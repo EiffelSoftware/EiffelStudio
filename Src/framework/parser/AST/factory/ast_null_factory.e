@@ -49,8 +49,9 @@ inherit
 			new_create_creation_expr_as,new_bang_creation_expr_as,
 			new_bracket_as,
 			new_assigner_mark_as, new_typed_char_as,
-			new_character_value, new_integer_value, new_real_value,
-			set_buffer, append_text_to_buffer, append_string_to_buffer,
+			new_character_value_as, new_integer_value, new_real_value,
+			set_buffer, append_text_to_buffer, append_character_to_buffer,
+			append_two_characters_to_buffer, new_string,
 			create_match_list,
 			reverse_extend_separator, reverse_extend_identifier, reverse_extend_identifier_separator,
 			new_agent_routine_creation_as,
@@ -80,8 +81,17 @@ feature -- Buffer operation
 		do
 		end
 
-	append_string_to_buffer (a_buf: STRING; a_str: STRING)
-			-- Append `a_str' to end of buffer `a_buf'.
+	append_character_to_buffer (a_buf: STRING; c: CHARACTER)
+			-- Append `c' to end of buffer `a_buf'.
+		do
+		end
+
+	append_two_characters_to_buffer (a_buf: STRING; a, b: CHARACTER)
+			-- Append `a' and `b' to end of buffer `a_buf'.
+		do
+		end
+
+	new_string (a_count: INTEGER): STRING
 		do
 		end
 
@@ -178,21 +188,21 @@ feature -- Roundtrip: New AST node
 
 feature -- Roundtrip
 
-	new_character_value (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer, a_text: STRING): CHAR_AS
+	new_character_value_as (a_psr: EIFFEL_SCANNER_SKELETON; buffer, a_text: STRING): CHAR_AS
 		do
 		end
 
-	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
 		do
 		end
 
-	new_real_value (a_psr: EIFFEL_PARSER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
+	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
 		do
 		end
 
 feature -- Roundtrip: New node
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS
+	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
 		end
@@ -1078,7 +1088,7 @@ feature -- Access
 		do
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER; buf: STRING): VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
 		end

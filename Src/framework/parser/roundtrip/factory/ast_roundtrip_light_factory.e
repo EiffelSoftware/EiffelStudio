@@ -142,12 +142,13 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS
+	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
-			create Result.initialize (t_as, c, l, co, p, n)
-			increase_match_list_count
-			Result.set_index (match_list_count)
+			if t_as /= Void and a_char /= Void then
+				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count)
+				Result.set_index (a_char.index)
+			end
 		end
 
 	new_string_as (s: STRING; l, c, p, n: INTEGER; buf: STRING): STRING_AS
@@ -160,11 +161,11 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER; buf: STRING): VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
 			if s /= Void and marker /= Void then
-				create Result.initialize (s, marker, is_indentable, l, c, p, n)
+				create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
 				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
@@ -416,7 +417,7 @@ feature -- Leaf nodes
 
 feature -- Access
 
-	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
 		local
 			token_value: STRING
 		do
@@ -441,7 +442,7 @@ feature -- Access
 			end
 		end
 
-	new_real_value (a_psr: EIFFEL_PARSER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
+	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
 		local
 			l_buffer: STRING
 		do

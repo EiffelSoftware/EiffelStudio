@@ -370,7 +370,7 @@ feature -- Access for Erros
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
 			-- New integer value.
 		local
 			l_type: TYPE_A

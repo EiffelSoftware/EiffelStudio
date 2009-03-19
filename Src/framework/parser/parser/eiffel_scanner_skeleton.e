@@ -53,7 +53,8 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			make_with_buffer (Empty_buffer)
 			create token_buffer.make (Initial_buffer_size)
-			create token_buffer2.make (Initial_buffer_size)
+			create roundtrip_token_buffer.make (Initial_buffer_size)
+			create start_location.make_null
 			create verbatim_marker.make (Initial_verbatim_marker_size)
 			filename := ""
 			syntax_version := obsolete_64_syntax
@@ -70,8 +71,9 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
+			start_location.set_position (0, 0, 0, 0)
 			token_buffer.clear_all
-			token_buffer2.clear_all
+			roundtrip_token_buffer.clear_all
 			verbatim_marker.clear_all
 			syntax_version := obsolete_64_syntax
 		end
@@ -84,14 +86,11 @@ feature -- Roundtrip
 	initial_match_list_size: INTEGER = 1000
 			-- Initial size of `match_list'.
 
-	token_buffer2: STRING
-			-- Buffer for verbatim string tokens
+	roundtrip_token_buffer: STRING
+			-- Buffer for roundtrip tokens
 
-	verbatim_start_position: INTEGER
-			-- Start position of verbatim string being scanned
-
-	string_start_position: INTEGER
-			-- Start position of regular string being scanned	
+	verbatim_common_columns: INTEGER
+			-- Number of columns that the verbatim string has in common.
 
 	last_keyword_as_id_index: INTEGER
 			-- Last index in `match_list' for keywords that can be used as identifier
@@ -123,11 +122,11 @@ feature -- Access
 	last_line_pragma: BREAK_AS
 			-- Last line pragma to be associated with next instruction
 
+	start_location: LOCATION_AS
+			-- Start location of a manifest string
+
 	token_buffer: STRING
 			-- Buffer for lexical tokens
-
-	string_position: INTEGER
-			-- Start position of a string token
 
 	verbatim_marker: STRING
 			-- Sequence of characters between " and [
@@ -321,10 +320,91 @@ feature {NONE} -- Error handling
 			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, ""))
 		end
 
+feature {AST_FACTORY} -- Error handling
+
 	report_invalid_integer_error (a_text: STRING)
 			-- Invalid integer
 		do
 			report_one_error (create {VIIN}.make (line, column, filename, ""))
+		end
+
+	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING)
+			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
+		require
+			a_type_not_void: a_type /= Void
+			a_real_not_void: a_real /= Void
+		local
+			an_error: SYNTAX_ERROR
+		do
+			create an_error.make (line, column, filename,
+				"Specified type %"" + a_type.dump +
+					"%" is not a valid type for real constant %"" + a_real + "%"")
+			report_one_error (an_error)
+		end
+
+	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING)
+			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
+		require
+			a_type_not_void: a_type /= Void
+			an_int_not_void: an_int /= Void
+		local
+			an_error: SYNTAX_ERROR
+		do
+			create an_error.make (line, column, filename,
+				"Specified type %"" + a_type.dump +
+					"%" is not a valid type for integer constant %"" + an_int + "%"")
+			report_one_error (an_error)
+		end
+
+	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING)
+			-- `an_int', although only made up of digits, doesn't fit
+			-- in an INTEGER (i.e. greater than maximum_integer_value).
+		require
+			an_int_not_void: an_int /= Void
+		local
+			an_error: SYNTAX_ERROR
+			l_message: STRING
+		do
+			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
+			if a_type /= Void then
+				l_message := "Integer value " + an_int + " is too large for " + a_type.dump + "."
+			else
+				l_message := "Integer value " + an_int + " is too large for any integer type."
+			end
+			create an_error.make (line, column, filename, l_message)
+			report_one_error (an_error)
+		end
+
+	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING)
+			-- `an_int', although only made up of digits, doesn't fit
+			-- in an INTEGER (i.e. less than minimum_integer_value).
+		require
+			an_int_not_void: an_int /= Void
+		local
+			an_error: SYNTAX_ERROR
+			l_message: STRING
+		do
+			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
+			if a_type /= Void then
+				l_message := "Integer value " + an_int + " is too small for " + a_type.dump + "."
+			else
+				l_message := "Integer value " + an_int + " is too small for any integer type."
+			end
+			create an_error.make (line, column, filename, l_message)
+			report_one_error (an_error)
+		end
+
+	report_character_code_too_large_error (a_code: STRING)
+			-- Integer encoded by `a_code' is too large to fit into a CHARACTER_32
+		require
+			a_code_not_void: a_code /= Void
+		local
+			l_message: STRING
+			an_error: BAD_CHARACTER
+		do
+			l_message := "Character code " + a_code + " is too large for CHARACTER_32."
+			create an_error.make (line, column, filename, l_message)
+			report_one_error (an_error)
 		end
 
 feature {NONE} -- Implementation
@@ -393,6 +473,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_simple_string_as (a_token: INTEGER)
+			-- Set `last_string_as_value' accordingly to the current scanner input of a manifest string and set `last_token' with `a_token'
+		local
+			l_str: STRING
+			n: INTEGER
+		do
+			n := text_count
+
+				-- We remove the double quotes and initializes it with scanned input.
+			l_str := ast_factory.new_string (n - 2)
+			if l_str /= Void then
+				append_text_substring_to_string (2, n - 1, l_str)
+			end
+
+				-- `roundtrip_token_buffer' is used for the getting the actual input
+				-- (useful for roundtrip parsing)
+			ast_factory.set_buffer (roundtrip_token_buffer, Current)
+
+				-- `l_str' being a new object, it is just fine to pass it as is.
+				-- `roundtrip_token_buffer' is not a new object but redefinitions of `new_string_as'
+				-- take care of duplicating it when necessary.
+			last_string_as_value := ast_factory.new_string_as (l_str, line, column, position, n, roundtrip_token_buffer)
+			last_token := a_token
+
+				-- Check if manifest string is not too long (excluding the double quotes).
+			if (n - 2) > maximum_string_length then
+					-- If `l_str' is Void, we need to actually create it for error purpose even if it was
+					-- not needed by the factory.
+				if l_str = Void then
+					create l_str.make (n - 2)
+					append_text_substring_to_string (2, n - 1, l_str)
+				end
+				report_too_long_string (l_str)
+			end
+		ensure
+			last_token_set: last_token = a_token
+		end
+
 feature {NONE} -- Implementation
 
 	is_verbatim_string_closer: BOOLEAN
@@ -440,6 +558,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			from
+				verbatim_common_columns := 0
 				done := s.count = 0
 			until
 				done
@@ -460,6 +579,7 @@ feature {NONE} -- Implementation
 					if i <= 0 then
 							-- Remove leading `c'.
 						s.remove (1)
+						verbatim_common_columns := verbatim_common_columns + 1
 						from
 							i := s.index_of ('%N', 1)
 						until

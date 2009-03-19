@@ -26,12 +26,26 @@ feature -- Buffer operation
 		do
 		end
 
-	append_string_to_buffer (a_buf: STRING; a_str: STRING)
-			-- Append `a_str' to end of buffer `a_buf'.
+	append_character_to_buffer (a_buf: STRING; c: CHARACTER)
+			-- Append `c' to end of buffer `a_buf'.
 		require
 			a_buf_not_void: a_buf /= Void
-			a_str_not_void: a_str /= Void
 		do
+		end
+
+	append_two_characters_to_buffer (a_buf: STRING; a, b: CHARACTER)
+			-- Append `a' and `b' to end of buffer `a_buf'.
+		require
+			a_buf_not_void: a_buf /= Void
+		do
+		end
+
+	new_string (n: INTEGER): STRING
+			-- New STRING object of size `n'.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make (n)
 		end
 
 feature -- Roundtrip: Match list maintaining
@@ -252,10 +266,12 @@ feature -- Access
 			create Result.make (k_as, i_as)
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS
+	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
-			create Result.initialize (t_as, c, l, co, p, n)
+			if t_as /= Void and then a_char /= Void then
+				create Result.initialize (t_as, a_char.value, a_char.line, a_char.column, a_char.position, a_char.location_count)
+			end
 		end
 
 	new_line_pragma (a_scn: EIFFEL_SCANNER_SKELETON): BREAK_AS
@@ -286,53 +302,34 @@ feature -- Access for Errors
 
 feature -- Value AST creation
 
-	new_character_value (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; a_text: STRING): CHAR_AS
-			-- New character value.
+	new_character_value_as (a_psr: EIFFEL_SCANNER_SKELETON; buffer: STRING; a_text: STRING): CHAR_AS
+			-- New character value for a numerical character representation (i.e. '%/001/').
 		require
 			buffer_not_void: buffer /= Void
+			buffer_not_empty: not buffer.is_empty
 			a_text_not_void: a_text /= Void
 			a_psr_not_void: a_psr /= Void
 		local
 			l_integer: INTEGER_AS
-			l_code: STRING
 		do
-			if buffer.count = 1 then
-				if a_type = Void then
-					Result := new_character_as (buffer.item (1), a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+				-- Would be nice to not have to create a INTEGER_AS to get the character value.
+			backup_match_list_count
+			disable_match_list_extension
+			l_integer := new_integer_value (a_psr, '+', Void, buffer, Void)
+			enable_match_list_extension
+			resume_match_list_count
+			if l_integer /= Void then
+				if l_integer.natural_64_value <= {NATURAL_32}.Max_value then
+					Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 				else
-					Result := new_typed_char_as (a_type, buffer.item (1), a_psr.line, a_psr.column, a_psr.position, 1, a_text)
-				end
-			else
-				l_code := buffer.substring (4, buffer.count - 1)
-				backup_match_list_count
-				disable_match_list_extension
-				l_integer := new_integer_value (a_psr, '+', Void, l_code, Void)
-				enable_match_list_extension
-				resume_match_list_count
-				if l_integer /= Void then
-					if l_integer.natural_64_value <= {NATURAL_8}.Max_value then
-						if a_type = Void then
-							Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-						else
-							Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-						end
-					elseif l_integer.natural_64_value <= {NATURAL_32}.Max_value then
-						if a_type = Void then
-							Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-						else
-							Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-						end
-					else
-						a_psr.report_character_code_too_large_error (l_code)
-
+					a_psr.report_character_code_too_large_error (buffer)
 							-- Dummy code (for error recovery) follows:
-						Result := new_character_as ('a', 0, 0, 0, 0, "")
-					end
+					Result := new_character_as ('a', 0, 0, 0, 0, "")
 				end
 			end
 		end
 
-	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -375,7 +372,7 @@ feature -- Value AST creation
 			end
 		end
 
-	new_real_value (a_psr: EIFFEL_PARSER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
+	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
 			-- New real value.
 		require
 			buffer_not_void: buffer /= Void
@@ -397,7 +394,7 @@ feature -- Value AST creation
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -1737,7 +1734,6 @@ feature -- Access
 	new_string_as (s: STRING; l, c, p, n: INTEGER; buf: STRING): STRING_AS
 			-- New STRING AST node
 		require
-			s_not_void: s /= Void
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
@@ -1842,7 +1838,7 @@ feature -- Access
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER; buf: STRING): VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		require
 			s_not_void: s /= Void
@@ -1853,7 +1849,7 @@ feature -- Access
 			n_non_negative: n >= 0
 		do
 			if s /= Void and marker /= Void then
-				create Result.initialize (s, marker, is_indentable, l, c, p, n)
+				create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
 			end
 		end
 

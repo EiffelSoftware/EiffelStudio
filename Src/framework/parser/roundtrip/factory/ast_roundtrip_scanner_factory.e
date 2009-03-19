@@ -46,7 +46,8 @@ inherit
 
 			set_buffer,
 			append_text_to_buffer,
-			append_string_to_buffer
+			append_character_to_buffer,
+			append_two_characters_to_buffer
 		end
 
 feature -- Buffer operation
@@ -54,7 +55,7 @@ feature -- Buffer operation
 	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON)
 		do
 			a_buf.clear_all
-			a_buf.append (a_scn.text)
+			a_scn.append_text_to_string (a_buf)
 		ensure then
 			a_buf_set: a_buf.is_equal (a_scn.text)
 		end
@@ -65,10 +66,17 @@ feature -- Buffer operation
 			a_scn.append_text_to_string (a_buf)
 		end
 
-	append_string_to_buffer (a_buf: STRING; a_str: STRING)
-			-- Append `a_str' to end of buffer `a_buf'.
+	append_character_to_buffer (a_buf: STRING; c: CHARACTER)
+			-- Append `c' to end of buffer `a_buf'.
 		do
-			a_buf.append (a_str)
+			a_buf.append_character (c)
+		end
+
+	append_two_characters_to_buffer (a_buf: STRING; a, b: CHARACTER)
+			-- Append `a' and `b' to end of buffer `a_buf'.
+		do
+			a_buf.append_character (a)
+			a_buf.append_character (b)
 		end
 
 feature -- Match list maintainning
@@ -114,10 +122,10 @@ feature -- Roundtrip
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, n))
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS
+	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
-			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
+				-- Nothing to be done, it was already done when processing CHAR_AS.
 		end
 
 feature -- Access
@@ -128,7 +136,7 @@ feature -- Access
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n: INTEGER; buf: STRING): VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))

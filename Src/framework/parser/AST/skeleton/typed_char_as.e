@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER)
 			-- Create a new CHARACTER AST node.
 		require
+			t_as_not_void: t_as /= Void
 			l_non_negative: l >= 0
 			co_non_negative: co >= 0
 			p_non_negative: p >= 0
@@ -47,14 +48,9 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
-			if a_list = Void then
+			Result := type.first_token (a_list)
+			if Result = Void then
 				Result := Current
-			else
-				if type /= Void then
-					Result := type.first_token (a_list)
-				else
-					Result := Current
-				end
 			end
 		end
 
@@ -76,8 +72,11 @@ feature -- Visitor
 			v.process_typed_char_as (Current)
 		end
 
+invariant
+	type_attached: type /= Void
+
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,11 +100,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

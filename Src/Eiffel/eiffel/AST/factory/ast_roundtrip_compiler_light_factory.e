@@ -77,7 +77,6 @@ inherit
 			new_filled_bit_id_as,
 			new_string_as,
 			new_verbatim_string_as,
-			append_string_to_buffer,
 			new_bin_and_then_as,
 			new_bin_or_else_as,
 			new_tagged_as,

@@ -72,7 +72,7 @@ feature {NONE} -- Externals
 			"[
 				C++ creator DebuggerManagedCallback
 				signature () 
-				use %"cli_debugger_callback.h%"
+				use "cli_debugger_callback.h"
 				]"
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Externals
 			"[
 				C++ creator DebuggerUnmanagedCallback
 				signature () 
-				use %"cli_debugger_callback.h%"
+				use "cli_debugger_callback.h"
 				]"
 		end		
 

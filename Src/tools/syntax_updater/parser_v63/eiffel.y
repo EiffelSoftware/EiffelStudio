@@ -41,7 +41,7 @@ create
 %token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
 %token TE_INTEGER
 %token TE_REAL
-%token <CHAR_AS>TE_CHAR
+%token <CHAR_AS>		TE_CHAR
 
 %token <SYMBOL_AS> 		TE_LSQURE TE_RSQURE
 %token <SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
@@ -86,12 +86,12 @@ create
 -- Special type for keywords that are either keyword or identifier
 %token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE
 
-%token TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
-%token TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
-%token TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
-%token TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
-%token TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
-%token TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
+%token <STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
+%token <STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
+%token <STRING_AS> TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
+%token <STRING_AS> TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
+%token <STRING_AS> TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
+%token <STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
 
 %type <SYMBOL_AS>ASemi
 %type <KEYWORD_AS> Alias_mark Is_keyword
@@ -823,13 +823,9 @@ Alias: TE_ALIAS Alias_name Alias_mark
 Alias_name: Infix_operator
 			{ $$ := $1 }
 	|	TE_STR_NOT
-			{
-				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_BRACKET
-			{
-				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	;
 
 Alias_mark: -- Empty
@@ -3076,19 +3072,9 @@ Boolean_constant: TE_FALSE
 	;
 
 Character_constant: TE_CHAR
-			{
-				check is_character: not token_buffer.is_empty end
-				
-				$$ := ast_factory.new_character_value (Current, Void, token_buffer, token_buffer2)
-
-			}
+			{ $$ := $1 }
 	|	Typed TE_CHAR
-			{
-				check is_character: not token_buffer.is_empty end
-				fixme (once "We should handle `Type' instead of ignoring it.")
-
-				$$ := ast_factory.new_character_value (Current, $1, token_buffer, token_buffer2)
-			}
+			{ $$ := ast_factory.new_typed_char_as ($1, $2) }
 	;
 
 --###################################################################
@@ -3209,13 +3195,9 @@ Manifest_string: Default_manifest_string
 Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
-			{
-				$$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_EMPTY_VERBATIM_STRING
-			{
-				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
-			}
+			{ $$ := $1 }
 	;
 
 Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
@@ -3233,186 +3215,152 @@ Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
 	;
 
 Non_empty_string: TE_STRING
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, string_position, position + text_count - string_position, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_VERBATIM_STRING
-			{
-				$$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_LT
-			{
-				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_LE
-			{
-				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_GT
-			{
-				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_GE
-			{
-				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_MINUS
-			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_PLUS
-			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_STAR
-			{
-				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_SLASH
-			{
-				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_MOD
-			{
-				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_DIV
-			{
-				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_POWER
-			{
-				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_BRACKET
-			{
-				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_AND
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_AND_THEN
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 10, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_IMPLIES
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 9, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_OR
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_OR_ELSE
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 9, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_XOR
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_NOT
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_FREE
-			{
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
-			}
+			{ $$ := $1 }
 	;
 
 Prefix_operator: TE_STR_MINUS
-			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_PLUS
-			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_NOT
 			{
-				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_FREE
 			{
-				$$ := ast_factory.new_string_as (cloned_lower_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	;
 
 Infix_operator: TE_STR_LT
-			{
-				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_LE
-			{
-				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_GT
-			{
-				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_GE
-			{
-				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_MINUS
-			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_PLUS
-			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_STAR
-			{
-				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_SLASH
-			{
-				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_MOD
-			{
-				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_DIV
-			{
-				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_POWER
-			{
-				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
-			}
+			{ $$ := $1 }
 	|	TE_STR_AND
 			{
-				$$ := ast_factory.new_string_as ("and", line, column, position, 5, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_AND_THEN
 			{
-				$$ := ast_factory.new_string_as ("and then", line, column, position, 10, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_IMPLIES
 			{
-				$$ := ast_factory.new_string_as ("implies", line, column, position, 9, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_OR
 			{
-				$$ := ast_factory.new_string_as ("or", line, column, position, 4, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_OR_ELSE
 			{
-				$$ := ast_factory.new_string_as ("or else", line, column, position, 9, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_XOR
 			{
-				$$ := ast_factory.new_string_as ("xor", line, column, position, 5, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
 	|	TE_STR_FREE
 			{
-				$$ := ast_factory.new_string_as (cloned_lower_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
+					-- Alias names should always be taken in their lower case version
+				if $1 /= Void then
+					$1.value.to_lower
+				end
+				$$ := $1
 			}
-				;
+	;
 
 Manifest_array: TE_LARRAY TE_RARRAY
 			{

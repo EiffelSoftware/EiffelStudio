@@ -39,79 +39,79 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 [ \t\r\n]+ { ast_factory.create_break_as (Current)  }
 
-[ \t\r\n]*/"--" { 
+[ \t\r\n]*/"--" {
 				last_break_as_start_position := position
 				last_break_as_start_line := line
 				last_break_as_start_column := column
-				ast_factory.set_buffer (token_buffer2, Current)
-				set_start_condition (PRAGMA)					
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				set_start_condition (PRAGMA)
 		}
 
 <PRAGMA> {
 	"--#line".*	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				last_line_pragma := ast_factory.new_line_pragma (Current)
 			}
-	
+
 	"--".*	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
-				
+
 	[ \t\r\n]+	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
-				
+
 	. {
 			less (0)
-			ast_factory.create_break_as_with_data (token_buffer2, 
-																last_break_as_start_line, 
-																last_break_as_start_column, 
-																last_break_as_start_position, 
-																token_buffer2.count)
-			set_start_condition (INITIAL)						
+			ast_factory.create_break_as_with_data (roundtrip_token_buffer,
+																last_break_as_start_line,
+																last_break_as_start_column,
+																last_break_as_start_position,
+																roundtrip_token_buffer.count)
+			set_start_condition (INITIAL)
 		}
-				
-	<<EOF>> {					
-			ast_factory.create_break_as_with_data (token_buffer2, 
-																last_break_as_start_line, 
-																last_break_as_start_column, 
-																last_break_as_start_position, 
-																token_buffer2.count)
+
+	<<EOF>> {
+			ast_factory.create_break_as_with_data (roundtrip_token_buffer,
+																last_break_as_start_line,
+																last_break_as_start_column,
+																last_break_as_start_position,
+																roundtrip_token_buffer.count)
 			set_start_condition (INITIAL)
 			}
 }
 
 -- Symbols
 
-";"			{				
+";"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_SEMICOLON, Current)
 				last_token := TE_SEMICOLON
 			}
-":"			{				
+":"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
 				last_token := TE_COLON
 			}
-","			{			
+","			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)
 				last_token := TE_COMMA
 			}
-".."		{				
+".."		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOTDOT, Current)
 				last_token := TE_DOTDOT
 			}
-"?"			{				
+"?"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_QUESTION, Current)
 				last_token := TE_QUESTION
 			}
-"~"			{				
+"~"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
 			}
-"."			{			
+"."			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
 				last_token := TE_DOT
 			}
-"$"			{				
+"$"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_ADDRESS, Current)
 				last_token := TE_ADDRESS
 			}
@@ -119,27 +119,27 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_ASSIGNMENT, Current)
 				last_token := TE_ASSIGNMENT
 			}
-"?="		{				
+"?="		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
 				last_token := TE_ACCEPT
 			}
-"="			{				
+"="			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_EQ, Current)
 				last_token := TE_EQ
 			}
-"<"			{				
+"<"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_LT, Current)
 				last_token := TE_LT
 			}
-">"			{			
+">"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_GT, Current)
 				last_token := TE_GT
 			}
-"<="		{				
+"<="		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_LE, Current)
 				last_token := TE_LE
 			}
-">="		{				
+">="		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
 				last_token := TE_GE
 			}
@@ -147,11 +147,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
 				last_token := TE_NOT_TILDE
 			}
-"/="		{				
+"/="		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
 				last_token := TE_NE
 			}
-"("			{				
+"("			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_LPARAN, Current)
 				last_token := TE_LPARAN
 			}
@@ -159,63 +159,63 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_RPARAN, Current)
 				last_token := TE_RPARAN
 			}
-"{"			{				
+"{"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_LCURLY, Current)
 				last_token := TE_LCURLY
 			}
-"}"			{				
+"}"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_RCURLY, Current)
 				last_token := TE_RCURLY
 			}
-"["			{				
+"["			{
 				last_symbol_as_value := ast_factory.new_square_symbol_as (TE_LSQURE, Current)
 				last_token := TE_LSQURE
 			}
-"]"			{				
+"]"			{
 				last_symbol_as_value := ast_factory.new_square_symbol_as (TE_RSQURE, Current)
 				last_token := TE_RSQURE
 			}
-"+"			{				
+"+"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_PLUS, Current)
 				last_token := TE_PLUS
 			}
-"-"			{				
+"-"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_MINUS, Current)
 				last_token := TE_MINUS
 			}
-"*"			{				
+"*"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_STAR, Current)
 				last_token := TE_STAR
 			}
-"/"			{				
+"/"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_SLASH, Current)
 				last_token := TE_SLASH
 			}
-"^"			{				
+"^"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
 				last_token := TE_POWER
 			}
-"->"  		{				
+"->"  		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
 				last_token := TE_CONSTRAIN
 			}
-"!"			{				
+"!"			{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_BANG, Current)
 				last_token := TE_BANG
 			}
-"<<"		{				
+"<<"		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_LARRAY, Current)
 				last_token := TE_LARRAY
 			}
-">>"		{			
+">>"		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
 				last_token := TE_RARRAY
 			}
-"//"		{				
+"//"		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_DIV, Current)
 				last_token := TE_DIV
 			}
-"\\\\"		{				
+"\\\\"		{
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_MOD, Current)
 				last_token := TE_MOD
 			}
@@ -231,27 +231,27 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Reserved words
 
-[aA][gG][eE][nN][tT]	{				
+[aA][gG][eE][nN][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
 				last_token := TE_AGENT
 			}
-[aA][lL][iI][aA][sS]	{				
+[aA][lL][iI][aA][sS]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ALIAS, Current)
 				last_token := TE_ALIAS
 			}
-[aA][lL][lL]	{				
+[aA][lL][lL]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ALL, Current)
 				last_token := TE_ALL
 			}
-[aA][nN][dD]	{				
+[aA][nN][dD]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_AND, Current)
 				last_token := TE_AND
 			}
-[aA][sS]	{				
+[aA][sS]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_AS, Current)
 				last_token := TE_AS
 			}
-[aA][sS][sS][iI][gG][nN] {				
+[aA][sS][sS][iI][gG][nN] {
 				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
 				last_token := TE_ASSIGN
 			}
@@ -283,7 +283,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					end
 				end
 			}
-[bB][iI][tT]	{			
+[bB][iI][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
 				if has_syntax_warning then
@@ -292,37 +292,37 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 							once "The `bit' keyword will be removed in the future according to ECMA Eiffel and should not be used."))
 				end
 			}
-[cC][hH][eE][cC][kK]	{			
+[cC][hH][eE][cC][kK]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
 				last_token := TE_CHECK
 			}
-[cC][lL][aA][sS][sS]	{				
+[cC][lL][aA][sS][sS]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
 				last_token := TE_CLASS
 			}
-[cC][oO][nN][vV][eE][rR][tT]	{				
+[cC][oO][nN][vV][eE][rR][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
 				last_token := TE_CONVERT
 			}
-[cC][rR][eE][aA][tT][eE]	{				
+[cC][rR][eE][aA][tT][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
 				last_token := TE_CREATE
 			}
-[cC][rR][eE][aA][tT][iI][oO][nN]	{				
+[cC][rR][eE][aA][tT][iI][oO][nN]	{
 				last_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
-				last_token := TE_CREATION				
+				last_token := TE_CREATION
 			}
-[cC][uU][rR][rR][eE][nN][tT]	{				
+[cC][uU][rR][rR][eE][nN][tT]	{
 				last_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			}
-[dD][eE][bB][uU][gG]	{				
+[dD][eE][bB][uU][gG]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
 				last_token := TE_DEBUG
 			}
-[dD][eE][fF][eE][rR][rR][eE][dD]	{				
+[dD][eE][fF][eE][rR][rR][eE][dD]	{
 				last_deferred_as_value := ast_factory.new_deferred_as (Current)
-				last_token := TE_DEFERRED			
+				last_token := TE_DEFERRED
 			}
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
 				if syntax_version /= obsolete_64_syntax then
@@ -338,63 +338,63 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					end
 				end
 			}
-[dD][oO]	{				
+[dD][oO]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
 				last_token := TE_DO
 			}
-[eE][lL][sS][eE]	{				
+[eE][lL][sS][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
 				last_token := TE_ELSE
 			}
-[eE][lL][sS][eE][iI][fF]	{				
+[eE][lL][sS][eE][iI][fF]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
 				last_token := TE_ELSEIF
 			}
-[eE][nN][dD]	{				
+[eE][nN][dD]	{
 				last_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			}
-[eE][nN][sS][uU][rR][eE]	{				
+[eE][nN][sS][uU][rR][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
 				last_token := TE_ENSURE
 			}
-[eE][xX][pP][aA][nN][dD][eE][dD]	{				
+[eE][xX][pP][aA][nN][dD][eE][dD]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
 				last_token := TE_EXPANDED
 			}
-[eE][xX][pP][oO][rR][tT]	{				
+[eE][xX][pP][oO][rR][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
 				last_token := TE_EXPORT
 			}
-[eE][xX][tT][eE][rR][nN][aA][lL]	{				
+[eE][xX][tT][eE][rR][nN][aA][lL]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
 				last_token := TE_EXTERNAL
 			}
-[fF][aA][lL][sS][eE]	{				
+[fF][aA][lL][sS][eE]	{
 				last_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			}
-[fF][eE][aA][tT][uU][rR][eE]	{				
+[fF][eE][aA][tT][uU][rR][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
 				last_token := TE_FEATURE
 			}
-[fF][rR][oO][mM]	{				
+[fF][rR][oO][mM]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
 				last_token := TE_FROM
 			}
-[fF][rR][oO][zZ][eE][nN]	{				
+[fF][rR][oO][zZ][eE][nN]	{
 				last_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			}
-[iI][fF]	{				
+[iI][fF]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
 				last_token := TE_IF
 			}
-[iI][mM][pP][lL][iI][eE][sS]	{				
+[iI][mM][pP][lL][iI][eE][sS]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
 				last_token := TE_IMPLIES
 			}
-[iI][nN][dD][eE][xX][iI][nN][gG]	{				
+[iI][nN][dD][eE][xX][iI][nN][gG]	{
 				if syntax_version /= ecma_syntax then
 					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
 					last_token := TE_INDEXING
@@ -403,31 +403,31 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					last_token := TE_ID
 				end
 			}
-[iI][nN][fF][iI][xX]	{				
+[iI][nN][fF][iI][xX]	{
 				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
 				last_token := TE_INFIX
 			}
-[iI][nN][hH][eE][rR][iI][tT]	{				
+[iI][nN][hH][eE][rR][iI][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
 				last_token := TE_INHERIT
 			}
-[iI][nN][sS][pP][eE][cC][tT]	{				
+[iI][nN][sS][pP][eE][cC][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
 				last_token := TE_INSPECT
 			}
-[iI][nN][vV][aA][rR][iI][aA][nN][tT]	{				
+[iI][nN][vV][aA][rR][iI][aA][nN][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
 				last_token := TE_INVARIANT
 			}
-[iI][sS]	{			
+[iI][sS]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
 				last_token := TE_IS
 			}
-[lL][iI][kK][eE]	{				
+[lL][iI][kK][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
 				last_token := TE_LIKE
 			}
-[lL][oO][cC][aA][lL]	{				
+[lL][oO][cC][aA][lL]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
 				last_token := TE_LOCAL
 			}
@@ -435,7 +435,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
 				last_token := TE_LOOP
 			}
-[nN][oO][tT]	{				
+[nN][oO][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
 				last_token := TE_NOT
 			}
@@ -453,11 +453,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					end
 				end
 			}
-[oO][bB][sS][oO][lL][eE][tT][eE]	{				
+[oO][bB][sS][oO][lL][eE][tT][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
 				last_token := TE_OBSOLETE
 			}
-[oO][lL][dD]	{				
+[oO][lL][dD]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
 				last_token := TE_OLD
 			}
@@ -473,18 +473,18 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 --      once
 --         do_nothing
 --      end
-[oO][nN][cC][eE]/\"	{				
+[oO][nN][cC][eE]/\"	{
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
 				last_token := TE_ONCE_STRING
 			}
-[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{				
+[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
 				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
-				last_token := TE_ONCE_STRING			
+				last_token := TE_ONCE_STRING
 			}
 
-[oO][nN][cC][eE]	{				
+[oO][nN][cC][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
 				last_token := TE_ONCE
 			}
@@ -497,67 +497,67 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			}
-[oO][rR]	{			
+[oO][rR]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
 			}
-[pP][aA][rR][tT][iI][aA][lL][ \t\r\n]*[cC][lL][aA][sS][sS] {				
+[pP][aA][rR][tT][iI][aA][lL][ \t\r\n]*[cC][lL][aA][sS][sS] {
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
 				last_token := TE_PARTIAL_CLASS
 			}
-[pP][rR][eE][cC][uU][rR][sS][oO][rR]	{				
+[pP][rR][eE][cC][uU][rR][sS][oO][rR]	{
 				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			}
-[pP][rR][eE][fF][iI][xX]	{				
+[pP][rR][eE][fF][iI][xX]	{
 				last_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
 				last_token := TE_PREFIX
 			}
-[rR][eE][dD][eE][fF][iI][nN][eE]	{				
+[rR][eE][dD][eE][fF][iI][nN][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
 				last_token := TE_REDEFINE
 			}
-[rR][eE][fF][eE][rR][eE][nN][cC][eE] {				
+[rR][eE][fF][eE][rR][eE][nN][cC][eE] {
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
 				last_token := TE_REFERENCE
 			}
-[rR][eE][nN][aA][mM][eE]	{				
+[rR][eE][nN][aA][mM][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
 				last_token := TE_RENAME
 			}
-[rR][eE][qQ][uU][iI][rR][eE]	{				
+[rR][eE][qQ][uU][iI][rR][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
 				last_token := TE_REQUIRE
 			}
-[rR][eE][sS][cC][uU][eE]	{				
+[rR][eE][sS][cC][uU][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
 				last_token := TE_RESCUE
 			}
-[rR][eE][sS][uU][lL][tT]	{					
+[rR][eE][sS][uU][lL][tT]	{
 				last_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			}
-[rR][eE][tT][rR][yY]	{				
+[rR][eE][tT][rR][yY]	{
 				last_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			}
-[sS][eE][lL][eE][cC][tT]	{				
+[sS][eE][lL][eE][cC][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
 				last_token := TE_SELECT
 			}
-[sS][eE][pP][aA][rR][aA][tT][eE]	{			
+[sS][eE][pP][aA][rR][aA][tT][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
 				last_token := TE_SEPARATE
 			}
-[sS][tT][rR][iI][pP]	{				
+[sS][tT][rR][iI][pP]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
 				last_token := TE_STRIP
 			}
-[tT][hH][eE][nN]	{				
+[tT][hH][eE][nN]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
 				last_token := TE_THEN
 			}
-[tT][rR][uU][eE]	{				
+[tT][rR][uU][eE]	{
 				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			}
@@ -565,31 +565,31 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_TUPLE
 				process_id_as
 			}
-[uU][nN][dD][eE][fF][iI][nN][eE]	{				
+[uU][nN][dD][eE][fF][iI][nN][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
 				last_token := TE_UNDEFINE
 			}
-[uU][nN][iI][qQ][uU][eE]	{				
+[uU][nN][iI][qQ][uU][eE]	{
 				last_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			}
-[uU][nN][tT][iI][lL]	{				
+[uU][nN][tT][iI][lL]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
 				last_token := TE_UNTIL
 			}
-[vV][aA][rR][iI][aA][nN][tT]	{			
+[vV][aA][rR][iI][aA][nN][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
 				last_token := TE_VARIANT
 			}
-[vV][oO][iI][dD] {				
+[vV][oO][iI][dD] {
 				last_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			}
-[wW][hH][eE][nN]	{				
+[wW][hH][eE][nN]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
 				last_token := TE_WHEN
 			}
-[xX][oO][rR]	{				
+[xX][oO][rR]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
 				last_token := TE_XOR
 			}
@@ -605,7 +605,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 -- Bits
 
 [0-1]+[bB]	{
-				last_token := TE_A_BIT			
+				last_token := TE_A_BIT
 				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
 
 				if has_syntax_warning then
@@ -627,25 +627,25 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					--     `when' `1' `..' `2' `then'
 
 				token_buffer.clear_all
-				append_text_to_string (token_buffer)				
+				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[xX]{H}(({H}|_)*{H})?	{		-- Recognizes hexadecimal integer numbers.
 				token_buffer.clear_all
-				append_text_to_string (token_buffer)				
+				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[cC]{O}(({O}|_)*{O})?	{		-- Recognizes octal integer numbers.
 				token_buffer.clear_all
-				append_text_to_string (token_buffer)				
+				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[bB]{B}(({B}|_)*{B})?	{		-- Recognizes binary integer numbers.
 				token_buffer.clear_all
-				append_text_to_string (token_buffer)				
+				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
@@ -667,152 +667,131 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 -- Characters
 
 \'[^%\n']\'	{
-				token_buffer.clear_all
-				token_buffer.append_character (text_item (2))
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as (text_item (2), line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'\'\'		{
 					-- This is not correct Eiffel!
-				token_buffer.clear_all
-				token_buffer.append_character ('%'')
-				last_token := TE_CHAR				
-				ast_factory.set_buffer (token_buffer2, Current)
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
+				last_token := TE_CHAR
 			}
 \'%A\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%A')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%B\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%B')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%C\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%C')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%D\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%D')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%F\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%F')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%H\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%H')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%L\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%L')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%N\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%N')
-				last_token := TE_CHAR				
-				ast_factory.set_buffer (token_buffer2, Current)
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, roundtrip_token_buffer)
+				last_token := TE_CHAR
 			}
 \'%Q\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%Q')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%R\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%R')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%S\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%S')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%T\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%T')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%U\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%U')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%V\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%V')
-				last_token := TE_CHAR				
-				ast_factory.set_buffer (token_buffer2, Current)
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, roundtrip_token_buffer)
+				last_token := TE_CHAR
 			}
 \'%%\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%%')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%\'\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%'')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%\"\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%"')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%\(\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%(')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%\)\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%)')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%<\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%<')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%>\'		{
-				token_buffer.clear_all
-				token_buffer.append_character ('%>')
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				last_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 \'%\/[0-9]+\/\'	|
 \'%\/0[xX]{H}(({H}|_)*{H})?\/\' |
 \'%\/0[cC]{O}(({O}|_)*{O})?\/\' |
 \'%\/0[bB]{B}(({B}|_)*{B})?\/\' {
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.clear_all
-				append_text_substring_to_string (1, text_count - 1, token_buffer)
+					-- We discard the '%/ and the final /'.
+				append_text_substring_to_string (4, text_count - 2, token_buffer)
+				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
 			}
 
 \'%\/0[bBcC]{H}(({H}|_)*{H})?\/\'	{
@@ -830,126 +809,75 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Strings
 
-\""<"\"		{				
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_LT
+\""<"\"		{
+				process_simple_string_as (TE_STR_LT)
 			}
-\"">"\"		{				
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_GT
+\"">"\"		{
+				process_simple_string_as (TE_STR_GT)
 			}
-\""<="\"	{				
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_LE
+\""<="\"	{
+				process_simple_string_as (TE_STR_LE)
 			}
-\"">="\"	{			
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_GE
+\"">="\"	{
+				process_simple_string_as (TE_STR_GE)
 			}
 \""+"\"		{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_PLUS
+				process_simple_string_as (TE_STR_PLUS)
 			}
 \""-"\"		{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_MINUS
+				process_simple_string_as (TE_STR_MINUS)
 			}
 \""*"\"		{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_STAR
+				process_simple_string_as (TE_STR_STAR)
 			}
 \""/"\"		{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_SLASH
+				process_simple_string_as (TE_STR_SLASH)
 			}
 \""^"\"		{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_POWER
+				process_simple_string_as (TE_STR_POWER)
 			}
 \""//"\"	{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_DIV
+				process_simple_string_as (TE_STR_DIV)
 			}
 \""\\\\"\"	{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_MOD
+				process_simple_string_as (TE_STR_MOD)
 			}
 \""[]"\"	{
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_BRACKET
+				process_simple_string_as (TE_STR_BRACKET)
 			}
 \"[aA][nN][dD]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 4, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_AND
+				process_simple_string_as (TE_STR_AND)
 			}
 \"[aA][nN][dD]\ [tT][hH][eE][nN]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 9, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_AND_THEN
+				process_simple_string_as (TE_STR_AND_THEN)
 			}
 \"[iI][mM][pP][lL][iI][eE][sS]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 8, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_IMPLIES
+				process_simple_string_as (TE_STR_IMPLIES)
 			}
 \"[nN][oO][tT]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 4, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_NOT
+				process_simple_string_as (TE_STR_NOT)
 			}
 \"[oO][rR]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 3, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_OR
+				process_simple_string_as (TE_STR_OR)
 			}
 \"[oO][rR]\ [eE][lL][sS][eE]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 8, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_OR_ELSE
+				process_simple_string_as (TE_STR_OR_ELSE)
 			}
 \"[xX][oO][rR]\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, 4, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_XOR
+				process_simple_string_as (TE_STR_XOR)
 			}
 \"(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
-				token_buffer.clear_all
-				append_text_substring_to_string (2, text_count - 1, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STR_FREE
-				if token_buffer.count > maximum_string_length then
-					report_too_long_string (token_buffer)
-				end
+				process_simple_string_as (TE_STR_FREE)
 			}
 \"\"		{
-					-- Empty string.
-				ast_factory.set_buffer (token_buffer2, Current)
-				string_position := position
-				last_token := TE_EMPTY_STRING
+				process_simple_string_as (TE_EMPTY_STRING)
 			}
 \"[^%\n"]+\" {
 					-- Regular string.
-				string_position := position
-				token_buffer.clear_all
-				append_text_substring_to_string (2, text_count - 1, token_buffer)
-				ast_factory.set_buffer (token_buffer2, Current)
-				last_token := TE_STRING
-				if token_buffer.count > maximum_string_length then
-					report_too_long_string (token_buffer)
-				end
+				process_simple_string_as (TE_STRING)
 			}
 \"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
-				string_position := position
-				verbatim_start_position := position
 				token_buffer.clear_all
 				verbatim_marker.clear_all
 				if text_item (text_count) = '[' then
@@ -957,21 +885,22 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				else
 					verbatim_marker.append_character ('}')
 				end
-				ast_factory.set_buffer (token_buffer2, Current)				
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
+				start_location.set_position (line, column, position, text_count)
 				set_start_condition (VERBATIM_STR3)
 			}
 <VERBATIM_STR3>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
 	[ \t\r]*\n {
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (VERBATIM_STR1)
 			}
 	.		{
 					-- No final bracket-double-quote.
 				append_text_to_string (token_buffer)
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
 					token_buffer.remove (token_buffer.count - 1)
@@ -989,7 +918,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
 	[ \t\r]*[\]\}][^\n"]*\" {
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if is_verbatim_string_closer then
 					set_start_condition (INITIAL)
 						-- Remove the trailing new-line.
@@ -1008,11 +937,21 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					end
 					if verbatim_marker.item (1) = ']' then
 						align_left (token_buffer)
+					else
+						verbatim_common_columns := 0
 					end
 					if token_buffer.is_empty then
 							-- Empty string.
+						last_string_as_value := ast_factory.new_verbatim_string_as ("",
+							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
+							start_location.line, start_location.column, start_location.position,
+							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
 						last_token := TE_EMPTY_VERBATIM_STRING
 					else
+						last_string_as_value := ast_factory.new_verbatim_string_as (cloned_string (token_buffer),
+							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
+							start_location.line, start_location.column, start_location.position,
+							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
 						last_token := TE_VERBATIM_STRING
 						if token_buffer.count > maximum_string_length then
 							report_too_long_string (token_buffer)
@@ -1024,12 +963,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				end
 			}
 	[^"\n]*\" {
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
 			}
 	[^"\n]*\n {
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
@@ -1038,7 +977,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 	[^"\n]* {
 					-- No final bracket-double-quote.
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
@@ -1053,7 +992,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 		-- Read remaining characters of a line
 		-- in verbatim string body.
 	.*\n	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
@@ -1063,7 +1002,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 	.*		{
 					-- No final bracket-double-quote.
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
@@ -1076,123 +1015,130 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 }
 \"[^%\n"]*	{
 					-- String with special characters.
-				ast_factory.set_buffer (token_buffer2, Current)
-				string_position := position
-				string_start_position := position
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				token_buffer.clear_all
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end
+				start_location.set_position (line, column, position, text_count)
 				set_start_condition (SPECIAL_STR)
 			}
 <SPECIAL_STR>{
 	[^%\n"]+	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
 			}
 	%A		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%A")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'A')
 				token_buffer.append_character ('%A')
 			}
 	%B		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%B")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'B')
 				token_buffer.append_character ('%B')
 			}
 	%C		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%C")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'C')
 				token_buffer.append_character ('%C')
 			}
 	%D		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%D")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'D')
 				token_buffer.append_character ('%D')
 			}
 	%F		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%F")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'F')
 				token_buffer.append_character ('%F')
 			}
 	%H		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%H")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'H')
 				token_buffer.append_character ('%H')
 			}
 	%L		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%L")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'L')
 				token_buffer.append_character ('%L')
 			}
 	%N		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%N")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'N')
 				token_buffer.append_character ('%N')
 			}
 	%Q		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%Q")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'Q')
 				token_buffer.append_character ('%Q')
 			}
 	%R		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%R")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'R')
 				token_buffer.append_character ('%R')
 			}
 	%S		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%S")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'S')
 				token_buffer.append_character ('%S')
 			}
 	%T		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%T")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'T')
 				token_buffer.append_character ('%T')
 			}
 	%U		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%U")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'U')
 				token_buffer.append_character ('%U')
 			}
 	%V		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%V")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'V')
 				token_buffer.append_character ('%V')
 			}
 	%%		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%%%")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%%')
 				token_buffer.append_character ('%%')
 			}
 	%\'		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%%'")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%'')
 				token_buffer.append_character ('%'')
 			}
 	%\"		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%%"")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%"')
 				token_buffer.append_character ('%"')
 			}
 	%\(		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%(")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '(')
 				token_buffer.append_character ('%(')
 			}
 	%\)		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%)")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', ')')
 				token_buffer.append_character ('%)')
 			}
 	%<		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%<")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '<')
 				token_buffer.append_character ('%<')
 			}
 	%>		{
-				ast_factory.append_string_to_buffer (token_buffer2, once "%%>")
+				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '>')
 				token_buffer.append_character ('%>')
 			}
 	%\/[0-9]{1,3}\/	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			}
 	%[ \t\r\n]+%	{
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
-			ast_factory.append_text_to_buffer (token_buffer2, Current)
+			ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
 	[^%\n"]*\"	{
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
 				end
 				set_start_condition (INITIAL)
 				if token_buffer.is_empty then
 						-- Empty string.
+					last_string_as_value := ast_factory.new_string_as (
+						cloned_string (token_buffer), start_location.line, start_location.column,
+						start_location.position,
+						position + text_count - start_location.position, roundtrip_token_buffer)
 					last_token := TE_EMPTY_STRING
 				else
+					last_string_as_value := ast_factory.new_string_as (
+						cloned_string (token_buffer), start_location.line, start_location.column,
+						start_location.position,
+						position + text_count - start_location.position, roundtrip_token_buffer)
 					last_token := TE_STRING
 					if token_buffer.count > maximum_string_length then
 						report_too_long_string (token_buffer)
@@ -1201,7 +1147,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 	%		{
 					-- Bad special character.
-				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (INITIAL)
 				report_string_bad_special_character_error
 			}

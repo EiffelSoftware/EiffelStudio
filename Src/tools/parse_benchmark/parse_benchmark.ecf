@@ -25,6 +25,7 @@
 			<option warning="false">
 			</option>
 		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="parser_benchmark" location=".\" recursive="true"/>
 	</target>
 	<target name="pbmark_donet" extends="pbmark">

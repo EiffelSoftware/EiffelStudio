@@ -26,6 +26,19 @@ feature {NONE} -- Initialization
 			identity_set: identity = a_id
 		end
 
+feature -- Syntax level
+
+	syntax_level: NATURAL_8
+			-- Chosen syntax level for parsing
+
+	set_syntax_level (a_level: like syntax_level)
+			-- Set `syntax_level' with `a_level'.
+		do
+			syntax_level := a_level
+		ensure
+			syntax_level_set: syntax_level = a_level
+		end
+
 feature -- Access
 
 	identity: STRING
@@ -44,6 +57,7 @@ feature -- Parsing
 			if not retried then
 				l_parser := eiffel_parser
 				l_parser.reset
+				l_parser.set_syntax_version (syntax_level)
 				l_parser.parse_from_string (a_source, Void)
 				successful := l_parser.error_count = 0
 			else
@@ -69,6 +83,7 @@ feature -- Parsing
 				l_parser := eiffel_parser
 				l_parser.reset
 				create l_buffer_if.make (a_fn)
+				l_parser.set_syntax_version (syntax_level)
 				l_parser.parse (l_buffer_if)
 				successful := l_parser.error_count = 0
 			else

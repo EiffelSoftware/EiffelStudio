@@ -45,48 +45,66 @@ feature {NONE} -- Access
 			-- <Precursor>
 		once
 			create Result.make (5)
-			Result.extend (create {ARGUMENT_SWITCH}.make (null_switch, "Test parser using AST_NULL_FACTORY%N(exclude when using -all.)", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (basic_switch, "Test parser using AST_FACTORY%N(exclude when using -all.)", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (lite_switch, "Test parser using AST_ROUNDTRIP_LIGHT_FACTORY%N(exclude when using -all.)", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (roundtrip_switch, "Test parser using AST_ROUNDTRIP_FACTORY%N(exclude when using -all.)", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Test parser using all factories.", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (factory_switch, "Type of factory", False, True, "Type of factory", "One of null, basic, lite, roundtrip or all", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (parser_level_switch, "Type of parser%N(default is transitional)", True, True, "Type of parser", "One of obsolete, transitional or standard", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (location_switch, "Location of a file or directory to test parser with.", True, False, "location", "A file or directory to parse contents of.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Should location be recursively searched?", True, False))
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make_with_range (error_switch, "Number of times the same file should be parsed to remove fuzzyness%N(default is 5.)", True, False, "count", "Number of parses to perform to retrieve mean parsed time.", False, 1, {NATURAL_8}.max_value))
 				-- Parser does not work using file names.
-			--Result.extend (create {ARGUMENT_SWITCH}.make (disk_access_switch, "Includes parser file loading times.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (disk_access_switch, "Includes parser file loading times.", True, False))
 		end
 
 feature -- Status Report
 
+	process_standard_syntax: BOOLEAN
+			-- Indicates standard syntax is to be used
+		once
+			Result := options_values_of_name (parser_level_switch).has ("standard")
+		end
+
+	process_transitional_syntax: BOOLEAN
+			-- Indicates transitional syntax is to be used
+		once
+			Result := not process_Standard_syntax or not process_obsolete_syntax
+		end
+
+	process_obsolete_syntax: BOOLEAN
+			-- Indicates obsolete syntax is to be used
+		once
+			Result := options_values_of_name (parser_level_switch).has ("obsolete")
+		end
+
 	process_null_factory: BOOLEAN
 			-- Indicates if AST_NULL_FACTORY should be tested.
 		once
-			Result := proces_all_factories xor has_option (null_switch)
+			Result := proces_all_factories or options_values_of_name (factory_switch).has ("null")
 		end
 
 	process_basic_factory: BOOLEAN
 			-- Indicates if AST_FACTORY should be tested.
 		once
-			Result := proces_all_factories xor has_option (basic_switch)
+			Result := proces_all_factories or options_values_of_name (factory_switch).has ("basic")
 		end
 
 	process_lite_factory: BOOLEAN
 			-- Indicates if AST_ROUNDTRIP_LIGHT_FACTORY should be tested.
 		once
-			Result := proces_all_factories xor has_option (lite_switch)
+			Result := proces_all_factories or options_values_of_name (factory_switch).has ("lite")
+
 		end
 
 	process_roundtrip_factory: BOOLEAN
 			-- Indicates if AST_ROUNDTRIP_FACTORY should be tested.
 		once
-			Result := proces_all_factories xor has_option (roundtrip_switch)
+			Result := proces_all_factories or options_values_of_name (factory_switch).has ("roundtrip")
+
 		end
 
 	proces_all_factories: BOOLEAN
 			-- Indicates if all AST_FACTORYs should be tested.
 		once
-			Result := has_option (all_switch)
+			Result := options_values_of_name (factory_switch).has ("all")
+
 		end
 
 	test_disk_access: BOOLEAN
@@ -148,12 +166,9 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Switch names
 
-	null_switch: !STRING = "n|null"
-	basic_switch: !STRING = "b|basic"
-	lite_switch: !STRING = "l|lite"
-	roundtrip_switch: !STRING = "o|roundtrip"
-	all_switch: !STRING = "a|all"
-			-- Factory switches
+	factory_switch: STRING = "f|factory"
+	parser_level_switch: STRING = "s|syntax_level"
+			-- Factory switch
 
 	location_switch: !STRING = "l|location"
 	recursive_switch: !STRING = "r|recursive"

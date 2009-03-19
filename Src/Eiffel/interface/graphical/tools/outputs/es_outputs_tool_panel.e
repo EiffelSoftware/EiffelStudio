@@ -168,6 +168,8 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			l_actions_running: BOOLEAN
 			l_locked: BOOLEAN
 			l_old_output: like output
+			l_widget: ES_WIDGET [EV_WIDGET]
+			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			if output /= a_output then
 				l_old_output := output
@@ -186,12 +188,30 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 					l_combo.change_actions.block
 				end
 
+					-- Change label in the combo box.
 				l_combo.set_text (a_output.name.as_string_32)
-				output := a_output
-				a_output.widget_for_window (develop_window.as_attached).widget.show
 
 				if l_actions_running then
 					l_combo.change_actions.resume
+				end
+
+				l_window := develop_window.as_attached
+				if attached l_old_output then
+					l_widget := l_old_output.widget_for_window (l_window)
+					if l_widget.is_interface_usable then
+						l_widget.widget.hide
+					end
+				end
+
+				last_output := output
+				output := a_output
+
+				l_widget := a_output.widget_for_window (l_window)
+				if l_widget.is_interface_usable then
+					l_widget.widget.show
+				else
+						-- Why is the new widget not usable?
+					check False end
 				end
 
 					-- Connect to lock events
@@ -206,6 +226,8 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 						on_output_locked (a_output)
 					end
 				end
+
+				on_output_shown (a_output)
 			end
 		ensure then
 --			a_editor_parented: a_editor.widget.widget.parent = user_widget
@@ -393,30 +415,11 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_item: EV_LIST_ITEM
-			l_widget: ES_WIDGET [EV_WIDGET]
-			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_item := selection_combo.selected_item
 			check l_item_attached: l_item /= Void end
 			if attached {like output} l_item.data as l_active_output then
-				l_window := develop_window.as_attached
-				if attached output as l_old_output then
-					l_widget := l_old_output.widget_for_window (l_window)
-					if l_widget.is_interface_usable then
-						l_widget.widget.hide
-					end
-				end
-
-				last_output := output
-				output := l_active_output
-
-				l_widget := l_active_output.widget_for_window (l_window)
-				if l_widget.is_interface_usable then
-					l_widget.widget.show
-				else
-						-- Why is the new widget not available?
-					check False end
-				end
+				set_output (l_active_output)
 			else
 				check no_data: False end
 			end

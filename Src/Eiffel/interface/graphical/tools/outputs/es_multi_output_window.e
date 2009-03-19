@@ -12,6 +12,8 @@ class
 
 inherit
 	OUTPUT_WINDOW
+		export
+			{NONE} display
 		redefine
 			start_processing,
 			end_processing,
@@ -52,16 +54,10 @@ inherit
 			process_column_text,
 			process_call_stack_item ,
 			process_menu_text,
-			process_class_menu_text
---			set_context_group
---			display,
---			clear_window
+			process_class_menu_text,
+			set_context_group,
+			clear_window
 		end
-
---	EB_SHARED_WINDOW_MANAGER
---		export
---			{NONE} all
---		end
 
 create
 	make
@@ -103,71 +99,70 @@ feature {OUTPUT_I} -- Extension
 	extend (a_output: OUTPUT_WINDOW)
 			-- Extend the managed set of windows with a new output window.
 			--
-			-- `a_window':
+			-- `a_window': The output window to add.
 		require
 			a_output_attached: a_output /= Void
+			not_has_window_a_output: not has_window (a_output)
 		do
 			new_managed_windows.extend (a_output)
+		ensure
+			has_window_a_output: has_window (a_output)
 		end
 
 feature {OUTPUT_I} -- Removal
 
+	prune (a_output: OUTPUT_WINDOW)
+			-- Removed an output window from a list of managed outputs.
+			--
+			-- `a_window': The output window to remove.
+		require
+			a_output_attached: a_output /= Void
+			has_window_a_output: has_window (a_output)
+		do
+			new_managed_windows.prune (a_output)
+			managed_windows.prune (a_output)
+		ensure
+			not_has_window_a_output: not has_window (a_output)
+		end
 
+feature -- Element change
 
---feature -- Element change
+	set_context_group (a_group: like context_group)
+			-- <Precursor>
+		local
+			l_windows: like managed_windows
+			l_formatter: TEXT_FORMATTER
+		do
+			Precursor (a_group)
+			l_windows := managed_windows
+			if not l_windows.is_empty then
+				from l_windows.start until l_windows.after loop
+					l_formatter := l_windows.item
+					if l_formatter /= Void then
+						l_formatter.set_context_group (a_group)
+					end
+					l_windows.forth
+				end
+			end
+		end
 
---	set_context_group (a_group: like context_group)
---			-- <Precursor>
---		local
---			l_windows: like managed_windows
---			l_formatter: TEXT_FORMATTER
---		do
---			Precursor (a_group)
---			l_windows := managed_windows
---			if not l_windows.is_empty then
---				from l_windows.start until l_windows.after loop
---					l_formatter := l_windows.item
---					if l_formatter /= Void then
---						l_formatter.set_context_group (a_group)
---					end
---					l_windows.forth
---				end
---			end
---		end
+feature -- Output
 
---feature -- Output
-
---	display
---			-- <Precursor>
---		local
---			l_windows: like managed_windows
---			l_window: OUTPUT_WINDOW
---		do
---			l_windows := managed_windows
---			from l_windows.start until l_windows.after loop
---				l_window := l_windows.item
---				if l_window /= Void then
---					l_window.display
---				end
---				l_windows.forth
---			end
---		end
-
---	clear_window
---			-- <Precursor>
---		local
---			l_windows: like managed_windows
---			l_window: OUTPUT_WINDOW
---		do
---			l_windows := managed_windows
---			from l_windows.start until l_windows.after loop
---				l_window := l_windows.item
---				if l_window /= Void then
---					l_window.clear_window
---				end
---				l_windows.forth
---			end
---		end
+	clear_window
+			-- <Precursor>
+		local
+			l_windows: like managed_windows
+			l_window: OUTPUT_WINDOW
+		do
+			l_windows := managed_windows
+			from l_windows.start until l_windows.after loop
+				l_window := l_windows.item
+				if l_window /= Void then
+					l_window.clear_window
+				end
+				l_windows.forth
+			end
+		end
 
 	put_new_line
 			-- <Precursor>

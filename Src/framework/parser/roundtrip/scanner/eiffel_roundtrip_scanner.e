@@ -70,27 +70,22 @@ feature -- Scann
 				read_token
 				inspect
 					last_token
-					when TE_INTEGER then
-						l_as := ast_factory.new_integer_as (Void, False, Void, text, Void, line, column, position, text_count)
-					when TE_REAL then
-						l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count)
-					when TE_CHAR then
-						l_as := ast_factory.new_character_as (' ', line, column, position, text_count, text)
-					when
-						TE_STR_LT, TE_STR_GT, TE_STR_LE, TE_STR_GE, TE_STR_PLUS, TE_STR_MINUS, TE_STR_STAR,
-						TE_STR_SLASH, TE_STR_POWER, TE_STR_DIV, TE_STR_MOD, TE_STR_BRACKET, TE_STR_AND,
- 				 	    TE_STR_AND_THEN, TE_STR_IMPLIES, TE_STR_NOT, TE_STR_OR, TE_STR_OR_ELSE, TE_STR_XOR,
- 				 	    TE_STR_FREE then
- 				 	    l_as := ast_factory.new_string_as ("", line, column, position, text_count, text)
-					when TE_EMPTY_STRING then
-						l_as := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
-					when TE_STRING then
-						l_as := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
-					when TE_EMPTY_VERBATIM_STRING then
-						l_as := ast_factory.new_verbatim_string_as ("", "", False, line, column, string_position, position + text_count - string_position, token_buffer2)
-					when TE_VERBATIM_STRING then
-						l_as := ast_factory.new_verbatim_string_as ("", "", False, line, column, string_position, position + text_count - string_position, token_buffer2)
-					else
+				when TE_INTEGER then
+					l_as := ast_factory.new_integer_as (Void, False, Void, text, Void, line, column, position, text_count)
+				when TE_REAL then
+					l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count)
+				when TE_CHAR then
+					l_as := last_char_as_value
+				when
+					TE_STR_LT, TE_STR_GT, TE_STR_LE, TE_STR_GE, TE_STR_PLUS, TE_STR_MINUS, TE_STR_STAR,
+					TE_STR_SLASH, TE_STR_POWER, TE_STR_DIV, TE_STR_MOD, TE_STR_BRACKET, TE_STR_AND,
+					TE_STR_AND_THEN, TE_STR_IMPLIES, TE_STR_NOT, TE_STR_OR, TE_STR_OR_ELSE, TE_STR_XOR,
+					TE_STR_FREE,
+					TE_EMPTY_STRING, TE_EMPTY_VERBATIM_STRING,
+					TE_STRING, TE_VERBATIM_STRING
+				then
+					l_as := last_string_as_value
+				else
 				end
 			end
 			if l_error_level /= error_handler.error_level then

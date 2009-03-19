@@ -276,7 +276,7 @@ feature
 	process_typed_char_as (l_as: TYPED_CHAR_AS)
 			-- Process `l_as'.
 		do
-			safe_process (l_as.type)
+			l_as.type.process (Current)
 			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end

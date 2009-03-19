@@ -86,10 +86,10 @@ feature {NONE} -- Implementation
 		do
 			parser := External_parser
 			parser.set_trigger_error (False)
-				-- Workaround while waiting STRING_AS and descendants to have the proper line number and column number.
 			if attached {VERBATIM_STRING_AS} language_name as verbatim_string then
-				l_real_line_number := (verbatim_string.line - verbatim_string.value.occurrences ('%N') - 1).max (1)
-				l_real_column_number := verbatim_string.column
+					-- The actual content of a verbatim string always starts at the line after the opening bracket.
+				l_real_line_number := verbatim_string.line + 1
+				l_real_column_number := verbatim_string.common_columns + 1
 			else
 				l_real_line_number := language_name.line
 				l_real_column_number := language_name.column + 1
@@ -289,88 +289,94 @@ feature {NONE} -- Implementation
 					end
 				end
 
-					-- Extracting the signature
-				if image.count /= 0 and then image.item (1) = '(' then
-					pos := image.index_of (')',2)
-					if pos = 0 then
-						has_parsing_error := True
-					else
-						signature_part := image.substring (1, pos)
-
-							-- Only unprocessed part is kept in `image'
-						image.remove_head (pos)
-						image.left_adjust
-					end
-				end
-
-					-- Return type
-				if image.count /= 0 and then image.item (1) = ':' then
-					if signature_part = Void then
-						create signature_part.make (0)
-					end
-
-					pos := image.index_of ('|', 1)
-					if pos = 0 then
-							-- No include part
-						signature_part.append (image)
-						image.wipe_out
-					else
-						signature_part.append (image.substring (1, pos - 1))
-						signature_part.right_adjust
-
-							-- Only unprocessed part is kept in `image'
-						image.remove_head (pos - 1)
-					end
-				end
-
-				if signature_part /= Void or else image.count /= 0 then
-					if extension = Void then
-						if ext_language_name.is_equal ("C++") then
+				if not has_parsing_error then
+						-- Extracting the signature
+					if image.count /= 0 and then image.item (1) = '(' then
+						pos := image.index_of (')',2)
+						if pos = 0 then
 							has_parsing_error := True
 						else
-							create {C_EXTENSION_AS} extension
+							signature_part := image.substring (1, pos)
+
+								-- Only unprocessed part is kept in `image'
+							image.remove_head (pos)
+							image.left_adjust
 						end
 					end
-				end
 
-				if signature_part /= Void then
-					extension.set_signature (signature_part)
-				end
+					if not has_parsing_error then
+							-- Return type
+						if image.count /= 0 and then image.item (1) = ':' then
+							if signature_part = Void then
+								create signature_part.make (0)
+							end
 
-				debug
-					if extension /= Void then
-						io.error.put_string ("Extension: ")
-						io.error.put_string (extension.generator)
-						io.error.put_new_line
-					end
-				end
+							pos := image.index_of ('|', 1)
+							if pos = 0 then
+									-- No include part
+								signature_part.append (image)
+								image.wipe_out
+							else
+								signature_part.append (image.substring (1, pos - 1))
+								signature_part.right_adjust
 
-				if image.count /= 0 then
-						-- Extracting the include part
-					if image.item (1) = '|' then
-						extension.set_include_files (image.substring (2, image.count))
-					else
-						debug
-							io.error.put_string (image)
+									-- Only unprocessed part is kept in `image'
+								image.remove_head (pos - 1)
+							end
 						end
-						has_parsing_error := True
-					end
-				end
 
-				if extension = Void and ext_language_name.is_equal ("C++") then
-					has_parsing_error := True
-				else
-					if extension /= Void then
-						extension.parse
-						if extension.has_parsing_error then
-							has_parsing_error := True
-						else
-								-- For old external we generate a syntax warning if option is turned on.
-							insert_external_warning
+						if signature_part /= Void or else image.count /= 0 then
+							if extension = Void then
+								if ext_language_name.is_equal ("C++") then
+									has_parsing_error := True
+								else
+									create {C_EXTENSION_AS} extension
+								end
+							end
 						end
-					else
-							-- For old external we generate a syntax warning if option is turned on.
-						insert_external_warning
+
+						if not has_parsing_error then
+							if signature_part /= Void then
+								extension.set_signature (signature_part)
+							end
+
+							debug
+								if extension /= Void then
+									io.error.put_string ("Extension: ")
+									io.error.put_string (extension.generator)
+									io.error.put_new_line
+								end
+							end
+
+							if image.count /= 0 then
+									-- Extracting the include part
+								if image.item (1) = '|' then
+									extension.set_include_files (image.substring (2, image.count))
+								else
+									debug
+										io.error.put_string (image)
+									end
+									has_parsing_error := True
+								end
+							end
+
+							if not has_parsing_error then
+								if extension = Void and ext_language_name.is_equal ("C++") then
+									has_parsing_error := True
+								else
+									if extension /= Void then
+										extension.parse
+										if extension.has_parsing_error then
+											has_parsing_error := True
+										else
+											insert_external_warning
+										end
+									else
+										insert_external_warning
+									end
+								end
+							end
+						end
 					end
 				end
 			end
@@ -380,7 +386,7 @@ feature {NONE} -- Implementation
 		end
 
 	insert_external_warning
-			-- Raises warning when parsing an old external syntax.
+			-- Raises warning when parsing an old external syntax but only if configuration says so.
 		local
 			l_warning: SYNTAX_WARNING
 		do
@@ -389,10 +395,10 @@ feature {NONE} -- Implementation
 				l_class_c.lace_class.options.is_warning_enabled (w_syntax))
 			then
 				create l_warning.make (
-					eiffel_parser.line,
-					eiffel_parser.column,
+					language_name.line,
+					language_name.column,
 					eiffel_parser.filename, "Use new external syntax instead.")
-				l_warning.set_associated_class (eiffel_parser.current_class)
+				l_warning.set_associated_class (l_class_c)
 				Error_handler.insert_warning (l_warning)
 			end
 		end

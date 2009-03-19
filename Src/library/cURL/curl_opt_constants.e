@@ -84,6 +84,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_userpwd: INTEGER
+			-- Declared as CURLOPT_USERPWD.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_USERPWD;
+			]"
+		end
+
 	curlopt_url: INTEGER
 			-- Declared as CURLOPT_URL.
 		external

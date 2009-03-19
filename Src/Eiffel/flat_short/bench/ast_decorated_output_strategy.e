@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.put_new_line
 				if not l_as.value.is_empty then
-					append_format_multilined (l_as.value.string, l_as.is_indentable)
+					append_format_multilined (l_as.value, l_as.is_indentable)
 				end
 				if l_as.is_indentable then
 					l_text_formatter_decorator.put_string_item ("]")
@@ -3995,17 +3995,19 @@ feature {NONE} -- Implementation: helpers
 			string_not_empty: not s.is_empty
 			context_not_void: text_formatter_decorator /= Void
 		local
-			in_index: BOOLEAN
 			sb: STRING
 			l: INTEGER
 			n: INTEGER
 			m: INTEGER
+			l_depth: INTEGER
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
-			in_index := l_text_formatter_decorator.in_indexing_clause
 			if indentable then
 				l_text_formatter_decorator.indent
+			else
+				l_depth := l_text_formatter_decorator.indent_depth
+				l_text_formatter_decorator.set_indent_depth (0)
 			end
 			from
 				l := s.count + 1
@@ -4018,18 +4020,14 @@ feature {NONE} -- Implementation: helpers
 					m := l
 				end
 				sb := s.substring (n, m - 1)
-				if indentable then
-					l_text_formatter_decorator.put_string_item (sb)
-				elseif in_index then
-					l_text_formatter_decorator.add_indexing_string (sb)
-				else
-					l_text_formatter_decorator.add_manifest_string (sb)
-				end
+				l_text_formatter_decorator.put_string_item (sb)
 				l_text_formatter_decorator.put_new_line
 				n := m + 1
 			end
 			if indentable then
 				l_text_formatter_decorator.exdent
+			else
+				l_text_formatter_decorator.set_indent_depth (l_depth)
 			end
 		end
 

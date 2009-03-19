@@ -4,8 +4,8 @@ note
 						For original C version, please see:
 						http://curl.haxx.se/lxr/source/docs/examples/http-post.c
 						
-						This demo will post something to target http website. 
-						This demo will not works since the target http website URL is fake.
+						This demo will post to dev.eiffel.com to login.
+						This demo will not login since the username/password is fake.
 					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

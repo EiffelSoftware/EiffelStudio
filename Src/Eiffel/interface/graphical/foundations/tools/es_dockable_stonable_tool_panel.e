@@ -78,7 +78,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 			end
 
 			if is_initialized and not has_performed_stone_change_notification then
-				internal_on_stone_changed (tool_descriptor.previous_stone)
+				on_stone_changed_internal (tool_descriptor.previous_stone)
 			end
 		end
 
@@ -91,7 +91,7 @@ feature {NONE} -- Status report
 			--       as ESF dictates that no interaction should be perform with the panel (Current) but
 			--       the tool descritor (`tool_descriptor').
 
-	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
+	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := tool_descriptor.is_stone_usable (a_stone)
@@ -213,7 +213,7 @@ feature {NONE} -- Action handlers
 			not_stone_change_notified: not has_performed_stone_change_notification
 		end
 
-	frozen internal_on_stone_changed (a_old_stone: detachable like stone)
+	frozen on_stone_changed_internal (a_old_stone: detachable like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' if Void.
 		require

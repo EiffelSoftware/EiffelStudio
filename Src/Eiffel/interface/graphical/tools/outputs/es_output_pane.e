@@ -17,6 +17,9 @@ inherit
 		end
 
 	ES_OUTPUT_PANE_I
+		redefine
+			activate
+		end
 
 	ES_RECYCLABLE
 		redefine
@@ -108,7 +111,8 @@ feature -- Status report
 			l_table := widget_table
 			if not l_table.is_empty then
 				l_cursor := l_table.new_cursor
-				from l_cursor.start until l_cursor.after loop
+				from l_cursor.start until l_cursor.after or Result loop
+					Result := l_cursor.item.is_shown
 					l_cursor.forth
 				end
 				l_cursor.finish
@@ -161,13 +165,24 @@ feature -- Query: User interface elements
 			result_consistent: Result = widget_for_window (a_window)
 		end
 
---feature -- Basic operations
+feature -- Basic operations
 
---	activate
---			-- <Precursor>
---		do
---			check not_implemented: False end
---		end
+	activate
+			-- <Precursor>
+		do
+			if attached window_manager.last_focused_development_window as l_window then
+				if l_window.is_interface_usable then
+						-- Show the output pane on the active window.
+					if attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
+							-- Set the output and show the tool.
+						l_tool.set_output (Current)
+						l_tool.show (False)
+					else
+						check tool_removed: False end
+					end
+				end
+			end
+		end
 
 feature {NONE} -- Factory
 

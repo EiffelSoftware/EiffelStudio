@@ -38,7 +38,7 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
+	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
 			if attached {FEATURE_STONE} a_stone as l_fs then

@@ -78,8 +78,8 @@ feature -- Status report
 			-- Indicates if a stone is currenly being set using `set_stone_with_query'
 
 	frozen is_stone_usable (a_stone: detachable like stone): BOOLEAN
-			--  Determines if a stone can be used by Current.
-			--| Note: Redefine `internal_is_stone_usable' to extend usablity checking.
+			-- Determines if a stone can be used by Current.
+			--|Note: Redefine `internal_is_stone_usable' to extend usablity checking.
 			--
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
@@ -87,7 +87,7 @@ feature -- Status report
 			is_interface_usable: is_interface_usable
 		do
 			if attached {like stone} a_stone as l_stone then
-				Result := l_stone.is_valid and then internal_is_stone_usable (l_stone)
+				Result := l_stone.is_valid and then is_stone_usable_internal (l_stone)
 			else
 				Result := a_stone = Void
 			end
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	internal_is_stone_usable (a_stone: attached like stone): BOOLEAN
+	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- Determines if a stone can be used by Current.
 			--
 			-- `a_stone': Stone to determine usablity.
@@ -118,7 +118,6 @@ feature -- Query
 		require
 			is_interface_usable: is_interface_usable
 			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
-			not_is_setting_stone_with_query: not is_setting_stone_with_query
 		do
 			Result := True
 		end
@@ -152,6 +151,15 @@ feature -- Basic operations
 			is_setting_stone_with_query_unchanged: is_setting_stone_with_query = old is_setting_stone_with_query
 		end
 
+feature -- Actions
+
+	stone_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [sender: ES_STONABLE_I; old_stone: detachable STONE]]
+			-- Actions called when a `stone' was changed
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
 feature -- Synchronization
 
 	synchronize
@@ -166,7 +174,7 @@ invariant
 	stone_is_stone_usable: stone /= Void implies is_stone_usable (stone)
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,22 +187,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

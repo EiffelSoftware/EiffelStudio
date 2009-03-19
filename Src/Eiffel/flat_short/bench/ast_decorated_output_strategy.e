@@ -3297,9 +3297,11 @@ feature {NONE} -- Implementation
 				else
 					l_text_formatter_decorator := text_formatter_decorator
 					if l_as.has_attached_mark then
-						l_text_formatter_decorator.process_symbol_text (ti_exclamation)
+						l_text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
+						l_text_formatter_decorator.add_space
 					elseif l_as.has_detachable_mark then
-						l_text_formatter_decorator.process_symbol_text (ti_question)
+						l_text_formatter_decorator.process_keyword_text (ti_detachable_keyword, Void)
+						l_text_formatter_decorator.add_space
 					end
 					l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					l_text_formatter_decorator.add_space

@@ -37,18 +37,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: attached STRING
+	file_name: STRING
 			-- Full path to the file.
 
 	last_string: detachable STRING
 			-- Last read string from `read_line'.
 
-	contents: attached STRING
+	contents: STRING
 			-- File full contents, which may differ when the file changes externally.
 		local
 			l_result: like internal_contents
 			l_file: PLAIN_TEXT_FILE
-			l_ts: NATURAL
+			l_ts: like time_stamp
 			l_refresh: BOOLEAN
 		do
 			l_result := internal_contents
@@ -56,7 +56,7 @@ feature -- Access
 			create l_file.make (file_name)
 			if l_refresh and then l_file.exists and then l_file.is_readable then
 				l_ts := time_stamp
-				if l_file.date /= l_ts.to_integer_32 then
+				if l_file.date /= l_ts then
 						-- File change changed and must be re-read.
 					l_result := Void
 				end
@@ -65,11 +65,12 @@ feature -- Access
 					l_file.open_read
 					l_file.read_stream (l_file.count)
 					l_result := l_file.last_string
-					if l_result /= Void then
-						internal_contents := l_result
-						time_stamp := l_file.date.as_natural_32
-						reset
-					end
+					l_file.close
+						-- Per postcondition of `l_file.read_stream'
+					check l_result_attached: l_result /= Void end
+					internal_contents := l_result
+					time_stamp := l_file.date
+					reset
 				end
 			end
 
@@ -85,15 +86,15 @@ feature -- Access
 
 feature -- Measurement
 
-	position: NATURAL
+	position: INTEGER
 			-- Position read in file.
 
-	read_lines: NATURAL
+	read_lines: INTEGER
 			-- Number of lines read up to `position'.
 
 feature {NONE} -- Measurement
 
-	time_stamp: NATURAL
+	time_stamp: INTEGER
 			-- Last read time stamp.
 
 feature -- Status report
@@ -116,7 +117,7 @@ feature -- Status setting
 
 feature -- Query
 
-	peek_read_line (a_line: NATURAL): detachable STRING
+	peek_read_line (a_line: INTEGER): detachable STRING
 			-- Tries to read a line without affecting any cached state.
 			--
 			-- `a_line': The line of the file to read, with affecting the current state.
@@ -163,10 +164,10 @@ feature -- Basic operations
 		ensure
 			position_reset: position = 0
 			read_lines_reset: read_lines = 0
-			last_string_detached: not attached last_string
+			last_string_detached: last_string = Void
 		end
 
-	read_line (a_line: NATURAL)
+	read_line (a_line: INTEGER)
 			-- Reads a line from the cached file.
 			--
 			-- `a_line': The line of the file to read, with affecting the current state.
@@ -174,11 +175,11 @@ feature -- Basic operations
 			a_line_positive: a_line > 0
 		local
 			l_contents: like contents
-			l_lines: NATURAL
-			l_read_lines: NATURAL
-			l_start_pos: NATURAL
-			l_buffer: STRING
-			l_count, i: NATURAL
+			l_lines: INTEGER
+			l_read_lines: INTEGER
+			l_start_pos: INTEGER
+			l_buffer: detachable STRING
+			l_count, i: INTEGER
 			c: CHARACTER
 		do
 			l_contents := contents
@@ -190,41 +191,41 @@ feature -- Basic operations
 			end
 			if a_line > read_lines then
 					-- Read the file up to the requested line.
-				l_count := l_contents.count.to_natural_32
+				l_count := l_contents.count
 				if l_count > position then
 					l_start_pos := 1
 					from
 						i := position + 1
-						l_lines := l_read_lines.max ({NATURAL} 1)
+						l_lines := l_read_lines.max (1)
 					until
-						i > l_count or l_lines = a_line + {NATURAL} 1
+						i > l_count or l_lines = a_line + 1
 					loop
-						c := l_contents.item (i.as_integer_32)
+						c := l_contents.item (i)
 						if c = '%N' then
-							l_lines := l_lines + {NATURAL} 1
+							l_lines := l_lines + 1
 							if a_line > 1 then
 									-- `l_start_pos' has already been set to '1' for requested line 1 so this code
 									-- does not need to be executed for the first line.
 								if l_lines = a_line then
 										-- Set the start position.
-									l_start_pos := i + {NATURAL} 1
-									i := i + {NATURAL} 1
+									l_start_pos := i + 1
+									i := i + 1
 								elseif l_lines < a_line then
-									i := i + {NATURAL} 1
+									i := i + 1
 								end
 							end
 						else
-							i := i + {NATURAL} 1
+							i := i + 1
 						end
 					end
 					if i <= l_count then
-						read_lines := l_lines - {NATURAL} 1
+						read_lines := l_lines - 1
 
-						position := i - {NATURAL} 1
+						position := i - 1
 						if l_start_pos <= i then
 							i := i - 1
 							if l_start_pos <= i then
-								l_buffer := l_contents.substring (l_start_pos.as_integer_32, i.as_integer_32)
+								l_buffer := l_contents.substring (l_start_pos, i)
 							else
 									-- The line is empty
 								create l_buffer.make_empty

@@ -163,7 +163,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 		require
 			file_name_not_void: file_name /= Void
 		local
-			l_line: NATURAL
+			l_line: INTEGER
 			l_fn: like file_name
 			l_file: detachable CACHED_PLAIN_TEXT_FILE_READER
 		do
@@ -175,7 +175,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 				l_file.is_contents_auto_refreshed := True
 				cached_file.put (l_file)
 			end
-			l_line := line.as_natural_32
+			l_line := line
 			if l_line > 1 then
 				l_file.read_line (l_line - 1)
 				previous_line := l_file.last_string

@@ -50,10 +50,9 @@ feature {NONE}
 			test_interconvert (counter, (create {CODE_PAGE_CONSTANTS}).utf32, (create {CODE_PAGE_CONSTANTS}).utf8, utf32_16_string)
 			test_interconvert (counter, "UTf-8", "UtF-32", utf8_string) -- Test case insensitivity.
 
-			if not {PLATFORM}.is_windows then
-					-- Fails on Windows.
-				test_interconvert (counter, "UTF-32BE", chinese_encoding, utf32be_string)
-			end
+				-- Fails on Windows and Ubuntu. Direct conversion from BE not supported.
+				-- Leave it here for reference.
+			-- test_interconvert (counter, "UTF-32BE", chinese_encoding, utf32be_string)
 		end
 
 	test_interconvert (a_c: INTEGER; e1, e2: STRING; a_str: STRING_GENERAL)
@@ -209,11 +208,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end
 

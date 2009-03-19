@@ -1,38 +1,63 @@
 note
-	description: "Summary description for {XEB_CALL_TAG}."
-	author: "sandro"
+	description: "Summary description for {TAG_DESCRIPTION}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XEB_CALL_TAG
+	TAG_DESCRIPTION
 
 inherit
-	TAG_SERIALIZER
-		redefine
-			output
-		end
+	TAG_LIB_ITEM
 
 create
 	make
 
 feature -- Access
 
-	make (params: TABLE [STRING, STRING])
+	class_name: STRING
+	name: STRING
+
+	attributes: LIST [TAG_DESCRIPTION_ATTRIBUTE]
+
+	make
 		do
-			make_base
-			feature_name := params ["feature"]
+			class_name := ""
+			name := ""
+			create {ARRAYED_LIST [TAG_DESCRIPTION_ATTRIBUTE]} attributes.make (10)
 		end
 
-	feature_name: STRING
-			-- The name of the feature to call
-
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
-			-- <Precursor>
+	put (a_child: TAG_LIB_ITEM)
+		local
+			child: TAG_DESCRIPTION_ATTRIBUTE
 		do
---				parent.call_on_controller (feature_name) -- UNCOMMENT ASAP
+			child ?= a_child
+			attributes.extend (child)
 		end
 
+	set_attribute (id: STRING; value: STRING)
+		do
+			if id.is_equal ("class") then
+				class_name := value
+			end
+			if id.is_equal ("id") then
+				name := value
+			end
+		end
+
+	is_call_feature (a_name: STRING): BOOLEAN
+		do
+			Result := False
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				if attributes.item.id.is_equal (a_name) then
+					Result := attributes.item.call
+				end
+				attributes.forth
+			end
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

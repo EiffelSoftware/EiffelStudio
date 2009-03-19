@@ -67,6 +67,8 @@ feature -- Access
 	root_tag: TAG_ELEMENT assign set_tag
 			-- All tags which represent the page
 
+	controller_calls: LIST [STRING] assign set_controller_calls
+
 feature -- Element change
 
 	put_xhtml_elements (element: OUTPUT_ELEMENT)
@@ -81,8 +83,14 @@ feature -- Element change
 feature -- Implementation
 
 	set_tag (root: TAG_ELEMENT)
+			-- Sets the tag, which renders the page
 		do
 			root_tag := root
+		end
+
+	set_controller_calls (a_calls: LIST [STRING])
+		do
+			controller_calls := a_calls
 		end
 
 	serialize (buf: INDENDATION_STREAM)
@@ -112,7 +120,7 @@ feature -- Implementation
 			create {LINKED_LIST [SERVLET_ELEMENT]} feature_elements.make
 
 			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("create Result." + constructor_name))
-			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("Result.text := root_tag.output (Current)"))
+			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("root_tag.output (Current, Result.text)"))
 
 			create Result.make (request_name, feature_elements)
 		end
@@ -132,12 +140,33 @@ feature -- Implementation
 				locals.extend (create {VARIABLE_ELEMENT}.make ("temp", "TAG_SERIALIZER"))
 				locals.extend (create {VARIABLE_ELEMENT}.make ("stack", "ARRAYED_STACK [TAG_SERIALIZER]"))
 				locals.extend (create {VARIABLE_ELEMENT}.make ("table", "HASH_TABLE [STRING, STRING]"))
-				build_tag_tree_builder (code_list, root_tag, 0)
+				build_tag_tree_builder (code_list, root_tag)
+
+				code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]} controller_features.make (10)"))
+
+				from
+					controller_calls.start
+				until
+					controller_calls.after
+				loop
+					code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("controller_features.put (agent "
+					+ "controller." + controller_calls.item + ", %"" + controller_calls.item + "%")"))
+					controller_calls.forth
+				end
 
 				create Result.make_with_locals ("make", code_list, locals)
 			end
 
-	build_tag_tree_builder (exprs: LIST [SERVLET_ELEMENT]; tag: TAG_ELEMENT; depth: NATURAL)
+	build_tag_tree_builder (exprs: LIST [SERVLET_ELEMENT]; tag: TAG_ELEMENT)
+			-- Generates a couple of expressions, which build the tag tree defined with `tag'
+		do
+			build_tag_tree_builder_rec (exprs, tag, 0)
+		end
+
+	build_tag_tree_builder_rec (exprs: LIST [SERVLET_ELEMENT]; tag: TAG_ELEMENT; depth: NATURAL)
+			-- Generates a couple of expressions, which build the tag tree defined with `tag'
+			-- `depth' is used for internal purposes
+			-- Don't use this method, use `build_tag_tree_builder' instead
 		local
 			children: LIST [TAG_ELEMENT]
 		do
@@ -145,8 +174,9 @@ feature -- Implementation
 			exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("create {" + tag.class_name + "} temp.make (table)"))
 			if depth = 0 then
 				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("root_tag := temp"))
+			else
+				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.item.add_to_body (temp)"))
 			end
-			exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.item.add_to_body (temp)"))
 
 			if tag.has_children then
 				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.put (temp)"))
@@ -156,7 +186,7 @@ feature -- Implementation
 				until
 					children.after
 				loop
-					build_tag_tree_builder (exprs, children.item, depth+1)
+					build_tag_tree_builder_rec (exprs, children.item, depth+1)
 					children.forth
 				end
 				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.remove"))
@@ -164,6 +194,7 @@ feature -- Implementation
 		end
 
 	build_param_table (exprs: LIST [SERVLET_ELEMENT]; params: HASH_TABLE [STRING, STRING])
+			-- Builds the code, which fills a table with all the `params'.
 		do
 			exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("create table.make(10)"))
 			from

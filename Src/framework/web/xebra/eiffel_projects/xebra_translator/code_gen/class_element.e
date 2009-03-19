@@ -131,7 +131,7 @@ feature -- Processing
 
 		end
 
-feature -- Constants
+feature {NONE} -- Constants
 
 		class_kw: STRING = "class"
 		feature_kw: STRING = "feature"

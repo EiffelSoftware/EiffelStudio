@@ -9,6 +9,9 @@ class
 
 inherit
 	TAG_SERIALIZER
+		redefine
+			output
+		end
 
 create
 	make
@@ -17,22 +20,24 @@ feature -- Access
 
 	make (params: TABLE [STRING, STRING])
 		do
-			n := 2--params ["times"]
+			make_base
+			n := params ["times"].to_integer
 		end
 
-	n: NATURAL
+	n: INTEGER
+			--
 
-	output (parent: SERVLET): STRING
+	output (parent: SERVLET buf: INDENDATION_STREAM)
+			-- <Precursor>
 		local
-			i: NATURAL
+			i: INTEGER
 		do
 			from
 				i := 0
-				Result := ""
 			until
 				i > n
 			loop
-				--Result := Result + body.output (parent)
+				output_children (parent, buf)
 				i := i + 1
 			end
 		end

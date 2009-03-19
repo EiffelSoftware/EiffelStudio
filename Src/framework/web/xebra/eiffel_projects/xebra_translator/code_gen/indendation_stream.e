@@ -10,6 +10,7 @@ class
 
 inherit
 	PLAIN_TEXT_FILE
+			--Stream would be better!
 		redefine
 			put_string
 		end

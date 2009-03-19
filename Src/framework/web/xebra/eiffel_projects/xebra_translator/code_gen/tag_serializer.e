@@ -4,17 +4,47 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	TAG_SERIALIZER
+
+create
+	make_base
+
+feature -- Initialization
+
+	make_base
+			-- Initialization of variables
+			-- Call this constructor, if you inherit
+		do
+			create {ARRAYED_LIST [TAG_SERIALIZER]} children.make (3)
+		end
 
 feature -- Access
 
-	output (a_parent: SERVLET): STRING
-		deferred
+	children: LIST [TAG_SERIALIZER]
+			-- All the children tags of the tag
+
+	output (a_parent: SERVLET; buf: INDENDATION_STREAM)
+			-- Writes to the XHTML result.
+		do
 		end
 
 	add_to_body (a_child: TAG_SERIALIZER)
+			-- Adds a TAG to the body.
 		do
+			children.extend (a_child)
+		end
+
+	output_children (a_parent: SERVLET; buf: INDENDATION_STREAM)
+		do
+			from
+				children.start
+			until
+				children.after
+			loop
+				children.item.output (a_parent, buf)
+				children.forth
+			end
 		end
 
 note

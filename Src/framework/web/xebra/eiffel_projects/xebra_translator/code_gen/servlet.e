@@ -10,14 +10,22 @@ deferred class
 
 feature -- Access
 
+	controller_features: TABLE [PROCEDURE [ANY, TUPLE], STRING]
+			-- Table with the feature agents of the controller
+			-- Only the features that will be called
+
 	handle_request (request: REQUEST): RESPONSE
 			-- Handles a request from a client.
 		deferred
 		end
 
 	call_on_controller (feature_name: STRING)
+			-- Calls the feature with the name `feature_name' on the controller
+			-- If the feature does not exist, nothing happens
 		do
-			-- TODO
+			if controller_features.valid_key (feature_name) then
+				controller_features [feature_name].call ([])
+			end
 		end
 
 note

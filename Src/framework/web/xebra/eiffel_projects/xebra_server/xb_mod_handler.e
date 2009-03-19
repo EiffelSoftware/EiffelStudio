@@ -71,7 +71,7 @@ feature --Execution
            	end
 
 			response := send_request (message, socket)
-			send_string (response.text, socket)
+			send_string ("response.txt", socket)
          	socket.cleanup
             check
             	socket.is_closed

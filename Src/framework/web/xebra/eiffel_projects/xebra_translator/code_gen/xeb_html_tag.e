@@ -9,20 +9,32 @@ class
 
 inherit
 	TAG_SERIALIZER
+		redefine
+			output
+		end
 
 create
 	make
 
 feature -- Access
 
+	text: STRING
+			-- The XHTML content
+
 	make (params: TABLE [STRING, STRING])
 		do
-
+			make_base
+			text := params ["text"]
+			if text = Void then
+				text := ""
+			end
 		end
 
-	output (parent: SERVLET): STRING
+	output (parent: SERVLET; buf: INDENDATION_STREAM)
+			-- <Precursor>
 		do
-			Result := "Bipede bapede?"
+			buf.put_string (text)
+			output_children (parent, buf)
 		end
 
 note

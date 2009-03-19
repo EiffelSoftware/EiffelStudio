@@ -13,15 +13,15 @@ create
 
 feature -- Access
 
-	text: STRING assign set_text
+	text: INDENDATION_STREAM assign set_text
 			-- Reponse text (xhtml)
 
 feature -- Initialization
 
 	make
-			-- 
+			--
 		do
-			text := ""
+			create text.make (" ")
 		end
 
 feature -- Element change
@@ -29,10 +29,10 @@ feature -- Element change
 	append (a_string: STRING)
 			-- Appends `a_string' to the text
 		do
-			text.append (a_string)
+			text.put_string (a_string)
 		end
 
-	set_text (a_text: STRING)
+	set_text (a_text: INDENDATION_STREAM)
 			-- Sets the text
 		do
 			text := a_text

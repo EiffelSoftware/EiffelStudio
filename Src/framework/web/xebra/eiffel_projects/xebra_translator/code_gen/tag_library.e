@@ -1,36 +1,68 @@
 note
-	description: "Summary description for {XEB_CALL_TAG}."
+	description: "Summary description for {TAG_LIBRARY}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XEB_CALL_TAG
+	TAG_LIBRARY
 
 inherit
-	TAG_SERIALIZER
-		redefine
-			output
-		end
+	TAG_LIB_ITEM
 
 create
 	make
 
 feature -- Access
 
-	make (params: TABLE [STRING, STRING])
+	tags: LIST [TAG_DESCRIPTION]
+
+	make
 		do
-			make_base
-			feature_name := params ["feature"]
+			create {ARRAYED_LIST [TAG_DESCRIPTION]} tags.make (10)
 		end
 
-	feature_name: STRING
-			-- The name of the feature to call
-
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
-			-- <Precursor>
+	put (a_child: TAG_LIB_ITEM)
+		local
+			child: TAG_DESCRIPTION
 		do
---				parent.call_on_controller (feature_name) -- UNCOMMENT ASAP
+			child ?= a_child
+			tags.extend (child)
+		end
+
+	set_attribute (id: STRING; value: STRING)
+		do
+			-- TODO
+		end
+
+	get_class_for_name (a_name: STRING): STRING
+		do
+			Result := ""
+			from
+				tags.start
+			until
+				tags.after
+			loop
+				if tags.item.name.as_lower.is_equal (a_name.as_lower) then
+					Result := tags.item.class_name
+				end
+				tags.forth
+			end
+		end
+
+	is_call_feature (a_id, a_name: STRING): BOOLEAN
+		do
+			Result := False
+			from
+				tags.start
+			until
+				tags.after
+			loop
+				if tags.item.name.as_lower.is_equal (a_id.as_lower) then
+					Result := tags.item.is_call_feature (a_name)
+				end
+				tags.forth
+			end
 		end
 
 note

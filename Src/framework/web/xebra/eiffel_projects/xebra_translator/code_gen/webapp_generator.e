@@ -128,7 +128,7 @@ feature -- Processing
 				feature_body.extend (wrap ("stateless_servlets.put (create {" + servlet.name.as_upper + "}.make , %"" + servlet.name.as_upper + "%")"))
 				some_servlets.forth
 			end
-			create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
+			create {ARRAYED_LIST [VARIABLE_ELEMENT]} locals.make (10)
 			create constructor.make_with_locals ("make", feature_body, locals)
 			Result := constructor
 		end

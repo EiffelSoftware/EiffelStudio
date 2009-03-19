@@ -524,7 +524,6 @@ feature {NONE} -- Events handlers
 			l_main_tool_bar: like tool_bar_widget
 			l_name: attached IMMUTABLE_STRING_32
 			l_button: SD_TOOL_BAR_BUTTON
-			l_output_window: OUTPUT_WINDOW
 		do
 			if a_output /= last_output then
 				l_outputs := modified_outputs

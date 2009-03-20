@@ -67,7 +67,7 @@ doc:    </routine>
 EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 {
 	REQUIRE("i_not_to_big", i < 2^31);
-	
+
 
 	return (i << 1) +  flag;
 }
@@ -131,9 +131,9 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd)
 	char * encoded_msg_length_byte;		/* ncoded size (as byte) of (frag of) message with frag flag */
 	char * frag_msg;			/* conatins the frag of message that is sent in the current loop */
 	char * m_pointer;			/* points to the start of part of message from where in the next step FRAG_SIZE byte will be sent */
-	
+
 	REQUIRE ("sockfd_valid", sockfd );
-	
+
 	DEBUG ("About to send message. Length is %i bytes\n", strlen (message));
 
 	/* Create fragment */
@@ -155,18 +155,18 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd)
 	m_pointer = message;
 
 	/* loop until the whole message has been sent */
-	while (bytes_of_msg_sent < strlen (message)){ 
-		
+	while (bytes_of_msg_sent < strlen (message)){
+
 		/* do we have to fragment the (current lenght of) message or not */
-		if (strlen (m_pointer) <= FRAG_SIZE){ 
+		if (strlen (m_pointer) <= FRAG_SIZE){
 			/* we don't have to */
 
 			/* free the space for frag_msg before we attach it to another location */
-			free (frag_msg); 
+			free (frag_msg);
 			frag_msg = m_pointer;
 
 			DEBUG (" -About to send last fragment. Length is %i bytes\n", strlen (frag_msg));
-			
+
 			/* encode last fragment */
 			encoded_msg_length_byte = intToByteArray (encode_natural (strlen (frag_msg), 0));
 		} else {
@@ -191,7 +191,7 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd)
 		numbytes = send (sockfd, encoded_msg_length_byte , sizeof (int) , 0);
 		if (numbytes < 1){
 			fprintf (stderr, "failed to send encoded_msg_lengh\n");
-			fflush (stderr);			
+			fflush (stderr);
 			return 0;
 		}
 
@@ -199,7 +199,7 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd)
 
 		/* send message */
 		numbytes = send (sockfd, frag_msg , strlen (frag_msg) *sizeof (char) , 0);
-		
+
 		if (numbytes < 1){
 			fprintf (stderr, "failed to send frag_msg\n");
 			fflush (stderr);
@@ -213,7 +213,7 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd)
 	}
 
 	/* all ok */
-	return 1; 
+	return 1;
 }
 
 /*
@@ -243,7 +243,7 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd)
 	DEBUG2 ("   ---trying malloc...*msg_buf        ");
 	(*msg_buf) = (char*) malloc (1);
 	DEBUG2 ("ok\n");
-		
+
 	/* resetting *msg_buf */
 	*msg_buf[0] = (char) 0;
 	msg_buf_strlength = 0;
@@ -277,10 +277,10 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd)
 
 		DEBUG ("Incoming frag, %i bytes, flag is %i\n" ,frag_length, flag);
 
-		strcpy (frag_buf,"");	
+		strcpy (frag_buf,"");
 		bytes_recv = 0;
 
-		/* loop to recieve whole fragement */	
+		/* loop to recieve whole fragement */
 		while (bytes_recv < frag_length){
 			numbytes = recv (sockfd, buf, frag_length-bytes_recv, 0);
 			buf[numbytes] = '\0';
@@ -309,12 +309,12 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd)
 		DEBUG ("Recieved %i bytes...:", numbytes);
 		DEBUG2 ("'%s'", frag_buf);
 		DEBUG ("\n");
-		
+
 		/* extend *msg_buf and copy frag to end of it */
 		*msg_buf = (char *) realloc (*msg_buf, msg_buf_strlength + numbytes + 1);
 		memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
 		msg_buf_strlength += numbytes;
-	}while (flag == 1); 
+	}while (flag == 1);
 
 	free (frag_buf);
 

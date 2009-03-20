@@ -115,7 +115,7 @@ static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLECSEP, key, TABLERSEP,
-			value, NULL);
+			value, TABLERSEP, NULL);
 	return 1;
 }
 
@@ -144,10 +144,16 @@ static int xebra_handler (request_rec* r)
 
 	ap_set_content_type (r, "text/html;charset=ascii");
 
-	message = apr_pstrcat (r->pool, r->the_request, NULL);
+	message = apr_palloc (r->pool, 1);
+	message[0] = '\0';
+
+	message = apr_pstrcat (r->pool, message, r->the_request, NULL);
 
 	/* Read headers into message buffer */
 	DEBUG2 ("Reading in headers...");
+
+	table_buf = apr_palloc (r->pool, 1);
+	table_buf[0] = '\0';
 	apr_table_do (print_item, r, r->headers_in, NULL);
 	apr_table_do (print_item, r, r->headers_out, NULL);
 	apr_table_do (print_item, r, r->subprocess_env, NULL);
@@ -155,7 +161,7 @@ static int xebra_handler (request_rec* r)
 
 	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
-		DEBUG2 ("Reading POST parameters...")
+		DEBUG2 ("Reading POST parameters...");
 		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
 
 		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")
@@ -169,33 +175,38 @@ static int xebra_handler (request_rec* r)
 		message = apr_pstrcat (r->pool, message, POSTKEYWORD, post_buf, NULL);
 	}
 
+	message = apr_pstrcat (r->pool, message, "#END#", NULL);
+
+	ap_rputs( message, r);
+
+
+	return OK;
+
 	/* set up connection to server */
-	DEBUG ("Setting up connection.\n");
+	DEBUG ("Setting up connection.");
 
 	memset (&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 
 	if ((rv = getaddrinfo (hname, PORT, &hints, &servinfo)) != 0) {
-		fprintf (stderr, "getaddrinfo: %s\n", gai_strerror (rv));
-		fflush (stderr);
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
+				gai_strerror (rv));
 		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR;
+		return OK;
 	}
 
 	/* loop through all the results and connect to the first we can */
 	for (p = servinfo; p != NULL; p = p->ai_next) {
 		if ((sockfd = socket (p->ai_family, p->ai_socktype, p->ai_protocol))
 				== -1) {
-			fprintf (stderr, "error socket");
-			fflush (stderr);
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error socket");
 			ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 			continue;
 		}
 
 		if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-			fprintf (stderr, "error connect");
-			fflush (stderr);
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error connect");
 			ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 			continue;
 		}
@@ -203,10 +214,9 @@ static int xebra_handler (request_rec* r)
 	}
 
 	if (p == NULL) {
-		fprintf (stderr, "client: failed to connect\n");
-		fflush (stderr);
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "client: failed to connect");
 		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR;
+		return OK;
 	}
 
 	inet_ntop (p->ai_family, get_in_addr ((struct sockaddr *) p->ai_addr), s,
@@ -214,30 +224,31 @@ static int xebra_handler (request_rec* r)
 
 	freeaddrinfo (servinfo);
 
-	DEBUG ("Connected.\n");
+	DEBUG ("Connected.");
 
-	DEBUG ("Sending message.\n");
+	DEBUG ("Sending message.");
 
 	if (!send_message_fraged (message, sockfd, r)) {
 		ap_rputs ("Error sending message. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR;
+		return OK;
 	}
 
-	DEBUG ("Messages sent. Now waiting for back message...\n");
+	DEBUG ("Messages sent. Now waiting for back message...");
 
 	numbytes = receive_message_fraged (&rmsg_buf, sockfd, r);
 
 	if (numbytes < 1) {
-		fprintf (stderr, "error in receive_message_fraged\n");
-		fflush (stderr);
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+				"error in receive_message_fraged");
 		ap_rputs ("Error receiving message. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR;
+		return OK;
 	}
 
-	DEBUG ("All receiving ok.\n");
+	DEBUG ("All receiving ok.");
 
+	/* display received message */
 	ap_rputs (rmsg_buf, r);
-	free (rmsg_buf);
+	//free (rmsg_buf); apache does it
 
 	shutdown (sockfd, 2);
 	close (sockfd);
@@ -267,10 +278,10 @@ EIF_INTEGER_32 byteArrayToInt (char * b)
  doc:            <synchronization></synchronization>
  doc:    </routine>
  */
-char * intToByteArray (EIF_INTEGER_32 i)
+char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 {
 	char * bb;
-	bb = malloc (4);
+	bb = apr_palloc (r->pool, 4);
 	bb[0] = (char) (i >> 24);
 	bb[1] = (char) (i >> 16);
 	bb[2] = (char) (i >> 8);
@@ -351,25 +362,20 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 {
 	EIF_INTEGER_32 numbytes = -1; /* how much was sent in the last recv*/
 	EIF_NATURAL_32 bytes_of_msg_sent = 0; /* how much is already sent (total) */
-	char * encoded_msg_length_byte; /* ncoded size (as byte) of (frag of) message with frag flag */
+	char * encoded_msg_length_byte; /* encoded size (as byte) of (frag of) message with frag flag */
 	char * frag_msg; /* conatins the frag of message that is sent in the current loop */
 	char * m_pointer; /* points to the start of part of message from where in the next step FRAG_SIZE byte will be sent */
 
-	REQUIRE ("sockfd_valid", sockfd);
-
-	DEBUG ("About to send message. Length is %i bytes\n", strlen (message));
+	DEBUG ("About to send message. Length is %i bytes", (int) strlen (message));
 
 	/* Create fragment */
 	DEBUG2 ("   ---trying malloc...frag_msg     ");
-
 	frag_msg = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
-
-	DEBUG2 ("ok\n");
+	DEBUG2 ("ok");
 
 	if (frag_msg == NULL) {
-		fprintf (stderr, "Error mallocating!");
-		fflush (stderr);
-		return -1;
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error mallocating!");
+		return 0;
 	}
 
 	frag_msg[0] = (char) 0;
@@ -388,12 +394,12 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 			free (frag_msg);
 			frag_msg = m_pointer;
 
-			DEBUG (" -About to send last fragment. Length is %i bytes\n",
-					strlen (frag_msg));
+			DEBUG (" -About to send last fragment. Length is %i bytes",
+					(int) strlen (frag_msg));
 
 			/* encode last fragment */
-			encoded_msg_length_byte = intToByteArray (encode_natural (strlen (
-					frag_msg), 0));
+			encoded_msg_length_byte = intToByteArray (r, encode_natural (
+					strlen (frag_msg), 0));
 		} else {
 			/* we have to fragment the message*/
 
@@ -401,34 +407,33 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 			strncpy (frag_msg, m_pointer, sizeof(char) * FRAG_SIZE);
 			frag_msg[sizeof(char) * FRAG_SIZE] = '\0';
 
-			DEBUG ("-About to send fragment. Length is %i bytes\n", strlen (
+			DEBUG ("-About to send fragment. Length is %i bytes", (int) strlen (
 					frag_msg));
 
 			/* encode frag_msg */
-			encoded_msg_length_byte = intToByteArray (encode_natural (strlen (
-					frag_msg), 1));
+			encoded_msg_length_byte = intToByteArray (r, encode_natural (
+					strlen (frag_msg), 1));
 		}
 
 		DEBUG (" -Sending... ");
 		DEBUG2 ("'%s'", frag_msg);
-		DEBUG ("\n");
 
 		/* send encoded messagte length */
 		numbytes = send (sockfd, encoded_msg_length_byte, sizeof(int), 0);
 		if (numbytes < 1) {
-			fprintf (stderr, "failed to send encoded_msg_lengh\n");
-			fflush (stderr);
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+					"failed to send encoded_msg_lengh");
 			return 0;
 		}
 
-		free (encoded_msg_length_byte);
+		//free (encoded_msg_length_byte); ap does it
 
 		/* send message */
 		numbytes = send (sockfd, frag_msg, strlen (frag_msg) * sizeof(char), 0);
 
 		if (numbytes < 1) {
-			fprintf (stderr, "failed to send frag_msg\n");
-			fflush (stderr);
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+					"failed to send frag_msg");
 			return 0;
 		}
 
@@ -465,39 +470,42 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 	char buf[sizeof(char) * FRAG_SIZE + 1]; /* buffer to receive message fragment fragments */
 	EIF_INTEGER_32 bytes_recv; /* number of bytes receivced for one fragment */
 
-	DEBUG ("Receiving message...\n");
+	DEBUG ("Receiving message...");
 
-	DEBUG2 ("   ---trying malloc...*msg_buf        ");
-	(*msg_buf) = (char*) malloc (1);
-	DEBUG2 ("ok\n");
+	//DEBUG2 ("   ---trying apr_palloc...*msg_buf        ");
+	//(*msg_buf) = (char*) malloc (1);
+	(*msg_buf) = apr_palloc (r->pool, 1);
+	//DEBUG2 ("ok");
 
 	/* resetting *msg_buf */
-	*msg_buf[0] = (char) 0;
+	*msg_buf[0] = '\0';
 	msg_buf_strlength = 0;
 
 	/* create buffer to receive message fragment */
-	DEBUG2 ("   ---trying malloc...*frag_buf          ");
-	frag_buf = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
-	DEBUG2 ("ok\n");
+	//DEBUG2 ("   ---trying malloc...*frag_buf          ");
+	//frag_buf = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
+	frag_buf = apr_palloc (r->pool, 1);
+	frag_buf[0] = '\0';
+	//DEBUG2 ("ok");
 
-	if ((frag_buf) == NULL) {
-		fprintf (stderr, "Error mallocating frag_buf!\n");
-		fflush (stderr);
-		return -1;
-	}
+	//if ((frag_buf) == NULL) {
+	//	ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error pallocating frag_buf!");
+	//	return 0;
+	//}
 
 	/* loop until we recieve a fragment with flag=0 */
 	do {
 		/* receive first 4 bytes determining length of message */
 		numbytes = recv (sockfd, frag_length_byte, sizeof(int), 0);
 		if (numbytes != sizeof(int)) {
-			perror ("recv");
-			fprintf (
-					stderr,
-					"Failed to receive fragment length. Received %i bytes instead of 4 bytes\n",
+			ap_log_rerror (
+					APLOG_MARK,
+					APLOG_ERR,
+					0,
+					r,
+					"Failed to receive fragment length. Received %i bytes instead of 4 bytes",
 					numbytes);
-			fflush (stderr);
-			return -1;
+			return 0;
 		}
 
 		/* decode */
@@ -505,9 +513,9 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 		frag_length = decode_natural (frag_length_int);
 		flag = decode_flag (frag_length_int);
 
-		DEBUG ("Incoming frag, %i bytes, flag is %i\n", frag_length, flag);
+		DEBUG ("Incoming frag, %i bytes, flag is %i", frag_length, flag);
 
-		strcpy (frag_buf, "");
+		//strcpy (frag_buf, "");
 		bytes_recv = 0;
 
 		/* loop to recieve whole fragement */
@@ -515,43 +523,45 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 			numbytes = recv (sockfd, buf, frag_length - bytes_recv, 0);
 			buf[numbytes] = '\0';
 
-			DEBUG ("  --filling buffer...%i bytes\n", numbytes);
+			DEBUG2 ("  --filling buffer...%i bytes", numbytes);
+			DEBUG2 ("  --'%s'", buf);
 
 			if (numbytes < 1) {
-				fprintf (stderr, "Failed to receive message. numbytes=%i\n",
-						numbytes);
-				fflush (stderr);
-				return -1;
+				ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+						"Failed to receive message. numbytes=%i", numbytes);
+				return 0;
 			}
 			bytes_recv += numbytes;
-			strcat (frag_buf, buf);
+			frag_buf = apr_pstrcat (r->pool, frag_buf, buf, NULL);
 		}
 
 		numbytes = bytes_recv;
 
 		if (numbytes != frag_length) {
-			fprintf (stderr, "ERROR, received bytes=%i, frag_lengh is %i",
-					numbytes, frag_length);
-			fflush (stderr);
-			return -1;
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+					"ERROR, received bytes=%i, frag_lengh is %i", numbytes,
+					frag_length);
+			return 0;
 		}
 
 		frag_buf[numbytes] = '\0';
 
 		DEBUG ("Recieved %i bytes...:", numbytes);
 		DEBUG2 ("'%s'", frag_buf);
-		DEBUG ("\n");
 
 		/* extend *msg_buf and copy frag to end of it */
-		*msg_buf
-				= (char *) realloc (*msg_buf, msg_buf_strlength + numbytes + 1);
-		memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
+		//*msg_buf
+		//		= (char *) realloc (*msg_buf, msg_buf_strlength + numbytes + 1);
+		//memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
+
+		(*msg_buf) = apr_pstrcat (r->pool, (*msg_buf), frag_buf, NULL);
+
 		msg_buf_strlength += numbytes;
 	} while (flag == 1);
 
-	free (frag_buf);
+	//free (frag_buf);
 
-	DEBUG ("Completed recieving message.\n");
+	DEBUG ("Completed recieving message.");
 
 	return msg_buf_strlength;
 }

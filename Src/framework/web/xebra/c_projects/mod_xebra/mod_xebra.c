@@ -1,18 +1,18 @@
 /*
- description: "Apache Module that sends request data to xebra server."
- date:		"$Date$"
- revision:	"$Revision$"
- copyright:	"Copyright (c) 1985-2007, Eiffel Software."
- license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
- licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
- copying: ""
- source: "[
- Eiffel Software
- 356 Storke Road, Goleta, CA 93117 USA
- Telephone 805-685-1006, Fax 805-685-6869
- Website http://www.eiffel.com
- Customer support http://support.eiffel.com
- ]"
+ *	 description: "Apache Module that sends request data to xebra server."
+ *	 date:		"$Date$"
+ *	 revision:	"$Revision$"
+ *	 copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+ *	 license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+ *	 licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+ *	 copying: ""
+ *	 source: 	"[
+ *	 		Eiffel Software
+ *	 		356 Storke Road, Goleta, CA 93117 USA
+ *	 		Telephone 805-685-1006, Fax 805-685-6869
+ *	 		Website http://www.eiffel.com
+ *	 		Customer support http://support.eiffel.com
+ *				 ]"
  */
 
 #include <httpd.h>
@@ -20,7 +20,6 @@
 #include <http_config.h>
 
 #include "xebrasockets.h"
-
 
 /*
  doc:    <routine name="xebra_handler" export="public">
@@ -30,23 +29,23 @@
  doc:            <synchronization></synchronization>
  doc:    </routine>
  */
-static int xebra_handler(request_rec* r)
+staticintxebra_handler(request_rec* r)
 {
-	int sockfd; 				/* socket it */
-	struct addrinfo hints, *servinfo, *p;	/* information about connection */
-	int rv; 				/* information about connection */
-	char s[INET6_ADDRSTRLEN]; 		/* information about connection */
-	char * message; 			/* the message to be sent to the server */
-	char * hname = HOSTNAME; 		/* hostname of server */
-	int numbytes; 				/* number of bytes recieved from server */
-	char* rmsg_buf; 			/* buffer for receiving message */
+	int sockfd; /* socket it */
+	struct addrinfo hints, *servinfo, *p; /* information about connection */
+	int rv; /* information about connection */
+	char s[INET6_ADDRSTRLEN]; /* information about connection */
+	char * message; /* the message to be sent to the server */
+	char * hname = HOSTNAME; /* hostname of server */
+	int numbytes; /* number of bytes recieved from server */
+	char* rmsg_buf; /* buffer for receiving message */
 
 	if (!r->handler || strcmp(r->handler, "mod_xebra"))
-		return DECLINED;
-	
+	return DECLINED;
+
 	/* if (r->method_number != M_GET)
-		return HTTP_METHOD_NOT_ALLOWED;
-	*/
+	 return HTTP_METHOD_NOT_ALLOWED;
+	 */
 	ap_set_content_type(r, "text/html;charset=ascii");
 
 	DEBUG ("\n\n===============NEW REQUEST===============\n");
@@ -64,7 +63,7 @@ static int xebra_handler(request_rec* r)
 		fprintf (stderr, "getaddrinfo: %s\n", gai_strerror (rv));
 		fflush (stderr);
 		ap_rputs("Cannot connect to XEbraServer. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR ;
+		return HTTP_INTERNAL_SERVER_ERROR;
 	}
 
 	/* loop through all the results and connect to the first we can */
@@ -77,8 +76,8 @@ static int xebra_handler(request_rec* r)
 			continue;
 		}
 
-		if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-			fprintf (stderr, "error connect");
+		if (connect (sockfd, p->ai_addr, p->ai_addrlen) ==-1) {
+	f printf(stde rr, " error connect");
 			fflush (stderr);
 			ap_rputs("Cannot connect to XEbraServer. See error log.", r);
 			continue;
@@ -91,7 +90,7 @@ static int xebra_handler(request_rec* r)
 		fprintf (stderr, "client: failed to connect\n");
 		fflush (stderr);
 		ap_rputs("Cannot connect to XEbraServer. See error log.", r);
-		return HTTP_INTERNAL_SERVER_ERROR ;
+		return HTTP_INTERNAL_SERVER_ERROR;
 	}
 
 	inet_ntop (p->ai_family, get_in_addr ((struct sockaddr *) p->ai_addr), s,
@@ -100,10 +99,10 @@ static int xebra_handler(request_rec* r)
 	freeaddrinfo (servinfo);
 
 	DEBUG ("Connected.\n");
-	
+
 	DEBUG ("Sending message.\n");
 
-	if (!send_message_fraged (message, sockfd)){
+	if (!send_message_fraged (message, sockfd)) {
 		ap_rputs("Error sending message. See error log.", r);
 		return HTTP_INTERNAL_SERVER_ERROR;
 	}
@@ -112,7 +111,7 @@ static int xebra_handler(request_rec* r)
 
 	numbytes = receive_message_fraged (&rmsg_buf, sockfd);
 
-	if (numbytes < 1) {		
+	if (numbytes < 1) {
 		fprintf (stderr, "error in receive_message_fraged\n");
 		fflush (stderr);
 		ap_rputs("Error receiving message. See error log.", r);
@@ -126,7 +125,7 @@ static int xebra_handler(request_rec* r)
 
 	shutdown (sockfd, 2);
 	close (sockfd);
-	
+
 	return OK;
 }
 

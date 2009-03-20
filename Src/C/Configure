@@ -271,6 +271,7 @@ d_safebcpy=''
 d_safemcpy=''
 d_sbrk=''
 d_select=''
+d_sigaction=''
 d_sigaltstack=''
 d_siglist=''
 d_sigsetmk=''
@@ -4227,6 +4228,18 @@ fi
 set d_siglist
 eval $setvar
 
+: see if sigaction exists
+echo " "
+if set sigaction val -f d_sigaction; eval $csym; $val; then
+	echo 'sigaction() found.' >&4
+	val="$define"
+else
+	echo "sigaction() not found." >&4
+	val="$undef"
+fi
+set d_sigaction
+eval $setvar
+
 : see if sigaltstack exists
 echo " "
 if set sigaltstack val -f d_sigaltstack; eval $csym; $val; then
@@ -5661,6 +5674,7 @@ case "$d_sbrk" in
 "$define")
 	echo "Let's see if your sbrk() is smart enough to release core..." >&4
 	$cat > sbrk.c <<'EOC'
+#include <unistd.h>
 #define INC 256		/* Small enough to be less than a page size */
 
 main()
@@ -6604,6 +6618,7 @@ d_bsdjmp='$d_bsdjmp'
 #Check value for next 1
 d_bsdsig='undef'
 d_keepsig='$d_keepsig'
+d_sigaction='$d_sigaction'
 d_sigaltstack='$d_sigaltstack'
 d_siglist='$d_siglist'
 d_sigsetmk='$d_sigsetmk'
@@ -6637,20 +6652,20 @@ spitshell='$spitshell'
 
 #Compiler/Preprocessor
 if [ -n "\$ISE_VERSION" ]; then
-    rt_version=\$ISE_VERSION
+	rt_version=\$ISE_VERSION
 else
-	rt_version='$rt_version'	
+	rt_version='$rt_version'
 fi
 if [ -n "\$ISE_EIFFEL" ]; then
-    rt_include=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/include
-    rt_lib=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/lib
-    rt_templates=\$ISE_EIFFEL/studio/config/\$ISE_PLATFORM/templates
-    x2c=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/bin/x2c
+	rt_include=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/include
+	rt_lib=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/lib
+	rt_templates=\$ISE_EIFFEL/studio/config/\$ISE_PLATFORM/templates
+	x2c=\$ISE_EIFFEL/studio/spec/\$ISE_PLATFORM/bin/x2c
 else
-    rt_include=\$ISE_PREFIX/include/eiffel\$rt_version
-    rt_lib=\$ISE_PREFIX/\$ISE_LIB_NAME/eiffel\$rt_version
-    rt_templates=\$ISE_PREFIX/share/eiffel\$rt_version/ec/config/\$ISE_PLATFORM/templates
-    x2c=\$ISE_PREFIX/\$ISE_LIB_NAME/eiffel\$rt_version/ec/x2c
+	rt_include=\$ISE_PREFIX/include/eiffelstudio-\$rt_version
+	rt_lib=\$ISE_PREFIX/\$ISE_LIB_NAME/eiffelstudio-\$rt_version
+	rt_templates=\$ISE_PREFIX/share/eiffelstudio-\$rt_version/studio/config/\$ISE_PLATFORM/templates
+	x2c=\$ISE_PREFIX/\$ISE_LIB_NAME/eiffelstudio-\$rt_version/studio/x2c
 fi
 add_log='$add_log'
 binary_format='$binary_format'

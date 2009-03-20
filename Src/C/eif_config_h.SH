@@ -246,6 +246,12 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 #$d_sbrk HAS_SBRK	/* NC */
 
+/* HAS_SIGACTION:
+ *	This symbol, if defined, indicates that the sigaction() routine is
+ *	available as a better alternative to the signal call.
+ */
+#$d_sigaction HAS_SIGACTION		/* NC */
+
 /* HAS_SIGALTSTACK:
  *	This symbol, if defined, indicates that the sigaltstack() routine is
  *	available to set an alternative call stack. Otherwise it means that

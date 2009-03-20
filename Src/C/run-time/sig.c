@@ -130,12 +130,22 @@ rt_shared struct s_stack sig_stk;
 /*
 doc:	<attribute name="c_sig_stk" return_type="stack_t" export="private">
 doc:		<summary>Stack used for evaluation signal handlers.</summary>
-doc:		<access>Read/Write</access>
+doc:		<access>Read/Write once on initialization</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_private stack_t c_sig_stk;
+
+/*
+doc:	<attribute name="is_sigaltstack" return_type="int" export="private">
+doc:		<summary>Flag to check if alternative signal stack is used. 1 using alternative stack, 0 otherwise. </summary>
+doc:		<access>Read/Write once on initialization</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_private int is_sigaltstack;
 #endif
 
 #ifdef EIF_VMS	/* signal handling control for CECIL: only on VMS for now */
@@ -154,6 +164,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG);				/* Dispatch queued signals */
 rt_shared void initsig(void);				/* Run-time initialization for trapping */
 rt_private void spush(int sig);				/* Queue signal in a FIFO stack */
 rt_private int spop(void);					/* Extract signals from queued stack */
+rt_private Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* Install signal handler */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -161,6 +172,37 @@ rt_private int spop(void);					/* Extract signals from queued stack */
 #define DEBUG	1		/* Highest debug level */
 #endif
 #endif
+
+void (*rt_signal (int sig, void (*handler)(int)))(int) 
+{
+#ifndef HAS_SIGACTION
+	return signal(sig, handler);
+#else
+	struct sigaction action;
+	struct sigaction old_action;
+								
+		/* Install new handler */
+	memset(&action,0,sizeof(struct sigaction));
+	action.sa_handler = handler;
+		/* To avoid reseting the mask when entering the signal handler. */
+	action.sa_flags = SA_NODEFER;
+#ifdef HAS_SIGALTSTACK
+	if ((is_sigaltstack) && (sig == SIGSEGV)) {
+		action.sa_flags |= SA_ONSTACK;
+	}
+#endif
+	if (sigaction (sig, &action, &old_action) == -1) {
+		if (sigaction (sig, NULL, &old_action) == -1) {
+			return NULL;
+		} else {
+			return old_action.sa_handler;
+			}
+	} else {
+		return old_action.sa_handler;
+	}
+#endif
+}
+
 
 /*
  * Signal handler routines.
@@ -186,6 +228,8 @@ rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe)
 	if (esigdefined(sig)) {
 		signal_name = signame(sig);
 	}
+
+#ifndef HAS_SIGACTION
 
 		/* On BSD systems (those with sigvec() facilities), we have to clear
 		 * the signal mask for the signal received. That way, it is possible
@@ -226,6 +270,7 @@ rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe)
 			signal(sig, old_handler);
 		}
 	}
+#endif
 #endif
 
 	if (sig_ign[sig])				/* If signal is to be ignored */
@@ -373,12 +418,12 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 */
 		default:
 			if (esigdefined(sig)) {
-				(void) signal(sig, handler);	/* Ignore EINVAL errors */
+				(void) rt_signal(sig, handler);	/* Ignore EINVAL errors */
 			}
 	}			
 #else
 		if (esigdefined(sig)) {
-			(void) signal(sig, handler);	/* Ignore EINVAL errors */
+			(void) rt_signal(sig, handler);	/* Ignore EINVAL errors */
 		}
 #endif	/* EIF_THREADS */
 
@@ -388,10 +433,10 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 	 */
 
 #ifdef SIGTSTP
-	(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGCONT
-	(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 #endif
 }
 
@@ -552,6 +597,26 @@ rt_shared void initsig(void)
 #ifdef EIF_THREADS
 	if (eif_thr_is_root()) {
 #endif
+
+#ifdef HAS_SIGALTSTACK
+		/* To make sure that stack overflow are properly handled, we allocate
+		 * a stack for signal handling where handler will be executed when
+		 * receiving a SIGSEGV.
+		 * By default we allocate 4 times the default SIGSTKSZ which has
+		 * been shown to be enough. See eweasel test#excep016 as a test to
+		 * see if this is good enough. */
+	c_sig_stk.ss_sp = eif_rt_xcalloc(4 * SIGSTKSZ, 1);	
+	c_sig_stk.ss_flags = 0;
+	c_sig_stk.ss_size = 4 * SIGSTKSZ;
+
+	if (sigaltstack(&c_sig_stk, NULL) == 0) {
+		is_sigaltstack = 1;
+	}
+	else {
+		is_sigaltstack = 0;
+	}
+#endif
+
 	for (sig = 1; sig < EIF_NSIG; sig++) {
 		old = SIG_IGN;
 
@@ -620,14 +685,14 @@ rt_shared void initsig(void)
 
 		default:
 			if (esigdefined (sig) == (char) 1) 
-				old = signal(sig, ehandler);		/* Ignore EINVAL errors */
+				old = rt_signal(sig, ehandler);		/* Ignore EINVAL errors */
 	}			
 #else
 		if (esigdefined (sig) == (char) 1) 
 #ifdef SIGPROF
 			if (sig != SIGPROF)
 #endif
-				old = signal(sig, ehandler);		/* Ignore EINVAL errors */
+				old = rt_signal(sig, ehandler);		/* Ignore EINVAL errors */
 #endif	/* EIF_THREADS */
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
@@ -644,7 +709,7 @@ rt_shared void initsig(void)
 
 #ifdef SIGCHLD
 	sig_ign[SIGCHLD] = 1;			/* Ignore death of a child */
-	signal(SIGCHLD, SIG_DFL);		/* Restore the default value */
+	rt_signal(SIGCHLD, SIG_DFL);		/* Restore the default value */
 #endif
 #ifdef SIGCLD
 	sig_ign[SIGCLD] = 1;			/* Ignore death of a child */
@@ -660,15 +725,15 @@ rt_shared void initsig(void)
 #endif
 #ifdef SIGWINCH
 	sig_ign[SIGWINCH] = 1;			/* Ignore window size change */
-	(void) signal(SIGWINCH, SIG_IGN);
+	(void) rt_signal(SIGWINCH, SIG_IGN);
 #endif
 #ifdef SIGTTIN
 	sig_ign[SIGTTIN] = 1;			/* Ignore background input signal */
-	(void) signal(SIGTTIN, SIG_IGN);
+	(void) rt_signal(SIGTTIN, SIG_IGN);
 #endif
 #ifdef SIGTTOU
 	sig_ign[SIGTTOU] = 1;			/* Ignore background output signal */
-	(void) signal(SIGTTOU, SIG_IGN);
+	(void) rt_signal(SIGTTOU, SIG_IGN);
 #endif
 
 	/* Do not catch SIGTSTP (stop signal from tty like ^Z under csh or ksh)
@@ -678,11 +743,11 @@ rt_shared void initsig(void)
 
 #ifdef SIGTSTP
 	sig_ign[SIGTSTP] = 0;				/* Do not ignore that signal */
-	(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGCONT
 	sig_ign[SIGCONT] = 0;				/* Do not ignore continue signal */
-	(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 #endif
 
 	/* It would not be wise to catch SIGTRAP: C debuggers may use this signal
@@ -694,9 +759,9 @@ rt_shared void initsig(void)
 	sig_ign[SIGTRAP] = 0;	/* Do not ignore Trap signal */
 #	ifdef EIF_SGI
 			/* On sgi, SIGTRAP is used as a Integer-Division-By-Zero signal */
-		(void) signal(SIGTRAP, exfpe);	
+		(void) rt_signal(SIGTRAP, exfpe);	
 #	else
-		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif /* EIF_SGI */
 #endif
 
@@ -707,7 +772,7 @@ rt_shared void initsig(void)
 
 #ifdef SIGFPE
 	sig_ign[SIGFPE] = 0;			/* Do not ignore a floating point signal */
-	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
+	(void) rt_signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
 #endif
 
 	/* Now save all the defaults in the special original status array, in order
@@ -719,33 +784,6 @@ rt_shared void initsig(void)
 		osig_ign[sig] = sig_ign[sig];
 #ifdef EIF_THREADS
 	}
-#endif
-#if defined(HAS_SIGALTSTACK) && defined(SIGSEGV)
-#ifdef EIF_THREADS
-	if (eif_thr_is_root()) {
-#endif
-		/* To make sure that stack overflow are properly handled, we allocate
-		 * a stack for signal handling where handler will be executed when
-		 * receiving a SIGSEGV.
-		 * By default we allocate 4 times the default SIGSTKSZ which has
-		 * been shown to be enough. See eweasel test#excep016 as a test to
-		 * see if this is good enough. */
-	c_sig_stk.ss_sp = eif_rt_xcalloc(4 * SIGSTKSZ, 1);	
-	c_sig_stk.ss_flags = 0;
-	c_sig_stk.ss_size = 4 * SIGSTKSZ;
-
-	if (sigaltstack(&c_sig_stk, NULL) == 0) {
-		struct sigaction action;
-
-		action.sa_handler = ehandler;
-		sigemptyset (&action.sa_mask);
-		sigaddset (&action.sa_mask, SIGSEGV);
-		action.sa_flags = SA_ONSTACK;
-		sigaction (SIGSEGV, &action, NULL);
-	}
-#ifdef EIF_THREADS
-	}
-#endif
 #endif
 }
 
@@ -762,8 +800,10 @@ rt_private void spush(int sig)
 	 * to duplicate signals and/or losses--RAM.
 	 */
 	RT_GET_CONTEXT
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 	 int oldmask;	/* To save old signal blocking mask */ /* %%ss addded #if ..#endif */
+#endif
 #endif
 	static char desc[DESC_LEN + 1];	/* Signal's description for panic */
 
@@ -787,8 +827,10 @@ rt_private void spush(int sig)
 		if (sig == sig_stk.s_buf[last])
 			return;							/* Same signal already on top */
 	}
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 	oldmask = sigsetmask(0xffffffff);		/* Block 31 signals */
+#endif
 #endif
 
 	/* The following section is protected against being interrupted by other
@@ -800,8 +842,10 @@ rt_private void spush(int sig)
 
 	sig_stk.s_pending = 1;				/* A signal is pending */
 
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 	(void) sigsetmask(oldmask);			/* Restore old mask */
+#endif
 #endif
 }
 
@@ -814,21 +858,26 @@ rt_private int spop(void)
 	int newpos;		/* Position we'll go to if we read something */
 	int cursig;					/* Current signal to be sent */
 
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 	int oldmask;				/* To save old signal blocking mask */ /* %%ss moved from above */
 	oldmask = sigsetmask(0xffffffff);		/* Block 31 signals */
 #endif
+#endif
 
 	/* The following section is protected against being interrupted by other
-	 * signals if HAS_SIGSETMASK is defined. Otherwise, nothing guaranteed--RAM.
+	 * signals if HAS_SIGSETMASK or HAS_SIGACTION is defined. Otherwise,
+	 * nothing guaranteed--RAM.
 	 */
 	newpos = sig_stk.s_min + 1;	/* s_min is the last successfully read pos */
 	if (newpos >= SIGSTACK)			/* If we overflow */
 		newpos = 0;					/* Go back to the left end */
 
 	if (sig_stk.s_max == newpos) {	/* Nothing to be read */
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 		(void) sigsetmask(oldmask);	/* Restore old mask */
+#endif
 #endif
 		sig_stk.s_pending = 0;		/* No more pending signals */
 		return 0;					/* Return end of stack condition */
@@ -849,8 +898,10 @@ rt_private int spop(void)
 	dprintf(1)("spop: returning signal #%d\n", cursig);
 #endif
 
+#ifndef HAS_SIGACTION
 #ifdef HAS_SIGSETMASK
 	(void) sigsetmask(oldmask);		/* Restore old mask */
+#endif
 #endif
 
 	return cursig;			/* Signal to be dealt with */
@@ -1071,41 +1122,41 @@ rt_public void esigcatch(long int sig)
 	sig_ign[sig] = 0;
 #ifdef SIGTTIN
 	if (sig == SIGTTIN) {
-		(void) signal(SIGTTIN, SIG_DFL);	/* Ignore background input signal */
+		(void) rt_signal(SIGTTIN, SIG_DFL);	/* Ignore background input signal */
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (sig == SIGTTOU) {
-		(void) signal(SIGTTOU, SIG_DFL);	/* Ignore background output signal */
+		(void) rt_signal(SIGTTOU, SIG_DFL);	/* Ignore background output signal */
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (sig == SIGTSTP) {
-		(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (sig == SIGCONT) {
-		(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, exfpe); 	/* Integer-Division-by-Zero on sgi */
+		(void) rt_signal(SIGTRAP, exfpe); 	/* Integer-Division-by-Zero on sgi */
 #	else
-		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (sig == SIGFPE) {
-		(void) signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
+		(void) rt_signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
 		return;
 	}
 #endif
@@ -1133,37 +1184,37 @@ rt_public void esigignore(long int sig)
 	sig_ign[sig] = 1;
 #ifdef SIGTTIN
 	if (sig == SIGTTIN) {
-		(void) signal(SIGTTIN, SIG_IGN);	
+		(void) rt_signal(SIGTTIN, SIG_IGN);	
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (sig == SIGTTOU) {
-		(void) signal(SIGTTOU, SIG_IGN);
+		(void) rt_signal(SIGTTOU, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (sig == SIGTSTP) {
-		(void) signal(SIGTSTP, SIG_IGN);
+		(void) rt_signal(SIGTSTP, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (sig == SIGCONT) {
-		(void) signal(SIGCONT, SIG_IGN);
+		(void) rt_signal(SIGCONT, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
-		(void) signal(SIGTRAP, SIG_IGN);
+		(void) rt_signal(SIGTRAP, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (sig == SIGFPE) {
-		(void) signal(SIGFPE, SIG_IGN);	
+		(void) rt_signal(SIGFPE, SIG_IGN);	
 		return;
 	}
 #endif
@@ -1211,26 +1262,26 @@ void esigresall(void)
 #endif
 	
 #ifdef SIGTTIN
-	(void) signal(SIGTTIN, SIG_IGN);/* Ignore background input signal */
+	(void) rt_signal(SIGTTIN, SIG_IGN);/* Ignore background input signal */
 #endif
 #ifdef SIGTTOU
-	(void) signal(SIGTTOU, SIG_IGN);/* Ignore background output signal */
+	(void) rt_signal(SIGTTOU, SIG_IGN);/* Ignore background output signal */
 #endif
 #ifdef SIGTSTP
-	(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGCONT
-	(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+	(void) rt_signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGTRAP
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, exfpe);
+		(void) rt_signal(SIGTRAP, exfpe);
 #	else
-		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif /* EIF_SGI */
 #endif
 #ifdef SIGFPE
-	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
+	(void) rt_signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
 #endif
 }
 
@@ -1254,41 +1305,41 @@ void esigresdef(long int sig)
 	sig_ign[sig] = osig_ign[sig];
 #ifdef SIGTTIN
 	if (sig == SIGTTIN) {
-		(void) signal(SIGTTIN, SIG_IGN);	/* Ignore background input signal */
+		(void) rt_signal(SIGTTIN, SIG_IGN);	/* Ignore background input signal */
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (sig == SIGTTOU) {
-	 	(void) signal(SIGTTOU, SIG_IGN);	/* Ignore background output signal */
+	 	(void) rt_signal(SIGTTOU, SIG_IGN);	/* Ignore background output signal */
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (sig == SIGTSTP) {
-		(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (sig == SIGCONT) {
-		(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, exfpe);	/* Restore default behaviour */
+		(void) rt_signal(SIGTRAP, exfpe);	/* Restore default behaviour */
 #	else
-		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+		(void) rt_signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif /* EIF_SGI */
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (sig == SIGFPE) {
-		(void) signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
+		(void) rt_signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
 		return;
 	}
 #endif

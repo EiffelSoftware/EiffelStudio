@@ -414,6 +414,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
+		local
+			a: ATTACHABLE_TYPE_A
 		do
 				-- Special cases for calls on a target which is a manifest integer
 				-- that might be compatible with _8 or _16. The returned
@@ -432,7 +434,20 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- i16 := (0x00FF).to_integer_16 & i8
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
-			Result := type.intrinsic_type.to_other_attachment (Current)
+			Result := type.intrinsic_type
+			if is_attached then
+					-- Adapt attachment marks as required.
+				Result := Result.to_other_attachment (Current)
+			elseif Result.is_attached then
+					-- Remove explicit "attached" mark.
+				if attached {ATTACHABLE_TYPE_A} Result as t then
+					a := t.duplicate
+					a.set_detachable_mark
+					Result := a
+				end
+			elseif Result.is_implicitly_attached then
+				Result := Result.as_implicitly_detachable
+			end
 		end
 
 	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A

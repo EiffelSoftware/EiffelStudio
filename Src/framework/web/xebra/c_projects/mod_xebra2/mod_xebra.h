@@ -10,7 +10,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
 #include <sys/wait.h>
 #include <signal.h>
 
@@ -45,15 +44,26 @@
 #endif
 
 
-
 /*======= SOCKET CONSTANTS =======*/
 
 
 #define FRAG_SIZE 65536
 #define HOSTNAME  "localhost"
+//#define HOSTNAME "firenze.ise"
 #define PORT "3490"
 
-//#define HOSTNAME "firenze.ise"
+/*======= PROTOCOL =======*/
+
+#define POSTKEYWORD "#POST#"
+#define HEADERSKEYWORD "#HEADERS#"
+#define TABLECSEP "#$#"
+#define TABLERSEP "#%#"
+
+
+
+#define MAX_POST_SIZE 10000
+
+
 
 
 /*

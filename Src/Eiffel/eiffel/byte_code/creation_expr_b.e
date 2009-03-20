@@ -11,7 +11,7 @@ class
 inherit
 	ACCESS_B
 		redefine
-			analyze, unanalyze,
+			analyze, unanalyze, parameters,
 			generate, register, get_register,
 			enlarged, size, is_simple_expr, is_single, is_type_fixed,
 			line_number, set_line_number, has_call, allocates_memory
@@ -28,6 +28,15 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_creation_expr_b (Current)
+		end
+
+feature -- Access
+
+	parameters: BYTE_LIST [PARAMETER_B]
+		do
+			if call /= Void then
+				Result := call.parameters
+			end
 		end
 
 feature -- Register
@@ -113,21 +122,15 @@ feature -- Analyze
 
 	unanalyze
 			-- Unanalyze creation code
-		local
-			l_call: like call
 		do
-			if not real_type (type).is_basic then
-				Precursor {ACCESS_B}
-				l_call := call
-				if l_call /= Void then
-					if l_call.routine_id = system.special_make_rout_id then
-						check
-							is_special_call_valid: is_special_call_valid
-						end
-						l_call.parameters.first.unanalyze
-					else
-						l_call.unanalyze
+			if not real_type (type).is_basic and then attached call as l_call then
+				if l_call.routine_id = system.special_make_rout_id then
+					check
+						is_special_call_valid: is_special_call_valid
 					end
+					l_call.parameters.first.unanalyze
+				else
+					l_call.unanalyze
 				end
 			end
 		end

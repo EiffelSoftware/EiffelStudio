@@ -8,7 +8,7 @@
  * copying: ""
  * source: 	"[
  * 			Eiffel Software
- * 			356 Storke Road, Goleta, CA 93117 USA
+ * 			5949 Hollister Ave #B, Goleta, CA 93117
  * 			Telephone 805-685-1006, Fax 805-685-6869
  * 			Website http://www.eiffel.com
  * 			Customer support http://support.eiffel.com
@@ -17,14 +17,9 @@
 
 #include "mod_xebra.h"
 
-#define MAX_SIZE 1000 /*TODO: give this a better name */
-
 static int read_from_POST (request_rec* r, char **buf)
 {
-
-	DEBUG2 ("start read post");
-	int max_loops = 100; /* hack*/
-
+	int max_loops = 1000; /* hack to prevent endless loops*/
 	int bytes, eos;
 	apr_size_t count;
 	apr_status_t rv;
@@ -32,18 +27,18 @@ static int read_from_POST (request_rec* r, char **buf)
 	apr_bucket_brigade *bbin;
 	char *baf;
 	apr_bucket *b;
-
 	const char *clen = apr_table_get (r->headers_in, "Content-Length");
 
 	if (clen != NULL) {
 		bytes = strtol (clen, NULL, 0);
-		if (bytes >= MAX_SIZE) {
+		if (bytes >= MAX_POST_SIZE) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
-					"Request too big (%d bytes; limit %d)", bytes, MAX_SIZE);
+					"Request too big (%d bytes; limit %d)", bytes,
+					MAX_POST_SIZE);
 			return HTTP_REQUEST_ENTITY_TOO_LARGE;
 		}
 	} else {
-		bytes = MAX_SIZE;
+		bytes = MAX_POST_SIZE;
 	}
 
 	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
@@ -64,13 +59,12 @@ static int read_from_POST (request_rec* r, char **buf)
 		for (b = APR_BRIGADE_FIRST (bbin); b != APR_BRIGADE_SENTINEL (bbin); b
 				= APR_BUCKET_NEXT (b)) {
 
-			DEBUG2 ("for");
 			max_loops--;
 			if (max_loops < 0) {
 				return HTTP_REQUEST_ENTITY_TOO_LARGE;
 			}
 
-			/*=======hack*/
+			/*=======hack to prevent endless loops*/
 			if ((b == NULL) || (b->length < 0) || b->length > 1000) {
 				break;
 			}
@@ -83,32 +77,24 @@ static int read_from_POST (request_rec* r, char **buf)
 			if (!APR_BUCKET_IS_METADATA (b)) {
 				if (b->length != (apr_size_t) (-1)) {
 					count += b->length;
-					if (count > MAX_SIZE) {
+					if (count > MAX_POST_SIZE) {
 						/* More data than we accept, murder the request, but mop up first */
 						apr_bucket_delete (b);
 					}
 				}
 			}
 
-			if (count <= MAX_SIZE) {
+			if (count <= MAX_POST_SIZE) {
 				APR_BUCKET_REMOVE (b);
 				APR_BRIGADE_INSERT_TAIL (bb, b);
 			}
-
-			if (b == NULL) {
-				DEBUG2 ("b is NULL!");
-			} else {
-				DEBUG2 ("length is %i, type is %s", b->length, b->type->name);
-
-			}
-
 		}
 	} while (!eos);
 
 	/* done with data, kill request if too much data */
-	if (count > MAX_SIZE) {
+	if (count > MAX_POST_SIZE) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Request too big (%d bytes; limit %d)", bytes, MAX_SIZE);
+				"Request too big (%d bytes; limit %d)", bytes, MAX_POST_SIZE);
 		return HTTP_REQUEST_ENTITY_TOO_LARGE;
 	}
 
@@ -123,13 +109,13 @@ static int read_from_POST (request_rec* r, char **buf)
 	return OK;
 }
 
-char *table_buf;
+char *table_buf; /* print_item uses this to store post parameter values and keys */
 
 static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
-	table_buf
-			= apr_pstrcat (r->pool, table_buf, "#$#", key, "#&#", value, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, TABLECSEP, key, TABLERSEP,
+			value, NULL);
 	return 1;
 }
 
@@ -165,10 +151,9 @@ static int xebra_handler (request_rec* r)
 	apr_table_do (print_item, r, r->headers_in, NULL);
 	apr_table_do (print_item, r, r->headers_out, NULL);
 	apr_table_do (print_item, r, r->subprocess_env, NULL);
-	message = apr_pstrcat (r->pool, message, "#HEADERS#", table_buf, NULL);
+	message = apr_pstrcat (r->pool, message, HEADERSKEYWORD, table_buf, NULL);
 
-	/* If there are, read POST parameters into message buffer */\
-
+	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...")
 		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
@@ -181,11 +166,8 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Error reading from data!", r);
 			return rv;
 		}
-		message = apr_pstrcat (r->pool, message, "#POSTPARAM#", post_buf, NULL);
+		message = apr_pstrcat (r->pool, message, POSTKEYWORD, post_buf, NULL);
 	}
-
-	//ap_rputs (message, r);
-
 
 	/* set up connection to server */
 	DEBUG ("Setting up connection.\n");
@@ -217,7 +199,6 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 			continue;
 		}
-
 		break;
 	}
 
@@ -262,7 +243,6 @@ static int xebra_handler (request_rec* r)
 	close (sockfd);
 
 	return OK;
-
 }
 
 /*

@@ -17,6 +17,32 @@
 
 #include "mod_xebra.h"
 
+static void* create_srv_cfg (apr_pool_t* pool, char* x)
+{
+	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
+	svr_cfg->port = "1234";
+	svr_cfg->port = "dinimer";
+	return svr_cfg;
+}
+
+static const char *set_srv_cfg_port (cmd_parms *parms, void *mconfig,
+		const char *arg)
+{
+	xebra_svr_cfg* svr_cfg = ap_get_module_config (
+			parms->server->module_config, &xebra_module);
+	svr_cfg->port = (char *) arg;
+	return NULL;
+}
+
+static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
+		const char *arg)
+{
+	xebra_svr_cfg* svr_cfg = ap_get_module_config (
+			parms->server->module_config, &xebra_module);
+	svr_cfg->host = (char *) arg;
+	return NULL;
+}
+
 static int read_from_POST (request_rec* r, char **buf)
 {
 	int max_loops = 1000; /* hack to prevent endless loops*/
@@ -109,8 +135,6 @@ static int read_from_POST (request_rec* r, char **buf)
 	return OK;
 }
 
-char *table_buf; /* print_item uses this to store post parameter values and keys */
-
 static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
@@ -127,10 +151,13 @@ static int xebra_handler (request_rec* r)
 	int rv = OK; /* information about connection */
 	char s[INET6_ADDRSTRLEN]; /* information about connection */
 	char * message; /* the message to be sent to the server */
-	char * hname = HOSTNAME; /* hostname of server */
 	int numbytes; /* number of bytes recieved from server */
 	char* rmsg_buf; /* buffer for receiving message */
 	char* post_buf;
+	char* srv_hostname;
+	char* srv_port;
+	xebra_svr_cfg *srvc = ap_get_module_config (r->server->module_config,
+			&xebra_module);
 
 	if (!r->handler || strcmp (r->handler, "mod_xebra"))
 		return DECLINED;
@@ -177,19 +204,19 @@ static int xebra_handler (request_rec* r)
 
 	message = apr_pstrcat (r->pool, message, "#END#", NULL);
 
-	ap_rputs( message, r);
-
-
-	return OK;
-
 	/* set up connection to server */
 	DEBUG ("Setting up connection.");
+
+	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
+	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
+
+	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
 
 	memset (&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 
-	if ((rv = getaddrinfo (hname, PORT, &hints, &servinfo)) != 0) {
+	if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
 				gai_strerror (rv));
 		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
@@ -256,28 +283,12 @@ static int xebra_handler (request_rec* r)
 	return OK;
 }
 
-/*
- doc:    <routine name="byteArrayToInt" export="public">
- doc:            <summary>Converts an array of 4 bytes to an integer.</summary>
- doc:            <param name="b" type="char*">The bytes to convert</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_INTEGER_32 byteArrayToInt (char * b)
 {
 	return (b[0] << 24) + ((b[1] & 0xFF) << 16) + ((b[2] & 0xFF) << 8) + (b[3]
 			& 0xFF);
 }
 
-/*
- doc:    <routine name="intToByteArray" export="public">
- doc:            <summary>Converts an integer to an array of 4 bytes. Make sure you free the return value later.</summary>
- doc:            <param name="i" type="EIF_INTEGER_32">The integer to convert</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 {
 	char * bb;
@@ -289,15 +300,6 @@ char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 	return bb;
 }
 
-/*
- doc:    <routine name="encode_natural" export="public">
- doc:            <summary>Encode i to include the flag. Use decode_natural to extract the original integer value and use decode_flag to extract the flag. I must not be bigger than 2^31</summary>
- doc:            <param name="i" type="EIF_NATURAL_32">The integer value to encode</param>
- doc:            <param name="flag" type="EIF_BOOLEAN">The flag value to encode</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 {
 	REQUIRE ("i_not_to_big", i < 2 ^ 31);
@@ -305,40 +307,16 @@ EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 	return (i << 1) + flag;
 }
 
-/*
- doc:    <routine name="decode_natural" export="public">
- doc:            <summary>Decode i and return original integer value. i should be encoded with encode_natural</summary>
- doc:            <param name="i" type="EIF_NATURAL_32">The integer value to decode</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_NATURAL_32 decode_natural (EIF_NATURAL_32 i)
 {
 	return (i >> 1);
 }
 
-/*
- doc:    <routine name="decode_flag" export="public">
- doc:            <summary>Decode i and return flag. i should be encoded with encode_natural</summary>
- doc:            <param name="i" type="EIF_NATURAL_32">The integer value to decode</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_BOOLEAN decode_flag (EIF_NATURAL_32 i)
 {
 	return (i & 1);
 }
 
-/*
- doc:    <routine name="get_in_addr" export="public">
- doc:            <summary>Get socket address</summary>
- doc:            <param name="sa" type="struct sockaddr *">The address to write</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 void* get_in_addr (struct sockaddr *sa)
 {
 	if (sa->sa_family == AF_INET) {
@@ -348,15 +326,6 @@ void* get_in_addr (struct sockaddr *sa)
 	return &(((struct sockaddr_in6*) sa)->sin6_addr);
 }
 
-/*
- doc:    <routine name="send_message_fraged" export="public">
- doc:            <summary>Devides the message into fragments of length FRAG_SIZE. For each fragment it encodes the size of it in an array of 4 bytes, sends these 4 bytes and then sends the fragment. The 4 byte array contains also a flag that determines if there will be another fragment coming up.</summary>
- doc:            <param name="message" type="char *">The message to be sent</param>
- doc:            <param name="sockfd" type="EIF_INTEGER_32">The socket connection id</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 		request_rec* r)
 {
@@ -447,15 +416,6 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 	return 1;
 }
 
-/*
- doc:    <routine name="receive_message_fraged" export="public">
- doc:            <summary>Receives a message that was send by send_message_fraged. For every incoming fragment, it first reads the 4 byte array determining the length of the fragment and if there will be another fragment coming up, then it calls recv until the whole fragment has been received.</summary>
- doc:            <param name="msg_buf" type="char **">The buffer where the message will be stored</param>
- doc:            <param name="sockfd" type="EIF_INTEGER_32">The socket connection id</param>
- doc:            <thread_safety></thread_safety>
- doc:            <synchronization></synchronization>
- doc:    </routine>
- */
 EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 		request_rec* r)
 {
@@ -571,5 +531,5 @@ static void register_hooks (apr_pool_t* pool)
 	ap_hook_handler (xebra_handler, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
-module AP_MODULE_DECLARE_DATA mod_xebra_module = { STANDARD20_MODULE_STUFF,
-		NULL, NULL, NULL, NULL, NULL, register_hooks };
+module AP_MODULE_DECLARE_DATA xebra_module = { STANDARD20_MODULE_STUFF, NULL,
+		NULL, create_srv_cfg, NULL, xebra_cmds, register_hooks };

@@ -553,6 +553,7 @@ rt_private void interpret(int flag, int where)
 	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
 	unsigned char * volatile rescue = NULL;	/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
+	jmp_buf exenvo;							/* For exception during once evaluation */
 	EIF_REFERENCE saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
 	int ex_pos;								/* Exception object local position */
 	unsigned char *IC_O;						/* Backup IC for old evaluation */
@@ -3707,7 +3708,6 @@ rt_private void interpret(int flag, int where)
 				/* This is a first-time call. */
 				/* Declare variables for exception handling. */
 			struct ex_vect * exvecto;
-			jmp_buf exenvo;
 				/* Mark once routine as executed. */
 			MTOM(OResult);
 				/* Record execution vector to catch exception. */

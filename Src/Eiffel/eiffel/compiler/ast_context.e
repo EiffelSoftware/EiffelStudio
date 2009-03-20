@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			create inline_agent_counter
 			create hidden_local_counter
 			create_local_containers
+			create attributes.make (0)
 		end
 
 	create_local_containers
@@ -53,7 +54,6 @@ feature {NONE} -- Initialization
 			create scopes.make (0)
 			create object_test_scopes.make (0)
 			create object_test_locals.make_map (0)
-			create attributes.make (0)
 		end
 
 feature -- Access
@@ -298,20 +298,27 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 			scope_set: scope = s
 		end
 
-	init_variable_scopes
-			-- Prepare structures to track variable scopes.
+	init_local_scopes
+			-- Prepare structures to track local scopes.
 		require
 			locals_attached: locals /= Void
-			attributes_attached: attributes /= Void
 		do
 			create local_initialization.make (locals.count)
 			create local_scope.make (locals.count)
-			create attribute_initialization.make (attributes.count)
 		ensure
 			local_initialization_attached: local_initialization /= Void
 			local_initialization_initialized: local_initialization.local_count = locals.count
 			local_scope_attached: local_scope /= Void
 			local_scope_initialized: local_scope.local_count = locals.count
+		end
+
+	init_attribute_scopes
+			-- Prepare structures to track attribute scopes.
+		require
+			attributes_attached: attributes /= Void
+		do
+			create attribute_initialization.make (attributes.count)
+		ensure
 			attribute_initialization_attached: attribute_initialization /= Void
 			attribute_initialization_initialized: attribute_initialization.attribute_count = attributes.count
 		end

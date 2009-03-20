@@ -126,6 +126,8 @@ feature -- Type checking
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+				-- Initialize structures to record attribute scopes.
+			context.init_attribute_scopes
 			is_byte_node_enabled := False
 			break_point_slot_count := 0
 			if a_is_safe_to_check_inherited then
@@ -160,6 +162,8 @@ feature -- Type checking
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+				-- Initialize structures to record attribute scopes.
+			context.init_attribute_scopes
 			if a_is_safe_to_check_inherited then
 				is_byte_node_enabled := False
 				break_point_slot_count := 0
@@ -213,6 +217,8 @@ feature -- Type checking
 			is_byte_node_enabled := a_generate_code
 			current_feature := a_feature
 			reset
+				-- Initialize structures to record attribute scopes.
+			context.init_attribute_scopes
 			a_clause.process (Current)
 			if a_generate_code then
 				l_list ?= last_byte_node
@@ -236,6 +242,8 @@ feature -- Type checking
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset
+				-- Initialize structures to record attribute scopes.
+			context.init_attribute_scopes
 			a_cas.process (Current)
 		end
 
@@ -915,7 +923,7 @@ feature -- Roundtrip
 			end
 
 			context.set_current_feature (l_feature)
-
+			context.init_attribute_scopes
 			create l_feature_checker
 			l_feature_checker.init (context)
 			context.set_current_inline_agent_body (l_as.body)
@@ -3060,10 +3068,9 @@ feature -- Implementation
 				check_locals (l_as)
 				l_has_invalid_locals := error_level /= l_error_level
 			end
-				-- Initialize structures to record variable scopes.
-				-- This should be done before checking precondition that may reference attributes,
-				-- but after checking locals that sets their count.
-			context.init_variable_scopes
+				-- Initialize structures to record local scopes.
+				-- This should be done after checking locals that sets their count.
+			context.init_local_scopes
 
 				-- Check preconditions
 			if l_as.precondition /= Void then
@@ -3134,7 +3141,7 @@ feature -- Implementation
 				elseif not l_has_invalid_locals then
 						-- Set mark of context
 					is_in_rescue := True
-					context.init_variable_scopes
+					context.init_local_scopes
 					process_compound (l_as.rescue_clause)
 					if l_needs_byte_node and then error_level = l_error_level then
 						l_list ?= last_byte_node

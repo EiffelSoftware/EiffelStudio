@@ -85,7 +85,7 @@ doc:            <synchronization></synchronization>
 doc:    </routine>
 */
 
-char * intToByteArray (EIF_INTEGER_32 i);
+char * intToByteArray (request_rec *r, EIF_INTEGER_32 i);
 
 /*
 doc:    <routine name="encode_natural" export="public">

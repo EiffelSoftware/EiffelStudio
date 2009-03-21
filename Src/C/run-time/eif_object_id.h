@@ -40,8 +40,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 RT_LNK EIF_INTEGER eif_object_id(EIF_OBJECT object);			/* Get a new id for the object, assuming it is NOT in the stack*/
+RT_LNK EIF_INTEGER eif_reference_id (EIF_REFERENCE object);		/* Same as eif_object_id with unprotected reference. */
 extern EIF_INTEGER eif_general_object_id(EIF_OBJECT object); /* Get an id for the object, sequential search first */
 RT_LNK EIF_REFERENCE eif_id_object(EIF_INTEGER id);		/* returns the object associated with the id */
 RT_LNK void eif_object_id_free(EIF_INTEGER id);			/* removes the object from the stack */

@@ -908,15 +908,24 @@ rt_public void failure(void)
 	/* NOTREACHED */
 }
 
+	/* Prevent emergency signal to be processed more than once. */
+rt_private volatile int emergency_call_success = 0;
+
 rt_private Signal_t emergency(int sig)
 {
 	/* A signal has been trapped while we were failing peacefully. The memory
 	 * must really be in a desastrous state, so print out a give-up message
 	 * and exit.
+	 * The code is protected in case `emergency' is triggered while calling `print_err_msg'
+	 * which was happening in eweasel test#vsrp208 because we got a SIGPIPE when outputs
+	 * of `ec' are redirected and closed while the compiler is not yet done.
 	 */
-	
-	print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
-		egc_system_name, sig, signame(sig));
+		
+	if (!emergency_call_success) {
+		emergency_call_success = 1;
+		print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
+			egc_system_name, sig, signame(sig));
+	}
 
 	exit(2);							/* Really abnormal termination */
 

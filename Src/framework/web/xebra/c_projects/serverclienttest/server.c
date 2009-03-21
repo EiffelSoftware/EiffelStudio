@@ -49,22 +49,23 @@ int main ( int argc, char *argv[] )
 	int rv;					/* connection info */
 	int yes=1;
 	int numbytes;				/* number of bytes received */
-	
+
 	printf ("Server ready to rock...\n");
-	
+
 
 	/* loop endlessly */
-	while (1){
+	while (1)
+	{
 
 		/* wait for connection */
 		memset (&hints, 0, sizeof hints);
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE; // use my IP
-		
+		rmsg_buf = (char*) malloc (100000);
 		DEBUG ("\n\n\nWaiting for a new client\n");
-		
-	
+
+
 		if ((rv = getaddrinfo (NULL, PORT, &hints, &servinfo)) != 0){
 			fprintf  (stderr, "getaddrinfo: %s\n", gai_strerror (rv));
 			return 1;
@@ -96,14 +97,14 @@ int main ( int argc, char *argv[] )
 		if (p == NULL){
 			fprintf (stderr, "server: failed to bind\n");
 		} else {
-			freeaddrinfo (servinfo); 
+			freeaddrinfo (servinfo);
 
 			if (listen (sockfd, BACKLOG) == -1){
 				perror ("listen");
 				return 1;
 			}
-			
-			sa.sa_handler = sigchld_handler; 
+
+			sa.sa_handler = sigchld_handler;
 			sigemptyset (&sa.sa_mask);
 			sa.sa_flags = SA_RESTART;
 			if ( sigaction (SIGCHLD, &sa, NULL) == -1){
@@ -113,7 +114,7 @@ int main ( int argc, char *argv[] )
 
 			DEBUG ("Waiting for connections...\n");
 
-			
+
 			sin_size = sizeof their_addr;
 			new_fd = accept (sockfd, (struct sockaddr *) &their_addr, &sin_size);
 
@@ -140,7 +141,7 @@ int main ( int argc, char *argv[] )
 				char * message = (char *) malloc (1000 + numbytes);
 				/*
 				char * message = "Danke, alles gut.";
-				*/				
+				*/
 				strcpy (message,"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"><html><head><title>Welcome to Xebra!</title>  </head><body><h1>Welcome to C-XEbraServer!!</h1><br>Your request was:\n '");
 
 				strcat (message,rmsg_buf);
@@ -148,9 +149,9 @@ int main ( int argc, char *argv[] )
 				strcat (message, "'\n</body></html>");
 
 				send_message_fraged (message, new_fd);
-				
+
 				free (message);
-		
+
 				DEBUG ("All done.\n");
 			}
 			free (rmsg_buf);
@@ -158,7 +159,7 @@ int main ( int argc, char *argv[] )
 
 		shutdown (new_fd, 2);
 		shutdown (sockfd, 2);
-		close (new_fd);  
+		close (new_fd);
 		close (sockfd);
 	}
 	return 0;

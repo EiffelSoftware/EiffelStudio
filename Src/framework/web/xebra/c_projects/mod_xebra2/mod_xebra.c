@@ -17,11 +17,13 @@
 
 #include "mod_xebra.h"
 
+/* For description of methods see mod_xebra.h */
+
 static void* create_srv_cfg (apr_pool_t* pool, char* x)
 {
 	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
-	svr_cfg->port = "1234";
-	svr_cfg->port = "dinimer";
+	svr_cfg->port = "9999";
+	svr_cfg->port = "localhost";
 	return svr_cfg;
 }
 
@@ -91,7 +93,7 @@ static int read_from_POST (request_rec* r, char **buf)
 			}
 
 			/*=======hack to prevent endless loops*/
-			if ((b == NULL) || (b->length < 0) || b->length > 1000) {
+			if ((b == NULL) || (b->length < 0) || b->length > 10000) {
 				break;
 			}
 			/*=======very strange */

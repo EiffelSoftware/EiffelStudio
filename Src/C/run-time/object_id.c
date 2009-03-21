@@ -107,6 +107,11 @@ rt_private EIF_INTEGER max_object_id = 0;
 
 rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 {
+	return eif_reference_id (eif_access(object));
+}
+
+rt_public EIF_INTEGER eif_reference_id (EIF_REFERENCE object)
+{
 #ifdef ISE_GC
 	EIF_INTEGER id;
 
@@ -115,8 +120,8 @@ rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 		 * because otherwise when the object is disposed only
 		 * one entry will be deleted, not the other one
 		 * and therefore corrupting GC memory */
-	REQUIRE ("Not in Object ID stack", !st_has (&object_id_stack, eif_access (object)));
-	id = private_object_id(eif_access(object), &object_id_stack, &max_object_id);
+	REQUIRE ("Not in Object ID stack", !st_has (&object_id_stack, object));
+	id = private_object_id(object, &object_id_stack, &max_object_id);
 	EIF_OBJECT_ID_UNLOCK;
 
 	return id;

@@ -2119,7 +2119,7 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE new_obj;						/* New object */
 			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit;
-			uint32 elem_size = 0, bit_size = 0, i = 0;
+			uint32 elem_size = 0, bit_size = 0, i = 0, spec_type;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE *nb_item;
 			uint32 nb = 0;
@@ -2134,7 +2134,8 @@ rt_private void interpret(int flag, int where)
 			if (is_expanded) {
 				elem_size = OVERHEAD + EIF_Size(get_int16(&IC));
 			} else {
-				switch (get_uint32(&IC) & SK_HEAD) {
+				spec_type = get_uint32(&IC);
+				switch (spec_type & SK_HEAD) {
 					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
 					case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
 					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;

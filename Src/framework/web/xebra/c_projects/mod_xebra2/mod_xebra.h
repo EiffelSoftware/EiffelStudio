@@ -1,3 +1,20 @@
+/*
+ * description: "Apache module that sends request data to xebra server and receives page to be displayed."
+ * date:		"$Date$"
+ * revision:	"$Revision$"
+ * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+ * license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+ * licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+ * copying: ""
+ * source: 	"[
+ * 			Eiffel Software
+ * 			5949 Hollister Ave #B, Goleta, CA 93117
+ * 			Telephone 805-685-1006, Fax 805-685-6869
+ * 			Website http://www.eiffel.com
+ * 			Customer support http://support.eiffel.com
+ * 			]"
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,13 +64,21 @@
 #define FRAG_SIZE 65536
 
 /*======= PROTOCOL =======*/
+/* The following strings represent delimiters for the message string that is sent to the server */
 
 #define POSTKEYWORD "#POST#"
 #define HEADERSKEYWORD "#HEADERS#"
 #define TABLECSEP "#$#"
 #define TABLERSEP "#%#"
 
+/* MAX_POST_SIZE:
+ *	Defines a max size to read the POST arguments
+ */
 #define MAX_POST_SIZE 10000
+
+/*=======   =======*/
+
+
 
 /* Registers the module within apache */
 module AP_MODULE_DECLARE_DATA xebra_module;

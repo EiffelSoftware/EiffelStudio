@@ -200,8 +200,6 @@ feature -- Input
 			if not error then
 				l_main_socket.read_stream (read_buffer_size)
 				l_packet := l_main_socket.last_string
-					-- Per postcondition of `read_stream'.
-				check l_packet_attached: l_packet /= Void end
 				last_packet := l_packet
 				last_packet_size := l_packet.count
 				bytes_transferred := bytes_transferred + last_packet_size

@@ -136,13 +136,11 @@ feature {NONE} -- Basic operations
 	decode (a_socket: attached like socket)
 			-- Retrieve response from server and set `smtp_code_number'.
 		local
-			response: detachable STRING
+			response: STRING
 		do
 			from
 				a_socket.read_line
 				response:= a_socket.last_string
-					-- Per postcondition of `socket.read_line'.
-				check response_attached: response /= Void end
 			until
 				response.count < 4 or else response.item (4) /= '-'
 			loop

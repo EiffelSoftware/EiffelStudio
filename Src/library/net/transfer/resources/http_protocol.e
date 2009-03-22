@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 				if not error then
 					l_socket.read_line
 					str := l_socket.last_string
-					if str /= Void and then not str.is_empty then
+					if not str.is_empty then
 						headers.extend (str.twin)
 					end
 				end

@@ -174,13 +174,7 @@ feature -- Input
 			if attached internal_stream as l_stream then
 				from
 					l_last_string := last_string
-					if l_last_string = Void then
-						create_last_string (1024)
-						l_last_string := last_string
-						check l_last_string_attached: l_last_string /= Void end
-					else
-						l_last_string.clear_all
-					end
+					l_last_string.clear_all
 					done := False
 					i := 0
 					str_cap := l_last_string.capacity

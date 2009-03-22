@@ -34,6 +34,7 @@ feature -- Initialization
 			string_not_empty: not fn.is_empty
 		do
 			create internal_file.make (fn.to_cil)
+			create last_string.make_empty
 			mode := Closed_file
 			name := fn
 		ensure
@@ -1448,13 +1449,7 @@ feature -- Input
 			if attached internal_stream as l_stream then
 				from
 					l_last_string := last_string
-					if l_last_string = Void then
-						create_last_string (1024)
-						l_last_string := last_string
-						check l_last_string_attached: l_last_string /= Void end
-					else
-						l_last_string.clear_all
-					end
+					l_last_string.clear_all
 					done := False
 					i := 0
 					str_cap := l_last_string.capacity
@@ -1501,14 +1496,8 @@ feature -- Input
 			l_last_string: like last_string
 		do
 			l_last_string := last_string
-			if l_last_string = Void then
-				create_last_string (nb_char)
-				l_last_string := last_string
-				check l_last_string_attached: l_last_string /= Void end
-			else
-				l_last_string.clear_all
-				l_last_string.grow (nb_char)
-			end
+			l_last_string.clear_all
+			l_last_string.grow (nb_char)
 			create str_area.make (nb_char)
 			if attached internal_stream as l_stream then
 				new_count := l_stream.read (str_area, 0, nb_char)
@@ -1573,13 +1562,7 @@ feature -- Input
 
 				-- Clean previous stored string.
 			l_last_string := last_string
-			if l_last_string = Void then
-				create_last_string (0)
-				l_last_string := last_string
-				check l_last_string_attached: l_last_string /= Void end
-			else
-				l_last_string.clear_all
-			end
+			l_last_string.clear_all
 
 				-- Initialize list of blanks character
 			blanks := internal_separators
@@ -1641,14 +1624,14 @@ feature -- Convenience
 		local
 			l_modulo, l_read, nb: INTEGER
 			l_pos: INTEGER
-			l_old_last_string, l_last_string: like last_string
+			l_old_last_string: like last_string
 		do
 			from
 				l_read := 0
 				nb := count
 				l_modulo := 51200
 				l_old_last_string := last_string
-				last_string := Void
+				create last_string.make (l_modulo)
 				l_pos := position
 				if l_pos /= 0 then
 					go (0)
@@ -1657,9 +1640,7 @@ feature -- Convenience
 				l_read >= nb
 			loop
 				read_stream (l_modulo)
-				l_last_string := last_string
-				check l_last_string_attached: l_last_string /= Void end
-				file.put_string (l_last_string)
+				file.put_string (last_string)
 				l_read := l_read + l_modulo
 			end
 				-- Restore previous status of Current file.
@@ -1685,6 +1666,8 @@ feature {NONE} -- Implementation
 	create_last_string (a_min_size: INTEGER)
 			-- Create new instance of `last_string' with a least `a_min_size'
 			-- as capacity.
+		obsolete
+			"Implementors should create `last_string' directly."
 		require
 			last_string_void: last_string = Void
 			a_min_size_non_negative: a_min_size >= 0

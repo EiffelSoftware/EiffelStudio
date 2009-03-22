@@ -336,7 +336,6 @@ feature -- Input
 				if not error then
 					l_socket.read_stream (read_buffer_size)
 					l_packet := l_socket.last_string
-					check l_packet_attached: l_packet /= Void end
 					last_packet := l_packet
 					last_packet_size := l_packet.count
 					bytes_transferred := bytes_transferred + last_packet_size
@@ -409,9 +408,7 @@ feature {NONE} -- Implementation
 				check_socket (s, Read_only)
 				if not error then
 					s.read_line
-					l_reply := s.last_string
-					check l_reply_attached: l_reply /= Void end
-					l_reply := l_reply.twin
+					l_reply := s.last_string.twin
 					l_reply.append ("%N")
 					debug
 						if not l_reply.is_empty then

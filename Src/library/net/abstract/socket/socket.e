@@ -648,9 +648,7 @@ feature -- Input
 				ext.set_count (return_val)
 				last_string := ext.substring (1, return_val)
 			else
-					-- All errors except EWOULDBLOCK will raise an I/O
-					-- exception
-				create last_string.make (0)
+				last_string.clear_all
 			end
 		end
 

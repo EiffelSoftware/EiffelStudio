@@ -34,6 +34,7 @@ feature -- Creation
 			-- `local_address'.
 		do
 			make
+			create last_string.make_empty
 			set_address (a_local_address)
 			bind
 		end
@@ -42,6 +43,7 @@ feature -- Creation
 			-- Create a socket targeted to `peer_address'.
 		do
 			make
+			create last_string.make_empty
 			connect_to_peer (a_peer_address)
 		end
 

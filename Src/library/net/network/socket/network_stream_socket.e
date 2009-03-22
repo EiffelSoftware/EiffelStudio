@@ -32,7 +32,7 @@ inherit
 		end
 
 create
-	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port
+	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_local_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
 	make_from_fd
@@ -46,6 +46,7 @@ feature -- Initialization
 			c_reset_error
 			family := af_inet
 			type := sock_stream;
+			create last_string.make_empty
 			make_socket
 			timeout := default_timeout
 		ensure
@@ -67,7 +68,7 @@ feature -- Initialization
 		end
 
 	make_server_by_port (a_port: INTEGER)
-			-- Create server socket on `a_port'.
+			-- Create server socket on `a_port' and on any incoming address.
 		require
 			valid_port: a_port >= 0
 		local
@@ -75,6 +76,20 @@ feature -- Initialization
 		do
 			make;
 			addr := create_any_local
+			addr := create_localhost
+			create address.make_from_address_and_port (addr, a_port)
+			bind
+		end
+
+	make_local_server_by_port (a_port: INTEGER)
+			-- Create server socket on `a_port' that listen only for localhost peer.
+		require
+			valid_port: a_port >= 0
+		local
+			addr: INET_ADDRESS
+		do
+			make;
+			addr := create_localhost
 			create address.make_from_address_and_port (addr, a_port)
 			bind
 		end
@@ -107,6 +122,7 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			is_open_read := True
 			is_open_write := True
 			timeout := default_timeout
+			create last_string.make_empty
 		ensure
 			address_set: address = a_address
 			family_valid: family = a_address.family;

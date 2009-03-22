@@ -47,6 +47,15 @@ feature -- Basic operations
 			inserted: eif_id_object (Result) = an_object
 		end
 
+	eif_current_object_id: INTEGER
+			-- New identifier for `an_object'
+		do
+			Result := eif_object_id (Current)
+		ensure
+			eif_object_id_positive: Result > 0
+			inserted: eif_id_object (Result) = Current
+		end
+
 	eif_object_id_free (an_id: INTEGER)
 			-- Free the entry `an_id'
 		require

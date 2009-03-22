@@ -107,7 +107,7 @@ feature -- Access
 			-- Run-time object Id of `Current'.
 		do
 			if internal_object_id = 0 then
-				internal_object_id := eif_object_id (Current)
+				internal_object_id := eif_current_object_id
 			end
 			Result := internal_object_id
 		end

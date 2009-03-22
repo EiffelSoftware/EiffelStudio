@@ -51,16 +51,9 @@ feature -- Initialization
 			l_library_cmd: STRING
 			l_c_setup: COMPILER_SETUP
 			l_options: RESOURCE_TABLE
-			l_output: FILE
 			l_translator: MAKEFILE_TRANSLATOR
 		do
 			if not retried then
-				if attached io.default_output as l_default_output then
-					l_output := l_default_output
-				else
-					l_output := io.output
-				end
-
 					-- if location has been specified, update it
 				if a_parser.has_location then
 					l_location := a_parser.location
@@ -107,7 +100,7 @@ feature -- Initialization
 					l_library_cmd.append_character ('"')
 					env.system (l_library_cmd)
 				else
-					create l_translator.make (l_options, l_mapped_path, a_parser.force_32bit_code_generation, l_processors, l_output)
+					create l_translator.make (l_options, l_mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
 					l_translator.translate
 					if not l_gen_only and l_translator.has_makefile_sh then
@@ -126,19 +119,19 @@ feature -- Initialization
 							l_msg := "Internal error during Makefile translation preparation.%N%N%
 									%Please report this problem to Eiffel Software at:%N%
 									%http://support.eiffel.com"
-							l_output.put_string (l_msg)
-							l_output.flush
+							io.put_string (l_msg)
+							io.standard_default.flush
 						else
 							if l_translator.has_makefile_sh then
 								if not c_error then
 										-- For eweasel processing
-									l_output.put_string ("C compilation completed%N")
+									io.put_string ("C compilation completed%N")
 								end
-								l_output.flush
+								io.standard_default.flush
 							elseif l_translator.is_il_code and not c_error then
 									-- For eweasel processing
-								l_output.put_string ("C compilation completed%N")
-								l_output.flush
+								io.put_string ("C compilation completed%N")
+								io.standard_default.flush
 							end
 						end
 					end

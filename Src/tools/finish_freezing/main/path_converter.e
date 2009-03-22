@@ -10,9 +10,6 @@ class
 
 feature -- Access
 
-	eiffel_dir: detachable STRING
-			-- EIFFEL installation environment variable
-
 	Max_path_length: INTEGER = 1024
 			-- Maximum path length (in characters)
 			--| Windows limit.

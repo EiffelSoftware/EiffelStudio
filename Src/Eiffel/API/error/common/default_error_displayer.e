@@ -62,9 +62,10 @@ feature -- Output
 			warning_list: LINKED_LIST [ERROR];
 			a_text_formatter: TEXT_FORMATTER
 			l_cursor: CURSOR
+			retried: INTEGER
 		do
 			a_text_formatter := output_window
-			if not retried then
+			if retried = 0 then
 				from
 					warning_list := handler.warning_list
 					l_cursor := warning_list.cursor
@@ -84,13 +85,12 @@ feature -- Output
 						-- put a separation before the next message
 					display_separation_line (a_text_formatter)
 				end;
-			else
-				retried := False;
+			elseif retried = 1 then
 				display_error_error (a_text_formatter)
-			end;
+			end
 		rescue
 			if not fail_on_rescue then
-				retried := True;
+				retried := retried  + 1;
 				retry;
 			end;
 		end;
@@ -101,9 +101,10 @@ feature -- Output
 			error_list: LINKED_LIST [ERROR]
 			a_text_formatter: TEXT_FORMATTER
 			l_cursor: CURSOR
+			retried: INTEGER
 		do
 			a_text_formatter := output_window
-			if not retried then
+			if retried = 0 then
 				from
 					error_list := handler.error_list
 					l_cursor := error_list.cursor
@@ -120,20 +121,17 @@ feature -- Output
 				error_list.go_to (l_cursor)
 				display_separation_line (a_text_formatter)
 				display_additional_info (a_text_formatter)
-			else
-				retried := False
+			elseif retried = 1 then
 				display_error_error (a_text_formatter)
 			end
 		rescue
 			if not fail_on_rescue then
-				retried := True
+				retried := retried + 1
 				retry
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	retried: BOOLEAN;
 
 	display_error_error (a_text_formatter: TEXT_FORMATTER)
 		do

@@ -189,14 +189,8 @@ feature -- Input
 			l_last_string: like last_string
 		do
 			l_last_string := last_string
-			if l_last_string = Void then
-				create_last_string (nb_char)
-				l_last_string := last_string
-				check l_last_string_attached: l_last_string /= Void end
-			else
-				l_last_string.clear_all
-				l_last_string.grow (nb_char)
-			end
+			l_last_string.clear_all
+			l_last_string.grow (nb_char)
 			create str_area.make (nb_char)
 			if attached internal_stream as l_stream then
 				new_count := l_stream.read (str_area, 0, nb_char)

@@ -71,6 +71,7 @@ extern "C" {
 
 /* IDENTIFIED_ROUTINES class */
 #define eif_builtin_IDENTIFIED_ROUTINES_eif_current_object_id(object)	eif_reference_id(object)
+#define eif_builtin_IDENTIFIED_ROUTINES_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
 
 /* INTERNAL class */
 #define eif_builtin_INTERNAL_c_is_instance_of(dftype,obj)	RTRA(dftype,obj)

@@ -53,31 +53,6 @@ feature {NONE} -- Implementation
 		local
 			done: BOOLEAN
 		do
---			from
---				semaphore.wait
---			until
---				thread_pool.over
---			loop
---				if (not thread_pool.over) then
---							-- We have some work now				
---					from
---						thread_procedure := thread_pool.get_work (Current)
---					until
---						thread_procedure = Void
---					loop
---						if attached thread_procedure as l_work then
---							if attached {G} target as l_target then
---								l_work.call ([l_target])
---							else
---								l_work.call (Void)
---							end
---						end
---						thread_procedure := thread_pool.get_work (Current)
---					end
---				end
---				semaphore.wait
---			end
---			thread_pool.thread_terminated
 			from
 				semaphore.wait
 				thread_procedure := thread_pool.get_work (Current)

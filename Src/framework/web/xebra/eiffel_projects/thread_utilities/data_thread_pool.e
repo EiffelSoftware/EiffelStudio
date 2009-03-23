@@ -62,7 +62,7 @@ feature {NONE} -- Implementation: Access
 				i > capacity
 			loop
 				create thread.make (Current, work_semaphore)
-				thread.set_target (target_spawner.item ([]))
+				thread.set_target (target_spawner.item (Void))
 				thread.launch
 				i := i + 1
 			end

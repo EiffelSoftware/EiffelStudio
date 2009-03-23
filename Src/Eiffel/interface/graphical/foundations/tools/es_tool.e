@@ -542,7 +542,7 @@ feature -- Basic operations
 			end
 		ensure
 			is_tool_instantiated: is_tool_instantiated
-			panel_is_shown: panel.is_interface_usable implies panel.is_shown
+			panel_is_shown: panel.is_interface_usable implies (panel.is_visible)
 		end
 
 	close

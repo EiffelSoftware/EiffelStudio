@@ -71,7 +71,7 @@ feature --Execution
            	end
 
 			response := send_request (message, socket)
-			send_string ("response.txt", socket)
+			send_string (response.get_text, socket)
          	socket.cleanup
             check
             	socket.is_closed
@@ -156,7 +156,6 @@ feature {NONE} -- Implementation
 				(end_index -i).as_integer_32
 			end
 		end
-
 
 	read_string (socket: NETWORK_STREAM_SOCKET; n: NATURAL): STRING
 			-- Reads `n' characters from the socket and concatenates them to a string

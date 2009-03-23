@@ -33,6 +33,14 @@ feature -- Basic operations
 			xyz_mutex.release_mutex
 		end
 
+	eif_is_object_id_of_current (an_id: INTEGER): BOOLEAN
+			-- Is `an_id' the associated object ID of `Current'.
+		require
+			an_id_non_negative: an_id >= 0
+		do
+			Result := eif_id_object (an_id) = Current
+		end
+
 	eif_object_id (an_object: ANY): INTEGER
 			-- New identifier for `an_object'
 		local
@@ -53,7 +61,7 @@ feature -- Basic operations
 			Result := eif_object_id (Current)
 		ensure
 			eif_object_id_positive: Result > 0
-			inserted: eif_id_object (Result) = Current
+			inserted: eif_is_object_id_of_current (Result)
 		end
 
 	eif_object_id_free (an_id: INTEGER)

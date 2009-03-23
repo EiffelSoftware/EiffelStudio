@@ -43,7 +43,6 @@ feature -- Implementation
             server_socket.cleanup
         end
 
-
 	servlet_handler_spawner: SERVLET_HANDLER
 			-- Spawns {SERVLET_HANDLER}s for the `request_pool'
 		do

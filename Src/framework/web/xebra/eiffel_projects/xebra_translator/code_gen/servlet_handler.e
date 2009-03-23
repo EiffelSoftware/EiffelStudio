@@ -34,7 +34,7 @@ feature -- Implementation
 
 	build_request (message: STRING): REQUEST
 			-- Transforms a plain text message into a {REQUEST} object
-			-- for further use in he servlet.
+			-- for further use in the servlet.
 			-- Session is retrieved and set
 		do
 			-- TODO: Proper session creation, management etc.

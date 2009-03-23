@@ -68,6 +68,7 @@ feature -- Document
 	on_start
 			-- Called when parsing starts.
 		do
+			tag_stack.wipe_out
 			tag_stack.put (root_tag)
 		ensure then
 			only_root_on_stack: tag_stack.count = 1

@@ -51,6 +51,7 @@ feature -- Processing
 			servlet: ROOT_SERVLET_ELEMENT
 			request_class: CLASS_ELEMENT
 			application_class: CLASS_ELEMENT
+			file: PLAIN_TEXT_FILE
 		do
 				-- Generate all the {SERVLET} classes
 			from
@@ -59,16 +60,18 @@ feature -- Processing
 				servlets.after
 			loop
 				servlet := servlets.item
-				create buf.make_open_write (path + servlet.name.as_lower + ".e")
+				create file.make_open_write (path + servlet.name.as_lower + ".e")
+				create buf.make (file)
 				buf.set_ind_character ('%T')
 				servlet.serialize (buf)
 				servlets.forth
-				buf.close
+				file.close
 			end
 
 				-- Generate the {REQUEST_HANDLER} class
 			webapp_name.to_lower
-			create buf.make_open_write (path + webapp_name + "_request_handler.e")
+			create file.make_open_write (path + webapp_name + "_request_handler.e")
+			create buf.make (file)
 			buf.set_ind_character ('%T')
 			webapp_name.to_upper
 			create request_class.make (webapp_name + "_REQUEST_HANDLER")
@@ -76,16 +79,17 @@ feature -- Processing
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
-			buf.close
+			file.close
 
 				-- Generate the {APPLICATION} class
-			create buf.make_open_write (path + webapp_name.as_lower + "_application.e")
+			create file.make_open_write (path + webapp_name.as_lower + "_application.e")
+			create buf.make (file)
 			buf.set_ind_character ('%T')
 			create application_class.make (webapp_name.as_upper + "_APPLICATION")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
-			buf.close
+			file.close
 
 		end
 
@@ -125,7 +129,8 @@ feature -- Processing
 				some_servlets.after
 			loop
 				servlet := some_servlets.item
-				feature_body.extend (wrap ("stateless_servlets.put (create {" + servlet.name.as_upper + "}.make , %"" + servlet.name.as_upper + "%")"))
+				feature_body.extend (wrap ("stateless_servlets.put (create {"
+					+ servlet.name.as_upper + "}.make , %"" + servlet.name.as_upper + "%")"))
 				some_servlets.forth
 			end
 			create {ARRAYED_LIST [VARIABLE_ELEMENT]} locals.make (10)

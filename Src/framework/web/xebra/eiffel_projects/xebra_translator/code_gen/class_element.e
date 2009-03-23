@@ -100,7 +100,7 @@ feature -- Processing
 			end
 
 			buf.put_string (feature_kw + "-- Access")
-			buf.new_line
+			buf.put_new_line
 			buf.indent
 			from
 				variables.start
@@ -109,12 +109,12 @@ feature -- Processing
 			loop
 				variables.item.serialize (buf)
 				variables.forth
-				buf.new_line
+				buf.put_new_line
 			end
 			buf.unindent
 
 			buf.put_string (feature_kw + "-- Implementation")
-			buf.new_line
+			buf.put_new_line
 			buf.indent
 			from
 				features.start
@@ -123,7 +123,7 @@ feature -- Processing
 			loop
 				features.item.serialize (buf)
 				features.forth
-				buf.new_line
+				buf.put_new_line
 			end
 			buf.unindent
 			buf.append_string (footer)

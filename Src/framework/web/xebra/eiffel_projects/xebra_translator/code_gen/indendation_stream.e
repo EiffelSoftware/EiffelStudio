@@ -8,18 +8,8 @@ note
 class
 	INDENDATION_STREAM
 
-inherit
-	PLAIN_TEXT_FILE
-			--Stream would be better!
-		redefine
-			put_string
-		end
-
 create
-
-	make, make_open_read, make_open_write, make_open_append,
-	make_open_read_write, make_create_read_write,
-	make_open_read_append
+	make
 
 feature -- Access
 
@@ -28,6 +18,16 @@ feature -- Access
 
 	ind_character: CHARACTER
 			-- Indendantion character
+
+	stream: IO_MEDIUM
+			-- Stream on which we want to write
+
+feature -- Initialization
+
+	make (a_stream: IO_MEDIUM)
+		do
+			stream := a_stream
+		end
 
 feature
 
@@ -46,18 +46,22 @@ feature
 		end
 
 	put_string (a_string: STRING)
-			-- <Precursor>
 			-- String is automatically indendated and a new line added.
 		do
 			indendate
-			Precursor (a_string)
-			put_new_line
+			stream.put_string (a_string)
+			stream.put_new_line
+		end
+
+	put_new_line
+		do
+			stream.put_new_line
 		end
 
 	append_string (a_string: STRING)
 			-- Appends a string without indendation
 		do
-			put_string (a_string)
+			stream.put_string (a_string)
 		end
 
 	indent
@@ -88,7 +92,7 @@ feature {INDENDATION_STREAM} -- Implementation
 			until
 				i > indendation
 			loop
-				put_character (ind_character)
+				stream.put_character (ind_character)
 				i := i + 1
 			end
 		end

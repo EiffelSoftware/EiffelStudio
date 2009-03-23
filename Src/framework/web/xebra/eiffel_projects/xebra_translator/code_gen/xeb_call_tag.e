@@ -30,7 +30,7 @@ feature -- Access
 	output (parent: SERVLET; buf: INDENDATION_STREAM)
 			-- <Precursor>
 		do
---				parent.call_on_controller (feature_name) -- UNCOMMENT ASAP
+			parent.call_on_controller (feature_name)
 		end
 
 note

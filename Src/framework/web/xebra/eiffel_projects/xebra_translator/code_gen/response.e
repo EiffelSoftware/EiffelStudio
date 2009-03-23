@@ -16,26 +16,29 @@ feature -- Access
 	text: INDENDATION_STREAM assign set_text
 			-- Reponse text (xhtml)
 
+	file: SIMPLE_OUTPUTER
+			-- use another stream!
+
 feature -- Initialization
 
 	make
 			--
 		do
-			create text.make (" ")
+			create file.make
+			create text.make (file)
 		end
 
 feature -- Element change
-
-	append (a_string: STRING)
-			-- Appends `a_string' to the text
-		do
-			text.put_string (a_string)
-		end
 
 	set_text (a_text: INDENDATION_STREAM)
 			-- Sets the text
 		do
 			text := a_text
+		end
+
+	get_text: STRING
+		do
+			Result := file.get_text
 		end
 
 note

@@ -25,7 +25,7 @@ feature -- Access
 		end
 
 	n: INTEGER
-			--
+			-- Number of repetitions of the body
 
 	output (parent: SERVLET buf: INDENDATION_STREAM)
 			-- <Precursor>

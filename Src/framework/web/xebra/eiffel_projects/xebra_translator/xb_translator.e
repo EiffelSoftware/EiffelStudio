@@ -56,7 +56,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_file (a_filename: STRING; taglib_filename: STRING)
+	process_with_file (files: LIST [STRING]; taglib_filename: STRING)
 			-- `a_filename': Name of xeb file
 			-- `taglib_filename': Name of tag library file
 			-- Processes a file.
@@ -64,26 +64,46 @@ feature -- Processing
 			l_file: KL_TEXT_INPUT_FILE
 			l_taglib_file: KL_TEXT_INPUT_FILE
 			l_failed: BOOLEAN
+			wgenerator: WEBAPP_GENERATOR
 		do
 			if l_failed then
-				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
+				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["bananaphone"]), false)
 			else
-				create l_file.make (a_filename)
+
 				create l_taglib_file.make (taglib_filename)
-				if (not l_file.exists) or (not l_taglib_file.exists) then
-					error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename + " or " + taglib_filename]), false)
-				else
-					l_file.open_read
+--				if (not l_file.exists) or (not l_taglib_file.exists) then
+--					error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["bananaphone" + " or " + taglib_filename]), false)
+--				else
+--					l_file.open_read
 					l_taglib_file.open_read
-					if not l_file.is_open_read then
-						error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
-					else
+--					if not l_file.is_open_read then
+--						error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["bananahone"]), false)
+--					else
 						process_taglib_with_stream (l_taglib_file)
 						l_taglib_file.close
-						process_with_stream (l_file)
-						l_file.close
-					end
-				end
+						create wgenerator.make ("TESTAPP", output_path)
+--						l_file.close
+						from
+							files.start
+						until
+							files.after
+						loop
+							if files.item.ends_with (".xeb") then
+								create l_file.make (output_path + files.item)
+								l_file.open_read
+								if not l_file.is_open_read then
+									error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["bananahone"]), false)
+								else
+									wgenerator.put_servlet (process_with_stream (files.item.substring (1, files.item.index_of ('.', 1)-1), l_file, taglib))
+									l_file.close
+								end
+							end
+							files.forth
+						end
+
+						wgenerator.generate
+--					end
+--				end
 			end
 			rescue
 				l_failed := true
@@ -101,37 +121,34 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			taglib := l_p_callback.taglib
+
 		end
 
-	process_with_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
+	process_with_stream (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TAG_LIBRARY): ROOT_SERVLET_ELEMENT
 			-- Processes a file.
 		local
 			l_webapp_generator: WEBAPP_GENERATOR
 			l_root_tag: TAG_ELEMENT
 			l_parser: XM_PARSER
 			l_p_callback: XB_XML_PARSER_CALLBACKS
-			wgenerator: WEBAPP_GENERATOR
 			root_servlet_element: ROOT_SERVLET_ELEMENT
 		do
 				create l_webapp_generator.make (name, output_path)
 
 				create {XM_EIFFEL_PARSER} l_parser.make
 				create {XB_XML_PARSER_CALLBACKS} l_p_callback.make
-				l_p_callback.put_taglib (taglib)
+				l_p_callback.put_taglib (a_taglib)
 				l_parser.set_callbacks (l_p_callback)
 				l_parser.parse_from_stream (a_stream)
 
 				l_root_tag := l_p_callback.root_tag
-				create wgenerator.make ("TESTAPP", output_path)
-				create root_servlet_element.make ("testapp", "TESTAPP_CONTROLLER", False)
+				create root_servlet_element.make (servlet_name, "TESTAPP_CONTROLLER", False)
 				root_servlet_element.set_tag (l_root_tag)
 				root_servlet_element.set_controller_calls (l_p_callback.controller_calls)
-				wgenerator.put_servlet (root_servlet_element)
-				wgenerator.generate
+				Result := root_servlet_element
 		end
 
 feature {NONE} -- Implementation
-
 
 	read_file (a_filename: STRING): STRING
 			--reads a file into a string			

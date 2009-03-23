@@ -1,10 +1,12 @@
-<html pingu="123">
-	dear
-	<one>
-		<two>was</two>
-		<xeb:call feature="asda" chocolate="black">
-			<xeb:loop item="a_list_time"></xeb:loop>
-			<tringo></tringo>
-		</xeb:call>
-	</one>
+<html>
+	<h1>This is the correct page</h1>
+	<xeb:call feature="print_to_console" />
+	<ul>
+	<xeb:loop times="%=how_many_times%">
+		<li>
+			<strong>yeah</strong>
+		</li>
+	</xeb:loop>
+	</ul>
+	Go to my <a href="%=get_the_url%">home page</a>.
 </html>

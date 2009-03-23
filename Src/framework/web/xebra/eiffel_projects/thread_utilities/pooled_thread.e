@@ -40,7 +40,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	set_target (a_target: detachable G)
+	set_target (a_target: G)
 			-- Sets the target on which the work should be executed
 		do
 			target := a_target

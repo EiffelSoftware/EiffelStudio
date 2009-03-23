@@ -23,7 +23,9 @@ create
 	make,
 	make_by_pointer,
 	make_client,
-	make_window
+	make_window,
+	make_client_from_pointer,
+	make_window_from_pointer
 
 feature {NONE} -- Initialization
 
@@ -66,6 +68,28 @@ feature {NONE} -- Initialization
 			cwin_get_window_rect (window.item, item)
 		ensure
 			window_rect_set: is_equal (window.window_rect)
+		end
+
+	make_client_from_pointer (a_hwnd: POINTER)
+			-- Make a client rectangle with `a_hwnd'
+		require
+			hwnd_valid: a_hwnd /= default_pointer
+		do
+			structure_make
+			cwin_get_client_rect (a_hwnd, item)
+		ensure
+			left_equal_zero: left = 0
+			top_equal_zero: top = 0
+		end
+
+	make_window_from_pointer (a_hwnd: POINTER)
+			-- Make a window rectangle with `window'
+			-- (absolute position)
+		require
+			hwnd_valid: a_hwnd /= default_pointer
+		do
+			structure_make
+			cwin_get_window_rect (a_hwnd, item)
 		end
 
 feature -- Access

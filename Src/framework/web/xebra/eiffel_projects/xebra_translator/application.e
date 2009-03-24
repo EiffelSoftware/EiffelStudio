@@ -23,32 +23,35 @@ feature {NONE} -- Initialization
 			l_translator: XB_TRANSLATOR
 			dir: DIRECTORY
 		do
-			if false then --if Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_file output_path%N")
+			if  Arguments.argument_count /= 3 then
+				print ("usage: translator project_name input_path output_path%N")
 			else
 				print ("%N============================%NTranslator started...%N")
 
-				create l_translator.make ("testapp") --Arguments.argument (1))
-
-				l_translator.set_output_path ("../../websites/testapp/") --Arguments.argument (2)) --
-
-				create dir.make ("../../websites/testapp/")
 
 
-				l_translator.process_with_file (dir.linear_representation, "../../websites/testapp/xeb.taglib") --Arguments.argument (3)) --"../../websites/testapp/testapp.xeb")
+				create l_translator.make (Arguments.argument (1))
 
---				create l_printer.default_create
---				if error_manager.has_warnings then
---					error_manager.trace_warnings (l_printer)
---				end
 
---				if not error_manager.is_successful then
---					error_manager.trace_last_error (l_printer)
---				else
---					print ("Output file generated to '")
---					print (l_translator.output_path)
---					print ("'.")
---				end
+				create dir.make (Arguments.argument (2))
+
+				l_translator.set_output_path (Arguments.argument (3)) 
+
+
+				l_translator.process_with_file (dir.linear_representation, "xeb.taglib")
+
+				create l_printer.default_create
+				if error_manager.has_warnings then
+					error_manager.trace_warnings (l_printer)
+				end
+
+				if not error_manager.is_successful then
+					error_manager.trace_last_error (l_printer)
+				else
+					print ("Output file generated to '")
+					print (l_translator.output_path)
+					print ("'.")
+				end
 			end
 		end
 

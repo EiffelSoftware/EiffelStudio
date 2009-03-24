@@ -115,7 +115,7 @@ feature -- Meta
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
 				-- We don't need to output comments
-			--create_html_tag_with_text ("<!--" + a_content + "-->")
+			html_buf.append ("<!--" + a_content + "-->")
 		end
 
 feature -- Tag

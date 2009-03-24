@@ -76,7 +76,6 @@ feature -- Initialization
 		do
 			make;
 			addr := create_any_local
-			addr := create_localhost
 			create address.make_from_address_and_port (addr, a_port)
 			bind
 		end

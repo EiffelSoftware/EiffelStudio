@@ -66,19 +66,20 @@
 /*======= PROTOCOL =======*/
 /* The following strings represent delimiters for the message string that is sent to the server */
 
-#define POSTKEYWORD "#POST#"
-#define HEADERSKEYWORD "#HEADERS#"
+#define POSTP "#POST#"
+#define GETP "#GET#"
+#define HEADERS_IN "#HEADERS_IN#"
+#define HEADERS_OUT "#HEADERS_OUT#"
+#define SUBP_ENV "#SUBP_ENV#"
 #define TABLECSEP "#$#"
 #define TABLERSEP "#%#"
 
 /* MAX_POST_SIZE:
- *	Defines a max size to read the POST arguments
+ *	Defines a max size for reading the POST arguments
  */
 #define MAX_POST_SIZE 10000
 
 /*=======   =======*/
-
-
 
 /* Registers the module within apache */
 module AP_MODULE_DECLARE_DATA xebra_module;

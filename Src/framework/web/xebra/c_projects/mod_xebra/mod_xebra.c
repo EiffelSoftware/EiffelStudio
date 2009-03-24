@@ -29,7 +29,7 @@
  doc:            <synchronization></synchronization>
  doc:    </routine>
  */
-staticintxebra_handler(request_rec* r)
+static int xebra_handler(request_rec* r)
 {
 	int sockfd; /* socket it */
 	struct addrinfo hints, *servinfo, *p; /* information about connection */

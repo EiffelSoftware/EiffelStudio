@@ -24,8 +24,8 @@ inherit
 			check_constraint_genericity,
 			check_constraint_renaming,
 			feature_of_feature_id,
-			feature_with_rout_id,
-			feature_with_name_id
+			feature_of_rout_id,
+			feature_of_name_id
 		end
 
 	CONF_CONSTANTS
@@ -124,32 +124,22 @@ feature -- Access
 			end
 		end
 
-	feature_with_rout_id (rout_id: INTEGER_32): E_FEATURE
-			-- Feature whose routine id rout_id. Also finds inline agent features
-		local
-			feat: FEATURE_I
+	feature_of_rout_id (rout_id: INTEGER_32): FEATURE_I
+			-- <Precursor>. Also finds inline agent features
 		do
 			Result := Precursor (rout_id)
-			if Result = Void and then internal_inline_agent_table /= Void then
+			if Result = Void then
 					-- Might be an inline agent
-				feat := inline_agent_of_rout_id (rout_id)
-				if feat /= Void then
-					Result := feat.api_feature (class_id)
-				end
+				Result := inline_agent_of_rout_id (rout_id)
 			end
 		end
 
-	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
-			-- <Precursor>
-		local
-			f: FEATURE_I
+	feature_of_name_id (a_feature_name_id: INTEGER): FEATURE_I
+			-- <Precursor>. Also finds inline agent features
 		do
 			Result := Precursor (a_feature_name_id)
-			if Result = Void and then internal_inline_agent_table /= Void then
-				f := inline_agent_of_name_id (a_feature_name_id)
-				if f /= Void then
-					Result := f.api_feature (class_id)
-				end
+			if Result = Void then
+				Result := inline_agent_of_name_id (a_feature_name_id)
 			end
 		end
 

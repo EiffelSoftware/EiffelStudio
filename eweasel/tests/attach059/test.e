@@ -1,6 +1,9 @@
 class
 	TEST
 
+inherit
+	A
+
 create
 	make
 
@@ -23,7 +26,7 @@ feature {NONE} -- Tests
 		end
 
 	f (a, b, c: detachable ANY): detachable ANY
-		require
+		require else
 			a /= Void
 			a.out /= Void
 		do
@@ -39,7 +42,7 @@ feature {NONE} -- Tests
 				c /= Void
 				c.out /= Void
 			end
-		ensure
+		ensure then
 			Result /= Void
 			Result.out /= Void
 		end

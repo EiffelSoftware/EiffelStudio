@@ -1,6 +1,7 @@
 test_name 	 voidness-cap-in-assertion
 test_description CAPs of read-only entities apply to stable attributes.
 
+copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
 

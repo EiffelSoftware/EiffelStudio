@@ -3248,7 +3248,7 @@ feature -- Access
 			Result := obsolete_message /= Void
 		end
 
-	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
+	frozen feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_a_feature_name_id: a_feature_name_id > 0
@@ -3256,13 +3256,13 @@ feature -- Access
 		local
 			f: FEATURE_I
 		do
-			f := feature_table.item_id (a_feature_name_id)
+			f := feature_of_name_id (a_feature_name_id)
 			if f /= Void then
 				Result := f.api_feature (class_id)
 			end
 		end
 
-	feature_with_id (a_feature_id: ID_AS): E_FEATURE
+	frozen feature_with_id (a_feature_id: ID_AS): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_a_feature_id: a_feature_id /= Void
@@ -3270,7 +3270,7 @@ feature -- Access
 		local
 			f: FEATURE_I
 		do
-			f := feature_table.item_id (a_feature_id.name_id)
+			f := feature_of_name_id (a_feature_id.name_id)
 			if f /= Void then
 				Result := f.api_feature (class_id)
 			end
@@ -3290,7 +3290,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_rout_id (rout_id: INTEGER): E_FEATURE
+	frozen feature_with_rout_id (rout_id: INTEGER): E_FEATURE
 			-- Feature whose routine id `rout_id'.
 		require
 			valid_rout_id: rout_id /= 0
@@ -3298,13 +3298,13 @@ feature -- Access
 		local
 			feat: FEATURE_I
 		do
-			feat := feature_table.feature_of_rout_id (rout_id)
+			feat := feature_of_rout_id (rout_id)
 			if feat /= Void then
 				Result := feat.api_feature (class_id)
 			end
 		end
 
-	feature_with_body_index (a_body_index: INTEGER): E_FEATURE
+	frozen feature_with_body_index (a_body_index: INTEGER): E_FEATURE
 			-- Feature whose body index is `a_body_index'.
 		require
 			a_body_index_non_negative: a_body_index >= 0
@@ -3312,13 +3312,13 @@ feature -- Access
 		local
 			l_feat: FEATURE_I
 		do
-			l_feat := feature_table.feature_of_body_index (a_body_index)
+			l_feat := feature_of_body_index (a_body_index)
 			if l_feat /= Void then
 				Result := l_feat.api_feature (class_id)
 			end
 		end
 
-	feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE
+	frozen feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE
 			-- Feature whose feature id `a_feature_id.
 		require
 			feature_id_non_negative: a_feature_id >= 0
@@ -3326,7 +3326,7 @@ feature -- Access
 		local
 			l_feat: FEATURE_I
 		do
-			l_feat := feature_table.feature_of_feature_id (a_feature_id)
+			l_feat := feature_of_feature_id (a_feature_id)
 			if l_feat /= Void then
 				Result := l_feat.api_feature (class_id)
 			end

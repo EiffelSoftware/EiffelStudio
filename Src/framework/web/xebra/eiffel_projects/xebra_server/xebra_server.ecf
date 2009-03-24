@@ -5,14 +5,14 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+		<option warning="true" syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<cluster name="thread_utilities" location="\home\sandrod\workspace\xebra\eiffel_projects\thread_utilities\" recursive="true"/>
+		<cluster name="thread_utilities" location="..\thread_utilities\" recursive="true"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
@@ -20,7 +20,7 @@
 				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="xebra_translator" location="\home\sandrod\workspace\xebra\eiffel_projects\xebra_translator\code_gen\" recursive="true"/>
+		<cluster name="xebra_translator" location="..\xebra_translator\code_gen\" recursive="true"/>
 	</target>
 	<target name="xebra_server_dotnet" extends="xebra_server">
 		<setting name="msil_generation" value="true"/>

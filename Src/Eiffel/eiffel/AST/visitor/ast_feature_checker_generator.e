@@ -6427,7 +6427,11 @@ feature -- Implementation
 			end
 			if l_as.invariant_part /= Void then
 					-- Type check the invariant loop
-				l_as.invariant_part.process (Current)
+				context.enter_realm
+				s := context.scope
+				process_eiffel_list_with_matcher (l_as.invariant_part, create {AST_SCOPE_ASSERTION}.make (context), Void)
+				context.set_scope (s)
+				context.leave_optional_realm
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_loop.set_invariant_part (l_list)
@@ -6697,6 +6701,8 @@ feature -- Implementation
 		end
 
 	process_invariant_as (l_as: INVARIANT_AS)
+		local
+			s: INTEGER
 		do
 			break_point_slot_count := 0
 			context.inline_agent_counter.reset
@@ -6704,7 +6710,11 @@ feature -- Implementation
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)
-				l_as.assertion_list.process (Current)
+				context.enter_realm
+				s := context.scope
+				process_eiffel_list_with_matcher (l_as.assertion_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
+				context.set_scope (s)
+				context.leave_optional_realm
 				set_is_checking_invariant (False)
 			else
 				last_byte_node := Void
@@ -6915,6 +6925,7 @@ feature -- Implementation
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
+			s: INTEGER
 		do
 			a := l_as.assertions
 			if a /= Void then
@@ -6922,7 +6933,11 @@ feature -- Implementation
 					create b.make (a.count)
 					i := context.next_object_test_local_position
 				end
-				process_eiffel_list_with_matcher (a, Void, b)
+				context.enter_realm
+				s := context.scope
+				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+				context.set_scope (s)
+				context.leave_optional_realm
 				if b /= Void then
 					if b.is_empty then
 						b := Void
@@ -6939,6 +6954,7 @@ feature -- Implementation
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
+			s: INTEGER
 		do
 			a := l_as.assertions
 			if a /= Void then
@@ -6946,7 +6962,11 @@ feature -- Implementation
 					create b.make (a.count)
 					i := context.next_object_test_local_position
 				end
-				process_eiffel_list_with_matcher (a, Void, b)
+				context.enter_realm
+				s := context.scope
+				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+				context.set_scope (s)
+				context.leave_optional_realm
 				if b /= Void then
 					if b.is_empty then
 						b := Void
@@ -6990,6 +7010,7 @@ feature -- Implementation
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
+			s: INTEGER
 		do
 			a := l_as.assertions
 			if a /= Void then
@@ -6997,7 +7018,11 @@ feature -- Implementation
 					create b.make (a.count)
 					i := context.next_object_test_local_position
 				end
-				process_eiffel_list_with_matcher (a, Void, b)
+				context.enter_realm
+				s := context.scope
+				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)
+				context.set_scope (s)
+				context.leave_optional_realm
 				if b /= Void then
 					if b.is_empty then
 						b := Void

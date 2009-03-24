@@ -58,23 +58,20 @@ feature {AST_EIFFEL} -- Visitor pattern
 			if is_negated = is_negation_expected then
 				if l_as.name /= Void then
 					add_object_test_scope (l_as.name)
-				else
-						-- Remove parentheses surrounding expression
-					from
-						expr := l_as.expression
-					until
-						not attached {PARAN_AS} expr as left_paran_as
-					loop
-						expr := left_paran_as.expr
-					end
-					if attached {EXPR_CALL_AS} expr as expr_call_as then
-						if attached {ACCESS_ID_AS} expr_call_as.call as access_id_as then
-							add_access_scope (access_id_as)
-						elseif attached {ACCESS_ASSERT_AS} expr_call_as.call as access_assert_as then
-							add_access_scope (access_assert_as)
-						elseif attached {RESULT_AS} expr_call_as.call as result_as then
-							add_result_scope
-						end
+				end
+					-- Remove parentheses surrounding expression
+				from
+					expr := l_as.expression
+				until
+					not attached {PARAN_AS} expr as paran_as
+				loop
+					expr := paran_as.expr
+				end
+				if attached {EXPR_CALL_AS} expr as expr_call_as then
+					if attached {ACCESS_INV_AS} expr_call_as.call as access_inv_as then
+						add_access_scope (access_inv_as)
+					elseif attached {RESULT_AS} expr_call_as.call as result_as then
+						add_result_scope
 					end
 				end
 			end
@@ -133,10 +130,8 @@ feature {NONE} -- Check for void test
 					e := left
 				end
 				if attached {EXPR_CALL_AS} e as expr_call_as then
-					if attached {ACCESS_ID_AS} expr_call_as.call as access_id_as then
-						add_access_scope (access_id_as)
-					elseif attached {ACCESS_ASSERT_AS} expr_call_as.call as access_assert_as then
-						add_access_scope (access_assert_as)
+					if attached {ACCESS_INV_AS} expr_call_as.call as access_inv_as then
+						add_access_scope (access_inv_as)
 					elseif attached {RESULT_AS} expr_call_as.call as result_as then
 						add_result_scope
 					end

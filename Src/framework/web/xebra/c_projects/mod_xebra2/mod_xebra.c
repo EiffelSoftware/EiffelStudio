@@ -14,6 +14,7 @@
  * 			Customer support http://support.eiffel.com
  * 			]"
  */
+#define REVISION "$Revision$"
 
 #include "mod_xebra.h"
 
@@ -23,7 +24,7 @@ static void* create_srv_cfg (apr_pool_t* pool, char* x)
 {
 	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
 	svr_cfg->port = "9999";
-	svr_cfg->port = "localhost";
+	svr_cfg->port = "0.0.0.0";
 	return svr_cfg;
 }
 
@@ -102,7 +103,7 @@ static int read_from_POST (request_rec* r, char **buf)
 				eos = 1;
 			}
 
-			if (!APR_BUCKET_IS_METADATA (b)) {
+			if (!APR_BUCKE T_IS_METADATA (b)) {
 				if (b->length != (apr_size_t) (-1)) {
 					count += b->length;
 					if (count > MAX_POST_SIZE) {
@@ -141,14 +142,13 @@ static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLECSEP, key, TABLERSEP,
-			value, TABLERSEP, NULL);
+			value, NULL);
 	return 1;
 }
 
 static int xebra_handler (request_rec* r)
 {
-
-	int sockfd; /* socket it */
+	int sockfd; /* socket id */
 	struct addrinfo hints, *servinfo, *p; /* information about connection */
 	int rv = OK; /* information about connection */
 	char s[INET6_ADDRSTRLEN]; /* information about connection */
@@ -183,10 +183,14 @@ static int xebra_handler (request_rec* r)
 
 	table_buf = apr_palloc (r->pool, 1);
 	table_buf[0] = '\0';
+
+	table_buf = apr_pstrcat (r->pool, HEADERS_IN, NULL);
 	apr_table_do (print_item, r, r->headers_in, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, HEADERS_OUT, NULL);
 	apr_table_do (print_item, r, r->headers_out, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, SUBP_ENV, NULL);
 	apr_table_do (print_item, r, r->subprocess_env, NULL);
-	message = apr_pstrcat (r->pool, message, HEADERSKEYWORD, table_buf, NULL);
+	message = apr_pstrcat (r->pool, message, table_buf, NULL);
 
 	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
@@ -201,10 +205,10 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Error reading from data!", r);
 			return rv;
 		}
-		message = apr_pstrcat (r->pool, message, POSTKEYWORD, post_buf, NULL);
+		message = apr_pstrcat (r->pool, message, POSTP, post_buf, NULL);
 	}
 
-	message = apr_pstrcat (r->pool, message, "#END#", NULL);
+	//	message = apr_pstrcat (r->pool, message, "#END#", NULL);
 
 	/* set up connection to server */
 	DEBUG ("Setting up connection.");
@@ -221,7 +225,7 @@ static int xebra_handler (request_rec* r)
 	if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
 				gai_strerror (rv));
-		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
+		//ap_rputs ("Cannot resolve XEbraServer address. See error log.", r);
 		return OK;
 	}
 
@@ -230,20 +234,20 @@ static int xebra_handler (request_rec* r)
 		if ((sockfd = socket (p->ai_family, p->ai_socktype, p->ai_protocol))
 				== -1) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error socket");
-			ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
+			//ap_rputs ("Cannot get socket to XEbraServer. See error log.", r);
 			continue;
 		}
 
 		if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error connect");
-			ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
+			//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 			continue;
 		}
 		break;
 	}
 
 	if (p == NULL) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "client: failed to connect");
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
 		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 		return OK;
 	}
@@ -277,11 +281,13 @@ static int xebra_handler (request_rec* r)
 
 	/* display received message */
 	ap_rputs (rmsg_buf, r);
-	//free (rmsg_buf); apache does it
-
+	/* display module revision */
+	ap_rputs ("<br><br><br><br><i><small>--xebra_mod ", r);
+	ap_rputs (REVISION, r);
+	ap_rputs ("</small></i>", r);
 	shutdown (sockfd, 2);
-	close (sockfd);
 
+	close (sockfd);
 	return OK;
 }
 

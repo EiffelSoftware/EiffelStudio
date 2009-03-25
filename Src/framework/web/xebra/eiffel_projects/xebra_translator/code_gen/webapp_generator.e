@@ -130,7 +130,7 @@ feature -- Processing
 			loop
 				servlet := some_servlets.item
 				feature_body.extend (wrap ("stateless_servlets.put (create {"
-					+ servlet.name.as_upper + "}.make , %"" + servlet.name.as_upper + "%")"))
+					+ servlet.name.as_upper + "}.make , %"" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")"))
 				some_servlets.forth
 			end
 			create {ARRAYED_LIST [VARIABLE_ELEMENT]} locals.make (10)

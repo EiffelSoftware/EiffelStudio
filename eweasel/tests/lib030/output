@@ -1,0 +1,21 @@
+File name: my_file
+Regular file: True
+Device: False
+Directory: False
+Symlink: False
+Fifo: False
+Socket: False
+Block special: False
+Character special: False
+
+File name: my_link
+Regular file: False
+Device: False
+Directory: False
+Symlink: True
+Fifo: False
+Socket: False
+Block special: False
+Character special: False
+
+Execution completed

@@ -12,7 +12,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">

@@ -16,6 +16,7 @@ feature -- Access
 
 	id: STRING
 	call: BOOLEAN
+	call_with_result: BOOLEAN
 
 	make
 		do
@@ -37,6 +38,9 @@ feature -- Access
 			end
 			if a_id.is_equal ("call") then
 				call := value.to_boolean
+			end
+			if a_id.is_equal ("call_with_result") then
+				call_with_result := value.to_boolean
 			end
 		end
 

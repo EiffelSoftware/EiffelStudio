@@ -18,19 +18,26 @@ create
 
 feature -- Access
 
-	make (params: TABLE [STRING, STRING])
+	make
 		do
 			make_base
-			feature_name := params ["feature"]
+			create {CONSTANT_ATTRIBUTE} feature_name.make ("")
 		end
 
-	feature_name: STRING
+	feature_name: TAG_ATTRIBUTE
 			-- The name of the feature to call
 
 	output (parent: SERVLET; buf: INDENDATION_STREAM)
 			-- <Precursor>
 		do
-			parent.call_on_controller (feature_name)
+			parent.call_on_controller (feature_name.value (parent))
+		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		do
+			if id.is_equal ("feature") then
+				feature_name := a_attribute
+			end
 		end
 
 note

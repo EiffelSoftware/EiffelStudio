@@ -1,79 +1,19 @@
 note
-	description: "Summary description for {TAG_DESCRIPTION}."
+	description: "Summary description for {TAG_ATTRIBUTE}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	TAG_DESCRIPTION
-
-inherit
-	TAG_LIB_ITEM
-
-create
-	make
+deferred class
+	TAG_ATTRIBUTE
 
 feature -- Access
 
-	class_name: STRING
-	name: STRING
-
-	attributes: LIST [TAG_DESCRIPTION_ATTRIBUTE]
-
-	make
-		do
-			class_name := ""
-			name := ""
-			create {ARRAYED_LIST [TAG_DESCRIPTION_ATTRIBUTE]} attributes.make (10)
+	value (servlet: SERVLET): STRING
+		deferred
 		end
 
-	put (a_child: TAG_LIB_ITEM)
-		local
-			child: TAG_DESCRIPTION_ATTRIBUTE
-		do
-			child ?= a_child
-			attributes.extend (child)
-		end
-
-	set_attribute (id: STRING; value: STRING)
-		do
-			if id.is_equal ("class") then
-				class_name := value
-			end
-			if id.is_equal ("id") then
-				name := value
-			end
-		end
-
-	is_call_feature (a_name: STRING): BOOLEAN
-		do
-			Result := False
-			from
-				attributes.start
-			until
-				attributes.after
-			loop
-				if attributes.item.id.is_equal (a_name) then
-					Result := attributes.item.call
-				end
-				attributes.forth
-			end
-		end
-
-	is_call_with_result_feature (a_name: STRING): BOOLEAN
-		do
-			Result := False
-			from
-				attributes.start
-			until
-				attributes.after
-			loop
-				if attributes.item.id.is_equal (a_name) then
-					Result := attributes.item.call_with_result
-				end
-				attributes.forth
-			end
-		end
-note
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

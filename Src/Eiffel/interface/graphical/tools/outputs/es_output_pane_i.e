@@ -34,6 +34,15 @@ feature -- Access
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
+	text: STRING_32
+			-- Text of contents generated to date.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Query
 
 	text_for_window (a_window: attached SHELL_WINDOW_I): attached STRING_32
@@ -92,6 +101,34 @@ feature -- Basic operations
 			if l_output_window /= Void then
 				l_output_window.clear_window
 			end
+		end
+
+feature -- Actions
+
+	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW; lines: NATURAL]]
+			-- Actions called when a new line has been added to the output
+			--
+			-- 'sender': The sender (Current) of the action.
+			-- 'lines': Number of new lines added.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = new_line_actions
+		end
+
+	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW]]
+			-- Actions called when the text has changed.
+			--
+			-- 'sender': The sender (Current) of the action.
+			-- 'count': Number of new lines added.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = text_changed_actions
 		end
 
 ;note

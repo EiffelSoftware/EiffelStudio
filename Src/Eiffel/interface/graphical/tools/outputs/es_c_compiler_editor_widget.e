@@ -1,6 +1,6 @@
 note
 	description: "[
-		An ESF widget for the C/C++ compilation editor.
+		An ESF widget for the C/C++ compilation output in the Outputs Tool ({ES_OUTPUTS_TOOL}).
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -188,7 +188,7 @@ feature {NONE} -- Internationalization
 
 	tt_open_in_external_editor: STRING = "Open the selected file name in an external editor"
 	tt_open_folder: STRING = "Open the selected folder"
-	
+
 	l_project: STRING = "Project Folder"
 	l_workbench: STRING = "Workbench Compiler Folder"
 	l_finalized: STRING = "Finalized Compiler Folder"

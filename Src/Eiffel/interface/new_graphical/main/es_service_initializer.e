@@ -158,7 +158,7 @@ feature {NONE} -- Registration: Output
 			create l_kinds
 			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_general), l_icons.tool_output_icon_buffer), l_kinds.general)
 			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_compiler), l_icons.compile_animation_7_icon_buffer), l_kinds.eiffel_compiler)
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_external_compilation), l_icons.tool_c_output_icon_buffer), l_kinds.c_compiler)
+			a_service.register (create {ES_C_COMPILER_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_external_compilation), l_icons.tool_c_output_icon_buffer), l_kinds.c_compiler)
 		end
 
 feature {NONE} -- Internationalization

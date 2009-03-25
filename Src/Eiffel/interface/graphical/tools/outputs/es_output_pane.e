@@ -38,13 +38,19 @@ inherit
 
 feature {NONE} -- Initialization
 
+	make
+			-- Initializes the output pane
+		do
+			create notifier_output_window.make
+		end
+
 	build_interface (a_widget: attached G)
 			-- Builds the interface for the widget.
 			--
 			-- `a_widget': The widget to build/initialize.
 		require
 			is_interface_usable: is_interface_usable
-			not_a_widget_is_interface_usable: not a_widget.is_interface_usable
+			a_widget_is_interface_usable: a_widget.is_interface_usable
 		deferred
 		end
 
@@ -72,6 +78,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
+	text: STRING_32
+			-- <Precursor>
+		do
+			Result := notifier_output_window.string
+		end
+
 	output_window: attached ES_MULTI_OUTPUT_WINDOW
 			-- <Precursor>
 		local
@@ -80,11 +92,21 @@ feature -- Access
 			l_result := internal_output_window
 			if l_result = Void then
 				create {ES_MULTI_OUTPUT_WINDOW} Result.make
+					-- Add the notifier window to ensure clients have access to the cached
+					-- string contents and actions.
+				Result.extend (notifier_output_window)
 				internal_output_window := Result
 			else
 				Result := l_result
 			end
+		ensure then
+			result_has_notifier_output_window: Result.has_window (notifier_output_window)
 		end
+
+feature {NONE} -- Access
+
+	notifier_output_window: attached ES_NOTIFIER_OUTPUT_WINDOW
+			-- Ouptut window use to notify clients of changes.
 
 feature {NONE} -- Access: User interface
 
@@ -148,6 +170,7 @@ feature -- Query: User interface elements
 				Result := l_table.item (l_id)
 			else
 				Result := new_widget (a_window)
+				build_interface (Result)
 				if l_table = Void then
 					create l_table.make_default
 					widget_table := l_table
@@ -184,6 +207,20 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Actions
+
+	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW; lines: NATURAL]]
+			-- <Precursor>
+		do
+			Result := notifier_output_window.new_line_actions
+		end
+
+	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW]]
+			-- <Precursor>
+		do
+			Result := notifier_output_window.text_changed_actions
+		end
+
 feature {NONE} -- Factory
 
 	new_widget (a_window: attached SHELL_WINDOW_I): attached G
@@ -204,6 +241,9 @@ feature {NONE} -- Implementation: Internal cache
 	internal_output_window: detachable like output_window
 			-- Cached version of `output_window'.
 			-- Note: Do not use directly!
+
+invariant
+	notifier_output_window_attached: notifier_output_window /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

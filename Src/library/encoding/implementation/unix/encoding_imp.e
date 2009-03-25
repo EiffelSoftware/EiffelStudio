@@ -1,5 +1,8 @@
 note
-	description: "Encoding conversion implementation on Unix"
+	description: "[
+					Encoding conversion implementation on Unix. The cache is never freed in the library. 
+					It relies on the normal termination of the client process.
+					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -26,7 +29,7 @@ feature -- String encoding convertion
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			l_managed_pointer, l_fp, l_tp: MANAGED_POINTER
+			l_managed_pointer: MANAGED_POINTER
 			l_count, l_size, i: INTEGER
 			l_pointer: POINTER
 			l_out_count: INTEGER
@@ -59,9 +62,7 @@ feature -- String encoding convertion
 					l_managed_pointer := multi_byte_to_pointer (a_from_string.as_string_8)
 					l_count := a_from_string.count
 				end
-				l_fp := multi_byte_to_pointer (a_from_code_page)
-				l_tp := multi_byte_to_pointer (a_to_code_page)
-				l_pointer := c_iconv (l_fp.item, l_tp.item, l_managed_pointer.item, l_count, $l_out_count, $l_error)
+				l_pointer := iconv_imp (a_from_code_page, a_to_code_page, l_managed_pointer.item, l_count, $l_out_count, $l_error)
 				if l_error /= 0 then
 					last_conversion_successful := False
 					conversion_exception (l_error).raise
@@ -137,14 +138,11 @@ feature -- Status report
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING_8): BOOLEAN
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		local
-			l_from_pointer, l_to_pointer: MANAGED_POINTER
 			l_error: INTEGER
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_from_pointer := multi_byte_to_pointer (a_from_code_page)
-				l_to_pointer := multi_byte_to_pointer (a_to_code_page)
-				Result := is_codeset_convertable (l_from_pointer.item, l_to_pointer.item, $l_error)
+				Result := is_codeset_convertable (a_from_code_page, a_to_code_page, $l_error)
 				if l_error /= 0 then
 					conversion_exception (l_error).raise
 				end
@@ -166,12 +164,10 @@ feature {NONE} -- Status report
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
 		local
-			l_pointer: MANAGED_POINTER
 			l_error: INTEGER
 		do
 			if not a_code_page.is_case_insensitive_equal (utf8) then
-				l_pointer := multi_byte_to_pointer (a_code_page)
-				Result := c_codeset_valid (l_pointer.item, $l_error)
+				Result := c_codeset_valid (a_code_page, $l_error)
 				if l_error /= 0 then
 					conversion_exception (l_error).raise
 				end
@@ -216,7 +212,65 @@ feature {NONE} -- Status report
 			Result := little_endian_code_pages.has (a_code_page.as_lower)
 		end
 
+feature {NONE} -- Cache
+
+	descriptor_cache: DESCRIPTOR_CACHE
+			-- Cache
+		once
+			create Result.make
+		end
+
 feature {NONE} -- Implementation
+
+	iconv_imp (a_from_code_page, a_to_code_page: STRING; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
+			-- `iconv' plus setup and caching.
+		require
+			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
+			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
+			code_page_convertable: is_code_page_convertable (a_from_code_page, a_to_code_page)
+		local
+			l_fp, l_tp: MANAGED_POINTER
+			l_key: STRING
+			l_cd: POINTER
+			l_succ: BOOLEAN
+		do
+			l_key := a_from_code_page + a_to_code_page
+			descriptor_cache.search (l_key)
+			check found: descriptor_cache.found end
+			l_cd := descriptor_cache.found_item
+			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_b)
+		end
+
+	is_codeset_convertable (a_from_code_page, a_to_code_page: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
+			-- Is `a_from_codeset' and `a_to_codeset' convertable?
+		local
+			l_fp, l_tp: MANAGED_POINTER
+			l_key: STRING
+			l_cd: POINTER
+			l_succ: BOOLEAN
+		do
+			l_key := a_from_code_page + a_to_code_page
+			descriptor_cache.search (l_key)
+			if descriptor_cache.found then
+				Result := True
+			else
+				l_fp := multi_byte_to_pointer (a_from_code_page)
+				l_tp := multi_byte_to_pointer (a_to_code_page)
+				l_cd := c_iconv_open (l_fp.item, l_tp.item, a_error, $l_succ)
+				if l_succ then
+					descriptor_cache.put (l_cd, l_key)
+					Result := True
+				end
+			end
+		end
+
+	c_codeset_valid (a_code_set: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
+			-- Check if `a_code_set' is convertible to utf-8 to see if it is valid.
+			-- Some systems do not support utf-8 to utf-8 conversion, so checking utf-8
+			-- should be avoided.
+		do
+			Result := is_codeset_convertable (a_code_set, "utf-8", a_error)
+		end
 
 	bom_little_endian (code: NATURAL_32): BOOLEAN
 			-- Is `code' little endian BOM?
@@ -295,7 +349,26 @@ feature {NONE} -- Implementation
 			conversion_exception_not_void: Result /= Void
 		end
 
-	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
+	c_iconv_open (a_from_codeset, a_to_codeset: POINTER; a_b: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]): POINTER
+			-- Open a descriptor
+		external
+			"C inline use <iconv.h>"
+		alias
+			"[
+				iconv_t cd;
+				
+				cd = iconv_open ($a_to_codeset, $a_from_codeset);
+				if (cd == (iconv_t)(-1)) {
+					*$a_b = 3;
+					return NULL;
+				}
+				printf ("iconv_open \n");
+				*$a_succ = EIF_TRUE;
+				return cd;
+			]"
+		end
+
+	c_iconv (a_cd: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
 			-- Code `a_b' could be set when error occurs.
 			-- See `conversion_exception' for the meaning.
 		external
@@ -303,7 +376,7 @@ feature {NONE} -- Implementation
 		alias
 			"[
 				size_t insize = 0;
-				iconv_t cd;
+				iconv_t cd = (iconv_t) $a_cd;
 				size_t nconv, avail, alloc;
 				char *res, *tres, *wrptr, *inptr;
 				
@@ -319,12 +392,8 @@ feature {NONE} -- Implementation
 				wrptr = res;   /* duplicate pointers because they */
 				inptr = $a_str; /* get modified by iconv */
 				
-				cd = iconv_open ($a_to_codeset, $a_from_codeset);
-				if (cd == (iconv_t)(-1)) {
-					*$a_b = 3;
-					free(res);
-					return NULL;
-				}
+				/* Reset the descriptor to intial state. */
+				iconv (cd, NULL, 0, NULL, 0);
 				
 				do {				
 					nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
@@ -359,64 +428,24 @@ feature {NONE} -- Implementation
 					}
 				} while (insize);
 				
-				if (iconv_close(cd)) {
-					*$a_b = 8;
-				}
-				
 				*$a_out_count = alloc - avail;
 				
 				return res;
 			]"
 		end
 
-	is_codeset_convertable (a_from_codeset, a_to_codeset: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
-			-- Is `a_from_codeset' and `a_to_codeset' convertable?
-		external
-			"C inline use <iconv.h>"
-		alias
-			"[
-				iconv_t cd;
-				cd = iconv_open ($a_to_codeset, $a_from_codeset);
-				if (cd != (iconv_t)(-1)){
-					if (iconv_close(cd)) {
-						*$a_error = 8;
-					}
-					return EIF_TRUE;
-				}else
-					return EIF_FALSE;
-			]"
-		end
 
-	c_codeset_valid (a_code_set: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
-			-- Check if `a_code_set' is convertible to utf-8 to see if it is valid.
-			-- Some systems do not support utf-8 to utf-8 conversion, so checking utf-8
-			-- should be avoided.
-		external
-			"C inline use <iconv.h>"
-		alias
-			"[
-				iconv_t cd;
-				cd = iconv_open ($a_code_set, "utf-8");
-				if (cd != (iconv_t)(-1)){
-					if (iconv_close(cd)) {
-						*$a_error = 8;
-					}
-					return EIF_TRUE;
-				}else
-					return EIF_FALSE;
-			]"
-		end
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

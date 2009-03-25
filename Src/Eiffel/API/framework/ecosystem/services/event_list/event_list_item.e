@@ -37,24 +37,38 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	category: NATURAL_8
-			-- Event item category, see {ENVIRONMENT_CATEGORIES}
+	category: NATURAL_8 assign set_category
+			-- <Precursor>
 
-	priority: INTEGER_8
-			-- Event item priority, see {PRIORITY_LEVELS}
+	priority: INTEGER_8 assign set_priority
+			-- <Precursor>
 
-	data: ANY
-			-- Event item user data
+	data: detachable ANY
+			-- <Precursor>
+
+feature -- Element change
+
+	set_category (a_category: like category)
+			-- <Precursor>
+		do
+			category := a_category
+		end
+
+	set_priority (a_priority: like priority)
+			-- <Precursor>
+		do
+			priority := a_priority
+		end
 
 feature -- Status report
 
 	is_invalidated: BOOLEAN
-			-- Indicates if the item has been invalidated and should be removed
+			-- <Precursor>
 
 feature -- Basic operations
 
 	invalidate
-			-- Invalidates the item for removal
+			-- <Precursor>
 		do
 			is_invalidated := True
 		end
@@ -65,7 +79,7 @@ invariant
 	data_is_valid_data: is_valid_data (data)
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -78,22 +92,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

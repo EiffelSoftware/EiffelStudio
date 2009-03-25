@@ -138,6 +138,7 @@ feature -- Processing
 				create root_servlet_element.make (servlet_name, name + "_CONTROLLER", False, l_root_tag)
 				root_servlet_element.set_tag (l_root_tag)
 				root_servlet_element.set_controller_calls (l_p_callback.controller_calls)
+				root_servlet_element.set_controller_calls_with_result (l_p_callback.controller_calls_with_result)
 				Result := root_servlet_element
 		end
 

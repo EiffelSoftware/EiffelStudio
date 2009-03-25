@@ -1,56 +1,46 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {XEB_OUTPUT_CALL_TAG}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XEB_OUTPUT_CALL_TAG
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	TAG_SERIALIZER
+		redefine
+			output
+		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature
 
 	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XB_TRANSLATOR
-			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+			make_base
+			create {CONSTANT_ATTRIBUTE} feature_name.make ("")
+		end
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+	feature_name: TAG_ATTRIBUTE
+			-- The name of the feature to call
 
-				l_translator.set_output_path (Arguments.argument (3))
+	output (parent: SERVLET; buf: INDENDATION_STREAM)
+			-- <Precursor>
+		do
+			buf.put_string (feature_name.value(parent))
+		end
 
-				l_translator.process_with_file (dir.linear_representation, "xeb.taglib")
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		do
+			if id.is_equal ("value") then
+				feature_name := a_attribute
 			end
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +72,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-
-
 	parse_table (a_string: STRING; a_key_in: STRING; a_key_out: STRING): HASH_TABLE [STRING, STRING]
 			-- Process string only from the first occurence of key_in until
 			-- the first occurence of key_out. Extracts all pairs and writes
@@ -43,7 +41,6 @@ feature -- Processing
 			l_key: STRING
 			l_value: STRING
 			l_has_more: BOOLEAN
-			l_method: STRING
 		do
 			create Result.make (12)
 
@@ -84,10 +81,6 @@ feature -- Processing
 		local
 			l_s: STRING
 			l_i: INTEGER
-			l_j: INTEGER
-			l_key: STRING
-			l_value: STRING
-			l_has_more: BOOLEAN
 			l_method: STRING
 		do
 			l_s := a_string.twin

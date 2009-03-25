@@ -25,7 +25,8 @@ feature {NONE} -- Initialization
 			create root_tag.make ("html", HTML_TAG_NAME)
 			create tag_stack.make (10)
 			create html_buf.make_empty
-			create {ARRAYED_LIST [STRING]} controller_calls.make (10)
+			create {ARRAYED_LIST [STRING]} controller_calls.make (2)
+			create {ARRAYED_LIST [STRING]} controller_calls_with_result.make (2)
 		end
 
 feature -- Constants
@@ -41,8 +42,8 @@ feature -- Constants
 feature -- Access
 
 	state: INTEGER
-		-- 0 reading html
-		-- 1 reading a tag
+		-- 0 READING_HTML
+		-- 1 READING_TAG
 
 	html_buf: STRING
 		-- Stores html text until a tag is created from it
@@ -54,8 +55,13 @@ feature -- Access
 		-- The stack is used to generate the tree
 
 	taglib: TAG_LIBRARY
+			-- Tag library which should be used
 
 	controller_calls: LIST [STRING]
+			-- All the calls on procedures which should be available for a servlet to be called
+
+	controller_calls_with_result: LIST [STRING]
+			-- All the calls on functions which should be available for a servlet to be called
 
 	put_taglib (a_taglib: TAG_LIBRARY)
 			-- Adds a taglib to the parser
@@ -197,17 +203,26 @@ feature -- Tag
 				-- all variables initialized
 
 			if state = READING_TAG then
-				tag_stack.item.put_attribute (l_namespace, l_prefix, l_local_part, l_value)
-				if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
-					tag_stack.item.put_controller_call (l_value)
+				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
+					process_dynamic_tag_attribute (l_local_part, l_value)
+				elseif taglib.is_call_feature (tag_stack.item.id, l_local_part) then
 					controller_calls.extend (l_value)
+					tag_stack.item.put_attribute (l_local_part, l_value)
+				elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
+					controller_calls_with_result.extend (l_value)
+					tag_stack.item.put_attribute (l_local_part, l_value)
+				else
+					tag_stack.item.put_attribute (l_local_part, l_value)
 				end
-
 			elseif state = READING_HTML then
 				if not l_prefix.is_empty then
 					l_prefix := l_prefix + ":"
 				end
-				html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
+				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
+					process_dynamic_html_attribute (l_local_part, l_value)
+				else
+					html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
+				end
 			end
 		ensure then
 			stack_does_not_change: tag_stack.count = old tag_stack.count
@@ -275,7 +290,6 @@ feature {NONE} -- Implementation
 		do
 			if not s.is_empty then
 				create l_tag.make ("html", HTML_TAG_NAME)
---				l_tag.put_attribute ("", "","code", s.twin) --TODO BODY
 				tag_stack.item.put_subtag (l_tag)
 			end
 		end
@@ -287,10 +301,9 @@ feature {NONE} -- Implementation
 		do
 			if not s.is_empty then
 				create l_tag.make ("html", HTML_TAG_NAME)
-				l_tag.put_attribute ("", "", "text", s)
---				l_tag.put_attribute ("", "","code", s.twin) -- TODO BODY
+				l_tag.put_attribute ("text", s)
+				l_tag.multiline_argument := True
 				tag_stack.item.put_subtag (l_tag)
-				--tag_stack.put (l_tag)
 			end
 		end
 
@@ -298,8 +311,35 @@ feature {NONE} -- Implementation
 			-- Creates a XB_TAG from html_buf and adds it to top element on stack then pushes it onto the stack.
 		do
 			create_html_tag_with_text_put (html_buf.out)
-				-- Don't use html_buf, since it will be wiped_out in the html_tag as well
+				-- Don't use html_buf (instead of html_buf.out), since it will be wiped_out in the html_tag as well
 			html_buf.wipe_out
+		end
+
+	process_dynamic_html_attribute (local_part, value: STRING)
+			-- Extracts the name of the feature from the value
+			-- Generates an html tag element and an output call
+		local
+			l_tag: TAG_ELEMENT
+			feature_name: STRING
+		do
+			html_buf.append (" " + local_part + "=%"")
+			create_html_tag_put
+			create l_tag.make ("output", "XEB_OUTPUT_CALL_TAG")
+			feature_name := value.substring (3, value.count-1)
+			l_tag.put_dynamic_attribute ("value", feature_name)
+			tag_stack.item.put_subtag (l_tag)
+			controller_calls_with_result.extend (feature_name)
+				-- Don't put it on the stack
+			html_buf.append ("%"")
+		end
+
+	process_dynamic_tag_attribute (local_part, value: STRING)
+		local
+			feature_name: STRING
+		do
+			feature_name := value.substring (3, value.count - 1)
+			controller_calls_with_result.extend (feature_name)
+			tag_stack.item.put_dynamic_attribute (local_part, feature_name)
 		end
 
 note

@@ -27,7 +27,6 @@ feature {NONE} -- Access
 			-- `a_context': Any optional contextual information.
 		do
 			context := a_context
-			internal_description := ""
 		end
 
 
@@ -35,7 +34,7 @@ feature {NONE} -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "File not found ${1}"
+			Result := "File not found {1}"
 		end
 
 

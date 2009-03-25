@@ -130,7 +130,7 @@ feature -- Query
 		require
 			not_void: a_tcf_file /= Void
 		local
-			l_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file.make (a_tcf_file)
 			Result := l_file.exists
@@ -254,7 +254,7 @@ feature -- Command
 			not_void: a_test_name /= Void
 		local
 			l_file_name: FILE_NAME
-			l_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file_name.make_from_string (a_dir)
 			l_file_name.set_file_name ("tcf")

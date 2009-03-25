@@ -3,6 +3,9 @@
 		<attribute id="feature" call="True" />
 	</tag>
 	<tag id="loop" class="XEB_LOOP_TAG">
-		<attribute id="times" call="False" />
+		<attribute id="times"/>
+	</tag>
+	<tag id="display" class="XEB_DISPLAY_TAG">
+		<attribute id="feature" call_with_result="True" />
 	</tag>
 </taglib>

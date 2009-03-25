@@ -28,7 +28,8 @@ inherit
 			on_unlocked,
 			on_event_item_added,
 			on_event_item_removed,
-			on_event_item_changed
+			on_event_item_changed,
+			on_event_item_adopted
 		end
 
 feature {NONE} -- Initialization
@@ -1202,18 +1203,50 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 	on_event_item_changed (a_sender: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
+			l_grid: like grid_events
 			l_row: EV_GRID_ROW
+			l_row_selections: ARRAYED_LIST [EV_GRID_ROW]
+			l_item_selections: ARRAYED_LIST [EV_GRID_ITEM]
 		do
 			Precursor (a_sender, a_event_item)
 
 			if is_initialized and then is_appliable_event (a_event_item) then
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
+						-- Query selection for later reselection
+					l_grid := grid_events
+					if l_grid.is_single_row_selection_enabled or l_grid.is_multiple_row_selection_enabled then
+						l_row_selections := l_grid.selected_rows
+					else
+						l_item_selections := l_grid.selected_items
+					end
+
 						-- Re-creates event row
 					populate_event_grid_row_items (a_event_item, l_row)
 					grid_events.grid_row_fill_empty_cells (l_row)
+
+						-- Perform reselection
+					if l_row_selections /= Void and l_row_selections.has (l_row) then
+						l_row.enable_select
+					elseif l_item_selections /= Void then
+						from l_item_selections.start until l_item_selections.after loop
+							if attached l_item_selections.item as l_item then
+								l_item.enable_select
+							end
+						end
+					end
 				end
 			end
+		ensure then
+			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
+		end
+
+	on_event_item_adopted (a_sender: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I; a_new_cookie: UUID; a_old_cookie: UUID)
+			-- <Precursor>
+		do
+			Precursor (a_sender, a_event_item, a_new_cookie, a_old_cookie)
+
+			on_event_item_changed (a_sender, a_event_item)
 		ensure then
 			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
 		end

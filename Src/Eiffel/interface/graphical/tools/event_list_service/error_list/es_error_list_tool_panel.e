@@ -836,9 +836,6 @@ feature {NONE} -- Event handlers
 			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count + 1)
-					if (attached {SYNTAX_ERROR} a_event_item.data) and then (attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error_item) then
-						ev_application.do_once_on_idle (agent on_syntax_error_event_item_added (l_error_item))
-					end
 				elseif is_warning_event (a_event_item) then
 					set_warning_count (warning_count + 1)
 				else
@@ -867,9 +864,6 @@ feature {NONE} -- Event handlers
 			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count - 1)
-					if (attached {SYNTAX_ERROR} a_event_item.data) and then (attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error_item) then
-						ev_application.do_once_on_idle (agent on_syntax_error_event_item_added (l_error_item))
-					end
 				elseif is_warning_event (a_event_item) then
 					set_warning_count (warning_count - 1)
 				else
@@ -879,63 +873,6 @@ feature {NONE} -- Event handlers
 			end
 		ensure then
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
-		end
-
-	on_syntax_error_event_item_added (a_event_item: attached EVENT_LIST_ERROR_ITEM_I)
-			-- <Precursor>
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized or is_initializing
-			a_event_item_is_appliable_event: is_appliable_event (a_event_item)
-			a_event_item_has_syntax_error: attached {SYNTAX_ERROR} a_event_item.data
-		local
-			l_service: EVENT_LIST_S
-			l_errors: like managed_syntax_errors
-			l_item: EVENT_LIST_ERROR_ITEM_I
-		do
-			l_errors := managed_syntax_errors
-			if a_event_item.category = {ENVIRONMENT_CATEGORIES}.editor then
-					-- Incoming editor error, we may need to replace an existing error.
-				l_errors.start
-				l_errors.search_forth (a_event_item)
-				if not l_errors.after then
-						-- There was an error managed by Current.
-					if l_errors.item_for_iteration.category /= {ENVIRONMENT_CATEGORIES}.editor then
-							-- The error is not from the editor.
-						if event_list.is_service_available then
-							l_service := event_list.service
-							l_item := l_errors.item_for_iteration
-							l_errors.remove_at
-							if l_service.has_event_item (l_item) then
-								l_service.prune_event_item (l_item)
-							end
-						end
-					end
-				end
-			else
-				l_errors.force_last (a_event_item)
-			end
-		end
-
-	on_syntax_error_event_item_removed (a_event_item: attached EVENT_LIST_ERROR_ITEM_I)
-			-- <Precursor>
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized or is_initializing
-			a_event_item_is_appliable_event: is_appliable_event (a_event_item)
-			a_event_item_has_syntax_error: attached {SYNTAX_ERROR} a_event_item.data
-		local
-			l_errors: like managed_syntax_errors
-		do
-			if a_event_item.category /= {ENVIRONMENT_CATEGORIES}.editor then
-					-- Remove non-editor error from the list of managed syntax errors.
-				l_errors := managed_syntax_errors
-				l_errors.start
-				l_errors.search_forth (a_event_item)
-				if not l_errors.after then
-					l_errors.remove_at
-				end
-			end
 		end
 
 	on_session_value_changed (a_session: SESSION; a_id: STRING_8)

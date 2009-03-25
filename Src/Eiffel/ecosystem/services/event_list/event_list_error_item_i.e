@@ -16,7 +16,7 @@ inherit
 feature -- Access
 
 	frozen type: NATURAL_8
-			-- Event list item type identifier, see {EVENT_LIST_ITEM_TYPES}
+			-- <Precursor>
 		once
 			Result := {EVENT_LIST_ITEM_TYPES}.error
 		end
@@ -24,7 +24,7 @@ feature -- Access
 feature -- Status report
 
 	is_warning: BOOLEAN
-			-- Indicates if the error item represents a warning
+			-- Indicates if the error item represents a warning.
 		deferred
 		end
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_server" uuid="DC7DD566-3701-432A-895B-5D144715CB95">
 	<target name="xebra_server">
-		<root class="APPLICATION" feature="make"/>
+		<root class="TEST" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
@@ -10,7 +10,7 @@
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<cluster name="thread_utilities" location="..\thread_utilities\" recursive="true"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
@@ -19,6 +19,18 @@
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>^/temp2$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^/temp$</exclude>
+			</file_rule>
+			<cluster name="temp" location="\home\fabioz\local\xebra\eiffel_projects\xebra_server\temp\">
+				<cluster name="temp3" location="\home\fabioz\local\xebra\eiffel_projects\xebra_server\temp\temp3\"/>
+			</cluster>
+			<cluster name="temp2" location="temp2\">
+				<cluster name="new_cluster_3" location="\home\fabioz\local\xebra\eiffel_projects\xebra_server\temp2\new_cluster_3\"/>
+			</cluster>
 		</cluster>
 		<cluster name="xebra_translator" location="..\xebra_translator\code_gen\" recursive="true"/>
 	</target>

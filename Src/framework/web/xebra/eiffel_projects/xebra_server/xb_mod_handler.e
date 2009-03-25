@@ -47,31 +47,34 @@ feature --Execution
 		require
 			socket_open: not socket.is_closed
 		local
-			message: STRING
-			response: RESPONSE
-			header: TUPLE [size: NATURAL; fragment: BOOLEAN]
-			i: INTEGER
+			l_message: STRING
+			l_response: RESPONSE
+			l_request: REQUEST
+			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
+			l_i: INTEGER
 		do
-			print (".")
 			from
-				message := ""
-          		header := [{NATURAL}0, true]
-           		i := 1
+				l_message := ""
+          		l_header := [{NATURAL}0, true]
+           		l_i := 1
            	until
-				not header.fragment
+				not l_header.fragment
            	loop
            		socket.read_natural_32
-           		header := encoder.decode_natural_and_flag (socket.last_natural_32)
-           		if header.size > internal_max_size then
-           			header.fragment := false
+           		l_header := encoder.decode_natural_and_flag (socket.last_natural_32)
+           		if l_header.size > internal_max_size then
+           			l_header.fragment := false
            		else
-           			message.append_string(read_string (socket, header.size))
-           			i := i + 1
+           			l_message.append_string(read_string (socket, l_header.size))
+           			l_i := l_i + 1
            		end
            	end
 
-			response := send_request (message, socket)
-			send_string (response.get_text, socket)
+           	create l_request.make_from_string (l_message)
+
+			l_response := forward_request_to_app (l_request, socket)
+
+			send_string (l_response.get_text, socket)
          	socket.cleanup
             check
             	socket.is_closed
@@ -80,26 +83,23 @@ feature --Execution
 
 feature {NONE} -- Implementation
 
-	send_request (a_message: STRING; webapp_socket: NETWORK_STREAM_SOCKET): RESPONSE
+	forward_request_to_app (a_request: REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): RESPONSE
 			--Sends a request to the correct webserver.
 		require
-			webapp_connected: not webapp_socket.is_closed
+			a_webapp_connected: not a_webapp_socket.is_closed
 		local
-			soc1: NETWORK_STREAM_SOCKET
-			message: STRING
+			l_soc1: NETWORK_STREAM_SOCKET
 		do
-			create soc1.make_client_by_port (3491, "localhost")
-            soc1.connect
+			create l_soc1.make_client_by_port (3491, "localhost")
+            l_soc1.connect
 
-            message := a_message
-
-            soc1.independent_store (message)
+            l_soc1.independent_store (a_request)
             create Result.make
-            if attached {RESPONSE} soc1.retrieved as rec_message then
+            if attached {RESPONSE} l_soc1.retrieved as rec_message then
             	Result := rec_message
             end
 
-            soc1.cleanup
+            l_soc1.cleanup
 		end
 
 	send_string (message: STRING; app_socket: NETWORK_STREAM_SOCKET)

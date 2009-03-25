@@ -16,12 +16,12 @@ create
 
 feature --Initialization
 
-	make_with_elements  (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN; some_elements: LIST[OUTPUT_ELEMENT])
+	make_with_elements  (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN; a_root_tag: like root_tag; some_elements: LIST[OUTPUT_ELEMENT])
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class
 			-- `some_elements': The elements which should be executed and written to the page
 		do
-			make (a_name, a_controller_name, stateful)
+			make (a_name, a_controller_name, stateful, a_root_tag)
 			from
 				some_elements.start
 			until
@@ -32,7 +32,7 @@ feature --Initialization
 			end
 		end
 
-	make (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN)
+	make (a_name: STRING; a_controller_name: STRING; is_stateful: BOOLEAN; a_root_tag: like root_tag)
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class
 		require
@@ -44,6 +44,8 @@ feature --Initialization
 			controller_name := a_controller_name
 			create {LINKED_LIST [OUTPUT_ELEMENT]} xhtml_elements.make
 			create controller_variable.make (controller_var, a_controller_name)
+			create {LINKED_LIST [STRING]}controller_calls.make
+			root_tag := a_root_tag
 		end
 
 feature -- Access

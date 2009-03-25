@@ -12,33 +12,25 @@ class
 create
 	make
 
-feature -- Implementation
+feature {NONE} -- Initialization
 
 	make
 		do
 			create {HASH_TABLE[STATELESS_SERVLET, STRING]} stateless_servlets.make (10)
 		end
 
+feature -- Access
+
 	stateless_servlets: TABLE [STATELESS_SERVLET, STRING]
 			-- The stateless servlets
 
-	process (a_message: STRING; a_socket: NETWORK_STREAM_SOCKET)
-			-- Processes an incoming request and sends it back to the server
-		local
-			request: REQUEST
-		do
-			request := build_request (a_message)
-	       	a_socket.independent_store (handle_request(request))
-	       	a_socket.close
-		end
+feature -- Processing
 
-	build_request (message: STRING): REQUEST
-			-- Transforms a plain text message into a {REQUEST} object
-			-- for further use in the servlet.
-			-- Session is retrieved and set
+	process (a_request: REQUEST; a_socket: NETWORK_STREAM_SOCKET)
+			-- Processes an incoming request and sends it back to the server
 		do
-			-- TODO: Proper session creation, management etc.
-			create Result.make (extract_web_app_name (message).as_upper + "_SERVLET", create {SESSION})
+		   	a_socket.independent_store (handle_request(a_request))
+	       	a_socket.close
 		end
 
 	handle_request (request: REQUEST): RESPONSE
@@ -55,7 +47,6 @@ feature -- Implementation
 			end
 		end
 
-
 	find_servlet (request: REQUEST): detachable SERVLET
 			-- Searches for the servlet requested by `request'
 			-- 1. Stateless servlet?
@@ -65,16 +56,27 @@ feature -- Implementation
 			if attached {STATELESS_SERVLET} stateless_servlets [request.file_identifier] as servlet then
 				Result := servlet
 			else
-				Result := request.session.get_stateful_servlet
+				--Result := request.session.get_stateful_servlet
 			end
 		end
 
-	extract_web_app_name (message: STRING): STRING
-			-- Extracts the webapp name from the get-parameter.
-		do
-			Result := message.substring (16, message.count)
-			Result := Result.substring (1, Result.substring_index (" ", 1)-1)
-		end
+--	extract_web_app_name (message: STRING): STRING
+--			-- Extracts the webapp name from the get-parameter.
+--		do
+--			Result := message.substring (16, message.count)
+--			Result := Result.substring (1, Result.substring_index (" ", 1)-1)
+--		end
+--		
+	--	build_request (message: STRING): REQUEST
+--			-- Transforms a plain text message into a {REQUEST} object
+--			-- for further use in the servlet.
+--			-- Session is retrieved and set
+--		do
+--			-- TODO: Proper session creation, management etc.
+--			--create Result.make (extract_web_app_name (message).as_upper + "_SERVLET", create {SESSION})
+--			create Result.make_from_string (message)
+--		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

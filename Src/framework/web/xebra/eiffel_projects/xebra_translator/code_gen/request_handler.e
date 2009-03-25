@@ -12,6 +12,12 @@ note
 deferred class
 	REQUEST_HANDLER
 
+feature -- Constants
+
+	Server_port: INTEGER = 3491
+
+	Max_queue: INTEGER = 5
+	
 feature -- Access
 
 	request_pool: DATA_THREAD_POOL [SERVLET_HANDLER]
@@ -24,6 +30,7 @@ feature -- Access
 	session_map: TABLE [SESSION, STRING]
 			-- A table which maps a session id on a session
 
+
 feature -- Implementation
 
 	run
@@ -32,9 +39,9 @@ feature -- Implementation
         local
             server_socket: NETWORK_STREAM_SOCKET
         do
-            create server_socket.make_server_by_port (3491)
+            create server_socket.make_server_by_port (Server_port)
             from
-                server_socket.listen (5)
+                server_socket.listen (Max_queue)
             until
                 false
             loop
@@ -50,12 +57,12 @@ feature -- Implementation
 		end
 
     process (server_socket: NETWORK_STREAM_SOCKET)
-            -- Receive a message, handle it, and send it back
+            -- Receive a request, handle it, and send it back
         do
             server_socket.accept
             if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
-	            if attached {STRING} thread_socket.retrieved as message then
-	            	request_pool.add_work (agent {SERVLET_HANDLER}.process (message, thread_socket))
+	            if attached {REQUEST} thread_socket.retrieved as l_request then
+	            	request_pool.add_work (agent {SERVLET_HANDLER}.process (l_request, thread_socket))
 	            end
             end
         end

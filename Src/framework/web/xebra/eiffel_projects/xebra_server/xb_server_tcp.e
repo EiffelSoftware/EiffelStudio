@@ -18,13 +18,16 @@ feature -- Initialization
 			create thread_pool.make (max_thread_number, agent data_spawner)
             create http_server_main_socket.make_server_by_port (port.as_integer_32)
 
+			print ("Server listening on localhost...%N")
             from
                 http_server_main_socket.listen (max_tcp_clients.as_integer_32)
             until
             	False
             loop
                 http_server_main_socket.accept
+                print ("Connection accepted.%N")
 	            if attached {NETWORK_STREAM_SOCKET} http_server_main_socket.accepted as thread_socket then
+
 	            	thread_pool.add_work (agent {XB_MOD_HANDLER}.do_execute (thread_socket))
 				end
             end

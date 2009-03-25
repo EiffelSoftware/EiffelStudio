@@ -219,6 +219,8 @@ feature -- Type checking
 			reset
 				-- Initialize structures to record attribute scopes.
 			context.init_attribute_scopes
+				-- There are no locals, but we need to initialize the structures that are used for scope tests.
+			context.init_local_scopes
 			a_clause.process (Current)
 			if a_generate_code then
 				l_list ?= last_byte_node

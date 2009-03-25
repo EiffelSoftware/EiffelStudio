@@ -292,6 +292,32 @@ feature -- Query (Pixmap)
 			result_attached: Result /= Void
 		end
 
+	pixmap_from_stone (a_stone: STONE): detachable EV_PIXMAP
+			-- Retrieves a pixmap for a given stone object
+		require
+			a_stone_attached: a_stone /= Void
+		do
+			if attached {EXTERNAL_FILE_STONE} a_stone as l_file then
+				Result := pixmaps.icon_pixmaps.general_document_icon
+			elseif attached {ERROR_STONE} a_stone as l_error then
+				if attached {WARNING} l_error.error_i then
+					Result := pixmaps.icon_pixmaps.general_warning_icon
+				else
+					Result := pixmaps.icon_pixmaps.general_error_icon
+				end
+			elseif attached {FEATURE_STONE} a_stone as l_feature then
+				Result := pixmap_from_e_feature (l_feature.e_feature)
+			elseif attached {CLASSI_STONE} a_stone as l_classi then
+				Result := pixmap_from_class_i (l_classi.class_i)
+			elseif attached {FILED_STONE} a_stone as l_filed then
+				Result := pixmaps.icon_pixmaps.general_document_icon
+			elseif attached {CLUSTER_STONE} a_stone as l_group then
+				Result := pixmap_from_group (l_group.group)
+			end
+		ensure
+			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
+		end
+
 feature -- Query (Pixel buffer)
 
 	pixel_buffer_from_class_i (a_class: CLASS_I): EV_PIXEL_BUFFER
@@ -517,6 +543,32 @@ feature -- Query (Pixel buffer)
 			result_not_void: Result /= Void
 		end
 
+	pixel_buffer_from_stone (a_stone: STONE): detachable EV_PIXEL_BUFFER
+			-- Retrieves a pixel buffer for a given stone object
+		require
+			a_stone_attached: a_stone /= Void
+		do
+			if attached {EXTERNAL_FILE_STONE} a_stone as l_file then
+				Result := pixmaps.icon_pixmaps.general_document_icon_buffer
+			elseif attached {ERROR_STONE} a_stone as l_error then
+				if attached {WARNING} l_error.error_i then
+					Result := pixmaps.icon_pixmaps.general_warning_icon_buffer
+				else
+					Result := pixmaps.icon_pixmaps.general_error_icon_buffer
+				end
+			elseif attached {FEATURE_STONE} a_stone as l_feature then
+				Result := pixel_buffer_from_e_feature (l_feature.e_feature)
+			elseif attached {CLASSI_STONE} a_stone as l_classi then
+				Result := pixel_buffer_from_class_i (l_classi.class_i)
+			elseif attached {FILED_STONE} a_stone as l_filed then
+				Result := pixmaps.icon_pixmaps.general_document_icon_buffer
+			elseif attached {CLUSTER_STONE} a_stone as l_group then
+				create Result.make_with_pixmap (pixmap_from_group (l_group.group))
+			end
+		ensure
+			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
+		end
+
 feature {NONE} -- Access
 
 	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8]
@@ -577,7 +629,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -590,22 +642,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

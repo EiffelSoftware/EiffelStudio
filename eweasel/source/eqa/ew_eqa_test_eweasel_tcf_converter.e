@@ -108,7 +108,7 @@ feature {EW_EQA_WINDOWS_SETUP} -- Internal
 		local
 			l_io: IO_MEDIUM
 			l_file_name: FILE_NAME
-			l_raw_file: RAW_FILE
+			l_raw_file: PLAIN_TEXT_FILE
 		do
 			create l_file_name.make_from_string (a_output_file)
 
@@ -131,7 +131,7 @@ feature {EW_EQA_WINDOWS_SETUP} -- Internal
 		require
 			all_converted_class_names_not_void: all_converted_class_content /= Void
 		local
-			l_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file.make (all_eweasel_test_case_template_file_name)
 			create Result.make_empty
@@ -216,9 +216,9 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_file_name /= Void
 			valid: a_file_name.is_valid
-			not_exists: not (create {RAW_FILE}.make (a_file_name)).exists
+			not_exists: not (create {PLAIN_TEXT_FILE}.make (a_file_name)).exists
 		local
-			l_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file.make (a_file_name)
 			check not_exits: not l_file.exists end
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			Result := l_file
 		ensure
 			not_void: Result /= Void
-			created: (create {RAW_FILE}.make (a_file_name)).exists
+			created: (create {PLAIN_TEXT_FILE}.make (a_file_name)).exists
 		end
 
 	control_file: EW_EQA_TEST_CONTROL_FILE
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			not_void: a_tcf_content /= Void
 			not_void: a_class_name /= Void
 		local
-			l_file: RAW_FILE
+			l_file: PLAIN_TEXT_FILE
 		do
 			create l_file.make (tcf_content_file_name)
 			create Result.make_empty

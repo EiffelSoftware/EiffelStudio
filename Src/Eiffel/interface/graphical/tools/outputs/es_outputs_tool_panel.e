@@ -309,6 +309,15 @@ feature {NONE} -- Basic operations
 				l_item.set_pixmap (a_editor.icon_pixmap)
 				l_item.set_data (a_editor)
 				register_kamikaze_action (l_item.select_actions, agent inject_output_widget (a_editor))
+				register_action (a_editor.text_changed_actions, agent (ia_sender: ES_NOTIFIER_OUTPUT_WINDOW; ia_output: ES_OUTPUT_PANE_I)
+					require
+						ia_sender_attached: ia_sender /= Void
+						ia_output_attached: ia_output /= Void
+					do
+						if is_interface_usable then
+							on_output_modified (ia_output)
+						end
+					end (?, a_editor))
 
 				l_combo.extend (l_item)
 			end
@@ -587,7 +596,9 @@ feature {NONE} -- Events handlers
 				l_item := l_outputs.item (a_output.name)
 				check l_item_attached: attached l_item end
 				unregister_action (l_item.button.select_actions, agent set_output (a_output))
+					-- Remove from the modified list and the button from the toolbar.
 				l_outputs.remove (a_output.name)
+				l_tool_bar.prune (l_item.button)
 
 				if l_outputs.is_empty then
 						-- No more outputs, hide the tool bar.

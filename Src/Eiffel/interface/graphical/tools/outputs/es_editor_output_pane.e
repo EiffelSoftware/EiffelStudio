@@ -12,6 +12,12 @@ class
 
 inherit
 	ES_OUTPUT_PANE [ES_EDITOR_WIDGET]
+		rename
+			make as make_output_pane
+		redefine
+			on_locked,
+			on_unlocked
+		end
 
 create
 	make,
@@ -37,6 +43,7 @@ feature {NONE} -- Initialization
 		require
 			a_icon_attached: a_icon /= Void
 		do
+			make_output_pane
 			create name.make_from_string (a_name.as_string_32)
 			icon := a_icon
 		ensure
@@ -46,10 +53,37 @@ feature {NONE} -- Initialization
 
 	build_interface (a_widget: attached ES_EDITOR_WIDGET)
 			-- <Precursor>
+		local
+			l_redirector: ES_TOOL_STONE_REDIRECT_HELPER
 		do
 			a_widget.editor.disable_line_numbers
 			a_widget.editor.disable_editable
 			a_widget.editor.disable_has_breakable_slots
+			a_widget.editor.set_read_only (True)
+
+				-- Set up a redirection for all dropped stones so they are forwarded to the correct
+				-- default tool.
+			create l_redirector.make (a_widget.editor.dev_window)
+			l_redirector.bind (a_widget.editor.editor_drawing_area, Current)
+			auto_recycle (l_redirector)
+
+				-- Recieve notifications when a new line has been added to the output. This ensures the output
+				-- is always scrolled to the end.
+			register_action (new_line_actions, agent (ia_sender: ES_NOTIFIER_OUTPUT_WINDOW; ia_lines: NATURAL)
+					-- Need to scroll the output
+				local
+					l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
+				do
+					if attached widget_table as l_table then
+						l_cursor := l_table.new_cursor
+						from l_cursor.start until l_cursor.after loop
+							if attached l_cursor.item as l_widget then
+								l_widget.scroll_editor_to_end (False)
+							end
+							l_cursor.forth
+						end
+					end
+				end)
 		end
 
 feature {NONE} -- Clean up
@@ -114,13 +148,49 @@ feature {NONE} -- Query
 			Result := l_result
 		end
 
+feature {NONE} -- Event handlers
+
+	on_locked
+			-- <Precursor>
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
+		do
+			Precursor
+			if attached widget_table as l_table then
+				l_cursor := l_table.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if attached l_cursor.item as l_widget then
+						l_widget.editor.handle_before_processing (False)
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
+	on_unlocked
+			-- <Precursor>
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
+		do
+			Precursor
+			if attached widget_table as l_table then
+				l_cursor := l_table.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if attached l_cursor.item as l_widget then
+						l_widget.editor.handle_after_processing
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_widget (a_window: attached SHELL_WINDOW_I): attached ES_EDITOR_WIDGET
 			-- <Precursor>
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
-				create {ES_C_COMPILER_EDITOR_WIDGET} Result.make (l_window)
+				create {ES_EDITOR_WIDGET} Result.make (l_window)
 			else
 				check False end
 			end

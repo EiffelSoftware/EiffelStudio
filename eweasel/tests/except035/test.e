@@ -24,11 +24,13 @@ feature -- Initialization
 		do
 			if not retried then
 					-- Raise a runtime_io_exception.
-				read_integer
+				read_character
 			end
 		rescue
 			if exception /= {EXCEP_CONST}.Runtime_io_exception then
 				print ("Not Runtime_io_exception exception code.%N")
+			else
+				print ("OK%N")
 			end
 			retried := True
 			retry

@@ -23,6 +23,20 @@ feature -- Test routines
 			test
 		end
 
+	cache_testing
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > 1000
+			loop
+				test
+				i := i + 1
+			end
+		end
+
 feature {NONE}
 
 	test

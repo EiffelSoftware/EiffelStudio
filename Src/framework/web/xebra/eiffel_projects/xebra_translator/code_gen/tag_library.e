@@ -65,6 +65,21 @@ feature -- Access
 			end
 		end
 
+	is_call_with_result_feature (a_id, a_name: STRING): BOOLEAN
+		do
+			Result := False
+			from
+				tags.start
+			until
+				tags.after
+			loop
+				if tags.item.name.as_lower.is_equal (a_id.as_lower) then
+					Result := tags.item.is_call_with_result_feature (a_name)
+				end
+				tags.forth
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

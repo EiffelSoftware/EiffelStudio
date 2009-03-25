@@ -4,11 +4,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TAG_SERIALIZER
-
-create
-	make_base
 
 feature -- Initialization
 
@@ -33,6 +30,10 @@ feature -- Access
 			-- Adds a TAG to the body.
 		do
 			children.extend (a_child)
+		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		deferred
 		end
 
 	output_children (a_parent: SERVLET; buf: INDENDATION_STREAM)

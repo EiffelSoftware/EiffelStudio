@@ -18,27 +18,35 @@ create
 
 feature -- Access
 
-	make (params: TABLE [STRING, STRING])
+	make
 		do
 			make_base
-			n := params ["times"].to_integer
+			create {CONSTANT_ATTRIBUTE} times.make ("")
 		end
 
-	n: INTEGER
+	times: TAG_ATTRIBUTE
 			-- Number of repetitions of the body
 
 	output (parent: SERVLET buf: INDENDATION_STREAM)
 			-- <Precursor>
 		local
-			i: INTEGER
+			i, n: INTEGER
 		do
+			n := times.value (parent).to_integer
 			from
-				i := 0
+				i := 1
 			until
 				i > n
 			loop
 				output_children (parent, buf)
 				i := i + 1
+			end
+		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		do
+			if id.is_equal ("times") then
+				times := a_attribute
 			end
 		end
 

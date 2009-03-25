@@ -23,6 +23,7 @@ feature -- Initialization
 			create {ARRAYED_LIST [STRING]} controller_calls.make (1)
 			create {ARRAYED_LIST [TAG_ELEMENT]} children.make (3)
 			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
+			create {HASH_TABLE [STRING, STRING]} dynamic_parameters.make (3)
 		end
 
 feature -- Access
@@ -34,7 +35,10 @@ feature -- Access
 			-- The name of the corresponding TAG-class
 
 	parameters: HASH_TABLE [STRING, STRING]
-			-- The parameters of the tag [value, id]
+			-- The parameters of the tag [value, parameter id]
+
+	dynamic_parameters: HASH_TABLE [STRING, STRING]
+			-- Dynamic parameters of the tag [feature name, parameter id]
 
 	children: LIST [TAG_ELEMENT]
 			-- All the children of the tag
@@ -42,7 +46,14 @@ feature -- Access
 	controller_calls: LIST [STRING]
 			-- All calls to the controller, which should be possible
 
+	multiline_argument: BOOLEAN assign set_multiline_argument
+
 feature -- Access
+
+	set_multiline_argument (is_multiline: BOOLEAN)
+		do
+			multiline_argument := is_multiline
+		end
 
 	has_children: BOOLEAN
 			-- Are there any children?
@@ -61,10 +72,63 @@ feature -- Access
 			children.extend (child)
 		end
 
-	put_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	put_attribute (a_local_part: STRING; a_value: STRING)
 			-- Sets the attribute of this tag.
 		do
-			parameters.put (a_value, a_local_part)
+			parameters.extend (a_value, a_local_part)
+		end
+
+	put_dynamic_attribute (a_local_part: STRING; a_feature_name: STRING)
+			-- Sets an attribute that will be a feature call on the controller
+		do
+			dynamic_parameters.extend (a_feature_name, a_local_part)
+		end
+
+	build_tag_tree (exprs: LIST [SERVLET_ELEMENT]; is_root: BOOLEAN)
+		do
+			exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("create {" + class_name + "} temp.make"))
+			if is_root then
+				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("root_tag := temp"))
+			else
+				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.item.add_to_body (temp)"))
+			end
+			build_attributes (exprs, parameters, "CONSTANT_ATTRIBUTE")
+			build_attributes (exprs, dynamic_parameters, "VARIABLE_ATTRIBUTE")
+
+			if has_children then
+				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.put (temp)"))
+				from
+					children.start
+				until
+					children.after
+				loop
+					children.item.build_tag_tree (exprs, False)
+					children.forth
+				end
+				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.remove"))
+			end
+		end
+
+	build_attributes (exprs: LIST [SERVLET_ELEMENT]; attributes: HASH_TABLE [STRING, STRING]; type: STRING)
+		do
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				if multiline_argument then
+					exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("temp.put_attribute(%""
+						+ attributes.key_for_iteration + "%", "
+						+ "create {" + type + "}.make (%N%"[%N" + attributes.item_for_iteration + "%N]%"))"
+					))
+				else
+					exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("temp.put_attribute(%""
+						+ attributes.key_for_iteration + "%", "
+						+ "create {" + type + "}.make (%"" + attributes.item_for_iteration + "%"))"
+					))
+				end
+				attributes.forth
+			end
 		end
 
 note

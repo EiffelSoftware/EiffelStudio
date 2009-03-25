@@ -18,23 +18,27 @@ create
 
 feature -- Access
 
-	text: STRING
+	text: TAG_ATTRIBUTE
 			-- The XHTML content
 
-	make (params: TABLE [STRING, STRING])
+	make
 		do
 			make_base
-			text := params ["text"]
-			if text = Void then
-				text := ""
-			end
+			create {CONSTANT_ATTRIBUTE} text.make ("")
 		end
 
 	output (parent: SERVLET; buf: INDENDATION_STREAM)
 			-- <Precursor>
 		do
-			buf.put_string (text)
+			buf.put_string (text.value (parent))
 			output_children (parent, buf)
+		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		do
+			if id.is_equal("text") then
+				text := a_attribute
+			end
 		end
 
 note

@@ -1098,7 +1098,6 @@ feature {NONE} -- Implementation
 			-- Show warning corresponding to `click_tool' error.
 		local
 			l_displayed: ES_ERROR_DISPLAYER
-			l_item: EVENT_LIST_ERROR_ITEM
 			l_error: SYNTAX_ERROR
 		do
 			if event_list.is_service_available then
@@ -1112,21 +1111,18 @@ feature {NONE} -- Implementation
 					-- There has been a syntax error so add the item to the list
 				l_error := text_displayed.last_syntax_error
 				check l_error_attached: l_error /= Void end
-				if event_list.is_service_available then
-					create l_displayed.make (window_manager)
-					create l_item.make ({ENVIRONMENT_CATEGORIES}.editor, l_error.out, l_error)
-					event_list.service.put_event_item (editor_context_cookie, l_item)
+				create l_displayed.make (window_manager)
+				l_displayed.trace_error ({ENVIRONMENT_CATEGORIES}.editor, editor_context_cookie, l_error)
 
-					if attached {ES_ERROR_LIST_TOOL} dev_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) as l_tool then
-						if not l_tool.is_tool_instantiated then
-								-- If the error list tool is not yet shown, show it, but just the first time.
-								-- The purpose is two fold; This is the first error generated and so the user should
-								-- be alerted to the first error, much like in the same way the compiler error
-								-- brings the UI to the front. Second, it will update the error count index.
-							l_tool.show (False)
-								-- Brings focus back (Legacy tool implementation causes focusing when show is called - Grr!)
-							set_focus
-						end
+				if attached {ES_ERROR_LIST_TOOL} dev_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) as l_tool then
+					if not l_tool.is_tool_instantiated then
+							-- If the error list tool is not yet shown, show it, but just the first time.
+							-- The purpose is two fold; This is the first error generated and so the user should
+							-- be alerted to the first error, much like in the same way the compiler error
+							-- brings the UI to the front. Second, it will update the error count index.
+						l_tool.show (False)
+							-- Brings focus back (Legacy tool implementation causes focusing when show is called - Grr!)
+						set_focus
 					end
 				end
 			end

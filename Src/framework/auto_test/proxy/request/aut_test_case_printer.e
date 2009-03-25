@@ -288,6 +288,7 @@ feature {AUT_REQUEST} -- Processing
 						if not l_args.after then
 							output_stream.put_string (", ")
 						end
+						i := i + 1
 					end
 					output_stream.put_string (")")
 				end

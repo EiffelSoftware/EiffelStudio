@@ -32,7 +32,7 @@ inherit
 		end
 
 create
-	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_local_server_by_port
+	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_loopback_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
 	make_from_fd
@@ -80,15 +80,15 @@ feature -- Initialization
 			bind
 		end
 
-	make_local_server_by_port (a_port: INTEGER)
-			-- Create server socket on `a_port' that listen only for localhost peer.
+	make_loopback_server_by_port (a_port: INTEGER)
+			-- Create server socket on `a_port' that listen only for loopback interface peer.
 		require
 			valid_port: a_port >= 0
 		local
 			addr: INET_ADDRESS
 		do
 			make;
-			addr := create_localhost
+			addr := create_loopback
 			create address.make_from_address_and_port (addr, a_port)
 			bind
 		end

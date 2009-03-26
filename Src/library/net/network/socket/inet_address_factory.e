@@ -24,6 +24,14 @@ feature
 			create_any_local_attached: Result /= Void
 		end
 
+	create_loopback: INET_ADDRESS
+			-- Loopback address.
+		do
+			Result := impl.loopback_address
+		ensure
+			create_any_localhost_attached: Result /= Void
+		end
+
 	create_localhost: INET_ADDRESS
 			--
 		local
@@ -388,7 +396,7 @@ feature {NONE} -- Implementation
 	    								val := 0
 	    							end
 		    					end
-		    				elseif ch = '.' and then ((j + {INET4_ADDRESS}.INADDRSZ) <= {INET6_ADDRESS}.INADDRSZ+1) then
+		    				elseif ch = '.' and then ((j + {INET4_ADDRESS}.INADDRSZ) <= {INET6_ADDRESS}.INADDRSZ + 1) then
 								ia4 := src.substring(curtok, length);
 								if dot_count (ia4) /= 3 then
 		    						Result := Void
@@ -478,6 +486,8 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
+		ensure
+			valid_array: Result /= Void implies Result.count = {INET4_ADDRESS}.INADDRSZ
 		end
 
 	is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN

@@ -42,7 +42,7 @@ feature --Initialization
 			name_is_valid: not a_name.is_empty
 			controller_name_is_valid: not a_controller_name.is_empty
 		do
-			name := a_name + "_SERVLET"
+			name := a_name
 			stateful := is_stateful
 			controller_name := a_controller_name
 			create {LINKED_LIST [OUTPUT_ELEMENT]} xhtml_elements.make
@@ -114,7 +114,7 @@ feature -- Implementation
 		local
 			servlet: CLASS_ELEMENT
 		do
-			create servlet.make (name.as_upper)
+			create servlet.make (name.as_upper + "_SERVLET")
 			if stateful then
 				servlet.set_inherit (stateful_servlet_class)
 			else

@@ -23,9 +23,11 @@ feature-- Implementation
 	make
 		do
 			create request_pool.make  (10, agent servlet_handler_spawner)
-			create {HASH_TABLE [SESSION, STRING]} session_map.make (5)
-			create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (5)
-			stateless_servlets.put (create {LOGIN_SERVLET}.make , "LOGIN_SERVLET")
+			create {HASH_TABLE [SESSION, STRING]} session_map.make (1)
+			create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
+			stateless_servlets.put (create {CONTACT_SERVLET}.make , "/demoapplication/contact.xeb")
+			stateless_servlets.put (create {LOGIN_SERVLET}.make , "/demoapplication/login.xeb")
+			stateless_servlets.put (create {RESERVATIONS_SERVLET}.make , "/demoapplication/reservations.xeb")
 		end
 
 note

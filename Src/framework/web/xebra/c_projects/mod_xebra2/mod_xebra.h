@@ -66,13 +66,14 @@
 /*======= PROTOCOL =======*/
 /* The following strings represent delimiters for the message string that is sent to the server */
 
-#define POSTP "#POST#"
-#define GETP "#GET#"
-#define HEADERS_IN "#HEADERS_IN#"
-#define HEADERS_OUT "#HEADERS_OUT#"
-#define SUBP_ENV "#SUBP_ENV#"
+#define POSTP "#P#"
+#define GETP "#G#"
+#define HEADERS_IN "#HI#"
+#define HEADERS_OUT "#HO#"
+#define SUBP_ENV "#SE#"
 #define TABLECSEP "#$#"
 #define TABLERSEP "#%#"
+#define TABLEEND "#E#"
 
 /* MAX_POST_SIZE:
  *	Defines a max size for reading the POST arguments

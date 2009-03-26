@@ -1,4 +1,5 @@
-<html>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Xebra Demo Application</title>
@@ -46,11 +47,11 @@ a {
 }
 .style5 {color: #CCCCCC}
 -->
-</style></head>
+</style>
+</head>
 
 <body>
-
-
+<p></p>
 <table width="1024" border="0" align="center">
   <tr>
     <td colspan="4"><h1>Xebra Demo Application</h1></td>
@@ -60,34 +61,35 @@ a {
   </tr>
   <tr>
     <td><h2>Login</h2></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
     <td colspan="4"><form id="1" name="login_form" method="post" action="login.xeb">
       <div align="center">
         <table width="300" border="0" align="center" cellpadding="3" cellspacing="5" bgcolor="#FFFFFF">
-            <tr>
-              <td width="100" bgcolor="#CCCCCC"><span class="style4">Name</span></td>
-              <td bgcolor="#CCCCCC"><label>
-                <input type="text" name="name" id="name" />
-              </label></td>
-            </tr>
-            <tr>
-              <td width="100" bgcolor="#CCCCCC" class="style4">Password</td>
-              <td bgcolor="#CCCCCC">               <input type="password" name="password" id="password" />              </td>
-            </tr>
+          <tr>
+            <td width="100" bgcolor="#CCCCCC"><span class="style4">Name</span></td>
+            <td bgcolor="#CCCCCC"><label>
+              <input type="text" name="name" id="name" />
+            </label></td>
+          </tr>
+          <tr>
+            <td width="100" bgcolor="#CCCCCC" class="style4">Password</td>
+            <td bgcolor="#CCCCCC"><input type="password" name="password" id="password" />
+            </td>
+          </tr>
         </table>
       </div>
       <p align="center">
-         <input type="submit" name="submit" id="submit" value="Submit" /> 
+        <input type="submit" name="submit" id="submit" value="Submit" />
       </p>
-        </form>    </td>
+    </form></td>
   </tr>
   <tr>
     <td colspan="4" bgcolor="#CCCCCC"><div align="center">footer text</div></td>
   </tr>
 </table>
-
-
-
 </body>
 </html>

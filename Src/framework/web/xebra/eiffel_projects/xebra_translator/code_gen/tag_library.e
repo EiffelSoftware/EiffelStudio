@@ -31,10 +31,12 @@ feature -- Access
 	put (a_child: TAG_LIB_ITEM)
 			-- <Precursor>
 		local
-			child: TAG_DESCRIPTION
+			child: detachable TAG_DESCRIPTION
 		do
 			child ?= a_child
-			tags.extend (child)
+			if attached child then
+				tags.extend (child)
+			end
 		end
 
 	set_attribute (a_id: STRING; value: STRING)

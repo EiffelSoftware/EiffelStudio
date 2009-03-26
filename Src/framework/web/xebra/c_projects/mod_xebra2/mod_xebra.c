@@ -103,7 +103,7 @@ static int read_from_POST (request_rec* r, char **buf)
 				eos = 1;
 			}
 
-			if (!APR_BUCKE T_IS_METADATA (b)) {
+			if (!APR_BUCKET_IS_METADATA (b)) {
 				if (b->length != (apr_size_t) (-1)) {
 					count += b->length;
 					if (count > MAX_POST_SIZE) {
@@ -186,10 +186,11 @@ static int xebra_handler (request_rec* r)
 
 	table_buf = apr_pstrcat (r->pool, HEADERS_IN, NULL);
 	apr_table_do (print_item, r, r->headers_in, NULL);
-	table_buf = apr_pstrcat (r->pool, table_buf, HEADERS_OUT, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, HEADERS_OUT, NULL);
 	apr_table_do (print_item, r, r->headers_out, NULL);
-	table_buf = apr_pstrcat (r->pool, table_buf, SUBP_ENV, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, SUBP_ENV, NULL);
 	apr_table_do (print_item, r, r->subprocess_env, NULL);
+	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, NULL);
 	message = apr_pstrcat (r->pool, message, table_buf, NULL);
 
 	/* If there are, read POST parameters into message buffer */
@@ -205,8 +206,13 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Error reading from data!", r);
 			return rv;
 		}
-		message = apr_pstrcat (r->pool, message, POSTP, post_buf, NULL);
+		message = apr_pstrcat (r->pool, message, POSTP, "&", post_buf, TABLEEND,  NULL);
+	} else if (r->args != NULL ) {
+		message = apr_pstrcat (r->pool, message, GETP, "&", r->args, TABLEEND,  NULL);
+	} else {
+		message = apr_pstrcat (r->pool, message, GETP, TABLEEND,  NULL);
 	}
+
 
 	//	message = apr_pstrcat (r->pool, message, "#END#", NULL);
 
@@ -282,7 +288,7 @@ static int xebra_handler (request_rec* r)
 	/* display received message */
 	ap_rputs (rmsg_buf, r);
 	/* display module revision */
-	ap_rputs ("<br><br><br><br><i><small>--xebra_mod ", r);
+	ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
 	ap_rputs (REVISION, r);
 	ap_rputs ("</small></i>", r);
 	shutdown (sockfd, 2);

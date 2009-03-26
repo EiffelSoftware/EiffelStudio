@@ -1,49 +1,37 @@
 note
-	description: "Summary description for {XEB_HTML_TAG}."
+	description: "Summary description for {ERROR_UNDEFINED_TAG}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XEB_HTML_TAG
+	ERROR_UNDEFINED_TAG
 
 inherit
-	TAG_SERIALIZER
+	ERROR_WARNING_INFO
 		redefine
-			output
+			make
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make
+	make (a_context: like context)
+			-- Initializes an error.
+			--
+			-- `a_context': Any optional contextual information.
 		do
-			make_base
-			create {CONSTANT_ATTRIBUTE} text.make ("")
+			context := a_context
 		end
 
-feature {NONE} -- Access
 
-	text: TAG_ATTRIBUTE
-			-- The XHTML content
-
-feature {NONE}
-
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
-			-- <Precursor>
+	dollar_description: STRING
+			-- Dollar encoded description. ${n} are replaced by array indicies.
+			-- See {STRING_FORMATTER}
 		do
-			buf.append_string (text.value (parent))
-			output_children (parent, buf)
-		end
-
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
-			-- <Precursor>
-		do
-			if id.is_equal("text") then
-				text := a_attribute
-			end
+			Result := "Undefined tag found in {1}. Include taglib or just don't use it!"
 		end
 
 note

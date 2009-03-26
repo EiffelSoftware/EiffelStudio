@@ -13,16 +13,23 @@ inherit
 create
 	make
 
-feature -- Access
-
-	tags: LIST [TAG_DESCRIPTION]
+feature -- Initialization
 
 	make
 		do
 			create {ARRAYED_LIST [TAG_DESCRIPTION]} tags.make (10)
 		end
 
+feature {NONE} -- Access
+
+	id: STRING
+
+	tags: LIST [TAG_DESCRIPTION]
+
+feature -- Access
+
 	put (a_child: TAG_LIB_ITEM)
+			-- <Precursor>
 		local
 			child: TAG_DESCRIPTION
 		do
@@ -30,12 +37,22 @@ feature -- Access
 			tags.extend (child)
 		end
 
-	set_attribute (id: STRING; value: STRING)
+	set_attribute (a_id: STRING; value: STRING)
+			-- <Precursor>
 		do
-			-- TODO
+			if a_id.is_equal ("id") then
+				id := value
+			end
 		end
 
+feature -- Query
+
 	get_class_for_name (a_name: STRING): STRING
+			-- Searches for the class corresponding to
+			-- the tag name. If no class is found
+			-- the empty string is returned
+		require
+			a_name_is_not_empty: not a_name.is_empty
 		do
 			Result := ""
 			from
@@ -51,6 +68,9 @@ feature -- Access
 		end
 
 	is_call_feature (a_id, a_name: STRING): BOOLEAN
+			-- Searches for the tag with the id `a_id'
+			-- and checks if `a_name' is a parameter
+			-- which represents a feature name
 		do
 			Result := False
 			from
@@ -66,6 +86,9 @@ feature -- Access
 		end
 
 	is_call_with_result_feature (a_id, a_name: STRING): BOOLEAN
+			-- Searches for the tag with the id `a_id'
+			-- and checks if `a_name' is a parameter
+			-- which represents a feature name that returns something
 		do
 			Result := False
 			from
@@ -75,6 +98,38 @@ feature -- Access
 			loop
 				if tags.item.name.as_lower.is_equal (a_id.as_lower) then
 					Result := tags.item.is_call_with_result_feature (a_name)
+				end
+				tags.forth
+			end
+		end
+
+	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
+			-- Verifies that `a_attribute' belongs to `a_tag'
+		do
+			Result := False
+			from
+				tags.start
+			until
+				tags.after
+			loop
+				if tags.item.name.as_lower.is_equal (a_tag.as_lower) then
+					Result := tags.item.has_argument (a_attribute)
+				end
+				tags.forth
+			end
+		end
+
+	contains (tag_id: STRING): BOOLEAN
+			-- checks, if the tag is available in the tag library
+		do
+			Result := False
+			from
+				tags.start
+			until
+				tags.after
+			loop
+				if tags.item.name.as_lower.is_equal (tag_id.as_lower) then
+					Result := True
 				end
 				tags.forth
 			end

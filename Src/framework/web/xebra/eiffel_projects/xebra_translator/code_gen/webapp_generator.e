@@ -11,6 +11,20 @@ class
 create
 	make
 
+feature -- Initialization
+
+	make (a_name, a_path: STRING)
+			-- `a_name': The name of the web application
+			-- `a_path': The path, where all the classes should be generated
+		require
+			a_name_is_not_empty: not a_name.is_empty
+			a_path_is_not_empty: not a_path.is_empty
+		do
+			webapp_name := a_name
+			path := a_path
+			create {LINKED_LIST [ROOT_SERVLET_ELEMENT]} servlets.make
+		end
+
 feature -- Access
 
 	webapp_name: STRING
@@ -26,26 +40,20 @@ feature -- Access
 			-- Adds a servlet to the list
 		do
 			servlets.extend (servlet)
+		ensure
+			servlet_has_been_added: old servlets.count = servlets.count - 1
 		end
 
-feature -- Initialization
-
-	make (a_name, a_path: STRING)
-			-- `a_name': The name of the web application
-			-- `a_path': The path, where all the classes should be generated
-		do
-			webapp_name := a_name
-			path := a_path
-			create {LINKED_LIST [ROOT_SERVLET_ELEMENT]} servlets.make
-		end
-
-feature -- Processing
+feature -- Implementation
 
 	generate
 			-- Generates all the classes for the webapp and links them together.
 			--  1. {SERVLET} for every xeb-page
 			--  2. {REQUEST_HANDLER}
 			--  3. {APPLICATION} which starts the application
+		require
+			path_is_not_empty: not path.is_empty
+			webapp_name_is_not_empty: not webapp_name.is_empty
 		local
 			buf: INDENDATION_STREAM
 			servlet: ROOT_SERVLET_ELEMENT
@@ -62,7 +70,6 @@ feature -- Processing
 				servlet := servlets.item
 				create file.make_open_write (path + servlet.name.as_lower + ".e")
 				create buf.make (file)
-				buf.set_ind_character ('%T')
 				servlet.serialize (buf)
 				servlets.forth
 				file.close
@@ -84,63 +91,41 @@ feature -- Processing
 				-- Generate the {APPLICATION} class
 			create file.make_open_write (path + webapp_name.as_lower + "_application.e")
 			create buf.make (file)
-			buf.set_ind_character ('%T')
 			create application_class.make (webapp_name.as_upper + "_APPLICATION")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
 			file.close
-
 		end
 
 	generate_contructor_for_application: FEATURE_ELEMENT
 			-- Generates the constructor for the application
-		local
-			constructor: FEATURE_ELEMENT
-			feature_body: LIST [SERVLET_ELEMENT]
-			locals: LIST [VARIABLE_ELEMENT]
-			request_handler_local: VARIABLE_ELEMENT
 		do
-			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
-			feature_body.extend (wrap ("create request_handler.make"))
-			feature_body.extend (wrap ("request_handler.run"))
-			create request_handler_local.make ("request_handler", webapp_name.as_upper + "_REQUEST_HANDLER")
-			create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
-			locals.extend (request_handler_local)
-			create constructor.make_with_locals ("make", feature_body, locals)
-			Result := constructor
+			create Result.make ("make")
+			Result.append_expression ("create request_handler.make")
+			Result.append_expression ("request_handler.run")
+			Result.append_local ("request_handler", webapp_name.as_upper + "_REQUEST_HANDLER")
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [ROOT_SERVLET_ELEMENT]): FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
-			constructor: FEATURE_ELEMENT
-			feature_body: LIST [SERVLET_ELEMENT]
-			locals: LIST [VARIABLE_ELEMENT]
 			servlet: ROOT_SERVLET_ELEMENT
 		do
-			create {LINKED_LIST [SERVLET_ELEMENT]} feature_body.make
-			feature_body.extend (wrap ("create request_pool.make  (10, agent servlet_handler_spawner)"))
-			feature_body.extend (wrap ("create {HASH_TABLE [SESSION, STRING]} session_map.make (1)"))
-			feature_body.extend (wrap ("create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (1)"))
+			create Result.make ("make")
+			Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
+			Result.append_expression ("create {HASH_TABLE [SESSION, STRING]} session_map.make (1)")
+			Result.append_expression ("create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
 			from
 				some_servlets.start
 			until
 				some_servlets.after
 			loop
 				servlet := some_servlets.item
-				feature_body.extend (wrap ("stateless_servlets.put (create {"
-					+ servlet.name.as_upper + "}.make , %"" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")"))
+				Result.append_expression ("stateless_servlets.put (create {"
+					+ servlet.name.as_upper + "}.make , %"" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
-			create {ARRAYED_LIST [VARIABLE_ELEMENT]} locals.make (10)
-			create constructor.make_with_locals ("make", feature_body, locals)
-			Result := constructor
-		end
-
-	wrap (code: STRING): PLAIN_CODE_ELEMENT
-		do
-			create Result.make (code)
 		end
 
 note

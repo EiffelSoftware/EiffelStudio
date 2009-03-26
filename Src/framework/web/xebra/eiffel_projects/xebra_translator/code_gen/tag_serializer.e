@@ -16,25 +16,28 @@ feature -- Initialization
 			create {ARRAYED_LIST [TAG_SERIALIZER]} children.make (3)
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
 	children: LIST [TAG_SERIALIZER]
 			-- All the children tags of the tag
 
-	output (a_parent: SERVLET; buf: INDENDATION_STREAM)
-			-- Writes to the XHTML result.
-		do
-		end
+feature -- Access
 
 	add_to_body (a_child: TAG_SERIALIZER)
 			-- Adds a TAG to the body.
 		do
 			children.extend (a_child)
+		ensure
+			child_has_been_added: children.count = old children.count + 1
 		end
 
 	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+		require
+			id_is_not_empty: not id.is_empty
 		deferred
 		end
+
+feature -- Implementation
 
 	output_children (a_parent: SERVLET; buf: INDENDATION_STREAM)
 		do
@@ -46,6 +49,11 @@ feature -- Access
 				children.item.output (a_parent, buf)
 				children.forth
 			end
+		end
+
+	output (a_parent: SERVLET; buf: INDENDATION_STREAM)
+			-- Writes to the XHTML result.
+		do
 		end
 
 note

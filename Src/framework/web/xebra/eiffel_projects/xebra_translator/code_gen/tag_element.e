@@ -26,10 +26,7 @@ feature -- Initialization
 			create {HASH_TABLE [STRING, STRING]} dynamic_parameters.make (3)
 		end
 
-feature -- Access
-
-	id: STRING
-			-- The tag id
+feature {NONE} -- Access
 
 	class_name: STRING
 			-- The name of the corresponding TAG-class
@@ -46,11 +43,16 @@ feature -- Access
 	controller_calls: LIST [STRING]
 			-- All calls to the controller, which should be possible
 
-	multiline_argument: BOOLEAN assign set_multiline_argument
-
 feature -- Access
 
+	id: STRING
+			-- The tag id
+
+	multiline_argument: BOOLEAN assign set_multiline_argument
+			-- Are the arguments of the tag multiline and have to be escaped?
+
 	set_multiline_argument (is_multiline: BOOLEAN)
+			-- Are the arguments of the tag multiline and have to be escaped?
 		do
 			multiline_argument := is_multiline
 		end
@@ -62,54 +64,75 @@ feature -- Access
 		end
 
 	put_controller_call (a_call: STRING)
+			-- Add a feature that should be available to servlets
+		require
+			call_is_not_empty: not a_call.is_empty
 		do
 			controller_calls.extend (a_call)
+		ensure
+			call_has_been_added: old controller_calls.count = controller_calls.count - 1
 		end
 
 	put_subtag (child: like Current)
 			-- Adds a tag to the list of children.
 		do
 			children.extend (child)
+		ensure
+			child_has_been_added: old children.count + 1 = children.count
 		end
 
 	put_attribute (a_local_part: STRING; a_value: STRING)
 			-- Sets the attribute of this tag.
+		require
+			local_part_is_not_empty: not a_local_part.is_empty
+			value_is_not_empty: not a_value.is_empty
 		do
 			parameters.extend (a_value, a_local_part)
+		ensure
+			attribute_has_been_added: old parameters.count + 1 = parameters.count
 		end
 
 	put_dynamic_attribute (a_local_part: STRING; a_feature_name: STRING)
 			-- Sets an attribute that will be a feature call on the controller
+		require
+			local_part_is_not_empty: not a_local_part.is_empty
+			feature_name_is_not_empty: not a_feature_name.is_empty
 		do
 			dynamic_parameters.extend (a_feature_name, a_local_part)
+		ensure
+			attribute_has_been_added: old dynamic_parameters.count + 1 = dynamic_parameters.count
 		end
 
-	build_tag_tree (exprs: LIST [SERVLET_ELEMENT]; is_root: BOOLEAN)
+	build_tag_tree (a_feature: FEATURE_ELEMENT; is_root: BOOLEAN)
+			-- Adds the needed expressions which build the tree of Current with the correct classes
 		do
-			exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("create {" + class_name + "} temp.make"))
+			a_feature.append_expression ("create {" + class_name + "} temp.make")
 			if is_root then
-				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("root_tag := temp"))
+				a_feature.append_expression ("root_tag := temp")
 			else
-				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.item.add_to_body (temp)"))
+				a_feature.append_expression ("stack.item.add_to_body (temp)")
 			end
-			build_attributes (exprs, parameters, "CONSTANT_ATTRIBUTE")
-			build_attributes (exprs, dynamic_parameters, "VARIABLE_ATTRIBUTE")
+			build_attributes (a_feature, parameters, "CONSTANT_ATTRIBUTE")
+			build_attributes (a_feature, dynamic_parameters, "VARIABLE_ATTRIBUTE")
 
 			if has_children then
-				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.put (temp)"))
+				a_feature.append_expression ("stack.put (temp)")
 				from
 					children.start
 				until
 					children.after
 				loop
-					children.item.build_tag_tree (exprs, False)
+					children.item.build_tag_tree (a_feature, False)
 					children.forth
 				end
-				exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("stack.remove"))
+				a_feature.append_expression ("stack.remove")
 			end
 		end
 
-	build_attributes (exprs: LIST [SERVLET_ELEMENT]; attributes: HASH_TABLE [STRING, STRING]; type: STRING)
+	build_attributes (a_feature: FEATURE_ELEMENT; attributes: HASH_TABLE [STRING, STRING]; type: STRING)
+			-- Adds expressions which put the right attributes to the tags
+		require
+			type_is_not_empty: not type.is_empty
 		do
 			from
 				attributes.start
@@ -117,15 +140,15 @@ feature -- Access
 				attributes.after
 			loop
 				if multiline_argument then
-					exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("temp.put_attribute(%""
+					a_feature.append_expression ("temp.put_attribute(%""
 						+ attributes.key_for_iteration + "%", "
 						+ "create {" + type + "}.make (%N%"[%N" + attributes.item_for_iteration + "%N]%"))"
-					))
+					)
 				else
-					exprs.extend (create {PLAIN_CODE_ELEMENT}.make ("temp.put_attribute(%""
+					a_feature.append_expression ("temp.put_attribute(%""
 						+ attributes.key_for_iteration + "%", "
 						+ "create {" + type + "}.make (%"" + attributes.item_for_iteration + "%"))"
-					))
+					)
 				end
 				attributes.forth
 			end

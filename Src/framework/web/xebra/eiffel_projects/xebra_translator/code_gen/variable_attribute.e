@@ -13,16 +13,26 @@ inherit
 create
 	make
 
-feature -- Access
-
-	feature_name: STRING
+feature {NONE} -- Initialization
 
 	make (a_feature_name: STRING)
+			-- `a_feature_name': the name of the feature that should be called
+			-- on the controller, to retrieve the value
+		require
+			feature_name_not_empty: not a_feature_name.is_empty
 		do
 			feature_name := a_feature_name
 		end
 
+feature {NONE} -- Access
+
+	feature_name: STRING
+			-- Name of the feature that should be called on the controller
+
+feature {NONE} -- Implementation
+
 	value (servlet: SERVLET): STRING
+			-- <Precursor>
 		do
 			Result := servlet.call_on_controller_with_result (feature_name)
 		end

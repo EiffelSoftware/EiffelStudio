@@ -12,17 +12,24 @@ inherit
 create
 	make
 
-feature -- Access
-
-	id: STRING
-	call: BOOLEAN
-	call_with_result: BOOLEAN
+feature {NONE}-- Initialization
 
 	make
 		do
 			id := ""
 			call := False
 		end
+
+feature -- Access
+
+	call: BOOLEAN
+		-- Does the value stand for a feature?
+
+	call_with_result: BOOLEAN
+		-- Does the value stand for a feature which returns something?
+
+	id: STRING
+		-- The id of the tag attribute
 
 	put (child: TAG_LIB_ITEM)
 			-- <Precursor>
@@ -32,6 +39,9 @@ feature -- Access
 
 	set_attribute (a_id: STRING; value: STRING)
 			-- <Precursor>
+		require else
+			a_id_is_not_empty: not a_id.is_empty
+			value_is_not_empty: not value.is_empty
 		do
 			if a_id.is_equal ("id") then
 				id := value

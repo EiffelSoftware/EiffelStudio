@@ -10,10 +10,16 @@ deferred class
 feature -- Access
 
 	put (child: TAG_LIB_ITEM)
+			-- Adds a child to the list of children
 		deferred
 		end
 
 	set_attribute (id: STRING; value: STRING)
+			-- Sets an attribute
+			-- Might be ignored by the specific implementation
+		require
+			id_is_not_empty: not id.is_empty
+			value_is_not_empty: not value.is_empty
 		deferred
 		end
 

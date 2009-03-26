@@ -1,5 +1,6 @@
 note
-	description: ""
+	description: "[
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,7 +17,7 @@ inherit
 create
 	make
 
-feature -- Access
+feature -- Initialization
 
 		make
 			do
@@ -24,15 +25,22 @@ feature -- Access
 				Precursor
 			end
 
+feature -- Access
+
 		buf: STRING
+				-- Internal buffer. Might be better to replace it with something faster
+
+feature -- Basic Functionality
 
 		put_string (a_string: STRING)
-			-- String is automatically indendated and a new line added.
-		do
-			buf.append (a_string)
-		end
+				-- <Precursor>
+				-- Appends a string to the content
+			do
+				buf.append (a_string)
+			end
 
 		get_text: STRING
+				-- Returns the accumulated content
 			do
 				Result := buf
 			end

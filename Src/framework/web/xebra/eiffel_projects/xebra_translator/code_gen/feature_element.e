@@ -15,20 +15,15 @@ create
 	make,
 	make_with_locals
 
-feature -- Access
-
-	signature: STRING
-			-- Signature of the feature
-
-	locals: LIST [VARIABLE_ELEMENT]
-			-- The local variables of the feature
-
-	content: LIST [SERVLET_ELEMENT]
-			-- The body expressions of the feature
-
 feature -- Initialization
 
-	make (a_signature: STRING; a_content: LIST [SERVLET_ELEMENT])
+	make (a_signature: STRING)
+			-- `a_signature': The signature of the feature
+		do
+			make_with_expressions (a_signature, create {ARRAYED_LIST [SERVLET_ELEMENT]}.make (5))
+		end
+
+	make_with_expressions (a_signature: STRING; a_content: LIST [SERVLET_ELEMENT])
 			-- `a_signature': The signature of the feature
 			-- `a_content': The feature body
 		require
@@ -52,7 +47,39 @@ feature -- Initialization
 			content := a_content
 		end
 
-feature -- Processing
+feature -- Access
+
+	signature: STRING
+			-- Signature of the feature
+
+	locals: LIST [VARIABLE_ELEMENT]
+			-- The local variables of the feature
+
+	content: LIST [SERVLET_ELEMENT]
+			-- The body expressions of the feature
+
+	append_local (name, type: STRING)
+			-- Appends a {PLAIN_CODE_ELEMENT} to the feature
+		require
+			name_is_valid: not name.is_empty
+			type_is_valid: not type.is_empty
+		do
+			locals.extend (create {VARIABLE_ELEMENT}.make (name, type))
+		ensure
+			local_has_been_added: old locals.count + 1 = locals.count
+		end
+
+	append_expression (expression: STRING)
+			-- Appends a {PLAIN_CODE_ELEMENT} to the feature
+		require
+			expression_is_valid: not expression.is_empty
+		do
+			content.extend (create {PLAIN_CODE_ELEMENT}.make (expression))
+		ensure
+			expression_has_been_added: old content.count + 1 = content.count
+		end
+
+feature -- Implementation
 
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			

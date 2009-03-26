@@ -20,6 +20,9 @@ feature --Initialization
 			-- `a_name': The name of the servlet
 			-- `a_controller_name': The name of the controller class
 			-- `some_elements': The elements which should be executed and written to the page
+		require
+			a_name_is_not_emtpy: not a_name.is_empty
+			a_controller_is_not_empty: not a_controller_name.is_empty
 		do
 			make (a_name, a_controller_name, stateful, a_root_tag)
 			from
@@ -70,8 +73,10 @@ feature -- Access
 			-- All tags which represent the page
 
 	controller_calls: LIST [STRING] assign set_controller_calls
+			-- All calls which should be available to the servlets
 
 	controller_calls_with_result: LIST [STRING] assign set_controller_calls_with_result
+			-- All calls which return something which should be available to the servlets
 
 feature -- Element change
 
@@ -93,11 +98,13 @@ feature -- Implementation
 		end
 
 	set_controller_calls (a_calls: LIST [STRING])
+			-- Sets the caller functions
 		do
 			controller_calls := a_calls
 		end
 
 	set_controller_calls_with_result (a_calls: LIST [STRING])
+			-- Sets the caller functions with result
 		do
 			controller_calls_with_result := a_calls
 		end
@@ -123,56 +130,43 @@ feature -- Implementation
 
 	build_request_feature: FEATURE_ELEMENT
 			-- Serializes the request feature of the {SERVLET}
-		local
-			feature_elements: LIST [SERVLET_ELEMENT]
 		do
-			create {LINKED_LIST [SERVLET_ELEMENT]} feature_elements.make
-
-			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("create Result." + constructor_name))
-			feature_elements.extend (create {PLAIN_CODE_ELEMENT}.make ("root_tag.output (Current, Result.text)"))
-
-			create Result.make (request_name, feature_elements)
+			create Result.make (request_name)
+			Result.append_expression ("create Result." + constructor_name)
+			Result.append_expression ("root_tag.output (Current, Result.text)")
 		end
 
 	build_constructor_feature: FEATURE_ELEMENT
 				-- Serializes the make feature of the {SERVLET}
-			local
-				make_code: PLAIN_CODE_ELEMENT
-				code_list: LIST [PLAIN_CODE_ELEMENT]
-				locals: LIST [VARIABLE_ELEMENT]
 			do
-				create make_code.make ("create " + controller_var + "." + constructor_name)
-				create {LINKED_LIST [PLAIN_CODE_ELEMENT]} code_list.make
-				create {LINKED_LIST [VARIABLE_ELEMENT]} locals.make
-				code_list.extend (make_code)
-				code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("create stack.make (10)"))
-				locals.extend (create {VARIABLE_ELEMENT}.make ("temp", "TAG_SERIALIZER"))
-				locals.extend (create {VARIABLE_ELEMENT}.make ("stack", "ARRAYED_STACK [TAG_SERIALIZER]"))
-				root_tag.build_tag_tree (code_list, True)
+				create Result.make ("make")
+				Result.append_expression ("create " + controller_var + "." + constructor_name)
+				Result.append_expression ("create stack.make (10)")
+				Result.append_local ("temp", "TAG_SERIALIZER")
+				Result.append_local ("stack", "ARRAYED_STACK [TAG_SERIALIZER]")
+				root_tag.build_tag_tree (Result, True)
 
-				code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]} controller_features.make (10)"))
+				Result.append_expression ("create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]} controller_features.make (10)")
 				from
 					controller_calls.start
 				until
 					controller_calls.after
 				loop
-					code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("controller_features.put (agent "
-						+ "controller." + controller_calls.item + ", %"" + controller_calls.item + "%")"))
+					Result.append_expression ("controller_features.put (agent "
+						+ "controller." + controller_calls.item + ", %"" + controller_calls.item + "%")")
 					controller_calls.forth
 				end
 
-				code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("create {HASH_TABLE [FUNCTION [ANY, TUPLE, STRING], STRING]} controller_features_with_result.make (10)"))
+				Result.append_expression ("create {HASH_TABLE [FUNCTION [ANY, TUPLE, STRING], STRING]} controller_features_with_result.make (10)")
 				from
 					controller_calls_with_result.start
 				until
 					controller_calls_with_result.after
 				loop
-					code_list.extend (create {PLAIN_CODE_ELEMENT}.make ("controller_features_with_result.put (agent "
-						+ "controller." + controller_calls_with_result.item + ", %"" + controller_calls_with_result.item + "%")"))
+					Result.append_expression ("controller_features_with_result.put (agent "
+						+ "controller." + controller_calls_with_result.item + ", %"" + controller_calls_with_result.item + "%")")
 					controller_calls_with_result.forth
 				end
-
-				create Result.make_with_locals ("make", code_list, locals)
 			end
 
 feature {NONE} -- Access

@@ -1,0 +1,34 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+     Tag library schema for Xebra.
+     Copyright 2009 eiffel.com. All rights reserved.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="taglib" type="TagLibType"/>
+
+  <xsd:complexType name="TagLibType">      
+      <xsd:sequence>
+        <xsd:element name="tag" type="Tag"/>
+      </xsd:sequence>
+      <xsd:attribute name="id"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Tag">
+      <xsd:sequence>
+         <xsd:element name="attribute" type="TagAttribute"/>
+      </xsd:sequence>
+      <xsd:attribute name="id"/>
+      <xsd:attribute name="class"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="TagAttribute">
+      <xsd:attribute name="id"/>
+      <xsd:attribute name="call" type="xsd:boolean"/>
+      <xsd:attribute name="call_with_result" type="xsd:boolean"/>
+  </xsd:complexType>
+
+</xsd:schema>
+

@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -24,8 +24,12 @@ feature -- Access
 			create {CONSTANT_ATTRIBUTE} times.make ("")
 		end
 
+feature {NONE} -- Access
+
 	times: TAG_ATTRIBUTE
 			-- Number of repetitions of the body
+
+feature {NONE} -- Implementation
 
 	output (parent: SERVLET buf: INDENDATION_STREAM)
 			-- <Precursor>
@@ -44,6 +48,7 @@ feature -- Access
 		end
 
 	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+			-- <Precursor>
 		do
 			if id.is_equal ("times") then
 				times := a_attribute

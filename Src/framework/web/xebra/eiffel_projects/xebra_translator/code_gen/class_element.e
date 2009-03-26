@@ -14,45 +14,6 @@ inherit
 create
 	make
 
-feature -- Access
-
-	name: STRING
-			-- Name of the class
-
-	constructor_name: STRING
-			-- Name of the create method
-
-	features: LIST [FEATURE_ELEMENT]
-			-- The local variables of the feature
-
-	precursor_name: STRING
-			-- The precursor class
-
-	variables: LIST [VARIABLE_ELEMENT]
-
-	set_inherit (a_precursor_name: STRING)
-			-- Sets the precursor class name.
-		do
-			precursor_name := a_precursor_name
-		end
-
-	set_constructor_name (a_constructor_name: STRING)
-			-- Sets the constructor name.
-		do
-			constructor_name := a_constructor_name
-		end
-
-	add_feature (a_feature: FEATURE_ELEMENT)
-			-- Adds a feature to the class.
-		do
-			features.extend (a_feature)
-		end
-
-	add_variable (a_variable: VARIABLE_ELEMENT)
-			-- Adds a variable to the class.
-		do
-			variables.extend (a_variable)
-		end
 
 feature -- Initialization
 
@@ -69,8 +30,53 @@ feature -- Initialization
 			create {LINKED_LIST [VARIABLE_ELEMENT]} variables.make
 		end
 
+feature {NONE} -- Access
 
-feature -- Processing
+	name: STRING
+			-- Name of the class
+
+	constructor_name: STRING
+			-- Name of the create method
+
+	features: LIST [FEATURE_ELEMENT]
+			-- The local variables of the feature
+
+	precursor_name: STRING
+			-- The precursor class
+
+	variables: LIST [VARIABLE_ELEMENT]
+
+feature -- Access
+
+	set_inherit (a_precursor_name: STRING)
+			-- Sets the precursor class name.
+		require
+			a_precursor_name_is_valid: not a_precursor_name.is_empty
+		do
+			precursor_name := a_precursor_name
+		end
+
+	set_constructor_name (a_constructor_name: STRING)
+			-- Sets the constructor name.
+		require
+			a_constructor_name: not a_constructor_name.is_empty
+		do
+			constructor_name := a_constructor_name
+		end
+
+	add_feature (a_feature: FEATURE_ELEMENT)
+			-- Adds a feature to the class.
+		do
+			features.extend (a_feature)
+		end
+
+	add_variable (a_variable: VARIABLE_ELEMENT)
+			-- Adds a variable to the class.
+		do
+			variables.extend (a_variable)
+		end
+
+feature -- Implementation
 
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>			

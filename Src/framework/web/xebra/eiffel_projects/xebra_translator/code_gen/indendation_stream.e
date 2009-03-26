@@ -25,8 +25,10 @@ feature -- Access
 feature -- Initialization
 
 	make (a_stream: IO_MEDIUM)
+			-- `a_stream' the stream on which it should write
 		do
 			stream := a_stream
+			ind_character := '%T'
 		end
 
 feature
@@ -61,7 +63,7 @@ feature
 	append_string (a_string: STRING)
 			-- Appends a string without indendation
 		do
-			stream.put_string (a_string)
+			stream.putstring (a_string)
 		end
 
 	indent

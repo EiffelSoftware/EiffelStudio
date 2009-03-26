@@ -158,11 +158,13 @@ feature -- Tag
 			end
 
 			if state = READING_TAG then
-				create l_tmp_tag.make (a_local_part, taglib.get_class_for_name (l_local_part.as_upper))
-					-- TODO: Read tag class name from taglib file!
-				tag_stack.item.put_subtag (l_tmp_tag)
-				tag_stack.put (l_tmp_tag)
-
+				if taglib.contains (l_local_part) then
+					create l_tmp_tag.make (a_local_part, taglib.get_class_for_name (l_local_part.as_upper))
+					tag_stack.item.put_subtag (l_tmp_tag)
+					tag_stack.put (l_tmp_tag)
+				else
+					error_manager.add_warning (create {ERROR_UNDEFINED_TAG}.make (["tag: " + l_local_part]))
+				end
 			elseif state = READING_HTML then
 				html_buf.append ("<" + l_prefix +  l_local_part)
 			end
@@ -202,16 +204,20 @@ feature -- Tag
 
 				-- all variables initialized
 
-			if state = READING_TAG then
+			if state = READING_TAG then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
+
+				if not taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
+					error_manager.add_warning (create {ERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+				end
+
 				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
 					process_dynamic_tag_attribute (l_local_part, l_value)
-				elseif taglib.is_call_feature (tag_stack.item.id, l_local_part) then
-					controller_calls.extend (l_value)
-					tag_stack.item.put_attribute (l_local_part, l_value)
-				elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
-					controller_calls_with_result.extend (l_value)
-					tag_stack.item.put_attribute (l_local_part, l_value)
 				else
+					if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
+						controller_calls.extend (l_value)
+					elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
+						controller_calls_with_result.extend (l_value)
+					end
 					tag_stack.item.put_attribute (l_local_part, l_value)
 				end
 			elseif state = READING_HTML then

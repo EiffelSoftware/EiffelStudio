@@ -13,15 +13,24 @@ inherit
 create
 	make
 
-feature -- Access
-	constant: STRING
+feature {NONE} -- Initialization
 
 	make (a_constant: STRING)
+		require
+			a_constant_valid: not a_constant.is_empty
 		do
 			constant := a_constant
 		end
 
+feature {NONE} -- Access
+
+	constant: STRING
+			-- The constant which represents this class
+
+feature {NONE} -- Basic functionality
+
 	value (servlet: SERVLET): STRING
+			-- <Precursor>
 		do
 			Result := constant
 		end

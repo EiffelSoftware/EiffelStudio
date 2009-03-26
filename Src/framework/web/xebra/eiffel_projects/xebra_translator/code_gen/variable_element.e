@@ -14,14 +14,6 @@ inherit
 create
 	make
 
-feature -- Access
-
-	name: STRING
-			-- The name of the variable
-
-	type: STRING
-			-- The type of the variable
-
 feature -- Initialization
 
 	make (a_name: STRING; a_type: STRING)
@@ -35,12 +27,19 @@ feature -- Initialization
 			type := a_type
 		end
 
-feature -- Processing
+feature -- Access
+
+	name: STRING
+			-- The name of the variable
+
+	type: STRING
+			-- The type of the variable
+
+feature -- Implementation
 
 	serialize (buf: INDENDATION_STREAM)
 			-- <Precursor>
 		do
-
 			buf.put_string (name + ": " + type.as_upper)
 		end
 

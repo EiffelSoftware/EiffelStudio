@@ -10,6 +10,8 @@ deferred class
 feature -- Access
 
 	value (servlet: SERVLET): STRING
+			-- Returns the value of the attribute (might be constant or
+			-- retrieved)
 		deferred
 		end
 

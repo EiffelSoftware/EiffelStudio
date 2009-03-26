@@ -12,12 +12,7 @@ inherit
 create
 	make
 
-feature -- Access
-
-	class_name: STRING
-	name: STRING
-
-	attributes: LIST [TAG_DESCRIPTION_ATTRIBUTE]
+feature
 
 	make
 		do
@@ -26,7 +21,21 @@ feature -- Access
 			create {ARRAYED_LIST [TAG_DESCRIPTION_ATTRIBUTE]} attributes.make (10)
 		end
 
+feature {NONE} -- Access
+
+	attributes: LIST [TAG_DESCRIPTION_ATTRIBUTE]
+			-- A list of all the possible attributes
+
+feature -- Access
+
+	name: STRING
+			-- The name of the tag
+
+	class_name: STRING
+			-- The name of the associated class
+
 	put (a_child: TAG_LIB_ITEM)
+			-- <Precursor>
 		local
 			child: TAG_DESCRIPTION_ATTRIBUTE
 		do
@@ -35,6 +44,7 @@ feature -- Access
 		end
 
 	set_attribute (id: STRING; value: STRING)
+			-- <Precursor>
 		do
 			if id.is_equal ("class") then
 				class_name := value
@@ -45,6 +55,9 @@ feature -- Access
 		end
 
 	is_call_feature (a_name: STRING): BOOLEAN
+			-- Is the attribute with the name `a_name' a feature name?
+		require
+			a_name_is_not_empty: not a_name.is_empty
 		do
 			Result := False
 			from
@@ -60,6 +73,9 @@ feature -- Access
 		end
 
 	is_call_with_result_feature (a_name: STRING): BOOLEAN
+			-- Is the attribute with the name `a_name' a name of a feature which returns something?
+		require
+			a_name_is_not_empty: not a_name.is_empty
 		do
 			Result := False
 			from
@@ -69,6 +85,24 @@ feature -- Access
 			loop
 				if attributes.item.id.is_equal (a_name) then
 					Result := attributes.item.call_with_result
+				end
+				attributes.forth
+			end
+		end
+
+	has_argument (a_name: STRING): BOOLEAN
+			-- Does this tag allow any arguments?
+		require
+			a_name_is_not_empty: not a_name.is_empty
+		do
+			Result := False
+			from
+				attributes.start
+			until
+				attributes.after or Result
+			loop
+				if attributes.item.id.is_equal (a_name) then
+					Result := True
 				end
 				attributes.forth
 			end

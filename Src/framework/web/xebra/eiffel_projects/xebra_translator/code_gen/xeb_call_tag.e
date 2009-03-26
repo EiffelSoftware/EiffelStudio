@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Access
+feature -- Initialization
 
 	make
 		do
@@ -24,8 +24,12 @@ feature -- Access
 			create {CONSTANT_ATTRIBUTE} feature_name.make ("")
 		end
 
+feature -- Access
+
 	feature_name: TAG_ATTRIBUTE
 			-- The name of the feature to call
+
+feature -- Implementation
 
 	output (parent: SERVLET; buf: INDENDATION_STREAM)
 			-- <Precursor>
@@ -34,6 +38,7 @@ feature -- Access
 		end
 
 	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+			-- <Precursor>
 		do
 			if id.is_equal ("feature") then
 				feature_name := a_attribute

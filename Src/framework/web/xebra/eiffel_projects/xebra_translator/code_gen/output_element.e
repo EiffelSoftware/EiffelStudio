@@ -37,18 +37,22 @@ feature -- Status Setting
 
 	set_controller_var (a_name: STRING)
 			-- Sets the name of the controller variable
+		require
+			a_name_is_valid: not a_name.is_empty
 		do
 			controller_var := a_name
 		end
 
 	set_response_var (a_name: STRING)
 			-- Sets the name of the response variable
+		require
+			a_name_is_valid: not a_name.is_empty
 		do
 			response_var := a_name
 		end
 
 	set_response_name(a_name: STRING)
-			-- Sets the response variable name.
+			-- Sets the response variable name.		
 		require
 			name_not_empty: not a_name.is_empty
 		do

@@ -1,51 +1,16 @@
-note
-	description: "Summary description for {XEB_HTML_TAG}."
-	author: "sandro"
-	date: "$Date$"
-	revision: "$Revision$"
-
 class
-	XEB_HTML_TAG
-
-inherit
-	TAG_SERIALIZER
-		redefine
-			output
-		end
+	QUINE
 
 create
 	make
 
-feature {NONE} -- Initialization
-
+feature
 	make
 		do
-			make_base
-			create {CONSTANT_ATTRIBUTE} text.make ("")
+			print (code + " " + code + "%"%Nend")
 		end
 
-feature {NONE} -- Access
-
-	text: TAG_ATTRIBUTE
-			-- The XHTML content
-
-feature {NONE}
-
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
-			-- <Precursor>
-		do
-			buf.append_string (text.value (parent))
-			output_children (parent, buf)
-		end
-
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
-			-- <Precursor>
-		do
-			if id.is_equal("text") then
-				text := a_attribute
-			end
-		end
-
+	code: STRING = "class QUINE %N create make %N feature %N make %N do print (code + %" %" + code + %"%%%"%") end %N code: STRING =%""
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

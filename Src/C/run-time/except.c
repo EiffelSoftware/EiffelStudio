@@ -4187,6 +4187,42 @@ rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj)
 	return result;
 }
 
+rt_public EIF_BOOLEAN c_in_rescue (void)							
+	/* Is current execution during rescue?
+	 * We traverse the execution stack to find if there is a EX_RESC vector. */
+{
+	EIF_GET_CONTEXT
+	struct xstack *stk = &eif_stack;
+	struct ex_vect *top = stk->st_top;	/* Top of stack */
+	struct stxchunk *cur;
+	int found = 0;
+
+	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
+		return EIF_TRUE;
+	}
+	cur = stk->st_cur;
+	while (top--){
+		if (top >= cur->sk_arena){ /* We are still in current chunk */
+			if (top->ex_type == EX_RESC)
+			{
+				return EIF_TRUE;
+			}
+		} else { /* We are out of current chunk */
+			cur = cur->sk_prev;
+			if (cur){ /* There is a previous chunk. */
+				top = cur->sk_end - 1;
+				if (top->ex_type == EX_RESC)
+				{
+					return EIF_TRUE;
+				}
+			} else {	/* It is already bottom of the stack. */
+				return EIF_FALSE;
+			}
+		}
+	}
+	return EIF_FALSE; /* Should never reach, just to make the c compiler happy. */
+}
+
 /*
 doc:</file>
 */

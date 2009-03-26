@@ -204,6 +204,7 @@ RT_LNK void chk_old(EIF_REFERENCE ex);							/* Check if ex is NULL, if not rais
 RT_LNK struct ex_vect *exold(void);								/* Push excution stack at entrance of old expression evaluation */
 RT_LNK void init_emnger (void);									/* Initialize once object and preallocate trace string */
 RT_LNK void ereturn(EIF_CONTEXT_NOARG);							/* Return to lastly recorded rescue entry */
+RT_LNK EIF_BOOLEAN c_in_rescue (void);							/* Is current execution during rescue */ 
 
 #ifdef __cplusplus
 }

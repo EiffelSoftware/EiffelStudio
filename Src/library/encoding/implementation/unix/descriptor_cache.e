@@ -69,7 +69,6 @@ feature {NONE} -- Externals
 		alias
 			"[
 				if ($a_cd != NULL) {
-					printf ("iconv closing\n");
 					iconv_close((iconv_t) $a_cd);
 				}
 			]"

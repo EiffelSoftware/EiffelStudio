@@ -81,6 +81,7 @@ feature -- Generation
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
 			l_saved_in_assertion, l_saved_supplier_precondition, l_saved_in_precondition: INTEGER
+			l_saved_rescue_level: INTEGER
 			l_nb_precond: INTEGER
 			l_old_expr_count: INTEGER
 			keep: BOOLEAN
@@ -135,6 +136,16 @@ feature -- Generation
 				il_generator.put_dummy_local_info (boolean_type, l_saved_supplier_precondition)
 				il_generator.generate_save_supplier_precondition
 				il_generator.generate_local_assignment (l_saved_supplier_precondition)
+			end
+
+			if a_body.rescue_clause /= Void or else a_body.is_once then
+					-- Generate local variable to save `rescue_level'.
+				context.add_local (integer_type)
+				l_saved_rescue_level := context.local_list.count
+				context.set_saved_rescue_level (l_saved_rescue_level)
+				il_generator.put_dummy_local_info (integer_type, l_saved_rescue_level)
+				il_generator.generate_get_rescue_level
+				il_generator.generate_local_assignment (l_saved_rescue_level)
 			end
 
 			if a_body.rescue_clause /= Void then
@@ -286,6 +297,10 @@ feature -- Generation
 				il_generator.generate_local (saved_last_exception)
 				il_generator.generate_restore_last_exception
 
+					-- Restore rescue level at the end of normal exit of the routine.
+				il_generator.generate_local (l_saved_rescue_level)
+				il_generator.generate_set_rescue_level
+
 				il_generator.generate_start_rescue
 					-- Restore precondition status.
 				il_generator.generate_local (l_saved_in_precondition)
@@ -297,6 +312,11 @@ feature -- Generation
 
 					-- Generate code of rescue.
 				a_body.rescue_clause.process (Current)
+
+					-- Setup rescue level before rethrowing.
+				il_generator.put_integer_32_constant (0)
+				il_generator.generate_set_rescue_level
+
 				il_generator.generate_end_exception_block
 				il_generator.mark_label (end_of_routine)
 			end
@@ -2622,6 +2642,8 @@ feature {NONE} -- Visitors
 	process_retry_b (a_node: RETRY_B)
 			-- Process `a_node'.
 		do
+			il_generator.generate_local (context.saved_rescue_level)
+			il_generator.generate_set_rescue_level
 			generate_il_line_info (a_node, True)
 			process_pragma (a_node)
 			il_generator.generate_leave_to (retry_label)

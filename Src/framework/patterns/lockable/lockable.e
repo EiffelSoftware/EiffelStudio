@@ -49,7 +49,7 @@ feature -- Basic operations
 			if l_events /= Void then
 					-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
 					-- performed.
-				l_events.publish_if ([Current], agent {attached LOCKABLE_I}.is_locked)
+				l_events.publish_if ([Current], agent {LOCKABLE_I}.is_locked)
 			end
 		ensure then
 			lock_counter_incremented: lock_counter = old lock_counter + 1
@@ -71,7 +71,7 @@ feature -- Basic operations
 			if l_events /= Void then
 					-- Only publish events if Curren is unlocked, because a event handler may cause an unlock to be
 					-- performed.
-				l_events.publish_if ([Current], agent (ia_lock: attached LOCKABLE_I): BOOLEAN
+				l_events.publish_if ([Current], agent (ia_lock: LOCKABLE_I): BOOLEAN
 					do
 						Result := not ia_lock.is_locked
 					end)
@@ -100,7 +100,7 @@ feature {NONE} -- Event handlers
 
 feature -- Events
 
-	locked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	locked_event: EVENT_TYPE [TUPLE [sender: LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_locked_event
@@ -115,7 +115,7 @@ feature -- Events
 			end
 		end
 
-	unlocked_event: EVENT_TYPE [TUPLE [sender: attached LOCKABLE_I]]
+	unlocked_event: EVENT_TYPE [TUPLE [sender: LOCKABLE_I]]
 			-- <Precursor>
 		local
 			l_result: like internal_unlocked_event
@@ -140,7 +140,7 @@ feature -- Events
 			l_result := internal_lockable_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: attached LOCKABLE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: LOCKABLE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
 								[locked_event, agent ia_observer.on_locked],

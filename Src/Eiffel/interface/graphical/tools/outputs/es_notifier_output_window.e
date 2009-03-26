@@ -44,11 +44,21 @@ feature -- Processing
 		do
 			Precursor (append)
 			if not append then
-				string.wipe_out
-				if attached internal_text_changed_actions as l_actions then
-					l_actions.call ([Current])
-				end
+				reset
 			end
+		end
+
+feature -- Basic operations
+
+	reset
+			-- Resets any cached data.
+		do
+			string.wipe_out
+			if attached internal_text_changed_actions as l_actions then
+				l_actions.call ([Current])
+			end
+		ensure
+			string_is_empty: string.is_empty
 		end
 
 feature -- Output
@@ -92,11 +102,7 @@ feature -- Output
 	clear_window
 			-- <Precursor>
 		do
-			Precursor
-			string.wipe_out
-			if attached internal_text_changed_actions as l_actions then
-				l_actions.call ([Current])
-			end
+			reset
 		end
 
 feature -- Actions

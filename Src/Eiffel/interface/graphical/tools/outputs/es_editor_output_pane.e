@@ -15,6 +15,7 @@ inherit
 		rename
 			make as make_output_pane
 		redefine
+			clear,
 			on_locked,
 			on_unlocked
 		end
@@ -25,22 +26,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: attached READABLE_STRING_GENERAL)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Initialize a output editor
 			--
 			-- `a_name': A friendly, human readable name for the editor.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		do
 			make_with_icon (a_name, stock_pixmaps.tool_output_icon_buffer)
 		ensure
 			name_set: a_name.as_string_32 ~ name.as_string_32
 		end
 
-	make_with_icon (a_name: attached READABLE_STRING_GENERAL; a_icon: detachable like icon)
+	make_with_icon (a_name: READABLE_STRING_GENERAL; a_icon: like icon)
 			-- Initialize a output editor with an representation icon
 			--
 			-- `a_name': A friendly, human readable name for the editor.
 			-- `a_icon': An icon representing the output pane.
 		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 			a_icon_attached: a_icon /= Void
 		do
 			make_output_pane
@@ -102,28 +108,28 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	icon: attached EV_PIXEL_BUFFER
+	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 
-	name: attached IMMUTABLE_STRING_32
+	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 
 feature -- Query
 
-	text_for_window (a_window: attached SHELL_WINDOW_I): attached STRING_32
+	text_from_window (a_window: SHELL_WINDOW_I): STRING_32
 			-- <Precursor>
 		local
-			l_widget: like widget_for_window
+			l_widget: like widget_from_window
 		do
-			l_widget := widget_for_window (a_window)
+			l_widget := widget_from_window (a_window)
 			if l_widget.is_interface_usable and then l_widget.is_initialized then
-				create Result.make_from_string (l_widget.editor.wide_text)
+				create Result.make_from_string (l_widget.text)
 			else
 				create Result.make_empty
 			end
 		end
 
-	output_window_for_window (a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
+	formatter_from_window (a_window: SHELL_WINDOW_I): TEXT_FORMATTER
 			-- <Precursor>
 		local
 			l_widget: ES_EDITOR_WIDGET
@@ -131,21 +137,49 @@ feature -- Query
 		do
 			l_widget := widget_table.item (a_window.window_id)
 			check l_widget_attached: l_widget /= Void end
-			l_result ?= l_widget.editor.text_displayed
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := formatter_from_widget (l_widget)
 		end
 
 feature {NONE} -- Query
 
-	widget_output_window (a_widget: attached ES_EDITOR_WIDGET; a_window: attached SHELL_WINDOW_I): attached OUTPUT_WINDOW
+	formatter_from_widget (a_widget: ES_EDITOR_WIDGET): TEXT_FORMATTER
 			-- <Precursor>
 		local
-			l_result: detachable OUTPUT_WINDOW
+			l_result: detachable TEXT_FORMATTER
 		do
-			l_result := a_widget.editor
+			l_result := a_widget.editor.text_displayed
 			check l_result_attached: l_result /= Void end
 			Result := l_result
+		end
+
+feature -- Basic operations
+
+	clear
+			-- <Precursor>
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]
+		do
+			Precursor
+			if attached widget_table as l_table then
+				l_cursor := l_table.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if attached l_cursor.item as l_widget then
+						l_widget.clear
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
+	clear_window (a_window: SHELL_WINDOW_I)
+			-- <Precursor>
+		local
+			l_widget: like widget_from_window
+		do
+			l_widget := widget_from_window (a_window)
+			if l_widget.is_interface_usable then
+				l_widget.clear
+			end
 		end
 
 feature {NONE} -- Event handlers
@@ -186,7 +220,7 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Factory
 
-	new_widget (a_window: attached SHELL_WINDOW_I): attached ES_EDITOR_WIDGET
+	new_widget (a_window: SHELL_WINDOW_I): ES_EDITOR_WIDGET
 			-- <Precursor>
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
@@ -197,6 +231,8 @@ feature {NONE} -- Factory
 		end
 
 invariant
+	icon_attached: icon /= Void
+	name_attached: name /= Void
 	not_name_is_empty: not name.is_empty
 
 ;note

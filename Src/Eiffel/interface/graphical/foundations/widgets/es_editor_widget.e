@@ -59,6 +59,14 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
+	text: STRING_32
+			-- Editor text
+		do
+			Result := editor.wide_text
+		ensure
+			result_attached: Result /= Void
+		end
+
 	editor: attached EB_CLICKABLE_EDITOR
 			-- Actual editor
 		local
@@ -82,6 +90,16 @@ feature {NONE} -- Status report
 			-- <Precursor>
 
 feature -- Basic operations
+
+	clear
+			-- Clears the editor.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			editor.clear_window
+		ensure
+			editor_is_empty: editor.is_empty
+		end
 
 	scroll_editor_to_end (a_force: BOOLEAN)
 			-- Scrolls the editor to the end, if the caret is placed at the end of the text.

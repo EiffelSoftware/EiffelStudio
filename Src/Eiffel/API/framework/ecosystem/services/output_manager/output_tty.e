@@ -24,13 +24,13 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	name: attached IMMUTABLE_STRING_32
+	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
 			Result := "Terminal"
 		end
 
-	output_window: attached OUTPUT_WINDOW
+	formatter: TEXT_FORMATTER
 			-- <Precursor>
 		attribute
 			create {TERM_WINDOW} Result
@@ -45,6 +45,11 @@ feature -- Status report
 		end
 
 feature -- Basic operations
+
+	clear
+			-- <Precursor>
+		do
+		end
 
 	activate
 			-- <Precursor>

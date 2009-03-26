@@ -1,6 +1,6 @@
 note
 	description: "[
-		Access to common output windows ({OUTPUT_WINDOW}) and outputs ({OUTPUT_I}), which are always
+		Access to common output windows ({formatter}) and outputs ({OUTPUT_I}), which are always
 		available in EiffelStudio.
 	]"
 	legal: "See notice at end of class."
@@ -87,61 +87,61 @@ feature {NONE} -- Access: Outputs
 
 feature {NONE} -- Access: Output Windows
 
-	general_output_window: OUTPUT_WINDOW
+	general_formatter: TEXT_FORMATTER
 			-- General output window, used to write general information output to.
 		do
-			if attached internal_general_output_window as l_result then
+			if attached internal_general_formatter as l_result then
 				Result := l_result
 			else
 				if attached general_output as l_output then
-					Result := l_output.output_window
+					Result := l_output.formatter
 				else
 						-- The output service is not available, default to the terminal window.
 					create {TERM_WINDOW} Result
-					internal_general_output_window := Result
+					internal_general_formatter := Result
 				end
 			end
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = general_output_window
+			result_consistent: Result = general_formatter
 		end
 
-	compiler_output_window: OUTPUT_WINDOW
+	compiler_formatter: TEXT_FORMATTER
 			-- Compiler output window, used to write Eiffel compilation output to.
 		do
-			if attached internal_compiler_output_window as l_result then
+			if attached internal_compiler_formatter as l_result then
 				Result := l_result
 			else
 				if attached compiler_output as l_output then
-					Result := l_output.output_window
+					Result := l_output.formatter
 				else
 						-- The output service is not available, default to the terminal window.
 					create {TERM_WINDOW} Result
-					internal_compiler_output_window := Result
+					internal_compiler_formatter := Result
 				end
 			end
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = compiler_output_window
+			result_consistent: Result = compiler_formatter
 		end
 
-	c_compiler_output_window: OUTPUT_WINDOW
+	c_compiler_formatter: TEXT_FORMATTER
 			-- C output window, used to write C compilation output to.
 		do
-			if attached internal_c_compiler_output_window as l_result then
+			if attached internal_c_compiler_formatter as l_result then
 				Result := l_result
 			else
 				if attached c_compiler_output as l_output then
-					Result := l_output.output_window
+					Result := l_output.formatter
 				else
 						-- The output service is not available, default to the terminal window.
 					create {TERM_WINDOW} Result
-					internal_c_compiler_output_window := Result
+					internal_c_compiler_formatter := Result
 				end
 			end
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = c_compiler_output_window
+			result_consistent: Result = c_compiler_formatter
 		end
 
 feature {NONE} -- Helpers
@@ -160,24 +160,24 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `general_output'.
 			-- Note: Do not use directly!
 
-	internal_general_output_window: detachable like general_output_window
-			-- Cached version of `general_output_window'.
+	internal_general_formatter: detachable like general_formatter
+			-- Cached version of `general_formatter'.
 			-- Note: Do not use directly!
 
 	internal_compiler_output: detachable like compiler_output
 			-- Cached version of `compiler_output'.
 			-- Note: Do not use directly!
 
-	internal_compiler_output_window: detachable like compiler_output_window
-			-- Cached version of `compiler_output_window'.
+	internal_compiler_formatter: detachable like compiler_formatter
+			-- Cached version of `compiler_formatter'.
 			-- Note: Do not use directly!
 
 	internal_c_compiler_output: detachable like c_compiler_output
 			-- Cached version of `c_compiler_output'.
 			-- Note: Do not use directly!
 
-	internal_c_compiler_output_window: detachable like c_compiler_output_window
-			-- Cached version of `c_compiler_output_window'.
+	internal_c_compiler_formatter: detachable like c_compiler_formatter
+			-- Cached version of `c_compiler_formatter'.
 			-- Note: Do not use directly!
 
 ;note

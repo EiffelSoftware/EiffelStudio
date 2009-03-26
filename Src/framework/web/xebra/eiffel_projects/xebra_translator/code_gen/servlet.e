@@ -19,7 +19,7 @@ feature -- Access
 			-- Only the features that will be called
 
 	handle_request (request: REQUEST): RESPONSE
-			-- Handles a request from a client.
+			-- Handles a request from a client an generates a response.
 		deferred
 		end
 

@@ -15,50 +15,68 @@ create
 feature {NONE} -- Initialization
 
 	make
+			--
 		do
-			create {HASH_TABLE[STATELESS_SERVLET, STRING]} stateless_servlets.make (10)
+
 		end
 
 feature -- Access
 
-	stateless_servlets: TABLE [STATELESS_SERVLET, STRING]
-			-- The stateless servlets
 
 feature -- Processing
 
-	process (a_request: REQUEST; a_socket: NETWORK_STREAM_SOCKET)
-			-- Processes an incoming request and sends it back to the server
+	process_servlet (a_request: REQUEST; a_socket: NETWORK_STREAM_SOCKET; a_request_handler: REQUEST_HANDLER)
+			-- Processes an incoming request and sends it back to the server.
+			-- Routes the request to the appropriate controller.
+		local
+			l_servlet: detachable SERVLET
+			l_response: RESPONSE
 		do
-		   	a_socket.independent_store (handle_request(a_request))
+			l_servlet := find_servlet (a_request, a_request_handler)
+
+			if attached l_servlet then
+				l_response := l_servlet.handle_request (a_request)
+			else
+				create l_response.make
+				l_response.text.put_string ("Application not found: %"" + a_request.target_uri + "%"")
+			end
+
+		  -- 	a_socket.independent_store (handle_servlet(a_request, a_request_handler))
+		   	a_socket.independent_store (l_response)
 	       	a_socket.close
 		end
 
-	handle_request (request: REQUEST): RESPONSE
-			-- Routes the request to the appropriate controller
-		local
-			servlet: detachable SERVLET
-		do
-			servlet := find_servlet (request)
-			if attached servlet then
-				Result := servlet.handle_request (request)
-			else
-				create Result.make
-				Result.text.put_string ("Application not found: %"" + request.file_identifier + "%"")
-			end
-		end
+feature {NONE} -- Internal Processing
 
-	find_servlet (request: REQUEST): detachable SERVLET
+
+	find_servlet (a_request: REQUEST; a_request_handler: REQUEST_HANDLER): detachable SERVLET
 			-- Searches for the servlet requested by `request'
 			-- 1. Stateless servlet?
 			-- 2. Servlet in session?
 			-- 3. If not found := Void
 		do
-			if attached {STATELESS_SERVLET} stateless_servlets [request.file_identifier] as servlet then
-				Result := servlet
+			if attached {STATELESS_SERVLET} a_request_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+				Result := l_servlet
 			else
-				--Result := request.session.get_stateful_servlet
+			--	Result := request.session.get_stateful_servlet
 			end
 		end
+
+
+--	handle_servlet (a_request: REQUEST; a_request_handler; a_request_handler: REQUEST_HANDLER): RESPONSE
+--			-- Routes the request to the appropriate controller
+--		local
+--			l_servlet: detachable SERVLET
+--		do
+--			l_servlet := find_servlet (a_request, a_request_handler)
+
+--			if attached l_servlet then
+--				Result := l_servlet.handle_request (a_request)
+--			else
+--				create Result.make
+--				Result.text.put_string ("Application not found: %"" + request.target_uri + "%"")
+--			end
+--		end
 
 --	extract_web_app_name (message: STRING): STRING
 --			-- Extracts the webapp name from the get-parameter.

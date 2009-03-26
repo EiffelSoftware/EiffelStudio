@@ -74,7 +74,7 @@ feature --Execution
 
 			l_response := forward_request_to_app (l_request, socket)
 
-			send_string (l_response.get_text, socket)
+			send_string (l_response.get_text + "<br/><br/><hr/><i><small>   --XebraServer $Revision$</i></small>" , socket)
          	socket.cleanup
             check
             	socket.is_closed

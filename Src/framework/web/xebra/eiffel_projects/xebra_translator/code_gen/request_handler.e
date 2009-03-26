@@ -1,6 +1,6 @@
 note
 	description: "[
-		Handler of the connection with the XEbra-server. Delegates all incoming
+		Handler of the connection with the XEbraServer. Delegates all incoming
 		requests to the appropriate servlet. Caching of sessions and session objects
 		handled as well.
 		A specific handler which inherits from this class is generated to accomodate
@@ -17,7 +17,7 @@ feature -- Constants
 	Server_port: INTEGER = 3491
 
 	Max_queue: INTEGER = 5
-	
+
 feature -- Access
 
 	request_pool: DATA_THREAD_POOL [SERVLET_HANDLER]
@@ -45,7 +45,7 @@ feature -- Implementation
             until
                 false
             loop
-                process (server_socket) -- See below
+                process_request (server_socket) -- See below
             end
             server_socket.cleanup
         end
@@ -56,13 +56,13 @@ feature -- Implementation
 			create Result.make
 		end
 
-    process (server_socket: NETWORK_STREAM_SOCKET)
+    process_request (server_socket: NETWORK_STREAM_SOCKET)
             -- Receive a request, handle it, and send it back
         do
             server_socket.accept
             if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
 	            if attached {REQUEST} thread_socket.retrieved as l_request then
-	            	request_pool.add_work (agent {SERVLET_HANDLER}.process (l_request, thread_socket))
+	            	request_pool.add_work (agent {SERVLET_HANDLER}.process_servlet (l_request, thread_socket, Current))
 	            end
             end
         end

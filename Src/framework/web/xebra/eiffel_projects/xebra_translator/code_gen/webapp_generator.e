@@ -68,7 +68,7 @@ feature -- Implementation
 				servlets.after
 			loop
 				servlet := servlets.item
-				create file.make_open_write (path + servlet.name.as_lower + ".e")
+				create file.make_open_write (path + servlet.name.as_lower + "_servlet.e")
 				create buf.make (file)
 				servlet.serialize (buf)
 				servlets.forth
@@ -123,7 +123,7 @@ feature -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.name.as_upper + "}.make , %"" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")")
+					+ servlet.name.as_upper + "_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end

@@ -41,12 +41,13 @@ feature -- Raise
 			-- Raise `a_exception'.
 			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
 			-- in rescue clause. Hence causes removal of original `last_exception'.
-			-- If the original `last_exception' needs to be reserved, `set_throwing_exception'
-			-- on `a_exception' can be called.
 		local
 			p_meaning, p_message: POINTER
 		do
 			if not a_exception.is_ignored then
+				if in_rescue then
+					a_exception.set_throwing_exception (last_exception)
+				end
 				set_last_exception (a_exception)
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
@@ -345,15 +346,21 @@ feature {NONE} -- Implementation, ignoring
 		local
 			l_type: INTEGER
 		once
-			l_type := internal_object.dynamic_type ({VOID_TARGET})
 			create Result.make (1)
+			l_type := internal_object.dynamic_type ({VOID_TARGET})
 			Result.force (l_type, l_type)
 		end
 
 	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unraisable exceptions
+		local
+			l_type: INTEGER
 		once
-			create Result.make (0)
+			create Result.make (2)
+			l_type := internal_object.dynamic_type ({ROUTINE_FAILURE})
+			Result.force (l_type, l_type)
+			l_type := internal_object.dynamic_type ({OLD_VIOLATION})
+			Result.force (l_type, l_type)
 		end
 
 feature {NONE} -- Implementation
@@ -407,7 +414,6 @@ feature {NONE} -- Implementation
 				if attached {ROUTINE_FAILURE} e as l_rf then
 					t := last_exception
 					if t /= Void then
-						check e_not_throwing_t: not e.is_throwing (t) end
 						e.set_throwing_exception (t)
 					end
 					l_rf.set_routine_name (l_data.rf_routine)
@@ -415,7 +421,6 @@ feature {NONE} -- Implementation
 				elseif attached {OLD_VIOLATION} e as l_ov then
 					t := last_exception
 					if t /= Void then
-						check e_not_throwing_t: not e.is_throwing (t) end
 						e.set_throwing_exception (t)
 					end
 				else
@@ -431,8 +436,13 @@ feature {NONE} -- Implementation
 						l_com.set_hresult_code (l_data.signal_code)
 						l_com.set_exception_information (l_data.tag)
 					end
-					check e_not_throwing_e: not e.is_throwing (e) end
-					e.set_throwing_exception (e)
+					if in_rescue then
+						t := last_exception
+					end
+					if t = Void then
+						t := e
+					end
+					e.set_throwing_exception (t)
 				end
 				e.set_exception_trace (l_data.trace)
 				e.set_message (l_data.tag)
@@ -450,6 +460,10 @@ feature {NONE} -- Implementation
 			p_meaning, p_message: POINTER
 		do
 			if not a_exception.is_ignored then
+				if in_rescue then
+						-- We replace the `cause'.
+					a_exception.original.set_throwing_exception (last_exception)
+				end
 				set_last_exception (a_exception)
 					-- Meaning is not yet used in the runtime.
 					-- We passes NULL, until we implemented it.
@@ -503,6 +517,14 @@ feature {NONE} -- Implementation
 			-- Raise an exception
 		external
 			"built_in"
+		end
+
+	frozen in_rescue: BOOLEAN
+			-- Current execution is during rescue?
+		external
+			"C use %"eif_except.h%""
+		alias
+			"c_in_rescue"
 		end
 
 note

@@ -64,15 +64,7 @@ Test recursive-delete-with-symlinks (directory001): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
-Test net-out-of-descriptor (net001): failed
-	Description: If you create too many sockets without connecting them, we ran out of descriptor.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/net001/tcf at line 11
-	Original text:    c_compile_result ok
-	Substituted text: c_compile_result ok
-	Reason: actual C compilation result does not match expected result
-	Actual result: failure C_compilation_not_completed
-	Expected result: no_failure C_compilation_completed
-
+Test net-out-of-descriptor (net001): passed
 Test old-expression-exception (except001): passed
 Test invariant-violation-on-entry (except002): passed
 Test exception-during-evaluation-of-invariant-on-entry (except003): passed
@@ -123,17 +115,7 @@ Test every_trace_has_root (except031): passed
 Test trace_has_no_pass (except032): passed
 Test precondition-violation-infinite-loop (except033): passed
 Test last-exception-not-cleared (except034): passed
-Test code-compatible-io-failure (except035): failed
-	Description: Show the behavior that IO_FAILURE raised as Runtime_io_exception by the runtime return a correct exception code. This is compatible to {EXCEPTIONS}.exception after the merging Io_exception and Runtime_io_exception.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/except035/tcf at line 11
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test code-compatible-io-failure (except035): passed
 Test original_routines_in_exceptions (except036): passed
 Test exception_cause (except037): failed
 	Description: Tests to demo the behavior of `{EXCEPTION}.cause'.
@@ -142,6 +124,12 @@ Test exception_cause (except037): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
 		Validity error in class TEST code VEEN
 		Validity error in class TEST code VEEN
 		Validity error in class TEST code VEEN
@@ -275,19 +263,7 @@ Test free-operator-reject (syntax014): failed
 	Expected result:
 		Final status:  completed 
 
-Test long-string-constant (syntax015): failed
-	Description: Manifest string constant with 400000 characters
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax015/tcf at line 14
-	Original text:    compile_result syntax_error TEST 22
-	Substituted text: compile_result syntax_error TEST 22
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 22
-		Final status:  system_failed had_exception (Software termination) 
-	Expected result:
-		Syntax error in class TEST at line 22
-		Final status:  paused 
-
+Test long-string-constant (syntax015): passed
 Test strip-no-prefix-opers (syntax016): failed
 	Description: Operator feature which is a prefix feature implemented as an attribute
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax016/tcf at line 14
@@ -392,18 +368,7 @@ Test generic-create-empty-feat-list (syntax041): failed
 	Expected result:
 		Final status:  completed 
 
-Test external-nonwhite-chars-ignored (syntax042): failed
-	Description: Compiler accepts but completely ignores many characters at certain positions inside an external routine declaration.  These characters include !#$%^-=+\|`~{}[];'./?%/0/%/1/ and probably others.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax042/tcf at line 21
-	Original text:    compile_result syntax_error TEST 18
-	Substituted text: compile_result syntax_error TEST 18
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Syntax error in class TEST at line 18
-		Final status:  paused 
-
+Test external-nonwhite-chars-ignored (syntax042): passed
 Test agent-parens-zero-args (syntax043): passed
 Test empty-convert-clause (syntax044): failed
 	Description: A class with a convert clause that does not list any routine names should be accepted, but the compiler reports a syntax error.
@@ -452,6 +417,7 @@ Test invalid-manifest-type-char-constant (syntax054): failed
 
 Test note-syntax (syntax055): passed
 Test attached-syntax (syntax056): passed
+Test external-with-invalid-use (syntax057): passed
 Test bad-class-end-comment (valid001): passed
 Test bad-infix-feature (valid002): passed
 Test class-not-in-universe (valid003): passed
@@ -1679,7 +1645,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	  (version 6.4.7.7646 GPL Edition - solaris-x86-64)
+	  (version 6.4.7.7841 GPL Edition - solaris-x86-64)
 	There is already a project compiled in "/home/manus/local/eweasel/eweasel/../test_dir/incr226"
 	It needs to be deleted before a precompilation.
 	
@@ -2082,14 +2048,15 @@ Test remove-convert-clause-bogus-vncp (incr318): failed
 
 Test execution-failure-after-vevi (incr319): passed
 Test switch-to-conforming-inheritance (incr320): passed
-Test eif-gen-conf-init-crash (incr321): failed
-	Description: After a sequence of changes ending with a melt, system execution crashes with a seg fault in eif_gen_conf_init and no exception trace
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr321/tcf at line 61
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
+Test eif-gen-conf-init-crash (incr321): passed
+Test function-to-attribute-refinalize (incr322): failed
+	Description: After initial compilation changes where the system is finalized, a feature that effects a deferred routine is changed from a function to an attribute.  When the system is refinalized, the compiler crashes with a call on Void target in {ATTRIBUTE_BL}.real_feature_id
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr322/tcf at line 23
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  silent_failure 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2531,6 +2498,7 @@ Test finalize-inline-attribute-body (final076): failed
 	Expected result:
 		Final status:  completed 
 
+Test finalize-creation-expression-corruption (final077): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2578,14 +2546,10 @@ Test nested-thread-exit-failure (thread002): failed
 
 Test memory-leak-in-eif-thr-wait (thread003): failed
 	Description: Show memory leak in `eif_thr_wait' calling RT_GC_PROTECT(thread_object) without an RT_GC_WEAN if `eif_children_mutex' is NULL.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/thread003/tcf at line 14
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed had_panic 
-	Expected result:
-		Final status:  completed 
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/thread003/tcf at line 15
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
 
 Test creating-string-runtime-panic (thread004): passed
 Test mem-info-update-crash-after-threads (thread005): passed
@@ -2715,7 +2679,7 @@ Test deep-exception-in-rescue (exec070): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  silent_failure 
 	Expected result:
 		Final status:  completed 
 
@@ -3205,7 +3169,7 @@ Test deep-twin-expanded-type (exec300): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed 
+		Final status:  system_failed had_panic 
 	Expected result:
 		Final status:  completed 
 
@@ -3839,6 +3803,13 @@ Test ptf-read-number-routines-2 (lib029): failed
 	Substituted text: compare exec_output output
 	Reason: files being compared do not have identical contents
 
+Test file-type-queries-wrong (lib030): failed
+	Description: A call to queries such as {FILE}.is_socket returns the wrong answer in many cases
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/lib030/tcf at line 14
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
 Test tuple-manipulation (tuple001): passed
 Test named-tuple-validation (tuple002): passed
 Test named-tuple-as-argument (tuple003): passed
@@ -4178,17 +4149,7 @@ Test agent-with-basic (agent003): failed
 	Expected result:
 		Final status:  completed 
 
-Test agent-crash (agent004): failed
-	Description: When using an agent on a open target compiler crashes at degree 2.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/agent004/tcf at line 9
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted system_failed had_exception () 
-	Expected result:
-		Final status:  completed 
-
+Test agent-crash (agent004): passed
 Test agent-too-many-arguments (agent005): passed
 Test incorrect-agent-type (agent006): failed
 	Description: At runtime the compiler generates incorrect agent type when the type of the agent is bound to an anchor in a different class.
@@ -4200,17 +4161,7 @@ Test incorrect-agent-type (agent006): failed
 Test agent-dotnet-failure (agent007): passed
 Test agent-on-tuple-label (agent008): passed
 Test agent-on-with-attached-operands (agent009): passed
-Test agent-calling-attribute-with-formal-type (agent010): failed
-	Description: An agent calling an attribute having a formal type, crashes the compiler.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/agent010/tcf at line 9
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted system_failed had_exception () 
-	Expected result:
-		Final status:  completed 
-
+Test agent-calling-attribute-with-formal-type (agent010): passed
 Test various-agent-creation-and-calls (agent011): passed
 Test print-large-pointer (platform001): passed
 Test object-test-semantics (attach001): passed
@@ -4281,18 +4232,7 @@ Test generic-attached-attribute-init (attach028): passed
 Test full-void-safe-compilation (attach029): passed
 Test attribute-init-code-generation-correct (attach030): passed
 Test parent-attribute-init (attach031): passed
-Test like-current-is-detached (attach032): failed
-	Description: Ensures like Current is considered attached by default.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach032/tcf at line 9
-	Original text:    compile_result validity_error APPLICATION VJAR
-	Substituted text: compile_result validity_error APPLICATION VJAR
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error in class APPLICATION code VJAR
-		Final status:  paused 
-
+Test like-current-is-detached (attach032): passed
 Test attached-type-creation-internal (attach033): passed
 Test anchored-generic-carries-attachment (attach034): passed
 Test object-test-in-precondition (attach035): passed
@@ -4382,14 +4322,19 @@ Test bogus-vevi-when-inherit-expanded (attach055): failed
 		Final status:  completed 
 
 Test stable-attribute-redeclaration (attach056): passed
-Test stable-attribute-caps (attach057): failed
+Test stable-attribute-caps (attach057): passed
+Test void-safety-level (attach058): passed
+Test voidness-cap-in-assertion (attach059): failed
 	Description: CAPs of read-only entities apply to stable attributes.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach057/tcf at line 8
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach059/tcf at line 9
 	Original text:    compile_result ok
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Validity error in class TEST code VUAR(2)
+		Validity error in class TEST code VUTA(2)
+		Validity error in class TEST code VUTA(2)
+		Validity error in class TEST code VUTA(2)
+		Validity error in class A code VUTA(2)
 		Final status:  paused 
 	Expected result:
 		Final status:  completed 
@@ -4431,8 +4376,8 @@ Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test dotnet-special-handling-crash (dotnet112): passed
 
-Passed:  1753 / 2023  (87%)
-Failed:  249 / 2023  (13%)
-Manual:  17 / 2023  (1%)
-Skipped:  4 / 2023  (1%)
+Passed:  1768 / 2029  (87%)
+Failed:  240 / 2029  (13%)
+Manual:  17 / 2029  (1%)
+Skipped:  4 / 2029  (1%)
 

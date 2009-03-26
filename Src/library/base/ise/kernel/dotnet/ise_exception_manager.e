@@ -40,10 +40,8 @@ feature -- Raise
 
 	raise (a_exception: EXCEPTION)
 			-- Raise `a_exception'.
-			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
+			-- Raising `a_exception' by this routine makes `a_exception' accessible by `last_exception'
 			-- in rescue clause. Hence causes removal of original `last_exception'.
-			-- If the original `last_exception' needs to be reserved, `set_throwing_exception'
-			-- on `a_exception' can be called.
 		do
 			if not a_exception.is_ignored then
 				{ISE_RUNTIME}.raise (a_exception)
@@ -301,15 +299,21 @@ feature {NONE} -- Implementation, ignoring
 		local
 			l_type: INTEGER
 		once
-			l_type := internal_object.dynamic_type ({VOID_TARGET})
 			create Result.make (1)
+			l_type := internal_object.dynamic_type ({VOID_TARGET})
 			Result.force (l_type, l_type)
 		end
 
 	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unraisable exceptions
+		local
+			l_type: INTEGER
 		once
-			create Result.make (0)
+			create Result.make (2)
+			l_type := internal_object.dynamic_type ({ROUTINE_FAILURE})
+			Result.force (l_type, l_type)
+			l_type := internal_object.dynamic_type ({OLD_VIOLATION})
+			Result.force (l_type, l_type)
 		end
 
 feature {NONE} -- Implementation, exception chain
@@ -341,6 +345,9 @@ feature {NONE} -- Implementation, exception chain
 			l_exception.set_recipient_name (l_rs.recipient)
 			l_exception.set_type_name (l_rs.type)
 			l_exception.set_line_number (l_rs.line_number)
+			if {ISE_RUNTIME}.exception_from_rescue then
+				l_exception.original.set_throwing_exception (last_exception)
+			end
 			Result := l_exception
 		ensure
 			constructed_exception_chain_not_void: Result /= Void
@@ -553,10 +560,12 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 				l_failure.set_throwing_exception (l_exception)
 
 				create l_stack_trace.make
-					-- The number 2 is the frames of current call.
 				l_rs := recipient_and_type_name (l_stack_trace, 0)
 				l_failure.set_routine_name (l_rs.recipient)
 				l_failure.set_class_name (l_rs.type)
+					-- Substitute `last_exception' for the use at the beginning of a `rescue',
+					-- where we setup possible `cause'.
+				{ISE_RUNTIME}.restore_last_exception (l_failure)
 				{ISE_RUNTIME}.raise (l_failure)
 			else
 				{ISE_RUNTIME}.raise (l_exception)

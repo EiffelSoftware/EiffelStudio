@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			a_module_id: INTEGER;
 			a_is_debug_mode: BOOLEAN;
 			a_is_main_module: BOOLEAN)
-		
+
 			-- Create a new module of name `a_file_name' using metadata dispenser `a_dispenser'.
 			-- If `a_is_main_module', current is an assembly manifest.
 		require
@@ -252,6 +252,13 @@ feature -- Access: tokens
 	ise_raise_old_token: INTEGER
 			-- Token for `ISE.Runtime.raise_old' that raise old violation when there was exception
 			-- during old expression evaluation
+
+	ise_enter_rescue_token: INTEGER
+			-- Token for `ISE.Runtime.enter_rescue' that increase rescue level when entering rescue.
+
+	ise_get_rescue_level_token, ise_set_rescue_level_token: INTEGER
+			-- Tokens for `ISE.Runtime.get_rescue_level' and `ISE.Runtime.set_rescue_level'
+			-- static members that holds rescue level.
 
 	ise_in_assertion_token, ise_set_in_assertion_token: INTEGER
 			-- Token for `ISE.Runtime.in_assertion' and `ISE.Runtime.set_in_assertion'
@@ -922,7 +929,7 @@ feature -- Code generation
 	define_entry_point
 			(creation_type: CLASS_TYPE; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
 			a_has_arguments: BOOLEAN)
-		
+
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_class_type'.
 		require
@@ -2395,7 +2402,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 
 	table_token (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
 			a_type_id, a_feature_id: INTEGER): INTEGER
-		
+
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
 		require
@@ -2427,7 +2434,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end_columns:	ARRAY [INTEGER];	-- End columns
 			written_class_id: INTEGER			-- Written in class ID
 			]
-		
+
 			-- For type definition purpose.
 		do
 		end
@@ -2654,7 +2661,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		end
 
 	insert_implementation_signature (a_signature: like signature; a_type_id, a_feature_id: INTEGER)
-		
+
 			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `implementation_signatures_table'.
 		require
 			is_generated: is_generated
@@ -2678,7 +2685,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 
 	insert_in_table (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
 			a_token, a_type_id, a_feature_id: INTEGER)
-		
+
 			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_attributes'.
 		require
 			is_generated: is_generated
@@ -3213,7 +3220,6 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("get_last_exception"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_restore_last_exception_token'.
-			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (1)
@@ -3243,6 +3249,34 @@ feature {NONE} -- Once per modules being generated.
 
 			ise_raise_old_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("raise_old"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_enter_rescue_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			ise_enter_rescue_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("enter_rescue"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_set_rescue_level_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+
+			ise_set_rescue_level_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("set_rescue_level"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_get_rescue_level_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+
+			ise_get_rescue_level_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("get_rescue_level"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_rethrow_token'.
 			l_meth_sig.reset

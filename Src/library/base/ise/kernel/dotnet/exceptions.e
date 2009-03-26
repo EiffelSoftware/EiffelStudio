@@ -138,7 +138,7 @@ feature -- Status report
 			-- assertion violation.
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception then
-				Result := l_exception.original.message
+				Result := l_exception.cause.original.message
 			end
 		end
 
@@ -147,7 +147,7 @@ feature -- Status report
 			-- current exception
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception then
-				Result := l_exception.original.code
+				Result := l_exception.cause.original.code
 			end
 		end
 
@@ -156,7 +156,7 @@ feature -- Status report
 			-- interrupted by original form of last exception
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception then
-				Result := l_exception.original.recipient_name
+				Result := l_exception.cause.original.recipient_name
 			end
 		end
 
@@ -165,7 +165,7 @@ feature -- Status report
 			-- of original form of last exception
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception then
-				Result := l_exception.original.type_name
+				Result := l_exception.cause.original.type_name
 			end
 		end
 

@@ -70,11 +70,21 @@ feature -- Access
 			create Result.make_from_cil (stack_trace)
 		end
 
-	frozen original: EXCEPTION
-			-- The original exception caused current exception
+	code: INTEGER
+			-- Code of the exception.
 		do
-			if attached throwing_exception as l_throwing_exception and then l_throwing_exception /= Current then
-				Result := l_throwing_exception.original
+		end
+
+	frozen original: EXCEPTION
+			-- The original exception directly triggered current exception
+		local
+			t: like throwing_exception
+		do
+			t := throwing_exception
+			if t = Current or else t = Void then
+				Result := Current
+			elseif (attached {ROUTINE_FAILURE} Current) or else (attached {OLD_VIOLATION} Current) then
+				Result := t.original
 			else
 				Result := Current
 			end
@@ -82,13 +92,17 @@ feature -- Access
 			original_not_void: Result /= Void
 		end
 
-	code: INTEGER
-			-- Code of the exception.
+	frozen cause: EXCEPTION
+			-- The cause of current exception raised during rescue processing
 		do
+			if attached original.throwing_exception as e then
+				Result := e
+			else
+				Result := Current
+			end
+		ensure
+			cause_not_void: Result /= Void
 		end
-
-	frozen throwing_exception: detachable EXCEPTION
-			-- The exception throwing current exception
 
 	frozen recipient_name: detachable STRING
 			-- Name of the routine whose execution was
@@ -187,46 +201,19 @@ feature -- Output
 			Result.append_string (exception_trace)
 		end
 
+feature {EXCEPTION} -- Access
+
+	frozen throwing_exception: ?EXCEPTION
+			-- The exception throwing current exception
+
 feature {EXCEPTION_MANAGER} -- Implementation
 
 	frozen set_throwing_exception (a_exception: detachable EXCEPTION)
 			-- Set `throwing_exception' with `a_exception'.
-		require
-			not_throwing_a_exception: a_exception /= Void implies not is_throwing (a_exception)
 		do
 			throwing_exception := a_exception
 		ensure
 			throwing_exception_set: throwing_exception = a_exception
-		end
-
-	frozen is_throwing (a_exception: EXCEPTION): BOOLEAN
-			-- Is current exception throwing `a_exception'?
-			-- If the throwing exception is current, return False.
-		require
-			a_exception_not_viod: a_exception /= Void
-		local
-			l_exception: detachable EXCEPTION
-			l_stop: BOOLEAN
-		do
-			if a_exception /= Current and then a_exception.throwing_exception /= a_exception then
-				from
-					l_exception := a_exception.throwing_exception
-				until
-					l_exception = Void or else l_stop
-				loop
-					if l_exception = Current then
-						Result := True
-						l_stop := True
-					elseif l_exception = l_exception.throwing_exception then
-							-- Allow self-throwing.
-							-- In this case, no possibility to throw `a_exception'.
-						Result := False
-						l_stop := True
-					else
-						l_exception := l_exception.throwing_exception
-					end
-				end
-			end
 		end
 
 	frozen set_type_name (a_type: like type_name)

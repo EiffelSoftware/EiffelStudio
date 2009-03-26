@@ -518,7 +518,7 @@ feature -- Generation Structure
 			location: STRING;
 			assembly_info: ASSEMBLY_INFO;
 			debug_mode: BOOLEAN)
-		
+
 			-- Create Assembly with `name'.
 		require
 			a_assembly_name_not_void: a_assembly_name /= Void
@@ -630,7 +630,7 @@ feature -- Generation Structure
 	define_entry_point
 			(creation_type: CLASS_TYPE; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
 			a_has_arguments: BOOLEAN)
-		
+
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.
 		require
@@ -1974,7 +1974,7 @@ feature -- Features info
 
 	define_feature_reference (a_type_id, a_feature_id: INTEGER;
 			in_interface, is_static, is_override: BOOLEAN)
-		
+
 			-- Define reference to feature `a_feature_id' defined in `a_type_id'.
 		require
 			type_id_valid: a_type_id > 0
@@ -2215,7 +2215,7 @@ feature -- Features info
 
 	implementation_generate_feature (
 			feat: FEATURE_I; in_interface, is_static, is_external, is_override, is_empty: BOOLEAN; signature_declaration_type: CLASS_TYPE)
-		
+
 			-- Generate interface `feat' description using for `signature_declaration_type' for signature evaluation.
 		require
 			feat_not_void: feat /= Void
@@ -3016,7 +3016,7 @@ feature -- IL Generation
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
 			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
 			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
-		
+
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
@@ -3743,7 +3743,7 @@ feature -- IL Generation
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)
-		
+
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		local
 			l_type_token: INTEGER
@@ -3756,7 +3756,7 @@ feature -- IL Generation
 
 	generate_external_creation_call (a_actual_type: CL_TYPE_A; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
-		
+
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		local
 			l_type_id: INTEGER
@@ -3778,7 +3778,7 @@ feature -- IL Generation
 
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
-		
+
 			-- Get token for feature specified by `base_name' and `member_name'
 		local
 			l_meth_sig: like method_sig
@@ -3859,7 +3859,7 @@ feature -- IL Generation
 			member_name: STRING; ext_kind: INTEGER;
 			parameters_string: ARRAY [STRING]; return_type: STRING;
 			is_virtual: BOOLEAN)
-		
+
 			-- Generate call to `member_name' with signature `parameters_type' + `return_type'.
 		require
 			valid_external_type: valid_type (ext_kind)
@@ -4387,7 +4387,7 @@ feature -- Variables access
 
 	generate_feature_access (type_i: TYPE_A; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
-		
+
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		local
 			l_type_id: INTEGER
@@ -4414,7 +4414,7 @@ feature -- Variables access
 
 	internal_generate_feature_access (a_type_id, a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
-		
+
 			-- Generate access to feature of `a_feature_id' in `a_type_id'.
 		require
 			positive_type_id: a_type_id > 0
@@ -4434,7 +4434,7 @@ feature -- Variables access
 
 	generate_precursor_feature_access (type_i: TYPE_A; a_feature_id: INTEGER;
 			nb: INTEGER; is_function: BOOLEAN)
-		
+
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
 		do
 			method_body.put_call ({MD_OPCODES}.Call,
@@ -5829,6 +5829,10 @@ feature -- Exception handling
 			method_body.put_opcode_label ({MD_OPCODES}.Leave, rescue_label)
 			method_body.exception_block.set_catch_position (method_body.count)
 			method_body.exception_block.set_type_token (current_module.system_exception_token)
+
+				-- Increase rescue level
+			method_body.put_static_call (current_module.ise_enter_rescue_token, 0, False)
+
 				-- We need to increment stack depth of 1 because CLI runtime automatically
 				-- puts the exception object on top of stack and there is no automatic
 				-- way to add it.
@@ -5929,6 +5933,18 @@ feature -- Exception handling
 			method_body.put_static_call (current_module.ise_raise_old_token, 1, False)
 
 			mark_label (l_label)
+		end
+
+	generate_get_rescue_level
+			-- Generate `get_rescue_level' on stack.
+		do
+			method_body.put_static_call (current_module.ise_get_rescue_level_token, 0, True)
+		end
+
+	generate_set_rescue_level
+			-- Generate `set_rescue_level' using the local.
+		do
+			method_body.put_static_call (current_module.ise_set_rescue_level_token, 1, False)
 		end
 
 feature -- Assertions
@@ -7562,7 +7578,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 
 	table_token (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
 			a_type_id, a_feature_id: INTEGER): INTEGER
-		
+
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
 		require
@@ -7587,7 +7603,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end_columns:	ARRAY [INTEGER];	-- End columns
 			written_class_id:	INTEGER			-- Written in class ID
 				]
-		
+
 			-- For type definition purpose.
 		do
 		end
@@ -7660,7 +7676,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		end
 
 	insert_implementation_signature (a_signature: like signature; a_type_id, a_feature_id: INTEGER)
-		
+
 			-- Insert `a_token' of `a_feature_id' in `a_type_id'.
 		require
 			a_signature_not_void: a_signature /= Void
@@ -7805,7 +7821,7 @@ feature {NONE} -- Implementation
 feature -- Inline agents
 
 	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
-		
+
 			-- Generate IL code for inline agents in `eif_cl'
 		require
 			eif_cl_not_void: eif_cl /= Void

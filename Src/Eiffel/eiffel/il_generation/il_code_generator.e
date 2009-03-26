@@ -111,7 +111,7 @@ feature -- IL Generation
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)
-		
+
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		require
 			base_name_not_void: base_name /= Void
@@ -122,7 +122,7 @@ feature -- IL Generation
 
 	generate_external_creation_call (a_actual_type: CL_TYPE_A; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
-		
+
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
 		require
 			a_actual_type_not_void: a_actual_type /= Void
@@ -132,7 +132,7 @@ feature -- IL Generation
 
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
-		
+
 			-- Get token for feature specified by `base_name' and `member_name'
 		require
 			base_name_not_void: base_name /= Void
@@ -262,7 +262,7 @@ feature -- Variables access
 
 	generate_feature_access (type_i: TYPE_A; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
-		
+
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -272,7 +272,7 @@ feature -- Variables access
 
 	generate_precursor_feature_access (type_i: TYPE_A; a_feature_id: INTEGER;
 			nb: INTEGER; is_function: BOOLEAN)
-		
+
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
 		require
 			type_i_not_void: type_i /= Void
@@ -757,6 +757,16 @@ feature -- Exception handling
 
 	generate_raising_old_exception (a_ex_local: INTEGER)
 			-- Generate raising old violation exception when there was exception saved
+		deferred
+		end
+
+	generate_get_rescue_level
+			-- Generate `get_rescue_level' on stack.
+		deferred
+		end
+
+	generate_set_rescue_level
+			-- Generate `set_rescue_level' using the local.
 		deferred
 		end
 

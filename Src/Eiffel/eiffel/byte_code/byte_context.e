@@ -159,6 +159,9 @@ feature -- Access
 	saved_supplier_precondition: INTEGER
 			-- Number of the saved_supplier_precondition local.
 
+	saved_rescue_level: INTEGER
+			-- Number of the `saved_rescue_local'.
+
 	origin_has_precondition: BOOLEAN
 			-- Is Current feature have origin feature with precondition?
 			-- (This is used for cases where the origin of the
@@ -263,6 +266,12 @@ feature -- Setting
 			-- Assign `s' to `saved_supplier_precondition'
 		do
 			saved_supplier_precondition := s
+		end
+
+	set_saved_rescue_level (s: INTEGER)
+			-- Assign `s' to `saved_rescue_level'
+		do
+			saved_rescue_level := s
 		end
 
 	set_has_feature_name_stored (v: like has_feature_name_stored)

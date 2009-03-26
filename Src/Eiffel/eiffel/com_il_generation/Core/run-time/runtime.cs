@@ -319,6 +319,19 @@ feature -- Exceptions
         _last_exception = ex;
     }
 
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    public static void enter_rescue()
+        // Enter a rescue clause, we increase the rescue level
+    {
+        _rescue_level++;
+    }
+
+    public static bool exception_from_rescue ()
+        // Exception was raised in rescue clause?
+    {
+        return (rescue_level > 1);
+    }
+
     [ThreadStatic]
     private static Exception _last_exception;
         // Store exception object per thread.
@@ -430,6 +443,24 @@ feature -- Exceptions
     {
         exception_manager.throw_last_exception(_last_exception, for_once);
     }
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    public static int rescue_level
+        // Record number of levels in rescue clause.
+    {
+        get
+        {
+            return _rescue_level;
+        }
+        set
+        {
+            _rescue_level = value;
+        }
+    }
+
+    [ThreadStatic]
+    private static int _rescue_level;
+        // Record number of levels in rescue clause.
 
 /*
 feature {NONE} -- RT Extension

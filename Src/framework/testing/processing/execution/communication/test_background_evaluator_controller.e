@@ -59,7 +59,7 @@ feature -- Status setting
 	terminate_evaluator
 			-- <Precursor>
 		do
-			if not process.force_terminated then
+			if process.launched and not process.force_terminated then
 				process.terminate
 				process.wait_for_exit
 			end
@@ -124,10 +124,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

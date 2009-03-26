@@ -197,7 +197,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
 				l_window := develop_window.as_attached
 				if attached l_old_output then
-					l_widget := l_old_output.widget_for_window (l_window)
+					l_widget := l_old_output.widget_from_window (l_window)
 					if l_widget.is_interface_usable then
 						l_widget.widget.hide
 					end
@@ -206,7 +206,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 				last_output := output
 				output := a_output
 
-				l_widget := a_output.widget_for_window (l_window)
+				l_widget := a_output.widget_from_window (l_window)
 				if l_widget.is_interface_usable then
 					l_widget.widget.show
 				else
@@ -350,7 +350,7 @@ feature {NONE} -- Basic operations
 				-- Fetch the widget from the output pane interface
 			l_window := develop_window
 			check l_window_attached: l_window /= Void end
-			l_widget := a_output.widget_for_window (l_window)
+			l_widget := a_output.widget_from_window (l_window)
 			remove_auto_recycle (l_widget)
 
 				-- Fetch the EiffelVision2 widget and hide it, because it is not activated yet.
@@ -373,14 +373,10 @@ feature {NONE} -- Basic operations
 			l_widget: ES_WIDGET [EV_WIDGET]
 			l_ev_widget: EV_WIDGET
 		do
-			a_output.output_window.start_processing (False)
-			a_output.output_window.add (a_output.name.as_string_8)
-			a_output.output_window.end_processing
-
 				-- Fetch the widget from the output pane interface
 			l_window := develop_window
 			check l_window_attached: attached l_window end
-			l_widget := a_output.widget_for_window (l_window)
+			l_widget := a_output.widget_from_window (l_window)
 			check not_has_parent: not l_widget.widget.has_parent end
 			auto_recycle (l_widget)
 
@@ -405,7 +401,7 @@ feature {NONE} -- Basic operations
 			l_text: STRING_32
 		do
 			create l_file.make_open_write (a_file_path)
-			l_text := a_output.text_for_window (develop_window.as_attached)
+			l_text := a_output.text_from_window (develop_window.as_attached)
 			l_file.put_string (l_text)
 			l_file.flush
 			l_file.close
@@ -647,7 +643,7 @@ feature {NONE} -- Factory
 			l_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 				-- Output Label
-			create l_label.make_with_text (locale_formatter.translation (l_output) + ":")
+			create l_label.make_with_text (locale_formatter.translation (lb_output) + ":")
 			l_box.extend (l_label)
 			l_box.disable_item_expand (l_label)
 
@@ -699,7 +695,7 @@ feature {NONE} -- Internationalization
 
 	t_save_1: STRING = "Save $1 Output"
 
-	l_output: STRING = "Output"
+	lb_output: STRING = "Output"
 
 	tt_save_output: STRING = "Save current output to disk"
 	tt_clear_output: STRING = "Clear current output"

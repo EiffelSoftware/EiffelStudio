@@ -11,9 +11,7 @@ class
 	ES_MULTI_OUTPUT_WINDOW
 
 inherit
-	OUTPUT_WINDOW
-		export
-			{NONE} display
+	TEXT_FORMATTER
 		redefine
 			start_processing,
 			end_processing,
@@ -55,8 +53,7 @@ inherit
 			process_call_stack_item ,
 			process_menu_text,
 			process_class_menu_text,
-			set_context_group,
-			clear_window
+			set_context_group
 		end
 
 create
@@ -66,63 +63,68 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create managed_windows.make (1)
-			create new_managed_windows.make (1)
+			create managed_formatters.make (1)
+			create new_managed_formatters.make (1)
 		end
 
 feature {NONE} -- Access
 
-	managed_windows: attached ARRAYED_SET [OUTPUT_WINDOW]
+	managed_formatters: ARRAYED_SET [TEXT_FORMATTER]
 			-- Current set of managed output windows.
 
-	new_managed_windows: attached ARRAYED_SET [OUTPUT_WINDOW]
+	new_managed_formatters: ARRAYED_SET [TEXT_FORMATTER]
 			-- New set of managed output windows.
-			--|Note: When `start_processing' moves the managed windows from `new_managed_windows' to the
-			--|     active and usable `managed_windows'.
+			--|Note: When `start_processing' moves the managed windows from `new_managed_formatters' to the
+			--|     active and usable `managed_formatters'.
 
-feature {OUTPUT_I} -- Status report
+feature -- Status report
 
-	has_window (a_window: attached OUTPUT_WINDOW): BOOLEAN
-			-- Determines if an output window is part of Current.
+	had_formatter (a_formatter: TEXT_FORMATTER): BOOLEAN
+			-- Determines if a text formatter is managed by Current.
 			--
-			-- `a_window':
-			-- `Result': True if the window is part of Current; False otherwise.
+			-- `a_formatter': A text formatter to check.
+			-- `Result': True if the formatter is part of Current; False otherwise.
+		require
+			a_formatter_attached: a_formatter /= Void
+			not_a_formatter_is_current: a_formatter /= Current
 		do
-			Result := managed_windows.has (a_window) or else new_managed_windows.has (a_window)
+			Result := managed_formatters.has (a_formatter) or else new_managed_formatters.has (a_formatter)
 		ensure
-			managed_windows_has_a_window: Result implies (
-				managed_windows.has (a_window) or new_managed_windows.has (a_window))
+			managed_formatters_has_a_formatter: Result implies (
+				managed_formatters.has (a_formatter) or new_managed_formatters.has (a_formatter))
 		end
 
 feature {OUTPUT_I} -- Extension
 
-	extend (a_output: OUTPUT_WINDOW)
-			-- Extend the managed set of windows with a new output window.
+	extend (a_formatter: TEXT_FORMATTER)
+			-- Extend the managed set of formatters with an existing formatter.
 			--
-			-- `a_window': The output window to add.
+			-- `a_formatter': The text formatter to add.
 		require
-			a_output_attached: a_output /= Void
-			not_has_window_a_output: not has_window (a_output)
+			a_formatter_attached: a_formatter /= Void
+			not_a_formatter_is_current: a_formatter /= Current
+			not_had_formatter_a_formatter: not had_formatter (a_formatter)
 		do
-			new_managed_windows.extend (a_output)
+			new_managed_formatters.extend (a_formatter)
 		ensure
-			has_window_a_output: has_window (a_output)
+			had_formatter_a_formatter: had_formatter (a_formatter)
 		end
 
 feature {OUTPUT_I} -- Removal
 
-	prune (a_output: OUTPUT_WINDOW)
-			-- Removed an output window from a list of managed outputs.
+	prune (a_formatter: TEXT_FORMATTER)
+			-- Removed an managed formatter from a list of managed formatters.
 			--
-			-- `a_window': The output window to remove.
+			-- `a_formatter': The text formatter to remove.
 		require
-			a_output_attached: a_output /= Void
-			has_window_a_output: has_window (a_output)
+			a_formatter_attached: a_formatter /= Void
+			not_a_formatter_is_current: a_formatter /= Current
+			had_formatter_a_formatter: had_formatter (a_formatter)
 		do
-			new_managed_windows.prune (a_output)
-			managed_windows.prune (a_output)
+			new_managed_formatters.prune (a_formatter)
+			managed_formatters.prune (a_formatter)
 		ensure
-			not_has_window_a_output: not has_window (a_output)
+			not_had_formatter_a_formatter: not had_formatter (a_formatter)
 		end
 
 feature -- Element change
@@ -130,69 +132,19 @@ feature -- Element change
 	set_context_group (a_group: like context_group)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
+			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
 			Precursor (a_group)
-			l_windows := managed_windows
-			if not l_windows.is_empty then
-				from l_windows.start until l_windows.after loop
-					l_formatter := l_windows.item
+			l_formatters := managed_formatters
+			if not l_formatters.is_empty then
+				from l_formatters.start until l_formatters.after loop
+					l_formatter := l_formatters.item
 					if l_formatter /= Void then
 						l_formatter.set_context_group (a_group)
 					end
-					l_windows.forth
+					l_formatters.forth
 				end
-			end
-		end
-
-feature -- Output
-
-	clear_window
-			-- <Precursor>
-		local
-			l_windows: like managed_windows
-			l_window: OUTPUT_WINDOW
-		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.clear_window
-				end
-				l_windows.forth
-			end
-		end
-
-	put_new_line
-			-- <Precursor>
-		local
-			l_windows: like managed_windows
-			l_window: OUTPUT_WINDOW
-		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.put_new_line
-				end
-				l_windows.forth
-			end
-		end
-
-	put_string (a_string: STRING_GENERAL)
-			 -- <Precursor>
-		local
-			l_windows: like managed_windows
-			l_window: OUTPUT_WINDOW
-		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.put_string (a_string)
-				end
-				l_windows.forth
 			end
 		end
 
@@ -201,655 +153,689 @@ feature -- Basic operation
 	start_processing (a_append: BOOLEAN)
 			 -- <Precursor>
 		local
-			l_window: TEXT_FORMATTER
-			l_windows: like managed_windows
-			l_new_windows: like new_managed_windows
+			l_formatter: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_new_windows: like new_managed_formatters
 		do
-			l_windows := managed_windows
+			l_formatters := managed_formatters
 
 				 -- A new process is starting to add the new output windows to the active list.
-			l_new_windows := new_managed_windows
+			l_new_windows := new_managed_formatters
 			if not l_new_windows.is_empty then
 				from l_new_windows.start until l_new_windows.after loop
-					l_windows.extend (l_new_windows.item)
+					l_formatters.extend (l_new_windows.item)
 					l_new_windows.forth
 				end
 			end
 
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.start_processing (a_append)
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.start_processing (a_append)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	end_processing
 			 -- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.end_processing
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.end_processing
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
+
+--feature {NONE} -- Output
+
+--	put_new_line
+--			-- <Precursor>
+--		local
+--			l_formatters: like managed_formatters
+--		do
+--			l_formatters := managed_formatters
+--			from l_formatters.start until l_formatters.after loop
+--				if attached l_formatters.item as l_formatter then
+--					l_formatter.process_new_line
+--				end
+--				l_formatters.forth
+--			end
+--		end
+
+--	put_string (a_string: STRING_GENERAL)
+--			 -- <Precursor>
+--		local
+--			l_formatters: like managed_formatters
+--		do
+--			l_formatters := managed_formatters
+--			from l_formatters.start until l_formatters.after loop
+--				if attached l_formatters.item as l_formatter then
+--					l_formatter.process_basic_text (a_string)
+--				end
+--				l_formatters.forth
+--			end
+--		end
 
 feature -- Process
 
 	process_basic_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_basic_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_basic_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_character_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_character_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_character_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_generic_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_generic_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_generic_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_indexing_tag_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_indexing_tag_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_indexing_tag_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_local_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_local_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_local_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_number_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_number_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_number_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_quoted_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_quoted_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_quoted_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_assertion_tag_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_assertion_tag_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_assertion_tag_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_string_text (a_text: STRING_GENERAL; a_link: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_string_text (a_text, a_link)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_string_text (a_text, a_link)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_reserved_word_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_reserved_word_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_reserved_word_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_comment_text (a_text: STRING_GENERAL; a_url: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_comment_text (a_text, a_url)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_comment_text (a_text, a_url)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_difference_text_item (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_difference_text_item (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_difference_text_item (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_class_name_text (a_text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_class_name_text (a_text, a_class, a_quote)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_class_name_text (a_text, a_class, a_quote)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_cluster_name_text (a_text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_cluster_name_text (a_text, a_cluster, a_quote)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_cluster_name_text (a_text, a_cluster, a_quote)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_target_name_text (a_text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_target_name_text (a_text, a_target)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_target_name_text (a_text, a_target)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_feature_name_text (a_text: STRING_GENERAL; a_class: CLASS_C)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_feature_name_text (a_text, a_class)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_feature_name_text (a_text, a_class)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_feature_error (a_text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_feature_error (a_text, a_feature, a_line)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_feature_error (a_text, a_feature, a_line)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_feature_text (a_text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_feature_text (a_text, a_feature, a_quote)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_feature_text (a_text, a_feature, a_quote)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_breakpoint (a_feature, a_index)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_breakpoint (a_feature, a_index)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_breakpoint_index (a_feature, a_index, a_cond)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_breakpoint_index (a_feature, a_index, a_cond)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_padded
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_padded
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_padded
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_new_line
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_new_line
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_new_line
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_indentation (a_indent_depth: INTEGER)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_indentation (a_indent_depth)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_indentation (a_indent_depth)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_after_class (a_class: CLASS_C)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_after_class (a_class)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_after_class (a_class)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_before_class (a_class: CLASS_C)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_before_class (a_class)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_before_class (a_class)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_filter_item (a_text: STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_filter_item (a_text, a_is_before)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_filter_item (a_text, a_is_before)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_tooltip_item (a_tooltip: STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_tooltip_item (a_tooltip, a_is_before)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_tooltip_item (a_tooltip, a_is_before)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_feature_dec_item (a_feature_name: STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_feature_dec_item (a_feature_name, a_is_before)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_feature_dec_item (a_feature_name, a_is_before)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_symbol_text (a_text: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_symbol_text (a_text)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_symbol_text (a_text)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_keyword_text (a_text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_keyword_text (a_text, a_feature)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_keyword_text (a_text, a_feature)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_operator_text (a_text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_operator_text (a_text, a_feature)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_operator_text (a_text, a_feature)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_address_text (a_address, a_name, a_class)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_address_text (a_address, a_name, a_class)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_error_text (a_text: STRING_GENERAL; a_error: ERROR)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_error_text (a_text, a_error)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_error_text (a_text, a_error)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_cl_syntax (a_text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_cl_syntax (a_text, a_syntax_message, a_class)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_cl_syntax (a_text, a_syntax_message, a_class)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_column_text (a_column_number: INTEGER)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_column_text (a_column_number)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_column_text (a_column_number)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_call_stack_item (a_level_number: INTEGER; a_display: BOOLEAN)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_call_stack_item (a_level_number, a_display)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_call_stack_item (a_level_number, a_display)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_menu_text (a_text, a_link: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_menu_text (a_text, a_link)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_menu_text (a_text, a_link)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
 
 	process_class_menu_text (a_text, a_link: STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_windows: like managed_windows
-			l_window: TEXT_FORMATTER
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
 		do
-			l_windows := managed_windows
-			from l_windows.start until l_windows.after loop
-				l_window := l_windows.item
-				if l_window /= Void then
-					l_window.process_class_menu_text (a_text, a_link)
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				l_formatter := l_formatters.item
+				if l_formatter /= Void then
+					l_formatter.process_class_menu_text (a_text, a_link)
 				end
-				l_windows.forth
+				l_formatters.forth
 			end
 		end
+
+invariant
+	managed_formatters_attached: managed_formatters /= Void
+	new_managed_formatters_attached: new_managed_formatters /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

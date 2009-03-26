@@ -22,23 +22,25 @@ inherit
 
 feature -- Access
 
-	name: attached IMMUTABLE_STRING_32
+	name: IMMUTABLE_STRING_32
 			-- Name given the output editor
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_consistent: Result ~ name
 		end
 
-	output_window: attached OUTPUT_WINDOW
-			-- Name given the output editor
+	formatter: TEXT_FORMATTER
+			-- Text formatter to use to write to the specific output
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_consistent: Result = output_window
+			result_attached: Result /= Void
+			result_consistent: Result = formatter
 		end
 
 feature -- Status report
@@ -53,11 +55,10 @@ feature -- Status report
 feature -- Basic operations
 
 	clear
-			-- Clears and cached output.
+			-- Clears any cached output.
 		require
 			is_interface_usable: is_interface_usable
-		do
-			output_window.clear_window
+		deferred
 		end
 
 	activate

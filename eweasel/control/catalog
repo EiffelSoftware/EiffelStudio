@@ -1369,6 +1369,7 @@ test	expanded-generic-call-on-void-target	exec306 tcf fail execution
 test	bogus-catcall-on-basic-type-agent	exec307 tcf fail execution catcall
 test	conversion-from-basic-through-any	exec308 tcf fail execution
 test	expanded-object-test-creates-objects	exec309 tcf fail execution
+test	out-on-long-attribute-buffer-overflow	exec310 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

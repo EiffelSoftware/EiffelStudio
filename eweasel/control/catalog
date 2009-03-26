@@ -1725,6 +1725,7 @@ test	ptf-read-number-routines	lib027	 tcf pass library file
 test	es-encoding-conversion		lib028	 tcf pass library encoding
 test	ptf-read-number-routines-2	lib029	 tcf pass library file
 test	file-type-queries-wrong		lib030	 tcf pass library file
+test	file-append-not-thread-safe	lib031	 tcf pass library file
 
 
 

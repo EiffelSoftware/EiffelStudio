@@ -53,9 +53,9 @@ feature {NONE} -- Externals
 	cwin_shell_execute (a_hwnd: POINTER; a_operation: POINTER; a_file: POINTER; a_params: POINTER; a_directory: POINTER; a_show_cmd: INTEGER): INTEGER
 			-- Performs an operation on a specified file.
 		external
-			"C signature (HWND, LPCTSTR, LPCTSTR, LPCTSTR, LPCTSTR, INT): HINSTANCE use <shellapi.h>"
+			"C inline use <shellapi.h>"
 		alias
-			"ShellExecute"
+			"return (EIF_INTEGER) ShellExecute ((HWND) $a_hwnd, (LPCTSTR) $a_operation, (LPCTSTR) $a_file, (LPCTSTR) $a_params, (LPCTSTR) $a_directory, (int) $a_show_cmd);"
 		end
 
 	cwin_sw_shownormal: INTEGER

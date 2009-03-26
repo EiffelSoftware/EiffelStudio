@@ -590,6 +590,16 @@ feature -- Exception handling
 		do
 		end
 
+	generate_get_rescue_level
+			-- Generate `get_rescue_level' on stack.
+		do
+		end
+
+	generate_set_rescue_level
+			-- Generate `set_rescue_level' using the local.
+		do
+		end
+
 feature -- Assertions
 
 	generate_in_assertion_status

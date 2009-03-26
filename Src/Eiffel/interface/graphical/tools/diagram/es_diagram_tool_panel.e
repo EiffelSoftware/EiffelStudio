@@ -1578,7 +1578,7 @@ feature {NONE} -- Class head command
 		require
 			not_recycled: not is_recycled
 		do
-			Result ?= area
+			Result := area
 		ensure
 			Result_not_void: Result /= Void
 		end

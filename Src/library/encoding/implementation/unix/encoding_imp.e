@@ -362,7 +362,6 @@ feature {NONE} -- Implementation
 					*$a_b = 3;
 					return NULL;
 				}
-				printf ("iconv_open \n");
 				*$a_succ = EIF_TRUE;
 				return cd;
 			]"

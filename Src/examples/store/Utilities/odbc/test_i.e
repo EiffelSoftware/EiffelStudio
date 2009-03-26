@@ -1,10 +1,10 @@
 note
 	description: "Nested queries example."
-	legal: "See notice at end of class.";
-	product: "EiffelStore";
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$";
+	legal: "See notice at end of class."
+	product: "EiffelStore"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TEST_I inherit
 

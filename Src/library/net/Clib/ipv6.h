@@ -117,13 +117,6 @@ struct ipv6bind {
 #define GET_PORT(X) ((X)->him.sa_family==AF_INET ?(X)->him4.sin_port: (X)->him6.sin6_port)
 #endif
 
-#ifndef IN6_IS_ADDR_ANY
-#define IN6_IS_ADDR_ANY(a)	\
-	(((a)->s6_words[0] == 0) && ((a)->s6_words[1] == 0) &&	\
-	((a)->s6_words[2] == 0) && ((a)->s6_words[3] == 0) &&	\
-	((a)->s6_words[4] == 0) && ((a)->s6_words[5] == 0))
-#endif
-
 void en_set_prefer_ipv4(EIF_BOOLEAN prefer);
 
 EIF_BOOLEAN en_get_prefer_ipv4();

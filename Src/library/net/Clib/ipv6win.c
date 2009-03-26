@@ -7,6 +7,12 @@
 
 /* Here are some declarations that strangely are not defined when we set for compiling for Win2k and above 
  * even if they don't use any features from those OSes. */
+static void NET_IN6_SET_ADDR_LOOPBACK(PIN6_ADDR a)
+{
+    memset(a->s6_bytes, 0, sizeof(IN6_ADDR));
+    a->s6_bytes[15] = 1;
+}
+
 static void NET_IN6_SET_ADDR_UNSPECIFIED(PIN6_ADDR a)
 {
     //
@@ -46,6 +52,15 @@ static EIF_BOOLEAN NET_IN6_IS_ADDR_LOOPBACK(CONST IN6_ADDR *a)
                      (a->s6_words[5] == 0) &&
                      (a->s6_words[6] == 0) &&
                      (a->s6_words[7] == 0x0100));
+}
+
+static void NET_IN6ADDR_SETLOOPBACK(PSOCKADDR_IN6 a)
+{
+    a->sin6_family = AF_INET6;
+    a->sin6_port = 0;
+    a->sin6_flowinfo = 0;
+    NET_IN6_SET_ADDR_LOOPBACK(&a->sin6_addr);
+    a->sin6_scope_id = 0;
 }
 
 static void NET_IN6ADDR_SETANY(PSOCKADDR_IN6 a)
@@ -106,7 +121,9 @@ static int net_bindV6(struct ipv6bind* b) {
 	u_short port; /* requested port parameter */
 	u_short bound_port;
 
-	if (family == AF_INET && (b->addr->him4.sin_addr.s_addr != INADDR_ANY)) {
+		/* We only bind to only IPv4 or IPv6 if the listen address is different from the ANY IP address or 
+		 * the LOOPBACK IP address. */
+	if (family == AF_INET && (b->addr->him4.sin_addr.s_addr != INADDR_ANY) && (b->addr->him4.sin_addr.s_addr != htonl (INADDR_LOOPBACK))) {
 			/* bind to v4 only */
 		int ret;
 		ret = net_bind (b->ipv4_fd, (struct sockaddr *)b->addr, sizeof (struct sockaddr_in));
@@ -117,7 +134,7 @@ static int net_bindV6(struct ipv6bind* b) {
 		b->ipv6_fd = INVALID_SOCKET;
 		return 0;
 	}
-	if (family == AF_INET6 && (!IN6_IS_ADDR_ANY(&b->addr->him6.sin6_addr))) {
+	if (family == AF_INET6 && (!NET_IN6ADDR_ISANY(&b->addr->him6)) && !NET_IN6ADDR_ISLOOPBACK(&b->addr->him6)) {
 			/* bind to v6 only */
 		int ret;
 		ret = net_bind (b->ipv6_fd, (struct sockaddr *)b->addr, sizeof (struct sockaddr_in6));
@@ -135,17 +152,25 @@ static int net_bindV6(struct ipv6bind* b) {
 		ofamily = AF_INET6;
 		fd = b->ipv4_fd;
 		ofd = b->ipv6_fd;
-		port = GET_PORT (b->addr);
-		NET_IN6ADDR_SETANY (&oaddr.him6);
+		port = ntohs (GET_PORT (b->addr));
+		if (b->addr->him4.sin_addr.s_addr == htonl (INADDR_LOOPBACK)) {
+			NET_IN6ADDR_SETLOOPBACK (&oaddr.him6);
+		} else {
+			NET_IN6ADDR_SETANY (&oaddr.him6);
+		}
 		oaddr.him6.sin6_port = port;
 	} else {
 		ofamily = AF_INET;
 		ofd = b->ipv4_fd;
 		fd = b->ipv6_fd;
-		port = GET_PORT (b->addr);
+		port = ntohs (GET_PORT (b->addr));
 		oaddr.him4.sin_family = AF_INET;
 		oaddr.him4.sin_port = port;
-		oaddr.him4.sin_addr.s_addr = INADDR_ANY;
+		if (NET_IN6ADDR_ISLOOPBACK(&b->addr->him6)) {
+			oaddr.him4.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
+		} else {
+			oaddr.him4.sin_addr.s_addr = INADDR_ANY;
+		}
 	}
 
 	rv = net_bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
@@ -158,9 +183,10 @@ static int net_bindV6(struct ipv6bind* b) {
 	if (getsockname(fd, (struct sockaddr *)b->addr, &len) == -1) {
 		CLOSE_SOCKETS_AND_RETURN;
 	}
-	bound_port = GET_PORT (b->addr);
-	SET_PORT (&oaddr, bound_port);
-	if ((rv=net_bind (ofd, (struct sockaddr *) &oaddr, SOCKETADDRESS_LEN (&oaddr))) == SOCKET_ERROR) {
+	bound_port = ntohs (GET_PORT (b->addr));
+	SET_PORT (&oaddr, htons (bound_port));
+	len = SOCKETADDRESS_LEN (&oaddr);
+	if ((rv=net_bind (ofd, (struct sockaddr *) &oaddr, len)) == SOCKET_ERROR) {
 		int retries;
 		int sotype, arglen=sizeof(sotype);
 
@@ -183,7 +209,7 @@ static int net_bindV6(struct ipv6bind* b) {
 			b->ipv4_fd = INVALID_SOCKET;
 			b->ipv6_fd = INVALID_SOCKET;
 
-			/* create two new sockets */
+				/* create two new sockets */
 			fd = check_socket_bounds (socket (family, sotype, 0));
 			if (fd == INVALID_SOCKET) {
 				CLOSE_SOCKETS_AND_RETURN;
@@ -193,24 +219,24 @@ static int net_bindV6(struct ipv6bind* b) {
 				CLOSE_SOCKETS_AND_RETURN;
 			}
 
-			/* bind random port on first socket */
+				/* bind random port on first socket */
 			SET_PORT (&oaddr, 0);
 			rv = net_bind (ofd, (struct sockaddr *)&oaddr, SOCKETADDRESS_LEN(&oaddr));
 			if (rv == SOCKET_ERROR) {
 				CLOSE_SOCKETS_AND_RETURN;
 			}
-			/* close the original pair of sockets before continuing */
+				/* close the original pair of sockets before continuing */
 			closesocket (close_fd); 
 			closesocket (close_ofd); 
 			close_fd = close_ofd = INVALID_SOCKET;
 
-			/* bind new port on second socket */
+				/* bind new port on second socket */
 			len = SOCKETADDRESS_LEN(&oaddr);
 			if (getsockname(ofd, (struct sockaddr *)&oaddr, &len) == -1) {
 				CLOSE_SOCKETS_AND_RETURN;
 			}
-			bound_port = GET_PORT (&oaddr);
-			SET_PORT (b->addr, bound_port);
+			bound_port = ntohs (GET_PORT (&oaddr));
+			SET_PORT (b->addr, htons (bound_port));
 			rv = net_bind (fd, (struct sockaddr *)b->addr, SOCKETADDRESS_LEN(b->addr));
 
 			if (rv != SOCKET_ERROR) {
@@ -768,14 +794,14 @@ void en_socket_stream_listen (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_POINTER
 
 	if (ipv6_supported) {
 		fd1 = *a_fd1;
-		if (addr->him.sa_family == AF_INET6 || addr->him4.sin_addr.s_addr == INADDR_ANY) {
+		if ((addr->him.sa_family == AF_INET6) || (addr->him4.sin_addr.s_addr == INADDR_ANY) || (addr->him4.sin_addr.s_addr == htonl (INADDR_LOOPBACK))) {
 				/* listen on v6 */
 			if ((res=listen(fd1, count)) == -1) {
 				eif_net_check(res);
 			}
 		} else {
 			net_socket_close(fd1);
-			*a_fd = -1;
+			*a_fd1 = -1;
 		}
 	}
 }

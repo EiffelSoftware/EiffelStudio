@@ -15,9 +15,8 @@ feature
 
 	glGetError: NATURAL_32 is
 		external
-			"C [dll32 %"opengl32.dll%"]: EIF_INTEGER"
+			"dll %"opengl32.dll%" signature: EIF_INTEGER"
 		alias
 			"glGetError"
 		end
-
 end

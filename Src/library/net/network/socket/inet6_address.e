@@ -28,6 +28,8 @@ feature -- Constants
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
 	make_from_host_and_address (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8])
+		require
+			an_address_count_valid: an_address.count = inaddrsz
 		do
 			family := ipv6
 			internal_host_name := a_hostname
@@ -35,6 +37,8 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 		end
 
 	make_from_host_and_address_and_interface_name (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
+		require
+			an_address_count_valid: an_address.count = inaddrsz
 		do
 			-- TODO Implement scope check
 			the_scope_ifname := an_iface_name
@@ -42,6 +46,8 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 		end
 
 	make_from_host_and_address_and_scope (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
+		require
+			an_address_count_valid: an_address.count = inaddrsz
 		do
 			make_from_host_and_address (a_hostname, an_address)
 			if a_scope_id >= 0 then
@@ -57,13 +63,13 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			i: INTEGER
 			scope: INTEGER
 		do
-			create addr.make (1, INADDRSZ)
+			create addr.make (1, inaddrsz)
 			if a_pointer /= default_pointer then
 				ptr := c_sockaddr_get_ipv6_address (a_pointer)
 				from
 					i := 1
 				until
-					i > INADDRSZ
+					i > inaddrsz
 				loop
 					addr.put (c_get_addr_element (ptr, i-1), i)
 					i := i + 1
@@ -104,7 +110,7 @@ feature -- Access
 			from
 				i := 1
 			until
-				i > INADDRSZ
+				i > inaddrsz
 			loop
 				test := test | the_address[i]
 				i := i + 1
@@ -201,7 +207,7 @@ feature {NONE} -- Implementation
 
 	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING
 		require
-			addr /= Void and then addr.count = INADDRSZ
+			addr /= Void and then addr.count = inaddrsz
 		local
 			i: INTEGER
 			e: NATURAL_16
@@ -210,11 +216,11 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			until
-				i >= INADDRSZ
+				i >= inaddrsz
 			loop
 				e := ((( addr.item (i).as_natural_16 |<< 8 ) & 0xff00) | (addr.item (i+1).as_natural_16 & 0xff)).as_natural_16
 				Result.append_string(e.to_hex_string)
-				if i < INADDRSZ-1 then
+				if i < inaddrsz - 1 then
 					Result.append_character(':')
 				end
 				i := i + 2

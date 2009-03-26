@@ -78,7 +78,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	items: attached DS_LINEAR [attached G]
+	items: DS_LINEAR [attached G]
 			-- <Precursor>
 		local
 			l_empty: like empty_items
@@ -113,7 +113,7 @@ feature -- Access
 			observing: Result.active_collection_connection.is_connected (Current)
 		end
 
-	expression: attached STRING
+	expression: STRING
 			-- Last expression set through `set_expression'.
 		require
 			has_expression: has_expression
@@ -127,7 +127,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_items: attached DS_HASH_SET [attached G]
+	internal_items: DS_HASH_SET [attached G]
 			-- Cache holding items currently matching expression
 
 	internal_collection: detachable ACTIVE_COLLECTION_I [G]
@@ -136,10 +136,10 @@ feature {NONE} -- Access
 	internal_expression: detachable like expression
 			-- Last defined expression
 
-	positive_matchers: attached DS_ARRAYED_LIST [attached RX_PCRE_REGULAR_EXPRESSION]
+	positive_matchers: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must match to be in `items'
 
-	negative_matchers: attached DS_ARRAYED_LIST [attached RX_PCRE_REGULAR_EXPRESSION]
+	negative_matchers: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must not match to be in `items'
 
 	empty_items: detachable DS_ARRAYED_LIST [attached G]
@@ -226,16 +226,16 @@ feature -- Status setting
 
 feature -- Events
 
-	item_added_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_added_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	item_removed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_removed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	item_changed_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_changed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
 			-- <Precursor>
 
-	items_reset_event: attached EVENT_TYPE [TUPLE [collection: attached ACTIVE_COLLECTION_I [G]]]
+	items_reset_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]]]
 			-- <Precursor>
 
 feature {ACTIVE_COLLECTION_I} -- Events
@@ -331,7 +331,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	tag_matches_regexes (a_tag: attached STRING; a_list: like positive_matchers): BOOLEAN
+	tag_matches_regexes (a_tag: STRING; a_list: like positive_matchers): BOOLEAN
 			-- Does `a_tag' match on of matchers in `a_list'?
 		do
 			if not a_list.is_empty then
@@ -346,7 +346,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	tags_match_regex (a_list: attached DS_LINEAR [attached STRING]; a_regex: like create_matcher): BOOLEAN
+	tags_match_regex (a_list: DS_LINEAR [STRING]; a_regex: like create_matcher): BOOLEAN
 			-- Does one of the tags satisfy a given regular expression?
 		do
 			if not a_list.is_empty then
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 					until
 						l_added.after
 					loop
-						if attached {G} l_added.item_for_iteration as l_added_g then
+						if attached l_added.item_for_iteration as l_added_g then
 							item_added_event.publish ([Current, l_added_g])
 						else
 							check False end
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 					until
 						l_removed.after
 					loop
-						if attached {G} l_removed.item_for_iteration as l_removed_g then
+						if attached l_removed.item_for_iteration as l_removed_g then
 							item_removed_event.publish ([Current, l_removed_g])
 						else
 							check False end
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_matcher (a_expr: attached STRING): attached RX_PCRE_REGULAR_EXPRESSION
+	create_matcher (a_expr: STRING): RX_PCRE_REGULAR_EXPRESSION
 			-- Create new regular expression
 		do
 			create Result.make

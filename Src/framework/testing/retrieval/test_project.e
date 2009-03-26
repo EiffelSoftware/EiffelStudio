@@ -67,16 +67,16 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	eiffel_project_helper: attached TEST_PROJECT_HELPER_I
+	eiffel_project_helper: TEST_PROJECT_HELPER_I
 			-- <Precursor>
 
-	eiffel_project: attached E_PROJECT
+	eiffel_project: E_PROJECT
 			-- <Precursor>
 		do
 			Result := internal_project
 		end
 
-	tests: attached DS_LINEAR [attached TEST_I]
+	tests: DS_LINEAR [TEST_I]
 			-- <Precursor>
 		do
 			Result := test_routine_map
@@ -91,20 +91,20 @@ feature {NONE} -- Access
 	internal_project: like eiffel_project
 			-- Internal storage for `eiffel_project'
 
-	test_class_map: attached DS_HASH_TABLE [attached TEST_CLASS, attached EIFFEL_CLASS_I]
+	test_class_map: DS_HASH_TABLE [TEST_CLASS, EIFFEL_CLASS_I]
 			-- Hash table mapping test classes (descendants of {TEST_SET}) to a list of routines names
 			-- representing test routines of the class.
 			--
 			-- keys: descendants of {TEST_SET}
 			-- values: List of test routine names contained in that class
 
-	test_routine_map: attached DS_HASH_TABLE [attached TEST_I, attached STRING]
+	test_routine_map: DS_HASH_TABLE [TEST_I, STRING]
 			-- Hash table mapping a test routine name to its associated Eiffel test instance
 			--
 			-- keys: Test routine names in the form CLASS_NAME.routine_name (to avoid clashes)
 			-- values: {TEST_I} instance corresponding to routine name
 
-	locators: attached DS_LINKED_LIST [attached TEST_CLASS_LOCATOR_I]
+	locators: DS_LINKED_LIST [TEST_CLASS_LOCATOR_I]
 			-- Locators for retrieving test classes
 
 	old_class_map: detachable like test_class_map
@@ -113,7 +113,7 @@ feature {NONE} -- Access
 	test_root_cluster: detachable CONF_CLUSTER
 			-- Internal cluster containing testing root classes
 
-	eiffel_parser: attached EIFFEL_PARSER
+	eiffel_parser: EIFFEL_PARSER
 			-- Simple parser used to parse test classes
 		once
 			create Result.make
@@ -133,7 +133,7 @@ feature -- Status report
 	is_updating_tests: BOOLEAN
 			-- <Precursor>
 
-	is_locator_registered (a_locator: attached TEST_CLASS_LOCATOR_I): BOOLEAN
+	is_locator_registered (a_locator: TEST_CLASS_LOCATOR_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := locators.has (a_locator)
@@ -146,37 +146,37 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := test_class_map.has (a_class)
 		end
 
-	tests_for_class (a_class: attached EIFFEL_CLASS_I): attached DS_LINEAR [attached TEST_I]
+	tests_for_class (a_class: EIFFEL_CLASS_I): DS_LINEAR [TEST_I]
 			-- <Precursor>
 		local
-			l_list: attached DS_ARRAYED_LIST [attached TEST_I]
-			l_test_class: attached TEST_CLASS
+			l_list: DS_ARRAYED_LIST [TEST_I]
+			l_test_class: TEST_CLASS
 		do
 			l_test_class := test_class_map.item (a_class)
 			create l_list.make (l_test_class.test_routine_names.count)
 			l_test_class.test_routine_names.do_all (
-				agent (n: attached STRING; c: attached TEST_CLASS; l: attached DS_LIST [attached TEST_I])
+				agent (n: STRING; c: TEST_CLASS; l: DS_LIST [TEST_I])
 					local
-						l_id: attached STRING
+						l_id: STRING
 					do
 						l_id := test_identifier (c, n)
 						l.put_last (test_routine_map.item (l_id))
 					end (?, l_test_class, l_list))
 		end
 
-	class_for_test (a_test: attached TEST_I): detachable EIFFEL_CLASS_I
+	class_for_test (a_test: TEST_I): detachable EIFFEL_CLASS_I
 			-- <Precursor>
 		do
 			Result := class_for_name (a_test.class_name)
 		end
 
-	feature_for_test (a_test: attached TEST_I): detachable E_FEATURE
+	feature_for_test (a_test: TEST_I): detachable E_FEATURE
 			-- <Precursor>
 		local
 			l_class: like compiled_class_for_test
@@ -189,21 +189,21 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	is_valid_feature (a_feature_as: attached FEATURE_AS): BOOLEAN
+	is_valid_feature (a_feature_as: FEATURE_AS): BOOLEAN
 			-- Is `a_feature_as' the syntax of a valid test routine?
 		do
 			Result := (a_feature_as.body.arguments = Void or else a_feature_as.body.arguments.is_empty) and
 				not a_feature_as.is_function and not a_feature_as.is_attribute and (test_routine_name (a_feature_as) /= Void)
 		end
 
-	is_valid_class_as (a_class: attached CLASS_AS): BOOLEAN
+	is_valid_class_as (a_class: CLASS_AS): BOOLEAN
 			-- Can `a_class' be a syntactical representation of a class containing tests?
 		do
 			Result := not a_class.is_deferred and then
 				(a_class.creators = Void or else a_class.creators.is_empty)
 		end
 
-	is_valid_feature_clause (a_clause_as: attached FEATURE_CLAUSE_AS): BOOLEAN
+	is_valid_feature_clause (a_clause_as: FEATURE_CLAUSE_AS): BOOLEAN
 			-- Is `a_clause_as' exported to ANY?
 		require
 			a_clause_as_not_void: a_clause_as /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	is_valid_routine_name (a_name: attached STRING): BOOLEAN
+	is_valid_routine_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid test routine name?
 		do
 			Result := not (a_name.is_equal ({TEST_CONSTANTS}.prepare_routine_name) or a_name.is_equal ({TEST_CONSTANTS}.clean_routine_name))
@@ -242,7 +242,7 @@ feature {NONE} -- Query
 			result_implies_not_tear_down: Result implies not a_name.is_equal ({TEST_CONSTANTS}.clean_routine_name)
 		end
 
-	class_name (a_class: attached CLASS_I): attached STRING
+	class_name (a_class: CLASS_I): STRING
 			-- Name of `a_class' in upper case.
 		do
 			create Result.make_from_string (a_class.name)
@@ -251,10 +251,10 @@ feature {NONE} -- Query
 			result_not_empty: not Result.is_empty
 		end
 
-	test_routine_name (a_feature: attached FEATURE_AS): detachable STRING
+	test_routine_name (a_feature: FEATURE_AS): detachable STRING
 			-- First valid test routine name in `a_feature', Void if there are none
 		local
-			l_name: attached STRING
+			l_name: STRING
 			l_names: EIFFEL_LIST [FEATURE_NAME]
 			l_cs: CURSOR
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Query
 				is_valid_routine_name (Result)
 		end
 
-	valid_features (a_class: attached CLASS_AS): attached DS_HASH_TABLE [attached FEATURE_AS, attached STRING]
+	valid_features (a_class: CLASS_AS): DS_HASH_TABLE [FEATURE_AS, STRING]
 			-- Hash table with test routines of `a_class' where the key
 			-- is the name of the feature
 		local
@@ -321,9 +321,9 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_has_valid_items: Result.keys.for_all (
-				agent (k: attached STRING; t: like valid_features): BOOLEAN
+				agent (k: STRING; t: like valid_features): BOOLEAN
 					local
-						l_item: attached FEATURE_AS
+						l_item: FEATURE_AS
 					do
 						l_item := t.item (k)
 						Result := is_valid_routine_name (k) and then
@@ -332,7 +332,7 @@ feature {NONE} -- Query
 					end (?, Result))
 		end
 
-	test_identifier (a_class: attached TEST_CLASS; a_name: attached STRING): attached STRING
+	test_identifier (a_class: TEST_CLASS; a_name: STRING): STRING
 			-- Create unqiue identifier for test routine
 			--
 			-- `a_class': Class in which test is defined.
@@ -345,7 +345,7 @@ feature {NONE} -- Query
 			result_not_empty: not Result.is_empty
 		end
 
-	test_root_cluster_path: attached STRING
+	test_root_cluster_path: STRING
 			-- Path for `test_root_cluster'
 		require
 			project_initialized: is_project_initialized
@@ -357,7 +357,7 @@ feature {NONE} -- Query
 			Result := l_dir
 		end
 
-	class_for_name (a_name: attached STRING): detachable EIFFEL_CLASS_I
+	class_for_name (a_name: STRING): detachable EIFFEL_CLASS_I
 			-- Class in universe for given name
 			--
 			-- `a_name': Name of class to look for.
@@ -402,7 +402,7 @@ feature -- Status setting
 					if eiffel_project.successful then
 						old_class_map := test_class_map
 						create test_class_map.make (old_class_map.count)
-						locators.do_all (agent {attached TEST_CLASS_LOCATOR_I}.locate_classes (Current))
+						locators.do_all (agent {TEST_CLASS_LOCATOR_I}.locate_classes (Current))
 						remove_old_classes
 						old_class_map := Void
 					end
@@ -418,7 +418,7 @@ feature -- Status setting
 			end
 		end
 
-	synchronize_with_class (a_class: attached EIFFEL_CLASS_I)
+	synchronize_with_class (a_class: EIFFEL_CLASS_I)
 			-- <Precursor>
 		local
 			l_is_test_class: BOOLEAN
@@ -427,7 +427,7 @@ feature -- Status setting
 			if not is_updating_tests then
 				is_updating_tests := True
 				if file_system.file_exists (a_class.file_name) and then is_class_in_project (a_class) then
-					l_is_test_class := locators.there_exists (agent {attached TEST_CLASS_LOCATOR_I}.is_test_class (a_class, Current))
+					l_is_test_class := locators.there_exists (agent {TEST_CLASS_LOCATOR_I}.is_test_class (a_class, Current))
 				end
 				test_class_map.search (a_class)
 				if l_is_test_class or test_class_map.found then
@@ -466,9 +466,9 @@ feature {NONE} -- Status setting
 			l_system: SYSTEM_I
 			l_name: FILE_NAME
 			l_file: KL_TEXT_OUTPUT_FILE
-			l_cursor: DS_LINEAR_CURSOR [attached EIFFEL_CLASS_I]
+			l_cursor: DS_LINEAR_CURSOR [EIFFEL_CLASS_I]
 			l_class: EIFFEL_CLASS_I
-			l_keys: DS_LINEAR [attached EIFFEL_CLASS_I]
+			l_keys: DS_LINEAR [EIFFEL_CLASS_I]
 		do
 			l_cursor := test_class_map.keys.new_cursor
 			from
@@ -511,16 +511,16 @@ feature {NONE} -- Status setting
 
 feature -- Element change
 
-	register_locator (a_locator: attached TEST_CLASS_LOCATOR_I)
+	register_locator (a_locator: TEST_CLASS_LOCATOR_I)
 			-- <Precursor>
 		do
 			locators.force_last (a_locator)
 		end
 
-	unregister_locator (a_locator: attached TEST_CLASS_LOCATOR_I)
+	unregister_locator (a_locator: TEST_CLASS_LOCATOR_I)
 			-- <Precursor>
 		local
-			l_cursor: DS_LINKED_LIST_CURSOR [attached TEST_CLASS_LOCATOR_I]
+			l_cursor: DS_LINKED_LIST_CURSOR [TEST_CLASS_LOCATOR_I]
 		do
 			l_cursor := locators.new_cursor
 			l_cursor.start
@@ -534,7 +534,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	add_test_class (a_class: attached EIFFEL_CLASS_I; a_class_as: attached CLASS_AS)
+	add_test_class (a_class: EIFFEL_CLASS_I; a_class_as: CLASS_AS)
 			-- Add Eiffel class to Eiffel test class map and analyze syntax to find tests defined in class.
 			--
 			--| If attached, `old_class_map' is searched for any previously created Eiffel test class
@@ -565,7 +565,7 @@ feature {NONE} -- Element change
 			added: is_test_class (a_class)
 		end
 
-	synchronize_test_class (a_test_class: attached TEST_CLASS; a_class_as: attached CLASS_AS)
+	synchronize_test_class (a_test_class: TEST_CLASS; a_class_as: CLASS_AS)
 			-- Add Eiffel class to Eiffel test class map.
 			--
 			-- Note: `add_test_class' will add a {TEST_CLASS} instance to `test_class_map'. In
@@ -578,12 +578,12 @@ feature {NONE} -- Element change
 			a_test_class_valid: test_class_map.has_item (a_test_class)
 			a_class_as_valid: is_valid_class_as (a_class_as)
 		local
-			l_names: attached DS_HASH_SET [attached STRING]
+			l_names: DS_HASH_SET [STRING]
 			l_features: like valid_features
-			l_cursor: DS_HASH_SET_CURSOR [attached STRING]
+			l_cursor: DS_HASH_SET_CURSOR [STRING]
 			l_et: detachable TEST_I
-			l_ctags, l_ftags: attached DS_HASH_SET [attached STRING]
-			l_tag: attached STRING
+			l_ctags, l_ftags: DS_HASH_SET [STRING]
+			l_tag: STRING
 			l_name: STRING
 			l_note_clause: detachable INDEXING_CLAUSE_AS
 		do
@@ -591,7 +591,7 @@ feature {NONE} -- Element change
 			l_features := valid_features (a_class_as)
 
 			create l_ctags.make_default
-			l_ctags.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
+			l_ctags.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
 
 				-- Add tags of top and bottom note clauses
 			l_note_clause := a_class_as.top_indexes
@@ -684,8 +684,8 @@ feature {NONE} -- Element change
 		require
 			old_class_map_attached: old_class_map /= Void
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached STRING]
-			l_name: attached STRING
+			l_cursor: DS_LINEAR_CURSOR [STRING]
+			l_name: STRING
 		do
 			from
 				old_class_map.start
@@ -707,7 +707,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	remove_test (a_id: attached STRING)
+	remove_test (a_id: STRING)
 			-- Remove test for given identifier from `test_routine_map' and inform observer
 		require
 			has_test_for_id: test_routine_map.has (a_id)
@@ -725,7 +725,7 @@ feature {NONE} -- Element change
 
 feature {TEST_CLASS_LOCATOR_I} -- Implementation
 
-	report_test_class (a_class: attached EIFFEL_CLASS_I)
+	report_test_class (a_class: EIFFEL_CLASS_I)
 			-- <Precursor>
 		local
 			l_ast: detachable CLASS_AS
@@ -754,10 +754,10 @@ feature {TEST_CLASS_LOCATOR_I} -- Implementation
 
 feature {NONE} -- Implementation: tag retrieval
 
-	cluster_stack: attached DS_ARRAYED_LIST [attached CONF_GROUP]
+	cluster_stack: DS_ARRAYED_LIST [CONF_GROUP]
 			-- List used as a stack by `add_class_path'
 
-	add_tag (a_tag: attached STRING; a_set: attached DS_SET [attached STRING])
+	add_tag (a_tag: STRING; a_set: DS_SET [STRING])
 			-- Add tag to set by replacing all class names with current cluster/class/feature hierarchy.
 			--
 			-- `a_tag': Tag to be added to set
@@ -770,7 +770,7 @@ feature {NONE} -- Implementation: tag retrieval
 			i, start: INTEGER
 			l_in_class, l_in_feature: BOOLEAN
 			c: CHARACTER
-			l_final, l_class_name: attached STRING
+			l_final, l_class_name: STRING
 			l_feature_name: detachable STRING
 		do
 			create l_final.make (a_tag.count*2)
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation: tag retrieval
 			a_set_increased: a_set.count = old a_set.count + 1
 		end
 
-	add_class_path (a_tag: attached STRING; a_class_name: attached STRING; a_feature_name: detachable STRING)
+	add_class_path (a_tag: STRING; a_class_name: STRING; a_feature_name: detachable STRING)
 			-- Add cluster/class/feature information to tag
 			--
 			-- `a_tag': Tag to which information should be added
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation: tag retrieval
 		local
 			l_current, l_group: CONF_GROUP
 			l_uni: UNIVERSE_I
-			l_list: LIST [attached CONF_LIBRARY]
+			l_list: LIST [CONF_LIBRARY]
 			l_path: LIST [STRING]
 			l_class: like class_for_name
 			l_uuid: detachable UUID
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation: tag retrieval
 			end
 		end
 
-	add_note_tags (a_indexing_clause: attached INDEXING_CLAUSE_AS; a_set: attached DS_SET [attached STRING])
+	add_note_tags (a_indexing_clause: INDEXING_CLAUSE_AS; a_set: DS_SET [STRING])
 			-- Add tags defined in indexing clause to a set.
 			--
 			-- `a_indexing_clause': Indexing clause of a class or feature that might contains tags.
@@ -935,7 +935,7 @@ feature {NONE} -- Implementation: tag retrieval
 			l_cs: CURSOR
 			l_item: INDEX_AS
 			l_value_list: EIFFEL_LIST [ATOMIC_AS]
-			l_tags: attached STRING
+			l_tags: STRING
 		do
 			if not a_indexing_clause.is_empty then
 				from
@@ -963,7 +963,7 @@ feature {NONE} -- Implementation: tag retrieval
 			end
 		end
 
-	tag_utilities: attached TAG_UTILITIES
+	tag_utilities: TAG_UTILITIES
 			-- Routines for extracting tags
 		once
 			create Result
@@ -971,7 +971,7 @@ feature {NONE} -- Implementation: tag retrieval
 
 feature {NONE} -- Factory
 
-	new_test_class (a_class: attached EIFFEL_CLASS_I): attached TEST_CLASS
+	new_test_class (a_class: EIFFEL_CLASS_I): TEST_CLASS
 			-- Create new test class
 			--
 			-- `a_class': Class for which new test class shall be created
@@ -980,7 +980,7 @@ feature {NONE} -- Factory
 			create Result.make (a_class)
 		end
 
-	new_test (a_routine_name: attached STRING; a_class: attached TEST_CLASS): attached TEST_I
+	new_test (a_routine_name: STRING; a_class: TEST_CLASS): TEST_I
 			-- Create new test
 			--
 			-- `a_routine_name': Name of routine which represents test.

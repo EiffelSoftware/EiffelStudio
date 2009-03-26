@@ -22,15 +22,17 @@ create {INET_ADDRESS_FACTORY}
 
 feature -- Constants
 
-	INADDRSZ: INTEGER = 4
+	inaddrsz: INTEGER = 4
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
 	make_from_host_and_address (a_hostname: detachable STRING; an_address: detachable ARRAY [NATURAL_8])
+		require
+			an_address_count_valid: an_address /= Void implies an_address.count = inaddrsz
 		do
 			internal_host_name := a_hostname
 			family := ipv4
-			if an_address /= Void and then an_address.count = INADDRSZ then
+			if an_address /= Void and then an_address.count = inaddrsz then
 				the_address := an_address.item(4).to_integer_32 & 0xFF
 				the_address := the_address | ((an_address.item(3).to_integer_32 |<< 8) & 0xFF00)
 				the_address := the_address | ((an_address.item(2).to_integer_32 |<< 16) & 0xFF0000)
@@ -121,7 +123,7 @@ feature -- Access
 
 	raw_address: ARRAY [NATURAL_8]
 		do
-			create Result.make(1,INADDRSZ)
+			create Result.make(1, inaddrsz)
 			Result.put (((the_address |>> 24) & 0xFF).to_natural_8, 1)
 			Result.put (((the_address |>> 16) & 0xFF).to_natural_8, 2)
 			Result.put (((the_address |>> 8) & 0xFF).to_natural_8, 3)
@@ -142,7 +144,7 @@ feature {NONE} -- Implementation
 
 	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING
 		require
-			addr /= Void and then addr.count = INADDRSZ
+			addr /= Void and then addr.count = inaddrsz
 		do
 			create Result.make_empty
 			Result.append_integer(addr.item (1))

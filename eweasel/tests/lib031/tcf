@@ -1,0 +1,19 @@
+
+test_name 	 file-append-not-thread-safe
+test_description Calling {FILE}.append on different FILE objects writing different output files is not thread-safe, due to use of static local in external `file_append'
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	worker.e $CLUSTER worker.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1 3 1000 1000
+execute_result	ok
+compare		exec_output1 output
+
+test_end

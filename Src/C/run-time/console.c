@@ -43,6 +43,7 @@ doc:<file name="console.c" header="eif_console.h" version="$Id$" summary="Extern
 #include "eif_file.h"
 #include "rt_main.h"
 #include "eif_console.h"
+#include "rt_error.h"
 #include "rt_assert.h"
 
 rt_public EIF_POINTER console_def (EIF_INTEGER file)
@@ -216,10 +217,30 @@ rt_public EIF_REAL_64 console_readdouble(FILE *f)
 }
 rt_public EIF_CHARACTER console_readchar(FILE *f)
 {
+	int c;
+
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gc (f);
+
+		/* The code of `file_gc' is duplicated here because of the special
+		 * handling for Solaris. */
+	errno = 0;
+	c = getc(f);
+#if EIF_OS == EIF_OS_SUNOS
+		/* On Solaris trying to read from stdout or stderr does not generate an error
+		 * when it does on other platforms. So if we read EOF and the file descriptor
+		 * is one of them we raise an exception. This fixes eweasel test#except035. */
+	if ((c == EOF) && ((f == stdout) || (f == stdin))) {
+		eise_io("FILE: unable to read CHARACTER value.");
+	}
+#else
+	if (c == EOF && ferror(f)) {
+		eise_io("FILE: unable to read CHARACTER value.");
+	}
+#endif
+
+	return (EIF_CHARACTER) c;
 }
 
 rt_public EIF_INTEGER console_readline(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)

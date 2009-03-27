@@ -1058,6 +1058,7 @@ test	creating-string-runtime-panic	thread004	tcf pass multithreaded
 test	mem-info-update-crash-after-threads	thread005	tcf pass multitheaded
 test	panic-when-too-many-allocation	thread006	tcf pass multitheaded
 test	join-with-no-children-leaks	thread007	tcf pass multitheaded
+test	memory-referers-not-thread-safe	thread008	tcf pass multitheaded
 
 -- Execution
 

@@ -1,0 +1,19 @@
+
+test_name 	 memory-referers-not-thread-safe
+test_description Routine {MEMORY}.referers is not thread-safe
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 worker.e  $CLUSTER worker.e
+
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	 NONE exec_output1 10 5000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

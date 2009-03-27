@@ -10,27 +10,9 @@ class
 
 inherit
 	AST_SCOPE_MATCHER
-		redefine
-			process_bin_and_as,
-			process_bin_and_then_as
-		end
 
 create
 	make
-
-feature {AST_EIFFEL} -- Visitor pattern
-
-	process_bin_and_as (l_as: BIN_AND_AS)
-		do
-			l_as.left.process (Current)
-			l_as.right.process (Current)
-		end
-
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
-		do
-			l_as.left.process (Current)
-			l_as.right.process (Current)
-		end
 
 feature {NONE} -- Status
 
@@ -38,7 +20,7 @@ feature {NONE} -- Status
 			-- Is negated value of a boolean expression expected?
 
 note
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

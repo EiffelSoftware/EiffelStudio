@@ -184,7 +184,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 						i <= 0
 					loop
 						n := object_test_scopes [i]
-						if n.name_id = id then
+						if n.name_id = id and then object_test_locals.has (n) then
 							Result := object_test_locals.item (n)
 						end
 						i := i - 1

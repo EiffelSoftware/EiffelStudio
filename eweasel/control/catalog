@@ -1057,6 +1057,7 @@ test	memory-leak-in-eif-thr-wait	thread003	tcf pass multithreaded
 test	creating-string-runtime-panic	thread004	tcf pass multithreaded
 test	mem-info-update-crash-after-threads	thread005	tcf pass multitheaded
 test	panic-when-too-many-allocation	thread006	tcf pass multitheaded
+test	join-with-no-children-leaks	thread007	tcf pass multitheaded
 
 -- Execution
 

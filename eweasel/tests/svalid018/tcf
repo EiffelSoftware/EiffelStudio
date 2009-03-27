@@ -7,6 +7,6 @@ copy_raw 	parent.e $CLUSTER parent.e
 copy_raw 	child.e $CLUSTER child.e
 
 compile_melted
-compile_result	validity_error TEST VGCC(6)
+compile_result	validity_error CHILD VUTA(2)
 
 test_end

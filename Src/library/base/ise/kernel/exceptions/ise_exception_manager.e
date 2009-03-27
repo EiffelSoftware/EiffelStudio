@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 		external
 			"C use %"eif_except.h%""
 		alias
-			"c_in_rescue"
+			"eif_is_in_rescue"
 		end
 
 note

@@ -4187,7 +4187,7 @@ rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj)
 	return result;
 }
 
-rt_public EIF_BOOLEAN c_in_rescue (void)							
+rt_public EIF_BOOLEAN eif_is_in_rescue (void)							
 	/* Is current execution during rescue?
 	 * We traverse the execution stack to find if there is a EX_RESC vector. */
 {

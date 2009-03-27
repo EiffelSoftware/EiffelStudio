@@ -335,7 +335,7 @@ feature -- Feature access
 		do
 			if a_class.is_valid and then a_class.has_feature_table then
 				rids := fi.rout_id_set
-				Result := a_class.feature_table.feature_of_rout_id_set (fi.rout_id_set)
+				Result := a_class.feature_of_rout_id_set (rids)
 			end
 		end
 
@@ -465,6 +465,7 @@ feature -- Access on Byte node
 			wcl: CLASS_C
 			l_cl: CLASS_C
 		do
+			--FIXME:jfiat:2009-03-27: review this code, since it looks pretty complicated ...
 			if cl.is_basic then
 				l_cl := associated_reference_basic_class_type (cl).associated_class
 				Result := l_cl.feature_of_rout_id (a_call_access_b.routine_id)
@@ -475,12 +476,15 @@ feature -- Access on Byte node
 				else
 					Result := cl.feature_of_rout_id (a_call_access_b.routine_id)
 					if Result = Void then
-							--| let's search from written_class
-						wcl := eiffel_system.class_of_id (a_call_access_b.written_in)
-						check wcl_not_void: wcl /= Void end
-						Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
-						if Result /= Void and then wcl /= cl then
-							Result := fi_version_of_class (Result, cl)
+						Result := cl.feature_of_name_id (a_call_access_b.feature_name_id)
+						if Result = Void then
+								--| let's search from written_class
+							wcl := eiffel_system.class_of_id (a_call_access_b.written_in)
+							check wcl_not_void: wcl /= Void end
+							Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
+							if Result /= Void and then wcl /= cl then
+								Result := fi_version_of_class (Result, cl)
+							end
 						end
 					end
 					if Result = Void then
@@ -608,7 +612,7 @@ feature -- Status report
 			-- Invariant's feature name
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -621,22 +625,22 @@ feature -- Status report
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

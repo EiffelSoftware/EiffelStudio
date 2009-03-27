@@ -3161,7 +3161,8 @@ feature -- Implementation
 			if
 				not l_has_invalid_locals and then
 				l_as.locals /= Void and then error_level = l_error_level and then
-				context.current_class.is_warning_enabled (w_unused_local)
+				context.current_class.is_warning_enabled (w_unused_local) and then
+				not is_inherited
 			then
 				check_unused_locals (context.locals)
 			end

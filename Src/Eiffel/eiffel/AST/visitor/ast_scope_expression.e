@@ -15,27 +15,17 @@ inherit
 			add_local_scope,
 			add_object_test_scope,
 			add_result_scope,
-			process_paran_as
+			make
 		end
 
-feature {AST_EIFFEL} -- Visitor pattern
+feature {NONE} -- Initialization
 
-	process_paran_as (l_as: PARAN_AS)
-		local
-			old_is_nested: BOOLEAN
+	make (c: like context)
+			-- Initialize Current.
 		do
-			old_is_nested := is_nested
-			is_nested := True
-			Precursor (l_as)
-			is_nested := old_is_nested
+			context := c
+			is_nested := False
 		end
-
-feature {NONE} -- Status report
-
-	is_nested: BOOLEAN
-			-- Is current expression nested, so that associativity rules
-			-- should not be taken into account that is important for
-			-- strict operators?
 
 feature {NONE} -- Context
 

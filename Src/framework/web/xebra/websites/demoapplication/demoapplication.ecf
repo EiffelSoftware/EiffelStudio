@@ -18,8 +18,8 @@
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
-			<cluster name="xebralibrary" location="\usr\local\home\fabioz\xebra\eiffel_projects\xebra_translator\code_gen\"/>
-			<cluster name="thread_utilities" location="\usr\local\home\fabioz\xebra\eiffel_projects\thread_utilities\"/>
+			<cluster name="xebralibrary" location="..\..\eiffel_projects\xebra_translator\code_gen\"/>
+			<cluster name="thread_utilities" location="..\..\eiffel_projects\thread_utilities\"/>
 		</cluster>
 	</target>
 	<target name="demoapplication_dotnet" extends="demoapplication">

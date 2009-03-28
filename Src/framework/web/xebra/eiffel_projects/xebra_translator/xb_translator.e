@@ -56,16 +56,15 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_file (a_files: LIST [STRING]; a_taglib_filename: STRING)
+	process_with_files (a_files: LIST [STRING]; a_taglib_filename: STRING)
 			-- `a_filename': Name of xeb file
 			-- `taglib_filename': Name of tag library file
 			-- Processes a file.
 		local
 			l_file: KL_TEXT_INPUT_FILE
 			l_taglib_file: KL_TEXT_INPUT_FILE
-			l_wgenerator: WEBAPP_GENERATOR
+			l_servlet_gag: SERVLET_GENERATOR_APP_GENERATOR
 		do
-
 			create l_taglib_file.make (a_taglib_filename)
 			if (not l_taglib_file.exists) then
 				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_taglib_filename]), false)
@@ -77,8 +76,7 @@ feature -- Processing
 					process_taglib_with_stream (l_taglib_file)
 					l_taglib_file.close
 
-					create l_wgenerator.make (name, output_path)
-
+					create l_servlet_gag.make
 					from
 						a_files.start
 					until
@@ -90,17 +88,31 @@ feature -- Processing
 							if not l_file.is_open_read then
 								error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 							else
-								l_wgenerator.put_servlet (process_with_stream (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib))
+								l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib))
 								l_file.close
 							end
 						end
 						a_files.forth
 					end
-
-					l_wgenerator.generate
+					l_servlet_gag.generate (output_path)
 				end
 			end
+		end
 
+	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TAG_LIBRARY): SERVLET_GENERATOR_GENERATOR
+		local
+			l_root_tag: TAG_ELEMENT
+			l_parser: XM_PARSER
+			l_p_callback: XB_XML_PARSER_CALLBACKS
+		do
+			create {XM_EIFFEL_PARSER} l_parser.make
+			create {XB_XML_PARSER_CALLBACKS} l_p_callback.make
+			l_p_callback.put_taglib (a_taglib)
+			l_parser.set_callbacks (l_p_callback)
+			l_parser.parse_from_stream (a_stream)
+
+			l_root_tag := l_p_callback.root_tag
+			create Result.make (servlet_name, name + "_CONTROLLER", False, l_root_tag, output_path)
 		end
 
 	process_taglib_with_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
@@ -114,20 +126,17 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			taglib := l_p_callback.taglib
-
 		end
 
 	process_with_stream (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TAG_LIBRARY): ROOT_SERVLET_ELEMENT
 			-- Processes a file.
+			-- OBSOLETE
 		local
-			l_webapp_generator: WEBAPP_GENERATOR
 			l_root_tag: TAG_ELEMENT
 			l_parser: XM_PARSER
 			l_p_callback: XB_XML_PARSER_CALLBACKS
 			root_servlet_element: ROOT_SERVLET_ELEMENT
 		do
-				create l_webapp_generator.make (name, output_path)
-
 				create {XM_EIFFEL_PARSER} l_parser.make
 				create {XB_XML_PARSER_CALLBACKS} l_p_callback.make
 				l_p_callback.put_taglib (a_taglib)

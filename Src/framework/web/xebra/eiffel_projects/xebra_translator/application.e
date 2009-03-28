@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 				l_translator.set_output_path (Arguments.argument (3))
 
-				l_translator.process_with_file (dir.linear_representation, "xeb.taglib")
+				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
 
 				create l_printer.default_create
 				if error_manager.has_warnings then

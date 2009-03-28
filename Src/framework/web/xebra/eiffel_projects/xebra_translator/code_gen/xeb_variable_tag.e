@@ -1,37 +1,16 @@
 note
-	description: "Summary description for {CONSTANT_ATTRIBUTE}."
+	description: "Summary description for {XEB_VARIABLE_TAG}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSTANT_ATTRIBUTE
+	XEB_VARIABLE_TAG [G]
 
 inherit
-	TAG_ATTRIBUTE
+	TAG_SERIALIZER [G]
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_constant: STRING)
-	 	do
-			constant := a_constant
-		end
-
-feature {NONE} -- Access
-
-	constant: STRING
-			-- The constant which represents this class
-
-feature {NONE} -- Basic functionality
-
-	value (servlet: SERVLET): STRING
-			-- <Precursor>
-		do
-			Result := constant
-		end
+feature -- Access
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

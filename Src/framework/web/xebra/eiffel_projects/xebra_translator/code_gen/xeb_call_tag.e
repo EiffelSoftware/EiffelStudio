@@ -3,6 +3,8 @@ note
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
+	xeb_tag: "call"
+	xeb_argument: "feature: BOOLEAN"
 
 class
 	XEB_CALL_TAG
@@ -10,7 +12,7 @@ class
 inherit
 	TAG_SERIALIZER
 		redefine
-			output
+			generate
 		end
 
 create
@@ -21,23 +23,23 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} feature_name.make ("")
+			feature_name := "####wrong_feature####"
 		end
 
 feature -- Access
 
-	feature_name: TAG_ATTRIBUTE
+	feature_name: STRING
 			-- The name of the feature to call
 
 feature -- Implementation
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
+	generate (a_feature: FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			parent.call_on_controller (feature_name.value (parent))
+			a_feature.append_expression ("controller." + feature_name)
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal ("feature") then

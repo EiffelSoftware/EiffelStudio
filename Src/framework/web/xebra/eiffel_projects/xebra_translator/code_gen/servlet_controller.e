@@ -1,36 +1,17 @@
 note
-	description: "Summary description for {CONSTANT_ATTRIBUTE}."
+	description: "Summary description for {SERVLET_CONTROLLER}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSTANT_ATTRIBUTE
+	SERVLET_CONTROLLER
 
-inherit
-	TAG_ATTRIBUTE
+feature -- Implementation
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_constant: STRING)
-	 	do
-			constant := a_constant
-		end
-
-feature {NONE} -- Access
-
-	constant: STRING
-			-- The constant which represents this class
-
-feature {NONE} -- Basic functionality
-
-	value (servlet: SERVLET): STRING
-			-- <Precursor>
+	on_page_load
 		do
-			Result := constant
+			
 		end
 
 note

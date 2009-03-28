@@ -17,6 +17,9 @@ feature -- Initialization
 
 	make (a_id: STRING; a_class_name: STRING)
 			-- `a_class_name': The name of the corresponding TAG-class
+		require
+			a_id_valid: not a_id.is_empty
+			a_class_name_is_valid: not a_class_name.is_empty
 		do
 			class_name := a_class_name
 			id := a_id
@@ -63,6 +66,11 @@ feature -- Access
 			Result := not children.is_empty
 		end
 
+	has_attribute (name: STRING): BOOLEAN
+		do
+			Result := parameters.has_key (name)
+		end
+
 	put_controller_call (a_call: STRING)
 			-- Add a feature that should be available to servlets
 		require
@@ -103,7 +111,13 @@ feature -- Access
 			attribute_has_been_added: old dynamic_parameters.count + 1 = dynamic_parameters.count
 		end
 
-	build_tag_tree (a_feature: FEATURE_ELEMENT; is_root: BOOLEAN)
+	build_tag_tree (a_feature: FEATURE_ELEMENT)
+			-- Adds the needed expressions which build the tree of Current with the correct classes
+		do
+			internal_build_tag_tree (a_feature, True)
+		end
+
+	internal_build_tag_tree (a_feature: FEATURE_ELEMENT; is_root: BOOLEAN)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		do
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
@@ -122,7 +136,7 @@ feature -- Access
 				until
 					children.after
 				loop
-					children.item.build_tag_tree (a_feature, False)
+					children.item.internal_build_tag_tree (a_feature, False)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")
@@ -142,12 +156,12 @@ feature -- Access
 				if multiline_argument then
 					a_feature.append_expression ("temp.put_attribute(%""
 						+ attributes.key_for_iteration + "%", "
-						+ "create {" + type + "}.make (%N%"[%N" + attributes.item_for_iteration + "%N]%"))"
+						+ "%N%"[%N" + attributes.item_for_iteration + "%N]%")"
 					)
 				else
 					a_feature.append_expression ("temp.put_attribute(%""
 						+ attributes.key_for_iteration + "%", "
-						+ "create {" + type + "}.make (%"" + attributes.item_for_iteration + "%"))"
+						+ "%"" + attributes.item_for_iteration + "%")"
 					)
 				end
 				attributes.forth

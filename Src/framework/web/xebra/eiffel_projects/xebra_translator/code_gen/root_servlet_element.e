@@ -144,7 +144,7 @@ feature -- Implementation
 				Result.append_expression ("create stack.make (10)")
 				Result.append_local ("temp", "TAG_SERIALIZER")
 				Result.append_local ("stack", "ARRAYED_STACK [TAG_SERIALIZER]")
-				root_tag.build_tag_tree (Result, True)
+				root_tag.build_tag_tree (Result)
 
 				Result.append_expression ("create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]} controller_features.make (10)")
 				from

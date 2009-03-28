@@ -59,8 +59,8 @@ feature {NONE} -- Implementation
 			-- Always real extracting since it is relatively light for conf notes.
 		local
 			l_notable: like notable
-			l_notes: ARRAYED_LIST [HASH_TABLE [STRING_8, STRING_8]]
-			l_note: HASH_TABLE [STRING_8, STRING_8]
+			l_notes: CONF_NOTE_ELEMENT
+			l_note: CONF_NOTE_ELEMENT
 			l_entries: HASH_TABLE [SEARCH_TABLE [HASHABLE], STRING]
 			l_id: STRING
 			l_date: INTEGER
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 				l_entries.search (lt_id)
 				if not l_entries.found or force_extracting then
 					l_notable := notable
-					l_notes := l_notable.notes
+					l_notes := l_notable.note_node
 					if l_notes /= Void then
 						from
 							l_notes.start

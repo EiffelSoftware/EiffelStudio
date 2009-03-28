@@ -11,6 +11,8 @@ class
 inherit
 	ES_EIS_SHARED
 
+	CONF_ACCESS
+
 feature -- Operation
 
 	process (a_entry: attached EIS_ENTRY)
@@ -58,20 +60,18 @@ feature -- Operation
 					l_output.append (others_as_code (a_entry))
 				end
 			else
-				create last_output_conf.make (2)
-					-- Add the ise_support attribute.
-				last_output_conf.force ({ES_EIS_TOKENS}.eis_string, {ES_EIS_TOKENS}.ise_support_string)
+				create last_output_conf.make ({ES_EIS_TOKENS}.eis_string.as_lower)
 				if a_entry.name /= Void then
-					last_output_conf.force (a_entry.name, {ES_EIS_TOKENS}.name_string)
+					last_output_conf.add_attribute (a_entry.name, {ES_EIS_TOKENS}.name_string)
 				end
 				if a_entry.protocol /= Void then
-					last_output_conf.force (a_entry.protocol, {ES_EIS_TOKENS}.protocol_string)
+					last_output_conf.add_attribute (a_entry.protocol, {ES_EIS_TOKENS}.protocol_string)
 				end
 				if a_entry.source /= Void then
-					last_output_conf.force (a_entry.source, {ES_EIS_TOKENS}.source_string)
+					last_output_conf.add_attribute (a_entry.source, {ES_EIS_TOKENS}.source_string)
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
-					last_output_conf.force (tags_as_code (a_entry), {ES_EIS_TOKENS}.tag_string)
+					last_output_conf.add_attribute (tags_as_code (a_entry), {ES_EIS_TOKENS}.tag_string)
 				end
 				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others and then not a_entry.others.is_empty then
 					from
@@ -81,7 +81,7 @@ feature -- Operation
 					loop
 						if not lt_others.key_for_iteration.is_empty then
 								--|FIXME: Bad conversion to STRING_8
-							last_output_conf.force (lt_others.item_for_iteration, lt_others.key_for_iteration)
+							last_output_conf.add_attribute (lt_others.item_for_iteration, lt_others.key_for_iteration)
 						end
 						lt_others.forth
 					end
@@ -113,7 +113,7 @@ feature -- Access
 	last_output_code: detachable STRING_32
 			-- Last output of code.
 
-	last_output_conf: HASH_TABLE [STRING, STRING]
+	last_output_conf: CONF_NOTE_ELEMENT
 			-- Last output of conf note.
 
 	tags_as_code (a_entry: attached EIS_ENTRY): attached STRING_32
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -221,11 +221,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

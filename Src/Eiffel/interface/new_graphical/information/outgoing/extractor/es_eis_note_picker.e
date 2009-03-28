@@ -39,9 +39,7 @@ feature {NONE} -- Implementation
 				a_eis_tuple.tags := parse_tags (a_value)
 			else
 					-- Others
-				if not a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.ise_support_string) then
-					a_eis_tuple.others.force (a_value, a_key)
-				end
+				a_eis_tuple.others.force (a_value, a_key)
 			end
 		end
 
@@ -114,9 +112,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_conf_note (a_note: HASH_TABLE [STRING, STRING]; l_id: attached STRING): detachable EIS_ENTRY
+	eis_entry_from_conf_note (a_note: CONF_NOTE_ELEMENT; l_id: attached STRING): detachable EIS_ENTRY
 			-- EIS entry from conf note element.
 		local
+			l_attributes: HASH_TABLE [STRING, STRING]
 			l_others: attached HASH_TABLE [STRING_32, STRING_32]
 			l_tags: attached ARRAYED_LIST [STRING_32]
 			l_entry_tuple: attached TUPLE [
@@ -128,22 +127,22 @@ feature {NONE} -- Implementation
 							others: HASH_TABLE [STRING_32, STRING_32]]
 		do
 			if a_note /= Void then
-				a_note.search ({ES_EIS_TOKENS}.ise_support_string)
-				if a_note.found and then a_note.found_item.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
+				if a_note.element_name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 					create l_entry_tuple
 					l_entry_tuple.id := l_id
 					create l_others.make (3)
 					create l_tags.make (2)
 					l_entry_tuple.others := l_others
 					l_entry_tuple.tags := l_tags
+					l_attributes := a_note.attributes
 					from
-						a_note.start
+						l_attributes.start
 					until
-						a_note.after
+						l_attributes.after
 					loop
 						if
-							attached {STRING} a_note.key_for_iteration as lt_key and then
-							attached {STRING} a_note.item_for_iteration as lt_value
+							attached {STRING} l_attributes.key_for_iteration as lt_key and then
+							attached {STRING} l_attributes.item_for_iteration as lt_value
 						then
 							lt_key.left_adjust
 							lt_key.right_adjust
@@ -151,7 +150,7 @@ feature {NONE} -- Implementation
 							lt_value.right_adjust
 							fill_from_key_value (lt_key, lt_value, l_entry_tuple)
 						end
-						a_note.forth
+						l_attributes.forth
 					end
 						-- Set them to Void if empty.
 					if l_entry_tuple.tags /= Void and then l_entry_tuple.tags.is_empty then
@@ -263,11 +262,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

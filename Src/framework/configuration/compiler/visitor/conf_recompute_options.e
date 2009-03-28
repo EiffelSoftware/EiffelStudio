@@ -59,7 +59,7 @@ feature -- Visit nodes
 					a_target.set_options (new_target.internal_options)
 				end
 				a_target.set_description (new_target.description)
-				a_target.set_notes (new_target.notes)
+				a_target.set_note_node (new_target.note_node)
 				a_target.set_external_includes (new_target.internal_external_include)
 				a_target.set_external_objects (new_target.internal_external_object)
 				a_target.set_external_libraries (new_target.internal_external_library)
@@ -164,10 +164,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

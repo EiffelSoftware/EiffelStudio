@@ -233,7 +233,7 @@ rt_private EIF_TYPE_INDEX get_creation_type(int for_creation);		/* Get a creatio
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
-rt_public void xinterp(unsigned char *icval);	/* Sets IC before calling interpret */
+rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed);	/* Sets IC before calling interpret */
 rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
@@ -267,7 +267,7 @@ rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);	/* Push one val
 rt_public EIF_TYPED_VALUE *opop(void);							/* Pop last item */
 rt_private EIF_TYPED_VALUE *stack_allocate(register int size);	/* Allocates first chunk */
 rt_private int stack_extend(register int size);				/* Extend stack's size */
-rt_private void npop(register int nb_items);				/* Pop 'n' items */
+rt_private void npop(rt_uint_ptr nb);				/* Pop 'nb' items */
 rt_public EIF_TYPED_VALUE *otop(void);							/* Pointer to value at the top */
 rt_private EIF_TYPED_VALUE *oitem(uint32 n);					/* Pointer to value at position `n' down the stack */
 rt_private void stack_truncate(void);						/* Truncate stack if necessary */
@@ -382,7 +382,7 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 		sync_registers(scur, stop);
 }
 
-rt_public void xinterp(unsigned char *icval)
+rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 {
 	/* Starts interpretation at IC = icval. It is the interpreter entry
 	 * point for C code. When an exception occurs in the interpreted
@@ -434,6 +434,7 @@ rt_public void xinterp(unsigned char *icval)
 		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
+		npop (nb_pushed);				/* Removed the pushed arguments. */
 		if (se){						/* Release exception object */
 			eif_wean (se);
 		}
@@ -2619,7 +2620,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ARG\n");
 #endif
-		code = get_int16(&IC);				/* Get number (from 1 to argnum) */
+		code = get_int16(&IC);				/* Get number (from 1 0x0000000001ee0528to argnum) */
 		last = iget();
 		memcpy (last, arg(code), ITEM_SZ);
 		break;
@@ -3879,16 +3880,12 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
 				last->it_ref = obj;
-
-				/*IC = melt[body_id];*/
-				/*interpret(INTERP_INVA, where);*//* Interpret invariant code */
-
-				/* The proper way to start the interpretation of a melted
-		 		* invariant code is to call `xiinv' in order to initialize the
-		 		* calling context (which is not done by `interpret').
-		 		* `tagval' will therefore be set, but we have to 
-				* resynchronize the registers anyway. --ericb
-		 		*/
+					/* The proper way to start the interpretation of a melted
+					* invariant code is to call `xiinv' in order to initialize the
+					* calling context (which is not done by `interpret').
+					* `tagval' will therefore be set, but we have to 
+					* resynchronize the registers anyway. --ericb
+					*/
 				xiinv(MTC melt[body_id], where);
 
 				sync_registers(MTC scur, stop);		/* Resynchronize registers */
@@ -4790,7 +4787,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 		 * in order to initialize the calling context (which is not done by `interpret').
 		 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
 		 */
-		xinterp(MTC melt[body_id]);
+		xinterp(MTC melt[body_id], 0);
 		sync_needed = 1;					/* Compulsory synchronisation */
 	}
 	IC = OLD_IC;					/* Restore IC back-up */
@@ -4840,16 +4837,13 @@ rt_private int icall(int fid, int stype, int ptype)
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {
-		/*IC = melt[body_id];*/					/* Melted byte code */
-		/*interpret(INTERP_CMPD, 0);*/		/* Interpret (tagval not set) */
-
 		/* The proper way to start the interpretation of a melted
 		 * feature is to call `xinterp' in order to initialize the
 		 * calling context (which is not done by `interpret').
 		 * `tagval' will therefore be set, but we have to 
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(MTC melt[body_id]);
+		xinterp(MTC melt[body_id], 0);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
@@ -4891,16 +4885,13 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {
-		/*IC = melt[body_id];	*/				/* Melted byte code */
-		/*interpret(INTERP_CMPD, 0);	*/	/* Interpret (tagval not set) */
-
-		/* The proper way to start the interpretation of a melted
-		 * feature is to call `xinterp' in order to initialize the
-		 * calling context (which is not done by `interpret').
-		 * `tagval' will therefore be set, but we have to 
-		 * resynchronize the registers anyway. --ericb
-		 */
-		xinterp(MTC melt[body_id]);
+			/* The proper way to start the interpretation of a melted
+			 * feature is to call `xinterp' in order to initialize the
+			 * calling context (which is not done by `interpret').
+			 * `tagval' will therefore be set, but we have to 
+			 * resynchronize the registers anyway. --ericb
+			 */
+		xinterp(MTC melt[body_id], 0);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
@@ -5614,13 +5605,15 @@ rt_private void pop_registers(void)
 	 */
 
 	RT_GET_CONTEXT
-	int nb_items;			/* Number of registers to be popped off */
+	rt_uint_ptr nb_locals, nb_args;			/* Number of registers to be popped off */
 	EIF_TYPED_VALUE *result;			/* To save the result */
 	EIF_TYPED_VALUE saved_result;		/* Save value pointed to by iresult */
-	
-	nb_items = opop()->it_int32;		/* This is the nummber of arguments */
-	nb_items += otop()->it_int32;	/* Add the number of locals */
-	nb_items += SPECIAL_REG - 1;	/* Add Current, Result and ilocnum */
+
+		/* Pop the special registers */
+	nb_args = opop()->it_uint32;		/* This is the nummber of arguments */
+	nb_locals = opop()->it_uint32;	/* Add the number of locals */
+	opop(); /* Remove Result */
+	opop(); /* Remove Current */
 
 	/* Using npop() may truncate the unused chunks at the tail of the stack,
 	 * which may free the chunk where results is stored if there where a lot
@@ -5629,7 +5622,7 @@ rt_private void pop_registers(void)
 	 */
 	memcpy (&saved_result, iresult, ITEM_SZ);
 
-	npop(nb_items);			/* Remove items and eventually shrink stack */
+	npop(nb_locals + nb_args);			/* Remove items and eventually shrink stack */
 
 	if (saved_result.type != SK_VOID) {	/* If Result is needed */
 		result = iget();				/* Get a new result record */
@@ -5857,9 +5850,9 @@ rt_public EIF_TYPED_VALUE *opop(void)
 	return op_stack.st_top;
 }
 
-rt_private void npop(register int nb_items)
+rt_private void npop(rt_uint_ptr nb)
 {
-	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
+	/* Removes 'nb' from the operational stack. Occasionaly, we also
 	 * try to truncate the unused chunks from the tail of the stack. We do
 	 * not do that in opop() because that would create an overhead...
 	 */
@@ -5867,7 +5860,6 @@ rt_private void npop(register int nb_items)
 	EIF_TYPED_VALUE *top;			/* Current top of operational stack */
 	struct stochunk *s;		/* To walk through stack chunks */
 	EIF_TYPED_VALUE *arena;		/* Base address of current chunk */
-	rt_int_ptr nb = nb_items;
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. That would indeed make popping very efficient.
@@ -5891,16 +5883,19 @@ rt_private void npop(register int nb_items)
 	top = op_stack.st_top;
 	for (s = op_stack.st_cur; nb > 0; /* empty */) {
 		arena = s->sk_arena;
-		nb -= top - arena;
-		if (nb <= 0) {			/* Have we gone too far? */
-			top = arena - nb;		/* Yes, reset top correctly */
-			break;						/* Done */
+			/* Are we in the same chunk? */
+		if (nb <= (rt_uint_ptr) (top - arena)) {
+			top -= nb;
+			break;
+		} else {
+			nb -= top - arena;
+			s = s->sk_prev;					/* Look at previous chunk */
+			if (s) {
+				top = s->sk_end;			/* Top at the end of previous chunk */
+			} else {
+				break;						/* We reached the bottom */
+			}
 		}
-		s = s->sk_prev;					/* Look at previous chunk */
-		if (s)
-			top = s->sk_end;			/* Top at the end of previous chunk */
-		else
-			break;						/* We reached the bottom */
 	}
 		
 #ifdef MAY_PANIC

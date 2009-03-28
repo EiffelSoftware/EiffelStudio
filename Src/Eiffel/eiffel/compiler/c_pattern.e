@@ -285,9 +285,9 @@ feature -- Pattern generation
 							if (result.type != SK_REF) {
 									it->type = SK_REF;
 									it->it_ref = RTBU(result);
-								}
-								else
+								} else {
 									*it = result;
+								}
 						]"
 					)
 				else
@@ -327,7 +327,9 @@ feature -- Pattern generation
 			buffer.put_string ("EIF_TYPED_VALUE *it;")
 			generate_toi_push (buffer)
 			buffer.put_new_line
-			buffer.put_string ("xinterp(IC);")
+			buffer.put_string ("xinterp(IC, ")
+			buffer.put_integer (argument_count + 1)
+			buffer.put_two_character (')', ';')
 			if result_type.is_pointer then
 					-- Mask type-specific bits of the type tag
 					-- because they are not expected on the C side.
@@ -393,7 +395,7 @@ feature -- Pattern generation
 				buffer.put_character (';')
 				i := i + 1;
 			end;
-			buffer.put_string ("%
+			buffer.put_string ("%N%
 				%%Tit = iget();%N%
 				%%Tit->type = SK_REF;%N%
 				%%Tit->it_ref = Current;%N");

@@ -31,7 +31,7 @@ feature -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "Unexpected attribute found in {1}"
+			Result := "Unexpected attribute found in {1}. Doesn't conform to tag or is double."
 		end
 
 note

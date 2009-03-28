@@ -31,7 +31,7 @@ feature -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "Undefined tag found in {1}. Include taglib or just don't use it!"
+			Result := "Undefined tag found: %"{1}%"."
 		end
 
 note

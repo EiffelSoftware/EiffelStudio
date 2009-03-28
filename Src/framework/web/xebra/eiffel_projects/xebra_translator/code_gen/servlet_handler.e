@@ -38,7 +38,7 @@ feature -- Processing
 				l_response := l_servlet.handle_request (a_request)
 			else
 				create l_response.make
-				l_response.text.put_string ("Application not found: %"" + a_request.target_uri + "%"")
+				l_response.html.put_string ("Application not found: %"" + a_request.target_uri + "%"")
 			end
 
 		  -- 	a_socket.independent_store (handle_servlet(a_request, a_request_handler))

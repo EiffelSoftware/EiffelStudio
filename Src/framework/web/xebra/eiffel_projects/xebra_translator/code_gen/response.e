@@ -1,6 +1,6 @@
 note
 	description: "[
-		The {RESPONSE} contains all the data which is sent back to the requester (web application).
+		The {RESPONSE} contains all the data which is sent back to the http server (the requester).
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,35 +11,72 @@ class
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- Creates current
+		do
+			create cookie_orders.make
+			create file.make
+			create html.make (file)
+		end
+
 feature -- Access
 
-	text: INDENDATION_STREAM assign set_text
-			-- Reponse text (xhtml)
+feature {NONE} -- Constants
+
+	Html_start: STRING = "#H#"
+
+feature -- Access
+
+
+	html: INDENDATION_STREAM
+			-- Reponse html (xhtml)
 
 	file: SIMPLE_OUTPUTER
 			-- use another stream!
 
-feature -- Initialization
-
-	make
-			--
-		do
-			create file.make
-			create text.make (file)
-		end
+	cookie_orders: LINKED_LIST [XH_COOKIE]
+			-- A cookie order will generate a cookie in the browser
+			-- once the response has been processed
 
 feature -- Element change
 
-	set_text (a_text: INDENDATION_STREAM)
+	set_html (a_html: INDENDATION_STREAM)
 			-- Sets the text
 		do
-			text := a_text
+			html := a_html
+		ensure
+			html_set: html = a_html
 		end
 
-	get_text: STRING
+	put_cookie_order (a_cookie: XH_COOKIE)
+			-- Adds a cookie
 		do
-			Result := file.get_text
+			cookie_orders.put_right (a_cookie)
+		ensure
+			cookie_order_bigger: cookie_orders.count > old cookie_orders.count
 		end
+
+	render_to_string: STRING
+			-- Renders to Response object to a string that can be sent to the mod_xebra
+		do
+			Result := ""
+			from
+				cookie_orders.start
+			until
+				cookie_orders.after
+			loop
+				Result := Result +  cookie_orders.item.render_to_string
+				cookie_orders.forth
+			end
+
+			Result := Result + Html_start + "<html><body><h1>default response html text. remove this from RESPONSE.render_to_string</h1></body></html>" -- + file.get_text
+		ensure
+			result_not_empty: not Result.is_empty
+		end
+
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

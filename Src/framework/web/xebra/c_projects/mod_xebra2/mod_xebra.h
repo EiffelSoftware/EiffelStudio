@@ -29,6 +29,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+#include <time.h>
+
 #include "rt_assert.h"
 #include "eif_eiffel.h"
 
@@ -66,6 +68,7 @@
 /*======= PROTOCOL =======*/
 /* The following strings represent delimiters for the message string that is sent to the server */
 
+/* Send message */
 #define POSTP "#P#"
 #define GETP "#G#"
 #define HEADERS_IN "#HI#"
@@ -74,6 +77,11 @@
 #define TABLECSEP "#$#"
 #define TABLERSEP "#%#"
 #define TABLEEND "#E#"
+
+/* Return message */
+#define COOKIE_START "#C#"
+#define COOKIE_END "#CE"
+#define HTML_START "#H#"
 
 /* MAX_POST_SIZE:
  *	Defines a max size for reading the POST arguments
@@ -240,6 +248,65 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
  doc:    </routine>
  */
 static void register_hooks (apr_pool_t* pool);
+
+
+
+/**
+ * Write an RFC2109 compliant cookie.
+ *
+ * @param r The request
+ * @param name The name of the cookie.
+ * @param val The value to place in the cookie.
+ * @param attrs The string containing additional cookie attributes. If NULL, the
+ *              DEFAULT_ATTRS will be used.
+ * @param maxage If non zero, a Max-Age header will be added to the cookie.
+ * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
+ *            to which the cookies should be added.
+ */
+apr_status_t cookie_write(request_rec * r, const char *name, const char *val,
+                                         const char *attrs, long maxage, ...);
+
+/**
+ * Write an RFC2965 compliant cookie.
+ *
+ * @param r The request
+ * @param name2 The name of the cookie.
+ * @param val The value to place in the cookie.
+ * @param attrs2 The string containing additional cookie attributes. If NULL, the
+ *               DEFAULT_ATTRS will be used.
+ * @param maxage If non zero, a Max-Age header will be added to the cookie.
+ * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
+ *            to which the cookies should be added.
+ */
+apr_status_t cookie_write2(request_rec * r, const char *name2, const char *val,
+                                          const char *attrs2, long maxage, ...);
+
+/**
+ * Remove an RFC2109 compliant cookie.
+ *
+ * @param r The request
+ * @param name The name of the cookie.
+ * @param attrs The string containing additional cookie attributes. If NULL, the
+ *              CLEAR_ATTRS will be used.
+ * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
+ *            to which the cookies should be added.
+ */
+apr_status_t cookie_remove(request_rec * r, const char *name, const char *attrs, ...);
+
+/**
+ * Remove an RFC2965 compliant cookie.
+ *
+ * @param r The request
+ * @param name2 The name of the cookie.
+ * @param attrs2 The string containing additional cookie attributes. If NULL, the
+ *               CLEAR_ATTRS will be used.
+ * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
+ *            to which the cookies should be added.
+ */
+apr_status_t cookie_remove2(request_rec * r, const char *name2, const char *attrs2, ...);
+
+
+
 
 /* The array of command_rec structures is passed to the httpd core by this module to declare a new configuration directive. */
 static const command_rec xebra_cmds[] = { AP_INIT_TAKE1 ("XebraServer_port",

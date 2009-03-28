@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
 				-- Read subp_env
-			subprocess_environment := parse_table (l_s, Key_subp_env, Key_t_key, Key_t_value, Key_t_end)
+			environment_vars := parse_table (l_s, Key_subp_env, Key_t_key, Key_t_value, Key_t_end)
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
 				-- Read POST/GET params
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 		end
 
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	Key_post_params: STRING = "#P#"
 	Key_get_params: STRING = "#G#"
@@ -106,8 +106,8 @@ feature -- Access
 	headers_out: HASH_TABLE [STRING, STRING]
 		-- Headers_out as provided by the http server	
 
-	subprocess_environment: HASH_TABLE [STRING, STRING]
-		-- subprocess_env as provided by the http server		
+	environment_vars: HASH_TABLE [STRING, STRING]
+		-- subprocess environment variables as provided by the http server		
 
 feature {NONE} -- Internal processing
 

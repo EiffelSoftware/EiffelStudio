@@ -16,6 +16,12 @@
  */
 #define REVISION "$Revision$"
 
+#define SET_COOKIE "Set-Cookie"
+#define SET_COOKIE2 "Set-Cookie2"
+#define DEFAULT_ATTRS "HttpOnly;Version=1"
+#define CLEAR_ATTRS "Version=1"
+#define COOKIE_LOG_PREFIX "cookie"
+
 #include "mod_xebra.h"
 
 /* For description of methods see mod_xebra.h */
@@ -206,13 +212,14 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Error reading from data!", r);
 			return rv;
 		}
-		message = apr_pstrcat (r->pool, message, POSTP, "&", post_buf, TABLEEND,  NULL);
-	} else if (r->args != NULL ) {
-		message = apr_pstrcat (r->pool, message, GETP, "&", r->args, TABLEEND,  NULL);
+		message = apr_pstrcat (r->pool, message, POSTP, "&", post_buf,
+				TABLEEND, NULL);
+	} else if (r->args != NULL) {
+		message = apr_pstrcat (r->pool, message, GETP, "&", r->args, TABLEEND,
+				NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, GETP, TABLEEND,  NULL);
+		message = apr_pstrcat (r->pool, message, GETP, TABLEEND, NULL);
 	}
-
 
 	//	message = apr_pstrcat (r->pool, message, "#END#", NULL);
 
@@ -285,16 +292,78 @@ static int xebra_handler (request_rec* r)
 
 	DEBUG ("All receiving ok.");
 
-	/* display received message */
-	ap_rputs (rmsg_buf, r);
+	rv = handle_response_message (r, rmsg_buf);
+	if (rv != APR_SUCCESS)
+		ap_rputs ("Error reading message from XEbra Server. See error log.", r);
+
 	/* display module revision */
 	ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
 	ap_rputs (REVISION, r);
 	ap_rputs ("</small></i>", r);
-	shutdown (sockfd, 2);
 
+	/* Close sockets and quit */
+	shutdown (sockfd, 2);
 	close (sockfd);
 	return OK;
+}
+
+apr_status_t handle_response_message (request_rec* r, char* message)
+{
+	char* msg_copy;
+	char* cookie_order_start;
+	char* cookie_order_end;
+	char* html;
+
+	msg_copy = apr_pstrndup (r->pool, message, strlen (message));
+
+	DEBUG2 ("Extracting cookies...");
+	/* Extract cookie orders */
+	//do
+	//{
+		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
+		if (cookie_order_start != NULL) {
+			cookie_order_start += strlen (COOKIE_START);
+			cookie_order_end = ap_strstr_c (msg_copy, COOKIE_END);
+			if (cookie_order_end != NULL) {
+				cookie_order_start[cookie_order_end - cookie_order_start] = '\0';
+				apr_table_add (r->headers_out, "Set-Cookie", cookie_order_start);
+				apr_table_add (r->err_headers_out, "Set-Cookie",
+						cookie_order_start);
+			} else {
+				ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+						"Message from xebra server contains a cookie start "
+							"tag '%s' without a cookie end tag '%s'", COOKIE_START,
+						COOKIE_END);
+				return APR_EGENERAL;
+			}
+		}
+		msg_copy = cookie_order_end;
+	//}while (cookie_order_start != NULL);
+
+
+
+	//apr_table_add (r->headers_out, "Set-Cookie", "pingu1=pangu1;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
+	//apr_table_add (r->headers_out, "Set-Cookie", "pingu2=pangu2;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
+
+
+	DEBUG2 ("Extracting html...");
+	/* Extract html code */
+	html = ap_strstr_c (message, HTML_START);
+	if (html == NULL) {
+		/* no html found */
+		ap_log_rerror (
+				APLOG_MARK,
+				APLOG_ERR,
+				0,
+				r,
+				"Message from xebra server does not contain a html start tag '%s'",
+				HTML_START);
+		return APR_EGENERAL;
+	}
+	html += strlen (HTML_START);
+	ap_rputs (html, r);
+	DEBUG2 ("Done.");
+	return APR_SUCCESS;
 }
 
 EIF_INTEGER_32 byteArrayToInt (char * b)
@@ -538,6 +607,78 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 	DEBUG ("Completed recieving message.");
 
 	return msg_buf_strlength;
+}
+
+/**
+ * Write an RFC2109 compliant cookie.
+ *
+ * @param r The request
+ * @param name The name of the cookie.
+ * @param val The value to place in the cookie.
+ * @param attrs The string containing additional cookie attributes. If NULL, the
+ *              DEFAULT_ATTRS will be used.
+ * @param maxage If non zero, a Max-Age header will be added to the cookie.
+ */
+
+apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
+		const char *attrs, long maxage, ...)
+{
+	char *buffer;
+	char *rfc2109;
+	apr_table_t *t;
+	va_list vp;
+
+	/* handle expiry */
+	buffer = "";
+	if (maxage) {
+		buffer = apr_pstrcat (r->pool, "Max-Age=", apr_ltoa (r->pool, maxage),
+				";", NULL);
+	}
+
+	/* create RFC2109 compliant cookie */
+	rfc2109 = apr_pstrcat (r->pool, name, "=", val, ";", buffer, attrs
+			&& strlen (attrs) > 0 ? attrs : DEFAULT_ATTRS, NULL);
+	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
+	"user '%s' set cookie: '%s'", r->user, rfc2109);
+
+	/* write the cookie to the header table(s) provided */
+	va_start (vp, maxage);
+	while ((t = va_arg(vp, apr_table_t *))) {
+		apr_table_addn (t, SET_COOKIE, rfc2109);
+	}
+	va_end (vp);
+
+	return APR_SUCCESS;
+
+}
+
+/**
+ * Remove an RFC2109 compliant cookie.
+ *
+ * @param r The request
+ * @param name The name of the cookie.
+ */
+apr_status_t cookie_remove (request_rec * r, const char *name,
+		const char *attrs, ...)
+{
+	apr_table_t *t;
+	va_list vp;
+
+	/* create RFC2109 compliant cookie */
+	char *rfc2109 = apr_pstrcat (r->pool, name, "=;Max-Age=0;", attrs ? attrs
+			: CLEAR_ATTRS, NULL);
+	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
+	"user '%s' removed cookie: '%s'", r->user, rfc2109);
+
+	/* write the cookie to the header table(s) provided */
+	va_start (vp, attrs);
+	while ((t = va_arg(vp, apr_table_t *))) {
+		apr_table_addn (t, SET_COOKIE, rfc2109);
+	}
+	va_end (vp);
+
+	return APR_SUCCESS;
+
 }
 
 static void register_hooks (apr_pool_t* pool)

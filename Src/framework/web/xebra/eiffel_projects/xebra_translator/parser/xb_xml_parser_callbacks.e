@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create XB_XML_PARSER_CALLBACKS.
 		do
-			create root_tag.make ("html", HTML_TAG_NAME)
+			create root_tag.make ("html", Html_tag_name)
 			create tag_stack.make (10)
 			create html_buf.make_empty
 			create {ARRAYED_LIST [STRING]} controller_calls.make (2)
@@ -34,16 +34,16 @@ feature -- Constants
 	Tag_keyword: STRING = "xeb"
 		-- temp
 
-	HTML_TAG_NAME: STRING = "XEB_HTML_TAG"
+	Html_tag_name: STRING = "XEB_HTML_TAG"
 
-	READING_HTML: INTEGER = 0
-	READING_TAG: INTEGER = 1
+	Reading_html: INTEGER = 0
+	Reading_tag: INTEGER = 1
 
 feature -- Access
 
 	state: INTEGER
-		-- 0 READING_HTML
-		-- 1 READING_TAG
+		-- 0 Reading_html
+		-- 1 Reading_tag
 
 	html_buf: STRING
 		-- Stores html text until a tag is created from it
@@ -121,6 +121,9 @@ feature -- Meta
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
 				-- We don't need to output comments
+			if state = Reading_tag then
+				state := Reading_html
+			end
 			html_buf.append ("<!--" + a_content + "-->")
 		end
 
@@ -134,21 +137,22 @@ feature -- Tag
 			l_prefix: STRING
 			l_local_part: STRING
 			l_tmp_tag: TAG_ELEMENT
+			l_class_name: STRING
 		do
 			if attached a_prefix then
 				if a_prefix.is_equal (Tag_keyword) then
-					if state = READING_HTML then
+					if state = Reading_html then
 						create_html_tag_put
 					end
-					state := READING_TAG
+					state := Reading_tag
 				else
-					state := READING_HTML
+					state := Reading_html
 				end
 
 				l_prefix := a_prefix + ":"
 			else
 				l_prefix := ""
-				state := READING_HTML
+				state := Reading_html
 			end
 
 			if attached a_local_part then
@@ -157,19 +161,22 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			if state = READING_TAG then
-				if taglib.contains (l_local_part) then
-					create l_tmp_tag.make (a_local_part, taglib.get_class_for_name (l_local_part.as_upper))
-					tag_stack.item.put_subtag (l_tmp_tag)
-					tag_stack.put (l_tmp_tag)
-				else
-					error_manager.add_warning (create {ERROR_UNDEFINED_TAG}.make (["tag: " + l_local_part]))
+			if state = Reading_tag then
+				l_class_name := taglib.get_class_for_name (l_local_part.as_upper)
+				if  l_class_name.is_empty then
+					l_class_name := Html_tag_name
 				end
-			elseif state = READING_HTML then
+				create l_tmp_tag.make (a_local_part, l_class_name)
+				tag_stack.item.put_subtag (l_tmp_tag)
+				tag_stack.put (l_tmp_tag)
+				if not taglib.contains (l_local_part) then
+					error_manager.add_warning (create {ERROR_UNDEFINED_TAG}.make ([l_local_part]))
+				end
+			elseif state = Reading_html then
 				html_buf.append ("<" + l_prefix +  l_local_part)
 			end
 		ensure then
-			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = READING_HTML
+			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = Reading_html
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
@@ -204,23 +211,29 @@ feature -- Tag
 
 				-- all variables initialized
 
-			if state = READING_TAG then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
-
-				if not taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
+			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
+				if not taglib.contains (tag_stack.item.id) then
+					l_value := "undefined tag: '" + tag_stack.item.id + "'"
+					l_local_part := "text"
+				elseif taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
+					if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
+						process_dynamic_tag_attribute (l_local_part, l_value)
+					else
+						if tag_stack.item.has_attribute (l_local_part) then
+							error_manager.add_warning (create {ERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+						else
+							tag_stack.item.put_attribute (l_local_part, l_value)
+							if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
+								controller_calls.extend (l_value)
+							elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
+								controller_calls_with_result.extend (l_value)
+							end
+						end
+					end
+				else
 					error_manager.add_warning (create {ERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
 				end
-
-				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
-					process_dynamic_tag_attribute (l_local_part, l_value)
-				else
-					if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
-						controller_calls.extend (l_value)
-					elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
-						controller_calls_with_result.extend (l_value)
-					end
-					tag_stack.item.put_attribute (l_local_part, l_value)
-				end
-			elseif state = READING_HTML then
+			elseif state = Reading_html then
 				if not l_prefix.is_empty then
 					l_prefix := l_prefix + ":"
 				end
@@ -237,7 +250,7 @@ feature -- Tag
 	on_start_tag_finish
 			-- End of start tag.
 		do
-			if state = READING_HTML then
+			if state = Reading_html then
 				html_buf.append (">")
 			end
 		end
@@ -295,7 +308,7 @@ feature {NONE} -- Implementation
 			l_tag: TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", HTML_TAG_NAME)
+				create l_tag.make ("html", Html_tag_name)
 				tag_stack.item.put_subtag (l_tag)
 			end
 		end
@@ -306,7 +319,7 @@ feature {NONE} -- Implementation
 			l_tag: TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", HTML_TAG_NAME)
+				create l_tag.make ("html", Html_tag_name)
 				l_tag.put_attribute ("text", s)
 				l_tag.multiline_argument := True
 				tag_stack.item.put_subtag (l_tag)

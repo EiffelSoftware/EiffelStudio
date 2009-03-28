@@ -99,10 +99,12 @@ feature -- Properties
 			if system.platform /= 0 then
 				Result := system.platform
 			else
-				if l_pf.is_unix then
-					Result := pf_unix
-				elseif l_pf.is_windows then
+				if l_pf.is_windows then
 					Result := pf_windows
+				elseif l_pf.is_mac then
+					Result := pf_mac
+				elseif l_pf.is_vxworks then
+					Result := pf_vxworks
 				else
 					Result := pf_unix
 				end

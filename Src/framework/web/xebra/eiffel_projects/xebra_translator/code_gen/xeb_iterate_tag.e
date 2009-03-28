@@ -1,37 +1,64 @@
 note
-	description: "Summary description for {CONSTANT_ATTRIBUTE}."
+	description: "Summary description for {XEB_ITERATE_TAG}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSTANT_ATTRIBUTE
+	XEB_ITERATE_TAG [G -> LIST_ITEM_I]
 
 inherit
-	TAG_ATTRIBUTE
+	TAG_SERIALIZER [G]
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_constant: STRING)
-	 	do
-			constant := a_constant
+	make
+		do
+			make_base
+			create {CONSTANT_ATTRIBUTE} times.make ("")
 		end
 
 feature {NONE} -- Access
 
-	constant: STRING
-			-- The constant which represents this class
+	list: TAG_ATTRIBUTE
+			-- The items over which we want to iterate
+	variable: TAG_ATTRIBUTE
+			-- Name of the variable
 
-feature {NONE} -- Basic functionality
+feature {NONE} -- Implementation
 
-	value (servlet: SERVLET): STRING
+	output (parent: SERVLET buf: INDENDATION_STREAM; variables: LIST [ANY])
 			-- <Precursor>
 		do
-			Result := constant
+			if attached {LIST [G]} list.value as l_list then
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					if attached l_list.item as l_item then
+						
+					end
+					l_list.forth
+				end
+			end
+
 		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+			-- <Precursor>
+		do
+			if id.is_equal ("list") then
+				list := a_attribute
+			end
+			if id.is_equal ("variable") then
+				variable := a_attribute
+			end
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

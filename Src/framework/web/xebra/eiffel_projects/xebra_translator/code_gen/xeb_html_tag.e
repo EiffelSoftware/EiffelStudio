@@ -10,7 +10,7 @@ class
 inherit
 	TAG_SERIALIZER
 		redefine
-			output
+			generate
 		end
 
 create
@@ -21,24 +21,24 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} text.make ("")
+			text := ""
 		end
 
 feature {NONE} -- Access
 
-	text: TAG_ATTRIBUTE
+	text: STRING
 			-- The XHTML content
 
 feature {NONE}
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
+	generate (a_feature: FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			buf.append_string (text.value (parent))
-			output_children (parent, buf)
+			write_string_to_result (text, a_feature)
+			generate_children (a_feature)
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal("text") then

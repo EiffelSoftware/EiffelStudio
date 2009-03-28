@@ -31,7 +31,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
+	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
 			-- <Precursor>
 		do
 			buf.append_string (feature_name.value(parent))

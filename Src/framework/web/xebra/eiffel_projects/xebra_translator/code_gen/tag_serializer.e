@@ -31,7 +31,7 @@ feature -- Access
 			child_has_been_added: children.count = old children.count + 1
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 		require
 			id_is_not_empty: not id.is_empty
 		deferred
@@ -39,21 +39,26 @@ feature -- Access
 
 feature -- Implementation
 
-	output_children (a_parent: SERVLET; buf: INDENDATION_STREAM)
+	generate_children (a_feature: FEATURE_ELEMENT)
 		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.output (a_parent, buf)
+				children.item.generate (a_feature)
 				children.forth
 			end
 		end
 
-	output (a_parent: SERVLET; buf: INDENDATION_STREAM)
-			-- Writes to the XHTML result.
+	generate (a_feature: FEATURE_ELEMENT)
+		deferred
+		end
+
+	write_string_to_result (a_text: STRING; a_feature: FEATURE_ELEMENT)
+			--
 		do
+			a_feature.append_expression ("Result.append(%"[%N" + a_text + "%N]%")")
 		end
 
 note

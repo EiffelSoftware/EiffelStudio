@@ -1,37 +1,50 @@
 note
-	description: "Summary description for {CONSTANT_ATTRIBUTE}."
+	description: "Summary description for {XEB_REDIRECT_TAG}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSTANT_ATTRIBUTE
+	XEB_REDIRECT_TAG [G]
 
 inherit
-	TAG_ATTRIBUTE
+	TAG_SERIALIZER
+		redefine
+			output
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_constant: STRING)
-	 	do
-			constant := a_constant
+	make
+		do
+			make_base
+			create {CONSTANT_ATTRIBUTE} url.make ("")
 		end
 
 feature {NONE} -- Access
 
-	constant: STRING
-			-- The constant which represents this class
+	url: TAG_ATTRIBUTE
+			-- The XHTML content
 
-feature {NONE} -- Basic functionality
+feature {NONE}
 
-	value (servlet: SERVLET): STRING
+	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
 			-- <Precursor>
 		do
-			Result := constant
+			buf.append_string ("<meta HTTP-EQUIV=%"REFRESH%" content=%"0; url=" + url.value (parent) + "%"")
 		end
+
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+			-- <Precursor>
+		do
+			if id.is_equal("url") then
+				url := a_attribute
+			end
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -10,7 +10,7 @@ class
 inherit
 	TAG_SERIALIZER
 		redefine
-			output
+			generate
 		end
 
 create
@@ -21,33 +21,31 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} times.make ("")
+			times := "0"
 		end
 
 feature {NONE} -- Access
 
-	times: TAG_ATTRIBUTE
+	times: STRING
 			-- Number of repetitions of the body
 
 feature {NONE} -- Implementation
 
-	output (parent: SERVLET buf: INDENDATION_STREAM)
+	generate (a_feature: FEATURE_ELEMENT)
 			-- <Precursor>
-		local
-			i, n: INTEGER
 		do
-			n := times.value (parent).to_integer
-			from
-				i := 1
-			until
-				i > n
-			loop
-				output_children (parent, buf)
-				i := i + 1
-			end
+			a_feature.append_local ("i", "NATURAL")
+			a_feature.append_expression ("from")
+			a_feature.append_expression ("i := 1")
+			a_feature.append_expression ("until")
+			a_feature.append_expression ("i > " + times)
+			a_feature.append_expression ("loop")
+			generate_children (a_feature)
+			a_feature.append_expression ("i := i + 1")
+			a_feature.append_expression ("end")
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal ("times") then
@@ -87,3 +85,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
+

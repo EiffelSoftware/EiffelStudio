@@ -76,6 +76,11 @@ feature -- Access
 			variables.extend (a_variable)
 		end
 
+	add_variable_by_name_type (a_name, a_type: STRING)
+		do
+			add_variable (create {VARIABLE_ELEMENT}.make (a_name, a_type))
+		end
+
 feature -- Implementation
 
 	serialize (buf: INDENDATION_STREAM)

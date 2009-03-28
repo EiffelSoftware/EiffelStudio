@@ -5,10 +5,10 @@ note
 	revision: "$Revision$"
 
 class
-	XEB_DISPLAY_TAG
+	XEB_DISPLAY_TAG [G]
 
 inherit
-	TAG_SERIALIZER
+	TAG_SERIALIZER [G]
 		redefine
 			output
 		end
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Implementation
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM)
+	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
 			-- <Precursor>
 		do
 			buf.append_string (parent.call_on_controller_with_result (feature_name.value (parent)))

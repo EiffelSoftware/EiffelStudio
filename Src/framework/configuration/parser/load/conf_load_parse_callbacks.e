@@ -46,6 +46,9 @@ feature {NONE} -- Initialization
 			create overrides_list.make (0)
 			create current_content.make_empty
 			factory := a_factory
+			last_undefined_tag_number := undefined_tag_start
+			create current_element_under_note.make
+			create current_attributes_undefined.make (0)
 		ensure
 			factory_set: factory = a_factory
 		end
@@ -60,8 +63,8 @@ feature -- Callbacks
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
 			l_tag: INTEGER
+			l_elem, l_parent_elem: CONF_NOTE_ELEMENT
 		do
 			if not is_error then
 				a_local_part.to_lower
@@ -73,9 +76,21 @@ feature -- Callbacks
 				if current_tag.is_empty then
 					current_tag.extend (t_none)
 				end
-				l_trans := state_transitions_tag.item (current_tag.item)
-				if l_trans /= Void then
-					l_tag := l_trans.item (a_local_part)
+
+				l_tag := tag_from_state_transitions (current_tag.item, a_local_part)
+					-- Record levels of note element as a flag we allow any content in note.
+
+				if note_level = 0 and then l_tag = t_note then
+						-- Root element
+					create l_elem.make (a_local_part)
+					current_element_under_note.extend (l_elem)
+				elseif note_level > 0 then
+						-- Subelements
+					create l_elem.make (a_local_part)
+					l_parent_elem := current_element_under_note.item
+					l_parent_elem.extend (l_elem)
+					l_elem.set_parent (l_parent_elem)
+					current_element_under_note.extend (l_elem)
 				end
 
 				if l_tag = 0 then
@@ -105,39 +120,39 @@ feature -- Callbacks
 					a_local_part.is_case_insensitive_equal ("schemaLocation")
 				then
 					a_local_part.to_lower
-						-- check if the attribute is valid for the current state
-					l_attr := tag_attributes.item (current_tag.item)
-					if l_attr /= Void then
-						l_attribute := l_attr.item (a_local_part)
-					end
-					if current_attributes = Void then
-						create current_attributes.make (1)
-					end
-					if current_attributes_undefined = Void then
-						create current_attributes_undefined.make (1)
-					end
-					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-							-- Check and put defined attributes in `current_attributes'.
-						if not a_value.is_empty then
-							a_value.replace_substring_all (lt_entity, lt_string)
-							a_value.replace_substring_all (gt_entity, gt_string)
-							current_attributes.force (a_value, l_attribute)
-						else
-							set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
+
+					if note_level = 0 then
+							-- check if the attribute is valid for the current state
+						l_attr := tag_attributes.item (current_tag.item)
+						if l_attr /= Void then
+							l_attribute := l_attr.item (a_local_part)
 						end
-					elseif tag_with_undefined_attributes.has (current_tag.item) and then not current_attributes_undefined.has (a_local_part) then
+						if current_attributes = Void then
+							create current_attributes.make (1)
+						end
+						if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
+								-- Check and put defined attributes in `current_attributes'.
+							if not a_value.is_empty then
+								a_value.replace_substring_all (lt_entity, lt_string)
+								a_value.replace_substring_all (gt_entity, gt_string)
+								current_attributes.force (a_value, l_attribute)
+							else
+								set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
+							end
+						else
+							if is_unknown_version then
+									-- unknown version, just add a warning
+								set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
+							else
+									-- known version, this is an error
+								set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
+							end
+						end
+					else
 							-- Put undefined attributes in `current_attributes_undefined'.
 						a_value.replace_substring_all (lt_entity, lt_string)
 						a_value.replace_substring_all (gt_entity, gt_string)
 						current_attributes_undefined.force (a_value, a_local_part)
-					else
-						if is_unknown_version then
-								-- unknown version, just add a warning
-							set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
-						else
-								-- known version, this is an error
-							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
-						end
 					end
 				end
 			end
@@ -226,8 +241,12 @@ feature -- Callbacks
 				when t_mapping then
 					process_mapping_attributes
 				when t_note then
-					process_note_attributes
+					process_element_under_note
 				else
+						-- Process attributs of elements under the first level of note.
+					if note_level > 0 then
+						process_element_under_note
+					end
 				end
 				current_attributes.clear_all
 				current_attributes_undefined.clear_all
@@ -240,6 +259,7 @@ feature -- Callbacks
 			l_group: CONF_GROUP
 			l_error: CONF_ERROR_GRUNDEF
 			l_e_ov: CONF_ERROR_OVERRIDE
+			l_element: CONF_NOTE_ELEMENT
 		do
 			if not is_error then
 				current_content.left_adjust
@@ -257,7 +277,12 @@ feature -- Callbacks
 					when t_include then
 						process_include_content
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_content (current_content))
+						if note_level > 0 then
+							l_element := current_element_under_note.item
+							l_element.set_content (current_content)
+						else
+							set_parse_error_message (conf_interface_names.e_parse_invalid_content (current_content))
+						end
 					end
 					create current_content.make_empty
 				end
@@ -356,6 +381,12 @@ feature -- Callbacks
 				when t_class_option then
 					current_option := Void
 				else
+					if note_level > 0 then
+						if note_level = 1 then
+							process_note
+						end
+						current_element_under_note.remove
+					end
 				end
 				current_tag.remove
 			end
@@ -1588,26 +1619,6 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
-	process_note_attributes
-			-- Process attributes of note tag.
-		require
-			system_or_group_or_target: last_system /= Void or current_group /= Void or current_target /= Void
-		local
-			l_attrs: like current_attributes_undefined
-		do
-				-- All notes attributes are undefined.
-			l_attrs := current_attributes_undefined
-			if l_attrs /= Void then
-				if current_group /= Void then
-					current_group.add_note (l_attrs.twin)
-				elseif current_target /= Void then
-					current_target.add_note (l_attrs.twin)
-				elseif last_system /= Void then
-					last_system.add_note (l_attrs.twin)
-				end
-			end
-		end
-
 feature {NONE} -- Implementation content processing
 
 	process_description_content
@@ -1693,9 +1704,112 @@ feature {NONE} -- Implementation
 			-- The values of the current attributes.
 			-- Defined attributes.
 
+feature {NONE} -- Note Implementation
+
+	process_element_under_note
+			-- Process attributes of an element under note.
+		require
+			in_note: note_level > 0
+		local
+			l_attrs: like current_attributes_undefined
+			l_element: CONF_NOTE_ELEMENT
+		do
+				-- All notes attributes are undefined.
+			l_attrs := current_attributes_undefined
+			l_element := current_element_under_note.item
+			if l_attrs /= Void then
+				l_element.set_attributes (l_attrs.twin)
+			end
+		end
+
+	process_note
+			-- Process note element
+		require
+			group_or_target_or_system: current_group /= Void or current_target /= Void or last_system /= Void
+			root_element: note_level = 1
+		local
+			l_note: CONF_NOTE_ELEMENT
+		do
+			l_note := current_element_under_note.item
+			if current_group /= Void then
+				if current_group.note_node = Void then
+					current_group.set_note_node (l_note)
+				else
+					set_parse_warning_message (conf_interface_names.e_parse_more_than_one_note (current_group.name))
+				end
+			elseif current_target /= Void then
+				if current_target.note_node = Void then
+					current_target.set_note_node (l_note)
+				else
+					set_parse_warning_message (conf_interface_names.e_parse_more_than_one_note (current_target.name))
+				end
+			elseif last_system /= Void then
+				if last_system.note_node = Void then
+					last_system.set_note_node (l_note)
+				else
+					set_parse_warning_message (conf_interface_names.e_parse_more_than_one_note (last_system.name))
+				end
+			end
+		end
+
+	note_level: INTEGER
+			-- Level of elements under note
+		do
+			Result := current_element_under_note.count
+		end
+
+	tag_from_state_transitions (a_tag: INTEGER; a_local_part: STRING): INTEGER
+			-- Get number presentation from current tag state transitions.
+		require
+			a_tag_greater_than_zero: a_tag > 0
+			a_local_part_not_void: a_local_part /= Void
+		local
+			l_trans: HASH_TABLE [INTEGER, STRING]
+			l_tag: INTEGER
+			l_tags_undef: like tags_undefined
+		do
+			if note_level = 0 then
+				l_trans := state_transitions_tag.item (a_tag)
+				if l_trans /= Void then
+					Result := l_trans.item (a_local_part)
+				end
+			else
+					-- In note, we allow anything.
+					-- Record the tag in `tags_undefined' if not found.
+				l_tags_undef := tags_undefined
+				if l_tags_undef /= Void then
+					l_tag := l_tags_undef.item (a_local_part)
+				else
+					create l_tags_undef.make (2)
+					tags_undefined := l_tags_undef
+				end
+				if l_tag = 0 then
+					l_tag := new_undefined_tag_number
+					l_tags_undef.force (l_tag, a_local_part)
+				end
+				Result := l_tag
+			end
+		end
+
+	new_undefined_tag_number: like last_undefined_tag_number
+			-- Return a new number for undefined tags.
+		do
+			Result := last_undefined_tag_number + 1
+			last_undefined_tag_number := Result
+		end
+
 	current_attributes_undefined: HASH_TABLE [STRING, STRING]
 			-- The values of the current attributes.
 			-- Undefined attributes.
+
+	current_element_under_note: LINKED_STACK [CONF_NOTE_ELEMENT]
+			-- The stack of elements under note element.
+
+	last_undefined_tag_number: INTEGER
+			-- Last number of undefined tag.
+
+	tags_undefined: HASH_TABLE [INTEGER, STRING]
+			-- Allowed undefined tags found dynamically
 
 feature {NONE} -- Implementation state transitions
 
@@ -2294,6 +2408,9 @@ feature {NONE} -- Implementation constants
 	at_is_void_safe: INTEGER = 1061
 	at_syntax_level: INTEGER = 1062
 
+		-- Undefined tag starting number
+	undefined_tag_start: INTEGER = 100000
+
 feature -- Assertions
 
 	has_resolved_namespaces: BOOLEAN = True
@@ -2308,7 +2425,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2321,21 +2438,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

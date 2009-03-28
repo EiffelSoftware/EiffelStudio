@@ -1045,42 +1045,68 @@ feature {NONE} -- Implementation
 
 	append_note_tag (a_notable: CONF_NOTABLE)
 			-- Append `a_notes'.
+		require
+			a_notable_not_void: a_notable /= Void
 		local
-			l_names, l_values: ARRAYED_LIST [STRING]
-			l_note: HASH_TABLE [STRING, STRING]
-			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
+			l_note: CONF_NOTE_ELEMENT
 		do
-			l_notes := a_notable.notes
-			if l_notes /= Void and then not l_notes.is_empty then
+			l_note := a_notable.note_node
+			if l_note /= Void then
+				append_note_recursive (l_note)
+			end
+		end
+
+	append_note_recursive (a_note: CONF_NOTE_ELEMENT)
+			-- Append `a_note' recursively.
+		require
+			a_note_not_void: a_note /= Void
+		local
+			l_name, l_value: STRING
+			l_attr: HASH_TABLE [STRING, STRING]
+		do
+			if not a_note.element_name.is_empty then
+				append_text_indent ("<")
+				append_text (a_note.element_name)
+				indent := indent + 1
+				l_attr := a_note.attributes
 				from
-					l_notes.start
+					l_attr.start
 				until
-					l_notes.after
+					l_attr.after
 				loop
-					l_note := l_notes.item_for_iteration
-					if not l_note.is_empty then
-						create l_names.make (1)
-						create l_values.make (1)
-						from
-							l_note.start
-						until
-							l_note.after
-						loop
-							if not l_note.key_for_iteration.is_empty then
-								l_names.extend (l_note.key_for_iteration)
-								l_values.extend (l_note.item_for_iteration)
-							end
-							l_note.forth
-						end
-						append_tag ("note", Void, l_names, l_values)
+					l_name := l_attr.key_for_iteration
+					l_value := l_attr.item_for_iteration
+					if l_value = Void then
+						l_value := once ""
 					end
-					l_notes.forth
+					if l_name /= Void and then not l_name.is_empty then
+						append_text (" " + l_name)
+						append_text ("=%"" + escape_xml (l_value) + "%"")
+					end
+					l_attr.forth
+				end
+
+				if not a_note.is_empty then
+					append_text (">%N")
+					from
+						a_note.start
+					until
+						a_note.after
+					loop
+						append_note_recursive (a_note.item)
+						a_note.forth
+					end
+					indent := indent - 1
+					append_text_indent ("</" + a_note.element_name +">%N")
+				else
+					indent := indent - 1
+					append_text ("/>%N")
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1093,22 +1119,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end
 

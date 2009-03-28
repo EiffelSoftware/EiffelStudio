@@ -183,12 +183,12 @@ feature {NONE} -- Conf modification
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
 		local
-			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
+			l_notes: CONF_NOTE_ELEMENT
 			l_found: BOOLEAN
 			l_for_conf: BOOLEAN
 		do
 			last_entry_modified := False
-			l_notes := a_conf.notes
+			l_notes := a_conf.note_node
 			l_for_conf := eis_output.is_for_conf
 			eis_output.set_is_for_conf (True)
 			from
@@ -217,11 +217,11 @@ feature {NONE} -- Conf modification
 		require
 			a_entry_editable: entry_editable (a_entry)
 		local
-			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
+			l_notes: CONF_NOTE_ELEMENT 
 			l_found: BOOLEAN
 		do
 			last_entry_modified := False
-			l_notes := conf_notable.notes
+			l_notes := conf_notable.note_node
 			from
 				l_notes.start
 			until

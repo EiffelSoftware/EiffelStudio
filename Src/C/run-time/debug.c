@@ -1768,7 +1768,7 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(egc_frozen[body_id]);		/* Call pattern */
 	} else
-		xinterp(melt[body_id]);
+		xinterp(melt[body_id], arg_num);
 	IC = OLD_IC;				/* Restore IC back-up */
 
 	return opop();				/* Return the result of the once function */

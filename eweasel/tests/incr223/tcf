@@ -40,4 +40,14 @@ execute_work	 NONE exec_output3
 execute_result	 ok
 compare		 exec_output3 output3
 
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output4
+execute_result	 ok
+compare		 exec_output4 output3
+
 test_end

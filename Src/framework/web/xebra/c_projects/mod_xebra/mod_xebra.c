@@ -22,6 +22,11 @@
 #define CLEAR_ATTRS "Version=1"
 #define COOKIE_LOG_PREFIX "cookie"
 
+#define ERROR_MSG "<html><body><h1>Oh no! It's the Fail Whale!</h1><br><img src=\"http://www.designlessbetter.com/blogless/wp-content/uploads/2008/12/whale.png\"/> </body></html>"
+
+
+
+
 #include "mod_xebra.h"
 
 /* For description of methods see mod_xebra.h */
@@ -177,7 +182,7 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("Reading input...");
 
-	//ap_set_content_type (r, "text/html;charset=ascii");
+	ap_set_content_type (r, "text/html;charset=ascii");
 
 	message = apr_palloc (r->pool, 1);
 	message[0] = '\0';
@@ -209,7 +214,7 @@ static int xebra_handler (request_rec* r)
 			rv = read_from_POST (r, &post_buf);
 		}
 		if (rv != OK) {
-			ap_rputs ("Error reading from data!", r);
+			ap_rputs ("Error reading from data! See error log.", r);
 			return rv;
 		}
 		message = apr_pstrcat (r->pool, message, POSTP, "&", post_buf,
@@ -261,7 +266,8 @@ static int xebra_handler (request_rec* r)
 
 	if (p == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
-		ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
+		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
+		ap_rputs (ERROR_MSG, r);
 		return OK;
 	}
 
@@ -275,7 +281,8 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("Sending message.");
 
 	if (!send_message_fraged (message, sockfd, r)) {
-		ap_rputs ("Error sending message. See error log.", r);
+		//ap_rputs ("Error sending message. See error log.", r);
+		ap_rputs (ERROR_MSG, r);
 		return OK;
 	}
 
@@ -286,7 +293,8 @@ static int xebra_handler (request_rec* r)
 	if (numbytes < 1) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
 				"error in receive_message_fraged");
-		ap_rputs ("Error receiving message. See error log.", r);
+		//ap_rputs ("Error receiving message. See error log.", r);
+		ap_rputs (ERROR_MSG, r);
 		return OK;
 	}
 
@@ -294,7 +302,8 @@ static int xebra_handler (request_rec* r)
 
 	rv = handle_response_message (r, rmsg_buf);
 	if (rv != APR_SUCCESS)
-		ap_rputs ("Error reading message from XEbra Server. See error log.", r);
+		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
+		ap_rputs (ERROR_MSG, r);
 
 	/* display module revision */
 	//ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
@@ -302,7 +311,7 @@ static int xebra_handler (request_rec* r)
 	//ap_rputs ("</small></i>", r);
 
 	//ap_rputs ("whole message:('", r);
-	ap_rputs (rmsg_buf, r);
+	//ap_rputs (rmsg_buf, r);
 	//ap_rputs ("')", r);
 
 
@@ -319,37 +328,33 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	char* cookie_order_end;
 	char* html;
 
-	msg_copy = apr_pstrndup (r->pool, message, strlen (message));
-
-	DEBUG2 ("Extracting cookies...");
 	/* Extract cookie orders */
-	//do
-	//{
-		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
-		if (cookie_order_start != NULL) {
-			cookie_order_start += strlen (COOKIE_START);
-			cookie_order_end = ap_strstr_c (msg_copy, COOKIE_END);
-			if (cookie_order_end != NULL) {
-				cookie_order_start[cookie_order_end - cookie_order_start] = '\0';
-				apr_table_add (r->headers_out, "Set-Cookie", cookie_order_start);
-				apr_table_add (r->err_headers_out, "Set-Cookie",
-						cookie_order_start);
-			} else {
-				ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
-						"Message from xebra server contains a cookie start "
-							"tag '%s' without a cookie end tag '%s'", COOKIE_START,
-						COOKIE_END);
-				return APR_EGENERAL;
-			}
+	msg_copy = apr_pstrndup (r->pool, message, strlen (message));
+	cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
+	while (cookie_order_start != NULL)
+	{
+		DEBUG ("Extracting cookies...");
+		cookie_order_start += strlen (COOKIE_START);
+		cookie_order_end = ap_strstr_c (msg_copy, COOKIE_END);
+		if (cookie_order_end != NULL) {
+			cookie_order_start[cookie_order_end - cookie_order_start] = '\0';
+			apr_table_add (r->headers_out, "Set-Cookie", cookie_order_start);
+			apr_table_add (r->err_headers_out, "Set-Cookie",
+					cookie_order_start);
+			DEBUG2 ("... %s", cookie_order_start);
+		} else {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+					"Message from xebra server contains a cookie start "
+						"tag '%s' without a cookie end tag '%s'", COOKIE_START,
+					COOKIE_END);
+			return APR_EGENERAL;
 		}
-		msg_copy = cookie_order_end;
-	//}while (cookie_order_start != NULL);
-
-
+		msg_copy = &cookie_order_start[cookie_order_end - cookie_order_start] + 1;
+		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
+	}
 
 	//apr_table_add (r->headers_out, "Set-Cookie", "pingu1=pangu1;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
 	//apr_table_add (r->headers_out, "Set-Cookie", "pingu2=pangu2;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
-
 
 	DEBUG2 ("Extracting html...");
 	/* Extract html code */

@@ -25,12 +25,12 @@ feature -- Access
 
 feature -- Processing
 
-	process_servlet (a_request: REQUEST; a_socket: NETWORK_STREAM_SOCKET; a_request_handler: REQUEST_HANDLER)
+	process_servlet (a_request: XH_REQUEST; a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_REQUEST_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		local
-			l_servlet: detachable SERVLET
-			l_response: RESPONSE
+			l_servlet: detachable XWA_SERVLET
+			l_response: XH_RESPONSE
 		do
 			l_servlet := find_servlet (a_request, a_request_handler)
 
@@ -49,13 +49,13 @@ feature -- Processing
 feature {NONE} -- Internal Processing
 
 
-	find_servlet (a_request: REQUEST; a_request_handler: REQUEST_HANDLER): detachable SERVLET
+	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_REQUEST_HANDLER): detachable XWA_SERVLET
 			-- Searches for the servlet requested by `request'
 			-- 1. Stateless servlet?
 			-- 2. Servlet in session?
 			-- 3. If not found := Void
 		do
-			if attached {STATELESS_SERVLET} a_request_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+			if attached {XWA_STATELESS_SERVLET} a_request_handler.stateless_servlets [a_request.target_uri] as l_servlet then
 				Result := l_servlet
 			else
 			--	Result := request.session.get_stateful_servlet

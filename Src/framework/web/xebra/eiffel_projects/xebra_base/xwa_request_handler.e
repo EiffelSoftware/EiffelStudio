@@ -20,14 +20,14 @@ feature -- Constants
 
 feature -- Access
 
-	request_pool: DATA_THREAD_POOL [SERVLET_HANDLER]
+	request_pool: DATA_THREAD_POOL [XWA_SERVLET_HANDLER]
 			-- A thread pool for the incoming requests from the xebra server
 
-	stateless_servlets: TABLE [STATELESS_SERVLET, STRING]
+	stateless_servlets: TABLE [XWA_STATELESS_SERVLET, STRING]
 			-- All the servlets which do not need a state
 			-- Page id points to the thread pool of servlets
 
-	session_map: TABLE [SESSION, STRING]
+	session_map: TABLE [XH_SESSION, STRING]
 			-- A table which maps a session id on a session
 
 
@@ -50,7 +50,7 @@ feature -- Implementation
             server_socket.cleanup
         end
 
-	servlet_handler_spawner: SERVLET_HANDLER
+	servlet_handler_spawner: XWA_SERVLET_HANDLER
 			-- Spawns {SERVLET_HANDLER}s for the `request_pool'
 		do
 			create Result.make
@@ -61,8 +61,8 @@ feature -- Implementation
         do
             server_socket.accept
             if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
-	            if attached {REQUEST} thread_socket.retrieved as l_request then
-	            	request_pool.add_work (agent {SERVLET_HANDLER}.process_servlet (l_request, thread_socket, Current))
+	            if attached {XH_REQUEST} thread_socket.retrieved as l_request then
+	            	request_pool.add_work (agent {XWA_SERVLET_HANDLER}.process_servlet (l_request, thread_socket, Current))
 	            end
             end
         end

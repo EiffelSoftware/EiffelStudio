@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	get_stateful_servlet: detachable SERVLET
+	get_stateful_servlet: detachable XWA_SERVLET
 			-- Returns the current servlet. Might be not available.
 		do
 				-- TODO

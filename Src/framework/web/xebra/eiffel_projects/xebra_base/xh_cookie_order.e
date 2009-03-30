@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			path := ""
 			domain := ""
 			comment := ""
-		--	is_http_only := true
 			is_secure := false
 			version := "1"
 		end
@@ -41,26 +40,44 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-	max_age: NATURAL assign set_max_age
-		-- The expiration date of the cookie in unix time	
+	max_age: INTEGER assign set_max_age
+		-- Optional.  The Max-Age attribute defines the lifetime of the
+		-- cookie, in seconds.  The delta-seconds value is a decimal non-
+		-- negative integer.  After delta-seconds seconds elapse, the client
+		-- should discard the cookie.  A value of zero means the cookie
+		-- should be discarded immediately. Set to < 0 to ignore this parameter.
 
 	version: STRING
-		-- The cookie version
+		-- Required.  The Version attribute, a decimal integer, identifies to
+		-- which version of the state management specification the cookie
+		-- conforms.  For this specification, Version=1 applies.
 
 	path: STRING assign set_path
-		-- The cookie path
+		-- Optional.  The Path attribute specifies the subset of URLs to
+		-- which this cookie applies.
 
 	comment: STRING assign set_comment
-		-- The cookie comment	
+		-- Optional.  Because cookies can contain private information about a
+	    -- user, the Cookie attribute allows an origin server to document its
+	    -- intended use of a cookie.  The user can inspect the information to
+	    -- decide whether to initiate or continue a session with this cookie.
 
-	domain: STRING --assign set_domain
-		-- The cookie domain	
+	domain: STRING  assign set_domain
+		-- Optional.  The Domain attribute specifies the domain for which the
+		-- cookie is valid.  An explicitly specified domain must always start
+		-- with a dot.
 
---	is_http_only: BOOLEAN --assign set_http_only
-		-- Sets the httponly atrribute
+	is_secure: BOOLEAN assign set_secure
+		-- Optional.  The Secure attribute (with no value) directs the user
+		-- agent to use only (unspecified) secure means to contact the origin
+		-- server whenever it sends back this cookie.
+		-- The user agent (possibly under the user's control) may determine
+		-- what level of security it considers appropriate for "secure"
+		-- cookies.  The Secure attribute should be considered security
+		-- advice from the server to the user agent, indicating that it is in
+		-- the session's interest to protect the cookie contents.
 
-	is_secure: BOOLEAN --assign set_secure
-		-- Sets the secure attribute	
+
 
 feature {NONE} -- Constants
 
@@ -71,7 +88,6 @@ feature {NONE} -- Constants
 	Key_sq: STRING = ";"
 	Key_max_age: STRING = "Max-Age="
 	Key_path: STRING = "Path="
---	Key_http_only: STRING = "HttpOnly"
 	Key_version: STRING = "Version="
 	Key_domain: STRING = "Domain="
 	Key_secure: STRING = "Secure"
@@ -85,8 +101,8 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_max_age (a_max_age: NATURAL)
-			-- Setter
+	set_max_age (a_max_age: INTEGER)
+			-- Setter.
 		do
 			max_age := a_max_age
 		ensure
@@ -94,7 +110,7 @@ feature -- Status setting
 		end
 
 	set_name (a_name: STRING)
-			-- Setter
+			-- Setter.
 		require
 			a_name_not_empty: not a_name.is_empty
 		do
@@ -104,7 +120,7 @@ feature -- Status setting
 		end
 
 	set_value (a_value: STRING)
-			-- Setter
+			-- Setter.
 		require
 			a_value_not_empty: not a_value.is_empty
 		do
@@ -114,7 +130,7 @@ feature -- Status setting
 		end
 
 	set_path (a_path : STRING)
-			-- Setter
+			-- Setter.
 		do
 			path  := escape_bad_chars (a_path)
 		ensure
@@ -122,7 +138,7 @@ feature -- Status setting
 		end
 
 	set_comment (a_comment : STRING)
-			-- Setter
+			-- Setter.
 		do
 			comment  := escape_bad_chars (a_comment)
 		ensure
@@ -130,11 +146,17 @@ feature -- Status setting
 		end
 
 	set_domain (a_domain : STRING)
-			-- Setter
+			-- Setter.
 		do
 			domain  := escape_bad_chars (a_domain)
 		ensure
 			domain_set: domain  = a_domain
+		end
+
+	set_secure (a_secure: BOOLEAN)
+			-- Setter.	
+		do
+			is_secure := a_secure
 		end
 
 feature -- Basic operations
@@ -154,26 +176,29 @@ feature -- Basic operations
 			--                   |       "Secure"
 			--                   |       "Version" "=" 1*DIGIT
 		do
+				-- Name and Value are required
 			Result := Cookie_start + name + Key_eq + value
-
+				-- Comment is optional
 			if not comment.is_empty then
 				Result := Result + Key_sq + Key_comment + comment
 			end
+				-- Domain is optional
 			if not domain.is_empty then
 				Result := Result + Key_sq + Key_domain + domain
 			end
-				-- Always put max-age
-		 	Result := Result + Key_sq + Key_max_age + max_age.out
+				-- Max-age is optional
+			if max_age >= 0 then
+		 		Result := Result + Key_sq + Key_max_age + max_age.out
+		 	end
+				-- Path is optional
 			if not path.is_empty then
-				Result := Result +Key_sq +  Key_path + path
+				Result := Result +Key_sq + Key_path + path
 			end
+				-- Secure is optional
 			if is_secure then
 				Result := Result + Key_sq + Key_secure
 			end
-	--		if is_http_only then
-	--			Result := Result + Key_sq + Key_http_only
-	--		end
-				-- Always pput version
+				-- Version is required
 			Result := Result + Key_sq + Key_version + version + Cookie_end
 		ensure
 			Result_not_empty: not Result.is_empty
@@ -194,8 +219,8 @@ feature {NONE} -- Implementation
 		end
 
 
-	default_max_age: NATURAL
-			-- Generates a default max ages of 5min
+	default_max_age: INTEGER
+			-- Generates a default max age of 5min
 		do
 			Result := 300;
 		end

@@ -61,8 +61,6 @@ feature {NONE} -- Initialization
 
 				-- Read cookies
 			cookies := read_cookies (headers_in)
-
-
 		ensure
 			method_set: method.is_equal (Method_post) or method.is_equal (Method_get)
 			post_set: method.is_equal (Method_post) implies attached post_parameters

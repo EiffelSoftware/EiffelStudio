@@ -16,7 +16,7 @@ create
 feature {NONE} -- Initialization	
 
 	make (a_name: STRING; a_value: STRING)
-			-- Create current
+			-- Creates current.
 		require
 			a_name_not_empty: not a_name.is_empty
 			a_value_not_empty: not a_Value.is_empty
@@ -31,9 +31,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING
-		-- The name of the cooklie
+		--  Required.  The name of the state information ("cookie") is NAME,
+		--  and its value is VALUE.  NAMEs that begin with $ are reserved for
+		--  other uses and must not be used by applications.
 
 	value: STRING
-		-- The value of the cookie
+		-- The VALUE is opaque to the user agent and may be anything the
+		-- origin server chooses to send, possibly in a server-selected
+		-- printable ASCII encoding.  "Opaque" implies that the content is of
+		-- interest and relevance only to the origin server.  The content
+		-- may, in fact, be readable by anyone that examines the Set-Cookie
+		-- header.
+
 
 end

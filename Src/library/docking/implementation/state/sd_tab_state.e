@@ -83,6 +83,14 @@ feature {NONE} -- Initlization
 			l_target_zone_tab_state.set_last_floating_height (a_target_zone.state.last_floating_height)
 			l_target_zone_tab_state.set_last_floating_width (a_target_zone.state.last_floating_width)
 			a_target_zone.content.change_state (l_target_zone_tab_state)
+
+			internal_content := a_content
+
+			-- For bug#15565
+			-- a_content's state can be {SD_STATE_VOID} if we don't update it now, so (in following `tab_zone.extend (a_content)') when executing in {SD_NOTEBOOK}.select_item,
+			-- the content's `show_actions' will call {SD_STATE_VOID}.set_user_widget but not {SD_TAB_STATE}.set_user_widget
+			change_state (Current)
+
 			-- At the end, add `a_content', so `a_content' is selected on SD_TAB_ZONE.
 			tab_zone.extend (a_content)
 
@@ -93,7 +101,6 @@ feature {NONE} -- Initlization
 					l_split_parent.set_split_position (l_old_split_position)
 				end
 			end
-			internal_content := a_content
 
 			initialized := True
 		ensure
@@ -114,9 +121,14 @@ feature {NONE} -- Initlization
 			if internal_content.user_widget.parent /= Void then
 				internal_content.user_widget.parent.prune (internal_content.user_widget)
 			end
-			tab_zone.extend (internal_content)
-
 			internal_content := a_content
+
+			-- For bug#15565
+			-- a_content's state can be {SD_STATE_VOID} if we don't update it now, so (in following `tab_zone.extend (a_content)') when executing in {SD_NOTEBOOK}.select_item,
+			-- the content's `show_actions' will call {SD_STATE_VOID}.set_user_widget but not {SD_TAB_STATE}.set_user_widget			
+			change_state (Current)
+
+			tab_zone.extend (internal_content)
 		ensure
 			set: a_target_zone = tab_zone
 			extended: tab_zone.has (internal_content)

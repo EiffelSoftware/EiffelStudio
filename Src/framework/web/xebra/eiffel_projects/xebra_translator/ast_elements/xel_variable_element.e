@@ -1,56 +1,49 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		Used to render a name and its type.
+	]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XEL_VARIABLE_ELEMENT
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	XEL_SERVLET_ELEMENT
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
+	make (a_name: STRING; a_type: STRING)
+			-- `a_name': The name of the variable
+			-- `a_type': The type of the variable
+		require
+			name_is_valid: not a_name.is_empty
+			type_is_valid: not a_type.is_empty
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
-
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
-
-				l_translator.set_output_path (Arguments.argument (3))
-
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
-			end
+			name := a_name
+			type := a_type
 		end
 
-;note
+feature -- Access
+
+	name: STRING
+			-- The name of the variable
+
+	type: STRING
+			-- The type of the variable
+
+feature -- Implementation
+
+	serialize (buf: INDENDATION_STREAM)
+			-- <Precursor>
+		do
+			buf.put_string (name + ": " + type.as_upper)
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +75,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

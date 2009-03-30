@@ -1,56 +1,67 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {TAG_GENERATOR}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class
-	APPLICATION
+deferred class
+	XTAG_TAG_SERIALIZER
 
-inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
+feature -- Initialization
 
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
+	make_base
+			-- Initialization of variables
+			-- Call this constructor, if you inherit
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+			create {ARRAYED_LIST [TAG_SERIALIZER]} children.make (3)
+		end
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+feature {NONE} -- Access
 
-				l_translator.set_output_path (Arguments.argument (3))
+	children: LIST [TAG_SERIALIZER]
+			-- All the children tags of the tag
 
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
+feature -- Access
 
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
+	add_to_body (a_child: TAG_SERIALIZER)
+			-- Adds a TAG to the body.
+		do
+			children.extend (a_child)
+		ensure
+			child_has_been_added: children.count = old children.count + 1
+		end
 
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+	put_attribute (id: STRING; a_attribute: STRING)
+		require
+			id_is_not_empty: not id.is_empty
+		deferred
+		end
+
+feature -- Implementation
+
+	generate_children (a_feature: FEATURE_ELEMENT)
+		do
+			from
+				children.start
+			until
+				children.after
+			loop
+				children.item.generate (a_feature)
+				children.forth
 			end
 		end
 
-;note
+	generate (a_feature: FEATURE_ELEMENT)
+		deferred
+		end
+
+	write_string_to_result (a_text: STRING; a_feature: FEATURE_ELEMENT)
+			--
+		do
+			a_feature.append_expression ("Result.append(%"[%N" + a_text + "%N]%")")
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +93,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

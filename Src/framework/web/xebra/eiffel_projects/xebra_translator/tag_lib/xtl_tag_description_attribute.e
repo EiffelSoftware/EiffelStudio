@@ -1,56 +1,60 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {TAG_DESCRIPTION_ATTRIBUTE}."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XTL_TAG_DESCRIPTION_ATTRIBUTE
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	XTL_TAG_LIB_ITEM
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE}-- Initialization
 
 	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+			id := ""
+			call := False
+		end
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+feature -- Access
 
-				l_translator.set_output_path (Arguments.argument (3))
+	call: BOOLEAN
+		-- Does the value stand for a feature?
 
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
+	call_with_result: BOOLEAN
+		-- Does the value stand for a feature which returns something?
 
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
+	id: STRING
+		-- The id of the tag attribute
 
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+	put (child: XTL_TAG_LIB_ITEM)
+			-- <Precursor>
+		do
+			-- Do nothing
+		end
+
+	set_attribute (a_id: STRING; value: STRING)
+			-- <Precursor>
+		require else
+			a_id_is_not_empty: not a_id.is_empty
+			value_is_not_empty: not value.is_empty
+		do
+			if a_id.is_equal ("id") then
+				id := value
+			end
+			if a_id.is_equal ("call") then
+				call := value.to_boolean
+			end
+			if a_id.is_equal ("call_with_result") then
+				call_with_result := value.to_boolean
 			end
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +86,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

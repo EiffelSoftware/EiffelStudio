@@ -35,6 +35,7 @@ feature -- Constants
 		-- temp
 
 	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
+	Output_tag_name: STRING = "XTAG_XEB_OUTPUT_CALL_TAG"
 
 	Reading_html: INTEGER = 0
 	Reading_tag: INTEGER = 1
@@ -343,7 +344,7 @@ feature {NONE} -- Implementation
 		do
 			html_buf.append (" " + local_part + "=%"")
 			create_html_tag_put
-			create l_tag.make ("output", "XEB_OUTPUT_CALL_TAG")
+			create l_tag.make ("output", Output_tag_name)
 			feature_name := value.substring (3, value.count-1)
 			l_tag.put_dynamic_attribute ("value", feature_name)
 			tag_stack.item.put_subtag (l_tag)

@@ -34,7 +34,7 @@ feature -- Constants
 	Tag_keyword: STRING = "xeb"
 		-- temp
 
-	Html_tag_name: STRING = "XEB_HTML_TAG"
+	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
 
 	Reading_html: INTEGER = 0
 	Reading_tag: INTEGER = 1

@@ -50,16 +50,16 @@ feature -- Basic functionality
 			path_is_not_empty: not a_path.is_empty
 		local
 			buf: INDENDATION_STREAM
-			servlet_generator_class: XEL_CLASS_ELEMENT
+			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
 			create file.make_open_write (a_path + servlet_name.as_lower + "_servlet_generator.e")
 			create buf.make (file)
-			create servlet_generator_class.make (servlet_name.as_upper + "_SERVLET_GENERATOR")
-			servlet_generator_class.set_inherit ("SERVLET_GENERATOR")
-			servlet_generator_class.set_constructor_name ("make")
-			servlet_generator_class.add_feature (build_generate_for_servlet_generator)
-			servlet_generator_class.serialize (buf)
+			create servlet_gen_class.make (servlet_name.as_upper + "_SERVLET_GENERATOR")
+			servlet_gen_class.set_inherit (Servlet_generator_class)
+			servlet_gen_class.set_constructor_name ("make")
+			servlet_gen_class.add_feature (build_generate_for_servlet_generator)
+			servlet_gen_class.serialize (buf)
 			file.close
 		end
 
@@ -78,7 +78,8 @@ feature {NONE} -- Implementation
 
 feature -- Constants
 
-	Tag_serializer_class: STRING = "TAG_SERIALIZER"
+	Tag_serializer_class: STRING = "XTAG_TAG_SERIALIZER"
+	Servlet_generator_class: STRING = "XGEN_SERVLET_GENERATOR"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

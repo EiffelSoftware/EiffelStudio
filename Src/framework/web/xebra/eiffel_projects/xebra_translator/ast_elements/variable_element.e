@@ -1,52 +1,47 @@
 note
 	description: "[
-		no comment yet
+		Used to render a name and its type.
 	]"
-	legal: "See notice at end of class."
-	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XB_TAG_ATTRIBUTE
+	VARIABLE_ELEMENT
+
+inherit
+	SERVLET_ELEMENT
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make  (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
-			-- Creates 	XB_TAG_ATTRIBUTE
+	make (a_name: STRING; a_type: STRING)
+			-- `a_name': The name of the variable
+			-- `a_type': The type of the variable
+		require
+			name_is_valid: not a_name.is_empty
+			type_is_valid: not a_type.is_empty
 		do
-			namespace := a_namespace
-			i_prefix := a_prefix
-			local_part := a_local_part
-			value := a_value
-		ensure
-			namespace_set: namespace = a_namespace
-			i_prefix_set: i_prefix = a_prefix
-			local_part_set: local_part = a_local_part
-			value_set: value  = a_value
+			name := a_name
+			type := a_type
 		end
 
 feature -- Access
 
-	namespace: STRING
-	i_prefix: STRING
-	local_part: STRING
-	value: STRING
+	name: STRING
+			-- The name of the variable
 
-feature -- Measurement
+	type: STRING
+			-- The type of the variable
 
-feature -- Element change
+feature -- Implementation
 
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
+	serialize (buf: INDENDATION_STREAM)
+			-- <Precursor>
+		do
+			buf.put_string (name + ": " + type.as_upper)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -1,54 +1,27 @@
- note
-	description: "[
-		no comment yet
-	]"
-	legal: "See notice at end of class."
-	status: "Prototyping phase"
+note
+	description: "Summary description for {TAG_LIB_ITEM}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XB_OUTPUT_ELEMENT_GENERATOR
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-
-		end
-
-feature -- Basic operations
-
-	generate (a_tag: XB_TAG): OUTPUT_ELEMENT
-			--
-		do
-			if a_tag.name.is_equal ("call") then
-			--	Result := create {CALL_ELEMENT}.make (.attributes.i_tha_tag (1))
-			end
-
-
-
-
-
-		end
+deferred class
+	TAG_LIB_ITEM
 
 feature -- Access
 
-feature -- Measurement
+	put (child: TAG_LIB_ITEM)
+			-- Adds a child to the list of children
+		deferred
+		end
 
-feature -- Element change
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
+	set_attribute (id: STRING; value: STRING)
+			-- Sets an attribute
+			-- Might be ignored by the specific implementation
+		require
+			id_is_not_empty: not id.is_empty
+			value_is_not_empty: not value.is_empty
+		deferred
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -45,7 +45,13 @@ feature -- Initialization
 			signature := a_signature
 			locals := some_locals
 			content := a_content
+			variable_count := 0
 		end
+
+feature {NONE} -- Access
+
+	variable_count: NATURAL
+			-- Used to generate unique identifiers
 
 feature -- Access
 
@@ -77,6 +83,12 @@ feature -- Access
 			content.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
 		ensure
 			expression_has_been_added: old content.count + 1 = content.count
+		end
+
+	get_temp_variable: STRING
+			-- Generates a name for a unique (feature scope) temp variable
+		do
+			Result := "temp_" + variable_count.out
 		end
 
 feature -- Implementation

@@ -5,12 +5,12 @@ note
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_DISPLAY_TAG [G]
+	XTAG_XEB_DISPLAY_TAG
 
 inherit
-	TAG_SERIALIZER [G]
+	XTAG_TAG_SERIALIZER
 		redefine
-			output
+			generate
 		end
 
 create
@@ -21,23 +21,23 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} feature_name.make ("")
+			feature_name := ""
 		end
 
 feature -- Access
 
-	feature_name: TAG_ATTRIBUTE
+	feature_name: STRING
 			-- The name of the feature to call
 
 feature -- Implementation
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			buf.append_string (parent.call_on_controller_with_result (feature_name.value (parent)))
+			a_feature.append_expression ("Result.append (controller." + feature_name + ".out)")
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precusor>
 		do
 			if id.is_equal ("feature") then

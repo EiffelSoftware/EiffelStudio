@@ -33,15 +33,18 @@ feature {NONE} -- Implementation
 
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
+		local
+			temp_var_name: STRING
 		do
-			a_feature.append_local ("i", "NATURAL")
+			temp_var_name := a_feature.get_temp_variable
+			a_feature.append_local (temp_var_name, "NATURAL")
 			a_feature.append_expression ("from")
-			a_feature.append_expression ("i := 1")
+			a_feature.append_expression (temp_var_name + " := 1")
 			a_feature.append_expression ("until")
-			a_feature.append_expression ("i > controller." + times)
+			a_feature.append_expression (temp_var_name + " > controller." + times)
 			a_feature.append_expression ("loop")
 			generate_children (a_feature)
-			a_feature.append_expression ("i := i + 1")
+			a_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
 			a_feature.append_expression ("end")
 		end
 

@@ -5,12 +5,12 @@ note
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_REDIRECT_TAG [G]
+	XTAG_XEB_REDIRECT_TAG
 
 inherit
-	TAG_SERIALIZER
+	XTAG_TAG_SERIALIZER
 		redefine
-			output
+			generate
 		end
 
 create
@@ -21,23 +21,23 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} url.make ("")
+			url := ""
 		end
 
 feature {NONE} -- Access
 
-	url: TAG_ATTRIBUTE
+	url: STRING
 			-- The XHTML content
 
 feature {NONE}
 
-	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			buf.append_string ("<meta HTTP-EQUIV=%"REFRESH%" content=%"0; url=" + url.value (parent) + "%"")
+			write_string_to_result ("<meta HTTP-EQUIV=%"REFRESH%" content=%"0; url=" + url + "%"", a_feature)
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal("url") then

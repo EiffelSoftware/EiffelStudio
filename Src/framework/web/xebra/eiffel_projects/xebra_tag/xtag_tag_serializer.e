@@ -13,17 +13,17 @@ feature -- Initialization
 			-- Initialization of variables
 			-- Call this constructor, if you inherit
 		do
-			create {ARRAYED_LIST [TAG_SERIALIZER]} children.make (3)
+			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
 		end
 
 feature {NONE} -- Access
 
-	children: LIST [TAG_SERIALIZER]
+	children: LIST [XTAG_TAG_SERIALIZER]
 			-- All the children tags of the tag
 
 feature -- Access
 
-	add_to_body (a_child: TAG_SERIALIZER)
+	add_to_body (a_child: XTAG_TAG_SERIALIZER)
 			-- Adds a TAG to the body.
 		do
 			children.extend (a_child)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Implementation
 
-	generate_children (a_feature: FEATURE_ELEMENT)
+	generate_children (a_feature: XEL_FEATURE_ELEMENT)
 		do
 			from
 				children.start
@@ -51,11 +51,11 @@ feature -- Implementation
 			end
 		end
 
-	generate (a_feature: FEATURE_ELEMENT)
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 		deferred
 		end
 
-	write_string_to_result (a_text: STRING; a_feature: FEATURE_ELEMENT)
+	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
 			--
 		do
 			a_feature.append_expression ("Result.append(%"[%N" + a_text + "%N]%")")

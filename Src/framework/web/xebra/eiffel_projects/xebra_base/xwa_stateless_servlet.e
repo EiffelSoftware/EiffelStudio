@@ -8,7 +8,7 @@ deferred class
 	XWA_STATELESS_SERVLET
 
 inherit
-	SERVLET
+	XWA_SERVLET
 
 feature -- Access
 

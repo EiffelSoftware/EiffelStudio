@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	handle_request (request: REQUEST): RESPONSE
+	handle_request (request: XH_REQUEST): XH_RESPONSE
 			-- Handles a request from a client an generates a response.
 		deferred
 		end

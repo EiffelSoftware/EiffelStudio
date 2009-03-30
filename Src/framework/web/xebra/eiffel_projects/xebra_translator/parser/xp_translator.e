@@ -30,7 +30,10 @@ feature {NONE} -- Access
 feature -- Access
 
 	output_path: STRING assign set_output_path
-			-- Defines where the files should be written		
+			-- Defines where the files should be written
+
+	servlet_gen_path: STRING assign set_servlet_gen_path
+			-- Defines where the servlets should be generated
 
 	name: STRING assign set_name
 			-- Name of the system
@@ -43,6 +46,12 @@ feature -- Status setting
 			-- Sets the output_path
 		do
 			output_path := a_path
+		end
+
+	set_servlet_gen_path (a_path: like servlet_gen_path)
+			-- Sets the servlet_gen_path
+		do
+			servlet_gen_path := a_path
 		end
 
 	set_name (a_name: like name)
@@ -92,7 +101,7 @@ feature -- Processing
 						end
 						a_files.forth
 					end
-					l_servlet_gag.generate (output_path)
+					l_servlet_gag.generate (servlet_gen_path)
 					create l_webapp_generator.make_with_servlets (name, output_path, l_servlet_gag.servlet_generator_generators)
 					l_webapp_generator.generate
 				end

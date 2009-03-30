@@ -34,6 +34,7 @@ feature -- Basic functionality
 			-- Generates all the classes for the servlet_generator_app and links them together.
 			--  1. {SERLVET_GENERATOR} All the servlet generators
 			--  2. {APPLICATION} The root class
+			--  3. The project file (.ecf)
 		require
 			path_is_not_empty: not a_path.is_empty
 		local
@@ -59,9 +60,36 @@ feature -- Basic functionality
 			create file.make_open_write (a_path + "application.e")
 			create buf.make (file)
 			create application_class.make ("APPLICATION")
+			application_class.set_inherit ("KL_SHARED_ARGUMENTS")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (build_constructor_for_application)
 			application_class.serialize (buf)
+			file.close
+
+				-- Generate the .ecf file
+
+			create file.make_open_write (a_path + "serlvet_gen.ecf")
+			file.put_string ("[
+			<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_translator" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
+	<target name="servlet_gen">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="false" is_void_safe="false" syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="servlet_gen" location=".\" recursive="true">
+			<option is_attached_by_default="false" is_void_safe="false">
+			</option>
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
+			]")
 			file.close
 		end
 
@@ -70,6 +98,11 @@ feature -- Basic functionality
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
 			create Result.make ("make")
+			Result.append_local ("path", "STRING")
+			Result.append_expression ("if  Arguments.argument_count /= 1 then")
+			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
+			Result.append_expression ("else")
+			Result.append_expression ("path := Arguments.argument (1)")
 			from
 				servlet_generator_generators.start
 			until
@@ -77,10 +110,11 @@ feature -- Basic functionality
 			loop
 				l_servlet_gg :=  servlet_generator_generators.item
 				Result.append_expression ("(create {"
-					+ l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make (%""
-					+ "./%", %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", %"" + l_servlet_gg.controller_type.as_upper + "%")).generate;")
+					+ l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
+					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", %"" + l_servlet_gg.controller_type.as_upper + "%")).generate;")
 				servlet_generator_generators.forth
 			end
+			Result.append_expression ("end")
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

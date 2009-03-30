@@ -72,7 +72,7 @@ feature -- Implementation
 			buf.set_ind_character ('%T')
 			webapp_name.to_upper
 			create request_class.make (webapp_name + "_REQUEST_HANDLER")
-			request_class.set_inherit ("REQUEST_HANDLER")
+			request_class.set_inherit ("XWA_REQUEST_HANDLER")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
@@ -104,8 +104,8 @@ feature -- Implementation
 		do
 			create Result.make ("make")
 			Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
-			Result.append_expression ("create {HASH_TABLE [SESSION, STRING]} session_map.make (1)")
-			Result.append_expression ("create {HASH_TABLE [STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
+			Result.append_expression ("create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)")
+			Result.append_expression ("create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
 			from
 				some_servlets.start
 			until

@@ -133,7 +133,6 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_widget: ES_EDITOR_WIDGET
-			l_result: detachable OUTPUT_WINDOW
 		do
 			l_widget := widget_table.item (a_window.window_id)
 			check l_widget_attached: l_widget /= Void end

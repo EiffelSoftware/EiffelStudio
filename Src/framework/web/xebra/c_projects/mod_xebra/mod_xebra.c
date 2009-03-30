@@ -177,7 +177,7 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("Reading input...");
 
-	ap_set_content_type (r, "text/html;charset=ascii");
+	//ap_set_content_type (r, "text/html;charset=ascii");
 
 	message = apr_palloc (r->pool, 1);
 	message[0] = '\0';
@@ -297,9 +297,14 @@ static int xebra_handler (request_rec* r)
 		ap_rputs ("Error reading message from XEbra Server. See error log.", r);
 
 	/* display module revision */
-	ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
-	ap_rputs (REVISION, r);
-	ap_rputs ("</small></i>", r);
+	//ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
+	//ap_rputs (REVISION, r);
+	//ap_rputs ("</small></i>", r);
+
+	//ap_rputs ("whole message:('", r);
+	ap_rputs (rmsg_buf, r);
+	//ap_rputs ("')", r);
+
 
 	/* Close sockets and quit */
 	shutdown (sockfd, 2);
@@ -361,7 +366,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		return APR_EGENERAL;
 	}
 	html += strlen (HTML_START);
-	ap_rputs (html, r);
+	//ap_rputs (html, r);
 	DEBUG2 ("Done.");
 	return APR_SUCCESS;
 }

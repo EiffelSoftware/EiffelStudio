@@ -525,6 +525,8 @@ feature -- Validation warnings
 		do
 			Result := "There is already a group with name "+a_group+"."
 		end
+	file_is_not_a_library: STRING = "The selected configuration file is not a library.%NPlease make sure the library is a valid Eiffel Configuration File and is has a library target."
+	add_non_void_safe_library: STRING = "The selected library is not Void-Safe. Do you still want to utilize it?%N%NNote: Using non-Void-Safe libraries in a void-safe system can cause library incompatibilities."
 
 	assembly_no_location: STRING = "No location specified."
 

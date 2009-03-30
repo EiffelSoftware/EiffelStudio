@@ -98,6 +98,7 @@ feature {NONE} -- Basic operation
 			l_prev: detachable like previous_token
 			l_local_list_state: attached like local_list_state
 			l_type_string: STRING_32
+			l_expression_string: STRING_32
 			l_stop: BOOLEAN
 		do
 			l_start_token := a_info.current_token
@@ -177,10 +178,20 @@ feature {NONE} -- Basic operation
 												check l_prev_attached: l_prev /= Void end
 
 													-- build the 'like' type string.
-												create l_type_string.make (30)
-												l_type_string.append_string_general ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword)
-												l_type_string.append_character (' ')
-												l_type_string.append (token_range_text (l_start_token, l_start_line, l_prev.token))
+												l_expression_string := token_range_text (l_start_token, l_start_line, l_prev.token)
+												if l_expression_string.has ('.') then
+														-- HACK
+														-- The expression is an attached factored expression, which requires an expression
+														-- evaluation (not yet ready). Remove this hack when anchored evaluator is able
+														-- to process factored expressions.
+													l_type_string := "ANY"
+												else
+													create l_type_string.make (30)
+													l_type_string.append_string_general ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword)
+													l_type_string.append_character (' ')
+													l_type_string.append (l_expression_string)
+												end
+
 
 													-- Add local
 												a_info.current_frame.add_local_string (l_next.token.wide_image.as_attached, l_type_string)

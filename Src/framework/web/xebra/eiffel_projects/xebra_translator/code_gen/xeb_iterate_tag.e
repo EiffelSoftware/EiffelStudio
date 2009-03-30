@@ -5,10 +5,10 @@ note
 	revision: "$Revision$"
 
 class
-	XEB_ITERATE_TAG [G -> LIST_ITEM_I]
+	XEB_ITERATE_TAG
 
 inherit
-	TAG_SERIALIZER [G]
+	TAG_SERIALIZER
 
 create
 	make
@@ -18,37 +18,40 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create {CONSTANT_ATTRIBUTE} times.make ("")
+			list := ""
+			variable := ""
+			type := ""
 		end
 
 feature {NONE} -- Access
 
-	list: TAG_ATTRIBUTE
+	list: STRING
 			-- The items over which we want to iterate
-	variable: TAG_ATTRIBUTE
+
+	variable: STRING
 			-- Name of the variable
+
+	type: STRING
+			-- Type of the variable
 
 feature {NONE} -- Implementation
 
-	output (parent: SERVLET buf: INDENDATION_STREAM; variables: LIST [ANY])
+	generate (a_feature: FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			if attached {LIST [G]} list.value as l_list then
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					if attached l_list.item as l_item then
-						
-					end
-					l_list.forth
-				end
-			end
-
+			a_feature.append_local (variable, type)
+			a_feature.append_expression ("from")
+			a_feature.append_expression ("controller." + list + ".start")
+			a_feature.append_expression ("until")
+			a_feature.append_expression ("controller." + list + ".after")
+			a_feature.append_expression ("loop")
+			a_feature.append_expression (variable + " := controller." + list + ".item")
+			generate_children (a_feature)
+			a_feature.append_expression ("controller." + list + ".forth")
+			a_feature.append_expression ("end")
 		end
 
-	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+	put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal ("list") then
@@ -56,6 +59,9 @@ feature {NONE} -- Implementation
 			end
 			if id.is_equal ("variable") then
 				variable := a_attribute
+			end
+			if id.is_equal ("type") then
+				type := a_attribute
 			end
 		end
 

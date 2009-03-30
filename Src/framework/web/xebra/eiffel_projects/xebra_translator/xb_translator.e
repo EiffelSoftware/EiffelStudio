@@ -64,6 +64,7 @@ feature -- Processing
 			l_file: KL_TEXT_INPUT_FILE
 			l_taglib_file: KL_TEXT_INPUT_FILE
 			l_servlet_gag: SERVLET_GENERATOR_APP_GENERATOR
+			l_webapp_generator: WEBAPP_GENERATOR
 		do
 			create l_taglib_file.make (a_taglib_filename)
 			if (not l_taglib_file.exists) then
@@ -95,6 +96,8 @@ feature -- Processing
 						a_files.forth
 					end
 					l_servlet_gag.generate (output_path)
+					create l_webapp_generator.make_with_servlets (name, output_path, l_servlet_gag.servlet_generator_generators)
+					l_webapp_generator.generate
 				end
 			end
 		end

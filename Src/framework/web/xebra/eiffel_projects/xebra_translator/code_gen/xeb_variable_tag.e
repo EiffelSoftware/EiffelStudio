@@ -5,13 +5,44 @@ note
 	revision: "$Revision$"
 
 class
-	XEB_VARIABLE_TAG [G]
+	XEB_VARIABLE_TAG
 
 inherit
-	TAG_SERIALIZER [G]
+	TAG_SERIALIZER
 
-feature -- Access
+create
+	make
 
+feature {NONE} -- Initialization
+
+	make
+		do
+			make_base
+			feature_name := ""
+			id := ""
+		end
+
+feature
+
+	feature_name: STRING
+	id: STRING
+
+	generate (a_feature: FEATURE_ELEMENT)
+			-- <Precursor>
+		do
+			a_feature.append_expression ("Result.append (" + id + "." + feature_name + ")")
+		end
+
+	put_attribute (a_id: STRING; a_attribute: STRING)
+			-- <Precursor>
+		do
+			if a_id.is_equal ("id") then
+				id := a_attribute
+			end
+			if a_id.is_equal ("feature") then
+				feature_name := a_attribute
+			end
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -332,8 +332,16 @@ feature {NONE} -- Actions
 			if attached {STRING_32} browse_dialog.file_name as l_fn and then not l_fn.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (l_fn)
-				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system and then attached {CONF_TARGET} l_system.library_target as l_target then
-					on_library_selected (l_system, l_fn.as_string_8.as_attached)
+				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system then
+					if attached {CONF_TARGET} l_system.library_target as l_target then
+						if not void_safe_check.is_selected or else l_target.options.is_void_safe then
+							on_library_selected (l_system, l_fn.as_string_8.as_attached)
+						else
+							prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn.as_string_8.as_attached), Void)
+						end
+					else
+						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
+					end
 				end
 			end
 		end
@@ -644,10 +652,10 @@ feature {NONE} -- Constants
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

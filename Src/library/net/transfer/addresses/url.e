@@ -18,12 +18,12 @@ feature {NONE} -- Initialization
 		require
 			address_specified: a /= Void and then not a.is_empty
 		do
-			address := a
+			create address.make_from_string (a)
 			port := Default_port
 			proxy_information := Void
 			analyze
 		ensure
-			address_set: address = a
+			address_set: address ~ a
 			port_set: port > 0
 			no_proxy_set: proxy_information = Void
 		end

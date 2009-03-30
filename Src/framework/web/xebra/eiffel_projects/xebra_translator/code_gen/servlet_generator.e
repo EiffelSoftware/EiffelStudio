@@ -48,13 +48,13 @@ feature --
 		do
 			create file.make_open_write (path + servlet_name.as_lower + "_servlet.e")
 			create buf.make (file)
-			create servlet_class.make (servlet_name.as_upper + "_servlet.e")
+			create servlet_class.make (servlet_name.as_upper + "_SERVLET")
 			if stateful then
 				servlet_class.set_inherit (Stateful_servlet_class)
 			else
 				servlet_class.set_inherit (Stateless_servlet_class)
 			end
-			servlet_class.set_inherit ("SERVLET")
+			servlet_class.set_inherit ("STATELESS_SERVLET")
 			servlet_class.set_constructor_name ("make")
 			servlet_class.add_variable_by_name_type ("controller", controller_type)
 			servlet_class.add_feature (build_make_for_servlet_generator)

@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			a_feature.append_expression ("from")
 			a_feature.append_expression ("i := 1")
 			a_feature.append_expression ("until")
-			a_feature.append_expression ("i > " + times)
+			a_feature.append_expression ("i > controller." + times)
 			a_feature.append_expression ("loop")
 			generate_children (a_feature)
 			a_feature.append_expression ("i := i + 1")

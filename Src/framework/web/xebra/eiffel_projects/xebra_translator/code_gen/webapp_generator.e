@@ -9,7 +9,7 @@ class
 	WEBAPP_GENERATOR
 
 create
-	make
+	make, make_with_servlets
 
 feature -- Initialization
 
@@ -20,9 +20,17 @@ feature -- Initialization
 			a_name_is_not_empty: not a_name.is_empty
 			a_path_is_not_empty: not a_path.is_empty
 		do
+			make_with_servlets (a_name, a_path, create {LINKED_LIST [SERVLET_GENERATOR_GENERATOR]}.make)
+		end
+
+	make_with_servlets (a_name, a_path: STRING; a_servlets: LIST [SERVLET_GENERATOR_GENERATOR])
+		require
+			a_name_is_not_empty: not a_name.is_empty
+			a_path_is_not_empty: not a_path.is_empty
+		do
+			servlets := a_servlets
 			webapp_name := a_name
 			path := a_path
-			create {LINKED_LIST [ROOT_SERVLET_ELEMENT]} servlets.make
 		end
 
 feature -- Access
@@ -33,48 +41,30 @@ feature -- Access
 	path: STRING
 			-- The path where the classes should be generated
 
-	servlets: LIST [ROOT_SERVLET_ELEMENT]
+	servlets: LIST [SERVLET_GENERATOR_GENERATOR]
 			-- All the parsed servlets
 
-	put_servlet (servlet: ROOT_SERVLET_ELEMENT)
+	put_servlet_generator_generators (a_servlet_gg: LIST [SERVLET_GENERATOR_GENERATOR])
 			-- Adds a servlet to the list
 		do
-			servlets.extend (servlet)
-		ensure
-			servlet_has_been_added: old servlets.count = servlets.count - 1
+			servlets := a_servlet_gg
 		end
 
 feature -- Implementation
 
 	generate
-			-- Generates all the classes for the webapp and links them together.
-			--  1. {SERVLET} for every xeb-page
-			--  2. {REQUEST_HANDLER}
-			--  3. {APPLICATION} which starts the application
+			-- Generates all the classes (except the servlets) for the webapp and links them together.
+			--  1. {REQUEST_HANDLER}
+			--  2. {APPLICATION} which starts the application
 		require
 			path_is_not_empty: not path.is_empty
 			webapp_name_is_not_empty: not webapp_name.is_empty
 		local
 			buf: INDENDATION_STREAM
-			servlet: ROOT_SERVLET_ELEMENT
 			request_class: CLASS_ELEMENT
 			application_class: CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
-				-- Generate all the {SERVLET} classes
-			from
-				servlets.start
-			until
-				servlets.after
-			loop
-				servlet := servlets.item
-				create file.make_open_write (path + servlet.name.as_lower + "_servlet.e")
-				create buf.make (file)
-				servlet.serialize (buf)
-				servlets.forth
-				file.close
-			end
-
 				-- Generate the {REQUEST_HANDLER} class
 			webapp_name.to_lower
 			create file.make_open_write (path + webapp_name + "_request_handler.e")
@@ -107,10 +97,10 @@ feature -- Implementation
 			Result.append_local ("request_handler", webapp_name.as_upper + "_REQUEST_HANDLER")
 		end
 
-	generate_constructor_for_request_handler (some_servlets: LIST [ROOT_SERVLET_ELEMENT]): FEATURE_ELEMENT
+	generate_constructor_for_request_handler (some_servlets: LIST [SERVLET_GENERATOR_GENERATOR]): FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
-			servlet: ROOT_SERVLET_ELEMENT
+			servlet: SERVLET_GENERATOR_GENERATOR
 		do
 			create Result.make ("make")
 			Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
@@ -123,7 +113,7 @@ feature -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.name.as_upper + "_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.name.as_lower  + ".xeb%")")
+					+ servlet.servlet_name.as_upper + "_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end

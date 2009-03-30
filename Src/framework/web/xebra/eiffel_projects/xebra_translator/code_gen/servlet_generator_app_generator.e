@@ -17,11 +17,6 @@ feature -- Initialization
 			create {ARRAYED_LIST [SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
 		end
 
-feature {NONE} -- Access
-
-	servlet_generator_generators: LIST [SERVLET_GENERATOR_GENERATOR]
-			-- All the servlet_generator_generators
-
 feature -- Access
 
 	put_servlet_generator_generator (servlet_gg: SERVLET_GENERATOR_GENERATOR)
@@ -29,6 +24,9 @@ feature -- Access
 		do
 			servlet_generator_generators.extend (servlet_gg)
 		end
+
+	servlet_generator_generators: LIST [SERVLET_GENERATOR_GENERATOR]
+		-- All the servlet_generator_generators
 
 feature -- Basic functionality
 

@@ -50,6 +50,12 @@ feature -- Element change
 			html_set: html = a_html
 		end
 
+	append (a_string: STRING)
+			-- Appends a string to the html result
+		do
+			html.append_string (a_string)
+		end
+
 	put_cookie_order (a_cookie: XH_COOKIE)
 			-- Adds a cookie
 		do

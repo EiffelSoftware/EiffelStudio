@@ -10,37 +10,9 @@ deferred class
 
 feature -- Access
 
-	controller_features: TABLE [PROCEDURE [ANY, TUPLE], STRING]
-			-- Table with the feature agents of the controller
-			-- Only the features that will be called
-
-	controller_features_with_result: TABLE [FUNCTION [ANY, TUPLE, STRING], STRING]
-			-- Table with the feature agents (only the functions) of the controller
-			-- Only the features that will be called
-
 	handle_request (request: REQUEST): RESPONSE
 			-- Handles a request from a client an generates a response.
 		deferred
-		end
-
-	call_on_controller (feature_name: STRING)
-			-- Calls the feature with the name `feature_name' on the controller
-			-- If the feature does not exist, nothing happens
-		do
-			if controller_features.valid_key (feature_name) then
-				controller_features [feature_name].call (Void)
-			end
-		end
-
-	call_on_controller_with_result (feature_name: STRING): STRING
-			-- Calls the feature with the name `feature_name' on the controller
-			-- If the feature does not exist, nothing happens
-			-- Returns the result of the feature
-		do
-			Result := ""
-			if controller_features_with_result.valid_key (feature_name) then
-				Result := controller_features_with_result [feature_name].item (Void)
-			end
 		end
 
 note

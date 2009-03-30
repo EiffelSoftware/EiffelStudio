@@ -27,8 +27,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-
-
 	root_tag: TAG_ELEMENT
 			-- The root tag of the parsed xeb file
 

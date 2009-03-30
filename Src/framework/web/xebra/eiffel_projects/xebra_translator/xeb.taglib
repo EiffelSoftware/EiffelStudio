@@ -1,23 +1,23 @@
 <taglib id= "xeb">
 	<tag id="call" class="XEB_CALL_TAG">
-		<attribute id="feature" call="True" />
+		<attribute id="feature" />
 	</tag>
 	<tag id="loop" class="XEB_LOOP_TAG">
 		<attribute id="times" />
 	</tag>
 	<tag id="display" class="XEB_DISPLAY_TAG">
-		<attribute id="feature" call_with_result="True" />
+		<attribute id="feature" />
 	</tag>
 	<tag id ="redirect" class="XEB_REDIRECT_TAG">
 		<attribute id="url" />
 	</tag>
 	<tag id="iterate" class="XEB_ITERATE_TAG">
-		<attribute id="list" call_with_result="True" />
+		<attribute id="list" />
 		<attribute id="variable" />
+		<attribute id="type" />
 	</tag>
 	<tag id="variable" class="XEB_VARIABLE_TAG">
 		<attribute id="id" />
-		<attribute id="type" />
 		<attribute id="feature" />
 	</tag>
 </taglib>

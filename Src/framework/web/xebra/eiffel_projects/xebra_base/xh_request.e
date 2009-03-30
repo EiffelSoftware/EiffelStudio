@@ -60,8 +60,9 @@ feature {NONE} -- Initialization
 			end
 
 				-- Read cookies
-			create cookies.make
-		
+			cookies := read_cookies (headers_in)
+
+
 		ensure
 			method_set: method.is_equal (Method_post) or method.is_equal (Method_get)
 			post_set: method.is_equal (Method_post) implies attached post_parameters
@@ -83,9 +84,15 @@ feature {NONE} -- Constants
 	Key_p_key: STRING = "&"
 	Key_p_value: STRING = "="
 	Key_t_end: STRING = "#E#"
+
 	Method_post: CHARACTER = 'P'
 	Method_get: CHARACTER = 'G'
+
 	Headers_in_set_cookies: STRING = "Set-Cookie"
+	Headers_in_cookie: STRING = "Cookie"
+	Headers_eq: STRING = "="
+	Headers_sq: STRING = ";"
+
 
 feature -- Access
 
@@ -119,6 +126,36 @@ feature -- Access
 
 
 feature {NONE} -- Internal processing
+
+	read_cookies (a_headers_in: HASH_TABLE [STRING, STRING]): LINKED_LIST [XH_COOKIE]
+			-- Parses a hash_table and looks for cookies.
+		local
+			l_s: detachable STRING
+			l_i: INTEGER
+			l_name: STRING
+			l_value: STRING
+			l_has_more: BOOLEAN
+		do
+			create Result.make
+			if attached a_headers_in.item (Headers_in_cookie) as l_item then
+				l_s := l_item
+				from l_has_more := true until not l_has_more loop
+					l_i := l_s.substring_index (Headers_eq, 1)
+					l_name := l_s.substring (1, l_i - 1)
+					l_s.remove_head (l_i - 1 + Headers_eq.count)
+					if l_s.has_substring (Headers_sq) then
+						l_has_more := True
+						l_i := l_s.substring_index (Headers_sq, 1)
+						l_value := l_s.substring (1, l_i - 1)
+						l_s.remove_head (l_value.count + Headers_sq.count +1 )
+					else
+						l_has_more := False
+						l_value := l_s.twin
+					end
+					Result.put_right (create {XH_COOKIE}.make (l_name, l_value))
+				end
+			end
+		end
 
 	parse_table (a_string: STRING; a_key_in: STRING; a_key_key: STRING; a_key_value: STRING
 				 a_key_out: STRING): HASH_TABLE [STRING, STRING]
@@ -202,5 +239,6 @@ feature {NONE} -- Internal processing
 			result_not_empty: not Result.is_empty
 		end
 
-
+	invariant
+		post_or_get_attached: attached post_parameters or attached get_parameters
 end

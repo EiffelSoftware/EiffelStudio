@@ -1,6 +1,7 @@
 note
 	description: "[
-		Contains all information to create a rfc2109 cookie in the browser
+		Contains all information to be handed to the request 
+		out header in order create a rfc2109 cookie in the browser
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

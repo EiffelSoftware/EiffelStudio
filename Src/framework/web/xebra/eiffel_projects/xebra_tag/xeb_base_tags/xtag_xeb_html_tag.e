@@ -8,7 +8,7 @@ class
 	XTAG_XEB_HTML_TAG
 
 inherit
-	TAG_SERIALIZER
+	XTAG_TAG_SERIALIZER
 		redefine
 			generate
 		end
@@ -31,7 +31,7 @@ feature {NONE} -- Access
 
 feature {NONE}
 
-	generate (a_feature: FEATURE_ELEMENT)
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
 			write_string_to_result (text, a_feature)

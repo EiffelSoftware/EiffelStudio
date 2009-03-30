@@ -8,7 +8,7 @@ class
 	XTAG_XEB_ITERATE_TAG
 
 inherit
-	TAG_SERIALIZER
+	XTAG_TAG_SERIALIZER
 
 create
 	make
@@ -36,7 +36,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	generate (a_feature: FEATURE_ELEMENT)
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
 			a_feature.append_local (variable, type)

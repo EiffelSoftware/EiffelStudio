@@ -8,7 +8,7 @@ class
 	XTAG_XEB_VARIABLE_TAG
 
 inherit
-	TAG_SERIALIZER
+	XTAG_TAG_SERIALIZER
 
 create
 	make
@@ -27,7 +27,7 @@ feature
 	feature_name: STRING
 	id: STRING
 
-	generate (a_feature: FEATURE_ELEMENT)
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
 			a_feature.append_expression ("Result.append (" + id + "." + feature_name + ")")

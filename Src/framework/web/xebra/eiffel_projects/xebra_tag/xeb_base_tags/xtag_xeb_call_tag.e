@@ -10,7 +10,7 @@ class
 	XTAG_XEB_CALL_TAG
 
 inherit
-	TAG_SERIALIZER
+	XTAG_TAG_SERIALIZER
 		redefine
 			generate
 		end
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Implementation
 
-	generate (a_feature: FEATURE_ELEMENT)
+	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
 			a_feature.append_expression ("controller." + feature_name)

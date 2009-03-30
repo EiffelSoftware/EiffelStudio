@@ -1,15 +1,14 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {XEB_ITERATE_TAG}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XTAG_XEB_ITERATE_TAG
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	TAG_SERIALIZER
 
 create
 	make
@@ -17,40 +16,57 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+			make_base
+			list := ""
+			variable := ""
+			type := ""
+		end
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+feature {NONE} -- Access
 
-				l_translator.set_output_path (Arguments.argument (3))
+	list: STRING
+			-- The items over which we want to iterate
 
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
+	variable: STRING
+			-- Name of the variable
 
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
+	type: STRING
+			-- Type of the variable
 
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+feature {NONE} -- Implementation
+
+	generate (a_feature: FEATURE_ELEMENT)
+			-- <Precursor>
+		do
+			a_feature.append_local (variable, type)
+			a_feature.append_expression ("from")
+			a_feature.append_expression ("controller." + list + ".start")
+			a_feature.append_expression ("until")
+			a_feature.append_expression ("controller." + list + ".after")
+			a_feature.append_expression ("loop")
+			a_feature.append_expression (variable + " := controller." + list + ".item")
+			generate_children (a_feature)
+			a_feature.append_expression ("controller." + list + ".forth")
+			a_feature.append_expression ("end")
+		end
+
+	put_attribute (id: STRING; a_attribute: STRING)
+			-- <Precursor>
+		do
+			if id.is_equal ("list") then
+				list := a_attribute
+			end
+			if id.is_equal ("variable") then
+				variable := a_attribute
+			end
+			if id.is_equal ("type") then
+				type := a_attribute
 			end
 		end
 
-;note
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +98,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

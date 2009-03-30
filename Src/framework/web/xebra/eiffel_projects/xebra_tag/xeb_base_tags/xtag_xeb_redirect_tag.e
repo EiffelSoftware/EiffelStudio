@@ -1,15 +1,17 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {XEB_REDIRECT_TAG}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XTAG_XEB_REDIRECT_TAG [G]
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	TAG_SERIALIZER
+		redefine
+			output
+		end
 
 create
 	make
@@ -17,40 +19,34 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+			make_base
+			create {CONSTANT_ATTRIBUTE} url.make ("")
+		end
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+feature {NONE} -- Access
 
-				l_translator.set_output_path (Arguments.argument (3))
+	url: TAG_ATTRIBUTE
+			-- The XHTML content
 
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
+feature {NONE}
 
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
+	output (parent: SERVLET; buf: INDENDATION_STREAM; variables: LIST [ANY])
+			-- <Precursor>
+		do
+			buf.append_string ("<meta HTTP-EQUIV=%"REFRESH%" content=%"0; url=" + url.value (parent) + "%"")
+		end
 
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+	put_attribute (id: STRING; a_attribute: TAG_ATTRIBUTE)
+			-- <Precursor>
+		do
+			if id.is_equal("url") then
+				url := a_attribute
 			end
 		end
 
-;note
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +78,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

@@ -1,56 +1,29 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {XTL_TAG_LIB_ITEM}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class
-	APPLICATION
+deferred class
+	XTL_TAG_LIB_ITEM
 
-inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
+feature -- Access
 
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
-		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
-
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
-
-				l_translator.set_output_path (Arguments.argument (3))
-
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
-			end
+	put (child: XTL_TAG_LIB_ITEM)
+			-- Adds a child to the list of children
+		deferred
 		end
 
-;note
+	set_attribute (id: STRING; value: STRING)
+			-- Sets an attribute
+			-- Might be ignored by the specific implementation
+		require
+			id_is_not_empty: not id.is_empty
+			value_is_not_empty: not value.is_empty
+		deferred
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +55,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

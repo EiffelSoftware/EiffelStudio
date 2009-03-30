@@ -1,56 +1,41 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		Used to render a statement which just adds the code to a feature.
+	]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XEL_PLAIN_CODE_ELEMENT
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	XEL_SERVLET_ELEMENT
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
-		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
+		code: STRING
+				-- Plain code that is inserted as is
 
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
+feature -- Initialization
 
-				l_translator.set_output_path (Arguments.argument (3))
-
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
+		make (a_code: STRING)
+				-- `a_code': The plain code that should be inserted
+			do
+				code := a_code
 			end
+
+feature -- Processing
+
+		serialize (buf: INDENDATION_STREAM)
+			-- <Precursor>			
+		do
+			buf.put_string (code)
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +67,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

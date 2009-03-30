@@ -1,15 +1,14 @@
 note
-	description : "Runns the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {XEB_VARIABLE_TAG}."
+	author: "sandro"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	APPLICATION
+	XTAG_XEB_VARIABLE_TAG
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
-	KL_SHARED_ARGUMENTS
-
+	TAG_SERIALIZER
 
 create
 	make
@@ -17,40 +16,34 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Make the application.
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 3 then
-				print ("usage: translator project_name input_path output_path%N")
-			else
-				print ("%N============================%NTranslator started...%N")
-
-				create l_translator.make (Arguments.argument (1))
-				create dir.make (Arguments.argument (2))
-
-				l_translator.set_output_path (Arguments.argument (3))
-
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("Output file generated to '")
-					print (l_translator.output_path)
-					print ("'.")
-				end
-			end
+			make_base
+			feature_name := ""
+			id := ""
 		end
 
-;note
+feature
+
+	feature_name: STRING
+	id: STRING
+
+	generate (a_feature: FEATURE_ELEMENT)
+			-- <Precursor>
+		do
+			a_feature.append_expression ("Result.append (" + id + "." + feature_name + ")")
+		end
+
+	put_attribute (a_id: STRING; a_attribute: STRING)
+			-- <Precursor>
+		do
+			if a_id.is_equal ("id") then
+				id := a_attribute
+			end
+			if a_id.is_equal ("feature") then
+				feature_name := a_attribute
+			end
+		end
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -82,6 +75,3 @@ feature {NONE} -- Initialization
 			Customer support http://support.eiffel.com
 		]"
 end
-
-
-

@@ -48,8 +48,8 @@ feature --Execution
 			socket_open: not socket.is_closed
 		local
 			l_message: STRING
-			l_response: RESPONSE
-			l_request: REQUEST
+			l_response: XH_RESPONSE
+			l_request: XH_REQUEST
 			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			l_i: INTEGER
 		do
@@ -83,7 +83,7 @@ feature --Execution
 
 feature {NONE} -- Implementation
 
-	forward_request_to_app (a_request: REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): RESPONSE
+	forward_request_to_app (a_request: XH_REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): XH_RESPONSE
 			--Sends a request to the correct webserver.
 		require
 			a_webapp_connected: not a_webapp_socket.is_closed
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 
             l_soc1.independent_store (a_request)
             create Result.make
-            if attached {RESPONSE} l_soc1.retrieved as rec_message then
+            if attached {XH_RESPONSE} l_soc1.retrieved as rec_message then
             	Result := rec_message
             end
 

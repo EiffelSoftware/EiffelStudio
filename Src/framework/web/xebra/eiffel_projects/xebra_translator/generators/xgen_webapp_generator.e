@@ -11,7 +11,7 @@ class
 create
 	make, make_with_servlets
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name, a_path: STRING)
 			-- `a_name': The name of the web application
@@ -24,6 +24,9 @@ feature -- Initialization
 		end
 
 	make_with_servlets (a_name, a_path: STRING; a_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
+			-- `a_name': The name of the web application
+			-- `a_path': The path, where all the classes should be generated
+			-- `a_servlets': List of the servlet generator generators for the webapp
 		require
 			a_name_is_not_empty: not a_name.is_empty
 			a_path_is_not_empty: not a_path.is_empty
@@ -50,7 +53,7 @@ feature -- Access
 			servlets := a_servlet_gg
 		end
 
-feature -- Implementation
+feature -- Basic Functionality
 
 	generate
 			-- Generates all the classes (except the servlets) for the webapp and links them together.
@@ -87,6 +90,8 @@ feature -- Implementation
 			application_class.serialize (buf)
 			file.close
 		end
+
+feature {NONE} -- Implementation
 
 	generate_contructor_for_application: XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the application

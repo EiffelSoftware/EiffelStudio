@@ -77,6 +77,7 @@ feature -- Access
 		end
 
 	add_variable_by_name_type (a_name, a_type: STRING)
+			-- Adds a access feature to the class
 		do
 			add_variable (create {XEL_VARIABLE_ELEMENT}.make (a_name, a_type))
 		end

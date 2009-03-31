@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SERVLET_GENERATOR_GENERATOR}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 

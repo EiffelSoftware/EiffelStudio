@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			create_html_tag_put
 			create l_tag.make ("output", Output_tag_name)
 			feature_name := value.substring (3, value.count-1)
-			l_tag.put_dynamic_attribute ("value", feature_name)
+			l_tag.put_attribute ("value", feature_name)
 			tag_stack.item.put_subtag (l_tag)
 			controller_calls_with_result.extend (feature_name)
 				-- Don't put it on the stack
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 		do
 			feature_name := value.substring (3, value.count - 1)
 			controller_calls_with_result.extend (feature_name)
-			tag_stack.item.put_dynamic_attribute (local_part, feature_name)
+			tag_stack.item.put_attribute (local_part, feature_name)
 		end
 
 note

@@ -63,7 +63,7 @@ feature -- Access
 
 	append_local (name, type: STRING)
 			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the feature
-			-- If the
+			-- The name of the local has to be unique
 		require
 			name_is_valid: not name.is_empty
 			name_is_not_already_used: not locals.has (name)

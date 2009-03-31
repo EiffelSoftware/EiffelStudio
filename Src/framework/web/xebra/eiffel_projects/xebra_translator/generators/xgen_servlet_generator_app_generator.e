@@ -74,7 +74,7 @@ feature -- Basic functionality
 
 			create file.make_open_write (a_path + "servlet_gen.ecf")
 			file.put_string ("[
-		<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
 		<root class="APPLICATION" feature="make"/>
@@ -92,7 +92,7 @@ feature -- Basic functionality
 				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="utilities" location="$XEBRA_DEV\eiffel_projects\utilities\"/>
+		<cluster name="utilities" location="$XEBRA_DEV\eiffel_projects\xebra_base\utilities\"/>
 		<cluster name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\xebra_ast_elements\"/>
 		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\"/>
 		<cluster name="xebra_tag" location="$XEBRA_DEV\eiffel_projects\xebra_tag\" recursive="true"/>

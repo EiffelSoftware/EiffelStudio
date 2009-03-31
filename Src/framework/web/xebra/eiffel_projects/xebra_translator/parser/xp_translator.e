@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: STRING)
-			-- Initialization for `XP_TRANSLATOR'.
+			-- Initialization for {XP_TRANSLATOR}.
 		do
 			output_path := "generated/" + a_name + "/"
 			name := a_name
@@ -37,6 +37,7 @@ feature -- Access
 			-- Name of the system
 
 	taglib: XTL_TAG_LIBRARY
+			-- Taglib which should be used to validate the xeb files
 
 feature -- Status setting
 

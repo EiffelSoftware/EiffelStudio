@@ -27,78 +27,6 @@ feature {NONE} -- Initialization
 			create data_cells.make (3)
 		end
 
-feature {NONE} -- Debugger session data access
-
-	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
-			-- Session manager consumer
-		once
-			create Result
-		end
-
-	session_data: SESSION_I
-			-- Session data
-		local
-			cons: like session_manager
-		do
-			Result := internal_session_data
-			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg")
-					internal_session_data := Result
-
-						-- Load debugger data when first access the session
-					manager.load_all_debugger_data
-				end
-			end
-		end
-
-	profiles_session_data: SESSION_I
-			-- Session data
-		local
-			cons: like session_manager
-		do
-			Result := internal_profiles_session_data
-			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg-profiles")
-					internal_profiles_session_data := Result
-
-						-- Load debugger data when first access the session
-					manager.load_profiles_data
-				end
-			end
-		end
-
-	internal_session_data: like session_data
-			-- cached version of `session_data'
-
-	internal_profiles_session_data: like profiles_session_data
-			-- cached version of `profiles_session_data'
-
-	Profiles_session_data_id: STRING = "com.eiffel.debugger.profiles"
-			-- Id for session data related to profiles
-
-	Breakpoints_session_data_id: STRING = "com.eiffel.debugger.breakpoints"
-			-- Id for session data related to breakpoints
-
-	Exception_handler_session_data_id: STRING = "com.eiffel.debugger.exceptions_handler"
-			-- Id for session data related to exception_handler
-
-feature {NONE} -- Debugger session data change
-
-	force_save_session_data (a_session_data: SESSION_I)
-			-- Force storing of `a_session_data'
-		local
-			cons: like session_manager
-		do
-			cons := session_manager
-			if cons.is_service_available then
-				cons.service.store (a_session_data)
-			end
-		end
-
 feature -- Access
 
 	breakpoints_data_from_storage: BREAK_LIST
@@ -143,7 +71,7 @@ feature -- Access
 			end
 		end
 
-feature -- Write
+feature {NONE} -- Persistence
 
 	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage)
 			-- <Precursor>
@@ -207,13 +135,85 @@ feature -- Write
 			force_save_session_data (dbg_session)
 		end
 
+feature {NONE} -- Access: session
+
+	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			-- Session manager consumer
+		once
+			create Result
+		end
+
+	session_data: SESSION_I
+			-- Session data
+		local
+			cons: like session_manager
+		do
+			Result := internal_session_data
+			if Result = Void then
+				cons := session_manager
+				if cons.is_service_available then
+					Result := cons.service.retrieve_extended (True, once "dbg")
+					internal_session_data := Result
+
+						-- Load debugger data when first access the session
+					manager.load_all_debugger_data
+				end
+			end
+		end
+
+	profiles_session_data: SESSION_I
+			-- Session data
+		local
+			cons: like session_manager
+		do
+			Result := internal_profiles_session_data
+			if Result = Void then
+				cons := session_manager
+				if cons.is_service_available then
+					Result := cons.service.retrieve_extended (True, once "dbg-profiles")
+					internal_profiles_session_data := Result
+
+						-- Load debugger data when first access the session
+					manager.load_profiles_data
+				end
+			end
+		end
+
+	internal_session_data: like session_data
+			-- cached version of `session_data'
+
+	internal_profiles_session_data: like profiles_session_data
+			-- cached version of `profiles_session_data'
+
+	Profiles_session_data_id: STRING = "com.eiffel.debugger.profiles"
+			-- Id for session data related to profiles
+
+	Breakpoints_session_data_id: STRING = "com.eiffel.debugger.breakpoints"
+			-- Id for session data related to breakpoints
+
+	Exception_handler_session_data_id: STRING = "com.eiffel.debugger.exceptions_handler"
+			-- Id for session data related to exception_handler
+
+feature {NONE} -- Element change: session
+
+	force_save_session_data (a_session_data: SESSION_I)
+			-- Force storing of `a_session_data'
+		local
+			cons: like session_manager
+		do
+			cons := session_manager
+			if cons.is_service_available then
+				cons.service.store (a_session_data)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	data_cells: HASH_TABLE [CELL_SESSION_DATA [DEBUGGER_STORABLE_DATA_I], STRING]
 			-- Cached cell session data.
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -226,22 +226,22 @@ feature {NONE} -- Implementation
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

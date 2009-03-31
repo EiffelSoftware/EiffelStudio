@@ -89,9 +89,6 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
 
 feature -- Context
 
-	context_feature: FEATURE_I
-			-- Feature associated to the context
-
 	Default_context_feature: FEATURE_I
 			-- Default context feature for `context_feature'
 		once
@@ -125,13 +122,13 @@ feature {NONE} -- Evaluation
 				init_context_with_current_callstack
 			elseif on_class then
 				init_context_address_with_current_callstack
-				set_context_data (Void, context_class, Void)
+				set_context_data (Void, context_class, Void, Void, 0, 0)
 			elseif on_object then
 				dobj := debugger_manager.object_manager.debugged_object (context_address, 0, 0)
 				if dobj.is_erroneous then
 					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context_address.output)))
 				else
-					set_context_data (Void, dobj.dynamic_class, dobj.class_type)
+					set_context_data (Void, dobj.dynamic_class, dobj.class_type, Void, 0, 0)
 				end
 				dobj := Void
 			end
@@ -2192,7 +2189,7 @@ feature -- Context: Element change
 					dbg_error_handler.notify_error_expression_during_context_preparation
 				else
 					fi := ecse.routine_i
-					set_context_data (fi, ecse.dynamic_class, ecse.dynamic_type)
+					set_context_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
 				end
 			end
 		end
@@ -2211,8 +2208,8 @@ feature -- Context: Element change
 			end
 		end
 
-	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type)
-			-- Set context data related to `f', `c', `ct'
+	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type; otl: like context_object_test_locals; a_bp, a_bp_nested: INTEGER)
+			-- Set context data related to `f', `c', `ct', `otl', `a_bp' and `a_bp_nested'
 		local
 			l_reset_byte_node: BOOLEAN
 			c_c_t: CLASS_TYPE
@@ -2225,7 +2222,7 @@ feature -- Context: Element change
 					context_feature := f
 					l_reset_byte_node := True
 				end
-				if not equal (context_class, c) then
+				if context_class /~ c then
 					context_class := c
 					l_reset_byte_node := True
 				end
@@ -2237,13 +2234,23 @@ feature -- Context: Element change
 						c_c_t := c_t_i.associated_class_type (Void)
 					end
 				end
-				if not equal (context_class_type, c_c_t) then
+				if context_class_type /~ c_c_t then
 					context_class_type := c_c_t
 					l_reset_byte_node := True
 				end
 				if context_class = Void and context_class_type /= Void then
 					context_class_type := Void
 					l_reset_byte_node := True
+				end
+
+				if otl /~ context_object_test_locals then
+					context_object_test_locals := otl
+				end
+				if context_breakable_index /= a_bp then
+					context_breakable_index := a_bp
+				end
+				if context_bp_nested_index /= a_bp_nested then
+					context_bp_nested_index := a_bp_nested
 				end
 
 				if context_feature = Void then
@@ -2334,24 +2341,29 @@ feature -- Access
 	is_boolean_expression (f: FEATURE_I): BOOLEAN
 			-- Is `Current' a boolean query in the context of `f'?
 		local
+			old_context_object_test_locals: like context_object_test_locals
 			old_context_feature: like context_feature
 			old_context_class: like context_class
 			old_context_class_type: like context_class_type
 			old_int_expression_byte_note: like internal_byte_node
+			old_bp, old_bp_nested: INTEGER
 			bak_byte_code: BYTE_CODE
 		do
 				--| Backup current context and values
+			old_context_object_test_locals := context_object_test_locals
 			old_context_feature := context_feature
 			old_context_class := context_class
 			old_context_class_type := context_class_type
 			old_int_expression_byte_note := internal_byte_node
+			old_bp := context_breakable_index
+			old_bp_nested := context_bp_nested_index
 
 				--| Removed any potential error due to previous evaluation
 			error_handler.wipe_out
 
 				--| prepare context
 				--| this may reset the `expression_byte_node' value
-			set_context_data (f, f.written_class, Void)
+			set_context_data (f, f.written_class, Void, Void, 0, 0) -- FIXME: we are missing object test locals here
 
 				--| Get expression_byte_node
 			get_byte_node
@@ -2399,7 +2411,7 @@ feature -- Access
 						--| and pertinent ...
 					old_context_class := context_class
 				end
-				set_context_data (old_context_feature, old_context_class, old_context_class_type)
+				set_context_data (old_context_feature, old_context_class, old_context_class_type, old_context_object_test_locals, old_bp, old_bp_nested)
 				internal_byte_node := old_int_expression_byte_note
 			end
 		end
@@ -2637,15 +2649,14 @@ feature {NONE} -- OT locals
 			li: LOCAL_INFO
 			l_name_id: INTEGER
 			ct: CLASS_TYPE
+			lst: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
 		do
 			ct := context_class_type
 			if ct = Void then
 				ct := f.associated_class.types.first
 			end
-			if
-				attached debugger_manager.compiler_data.object_test_locals (ct, f) as lst and then
-				not lst.is_empty
-			then
+			lst := context_object_test_locals
+			if lst /= Void and then	not lst.is_empty then
 				from
 					lst.start
 				until
@@ -2725,22 +2736,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DBG_EXPRESSION_EVALUATOR_B

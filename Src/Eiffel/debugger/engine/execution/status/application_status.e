@@ -215,6 +215,9 @@ feature -- Values
 			-- Breakpoint at which we are currently stopped
 			-- (first, second...)
 
+	break_nested_index: INTEGER
+			-- Breakpoint nested index at which we are currently stopped
+
 	reason: INTEGER
 			-- Reason for the application being stopped
 
@@ -508,7 +511,7 @@ feature -- Access
 						(reason = Pg_step)
 		end
 
-	debugged_position_information (fe: E_FEATURE): TUPLE [break_index: INTEGER; fid: INTEGER]
+	debugged_position_information (fe: E_FEATURE): TUPLE [bp, bp_nested: INTEGER; fid: INTEGER]
 			-- Information about debugged position
 		do
 			if current_call_stack /= Void then
@@ -517,13 +520,19 @@ feature -- Access
 					attached rep.e_feature as r_fe and then
 					r_fe.body_id_for_ast = fe.body_index
 				then
-					Result := [rep.replayed_break_index, r_fe.feature_id]
+					create Result
+					Result.bp := rep.replayed_break_index
+					Result.bp_nested := 0
+					Result.fid := r_fe.feature_id
 				elseif
 					attached {EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element as stel and then
 					attached stel.routine as ot_fe and then
 					ot_fe.body_id_for_ast = fe.body_index
 				then
-					Result := [stel.break_index, ot_fe.feature_id]
+					create Result
+					Result.bp := stel.break_index
+					Result.bp_nested := stel.break_nested_index
+					Result.fid := ot_fe.feature_id
 				end
 			end
 		end
@@ -725,7 +734,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -738,22 +747,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

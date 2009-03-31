@@ -136,6 +136,26 @@ feature -- Properties
 			end
 		end
 
+	object_test_locals_info: LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+			-- List of object test local's info
+		local
+			l_result: detachable like object_test_locals_info
+		do
+			l_result := private_object_test_locals_info
+			if l_result = Void then
+				if routine /= Void and dynamic_type /= Void then
+					l_result := debugger_manager.debugger_ast_server.object_test_locals (dynamic_type, routine, break_index, break_nested_index)
+				end
+				if l_result = Void then
+					create {ARRAYED_LIST [TUPLE [ID_AS, TYPE_A]]} l_result.make (0)
+				end
+				private_object_test_locals_info := l_result
+			end
+			Result := l_result
+		ensure
+			Result_attached: Result /= Void
+		end
+
 	locals: LIST [ABSTRACT_DEBUG_VALUE]
 			-- Value of local variables
 		local
@@ -207,6 +227,7 @@ feature -- Stack reset
 			private_arguments := Void
 			private_locals := Void
 			private_result := Void
+			private_object_test_locals_info := Void
 		ensure
 			not_initialized: not initialized
 		end
@@ -228,15 +249,6 @@ feature {NONE} -- Implementation
 			Result := feat.locals
 		end
 
-	object_test_locals_from (a_class_type: CLASS_TYPE; a_feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_A]]
-			-- Locals declaration groups for `feat'.
-		require
-			a_class_type_attached: a_class_type /= Void
-			a_feat_attached: a_feat /= Void
-		do
-			Result := debugger_manager.compiler_data.object_test_locals (a_class_type, a_feat)
-		end
-
 feature {NONE} -- Implementation Properties
 
 	private_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
@@ -247,6 +259,9 @@ feature {NONE} -- Implementation Properties
 
 	private_result: like result_value
 			-- Associated result
+
+	private_object_test_locals_info: like object_test_locals_info
+			-- Associated list of object test local's resolved info
 
 	initialized: BOOLEAN
 			-- Is the stack initialized
@@ -271,7 +286,7 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -284,22 +299,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_CALL_STACK_ELEMENT

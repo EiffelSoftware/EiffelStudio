@@ -1363,6 +1363,10 @@ feature {NONE} -- Stack grid implementation
 
 					--| Break Index
 				l_breakindex_info := cse.break_index.out
+				if cse.break_nested_index > 0 then
+					l_breakindex_info.append_character ('+')
+					l_breakindex_info.append_integer (cse.break_nested_index)
+				end
 
 					--| Routine name
 				l_feature_name := cse.routine_name
@@ -1447,7 +1451,11 @@ feature {NONE} -- Stack grid implementation
 				a_row.set_item (Feature_column_index, glab)
 
 					--| Position
-				create glab.make_with_text (cse.break_index.out)
+				if cse.break_nested_index > 0 then
+					create glab.make_with_text (cse.break_index.out + "+" + cse.break_nested_index.out)
+				else
+					create glab.make_with_text (cse.break_index.out)
+				end
 				a_row.set_item (Position_column_index, glab)
 
 					--| Dynamic Type

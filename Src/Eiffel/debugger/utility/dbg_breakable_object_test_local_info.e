@@ -1,59 +1,64 @@
 note
-	description : "Objects that ..."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Summary description for {DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO}."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	EXTERNAL_CALL_STACK_ELEMENT
-
-inherit
-	CALL_STACK_ELEMENT
+	DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO
 
 create
 	make
 
-feature -- Change
+feature {NONE} -- Initialization
 
-	set_info (a_oa: DBG_ADDRESS; a_cn, a_fn: STRING; a_bp, a_bp_nested: INTEGER; a_info: STRING)
-		require
-			object_address_not_void: a_oa /= Void
-			class_name_not_void: a_cn /= Void
-			routine_name_not_void: a_fn /= Void
-			break_index_positive: a_bp >= 0
+	make (a_bp: like breakable_index; a_bpn: like breakable_nested_index)
+			-- Instanciate Current
 		do
-			class_name := a_cn
-			routine_name := a_fn
-			break_index := a_bp
-			break_nested_index := a_bp_nested
-			object_address := a_oa
-			info := a_info
+			breakable_index := a_bp
+			breakable_nested_index := a_bpn
 		end
 
-feature -- Properties
+feature -- Access
 
-	info: STRING
+	breakable_index: INTEGER
+			-- break index
 
-	is_eiffel_call_stack_element: BOOLEAN = False
-		-- Is Current an Eiffel Call Stack Element ?
+	breakable_nested_index: INTEGER
+			-- nested break index
 
-	object_address: DBG_ADDRESS
+	name_id: detachable ID_AS assign set_name
+			-- Object test local's name id
 
-feature -- Output
+	type: detachable TYPE_AS assign set_type
+			-- Object test local's type	
 
-	object_address_to_string: STRING
+	expression: detachable EXPR_AS assign set_expression
+			-- Object test local's expression	
+
+feature -- Element change
+
+	set_name (v: like name_id)
+			-- Set `name_id' to `v'
 		do
-			if object_address /= Void then
-				Result := object_address.output
-			end
+			name_id := v
 		end
 
-note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	set_type (v: like type)
+			-- Set `type' to `v'
+		do
+			type := v
+		end
+
+	set_expression (v: like expression)
+			-- Set `expression' to `v'
+		do
+			expression := v
+		end
+
+;note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -81,5 +86,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-end -- class EIFFEL_CALL_STACK_ELEMENT
+end

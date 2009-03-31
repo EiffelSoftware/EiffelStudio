@@ -82,7 +82,7 @@ feature
 			indendation >= 0
 		end
 
-feature {INDENDATION_STREAM} -- Implementation
+feature {XU_INDENDATION_STREAM} -- Implementation
 
 	indendate
 			-- Appends the indendantion to the stream

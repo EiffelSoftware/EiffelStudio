@@ -1,71 +1,65 @@
 note
 	description: "[
-		Handler of the connection with the XEbraServer. Delegates all incoming
-		requests to the appropriate servlet. Caching of sessions and session objects
-		handled as well.
-		A specific handler which inherits from this class is generated to accomodate
-		all the xeb pages of a particular web application.
+		Handles requests and delegates them to the appropriate servlet. Is
+		reponsible for sending back the response to the client.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XWA_REQUEST_HANDLER -- XWA_SERVER_CON_HANDLER
+class
+	XWA_REQUEST_HANDLER 
 
-feature -- Constants
+create
+	make
 
-	Server_port: INTEGER = 3491
+feature {NONE} -- Initialization
 
-	Max_queue: INTEGER = 5
+	make
+			--
+		do
+
+		end
 
 feature -- Access
 
-	request_pool: DATA_THREAD_POOL [XWA_SERVLET_HANDLER]
-			-- A thread pool for the incoming requests from the xebra server
 
-	stateless_servlets: TABLE [XWA_STATELESS_SERVLET, STRING]
-			-- All the servlets which do not need a state
-			-- Page id points to the thread pool of servlets
+feature -- Processing
 
-	session_map: TABLE [XH_SESSION, STRING]
-			-- A table which maps a session id on a session
-
-
-feature -- Implementation
-
-	run
-			-- Starts the web application.
-            -- Accept communication with client and exchange messages.
-        local
-            server_socket: NETWORK_STREAM_SOCKET
-        do
-            create server_socket.make_server_by_port (Server_port)
-            from
-                server_socket.listen (Max_queue)
-            until
-                false
-            loop
-                process_request (server_socket) -- See below
-            end
-            server_socket.cleanup
-        end
-
-	servlet_handler_spawner: XWA_SERVLET_HANDLER
-			-- Spawns {SERVLET_HANDLER}s for the `request_pool'
+	process_servlet (a_request: XH_REQUEST; a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
+			-- Processes an incoming request and sends it back to the server.
+			-- Routes the request to the appropriate controller.
+		local
+			l_servlet: detachable XWA_SERVLET
+			l_response: XH_RESPONSE
 		do
-			create Result.make
+			l_servlet := find_servlet (a_request, a_request_handler)
+
+			if attached l_servlet then
+				l_response := l_servlet.handle_request (a_request)
+			else
+				create l_response.make
+				l_response.html.put_string ("Application not found: %"" + a_request.target_uri + "%"")
+			end
+
+		  -- 	a_socket.independent_store (handle_servlet(a_request, a_request_handler))
+		   	a_socket.independent_store (l_response)
+	       	a_socket.close
 		end
 
-    process_request (server_socket: NETWORK_STREAM_SOCKET)
-            -- Receive a request, handle it, and send it back
-        do
-            server_socket.accept
-            if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
-	            if attached {XH_REQUEST} thread_socket.retrieved as l_request then
-	            	request_pool.add_work (agent {XWA_SERVLET_HANDLER}.process_servlet (l_request, thread_socket, Current))
-	            end
-            end
-        end
+feature {NONE} -- Internal Processing
+
+	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_SERVER_CONN_HANDLER): detachable XWA_SERVLET
+			-- Searches for the servlet requested by `request'
+			-- 1. Stateless servlet?
+			-- 2. Servlet in session?
+			-- 3. If not found := Void
+		do
+			if attached {XWA_STATELESS_SERVLET} a_request_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+				Result := l_servlet
+			else
+			--	Result := request.session.get_stateful_servlet
+			end
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

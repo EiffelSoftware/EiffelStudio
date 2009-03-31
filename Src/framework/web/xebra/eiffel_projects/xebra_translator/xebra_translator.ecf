@@ -10,7 +10,7 @@
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<cluster name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\xebra_ast_elements\" recursive="true"/>
-		<cluster name="xebra_base" location="\home\fabioz\local\xebra\eiffel_projects\xebra_base\" recursive="true">
+		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\" recursive="true">
 			<option full_class_checking="false" is_attached_by_default="false" is_void_safe="false">
 			</option>
 		</cluster>

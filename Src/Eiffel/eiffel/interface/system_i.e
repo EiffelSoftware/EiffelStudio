@@ -337,9 +337,6 @@ feature -- Properties
 			--| Once melted, it is kept in memory so it won't be re-processed
 			--| each time
 
-	nb_frozen_features: INTEGER
-			-- Number of frozen features in system.
-
 	body_index_table: ARRAY [INTEGER]
 			-- Body index table
 			--| Correspondance of generic body index and generic body
@@ -2408,6 +2405,9 @@ end
 				-- next time we will freeze, all the melted classes will
 				-- be in `Degree_minus_1'.
 			Degree_1.transfer_to (Degree_minus_1)
+
+				-- Compress execution table.
+			execution_table.melt
 		end
 
 	make_update (empty: BOOLEAN)
@@ -2952,8 +2952,13 @@ end
 debug ("ACTIVITY")
 	io.error.put_string ("Shake%N")
 end
-				-- Rebuild the execution table
-			shake
+				-- Compress execution table.
+			if not first_compilation then
+				execution_table.freeze
+			end
+
+				-- Freeze the external table.
+			externals.freeze
 
 				-- Generation of the descriptor tables
 			process_degree_minus_1
@@ -3005,33 +3010,12 @@ end
 
 			deg_output.display_degree_output (degree_message, 1, 10)
 			execution_table.generate
-				-- Empty melted list of execution table
-			execution_table.freeze
 
 			deg_output.display_degree_output (degree_message, 0, 10)
 			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
 			make_update (True)
-		end
-
-	shake
-		local
-			exec_table: EXECUTION_TABLE
-		do
-				-- Compress execution table
-			exec_table := execution_table
-
-			if not first_compilation then
-				exec_table.shake
-			end
-
-				-- Reset the frozen level since the execution table
-				-- is re-built now.
-			nb_frozen_features := exec_table.nb_frozen_features
-
-				-- Freeze the external table.
-			externals.freeze
 		end
 
 feature -- Final mode generation
@@ -5296,7 +5280,7 @@ feature -- Pattern table generation
 					-- Set the frozen level
 				buffer.put_new_line
 				buffer.put_string ("eif_nb_features = ")
-				buffer.put_integer (nb_frozen_features)
+				buffer.put_integer (execution_table.nb_frozen_features)
 				buffer.put_character (';')
 
 				buffer.generate_block_close

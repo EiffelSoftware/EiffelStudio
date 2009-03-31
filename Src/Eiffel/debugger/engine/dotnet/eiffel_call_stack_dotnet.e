@@ -239,7 +239,8 @@ feature {APPLICATION_STATUS} -- Restricted access
 															l_class_type, 	-- dynmic class type
 															l_feature_i, 	-- routine, routine_name ...
 															l_il_offset,
-															l_line_number 	-- break_index / line number
+															l_line_number, 	-- break_index / line number
+															0 -- FIXME: find a way to provide nested index .. if possible.
 															)
 														eiffel_cse.set_chain_frame_indexes (c, i)
 														call := eiffel_cse
@@ -270,7 +271,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 														addr,
 														l_module.md_type_name (l_class_token),
 														l_module.md_member_name (l_feature_token),
-														l_il_offset,
+														l_il_offset, 0, -- FIXME: find a way to provide a nested index
 														l_extra_info
 													)
 												call := external_cse
@@ -324,7 +325,7 @@ feature -- cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -337,22 +338,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_CALL_STACK_DOTNET

@@ -24,7 +24,7 @@ create {APPLICATION_EXECUTION}
 
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
-	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, reas: INTEGER)
+	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, nested, reas: INTEGER)
 			-- Set the various attributes identifying current
 			-- position in source code.
 		require
@@ -59,6 +59,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 					-- Compute break position.
 				break_index := offs
+				break_nested_index := nested
 
 					-- create the call stack
 				create ccs.make_empty (current_thread_id)
@@ -110,7 +111,7 @@ feature -- Query
 
 	dummy_call_stack_element: CALL_STACK_ELEMENT_CLASSIC
 		do
-			create Result.dummy_make (e_feature, 1, True, break_index, object_address, dynamic_type, dynamic_class, origin_class)
+			create Result.dummy_make (e_feature, 1, True, break_index, break_nested_index, object_address, dynamic_type, dynamic_class, origin_class)
 		end
 
 feature -- Values
@@ -140,7 +141,7 @@ feature -- Threads related access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -153,22 +154,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class APPLICATION_STATUS_CLASSIC

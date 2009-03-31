@@ -79,7 +79,7 @@ feature -- Filling
 			melted: BOOLEAN; a_address: DBG_ADDRESS;
 			a_dyn_type: CLASS_TYPE;
 			a_feature: FEATURE_I;
-			a_il_offset: INTEGER; a_line_number: INTEGER)
+			a_il_offset: INTEGER; a_bp_index, a_bp_nested_index: INTEGER)
 		local
 			l_routine: E_FEATURE
 		do
@@ -100,10 +100,13 @@ feature -- Filling
 				class_name := dynamic_class.name_in_upper
 			end
 			written_class := a_feature.written_class
-			if a_line_number = 0 then
+			if a_bp_index = 0 then
 				break_index := 1
 			else
-				break_index := a_line_number
+				break_index := a_bp_index
+				if a_bp_nested_index > 0 then
+					break_nested_index := a_bp_nested_index
+				end
 			end
 
 			object_address := a_address
@@ -503,7 +506,7 @@ feature {NONE} -- Implementation
 			initialized_current_object
 		local
 			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
-			l_ot_locals: like object_test_locals_from
+			l_ot_locals: like object_test_locals_info
 			id_list: IDENTIFIER_LIST
 			l_index: INTEGER
 			l_count: INTEGER
@@ -634,7 +637,7 @@ feature {NONE} -- Implementation
 						end
 						if not l_list.after then
 								--| Remaining locals, should be OT locals
-							l_ot_locals := object_test_locals_from (dynamic_type ,rout)
+							l_ot_locals := object_test_locals_info
 							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
 								from
 									l_ot_locals.start
@@ -821,7 +824,7 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -834,22 +837,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CALL_STACK_ELEMENT_DOTNET

@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 			create profiles.make (10)
 			create breakpoints_manager.make (Void)
 
+			create debugger_ast_server.make (100)
+
 			initialize_storage
 			observer_provider.attach_to_debugger (Current)
 			breakpoints_manager.add_observer (Current)
@@ -1124,6 +1126,8 @@ feature -- Bridge to compiler data
 
 	compiler_data: DEBUGGER_DATA_FROM_COMPILER
 
+	debugger_ast_server: DEBUGGER_AST_SERVER
+
 feature {NONE} -- Bridge to compiler data implementation
 
 	compute_class_c_data
@@ -1402,6 +1406,7 @@ feature -- Compilation events
 				end
 			end
 			update_rt_extension_available
+			debugger_ast_server.reset
 		end
 
 feature -- Debugging events
@@ -1715,12 +1720,13 @@ invariant
 	dbg_storage_attached: dbg_storage /= Void
 	implementation_not_void: implementation /= Void
 	controller_not_void: controller /= Void
+	debugger_ast_server_attached: debugger_ast_server /= Void
 
 	application_initialized_not_void: application_initialized implies application /= Void
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1733,22 +1739,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

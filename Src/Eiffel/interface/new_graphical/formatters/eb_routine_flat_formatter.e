@@ -67,7 +67,7 @@ feature -- Formatting
 	show_debugged_line
 			-- Update arrows in formatter and ensure that arrows is visible.
 		local
-			t: TUPLE [line: INTEGER; fid: INTEGER]
+			t: TUPLE [bp, bp_nested: INTEGER; fid: INTEGER]
 			dm: like debugger_manager
 		do
 			if displayed and selected then
@@ -75,8 +75,8 @@ feature -- Formatting
 					dm := debugger_manager
 					if dm.safe_application_is_stopped then
 						t := dm.application_status.debugged_position_information (associated_feature)
-						if t /= Void and then t.line > 0 then
-							editor.display_breakpoint_number_when_ready (t.line, t.fid)
+						if t /= Void and then t.bp > 0 then
+							editor.display_breakpoint_number_when_ready (t.bp, t.fid)
 								-- Refresh is needed on the margin because if we are showing the same
 								-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
 								-- we need to refresh it to show/hide the green arrow representing
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			-- Should breakpoints be shown in Current?
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -200,11 +200,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ROUTINE_FLAT_FORMATTER

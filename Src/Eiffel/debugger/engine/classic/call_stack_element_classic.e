@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: DBG_ADDRESS;
+	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; a_bp, a_bp_nested: INTEGER; addr: DBG_ADDRESS;
 				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class)
 			-- Initialize `Current' with no calls to the run-time.
 		require
@@ -113,7 +113,8 @@ feature {NONE} -- Initialization
 			end
 			level_in_stack := lvl
 			is_melted := mlt
-			break_index := br
+			break_index := a_bp
+			break_nested_index := a_bp_nested
 
 				--| Dynamic type
 			dynamic_type := a_type
@@ -327,6 +328,8 @@ feature {NONE} -- Implementation
 			value: ABSTRACT_DEBUG_VALUE
 			args_locs_info: like retrieved_locals_and_arguments
 			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
+			l_ot_locals: like private_object_test_locals_info
+			l_type: detachable TYPE_A
 			l_index, l_upper: INTEGER
 			locals_list: like private_locals
 			args_list: like private_arguments
@@ -468,10 +471,8 @@ feature {NONE} -- Implementation
 
 						if l_index <= l_upper then
 								--| Remaining locals, should be OT locals
-							if
-								attached object_test_locals_from (dynamic_type, rout) as l_ot_locals and then
-								not l_ot_locals.is_empty
-							then
+							l_ot_locals := object_test_locals_info
+							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
 								from
 									l_ot_locals.start
 								until
@@ -481,7 +482,12 @@ feature {NONE} -- Implementation
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
-									l_stat_class := static_class_for_local_from_type_a (l_ot_locals.item.type, rout_i, l_wc)
+									l_type := l_ot_locals.item.type
+									if l_type /= Void then
+										l_stat_class := static_class_for_local_from_type_a (l_type, rout_i, l_wc)
+									else
+										l_stat_class := Void
+									end
 									if l_stat_class /= Void then
 										value.set_static_class (l_stat_class)
 									end
@@ -558,7 +564,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 			c_pass_set_rout ($set_rout)
 		end
 
-	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; line_number: INTEGER)
+	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; bp_index, bp_nested_index: INTEGER)
 			-- See: C/ipc/ewb/ewb_dumper.c: c_recv_rout_info (..)
 		local
 			dt: like dynamic_type
@@ -574,7 +580,8 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 				end
 				written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)
 
-				break_index := line_number
+				break_index := bp_index
+				break_nested_index := bp_nested_index
 				object.to_upper
 				object_address_to_string := "Unavailable"
 				create object_address.make_from_string (object)
@@ -610,35 +617,35 @@ invariant
 	valid_level: level_in_stack >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CALL_STACK_ELEMENT_CLASSIC

@@ -18,12 +18,12 @@ feature
 		do
 			class_name := ""
 			name := ""
-			create {ARRAYED_LIST [XTL_TAG_DESCRIPTION_ATTRIBUTE]} attributes.make (10)
+			create {HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]} attributes.make (2)
 		end
 
 feature {NONE} -- Access
 
-	attributes: LIST [XTL_TAG_DESCRIPTION_ATTRIBUTE]
+	attributes: HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]
 			-- A list of all the possible attributes
 
 feature -- Access
@@ -36,13 +36,12 @@ feature -- Access
 
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
-		local
-			child: detachable XTL_TAG_DESCRIPTION_ATTRIBUTE
 		do
-			child ?= a_child
-			if attached child then
-				attributes.extend (child)
+			if attached {XTL_TAG_DESCRIPTION_ATTRIBUTE} a_child as child then
+				attributes.put (child, child.id)
 			end
+		ensure then
+			child_has_been_added: attributes.count = old attributes.count + 1
 		end
 
 	set_attribute (id: STRING; value: STRING)
@@ -54,42 +53,9 @@ feature -- Access
 			if id.is_equal ("id") then
 				name := value
 			end
-		end
-
-	is_call_feature (a_name: STRING): BOOLEAN
-			-- Is the attribute with the name `a_name' a feature name?
-		require
-			a_name_is_not_empty: not a_name.is_empty
-		do
-			Result := False
-			from
-				attributes.start
-			until
-				attributes.after
-			loop
-				if attributes.item.id.is_equal (a_name) then
-					Result := attributes.item.call
-				end
-				attributes.forth
-			end
-		end
-
-	is_call_with_result_feature (a_name: STRING): BOOLEAN
-			-- Is the attribute with the name `a_name' a name of a feature which returns something?
-		require
-			a_name_is_not_empty: not a_name.is_empty
-		do
-			Result := False
-			from
-				attributes.start
-			until
-				attributes.after
-			loop
-				if attributes.item.id.is_equal (a_name) then
-					Result := attributes.item.call_with_result
-				end
-				attributes.forth
-			end
+		ensure then
+			class_or_id_has_been_set: (id.is_empty implies not class_name.is_empty) and
+										(class_name.is_empty implies not id.is_empty)
 		end
 
 	has_argument (a_name: STRING): BOOLEAN
@@ -97,17 +63,7 @@ feature -- Access
 		require
 			a_name_is_not_empty: not a_name.is_empty
 		do
-			Result := False
-			from
-				attributes.start
-			until
-				attributes.after or Result
-			loop
-				if attributes.item.id.is_equal (a_name) then
-					Result := True
-				end
-				attributes.forth
-			end
+			Result := attached attributes [a_name]
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

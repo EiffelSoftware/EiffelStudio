@@ -17,26 +17,25 @@ feature -- Initialization
 
 	make
 		do
-			create {ARRAYED_LIST [XTL_TAG_DESCRIPTION]} tags.make (10)
+			create {HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]} tags.make (10)
 		end
 
 feature {NONE} -- Access
 
 	id: STRING
 
-	tags: LIST [XTL_TAG_DESCRIPTION]
+	tags: HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]
 
 feature -- Access
 
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
-		local
-			child: detachable XTL_TAG_DESCRIPTION
 		do
-			child ?= a_child
-			if attached child then
-				tags.extend (child)
+			if attached {XTL_TAG_DESCRIPTION} a_child as child then
+				tags.put (child, child.name)
 			end
+		ensure then
+			child_has_been_added: tags.count = old tags.count + 1
 		end
 
 	set_attribute (a_id: STRING; value: STRING)
@@ -57,84 +56,23 @@ feature -- Query
 			a_name_is_not_empty: not a_name.is_empty
 		do
 			Result := ""
-			from
-				tags.start
-			until
-				tags.after
-			loop
-				if tags.item.name.as_lower.is_equal (a_name.as_lower) then
-					Result := tags.item.class_name
-				end
-				tags.forth
-			end
-		end
-
-	is_call_feature (a_id, a_name: STRING): BOOLEAN
-			-- Searches for the tag with the id `a_id'
-			-- and checks if `a_name' is a parameter
-			-- which represents a feature name
-		do
-			Result := False
-			from
-				tags.start
-			until
-				tags.after
-			loop
-				if tags.item.name.as_lower.is_equal (a_id.as_lower) then
-					Result := tags.item.is_call_feature (a_name)
-				end
-				tags.forth
-			end
-		end
-
-	is_call_with_result_feature (a_id, a_name: STRING): BOOLEAN
-			-- Searches for the tag with the id `a_id'
-			-- and checks if `a_name' is a parameter
-			-- which represents a feature name that returns something
-		do
-			Result := False
-			from
-				tags.start
-			until
-				tags.after
-			loop
-				if tags.item.name.as_lower.is_equal (a_id.as_lower) then
-					Result := tags.item.is_call_with_result_feature (a_name)
-				end
-				tags.forth
+			if attached tags [a_name] as tag then
+				Result := tag.class_name
 			end
 		end
 
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
 			-- Verifies that `a_attribute' belongs to `a_tag'
 		do
-			Result := False
-			from
-				tags.start
-			until
-				tags.after
-			loop
-				if tags.item.name.as_lower.is_equal (a_tag.as_lower) then
-					Result := tags.item.has_argument (a_attribute)
-				end
-				tags.forth
+			if attached tags [a_tag] as tag then
+				Result := tag.has_argument (a_attribute)
 			end
 		end
 
 	contains (tag_id: STRING): BOOLEAN
 			-- checks, if the tag is available in the tag library
 		do
-			Result := False
-			from
-				tags.start
-			until
-				tags.after
-			loop
-				if tags.item.name.as_lower.is_equal (tag_id.as_lower) then
-					Result := True
-				end
-				tags.forth
-			end
+			Result := attached tags [tag_id]
 		end
 
 note

@@ -17,16 +17,9 @@ feature {NONE}-- Initialization
 	make
 		do
 			id := ""
-			call := False
 		end
 
 feature -- Access
-
-	call: BOOLEAN
-		-- Does the value stand for a feature?
-
-	call_with_result: BOOLEAN
-		-- Does the value stand for a feature which returns something?
 
 	id: STRING
 		-- The id of the tag attribute
@@ -45,12 +38,6 @@ feature -- Access
 		do
 			if a_id.is_equal ("id") then
 				id := value
-			end
-			if a_id.is_equal ("call") then
-				call := value.to_boolean
-			end
-			if a_id.is_equal ("call_with_result") then
-				call_with_result := value.to_boolean
 			end
 		end
 

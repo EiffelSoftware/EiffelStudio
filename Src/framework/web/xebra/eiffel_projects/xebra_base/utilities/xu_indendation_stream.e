@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	INDENDATION_STREAM
+	XU_INDENDATION_STREAM
 
 create
 	make

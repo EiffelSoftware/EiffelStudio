@@ -13,12 +13,12 @@ inherit
 
 	CODE_PAGE_CONSTANTS
 		export
-			{NONT} all
+			{NONE} all
 		end
 
 	ENCODING_HELPER
 		export
-			{NONT} all
+			{NONE} all
 		end
 
 feature {ENCODING} -- String encoding convertion

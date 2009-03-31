@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			target_uri_set: not target_uri.is_empty
 		end
 
-
 feature {NONE} -- Constants
 
 	Key_post_params: STRING = "#P#"
@@ -90,7 +89,6 @@ feature {NONE} -- Constants
 	Headers_in_cookie: STRING = "Cookie"
 	Headers_eq: STRING = "="
 	Headers_sq: STRING = ";"
-
 
 feature -- Access
 
@@ -121,7 +119,22 @@ feature -- Access
 	cookies: LINKED_LIST [XH_COOKIE]
 			-- Retrives cookies that are stored in the headers_in table.
 
+feature -- Basic Operations
 
+	get_cookie (a_name: STRING): detachable XH_COOKIE
+			-- Returns true if there is a cookie with name=a_name in the list of cookies
+		do
+			from
+				cookies.start
+			until
+				cookies.after
+			loop
+				if cookies.item_for_iteration.name.is_equal (a_name) then
+					Result := cookies.item_for_iteration
+				end
+				cookies.forth
+			end
+		end
 
 feature {NONE} -- Internal processing
 

@@ -7,7 +7,8 @@ note
 	revision: "$Revision$"
 
 class
-	XWA_REQUEST_HANDLER 
+	XWA_REQUEST_HANDLER
+	
 
 create
 	make
@@ -35,7 +36,7 @@ feature -- Processing
 			l_servlet := find_servlet (a_request, a_request_handler)
 
 			if attached l_servlet then
-				l_response := l_servlet.handle_request (a_request)
+				l_response := l_servlet.pre_handle_request (a_request)
 			else
 				create l_response.make
 				l_response.html.put_string ("Application not found: %"" + a_request.target_uri + "%"")

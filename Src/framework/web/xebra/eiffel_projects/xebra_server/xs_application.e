@@ -17,16 +17,16 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			server: XB_SERVER_TCP
+			server: XS_SERVER_TCP
 		do
-			create server.make_with_port({XB_SERVER_TCP}.default_http_server_port)
+			create server.make_with_port({XS_SERVER_TCP}.default_http_server_port)
 			--test_encoding_facility
 		end
 
 	test_encoding_facility
 			--
 		local
-			code: ENCODING_FACILITIES
+			code: XS_ENCODING_FACILITIES
 			d: NATURAL
 			b: BOOLEAN
 			e: NATURAL

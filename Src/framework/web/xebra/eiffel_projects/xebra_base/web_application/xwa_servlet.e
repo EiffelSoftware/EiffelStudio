@@ -7,10 +7,26 @@ note
 
 deferred class
 	XWA_SERVLET
+	
+inherit
+	XWA_SHARED_SESSION_MANAGER
 
 feature -- Access
 
-	handle_request (request: XH_REQUEST): XH_RESPONSE
+	current_session: XH_SESSION
+		-- Represents the session that belongs to the user that has send the current request
+
+feature -- Basic Operations	
+
+	pre_handle_request (a_request: XH_REQUEST): XH_RESPONSE
+			-- Handles a request from a client an generates a response.
+		do
+			create Result.make
+			current_session := session_manager.get_current_session (a_request, Result)
+			handle_request (a_request, Result)
+		end
+
+	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
 		deferred
 		end

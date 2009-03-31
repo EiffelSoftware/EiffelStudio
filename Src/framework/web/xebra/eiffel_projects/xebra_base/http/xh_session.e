@@ -18,9 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	 make
-			-- Creates current.
-		local
-			l_date: XU_DATE
+			-- Creates current.		
 		do
 				uuid := uuid_generator.generate_uuid.out
 				remote_user := ""
@@ -30,11 +28,7 @@ feature {NONE} -- Initialization
 				is_dirty := False
 				is_written := False
 
-				max_age := 300
-
-				create l_date.default_create
-				expiry := max_age + l_date.unix_time_stamp
-
+				set_max_age (300)
 		end
 
 feature -- Access
@@ -42,14 +36,39 @@ feature -- Access
 	uuid: STRING
 		-- Anonymous uuid of this particular session
 
-	remote_user: STRING
+	remote_user: STRING assign set_remote_user
 		-- User who owns this particular session
 
 	expiry: NATURAL
 		-- When the session expires
 
-	max_age: NATURAL
+	max_age: NATURAL assign set_max_age
 		-- 	
+
+feature -- Status Setting
+
+	set_max_age (a_i: NATURAL)
+			-- Sets max_age and updates expiry.
+		local
+			l_date: XU_DATE
+		do
+			max_age := a_i
+			create l_date.default_create
+			expiry := max_age + l_date.unix_time_stamp
+		ensure
+			max_age_set: max_age = a_i
+		end
+
+	set_remote_user (a_s: STRING)
+			-- Setter.
+		do
+			remote_user := a_s
+		ensure
+			remote_user_set: remote_user = a_s
+		end
+
+
+
 
 feature {NONE} -- Access
 

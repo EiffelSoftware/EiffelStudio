@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-	max_age: INTEGER assign set_max_age
+	max_age: NATURAL assign set_max_age
 		-- Optional.  The Max-Age attribute defines the lifetime of the
 		-- cookie, in seconds.  The delta-seconds value is a decimal non-
 		-- negative integer.  After delta-seconds seconds elapse, the client
@@ -101,7 +101,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_max_age (a_max_age: INTEGER)
+	set_max_age (a_max_age: NATURAL)
 			-- Setter.
 		do
 			max_age := a_max_age
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	default_max_age: INTEGER
+	default_max_age: NATURAL
 			-- Generates a default max age of 5min
 		do
 			Result := 300;

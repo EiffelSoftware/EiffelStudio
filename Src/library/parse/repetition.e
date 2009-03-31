@@ -52,6 +52,8 @@ feature {CONSTRUCT} -- Implementation
 
 	check_recursion
 			-- Check the sequence for left recursion.
+		local
+			l_child: like child
 		do
 			if not check_recursion_list.has (production) then
 				check_recursion_list.extend (production);
@@ -59,8 +61,11 @@ feature {CONSTRUCT} -- Implementation
 					print_children
 				end;
 				child_start;
-				child.expand_all;
-				child.check_recursion
+				l_child := child
+				if l_child /= Void then
+					l_child.expand_all;
+					l_child.check_recursion
+				end
 			end
 		end
 
@@ -156,6 +161,7 @@ feature {NONE} -- Implementation
 			-- return true if successful.
 		local
 			tmp_committed: BOOLEAN
+			l_child: like child
 		do
 			expand;
 			if has_separator then
@@ -166,8 +172,10 @@ feature {NONE} -- Implementation
 				parse_child;
 				committed := committed or tmp_committed
 			end;
-			Result := child.parsed;
-			if not child.parsed then
+			l_child := child
+			check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
+			Result := l_child.parsed;
+			if not l_child.parsed then
 				remove_child
 			end
 		end;
@@ -175,6 +183,8 @@ feature {NONE} -- Implementation
 	in_action
 			-- Execute semantic actions on current construct
 			-- by executing actions on children in sequence.
+		local
+			l_child: like child
 		do
 			if not no_components then
 				from
@@ -182,7 +192,9 @@ feature {NONE} -- Implementation
 				until
 					child_after
 				loop
-					child.semantics;
+					l_child := child
+					check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
+					l_child.semantics;
 					middle_action;
 					child_forth
 				end
@@ -198,15 +210,21 @@ feature {NONE} -- Implementation
 	print_children
 			-- Print content of sequence,
 			-- optional are between square brackets.
+		require
+			has_child: not is_empty
+		local
+			l_child: like child
 		do
 			print_name;
 			io.put_string (" :	");
 			child_start;
-			if child.is_optional then
+			l_child := child
+			check l_child_not_void: l_child /= Void end -- Implied from the precondition.
+			if l_child.is_optional then
 				io.put_character ('[')
 			end;
-			child.print_name;
-			if child.is_optional then
+			l_child.print_name;
+			if l_child.is_optional then
 				io.put_character (']')
 			end;
 			io.put_string (" ..");

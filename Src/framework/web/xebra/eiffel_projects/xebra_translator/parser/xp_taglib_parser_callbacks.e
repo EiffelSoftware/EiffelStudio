@@ -1,6 +1,6 @@
 note
 	description: "[
-		Retrieves meta data from a tag library
+		Retrieves meta data from a tag library file (XML)
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,17 +23,15 @@ feature {NONE} -- Initialization
 			create tag_stack.make (10)
 		end
 
-feature -- Constants
-
 feature -- Access
 
-	TAG_LIB_TAG_NAME: STRING = "taglib"
-	TAG_TAG_NAME: STRING = "tag"
-	TAG_ATTRIBUTE_NAME: STRING = "attribute"
-
 	taglib: XTL_TAG_LIBRARY
+			-- Taglib which is generated after parsing
+
+feature {NONE} -- Access
 
 	tag_stack: ARRAYED_STACK [XTL_TAG_LIB_ITEM]
+			-- Stack to generate the parse tree
 
 feature -- Document
 
@@ -81,14 +79,14 @@ feature -- Tag
 			l_tag: XTL_TAG_DESCRIPTION
 			l_attr: XTL_TAG_DESCRIPTION_ATTRIBUTE
 		do
-			if a_local_part.is_equal (TAG_LIB_TAG_NAME) then
+			if a_local_part.is_equal (Tag_lib_tag_name) then
 				create taglib.make
 				tag_stack.put (taglib)
-			elseif a_local_part.is_equal (TAG_TAG_NAME)	then
+			elseif a_local_part.is_equal (Tag_tag_name)	then
 				create l_tag.make
 				tag_stack.item.put (l_tag)
 				tag_stack.put (l_tag)
-			elseif a_local_part.is_equal (TAG_ATTRIBUTE_NAME) then
+			elseif a_local_part.is_equal (Tag_attribute_name) then
 				create l_attr.make
 				tag_stack.item.put (l_attr)
 				tag_stack.put (l_attr)
@@ -117,12 +115,13 @@ feature -- Content
 	on_content (a_content: STRING)
 			-- <Precursor>
 		do
-
 		end
 
-feature {NONE} -- Implementation
+feature -- Constants
 
-
+	Tag_lib_tag_name: STRING = "taglib"
+	Tag_tag_name: STRING = "tag"
+	Tag_attribute_name: STRING = "attribute"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

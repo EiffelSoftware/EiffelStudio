@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {SERVLET_GENERATOR_APP_GENERATOR}."
-	author: "sandro"
+	description: "[
+		This class generates servlet generators for a xeb file. The generated file is a
+		eiffel class and has to be compiled and executed together with the other servlet generator
+		classes to generate the very servlets.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,9 +13,10 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
+			--
 		do
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
 		end
@@ -93,12 +97,15 @@ feature -- Basic functionality
 		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\"/>
 		<cluster name="xebra_tag" location="$XEBRA_DEV\eiffel_projects\xebra_tag\" recursive="true"/>
 	</target>
-</system>	
+</system>
 			]")
 			file.close
 		end
 
+feature {NONE} -- Implementation
+
 	build_constructor_for_application: XEL_FEATURE_ELEMENT
+			-- Builds the constructor feature for the APPLICATION class of servlet_gen
 		local
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
 		do

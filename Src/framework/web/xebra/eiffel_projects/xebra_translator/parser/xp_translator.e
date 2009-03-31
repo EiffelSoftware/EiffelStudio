@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 	make (a_name: STRING)
 			-- Initialization for `XP_TRANSLATOR'.
 		do
-		--	create preprocessor.make
-				-- Create a default output_path
 			output_path := "generated/" + a_name + "/"
 			name := a_name
 		end

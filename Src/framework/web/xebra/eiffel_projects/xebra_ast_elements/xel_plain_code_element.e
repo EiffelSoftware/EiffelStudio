@@ -16,20 +16,20 @@ create
 
 feature -- Access
 
-		code: STRING
-				-- Plain code that is inserted as is
+	code: STRING
+			-- Plain code that is inserted as is
 
 feature -- Initialization
 
-		make (a_code: STRING)
-				-- `a_code': The plain code that should be inserted
-			do
-				code := a_code
-			end
+	make (a_code: STRING)
+			-- `a_code': The plain code that should be inserted
+		do
+			code := a_code
+		end
 
 feature -- Processing
 
-		serialize (buf:XU_INDENDATION_STREAM)
+	serialize (buf:XU_INDENDATION_STREAM)
 			-- <Precursor>			
 		do
 			buf.put_string (code)

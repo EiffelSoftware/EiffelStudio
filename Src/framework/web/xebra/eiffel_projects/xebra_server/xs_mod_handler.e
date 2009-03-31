@@ -1,11 +1,10 @@
 note
 	description: "Handles incoming requests from http_module and sends it to the appropriate XebraApp {XB_MOD_HANDLER}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XB_MOD_HANDLER
+	XS_MOD_HANDLER
 
 create
 	make

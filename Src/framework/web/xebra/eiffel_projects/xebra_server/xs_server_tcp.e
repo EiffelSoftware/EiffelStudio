@@ -1,5 +1,5 @@
 class
-    XB_SERVER_TCP
+    XS_SERVER_TCP
 
 create
     make_with_port

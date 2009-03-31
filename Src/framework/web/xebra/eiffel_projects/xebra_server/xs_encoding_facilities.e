@@ -1,11 +1,10 @@
 note
-	description: "Summary description for {ENCODING_FACILITIES}."
-	author: "sdz"
+	description: "Provides features to encode and decode messages"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ENCODING_FACILITIES
+	XS_ENCODING_FACILITIES
 
 create
 	make

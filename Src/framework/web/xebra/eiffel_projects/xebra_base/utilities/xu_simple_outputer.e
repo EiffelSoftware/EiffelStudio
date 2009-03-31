@@ -11,6 +11,7 @@ inherit
 	STREAM
 		redefine
 			put_string,
+			putstring,
 			make
 		end
 
@@ -35,6 +36,12 @@ feature -- Basic Functionality
 		put_string (a_string: STRING)
 				-- <Precursor>
 				-- Appends a string to the content
+			do
+				buf.append (a_string)
+			end
+
+		putstring (a_string: STRING)
+				-- <Precursor>
 			do
 				buf.append (a_string)
 			end

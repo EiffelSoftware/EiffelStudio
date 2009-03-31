@@ -1,11 +1,10 @@
 note
-	description : "test_project application root class"
-	author		: "sdz"
+	description : "Xebra server run class"
 	date        : "$Date$"
 	revision    : "$Revision$"
 
 class
-	APPLICATION
+	XS_APPLICATION
 
 inherit
 	ARGUMENTS

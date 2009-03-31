@@ -42,7 +42,7 @@ feature --
 	generate
 			--
 		local
-			buf: INDENDATION_STREAM
+			buf:XU_INDENDATION_STREAM
 			servlet_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do

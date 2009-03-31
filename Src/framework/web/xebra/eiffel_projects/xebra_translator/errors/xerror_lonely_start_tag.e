@@ -3,12 +3,12 @@ note
 		no comment yet
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ERROR_FILENOTFOUND
+	XERROR_LONELY_START_TAG
 
 inherit
 	ERROR_ERROR_INFO
@@ -27,6 +27,7 @@ feature {NONE} -- Access
 			-- `a_context': Any optional contextual information.
 		do
 			context := a_context
+			internal_description := ""
 		end
 
 
@@ -34,9 +35,8 @@ feature {NONE} -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "File not found {1}"
+			Result := "There is a lonely start tag in '${1}'"
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

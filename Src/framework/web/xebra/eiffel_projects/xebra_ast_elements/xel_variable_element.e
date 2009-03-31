@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Implementation
 
-	serialize (buf: INDENDATION_STREAM)
+	serialize (buf:XU_INDENDATION_STREAM)
 			-- <Precursor>
 		do
 			buf.put_string (name + ": " + type.as_upper)

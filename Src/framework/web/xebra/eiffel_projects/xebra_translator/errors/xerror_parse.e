@@ -8,34 +8,22 @@ note
 	revision: "$Revision$"
 
 class
-	ERROR_LONELY_START_TAG
+	XERROR_PARSE
 
 inherit
 	ERROR_ERROR_INFO
-	redefine
-		make
-		end
+
 
 create
 	make
 
 feature {NONE} -- Access
 
-	make (a_context: like context)
-			-- Initializes an error.
-			--
-			-- `a_context': Any optional contextual information.
-		do
-			context := a_context
-			internal_description := ""
-		end
-
-
 	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "There is a lonely start tag in '${1}'"
+			Result := "There is a error in the xeb file: '{1}'"
 		end
 
 note

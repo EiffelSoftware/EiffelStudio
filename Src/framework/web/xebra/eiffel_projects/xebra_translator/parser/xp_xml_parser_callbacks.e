@@ -95,7 +95,7 @@ feature -- Document
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.		
 		do
-		--	error_manager.set_last_error (create {ERROR_PARSE}.make (["Xml declarations not yet supported"]), false)
+		--	error_manager.set_last_error (create {XERROR_PARSE}.make (["Xml declarations not yet supported"]), false)
 		end
 
 feature -- Errors
@@ -103,7 +103,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			error_manager.set_last_error (create {ERROR_PARSE}.make ([a_message]), false)
+			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message]), false)
 		end
 
 feature -- Meta
@@ -112,7 +112,7 @@ feature -- Meta
 			-- Processing instruction.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			error_manager.set_last_error (create {ERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
+			error_manager.set_last_error (create {XERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
 			--	html_buf.append ("<instruction " + a_name + "++" + a_content + "instruction>")
 		end
 
@@ -171,7 +171,7 @@ feature -- Tag
 				tag_stack.item.put_subtag (l_tmp_tag)
 				tag_stack.put (l_tmp_tag)
 				if not taglib.contains (l_local_part) then
-					error_manager.add_warning (create {ERROR_UNDEFINED_TAG}.make ([l_local_part]))
+					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
 				end
 			elseif state = Reading_html then
 				html_buf.append ("<" + l_prefix +  l_local_part)
@@ -221,7 +221,7 @@ feature -- Tag
 						process_dynamic_tag_attribute (l_local_part, l_value)
 					else
 						if tag_stack.item.has_attribute (l_local_part) then
-							error_manager.add_warning (create {ERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+							error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
 						else
 							tag_stack.item.put_attribute (l_local_part, l_value)
 							if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
@@ -232,7 +232,7 @@ feature -- Tag
 						end
 					end
 				else
-					error_manager.add_warning (create {ERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+					error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
 				end
 			elseif state = Reading_html then
 				if not l_prefix.is_empty then

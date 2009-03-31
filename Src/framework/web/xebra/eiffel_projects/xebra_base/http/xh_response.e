@@ -30,10 +30,10 @@ feature {NONE} -- Constants
 feature -- Access
 
 
-	html: INDENDATION_STREAM
+	html: XU_INDENDATION_STREAM
 			-- Reponse html (xhtml)
 
-	file: SIMPLE_OUTPUTER
+	file: XU_SIMPLE_OUTPUTER
 			-- use another stream!
 
 	cookie_orders: LINKED_LIST [XH_COOKIE_ORDER]
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_html (a_html: INDENDATION_STREAM)
+	set_html (a_html: XU_INDENDATION_STREAM)
 			-- Sets the text
 		do
 			html := a_html

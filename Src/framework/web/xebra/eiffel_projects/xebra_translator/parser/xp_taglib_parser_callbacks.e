@@ -57,7 +57,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- <Precursor>
 		do
-			error_manager.set_last_error (create {ERROR_PARSE}.make ([a_message]), false)
+			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message]), false)
 		end
 
 feature -- Meta
@@ -65,7 +65,7 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- <Precursor>
 		do
-			error_manager.set_last_error (create {ERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
+			error_manager.set_last_error (create {XERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
 		end
 
 	on_comment (a_content: STRING)

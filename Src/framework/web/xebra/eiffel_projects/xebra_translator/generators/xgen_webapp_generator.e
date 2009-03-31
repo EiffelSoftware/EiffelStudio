@@ -60,7 +60,7 @@ feature -- Implementation
 			path_is_not_empty: not path.is_empty
 			webapp_name_is_not_empty: not webapp_name.is_empty
 		local
-			buf: INDENDATION_STREAM
+			buf:XU_INDENDATION_STREAM
 			request_class: XEL_CLASS_ELEMENT
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE

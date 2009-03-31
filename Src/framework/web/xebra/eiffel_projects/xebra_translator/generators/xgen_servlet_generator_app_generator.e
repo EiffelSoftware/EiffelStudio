@@ -38,7 +38,7 @@ feature -- Basic functionality
 		require
 			path_is_not_empty: not a_path.is_empty
 		local
-			buf: INDENDATION_STREAM
+			buf:XU_INDENDATION_STREAM
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE

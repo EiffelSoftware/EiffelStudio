@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	ERROR_LONELY_END_TAG
+	XERROR_LONELY_END_TAG
 
 inherit
 	ERROR_ERROR_INFO

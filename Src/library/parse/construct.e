@@ -20,8 +20,16 @@ inherit
 			make as twt_make
 		export
 			{CONSTRUCT} twt_put, twt_make
+		undefine
+			new_tree, clone_node
 		redefine
-			parent, new_cell
+			parent,
+			new_cell,
+			child_cursor,
+			twl_merge_left,
+			twl_merge_right,
+			tree_is_equal,
+			tree_copy
 		end
 
 feature -- Initialization
@@ -33,6 +41,15 @@ feature -- Initialization
 		end
 
 feature -- Access
+
+	parent: detachable CONSTRUCT
+			-- <precursor>
+
+	child_cursor: CONSTRUCT_CURSOR
+			-- <precursor>
+		do
+			create Result.make (child, child_after, child_before)
+		end
 
 	document: INPUT
 			-- The document to be parsed
@@ -158,6 +175,24 @@ feature -- Output
 			end
 		end
 
+feature -- Element Change
+
+	twl_merge_left (other: CONSTRUCT)
+			-- <precursor>
+		do
+			if {l_other: like Current} other then
+				Precursor {TWO_WAY_TREE}(l_other)
+			end
+		end
+
+	twl_merge_right (other: CONSTRUCT)
+			-- <precursor>
+		do
+			if {l_other: like Current} other then
+				Precursor {TWO_WAY_TREE}(l_other)
+			end
+		end
+
 feature {CONSTRUCT} -- Implementation
 
 	complete: BOOLEAN
@@ -165,11 +200,10 @@ feature {CONSTRUCT} -- Implementation
 			-- (Like `parsed', but in addition the construct,
 			-- if optional, must be present.)
 
-	parent: CONSTRUCT
-			-- Parent of current construct
-
-	new_cell (v: like item): like item
+	new_cell (v: like item): CONSTRUCT
 		do
+				--| FIXME: Bad design, no way to ensure result is attached.
+			check v /= Void end
 			Result := v
 			Result.twt_put (v)
 			Result.attach_to_parent (Current)
@@ -203,17 +237,24 @@ feature {NONE} -- Implementation
 			last_sub_construct := c
 		end
 
-	last_sub_construct: CONSTRUCT;
+	last_sub_construct: detachable CONSTRUCT;
 			-- Subconstruct most recently added to the production
 
 	make_optional
 			-- Make the last entered subconstruct optional.
+		local
+			l_last_sub: like last_sub_construct
 		do
-			last_sub_construct.set_optional
+			l_last_sub := last_sub_construct
+			if l_last_sub /= Void then
+				l_last_sub.set_optional
+			end
 		end
 
 	keyword (s: STRING)
 			-- Insert a keyword into the production.
+		require
+			s_not_void: s /= Void
 		local
 			key: KEYWORD
 		do
@@ -259,6 +300,8 @@ feature {NONE} -- Implementation
 			-- Add a new component to expand the production.
 			-- Note that the components are always added in
 			-- the tree node in left to right order.
+		require
+			new_not_void: new /= Void
 		do
 			child_finish;
 			child_put_right (new)
@@ -267,15 +310,17 @@ feature {NONE} -- Implementation
 
 	raise_syntax_error (s: STRING)
 			-- Print error message s.
+		require
+			s_not_void: s /= Void
 		local
 			s2 : STRING
 		do
 			s2 := s.twin
 			s2.append (" in ")
 			s2.append (construct_name)
-			if parent /= Void then
+			if attached parent as l_parent then
 				s2.append (" in ")
-				s2.append (parent.construct_name)
+				s2.append (l_parent.construct_name)
 			end;
 			document.raise_error (s2)
 		end
@@ -283,11 +328,17 @@ feature {NONE} -- Implementation
 	expected_found_error
 			-- Print an error message saying what was
 			-- expected and what was found.
+		require
+			child_not_void: child /= Void
 		local
+			l_child: like child
 			err: STRING
 		do
+			l_child := child
+			check l_child /= Void end -- Implied from the precondition.
+
 			create err.make (20)
-			err.append (child.construct_name)
+			err.append (l_child.construct_name)
 			err.append (" expected, ")
 			if document.token.type = -1 then
 				err.append ("end of document found")
@@ -333,9 +384,15 @@ feature {NONE} -- Implementation
 
 	message_construction: BOOLEAN
 			-- Has the message on left recursion been already printed?
+		require
+			child_not_void: child /= Void
+		local
+			l_child: like child
 		do
-			child.expand_all
-			Result := not child.left_recursion
+			l_child := child
+			check l_child /= Void end -- Implied from the precondition.
+			l_child.expand_all
+			Result := not l_child.left_recursion
 			if not Result then
 				if not structure_list.has (production) then
 					structure_list.put_right (production)
@@ -376,14 +433,32 @@ feature {NONE} -- Implementation
 			-- An error is output the first time a parse fails
 			-- in an uncommitted child of a committed parent
 			-- i.e. at the deepest point known to be meaningful.
+		require
+			child_not_void: child /= Void
+		local
+			l_child: like child
 		do
-			child.parse
-			if child.committed then
+			l_child := child
+			check l_child /= Void end -- Implied from the precondition.
+			l_child.parse
+			if l_child.committed then
 				committed := True
 			end;
-			if committed and not (child.parsed or child.committed) then
+			if committed and not (l_child.parsed or l_child.committed) then
 				expected_found_error
 			end
+		end
+
+	tree_is_equal (t1, t2: like Current): BOOLEAN
+			-- <precursor>
+		do
+			Result := Precursor {TWO_WAY_TREE}(t1, t2)
+		end
+
+	tree_copy (other, tmp_tree: like Current)
+			-- <precursor>
+		do
+			Precursor {TWO_WAY_TREE}(other, tmp_tree)
 		end
 
 note

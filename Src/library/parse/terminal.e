@@ -20,7 +20,7 @@ deferred class TERMINAL  inherit
 
 feature -- Access
 
-	token: TOKEN
+	token: detachable TOKEN
 			-- Token associated with terminal
 
 feature -- Status report
@@ -33,9 +33,10 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	production: LINKED_LIST [CONSTRUCT]
-			-- Void
+			-- Empty
 			-- (Meaningless for terminal constructs)
 		once
+			create Result.make
 		end
 
 	left_recursion: BOOLEAN = False;

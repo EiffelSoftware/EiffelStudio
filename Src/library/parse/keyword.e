@@ -26,9 +26,11 @@ feature -- Initialization
 
 	make (s: STRING)
 			-- Set up terminal to represent `s'.
+		require
+			s_not_void: s /= Void
 		do
-			construct_make;
 			construct_name := s;
+			construct_make;
 			lex_code := document.keyword_code (s)
 		ensure
 			construct_name = s;
@@ -42,6 +44,21 @@ feature -- Access
 
 	lex_code: INTEGER
 			-- Code of keyword in the lexical anayser
+
+feature {KEYWORD} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make (n.construct_name)
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make (construct_name)
+		end
 
 feature {NONE} -- Implementation
 

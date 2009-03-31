@@ -22,11 +22,15 @@ feature -- Initialization
 			-- to be the input document.
 		require
 			document_exists: doc /= Void
+		local
+			l_analyzer: like analyzer
 		do
 			metalex_make;
 			obtain_analyzer;
 			make_analyzer;
-			doc.set_lexical (analyzer)
+			l_analyzer := analyzer
+			check l_analyzer_not_void: l_analyzer /= Void end
+			doc.set_lexical (l_analyzer)
 		end;
 
 	obtain_analyzer
@@ -40,11 +44,15 @@ feature {NONE} -- Implementation
 
 	set_separator_type (type: INTEGER)
 			-- Make tokens of type `type' to be separators.
+		local
+			l_analyzer: like analyzer
 		do
-			if analyzer = Void then
-				create analyzer.make
+			l_analyzer := analyzer
+			if l_analyzer = Void then
+				create l_analyzer.make
+				analyzer := l_analyzer
 			end;
-			analyzer.set_separator_type (type)
+			l_analyzer.set_separator_type (type)
 		end;
 
 note

@@ -32,14 +32,19 @@ feature -- Initialisation
 
 feature  -- Access
 
-	analyzer: LEXICAL;
+	analyzer: detachable LEXICAL
 			-- Lexical analyzer used
+		note
+			option: stable
+		attribute
+		end
 
 	keyword_code (s: STRING) : INTEGER
 			-- Keyword code corresponding to `s';
 			-- -1 if no specimen of `s' is found.
 		require
 			lex_not_void: analyzer /= Void
+			s_not_void: s /= Void
 		do
 			Result := analyzer.keyword_code (s)
 		end;
@@ -64,6 +69,8 @@ feature  -- Status report
 
 	end_of_document : BOOLEAN
 			-- Has end of document been reached?
+		require
+			lex_not_void: analyzer /= Void
 		do
 			Result := analyzer.end_of_text
 		end;
@@ -77,13 +84,15 @@ feature  -- Status setting
 			lex_not_void: analyzer /= Void;
 			name_not_void: filename /= Void;
 		do
-			check not (analyzer = Void) end;
 			analyzer.set_file (filename)
 		end;
 
 	set_input_string (stringname: STRING)
 			-- Set the name of the input string to be read
 			-- by the lexical analyzer.
+		require
+			lex_not_void: analyzer /= Void
+			stringname_not_void: stringname /= Void
 		do
 			analyzer.set_string (stringname)
 		end;
@@ -92,6 +101,8 @@ feature  -- Input
 
 	get_token
 			-- Make next token accessible with ``token''
+		require
+			analyzer_not_void: analyzer /= Void
 		local
 			new_token: TOKEN
 		do
@@ -149,13 +160,17 @@ feature  -- Output
 			end
 		end;
 
-
 	raise_error (s: STRING)
 			-- Print error message `s'.
+		require
+			s_not_void: s /= Void
+		local
+			l_file_name: like file_name
 		do
 			error_message.wipe_out;
-			if file_name /= Void then
-				error_message.append (file_name);
+			l_file_name := file_name
+			if l_file_name /= Void then
+				error_message.append (l_file_name);
 			end
 			error_message.append (" (line ");
 			error_message.append_integer (token.line_number);
@@ -174,14 +189,18 @@ feature {NONE}
 			create Result.make (120)
 		end
 
-	file_name : STRING
+	file_name : detachable STRING
 			-- Name of the file read by the lexical analyzer
+		require
+			lex_not_void: analyzer /= Void
 		do
 			Result := analyzer.file_name
 		end;
 
 	line_number : INTEGER
 			-- Line number of token
+		require
+			lex_not_void: analyzer /= Void
 		do
 			Result := analyzer.token_line_number
 		end;

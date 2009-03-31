@@ -19,7 +19,7 @@ deferred class CHOICE inherit
 
 feature -- Access
 
-	retained: CONSTRUCT;
+	retained: detachable CONSTRUCT;
 			-- Child which matches the input document;
 			-- Void if none.
 
@@ -56,6 +56,8 @@ feature {CONSTRUCT} -- Implementation
 
 	check_recursion
 			-- Check choice construct for left recursion.
+		local
+			l_child: like child
 		do
 			if not check_recursion_list.has (production) then
 				check_recursion_list.extend (production);
@@ -67,7 +69,9 @@ feature {CONSTRUCT} -- Implementation
 				until
 					no_components or child_after
 				loop
-					child.check_recursion;
+					l_child := child
+					check l_child /= Void end -- Implied from the `child_after'.
+					l_child.check_recursion;
 					child_forth
 				end
 			end
@@ -77,6 +81,8 @@ feature {NONE} -- Implementation
 
 	print_children
 			-- Print children separated with a bar.
+		local
+			l_child: like child
 		do
 			print_name;
 			io.put_string (" :    ");
@@ -85,7 +91,9 @@ feature {NONE} -- Implementation
 			until
 				no_components or child_after
 			loop
-				child.print_name;
+				l_child := child
+				check l_child /= Void end -- Implied from the `child_after'.
+				l_child.print_name;
 				child_forth;
 				if not child_after then
 					io.put_string (" | ")
@@ -105,6 +113,7 @@ feature {NONE} -- Implementation
 			-- the one that works.
 		local
 			initial_document_position: INTEGER
+			l_child: like child
 		do
 			from
 				initial_document_position := document.index;
@@ -113,8 +122,10 @@ feature {NONE} -- Implementation
 				no_components or child_after or retained /= Void
 			loop
 				parse_child;
-				if child.parsed then
-					retained := child
+				l_child := child
+				check l_child /= Void end -- Implied from the `child_after'.
+				if l_child.parsed then
+					retained := l_child
 				else
 					document.go_i_th (initial_document_position)
 				end;
@@ -128,8 +139,8 @@ feature {NONE} -- Implementation
 
 	in_action
 		do
-			if retained /= Void then
-				retained.semantics
+			if attached retained as l_retained then
+				l_retained.semantics
 			end
 		end;
 

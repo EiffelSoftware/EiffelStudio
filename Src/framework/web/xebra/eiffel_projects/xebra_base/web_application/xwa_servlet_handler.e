@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	XWA_SERVLET_HANDLER
+	XWA_SERVLET_HANDLER -- XWA_REQUEST_HANDLER
 
 create
 	make
@@ -48,7 +48,6 @@ feature -- Processing
 
 feature {NONE} -- Internal Processing
 
-
 	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_REQUEST_HANDLER): detachable XWA_SERVLET
 			-- Searches for the servlet requested by `request'
 			-- 1. Stateless servlet?
@@ -61,40 +60,6 @@ feature {NONE} -- Internal Processing
 			--	Result := request.session.get_stateful_servlet
 			end
 		end
-
-
---	handle_servlet (a_request: REQUEST; a_request_handler; a_request_handler: REQUEST_HANDLER): RESPONSE
---			-- Routes the request to the appropriate controller
---		local
---			l_servlet: detachable SERVLET
---		do
---			l_servlet := find_servlet (a_request, a_request_handler)
-
---			if attached l_servlet then
---				Result := l_servlet.handle_request (a_request)
---			else
---				create Result.make
---				Result.text.put_string ("Application not found: %"" + request.target_uri + "%"")
---			end
---		end
-
---	extract_web_app_name (message: STRING): STRING
---			-- Extracts the webapp name from the get-parameter.
---		do
---			Result := message.substring (16, message.count)
---			Result := Result.substring (1, Result.substring_index (" ", 1)-1)
---		end
---		
-	--	build_request (message: STRING): REQUEST
---			-- Transforms a plain text message into a {REQUEST} object
---			-- for further use in the servlet.
---			-- Session is retrieved and set
---		do
---			-- TODO: Proper session creation, management etc.
---			--create Result.make (extract_web_app_name (message).as_upper + "_SERVLET", create {SESSION})
---			create Result.make_from_string (message)
---		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

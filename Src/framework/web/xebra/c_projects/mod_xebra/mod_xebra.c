@@ -311,7 +311,7 @@ static int xebra_handler (request_rec* r)
 	//ap_rputs ("</small></i>", r);
 
 	//ap_rputs ("whole message:('", r);
-	//ap_rputs (rmsg_buf, r);
+	ap_rputs (rmsg_buf, r);
 	//ap_rputs ("')", r);
 
 

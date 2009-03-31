@@ -1,88 +1,94 @@
 note
 	description: "[
-		The {RESPONSE} contains all the data which is sent back to the http server (the requester).
+		Holds all session data for a client.
+		At the core of the session is a set of name value pairs making up the session.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XH_RESPONSE
+	XH_SESSION
+
+inherit
+	 XU_SHARED_UUID_GENERATOR
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creates current
+	 make
+			-- Creates current.
+		local
+			l_date: XU_DATE
 		do
-			create cookie_orders.make
-			create file.make
-			create html.make (file)
+				uuid := uuid_generator.generate_uuid.out
+				remote_user := ""
+				expiry := 0
+				create entries.make (8)
+				encoded := entries
+				is_dirty := False
+				is_written := False
+
+				max_age := 300
+
+				create l_date.default_create
+				expiry := max_age + l_date.unix_time_stamp
+
 		end
 
 feature -- Access
 
-feature {NONE} -- Constants
+	uuid: STRING
+		-- Anonymous uuid of this particular session
 
-	Html_start: STRING = "#H#"
+	remote_user: STRING
+		-- User who owns this particular session
 
-feature -- Access
+	expiry: NATURAL
+		-- When the session expires
+
+	max_age: NATURAL
+		-- 	
+
+feature {NONE} -- Access
+
+	entries: HASH_TABLE [STRING, STRING]
+    	-- Key value pairs
+
+    encoded: HASH_TABLE [STRING, STRING]
+    	-- The encoded version of the key value pairs
+
+    is_dirty: BOOLEAN
+    	-- Dirty flag
+
+    is_written: BOOLEAN
+    	-- True if this session has already been writte
 
 
-	html: INDENDATION_STREAM
-			-- Reponse html (xhtml)
+feature -- Basic Operations
 
-	file: SIMPLE_OUTPUTER
-			-- use another stream!
-
-	cookie_orders: LINKED_LIST [XH_COOKIE_ORDER]
-			-- A cookie order will generate a cookie in the browser
-			-- once the response has been processed
-
-feature -- Element change
-
-	set_html (a_html: INDENDATION_STREAM)
-			-- Sets the text
+	has_expired: BOOLEAN
+			--
+		local
+			l_date: XU_DATE
 		do
-			html := a_html
-		ensure
-			html_set: html = a_html
-		end
-
-	append (a_string: STRING)
-			-- Appends a string to the html result
-		do
-			html.append_string (a_string)
-		end
-
-	put_cookie_order (a_cookie: XH_COOKIE_ORDER)
-			-- Adds a cookie_order
-		do
-			cookie_orders.put_right (a_cookie)
-		ensure
-			cookie_order_bigger: cookie_orders.count > old cookie_orders.count
-		end
-
-	render_to_string: STRING
-			-- Renders to Response object to a string that can be sent to the mod_xebra
-		do
-			Result := ""
-			from
-				cookie_orders.start
-			until
-				cookie_orders.after
-			loop
-				Result := Result +  cookie_orders.item.render_to_string
-				cookie_orders.forth
-			end
-
-			Result := Result + Html_start + "<html><body><h1>default response html text. remove this from RESPONSE.render_to_string</h1></body></html>" -- + file.get_text
-		ensure
-			result_not_empty: not Result.is_empty
+			create l_date.default_create
+			Result := (expiry > l_date.unix_time_stamp)
 		end
 
 
+	put (a_name: STRING; a_value: STRING)
+			--
+		do
+			entries.put (a_value, a_name)
+		end
+
+	get (a_name: STRING): detachable STRING
+			--
+		do
+			Result := entries.item (a_name)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

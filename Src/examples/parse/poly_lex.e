@@ -3,8 +3,8 @@ note
 	status: "See notice at end of class."
 -- Lexical interface class for the Polynomial language
 
-class POLY_LEX 
-	
+deferred class POLY_LEX
+
 inherit
 
 	L_INTERFACE
@@ -57,7 +57,7 @@ feature {NONE}
 			put_keyword (")", Special)
 			put_keyword ("*", Special)
 		end -- build_keywords
- 
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

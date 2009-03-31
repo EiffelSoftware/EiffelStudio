@@ -4,7 +4,7 @@ note
 -- Difference expressions: PRODUCT "-" PRODUCT "-" ... "-" PRODUCT
 
 class
-	DIFF 
+	DIFF
 
 inherit
 
@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	construct_name: STRING = "DIFF"
 
@@ -44,23 +44,44 @@ feature
 	post_action
 		local
 			int_value: INTEGER
+			l_child: like child
 		do
 			from
 				child_start
 				if not no_components then
-					child.post_action
-					int_value := info.child_value
-					child_forth
+					l_child := child
+					if l_child /= Void then
+						l_child.post_action
+						int_value := info.child_value
+						child_forth
+					end
 				end;
 			until
 				no_components or child_after
 			loop
-				child.post_action
+				l_child := child
+				check l_child /= Void end -- Implied from `child_after'.
+				l_child.post_action
 				int_value := int_value - info.child_value
 				child_forth
 			end
 			info.set_child_value (int_value)
 		end -- post_action
+
+feature {DIFF} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

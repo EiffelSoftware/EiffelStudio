@@ -3,7 +3,7 @@ note
 	status: "See notice at end of class."
 -- Variable lists
 
-class VARIABLES 
+class VARIABLES
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	construct_name: STRING
 		once
@@ -31,9 +31,9 @@ feature {NONE}
 
 	separator: STRING = ";"
 
-feature 
+feature
 
-	production: LINKED_LIST [IDENTIFIER]
+	production: LINKED_LIST [CONSTRUCT]
 		local
 			base: VAR
 		once
@@ -44,6 +44,8 @@ feature
 		end; -- production
 
 	post_action
+		local
+			l_child: like child
 		do
 			if not no_components then
 				from
@@ -51,11 +53,28 @@ feature
 				until
 					child_after
 				loop
-					child.post_action
+					l_child := child
+					check l_child /= Void end -- Implied by `child_after'
+					l_child.post_action
 					child_forth
 				end
 			end
 		end -- post_action
+
+feature {VARIABLES} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

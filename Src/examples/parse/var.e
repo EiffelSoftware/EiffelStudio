@@ -4,7 +4,7 @@ note
 -- Variables
 
 class
-	VAR 
+	VAR
 
 inherit
 
@@ -30,7 +30,9 @@ feature {NONE}
 
 	action
 		do
-			info.cons_id_table (token.string_value)
+			if attached token as l_token then
+				info.cons_id_table (l_token.string_value)
+			end
 		end -- action
 
 note

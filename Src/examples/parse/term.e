@@ -4,7 +4,7 @@ note
 -- Terms: SIMPLE_VAR | POLY_INTEGER | NESTED
 
 class
-	TERM 
+	TERM
 
 inherit
 
@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	construct_name: STRING
 		once
@@ -46,8 +46,25 @@ feature
 
 	post_action
 		do
-			retained.post_action
+			if attached retained as l_retained then
+				l_retained.post_action
+			end
 		end -- post_action
+
+feature {TERM} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

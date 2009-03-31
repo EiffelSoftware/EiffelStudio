@@ -4,7 +4,7 @@ note
 -- Identifiers
 
 class
-	IDENTIFIER 
+	IDENTIFIER
 
 inherit
 
@@ -20,7 +20,7 @@ create
 
 feature {NONE}
 
-	default_identifier_name: STRING 
+	default_identifier_name: STRING
 		once
 			Result := "IDENTIFIER"
 		end -- default_identifier_name
@@ -30,12 +30,27 @@ feature {NONE}
 			Result := default_identifier_name
 		end -- construct_name
 
-feature 
+feature
 
 	token_type: INTEGER
 		do
 			Result := Simple_identifier
 		end -- token_type
+
+feature {IDENTIFIER} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

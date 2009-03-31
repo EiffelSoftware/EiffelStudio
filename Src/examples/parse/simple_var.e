@@ -4,12 +4,12 @@ note
 -- Simple variables
 
 class
-	SIMPLE_VAR 
+	SIMPLE_VAR
 
 inherit
 
 	IDENTIFIER
-		redefine 
+		redefine
 			action, construct_name
 		end
 
@@ -29,8 +29,13 @@ feature {NONE}
 		end -- construct_name
 
 	action
+		local
+			l_token: like token
 		do
-			info.set_child_value (info.int_value (token.string_value))
+			l_token := token
+			if l_token /= Void then
+				info.set_child_value (info.int_value (l_token.string_value))
+			end
 		end -- action
 
 note

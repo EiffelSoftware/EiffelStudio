@@ -9,17 +9,17 @@ note
 -- prompt for integer values of the variables and evaluate
 -- the polynomial.
 --
---	POLYNOMIAL DESCRIPTION 
+--	POLYNOMIAL DESCRIPTION
 --       Grammar:
---          	LINE 		[=]  VARIABLES ":" SUM 
---				VARIABLES	[=]  {VAR ";" ...} 
---				SUM 		[=]  {DIFF "+" ...} 
---				DIFF 		[=]  {PRODUCT "-" ...} 
---				PRODUCT 	[=]  {TERM "*" ...} 
+--          	LINE 		[=]  VARIABLES ":" SUM
+--				VARIABLES	[=]  {VAR ";" ...}
+--				SUM 		[=]  {DIFF "+" ...}
+--				DIFF 		[=]  {PRODUCT "-" ...}
+--				PRODUCT 	[=]  {TERM "*" ...}
 --				TERM		[=]  SIMPLE_VAR | INT_CONSTANT | NESTED
---				NESTED		[=]  "(" SUM ")" 
+--				NESTED		[=]  "(" SUM ")"
 --
---	Example: 
+--	Example:
 --		x;y: x*(y+8-(2*x))
 --
 -- ----------------------------------------------------------------
@@ -35,7 +35,7 @@ create
 
 	make
 
-feature 
+feature
 
 	root_line: LINE
 
@@ -43,14 +43,17 @@ feature
 		local
 			nb_try: INTEGER
 			t_b: BOOLEAN
-			text_name: STRING
-		do  
+			text_name: detachable STRING
+			l_line: detachable STRING
+		do
 			create root_line.make
 			build (root_line.document)
 			io.putstring ("Do you want to test for left recursion (y/n)? ")
 			io.readword
 			io.next_line
-			if io.laststring.is_equal ("y") then
+			l_line := io.laststring
+			check l_line /= Void end
+			if l_line.is_equal ("y") then
 				root_line.print_mode.put (true)
 				root_line.expand_all
 				t_b := not root_line.left_recursion

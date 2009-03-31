@@ -3,8 +3,8 @@ note
 	status: "See notice at end of class."
 -- Integer constants
 
-class
-	INT_CONSTANT 
+deferred class
+	INT_CONSTANT
 
 inherit
 
@@ -15,10 +15,10 @@ inherit
 			copy, is_equal
 		end
 
-feature 
+feature
 
 	token_type: INTEGER
-		do  
+		do
 			Result := Integer_constant
 		end
 

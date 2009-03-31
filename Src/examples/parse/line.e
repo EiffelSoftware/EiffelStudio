@@ -5,14 +5,14 @@ note
 -- This is the top construct of the Polynomial language
 
 class
-	LINE 
+	LINE
 
 inherit
 
 	AGGREGATE
 		export
-			{PROCESS} all
-		redefine 
+			{PROCESS, LINE} all
+		redefine
 			post_action
 		end
 
@@ -24,7 +24,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	construct_name: STRING
 		once
@@ -46,21 +46,43 @@ feature
 		end -- production
 
 	post_action
+		local
+			l_child: like child
 		do
 			child_start
-			child.post_action
+			l_child := child
+			if l_child /= Void then
+				l_child.post_action
+			end
 			from
 				child_finish
 			until
 				info.end_session
 			loop
 				info.set_value
-				child.post_action
+				l_child := child
+				check l_child /= Void end
+				l_child.post_action
 				io.putstring ("value: ")
 				io.putint (info.child_value)
 				io.new_line
 			end
 		end -- post_action
+
+feature {LINE} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

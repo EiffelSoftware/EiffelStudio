@@ -3,7 +3,7 @@ note
 	status: "See notice at end of class."
 -- Parenthesized expressions: "(" SUM ")"
 
-class NESTED 
+class NESTED
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	construct_name: STRING
 		once
@@ -41,11 +41,31 @@ feature
 		end -- production
 
 	post_action
-		do       
+		local
+			l_child: like child
+		do
 			child_start
 			child_forth
-			child.post_action
+			l_child := child
+			if l_child /= Void then
+				l_child.post_action
+			end
 		end -- post_action
+
+feature {NESTED} -- Implementation
+
+	clone_node (n: like Current): like Current
+			-- <precursor>
+		do
+			create Result.make
+			Result.copy_node (n)
+		end
+
+	new_tree: like Current
+			-- <precursor>
+		do
+			create Result.make
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -28,14 +28,11 @@ feature -- Initialization
 			-- `a_content': The feature body
 		require
 			signature_valid: not a_signature.is_empty
-		local
-			list: LIST [XEL_VARIABLE_ELEMENT]
 		do
-			create {LINKED_LIST [XEL_VARIABLE_ELEMENT]} list.make
-			make_with_locals (a_signature, a_content, list)
+			make_with_locals (a_signature, a_content, create {HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING]}.make (1))
 		end
 
-	make_with_locals (a_signature: STRING; a_content: LIST [XEL_SERVLET_ELEMENT]; some_locals: LIST[XEL_VARIABLE_ELEMENT])
+	make_with_locals (a_signature: STRING; a_content: LIST [XEL_SERVLET_ELEMENT]; some_locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING])
 			-- `a_signature': The signature of the feature
 			-- `a_content': The feature body
 			-- `some_locals': The local variables of the feature
@@ -58,7 +55,7 @@ feature -- Access
 	signature: STRING
 			-- Signature of the feature
 
-	locals: LIST [XEL_VARIABLE_ELEMENT]
+	locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING]
 			-- The local variables of the feature
 
 	content: LIST [XEL_SERVLET_ELEMENT]
@@ -66,11 +63,13 @@ feature -- Access
 
 	append_local (name, type: STRING)
 			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the feature
+			-- If the
 		require
 			name_is_valid: not name.is_empty
+			name_is_not_already_used: not locals.has (name)
 			type_is_valid: not type.is_empty
 		do
-			locals.extend (create {XEL_VARIABLE_ELEMENT}.make (name, type))
+			locals.put (create {XEL_VARIABLE_ELEMENT}.make (name, type), name)
 		ensure
 			local_has_been_added: old locals.count + 1 = locals.count
 		end
@@ -106,7 +105,7 @@ feature -- Implementation
 				until
 					locals.after
 				loop
-					locals.item.serialize (buf)
+					locals.item_for_iteration.serialize (buf)
 					locals.forth
 				end
 				buf.unindent

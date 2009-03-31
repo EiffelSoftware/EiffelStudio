@@ -6,7 +6,7 @@ create
 
 feature -- Initialization
 
-	thread_pool: DATA_THREAD_POOL [XB_MOD_HANDLER]
+	thread_pool: DATA_THREAD_POOL [XS_MOD_HANDLER]
 
 	make_with_port (port: NATURAL)
 			-- Creates a server on the specified `port' which listens to a http server mod (xebra)
@@ -28,7 +28,7 @@ feature -- Initialization
                 print ("Connection accepted.%N")
 	            if attached {NETWORK_STREAM_SOCKET} http_server_main_socket.accepted as thread_socket then
 
-	            	thread_pool.add_work (agent {XB_MOD_HANDLER}.do_execute (thread_socket))
+	            	thread_pool.add_work (agent {XS_MOD_HANDLER}.do_execute (thread_socket))
 				end
             end
             http_server_main_socket.cleanup
@@ -60,8 +60,8 @@ feature -- Access
 
 feature {POOLED_THREAD} -- Implementation
 
-	data_spawner: XB_MOD_HANDLER
-			-- Instantiates a new {XB_MOD_HANDLER}.
+	data_spawner: XS_MOD_HANDLER
+			-- Instantiates a new {Xs_MOD_HANDLER}.
 			-- Used for the thread_manager.
 		do
 			create Result.make (message_default_bound, message_upper_bound)

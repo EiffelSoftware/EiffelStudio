@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XWA_SERVER_CONN_HANDLER -- XWA_SERVER_CON_HANDLER
+	XWA_SERVER_CONN_HANDLER
 
 feature -- Constants
 

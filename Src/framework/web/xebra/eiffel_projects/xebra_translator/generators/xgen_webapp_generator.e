@@ -72,7 +72,7 @@ feature -- Implementation
 			buf.set_ind_character ('%T')
 			webapp_name.to_upper
 			create request_class.make (webapp_name + "_REQUEST_HANDLER")
-			request_class.set_inherit ("XWA_REQUEST_HANDLER")
+			request_class.set_inherit ("XWA_SERVER_CONN_HANDLER")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)

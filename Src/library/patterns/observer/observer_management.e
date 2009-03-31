@@ -13,7 +13,7 @@ create
 	make
 
 feature -- Initialization
-	
+
 	make
 		-- Initialize.
 		do
@@ -30,7 +30,7 @@ feature -- Operations
 		local
 			data_observer: DATA_OBSERVER
 		do
-			data_observer := get_data_observer (d)	
+			data_observer := get_data_observer (d)
 			if data_observer /= Void then
 				data_observer.add_observer (w)
 			else
@@ -49,7 +49,7 @@ feature -- Operations
 			found: BOOLEAN
 			data_observer: DATA_OBSERVER
 		do
-			from 
+			from
 				data_observer_list.start
 				found := false
 			until
@@ -63,20 +63,20 @@ feature -- Operations
 				if data_observer.data = d then
 					found := true
 					data_observer.remove_observer (w)
-				end 
+				end
 				data_observer_list.forth
 			end
 		end
 
 	clear_observer (o: OBSERVER)
-		-- Remove the observer o from the list of all the subjects. 
+		-- Remove the observer o from the list of all the subjects.
 		require
 			observer_exists: o /= Void
 		local
 			found: BOOLEAN
 			data_observer: DATA_OBSERVER
 		do
-			from 
+			from
 				data_observer_list.start
 			until
 				data_observer_list.after or found
@@ -117,20 +117,20 @@ feature -- Access
 			found: BOOLEAN
 			data_observer: DATA_OBSERVER
 		do
-			from 
+			from
 				data_observer_list.start
 				found := false
 			until
 				data_observer_list.after or found
 			loop
 				data_observer := data_observer_list.item
-				if data_observer /= Void 
+				if data_observer /= Void
 				then
 					if data_observer.data = d
 					then
 						found := true
-						Result := data_observer	
-					end 
+						Result := data_observer
+					end
 				end
 				data_observer_list.forth
 			end
@@ -149,14 +149,14 @@ invariant
 	OBSERVER_MANAGEMENT_data_observer_list_exists: data_observer_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -15,7 +15,6 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<cluster name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\thread_utilities\" recursive="true"/>
-		<cluster name="utilities" location="\home\sandrod\workspace\xebra\eiffel_projects\utilities\" recursive="true"/>
 		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\" recursive="true"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>

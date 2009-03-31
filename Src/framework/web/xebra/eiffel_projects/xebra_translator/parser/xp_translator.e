@@ -74,11 +74,11 @@ feature -- Processing
 		do
 			create l_taglib_file.make (a_taglib_filename)
 			if (not l_taglib_file.exists) then
-				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_taglib_filename]), false)
+				error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_taglib_filename]), false)
 			else
 				l_taglib_file.open_read
 				if not l_taglib_file.is_open_read then
-					error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["cannot read file " + a_taglib_filename ]), false)
+					error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + a_taglib_filename ]), false)
 				else
 					process_taglib_with_stream (l_taglib_file)
 					l_taglib_file.close
@@ -93,7 +93,7 @@ feature -- Processing
 							create l_file.make (output_path + a_files.item.twin)
 							l_file.open_read
 							if not l_file.is_open_read then
-								error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
+								error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 							else
 								l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib))
 								l_file.close
@@ -147,15 +147,15 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			if l_failed then
-				error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
+				error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
 			else
 				create l_file.make (a_filename)
 				if not l_file.exists then
-					error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
+					error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
 				else
 					l_file.open_read
 					if not l_file.is_open_read then
-						error_manager.set_last_error (create {ERROR_FILENOTFOUND}.make ([a_filename]), false)
+						error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
 					else
 						from until l_file.end_of_file
 						loop

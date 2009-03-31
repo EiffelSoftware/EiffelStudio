@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {ERROR_UNEXPECTED_ATTRIBUTE}."
+	description: "Summary description for {ERROR_UNDEFINED_TAG}."
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ERROR_UNEXPECTED_ATTRIBUTE
+	XERROR_UNDEFINED_TAG
 
 inherit
 	ERROR_WARNING_INFO
@@ -31,7 +31,7 @@ feature -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "Unexpected attribute found in {1}. Doesn't conform to tag or is double."
+			Result := "Undefined tag found: %"{1}%"."
 		end
 
 note

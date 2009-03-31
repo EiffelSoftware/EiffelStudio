@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	serialize (stream: INDENDATION_STREAM)
+	serialize (stream:XU_INDENDATION_STREAM)
 			-- Serializes the element to a part of a servlet class
 			-- `stream': Writes on this stream
 		deferred

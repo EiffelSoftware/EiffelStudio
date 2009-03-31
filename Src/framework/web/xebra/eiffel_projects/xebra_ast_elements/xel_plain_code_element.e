@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Processing
 
-		serialize (buf: INDENDATION_STREAM)
+		serialize (buf:XU_INDENDATION_STREAM)
 			-- <Precursor>			
 		do
 			buf.put_string (code)

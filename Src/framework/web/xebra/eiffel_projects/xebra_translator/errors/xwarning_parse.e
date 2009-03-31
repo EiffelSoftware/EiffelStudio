@@ -1,37 +1,29 @@
 note
-	description: "Summary description for {ERROR_UNDEFINED_TAG}."
-	author: "sandro"
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ERROR_UNDEFINED_TAG
+	XWARNING_PARSE
 
 inherit
 	ERROR_WARNING_INFO
-		redefine
-			make
-		end
+
 
 create
 	make
 
-feature -- Access
-
-	make (a_context: like context)
-			-- Initializes an error.
-			--
-			-- `a_context': Any optional contextual information.
-		do
-			context := a_context
-		end
-
+feature {NONE} -- Access
 
 	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "Undefined tag found: %"{1}%"."
+			Result := "There is a warning in the xeb file: '${1}'"
 		end
 
 note

@@ -3,28 +3,41 @@ note
 		no comment yet
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ERROR_PARSE
+	
+XERROR_FILENOTFOUND
 
 inherit
 	ERROR_ERROR_INFO
-
+	redefine
+		make
+		end
 
 create
 	make
 
 feature {NONE} -- Access
 
+	make (a_context: like context)
+			-- Initializes an error.
+			--
+			-- `a_context': Any optional contextual information.
+		do
+			context := a_context
+		end
+
+
 	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "There is a error in the xeb file: '{1}'"
+			Result := "File not found {1}"
 		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

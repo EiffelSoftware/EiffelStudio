@@ -1,29 +1,37 @@
 note
-	description: "[
-		no comment yet
-	]"
-	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	description: "Summary description for {ERROR_UNEXPECTED_ATTRIBUTE}."
+	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WARNING_PARSE
+	XERROR_UNEXPECTED_ATTRIBUTE
 
 inherit
 	ERROR_WARNING_INFO
-
+		redefine
+			make
+		end
 
 create
 	make
 
-feature {NONE} -- Access
+feature -- Access
+
+	make (a_context: like context)
+			-- Initializes an error.
+			--
+			-- `a_context': Any optional contextual information.
+		do
+			context := a_context
+		end
+
 
 	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "There is a warning in the xeb file: '${1}'"
+			Result := "Unexpected attribute found in {1}. Doesn't conform to tag or is double."
 		end
 
 note

@@ -4,7 +4,7 @@ note
 	revision    : "$Revision$"
 
 class
-	APPLICATION
+	XT_APPLICATION
 
 inherit
 	ERROR_SHARED_ERROR_MANAGER

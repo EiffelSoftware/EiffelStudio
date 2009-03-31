@@ -35,7 +35,7 @@ feature {NONE} -- Access
 	internal_default_size: NATURAL
 			-- Initial size of data packet. Will be expanded to `internal_default_size' if needed.
 
-	encoder: ENCODING_FACILITIES
+	encoder: XS_ENCODING_FACILITIES
 			-- Encodes and decodes incoming and outgoing messages
 
 feature --Execution

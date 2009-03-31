@@ -578,7 +578,11 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 	    return RTMS(decc$translate_vms(eif_getenv_native ("SYS$LOGIN")));
 	}
 #else
-	return RTMS(getenv("HOME"));
+	if (getenv("HOME")) {
+		return RTMS(getenv("HOME"));
+	} else {
+		return RTMS("~");
+	}
 #endif
 }
 

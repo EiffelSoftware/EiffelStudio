@@ -69,7 +69,7 @@ feature -- Initialization
 
 feature -- Access
 
-	melted_list: SEARCH_TABLE [EXECUTION_UNIT]
+	melted_list: MELTED_EXECUTION_TABLE
 			-- List of melted unit
 
 	last_unit: EXECUTION_UNIT
@@ -195,12 +195,6 @@ feature -- Update
 			melted_list.force (t)
 		end
 
-	freeze
-			-- Wipe out `melted_list'.
-		do
-			create melted_list.make (10)
-		end
-
 	nb_frozen_features: INTEGER
 			-- Melted/Frozen limit
 		do
@@ -209,7 +203,16 @@ feature -- Update
 
 feature {SYSTEM_I} -- Shake table
 
-	shake
+	melt
+			-- Clean table after a successful melt
+		do
+				-- All functions changed into attributes have been detected and
+				-- removed from execution table, we can reset `dead_attributes'
+				-- for next recompilation.
+			dead_attributes := Void
+		end
+
+	freeze
 			-- Reorganize the table during a refreezing
 		local
 			u: EXECUTION_UNIT
@@ -229,6 +232,7 @@ feature {SYSTEM_I} -- Shake table
 				-- removed from execution table, we can reset `dead_attributes'
 				-- for next recompilation.
 			dead_attributes := Void
+			create melted_list.make (10)
 		end
 
 feature {NONE} -- Search

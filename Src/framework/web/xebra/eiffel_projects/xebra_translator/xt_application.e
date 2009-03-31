@@ -10,7 +10,6 @@ inherit
 	ERROR_SHARED_ERROR_MANAGER
 	KL_SHARED_ARGUMENTS
 
-
 create
 	make
 

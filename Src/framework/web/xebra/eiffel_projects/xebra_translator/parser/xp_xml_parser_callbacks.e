@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 			create root_tag.make ("html", Html_tag_name)
 			create tag_stack.make (10)
 			create html_buf.make_empty
-			create {ARRAYED_LIST [STRING]} controller_calls.make (2)
-			create {ARRAYED_LIST [STRING]} controller_calls_with_result.make (2)
 		end
 
 feature -- Constants
@@ -57,12 +55,6 @@ feature -- Access
 
 	taglib: XTL_TAG_LIBRARY
 			-- Tag library which should be used
-
-	controller_calls: LIST [STRING]
-			-- All the calls on procedures which should be available for a servlet to be called
-
-	controller_calls_with_result: LIST [STRING]
-			-- All the calls on functions which should be available for a servlet to be called
 
 	put_taglib (a_taglib: XTL_TAG_LIBRARY)
 			-- Adds a taglib to the parser
@@ -121,7 +113,6 @@ feature -- Meta
 			-- Atomic: single comment produces single event
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-				-- We don't need to output comments
 			if state = Reading_tag then
 				state := Reading_html
 			end
@@ -134,7 +125,6 @@ feature -- Tag
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
-		--	l_namespace: STRING
 			l_prefix: STRING
 			l_local_part: STRING
 			l_tmp_tag: XP_TAG_ELEMENT
@@ -210,8 +200,7 @@ feature -- Tag
 				l_value := ""
 			end
 
-				-- all variables initialized
-
+				-- All variables initialized
 			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
 				if not taglib.contains (tag_stack.item.id) then
 					l_value := "undefined tag: '" + tag_stack.item.id + "'"
@@ -224,11 +213,6 @@ feature -- Tag
 							error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
 						else
 							tag_stack.item.put_attribute (l_local_part, l_value)
-							if taglib.is_call_feature (tag_stack.item.id, l_local_part) then
-								controller_calls.extend (l_value)
-							elseif taglib.is_call_with_result_feature (tag_stack.item.id, l_local_part) then
-								controller_calls_with_result.extend (l_value)
-							end
 						end
 					end
 				else
@@ -260,7 +244,6 @@ feature -- Tag
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
-		--	l_namespace: STRING
 			l_prefix: STRING
 			l_local_part: STRING
 		do
@@ -277,7 +260,6 @@ feature -- Tag
 			end
 
 				-- All variables initialized
-
 			if not l_prefix.is_equal (Tag_keyword) then
 				if not l_prefix.is_empty then
 					l_prefix := l_prefix + ":"
@@ -297,7 +279,6 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			--create_html_tag_with_text (a_content)
 			html_buf.append (a_content)
 		end
 
@@ -345,22 +326,30 @@ feature {NONE} -- Implementation
 			html_buf.append (" " + local_part + "=%"")
 			create_html_tag_put
 			create l_tag.make ("output", Output_tag_name)
-			feature_name := value.substring (3, value.count-1)
+			feature_name := strip_off_dynamic_tags (value)
 			l_tag.put_attribute ("value", feature_name)
 			tag_stack.item.put_subtag (l_tag)
-			controller_calls_with_result.extend (feature_name)
 				-- Don't put it on the stack
 			html_buf.append ("%"")
 		end
 
 	process_dynamic_tag_attribute (local_part, value: STRING)
+			-- And adds an attribute
 		local
 			feature_name: STRING
 		do
-			feature_name := value.substring (3, value.count - 1)
-			controller_calls_with_result.extend (feature_name)
+			feature_name := strip_off_dynamic_tags (value)
 			tag_stack.item.put_attribute (local_part, feature_name)
 		end
+
+	strip_off_dynamic_tags (a_string: STRING): STRING
+			-- Strips off the "%=" and ending "%"
+		require
+			a_string_is_valid: a_string.starts_with ("%%=") and a_string.ends_with ("%%")
+		do
+			Result := a_string.substring (3, a_string.count - 1)
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -43,6 +43,8 @@ feature -- Document
 	on_finish
 			-- <Precursor>
 		do
+		ensure then
+			tag_stack_is_empty: tag_stack.is_empty
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
@@ -84,11 +86,11 @@ feature -- Tag
 				tag_stack.put (taglib)
 			elseif a_local_part.is_equal (Tag_tag_name)	then
 				create l_tag.make
-				tag_stack.item.put (l_tag)
+				--tag_stack.item.put (l_tag)
 				tag_stack.put (l_tag)
 			elseif a_local_part.is_equal (Tag_attribute_name) then
 				create l_attr.make
-				tag_stack.item.put (l_attr)
+				--tag_stack.item.put (l_attr)
 				tag_stack.put (l_attr)
 			end
 		end
@@ -106,8 +108,14 @@ feature -- Tag
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
+		local
+			top_item: XTL_TAG_LIB_ITEM
 		do
+			top_item := tag_stack.item
 			tag_stack.remove
+			if tag_stack.count > 0 then
+				tag_stack.item.put (top_item)
+			end
 		end
 
 feature -- Content

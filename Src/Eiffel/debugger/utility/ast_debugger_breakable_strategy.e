@@ -310,6 +310,23 @@ feature {NONE} -- Element change
 			breakable_feature_info.add_object_test_local (a_name, a_type, a_exp)
 		end
 
+	register_variant_local (a_variant_as: VARIANT_AS)
+			-- Register variant local info
+		local
+--			s: STRING
+--			l_id: ID_AS
+		do
+			--| FIXME:jfiat: due to bug#15572, we can not have a nice way to handle the variant's values
+--			create s.make_from_string (once "_loop_variant")
+--			l_id := l_as.tag
+--			if l_id /= Void then
+--				s.append_character ('_')
+--				s.append_string (l_id.name)
+--			end
+--			create l_id.initialize (s)
+--			register_object_test_local (l_id, Void, l_as.expr)
+		end
+
 feature {NONE} -- Iteration
 
 	process_assign_as (l_as: ASSIGN_AS)
@@ -367,6 +384,7 @@ feature {NONE} -- Iteration
 	process_variant_as (l_as: VARIANT_AS)
 		do
 			register_breakable (l_as)
+			register_variant_local (l_as)
 			Precursor (l_as)
 		end
 
@@ -383,26 +401,36 @@ feature {NONE} -- Iteration
 		end
 
 	process_routine_as (l_as: ROUTINE_AS)
+		local
+			l_info: like breakable_feature_info
+			l_body_ot_lst, l_inherited_ot_lst: LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
 		do
 			if
 				not current_feature_i.is_inline_agent and then
 				attached flatten_inherited_assertions (current_feature_i, current_class) as l_flatten_inherited_assertions
 			then
+				l_info := breakable_feature_info
+
+				l_body_ot_lst := l_info.object_test_locals
+				--| Due to compiler behavior, the object test locals' order is not AST logical.
+				--| So let's handle the good order for the debugger.
+
+				l_info.change_object_test_locals (Void)
+				l_inherited_ot_lst := l_info.object_test_locals
 				process_inherited_preconditions (l_flatten_inherited_assertions)
-				if attached breakable_feature_info.object_test_locals_backup as l_ot_lst and then not l_ot_lst.is_empty then
-					breakable_feature_info.object_test_locals.wipe_out
-					safe_process (l_as.precondition)
-					safe_process (l_as.locals)
-					l_as.routine_body.process (Current)
-					breakable_feature_info.restore_object_test_locals_backup (l_ot_lst)
-				else
-					safe_process (l_as.precondition)
-					safe_process (l_as.locals)
-					l_as.routine_body.process (Current)
-				end
+				l_info.change_object_test_locals (l_body_ot_lst)
+
+				safe_process (l_as.precondition)
+				safe_process (l_as.locals)
+				l_as.routine_body.process (Current)
+
+				l_info.change_object_test_locals (l_inherited_ot_lst)
 				process_inherited_postconditions (l_flatten_inherited_assertions)
+				l_info.change_object_test_locals (l_body_ot_lst)
+
 				safe_process (l_as.postcondition)
 				safe_process (l_as.rescue_clause)
+				l_info.append_object_test_locals (l_inherited_ot_lst)
 			else
 				Precursor (l_as)
 			end

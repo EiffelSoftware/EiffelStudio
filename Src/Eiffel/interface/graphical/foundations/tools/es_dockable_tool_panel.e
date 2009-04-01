@@ -722,6 +722,7 @@ feature {NONE} -- User interface elements
     frozen tool_bar_widget: SD_WIDGET_TOOL_BAR
             -- Main tool tool bar
         local
+        	l_padding: EV_CELL
             l_cell: like internal_tool_bar_widget
             l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
         do
@@ -736,7 +737,16 @@ feature {NONE} -- User interface elements
 
                         -- Add tool bar items
 					from l_items.start until l_items.after loop
-						Result.extend (l_items.item_for_iteration)
+						if attached l_items.item_for_iteration as l_item then
+							if l_items.is_first and then attached {SD_TOOL_BAR_WIDGET_ITEM} l_item as l_widget then
+									-- Need to added initial padding because the widgets look too close to the window's border.
+								create l_padding
+								l_padding.set_minimum_width ({ES_UI_CONSTANTS}.frame_border)
+								Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_padding))
+							end
+							Result.extend (l_item)
+						end
+
 						l_items.forth
 					end
 

@@ -68,7 +68,6 @@
 #include "rt_main.h" 	/* For debug_mode. */
 #include "eif_local.h"	/* For epop() */
 #include "eif_debug.h"	/* For rt addons */
-#include "eif_out.h"	/* For simple_out */
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -676,15 +675,10 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 rt_private void inspect(EIF_PSTREAM s, Opaque *what)
              		/* Generic structure describing request */
 {
-	/* Inspect an object and return its tagged out form back to ewb. The
-	 * opaque structure describes the object we want. Note that the address
-	 * is stored as a long, because XDR cannot pass pointers (without also
-	 * sending the information referred to by this pointer).
-	 */
-
-
-	char *out = NULL;				/* Buffer where out form is stored */
-	EIF_DEBUG_VALUE val;			/* Value in operational stack */
+		/* Inspect an object. The opaque structure describes the object we want.
+		 * Note that the address is stored as a long, because XDR cannot pass
+		 * pointers (without also sending the information referred to by this pointer).
+		 */
 	char *addr;				/* Address of EIF_OBJ */
 
 	switch (what->op_1) {		/* First value describes request */
@@ -708,35 +702,9 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		obj_inspect((EIF_OBJ) addr);
 #endif
 		return;
-	case IN_ADDRESS:				/* Address inspection */
-		addr = (char *) what->op_3;		/* long -> (char *) */
-		out = dview(addr);
-		break;
-	case IN_LOCAL:					/* Local inspection */
-		ivalue(&val, IV_LOCAL, what->op_2,0);
-		break;
-	case IN_ARG:					/* Argument inspection */
-		ivalue(&val, IV_ARG, what->op_2,0);
-		break;
-	case IN_CURRENT:				/* Value of Current */
-		ivalue(&val, IV_CURRENT,0,0);		/* %%zs misuse, added ",0" */
-		break;
-	case IN_RESULT:					/* Value of Result */
-		ivalue(&val, IV_RESULT,0,0);		/* %%zs misuse, added ",0" */
-		break;
 	default:
-		eif_panic("BUG inspect");
+		eif_panic("Unmatched inspect value in `inspect'.");
 	}
-
-	if (what->op_1 != IN_ADDRESS)	/* Not an address request */
-		out = simple_out(&val.value);			/* May be a simple type */
-
-	/* Now we got a string, holding the appropriate representation of the
-	 * object. Send it to the remote process verbatim and free it.
-	 */
-
-	app_twrite(out, strlen(out));
-	free(out);
 }
 
 rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)

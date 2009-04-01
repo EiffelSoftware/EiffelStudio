@@ -20,4 +20,7 @@
 		<attribute id="id" />
 		<attribute id="feature" />
 	</tag>
+	<tag id="if" class="XTAG_XEB_IF_TAG">
+		<attribute id="condition" />
+	</tag>
 </taglib>

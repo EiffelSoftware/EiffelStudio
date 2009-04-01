@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			feature_id := a_feat.feature_id
 			class_id := a_feat.associated_class.class_id
 			create {ARRAYED_LIST [DBG_BREAKABLE_POINT_INFO]} points.make (10)
-			create object_test_locals.make (5)
+			create {ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]} object_test_locals.make (5)
 		end
 
 feature -- Access
@@ -42,26 +42,27 @@ feature -- Access
 	points: LIST [DBG_BREAKABLE_POINT_INFO]
 			-- List of breakable point (including nested location)
 
-	object_test_locals: ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
+	object_test_locals: LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
 			-- List of object test local's info
 
 feature -- Backup
 
-	object_test_locals_backup: like object_test_locals
-			-- Backup value for `object_test_locals'
+	change_object_test_locals (v: detachable like object_test_locals)
 		do
-			create Result.make (object_test_locals.count)
-			Result.append (object_test_locals)
+			if v /= Void then
+				object_test_locals := v
+			else
+				create {ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]} object_test_locals.make (5)
+			end
 		ensure
-			Result_attached: Result /= Void
+			object_test_locals_attached: object_test_locals /= Void
 		end
 
-	restore_object_test_locals_backup (v: like object_test_locals_backup)
-			-- Restore `object_test_locals' from backup value `v'
-		require
-			v_attached: v /= Void
+	append_object_test_locals (v: like object_test_locals)
 		do
-			object_test_locals.append (v)
+			if v /= Void and then not v.is_empty then
+				object_test_locals.append (v)
+			end
 		end
 
 feature -- Breakable data

@@ -2414,6 +2414,8 @@ feature -- Access
 				set_context_data (old_context_feature, old_context_class, old_context_class_type, old_context_object_test_locals, old_bp, old_bp_nested)
 				internal_byte_node := old_int_expression_byte_note
 			end
+		ensure then
+			error_handler_cleaned: not error_handler.has_error
 		end
 
 feature {NONE} -- Implementation
@@ -2563,6 +2565,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			expression_byte_node_computed: byte_node_computed
+			error_handler_cleaned: not error_handler.has_error
 		rescue
 			retried := True
 			retry
@@ -2623,6 +2626,8 @@ feature {NONE} -- Implementation
 				end
 				Result := Void
 			end
+		ensure
+			error_handler_cleaned: not error_handler.has_error
 		rescue
 			retried := True
 			retry

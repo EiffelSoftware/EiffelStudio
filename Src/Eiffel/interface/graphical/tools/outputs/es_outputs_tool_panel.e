@@ -28,7 +28,6 @@ inherit
 
 	OUTPUT_MANAGER_OBSERVER
 		redefine
-			on_output_registered,
 			on_output_unregistered,
 			on_output_activated
 		end
@@ -317,7 +316,11 @@ feature {NONE} -- Basic operations
 				create l_item.make_with_text (l_name)
 				l_item.set_pixmap (a_editor.icon_pixmap)
 				l_item.set_data (a_editor)
-				register_kamikaze_action (l_item.select_actions, agent inject_output_widget (a_editor))
+
+					-- Inject the output widget into the UI now, so it recieves updates.
+				inject_output_widget (a_editor)
+
+					-- Set up action to ensure users are notified when a hidden output changes.
 				register_action (a_editor.text_changed_actions, agent (ia_sender: ES_NOTIFIER_OUTPUT_WINDOW; ia_output: ES_OUTPUT_PANE_I)
 					require
 						ia_sender_attached: ia_sender /= Void
@@ -612,17 +615,6 @@ feature {NONE} -- Action handlers
 
 feature {REGISTRAR_I} -- Event handlers
 
-	on_output_registered (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached CONCEALER_I [OUTPUT_I]; a_key: attached UUID)
-			-- <Precursor>
-		do
-				-- We have to force revealing the object to retrieve the
-			if attached {ES_OUTPUT_PANE_I} a_registration.object as l_output_pane then
-				extend_output (l_output_pane)
-			else
-				check must_have_object: False end
-			end
-		end
-
 	on_output_unregistered (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached CONCEALER_I [OUTPUT_I]; a_key: attached UUID)
 			-- <Precursor>
 		do
@@ -638,6 +630,9 @@ feature {REGISTRAR_I} -- Event handlers
 		do
 				-- The output pane has been created in the registrar (as `on_output_activated' is a renamed
 				-- feature from {REGISTRAR_OBSERVER}. Now we can extend the UI to include the actual widget.
+			if attached {ES_OUTPUT_PANE_I} a_registration as l_output_pane then
+				extend_output (l_output_pane)
+			end
 		end
 
 feature {LOCKABLE_I} -- Event handlers

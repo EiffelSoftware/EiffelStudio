@@ -151,14 +151,23 @@ feature {NONE} -- Registration: Output
 			-- <Precursor>
 		local
 			l_kinds: OUTPUT_MANAGER_KINDS
-			l_icons: ES_PIXMAPS_16X16
 		do
-			l_icons := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-
 			create l_kinds
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_general), l_icons.tool_output_icon_buffer), l_kinds.general)
-			a_service.register (create {ES_EIFFEL_COMPILER_OUTPUT_PANE}.make (locale_formatter.translation (l_compiler)), l_kinds.eiffel_compiler)
-			a_service.register (create {ES_C_COMPILER_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_external_compilation), l_icons.tool_c_output_icon_buffer), l_kinds.c_compiler)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_general), (create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_output_icon_buffer), l_kinds.general)
+
+			a_service.register_with_activator (
+				agent: OUTPUT_I
+						-- Delay initialization of the compiler output until needed.
+					do
+						create {ES_EIFFEL_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (l_compiler))
+					end, l_kinds.eiffel_compiler)
+
+			a_service.register_with_activator (
+				agent: OUTPUT_I
+						-- Delay initialization of the external compiler output until needed.
+					do
+						create {ES_C_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (l_external_compilation))
+					end, l_kinds.c_compiler)
 		end
 
 feature {NONE} -- Internationalization

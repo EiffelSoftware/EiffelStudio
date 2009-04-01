@@ -39,7 +39,7 @@ feature -- Basic operations
 			l_session: detachable like get_current_session
 		do
 			if attached a_request.get_cookie (Uuid) as l_cookie then
-				l_session := sessions.item (l_cookie.name)
+				l_session := sessions.item (l_cookie.value)
 				if l_session /= Void and then not l_session.has_expired then
 					renew_session (l_session, a_response)
 				end

@@ -18,6 +18,10 @@ feature -- Constants
 
 	Max_queue: INTEGER = 5
 
+	session_manager: XWA_SESSION_MANAGER
+		-- The session manager for a wep app. Has to be
+		-- created before threads are spawned
+
 feature -- Access
 
 	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
@@ -70,7 +74,7 @@ feature -- Implementation
             server_socket.accept
             if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
 	            if attached {XH_REQUEST} thread_socket.retrieved as l_request then
-	            	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (l_request, thread_socket, Current))
+	            	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request, thread_socket, Current))
 	            end
             end
         end

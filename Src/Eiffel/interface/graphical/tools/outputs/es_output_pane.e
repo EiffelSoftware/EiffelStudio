@@ -105,7 +105,61 @@ feature {NONE} -- Access
 	notifier_formatter: ES_NOTIFIER_OUTPUT_WINDOW
 			-- Ouptut window use to notify clients of changes.
 
+feature -- Access
+
+	icon_animations: LIST [EV_PIXEL_BUFFER]
+			-- <Precursor>
+		do
+			if attached internal_icon_animations as l_result then
+				Result := l_result
+			else
+				Result := new_icon_animations
+				internal_icon_animations := Result
+			end
+		end
+
+	icon_pixmap_animations: LIST [EV_PIXMAP]
+			-- <Precursor>
+		do
+			if attached internal_icon_pixmap_animations as l_result then
+				Result := l_result
+			else
+				Result := new_icon_pixmap_animations
+				internal_icon_pixmap_animations := Result
+			end
+		end
+
 feature {NONE} -- Access: User interface
+
+	icon_animation_overlay_coords: LINEAR [TUPLE [x, y: NATURAL_8]]
+			-- Animation icons coordinates for drawing an overlay icon.
+		local
+			l_result: ARRAYED_LIST [TUPLE [NATURAL_8, NATURAL_8]]
+		once
+			create l_result.make (7)
+--			l_result.extend ([{NATURAL_8} 1, {NATURAL_8} 1])
+--			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
+--			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 1])
+--			l_result.extend ([{NATURAL_8} 4, {NATURAL_8} 1])
+--			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 1])
+--			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 1])
+
+			l_result.extend ([{NATURAL_8} 1, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 4, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
+			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
+
+--			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 2])
+--			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 2])
+--			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 
 	widget_table: detachable DS_HASH_TABLE [G, NATURAL]
 			-- Table of requested widgets, indexed by a window ID.
@@ -227,11 +281,75 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+	new_icon_animations: ARRAYED_LIST [EV_PIXEL_BUFFER]
+			-- Creates a new series of animation icons when the output is currently processing output.
+		local
+			l_coords: like icon_animation_overlay_coords
+			l_base_icon: like icon
+			l_icon: EV_PIXEL_BUFFER
+			l_pixmaps: like stock_pixmaps
+			l_mini_pixmaps: like mini_stock_pixmaps
+		do
+			l_coords := icon_animation_overlay_coords
+			l_base_icon := icon
+			l_pixmaps := stock_pixmaps
+			l_mini_pixmaps := mini_stock_pixmaps
+			create Result.make (5)
+			from l_coords.start until l_coords.after loop
+				if attached l_coords.item as l_coord then
+					l_icon := l_pixmaps.icon_buffer_with_overlay (l_base_icon, l_mini_pixmaps.general_edit_icon_buffer, l_coord.x, l_coord.y)
+					--l_icon.set_size (l_base_icon.width, l_base_icon.height)
+					Result.extend (l_icon)
+				end
+				l_coords.forth
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			not_result_is_destroyed: not Result.there_exists (agent {EV_PIXEL_BUFFER}.is_destroyed)
+		end
+
+	new_icon_pixmap_animations: ARRAYED_LIST [EV_PIXMAP]
+			-- Creates a new series of animation icon pixmaps when the output is currently processing output.
+		local
+			l_coords: like icon_animation_overlay_coords
+			l_base_icon: like icon
+			l_icon: EV_PIXMAP
+			l_pixmaps: like stock_pixmaps
+			l_mini_pixmaps: like mini_stock_pixmaps
+		do
+			l_coords := icon_animation_overlay_coords
+			l_base_icon := icon
+			l_pixmaps := stock_pixmaps
+			l_mini_pixmaps := mini_stock_pixmaps
+			create Result.make (5)
+			from l_coords.start until l_coords.after loop
+				if attached l_coords.item as l_coord then
+					l_icon := l_pixmaps.icon_with_overlay (l_base_icon, l_mini_pixmaps.general_edit_icon_buffer, l_coord.x, l_coord.y)
+					l_icon.set_size (l_base_icon.width, l_base_icon.height)
+					Result.extend (l_icon)
+				end
+				l_coords.forth
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			not_result_is_destroyed: not Result.there_exists (agent {EV_PIXMAP}.is_destroyed)
+		end
+
 feature {NONE} -- Implementation: Internal cache
 
 	internal_formatter: detachable like formatter
 			-- Cached version of `formatter'.
 			-- Note: Do not use directly!
+
+	internal_icon_animations: detachable like icon_animations
+			-- Cached version of `icon_animations'
+			-- Note: DO not use directly!
+
+	internal_icon_pixmap_animations: detachable like icon_pixmap_animations
+			-- Cached version of `icon_pixmap_animations'
+			-- Note: DO not use directly!
 
 invariant
 	notifier_formatter_attached: notifier_formatter /= Void

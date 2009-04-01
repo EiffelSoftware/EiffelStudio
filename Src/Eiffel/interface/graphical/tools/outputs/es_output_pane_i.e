@@ -47,6 +47,30 @@ feature -- Access: User interface
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
+	icon_animations: LIST [EV_PIXEL_BUFFER]
+			-- An list of animation icons representing the output pane is active.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			not_result_is_destroyed: not Result.there_exists (agent {EV_PIXEL_BUFFER}.is_destroyed)
+			result_consistent: Result = icon_animations
+		end
+
+	icon_pixmap_animations: LIST [EV_PIXMAP]
+			-- An list of animation pixmap icons representing the output pane is active.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			not_result_is_destroyed: not Result.there_exists (agent {EV_PIXMAP}.is_destroyed)
+			result_consistent: Result = icon_pixmap_animations
+		end
+
 feature -- Query
 
 	text_from_window (a_window: SHELL_WINDOW_I): STRING_32

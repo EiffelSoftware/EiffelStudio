@@ -221,9 +221,17 @@ feature {NONE} -- Factory
 
 	new_widget (a_window: SHELL_WINDOW_I): ES_EDITOR_WIDGET
 			-- <Precursor>
+		local
+			l_text: like text
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
 				create {ES_EDITOR_WIDGET} Result.make (l_window)
+				l_text := text
+				if not l_text.is_empty then
+						-- Loads the previous cached text into the editor.
+					Result.editor.load_text (l_text)
+					Result.scroll_editor_to_end (True)
+				end
 			else
 				check False end
 			end

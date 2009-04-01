@@ -141,16 +141,16 @@ feature {NONE} -- Basic operations
 			not_a_template_is_empty: not a_template.is_empty
 			a_parameters_attached: a_parameters /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [attached ANY, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING]
 			l_key: STRING
-			l_factory: attached CODE_FACTORY
-			l_definition: attached CODE_TEMPLATE_DEFINITION
-			l_declarations: attached CODE_DECLARATION_COLLECTION
-			l_literal_declaration: attached CODE_LITERAL_DECLARATION
-			l_templates: attached CODE_TEMPLATE_COLLECTION
-			l_template: attached CODE_TEMPLATE
-			l_table_builder: attached CODE_SYMBOL_TABLE_BUILDER
-			l_table: attached CODE_SYMBOL_TABLE
+			l_factory: CODE_FACTORY
+			l_definition: CODE_TEMPLATE_DEFINITION
+			l_declarations: CODE_DECLARATION_COLLECTION
+			l_literal_declaration: CODE_LITERAL_DECLARATION
+			l_templates: CODE_TEMPLATE_COLLECTION
+			l_template: CODE_TEMPLATE
+			l_table_builder: CODE_SYMBOL_TABLE_BUILDER
+			l_table: CODE_SYMBOL_TABLE
 		do
 			create l_factory
 			create l_definition.make (l_factory)
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 				l_key := l_cursor.key
 				check l_key_attached: l_key /= Void end
 				l_literal_declaration := l_factory.create_code_literal_declaration (l_key, l_declarations)
-				if attached {STRING_32} l_cursor.item.out.as_string_32 as l_value then
+				if attached l_cursor.item.out.as_string_32 as l_value then
 					l_literal_declaration.default_value := l_value
 				end
 				l_declarations.extend (l_literal_declaration)
@@ -211,11 +211,11 @@ feature {NONE} -- Basic operations
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

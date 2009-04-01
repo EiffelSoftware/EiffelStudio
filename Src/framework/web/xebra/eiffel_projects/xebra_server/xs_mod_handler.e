@@ -69,7 +69,7 @@ feature --Execution
            		end
            	end
 
-           	create l_request.make_from_string (l_message)
+			l_request := create_request (l_message)
 
 			l_response := forward_request_to_app (l_request, socket)
 
@@ -81,6 +81,15 @@ feature --Execution
 		end
 
 feature {NONE} -- Implementation
+
+	create_request (a_string: STRING): XH_REQUEST
+		do
+			if a_string.has_substring ("#" + ({XH_GET_REQUEST}.Method_get.out) + "#") then
+				create {XH_GET_REQUEST} Result.make_from_string (a_string)
+			else
+				create {XH_POST_REQUEST} Result.make_from_string (a_string)
+			end
+		end
 
 	forward_request_to_app (a_request: XH_REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): XH_RESPONSE
 			--Sends a request to the correct webserver.

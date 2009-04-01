@@ -1,8 +1,5 @@
 
 class TEST
-create
-	make
-
 inherit
 
 	A
@@ -12,6 +9,8 @@ inherit
 			my_routine
 		end
 
+create
+	make
 
 feature
 	

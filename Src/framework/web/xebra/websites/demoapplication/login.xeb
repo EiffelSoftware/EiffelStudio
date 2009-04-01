@@ -88,6 +88,7 @@ a {
     </form></td>
   </tr>
   <tr>
+  <xeb:display feature="login_ok"/> 
     <td colspan="4" bgcolor="#CCCCCC"><div align="center">footer text</div></td>
   </tr>
 </table>

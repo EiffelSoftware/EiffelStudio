@@ -28,11 +28,16 @@ feature -- Basic Operations
 		do
 			create Result.make
 			current_session := a_session_manager.get_current_session (a_request, Result)
+			internal_controller.set_current_request (a_request)
 			handle_request (a_request, Result)
 		end
 
 	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
+		deferred
+		end
+
+	internal_controller: XWA_CONTROLLER
 		deferred
 		end
 

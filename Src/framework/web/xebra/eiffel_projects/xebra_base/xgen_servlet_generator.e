@@ -32,6 +32,13 @@ feature --
 			Result.append_expression ("create controller." + constructor_name)
 		end
 
+	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
+			-- Serializes the request feature of the {SERVLET}
+		do
+			create Result.make ("internal_controller: XWA_CONTROLLER")
+			Result.append_expression ("Result := controller")
+		end
+
 	build_handle_request_feature_for_servlet (root_tag: XTAG_TAG_SERIALIZER): XEL_FEATURE_ELEMENT
 			-- Serializes the request feature of the {SERVLET}
 		do
@@ -58,6 +65,7 @@ feature --
 			servlet_class.set_constructor_name ("make")
 			servlet_class.add_variable_by_name_type ("controller", controller_type)
 			servlet_class.add_feature (build_make_for_servlet_generator)
+			servlet_class.add_feature (build_internal_controller_for_servlet)
 			servlet_class.add_feature (build_handle_request_feature_for_servlet (get_root_tag))
 			servlet_class.serialize (buf)
 			file.close

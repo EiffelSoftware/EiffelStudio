@@ -107,8 +107,8 @@ rt_private size_t tagged_len = 0;
 #endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
-rt_private void write_char(EIF_CHARACTER c, char *buf);		/* Write a character */
-rt_private void write_out(void);		/* Write in `tagged_out' */
+rt_private void write_char(EIF_CHARACTER c);		/* Write a character */
+rt_private void write_attribute_character(EIF_CHARACTER c);		/* Write a character as an Eiffel attribute */
 rt_private void write_tab(register int tab);		/* Print tabulations */
 rt_private void rec_write(register EIF_REFERENCE object, int tab);	/* Write object print in `tagged_out' */
 rt_private void rec_swrite(register EIF_REFERENCE object, int tab);		/* Write special object */
@@ -164,29 +164,21 @@ rt_shared char *build_out(EIF_REFERENCE object)
 
 	flags = HEADER(object)->ov_flags;
 
+		/* Print instance type name */
+	write_string (eif_typename(Dftype(object)));
+	sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object);
+	write_string(buffero);
+		/* Print recursively in `tagged_out' */
 	if (flags & EO_SPEC) {
-			/* Special object */
-		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename(Dftype(object)),
-			(rt_uint_ptr) object);
-		write_out();
 		if (flags & EO_TUPLE) {
-			/* Print recursively in `tagged_out' */
 			rec_twrite(object, 0);
 		} else {
-			/* Print recursively in `tagged_out' */
 			rec_swrite(object, 0);
 		}
 	} else {
-		/* Print instance class name and object id */
-		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", System(Dtype(object)).cn_generator,
-			(rt_uint_ptr) object);
-		write_out();
-		/* Print recursively in `tagged_out' */
 		rec_write(object, 0);
 	}
-
-	*buffero = '\0';
-	write_out();
+	write_char ('\0');
 
 	return tagged_out;		/* This arena must be freed manually */
 }
@@ -240,8 +232,8 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 
 		/* Print attribute name */
 		write_tab(tab+1);
-		sprintf(buffero, "%s: ", names[i]);
-		write_out();
+		write_string (names [i]);
+		write_string (": ");
 
 		/* Print attribute value */
 		type = types[i];
@@ -255,105 +247,103 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 		case SK_POINTER:
 			/* Pointer attribute */
 			sprintf(buffero, "POINTER =  C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) (*(fnptr *)o_ref));
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_BOOL:
 			/* Boolean attribute */
-			sprintf(buffero, "BOOLEAN = ");
-			write_out();
-			if (*o_ref)
-				sprintf(buffero, "True\n");
-			else
-				sprintf(buffero, "False\n");
-			write_out();
+			write_string("BOOLEAN = ");
+			if (*o_ref) {
+				write_string ("True\n");
+			} else {
+				write_string ("False\n");
+			}
 			break;
 		case SK_CHAR:
 			/* Character attribute */
-			write_char(*o_ref, buffero);
-			write_out();
+			write_attribute_character (*o_ref);
 			break;
 		case SK_WCHAR:
 			/* Wide character attribute */
 			sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_UINT8:
 			/* Natural 8 bits attribute */
 			sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_UINT16:
 			/* Natural 16 bits attribute */
 			sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_UINT32:
 			/* Natural 32 bits attribute */
 			sprintf(buffero, "NATURAL = %d\n", *(EIF_NATURAL_32 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_UINT64:
 			/* Natural 64 bits attribute */
-			sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
-				 *(EIF_NATURAL_64 *) o_ref);
-			write_out();
+			sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n", *(EIF_NATURAL_64 *) o_ref);
+			write_string(buffero);
 			break;
 		case SK_INT8:
 			/* Integer 8 bits attribute */
 			sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_INT16:
 			/* Integer 16 bits attribute */
 			sprintf(buffero, "INTEGER_16 = %d\n", *(EIF_INTEGER_16 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_INT32:
 			/* Integer 32 bits attribute */
 			sprintf(buffero, "INTEGER_32 = %d\n", *(EIF_INTEGER_32 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_INT64:
 			/* Integer 64 bits attribute */
 			sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
 				 *(EIF_INTEGER_64 *) o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_REAL32:
 			/* Real attribute */
 			sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;
 		case SK_REAL64:
 			/* Double attribute */
 			sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
-			write_out();
+			write_string(buffero);
 			break;	
 		case SK_BIT:
 			{		
 				char *str = b_out(o_ref);
 
 				sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
-				write_out();
+				write_string(buffero);
 				write_string(str);
 				sprintf(buffero, "\n");
-				write_out();
+				write_string(buffero);
 				eif_rt_xfree(str);	/* Allocated by `b_out' */
 			}
 			break;
 		case SK_EXP:
 			/* Expanded attribute */
-			sprintf(buffero, "expanded %s\n", eif_typename(Dftype(o_ref)));
-			write_out();
+			write_string("expanded ");
+			write_string(eif_typename(Dftype(o_ref)));
+			write_char ('\n');
 			write_tab (tab + 2);
 			sprintf(buffero, "-- begin sub-object --\n");
-			write_out();
+			write_string(buffero);
 
 			rec_write((EIF_REFERENCE)o_ref, tab + 3);
 
 			write_tab(tab + 2);
 			sprintf(buffero, "-- end sub-object --\n");
-			write_out();
+			write_string(buffero);
 			break;
 		default: 
 			/* Object reference */
@@ -363,44 +353,39 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				if (ref_flags & EO_C) {
 					/* C reference */
 					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
-					write_out();
-				} else if (ref_flags & EO_SPEC) {
-					if (ref_flags & EO_TUPLE) {
-						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename (Dftype(reference)),
-							(rt_uint_ptr) reference);
-						write_out();
-						write_tab(tab + 2);
-						sprintf(buffero, "-- begin tuple object --\n");
-						write_out();
-
-						rec_twrite(reference, tab + 3);
-
-						write_tab(tab + 2);
-						sprintf(buffero, "-- end tuple object --\n");
-						write_out();
-
-					} else {
-						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename (Dftype(reference)),
-							(rt_uint_ptr) reference);
-						write_out();
-						write_tab(tab + 2);
-						sprintf(buffero, "-- begin special object --\n");
-						write_out();
-
-						rec_swrite(reference, tab + 3);
-
-						write_tab(tab + 2);
-						sprintf(buffero, "-- end special object --\n");
-						write_out();
-					}
+					write_string(buffero);
 				} else {
-					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-						eif_typename(Dftype(reference)), (rt_uint_ptr) reference);
-					write_out();
+					write_string(eif_typename(Dftype(reference)));
+					sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
+					write_string(buffero);
+					if (ref_flags & EO_SPEC) {
+						if (ref_flags & EO_TUPLE) {
+							write_tab(tab + 2);
+							sprintf(buffero, "-- begin tuple object --\n");
+							write_string(buffero);
+
+							rec_twrite(reference, tab + 3);
+
+							write_tab(tab + 2);
+							sprintf(buffero, "-- end tuple object --\n");
+							write_string(buffero);
+
+						} else {
+							write_tab(tab + 2);
+							sprintf(buffero, "-- begin special object --\n");
+							write_string(buffero);
+
+							rec_swrite(reference, tab + 3);
+
+							write_tab(tab + 2);
+							sprintf(buffero, "-- end special object --\n");
+							write_string(buffero);
+						}
+					}
 				}
 			} else {
 				sprintf(buffero, "Void\n");
-				write_out();
+				write_string(buffero);
 			}
 		}
 	}
@@ -432,79 +417,83 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 						o_ref += elem_size) {
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: expanded ", (long) (old_count - count));
-				write_out();
-				sprintf(buffero, "%s\n", eif_typename(Dftype(o_ref)));
-				write_out();
+				write_string(buffero);
+				write_string(eif_typename(Dftype(o_ref)));
+				write_char('\n');
 				write_tab(tab + 2);
 				sprintf(buffero, "-- begin sub-object --\n");
-				write_out();
+				write_string(buffero);
 		
 				rec_write(o_ref, tab + 3);
 	
 				write_tab(tab + 2);
 				sprintf(buffero, "-- end sub-object --\n");
-				write_out();
+				write_string(buffero);
 			}
 		else
 			for (o_ref = object; count > 0; count--,
 						o_ref += elem_size) {
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: ", (long) (old_count - count));
-				write_out();
+				write_string(buffero);
 				if (dtype == egc_sp_char) {
-					write_char(*o_ref, buffero);
-					write_out();
+					write_attribute_character (*o_ref);
 				} else if (dtype == egc_sp_wchar) {
 					sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
-					write_out ();
+					write_string(buffero);
 				} else if (dtype == egc_sp_uint8) {
 					sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_uint16) {
 					sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_uint32) {
 					sprintf(buffero, "NATURAL_32 = %d\n", *(EIF_NATURAL_32 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_uint64) {
 					sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
 						*(EIF_NATURAL_64 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_int8) {
 					sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_int16) {
 					sprintf(buffero, "INTEGER_16 = %d\n", *(EIF_INTEGER_16 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_int32) {
 					sprintf(buffero, "INTEGER_32 = %d\n", *(EIF_INTEGER_32 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_int64) {
 					sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
 						*(EIF_INTEGER_64 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_bool) {
-					sprintf(buffero, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
-					write_out();
+					write_string ("BOOLEAN = ");
+					if (*o_ref) {
+						write_string ("True");
+					} else {
+						write_string ("False");
+					}
+					write_char('\n');
 				} else if (dtype == egc_sp_real32) {
 					sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_real64) {
 					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
-					write_out();
+					write_string(buffero);
 				} else if (dtype == egc_sp_pointer) {
 					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n",
 						(rt_uint_ptr) (*(fnptr *)o_ref));
-					write_out();
+					write_string(buffero);
 				} else {
 					/* Must be bit */
 					char *str = b_out(o_ref);
 
 					sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
-					write_out();
+					write_string(buffero);
 					write_string(str);
 					sprintf(buffero, "\n");
-					write_out();
+					write_string(buffero);
 					eif_rt_xfree(str);	/* Allocated by `b_out' */
 				}
 			}
@@ -513,16 +502,17 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					o_ref = (EIF_REFERENCE) ((EIF_REFERENCE *)o_ref + 1)) {
 			write_tab(tab + 1);
 			sprintf(buffero, "%ld: ", (long) (old_count - count));
-			write_out();
+			write_string(buffero);
 			reference = *(EIF_REFERENCE *) o_ref;
 			if (!reference)
 				sprintf(buffero, "Void\n");
-			else if (HEADER(reference)->ov_flags & EO_C)
+			else if (HEADER(reference)->ov_flags & EO_C) {
 				sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
-			else
-				sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-					eif_typename(Dftype(reference)), (rt_uint_ptr) reference);
-			write_out();
+			} else {
+				write_string (eif_typename(Dftype(reference)));
+				sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
+			}
+			write_string(buffero);
 		}
 }
 
@@ -541,125 +531,89 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 	for (; i < count; i++) {
 		write_tab(tab + 1);
 		sprintf(buffero, "%ld: ", (long) i);
-		write_out();
+		write_string(buffero);
 		switch (eif_gen_typecode_with_dftype(dftype, i)) {
 			case EIF_BOOLEAN_CODE:
-				sprintf(buffero, "BOOLEAN = %s\n", (eif_boolean_item(object, i) ? "True" : "False"));
-				write_out();
+				write_string ("BOOLEAN = ");
+				if (eif_boolean_item(object, i)) {
+					write_string ("True");
+				} else {
+					write_string ("False");
+				}
+				write_char('\n');
 				break;
 			case EIF_CHARACTER_CODE:
-				write_char(eif_character_item(object,i), buffero);
-				write_out();
+				write_attribute_character (eif_character_item(object,i));
 				break;
 			case EIF_REAL_64_CODE:
 				sprintf(buffero, "DOUBLE = %.17g\n", eif_real_64_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_REAL_32_CODE:
 				sprintf(buffero, "REAL = %g\n", eif_real_32_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_POINTER_CODE:
 				sprintf(buffero, "POINTER = 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) eif_pointer_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_REFERENCE_CODE:
 				if (eif_reference_item(object,i) == NULL) {
 					sprintf(buffero, "Void\n");
-					write_out();
+					write_string(buffero);
 				} else {
-					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-						eif_typename(Dftype(eif_reference_item(object,i))),
-						(rt_uint_ptr) eif_reference_item(object,i));
-					write_out();
+					write_string(eif_typename(Dftype(eif_reference_item(object, i))));
+					sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) eif_reference_item(object,i));
+					write_string(buffero);
 				}
 				break;
 			case EIF_NATURAL_8_CODE:
 				sprintf(buffero, "NATURAL_8 = %d\n", eif_natural_8_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_NATURAL_16_CODE:
 				sprintf(buffero, "NATURAL_16 = %d\n", eif_natural_16_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_NATURAL_32_CODE:
 				sprintf(buffero, "NATURAL_32 = %d\n", eif_natural_32_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_NATURAL_64_CODE:
 				sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
 					eif_natural_64_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_INTEGER_8_CODE:
 				sprintf(buffero, "INTEGER_8 = %d\n", eif_integer_8_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_INTEGER_16_CODE:
 				sprintf(buffero, "INTEGER_16 = %d\n", eif_integer_16_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_INTEGER_32_CODE:
 				sprintf(buffero, "INTEGER_32 = %d\n", eif_integer_32_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_INTEGER_64_CODE:
 				sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
 					eif_integer_64_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 			case EIF_WIDE_CHAR_CODE:
 				sprintf(buffero, "WIDE_CHARACTER = U+%x\n", eif_wide_character_item(object,i));
-				write_out();
+				write_string(buffero);
 				break;
 		}
 	}
 }
 
-rt_private void write_tab(register int tab)
+rt_private void write_char(EIF_CHARACTER c)
 {
+		/* Print `c' in `tagged_out'. */
 	RT_GET_CONTEXT
-	int i = 0;
-
-	for (; i < tab; i++) {
-		sprintf(buffero,"  ");
-		write_out();
-	}
-}
-
-rt_private void write_char (EIF_CHARACTER c, char *buf)
-							/* The character */
-		  		/* Where it should be written */
-{
-	/* Write a character in `buffer' */
-		
-	if (c < ' ')
-		sprintf(buf, "CHARACTER = Ctrl-%c\n", c + '@');
-	else if (c > 127) {
-		c -= 128;
-		if (c < ' ')
-			sprintf(buf, "CHARACTER = Ext-Ctrl-%c\n", c + '@');
-		else
-			sprintf(buf, "CHARACTER = Ext-%c\n", c);
-	} else
-		sprintf(buf, "CHARACTER = '%c'\n", c);
-}
-
-rt_private void write_out(EIF_CONTEXT_NOARG)
-{
-	RT_GET_CONTEXT
-
-	/* Print private string `buffer' in `tagged_out'. */
-	write_string(buffero);
-}
-
-rt_private void write_string(char *str)
-{
-	/* Print `str' in `tagged_out'. */
-	RT_GET_CONTEXT
-	size_t buffer_len = strlen(str);	/* Length of `str' */
-
-	tagged_len += buffer_len;
+	tagged_len += sizeof(EIF_CHARACTER);
 	if (tagged_len >= tagged_max) {
 		/* Reallocation of C string `tagged_out' */
 		do 
@@ -669,8 +623,68 @@ rt_private void write_string(char *str)
 		if (tagged_out == (char *) 0)
 			enomem(MTC_NOARG);
 	}
-	/* Append `str' to `tagged_out' */
-	strcat(tagged_out, str);
+		/* Append `str' to `tagged_out' */
+	tagged_out[tagged_len - 1] = c;
+}
+
+rt_private void write_tab(register int tab)
+{
+	int i = 0;
+
+	for (; i < tab; i++) {
+		write_char (' ');
+		write_char (' ');
+	}
+}
+
+rt_private void write_attribute_character (EIF_CHARACTER c)
+							/* The character */
+		  		/* Where it should be written */
+{
+		/* Write a character in `buffer' */
+	write_string ("CHARACTER = ");
+	if (c < ' ') {
+		write_string ("Ctrl-");
+		write_char (c + '@');
+	} else if (c > 127) {
+		c -= 128;
+		write_string ("Ext-Ctrl-");
+		if (c < ' ') {
+			write_char (c + '@');
+		} else {
+			write_char (c);
+		}
+	} else {
+		write_char ('\'');
+		write_char (c);
+		write_char ('\'');
+	}
+	write_char ('\n');
+}
+
+rt_private void write_string(char *str)
+{
+	/* Print `str' in `tagged_out'. */
+	RT_GET_CONTEXT
+	size_t buffer_len = strlen(str);	/* Length of `str' */
+	size_t j, i = tagged_len;
+
+	tagged_len += buffer_len;
+	if (tagged_len >= tagged_max) {
+			/* Reallocation of C string `tagged_out' */
+		do {
+			tagged_max *= 2;
+		} while (tagged_len >= tagged_max);
+
+		tagged_out = (char *) xrealloc(tagged_out, tagged_max, GC_OFF);
+		if (tagged_out == (char *) 0) {
+			enomem(MTC_NOARG);
+		}
+	}
+		/* Append `str' to `tagged_out' */
+	for (j = 0; i < tagged_len; i++, j++) {
+		tagged_out[i] = str[j];
+	}
 }
 
 /*
@@ -737,58 +751,6 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 	len = sprintf(buffero, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) p);
 	return makestr(buffero, len);
 }
-
-#ifdef WORKBENCH
-
-#include "eif_interp.h"
-
-/* The following routine builds a tagged out string out of simple types.
- * The reason for this is that the debugger can request the value of, say,
- * local #2, and this might be an integer for instance... We cannot call
- * build_out, as it expects a true object, not a simple type...
- */
-
-rt_shared char *simple_out(EIF_TYPED_VALUE *val) 
-	/* Interpreter value cell */
-{
-	/* Hand build a tagged out representation for simple types. The
-	 * representation should be kept in sync with those defined above.
-	 * NB: this whole file needs a clean rewriting--RAM.
-	 */
-	RT_GET_CONTEXT
-	buffer_allocate();		/* Allocate initial `tagged_out' buffer */
-
-	switch (val->type & SK_HEAD) {
-	case SK_EXP:
-	case SK_REF:
-		eif_rt_xfree(tagged_out);							/* What a waste of CPU cycles */
-		return build_out(val->it_ref);	/* Only for the beauty of it */
-	case SK_VOID: sprintf(tagged_out, "Not an object!"); break;
-	case SK_BOOL: sprintf(tagged_out, "BOOLEAN = %s", val->it_char ? "True" : "False"); break;
-	case SK_CHAR: write_char(val->it_char, tagged_out); break;
-	case SK_WCHAR: sprintf(tagged_out, "WIDE_CHARACTER = U+%x", val->it_wchar); break;
-	case SK_UINT8: sprintf(tagged_out, "NATURAL_8 = %d", val->it_uint8); break;
-	case SK_UINT16: sprintf(tagged_out, "NATURAL_16 = %d", val->it_uint16); break;
-	case SK_UINT32: sprintf(tagged_out, "NATURAL_32 = %d", val->it_uint32); break;
-	case SK_UINT64: sprintf(tagged_out, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY, val->it_uint64); break;
-	case SK_INT8: sprintf(tagged_out, "INTEGER_8 = %d", val->it_int8); break;
-	case SK_INT16: sprintf(tagged_out, "INTEGER_16 = %d", val->it_int16); break;
-	case SK_INT32: sprintf(tagged_out, "INTEGER_32 = %d", val->it_int32); break;
-	case SK_INT64: sprintf(tagged_out, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY, val->it_int64); break;
-	case SK_REAL32: sprintf(tagged_out, "REAL = %g", val->it_real32); break;
-	case SK_REAL64: sprintf(tagged_out, "DOUBLE = %.17g", val->it_real64); break;
-	case SK_BIT: sprintf(tagged_out, "Bit object"); break;
-	case SK_POINTER:
-		sprintf(tagged_out, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "", (rt_uint_ptr) val->it_ref);
-		break;
-	default:
-		sprintf(tagged_out, "Not an object?");
-	}
-
-	return tagged_out;
-}
-
-#endif
 
 /*
 doc:</file>

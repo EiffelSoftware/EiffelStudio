@@ -69,18 +69,6 @@ RT_LNK EIF_REFERENCE c_outr64(EIF_REAL_64 d);
 RT_LNK EIF_REFERENCE c_outc(EIF_CHARACTER c);
 RT_LNK EIF_REFERENCE c_outp(EIF_POINTER p);
 
-#ifdef WORKBENCH
-
-/* The following routine builds a tagged out string out of simple types.
- * The reason for this is that the debugger can request the value of, say,
- * local #2, and this might be an integer for instance... We cannot call
- * build_out, as it expects a true object, not a simple type...
- */
-
-extern char *simple_out(EIF_TYPED_VALUE *val);		/* Tagged out form for simple types */	/* %%zs need to include 'item' definition */
-
-#endif /* WORKBENCH */
-
 #ifdef __cplusplus
 }
 #endif

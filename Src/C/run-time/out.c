@@ -269,17 +269,17 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_UINT8:
 			/* Natural 8 bits attribute */
-			sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
+			sprintf(buffero, "NATURAL_8 = %u\n", *(EIF_NATURAL_8 *)o_ref);
 			write_string(buffero);
 			break;
 		case SK_UINT16:
 			/* Natural 16 bits attribute */
-			sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
+			sprintf(buffero, "NATURAL_16 = %u\n", *(EIF_NATURAL_16 *)o_ref);
 			write_string(buffero);
 			break;
 		case SK_UINT32:
 			/* Natural 32 bits attribute */
-			sprintf(buffero, "NATURAL = %d\n", *(EIF_NATURAL_32 *)o_ref);
+			sprintf(buffero, "NATURAL_32 = %u\n", *(EIF_NATURAL_32 *)o_ref);
 			write_string(buffero);
 			break;
 		case SK_UINT64:
@@ -442,17 +442,16 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_uint8) {
-					sprintf(buffero, "NATURAL_8 = %d\n", *(EIF_NATURAL_8 *)o_ref);
+					sprintf(buffero, "NATURAL_8 = %u\n", *(EIF_NATURAL_8 *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_uint16) {
-					sprintf(buffero, "NATURAL_16 = %d\n", *(EIF_NATURAL_16 *)o_ref);
+					sprintf(buffero, "NATURAL_16 = %u\n", *(EIF_NATURAL_16 *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_uint32) {
-					sprintf(buffero, "NATURAL_32 = %d\n", *(EIF_NATURAL_32 *)o_ref);
+					sprintf(buffero, "NATURAL_32 = %u\n", *(EIF_NATURAL_32 *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_uint64) {
-					sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n",
-						*(EIF_NATURAL_64 *)o_ref);
+					sprintf(buffero, "NATURAL_64 = %" EIF_NATURAL_64_DISPLAY "\n", *(EIF_NATURAL_64 *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_int8) {
 					sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
@@ -568,15 +567,15 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				}
 				break;
 			case EIF_NATURAL_8_CODE:
-				sprintf(buffero, "NATURAL_8 = %d\n", eif_natural_8_item(object,i));
+				sprintf(buffero, "NATURAL_8 = %u\n", eif_natural_8_item(object,i));
 				write_string(buffero);
 				break;
 			case EIF_NATURAL_16_CODE:
-				sprintf(buffero, "NATURAL_16 = %d\n", eif_natural_16_item(object,i));
+				sprintf(buffero, "NATURAL_16 = %u\n", eif_natural_16_item(object,i));
 				write_string(buffero);
 				break;
 			case EIF_NATURAL_32_CODE:
-				sprintf(buffero, "NATURAL_32 = %d\n", eif_natural_32_item(object,i));
+				sprintf(buffero, "NATURAL_32 = %u\n", eif_natural_32_item(object,i));
 				write_string(buffero);
 				break;
 			case EIF_NATURAL_64_CODE:

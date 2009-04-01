@@ -93,7 +93,7 @@ feature -- Basic Operations
 			l_date: XU_DATE
 		do
 			create l_date.default_create
-			Result := (expiry > l_date.unix_time_stamp)
+			Result := (expiry < l_date.unix_time_stamp)
 		end
 
 

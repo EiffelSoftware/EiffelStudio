@@ -8,7 +8,6 @@ note
 
 class
 	XWA_REQUEST_HANDLER
-	
 
 create
 	make
@@ -18,15 +17,14 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
-
 		end
 
 feature -- Access
 
-
 feature -- Processing
 
-	process_servlet (a_request: XH_REQUEST; a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
+	process_servlet (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
+					 a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		local
@@ -36,7 +34,7 @@ feature -- Processing
 			l_servlet := find_servlet (a_request, a_request_handler)
 
 			if attached l_servlet then
-				l_response := l_servlet.pre_handle_request (a_request)
+				l_response := l_servlet.pre_handle_request (a_session_manager, a_request)
 			else
 				create l_response.make
 				l_response.html.put_string ("Application not found: %"" + a_request.target_uri + "%"")

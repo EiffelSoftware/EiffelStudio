@@ -8,9 +8,6 @@ note
 deferred class
 	XWA_SERVLET
 
-inherit
-	XWA_SHARED_SESSION_MANAGER
-
 feature {XWA_SERVLET} -- Initialization
 
 	base_make
@@ -26,11 +23,11 @@ feature -- Access
 
 feature -- Basic Operations	
 
-	pre_handle_request (a_request: XH_REQUEST): XH_RESPONSE
+	pre_handle_request (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST): XH_RESPONSE
 			-- Handles a request from a client an generates a response.
 		do
 			create Result.make
-			current_session := session_manager.get_current_session (a_request, Result)
+			current_session := a_session_manager.get_current_session (a_request, Result)
 			handle_request (a_request, Result)
 		end
 

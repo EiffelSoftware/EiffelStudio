@@ -29,6 +29,8 @@ feature -- Basic Operations
 			create Result.make
 			current_session := a_session_manager.get_current_session (a_request, Result)
 			internal_controller.set_current_request (a_request)
+			internal_controller.set_current_session (current_session)
+			internal_controller.on_page_load
 			handle_request (a_request, Result)
 		end
 

@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
-
 		end
 
 feature -- Basic Operations
@@ -32,21 +31,19 @@ feature -- Basic Operations
 
 		end
 
-	login_ok: BOOLEAN
+	login_ok: STRING
 			--
 		do
-			Result := False
+			Result := "NICHT AUTHENTIFIZIERT"
 
 			if attached current_request as r then
 				if attached r.post_parameters as post then
 					if attached post.item ("name") as name then
 						if attached post.item ("password") as pass then
-
 							if name.is_equal ("fabio") and pass.is_equal ("123") then
-								Result := True
+								Result := "AUTHENTIFIZIERT"
 							end
 						end
-
 					end
 				end
 			end

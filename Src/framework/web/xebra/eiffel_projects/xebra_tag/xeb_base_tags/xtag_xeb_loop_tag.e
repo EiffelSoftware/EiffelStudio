@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			a_feature.append_expression ("from")
 			a_feature.append_expression (temp_var_name + " := 1")
 			a_feature.append_expression ("until")
-			a_feature.append_expression (temp_var_name + " > controller." + times)
+			a_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
 			a_feature.append_expression ("loop")
 			generate_children (a_feature)
 			a_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")

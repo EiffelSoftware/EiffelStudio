@@ -28,6 +28,7 @@ feature --
 			-- Serializes the request feature of the {SERVLET}
 		do
 			create Result.make ("make")
+			Result.append_expression ("base_make")
 			Result.append_expression ("create controller." + constructor_name)
 		end
 
@@ -35,7 +36,6 @@ feature --
 			-- Serializes the request feature of the {SERVLET}
 		do
 			create Result.make (request_name)
-			Result.append_expression ("create Result." + constructor_name)
 			root_tag.generate (Result)
 		end
 
@@ -72,8 +72,10 @@ feature --Constants
 
 	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
 	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
-	Request_name: STRING = "handle_request (request: XH_REQUEST): XH_RESPONSE"
-	constructor_name: STRING = "make"
+	Request_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Constructor_name: STRING = "make"
+	Response_name: STRING = "response"
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

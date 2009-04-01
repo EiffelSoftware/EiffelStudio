@@ -41,13 +41,13 @@ feature {NONE} -- Implementation
 		do
 			a_feature.append_local (variable, type)
 			a_feature.append_expression ("from")
-			a_feature.append_expression ("controller." + list + ".start")
+			a_feature.append_expression (Controller_variable + "." + list + ".start")
 			a_feature.append_expression ("until")
-			a_feature.append_expression ("controller." + list + ".after")
+			a_feature.append_expression (Controller_variable + "." + list + ".after")
 			a_feature.append_expression ("loop")
-			a_feature.append_expression (variable + " := controller." + list + ".item")
+			a_feature.append_expression (variable + " := " + Controller_variable + "." + list + ".item")
 			generate_children (a_feature)
-			a_feature.append_expression ("controller." + list + ".forth")
+			a_feature.append_expression (Controller_variable + "." + list + ".forth")
 			a_feature.append_expression ("end")
 		end
 

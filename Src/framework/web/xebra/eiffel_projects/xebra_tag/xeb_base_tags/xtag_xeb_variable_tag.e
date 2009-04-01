@@ -30,7 +30,7 @@ feature
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			a_feature.append_expression ("Result.append (" + id + "." + feature_name + ")")
+			a_feature.append_expression (Response_variable + ".append (" + id + "." + feature_name + ")")
 		end
 
 	put_attribute (a_id: STRING; a_attribute: STRING)

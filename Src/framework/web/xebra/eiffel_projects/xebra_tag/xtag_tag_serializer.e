@@ -58,8 +58,13 @@ feature -- Implementation
 	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
 			--
 		do
-			a_feature.append_expression ("Result.append(%"[%N" + a_text + "%N]%")")
+			a_feature.append_expression (Response_variable + ".append(%"[%N" + a_text + "%N]%")")
 		end
+
+feature {XTAG_TAG_SERIALIZER} -- Constants
+
+		Response_variable: STRING = "response"
+		Controller_variable: STRING = "controller"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

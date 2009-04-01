@@ -33,6 +33,14 @@ feature -- Access
 
 feature -- Implementation
 
+	base_make
+			-- Initialization of classes
+		do
+			create request_pool.make  (10, agent servlet_handler_spawner)
+			create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)
+			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
+		end
+
 	run
 			-- Starts the web application.
             -- Accept communication with client and exchange messages.

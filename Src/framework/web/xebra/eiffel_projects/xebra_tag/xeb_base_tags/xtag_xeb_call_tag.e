@@ -36,7 +36,7 @@ feature -- Implementation
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			a_feature.append_expression ("controller." + feature_name)
+			a_feature.append_expression (Controller_variable + "." + feature_name)
 		end
 
 	put_attribute (id: STRING; a_attribute: STRING)

@@ -34,7 +34,7 @@ feature -- Implementation
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			a_feature.append_expression ("Result.append (controller." + text + ")")
+			a_feature.append_expression (Response_variable + ".append (controller." + text + ".out)")
 		end
 
 	put_attribute (id: STRING; a_attribute: STRING)

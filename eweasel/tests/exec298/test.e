@@ -20,7 +20,7 @@ feature
 			s := out
 			if s.substring_index ("NATURAL_8 = 255", 1) > 0 and
 			   s.substring_index ("NATURAL_16 = 65535", 1) > 0 and
-			   s.substring_index ("NATURAL = 4294967295", 1) > 0 and
+			   s.substring_index ("NATURAL_32 = 4294967295", 1) > 0 and
 			   s.substring_index ("NATURAL_64 = 18446744073709551615", 1) > 0 then
 				print ("Out is OK%N")
 			else

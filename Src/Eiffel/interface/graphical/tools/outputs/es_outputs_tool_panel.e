@@ -159,6 +159,15 @@ feature {NONE} -- Access: User interface
 	modified_outputs_tool_bar: detachable SD_TOOL_BAR
 			-- Tool bar used to contain the modified outputs buttons.
 
+	icon_animations: detachable ARRAYED_LIST [EV_PIXEL_BUFFER]
+			-- Animation icons used to notify users output is being generated.
+
+	icon_pixmap_animations: detachable ARRAYED_LIST [EV_PIXMAP]
+			-- Animation icon pixmaps used to notify users output is being generated.
+
+	icon_animation_timer: detachable EV_TIMEOUT
+			-- Animation icon timer used to cycle frames.
+
 feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
 	set_output (a_output: attached ES_OUTPUT_PANE_I)
@@ -411,6 +420,83 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+	start_icon_animation
+			-- Initializes the start of the icon animation on the output pane.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_icons: like icon_animations
+			l_icon_pixmaps: like icon_pixmap_animations
+			l_timer: like icon_animation_timer
+		do
+				-- Set the new animation icon list
+			if attached output as l_output then
+				create l_icons.make (0)
+				l_icons.append (l_output.icon_animations)
+				create l_icon_pixmaps.make (0)
+				l_icon_pixmaps.append (l_output.icon_pixmap_animations)
+			else
+				create l_icons.make (1)
+				l_icons.extend (tool_descriptor.icon)
+				create l_icon_pixmaps.make (1)
+				l_icon_pixmaps.extend (tool_descriptor.icon_pixmap)
+			end
+				-- Reset the animation so the next icon will be the first
+			l_icons.start
+			l_icon_pixmaps.start
+			l_icons.back
+			l_icon_pixmaps.back
+			icon_animations := l_icons
+			icon_pixmap_animations := l_icon_pixmaps
+
+				-- Perform the first animation step
+			on_icon_animation_timeout
+
+				-- Start the timer
+			l_timer := icon_animation_timer
+			check l_timer_detached: l_timer = Void end
+			create l_timer.make_with_interval (200)
+			register_action (l_timer.actions, agent on_icon_animation_timeout)
+			icon_animation_timer := l_timer
+		ensure
+			icon_animations_attached: icon_animations /= Void
+			icon_pixmap_animations_attached: icon_pixmap_animations /= Void
+			icon_animation_timer_attached: icon_animation_timer /= Void
+		end
+
+	end_icon_animation
+			-- Ends the icon animation on the output pane.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_timer: like icon_animation_timer
+		do
+				-- Remove timer.
+			l_timer := icon_animation_timer
+			l_timer.set_interval (0)
+			check l_timer_attached: l_timer /= Void end
+			unregister_action (l_timer.actions, agent on_icon_animation_timeout)
+			l_timer.destroy
+			icon_animation_timer := Void
+			icon_animations := Void
+			icon_pixmap_animations := Void
+
+				-- Put back the icon.
+			if attached output as l_output then
+				content.set_pixel_buffer (l_output.icon)
+				content.set_pixmap (l_output.icon_pixmap)
+			else
+				content.set_pixel_buffer (tool_descriptor.icon)
+				content.set_pixmap (tool_descriptor.icon_pixmap)
+			end
+		ensure
+			icon_animations_detached: icon_animations = Void
+			icon_pixmap_animations_detached: icon_pixmap_animations = Void
+			icon_animation_timer_detached: icon_animation_timer = Void
+		end
+
 feature {NONE} -- Action handlers
 
 	on_selected_editor_changed
@@ -470,6 +556,60 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_icon_animation_timeout
+			-- Steps the icon animation on the output tool panel.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			icon_animations_attached: icon_animations /= Void
+			icon_pixmap_animations_attached: icon_pixmap_animations /= Void
+		local
+			l_icon: EV_PIXEL_BUFFER
+			l_icon_pixmap: EV_PIXMAP
+		do
+				-- Retrieve active icon
+			if attached output as l_output then
+				l_icon := l_output.icon
+				l_icon_pixmap := l_output.icon_pixmap
+			else
+				l_icon := tool_descriptor.icon
+				l_icon_pixmap := tool_descriptor.icon_pixmap
+			end
+
+			if attached icon_animations as l_icons then
+					-- Set the next pixel buffer
+				if not l_icons.after then
+					l_icons.forth
+				end
+				if l_icons.after then
+					l_icons.start
+				end
+				l_icon := l_icons.item
+				check l_icon_attached: l_icon /= Void end
+
+					-- Set icon
+				content.set_pixel_buffer (l_icon)
+			else
+				check no_icons_set: False end
+			end
+			if attached icon_pixmap_animations as l_icons then
+					-- Set the next icon
+				if not l_icons.after then
+					l_icons.forth
+				end
+				if l_icons.after then
+					l_icons.start
+				end
+				l_icon_pixmap := l_icons.item
+				check l_icon_pixmap_attached: l_icon_pixmap /= Void end
+
+					-- Set icon
+				content.set_pixmap (l_icon_pixmap)
+			else
+				check no_icons_set: False end
+			end
+		end
+
 feature {REGISTRAR_I} -- Event handlers
 
 	on_output_registered (a_registrar: attached OUTPUT_MANAGER_S; a_registration: attached CONCEALER_I [OUTPUT_I]; a_key: attached UUID)
@@ -505,16 +645,18 @@ feature {LOCKABLE_I} -- Event handlers
 	on_output_locked (a_lock: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
-			if is_initialized and then a_lock ~ output then
+			if is_initialized and then a_lock = output then
 				clear_button.disable_sensitive
+				start_icon_animation
 			end
 		end
 
 	on_output_unlocked (a_lock: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
-			if is_initialized and then a_lock ~ output then
+			if is_initialized and then a_lock = output then
 				clear_button.enable_sensitive
+				end_icon_animation
 			end
 		end
 

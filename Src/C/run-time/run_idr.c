@@ -501,11 +501,9 @@ rt_public void widr_multi_char (EIF_CHARACTER *obj, size_t num)
 			idrf.i_encode.i_ptr += cap;
 			count--;
 		}
-
 		check_capacity (&idrf.i_encode, left_over);
 		memcpy (idrf.i_encode.i_ptr, obj, left_over);
 		idrf.i_encode.i_ptr += left_over;
-
 	}
 }
 

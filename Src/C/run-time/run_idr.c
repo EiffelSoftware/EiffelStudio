@@ -460,7 +460,7 @@ rt_public void ridr_multi_char (EIF_CHARACTER *obj, size_t num)
 	RT_GET_CONTEXT
 	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		check_capacity (&idrf.i_decode, num);
 		memcpy (obj, idrf.i_decode.i_ptr, num);
 		idrf.i_decode.i_ptr += num;
@@ -486,7 +486,7 @@ rt_public void widr_multi_char (EIF_CHARACTER *obj, size_t num)
 	RT_GET_CONTEXT
 	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		check_capacity (&idrf.i_encode, num);
 		memcpy (idrf.i_encode.i_ptr, obj, num);
 		idrf.i_encode.i_ptr += num;
@@ -559,7 +559,7 @@ rt_public void widr_multi_any (char *obj, size_t num)
 	idrf.i_encode.i_ptr += sizeof (char);
 
 #ifdef EIF_64_BITS
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		check_capacity (&idrf.i_encode, num * sizeof (char *));
 		for (i = num; i > 0; i--, lptr++) {
 			l_obj = mapped_address (*(rt_uint_ptr *) lptr);
@@ -584,7 +584,7 @@ rt_public void widr_multi_any (char *obj, size_t num)
 		}
 	}
 #else
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		run_uint_ptr (&idrf.i_encode, obj, num, sizeof (char *));
 	} else {
 		size_t count = num / cap;
@@ -612,7 +612,7 @@ rt_public void ridr_multi_ptr (char *obj, size_t num)
 	idrf.i_decode.i_ptr += sizeof (char);
 	cap = idrf_buffer_size / s;
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		run_uint_ptr (&idrf.i_decode, obj, num, s);
 	} else {
 		size_t count = num / cap;
@@ -638,7 +638,7 @@ rt_public void widr_multi_ptr (char *obj, size_t num)
 	memcpy (idrf.i_encode.i_ptr, &s, sizeof (char));
 	idrf.i_encode.i_ptr += sizeof (char);
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		run_uint_ptr (&idrf.i_encode, obj, num, sizeof (char *));
 	} else {
 		size_t count = num / cap;
@@ -1082,7 +1082,7 @@ rt_private void old_ridr_multi_int (long int *obj, size_t num)
 	idrf.i_decode.i_ptr += sizeof (char);
 	cap = idrf_buffer_size / s;
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		run_ulong (&idrf.i_decode, (long unsigned int *) obj, num, s);
 	} else {
 		size_t count = num / cap;
@@ -1107,7 +1107,7 @@ rt_private void old_widr_multi_int (long int *obj, size_t num)
 	memcpy (idrf.i_encode.i_ptr, &s, sizeof (char));
 	idrf.i_encode.i_ptr += sizeof (char);
 
-	if ((num - cap) <= 0) {
+	if (num <= cap) {
 		run_ulong (&idrf.i_encode, (long unsigned int *) obj, num, sizeof (long));
 	} else {
 		size_t count = num / cap;

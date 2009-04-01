@@ -13,7 +13,9 @@ deferred class
 inherit
 	LOCKABLE
 		redefine
-			is_interface_usable
+			is_interface_usable,
+			on_locked,
+			on_unlocked
 		end
 
 	ES_OUTPUT_PANE_I
@@ -198,6 +200,7 @@ feature -- Query: User interface
 			-- <Precursor>
 		local
 			l_table: like widget_table
+			l_formatter: like formatter_from_widget
 			l_id: NATURAL
 		do
 			l_table := widget_table
@@ -215,7 +218,8 @@ feature -- Query: User interface
 
 					-- The widget has been requested so we can made the output window
 					-- available for use but adding it to the `output_window' object.
-				formatter.extend (formatter_from_widget (Result))
+				l_formatter := formatter_from_widget (Result)
+				formatter.extend (l_formatter)
 			end
 		ensure then
 			widget_table_attached: widget_table /= Void
@@ -263,6 +267,22 @@ feature -- Actions
 			-- <Precursor>
 		do
 			Result := notifier_formatter.text_changed_actions
+		end
+
+feature {NONE} -- Event handlers
+
+	on_locked
+			-- <Precursor>
+		do
+			Precursor
+			formatter.start_processing (True)
+		end
+
+	on_unlocked
+			-- <Precursor>
+		do
+			Precursor
+			formatter.end_processing
 		end
 
 feature {NONE} -- Factory

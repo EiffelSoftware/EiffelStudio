@@ -14,12 +14,20 @@ class
 inherit
 	ES_EDITOR_OUTPUT_PANE
 		redefine
+			make,
 			new_widget
 		end
 
 create
-	make,
-	make_with_icon
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: READABLE_STRING_GENERAL)
+			-- <Precursor>		
+		do
+			make_with_icon (a_name, stock_pixmaps.tool_c_output_icon_buffer)
+		end
 
 feature {NONE} -- Factory
 

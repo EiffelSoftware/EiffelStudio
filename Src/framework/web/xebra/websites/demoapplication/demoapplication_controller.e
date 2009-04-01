@@ -10,6 +10,9 @@ note
 class
 	DEMOAPPLICATION_CONTROLLER
 
+inherit
+	XWA_CONTROLLER
+
 create
 	make
 
@@ -18,10 +21,36 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
-			
+
 		end
 
+feature -- Basic Operations
 
+	on_page_load
+			--
+		do
+
+		end
+
+	login_ok: BOOLEAN
+			--
+		do
+			Result := False
+
+			if attached current_request as r then
+				if attached r.post_parameters as post then
+					if attached post.item ("name") as name then
+						if attached post.item ("password") as pass then
+
+							if name.is_equal ("fabio") and pass.is_equal ("123") then
+								Result := True
+							end
+						end
+
+					end
+				end
+			end
+		end
 
 feature -- Access
 

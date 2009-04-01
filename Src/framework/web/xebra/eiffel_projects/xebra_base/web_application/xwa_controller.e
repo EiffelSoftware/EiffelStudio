@@ -10,9 +10,16 @@ note
 deferred class
 	XWA_CONTROLLER
 
+feature -- Initialization
+
+	base_make
+		do
+			create {XH_GET_REQUEST} current_request.make_empty
+		end
+
 feature -- Access
 
-	current_request: detachable  XH_REQUEST
+	current_request: XH_REQUEST
 		-- Represents the current request that was sent by the user
 
 	current_session: detachable XH_SESSION

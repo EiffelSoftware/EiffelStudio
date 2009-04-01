@@ -5,25 +5,32 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	XH_REQUEST
 
-create
-	make_from_string
-
 feature {NONE} -- Initialization
+
+	make_empty
+		do
+			the_request := ""
+			target_uri := ""
+			create {HASH_TABLE [STRING, STRING]} parameters.make (1)
+			create {HASH_TABLE [XH_COOKIE, STRING]} cookies.make (1)
+			create {HASH_TABLE [STRING, STRING]} environment_vars.make (1)
+			create {HASH_TABLE [STRING, STRING]} headers_out.make (1)
+			create {HASH_TABLE [STRING, STRING]} headers_in.make (1)
+		end
 
 	make_from_string (a_string: STRING)
 		-- Parses the string an fills attributes of the request object			
 		require
+			has_params: a_string.has_substring (key_params)
 			a_string_not_empty: not a_string.is_empty
-			is_post_or_get: a_string.item (1).is_equal (Method_post) or a_string.item (1).is_equal (Method_get)
 			has_http: a_string.has_substring ("HTTP")
 			has_headers_in: a_string.has_substring (Key_headers_in)
 			has_headers_out: a_string.has_substring (Key_headers_out)
 			has_subp_env: a_string.has_substring (Key_subp_env)
-			has_post: a_string.item (1).is_equal (Method_post) implies a_string.has_substring (Key_post_params)
-			has_get: a_string.item (1).is_equal (Method_get) implies a_string.has_substring (Key_get_params)
+
 		local
 			l_s: STRING
 			l_i: INTEGER
@@ -53,23 +60,16 @@ feature {NONE} -- Initialization
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
 				-- Read POST/GET params
-			if method.is_equal (Method_post) then
-				post_parameters := parse_table (l_s, Key_post_params, Key_p_key, Key_p_value, Key_t_end)
-			else
-				get_parameters :=  parse_table (l_s, Key_get_params, Key_p_key, Key_p_value, Key_t_end)
-			end
+			parameters := parse_table (l_s, key_params, Key_p_key, Key_p_value, Key_t_end)
 
 				-- Read cookies
 			cookies := read_cookies (headers_in)
 		ensure
-			method_set: method.is_equal (Method_post) or method.is_equal (Method_get)
-			post_set: method.is_equal (Method_post) implies attached post_parameters
-			post_set: method.is_equal (Method_get) implies attached get_parameters
 			the_request_set: not the_request.is_empty
 			target_uri_set: not target_uri.is_empty
 		end
 
-feature {NONE} -- Constants
+feature -- Constants
 
 	Key_post_params: STRING = "#P#"
 	Key_get_params: STRING = "#G#"
@@ -82,13 +82,12 @@ feature {NONE} -- Constants
 	Key_p_value: STRING = "="
 	Key_t_end: STRING = "#E#"
 
-	Method_post: CHARACTER = 'P'
-	Method_get: CHARACTER = 'G'
-
 	Headers_in_set_cookies: STRING = "Set-Cookie"
 	Headers_in_cookie: STRING = "Cookie"
 	Headers_eq: STRING = "="
 	Headers_sq: STRING = ";"
+
+feature {NONE} -- Access
 
 feature -- Access
 
@@ -101,11 +100,8 @@ feature -- Access
 	method: CHARACTER
 			-- P for POST, G for GET		
 
-	get_parameters: detachable HASH_TABLE [STRING, STRING]
-			-- The GET parameters
-
-	post_parameters: detachable HASH_TABLE [STRING, STRING]
-			-- The POST parameters
+	parameters: HASH_TABLE [STRING, STRING]
+			-- The GET/POST parameters
 
 	headers_in: HASH_TABLE [STRING, STRING]
 			-- Headers_in as provided by the http server
@@ -116,7 +112,7 @@ feature -- Access
 	environment_vars: HASH_TABLE [STRING, STRING]
 			-- Subprocess environment variables as provided by the http server		
 
-	cookies: LINKED_LIST [XH_COOKIE]
+	cookies: TABLE [XH_COOKIE, STRING]
 			-- Retrives cookies that are stored in the headers_in table.
 
 feature -- Basic Operations
@@ -124,21 +120,22 @@ feature -- Basic Operations
 	get_cookie (a_name: STRING): detachable XH_COOKIE
 			-- Returns true if there is a cookie with name=a_name in the list of cookies
 		do
-			from
-				cookies.start
-			until
-				cookies.after
-			loop
-				if cookies.item_for_iteration.name.is_equal (a_name) then
-					Result := cookies.item_for_iteration
-				end
-				cookies.forth
-			end
+			Result := cookies [a_name]
+		end
+
+	has_cookie (a_name: STRING): BOOLEAN
+			-- Is there a cookie with the specified `a_name'
+		do
+			Result := cookies.valid_key (a_name)
 		end
 
 feature {NONE} -- Internal processing
 
-	read_cookies (a_headers_in: HASH_TABLE [STRING, STRING]): LINKED_LIST [XH_COOKIE]
+	key_params: STRING
+		deferred
+		end
+
+	read_cookies (a_headers_in: HASH_TABLE [STRING, STRING]): TABLE [XH_COOKIE, STRING]
 			-- Parses a hash_table and looks for cookies.
 		local
 			l_s: detachable STRING
@@ -147,7 +144,7 @@ feature {NONE} -- Internal processing
 			l_value: STRING
 			l_has_more: BOOLEAN
 		do
-			create Result.make
+			create {HASH_TABLE [XH_COOKIE, STRING]} Result.make (10)
 			if attached a_headers_in.item (Headers_in_cookie) as l_item then
 				l_s := l_item
 				from l_has_more := true until not l_has_more loop
@@ -158,12 +155,12 @@ feature {NONE} -- Internal processing
 						l_has_more := True
 						l_i := l_s.substring_index (Headers_sq, 1)
 						l_value := l_s.substring (1, l_i - 1)
-						l_s.remove_head (l_value.count + Headers_sq.count +1 )
+						l_s.remove_head (l_value.count + Headers_sq.count + 1)
 					else
 						l_has_more := False
 						l_value := l_s.twin
 					end
-					Result.put_right (create {XH_COOKIE}.make (l_name, l_value))
+					Result.put (create {XH_COOKIE}.make (l_name, l_value), l_name)
 				end
 			end
 		end
@@ -195,7 +192,7 @@ feature {NONE} -- Internal processing
 				from
 					l_has_more := true
 				until
-					l_has_more = false
+					not l_has_more
 				loop
 						-- Read the headers_in table
 					l_i := l_s.substring_index (a_key_key, 1)
@@ -226,30 +223,12 @@ feature {NONE} -- Internal processing
 	read_uri (a_the_request: STRING): STRING
 				-- Reads the uri from a the_request
 		require
-			is_post_or_get: a_the_request.item (1).is_equal (Method_post) or   a_the_request.item (1).is_equal (Method_get)
 			is_http_request: a_the_request.has_substring ("HTTP")
-		local
-			l_i: INTEGER
-		do
-			Result := ""
-
-			if a_the_request.item (1).is_equal (Method_post) then
-				l_i := a_the_request.substring_index ("HTTP",1)
-				Result := a_the_request.substring (6, l_i-2)
-			elseif a_the_request.item (1).is_equal (Method_get) then
-				if a_the_request.has_substring ("?") then
-					l_i := a_the_request.substring_index ("?",1)
-					Result := a_the_request.substring (5, l_i-1)
-				else
-					l_i := a_the_request.substring_index ("HTTP",1)
-					Result := a_the_request.substring (5, l_i-2)
-				end
-
-			end
+		deferred
 		ensure
 			result_not_empty: not Result.is_empty
 		end
 
 	invariant
-		post_or_get_attached: attached post_parameters or attached get_parameters
+		parameters_attached: attached parameters
 end

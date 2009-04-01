@@ -70,12 +70,12 @@ feature -- Basic Functionality
 		do
 				-- Generate the {REQUEST_HANDLER} class
 			webapp_name.to_lower
-			create file.make_open_write (path + webapp_name + "_request_handler.e")
+			create file.make_open_write (path + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			webapp_name.to_upper
-			create request_class.make (webapp_name + "_REQUEST_HANDLER")
-			request_class.set_inherit ("XWA_SERVER_CONN_HANDLER")
+			create request_class.make (webapp_name + "_" + Server_con_handler_class)
+			request_class.set_inherit ("XWA_" + Server_con_handler_class)
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			create Result.make ("make")
 			Result.append_expression ("create request_handler.make")
 			Result.append_expression ("request_handler.run")
-			Result.append_local ("request_handler", webapp_name.as_upper + "_REQUEST_HANDLER")
+			Result.append_local ("request_handler", webapp_name.as_upper + "_" + Server_con_handler_class)
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
@@ -108,9 +108,10 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
 			create Result.make ("make")
-			Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
-			Result.append_expression ("create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)")
-			Result.append_expression ("create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
+			Result.append_expression ("base_make")
+			--Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
+			--Result.append_expression ("create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)")
+			--Result.append_expression ("create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
 			from
 				some_servlets.start
 			until
@@ -122,6 +123,10 @@ feature {NONE} -- Implementation
 				some_servlets.forth
 			end
 		end
+
+feature {NONE} -- Constants
+
+	Server_con_handler_class: STRING = "SERVER_CONN_HANDLER"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -41,11 +41,11 @@ feature {NONE} -- Initialization
 				if not error_manager.is_successful then
 					error_manager.trace_last_error (l_printer)
 				else
-					print ("Output generated to '")
+					print ("%NOutput generated to '")
 					print (l_translator.output_path)
-					print ("Servlets generated to '")
+					print ("%NServlets generated to '")
 					print (l_translator.servlet_gen_path)
-					print ("'.")
+					print ("'.%N")
 				end
 			end
 		end

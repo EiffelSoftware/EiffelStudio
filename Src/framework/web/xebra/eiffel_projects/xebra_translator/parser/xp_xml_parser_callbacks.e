@@ -153,7 +153,7 @@ feature -- Tag
 			end
 
 			if state = Reading_tag then
-				l_class_name := taglib.get_class_for_name (l_local_part.as_upper)
+				l_class_name := taglib.get_class_for_name (l_local_part)
 				if  l_class_name.is_empty then
 					l_class_name := Html_tag_name
 				end

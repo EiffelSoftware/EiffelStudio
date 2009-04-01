@@ -7,9 +7,17 @@ note
 
 deferred class
 	XWA_SERVLET
-	
+
 inherit
 	XWA_SHARED_SESSION_MANAGER
+
+feature {XWA_SERVLET} -- Initialization
+
+	base_make
+			-- Will be executed by inheritant class
+		do
+			create current_session.make
+		end
 
 feature -- Access
 

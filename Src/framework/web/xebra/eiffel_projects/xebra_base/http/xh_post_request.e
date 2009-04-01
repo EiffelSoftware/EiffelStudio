@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_string)
 		ensure then
-			parameters_set: attached parameters
+			arguments_set: attached arguments
 		end
 
 feature -- Access

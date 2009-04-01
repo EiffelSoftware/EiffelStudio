@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 		do
 			the_request := ""
 			target_uri := ""
-			create {HASH_TABLE [STRING, STRING]} parameters.make (1)
+			create {HASH_TABLE [STRING, STRING]} arguments.make (1)
 			create {HASH_TABLE [XH_COOKIE, STRING]} cookies.make (1)
 			create {HASH_TABLE [STRING, STRING]} environment_vars.make (1)
 			create {HASH_TABLE [STRING, STRING]} headers_out.make (1)
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
 				-- Read POST/GET params
-			parameters := parse_table (l_s, key_params, Key_p_key, Key_p_value, Key_t_end)
+			arguments := parse_table (l_s, key_params, Key_p_key, Key_p_value, Key_t_end)
 
 				-- Read cookies
 			cookies := read_cookies (headers_in)
@@ -100,7 +100,7 @@ feature -- Access
 	method: CHARACTER
 			-- P for POST, G for GET		
 
-	parameters: HASH_TABLE [STRING, STRING]
+	arguments: HASH_TABLE [STRING, STRING]
 			-- The GET/POST parameters
 
 	headers_in: HASH_TABLE [STRING, STRING]
@@ -230,5 +230,5 @@ feature {NONE} -- Internal processing
 		end
 
 	invariant
-		parameters_attached: attached parameters
+		arguments_attached: attached arguments
 end

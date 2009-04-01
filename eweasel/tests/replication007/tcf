@@ -10,6 +10,6 @@ compile_melted
 compile_result 	ok
 execute_work	NONE exec_output1
 execute_result 	ok
-compare output 	exec_output1
+compare exec_output1 output
 
 test_end

@@ -308,7 +308,7 @@ feature {NONE} -- Action handlers
 					l_next_state := l_transitions.item (l_name)
 				end
 
-				if l_next_state = t_none then
+				if is_strict and then l_next_state = t_none then
 						-- Parse error
 					on_report_xml_error ("Unexpected tag '" + a_local_part + "'!")
 				else

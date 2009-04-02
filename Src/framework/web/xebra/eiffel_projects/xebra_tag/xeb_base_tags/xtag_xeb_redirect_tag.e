@@ -33,7 +33,7 @@ feature {NONE}
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			write_string_to_result (Request + ".set_redirect (%"" + url + "%")")
+			a_feature.append_expression(Response_variable + ".set_goto_request (%"" + url + "%")")
 		end
 
 	put_attribute (id: STRING; a_attribute: STRING)

@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			t: TWITTER_I
 			s: STRING
 			pref: like preferences
+			src: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -31,16 +32,21 @@ feature {NONE} -- Initialization
 				if attached separate_character_option_value ('p') as l_passwd then
 					pref.password := l_passwd
 				end
+				if attached separate_word_option_value ("source") as l_source then
+					src := l_source
+				else
+					src := "EiffelTwitter"
+				end
 				if index_of_character_option ('i') > 0 then
 					pref := preferences (True, pref)
 				end
 				if pref.login = Void or pref.password = Void then
 					usage ("Missing login/password ...%N")
 				else
-					create {TWITTER_JSON} t.make_with_source (pref.login, pref.password, "EiffelTwitter")
+					create {TWITTER_JSON} t.make_with_source (pref.login, pref.password, src)
 					if attached t.verify_credentials as l_user then
 						print ("Authentication succeed...%N")
-						start_twitting (t)
+						start_tweeting (t)
 					else
 						print ("Authentication failed...%N")
 					end
@@ -76,7 +82,7 @@ feature {NONE} -- Initialization
 			io.error.put_string ("%N")
 		end
 
-	start_twitting (t: TWITTER_I)
+	start_tweeting (t: TWITTER_I)
 		local
 			a: detachable ANY
 			f: RAW_FILE
@@ -86,13 +92,20 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			debug ("twitter")
-				if attached t.rate_limit_status as rate then
+				if attached t.rate_limit_status (True) as rate then
 					print ("Remaining twitter hits: " + rate.remaining_hits.out + " / " + rate.hourly_limit.out + "%N")
 				end
 			end
 			if attached separate_character_option_value ('a') as v then
 				l_action := v
 			end
+
+--			if attached t.user_timeline (0, "djocenet", Void, 0, 0, 0) as l_stats then
+--					print ("%NUpdates:%N")
+--					print ("-----------------------------------%N")
+--					display_statuses (l_stats)
+--					print ("-----------------------------------%N")
+--			end
 
 			create l_data.put ("")
 			if l_action /= Void then

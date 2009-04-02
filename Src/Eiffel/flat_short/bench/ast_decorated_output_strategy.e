@@ -1055,7 +1055,8 @@ feature {NONE} -- Implementation
 							end
 							l_type := l_type.actual_type
 						end
-						if l_type.is_loose then
+							-- Creation method does not need instantiation
+						if l_type.is_loose and then not processing_creation_target then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
 						else
 							last_type := l_type

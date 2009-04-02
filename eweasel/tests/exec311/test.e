@@ -4,10 +4,10 @@ create
 feature
 	make is
 		local
-			s: STRING
+			s: TEST1
 		do
-			create s.make_from_string ("Test")
-			s.append_integer (5)
+			create s
+			s.test.do_nothing
 		end
 
 end

@@ -44,6 +44,11 @@
 		<geant target="create_config_local_script"  if="${config_local_available}=true" />
 		<unset name="config_local_available" />
 
+		<!-- Env -->
+		<global name="_FULL" value="true" if="$_FULL" />
+		<global name="_FULL" value="false" unless="$_FULL" />
+		<unset name="_FULL" unless="$_FULL=true" />
+
 		<!-- let's continue -->
 	</target>
 
@@ -67,7 +72,9 @@
 	<target name="update_wkbench" depend="init">
 		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}dotnet" if="${is_windows}"/>
 
-		<echo message="Update [${ISE_EIFFEL}_wkbench]" />
+		<echo message="Update [${ISE_EIFFEL}_wkbench] FULL" if="$_FULL" />
+		<echo message="Update [${ISE_EIFFEL}_wkbench] LITE" unless="$_FULL" />
+
 		<echo message="debug_mode=${debug_mode}" />
 		<set name="wb_platform_dir" value="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 		<set name="ise_platform_dir" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
@@ -103,10 +110,10 @@
 	<target name="update_executable_properties" depend="init" unless="${is_windows}" >
 		<echo message="Update Executable Properties on [${ISE_EIFFEL}_wkbench].." />
 		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/studio/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" if="$_FULL"/>
 		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/make_install" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
+		<exec executable="chmod 755 ${ISE_EIFFEL}_wkbench/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code"  if="$_FULL" />
 	</target>
 
 	<target name="copy_from_ise_eiffel" depend="init">
@@ -149,11 +156,13 @@
 			  to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio"
 			  force="true" 
 			><fileset include="@(**/*)" /></copy>
-		<echo message=" -> esbuilder" />
-		<copy dir="${delivery_dir}${path_separator}esbuilder" 
-			to_directory="${ISE_EIFFEL}_wkbench${path_separator}esbuilder"
-			  force="true" 
-			><fileset include="@(**/*)" /></copy>
+		<group if="$_FULL">
+			<echo message=" -> esbuilder" />
+			<copy dir="${delivery_dir}${path_separator}esbuilder" 
+				to_directory="${ISE_EIFFEL}_wkbench${path_separator}esbuilder"
+				  force="true" 
+				><fileset include="@(**/*)" /></copy>
+		</group>
 		<echo message=" -> precomp" />
 		<copy dir="${delivery_dir}${path_separator}precomp" 
 			to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp"
@@ -197,30 +206,31 @@
 		<set name="tmpincludeall" value="false" />
 
 		<geant target="copy_from_a_library" arguments="base" />
-		<geant target="copy_from_a_library" arguments="base_original" />
-		<geant target="copy_from_a_library" arguments="gobo" />
-		<geant target="copy_from_a_library" arguments="gobo_extension" />
-		<geant target="copy_from_a_library" arguments="graph" />
-		<geant target="copy_from_a_library" arguments="lex" />
-		<geant target="copy_from_a_library" arguments="memory_analyzer" />
-		<geant target="copy_from_a_library" arguments="net" />
-		<geant target="copy_from_a_library" arguments="parse" />
-		<geant target="copy_from_a_library" arguments="preferences" />
-		<geant target="copy_from_a_library" arguments="process" />
-		<geant target="copy_from_a_library" arguments="thread" />
-		<geant target="copy_from_a_library" arguments="time" />
-		<geant target="copy_from_a_library" arguments="uuid" />
-		<geant target="copy_from_a_library" arguments="vision2" />
-		<geant target="copy_from_a_library" arguments="vision2_extension" />
+		<group  if="$_FULL">
+			<geant target="copy_from_a_library" arguments="gobo" />
+			<geant target="copy_from_a_library" arguments="gobo_extension" />
+			<geant target="copy_from_a_library" arguments="graph" />
+			<geant target="copy_from_a_library" arguments="lex" />
+			<geant target="copy_from_a_library" arguments="memory_analyzer" />
+			<geant target="copy_from_a_library" arguments="net" />
+			<geant target="copy_from_a_library" arguments="parse" />
+			<geant target="copy_from_a_library" arguments="preferences" />
+			<geant target="copy_from_a_library" arguments="process" />
+			<geant target="copy_from_a_library" arguments="thread" />
+			<geant target="copy_from_a_library" arguments="time" />
+			<geant target="copy_from_a_library" arguments="uuid" />
+			<geant target="copy_from_a_library" arguments="vision2" />
+			<geant target="copy_from_a_library" arguments="vision2_extension" />
 
-		<geant target="copy_from_a_library" if="${is_windows}" arguments="wel" />
-		<geant target="copy_from_a_library" if="${is_windows}" arguments="com" />
+			<geant target="copy_from_a_library" if="${is_windows}" arguments="wel" />
+			<geant target="copy_from_a_library" if="${is_windows}" arguments="com" />
 
-		<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="web" />
-		<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="vision" />
-		<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="store" />
+			<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="web" />
+			<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="vision" />
+			<geant target="copy_from_a_library" if="${tmpincludeall}=true" arguments="store" />
 
-		<geant target="copy_from_a_library" arguments="cURL" />
+			<geant target="copy_from_a_library" arguments="cURL" />
+		</group>
 	</target>
 
 	<target name="copy_from_a_library" depend="init">

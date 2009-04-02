@@ -901,18 +901,18 @@ test	expanded-generic-anchored-local	melt067  tcf fail melting
 test	melted-old-expanded-result	melt068  tcf pass melting
 test	expanded-list-like-current	melt069  tcf fail melting
 test	special-expanded-creation	melt070	 tcf pass melting
-test	melt-old-expression-in-redefinition melt071  tcf pass execution
-test	compare-var-attribute-addrs	melt072  tcf fail execution
-test	increment-character		melt073  tcf pass execution
-test	int64-cast-uint64		melt074  tcf pass execution
-test	character_32-inspect 	melt075  tcf pass execution
-test	invariant-check-melted-agent-callee melt076  tcf pass execution
-test	dollar-with-tuple		melt077  tcf pass execution tuple
-test	dollar-with-expanded-attribute	melt078  tcf pass execution
-test	runtime-stack-corruption	melt079  tcf pass execution
-test	nan-comparison			melt080  tcf pass execution
-test	melted-special-creation-crash	melt081  tcf pass execution
-test	melted-external-call	melt082  tcf pass execution
+test	melt-old-expression-in-redefinition melt071  tcf pass melting execution
+test	compare-var-attribute-addrs	melt072  tcf fail melting execution
+test	increment-character		melt073  tcf pass melting execution
+test	int64-cast-uint64		melt074  tcf pass melting execution
+test	character_32-inspect 	melt075  tcf pass melting execution
+test	invariant-check-melted-agent-callee melt076  tcf pass melting execution
+test	dollar-with-tuple		melt077  tcf pass melting execution tuple
+test	dollar-with-expanded-attribute	melt078  tcf pass melting execution
+test	runtime-stack-corruption	melt079  tcf pass melting execution
+test	nan-comparison			melt080  tcf pass melting execution
+test	melted-special-creation-crash	melt081  tcf pass melting execution
+test	melted-external-call	melt082  tcf pass melting execution
 test	melted-agent-call-on-void-target	melt083  tcf fail execution melting
 test	inherited-like-current-object-test	melt084  tcf fail execution melting
 test	melted-anchored-precursor-object-test	melt085  tcf fail execution melting
@@ -1685,6 +1685,7 @@ test	storable-with-attached-type-by-62	store018 tcf pass storable attached_types
 test	storable-with-attached-type-1	store019 tcf pass storable attached_types
 test	storable-with-attached-type-by-63	store020 tcf pass storable attached_types
 test	storable-removing-attachment-marks	store021 tcf pass storable attached_types
+test	store-expanded-class-type-2	store022 tcf pass storable expanded
 
 -- Flat, short, flatshort tests
 

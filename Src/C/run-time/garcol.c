@@ -116,7 +116,9 @@ rt_shared struct gacinfo rt_g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
 	0L,			/* mem_used */
-	0,			/* gc_to */
+	0L,			/* mem_copied */
+	0L,			/* mem_move */
+	0L,			/* gc_to */
 	(char) 0,	/* status */
 };
 
@@ -872,6 +874,27 @@ rt_shared int acollect(void)
 }
 
 /*
+doc:	<routine name="rt_average" return_type="rt_uint_ptr" export="private">
+doc:		<summary>Compute an average without overflow as long as the sum of the two input does not cause an overflow .</summary>
+doc:		<param name="average" type="rt_uint_ptr">Value of average so far for the `n - 1' iterations.</param>
+doc:		<param name="value" type="rt_uint_ptr">New computed value to take into account in average.</param>
+doc:		<param name="n" type="rt_uint_ptr">Number of iteration so far. Assumes `n > 0'.</param>
+doc:		<return>Return the new average</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Performs a GC synchronization before executing itself.</synchronization>
+doc:	</routine>
+*/
+#define RT_AVERAGE(average, value, n) ((average) + (((value) - (average)) / (n)))
+rt_private rt_uint_ptr rt_average (rt_uint_ptr average, rt_uint_ptr value, rt_uint_ptr n)
+{
+	if (value > average) {
+		return average + ((value - average) / n);
+	} else {
+		return average - ((average - value) / n);
+	}
+}
+
+/*
 doc:	<routine name="scollect" return_type="int" export="shared">
 doc:		<summary>Run a garbage collection cycle with statistics updating. We monitor both the time spent in the collection and the memory released, if any, as well as time between two collections... </summary>
 doc:		<param name="gc_func" type="int (*) (void)">Collection function to be called.</param>
@@ -885,12 +908,12 @@ doc:	</routine>
 rt_shared int scollect(int (*gc_func) (void), int i)
 {
 	RT_GET_CONTEXT
-	static uint32 nb_stats[GST_NBR];	/* For average computation */
-#ifndef FAST_RUNTIME
+	static rt_uint_ptr nb_stats[GST_NBR];	/* For average computation */
+#ifndef NO_GC_STATISTICS
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
 	Timeval realtime, realtime2;		/* Real time stamps */
-	double usertime, systime;			/* CPU stats before collection */
-	double usertime2, systime2;			/* CPU usage after collection */
+	double usertime = 0, systime = 0;			/* CPU stats before collection */
+	double usertime2 = 0, systime2 = 0;			/* CPU usage after collection */
 	static double lastuser[GST_NBR];	/* Last CPU time for last call */
 	static double lastsys[GST_NBR];		/* Last kernel time for last call */
 #endif
@@ -898,8 +921,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	rt_uint_ptr e_mem_used_before, e_mem_used_after;
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &rt_g_stat[i];	/* Address where stats are kept */
-	int nbstat;							/* Current number of statistics */
-	unsigned long nb_full;
+	rt_uint_ptr nbstat;			/* Current number of statistics */
+	rt_uint_ptr nb_full;
 
 	if (rt_g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
@@ -910,7 +933,17 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	nb_full = rt_g_data.nb_full;
 	mem_used = rt_m_data.ml_used + rt_m_data.ml_over;		/* Count overhead */
 	e_mem_used_before = rt_e_data.ml_used + rt_e_data.ml_over;
-	nbstat = ++nb_stats[i];							/* One more computation */
+		/* One more GC cycle. */
+	if (nb_stats [i] == 0) {
+			/* This is the first GC collection ever for `i'. */
+		nbstat = nb_stats [i] = 1;
+	} else {
+		nbstat = ++nb_stats[i];
+		 	/* If we overflow `nbstat' we restart the processing of the average calculation. */
+		if (nbstat == 0) {
+			nbstat = 3;
+		}
+	}
 
 	/* Reset scavenging-related figures, since those will be updated by the
 	 * scavenging routines when needed.
@@ -919,7 +952,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	rt_g_data.mem_move = 0;				/* Memory subject to scavenging */
 	rt_g_data.mem_copied = 0;				/* Amount of that memory which moved */
 
-#ifndef FAST_RUNTIME
+#ifndef NO_GC_STATISTICS
 	/* Get the current time before CPU time, because the accuracy of the
 	 * real time clock is usually less important than the one used for CPU
 	 * accounting.
@@ -947,7 +980,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 #endif
 #endif
 
-#ifndef FAST_RUNTIME
+#ifndef NO_GC_STATISTICS
 	/* Get CPU time before real time, so that we have a more precise figure
 	 * (gettime uses a system call)--RAM.
 	 */
@@ -975,10 +1008,9 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	} else {
 		gstat->mem_collect = 0;
 	}
-	gstat->mem_collect +=		/* Memory freed by scavenging (with overhead) */
-		rt_g_data.mem_copied - rt_g_data.mem_move;
-	gstat->mem_avg = ((gstat->mem_avg * (nbstat - 1)) +
-		gstat->mem_collect) / nbstat;					/* Average mem freed */
+		/* Memory freed by scavenging (with overhead) */
+	gstat->mem_collect += rt_g_data.mem_copied - rt_g_data.mem_move;
+	gstat->mem_avg = rt_average(gstat->mem_avg, gstat->mem_collect, nbstat); /* Average mem freed */
 
 	if (nb_full != rt_g_data.nb_full) {
 			/* We are during a full collection cycle. This is were we
@@ -1058,7 +1090,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		}
 	}
 			
-#ifndef FAST_RUNTIME
+#ifndef NO_GC_STATISTICS
 	if (gc_monitor) {
 		gstat->real_time = elapsed(&realtime, &realtime2);
 		gstat->cpu_time = usertime2 - usertime;			/* CPU time (user) */
@@ -1070,18 +1102,13 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		gstat->cpu_time = gstat->cpu_avg;		/* will not change the */
 		gstat->sys_time = gstat->sys_avg;		/* computation done so far */
 	}
-	gstat->real_avg = ((gstat->real_avg * (nbstat - 1)) +
-		gstat->real_time) / nbstat;						/* Average real time */
-	gstat->cpu_avg = ((gstat->cpu_avg * (nbstat - 1)) +
-		gstat->cpu_time) / nbstat;						/* Average user time */
-	gstat->sys_avg = ((gstat->sys_avg * (nbstat - 1)) +
-		gstat->sys_time) / nbstat;						/* Average sys time */
+	gstat->real_avg = rt_average(gstat->real_avg, gstat->real_time, nbstat);	/* Average real time */
+	gstat->cpu_avg = RT_AVERAGE(gstat->cpu_avg, gstat->cpu_time, nbstat);		/* Average user time */
+	gstat->sys_avg = RT_AVERAGE(gstat->sys_avg, gstat->sys_time, nbstat);		/* Average sys time */
 
 
-	/* If it is not the first time, update the statistics. First compute the
-	 * time elapsed since last call, then update the average accordingly.
-	 */
-
+		/* If it is not the first time, update the statistics. First compute the
+		 * time elapsed since last call, then update the average accordingly. */
 	if (lastuser[i] != 0) {
 		if (gc_monitor) {
 			gstat->cpu_itime = usertime - lastuser[i];
@@ -1092,12 +1119,9 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			gstat->sys_itime = gstat->sys_iavg;		/* does not change the */
 			gstat->real_itime = gstat->real_iavg;	/* data we already have */
 		}
-		gstat->real_iavg = ((gstat->real_iavg * (nbstat - 2)) +
-			gstat->real_itime) / (nbstat - 1);
-		gstat->cpu_iavg = ((gstat->cpu_iavg * (nbstat - 2)) +
-			gstat->cpu_itime) / (nbstat - 1);
-		gstat->sys_iavg = ((gstat->sys_iavg * (nbstat - 2)) +
-			gstat->sys_itime) / (nbstat - 1);
+		gstat->real_iavg = rt_average(gstat->real_iavg, gstat->real_itime, nbstat - 1);
+		gstat->cpu_iavg = RT_AVERAGE(gstat->cpu_iavg, gstat->cpu_itime, nbstat - 1);
+		gstat->sys_iavg = RT_AVERAGE(gstat->sys_iavg, gstat->sys_itime, nbstat - 1);
 	}
 
 	/* Record current times for next invokation */
@@ -1107,7 +1131,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		lastsys[i] = systime2;			/* System time after last GC */
 		memcpy (&lastreal[i], &realtime2, sizeof(Timeval));
 	}
-#endif /* ifndef FAST_RUNTIME */
+#endif
 
 #ifdef DEBUG
 	dprintf(1)("scollect: statistics for %s\n",
@@ -4874,16 +4898,14 @@ rt_public ONCE_INDEX once_index (BODY_INDEX code_id)
 {
 	BODY_INDEX * p = EIF_once_indexes;
 	ONCE_INDEX i = 0;
-	while (1)
-	{
+	int done = 0;
+	while (!done) {
 		BODY_INDEX index = p [i];
 		if (index == code_id) {
 				/* Once routine with this `code_id' is found. */
 				/* Use it. */
 			break;
-		}
-		else if (index == 0)
-		{
+		} else if (index == 0) {
 				/* Once routine with this `code_id' is not found. */
 				/* Add it. */
 			p [i] = code_id;
@@ -4910,16 +4932,14 @@ rt_public ONCE_INDEX process_once_index (BODY_INDEX code_id)
 {
 	BODY_INDEX * p = EIF_process_once_indexes;
 	ONCE_INDEX i = 0;
-	while (1)
-	{
+	int done = 0;
+	while (!done) {
 		BODY_INDEX index = p [i];
 		if (index == code_id) {
 				/* Once routine with this `code_id' is found. */
 				/* Use it. */
 			break;
-		}
-		else if (index == 0)
-		{
+		} else if (index == 0) {
 				/* Once routine with this `code_id' is not found. */
 				/* Add it. */
 			p [i] = code_id;

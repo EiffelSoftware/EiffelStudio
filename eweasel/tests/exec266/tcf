@@ -4,6 +4,7 @@ test_description A call to a feature from ANY on a formal generic in a derivatio
 copy_sub	Ace $TEST Ace
 copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
 
 compile_melted
 compile_result	ok

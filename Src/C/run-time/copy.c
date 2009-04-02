@@ -494,10 +494,10 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		} else if (!(flags & EO_COMP))	{	/* Special object filled with references */
 			for (offset = 0; count > 0; count--, offset += REFSIZ) {
 				c_field = *(EIF_REFERENCE *) (clone + offset);
-				/* Iteration on non void references and Eiffel references */
-				if ((c_field == NULL) || (HEADER(c_field)->ov_flags & EO_C))
-					continue;
-				rdeepclone(c_field, clone, offset);
+					/* Iteration on non void references and Eiffel references */
+				if (c_field) {
+					rdeepclone(c_field, clone, offset);
+				}
 			}
 		} else {					/* Special filled with expanded objects */
 			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (c_ref);
@@ -795,14 +795,11 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 				expanded_update(s_expanded, t_expanded, shallow_or_deep);
 
 		} else if (shallow_or_deep == DEEP) {	/* Not expanded */
-
-			/* Run rdeepclone recursively only if the reference is not a C
-			 * pointer, i.e. does not refer to a eif_malloc'ed C object which
-			 * happens to have been attached to an Eiffel reference.
-			 */
-			if (!(flags & EO_C)) {
-				rdeepclone(t_reference, t_enclosing, t_offset);
-			}
+				/* Run rdeepclone recursively only if the reference is not a C
+				 * pointer, i.e. does not refer to a eif_malloc'ed C object which
+				 * happens to have been attached to an Eiffel reference.
+				 */
+			rdeepclone(t_reference, t_enclosing, t_offset);
 		}
 	}
 }

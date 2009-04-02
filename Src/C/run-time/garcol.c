@@ -741,20 +741,10 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move);		/*
 #endif
 
 #ifdef DEBUG
-#define NB_FULL		0
-#define NB_PARTIAL	1
-
-#define debug_ok(n)	( \
-	(n) & DEBUG || \
-	(rt_g_data.nb_full == NB_FULL && fdone || rt_g_data.nb_partial == NB_PARTIAL) \
-	)
-#define dprintf(n)	\
-	if ( \
-			DEBUG & (n) && debug_ok(n)\
-	) printf 
-#define flush			fflush(stdout);
-
 static int fdone = 0;	/* Tracing flag to only get the last full collect */
+#define debug_ok(n)	((n) & DEBUG || fdone)
+#define dprintf(n)	if (DEBUG & (n) && debug_ok(n)) printf 
+#define flush		fflush(stdout);
 #endif
 
 
@@ -1410,7 +1400,7 @@ rt_private void run_collector(void)
 	rt_g_data.nb_full++;	/* One more full collection */
 
 #ifdef DEBUG
-	fdone = rt_g_data.nb_full == NB_FULL;
+	fdone = 1;
 	dprintf(1)("run_collector: gen_scavenge: 0x%lx, status: 0x%lx\n",
 		gen_scavenge, rt_g_data.status);
 	flush;

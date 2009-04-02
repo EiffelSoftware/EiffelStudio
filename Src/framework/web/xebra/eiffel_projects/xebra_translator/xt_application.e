@@ -22,8 +22,8 @@ feature {NONE} -- Initialization
 			l_translator: XP_TRANSLATOR
 			dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 4 then
-				print ("usage: translator project_name input_path output_path servlet_gen_path%N")
+			if  Arguments.argument_count /= 5 then
+				print ("usage: translator project_name input_path output_path servlet_gen_path tag_lib_path%N")
 			else
 				create l_translator.make (Arguments.argument (1))
 				create dir.make (Arguments.argument (2))
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 				l_translator.set_output_path (Arguments.argument (3))
 				l_translator.set_servlet_gen_path (Arguments.argument (4))
 
-				l_translator.process_with_files (dir.linear_representation, "xeb.taglib")
+				l_translator.process_with_files (dir.linear_representation, Arguments.argument (5) + "xeb.taglib")
 
 				create l_printer.default_create
 				if error_manager.has_warnings then

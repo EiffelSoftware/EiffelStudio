@@ -107,6 +107,7 @@ rt_shared uint32 nomark(char *);
 rt_private uint32 chknomark(char *, struct htable *, long);
 #endif
 
+rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int is_first_level);
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type);
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
@@ -270,8 +271,15 @@ doc:	</routine>
 
 rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 {
-	/* First pass of the store mechanism consisting in marking objects. */
+	REQUIRE("object not null", object);
 
+		/* Use `internal_traversal' so that if `object' is expanded, we still process it properly. */
+	internal_traversal(object, p_accounting, 1);
+}
+
+rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int is_first_level)
+{
+		/* First pass of the store mechanism consisting in marking objects. */
 	EIF_GET_CONTEXT
 	char *object_ref, *reference;
 	rt_uint_ptr count, elem_size;
@@ -282,16 +290,16 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 	int mapped_object = 0;		/* True if maping occurred */
 	rt_uint_ptr i;						/* To iterate over the references */
 
+	REQUIRE("object not null", object);
+
 	zone = HEADER(object);
 	flags = zone->ov_flags;
-
-	if (flags & EO_C)				/* Stop on C objects */
-		return;
 
 	if (flags & EO_STORE)			/* Object is already marked? */
 		return;						/* Then we already dealt with it */
 
-	if (!eif_is_nested_expanded(flags)) {		/* Mark the object if not expanded */
+		/* Mark the object if it is not expanded, or if it is, it should be the top level object. */
+	if (is_first_level || !eif_is_nested_expanded(flags)) {
 
 		/* If a maping table is to be built, create a new object and insert it
 		 * in the map table. The reference is protected by requesting insertion
@@ -350,7 +358,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 			return;
 		}
 
-		/* Evaluation of the number of items in the special object */
+			/* Evaluation of the number of items in the special object */
 		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
@@ -361,25 +369,26 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 				if (eif_item_sk_type(object, i) == SK_REF) {
 					reference = eif_reference_item(object, i);
 					if (reference) {
-						traversal(reference, p_accounting);	
+						internal_traversal(reference, p_accounting, 0);
 					}
 				}
 			}
 		} else if (!(flags & EO_COMP))
-			/* Special object filled with references */
+				/* Special object filled with references */
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
-				if (reference)		/* Non void reference */
-					traversal(reference, p_accounting);
+				if (reference) {
+					internal_traversal(reference, p_accounting, 0);
+				}
 			}
 		else {
-			/* Special object filled with expanded objects which are
-			 * necessary not special objects.
-			 */
+				/* Special object filled with expanded objects which are
+				 * necessary not special objects. */
 			rt_uint_ptr offset = OVERHEAD;
 			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
-			for (i = 0; i < count; i++, offset += elem_size)
-				traversal(object + offset, p_accounting);
+			for (i = 0; i < count; i++, offset += elem_size) {
+				internal_traversal(object + offset, p_accounting, 0);
+			}
 		}
 	} else {
 		/* Normal object */
@@ -388,8 +397,9 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 		/* Traversal of references of `object' */
 		for (i = 0; i < count; i++) {
 			reference = *((char **) object + i);
-			if ((char *) 0 != reference)
-				traversal(reference, p_accounting);
+			if (reference) {
+				internal_traversal(reference, p_accounting, 0);
+			}
 		}
 	}
 
@@ -942,7 +952,7 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if ((flags & EO_C) || (flags & EO_STORE)) {
+	if (flags & EO_STORE) {
 		/* Object is already marked, so we skip it. */
 		return;
 	}
@@ -1026,10 +1036,6 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 	unsigned long key = ((unsigned long) object) - 1;
 
 	flags = zone->ov_flags;
-
-	/* Stop on C objects */
-	if (flags & EO_C)
-		return object_count;
 
 	/* Check if the object is already checked */
 	if (ht_value(tbl,key) != (char *) 0)

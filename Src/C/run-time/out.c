@@ -350,37 +350,31 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			reference = *(EIF_REFERENCE *)o_ref;
 			if (reference) {
 				ref_flags = HEADER(reference)->ov_flags;
-				if (ref_flags & EO_C) {
-					/* C reference */
-					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
-					write_string(buffero);
-				} else {
-					write_string(eif_typename(Dftype(reference)));
-					sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
-					write_string(buffero);
-					if (ref_flags & EO_SPEC) {
-						if (ref_flags & EO_TUPLE) {
-							write_tab(tab + 2);
-							sprintf(buffero, "-- begin tuple object --\n");
-							write_string(buffero);
+				write_string(eif_typename(Dftype(reference)));
+				sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
+				write_string(buffero);
+				if (ref_flags & EO_SPEC) {
+					if (ref_flags & EO_TUPLE) {
+						write_tab(tab + 2);
+						sprintf(buffero, "-- begin tuple object --\n");
+						write_string(buffero);
 
-							rec_twrite(reference, tab + 3);
+						rec_twrite(reference, tab + 3);
 
-							write_tab(tab + 2);
-							sprintf(buffero, "-- end tuple object --\n");
-							write_string(buffero);
+						write_tab(tab + 2);
+						sprintf(buffero, "-- end tuple object --\n");
+						write_string(buffero);
 
-						} else {
-							write_tab(tab + 2);
-							sprintf(buffero, "-- begin special object --\n");
-							write_string(buffero);
+					} else {
+						write_tab(tab + 2);
+						sprintf(buffero, "-- begin special object --\n");
+						write_string(buffero);
 
-							rec_swrite(reference, tab + 3);
+						rec_swrite(reference, tab + 3);
 
-							write_tab(tab + 2);
-							sprintf(buffero, "-- end special object --\n");
-							write_string(buffero);
-						}
+						write_tab(tab + 2);
+						sprintf(buffero, "-- end special object --\n");
+						write_string(buffero);
 					}
 				}
 			} else {
@@ -503,10 +497,8 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			sprintf(buffero, "%ld: ", (long) (old_count - count));
 			write_string(buffero);
 			reference = *(EIF_REFERENCE *) o_ref;
-			if (!reference)
+			if (!reference) {
 				sprintf(buffero, "Void\n");
-			else if (HEADER(reference)->ov_flags & EO_C) {
-				sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
 			} else {
 				write_string (eif_typename(Dftype(reference)));
 				sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);

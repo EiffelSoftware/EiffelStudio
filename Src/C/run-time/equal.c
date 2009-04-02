@@ -182,13 +182,7 @@ rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
 		target, System(Dtype(target)).cn_generator);
 #endif
 
-	if (HEADER(source)->ov_flags & EO_C)
-		return EIF_FALSE;
-
-	if (HEADER(target)->ov_flags & EO_C)
-		return EIF_FALSE;
-
-	/* Check if the dynamic types are the same */
+		/* Check if the dynamic types are the same */
 	if (Dftype(source) != Dftype(target)) {
 		return EIF_FALSE;
 	} else {

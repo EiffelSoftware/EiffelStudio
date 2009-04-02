@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_REDIRECT_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +33,7 @@ feature {NONE}
 	generate (a_feature: XEL_FEATURE_ELEMENT)
 			-- <Precursor>
 		do
-			write_string_to_result ("<meta HTTP-EQUIV=%"REFRESH%" content=%"0; url=" + url + "%"", a_feature)
+			write_string_to_result (Request + ".set_redirect (%"" + url + "%")")
 		end
 
 	put_attribute (id: STRING; a_attribute: STRING)

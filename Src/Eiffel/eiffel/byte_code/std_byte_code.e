@@ -755,6 +755,7 @@ end
 						l_loc_name.append ("sloc")
 						l_loc_name.append_integer (i)
 
+						buf.put_new_line
 						buf.put_string ("memset (&")
 						buf.put_string (l_loc_name)
 						buf.put_string (".overhead, 0, OVERHEAD + ")
@@ -765,7 +766,6 @@ end
 							l_class_type.skeleton.generate_size (buf, True)
 						end
 						buf.put_string (");")
-						buf.put_new_line
 
 							-- Then we update the type information
 						l_class_type.generate_expanded_type_initialization (buf, l_loc_name, l_type, context.class_type)

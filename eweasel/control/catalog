@@ -890,7 +890,7 @@ test	melted-expanded-like-current	melt056  tcf fail melting
 test	melted-long-class-name		melt057  tcf pass melting
 test	melt-pass-bit-shift		melt058  tcf pass melting
 test	inspect-integer-64-one		melt059  tcf pass melting
-test	melted-profile-system		melt060  tcf fail melting
+test	melted-profile-system		melt060  tcf fail melting profile
 test	integer-16-minus-one		melt061  tcf pass melting
 test	melted-invariant-invalid-object	melt062  tcf fail melting
 test	melted-void-expanded-arg	melt063  tcf pass melting
@@ -1372,6 +1372,7 @@ test	bogus-catcall-on-basic-type-agent	exec307 tcf fail execution catcall
 test	conversion-from-basic-through-any	exec308 tcf fail execution
 test	expanded-object-test-creates-objects	exec309 tcf fail execution
 test	out-on-long-attribute-buffer-overflow	exec310 tcf fail execution
+test	profile-with-invariant				exec311 tcf fail execution profile
 
 
 -- Compiler termination (exception trace, panic, etc.)

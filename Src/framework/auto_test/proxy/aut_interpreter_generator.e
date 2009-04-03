@@ -33,20 +33,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: SYSTEM_I)
+	make (a_session: like session)
 			-- Initialize `system' with `a_system'.
 		require
-			a_system_not_void: a_system /= Void
+			a_session_not_void: a_session /= Void
 		do
-			system := a_system
+			session := a_session
 		ensure
-			system_set: system = a_system
+			session_set: session = a_session
 		end
 
 feature -- Access
 
 	system: SYSTEM_I
-			-- System
+			-- <Precursor>
+		do
+			Result := session.eiffel_system
+		end
+
+feature {NONE} -- Access
+
+	session: AUT_SESSION
+			-- Current session
 
 feature -- Access
 
@@ -67,36 +75,62 @@ feature -- Generation
 			file_system_routines.copy_recursive (pathnames.runtime_dirname, file_system.pathname (a_pathname, "runtime"))
 		end
 
-	create_interpreter (a_pathname: STRING; a_log_dirname: STRING; a_error_handler: AUT_ERROR_HANDLER)
+	create_interpreter (a_log_dirname: STRING)
 			-- Create interpreter proxy based on executable found in `a_pathname'
 			-- and make it available via `last_interpreter'.
+			--
+			-- TODO: use log dirname information from `session'
 		require
-			a_pathname_not_void: a_pathname /= Void
-			a_pathname_not_empty: not a_pathname.is_empty
 			a_log_dirname_not_void: a_log_dirname /= Void
 			a_log_dirname_not_empty: not a_log_dirname.is_empty
-			a_error_handler_not_void: a_error_handler /= Void
 		local
 			absolute_pathname: STRING
 			executable_filename: STRING
 		do
 			last_interpreter := Void
-			absolute_pathname := file_system.absolute_pathname (a_pathname)
 			file_system.recursive_create_directory (a_log_dirname)
 			executable_filename := system.eiffel_system.application_name (True)
 
-			compute_interpreter_root_class
+			--compute_interpreter_root_class
 			if file_system.file_exists (executable_filename) and interpreter_root_class /= Void then
 				create last_interpreter.make (
 					executable_filename,
 					system,
 					file_system.pathname (a_log_dirname, "interpreter_log.txt"),
 					file_system.pathname (a_log_dirname, "proxy_log.txt"),
-					a_error_handler)
+					session.error_handler)
 			end
 		end
 
-invariant
-	system_attached: system /= Void
-
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -1,26 +1,40 @@
 note
-
-	description:
-
-		"Shared access to AUT_PATHNAMES."
-
-	library: "AutoTest Library"
-	copyright: "Copyright (c) 2005, Andreas Leitner and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	description: "[
+		Abstract interface of a log processor for request/response events.
+	]"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class AUT_SHARED_PATHNAMES
+deferred class
+	AUT_LOG_PROCESSOR
 
-feature {NONE} -- Singleton Access
+feature -- Basic operations
 
-	pathnames: AUT_PATHNAMES
-			-- Singleton Access to AUT_PATHNAMES
-		once
-			create Result.make
-		ensure
-			pathnames_not_void: Result /= Void
+	report_begin
+			-- Start logging.
+		deferred
 		end
+
+	report_request (a_request: AUT_REQUEST)
+			-- Process new request.
+			--
+			-- `a_request': Last request sent to interpreter.
+		deferred
+		end
+
+	report_response (a_response: AUT_RESPONSE)
+			-- Process new response.
+			--
+			-- `a_response': Last response reveiced from interpreter.
+		deferred
+		end
+
+	report_finish
+			-- Terminate logging.
+		deferred
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -53,4 +67,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

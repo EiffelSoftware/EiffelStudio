@@ -117,6 +117,8 @@ feature {NONE} -- Initialization
 			set_is_logging_enabled (True)
 			set_is_speed_logging_enabled (True)
 			set_is_test_case_index_logging_enabled (True)
+
+			create log_processors.make_default
 		ensure
 			executable_file_name_set: executable_file_name = an_executable_file_name
 			system_set: system = a_system
@@ -184,6 +186,10 @@ feature -- Access
 			filename_not_void: Result /= Void
 			valid_filename: Result.is_equal (proxy_log_file.name)
 		end
+
+feature {NONE} -- Access
+
+	log_processors: DS_ARRAYED_LIST [AUT_LOG_PROCESSOR]
 
 feature -- Settings
 
@@ -509,6 +515,7 @@ feature -- Execution
 			a_constant_not_void: an_expression /= Void
 		do
 			create {AUT_ASSIGN_EXPRESSION_REQUEST} last_request.make (system, a_receiver, an_expression)
+
 			last_request.process (request_printer)
 			flush_process
 			parse_invoke_response
@@ -631,6 +638,49 @@ feature -- Response parsing
 			last_response := raw_response_analyzer.response
 		end
 
+feature -- Element change
+
+	add_log_processor (a_processor: AUT_LOG_PROCESSOR)
+			-- Add log processor to end of `log_processor'.
+			--
+			-- `a_processor': Log processor to be added to list.
+		do
+			log_processors.force_last (a_processor)
+		ensure
+			increased: log_processors.count = old log_processors.count + 1
+			added: log_processors.last = a_processor
+		end
+
+	remove_log_processor (a_processor: AUT_LOG_PROCESSOR)
+			-- Remove all instances of a given log processor from `log_processors'.
+			--
+			-- `a_processor': Log processor to be removed from list.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [AUT_LOG_PROCESSOR]
+		do
+			from
+				l_cursor := log_processors.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_cursor.search_forth (a_processor)
+				if not l_cursor.off then
+					l_cursor.remove
+				end
+			end
+		ensure
+			removed: not log_processors.has (a_processor)
+		end
+
+	wipe_out_log_processors
+			-- Remove all log processors from `log_processors'.
+		do
+			log_processors.wipe_out
+		ensure
+			removed: log_processors.is_empty
+		end
+
 feature {NONE} -- Process scheduling
 
 	process: AUT_PROCESS_CONTROLLER
@@ -675,18 +725,24 @@ feature{NONE} -- Process scheduling
 			-- If error occurs, close `socket'.
 		local
 			failed: BOOLEAN
-			l_last_request: TUPLE [flag: NATURAL_8; data: detachable ANY]
+			l_last_request: like last_request
+			l_last_bc_request: TUPLE [flag: NATURAL_8; data: detachable ANY]
 		do
 			if not failed then
+					-- Log request
+				l_last_request := last_request
+				check l_last_request /= Void end
+				log_processors.do_all (agent {AUT_LOG_PROCESSOR}.report_request (l_last_request))
+
 --				is_ready := False
 				if process.input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 					log (log_stream.string)
 					request_count := request_count + 1
 					process.set_timeout (timeout)
 					if socket /= Void and then socket.is_open_write and socket.extendible then
-						l_last_request := socket_data_printer.last_request
-						socket.put_natural_32 (l_last_request.flag)
-						socket.independent_store (l_last_request.data)
+						l_last_bc_request := socket_data_printer.last_request
+						socket.put_natural_32 (l_last_bc_request.flag)
+						socket.independent_store (l_last_bc_request.data)
 					end
 				else
 					log_line ("-- Error: could not send instruction to interpreter due its input stream being closed.")
@@ -764,6 +820,7 @@ feature -- Socket IPC
 	cleanup
 			-- Clean up Current proxy.
 		do
+			log_processors.wipe_out
 			if socket /= Void then
 				cleanup_socket
 			end
@@ -795,7 +852,7 @@ feature -- Socket IPC
 				l_data ?= l_socket.retrieved
 				process.set_timeout (0)
 				if l_data /= Void then
-					create last_raw_response.make (l_data.output, l_data.error, l_response_flag)
+					create last_raw_response.make (create {STRING}.make_from_string (l_data.output), create {STRING}.make_from_string (l_data.error), l_response_flag)
 						-- Fixme: This is a walk around for the issue that we cannot launch a process
 						-- only with standard input redirected. Remove the following line when fixed,
 						-- because everything that the interpreter output should come from `l_data.output'.
@@ -827,7 +884,7 @@ feature -- Socket IPC
 						-- has been read at this point.
 					stdout_reader.try_read_all_lines
 					if stdout_reader.last_string /= Void then
-						last_raw_response.set_output (stdout_reader.last_string)
+						last_raw_response.set_output (create {STRING}.make_from_string (stdout_reader.last_string))
 					end
 				end
 			end

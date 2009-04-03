@@ -14,9 +14,8 @@ class AUT_REQUEST_PLAYER
 inherit
 
 	AUT_STRATEGY
-		rename
-			make as make_strategy
 		redefine
+			make,
 			start
 		end
 
@@ -33,20 +32,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_a_system: like system; an_interpreter: like interpreter)
+	make (a_interpreter: like interpreter; a_system: like system; a_error_handler: like error_handler)
 			-- Create new strategy.
-		require
-			a_a_system_not_void: a_a_system /= Void
-			a_interpreter_not_void: an_interpreter /= Void
-			an_interpreter_in_replay_mode: an_interpreter.is_in_replay_mode
 		do
-			make_strategy (a_a_system, an_interpreter)
+			Precursor (a_interpreter, a_system, a_error_handler)
 			create {DS_ARRAYED_LIST [AUT_REQUEST]} request_list.make (0)
 			request_list_cursor := request_list.new_cursor
 			is_interpreter_started_by_default := True
-		ensure
-			system_set: system = a_a_system
-			interpreter_set: interpreter = an_interpreter
+		ensure then
 			interpreter_started_by_default: is_interpreter_started_by_default
 		end
 
@@ -54,7 +47,7 @@ feature -- Status
 
 	has_next_step: BOOLEAN
 		do
-			Result := not has_error and then not request_list_cursor.off and then (interpreter.is_running implies interpreter.is_ready)
+			Result := not has_error and then not request_list_cursor.off
 		end
 
 	has_error: BOOLEAN
@@ -93,26 +86,33 @@ feature -- Setting
 			is_interpreter_started_by_default_set: is_interpreter_started_by_default = b
 		end
 
-
 feature -- Execution
 
 	start
+			-- <Precursor>
+		local
+			l_itp: like interpreter
 		do
-			if interpreter.is_running then
-				interpreter.stop
-			end
+			l_itp := interpreter
+			l_itp.set_is_in_replay_mode (True)
 			if is_interpreter_started_by_default then
-				interpreter.start
+				Precursor
 				has_error := not interpreter.is_ready
+			elseif l_itp.is_running then
+				l_itp.stop
 			end
-			request_list_cursor.start
+			if has_error then
+				request_list_cursor.go_after
+			else
+				request_list_cursor.start
+			end
 		end
 
 	step
 		do
 --			if not interpreter.is_running then
 --				interpreter.start
-----				assign_void
+--				assign_void
 --			end
 			has_error := interpreter.is_launched and then not interpreter.is_ready
 			if not has_error then
@@ -225,10 +225,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

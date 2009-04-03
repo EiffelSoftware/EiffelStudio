@@ -10,40 +10,27 @@ class
 
 inherit
 	XH_REQUEST
-		redefine
-			make_from_string
-		end
+	redefine
+		method
+	end
 
 create
-	make_from_string,
-	make_empty
+	make_from_message,
+	make_empty,
+	make_goto_request
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_string: STRING)
-			-- <Precursor>
-		require else
-			is_post: a_string.item (1).is_equal (Method_post)
-		do
-			Precursor (a_string)
-		ensure then
-			arguments_set: attached arguments
-		end
+feature -- Constants
+
 
 feature -- Access
 
-	Method_post: CHARACTER = 'P'
+	method: CHARACTER = 'P'
 
 feature -- Implementation
 
-	key_params: STRING
-		do
-			Result := "#P#"
-		end
-
 	read_uri (a_the_request: STRING): STRING
-		require else
-			is_get: a_the_request.item (1).is_equal (Method_post)
 		local
 			l_i: INTEGER
 		do

@@ -39,6 +39,8 @@
 #include <http_protocol.h>
 #include <http_config.h>
 
+#define REVISION "$Revision$"
+
 /*======= Choose debug level here ======= */
 #define DO_DEBUG
 #define DO_DEBUG2
@@ -69,8 +71,8 @@
 /* The following strings represent delimiters for the message string that is sent to the server */
 
 /* Send message */
-#define POSTP "#P#"
-#define GETP "#G#"
+#define ARG "#A#"
+
 #define HEADERS_IN "#HI#"
 #define HEADERS_OUT "#HO#"
 #define SUBP_ENV "#SE#"
@@ -87,6 +89,14 @@
  *	Defines a max size for reading the POST arguments
  */
 #define MAX_POST_SIZE 10000
+
+#define SET_COOKIE "Set-Cookie"
+#define SET_COOKIE2 "Set-Cookie2"
+#define DEFAULT_ATTRS "HttpOnly;Version=1"
+#define CLEAR_ATTRS "Version=1"
+#define COOKIE_LOG_PREFIX "cookie"
+
+#define ERROR_MSG "<html><body><h1>Oh no! It's the Fail Whale!</h1><br><img src=\"http://www.designlessbetter.com/blogless/wp-content/uploads/2008/12/whale.png\"/> </body></html>"
 
 /*=======   =======*/
 
@@ -249,8 +259,6 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
  */
 static void register_hooks (apr_pool_t* pool);
 
-
-
 /**
  * Write an RFC2109 compliant cookie.
  *
@@ -263,8 +271,8 @@ static void register_hooks (apr_pool_t* pool);
  * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
  *            to which the cookies should be added.
  */
-apr_status_t cookie_write(request_rec * r, const char *name, const char *val,
-                                         const char *attrs, long maxage, ...);
+apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
+		const char *attrs, long maxage, ...);
 
 /**
  * Write an RFC2965 compliant cookie.
@@ -278,8 +286,8 @@ apr_status_t cookie_write(request_rec * r, const char *name, const char *val,
  * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
  *            to which the cookies should be added.
  */
-apr_status_t cookie_write2(request_rec * r, const char *name2, const char *val,
-                                          const char *attrs2, long maxage, ...);
+apr_status_t cookie_write2 (request_rec * r, const char *name2,
+		const char *val, const char *attrs2, long maxage, ...);
 
 /**
  * Remove an RFC2109 compliant cookie.
@@ -291,7 +299,8 @@ apr_status_t cookie_write2(request_rec * r, const char *name2, const char *val,
  * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
  *            to which the cookies should be added.
  */
-apr_status_t cookie_remove(request_rec * r, const char *name, const char *attrs, ...);
+apr_status_t cookie_remove (request_rec * r, const char *name,
+		const char *attrs, ...);
 
 /**
  * Remove an RFC2965 compliant cookie.
@@ -303,10 +312,8 @@ apr_status_t cookie_remove(request_rec * r, const char *name, const char *attrs,
  * @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
  *            to which the cookies should be added.
  */
-apr_status_t cookie_remove2(request_rec * r, const char *name2, const char *attrs2, ...);
-
-
-
+apr_status_t cookie_remove2 (request_rec * r, const char *name2,
+		const char *attrs2, ...);
 
 /* The array of command_rec structures is passed to the httpd core by this module to declare a new configuration directive. */
 static const command_rec xebra_cmds[] = { AP_INIT_TAKE1 ("XebraServer_port",

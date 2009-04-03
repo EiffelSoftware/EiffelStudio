@@ -14,6 +14,7 @@ feature {NONE} -- Initialization
 		do
 			the_request := ""
 			target_uri := ""
+			request_message := ""
 			create {HASH_TABLE [STRING, STRING]} arguments.make (1)
 			create {HASH_TABLE [XH_COOKIE, STRING]} cookies.make (1)
 			create {HASH_TABLE [STRING, STRING]} environment_vars.make (1)
@@ -21,23 +22,36 @@ feature {NONE} -- Initialization
 			create {HASH_TABLE [STRING, STRING]} headers_in.make (1)
 		end
 
-	make_from_string (a_string: STRING)
-		-- Parses the string an fills attributes of the request object			
+	make_goto_request (a_uri: STRING; a_previous_request: XH_REQUEST)
+			-- Replaces the uri in the previous request and
 		require
-			has_params: a_string.has_substring (key_params)
-			a_string_not_empty: not a_string.is_empty
-			has_http: a_string.has_substring ("HTTP")
-			has_headers_in: a_string.has_substring (Key_headers_in)
-			has_headers_out: a_string.has_substring (Key_headers_out)
-			has_subp_env: a_string.has_substring (Key_subp_env)
-
+			a_uri_not_empty: not a_uri.is_empty
+			a_previous_request_has_headers_in: a_previous_request.request_message.has_substring (Key_headers_in)
 		local
-			l_s: STRING
 			l_i: INTEGER
 		do
-			l_s := a_string.twin
-				-- Read method
-			method := l_s.item (1)
+			l_i := a_previous_request.request_message.substring_index (Key_headers_in, 1)
+			make_from_message ("GET " + escape_bad_chars (a_uri) + " HTTP/1.1"
+					 + a_previous_request.request_message.substring (l_i, a_previous_request.request_message.count))
+		end
+
+	make_from_message (a_message: STRING)
+		-- Parses the string an fills attributes of the request object			
+		require
+			is_correct_arg: a_message.item (1).is_equal (method)
+			has_args: a_message.has_substring (Key_arg)
+			a_string_not_empty: not a_message.is_empty
+			has_http: a_message.has_substring ("HTTP")
+			has_headers_in: a_message.has_substring (Key_headers_in)
+			has_headers_out: a_message.has_substring (Key_headers_out)
+			has_subp_env: a_message.has_substring (Key_subp_env)
+
+		local
+			l_i: INTEGER
+			l_s: STRING
+		do
+			request_message := a_message.twin
+			l_s := a_message.twin
 
 				-- Read the_request
 			l_i := l_s.substring_index (Key_headers_in, 1)
@@ -60,7 +74,7 @@ feature {NONE} -- Initialization
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
 				-- Read POST/GET params
-			arguments := parse_table (l_s, key_params, Key_p_key, Key_p_value, Key_t_end)
+			arguments := parse_table (l_s, Key_arg, Key_p_key, Key_p_value, Key_t_end)
 
 				-- Read cookies
 			cookies := read_cookies (headers_in)
@@ -71,8 +85,6 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	Key_post_params: STRING = "#P#"
-	Key_get_params: STRING = "#G#"
 	Key_headers_in: STRING = "#HI#"
 	Key_headers_out: STRING = "#HO#"
 	Key_subp_env: STRING = "#SE#"
@@ -81,6 +93,7 @@ feature -- Constants
 	Key_p_key: STRING = "&"
 	Key_p_value: STRING = "="
 	Key_t_end: STRING = "#E#"
+	Key_arg: STRING = "#A#"
 
 	Headers_in_set_cookies: STRING = "Set-Cookie"
 	Headers_in_cookie: STRING = "Cookie"
@@ -97,9 +110,6 @@ feature -- Access
 	target_uri: STRING
 			-- The target uri
 
-	method: CHARACTER
-			-- P for POST, G for GET		
-
 	arguments: HASH_TABLE [STRING, STRING]
 			-- The GET/POST parameters
 
@@ -114,6 +124,15 @@ feature -- Access
 
 	cookies: TABLE [XH_COOKIE, STRING]
 			-- Retrives cookies that are stored in the headers_in table.
+
+	request_message: STRING
+			-- The original message 	
+
+	method: CHARACTER
+			-- P for POST, G for GET
+		do
+			Result := 'X'
+		end
 
 feature -- Basic Operations
 
@@ -131,9 +150,18 @@ feature -- Basic Operations
 
 feature {NONE} -- Internal processing
 
-	key_params: STRING
-		deferred
+	escape_bad_chars (a_s: STRING): STRING
+			-- Check for bad characters
+		do
+			--TODO: complete, better mechanism
+			Result := a_s.twin
+
+			Result.replace_substring_all ("?", "#qu#")
+			Result.replace_substring_all ("=", "#eq#")
+			Result.replace_substring_all ("#", "#r#")
+
 		end
+
 
 	read_cookies (a_headers_in: HASH_TABLE [STRING, STRING]): TABLE [XH_COOKIE, STRING]
 			-- Parses a hash_table and looks for cookies.
@@ -224,11 +252,9 @@ feature {NONE} -- Internal processing
 				-- Reads the uri from a the_request
 		require
 			is_http_request: a_the_request.has_substring ("HTTP")
+			has_valid_method: a_the_request.item (1).is_equal (method)
 		deferred
 		ensure
 			result_not_empty: not Result.is_empty
 		end
-
-	invariant
-		arguments_attached: attached arguments
 end

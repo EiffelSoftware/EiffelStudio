@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			-- Check for bad characters
 		do
 			--TODO: complete, better mechanism
-			Result := a_s
+			Result := a_s.twin
 
 			Result.replace_substring_all ("=", "#eq#")
 			Result.replace_substring_all (";", "#sq#")

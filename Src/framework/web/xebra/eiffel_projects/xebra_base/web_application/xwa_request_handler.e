@@ -23,27 +23,54 @@ feature -- Access
 
 feature -- Processing
 
-	process_servlet (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
+process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
 					 a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		local
 			l_servlet: detachable XWA_SERVLET
+			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
-		do
-			l_servlet := find_servlet (a_request, a_request_handler)
 
-			if attached l_servlet then
-				l_response := l_servlet.pre_handle_request (a_session_manager, a_request)
-			else
-				create l_response.make
-				l_response.html.put_string ("Application not found: %"" + a_request.target_uri + "%"")
+		do
+			l_new_request := a_request
+			create l_response.make_empty
+			l_response.html.put_string ("There was an error in the request:'" + l_new_request.request_message + "'")
+
+			from
+
+			until
+				l_new_request = Void
+			loop
+				create l_response.make_empty
+				l_servlet := find_servlet (l_new_request, a_request_handler)
+				if attached l_servlet then
+					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
+					l_new_request := post_process_response (l_response, l_new_request)
+				else
+					l_response.html.put_string ("Application not found: %"" + l_new_request.target_uri + "%"")
+					l_new_request := Void
+				end
 			end
+
+
 		   	a_socket.independent_store (l_response)
 	       	a_socket.close
 		end
 
 feature {NONE} -- Internal Processing
+
+	post_process_response (a_response: XH_RESPONSE; a_previous_request: XH_REQUEST): detachable XH_GET_REQUEST
+			-- If a goto value is specified in a_response a
+			-- new request is generated out of it
+		do
+			 if not a_response.goto_request.is_empty then
+				create Result.make_goto_request (a_response.goto_request, a_previous_request)
+			 end
+		end
+
+
+
 
 	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_SERVER_CONN_HANDLER): detachable XWA_SERVLET
 			-- Searches for the servlet requested by `request'

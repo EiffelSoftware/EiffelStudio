@@ -48,10 +48,11 @@ feature --Execution
 		local
 			l_message: STRING
 			l_response: XH_RESPONSE
-			l_request: XH_REQUEST
 			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			l_i: INTEGER
+			l_request_factory: XU_REQUEST_FACTORY
 		do
+			create l_request_factory.make
 			from
 				l_message := ""
           		l_header := [{NATURAL}0, true]
@@ -69,11 +70,13 @@ feature --Execution
            		end
            	end
 
-			l_request := create_request (l_message)
+			if attached l_request_factory.get_request (l_message) as l_request then
+				l_response := forward_request_to_app (l_request, socket)
+				send_message_to_http ("Request: '" + l_message + "' <br><br>Response: '" + l_response.render_to_string + "'", socket) --"<br/><br/><hr/><i><small>   --XebraServer $Revision$</i></small>" , socket)
+	         else
+         		send_message_to_http ("#H#XebraServer: Could not parse request message", socket)
+         	end
 
-			l_response := forward_request_to_app (l_request, socket)
-
-			send_string ("Request: '" + l_message + "' <br><br>Response: '" + l_response.render_to_string + "'", socket) --"<br/><br/><hr/><i><small>   --XebraServer $Revision$</i></small>" , socket)
          	socket.cleanup
             check
             	socket.is_closed
@@ -82,14 +85,6 @@ feature --Execution
 
 feature {NONE} -- Implementation
 
-	create_request (a_string: STRING): XH_REQUEST
-		do
-			if a_string.has_substring ("#" + ({XH_GET_REQUEST}.Method_get.out) + "#") then
-				create {XH_GET_REQUEST} Result.make_from_string (a_string)
-			else
-				create {XH_POST_REQUEST} Result.make_from_string (a_string)
-			end
-		end
 
 	forward_request_to_app (a_request: XH_REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): XH_RESPONSE
 			--Sends a request to the correct webserver.
@@ -102,7 +97,7 @@ feature {NONE} -- Implementation
             l_soc1.connect
 
             l_soc1.independent_store (a_request)
-            create Result.make
+            create Result.make_empty
             if attached {XH_RESPONSE} l_soc1.retrieved as rec_message then
             	Result := rec_message
             end
@@ -110,7 +105,7 @@ feature {NONE} -- Implementation
             l_soc1.cleanup
 		end
 
-	send_string (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
+	send_message_to_http (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.
 		require
 			socket_is_open: not app_socket.is_closed

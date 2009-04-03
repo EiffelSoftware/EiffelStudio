@@ -113,10 +113,10 @@ feature -- Meta
 			-- Atomic: single comment produces single event
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			if state = Reading_tag then
-				state := Reading_html
-			end
-			html_buf.append ("<!--" + a_content + "-->")
+			--if state = Reading_tag then
+			--	state := Reading_html
+			--end
+			--html_buf.append ("<!--" + a_content + "-->")
 		end
 
 feature -- Tag

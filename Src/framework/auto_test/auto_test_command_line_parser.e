@@ -16,86 +16,13 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
-feature -- Status report
+create
+	make_with_arguments,
+	make_with_configuration
 
-	error_handler: detachable AUT_ERROR_HANDLER
-			-- Error handler
+feature {NONE} -- Initialization
 
-	output_dirname: STRING
-			-- Name of output directory
-
-	ecf_filename: STRING
-			-- Name of ecf file of input system
-
---	ecf_target: STRING
---			-- Name of target in file named `ecf_filename'; Void if no target was specified.
-
-	class_names: DS_LIST [STRING]
-			-- List of class names to be tested
-
-	time_out: DT_DATE_TIME_DURATION
-			-- Maximal time to test;
-			-- A timeout value of `0' means no time out.
-
-	is_debug_mode_enabled: BOOLEAN
-			-- Should the interpreter runtime be compiled with
-			-- assertion checking on?
-
-	just_test: BOOLEAN
-			-- Should generation and compilation of the interpreter be skipped
-
-	is_deep_relevancy_enabled: BOOLEAN
-			-- Should the manual testing strategy use deep dependence
-			-- checking when locating relevant manual unit tests?
-
-	is_manual_testing_enabled: BOOLEAN
-			-- Should the manual testing strategy be used?
-
-	is_automatic_testing_enabled: BOOLEAN
-			-- Should the automatic testing strategy be used?
-
-	is_minimization_enabled: BOOLEAN
-			-- Should bug reproducing examples be minimized?
-
-	is_text_statistics_format_enabled: BOOLEAN
-			-- Should statistics be output as plain text?
-
-	is_html_statistics_format_enabled: BOOLEAN
-			-- Should statistics be output static HTML?
-
-	is_slicing_enabled: BOOLEAN
-			-- Should test cases be minimized via slicing?
-
-	is_ddmin_enabled: BOOLEAN
-			-- Should test cases be minimized via ddmin?
-
-	proxy_time_out: INTEGER
-			-- Proxy time out in second
-
-	is_replay_enabled: BOOLEAN
-			-- Is log replay specified?
-
-	log_to_replay: STRING
-			-- File name of the log to be replayed.
-
-	should_display_help_message: BOOLEAN
-			-- Should help message be displayed?
-
-	help_message: STRING
-			-- Help message for command line arguments
-			-- This value is only set if help option presents.
-
-feature -- Element change
-
-	set_error_handler (a_error_handler: like error_handler)
-			-- Set `error_handler' to `a_error_handler'.
-		do
-			error_handler := a_error_handler
-		end
-
-feature -- Parsing
-
-	process_arguments (a_arguments: DS_LIST [STRING])
+	make_with_arguments (a_arguments: DS_LIST [STRING]; error_handler: AUT_ERROR_HANDLER)
 			-- Process `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void
@@ -323,6 +250,94 @@ feature -- Parsing
 			help_message_set_when_required: should_display_help_message implies help_message /= Void
 		end
 
+	make_with_configuration (a_conf: TEST_GENERATOR_CONF_I; error_handler: AUT_ERROR_HANDLER)
+			-- use `configuration' to initialize AutoTest settings
+		do
+			is_slicing_enabled := a_conf.is_slicing_enabled
+			is_ddmin_enabled := a_conf.is_ddmin_enabled
+			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled
+
+			create time_out.make (0, 0, 0, 0, a_conf.time_out.as_integer_32, 0)
+
+			if a_conf.seed > 0 then
+				random.set_seed (a_conf.seed.to_integer_32)
+			else
+				random.set_seed ((create {TIME}.make_now).milli_second)
+			end
+			is_text_statistics_format_enabled := True
+			is_html_statistics_format_enabled := a_conf.is_html_output
+
+			proxy_time_out := a_conf.proxy_time_out.as_integer_32
+
+			create {DS_ARRAYED_LIST [attached STRING]} class_names.make_from_linear (a_conf.types)
+		end
+
+feature -- Status report
+
+	output_dirname: STRING
+			-- Name of output directory
+
+	ecf_filename: STRING
+			-- Name of ecf file of input system
+
+--	ecf_target: STRING
+--			-- Name of target in file named `ecf_filename'; Void if no target was specified.
+
+	class_names: DS_LIST [STRING]
+			-- List of class names to be tested
+
+	time_out: DT_DATE_TIME_DURATION
+			-- Maximal time to test;
+			-- A timeout value of `0' means no time out.
+
+	is_debug_mode_enabled: BOOLEAN
+			-- Should the interpreter runtime be compiled with
+			-- assertion checking on?
+
+	just_test: BOOLEAN
+			-- Should generation and compilation of the interpreter be skipped
+
+	is_deep_relevancy_enabled: BOOLEAN
+			-- Should the manual testing strategy use deep dependence
+			-- checking when locating relevant manual unit tests?
+
+	is_manual_testing_enabled: BOOLEAN
+			-- Should the manual testing strategy be used?
+
+	is_automatic_testing_enabled: BOOLEAN
+			-- Should the automatic testing strategy be used?
+
+	is_minimization_enabled: BOOLEAN
+			-- Should bug reproducing examples be minimized?
+
+	is_text_statistics_format_enabled: BOOLEAN
+			-- Should statistics be output as plain text?
+
+	is_html_statistics_format_enabled: BOOLEAN
+			-- Should statistics be output static HTML?
+
+	is_slicing_enabled: BOOLEAN
+			-- Should test cases be minimized via slicing?
+
+	is_ddmin_enabled: BOOLEAN
+			-- Should test cases be minimized via ddmin?
+
+	proxy_time_out: INTEGER
+			-- Proxy time out in second
+
+	is_replay_enabled: BOOLEAN
+			-- Is log replay specified?
+
+	log_to_replay: STRING
+			-- File name of the log to be replayed.
+
+	should_display_help_message: BOOLEAN
+			-- Should help message be displayed?
+
+	help_message: STRING
+			-- Help message for command line arguments
+			-- This value is only set if help option presents.
+
 invariant
 	minimization_is_either_slicing_or_ddmin: is_minimization_enabled implies (is_slicing_enabled xor is_ddmin_enabled)
 
@@ -351,10 +366,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

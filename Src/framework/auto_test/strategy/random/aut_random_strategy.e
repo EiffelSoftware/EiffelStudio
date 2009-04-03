@@ -14,11 +14,20 @@ class AUT_RANDOM_STRATEGY
 inherit
 
 	AUT_STRATEGY
-		rename
-			make as make_strategy
 		redefine
+			make,
 			start,
 			cancel
+		end
+
+	ERL_G_TYPE_ROUTINES
+		export
+			{NONE} all
+		end
+
+	AUT_SHARED_INTERPRETER_INFO
+		export
+			{NONE} all
 		end
 
 create
@@ -27,21 +36,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_interpreter: like interpreter; an_error_handler: like error_handler)
+	make (a_interpreter: like interpreter; a_system: like system; an_error_handler: like error_handler)
 			-- Create new strategy.
-		require
-			a_system_not_void: a_system /= Void
-			an_interpreter_not_void: an_interpreter /= Void
-			an_interpreter_not_in_replay_mode: not an_interpreter.is_in_replay_mode
-			an_error_handler_not_void: an_error_handler /= Void
 		do
-			make_strategy (a_system, an_interpreter)
+			Precursor (a_interpreter, a_system, an_error_handler)
 			create queue.make (system)
-			error_handler := an_error_handler
-		ensure
-			system_set: system = a_system
-			interpreter_set: interpreter = an_interpreter
-			error_handler_set: error_handler = an_error_handler
+			create types_under_test.make_default
+			create classes_under_test.make_default
+			classes_under_test.set_equality_tester (create {AUT_CLASS_EQUALITY_TESTER}.make)
 		end
 
 feature -- Status
@@ -56,18 +58,103 @@ feature -- Access
 	queue: AUT_DYNAMIC_PRIORITY_QUEUE
 			-- Feature queue
 
-	error_handler: AUT_ERROR_HANDLER
-			-- Error handler
-
 	selected_feature: AUT_FEATURE_OF_TYPE
 			-- Currently selected feature;
 			-- `Void' if none is selected.
 
+	types_under_test: DS_ARRAYED_LIST [CL_TYPE_A]
+			-- Types under test
+
+	classes_under_test: DS_ARRAYED_LIST [CLASS_C]
+			-- Classes under test
+
+feature -- Element change
+
+	add_class_names (a_list: detachable DS_LIST [STRING_8])
+			-- Add class/type names which shall be tested to `queue', `types_under_test' and
+			-- `classes_under_test' with list of class names.
+			--
+			-- `a_list': List of class/type names, can be void or empty to indicate that all classes in the
+			--           system should be tested.
+		require
+			not_has_next_step: not has_next_step
+		local
+			l_tester: KL_STRING_EQUALITY_TESTER_A [STRING]
+			l_class_set: DS_HASH_SET [CLASS_I]
+			l_class_cur: DS_HASH_SET_CURSOR [CLASS_I]
+			l_type: TYPE_A
+			l_class_name_set: DS_HASH_SET [STRING]
+			l_name_cur: DS_HASH_SET_CURSOR [STRING]
+			l_name: STRING
+		do
+
+			create l_tester
+			if a_list /= Void and then not a_list.is_empty then
+				create l_class_name_set.make (a_list.count)
+				l_class_name_set.set_equality_tester (l_tester)
+				l_class_name_set.append (a_list)
+			else
+					-- If no type name is given explictly, we test all compiled classes in the system.
+				l_class_set := system.universe.all_classes
+				create l_class_name_set.make (l_class_set.count)
+				l_class_name_set.set_equality_tester (l_tester)
+				from
+					l_class_cur := l_class_set.new_cursor
+					l_class_cur.start
+				until
+					l_class_cur.after
+				loop
+					l_name := l_class_cur.item.name
+					check l_name /= Void end
+					l_class_name_set.force_last (l_name)
+					l_class_cur.forth
+				end
+			end
+
+			from
+				l_name_cur := l_class_name_set.new_cursor
+				l_name_cur.start
+			until
+				l_name_cur.after
+			loop
+				l_type := base_type (l_name_cur.item)
+				if l_type /= Void then
+					if l_type.associated_class.is_generic then
+						if not attached {GEN_TYPE_A} l_type as l_gen_type then
+							if attached {GEN_TYPE_A} l_type.associated_class.actual_type as l_gen_type2 then
+								l_type := generic_derivation_of_type (l_gen_type2, l_gen_type2.associated_class)
+							else
+								check
+									dead_end: False
+								end
+							end
+						end
+					end
+					if attached {CL_TYPE_A} l_type as l_class_type then
+							-- Only compiled classes are taken into consideration.
+						if l_class_type.associated_class /= Void then
+							if not interpreter_related_classes.has (l_class_type.name) then
+								types_under_test.force_last (l_class_type)
+								queue.set_static_priority_of_type (l_class_type, 10)
+							end
+						end
+					else
+						check
+							dead_end: False
+						end
+					end
+				end
+				l_name_cur.forth
+			end
+		end
+
 feature -- Execution
 
 	start
+			-- <Precursor>
 		do
 			Precursor
+			interpreter.set_is_in_replay_mode (False)
 			assign_void
 			if queue.highest_dynamic_priority > 0 then
 				select_new_sub_task
@@ -77,6 +164,7 @@ feature -- Execution
 	cancel
 		do
 			sub_task := Void
+			interpreter.stop
 		end
 
 	step
@@ -155,8 +243,18 @@ feature {NONE} -- Implementation
 	feature_table_internal: like feature_table
 			-- Implementation of `feature_table'
 
-invariant
+	assign_void
+			-- Assign void to the next free variable.
+		local
+			void_constant: ITP_CONSTANT
+		do
+			if interpreter.is_running and interpreter.is_ready then
+				create void_constant.make (Void)
+				interpreter.assign_expression (interpreter.variable_table.new_variable, void_constant)
+			end
+		end
 
+invariant
 	queue_not_void: queue /= Void
 	error_handler_not_void: error_handler /= Void
 	interpreter_not_in_replay_mode: not interpreter.is_in_replay_mode

@@ -279,6 +279,7 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
+			state := Reading_html
 			html_buf.append (a_content)
 		end
 

@@ -44,12 +44,12 @@ feature -- Basic operations
 			lock_counter := l_counter
 			if l_counter = 1 then
 				on_locked
-			end
-			l_events := internal_locked_event
-			if l_events /= Void then
-					-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
-					-- performed.
-				l_events.publish_if ([Current], agent {LOCKABLE_I}.is_locked)
+				l_events := internal_locked_event
+				if l_events /= Void then
+						-- Only publish events if Curren is locked, because a event handler may cause an unlock to be
+						-- performed.
+					l_events.publish_if ([Current], agent {LOCKABLE_I}.is_locked)
+				end
 			end
 		ensure then
 			lock_counter_incremented: lock_counter = old lock_counter + 1
@@ -66,15 +66,15 @@ feature -- Basic operations
 			lock_counter := l_counter
 			if l_counter = 0 then
 				on_unlocked
-			end
-			l_events := internal_unlocked_event
-			if l_events /= Void then
-					-- Only publish events if Curren is unlocked, because a event handler may cause an unlock to be
-					-- performed.
-				l_events.publish_if ([Current], agent (ia_lock: LOCKABLE_I): BOOLEAN
-					do
-						Result := not ia_lock.is_locked
-					end)
+				l_events := internal_unlocked_event
+				if l_events /= Void then
+						-- Only publish events if Curren is unlocked, because a event handler may cause an unlock to be
+						-- performed.
+					l_events.publish_if ([Current], agent (ia_lock: LOCKABLE_I): BOOLEAN
+						do
+							Result := not ia_lock.is_locked
+						end)
+				end
 			end
 		ensure then
 			lock_counter_incremented: lock_counter = old lock_counter - 1

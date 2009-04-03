@@ -235,6 +235,8 @@ feature {NONE} -- Implementation
 			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
+				-- Set default values to be the starting value.
+			locale_id_preference.set_default_value (locale_id_preference.string_value)
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
@@ -366,7 +368,7 @@ invariant
 	eis_preference_not_void: eis_path_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -390,11 +392,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_MISC_DATA

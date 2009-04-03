@@ -71,13 +71,14 @@ feature {NONE} -- Command
 			l_value,
 			l_item: STRING
 			l_displayed_value: STRING_32
-			l_cnt: INTEGER
+			l_cnt, nb_values: INTEGER
 		do
 			from
 				create l_value.make_empty
 				l_cnt := 1
+				nb_values := preference.value.count
 			until
-				l_cnt > preference.value.count
+				l_cnt > nb_values
 			loop
 				l_item := preference.value.item (l_cnt)
 				l_displayed_value := Void
@@ -96,7 +97,9 @@ feature {NONE} -- Command
 					l_value.append (l_item)
 				end
 				l_cnt := l_cnt + 1
-				l_value.append_character (';')
+				if l_cnt <= nb_values then
+					l_value.append_character (';')
+				end
 			end
 			preference.set_value_from_string (l_value)
 			Precursor {PREFERENCE_WIDGET}
@@ -182,14 +185,14 @@ feature {NONE} -- Implementation
 			-- Item: strings displayed
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

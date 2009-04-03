@@ -21,9 +21,31 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
+			base_make
+
+			--fake reservations
+			create reservations.make
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "23/11/2009", 3))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "24/11/2009", 3))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "25/11/2009", 3))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "26/11/2009", 5))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "23/11/2009", 5))
+			reservations.extend (create {MY_RESERVATION}.make ("Sanddro Dezahnet", "34/66/2009", 1))
+			reservations.extend (create {MY_RESERVATION}.make ("Sanddro Dezahnet", "23/23/2009", 1))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "23111/2009", 2))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "11/11/2009", 2))
+			reservations.extend (create {MY_RESERVATION}.make ("Fabio Zuend", "23/55/2009", 2))
 		end
 
+
+feature -- Access
+
+	reservations: LINKED_LIST [MY_RESERVATION]
+
 feature -- Basic Operations
+
+
+
 
 	on_page_load
 			--
@@ -31,21 +53,54 @@ feature -- Basic Operations
 
 		end
 
-	login_ok: STRING
+	authenticated: BOOLEAN
+			-- Tests if session contains authenticated flag.
+		do
+			Result := False
+
+			if attached current_session as session then
+				if attached session.get ("fabio") as item then
+
+					Result := True
+				end
+			end
+		end
+
+	not_authenticated: BOOLEAN
 			--
 		do
-			Result := "NICHT AUTHENTIFIZIERT"
+			Result := not authenticated
+		end
 
-			if attached current_request as r then
-				if attached r.post_parameters as post then
-					if attached post.item ("name") as name then
-						if attached post.item ("password") as pass then
-							if name.is_equal ("fabio") and pass.is_equal ("123") then
-								Result := "AUTHENTIFIZIERT"
-							end
-						end
-					end
+	logout
+			-- logs out]
+		do
+			if attached current_session as session  then
+					session.remove ("fabio")
 				end
+		end
+
+	login
+			-- sets the authenticated flat to true
+		do
+
+
+			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
+				if name.is_equal ("fabio") and password.is_equal ("123") then
+					if attached current_session as session  then
+						session.put ("fabio", "isloggedin")
+							end
+				end
+			end
+		end
+
+	username: STRING
+			--
+		do
+			if authenticated then
+				Result := "Fabio"
+			else
+				Result := ""
 			end
 		end
 

@@ -9,16 +9,17 @@ class
 	XH_RESPONSE
 
 create
-	make
+	make_empty
 
 feature {NONE} -- Initialization
 
-	make
+	make_empty
 			-- Creates current
 		do
 			create cookie_orders.make
 			create file.make
 			create html.make (file)
+			goto_request := ""
 		end
 
 feature -- Access
@@ -40,7 +41,17 @@ feature -- Access
 			-- A cookie order will generate a cookie in the browser
 			-- once the response has been processed
 
+	goto_request: STRING assign set_goto_request
+			-- Can be used to order the REQUEST_HANLDER to generate a new request
+
 feature -- Element change
+
+	set_goto_request (a_string: STRING)
+			-- Setter. A_string can be empty!
+		do
+			goto_request := a_string
+		end
+
 
 	set_html (a_html: XU_INDENDATION_STREAM)
 			-- Sets the text
@@ -77,7 +88,7 @@ feature -- Element change
 				cookie_orders.forth
 			end
 
-			Result := Result + Html_start + file.get_text +"<html><body><h1>default response html text. remove this from RESPONSE.render_to_string</h1></body></html>" --
+			Result := Result + Html_start + file.get_text
 		ensure
 			result_not_empty: not Result.is_empty
 		end

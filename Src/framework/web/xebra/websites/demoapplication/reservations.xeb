@@ -1,76 +1,105 @@
-<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html><!-- InstanceBegin template="/Templates/templatexebrademoapp.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
 <title>Xebra Demo Application</title>
-<style type="text/css">
-<!--
-body,td,th {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #666666;
-}
-body {
-	background-color: #FFFFFF;
-	margin-left: 20px;
-	margin-top: 20px;
-	margin-right: 50px;
-	margin-bottom: 50px;
-}
-a:link {
-	color: #990000;
-	text-decoration: none;
-}
-a:visited {
-	color: #990099;
-	text-decoration: none;
-}
-a:hover {
-	color: #FF0000;
-	text-decoration: none;
-}
-a:active {
-	color: #990033;
-	text-decoration: none;
-}
-h1 {
-	font-size: x-large;
-	color: #333333;
-}
-h2 {
-	font-size: large;
-	color: #333333;
-}
-.style4 {color: #666666; font-weight: bold; }
-a {
-	font-weight: bold;
-}
-.style5 {color: #CCCCCC}
--->
-</style>
+<!-- InstanceEndEditable -->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
-
-<body>
-<table width="1024" border="0" align="center">
-  <tr>
-    <td colspan="4"><h1>Xebra Demo Application</h1></td>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!-- ImageReady Slices (template.psd) -->
+<table width="1100" height="499" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+<tr>
+		<td>
+			<img src="images/template_01.gif" width="20" height="46" alt="" /></td>
+		<td>
+			<img src="images/template_02.gif" width="168" height="46" alt="" /></td>
+		<td>
+			<img src="images/template_03.gif" width="30" height="46" alt="" /></td>
+		<td>
+			<img src="images/template_04.gif" width="862" height="46" alt="" /></td>
+		<td>
+			<img src="images/template_05.gif" width="20" height="46" alt="" /></td>
+	</tr>
+	<tr>
+		<td>
+			<img src="images/template_06.gif" width="20" height="28" alt="" /></td>
+		<td>
+			<img src="images/template_07.gif" width="168" height="28" alt="" /></td>
+		<td>
+			<img src="images/template_08.gif" width="30" height="28" alt="" /></td>
+		<td background="images/login.gif"><div align="right">
+        
+        <xeb:if condition="authenticated"> 
+        Welcome <xeb:display feature="username"/><a href="logout.xeb">Logout</a>
+        </xeb:if>
+        <xeb:if condition="not_authenticated"> 
+        <a href="login.xeb">Login</a>
+        </xeb:if></div></td>
+<td>
+			<img src="images/template_10.gif" width="20" height="28" alt="" /></td>
+	</tr>
+	<tr>
+		<td>
+			<img src="images/template_11.gif" width="20" height="244" alt="" /></td>
+		<td>
+			<img src="images/template_12.gif" width="168" height="244" alt="" /></td>
+		<td>
+			<img src="images/template_13.gif" width="30" height="244" alt="" /></td>
+		<td>
+			<img src="images/template_14.gif" width="862" height="244" alt="" /></td>
+		<td>
+			<img src="images/template_15.gif" width="20" height="244" alt="" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td align="left" valign="top"><h2 class="style1">Navigation</h2>
+		  <ul><li><a href="home.xeb">Home</a></li>
+		  <li><a href="reservations.xeb">Reservations</a></li>
+		  <li><a href="contact.xeb">Contact</a></li>
+	    </ul></td>
+  <td background="images/template_18.gif">
+			<img src="images/template_18.gif" width="30" height="113" alt="" /></td>
+		<td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
+		  <h2 class="style1">Reservations</h2>
+          <xeb:if condition="not_authenticated">
+			  <p>Please log in to view reservations.</p>
+          </xeb:if>
+          <xeb:if condition="authenticated">
+              <table width="100%" border="0" cellpadding="0">
+                <tr bgcolor="#666666">
+                  <td><span class="style2">Name</span></td>
+                  <td class="style2">Date</td>
+                  <td class="style2">Persons</td>
+                </tr>
+                <xeb:iterate list="reservations" variable="reservation"
+                type="MY_RESERVATION">
+                <tr>
+                    <td><xeb:variable id="reservation" feature="name" /></td>
+                    <td><xeb:variable id="reservation" feature="date" /></td>
+                    <td><xeb:variable id="reservation" feature="persons" /></td>
+                </tr>
+                </xeb:iterate>
+              </table>
+           </xeb:if>	
+		<!-- InstanceEndEditable --></td>
+  <td></td>
   </tr>
-  <tr>
-    <td colspan="4" bgcolor="#CCCCCC"><div align="center" class="style5"><a href="login.xeb">Login</a> | <a href="reservations.xeb"> Reservations</a> | <a href="contact.xeb">Contact</a></div></td>
-  </tr>
-  <tr>
-    <td><h2>Reservations</h2></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td colspan="4">
-       <p></p>
-      <p align="center">No reservations.</p>
-      <p></p>
-    </td>
-  </tr>
+	<tr>
+		<td>
+			<img src="images/template_21.gif" width="20" height="68" alt="" /></td>
+		<td>
+			<img src="images/template_22.gif" width="168" height="68" alt="" /></td>
+		<td>
+			<img src="images/template_23.gif" width="30" height="68" alt="" /></td>
+		<td>
+			<img src="images/template_24.gif" width="862" height="68" alt="" /></td>
+		<td>
+			<img src="images/template_25.gif" width="20" height="68" alt="" /></td>
+	</tr>
 </table>
+<!-- End ImageReady Slices -->
 </body>
-</html>
+<!-- InstanceEnd --></html>

@@ -109,6 +109,12 @@ feature -- Basic Operations
 			Result := entries.item (a_name)
 		end
 
+	remove (a_name: STRING)
+			--
+		do
+			entries.remove (a_name)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

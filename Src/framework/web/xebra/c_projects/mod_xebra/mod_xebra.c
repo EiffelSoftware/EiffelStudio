@@ -14,18 +14,6 @@
  * 			Customer support http://support.eiffel.com
  * 			]"
  */
-#define REVISION "$Revision$"
-
-#define SET_COOKIE "Set-Cookie"
-#define SET_COOKIE2 "Set-Cookie2"
-#define DEFAULT_ATTRS "HttpOnly;Version=1"
-#define CLEAR_ATTRS "Version=1"
-#define COOKIE_LOG_PREFIX "cookie"
-
-#define ERROR_MSG "<html><body><h1>Oh no! It's the Fail Whale!</h1><br><img src=\"http://www.designlessbetter.com/blogless/wp-content/uploads/2008/12/whale.png\"/> </body></html>"
-
-
-
 
 #include "mod_xebra.h"
 
@@ -217,13 +205,13 @@ static int xebra_handler (request_rec* r)
 			ap_rputs ("Error reading from data! See error log.", r);
 			return rv;
 		}
-		message = apr_pstrcat (r->pool, message, POSTP, "&", post_buf,
+		message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
 				TABLEEND, NULL);
 	} else if (r->args != NULL) {
-		message = apr_pstrcat (r->pool, message, GETP, "&", r->args, TABLEEND,
+		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, TABLEEND,
 				NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, GETP, TABLEEND, NULL);
+		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
 	}
 
 	//	message = apr_pstrcat (r->pool, message, "#END#", NULL);
@@ -311,7 +299,7 @@ static int xebra_handler (request_rec* r)
 	//ap_rputs ("</small></i>", r);
 
 	//ap_rputs ("whole message:('", r);
-	ap_rputs (rmsg_buf, r);
+	//ap_rputs (rmsg_buf, r);
 	//ap_rputs ("')", r);
 
 
@@ -331,16 +319,14 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	/* Extract cookie orders */
 	msg_copy = apr_pstrndup (r->pool, message, strlen (message));
 	cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
-	while (cookie_order_start != NULL)
-	{
+	while (cookie_order_start != NULL) {
 		DEBUG ("Extracting cookies...");
 		cookie_order_start += strlen (COOKIE_START);
 		cookie_order_end = ap_strstr_c (msg_copy, COOKIE_END);
 		if (cookie_order_end != NULL) {
 			cookie_order_start[cookie_order_end - cookie_order_start] = '\0';
 			apr_table_add (r->headers_out, "Set-Cookie", cookie_order_start);
-			apr_table_add (r->err_headers_out, "Set-Cookie",
-					cookie_order_start);
+			apr_table_add (r->err_headers_out, "Set-Cookie", cookie_order_start);
 			DEBUG2 ("... %s", cookie_order_start);
 		} else {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
@@ -349,7 +335,8 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 					COOKIE_END);
 			return APR_EGENERAL;
 		}
-		msg_copy = &cookie_order_start[cookie_order_end - cookie_order_start] + 1;
+		msg_copy = &cookie_order_start[cookie_order_end - cookie_order_start]
+				+ 1;
 		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
 	}
 
@@ -371,7 +358,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		return APR_EGENERAL;
 	}
 	html += strlen (HTML_START);
-	//ap_rputs (html, r);
+	ap_rputs (html, r);
 	DEBUG2 ("Done.");
 	return APR_SUCCESS;
 }
@@ -649,7 +636,7 @@ apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
 	rfc2109 = apr_pstrcat (r->pool, name, "=", val, ";", buffer, attrs
 			&& strlen (attrs) > 0 ? attrs : DEFAULT_ATTRS, NULL);
 	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-	"user '%s' set cookie: '%s'", r->user, rfc2109);
+			"user '%s' set cookie: '%s'", r->user, rfc2109);
 
 	/* write the cookie to the header table(s) provided */
 	va_start (vp, maxage);
@@ -678,7 +665,7 @@ apr_status_t cookie_remove (request_rec * r, const char *name,
 	char *rfc2109 = apr_pstrcat (r->pool, name, "=;Max-Age=0;", attrs ? attrs
 			: CLEAR_ATTRS, NULL);
 	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-	"user '%s' removed cookie: '%s'", r->user, rfc2109);
+			"user '%s' removed cookie: '%s'", r->user, rfc2109);
 
 	/* write the cookie to the header table(s) provided */
 	va_start (vp, attrs);

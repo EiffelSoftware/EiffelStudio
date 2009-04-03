@@ -94,8 +94,10 @@ feature -- Processing
 							if not l_file.is_open_read then
 								error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 							else
+								print ("Processing '" + l_file.name + "'...%N")
 								l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib))
 								l_file.close
+								print ("Done.%N")
 							end
 						end
 						a_files.forth

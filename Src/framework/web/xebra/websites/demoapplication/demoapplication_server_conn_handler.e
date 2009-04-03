@@ -1,46 +1,33 @@
 note
 	description: "[
-		The {SERVLET} handles a page request.
+		No comment yet
 	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XWA_SERVLET
+class
+	DEMOAPPLICATION_SERVER_CONN_HANDLER
 
-feature {XWA_SERVLET} -- Initialization
+inherit
+	XWA_SERVER_CONN_HANDLER
 
-	base_make
-			-- Will be executed by inheritant class
+create
+	make
+
+feature-- Access
+
+feature-- Implementation
+
+	make
 		do
-			create current_session.make
-		end
-
-feature -- Access
-
-
-	current_session: XH_SESSION
-		-- Represents the session that belongs to the user that has send the current request
-
-feature -- Basic Operations	
-
-	pre_handle_request (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_response: XH_RESPONSE)
-			-- Handles a request from a client an generates a response.
-		do
-			current_session := a_session_manager.get_current_session (a_request, a_response)
-			internal_controller.set_current_request (a_request)
-			internal_controller.set_current_session (current_session)
-			internal_controller.on_page_load
-			handle_request (a_request, a_response)
-		end
-
-	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
-			-- Handles a request from a client an generates a response.
-		deferred
-		end
-
-	internal_controller: XWA_CONTROLLER
-		deferred
+			base_make
+			stateless_servlets.put (create {LOGOUT_SERVLET}.make , "/demoapplication/logout.xeb")
+			stateless_servlets.put (create {CONTACT_SERVLET}.make , "/demoapplication/contact.xeb")
+			stateless_servlets.put (create {LOGIN_SERVLET}.make , "/demoapplication/login.xeb")
+			stateless_servlets.put (create {HOME_SERVLET}.make , "/demoapplication/home.xeb")
+			stateless_servlets.put (create {RESERVATIONS_SERVLET}.make , "/demoapplication/reservations.xeb")
 		end
 
 note
@@ -73,5 +60,4 @@ note
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
-		]"
-end
+		]"end

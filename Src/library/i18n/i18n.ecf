@@ -63,7 +63,7 @@
 				</cluster>
 				<cluster name="posix_imp" location=".\locale\posix\">
 					<condition>
-						<platform value="unix"/>
+						<platform excluded_value="windows"/>
 					</condition>
 				</cluster>
 				<cluster name="dotnet_imp" location=".\locale\dotnet\">

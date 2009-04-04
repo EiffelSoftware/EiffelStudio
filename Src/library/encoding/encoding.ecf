@@ -51,7 +51,7 @@
 				</cluster>
 				<cluster name="unix" location=".\implementation\unix\">
 					<condition>
-						<platform value="unix"/>
+						<platform excluded_value="windows"/>
 					</condition>
 				</cluster>
 			</cluster>

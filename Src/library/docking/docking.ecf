@@ -33,7 +33,7 @@
 			</option>
 			<cluster name="implementation_mswin" location="implementation\" recursive="true">
 				<condition>
-					<platform excluded_value="unix"/>
+					<platform value="windows"/>
 				</condition>
 				<option namespace="Implementation">
 				</option>

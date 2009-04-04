@@ -1,4 +1,4 @@
-<taglib id= "xeb">
+<taglib id="xeb">
 	<tag id="call" class="XTAG_XEB_CALL_TAG">
 		<attribute id="feature" />
 	</tag>

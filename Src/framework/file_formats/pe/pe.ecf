@@ -25,7 +25,7 @@
 			<file_rule>
 				<exclude>/windows$</exclude>
 				<condition>
-					<platform value="unix"/>
+					<platform excluded_value="windows"/>
 				</condition>
 			</file_rule>
 		</cluster>

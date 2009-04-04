@@ -72,10 +72,10 @@ feature -- Status Setting
 
 feature {NONE} -- Access
 
-	entries: HASH_TABLE [STRING, STRING]
+	entries: HASH_TABLE [ANY, STRING]
     	-- Key value pairs
 
-    encoded: HASH_TABLE [STRING, STRING]
+    encoded: HASH_TABLE [ANY, STRING]
     	-- The encoded version of the key value pairs
 
     is_dirty: BOOLEAN
@@ -97,22 +97,30 @@ feature -- Basic Operations
 		end
 
 
-	put (a_name: STRING; a_value: STRING)
+	put (a_value: ANY; a_key: STRING)
 			--
 		do
-			entries.put (a_value, a_name)
+			entries.put (a_value, a_key)
+
 		end
 
-	get (a_name: STRING): detachable STRING
+	force (a_value: ANY; a_key: STRING)
 			--
 		do
-			Result := entries.item (a_name)
+			entries.force (a_value, a_key)
+
 		end
 
-	remove (a_name: STRING)
+	get (a_key: STRING): detachable ANY
 			--
 		do
-			entries.remove (a_name)
+			Result := entries[a_key]
+		end
+
+	remove (a_key: STRING)
+			--
+		do
+			entries.remove (a_key)
 		end
 
 note

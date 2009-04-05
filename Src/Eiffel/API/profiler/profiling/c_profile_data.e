@@ -22,7 +22,7 @@ create
 
 feature -- Creation feature
 
-	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: C_FUNCTION)
+	make (num_calls: INTEGER; time, self_s, descen: REAL_64; new_function: C_FUNCTION)
 			-- Create an object containing profile data for a single C function.
 		do
 			p_d_make(num_calls, time, self_s, descen);

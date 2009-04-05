@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: CYCLE_FUNCTION)
+	make (num_calls: INTEGER; time, self_s, descen: REAL_64; new_function: CYCLE_FUNCTION)
 			-- Create profile data for a whole cycle.
 		do
 			p_d_make (num_calls, time, self_s, descen);

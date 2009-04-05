@@ -185,7 +185,7 @@ end;
 			loop
 				if cycle_profiling_list.item.number = number then
 					cycle_profiling_list.item.add_function (function);
-					function_added := true;
+					function_added := True;
 				else
 					cycle_profiling_list.forth;
 				end;
@@ -200,7 +200,7 @@ end;
 				cycle_profiling_list.after or else Result
 			loop
 				if cycle_profiling_list.item.number = number then
-					Result := true;
+					Result := True;
 				else
 					cycle_profiling_list.forth;
 				end;
@@ -558,7 +558,7 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	self_avg_cycle,
 	total_min_cycle,
 	total_max_cycle,
-	total_avg_cycle: REAL
+	total_avg_cycle: REAL_64
 
 feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 

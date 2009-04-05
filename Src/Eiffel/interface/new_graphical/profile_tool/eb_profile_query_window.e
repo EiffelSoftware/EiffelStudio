@@ -641,9 +641,9 @@ feature {NONE} -- Implementation
 		-- Eiffel, C or Cyclic nodes. Only used in the
 		-- tree structure mode.
 
-	calls, self, descendants, total, percentage: REAL
-	cluster_calls, cluster_self, cluster_descendants, cluster_total, cluster_percentage: REAL
-	class_calls, class_self, class_descendants, class_total, class_percentage: REAL
+	calls, self, descendants, total, percentage: REAL_64
+	cluster_calls, cluster_self, cluster_descendants, cluster_total, cluster_percentage: REAL_64
+	class_calls, class_self, class_descendants, class_total, class_percentage: REAL_64
 		-- Attributes to hold information totals during building of the structured tree mode.
 		-- They are not defined as locals within `rebuild_grid' as this permits functions to
 		-- be implemented which deal with them, thereby reducing repeated code.

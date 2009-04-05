@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-12-02 16:56+0300\n"
+"PO-Revision-Date: 2009-04-05 20:08+0300\n"
 "Last-Translator: Alexander Kogtenkov <alexk@eiffel.com>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "MIME-Version: 1.0\n"
@@ -24370,7 +24370,7 @@ msgstr "Выберите необходимую информацию и сфор
 #. Source code: select_the_target_you_want: STRING_32 is 				do Result := locale.translation ("Select the target you want (0 to quit): ") end
 #: ewb_names.e:37
 msgid "Select the target you want (0 to quit): "
-msgstr "Выберите задание, которое хотите (0 для выхова): "
+msgstr "Выберите задание, которое хотите (0 для выхода): "
 
 #. Source code: t_contract_select_mode: STRING_32 				do Result := locale.translation ("Select the type of contracts to edit") end
 #: interface_names.e:2374

@@ -71,10 +71,9 @@ feature -- Execution
 			l_args := auto_test_arguments
 			if l_args /= Void then
 				l_project := a_test_suite.eiffel_project
-				create l_ap
 				create l_error_handler.make (l_project.system.system)
-				l_ap.set_error_handler (l_error_handler)
-				l_ap.process_arguments (l_args)
+				create l_ap.make_with_arguments (l_args, l_error_handler)
+				--l_ap.process_arguments (l_args)
 
 				create l_shared_prefs
 				l_prefs := l_shared_prefs.preferences.testing_tool_data
@@ -216,10 +215,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

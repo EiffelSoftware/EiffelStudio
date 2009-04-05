@@ -37,13 +37,13 @@ feature -- Adding information
 			Result := profile_data.has_cycle (number)
 		end
 
-	set_total_execution_time (new_time: REAL)
+	set_total_execution_time (new_time: REAL_64)
 			-- Set total execution time to `new_time').
 		require
 			long_enough: new_time >= 0;
 		do
 			total_exec_time := new_time;
-			available := true;
+			available := True;
 		end;
 
 	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA)
@@ -84,7 +84,7 @@ feature -- Status report
 			Result := available;
 		end;
 
-	total_execution_time: REAL
+	total_execution_time: REAL_64
 			-- Time spent during the last run.
 		require
 			availble: is_total_time_available;
@@ -159,7 +159,7 @@ feature {NONE} -- Attributes
 		-- All functions that are part of a cycle.
 		-- Containing Eiffel features and C functions.
 
-	total_exec_time: REAL
+	total_exec_time: REAL_64
 		-- Time spent during execution of application in seconds.
 
 	available: BOOLEAN

@@ -474,11 +474,11 @@ end;
 			-- CALLS_FILTER (true) or not (false).
 			-- Index of value is `i'.
 		local
-			real_ref: REAL_REF;
+			real_ref: REAL_64_REF;
 			int_ref: INTEGER_REF;
 			lower, upper, origin: STRING;
 			lower_ref_int, upper_ref_int: INTEGER_REF;
-			lower_ref_real, upper_ref_real: REAL_REF
+			lower_ref_real, upper_ref_real: REAL_64_REF
 		do
 			Result := filter;
 			origin := prof_query.subquery_at (i).value;
@@ -513,7 +513,7 @@ end;
 			-- `val' contains the value.
 		local
 			int_ref: INTEGER_REF
-			real_ref: REAL_REF
+			real_ref: REAL_64_REF
 		do
 			if calls then
 				create int_ref;

@@ -64,19 +64,19 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		-- Total amount of calls to function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 	
-	self: REAL
+	self: REAL_64
 		-- Total amount of seconds spent in the function itself.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 	
-	descendents: REAL
+	descendents: REAL_64
 		-- Total amount of seconds spent in the descendants of the function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 	
-	total: REAL
+	total: REAL_64
 		-- Total amount of seconds spent in the function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 	
-	percentage: REAL
+	percentage: REAL_64
 		-- Percentage of time spent in the function and the descendants.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 	
@@ -260,7 +260,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			upper_set: child_node_upper_index = an_upper
 		end
 		
-	set_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL)
+	set_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL_64)
 			-- Assign `a_calls' to `calls', `a_self' to `self', `a_descendents' to `descendents',
 			-- `a_total' to `total' and `a_percentage' to `percentage'.
 		do
@@ -274,7 +274,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 				descendents = a_descendents and percentage = a_percentage
 		end
 		
-	increase_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL)
+	increase_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL_64)
 			-- Increase `calls' by `a_calls', `self' by `a_self', `descendents' by `a_descendents',
 			-- `total' by `a_total' and `percentage' by `a_percentage'.
 		do

@@ -53,16 +53,16 @@ feature -- Value setting
 	set_value_range (lower, upper: COMPARABLE)
 			-- Value range as used in the Comparing-features 
 		local
-			real_ref: REAL_REF
+			real_ref: REAL_64_REF
 		do
 			real_ref ?= lower
 			check
-				new_value_must_be_REAL: real_ref /= Void
+				new_value_must_be_real_64: real_ref /= Void
 			end
 			lower_interval := real_ref.item
 			real_ref ?= upper
 			check
-				new_value_must_be_REAL: real_ref /= Void
+				new_value_must_be_real_64: real_ref /= Void
 			end
 			upper_interval := real_ref.item
 		end
@@ -70,11 +70,11 @@ feature -- Value setting
 	set_value (new_value: COMPARABLE)
 			-- Value as used in Comparing-features
 		local
-			real_ref: REAL_REF
+			real_ref: REAL_64_REF
 		do
 			real_ref ?= new_value
 			check
-				new_value_must_be_REAL: real_ref /= Void
+				new_value_must_be_real_64: real_ref /= Void
 			end
 			value := real_ref.item
 		end
@@ -117,11 +117,11 @@ feature -- Comparing
 
 feature {NONE} -- Attributes
 
-	value: REAL
+	value: REAL_64
 
-	item_value: REAL
+	item_value: REAL_64
 
-	lower_interval, upper_interval: REAL;
+	lower_interval, upper_interval: REAL_64;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

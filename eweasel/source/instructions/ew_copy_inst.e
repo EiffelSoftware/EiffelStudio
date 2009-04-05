@@ -64,10 +64,12 @@ feature
 			dest_directory := l_factory.replace_environments (test.environment, dest_directory)
 
 			execute_ok := False;
-			src_name := os.full_file_name (test.environment.value (Source_dir_name),
-				source_file);
-			dest_name := os.full_file_name (dest_directory,
-				dest_file);
+			if use_source_environment_variable then
+				src_name := os.full_file_name (test.environment.value (Source_dir_name), source_file);
+			else
+				src_name := source_file
+			end
+			dest_name := os.full_file_name (dest_directory, dest_file);
 			src := new_file (src_name)
 			ensure_dir_exists (dest_directory);
 			dir := new_file (dest_directory)
@@ -240,6 +242,12 @@ feature {NONE}
 		deferred
 		ensure
 			new_file_not_void: Result /= Void
+		end
+
+	use_source_environment_variable: BOOLEAN
+			-- Do we use `source_dir_name' for copy?
+		do
+			Result := True
 		end
 
 indexing

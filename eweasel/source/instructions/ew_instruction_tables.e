@@ -45,6 +45,7 @@ feature
 			create {EW_SETENV_INST} t;
 			Result.put (t, Setenv_keyword);
 			Result.put (create {EW_COPY_BIN_INST}, Copy_bin_keyword);
+			Result.put (create {EW_COPY_FILE_INST}, copy_file_keyword);
 			create {EW_COPY_RAW_INST} t;
 			Result.put (t, Copy_raw_keyword);
 			create {EW_COPY_SUB_INST} t;

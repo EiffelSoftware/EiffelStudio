@@ -218,10 +218,10 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s);			/* == 
 rt_private void eif_three_way_comparison (void);	/* Execute `three_way_comparison'. */
 rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
 														   on value of `type' */
-rt_private void eif_interp_generator (void);	/* generate the name of the basic type */
+rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the name of the basic type */
 rt_private void eif_interp_offset (void);	/* execute `offset' on character and pointer type */
 rt_private void eif_interp_bit_operations (void);	/* execute bit operations on integers */
-rt_private void eif_interp_basic_operations (void);	/* execute basic operations on basic types */
+rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
 
 /* Assertion checking */
 rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);				/* Invariant check */
@@ -805,6 +805,7 @@ rt_private void interpret(int flag, int where)
 #endif
 
 			RTEAINV((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, 0 /* Invariant has no body id for now */);
+			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 
 			scur = op_stack.st_cur;		/* Save stack context */
@@ -2687,7 +2688,7 @@ rt_private void interpret(int flag, int where)
 	 * on basic types.
 	 */
 	case BC_BASIC_OPERATIONS:
-		eif_interp_basic_operations ();
+		eif_interp_basic_operations (scur, stop);
 		break;
 
 	/*
@@ -3429,6 +3430,7 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE str_obj;			  /* String object created */
 			unsigned long stagval;
+			unsigned char *OLD_IC;
 			int32 length;
  
 			stagval = tagval;
@@ -3442,7 +3444,9 @@ rt_private void interpret(int flag, int where)
 			 * run a cycle when makestr() is called...
 			 */
 
-			str_obj = makestr((char *) string, length);
+			OLD_IC = IC;
+			str_obj = RTMS_EX((char *) string, length);
+			IC = OLD_IC;
  
 			last->type = SK_REF;
 			last->it_ref = str_obj;
@@ -4261,12 +4265,18 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
-rt_private void eif_interp_generator (void)
+rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 {
 	/* Execute the `generator' or `generating_type' function call for basic types
 	 * in melted code
 	 */
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *first;			/* First operand */
+	unsigned char *OLD_IC = IC;
+	unsigned long stagval = tagval;	/* Tag value backup */
+
+	OLD_IC = IC;
 	
 	first = otop();				/* First operand will be replace by result */
 	switch (first->type & SK_HEAD) {
@@ -4287,6 +4297,12 @@ rt_private void eif_interp_generator (void)
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	first->type = SK_REF;
+
+	IC = OLD_IC;
+	if (tagval != stagval) {		/* previous call can call malloc which may call the interpreter for
+								   creation routines. */
+		sync_registers(stack_cur, stack_top);
+	}
 }
 
 rt_private void eif_interp_min_max (int code)
@@ -4413,7 +4429,7 @@ rt_private void eif_interp_offset(void)
 	}
 }
 
-rt_private void eif_interp_basic_operations (void)
+rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 	/* execute basic operations on basic types and put the result back on the
 	 * stack.
 	 */
@@ -4436,7 +4452,7 @@ rt_private void eif_interp_basic_operations (void)
 
 			/* `generator' and `generating_type' function calls */
 		case BC_GENERATOR:
-			eif_interp_generator ();
+			eif_interp_generator (stack_cur, stack_top);
 			break;
 
 			/* Offset operation on CHARACTER_8 and POINTER */

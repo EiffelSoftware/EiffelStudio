@@ -57,6 +57,7 @@ feature -- Status setting
 					port_counter.put (min_port)
 				end
 				last_port := port_counter.item
+				--create l_socket.make_local_server_by_port (last_port)
 				create l_socket.make_server_by_port (last_port)
 				l_tries := l_tries + 1
 			end
@@ -181,10 +182,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

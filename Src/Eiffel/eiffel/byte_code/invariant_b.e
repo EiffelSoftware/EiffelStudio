@@ -87,6 +87,7 @@ feature
 			buf: GENERATION_BUFFER
 			o: like object_test_locals
 			l_inv_is_call: BOOLEAN
+			l_is_profiler_enabled: BOOLEAN
 		do
 			buf := buffer
 
@@ -114,6 +115,13 @@ feature
 			context.mark_current_used;
 
 			l_inv_is_call := context.workbench_mode or else system.exception_stack_managed
+			l_is_profiler_enabled := context.workbench_mode or else
+				context.associated_class.profile_level.is_yes
+
+				-- We need `dtype' when checking invariant.
+			if l_is_profiler_enabled then
+				context.add_dt_current
+			end
 
 				-- Routine's name				
 			if context.final_mode then
@@ -135,7 +143,7 @@ feature
 
 			buf.generate_block_open
 			buf.put_gtcx
-			if l_inv_is_call then
+			if l_inv_is_call or l_is_profiler_enabled then
 				context.set_has_feature_name_stored (True)
 				buf.put_new_line
 				buf.put_string ("char *")
@@ -144,8 +152,10 @@ feature
 				buf.put_string_literal ("_invariant")
 				buf.put_character (';')
 
-				buf.put_new_line
-				buf.put_string ("RTEX;")
+				if l_inv_is_call then
+					buf.put_new_line
+					buf.put_string ("RTEX;")
+				end
 			end
 
 			context.generate_local_declaration (0, False)
@@ -161,6 +171,25 @@ feature
 				buf.put_new_line;
 				buf.put_string ("RTLD;");
 			end;
+
+			if l_is_profiler_enabled then
+				buf.put_new_line
+				if context.workbench_mode then
+					buf.put_string ("RTDA;")
+				else
+					buf.put_string ("RTPR(")
+					context.generate_feature_name (buf)
+					buf.put_string (gc_comma)
+					if context.workbench_mode then
+						buf.put_static_type_id (context.class_type.static_type_id)
+					else
+						buf.put_type_id (context.class_type.type_id)
+					end
+					buf.put_string (gc_comma)
+					context.generate_current_dtype
+					buf.put_string (gc_rparan_semi_c)
+				end
+			end
 
 				-- Separate declarations and body with a blank line
 			buf.put_new_line;
@@ -188,6 +217,12 @@ feature
 				buf.put_string (gc_comma)
 				buf.put_real_body_id (body_index)
 				buf.put_string (gc_rparan_semi_c)
+				if l_is_profiler_enabled and context.workbench_mode then
+					buf.put_new_line
+					buf.put_string ("RTSA(")
+					context.generate_current_dtype
+					buf.put_string (gc_rparan_semi_c)
+				end
 			end
 
 			byte_list.generate;
@@ -203,6 +238,10 @@ feature
 			end;
 
 			if l_inv_is_call then
+				if l_is_profiler_enabled and not context.workbench_mode then
+					buf.put_new_line
+					buf.put_string ("RTXP;")
+				end
 				buf.put_new_line
 				buf.put_string ("RTEE;");
 			end

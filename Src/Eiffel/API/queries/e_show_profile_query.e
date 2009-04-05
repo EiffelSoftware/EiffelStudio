@@ -579,7 +579,7 @@ end;
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
-						real_ref.set_item (val.to_real)
+						real_ref.set_item (val.to_double)
 					end
 				elseif prof_query.subquery_at (i).column.is_equal (profiler_descendants) then
 					if val.is_equal (profiler_min) then
@@ -610,7 +610,7 @@ end;
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
-						real_ref.set_item (val.to_real)
+						real_ref.set_item (val.to_double)
 					end
 				elseif prof_query.subquery_at (i).column.is_equal (profiler_self) then
 					if val.is_equal (profiler_min) then
@@ -641,7 +641,7 @@ end;
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
-						real_ref.set_item (val.to_real)
+						real_ref.set_item (val.to_double)
 					end
 				elseif prof_query.subquery_at (i).column.is_equal (profiler_total) then
 					if val.is_equal (profiler_min) then
@@ -672,7 +672,7 @@ end;
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
-						real_ref.set_item (val.to_real)
+						real_ref.set_item (val.to_double)
 					end
 				end;
 				Result := real_ref

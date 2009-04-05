@@ -251,6 +251,10 @@ typedef uint32		BODY_INDEX;
 /* Index into array of once values */
 typedef uint32 ONCE_INDEX;
 
+/* 64-bit signed and unsigned type for runtime */
+typedef EIF_NATURAL_64	rt_uint64;
+typedef EIF_INTEGER_64	rt_int64;
+
 	/* previously in eif_globals.h */
 #define MTC_NOARG           
 #define MTC                 /* MTC_NOARG, */

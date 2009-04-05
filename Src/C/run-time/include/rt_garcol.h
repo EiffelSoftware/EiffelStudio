@@ -111,11 +111,6 @@ extern int tenure;			/* Tenure value for next generation cycle */
 extern long plsc_per;			/* Period of plsc() in acollect() */
 extern long force_plsc;
 
-/* To start timing or not for GC-profiling */
-extern int gc_running;			/* Is the GC currently running */
-extern double last_gc_time;		/* Time spent during the last run */
-extern int gc_ran;				/* Has the GC been running */
-
 /* Exported variables */
 extern size_t th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */

@@ -25,6 +25,7 @@ feature -- Properties
 	Copy_bin_keyword: 		STRING is "copy_bin"
 	Copy_raw_keyword: 		STRING is "copy_raw"
 	Copy_sub_keyword: 		STRING is "copy_sub"
+	Copy_file_keyword:		STRING is "copy_file"
 	Cpu_limit_keyword: 		STRING is "cpu_limit"
 	Define_directory_keyword: 	STRING is "define_directory"
 	Define_file_keyword: 		STRING is "define_file"

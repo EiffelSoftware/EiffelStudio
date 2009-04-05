@@ -445,6 +445,12 @@ copy_bin <source-file> <dest-directory> <dest-file>
 	$SOURCE to the <dest-directory> under the name <dest-file>.
 	The destination directory is created if it does not exist.
 
+copy_file <absolute-path-source-file> <dest-directory> <dest-file>
+
+	Copy the binary file named <absolute-path-source-file> to the <dest-directory>
+	under the name <dest-file>.
+	The destination directory is created if it does not exist.
+
 copy_raw <source-file> <dest-directory> <dest-file>
 
 	Copy the file named <source-file> from the source directory

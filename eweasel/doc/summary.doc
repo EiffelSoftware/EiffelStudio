@@ -65,6 +65,7 @@ Test control file instructions:
 	setenv <name> <value>
 	
 	copy_bin <source-file> <dest-directory> <dest-file>
+	copy_file <absolute-path-source-file> <dest-directory> <dest-file>
 	copy_raw <source-file> <dest-directory> <dest-file>
 	copy_sub <source-file> <dest-directory> <dest-file>
 	delete <dest-directory> <dest-file>

@@ -92,15 +92,15 @@ RT_LNK int trace_call_level;			/* Call level to report at E-TRACE output */
 RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
 #endif
 
-RT_LNK void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
+RT_LNK void check_options(struct eif_opt *opt, EIF_TYPE_INDEX dtype);			/* Dispatches to start_profile and start_trace */
 RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
 
-RT_LNK void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
-RT_LNK void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
+RT_LNK void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Prints entering feature ... */
+RT_LNK void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Prints leaving feature ... */
 
 RT_LNK void initprf(void);				/* Generates table for profiling */
 
-RT_LNK void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */
+RT_LNK void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Starts profiling of a certain feature */
 RT_LNK void stop_profile(void);			/* Stops profiling of a certain feature */
 
 RT_LNK void prof_stack_rewind(char **old_top);		/* Stops all timer counts in

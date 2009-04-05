@@ -525,36 +525,6 @@ doc:	</attribute>
 rt_shared long force_plsc = 0;
 
 /*
-doc:	<attribute name="gc_running" return_type="int" export="public">
-doc:		<summary>Is GC running?</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Does not seem to be used anymore apart in `option.c' for profiling but we don't even know why? We might want to get rid of it.</fixme>
-doc:	</attribute>
-*/
-rt_public int gc_running = 0;			/* Is the GC running */ 
-
-/*
-doc:	<attribute name="last_gc_time" return_type="double" export="public">
-doc:		<summary>Last time spent on last collect, sweep or whatever the GC did.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>As with `gc_running' we don't know when it is really used.</fixme>
-doc:	</attribute>
-*/
-rt_public double last_gc_time = 0;
-
-/*
-doc:	<attribute name="gc_ran" return_type="int" export="public">
-doc:		<summary>Has the GC been running?</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Same as `gc_running'. There is a mistery to solve.</fixme>
-doc:	</attribute>
-*/
-rt_public int gc_ran = 0;				/* Has the GC been running */ 
-
-/*
 doc:	<attribute name="clsc_per" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Period of full coalescing. If `0', it is never called.</summary>
 doc:		<thread_safety>Not safe</thread_safety>
@@ -978,6 +948,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	if (gc_monitor) {
 		getcputime(&usertime2, &systime2);	/* Current CPU usage */
 		gettime(&realtime2);				/* Get current time stamp */
+	} else {
+		memset(&realtime2, 0, sizeof(Timeval));
 	}
 #endif
 

@@ -229,15 +229,14 @@ typedef struct tag_rt_globals
 	int last_origin_cx;
 	char *last_name_cx;
 	struct htable *class_table_cx;
-#ifdef HAS_GETRUSAGE
-	struct 	prof_rusage	*init_date_cx;
-#elif defined(HAS_TIMES)
-	double 	       init_date_cx;
-#elif defined(EIF_WINDOWS)
-	SYSTEMTIME 	*init_date_cx;
+	rt_uint64 init_date_cx;
+#ifdef EIF_WINDOWS
+#elif defined(HAS_GETRUSAGE)
+#elif define(HAS_TIMES)
+	rt_uint64 rt_nb_ticks_per_second_cx;
 #else
-	time_t	*init_date_cx;
-#endif  /* HAS_GERUSAGE */
+	rt_uint64 rt_start_time_cx;
+#endif
 
 		/* memory.c */
 	EIF_INTEGER m_largest_cx;
@@ -454,6 +453,8 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define last_name			(rt_globals->last_name_cx)
 #define class_table			(rt_globals->class_table_cx)
 #define init_date			(rt_globals->init_date_cx)
+#define rt_nb_ticks_per_second	(rt_globals->rt_nb_ticks_per_second_cx)
+#define rt_start_time		(rt_globals->rt_start_time_cx)
 
 		/* memory.c */
 #define m_largest			(rt_globals->m_largest_cx)

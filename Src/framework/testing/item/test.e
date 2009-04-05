@@ -11,9 +11,6 @@ class
 
 inherit
 	TEST_I
-		rename
-			new_hash_set as tu_new_hash_set
-		end
 
 	TEST_MEMENTO_I
 

@@ -156,7 +156,7 @@ rt_public void getcputime(double *usertime, double *systime)
 
 	l_success = GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel, &l_user);
 	if (l_success) {
-			/* The times are given in nanoseconds, thus the division by 10000000 to get the seconds. */
+			/* The times are given in 100-nanoseconds, thus the division by 10000000 to get the seconds. */
 		*usertime = (eif_uint64_to_real64 (*(EIF_NATURAL_64*) &l_user) / 10000000.);
 		*systime = (eif_uint64_to_real64 (*(EIF_NATURAL_64*) &l_kernel) / 10000000.);
 	} else {

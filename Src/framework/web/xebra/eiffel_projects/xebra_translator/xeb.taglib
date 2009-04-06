@@ -24,16 +24,3 @@
 		<attribute id="condition" />
 	</tag>
 </taglib>
-
-
-<xeb:form type="PERSON" target="saved.xeb">
-	<xeb:input name="age">
-	<xeb:button action="save" label="Save!">
-</form>
-
-feature
-
-	save (person: PERSON)
-		do
-			db.save (person)
-		end

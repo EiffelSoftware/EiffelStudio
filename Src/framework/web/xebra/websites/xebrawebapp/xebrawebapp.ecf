@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebrawebapp" uuid="ADBC6109-4D45-4BFD-A06C-B845A761DD8F">
+	<target name="xebrawebapp">
+		<root class="XEBRAWEBAPP_APPLICATION" feature="make"/>
+		<option warning="true" syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="multithreaded" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf">
+			<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			</option>
+		</library>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<cluster name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\thread_utilities\" recursive="true">
+			<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			</option>
+		</cluster>
+		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\" recursive="true">
+			<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			</option>
+		</cluster>
+		<cluster name="xebrawebapp" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="xebrawebapp_dotnet" extends="xebrawebapp">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

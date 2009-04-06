@@ -743,13 +743,13 @@ end;
 					elseif prof_options.output_names.item (i).is_equal ("calls") then
 						text_formatter.add (item.calls.out)
 					elseif prof_options.output_names.item (i).is_equal ("self") then
-						text_formatter.add (item.self.out)
+						text_formatter.add (time_formatter.formatted (item.self))
 					elseif prof_options.output_names.item (i).is_equal ("descendants") then
-						text_formatter.add (item.descendants.out)
+						text_formatter.add (time_formatter.formatted (item.descendants))
 					elseif prof_options.output_names.item (i).is_equal ("total") then
-						text_formatter.add (item.total.out)
+						text_formatter.add (time_formatter.formatted (item.total))
 					elseif prof_options.output_names.item (i).is_equal ("percentage") then
-						text_formatter.add (item.percentage.out)
+						text_formatter.add (percentage_formatter.formatted (item.percentage))
 					end
 					text_formatter.add_indent
 					i := i + 1
@@ -775,8 +775,22 @@ feature {NONE} -- Attributes
 	prof_query: PROFILER_QUERY;
 		-- All the active queries.
 
-	prof_options: PROFILER_OPTIONS;
+	prof_options: PROFILER_OPTIONS
 		-- The options specified by the user.
+
+	time_formatter: FORMAT_DOUBLE
+			-- Consistent presentation of real numbers.
+		once
+			create Result.make (7, 6)
+			Result.hide_trailing_zeros
+		end
+
+	percentage_formatter: FORMAT_DOUBLE
+			-- Consistent presentation of real numbers.
+		once
+			create Result.make (4, 3)
+			Result.hide_trailing_zeros
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

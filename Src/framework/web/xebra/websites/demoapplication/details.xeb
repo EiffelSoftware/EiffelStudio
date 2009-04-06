@@ -1,0 +1,174 @@
+<html>
+<head>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Xebra Demo Application</title>
+<xeb:if condition="not_authenticated">
+	<xeb:redirect url="reservations.xeb"/>
+</xeb:if>
+<!-- InstanceEndEditable -->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!-- ImageReady Slices (template.psd) -->
+<table width="1100" height="499" border="0" cellpadding="0"
+	cellspacing="0" id="Table_01">
+	<tr>
+		<td><img src="images/template_01.gif" width="20" height="46"
+			alt="" /></td>
+		<td><img src="images/template_02.gif" width="168" height="46"
+			alt="" /></td>
+		<td><img src="images/template_03.gif" width="30" height="46"
+			alt="" /></td>
+		<td><img src="images/template_04.gif" width="862" height="46"
+			alt="" /></td>
+		<td><img src="images/template_05.gif" width="20" height="46"
+			alt="" /></td>
+	</tr>
+	<tr>
+		<td><img src="images/template_06.gif" width="20" height="28"
+			alt="" /></td>
+		<td><img src="images/template_07.gif" width="168" height="28"
+			alt="" /></td>
+		<td><img src="images/template_08.gif" width="30" height="28"
+			alt="" /></td>
+		<td background="images/login.gif">
+		<div align="right"><xeb:if condition="authenticated"> 
+        Welcome <xeb:display feature="username" />, <a href="logout.xeb">Logout</a>
+		</xeb:if> <xeb:if condition="not_authenticated">
+			<a href="login.xeb">Login</a>
+		</xeb:if></div>
+		</td>
+		<td><img src="images/template_10.gif" width="20" height="28"
+			alt="" /></td>
+	</tr>
+	<tr>
+		<td><img src="images/template_11.gif" width="20" height="244"
+			alt="" /></td>
+		<td><img src="images/template_12.gif" width="168" height="244"
+			alt="" /></td>
+		<td><img src="images/template_13.gif" width="30" height="244"
+			alt="" /></td>
+		<td><img src="images/template_14.gif" width="862" height="244"
+			alt="" /></td>
+		<td><img src="images/template_15.gif" width="20" height="244"
+			alt="" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td align="left" valign="top">
+		<h2 class="style1">Navigation</h2>
+		<ul>
+			<li><a href="home.xeb">Home</a></li>
+			<li><a href="reservations.xeb">Reservations</a></li>
+			<li><a href="contact.xeb">Contact</a></li>
+		</ul>
+		</td>
+		<td background="images/template_18.gif"><img
+			src="images/template_18.gif" width="30" height="113" alt="" /></td>
+		<td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
+		<h2><span class="style1">Reservation Details</span></h2>
+		<xeb:call feature="edit" /> 
+		<form action="details.xeb" method="post" id="form1">
+		<table width="100%" border="0" cellpadding="0">
+			<tr>
+				<th scope="row">
+				<div align="left">Id</div>
+				</th>
+				<td>
+				<div align="left"><xeb:if condition="not_authenticated_admin">
+					<xeb:display feature="get_res_id_from_args" />
+					</xeb:if>
+					<xeb:if condition="authenticated_admin">
+						<input name="id" type="text" id="id"
+							value="%=get_res_id_from_args%" />
+						</xeb:if></div>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+				<div align="left">Name</div>
+				</th>
+				<td>
+				<div align="left"><xeb:if condition="not_authenticated_admin">
+					<xeb:display feature="get_res_name_from_args" />
+					</xeb:if>
+					<xeb:if condition="authenticated_admin">
+						<input name="name" type="text" id="name"
+							value="%=get_res_name_from_args%" />
+						</xeb:if></div>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+				<div align="left">Date</div>
+				</th>
+				<td>
+				<div align="left"><xeb:if condition="not_authenticated_admin">
+					<xeb:display feature="get_res_date_from_args" />
+					</xeb:if>
+					<xeb:if condition="authenticated_admin">
+						<input name="date" type="text" id="date"
+							value="%=get_res_date_from_args%" />
+						</xeb:if></div>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+				<div align="left">Persons</div>
+				</th>
+				<td>
+				<div align="left"><xeb:if condition="not_authenticated_admin">
+					<xeb:display feature="get_res_persons_from_args" />
+					</xeb:if>
+					<xeb:if condition="authenticated_admin">
+						<input name="persons" type="text" id="persons"
+							value="%=get_res_persons_from_args%" />
+						</xeb:if></div>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+				<div align="left">Description</div>
+				</th>
+				<td>
+				<div align="left"><xeb:if condition="not_authenticated_admin">
+					<xeb:display feature="get_res_description_from_args" />
+					</xeb:if>
+					<xeb:if condition="authenticated_admin">
+						<input name="description" type="text" id="description"
+							value="%=get_res_description_from_args%" />
+						</xeb:if></div>
+				</td>
+			</tr>
+			<xeb:if condition="authenticated_admin">
+				<tr>
+					<th scope="row"></th>
+					<td><input type="submit" name="Submit" id="Submit"
+						value="Submit" /> </td>
+				</tr>
+				</xeb:if>
+		</table>
+		</form>
+		<!-- InstanceEndEditable --></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><img src="images/template_21.gif" width="20" height="68"
+			alt="" /></td>
+		<td><img src="images/template_22.gif" width="168" height="68"
+			alt="" /></td>
+		<td><img src="images/template_23.gif" width="30" height="68"
+			alt="" /></td>
+		<td><img src="images/template_24.gif" width="862" height="68"
+			alt="" /></td>
+		<td><img src="images/template_25.gif" width="20" height="68"
+			alt="" /></td>
+	</tr>
+</table>
+<!-- End ImageReady Slices -->
+</body>
+<!-- InstanceEnd -->
+</html>

@@ -50,7 +50,7 @@ feature-- Implementation
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table width="1100" height="499" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+<table width="1100" height="499" border="0" cellpadding="0" cellspacing="0" id="Table_01">
 <tr>
 		<td>
 			<img src="images/template_01.gif" width="20" height="46" alt=""></img></td>
@@ -62,7 +62,7 @@ feature-- Implementation
 			<img src="images/template_04.gif" width="862" height="46" alt=""></img></td>
 		<td>
 			<img src="images/template_05.gif" width="20" height="46" alt=""></img></td>
-	</tr>
+  </tr>
 	<tr>
 		<td>
 			<img src="images/template_06.gif" width="20" height="28" alt=""></img></td>
@@ -75,9 +75,13 @@ feature-- Implementation
         
 ]")
 			if controller.authenticated then
+			response.append("[
+
+       Welcome 
+]")
 			response.append (controller.username.out)
 			response.append("[
-<a href="logout.xeb">Logout</a>
+, <a href="logout.xeb">Logout</a>
         
 ]")
 			end

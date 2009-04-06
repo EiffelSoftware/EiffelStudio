@@ -157,7 +157,7 @@ feature {NONE} -- Constants
 "{
 note
 	description: "[
-		No comment yet
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

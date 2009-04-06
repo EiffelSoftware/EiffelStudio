@@ -90,15 +90,25 @@
  */
 #define MAX_POST_SIZE 10000
 
+/*======= HEADERS ENCODING =======*/
+
 #define SET_COOKIE "Set-Cookie"
 #define SET_COOKIE2 "Set-Cookie2"
 #define DEFAULT_ATTRS "HttpOnly;Version=1"
 #define CLEAR_ATTRS "Version=1"
 #define COOKIE_LOG_PREFIX "cookie"
 
-#define ERROR_MSG "<html><body><h1>Oh no! It's the Fail Whale!</h1><br><img src=\"http://www.designlessbetter.com/blogless/wp-content/uploads/2008/12/whale.png\"/> </body></html>"
 
-/*=======   =======*/
+/*======= ERROR HANDLING =======*/
+
+#define ERROR_MSG_START "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Xebra Module - Error report</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><style type=\"text/css\"><!--body,td,th {	font-family: Geneva, Arial, Helvetica, sans-serif;	font-size: 12px;}h1 {	font-size: 18px;	background-color:#6CC5C3;	color: #FFFFFF;}h3 {	font-size: 14px;	background-color:#6CC5C3;	color: #FFFFFF;}--></style></head><body><h1>HTTP 500 Internal Server Error</h1><hr size=\"1\" noshade=\"noshade\" /><p>"
+
+#define ERROR_MSG_END "</p><p><img src=\"http://www.yiyinglu.com/failwhale/images/failwhale.gif\" alt=\"fail whale image\" width=\"800\" height=\"432\" /></p><hr size=\"1\" noshade=\"noshade\" /><h3>Xebra Module $Revision 1$</h3></body></html>"
+
+#define PRINT_ERROR(a) ap_rputs (ERROR_MSG_START, r); ap_rputs (a, r); ap_rputs (ERROR_MSG_END, r);
+
+
+/*======= END  =======*/
 
 /* Registers the module within apache */
 module AP_MODULE_DECLARE_DATA xebra_module;

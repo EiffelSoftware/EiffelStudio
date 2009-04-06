@@ -214,8 +214,6 @@ static int xebra_handler (request_rec* r)
 		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
 	}
 
-	//	message = apr_pstrcat (r->pool, message, "#END#", NULL);
-
 	/* set up connection to server */
 	DEBUG ("Setting up connection.");
 
@@ -231,6 +229,7 @@ static int xebra_handler (request_rec* r)
 	if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
 				gai_strerror (rv));
+
 		//ap_rputs ("Cannot resolve XEbraServer address. See error log.", r);
 		return OK;
 	}
@@ -255,7 +254,7 @@ static int xebra_handler (request_rec* r)
 	if (p == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
 		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-		ap_rputs (ERROR_MSG, r);
+		PRINT_ERROR ("Cannot connect to XebraServer. See error log.");
 		return OK;
 	}
 
@@ -270,7 +269,7 @@ static int xebra_handler (request_rec* r)
 
 	if (!send_message_fraged (message, sockfd, r)) {
 		//ap_rputs ("Error sending message. See error log.", r);
-		ap_rputs (ERROR_MSG, r);
+		PRINT_ERROR ("Error sending message. See error log.");
 		return OK;
 	}
 
@@ -282,7 +281,7 @@ static int xebra_handler (request_rec* r)
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
 				"error in receive_message_fraged");
 		//ap_rputs ("Error receiving message. See error log.", r);
-		ap_rputs (ERROR_MSG, r);
+		PRINT_ERROR("Error receiving message. See error log.");
 		return OK;
 	}
 
@@ -290,9 +289,10 @@ static int xebra_handler (request_rec* r)
 
 	rv = handle_response_message (r, rmsg_buf);
 	if (rv != APR_SUCCESS)
+	{
 		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
-		ap_rputs (ERROR_MSG, r);
-
+		PRINT_ERROR("Error reading message from XEbra Server. See error log.");
+	}
 	/* display module revision */
 	//ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
 	//ap_rputs (REVISION, r);

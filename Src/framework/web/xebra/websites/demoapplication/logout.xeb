@@ -1,4 +1,4 @@
-<html><!-- InstanceBegin template="/Templates/templatexebrademoapp.dwt" codeOutsideHTMLIsLocked="false" -->
+<html>
 <head>
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>Xebra Demo Application</title>
@@ -9,7 +9,7 @@
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <!-- ImageReady Slices (template.psd) -->
-<table width="1100" height="499" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+<table width="1100" height="499" border="0" cellpadding="0" cellspacing="0" id="Table_01">
 <tr>
 		<td>
 			<img src="images/template_01.gif" width="20" height="46" alt="" /></td>
@@ -21,7 +21,7 @@
 			<img src="images/template_04.gif" width="862" height="46" alt="" /></td>
 		<td>
 			<img src="images/template_05.gif" width="20" height="46" alt="" /></td>
-	</tr>
+  </tr>
 	<tr>
 		<td>
 			<img src="images/template_06.gif" width="20" height="28" alt="" /></td>
@@ -32,7 +32,7 @@
 		<td background="images/login.gif"><div align="right">
         
         <xeb:if condition="authenticated"> 
-        Welcome <xeb:display feature="username"/><a href="logout.xeb">Logout</a>
+        Welcome <xeb:display feature="username"/>, <a href="logout.xeb">Logout</a>
         </xeb:if>
         <xeb:if condition="not_authenticated"> 
         <a href="login.xeb">Login</a>

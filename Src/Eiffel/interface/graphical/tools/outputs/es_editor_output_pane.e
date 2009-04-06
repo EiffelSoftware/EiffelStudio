@@ -221,8 +221,6 @@ feature {NONE} -- Factory
 
 	new_widget (a_window: SHELL_WINDOW_I): ES_EDITOR_WIDGET
 			-- <Precursor>
-		local
-			l_text: like text
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as l_window then
 				create {ES_EDITOR_WIDGET} Result.make (l_window)

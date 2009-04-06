@@ -77,8 +77,6 @@ feature -- Type checking
 					end
 				end
 			end
-		ensure
-			error_handler_cleaned: not error_handler.has_error
 		end
 
 	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL)

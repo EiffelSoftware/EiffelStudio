@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 
 			--fake users
 			create users.make(3)
-			users.put (create {MY_USER}.make ("admin", "123", True), "admin")
-			users.put (create {MY_USER}.make ("fabio", "123", False), "fabio")
+			users.put (create {USER}.make ("admin", "123", True), "admin")
+			users.put (create {USER}.make ("fabio", "123", False), "fabio")
 		end
 
 
@@ -43,7 +43,7 @@ feature -- Access
 
 	reservations: ARRAYED_LIST [MY_RESERVATION]
 
-	users: HASH_TABLE [MY_USER, STRING]
+	users: HASH_TABLE [USER, STRING]
 
 feature -- Basic Operations
 
@@ -71,7 +71,7 @@ feature -- Basic Operations
 			Result := False
 
 			if attached current_session as session then
-				if attached {MY_USER} session.get ("auth") as session_user then
+				if attached {USER} session.get ("auth") as session_user then
 					if session_user.is_admin then
 						Result := True
 					end
@@ -270,9 +270,9 @@ feature -- Basic Operations
 			--
 		do
 			Result := ""
-			
+
 			if attached current_session as session then
-				if attached {MY_USER} session.get ("auth") as user then
+				if attached {USER} session.get ("auth") as user then
 					Result := user.name
 				end
 			end

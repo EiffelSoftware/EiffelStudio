@@ -26,7 +26,7 @@ feature -- Creation feature
 			total := feature_total
 			descendants := feature_descendants
 			percentage := feature_percentage
-			self := ((total - descendants) * 100.0).rounded / 100.0
+			self := total - descendants
 		end;
 
 feature -- Output

@@ -669,16 +669,16 @@ feature {NONE} -- Implementation
 					create calls_grid_item.make_with_text (query_grid_row.calls.out)
 				end
 				if show_self then
-					create self_grid_item.make_with_text (query_grid_row.self.out)
+					create self_grid_item.make_with_text (time_formatter.formatted (query_grid_row.self))
 				end
 				if show_descendents then
-					create descendents_grid_item.make_with_text (query_grid_row.descendents.out)
+					create descendents_grid_item.make_with_text (time_formatter.formatted (query_grid_row.descendents))
 				end
 				if show_total then
-					create total_grid_item.make_with_text (query_grid_row.total.out)
+					create total_grid_item.make_with_text (time_formatter.formatted (query_grid_row.total))
 				end
 				if show_percentage then
-					create percentage_grid_item.make_with_text (query_grid_row.percentage.out)
+					create percentage_grid_item.make_with_text (percentage_formatter.formatted (query_grid_row.percentage))
 				end
 				query_grid_row.set_grid_items (feature_grid_item, calls_grid_item, self_grid_item, descendents_grid_item, total_grid_item, percentage_grid_item)
 			end
@@ -1978,8 +1978,22 @@ feature {NONE} -- Implementation
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 
+	time_formatter: FORMAT_DOUBLE
+			-- Consistent presentation of real numbers.
+		once
+			create Result.make (7, 6)
+			Result.hide_trailing_zeros
+		end
+
+	percentage_formatter: FORMAT_DOUBLE
+			-- Consistent presentation of real numbers.
+		once
+			create Result.make (4, 3)
+			Result.hide_trailing_zeros
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1992,22 +2006,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PROFILE_QUERY_WINDOW

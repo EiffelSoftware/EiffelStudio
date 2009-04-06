@@ -1,0 +1,5 @@
+<html>
+<body>
+Hello <xeb:display feature="world"/>!
+</body>
+</html>

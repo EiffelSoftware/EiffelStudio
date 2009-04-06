@@ -15,32 +15,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (	a_name: STRING;
-	a_date:  STRING;
-	a_persons: INTEGER)
+	make (a_id: STRING; a_name: STRING;	a_date:  STRING; a_persons: STRING; a_description: STRING)
 			-- Initialization for `Current'.
 		do
+			id := a_id
 			name := a_name
 			date:=  a_date
 			persons:= a_persons.out
-			descripion:= "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG TEXT"
+			descripion:= a_description
 		end
 
 feature -- Access
+
+	id: STRING
 	name: STRING
 	date:  STRING
 	persons: STRING
 	descripion: STRING
-feature -- Measurement
 
-feature -- Element change
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
 
 end

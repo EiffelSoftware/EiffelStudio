@@ -121,12 +121,14 @@ feature -- Analyzis
 				if workbench_mode then
 					l_context.add_dt_current
 				end
+				l_context.set_assertion_type (In_precondition)
 				if inh_assert.has_precondition then
 					inh_assert.analyze_precondition
 				end
 				if precondition /= Void then
 					precondition.analyze
 				end
+				l_context.set_assertion_type (0)
 			end
 
 				-- Analyze postconditions
@@ -134,6 +136,7 @@ feature -- Analyzis
 				if workbench_mode then
 					l_context.add_dt_current
 				end
+				l_context.set_assertion_type (In_postcondition)
 				if old_expressions /= Void then
 					from
 						old_expressions.start
@@ -151,6 +154,7 @@ feature -- Analyzis
 				if inh_assert.has_postcondition then
 					inh_assert.analyze_old_expressions
 				end
+				l_context.set_assertion_type (0)
 			end
 
 				-- If result is expanded or a bit, we need to create it anyway
@@ -176,6 +180,7 @@ feature -- Analyzis
 			end
 				-- Analyze postconditions
 			if have_postcond then
+				l_context.set_assertion_type (In_postcondition)
 				if workbench_mode then
 					l_context.add_dt_current
 				end
@@ -185,6 +190,7 @@ feature -- Analyzis
 				if inh_assert.has_postcondition then
 					inh_assert.analyze_postcondition
 				end
+				l_context.set_assertion_type (0)
 			end
 			if rescue_clause /= Void then
 				rescue_clause.analyze
@@ -1771,7 +1777,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

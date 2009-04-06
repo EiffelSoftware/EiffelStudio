@@ -357,20 +357,21 @@ feature -- Settings
 			inh_assert: INHERITED_ASSERTION
 		do
 			if a_has_precond then
+				Context.set_assertion_type (In_precondition)
 				inh_assert := Context.inherited_assertion
 				if inh_assert.has_precondition then
 					inh_assert.enlarge_precondition_tree
 				end
 				if precondition /= Void then
-					Context.set_assertion_type (In_precondition)
 					precondition.enlarge_tree
-					Context.set_assertion_type (0)
 				end
+				Context.set_assertion_type (0)
 			end
 			if compound /= Void then
 				compound.enlarge_tree
 			end
 			if a_has_postcond then
+				Context.set_assertion_type (In_postcondition)
 				if inh_assert = Void then
 					inh_assert := Context.inherited_assertion
 				end
@@ -387,6 +388,7 @@ feature -- Settings
 				if postcondition /= Void then
 					postcondition.enlarge_tree
 				end
+				Context.set_assertion_type (0)
 			end
 			if rescue_clause /= Void then
 				rescue_clause.enlarge_tree
@@ -1055,7 +1057,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

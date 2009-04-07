@@ -71,13 +71,20 @@ feature -- Implementation
 
     process_request (server_socket: NETWORK_STREAM_SOCKET)
             -- Receive a request, handle it, and send it back
+        local
+        	l_request_message: detachable STRING
         do
             server_socket.accept
             if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
-	            if attached {XH_REQUEST} thread_socket.retrieved as l_request then
-	            	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request, thread_socket, Current))
+	            --if attached {STRING} thread_socket.retrieved as l_request_message then
+	            l_request_message ?= thread_socket.retrieved
+	            if l_request_message /= Void then
+	               	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, thread_socket, Current))
+	            else
+					thread_socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
+	       			thread_socket.close
 	            end
-            end
+	        end
         end
 
 note

@@ -14,7 +14,7 @@ extern void egc_init_plug();
 void init_rt (void)
 {
 #ifdef EIF_THREADS
-	eif_thr_register();
+	eif_thr_register(1);
 	initsig(); 
 	initstk(); 
 #endif

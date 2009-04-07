@@ -39,17 +39,27 @@ feature --
 			Result.append_expression ("Result := controller")
 		end
 
-	build_handle_request_feature_for_servlet (root_tag: XTAG_TAG_SERIALIZER): XEL_FEATURE_ELEMENT
+	build_handle_request_feature_for_servlet (a_class: XEL_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)
 			-- Serializes the request feature of the {SERVLET}
+		local
+			a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT
 		do
-			create Result.make (request_name)
-			root_tag.generate (Result)
+			create a_render_feature.make (Render_feature_name)
+			create a_prerender_post_feature.make (Prerender_post_feature_name)
+			create a_prerender_get_feature.make (Prerender_get_feature_name)
+			create a_afterrender_feature.make (Afterrender_feature_name)
+
+			root_tag.generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, create {HASH_TABLE [STRING, STRING]}.make (10))
+			a_class.add_feature (a_render_feature)
+			a_class.add_feature (a_prerender_post_feature)
+			a_class.add_feature (a_prerender_get_feature)
+			a_class.add_feature (a_afterrender_feature)
 		end
 
 	generate
 			--
 		local
-			buf:XU_INDENDATION_STREAM
+			buf: XU_INDENDATION_STREAM
 			servlet_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
@@ -66,7 +76,7 @@ feature --
 			servlet_class.add_variable_by_name_type ("controller", controller_type)
 			servlet_class.add_feature (build_make_for_servlet_generator)
 			servlet_class.add_feature (build_internal_controller_for_servlet)
-			servlet_class.add_feature (build_handle_request_feature_for_servlet (get_root_tag))
+			build_handle_request_feature_for_servlet (servlet_class, get_root_tag)
 			servlet_class.serialize (buf)
 			file.close
 		end
@@ -80,7 +90,12 @@ feature --Constants
 
 	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
 	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
-	Request_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+
+	Render_feature_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Prerender_post_feature_name: STRING = "prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Prerender_get_feature_name: STRING = "prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Afterrender_feature_name: STRING = "afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+
 	Constructor_name: STRING = "make"
 	Response_name: STRING = "response"
 

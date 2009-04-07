@@ -95,7 +95,7 @@ feature -- Processing
 								error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 							else
 								print ("Processing '" + l_file.name + "'...%N")
-								l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib))
+								l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglib, l_file.name))
 								l_file.close
 								print ("Done.%N")
 							end
@@ -109,14 +109,16 @@ feature -- Processing
 			end
 		end
 
-	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: XTL_TAG_LIBRARY): XGEN_SERVLET_GENERATOR_GENERATOR
+	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: XTL_TAG_LIBRARY; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
 		local
 			l_root_tag: XP_TAG_ELEMENT
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
 		do
 			create {XM_EIFFEL_PARSER} l_parser.make
-			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make
+			--l_parser.set_dtd_resolver (create {XP_EXTERNAL_RESOLVER})
+			--l_parser.set_entity_resolver (create {XP_EXTERNAL_RESOLVER})
+			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
 			l_p_callback.put_taglib (a_taglib)
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)

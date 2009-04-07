@@ -14,7 +14,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_id: STRING; a_class_name: STRING)
+	make (a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
 			-- `a_class_name': The name of the corresponding TAG-class
 		require
 			a_id_valid: not a_id.is_empty
@@ -24,6 +24,7 @@ feature {NONE}-- Initialization
 			id := a_id
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
 			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
+			debug_information := a_debug_information
 		end
 
 feature {NONE} -- Access
@@ -36,6 +37,9 @@ feature {NONE} -- Access
 
 	children: LIST [XP_TAG_ELEMENT]
 			-- All the children of the tag
+
+	debug_information: STRING
+			-- Debug information (row and column in the xeb file)
 
 feature -- Access
 
@@ -95,7 +99,9 @@ feature {XP_TAG_ELEMENT} -- Implementation
 	internal_build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; is_root: BOOLEAN)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		do
+			a_feature.append_comment (debug_information)
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
+			a_feature.append_expression ("temp.debug_information := %"" + debug_information + "%"" )
 			if is_root then
 				a_feature.append_expression ("root_tag := temp")
 			else

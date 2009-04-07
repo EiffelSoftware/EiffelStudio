@@ -148,6 +148,11 @@ feature -- Basic Operations
 			Result := cookies.valid_key (a_name)
 		end
 
+	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
+			-- Calls the right pre_handler on the servlet
+		deferred
+		end
+
 feature {NONE} -- Internal processing
 
 	escape_bad_chars (a_s: STRING): STRING

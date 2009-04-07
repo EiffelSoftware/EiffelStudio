@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_CALL_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 	xeb_tag: "call"
@@ -11,14 +10,11 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -26,20 +22,21 @@ feature -- Initialization
 			feature_name := "####wrong_feature####"
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
 	feature_name: STRING
 			-- The name of the feature to call
 
 feature -- Implementation
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			a_feature.append_expression (Controller_variable + "." + feature_name)
+			append_debug_info (a_render_feature)
+			add_controller_call (feature_name, a_render_feature)
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal ("feature") then

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TAG_GENERATOR}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,6 +13,7 @@ feature -- Initialization
 			-- Call this constructor, if you inherit
 		do
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
+			render := ""
 		end
 
 feature {NONE} -- Access
@@ -21,7 +21,14 @@ feature {NONE} -- Access
 	children: LIST [XTAG_TAG_SERIALIZER]
 			-- All the children tags of the tag
 
+	render: STRING
+			-- String representation of boolean (either call or constant) for
+			-- rendering
+
 feature -- Access
+
+	debug_information: STRING assign set_debug_information
+			-- Row and column of original xeb file
 
 	add_to_body (a_child: XTAG_TAG_SERIALIZER)
 			-- Adds a TAG to the body.
@@ -32,26 +39,59 @@ feature -- Access
 		end
 
 	put_attribute (id: STRING; a_attribute: STRING)
+			-- Adds an attribute to the tag
 		require
 			id_is_not_empty: not id.is_empty
+		do
+			if id.is_equal ("render") then
+				render := a_attribute
+			else
+				internal_put_attribute (id, a_attribute)
+			end
+		end
+
+	internal_put_attribute (id: STRING; a_attribute: STRING)
+			-- Adds an attribute to the tag
 		deferred
+		end
+
+	set_debug_information (a_debug_information: STRING)
+			-- Sets the debug information
+		do
+			debug_information := a_debug_information
 		end
 
 feature -- Implementation
 
-	generate_children (a_feature: XEL_FEATURE_ELEMENT)
+	generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.generate (a_feature)
+				children.item.generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
 				children.forth
 			end
 		end
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- `a_prerender_get_feature': This feature is executed before the render feature in case of a get request
+			-- `a_prerender_post_feature': Like `a_prerender_get_feature' but on a post request
+			-- `a_render_feature': This feature is executed after a_prerender_post/get_feature and renders the page
+			-- `a_afterrender_feature': This feature is executed in the end, after rendering the page
+		do
+			if not render.is_empty then
+				a_render_feature.append_expression ("if " + render + " then")
+				internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
+				a_render_feature.append_expression ("end")
+			else
+				internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
+			end
+		end
+
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+			--
 		deferred
 		end
 
@@ -61,10 +101,24 @@ feature -- Implementation
 			a_feature.append_expression (Response_variable + ".append(%"[%N" + a_text + "%N]%")")
 		end
 
+	add_controller_call (feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
+			--
+		do
+			a_feature.append_expression (Controller_variable + "." + feature_name)
+		end
+
+	append_debug_info (a_feature: XEL_FEATURE_ELEMENT)
+			-- Appends debug information to the feature
+		do
+			a_feature.append_comment (debug_information)
+		end
+
 feature {XTAG_TAG_SERIALIZER} -- Constants
 
 		Response_variable: STRING = "response"
+		Request_variable: STRING = "request"
 		Controller_variable: STRING = "controller"
+		Response_variable_append: STRING = "response.append"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

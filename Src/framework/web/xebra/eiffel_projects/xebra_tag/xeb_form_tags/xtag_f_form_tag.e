@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {XEB_LOOP_TAG}."
+	description: "Summary description for {XEB_DISPLAY_TAG}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_LOOP_TAG
+	XTAG_F_FORM_TAG
 
 inherit
 	XTAG_TAG_SERIALIZER
@@ -15,46 +15,48 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make
 		do
 			make_base
-			times := "0"
+			data_class := ""
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
-	times: STRING
-			-- Number of repetitions of the body
+	data_class: STRING
+			-- Name of the class which holds the data of the form
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		local
-			temp_var_name: STRING
+			data_var: STRING
 		do
-			append_debug_info (a_render_feature)
-			temp_var_name := a_render_feature.get_temp_variable
-			a_render_feature.append_local (temp_var_name, "NATURAL")
-			a_render_feature.append_expression ("from")
-			a_render_feature.append_expression (temp_var_name + " := 1")
-			a_render_feature.append_expression ("until")
-			a_render_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
-			a_render_feature.append_expression ("loop")
-			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
-			a_render_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
-			a_render_feature.append_expression ("end")
+			data_var := a_render_feature.get_temp_variable
+			a_render_feature.append_local (data_var, data_class)
+			variable_table.put (data_var, Form_var_key)
+			a_render_feature.append_expression ("create " + data_var)
+			a_render_feature.append_expression (Response_variable + ".append (%"<form action=%%%"+"
+				+ Request_variable + ".target_uri + %" method=%"post%")")
+			generate_body (a_render_feature)
+			write_string_to_result ("</form>")
+			variable_table.remove (Form_var_key)
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precursor>
+	put_attribute (id: STRING; a_attribute: STRING)
+			-- <Precusor>
 		do
-			if id.is_equal ("times") then
-				times := a_attribute
+			if id.is_equal ("class") then
+				data_class := a_attribute
 			end
 		end
+
+feature -- Constants
+
+	Form_var_key: STRING = "Form_var_key"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -88,4 +90,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

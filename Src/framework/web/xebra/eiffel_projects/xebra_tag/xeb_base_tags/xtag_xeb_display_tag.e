@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_DISPLAY_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +8,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
 
 create
 	make
@@ -31,13 +27,14 @@ feature -- Access
 
 feature -- Implementation
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			a_feature.append_expression (Response_variable + ".append (controller." + feature_name + ".out)")
+			append_debug_info (a_render_feature)
+			a_render_feature.append_expression (Response_variable_append + "(" + Controller_variable + "." + feature_name + ".out)")
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precusor>
 		do
 			if id.is_equal ("feature") then

@@ -65,7 +65,7 @@ feature -- Query
 			-- Verifies that `a_attribute' belongs to `a_tag'
 		do
 			if attached tags [a_tag] as tag then
-				Result := tag.has_argument (a_attribute)
+				Result := a_attribute.is_equal ("render") or tag.has_argument (a_attribute)
 			end
 		end
 

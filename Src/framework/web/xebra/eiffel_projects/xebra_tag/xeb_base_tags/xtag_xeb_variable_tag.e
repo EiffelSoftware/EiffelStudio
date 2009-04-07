@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_VARIABLE_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,13 +26,14 @@ feature
 	feature_name: STRING
 	id: STRING
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			a_feature.append_expression (Response_variable + ".append (" + id + "." + feature_name + ")")
+			append_debug_info (a_render_feature)
+			a_render_feature.append_expression (Response_variable_append + " (" + id + "." + feature_name + ")")
 		end
 
-	put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if a_id.is_equal ("id") then

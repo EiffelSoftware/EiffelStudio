@@ -22,6 +22,7 @@ feature --Initialization
 			internal_default_size := message_default_bound
 			create data.make (message_default_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			create encoder.make
+			create webapp_handler.make
 		end
 
 feature {NONE} -- Access
@@ -38,6 +39,9 @@ feature {NONE} -- Access
 	encoder: XS_ENCODING_FACILITIES
 			-- Encodes and decodes incoming and outgoing messages
 
+	webapp_handler: XS_WEBAPP_HANDLER
+			-- Handles connection to webapps		
+
 feature --Execution
 
 	do_execute (socket: NETWORK_STREAM_SOCKET)
@@ -46,15 +50,15 @@ feature --Execution
 		require
 			socket_open: not socket.is_closed
 		local
-			l_message: STRING
-			l_response: XH_RESPONSE
+			l_request_message: STRING
+			l_response_message: STRING
 			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			l_i: INTEGER
 			l_request_factory: XU_REQUEST_FACTORY
 		do
 			create l_request_factory.make
 			from
-				l_message := ""
+				l_request_message := ""
           		l_header := [{NATURAL}0, true]
            		l_i := 1
            	until
@@ -65,17 +69,14 @@ feature --Execution
            		if l_header.size > internal_max_size then
            			l_header.fragment := false
            		else
-           			l_message.append_string(read_string (socket, l_header.size))
+           			l_request_message.append_string(read_string (socket, l_header.size))
            			l_i := l_i + 1
            		end
            	end
 
-			if attached l_request_factory.get_request (l_message) as l_request then
-				l_response := forward_request_to_app (l_request, socket)
-				send_message_to_http ("Request: '" + l_message + "' <br><br>Response: '" + l_response.render_to_string + "'", socket) --"<br/><br/><hr/><i><small>   --XebraServer $Revision$</i></small>" , socket)
-	         else
-         		send_message_to_http ("#H#XebraServer: Could not parse request message", socket)
-         	end
+			l_response_message := webapp_handler.forward_request_to_app (l_request_message, socket)
+
+			send_message_to_http (l_response_message, socket)
 
          	socket.cleanup
             check
@@ -86,24 +87,6 @@ feature --Execution
 feature {NONE} -- Implementation
 
 
-	forward_request_to_app (a_request: XH_REQUEST; a_webapp_socket: NETWORK_STREAM_SOCKET): XH_RESPONSE
-			--Sends a request to the correct webserver.
-		require
-			a_webapp_connected: not a_webapp_socket.is_closed
-		local
-			l_soc1: NETWORK_STREAM_SOCKET
-		do
-			create l_soc1.make_client_by_port (3491, "localhost")
-            l_soc1.connect
-
-            l_soc1.independent_store (a_request)
-            create Result.make_empty
-            if attached {XH_RESPONSE} l_soc1.retrieved as rec_message then
-            	Result := rec_message
-            end
-
-            l_soc1.cleanup
-		end
 
 	send_message_to_http (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.

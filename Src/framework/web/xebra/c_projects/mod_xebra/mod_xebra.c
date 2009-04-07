@@ -202,7 +202,7 @@ static int xebra_handler (request_rec* r)
 			rv = read_from_POST (r, &post_buf);
 		}
 		if (rv != OK) {
-			ap_rputs ("Error reading from data! See error log.", r);
+			ap_rputs ("Error reading from data! See apache error log.", r);
 			return rv;
 		}
 		message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
@@ -254,7 +254,7 @@ static int xebra_handler (request_rec* r)
 	if (p == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
 		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-		PRINT_ERROR ("Cannot connect to XebraServer. See error log.");
+		PRINT_ERROR ("Cannot connect to XebraServer. See apache error log.");
 		return OK;
 	}
 
@@ -269,7 +269,7 @@ static int xebra_handler (request_rec* r)
 
 	if (!send_message_fraged (message, sockfd, r)) {
 		//ap_rputs ("Error sending message. See error log.", r);
-		PRINT_ERROR ("Error sending message. See error log.");
+		PRINT_ERROR ("Error sending message. See apache error log.");
 		return OK;
 	}
 
@@ -281,7 +281,7 @@ static int xebra_handler (request_rec* r)
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
 				"error in receive_message_fraged");
 		//ap_rputs ("Error receiving message. See error log.", r);
-		PRINT_ERROR("Error receiving message. See error log.");
+		PRINT_ERROR("Error receiving message. See apache error log.");
 		return OK;
 	}
 
@@ -291,7 +291,7 @@ static int xebra_handler (request_rec* r)
 	if (rv != APR_SUCCESS)
 	{
 		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
-		PRINT_ERROR("Error reading message from XEbra Server. See error log.");
+		PRINT_ERROR("Error reading message. See apache error log.");
 	}
 	/* display module revision */
 	//ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);

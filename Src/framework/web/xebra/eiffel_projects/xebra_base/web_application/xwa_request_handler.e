@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Processing
 
-process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
+process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
 					 a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
@@ -31,11 +31,12 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
+			l_request_factory: XU_REQUEST_FACTORY
 
 		do
-			l_new_request := a_request
+			create l_request_factory.make
+			l_new_request := l_request_factory.get_request (a_request_message)
 			create l_response.make_empty
-			l_response.html.put_string ("There was an error in the request:'" + l_new_request.request_message + "'")
 
 			from
 
@@ -48,7 +49,7 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST;
 					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
-					l_response.html.put_string ("Application not found: %"" + l_new_request.target_uri + "%"")
+					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
 					l_new_request := Void
 				end
 			end

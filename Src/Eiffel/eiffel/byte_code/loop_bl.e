@@ -107,10 +107,12 @@ feature -- Access
 					invariant_part.generate
 					generate_end_final_mode_test
 				end
+				context.set_assertion_type (0)
 			end
 
 				-- Generate the "variant" part
 			if generate_variant then
+				context.set_assertion_type (In_loop_variant)
 				if workbench_mode then
 					generate_workbench_test
 					variant_part.generate
@@ -120,6 +122,7 @@ feature -- Access
 					variant_part.generate
 					generate_end_final_mode_test
 				end
+				context.set_assertion_type (0)
 			end
 		end
 
@@ -180,6 +183,7 @@ feature -- Access
 					invariant_part.generate
 					generate_end_final_mode_test
 				end
+				context.set_assertion_type (0)
 			end
 				-- Regenerate the variant clause	
 			if generate_variant then
@@ -290,7 +294,7 @@ feature {NONE} -- Implementation
 			-- "invariant/variant" clause.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

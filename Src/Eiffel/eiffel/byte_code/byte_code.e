@@ -504,6 +504,7 @@ feature -- Settings
 				Context.has_postcondition and then (old_expressions /= Void
 				or else inh_assert.has_old_expression)
 			then
+				context.set_assertion_type ({ASSERT_TYPE}.in_postcondition)
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("if (RTAL & CK_ENSURE) {")
@@ -532,6 +533,7 @@ feature -- Settings
 				buf.exdent
 				buf.put_new_line
 				buf.put_character ('}')
+				context.set_assertion_type (0)
 			end
 		end
 

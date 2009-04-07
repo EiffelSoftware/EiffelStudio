@@ -554,6 +554,8 @@ feature {NONE} -- Visitors
 				a_node.check_list.process (Current)
 					-- Jump offset evaluation
 				ba.write_forward
+
+				context.set_assertion_type (0)
 			end
 		end
 
@@ -1200,9 +1202,6 @@ feature {NONE} -- Visitors
 			invariant_breakpoint_slot := l_context.get_breakpoint_slot
 
 			if not (a_node.invariant_part = Void and then a_node.variant_part = Void) then
-					-- Set the assertion type
-				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
-
 				ba.append (Bc_loop)
 					-- In case the loop assertion are not checked, we
 					-- have to put a jump value.
@@ -1222,6 +1221,7 @@ feature {NONE} -- Visitors
 
 					-- Evaluation of the jump value
 				ba.write_forward
+				l_context.set_assertion_type (0)
 			end
 
 				-- Generate byte code for exit expression
@@ -1244,9 +1244,6 @@ feature {NONE} -- Visitors
 			l_context.set_breakpoint_slot (invariant_breakpoint_slot)
 
 			if not (a_node.invariant_part = Void and then a_node.variant_part = Void) then
-					-- Set the assertion type
-				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
-
 				ba.append (Bc_loop)
 					-- In case the loop assertion are not checked, we
 					-- have to put a jump value.
@@ -1266,6 +1263,7 @@ feature {NONE} -- Visitors
 
 					-- Evaluation of the jump value
 				ba.write_forward
+				l_context.set_assertion_type (0)
 			end
 
 				-- Restore hook context
@@ -2126,7 +2124,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

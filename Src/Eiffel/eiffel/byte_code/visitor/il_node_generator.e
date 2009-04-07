@@ -209,11 +209,13 @@ feature -- Generation
 			if
 				keep and then (a_body.old_expressions /= Void or inh_assert.has_postcondition)
 			then
+				context.set_assertion_type ({ASSERT_TYPE}.in_postcondition)
 				end_of_assertion := il_generator.create_label
 				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_ensure)
 				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
+
 
 					-- Calculate how many try/catch blocks are needed for old expression evaluation.
 				if a_body.old_expressions /= Void then
@@ -240,6 +242,7 @@ feature -- Generation
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
+				context.set_assertion_type (0)
 			end
 
 				-- Initialize local variables (if required)
@@ -4599,7 +4602,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

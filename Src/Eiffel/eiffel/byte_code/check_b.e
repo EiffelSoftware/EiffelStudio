@@ -107,6 +107,7 @@ feature -- Code generation
 					buf.put_new_line
 					buf.put_character ('}')
 				end
+				context.set_assertion_type (0)
 			end
 		end
 
@@ -163,7 +164,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

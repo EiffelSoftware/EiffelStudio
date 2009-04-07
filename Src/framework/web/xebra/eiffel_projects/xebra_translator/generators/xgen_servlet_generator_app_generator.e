@@ -54,7 +54,7 @@ feature -- Basic functionality
 				servlet_generator_generators.after
 			loop
 				servlet_generator_generator := servlet_generator_generators.item
-				create file.make_open_write (a_path + servlet_generator_generator.servlet_name.as_lower + "_servlet_generator.e")
+				--create file.make_open_write (a_path + servlet_generator_generator.servlet_name.as_lower + "_g_servlet_generator.e")
 				create buf.make (file)
 				servlet_generator_generator.generate (a_path)
 				servlet_generator_generators.forth
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			until
 				servlet_generator_generators.after
 			loop
-				l_servlet_gg :=  servlet_generator_generators.item
+				l_servlet_gg := servlet_generator_generators.item
 				Result.append_expression ("(create {"
 					+ l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
 					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", %"" + l_servlet_gg.controller_type.as_upper + "%")).generate;")

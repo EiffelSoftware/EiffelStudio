@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_ITERATE_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,22 +35,23 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			a_feature.append_local (variable, type)
-			a_feature.append_expression ("from")
-			a_feature.append_expression (Controller_variable + "." + list + ".start")
-			a_feature.append_expression ("until")
-			a_feature.append_expression (Controller_variable + "." + list + ".after")
-			a_feature.append_expression ("loop")
-			a_feature.append_expression (variable + " := " + Controller_variable + "." + list + ".item")
-			generate_children (a_feature)
-			a_feature.append_expression (Controller_variable + "." + list + ".forth")
-			a_feature.append_expression ("end")
+			append_debug_info (a_render_feature)
+			a_render_feature.append_local (variable, type)
+			a_render_feature.append_expression ("from")
+			add_controller_call (list + ".start", a_render_feature)
+			a_render_feature.append_expression ("until")
+			add_controller_call (list + ".after", a_render_feature)
+			a_render_feature.append_expression ("loop")
+			a_render_feature.append_expression (variable + " := " + Controller_variable + "." + list + ".item")
+			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
+			add_controller_call (list + ".forth", a_render_feature)
+			a_render_feature.append_expression ("end")
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal ("list") then

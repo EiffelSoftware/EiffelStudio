@@ -1,10 +1,12 @@
 note
-	description: "Summary description for {XTAG_XEB_OUTPUT_CALL_TAG}."
+	description: "[
+		{XTAG_F_BUTTON_TAG}.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_OUTPUT_CALL_TAG
+	XTAG_F_BUTTON_TAG
 
 inherit
 	XTAG_TAG_SERIALIZER
@@ -17,28 +19,34 @@ feature -- Initialization
 	make
 		do
 			make_base
-			text := ""
+			value := ""
+			action := ""
 		end
 
 feature -- Access
 
-	text: STRING
-			-- The name of the feature to call
+	value: STRING
+			-- Caption of the button
+
+	action: STRING
+			-- Name of the feature which will be executed
+			-- when the button is pressed
 
 feature -- Implementation
 
 	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			append_debug_info (a_render_feature)
-			a_render_feature.append_expression (Response_variable_append + "(" + Controller_variable + "." + text + ".out)")
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precursor>
+			-- <Precusor>
 		do
 			if id.is_equal ("value") then
-				text := a_attribute
+				value := a_attribute
+			end
+			if id.is_equal ("action") then
+				action := a_attribute
 			end
 		end
 

@@ -70,11 +70,11 @@ feature -- Basic Functionality
 		do
 				-- Generate the {REQUEST_HANDLER} class
 			webapp_name.to_lower
-			create file.make_open_write (path + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
+			create file.make_open_write (path + webapp_name + "_g_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			webapp_name.to_upper
-			create request_class.make (webapp_name + "_" + Server_con_handler_class)
+			create request_class.make (webapp_name + "_G_" + Server_con_handler_class)
 			request_class.set_inherit ("XWA_" + Server_con_handler_class)
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
@@ -82,9 +82,9 @@ feature -- Basic Functionality
 			file.close
 
 				-- Generate the {APPLICATION} class
-			create file.make_open_write (path + webapp_name.as_lower + "_application.e")
+			create file.make_open_write (path + webapp_name.as_lower + "_g_application.e")
 			create buf.make (file)
-			create application_class.make (webapp_name.as_upper + "_APPLICATION")
+			create application_class.make (webapp_name.as_upper + "_G_APPLICATION")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			create Result.make ("make")
 			Result.append_expression ("create request_handler.make")
 			Result.append_expression ("request_handler.run")
-			Result.append_local ("request_handler", webapp_name.as_upper + "_" + Server_con_handler_class)
+			Result.append_local ("request_handler", webapp_name.as_upper + "_G_" + Server_con_handler_class)
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT

@@ -1,61 +1,49 @@
 note
-	description: "Summary description for {XEB_LOOP_TAG}."
+	description: "[
+		{XP_EXTERNAL_RESOLVER}.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_LOOP_TAG
+	XP_EXTERNAL_RESOLVER
 
 inherit
-	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
+	XM_EXTERNAL_RESOLVER
 
-create
-	make
+feature -- Action(s)
 
-feature {NONE} -- Initialization
-
-	make
+	resolve (a_system: STRING) is
+			-- Fails.
 		do
-			make_base
-			times := "0"
+
+		ensure then
+			stream_has_not_to_be_open: True
 		end
 
-feature {NONE} -- Access
+feature -- Result
 
-	times: STRING
-			-- Number of repetitions of the body
+	has_error: BOOLEAN is
+			-- Always False
+		do
+			Result := False
+		end
 
-feature {NONE} -- Implementation
+	last_error: STRING is
+			-- Error message.
+		do
+			Result := "this error message should not appear"
+		end
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- <Precursor>
+	last_stream: KI_CHARACTER_INPUT_STREAM is
+			-- Not used.
 		local
-			temp_var_name: STRING
+			stream: KL_TEXT_INPUT_FILE
 		do
-			append_debug_info (a_render_feature)
-			temp_var_name := a_render_feature.get_temp_variable
-			a_render_feature.append_local (temp_var_name, "NATURAL")
-			a_render_feature.append_expression ("from")
-			a_render_feature.append_expression (temp_var_name + " := 1")
-			a_render_feature.append_expression ("until")
-			a_render_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
-			a_render_feature.append_expression ("loop")
-			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
-			a_render_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
-			a_render_feature.append_expression ("end")
+			create stream.make ("./dtd.txt")
+			stream.open_read
+			Result := stream
 		end
-
-	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precursor>
-		do
-			if id.is_equal ("times") then
-				times := a_attribute
-			end
-		end
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -88,4 +76,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

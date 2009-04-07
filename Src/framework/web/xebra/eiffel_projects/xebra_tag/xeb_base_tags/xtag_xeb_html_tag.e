@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {XEB_HTML_TAG}."
-	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +8,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
 
 create
 	make
@@ -31,14 +27,15 @@ feature {NONE} -- Access
 
 feature {NONE}
 
-	generate (a_feature: XEL_FEATURE_ELEMENT)
+	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			write_string_to_result (text, a_feature)
-			generate_children (a_feature)
+			append_debug_info (a_render_feature)
+			write_string_to_result (text, a_render_feature)
+			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if id.is_equal("text") then

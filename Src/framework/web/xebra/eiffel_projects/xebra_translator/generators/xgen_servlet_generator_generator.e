@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
 		do
-			servlet_name := a_servlet_name
+			servlet_name := a_servlet_name + "_G"
 			controller_type := a_controller_type
 			stateful := a_stateful
 			root_tag := a_root_tag

@@ -84,6 +84,11 @@ feature -- Access
 			expression_has_been_added: old content.count + 1 = content.count
 		end
 
+	append_comment (comment: STRING)
+		do
+			append_expression ("%T-- " + comment)
+		end
+
 	get_temp_variable: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do

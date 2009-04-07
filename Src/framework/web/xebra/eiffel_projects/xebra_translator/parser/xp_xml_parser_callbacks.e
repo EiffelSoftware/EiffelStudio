@@ -19,10 +19,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_parser: XM_PARSER; a_path: STRING)
 			-- Create XB_XML_PARSER_CALLBACKS.
 		do
-			create root_tag.make ("html", Html_tag_name)
+			parser := a_parser
+			path := a_path
+			create root_tag.make ("html", Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
 			create html_buf.make_empty
 		end
@@ -38,7 +40,12 @@ feature -- Constants
 	Reading_html: INTEGER = 0
 	Reading_tag: INTEGER = 1
 
+	parser: XM_PARSER
+
 feature -- Access
+
+	path: STRING
+		-- The path of the file to which is being read
 
 	state: INTEGER
 		-- 0 Reading_html
@@ -157,10 +164,11 @@ feature -- Tag
 				if  l_class_name.is_empty then
 					l_class_name := Html_tag_name
 				end
-				create l_tmp_tag.make (a_local_part, l_class_name)
+				create l_tmp_tag.make (a_local_part, l_class_name, current_debug_information)
 				tag_stack.item.put_subtag (l_tmp_tag)
 				tag_stack.put (l_tmp_tag)
 				if not taglib.contains (l_local_part) then
+
 					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
 				end
 			elseif state = Reading_html then
@@ -291,7 +299,7 @@ feature {NONE} -- Implementation
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", Html_tag_name)
+				create l_tag.make ("html", Html_tag_name, current_debug_information)
 				tag_stack.item.put_subtag (l_tag)
 			end
 		end
@@ -302,7 +310,7 @@ feature {NONE} -- Implementation
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", Html_tag_name)
+				create l_tag.make ("html", Html_tag_name, current_debug_information)
 				l_tag.put_attribute ("text", s)
 				l_tag.multiline_argument := True
 				tag_stack.item.put_subtag (l_tag)
@@ -326,7 +334,7 @@ feature {NONE} -- Implementation
 		do
 			html_buf.append (" " + local_part + "=%"")
 			create_html_tag_put
-			create l_tag.make ("output", Output_tag_name)
+			create l_tag.make ("output", Output_tag_name, current_debug_information)
 			feature_name := strip_off_dynamic_tags (value)
 			l_tag.put_attribute ("value", feature_name)
 			tag_stack.item.put_subtag (l_tag)
@@ -340,7 +348,7 @@ feature {NONE} -- Implementation
 			feature_name: STRING
 		do
 			feature_name := strip_off_dynamic_tags (value)
-			tag_stack.item.put_attribute (local_part, feature_name)
+			tag_stack.item.put_attribute (local_part, "controller." + feature_name)
 		end
 
 	strip_off_dynamic_tags (a_string: STRING): STRING
@@ -351,6 +359,15 @@ feature {NONE} -- Implementation
 			Result := a_string.substring (3, a_string.count - 1)
 		end
 
+	current_debug_information: STRING
+			-- Queries the parser for row and column
+		do
+			if parser.position /= Void then
+				Result := "row: " + parser.position.row.out + " column: " + parser.position.column.out + " path: " + path
+			else
+				Result := "Could not determine position!"
+			end
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

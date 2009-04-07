@@ -31,11 +31,25 @@ feature -- Basic Operations
 			internal_controller.set_current_request (a_request)
 			internal_controller.set_current_session (current_session)
 			internal_controller.on_page_load
+			a_request.call_pre_handler (Current, a_response)
 			handle_request (a_request, a_response)
+			afterhandle_request (a_request, a_response)
 		end
 
 	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
+		deferred
+		end
+
+	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+		deferred
+		end
+
+	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+		deferred
+		end
+
+	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
 		deferred
 		end
 

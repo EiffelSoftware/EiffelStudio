@@ -167,6 +167,7 @@ feature -- Assertion
 			-- tree for C code generation.
 		require
 			types_and_assert_count_same: valid_count
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
 		do
 			from
 				precondition_start
@@ -174,9 +175,7 @@ feature -- Assertion
 				precondition_after
 			loop
 				precondition_context_init
-				Context.set_assertion_type (Context.In_precondition)
 				precondition_list.item.enlarge_tree
-				Context.set_assertion_type (0)
 				precondition_forth
 			end
 			restore_current_context
@@ -187,6 +186,7 @@ feature -- Assertion
 			-- tree for C code generation.
 		require
 			types_and_assert_count_same: valid_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		local
 			old_expr: LINKED_LIST [UN_OLD_B]
 		do
@@ -323,6 +323,7 @@ feature -- Inherited precondition
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_prec_count
 			has_precondition: has_precondition
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
 		local
 			success_block, failure_block: IL_LABEL
 			assert_b: ASSERT_B
@@ -372,6 +373,7 @@ feature -- Inherited precondition
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_prec_count
 			has_precondition: has_precondition
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
 		do
 			from
 				precondition_start
@@ -408,6 +410,7 @@ feature -- Inherited precondition
 			-- Analyze inherited preconditions
 		require
 			types_and_assert_count_same: valid_prec_count
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
 		do
 			from
 				precondition_start
@@ -428,6 +431,7 @@ feature -- Inherited precondition
 		require
 			types_and_assert_count_same: valid_prec_count
 			has_prec: has_precondition
+			is_precondition: context.assertion_type = {ASSERT_TYPE}.in_precondition
 		do
 			from
 				precondition_start
@@ -570,6 +574,7 @@ feature -- inherited postcondition
 			-- Analyze inherited old expressions
 		require
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
 			old_exp: UN_OLD_BL
@@ -605,6 +610,7 @@ feature -- inherited postcondition
 			-- Analyze inherited postconditions
 		require
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		do
 			from
 				postcondition_start
@@ -624,6 +630,7 @@ feature -- inherited postcondition
 			-- Generate inherited postcondition .
 		require
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		do
 			from
 				postcondition_start
@@ -645,6 +652,7 @@ feature -- inherited postcondition
 		require
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		do
 			from
 				postcondition_start
@@ -665,6 +673,7 @@ feature -- inherited postcondition
 		require
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
 		do
@@ -699,6 +708,7 @@ feature -- inherited postcondition
 		require
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		do
 			from
 				postcondition_start
@@ -758,6 +768,7 @@ feature -- inherited postcondition
 		require
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
 		do
@@ -791,6 +802,7 @@ feature -- inherited postcondition
 			-- Generate value for old variables
 		require
 			types_and_assert_count_same: valid_post_count
+			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
 			item: UN_OLD_BL

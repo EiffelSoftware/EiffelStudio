@@ -1053,6 +1053,7 @@ end
 					buf.put_character ('}')
 				end
 			end
+			context.set_assertion_type (0)
 		end
 
 	generate_postcondition
@@ -1085,6 +1086,7 @@ end
 					buf.exdent
 					buf.put_new_line
 					buf.put_character ('}')
+					context.set_assertion_type (0)
 				end
 				generate_invariant_after
 			end
@@ -1483,17 +1485,11 @@ feature -- Byte code generation
 			make_catcall_check (ba)
 
 			inh_assert := Context.inherited_assertion
-			if Context.origin_has_precondition then
-				have_assert := (precondition /= Void or else inh_assert.has_precondition)
-			end
-
-			if have_assert then
+			if Context.origin_has_precondition and then (precondition /= Void or else inh_assert.has_precondition) then
 				context.set_assertion_type (In_precondition)
 				ba.append (Bc_precond)
 				ba.mark_forward
-			end
 
-			if Context.origin_has_precondition then
 				if inh_assert.has_precondition then
 					inh_assert.make_precondition_byte_code (a_generator, ba)
 				end
@@ -1502,9 +1498,7 @@ feature -- Byte code generation
 					Context.set_new_precondition_block (True)
 					a_generator.generate (ba, precondition)
 				end
-			end
 
-			if have_assert then
 				from
 				until
 					ba.forward_marks4.count = 0
@@ -1521,45 +1515,42 @@ feature -- Byte code generation
 					end
 				end
 				ba.write_forward
+				context.set_assertion_type (0)
 			end
 
 			has_old := (old_expressions /= Void) or else (inh_assert.has_old_expression)
 			if has_old then
+				context.set_assertion_type (In_postcondition)
 				ba.append (Bc_start_eval_old)
 					-- Mark offset for the end of old expression evaluation.
 				ba.mark_forward
 					-- Mark offset for next BC_OLD
 				ba.mark_forward
-			end
 
-			if postcondition /= Void and then
-				old_expressions /= Void then
-					-- Make byte code for old expression
-					--! Order is important since interpretor pops expression
-					--! bottom up.
-				from
-					old_expressions.start
-				until
-					old_expressions.after
-				loop
-					a_generator.generate_old_expression_initialization (ba, old_expressions.item)
-					old_expressions.forth
+				if postcondition /= Void and then
+					old_expressions /= Void then
+						-- Make byte code for old expression
+						--! Order is important since interpretor pops expression
+						--! bottom up.
+					from
+						old_expressions.start
+					until
+						old_expressions.after
+					loop
+						a_generator.generate_old_expression_initialization (ba, old_expressions.item)
+						old_expressions.forth
+					end
 				end
-			end
 
-				-- Make byte code for inherited old expressions
-			have_assert := postcondition /= Void or else inh_assert.has_postcondition
-			if have_assert then
 				if inh_assert.has_postcondition then
 					inh_assert.make_old_exp_byte_code (a_generator, ba)
 				end
-			end
 
-			if has_old then
 					-- Write position for the last old expression evaluation.
 				ba.write_forward
 				ba.append (Bc_end_eval_old)
 				ba.write_forward
+				context.set_assertion_type (0)
 			end
 				-- Go to point for old expressions
 
@@ -1568,22 +1559,18 @@ feature -- Byte code generation
 			end
 
 				-- Make byte code for postcondition
-			if have_assert then
+			if postcondition /= Void or else inh_assert.has_postcondition then
 				context.set_assertion_type (In_postcondition)
 				ba.append (Bc_postcond)
 				ba.mark_forward
-			end
-
-			if inh_assert.has_postcondition then
-				inh_assert.make_postcondition_byte_code (a_generator, ba)
-			end
-
-			if postcondition /= Void then
-				a_generator.generate (ba, postcondition)
-			end
-
-			if have_assert then
+				if inh_assert.has_postcondition then
+					inh_assert.make_postcondition_byte_code (a_generator, ba)
+				end
+				if postcondition /= Void then
+					a_generator.generate (ba, postcondition)
+				end
 				ba.write_forward
+				context.set_assertion_type (0)
 			end
 		end
 

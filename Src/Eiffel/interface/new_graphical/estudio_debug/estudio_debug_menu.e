@@ -101,6 +101,14 @@ feature {NONE} -- Initialization
 				--| Void safe helpers
 			create menu_item.make_with_text_and_action ("Check all routines in system", agent on_check_routines)
 			extend (menu_item)
+
+			extend (create {EV_MENU_SEPARATOR})
+
+				--| Debug
+			create menu.make_with_text ("debug")
+			extend (menu)
+			build_debug_sub_menu (menu)
+
 		end
 
 	build_tools_sub_menu (a_menu: attached EV_MENU)
@@ -180,6 +188,18 @@ feature {NONE} -- Initialization
 
 				--| Save all classes though the editor in current project
 			create l_menu_item.make_with_text_and_action ("Save All Classes In The Project Through The Editor", agent on_resave_all_classes)
+			a_menu.extend (l_menu_item)
+		end
+
+	build_debug_sub_menu (a_menu: attached EV_MENU)
+			-- Builds the debug submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_menu_item: attached EV_MENU_ITEM
+		do
+				--| Force Call on Void
+			create l_menu_item.make_with_text_and_action ("Force Call on Void target", agent local s: STRING do s.to_lower end)
 			a_menu.extend (l_menu_item)
 		end
 

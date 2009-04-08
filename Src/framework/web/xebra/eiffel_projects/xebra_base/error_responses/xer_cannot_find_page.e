@@ -11,7 +11,7 @@ class
 	XER_CANNOT_FIND_PAGE
 
 inherit
-	X_ERROR_RESPONSE
+	XER_APP
 
 create
 	make

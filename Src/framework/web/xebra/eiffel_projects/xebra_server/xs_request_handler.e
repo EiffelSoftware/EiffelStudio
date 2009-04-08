@@ -6,6 +6,9 @@ note
 class
 	XS_REQUEST_HANDLER
 
+inherit
+	XU_DEBUG_OUTPUTTER
+
 create
 	make
 
@@ -41,11 +44,11 @@ feature {NONE} -- Access
 
 feature --Execution
 
-	do_execute (socket: NETWORK_STREAM_SOCKET; webapp_handler: XS_WEBAPP_HANDLER)
+	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_webapp_handler: XS_WEBAPP_HANDLER)
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
-			socket_open: not socket.is_closed
+			a_http_socket: not a_http_socket.is_closed
 		local
 			l_request_message: STRING
 			l_response_message: STRING
@@ -61,54 +64,57 @@ feature --Execution
            	until
 				not l_header.fragment
            	loop
-           		socket.read_natural_32
-           		l_header := encoder.decode_natural_and_flag (socket.last_natural_32)
+           		a_http_socket.read_natural_32
+           		l_header := encoder.decode_natural_and_flag (a_http_socket.last_natural_32)
            		if l_header.size > internal_max_size then
            			l_header.fragment := false
            		else
-           			l_request_message.append_string(read_string (socket, l_header.size))
+           			l_request_message.append_string(read_string (a_http_socket, l_header.size))
            			l_i := l_i + 1
            		end
            	end
 
-			l_response_message := webapp_handler.forward_request_to_app (l_request_message, socket)
+			l_response_message := a_webapp_handler.forward_request_to_app (l_request_message)
 
-			send_message_to_http (l_response_message, socket)
+			dprint ("Sending response to http",2)
+			send_message_to_http (l_response_message, a_http_socket)
 
-         	socket.cleanup
+         	a_http_socket.cleanup
             check
-            	socket.is_closed
+            	a_http_socket.is_closed
             end
 		end
 
 feature {NONE} -- Implementation
 
-	send_message_to_http (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
+	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.
 		require
-			socket_is_open: not app_socket.is_closed
+			a_http_socket_is_open: not a_http_socket.is_closed
 		local
-			 fragment: BOOLEAN
-			 index, message_size, fragment_size: NATURAL
+			 l_fragment: BOOLEAN
+			 l_index, l_message_size, l_fragment_size: NATURAL
 		do
-			fragment := false
-			message_size := message.count.as_natural_32
-			if message_size > internal_default_size then
+			l_fragment := false
+			l_message_size := a_message.count.as_natural_32
+			if l_message_size > internal_default_size then
 				create data.make (internal_max_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			end
 			from
-				index := 1
+				l_index := 1
 			until
-				index > message.count.as_natural_32
+				l_index > a_message.count.as_natural_32
 			loop
-				fragment := (message.count.as_natural_32 - index) > internal_max_size
-				fragment_size := internal_max_size.min (message.count.as_natural_32-index+1)
+				l_fragment := (a_message.count.as_natural_32 - l_index) > internal_max_size
+				l_fragment_size := internal_max_size.min (a_message.count.as_natural_32-l_index+1)
 
-				write_message_to_data (data, message, index, index + fragment_size, fragment)
-				app_socket.put_managed_pointer (data, 0, fragment_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
-				index := index + fragment_size
+				write_message_to_data (data, a_message, l_index, l_index + l_fragment_size, l_fragment)
+				a_http_socket.put_managed_pointer (data, 0, l_fragment_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
+				l_index := l_index + l_fragment_size
 			end
 		end
+
+
 
 	write_message_to_data (d: MANAGED_POINTER;
 						   message: STRING;

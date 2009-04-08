@@ -12,6 +12,7 @@ class
 
 inherit
 	THREAD
+	XU_DEBUG_OUTPUTTER
 
 create make
 
@@ -22,7 +23,7 @@ feature -- Initialization
 		do
 			webapp_handler := a_webapp_handler
             create socket.make_server_by_port (default_http_server_port)
-            create thread_pool.make (max_thread_number, agent data_spawner)
+            create thread_pool.make (max_thread_number, agent request_handler_spawner)
             stop := False
 		ensure
 			webapp_handler_set: a_webapp_handler = webapp_handler
@@ -39,9 +40,9 @@ feature -- Inherited Features
             	stop
             loop
                 socket.accept
-                print ("Connection to http accepted.%N")
-	            if attached {NETWORK_STREAM_SOCKET} socket.accepted as thread_socket then
-	            	thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_socket, webapp_handler))
+                dprint ("Connection to http accepted",1)
+	            if attached {NETWORK_STREAM_SOCKET} socket.accepted as thread_http_socket then
+	            	thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 				end
             end
             socket.cleanup
@@ -82,7 +83,7 @@ feature -- Constants
 
 feature -- Status setting
 
-	do_stop
+	shutdown
 			-- Stops the thread
 		do
 			stop := True
@@ -96,7 +97,7 @@ feature -- Status setting
 
 feature {POOLED_THREAD} -- Implementation
 
-	data_spawner: XS_REQUEST_HANDLER
+	request_handler_spawner: XS_REQUEST_HANDLER
 			-- Instantiates a new {XS_REQUEST_HANDLER}.
 			-- Used for the thread_manager.
 		do

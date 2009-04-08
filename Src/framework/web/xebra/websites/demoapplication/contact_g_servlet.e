@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	CONTACT_SERVLET
+	CONTACT_G_SERVLET
 
 inherit
 	XWA_STATELESS_SERVLET
@@ -35,9 +35,11 @@ feature-- Implementation
 
 	handle_request (request: XH_REQUEST; response: XH_RESPONSE)
 		do
+				-- row: 1 column: 1 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
 
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
 <html>
 <head>
@@ -50,7 +52,7 @@ feature-- Implementation
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table width="1100" height="499" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+<table width="1100" height="499" border="0" cellpadding="0" cellspacing="0" id="Table_01">
 <tr>
 		<td>
 			<img src="images/template_01.gif" width="20" height="46" alt=""></img></td>
@@ -62,7 +64,7 @@ feature-- Implementation
 			<img src="images/template_04.gif" width="862" height="46" alt=""></img></td>
 		<td>
 			<img src="images/template_05.gif" width="20" height="46" alt=""></img></td>
-	</tr>
+  </tr>
 	<tr>
 		<td>
 			<img src="images/template_06.gif" width="20" height="28" alt=""></img></td>
@@ -74,24 +76,36 @@ feature-- Implementation
         
         
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/contact.xeb
 			if controller.authenticated then
-			response.append (controller.username.out)
+				-- row: 35 column: 29 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
-<a href="logout.xeb">Logout</a>
+
+       Welcome 
+]")
+				-- row: 35 column: 29 path: ../../websites/demoapplication/contact.xeb
+			response.append(controller.username.out)
+				-- row: 36 column: 17 path: ../../websites/demoapplication/contact.xeb
+			response.append("[
+, <a href="logout.xeb">Logout</a>
         
 ]")
 			end
+				-- row: 37 column: 16 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
 
         
 ]")
+				-- row: 37 column: 16 path: ../../websites/demoapplication/contact.xeb
 			if controller.not_authenticated then
+				-- row: 39 column: 17 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
 
        <a href="login.xeb">Login</a>
        
 ]")
 			end
+				-- row: 84 column: 28 path: ../../websites/demoapplication/contact.xeb
 			response.append("[
 </div></td>
 <td>
@@ -140,6 +154,18 @@ feature-- Implementation
 </body>
 </html>
 ]")
+		end
+
+	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
 		end
 
 note

@@ -12,9 +12,16 @@ note
 deferred class
 	XWA_SERVER_CONN_HANDLER
 
+inherit
+	THREAD
+	XU_DEBUG_OUTPUTTER
+	XU_ERROR_OUTPUTTER
+
 feature -- Constants
 
-	Server_port: INTEGER = 3491
+	Default_server_port: INTEGER = 55001
+
+	Default_server_host: STRING = "localhost"
 
 	Max_queue: INTEGER = 5
 
@@ -22,7 +29,15 @@ feature -- Constants
 		-- The session manager for a wep app. Has to be
 		-- created before threads are spawned
 
+feature -- Protocol Constants
+
+	Key_register: STRING = "#REG#"
+	Key_register_ack: STRING = "#RACK#"
+
 feature -- Access
+
+	socket: XU_THREAD_NETWORK_STREAM_SOCKET
+			-- The socket to the xebra server
 
 	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
 			-- A thread pool for the incoming requests from the xebra server
@@ -31,62 +46,110 @@ feature -- Access
 			-- All the servlets which do not need a state
 			-- Page id points to the thread pool of servlets
 
-	session_map: TABLE [XH_SESSION, STRING]
-			-- A table which maps a session id on a session
+	stop: BOOLEAN
+			-- Used to stop the thread
+
+	name: STRING
+			-- The name of the web app
+
 
 
 feature -- Implementation
 
-	base_make
-			-- Initialization of classes
+	base_make (a_name: STRING)
+			-- Initialization of classes.
 		do
+			name := a_name
 			create session_manager.make
 			create request_pool.make  (10, agent servlet_handler_spawner)
-			create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)
 			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
+			create socket.make_client_by_port (Default_server_port, Default_server_host)
+			stop := False
+		ensure
+			name_set: a_name = name
 		end
 
+	execute
+			-- Registers to server and waits for requests.
+		do
+			if register then
+				run
+			else
+				eprint ("Failed to register.")
+			end
+		end
+
+	register: BOOLEAN
+			-- Register with the xebra server.
+		do
+			Result := False
+
+			dprint ("Connecting to Xebra Server...",1)
+			socket.connect
+			if socket.is_connected then
+				dprint ("Connected.",1)
+
+				dprint ("Sending registration...",1)
+				socket.independent_store (Key_register + name)
+
+				dprint ("Waiting for registration confirmation...",1)
+				if attached {STRING} socket.retrieved as l_buf then
+					if l_buf.is_equal (Key_register_ack) then
+						dprint ("Registered.",1)
+						Result := True
+					else
+						eprint ("No register confirmation was received.")
+					end
+				else
+					eprint ("Not validly retrieved.")
+				end
+			else
+				eprint ("Could not connect!")
+			end
+		end
 	run
-			-- Starts the web application.
-            -- Accept communication with client and exchange messages.
-        local
-            server_socket: NETWORK_STREAM_SOCKET
+            -- Waits for incomming requests from the xebra server
         do
-            create server_socket.make_server_by_port (Server_port)
             from
-                server_socket.listen (Max_queue)
             until
-                false
+                stop
             loop
-                process_request (server_socket) -- See below
+                process_request
             end
-            server_socket.cleanup
         end
 
 	servlet_handler_spawner: XWA_REQUEST_HANDLER
-			-- Spawns {SERVLET_HANDLER}s for the `request_pool'
+			-- Spawns {SERVLET_HANDLER}s for the `request_pool'.
 		do
 			create Result.make
 		end
 
-    process_request (server_socket: NETWORK_STREAM_SOCKET)
-            -- Receive a request, handle it, and send it back
-        local
-        	l_request_message: detachable STRING
+    process_request
+              -- Receive a request, handle it in new thread, and send it back.
         do
-            server_socket.accept
-            if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as thread_socket then
-	            --if attached {STRING} thread_socket.retrieved as l_request_message then
-	            l_request_message ?= thread_socket.retrieved
-	            if l_request_message /= Void then
-	               	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, thread_socket, Current))
+            if socket.is_connected then
+	            if attached {STRING} socket.retrieved as l_request_message then
+	            	dprint ("Incoming request, spawning new thread...",1)
+	 	        	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
 	            else
-					thread_socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
-	       			thread_socket.close
+					socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
 	            end
+	        else
+	        	eprint ("Connection lost.")
 	        end
         end
 
+feature -- Status setting
+
+	shutdown
+			-- Stops the thread and closes connections
+		do
+			stop := True
+			socket.cleanup
+			check
+        		socket.is_closed
+        	end
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

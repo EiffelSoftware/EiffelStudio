@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,26 +8,26 @@ note
 	revision: "$Revision$"
 
 class
-	DEMOAPPLICATION_SERVER_CONN_HANDLER
+	DEMOAPPLICATION_G_APPLICATION
 
 inherit
-	XWA_SERVER_CONN_HANDLER
+	XWA_APPLICATION
 
 create
 	make
 
-feature-- Access
-
-feature-- Implementation
+feature --
 
 	make
+			-- Initialize current
 		do
+			create {DEMOAPPLICATION_G_SERVER_CONN_HANDLER} server_connection_handler.make (name)
 			base_make
-			stateless_servlets.put (create {LOGOUT_SERVLET}.make , "/demoapplication/logout.xeb")
-			stateless_servlets.put (create {CONTACT_SERVLET}.make , "/demoapplication/contact.xeb")
-			stateless_servlets.put (create {LOGIN_SERVLET}.make , "/demoapplication/login.xeb")
-			stateless_servlets.put (create {HOME_SERVLET}.make , "/demoapplication/home.xeb")
-			stateless_servlets.put (create {RESERVATIONS_SERVLET}.make , "/demoapplication/reservations.xeb")
+		end
+
+	name: STRING
+		do
+			Result := "demoapplication"
 		end
 
 note

@@ -9,6 +9,9 @@ note
 class
 	XWA_REQUEST_HANDLER
 
+inherit
+	XU_DEBUG_OUTPUTTER
+
 create
 	make
 
@@ -24,7 +27,7 @@ feature -- Access
 feature -- Processing
 
 process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
-					 a_socket: NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
+					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		local
@@ -34,6 +37,7 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 			l_request_factory: XU_REQUEST_FACTORY
 
 		do
+			dprint ("I'm a new thread",2)
 			create l_request_factory.make
 			l_new_request := l_request_factory.get_request (a_request_message)
 			create l_response.make_empty
@@ -44,19 +48,20 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 				l_new_request = Void
 			loop
 				create l_response.make_empty
+				dprint ("Searching matching servlet...",2)
 				l_servlet := find_servlet (l_new_request, a_request_handler)
 				if attached l_servlet then
+					dprint ("Handing over to matching servlet...",2)
 					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
+					dprint ("No matching servlet found.",2)
 					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
 					l_new_request := Void
 				end
 			end
-
-
+			dprint ("Sending back response...", 2)
 		   	a_socket.independent_store (l_response)
-	       	a_socket.close
 		end
 
 feature {NONE} -- Internal Processing
@@ -69,9 +74,6 @@ feature {NONE} -- Internal Processing
 				create Result.make_goto_request (a_response.goto_request, a_previous_request)
 			 end
 		end
-
-
-
 
 	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_SERVER_CONN_HANDLER): detachable XWA_SERVLET
 			-- Searches for the servlet requested by `request'

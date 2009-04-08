@@ -254,7 +254,7 @@ static int xebra_handler (request_rec* r)
 	if (p == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
 		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-		PRINT_ERROR ("Cannot connect to XebraServer. See apache error log.");
+		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
 		return OK;
 	}
 

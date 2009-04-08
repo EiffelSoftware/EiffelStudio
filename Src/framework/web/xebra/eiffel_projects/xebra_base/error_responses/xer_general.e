@@ -11,7 +11,7 @@ class
 	XER_GENERAL
 
 inherit
-	X_ERROR_RESPONSE
+	XER_SERVER
 
 create
 	make
@@ -23,5 +23,6 @@ feature -- Access
 		do
 			Result := arg
 		end
+
 
 end

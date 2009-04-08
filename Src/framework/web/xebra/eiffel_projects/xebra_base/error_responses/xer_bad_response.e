@@ -11,7 +11,7 @@ class
 	XER_BAD_RESPONSE
 
 inherit
-	X_ERROR_RESPONSE
+	XER_SERVER
 
 create
 	make

@@ -11,7 +11,7 @@ class
 	XER_CANNOT_CONNECT
 
 inherit
-	X_ERROR_RESPONSE
+	X_ER_SERVER
 
 create
 	make

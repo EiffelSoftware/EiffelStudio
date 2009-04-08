@@ -7,21 +7,17 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XER_CANNOT_DECODE
-
-inherit
+deferred class
 	XER_SERVER
 
-create
-	make
+inherit
+	X_ERROR_RESPONSE
 
 feature -- Access
 
-	message: STRING
-			-- <Precursor>
+	producer: STRING
+			-- <Presursor>
 		do
-			Result :=  "Cannot decode message from http server."
+			Result := "Xebra Server "
 		end
-
 end

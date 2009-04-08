@@ -25,11 +25,11 @@ feature {NONE} -- Initialization
 
 			--fake reservations
 			create reservations.make (10)
-			reservations.extend (create {MY_RESERVATION}.make ("1", "Fabio Zuend", "23/11/2009", "3", "blablablablablabla description"))
-			reservations.extend (create {MY_RESERVATION}.make ("2", "Fabio Zuend", "21/11/2009", "2", "blablablablablabla description"))
-			reservations.extend (create {MY_RESERVATION}.make ("3", "Fabio Zuend", "24/11/2009", "33", "blablablablablabla description"))
-			reservations.extend (create {MY_RESERVATION}.make ("4", "Fabio Zuend", "25/11/2009", "5", "blablablablablabla description"))
-			reservations.extend (create {MY_RESERVATION}.make ("5", "Fabio Zuend", "26/11/2009", "1", "blablablablablabla description"))
+			reservations.extend (create {RESERVATION}.make ("1", "Fabio Zuend", "23/11/2009", "3", "blablablablablabla description"))
+			reservations.extend (create {RESERVATION}.make ("2", "Fabio Zuend", "21/11/2009", "2", "blablablablablabla description"))
+			reservations.extend (create {RESERVATION}.make ("3", "Fabio Zuend", "24/11/2009", "33", "blablablablablabla description"))
+			reservations.extend (create {RESERVATION}.make ("4", "Fabio Zuend", "25/11/2009", "5", "blablablablablabla description"))
+			reservations.extend (create {RESERVATION}.make ("5", "Fabio Zuend", "26/11/2009", "1", "blablablablablabla description"))
 
 
 			--fake users
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	reservations: ARRAYED_LIST [MY_RESERVATION]
+	reservations: ARRAYED_LIST [RESERVATION]
 
 	users: HASH_TABLE [USER, STRING]
 
@@ -230,7 +230,7 @@ feature -- Basic Operations
 --						end
 --					end
 
-					reservations.extend (create {MY_RESERVATION}.make (id, name, date, persons, description))
+					reservations.extend (create {RESERVATION}.make (id, name, date, persons, description))
 
 
 				end

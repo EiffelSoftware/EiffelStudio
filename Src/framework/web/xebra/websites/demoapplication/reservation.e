@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	MY_RESERVATION
+	RESERVATION
 
 create
 	make

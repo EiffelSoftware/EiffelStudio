@@ -1,6 +1,9 @@
 class
     XS_MAIN_SERVER
 
+inherit
+	XU_DEBUG_OUTPUTTER
+
 create
     make
 
@@ -11,28 +14,29 @@ feature -- Initialization
 		do
 			create webapp_handler.make
 
+			print ("%N%N%N")
 			print ("Starting Xebra Server...%N")
-			print ("--Launching HTTP Connection Server...%N")
+			dprint ("Launching HTTP Connection Server...",1)
 			create http_connection_server.make (webapp_handler)
 			http_connection_server.launch
-			print ("--Launching Web App Connection Server...%N")
+			dprint ("Launching Web App Connection Server...",1)
 			create app_connection_server.make (webapp_handler)
 			app_connection_server.launch
 			print ("Xebra Server ready to rock...%N")
 
-			print ("(enter 's' to shut down)%N")
+			print ("(enter 'x' to shut down)%N")
 			from
 				io.read_character
 			until
-				io.last_character.is_equal ('s')
+				io.last_character.is_equal ('x')
 			loop
 				io.read_character
 			end
 
 			print ("Shutting down...%N")
 			webapp_handler.close_all
-			http_connection_server.do_stop
-			app_connection_server.do_stop
+			http_connection_server.shutdown
+			app_connection_server.shutdown
 			print ("Bye!%N")
 		end
 

@@ -8,6 +8,9 @@ note
 deferred class
 	XWA_SERVLET
 
+inherit
+	XU_DEBUG_OUTPUTTER
+
 feature {XWA_SERVLET} -- Initialization
 
 	base_make
@@ -27,6 +30,7 @@ feature -- Basic Operations
 	pre_handle_request (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
 		do
+			dprint ("Processing request...",3)
 			current_session := a_session_manager.get_current_session (a_request, a_response)
 			internal_controller.set_current_request (a_request)
 			internal_controller.set_current_session (current_session)

@@ -40,8 +40,9 @@
 #include "eif_config.h"
 
 #ifdef EIF_VMS		/* VMS platform specific definitions; must precede any system or library includes */
-#define __NEW_STARLET		/* define prototypes for VMS system (sys$) and library (lib$) functions */
-#define _POSIX_EXIT		/* use POSIX-1 semantics for exit() */
+#define __NEW_STARLET 1		/* define prototypes for VMS system (sys$) and library (lib$) functions */
+#define _POSIX_EXIT 1		/* use POSIX-1 semantics for exit() */
+#define _SOCKADDR_LEN 1		/* enables 4.4BSD- and and XPG4 V2-compatible socket interfaces */
 //#define _POSIX_C_SOURCE 2 
 //#define _XOPEN_SOURCE 
 //#define _XOPEN_SOURCE_EXTENDED 
@@ -152,12 +153,17 @@ typedef uint64_t rt_uint_ptr;
 typedef int32_t  rt_int_ptr;
 typedef uint32_t rt_uint_ptr;
 #endif
-#else /* VMSVAX always 32 bit; VMSIA64 always 64 bit? */
+#elif defined(__ia64) /* VMSIA64 always 64 bit? */
+typedef	int64_t	 rt_int_ptr;
+typedef uint64_t rt_uint_ptr;
+#elif defined(__VAXC) || defined(__vaxc)
 typedef intptr_t    rt_int_ptr;
 typedef uintptr_t   rt_uint_ptr;
+#else /* unknown VMS platform? */
+#error "unknown VMS platform"
 #endif
-#else
 
+#else
 #include <stdint.h>
 #endif
 

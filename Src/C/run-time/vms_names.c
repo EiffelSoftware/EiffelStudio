@@ -39,7 +39,11 @@
 /* $Id$ */
 
 #ifdef __VMS  /* scope: to end of file */
-#pragma module VMS_NAMES "VMS_Eiffel_62_xxx/32"	/* force uppercase module name, ident */
+#if __INITIAL_POINTER_SIZE > 32
+#pragma module VMS_NAMES "VMS Eiffel 6.3.76070/64"	/* force uppercase module name, ident */
+#else
+#pragma module VMS_NAMES "VMS Eiffel 6.3.76070/32"	/* force uppercase module name, ident */
+#endif
 
 
 /* Native code on VMS defaults to coercing all external names to UPPERCASE.	*/

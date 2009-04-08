@@ -405,13 +405,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create l_cmd.make
 			l_string := develop_window.Interface_names.m_search
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("show_search_tool")
+			l_cmd.enable_sensitive
 			l_cmd.set_referred_shortcut (l_shortcut)
 			l_cmd.set_menu_name (l_string)
-			l_cmd.add_agent (agent develop_window.search)
+			l_cmd.add_agent (agent editor_search)
 			l_command_menu_item := l_cmd.new_menu_item
-			l_command_controller.add_edition_command (l_cmd)
 			auto_recycle (l_command_menu_item)
-			develop_window.commands.editor_commands.extend (l_cmd)
+			develop_window.commands.toolbarable_commands.extend (l_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Go to
@@ -432,13 +432,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create l_cmd.make
 			l_string := develop_window.Interface_names.m_replace
 			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("show_search_and_replace_panel")
+			l_cmd.enable_sensitive
 			l_cmd.set_menu_name (l_string)
 			l_cmd.add_agent (agent editor_replace)
-			l_cmd.set_needs_editable (True)
 			l_cmd.set_referred_shortcut (l_shortcut)
 			l_command_menu_item := l_cmd.new_menu_item
-			l_command_controller.add_edition_command (l_cmd)
-			develop_window.commands.editor_commands.extend (l_cmd)
+			develop_window.commands.toolbarable_commands.extend (l_cmd)
 			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
@@ -1322,11 +1321,33 @@ feature {NONE} -- Agents for editor
 			Result := develop_window.editors_manager.current_editor
 		end
 
+	editor_search
+			-- Search some text in the focused editor.
+		local
+			l_tool: ES_TOOL [EB_TOOL]
+			l_cmd: ES_SHOW_TOOL_COMMAND
+		do
+			if current_editor /= Void then
+				current_editor.search
+			else
+				l_tool := develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
+				l_cmd := develop_window.commands.show_shell_tool_commands.item (l_tool)
+				l_cmd.execute
+			end
+		end
+
 	editor_replace
 			-- Replace in current editor.
+		local
+			l_tool: ES_TOOL [EB_TOOL]
+			l_cmd: ES_SHOW_TOOL_COMMAND
 		do
 			if current_editor /= Void then
 				current_editor.replace
+			else
+				l_tool := develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
+				l_cmd := develop_window.commands.show_shell_tool_commands.item (l_tool)
+				l_cmd.execute
 			end
 		end
 

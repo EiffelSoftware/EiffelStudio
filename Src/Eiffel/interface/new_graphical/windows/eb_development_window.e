@@ -1991,17 +1991,6 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	search
-			-- Search some text in the focused editor.
-		local
-			cv_ced: EB_CLICKABLE_EDITOR
-		do
-			cv_ced ?= editors_manager.current_editor
-			if cv_ced /= Void then
-				cv_ced.search
-			end
-		end
-
 	goto
 			-- Display a dialog to select a line to go to in the editor.
 		local

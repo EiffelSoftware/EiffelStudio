@@ -162,7 +162,6 @@ feature {NONE} -- Initialization
 			report_tool.expand_all_button.select_actions.extend (agent expand_all)
 			report_tool.collapse_all_button.select_actions.extend (agent collapse_all)
 
-			create loaded_actions
 			create show_actions
 			create bottom_reached_actions
 			create first_result_reached_actions
@@ -322,8 +321,8 @@ feature -- Action
 				dispatch_search
 				select_and_show
 			else
-				extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
-				extend_and_run_loaded_action (agent go_to_next_found_select_and_show)
+				go_to_next_found_perform (reverse)
+				go_to_next_found_select_and_show
 			end
 		end
 
@@ -384,14 +383,14 @@ feature -- Action
 							if l_check then
 								check_class_file_and_do (agent replace_current_perform)
 							else
-								extend_and_run_loaded_action (agent replace_current_perform)
+								replace_current_perform
 							end
 							l_replaced := True
-							extend_and_run_loaded_action (agent go_to_next_found)
-							extend_and_run_loaded_action (agent search_report_grid.redraw_grid)
-							extend_and_run_loaded_action (agent select_current_row)
-							extend_and_run_loaded_action (agent force_not_changed)
-							extend_and_run_loaded_action (agent put_replace_report (False))
+							go_to_next_found
+							search_report_grid.redraw_grid
+							select_current_row
+							force_not_changed
+							put_replace_report (False)
 						end
 					end
 				else
@@ -399,7 +398,7 @@ feature -- Action
 				end
 			end
 			if not l_replaced then
-				extend_and_run_loaded_action (agent put_replace_report (True))
+				put_replace_report (True)
 			end
 		end
 
@@ -418,12 +417,12 @@ feature -- Action
 			if not hindered then
 				if not is_current_editor_searched then
 					create l_warning.make_standard_with_cancel (warning_messages.w_replace_all, interface_names.l_discard_replace_all_warning_dialog, preferences.dialog_data.confirm_replace_all_string)
-					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent extend_and_run_loaded_action (agent replace_all))
+					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent replace_all)
 					l_warning.set_button_text (l_warning.dialog_buttons.ok_button, interface_names.b_yes)
 					l_warning.set_button_text (l_warning.dialog_buttons.cancel_button, interface_names.b_no)
 					l_warning.show_on_active_window
 				else
-					extend_and_run_loaded_action (agent replace_all)
+					replace_all
 				end
 			end
 		end
@@ -685,10 +684,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			-- Text observer, runs when text is fully loaded.
 		do
 			Precursor {TEXT_OBSERVER}
-			if not loaded_actions.is_empty then
-				loaded_actions.call (Void)
-				loaded_actions.wipe_out
-			end
 			if is_current_editor_searched then
 				force_new_search
 			end
@@ -1050,7 +1045,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			-- Trigger keyword field color after incremental search.
 			-- Highlight background if no result.
 		do
-			extend_and_run_loaded_action (agent trigger_keyword_field_color_perform (a_keyword_field))
+			trigger_keyword_field_color_perform (a_keyword_field)
 		end
 
 	trigger_keyword_field_color_perform (a_keyword_field: EV_COMBO_BOX)
@@ -1217,7 +1212,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				multi_search_performer.do_search
 				update_combo_box_specific (keyword_field, currently_searched)
 				after_search
-				extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
+				go_to_next_found_perform (reverse)
 				update_combo_box_specific (keyword_field, currently_searched)
 			end
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
@@ -1268,7 +1263,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					multi_search_performer.do_search
 					update_combo_box_specific (keyword_field, currently_searched)
 					after_search
-					extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
+					go_to_next_found_perform (reverse)
 				end
 			end
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
@@ -1296,7 +1291,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			update_combo_box_specific (keyword_field, currently_searched)
 			after_search
 			old_editor := Void
-			extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
+			go_to_next_found_perform (reverse)
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
@@ -1342,7 +1337,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				end
 				trigger_keyword_field_color (keyword_field)
 				changed_classes.wipe_out
-				extend_and_run_loaded_action (agent force_not_changed)
+				force_not_changed
 			end
 		end
 
@@ -1659,7 +1654,6 @@ feature {NONE} -- Recycle
 		do
 			bottom_reached_actions.wipe_out
 			first_result_reached_actions.wipe_out
-			loaded_actions.wipe_out
 			remove_observer (Current)
 			Precursor {ES_MULTI_SEARCH_TOOL_PANEL_IMP}
 		end
@@ -1807,20 +1801,18 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				l_class_i ?= l_item.data
 				if l_class_i /= Void then
 					l_new_stone := stone_from_class_i (l_class_i)
-					if develop_window.class_name /= Void and then not develop_window.class_name.is_equal (l_item.class_name) then
+					if attached develop_window.class_name as l_class_name implies (not l_class_name.is_equal (l_item.class_name)) then
 						if l_class_i /= Void then
 							develop_window.set_stone (l_new_stone)
 							if l_stone /= develop_window.stone then
 								is_text_changed_in_editor := False
 							else
-								loaded_actions.wipe_out
 								check_class_succeed := False
 							end
 						end
 					elseif not is_current_editor_searched then
 						develop_window.set_stone (l_new_stone)
 						if l_stone = develop_window.stone then
-							loaded_actions.wipe_out
 							check_class_succeed := False
 						end
 					end
@@ -1829,8 +1821,12 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 					l_stone /= develop_window.stone and then
 					is_editor_ready
 				then
+					if not editor.text_is_fully_loaded then
+						editor.flush
+					end
 					editor.set_focus
 				end
+
 			end
 		end
 
@@ -1855,47 +1851,14 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	extend_and_run_loaded_action (a_pro: PROCEDURE [ANY, TUPLE])
-			-- Insert `a_pro' to loaded_actions and run all actions in it.
-		local
-			l_pro: PROCEDURE [ANY, TUPLE]
-			loop_end : BOOLEAN
-		do
-			if check_class_succeed then
-				loaded_actions.extend (a_pro)
-				block_actions
-				blocking_actions_times := blocking_actions_times + 1
-				from
-					loaded_actions.start
-				until
-					loaded_actions.count = 0 or loop_end
-				loop
-					if is_editor_ready and then (editor.text_is_fully_loaded or editor.is_empty) then
-						l_pro := loaded_actions.item
-						loaded_actions.remove
-						l_pro.call (Void)
-					else
-						loop_end := True
-					end
-				end
-				if blocking_actions_times <= 1 then
-					resume_actions
-					blocking_actions_times := 0
-				else
-					blocking_actions_times := blocking_actions_times - 1
-				end
-			end
-		end
-
 	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE])
 			-- Check class before insert `a_pro' to loaded_actions and run all actions in it.
+		require
+			a_pro_not_void: a_pro /= Void
 		do
-			extend_and_run_loaded_action (agent check_class_file)
-			extend_and_run_loaded_action (a_pro)
+			check_class_file
+			a_pro.call (Void)
 		end
-
-	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions that are invoked sequently when text is fully loaded
 
 	stone_from_class_i (a_class_i: CLASS_I): STONE
 			-- Make a stone from a_class_i.
@@ -1966,7 +1929,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			-- Select in the editor
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-				extend_and_run_loaded_action (agent select_in_current_editor_perform)
+				select_in_current_editor_perform
 			end
 		end
 
@@ -2077,55 +2040,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		ensure
 			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)
 		end
-
-	block_actions
-			-- Block actions.
-		do
-			keyword_field.change_actions.block
-			replace_combo_box.key_press_actions.block
-			case_sensitive_button.key_press_actions.block
-			whole_word_button.key_press_actions.block
-			use_regular_expression_button.key_press_actions.block
-			search_backward_button.key_press_actions.block
-			current_editor_button.key_press_actions.block
-			whole_project_button.key_press_actions.block
-			custom_button.key_press_actions.block
-			search_subcluster_button.key_press_actions.block
-			search_compiled_class_button.key_press_actions.block
-			scope_list.key_press_actions.block
-			search_button.select_actions.block
-			replace_button.select_actions.block
-			replace_all_click_button.select_actions.block
-			search_button.key_press_actions.block
-			replace_button.key_press_actions.block
-			replace_all_click_button.key_press_actions.block
-		end
-
-	resume_actions
-			-- Resume actions.
-		do
-			keyword_field.change_actions.resume
-			replace_combo_box.key_press_actions.resume
-			case_sensitive_button.key_press_actions.resume
-			whole_word_button.key_press_actions.resume
-			use_regular_expression_button.key_press_actions.resume
-			search_backward_button.key_press_actions.resume
-			current_editor_button.key_press_actions.resume
-			whole_project_button.key_press_actions.resume
-			custom_button.key_press_actions.resume
-			search_subcluster_button.key_press_actions.resume
-			search_compiled_class_button.key_press_actions.resume
-			scope_list.key_press_actions.resume
-			search_button.select_actions.resume
-			replace_button.select_actions.resume
-			replace_all_click_button.select_actions.resume
-			search_button.key_press_actions.resume
-			replace_button.key_press_actions.resume
-			replace_all_click_button.key_press_actions.resume
-		end
-
-	blocking_actions_times: INTEGER;
-			-- Blocking actions?
 
 	no_result_bgcolor: EV_COLOR
 			-- Background color when no result for incremental search.

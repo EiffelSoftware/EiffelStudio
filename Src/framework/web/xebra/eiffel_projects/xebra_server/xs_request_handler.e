@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	XS_MOD_HANDLER
+	XS_REQUEST_HANDLER
 
 create
 	make
@@ -22,7 +22,6 @@ feature --Initialization
 			internal_default_size := message_default_bound
 			create data.make (message_default_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			create encoder.make
-			create webapp_handler.make
 		end
 
 feature {NONE} -- Access
@@ -39,14 +38,12 @@ feature {NONE} -- Access
 	encoder: XS_ENCODING_FACILITIES
 			-- Encodes and decodes incoming and outgoing messages
 
-	webapp_handler: XS_WEBAPP_HANDLER
-			-- Handles connection to webapps		
 
 feature --Execution
 
-	do_execute (socket: NETWORK_STREAM_SOCKET)
+	do_execute (socket: NETWORK_STREAM_SOCKET; webapp_handler: XS_WEBAPP_HANDLER)
 			-- <Predecessor>
-			-- Waits for one incoming module request and delegates it to the appropriate XebraApp
+			-- Waits for one incoming module request and
 		require
 			socket_open: not socket.is_closed
 		local
@@ -85,8 +82,6 @@ feature --Execution
 		end
 
 feature {NONE} -- Implementation
-
-
 
 	send_message_to_http (message: STRING; app_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.

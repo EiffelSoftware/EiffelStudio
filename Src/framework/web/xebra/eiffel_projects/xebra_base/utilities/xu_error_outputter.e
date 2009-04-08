@@ -7,21 +7,16 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XER_CANNOT_DECODE
+deferred class
+	XU_ERROR_OUTPUTTER
 
-inherit
-	XER_SERVER
 
-create
-	make
+feature
 
-feature -- Access
-
-	message: STRING
-			-- <Precursor>
+	eprint (a_msg: STRING; )
+			-- Prints an error message
 		do
-			Result :=  "Cannot decode message from http server."
+			print ("[ERROR] " + generating_type + ": " + a_msg + "%N")
 		end
 
 end

@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	LOGOUT_SERVLET
+	LOGOUT_G_SERVLET
 
 inherit
 	XWA_STATELESS_SERVLET
@@ -35,9 +35,11 @@ feature-- Implementation
 
 	handle_request (request: XH_REQUEST; response: XH_RESPONSE)
 		do
+				-- row: 1 column: 1 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 <html>
 <head>
@@ -74,28 +76,36 @@ feature-- Implementation
         
         
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/logout.xeb
 			if controller.authenticated then
+				-- row: 35 column: 29 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 
        Welcome 
 ]")
-			response.append (controller.username.out)
+				-- row: 35 column: 29 path: ../../websites/demoapplication/logout.xeb
+			response.append(controller.username.out)
+				-- row: 36 column: 17 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 , <a href="logout.xeb">Logout</a>
         
 ]")
 			end
+				-- row: 37 column: 16 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 
         
 ]")
+				-- row: 37 column: 16 path: ../../websites/demoapplication/logout.xeb
 			if controller.not_authenticated then
+				-- row: 39 column: 17 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 
        <a href="login.xeb">Login</a>
        
 ]")
 			end
+				-- row: 66 column: 18 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 </div></td>
 <td>
@@ -126,7 +136,9 @@ feature-- Implementation
         
         
 ]")
+				-- row: 66 column: 18 path: ../../websites/demoapplication/logout.xeb
 			controller.logout
+				-- row: 88 column: 28 path: ../../websites/demoapplication/logout.xeb
 			response.append("[
 
         You have successfully been logged out.
@@ -152,6 +164,18 @@ feature-- Implementation
 </body>
 </html>
 ]")
+		end
+
+	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
 		end
 
 note

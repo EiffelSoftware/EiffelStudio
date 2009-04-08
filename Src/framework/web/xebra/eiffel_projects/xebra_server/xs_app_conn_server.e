@@ -12,6 +12,8 @@ class
 
 inherit
 	THREAD
+	XU_DEBUG_OUTPUTTER
+	XU_ERROR_OUTPUTTER
 
 create make
 
@@ -31,8 +33,6 @@ feature -- Inherited Features
 
 	execute
 			-- <Precursor>
-		local
-			l_buf: STRING
 		do
         	from
                 socket.listen (max_tcp_clients.as_integer_32)
@@ -40,17 +40,22 @@ feature -- Inherited Features
             	stop
             loop
                 socket.accept
-                print ("Connection to app accepted.%N")
+                dprint ("Incoming registration...",1)
 				  if attached {NETWORK_STREAM_SOCKET} socket.accepted as l_socket then
-
 				  	-- Register application to webapp_handler
-				  l_socket.read_line_thread_aware
-           		  l_buf := l_socket.last_string
-				  if l_buf.has_substring (Key_register) then
-				  	l_buf.remove_head (l_buf.substring_index (Key_register, 1) + Key_register.count)
-				  	webapp_handler.register (l_buf, l_socket)
-				  	l_socket.independent_store (Key_register_ack)
-				  end
+					  if attached {STRING} l_socket.retrieved as l_buf then
+						 if l_buf.has_substring (Key_register) then
+						  	l_buf.remove_head (l_buf.substring_index (Key_register, 1) + Key_register.count-1)
+						  	webapp_handler.register (l_buf, l_socket)
+						  	l_socket.independent_store (Key_register_ack)
+						  	dprint ("New application registered '" + l_buf + "'.", 1)
+						  else
+						  	eprint ("Invalid registration, shutting down socket.")
+						  	l_socket.cleanup
+						  end
+					  else
+					  	 	eprint ("Not valid retrieved")
+					  end
 				end
             end
             socket.cleanup
@@ -80,12 +85,12 @@ feature -- Constants
 feature -- Protocol Constants
 
 	Key_register: STRING = "#REG#"
-	Key_register_ack: STRING = "#REGACK#"
+	Key_register_ack: STRING = "#RACK#"
 
 
 feature -- Status setting
 
-	do_stop
+	shutdown
 			-- Stops the thread
 		do
 			stop := True

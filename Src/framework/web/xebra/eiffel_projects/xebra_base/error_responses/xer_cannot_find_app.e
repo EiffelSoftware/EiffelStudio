@@ -11,7 +11,7 @@ class
 	XER_CANNOT_FIND_APP
 
 inherit
-	X_ERROR_RESPONSE
+	XER_SERVER
 
 create
 	make

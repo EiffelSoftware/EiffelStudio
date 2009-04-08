@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	RESERVATIONS_SERVLET
+	HOME_G_SERVLET
 
 inherit
 	XWA_STATELESS_SERVLET
@@ -34,12 +34,12 @@ feature-- Implementation
 		end
 
 	handle_request (request: XH_REQUEST; response: XH_RESPONSE)
-		local
-			reservation: MY_RESERVATION
 		do
+				-- row: 1 column: 1 path: ../../websites/demoapplication/home.xeb
 			response.append("[
 
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/home.xeb
 			response.append("[
 <html>
 <head>
@@ -48,12 +48,11 @@ feature-- Implementation
 
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
 
-
 <link href="style.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table width="1100" height="499" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
+<table width="1100" height="499" border="0" cellpadding="0" cellspacing="0" id="Table_01">
 <tr>
 		<td>
 			<img src="images/template_01.gif" width="20" height="46" alt=""></img></td>
@@ -65,7 +64,7 @@ feature-- Implementation
 			<img src="images/template_04.gif" width="862" height="46" alt=""></img></td>
 		<td>
 			<img src="images/template_05.gif" width="20" height="46" alt=""></img></td>
-	</tr>
+  </tr>
 	<tr>
 		<td>
 			<img src="images/template_06.gif" width="20" height="28" alt=""></img></td>
@@ -77,24 +76,36 @@ feature-- Implementation
         
         
 ]")
+				-- row: 34 column: 16 path: ../../websites/demoapplication/home.xeb
 			if controller.authenticated then
-			response.append (controller.username.out)
+				-- row: 35 column: 29 path: ../../websites/demoapplication/home.xeb
 			response.append("[
-<a href="logout.xeb">Logout</a>
+
+       Welcome 
+]")
+				-- row: 35 column: 29 path: ../../websites/demoapplication/home.xeb
+			response.append(controller.username.out)
+				-- row: 36 column: 17 path: ../../websites/demoapplication/home.xeb
+			response.append("[
+, <a href="logout.xeb">Logout</a>
         
 ]")
 			end
+				-- row: 37 column: 16 path: ../../websites/demoapplication/home.xeb
 			response.append("[
 
         
 ]")
+				-- row: 37 column: 16 path: ../../websites/demoapplication/home.xeb
 			if controller.not_authenticated then
+				-- row: 39 column: 17 path: ../../websites/demoapplication/home.xeb
 			response.append("[
 
        <a href="login.xeb">Login</a>
        
 ]")
 			end
+				-- row: 85 column: 28 path: ../../websites/demoapplication/home.xeb
 			response.append("[
 </div></td>
 <td>
@@ -122,68 +133,8 @@ feature-- Implementation
   <td background="images/template_18.gif">
 			<img src="images/template_18.gif" width="30" height="113" alt=""></img></td>
 		<td align="left" valign="top">
-		  <h2 class="style1">Reservations</h2>
-          
-]")
-			if controller.not_authenticated then
-			response.append("[
-
-			  <p>Please log in to see reservations.</p>
-          
-]")
-			end
-			response.append("[
-
-          
-]")
-			if controller.authenticated then
-			response.append("[
-
-              <table width="100%" border="0" cellpadding="0">
-                <tr bgcolor="#666666">
-                  <td><span class="style2">Name</span></td>
-                  <td class="style2">Date</td>
-                  <td class="style2">Persons</td>
-                </tr>
-                
-]")
-			from
-			controller.reservations.start
-			until
-			controller.reservations.after
-			loop
-			reservation := controller.reservations.item
-			response.append("[
-
-                <tr>
-                    <td>
-]")
-			response.append (reservation.name)
-			response.append("[
-</td>
-                    <td>
-]")
-			response.append (reservation.date)
-			response.append("[
-</td>
-                    <td>
-]")
-			response.append (reservation.persons)
-			response.append("[
-</td>
-                </tr>
-                
-]")
-			controller.reservations.forth
-			end
-			response.append("[
-
-              </table>
-           
-]")
-			end
-			response.append("[
-	
+		  <h2 class="style1">Home</h2>
+		  <p>Welcome to Xebra Demo Application!</p>
 		</td>
   <td></td>
   </tr>
@@ -204,6 +155,18 @@ feature-- Implementation
 </body>
 </html>
 ]")
+		end
+
+	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
+		end
+
+	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
+		do
 		end
 
 note

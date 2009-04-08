@@ -10,6 +10,9 @@ note
 class
 	XS_WEBAPP_HANDLER
 
+inherit
+	XU_DEBUG_OUTPUTTER
+
 
 create
 	make
@@ -20,24 +23,29 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create webapps.make (1)
+			create webapps_mutex.make
 	end
 
 feature -- Access
 
 	webapps: HASH_TABLE [NETWORK_SOCKET, STRING]
 
+	webapps_mutex: MUTEX
 
 feature -- Status Change
 
 	register (a_name: STRING; a_socket: NETWORK_SOCKET)
 			-- Registers a new webapp in webapps
 		do
+			webapps_mutex.lock
 			webapps.extend (a_socket, a_name)
+			webapps_mutex.unlock
 		end
 
 	close_all
 			-- Closes all connections to webapps
 		do
+			webapps_mutex.lock
 			from
 				webapps.start
 			until
@@ -46,18 +54,18 @@ feature -- Status Change
 				webapps.item_for_iteration.cleanup
 				webapps.forth
 			end
+			webapps_mutex.unlock
 		end
 
 feature -- Basic operations
 
-	forward_request_to_app (l_request_message: STRING; a_webapp_socket: NETWORK_STREAM_SOCKET): STRING
+	forward_request_to_app (l_request_message: STRING): STRING
 			--Sends a request to the correct webserver.
-		require
-			a_webapp_connected: not a_webapp_socket.is_closed
 		local
 			l_request_factory: XU_REQUEST_FACTORY
 			l_uri_webapp_name: STRING
 		do
+			webapps_mutex.lock
 			create Result.make_empty
 			create l_request_factory.make
 
@@ -69,21 +77,25 @@ feature -- Basic operations
 						-- Find correct webapp and conntect to it
 				if attached webapps[l_uri_webapp_name] as l_webapp_socket then
 
-		            if  l_webapp_socket.is_connected then
+--		            if  l_webapp_socket.is_connected then
+						dprint ("Forwarding request to '" + l_uri_webapp_name + "'", 2)
 			            l_webapp_socket.independent_store (l_request_message)
+			            dprint ("Waiting for response", 2)
 						if attached {XH_RESPONSE} l_webapp_socket.retrieved as l_response then
+							dprint ("Response retrieved", 2)
 			            	Result := l_response.render_to_string
 			            else
 			            	Result := (create {XER_BAD_RESPONSE}.make (l_uri_webapp_name)).render_to_response.render_to_string
 			            end
-			        else
-			        	Result := (create {XER_CANNOT_CONNECT}.make (l_uri_webapp_name)).render_to_response.render_to_string
-			        end
+--			        else
+--			        	Result := (create {XER_CANNOT_CONNECT}.make (l_uri_webapp_name)).render_to_response.render_to_string
+--			        end
 	            else
 					Result := (create {XER_CANNOT_FIND_APP}.make (l_uri_webapp_name)).render_to_response.render_to_string
 				end
             else
             	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response.render_to_string
             end
+            webapps_mutex.unlock
 		end
 end

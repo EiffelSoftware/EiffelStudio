@@ -140,7 +140,8 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 			-- Redraw grid according to search result and refresh summary label.
 		local
 			l_index: INTEGER
-			i, j, k: INTEGER
+			i, -- Class node count
+			k: INTEGER -- text node count for one class
 			l_row_count: INTEGER
 			submatch_parent: INTEGER
 			arrayed_list: ARRAYED_LIST[MSR_ITEM]
@@ -173,7 +174,6 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 					arrayed_list.start
 					l_row_count := l_row_count + 1
 					i := 0
-					j := 0
 					k := 0
 				until
 					arrayed_list.after
@@ -182,7 +182,6 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 
 					l_class_item ?= arrayed_list.item
 					if l_class_item /= Void then
-						j := j + 1
 						insert_new_row (l_row_count)
 						l_new_row := row (l_row_count)
 						l_new_row.set_data (l_class_item)
@@ -261,6 +260,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 				if i /= 0 then
 					set_item (2, i, new_label_item (k.out))
 					item (2, i).set_foreground_color (preferences.editor_data.number_text_color)
+					extend_pointer_actions (row (i))
 				end
 				multi_search_performer.go_i_th (l_index)
 			end
@@ -757,7 +757,7 @@ invariant
 	search_tool_set: search_tool /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -770,21 +770,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

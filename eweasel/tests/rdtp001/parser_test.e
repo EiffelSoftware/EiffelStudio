@@ -17,14 +17,18 @@ feature {NONE} -- Initialization
 	make is
 		do
 			test_roundtrip := False
+
 			create {AST_NULL_FACTORY} factory
 			execute
 
 			create {AST_ROUNDTRIP_LIGHT_FACTORY} factory
 			execute
 
+			test_roundtrip_scanner := True
+			create light_factory
 			create {AST_ROUNDTRIP_SCANNER_FACTORY} factory
 			execute
+			test_roundtrip_scanner := False
 
 			test_roundtrip := True
 			create {AST_ROUNDTRIP_FACTORY} factory
@@ -33,23 +37,24 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-   	generated_text (a_class: CLASS_AS; a_match_list: LEAF_AS_LIST): STRING is
-           -- Is roundtrip generated code from `a_ast' in `a_class' and `a_match_list' the same as it is in `a_source'?
-       require
-           a_class_attached: a_class /= Void
-           a_match_list_attached: a_match_list /= Void
-       local
-           l_visitor: AST_ROUNDTRIP_PRINTER_VISITOR
-       do
-           create l_visitor.make_with_default_context
-           l_visitor.setup (a_class, a_match_list, True, True)
-           l_visitor.process_ast_node (a_class)
-           Result := l_visitor.text
-       end
+	generated_text (a_class: CLASS_AS; a_match_list: LEAF_AS_LIST): STRING is
+			-- Is roundtrip generated code from `a_ast' in `a_class' and `a_match_list' the same as it is in `a_source'?
+		require
+			a_class_attached: a_class /= Void
+			a_match_list_attached: a_match_list /= Void
+		local
+			l_visitor: AST_ROUNDTRIP_PRINTER_VISITOR
+		do
+			create l_visitor.make_with_default_context
+			l_visitor.setup (a_class, a_match_list, True, True)
+			l_visitor.process_ast_node (a_class)
+			Result := l_visitor.text
+		end
 
 	test_parse (file_name: STRING) is
 		local
 			parser: STANDALONE_EIFFEL_PARSER
+			scanner: EIFFEL_ROUNDTRIP_SCANNER
 			file: KL_BINARY_INPUT_FILE
 			fault: KL_BINARY_OUTPUT_FILE
 			count: INTEGER
@@ -59,7 +64,14 @@ feature {NONE} -- Implementation
 			fn: STRING
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
-				create parser.make_with_factory (factory)
+				if test_roundtrip_scanner then
+					create scanner.make_with_factory (factory)
+				end
+				if test_roundtrip_scanner then
+					create parser.make_with_factory (light_factory)
+				else
+					create parser.make_with_factory (factory)
+				end
 					-- Set for `IL' parsing since it accepts more classes.
 				parser.set_il_parser
 				create file.make (file_name)
@@ -67,15 +79,23 @@ feature {NONE} -- Implementation
 				file.open_read
 				if file.is_open_read then
 					file.read_string (count)
-					parse_eiffel_class (parser, file.last_string)
+					parse_eiffel_class (scanner, parser, file.last_string)
 
 					if parser.error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
 						parser.error_handler.wipe_out
-					elseif test_roundtrip then
-						output := generated_text (parser.root_node, parser.match_list)
-						res := file.last_string.is_equal (output)
+					elseif test_roundtrip or test_roundtrip_scanner then
+						if test_roundtrip then
+							output := generated_text (parser.root_node, parser.match_list)
+							res := file.last_string.is_equal (output)
+						else
+							res := True
+						end
+						if res and test_roundtrip_scanner then
+							output := generated_text (parser.root_node, scanner.match_list)
+							res := file.last_string.is_equal (output)
+						end
 						if not res then
 							create file_system
 							fn := file_system.file_system.dirname (file_name)
@@ -97,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_eiffel_class (a_parser: STANDALONE_EIFFEL_PARSER; a_buffer: STRING)
+	parse_eiffel_class (a_scanner: EIFFEL_ROUNDTRIP_SCANNER; a_parser: STANDALONE_EIFFEL_PARSER; a_buffer: STRING)
 			-- Using a parser, parse our code using different parser mode, to ensure that we can
 			-- indeed convert any kind of Eiffel classes.
 		require
@@ -105,16 +125,26 @@ feature {NONE} -- Implementation
 			a_buffer_not_void: a_buffer /= Void
 		do
 				-- First we do it using the old conventions.
+			if a_scanner /= Void then
+				a_scanner.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+				a_scanner.scan_string (a_buffer)
+			end
 			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
 			a_parser.parse_from_string (a_buffer, Void)
 			if a_parser.error_handler.has_error then
-				a_parser.error_handler.wipe_out
 					-- There was an error, let's try to see if the code is using transitional syntax.
+				if a_scanner /= Void then
+					a_scanner.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+					a_scanner.scan_string (a_buffer)
+				end
 				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
 				a_parser.parse_from_string (a_buffer, Void)
 				if a_parser.error_handler.has_error then
-					a_parser.error_handler.wipe_out
 						-- Still an error, let's try to see if the code is already using `attribute'.
+					if a_scanner /= Void then
+						a_scanner.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
+						a_scanner.scan_string (a_buffer)
+					end
 					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
 					a_parser.parse_from_string (a_buffer, Void)
 				end
@@ -187,7 +217,11 @@ feature {NONE}
 	test_roundtrip: BOOLEAN
 			-- Are we testing the roundtrip?
 
+	test_roundtrip_scanner: BOOLEAN
+
 	factory: AST_FACTORY
 			-- Factory being used for parsing.
+
+	light_factory: AST_ROUNDTRIP_LIGHT_FACTORY
 
 end -- class PARSER_TEST

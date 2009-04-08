@@ -52,6 +52,13 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EB_CONTROL_PICK_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make
 
@@ -475,42 +482,60 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			search_tool.panel.report_tool.set_summary (report_summary_string)
 		end
 
-	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE
-			-- Grid pebble function
+	stone_from_grid_item (a_item: EV_GRID_ITEM): detachable STONE
+			-- Stone combined with `a_item'.
+		require
+			a_item_not_void: a_item /= Void
 		local
 			l_row: EV_GRID_ROW
-			l_item: MSR_ITEM
-			l_text_item: MSR_TEXT_ITEM
 			l_start, l_end: INTEGER
-			l_class: CLASS_I
 			l_class_c: CLASS_C
 			l_compiled_line_stone: COMPILED_LINE_STONE
 			l_uncompiled_line_stone: UNCOMPILED_LINE_STONE
 		do
-			if a_item /= Void then
-				l_row := a_item.row
-				l_item ?= l_row.data
-				if l_item /= Void then
-					l_class ?= l_item.data
-					if l_class /= Void then
-						l_text_item ?= l_row.data
-						if l_text_item /= Void then
-							l_start := l_text_item.start_index_in_unix_text
-							l_end := l_text_item.end_index_in_unix_text + 1
-							l_class_c := l_class.compiled_representation
-							if l_class_c /= Void then
-								create l_compiled_line_stone.make_with_line (l_class_c, 1, True)
-								l_compiled_line_stone.set_selection ([l_start, l_end])
-								Result := l_compiled_line_stone
-							else
-								create l_uncompiled_line_stone.make_with_line (l_class, 1, True)
-								l_uncompiled_line_stone.set_selection ([l_start, l_end])
-								Result := l_uncompiled_line_stone
-							end
+			l_row := a_item.row
+			if attached {MSR_ITEM}l_row.data as l_item then
+				if attached {CLASS_I}l_item.data as l_class then
+					if attached {MSR_TEXT_ITEM}l_row.data as l_text_item then
+						l_start := l_text_item.start_index_in_unix_text
+						l_end := l_text_item.end_index_in_unix_text + 1
+						l_class_c := l_class.compiled_representation
+						if l_class_c /= Void then
+							create l_compiled_line_stone.make_with_line (l_class_c, 1, True)
+							l_compiled_line_stone.set_selection ([l_start, l_end])
+							Result := l_compiled_line_stone
 						else
-							Result := stone_from_class_i (l_class)
+							create l_uncompiled_line_stone.make_with_line (l_class, 1, True)
+							l_uncompiled_line_stone.set_selection ([l_start, l_end])
+							Result := l_uncompiled_line_stone
 						end
+					else
+						Result := stone_from_class_i (l_class)
 					end
+				end
+			end
+		end
+
+	grid_pebble_function (a_item: EV_GRID_ITEM) : detachable STONE
+			-- Grid pebble function
+		do
+			if not ev_application.ctrl_pressed and a_item /= Void then
+				Result := stone_from_grid_item (a_item)
+			end
+		end
+
+	on_pointer_right_click (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_item: EV_GRID_ITEM)
+			-- Action to be performed when pointer right click on grid
+			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
+		require
+			a_item_not_void: a_item /= Void
+		local
+			l_stone: detachable STONE
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_stone := stone_from_grid_item (a_item)
+				if l_stone /= Void and then l_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
 		end
@@ -551,13 +576,16 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			a_row_attached: a_row /= Void
 		local
 			i: INTEGER
+			l_item: EV_GRID_ITEM
 		do
 			from
 				i := 1
 			until
 				i > a_row.count
 			loop
-				a_row.item (i).pointer_double_press_actions.extend (agent on_grid_row_double_clicked (?, ?, ?, ?, ?, ?, ?, ?, a_row))
+				l_item := a_row.item (i)
+				l_item.pointer_double_press_actions.extend (agent on_grid_row_double_clicked (?, ?, ?, ?, ?, ?, ?, ?, a_row))
+				l_item.pointer_button_press_actions.extend (agent on_pointer_right_click (?, ?, ?, ?, ?, ?, ?, ?, l_item))
 				i := i + 1
 			end
 		end

@@ -56,7 +56,8 @@ all :: .FORCE_DEPEND
 #DPFLAGS = /prefix=all/incl=([-],[-.run-time])
 #CINCLUDES = /incl=($(TOP),[-.run-time],[-.run-time.include],[-.minilzo])
 #CINCLUDES = /incl=($(DECC_INCLUDES),[-.run-time],[-.run-time.include],[-.minilzo],[-.idrs])
-CINCLUDES = [-.run-time],[-.run-time.include],[-.minilzo],[-.idrs]
+#CINCLUDES = $(TOP),[-.run-time],[-.run-time.include],[-.minilzo],[-.idrs]
+CINCLUDES = [C.run-time],[C.run-time.include],[C.idrs]
 #CDEFINES = BENCH_TEST
 
 # Presumably, these modules are used only by es3
@@ -68,14 +69,14 @@ include EIFFEL_SRC:[C]makeinc.VMS
 
 
 # Files used to build the daemon
-LSRC = byte.c date.c encode.c offset.c minilzo.c
+LSRC = byte.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 # Derived object file names
-FOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj pretrieve.obj 
-MT_FOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTpstore.obj MTpretrieve.obj 
-WOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
-#MT_WOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTwpstore.obj MTwpretrieve.obj 
+FOBJ = byte.obj minilzo.obj pstore.obj pretrieve.obj 
+MT_FOBJ = MTbyte.obj MTminilzo.obj MTpstore.obj MTpretrieve.obj 
+WOBJ = byte.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
+#MT_WOBJ = MTbyte.obj MTminilzo.obj MTwpstore.obj MTwpretrieve.obj 
 
 LOBJ = $(FOBJ) $(WOBJ) # $(MT_FOBJ) $(MT_WOBJ)
 

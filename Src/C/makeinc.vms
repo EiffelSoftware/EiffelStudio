@@ -54,7 +54,8 @@ endif
 # __NEW_STARLET: define prototypes for VMS system (sys$) and library (lib$) functions 
 # _SOCKADDR_LEN: enables 4.4BSD- and and XPG4 V2-compatible socket interfaces
 #TOP_CDEFINES = EIF_TOP_CDEFINE_TEST
-TOP_CDEFINES = _SOCKADDR_LEN
+TOP_CDEFINES = __NEW_STARLET,_SOCKADDR_LEN
+#TOP_CDEFINES = _SOCKADDR_LEN
 # Uncomment the following line to force assertions in runtime:
 #TOP_CDEFINES += ,ISE_USE_ASSERT
 

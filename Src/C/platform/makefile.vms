@@ -5,7 +5,7 @@
 
 SHELL = /bin/sh
 JMAKE = jmake
-TOP = [-]
+#TOP = [-]
 CURRENT = [.platform
 DIR = $(CURRENT)]
 

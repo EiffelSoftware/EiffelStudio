@@ -199,10 +199,9 @@ LOBJ = \
 	option.obj \
 	compress.obj \
 	console.obj \
+	offset.obj \
 	main.obj \
-	except.obj \
-	memory_analyzer.obj
-
+	except.obj
 
 
 # EOBJ needs work

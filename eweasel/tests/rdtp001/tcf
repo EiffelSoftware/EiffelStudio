@@ -12,6 +12,7 @@ copy_raw	test_bracket.e $CLUSTER test_bracket.e
 copy_raw	test_tilde.e $CLUSTER test_tilde.e
 copy_raw	test_agent.e $CLUSTER test_agent.e
 copy_raw	es_testing_tool.e $CLUSTER es_testing_tool.e
+copy_raw	characters.e $CLUSTER characters.e
 
 compile_final_keep
 compile_result ok

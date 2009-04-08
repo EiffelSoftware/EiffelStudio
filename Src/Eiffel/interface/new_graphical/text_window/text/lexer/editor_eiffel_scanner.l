@@ -108,6 +108,7 @@ UTF8_tail	[\x80-\xBF]
 ">>"				|
 "?="				|
 ":="				|
+"/~"				|
 "-"					|
 "+"					|
 "*"					|
@@ -115,7 +116,8 @@ UTF8_tail	[\x80-\xBF]
 "^"					|
 "="					|
 ">"					|
-"<"					{ 
+"<"					|
+"~"					{ 
 						-- Operator Symbol
 					if not in_comments then
 						curr_token := new_operator (text)					

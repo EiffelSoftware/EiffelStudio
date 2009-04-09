@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 			-- <Precusor>
 		do
 			Precursor
-			code_symbol_table.value_changed_events.subscribe (agent on_code_symbol_table_value_changed)
+			code_symbol_table.value_changed_event.subscribe (agent on_code_symbol_table_value_changed)
 			update_code_result
 		end
 
@@ -194,11 +194,11 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		local
-			l_action: PROCEDURE [ANY, TUPLE [attached STRING]]
+			l_action: PROCEDURE [ANY, TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_8]]
 		do
 			l_action := agent on_code_symbol_table_value_changed
-			if code_symbol_table.value_changed_events.is_subscribed (l_action) then
-				code_symbol_table.value_changed_events.unsubscribe (l_action)
+			if code_symbol_table.value_changed_event.is_subscribed (l_action) then
+				code_symbol_table.value_changed_event.unsubscribe (l_action)
 			end
 			Precursor
 		end
@@ -336,22 +336,30 @@ feature {NONE} -- User interface elements
 
 feature -- Events handlers
 
-	on_code_symbol_table_value_changed (a_id: attached STRING_8)
+	on_code_symbol_table_value_changed (a_sender: CODE_SYMBOL_TABLE; a_id: READABLE_STRING_8)
 			-- Called when a value in the symbol table changes
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			a_sender_attached: a_sender /= Void
+			a_id_attached: a_id /= Void
 		local
 			l_field: EV_TEXT_FIELD
+			l_id: STRING_8
 		do
 			if not is_shown then
-				if declaration_text_fields.has (a_id) then
-					l_field := declaration_text_fields.item (a_id)
-					if l_field /= Void and then code_symbol_table.has_id (a_id) then
-						l_field.set_text (code_symbol_table.item (a_id).value)
-					else
-						l_field.set_text ("")
+				if a_sender = code_symbol_table then
+					l_id := a_id.as_string_8
+					if declaration_text_fields.has (l_id) then
+						l_field := declaration_text_fields.item (l_id)
+						if l_field /= Void and then code_symbol_table.has_id (a_id) then
+							l_field.set_text (code_symbol_table.item (a_id).value)
+						else
+							l_field.set_text ("")
+						end
 					end
+				else
+					check unknown_table: False end
 				end
 			end
 		end

@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 			-- Note: Initialization will set the parser's callbacks to Current.
 			--
 			-- `a_parser': An XML parser Current is used with.
+		require
+			a_parser_attached: a_parser /= Void
 		do
 			create current_transition_stack.make_default
 			create current_attributes_stack.make_default
@@ -56,15 +58,15 @@ feature {NONE} -- Initialization
 			make_callbacks
 		ensure
 			xml_parser_set: xml_parser = a_parser
-			xml_parser_callbacks_set: xml_parser.callbacks = Current
+			xml_parser_callbacks_set: a_parser.callbacks = Current
 		end
 
 feature -- Access
 
-	xml_parser: attached XM_EIFFEL_PARSER
+	xml_parser: XM_EIFFEL_PARSER
 			-- The XML parser used to in conjuntion with Current
 
-	last_error_message: attached STRING_32
+	last_error_message: STRING_32
 			-- Last error message
 		require
 			has_error: has_error
@@ -74,17 +76,19 @@ feature -- Access
 			else
 				create Result.make_empty
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Access
 
-	current_transition_stack: attached DS_LINKED_STACK [NATURAL_8]
+	current_transition_stack: DS_LINKED_STACK [NATURAL_8]
 			-- Stack of transitional XML element tags
 
-	current_attributes_stack: attached DS_LINKED_STACK [DS_HASH_TABLE [STRING_32, NATURAL_8]]
+	current_attributes_stack: DS_LINKED_STACK [DS_HASH_TABLE [STRING_32, NATURAL_8]]
 			-- Current attributes
 
-	current_content_stack: attached DS_LINKED_STACK [STRING_32]
+	current_content_stack: DS_LINKED_STACK [STRING_32]
 			-- Current text content
 
 	frozen current_state: NATURAL_8
@@ -93,17 +97,21 @@ feature {NONE} -- Access
 			not_current_transition_stack_is_empty: not current_transition_stack.is_empty
 		do
 			Result := current_transition_stack.item
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen current_attributes: attached DS_HASH_TABLE [STRING_32, NATURAL_8]
+	frozen current_attributes: DS_HASH_TABLE [STRING_32, NATURAL_8]
 			-- Current attributes
 		require
 			not_current_attributes_stack_is_empty: not current_attributes_stack.is_empty
 		do
 			Result := current_attributes_stack.item
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen current_content: attached STRING_32
+	frozen current_content: STRING_32
 			-- Current content
 		require
 			not_current_content_stack_is_empty: not current_content_stack.is_empty
@@ -113,6 +121,8 @@ feature {NONE} -- Access
 			else
 				Result := current_content_stack.item.twin.as_attached
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report
@@ -227,7 +237,7 @@ feature {NONE} -- Query
 
 feature -- Actions
 
-	frozen error_reported_actions: attached ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
+	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an error
 			--
 			-- 'msg': Message and cause of the error.
@@ -245,7 +255,7 @@ feature -- Actions
 			result_consistent: Result = error_reported_actions
 		end
 
-	frozen warning_reported_actions: attached ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
+	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an warning
 			--
 			-- 'msg': Message and cause of the warning.
@@ -337,7 +347,6 @@ feature {NONE} -- Action handlers
 			l_name: STRING
 			l_cur_attributes: like current_attributes
 			l_attribute_states: like attribute_states
-			l_attributes: detachable DS_HASH_TABLE [NATURAL_8, STRING]
 			l_tag_state: NATURAL_8
 			l_state: NATURAL_8
 		do
@@ -352,8 +361,7 @@ feature {NONE} -- Action handlers
 					l_tag_state := current_transition_stack.item
 					l_attribute_states := attribute_states
 					if l_attribute_states /= Void and then l_attribute_states.has (l_tag_state) then
-						l_attributes := l_attribute_states.item (l_tag_state)
-						if l_attributes /= Void and then l_attributes.has (l_name) then
+						if (attached l_attribute_states.item (l_tag_state) as l_attributes) and then l_attributes.has (l_name) then
 							l_state := l_attributes.item (l_name)
 						end
 					end
@@ -392,9 +400,8 @@ feature {NONE} -- Action handlers
 		do
 			if not has_error then
 				check not_current_content_stack_is_empty: not current_content_stack.is_empty end
-
-				if a_content /= Void and then attached {STRING_32} a_content.as_string_32 as l_content then
-					current_content_stack.item.append (l_content)
+				if attached current_content_stack.item as l_item then
+					l_item.append (a_content.as_string_32)
 				end
 			end
 		end
@@ -404,7 +411,6 @@ feature {NONE} -- Action handlers
 		local
 			l_name: STRING
 			l_tag_transitions: like tag_state_transitions
-			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING]
 			l_current_transition_stack: like current_transition_stack
 			l_current_state: like current_state
 			l_next_state: NATURAL_8
@@ -428,8 +434,7 @@ feature {NONE} -- Action handlers
 					l_current_state := t_none
 				end
 				if l_tag_transitions.has (l_current_state) then
-					l_transitions := l_tag_transitions.item (l_current_state)
-					if l_transitions /= Void and then l_transitions.has (l_name) then
+					if (attached l_tag_transitions.item (l_current_state) as l_transitions) and then l_transitions.has (l_name) then
 						l_next_state := l_transitions.item (l_name)
 						if l_next_state /= t_none then
 							l_current_transition_stack.force (l_next_state)
@@ -774,6 +779,10 @@ feature {NONE} -- Attribute values
 	v_bool_no: STRING = "no"
 
 invariant
+	current_transition_stack_attached: current_transition_stack /= Void
+	current_attributes_stack_attached: current_attributes_stack /= Void
+	current_content_stack_attached: current_content_stack /= Void
+	xml_parser_attached: xml_parser /= Void
 	xml_parser_callbacks_is_current: xml_parser.callbacks = Current
 
 ;note

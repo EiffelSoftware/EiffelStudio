@@ -292,8 +292,8 @@ extern void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_to
 extern void idump(FILE *fd, char *start);
 extern void opstack_reset(struct opstack *stk);
 
-extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);	/* Dynamic evaluation of a feature */
-extern EIF_TYPED_VALUE * dynamic_eval_dbg(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
+extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);	/* Dynamic evaluation of a feature */
+extern void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result);
 
 extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE, EIF_TYPE_INDEX);
 

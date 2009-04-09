@@ -123,7 +123,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 /* Dynamic function evaluation */
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
-rt_private unsigned char otop_recorded = 0;
+rt_private rt_uint_ptr nb_pushed = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, EIF_TYPE_INDEX typeid);
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp);
@@ -1634,17 +1634,11 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 	{
-	if (otop_recorded==0)
-		{
-		previous_otop = otop();
-		otop_recorded = 1;
-		}
-
-	switch (item->type & SK_HEAD)
-		{
+	switch (item->type & SK_HEAD) {
 		case SK_REF:
-			if (item->it_ref)
+			if (item->it_ref) {
 				item->it_ref = eif_access(item->it_ref); /* unprotect this object */
+			}
 			break;
 		case SK_STRING:
 			item->it_ref = RTMS(item->it_ref);
@@ -1652,9 +1646,18 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 		default:
 			/* do nothing. leave the item as it is */
 			break;
-		}
-	opush(item);
 	}
+	opush(item);
+	if (previous_otop == NULL) {
+			/* First call in pushing arguments for a debugger evaluation, record top of stack
+			 * prior the push. We do not do it before the call to `opush' in the event that
+			 * the stack has not yet been created in which case `otop' would be NULL. */
+		previous_otop = otop();
+		CHECK("has_top", previous_otop);
+		previous_otop--;
+	}
+	nb_pushed++;
+}
 
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
 {
@@ -1717,7 +1720,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 
 rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
-	EIF_TYPED_VALUE *ip;
+	EIF_TYPED_VALUE ip;
 
 	int b = exec_recording_enabled;
 	int exception_occured = 0;	/* Exception occurred ? */
@@ -1726,21 +1729,21 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
  
 	c_opush(NULL); /*Is needed since the stack management seems to have problems with uninitialized c stack*/
 	c_opop(); 
-	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
+	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occured, &ip);
 
-	if (ip == (EIF_TYPED_VALUE *) 0) {
+	if (ip.type == SK_VOID) {
 		app_send_typed_value (sp, NULL, DMP_VOID);
 	} else {
 		if (exception_occured == 1) {
-			app_send_typed_value (sp, ip, DMP_EXCEPTION_ITEM);
+			app_send_typed_value (sp, &ip, DMP_EXCEPTION_ITEM);
 		} else {
-			app_send_typed_value (sp, ip, DMP_ITEM);
+			app_send_typed_value (sp, &ip, DMP_ITEM);
 		}
 	}
 
 	/* reset info concerning otop */
 	previous_otop = NULL;
-	otop_recorded = 0;
+	nb_pushed = 0;
 
 	exec_recording_enabled = b; /* Restore execution recording status */
 }

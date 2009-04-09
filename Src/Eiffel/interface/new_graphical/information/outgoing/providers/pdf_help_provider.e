@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	document_protocol: attached STRING_32
+	document_protocol: STRING
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
 			create Result.make_empty
 			Result.append ("PDF")
 		end
 
-	document_description: attached STRING_32
+	document_description: STRING_32
 			-- Document short description
 		once
 			create Result.make_empty
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
 		local
 			l_file_type: BOOLEAN
@@ -138,7 +138,7 @@ feature -- Basic operations
 	launch_command (a_command: attached STRING_8)
 			-- Launches a command
 		do
-			if attached {PROCESS} (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) as l_process then
+			if attached (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) as l_process then
 				l_process.set_hidden (True)
 				l_process.launch
 			end
@@ -191,11 +191,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

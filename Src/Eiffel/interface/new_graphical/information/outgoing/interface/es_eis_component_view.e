@@ -54,14 +54,14 @@ inherit
 
 feature -- HELP_CONTEXT_I, Access
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		local
 			l_eis_entry: EIS_ENTRY
 		do
 			l_eis_entry ?= eis_grid.selected_rows.i_th (1).data
-			if l_eis_entry /= Void and then attached {STRING_GENERAL} l_eis_entry.source as lt_src and then not lt_src.is_empty then
-				Result := lt_src
+			if l_eis_entry /= Void and then attached l_eis_entry.source as l_src and then not l_src.is_empty then
+				Result := l_src
 			else
 					-- Looks like the post condition is too strict.
 				Result := "No source specified."
@@ -71,30 +71,27 @@ feature -- HELP_CONTEXT_I, Access
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
-			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as lt_entry then
-				Result := create {HELP_SECTION_EIS_ENTRY}.make (lt_entry)
+			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+				Result := create {HELP_SECTION_EIS_ENTRY}.make (l_entry)
 			else
 				check entry_not_attached: False end
 			end
 		end
 
-	help_context_description: detachable STRING_GENERAL
+	help_context_description: detachable STRING_32
 			-- An optional description of the context.
 		do
-			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as lt_entry then
-				eis_output.process (lt_entry)
+			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+				eis_output.process (l_entry)
 				Result := eis_output.last_output_code
 			end
 		end
 
-	help_provider: attached UUID
+	help_provider: UUID
 			-- <Precursor>
 			-- Help provider computed from selected eis entry
-		local
-			l_eis_entry: EIS_ENTRY
 		do
-			l_eis_entry ?= eis_grid.selected_rows.i_th (1).data
-			if l_eis_entry /= Void then
+			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_eis_entry then
 				Result := help_provider_from_protocol (l_eis_entry.protocol)
 			else
 				check entry_not_attached: False end

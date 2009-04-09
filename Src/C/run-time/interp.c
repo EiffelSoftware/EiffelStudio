@@ -4628,7 +4628,7 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 {
 		/* This is the debugger dispatcher for routine calls. It is called when
 		 * the user want to dynamically evaluate a feature. */
-	EIF_GET_CONTEXT;
+	EIF_GET_CONTEXT
 	jmp_buf exenv;
 	volatile int saved_debug_mode = debug_mode;
 	uint32	type = 0;			/* Dynamic type of the result */

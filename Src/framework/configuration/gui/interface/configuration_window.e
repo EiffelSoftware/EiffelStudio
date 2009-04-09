@@ -1261,6 +1261,12 @@ feature {NONE} -- Implementation
 			create l_prop.make (conf_interface_names.task_command_name)
 			l_prop.set_description (conf_interface_names.task_command_description)
 			l_prop.set_value (a_task.command)
+			l_prop.validate_value_actions.extend (agent (a_name: STRING_32): BOOLEAN
+					require
+						a_name_not_void: a_name /= Void
+					do
+						Result := not a_name.is_empty
+					end)
 			l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_command))
 			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_prop)
@@ -1498,7 +1504,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1522,10 +1528,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

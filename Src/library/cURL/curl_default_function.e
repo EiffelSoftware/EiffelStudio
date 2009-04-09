@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Default implementation of CURL_FUNCTION.
 																				]"

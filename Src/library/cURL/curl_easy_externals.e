@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					cURL easy externals.
 					For more informaton see:

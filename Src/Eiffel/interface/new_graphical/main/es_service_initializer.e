@@ -14,6 +14,7 @@ inherit
 	SERVICE_INITIALIZER
 		redefine
 			add_core_services,
+			new_output_manager_service,
 			new_testing_service,
 			register_outputs
 		end
@@ -72,6 +73,13 @@ feature {NONE} -- Factory
 			end
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	new_output_manager_service: detachable OUTPUT_MANAGER_S
+			-- Creates the output manager service
+		do
+			create {ES_OUTPUT_MANAGER} Result.make
+			register_outputs (Result)
 		end
 
 	new_status_bar_service: detachable STATUS_BAR_S
@@ -153,28 +161,28 @@ feature {NONE} -- Registration: Output
 			l_kinds: OUTPUT_MANAGER_KINDS
 		do
 			create l_kinds
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (l_general), (create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_output_icon_buffer), l_kinds.general)
+			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (lb_general), (create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_output_icon_buffer), l_kinds.general)
 
 			a_service.register_with_activator (
-				agent: OUTPUT_I
+				agent: attached OUTPUT_I
 						-- Delay initialization of the compiler output until needed.
 					do
-						create {ES_EIFFEL_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (l_compiler))
+						create {ES_EIFFEL_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (lb_compiler))
 					end, l_kinds.eiffel_compiler)
 
 			a_service.register_with_activator (
-				agent: OUTPUT_I
+				agent: attached OUTPUT_I
 						-- Delay initialization of the external compiler output until needed.
 					do
-						create {ES_C_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (l_external_compilation))
+						create {ES_C_COMPILER_OUTPUT_PANE} Result.make (locale_formatter.translation (lb_external_compilation))
 					end, l_kinds.c_compiler)
 		end
 
 feature {NONE} -- Internationalization
 
-	l_general: STRING = "General"
-	l_compiler: STRING = "Compiler"
-	l_external_compilation: STRING = "External Compilation"
+	lb_general: STRING = "General"
+	lb_compiler: STRING = "Compiler"
+	lb_external_compilation: STRING = "External Compilation"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -89,10 +89,11 @@ feature -- Access
 			append_expression ("%T-- " + comment)
 		end
 
-	get_temp_variable: STRING
+	get_unique_identifier: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do
 			Result := "temp_" + variable_count.out
+			variable_count := variable_count + 1
 		end
 
 feature -- Implementation

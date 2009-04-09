@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
 		do
-			servlet_name := a_servlet_name + "_G"
+			servlet_name := a_servlet_name
 			controller_type := a_controller_type
 			stateful := a_stateful
 			root_tag := a_root_tag
@@ -52,9 +52,9 @@ feature -- Basic functionality
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_open_write (a_path + servlet_name.as_lower + "_servlet_generator.e")
+			create file.make_open_write (a_path + servlet_name.as_lower + "_g_servlet_generator.e")
 			create buf.make (file)
-			create servlet_gen_class.make (servlet_name.as_upper + "_SERVLET_GENERATOR")
+			create servlet_gen_class.make (servlet_name.as_upper + "_G_SERVLET_GENERATOR")
 			servlet_gen_class.set_inherit (Servlet_generator_class)
 			servlet_gen_class.set_constructor_name ("make")
 			servlet_gen_class.add_feature (build_generate_for_servlet_generator)

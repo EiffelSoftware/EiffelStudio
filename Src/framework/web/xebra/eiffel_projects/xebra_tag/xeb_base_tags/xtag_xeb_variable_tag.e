@@ -26,11 +26,10 @@ feature
 	feature_name: STRING
 	id: STRING
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			append_debug_info (a_render_feature)
-			a_render_feature.append_expression (Response_variable_append + " (" + id + "." + feature_name + ")")
+			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + id + "." + feature_name + ")")
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: STRING)

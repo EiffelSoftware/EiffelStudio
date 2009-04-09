@@ -24,15 +24,12 @@ feature {NONE} -- Initialization
 		do
 			parser := a_parser
 			path := a_path
-			create root_tag.make ("html", Html_tag_name, current_debug_information)
+			create root_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
 			create html_buf.make_empty
 		end
 
 feature -- Constants
-
-	Tag_keyword: STRING = "xeb"
-		-- temp
 
 	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
 	Output_tag_name: STRING = "XTAG_XEB_OUTPUT_CALL_TAG"
@@ -60,13 +57,13 @@ feature -- Access
 	tag_stack: ARRAYED_STACK [XP_TAG_ELEMENT]
 		-- The stack is used to generate the tree
 
-	taglib: XTL_TAG_LIBRARY
+	taglibs: TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Tag library which should be used
 
-	put_taglib (a_taglib: XTL_TAG_LIBRARY)
+	put_taglibs (a_taglibs: TABLE [XTL_TAG_LIBRARY, STRING])
 			-- Adds a taglib to the parser
 		do
-			taglib := a_taglib
+			taglibs := a_taglibs
 		end
 
 feature -- Document
@@ -136,9 +133,10 @@ feature -- Tag
 			l_local_part: STRING
 			l_tmp_tag: XP_TAG_ELEMENT
 			l_class_name: STRING
+			l_taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_prefix then
-				if a_prefix.is_equal (Tag_keyword) then
+				if taglibs.valid_key (a_prefix) then
 					if state = Reading_html then
 						create_html_tag_put
 					end
@@ -146,8 +144,6 @@ feature -- Tag
 				else
 					state := Reading_html
 				end
-
-				l_prefix := a_prefix + ":"
 			else
 				l_prefix := ""
 				state := Reading_html
@@ -160,18 +156,22 @@ feature -- Tag
 			end
 
 			if state = Reading_tag then
-				l_class_name := taglib.get_class_for_name (l_local_part)
-				if  l_class_name.is_empty then
+				l_taglib := get_tag_lib (a_prefix)
+				l_class_name := l_taglib.get_class_for_name (l_local_part)
+				if l_class_name.is_empty then
 					l_class_name := Html_tag_name
 				end
-				create l_tmp_tag.make (a_local_part, l_class_name, current_debug_information)
+				create l_tmp_tag.make (a_prefix, a_local_part, l_class_name, current_debug_information)
 				tag_stack.item.put_subtag (l_tmp_tag)
 				tag_stack.put (l_tmp_tag)
-				if not taglib.contains (l_local_part) then
+				if not l_taglib.contains (l_local_part) then
 
 					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
 				end
 			elseif state = Reading_html then
+				if not l_prefix.is_empty then
+					l_prefix := l_prefix + ":"
+				end
 				html_buf.append ("<" + l_prefix +  l_local_part)
 			end
 		ensure then
@@ -186,6 +186,7 @@ feature -- Tag
 			l_prefix: STRING
 			l_local_part: STRING
 			l_value: STRING
+			taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_namespace then
 				l_namespace := a_namespace
@@ -210,10 +211,11 @@ feature -- Tag
 
 				-- All variables initialized
 			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
+				taglib := get_tag_lib (tag_stack.item.namespace)
 				if not taglib.contains (tag_stack.item.id) then
 					l_value := "undefined tag: '" + tag_stack.item.id + "'"
 					l_local_part := "text"
-				elseif taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
+				elseif  taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
 					if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
 						process_dynamic_tag_attribute (l_local_part, l_value)
 					else
@@ -267,14 +269,13 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-				-- All variables initialized
-			if not l_prefix.is_equal (Tag_keyword) then
+			if l_prefix.is_empty or not taglibs.valid_key (a_prefix) then
 				if not l_prefix.is_empty then
 					l_prefix := l_prefix + ":"
 				end
 				html_buf.append ("</" + l_prefix  + l_local_part + ">")
-			else
 				create_html_tag_put
+			else
 				tag_stack.remove
 			end
 		end
@@ -293,13 +294,19 @@ feature -- Content
 
 feature {NONE} -- Implementation
 
+	get_tag_lib (id: STRING): XTL_TAG_LIBRARY
+			--
+		do
+			Result := taglibs [id]
+		end
+
 	create_html_tag_with_text (s: STRING)
 			-- Creates a XB_TAG from s and adds it to top element on stack.
 		local
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", Html_tag_name, current_debug_information)
+				create l_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
 				tag_stack.item.put_subtag (l_tag)
 			end
 		end
@@ -310,7 +317,7 @@ feature {NONE} -- Implementation
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("html", Html_tag_name, current_debug_information)
+				create l_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
 				l_tag.put_attribute ("text", s)
 				l_tag.multiline_argument := True
 				tag_stack.item.put_subtag (l_tag)
@@ -334,7 +341,7 @@ feature {NONE} -- Implementation
 		do
 			html_buf.append (" " + local_part + "=%"")
 			create_html_tag_put
-			create l_tag.make ("output", Output_tag_name, current_debug_information)
+			create l_tag.make ("xeb", "output", Output_tag_name, current_debug_information)
 			feature_name := strip_off_dynamic_tags (value)
 			l_tag.put_attribute ("value", feature_name)
 			tag_stack.item.put_subtag (l_tag)

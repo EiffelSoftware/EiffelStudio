@@ -22,11 +22,13 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	id: STRING
-
 	tags: HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]
+			-- All the tags defined in th is tag library
 
 feature -- Access
+
+	id: STRING
+			-- Namespace of this tag library
 
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>

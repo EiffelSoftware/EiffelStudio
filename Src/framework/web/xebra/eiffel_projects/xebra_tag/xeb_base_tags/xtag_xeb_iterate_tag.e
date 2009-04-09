@@ -35,20 +35,19 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			append_debug_info (a_render_feature)
-			a_render_feature.append_local (variable, type)
-			a_render_feature.append_expression ("from")
-			add_controller_call (list + ".start", a_render_feature)
-			a_render_feature.append_expression ("until")
-			add_controller_call (list + ".after", a_render_feature)
-			a_render_feature.append_expression ("loop")
-			a_render_feature.append_expression (variable + " := " + Controller_variable + "." + list + ".item")
-			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
-			add_controller_call (list + ".forth", a_render_feature)
-			a_render_feature.append_expression ("end")
+			a_servlet_class.render_feature.append_local (variable, type)
+			a_servlet_class.render_feature.append_expression ("from")
+			add_controller_call (list + ".start", a_servlet_class.render_feature)
+			a_servlet_class.render_feature.append_expression ("until")
+			add_controller_call (list + ".after", a_servlet_class.render_feature)
+			a_servlet_class.render_feature.append_expression ("loop")
+			a_servlet_class.render_feature.append_expression (variable + " := " + Controller_variable + "." + list + ".item")
+			generate_children (a_servlet_class, variable_table)
+			add_controller_call (list + ".forth", a_servlet_class.render_feature)
+			a_servlet_class.render_feature.append_expression ("end")
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)

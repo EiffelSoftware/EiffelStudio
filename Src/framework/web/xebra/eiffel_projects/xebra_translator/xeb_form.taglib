@@ -1,6 +1,7 @@
 <taglib id="f">
 	<tag id="form" class="XTAG_F_FORM_TAG">
 		<attribute id="class"/>
+		<attribute id="variable"/>
 	</tag>
 	<tag id="button" class="XTAG_F_BUTTON_TAG">
 		<attribute id="value"/>

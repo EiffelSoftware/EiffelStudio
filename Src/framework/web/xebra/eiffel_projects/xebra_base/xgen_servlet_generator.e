@@ -24,12 +24,11 @@ feature --
 			controller_type := a_controller_type
 		end
 
-	build_make_for_servlet_generator: XEL_FEATURE_ELEMENT
+	build_make_for_servlet_generator (a_class: XEL_SERVLET_CLASS_ELEMENT)
 			-- Serializes the request feature of the {SERVLET}
 		do
-			create Result.make ("make")
-			Result.append_expression ("base_make")
-			Result.append_expression ("create controller." + constructor_name)
+			a_class.make_feature.append_expression ("base_make")
+			a_class.make_feature.append_expression ("create controller." + constructor_name)
 		end
 
 	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
@@ -39,33 +38,22 @@ feature --
 			Result.append_expression ("Result := controller")
 		end
 
-	build_handle_request_feature_for_servlet (a_class: XEL_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)
-			-- Serializes the request feature of the {SERVLET}
-		local
-			a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT
+	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)
+			-- Serializes the request feature of the {SERVLET}		
 		do
-			create a_render_feature.make (Render_feature_name)
-			create a_prerender_post_feature.make (Prerender_post_feature_name)
-			create a_prerender_get_feature.make (Prerender_get_feature_name)
-			create a_afterrender_feature.make (Afterrender_feature_name)
-
-			root_tag.generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, create {HASH_TABLE [STRING, STRING]}.make (10))
-			a_class.add_feature (a_render_feature)
-			a_class.add_feature (a_prerender_post_feature)
-			a_class.add_feature (a_prerender_get_feature)
-			a_class.add_feature (a_afterrender_feature)
+			root_tag.generate (a_class, create {HASH_TABLE [STRING, STRING]}.make (10))
 		end
 
 	generate
 			--
 		local
 			buf: XU_INDENDATION_STREAM
-			servlet_class: XEL_CLASS_ELEMENT
+			servlet_class: XEL_SERVLET_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_open_write (path + servlet_name.as_lower + "_servlet.e")
+			create file.make_open_write (path + servlet_name.as_lower + "_g_servlet.e")
 			create buf.make (file)
-			create servlet_class.make (servlet_name.as_upper + "_SERVLET")
+			create servlet_class.make (servlet_name.as_upper + "_G_SERVLET")
 			if stateful then
 				servlet_class.set_inherit (Stateful_servlet_class)
 			else
@@ -74,7 +62,7 @@ feature --
 			servlet_class.set_inherit (Stateless_servlet_class)
 			servlet_class.set_constructor_name ("make")
 			servlet_class.add_variable_by_name_type ("controller", controller_type)
-			servlet_class.add_feature (build_make_for_servlet_generator)
+			build_make_for_servlet_generator (servlet_class)
 			servlet_class.add_feature (build_internal_controller_for_servlet)
 			build_handle_request_feature_for_servlet (servlet_class, get_root_tag)
 			servlet_class.serialize (buf)
@@ -91,14 +79,8 @@ feature --Constants
 	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
 	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
 
-	Render_feature_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Prerender_post_feature_name: STRING = "prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Prerender_get_feature_name: STRING = "prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Afterrender_feature_name: STRING = "afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)"
-
 	Constructor_name: STRING = "make"
 	Response_name: STRING = "response"
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

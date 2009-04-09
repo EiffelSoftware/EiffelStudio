@@ -8,9 +8,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
 
 create
 	make
@@ -28,29 +25,37 @@ feature -- Access
 	data_class: STRING
 			-- Name of the class which holds the data of the form
 
+	variable: STRING
+			-- The name for the variable
+
 feature -- Implementation
 
-	generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		local
 			data_var: STRING
 		do
-			data_var := a_render_feature.get_temp_variable
-			a_render_feature.append_local (data_var, data_class)
-			variable_table.put (data_var, Form_var_key)
-			a_render_feature.append_expression ("create " + data_var)
-			a_render_feature.append_expression (Response_variable + ".append (%"<form action=%%%"+"
-				+ Request_variable + ".target_uri + %" method=%"post%")")
-			generate_body (a_render_feature)
-			write_string_to_result ("</form>")
-			variable_table.remove (Form_var_key)
+			a_servlet_class.add_variable_by_name_type (variable, data_class)
+
+			a_servlet_class.prerender_post_feature.append_expression ("create " + variable + ".make" )
+
+			data_var := a_servlet_class.render_feature.get_unique_identifier
+			variable_table.put (variable, Form_var_key)
+			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"<form action=%"+"
+				+ Request_variable + ".target_uri + %" method=%%%"post%%%"%")")
+			generate_children (a_servlet_class, variable_table)
+			write_string_to_result ("</form>", a_servlet_class.render_feature)
+			--variable_table. (Form_var_key)
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precusor>
 		do
 			if id.is_equal ("class") then
 				data_class := a_attribute
+			end
+			if id.is_equal ("variable") then
+				variable := a_attribute
 			end
 		end
 

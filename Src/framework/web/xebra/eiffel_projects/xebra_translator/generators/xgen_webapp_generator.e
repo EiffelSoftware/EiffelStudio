@@ -57,7 +57,7 @@ feature -- Basic Functionality
 
 	generate
 			-- Generates all the classes (except the servlets) for the webapp and links them together.
-			--  1. {REQUEST_HANDLER}
+			--  1. {XWA_SERVER_CONNECTION_HANDLER}
 			--  2. {APPLICATION} which starts the application
 		require
 			path_is_not_empty: not path.is_empty
@@ -68,7 +68,7 @@ feature -- Basic Functionality
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
-				-- Generate the {REQUEST_HANDLER} class
+				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			webapp_name.to_lower
 			create file.make_open_write (path + webapp_name + "_g_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
@@ -76,6 +76,7 @@ feature -- Basic Functionality
 			webapp_name.to_upper
 			create request_class.make (webapp_name + "_G_" + Server_con_handler_class)
 			request_class.set_inherit ("XWA_" + Server_con_handler_class)
+			request_class.add_variable_by_name_type ("name", "STRING = %"" + webapp_name + "%"")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
@@ -97,9 +98,9 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
-			Result.append_expression ("create request_handler.make")
-			Result.append_expression ("request_handler.run")
-			Result.append_local ("request_handler", webapp_name.as_upper + "_G_" + Server_con_handler_class)
+			Result.append_expression ("create server_connection_handler.make")
+			Result.append_expression ("server_connection_handler.run")
+			Result.append_local ("server_connection_handler", webapp_name.as_upper + "_G_" + Server_con_handler_class)
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
@@ -119,7 +120,7 @@ feature {NONE} -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.servlet_name.as_upper + "_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end

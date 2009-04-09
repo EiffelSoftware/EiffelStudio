@@ -41,6 +41,7 @@ feature -- Implementation
 		local
 			unique_id, unique_var, unique_form_id: STRING
 		do
+			append_debug_info (a_servlet_class.render_feature)
 				-- Figure out, if the post request comes from this link, if yes execute the function with the appropriate argument
 			unique_id :=  a_prerender_post_feature.get_temp_variable
 			unique_var :=  a_prerender_post_feature.get_temp_variable

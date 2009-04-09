@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {DEBUGGER_BREAKABLE_POINT_INFO}."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -17,7 +17,6 @@ inherit
 			internal_recycle,
 			query_set_stone,
 			create_right_tool_bar_items,
---			create_mini_tool_bar_items,
 			on_show,
 			on_focus_in,
 			on_handle_key
@@ -239,7 +238,7 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "28E1B33F-4B74-4DAB-AF6B-51E7E7FBAFCF"
@@ -1540,27 +1539,6 @@ feature {NONE} -- Factory
 			show_callers_button := l_button
 			Result.put_last (l_button)
 		end
-
---	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
---			-- <Precursor>
---		local
---			l_history: ES_STONE_HISTORY_LABEL_WIDGET
---			l_history_service: SERVICE_CONSUMER [HISTORY_MANAGER_S]
---			l_container: attached HISTORY_CONTAINER
---			l_widget: SD_TOOL_BAR_WIDGET_ITEM
---		do
---			create Result.make (1)
-
---				-- History
---			create l_container
---			create l_history.make (l_container)
---			create l_widget.make (l_history)
---			Result.put_last (l_widget)
-
---			stone_sychronizer.extend (l_history)
---		ensure then
---			result_attached: Result /= Void
---		end
 
 	contract_mode_label (a_mode: like contract_mode): attached STRING_32
 			-- Retrieve the edit label for a given an edit mode.

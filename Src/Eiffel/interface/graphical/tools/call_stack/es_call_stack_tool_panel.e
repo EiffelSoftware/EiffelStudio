@@ -293,7 +293,7 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "8C3CD0FE-78AA-7EC6-F36A-2233A4E26755"

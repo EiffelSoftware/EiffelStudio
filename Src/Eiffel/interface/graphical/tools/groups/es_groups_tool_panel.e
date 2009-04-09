@@ -85,7 +85,7 @@ feature {NONE} -- Access: User interface elements
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "0BAEBAA5-A9C8-4C7C-6ACE-C11D82804906"

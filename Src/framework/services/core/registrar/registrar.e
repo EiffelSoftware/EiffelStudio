@@ -70,7 +70,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	active_registrations: attached DS_LINEAR [G]
+	active_registrations: DS_LINEAR [G]
 			-- <Precursor>
 		local
 			l_result: DS_LINEAR [G]
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	registrations: attached DS_LINEAR [CONCEALER_I [G]]
+	registrations: DS_LINEAR [CONCEALER_I [G]]
 			-- <Precursor>
 		do
 			Result := table.as_attached
@@ -111,7 +111,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	table: attached DS_HASH_TABLE [CONCEALER_I [G], K]
+	table: DS_HASH_TABLE [CONCEALER_I [G], K]
 			-- Actual table used to store active dictionary items.
 
 feature -- Status report
@@ -146,7 +146,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	register (a_item: attached G a_key: attached K)
+	register (a_item: G a_key: K)
 			-- <Precursor>
 		local
 			l_concealer: CONCEALER_STATIC [G]
@@ -155,7 +155,7 @@ feature -- Basic operations
 			internal_register (l_concealer, a_key)
 		end
 
-	register_with_activator (a_activator: attached FUNCTION [ANY, TUPLE, attached G]; a_key: attached K)
+	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, attached G]; a_key: K)
 			-- <Precursor>
 		local
 			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
@@ -164,12 +164,12 @@ feature -- Basic operations
 			internal_register (l_concealer, a_key)
 		end
 
-	register_with_type_activator (a_type: attached TYPE [G]; a_key: attached K)
+	register_with_type_activator (a_type: TYPE [G]; a_key: K)
 			-- <Precursor>
 		local
 			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
 		do
-			register_with_activator (agent (ia_type: attached TYPE [G]): attached G
+			register_with_activator (agent (ia_type: TYPE [G]): attached G
 					-- Activator function to dynamically instantiate type.
 				local
 					l_internal: INTERNAL
@@ -186,12 +186,11 @@ feature -- Basic operations
 				end (a_type), a_key)
 		end
 
-	unregister (a_key: attached K)
+	unregister (a_key: K)
 			-- <Precursor>
 		local
 			l_table: like table
 			l_registration: detachable CONCEALER_I [G]
-			l_event: like internal_unregistered_event
 			l_action: PROCEDURE [ANY, TUPLE]
 			l_adopted: BOOLEAN
 		do
@@ -201,8 +200,7 @@ feature -- Basic operations
 				check l_registration_attached: l_registration /= Void end
 				l_table.remove (a_key)
 
-				l_event := internal_unregistered_event
-				if l_event /= Void then
+				if attached internal_unregistered_event as l_event then
 					l_event.publish ([Current, l_registration, a_key])
 				end
 
@@ -212,11 +210,17 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	internal_register (a_item: attached CONCEALER_I [G]; a_key: attached K)
+	internal_register (a_item: CONCEALER_I [G]; a_key: K)
 			-- <Precursor>
+		require
+			a_item_attached: a_item /= Void
+			a_item_is_valid_registration_item:
+				(attached {G} a_item as l_item implies is_valid_registration (l_item)) or else
+				(attached {CONCEALER_I [G]} a_item)
+			a_key_attached: a_key /= Void
+			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
 		local
-			l_item: detachable ANY
-			l_event: like internal_registered_event
+			l_registration: detachable ANY
 		do
 				-- Add the item to the table.
 			table.force (a_item, a_key)
@@ -224,25 +228,26 @@ feature {NONE} -- Basic operations
 				-- Fetch the actual item
 			if a_item.is_revealed then
 					-- The object has already been revealed, so use it.
-				l_item := a_item.object
-				check l_item_attached: l_item /= Void end
+				l_registration := a_item.object
+				check l_registration_attached: l_registration /= Void end
 			else
-				l_item := a_item
+				l_registration := a_item
 			end
 
 				-- Publish registration event
-			l_event := internal_registered_event
-			if l_event /= Void then
+			if attached internal_registered_event as l_event then
 				l_event.publish ([Current, a_item, a_key])
 			end
 
 				-- Perform activation setup and notification
-			activate_registration (l_item, a_key)
+			activate_registration (l_registration, a_key)
+		ensure
+			a_key_is_registered: is_registered (a_key)
 		end
 
 feature {NONE} -- Actions handlers
 
-	activate_registration (a_registration: attached ANY; a_key: attached K)
+	activate_registration (a_registration: ANY; a_key: K)
 			-- Activates a registration object, and in the case of a concealed object, setup for delayed
 			-- activation.
 			--
@@ -250,12 +255,13 @@ feature {NONE} -- Actions handlers
 			-- `a_key': The key used to register the registration object.
 		require
 			is_interface_usable: is_interface_usable
-			is_valid_registration_item: (attached {G} a_registration as rl_item implies is_valid_registration (rl_item)) or else
-				attached {CONCEALER_I [G]} a_registration as rl_concealer
+			a_registration_attached: a_registration /= Void
+			a_registration_is_valid_registration_item:
+				(attached {G} a_registration as l_item implies is_valid_registration (l_item)) or else
+				(attached {CONCEALER_I [G]} a_registration)
+			a_key_attached: a_key /= Void
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
 			a_key_is_registered: is_registered (a_key)
-		local
-			l_event: like internal_registration_activated_event
 		do
 			if attached {G} a_registration as l_registration then
 					-- Actual item is available.
@@ -276,8 +282,7 @@ feature {NONE} -- Actions handlers
 				end
 
 					-- Publish activation event.
-				l_event := internal_registration_activated_event
-				if l_event /= Void then
+				if attached internal_registration_activated_event as l_event then
 					l_event.publish ([Current, l_registration, a_key])
 				end
 
@@ -288,7 +293,7 @@ feature {NONE} -- Actions handlers
 
 				if not l_concealer.is_revealed and then attached {CONCEALER_WITH_ACTIVATOR [G]} a_registration as l_activator then
 						-- The object is concealed, so delay other functionality.
-					l_activator.activated_event.subscribe_for_single_notification (agent (ia_object: detachable G; ia_key: attached K)
+					l_activator.activated_event.subscribe_for_single_notification (agent (ia_object: detachable G; ia_key: K)
 						require
 							is_interface_usable: is_interface_usable
 						do
@@ -312,14 +317,15 @@ feature {NONE} -- Actions handlers
 			end
 		end
 
-	deactivate_registration (a_registration: attached ANY; a_key: attached K)
+	deactivate_registration (a_registration: ANY; a_key: K)
 			-- Deactivates a registration object, one that was activated using `activate_registration'.
 			--
 			-- `a_registration': A registration object {G} or a concealed registration object {CONCEALER_I}[G].
 			-- `a_key': The key used to register the registration object.
 		require
 			is_interface_usable: is_interface_usable
-			is_valid_registration_item: attached {G} a_registration as rl_item or attached {CONCEALER_I [G]} a_registration as rl_concealer
+			a_registration_attached: a_registration /= Void
+			a_registration_is_valid_registration_item: (attached {G} a_registration) or (attached {CONCEALER_I [G]} a_registration)
 		local
 			l_action: PROCEDURE [ANY, TUPLE]
 		do
@@ -370,15 +376,14 @@ feature {NONE} -- Actions handlers
 
 feature -- Events: Connection point
 
-	frozen registrar_connection: attached EVENT_CONNECTION_I [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]
+	frozen registrar_connection: EVENT_CONNECTION_I [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]
 			-- <Precursor>
-		local
-			l_result: like internal_registrar_connection
 		do
-			l_result := internal_registrar_connection
-			if l_result = Void then
+			if attached internal_registrar_connection as l_result then
+				Result := l_result
+			else
 				create {EVENT_CONNECTION [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]} Result.make (
-					agent (ia_observer: attached REGISTRAR_OBSERVER [G, K]): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: REGISTRAR_OBSERVER [G, K]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
 								[registered_event, agent ia_observer.on_registered],
@@ -387,55 +392,44 @@ feature -- Events: Connection point
 						end)
 				automation.auto_dispose (Result)
 				internal_registrar_connection := Result
-			else
-				Result := l_result
 			end
 		end
 
 feature -- Events
 
-	registered_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached CONCEALER_I [G]; key: attached K]]
+	registered_event: EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: CONCEALER_I [G]; key: K]]
 			-- <Precursor>
-		local
-			l_result: like internal_registered_event
 		do
-			l_result := internal_registered_event
-			if l_result = Void then
+			if attached internal_registered_event as l_result then
+				Result := l_result
+			else
 				create Result
 				internal_registered_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		end
 
-	unregistered_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached CONCEALER_I [G]; key: attached K]]
+	unregistered_event: EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: CONCEALER_I [G]; key: K]]
 			-- <Precursor>
-		local
-			l_result: like internal_unregistered_event
 		do
-			l_result := internal_unregistered_event
-			if l_result = Void then
+			if attached internal_unregistered_event as l_result then
+				Result := l_result
+			else
 				create Result
 				internal_unregistered_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		end
 
-	registration_activated_event: attached EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: attached G; key: attached K]]
+	registration_activated_event: EVENT_TYPE [TUPLE [registrar: REGISTRAR_I [G, K]; registration: G; key: K]]
 			-- <Precursor>
-		local
-			l_result: like internal_registration_activated_event
 		do
-			l_result := internal_registration_activated_event
-			if l_result = Void then
+			if attached internal_registration_activated_event as l_result then
+				Result := l_result
+			else
 				create Result
 				internal_registration_activated_event := Result
 				automation.auto_dispose (Result)
-			else
-				Result := l_result
 			end
 		end
 
@@ -460,6 +454,9 @@ feature {NONE} -- Implementation: Internal cache
 	internal_registrar_connection: detachable like registrar_connection
 			-- Cached version of `registrar_connection'.
 			-- Note: Do not use directly!
+
+invariant
+	table_attached: table /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

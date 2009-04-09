@@ -35,16 +35,17 @@ inherit
 
 feature -- Basic operations
 
-	show_help (a_context: attached HELP_CONTEXT_I)
+	show_help (a_context: HELP_CONTEXT_I)
 			-- Attempts to show help for a specific context using the current help provider
 			--
 			-- `a_context': A help context to use to show the help
 		require
 			is_interface_usable: is_interface_usable
+			a_context_attached: a_context /= Void
 			a_context_is_interface_usable: a_context.is_interface_usable
 			a_context_is_help_available: a_context.is_help_available
 		local
-			l_provider: attached HELP_PROVIDER_I
+			l_provider: HELP_PROVIDER_I
 		do
 			if is_provider_available (a_context.help_provider) then
 				l_provider := provider (a_context.help_provider)

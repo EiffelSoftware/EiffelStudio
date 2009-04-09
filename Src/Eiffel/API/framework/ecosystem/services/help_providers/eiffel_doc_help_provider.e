@@ -23,13 +23,13 @@ create
 
 feature -- Access
 
-	document_protocol: attached STRING_32
+	document_protocol: STRING
 			-- <Precursor>
 		once
 			create Result.make_from_string ("eiffeldoc")
 		end
 
-	document_description: attached STRING_32
+	document_description: STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("Eiffel Documentation")
@@ -37,7 +37,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: attached STRING
+	base_url: STRING
 			-- <Precursor>
 		once
 			create Result.make_from_string ("http://docs.eiffel.com/isedoc/uuid/")
@@ -51,7 +51,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: attached STRING_GENERAL): attached STRING
+	format_context (a_context: READABLE_STRING_GENERAL): STRING
 			-- <Precursor>
 		local
 			l_count, i: INTEGER
@@ -67,7 +67,7 @@ feature {NONE} -- Formatting
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -91,11 +91,11 @@ feature {NONE} -- Formatting
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		require
 			not_is_initialized: not is_initialized
+			a_factory_attached: a_factory /= Void
 		do
 			initialize_nodes (a_factory)
 			is_initialized := True
@@ -39,31 +40,38 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		require
 			not_is_initialized: not is_initialized
+			a_factory_attached: a_factory /= Void
 		deferred
 		end
 
 feature -- Access
 
-	definition: attached CODE_TEMPLATE_DEFINITION
+	definition: CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {CODE_NODE} -- Access
 
-	code_factory: attached CODE_FACTORY
-			-- Factory used for creating code nodes
+	code_factory: CODE_FACTORY
+			-- Factory used for creating code nodes.
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- <Precursor>
 		do
 			Result := is_initialized
+		ensure then
+			is_initialized: Result implies is_initialized
 		end
 
 feature {NONE} -- Status report
@@ -73,16 +81,19 @@ feature {NONE} -- Status report
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: CODE_TEMPLATE_VISITOR_I)
 			-- Visit's the current node and processes it.
+			--
+			-- `a_visitor': A code template visitor used to process the node.
 		require
 			is_interface_usable: is_interface_usable
+			a_visitor_attached: a_visitor /= Void
 			a_visitor_is_interface_usable: a_visitor.is_interface_usable
 		deferred
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,22 +106,22 @@ feature -- Visitor
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

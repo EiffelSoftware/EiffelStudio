@@ -23,83 +23,111 @@ feature {NONE} -- Initialization
 			--
 			-- `a_factory': Factory used for creating nodes.
 		do
-			set_title (create {attached STRING_32}.make_empty)
-			set_description (create {attached STRING_32}.make_empty)
-			set_author (create {attached STRING_32}.make_empty)
-			set_shortcut (create {attached STRING_32}.make_empty)
-			set_categories (a_factory.create_code_category_collection (Current))
+			set_title (create {STRING_32}.make_empty)
+			set_description (create {STRING_32}.make_empty)
+			set_author (create {STRING_32}.make_empty)
+			set_shortcut (create {STRING_32}.make_empty)
+			set_categories (a_factory.new_code_category_collection (Current))
 		end
 
 feature -- Access
 
-	title: attached STRING_32 assign set_title
-			-- Code template title, used by UI for a terse description
+	title: STRING_32 assign set_title
+			-- Code template title, used by UI for a terse description.
 
-	description: attached STRING_32 assign set_description
-			-- Code template description, used by UI for a more detailed descrition of its function
+	description: STRING_32 assign set_description
+			-- Code template description, used by UI for a more detailed descrition of its function.
 
-	author: attached STRING_32 assign set_author
+	author: STRING_32 assign set_author
 			-- Owner/author of the code template.
 
-	shortcut: attached STRING_32 assign set_shortcut
-			-- Shortcut identifier, used in editing to insert the code template quickly
+	shortcut: STRING_32 assign set_shortcut
+			-- Shortcut identifier, used in editing to insert the code template quickly.
 
-	categories: attached CODE_CATEGORY_COLLECTION assign set_categories
-			-- A collection of categories that the code template belongs to
+	categories: CODE_CATEGORY_COLLECTION assign set_categories
+			-- A collection of categories that the code template belongs to.
 
 feature -- Element change
 
 	set_title (a_title: like title)
-			-- Set `title' with `a_title'.
+			-- Sets a code template title.
+			--
+			-- `a_title': The title for the code template.
+		require
+			a_title_attached: a_title /= Void
 		do
-			title := a_title.twin
+			create title.make_from_string (a_title)
 		ensure
-			title_assigned: title.is_equal (a_title)
+			title_set: title ~ a_title
 		end
 
 	set_description (a_description: like description)
-			-- Set `description' with `a_description'.
+			-- Sets a code template description.
+			--
+			-- `a_description': A new code template description.
+		require
+			a_description_attached: a_description /= Void
 		do
-			description := a_description.twin
+			create description.make_from_string (a_description)
 		ensure
-			description_assigned: description.is_equal (a_description)
+			description_set: description ~ a_description
 		end
 
 	set_author (a_author: like author)
-			-- Set `author' with `a_author'.
+			-- Sets a new code template author.
+			--
+			-- `a_author': A new author name or other moniker.
+		require
+			a_author_attached: a_author /= Void
 		do
-			author := a_author.twin
+			create author.make_from_string (a_author)
 		ensure
-			author_assigned: author.is_equal (a_author)
+			author_set: author ~ a_author
 		end
 
 	set_shortcut (a_shortcut: like shortcut)
-			-- Set `shortcut' with `a_shortcut'.
+			-- Sets a new code template shortcut, used for quick insertion.
+			--
+			-- `a_shortcut': A shortcut string.
+		require
+			a_shortcut_attached: a_shortcut /= Void
 		do
-			shortcut := a_shortcut.twin
+			create shortcut.make_from_string (a_shortcut)
 		ensure
-			shortcut_assigned: shortcut.is_equal (a_shortcut)
+			shortcut_set: shortcut ~ a_shortcut
 		end
 
 	set_categories (a_categories: like categories)
-			-- Set `categories' with `a_categories'.
+			-- Sets a new collection of categories.
+			--
+			-- `a_categories': A new category collection.
+		require
+			a_categories_attached: a_categories /= Void
 		do
 			categories := a_categories
+			a_categories.parent := Current
 		ensure
-			categories_assigned: categories = a_categories
+			categories_set: categories = a_categories
 			categories_parent_set: categories.parent = Current
 		end
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_metadata (Current)
 		end
 
+invariant
+	title_attached: title /= Void
+	description_attached: description /= Void
+	author_attached: author /= Void
+	shortcut_attached: shortcut /= Void
+	categories_attached: categories /= Void
+
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,22 +140,22 @@ feature -- Visitor
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

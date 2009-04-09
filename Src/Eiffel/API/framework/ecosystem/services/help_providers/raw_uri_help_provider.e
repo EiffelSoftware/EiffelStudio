@@ -22,11 +22,8 @@ inherit
 
 feature -- Access
 
-	help_title (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING_32
-			-- A human readable title for a help document, given a context id and section.
-			--
-			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
-			-- `a_section': Used as a title of the piece of help imformation.
+	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
+			-- <Precursor>
 		do
 			if a_section /= Void then
 				create Result.make_from_string (a_section.section.as_string_32)
@@ -36,13 +33,13 @@ feature -- Access
 			end
 		end
 
-	document_protocol: attached STRING_32
+	document_protocol: STRING
 			-- <Precursor>
 		once
 			create Result.make_from_string ("URI")
 		end
 
-	document_description: attached STRING_32
+	document_description: STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("URI")
@@ -55,12 +52,12 @@ feature -- Querry
 
 feature -- Basic operations
 
-	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <Precursor>
 		local
-			l_id: attached STRING
+			l_id: STRING
 		do
-			l_id := a_context_id.as_string_8.as_attached
+			l_id := a_context_id.as_string_8
 			if l_id ~ a_context_id then
 				l_id := l_id.twin
 			end
@@ -70,16 +67,17 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_uri (a_uri: attached STRING)
+	launch_uri (a_uri: READABLE_STRING_8)
 			-- Launches uri in the default web browser.
 			--
 			-- `a_uri': The URI to launch in a web-browser.
 		require
+			a_uri_attached: a_uri /= Void
 			not_a_url_is_empty: not a_uri.is_empty
 		local
-			l_url: attached URI_LAUNCHER
+			l_url: URI_LAUNCHER
 			l_error: ES_ERROR_PROMPT
-			l_default_browser: STRING_GENERAL
+			l_default_browser: READABLE_STRING_GENERAL
 			l_launched: BOOLEAN
 		do
 			create l_url
@@ -99,25 +97,28 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Variable expansion
 
-	context_variables: attached HASH_TABLE [STRING, STRING]
+	context_variables: HASH_TABLE [STRING, STRING]
 			-- A table of context variables, indexed by a variable name
 		do
 			Result := environment_variables
 			Result.merge (es_built_in_variables)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	format_uris (a_uri: attached STRING)
+	format_uris (a_uri: STRING)
 			-- Formates URI and expands any variables
 			--
 			-- `a_uri': URI to format.
 		require
+			a_uri_attached: a_uri /= Void
 			a_uris_contains_valid_items: not a_uri.is_empty
 		local
 			l_context_vars: like context_variables
-			l_uri: attached STRING
-			l_new_uri: attached STRING
+			l_uri: STRING
+			l_new_uri: STRING
 			l_vars: like uri_variables
-			l_var: TUPLE [var: attached STRING; start_i, end_i: INTEGER]
+			l_var: TUPLE [var: STRING; start_i, end_i: INTEGER]
 			l_start_i, l_end_i: INTEGER
 			l_scanner_regex: like variable_scanner_regex
 			l_extractor_regex: like variable_extractor_regex
@@ -175,7 +176,7 @@ feature {NONE} -- Variable expansion
 			end
 		end
 
-	uri_variables (a_uri: attached STRING; a_scanner: attached RX_PCRE_MATCHER; a_var_extractor: attached RX_PCRE_MATCHER): detachable ARRAYED_LIST [TUPLE [var: attached STRING; start_i, end_i: INTEGER]]
+	uri_variables (a_uri: STRING; a_scanner: RX_PCRE_MATCHER; a_var_extractor: RX_PCRE_MATCHER): detachable ARRAYED_LIST [TUPLE [var: STRING; start_i, end_i: INTEGER]]
 			-- Extracts variables from a URI and returns a list of variables with the start and end location
 			-- in characters.
 			--
@@ -183,8 +184,11 @@ feature {NONE} -- Variable expansion
 			-- `a_scanner': An expression to extract tokenized variables.
 			-- `a_var_extractor': An expression used to extract the variable name from its tokenized representation
 		require
+			a_uri_attached: a_uri /= Void
 			not_a_uri_is_empty: not a_uri.is_empty
+			a_scanner_attached: a_scanner /= Void
 			a_scanner_is_compiled: a_scanner.is_compiled
+			a_var_extractor_attached: a_var_extractor /= Void
 			a_var_extractor_is_compiled: a_var_extractor.is_compiled
 		local
 			l_token_var: STRING
@@ -212,38 +216,46 @@ feature {NONE} -- Variable expansion
 				end
 			end
 		ensure
-			result_contains_attached_items: Result /= Void implies not Result.has (Void)
-			result_contains_valid_items: Result /= Void implies Result.for_all (agent (a_ia_item: TUPLE [var: attached STRING; start_i, end_i: INTEGER]): BOOLEAN
-				do
-					Result := not a_ia_item.var.is_empty and a_ia_item.start_i > 0 and a_ia_item.start_i < a_ia_item.end_i
-				end)
+			result_contains_attached_items: (attached {LIST [detachable ANY]} Result) implies not Result.has (Void)
+			result_contains_valid_items: Result /= Void implies Result.for_all (
+				agent (a_ia_item: TUPLE [var: STRING; start_i, end_i: INTEGER]): BOOLEAN
+					do
+						Result := (attached a_ia_item.var as l_var) and then
+							not a_ia_item.var.is_empty and then
+							a_ia_item.start_i > 0 and then
+							a_ia_item.start_i < a_ia_item.end_i
+					end)
 		end
 
-	variable_scanner_regex: attached RX_PCRE_MATCHER
+	variable_scanner_regex: RX_PCRE_MATCHER
 			-- Regular expression to extract tokenized variables from a URI string
 		once
 			create Result.make
 			Result.compile ("(\$[a-zA-Z0-9_-]+|\$\([a-zA-Z0-9_-]+\))")
 		ensure
+			result_attached: Result /= Void
 			result_is_compiled: Result.is_compiled
 		end
 
-	variable_extractor_regex: attached RX_PCRE_MATCHER
+	variable_extractor_regex: RX_PCRE_MATCHER
 			-- Regular expression to extract tokenized variables from a URI string
 		once
 			create Result.make
 			Result.compile ("^\$\(?([^)]+)\)?$")
 		ensure
+			result_attached: Result /= Void
 			result_is_compiled: Result.is_compiled
 		end
 
-	environment_variables: attached HASH_TABLE [STRING, STRING]
+	environment_variables: HASH_TABLE [STRING, STRING]
 			-- All environment variables
 		once
 			Result := (create {EXECUTION_ENVIRONMENT}).starting_environment_variables.as_attached
+		ensure
+			result_attached: Result /= Void
 		end
 
-	es_built_in_variables: attached HASH_TABLE [STRING, STRING]
+	es_built_in_variables: HASH_TABLE [STRING, STRING]
 			-- ES built-in variables.
 			-- These variables should ideally be built into a configure file.
 		once
@@ -252,6 +264,8 @@ feature {NONE} -- Variable expansion
 			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
 			Result.put ("http://doc.eiffel.com", "ISE_DOC")
 			Result.put ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
+		ensure
+			result_attached: Result /= Void
 		end
 
 note
@@ -279,11 +293,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

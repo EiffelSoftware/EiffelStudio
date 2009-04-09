@@ -19,34 +19,36 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; a_parent: like parent)
+	make (a_id: READABLE_STRING_GENERAL; a_parent: like parent)
 			-- Initializes a code declaration node.
 			--
 			-- `a_id': A declaration identifier.
 			-- `a_parent': Parent code node.
 		require
+			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
+			a_parent_attached: a_parent /= Void
 		do
-			set_id (a_id)
+			set_id (a_id.as_string_8)
 			make_sub_node (a_parent)
 		ensure
-			id_set: id.is_equal (a_id)
+			id_set: id ~ a_id
+			parent_set: parent = a_parent
+			is_initialized: is_initialized
 		end
 
 	initialize_nodes (a_factory: like code_factory)
-			-- Initializes the default nodes for Current.
-			--
-			-- `a_factory': Factory used for creating nodes.
+			-- <Precursor>
 		do
 			create description.make_empty
 		end
 
 feature -- Access
 
-	id: attached STRING_8 assign set_id
+	id: STRING assign set_id
 			-- Declaration identifier
 
-	description: attached STRING_32 assign set_description
+	description: STRING_32 assign set_description
 			-- Description of the identifier for user interface cues.
 
 feature -- Element change
@@ -56,21 +58,24 @@ feature -- Element change
 			--
 			-- `a_id': A declaration identifier.
 		require
+			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 		do
-			id := a_id.twin
+			create id.make_from_string (a_id)
 		ensure
-			id_set: id.is_equal (a_id)
+			id_set: id ~ a_id
 		end
 
 	set_description (a_description: like description)
 			-- Set a declaration's description for UI cues.
 			--
 			-- `a_description': A description of the identifier for UI replacement cues.
+		require
+			a_description_attached: a_description /= Void
 		do
-			description := a_description.twin
+			create description.make_from_string (a_description)
 		ensure
-			description_set: description.is_equal (a_description)
+			description_set: description ~ a_description
 		end
 
 feature -- Status report
@@ -83,10 +88,12 @@ feature -- Status report
 		end
 
 invariant
+	id_attached: id /= Void
 	not_id_is_empty: is_initialized implies not id.is_empty
+	description_attached: description /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,22 +106,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

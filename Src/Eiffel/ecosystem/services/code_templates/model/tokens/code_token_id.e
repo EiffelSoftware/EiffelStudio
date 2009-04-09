@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text)
+	make (a_text: READABLE_STRING_GENERAL)
 			-- Initializes the code token using a text representation, as taken from a code template text source.
 			--
 			-- `a_text': A string representation of the token.
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			is_editable := True
 			make_token (a_text)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: text.same_string_general (a_text)
 			is_editable: is_editable
 		end
 
@@ -44,11 +44,8 @@ feature -- Access
 
 	printable_text: like text
 			-- <Precursor>
-		local
-			l_result: like internal_printable_text
 		do
-			l_result := internal_printable_text
-			if l_result /= Void then
+			if attached internal_printable_text as l_result then
 				Result := l_result
 			else
 				create Result.make_empty
@@ -75,15 +72,17 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	evaluate (a_table: attached CODE_SYMBOL_TABLE)
+	evaluate (a_table: CODE_SYMBOL_TABLE)
 			-- Evalutes the current token to determine it's printable value.
 			--
 			-- `a_table': A code symbol table to take evaluated values from.
+		require
+			a_table_attached: a_table /= Void
 		local
-			l_value: attached CODE_SYMBOL_VALUE
-			l_id: attached STRING
+			l_value: CODE_SYMBOL_VALUE
+			l_id: STRING
 		do
-			l_id := text.as_string_8.as_attached
+			l_id := text.as_string_8
 			if a_table.has_id (l_id) then
 					-- Fetch value from the symbol table
 				l_value := a_table.item (l_id)
@@ -96,7 +95,7 @@ feature -- Basic operations
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
+	process (a_visitor: CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_id (Current)
@@ -115,11 +114,11 @@ feature -- Output
 
 feature {NONE} -- Internal implementation cache
 
-	internal_printable_text: detachable STRING_32
+	internal_printable_text: detachable like printable_text
 			-- Mutable version of `printable_text'		
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -132,22 +131,22 @@ feature {NONE} -- Internal implementation cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

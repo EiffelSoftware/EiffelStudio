@@ -44,7 +44,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	new_output (a_key: UUID): OUTPUT_I
+	new_output (a_key: UUID; a_name: READABLE_STRING_GENERAL): OUTPUT_I
 			-- <Precursor>
 		do
 			create {OUTPUT_TTY} Result

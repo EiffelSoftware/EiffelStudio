@@ -24,9 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize_nodes (a_factory: like code_factory)
-			-- Initializes the default nodes for Current.
-			--
-			-- `a_factory': Factory used for creating nodes.
+			-- <Precursor>
 		do
 			create must_conform_to.make_from_string ("ANY")
 			Precursor (a_factory)
@@ -34,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	must_conform_to: attached STRING_32 assign set_must_conform_to
+	must_conform_to: STRING assign set_must_conform_to
 			-- A object value conformance type.
 
 feature -- Element change
@@ -44,26 +42,28 @@ feature -- Element change
 			--
 			-- `a_type': The type the object literal must conform to.
 		require
+			a_type_attached: a_type /= Void
 			not_a_type_is_empty: not a_type.is_empty
 		do
-			must_conform_to := a_type.twin
+			create must_conform_to.make_from_string (a_type)
 		ensure
-			must_conform_to_set: must_conform_to.is_equal (a_type)
+			must_conform_to_set: must_conform_to ~ a_type
 		end
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_object_declaration (Current)
 		end
 
 invariant
+	must_conform_to: is_initialized implies must_conform_to /= Void
 	not_must_conform_to_is_empty: is_initialized implies not must_conform_to.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -76,22 +76,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

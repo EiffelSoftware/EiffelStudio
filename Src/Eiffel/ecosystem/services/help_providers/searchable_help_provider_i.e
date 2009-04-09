@@ -15,18 +15,28 @@ inherit
 
 feature -- Query
 
-	search_help (a_search: attached STRING_GENERAL): attached DS_LIST [TUPLE [title: attached STRING_GENERAL; context_id: attached STRING_GENERAL]]
+	search_help (a_search: READABLE_STRING_GENERAL): DS_LIST [TUPLE [title: STRING_32; context_id: STRING_32]]
 			-- Searches help provider for documents using a search string.
 			-- Note: Search is syncronous and may be slow to retrieve results.
 			--
 			-- `a_search': Search string to look up reference documentation
 			-- `Result': A list of results paired using a textual title of the document and a matching help content context id.
+		require
+			a_search_attached: a_search /= Void
+			not_a_search_is_empty: not a_search.is_empty
 		deferred
 		ensure
-			result_contains_attached_items: not Result.has (Void)
-			result_contains_valid_items: Result.for_all (agent (a_ia_item: TUPLE [title: attached STRING_GENERAL; context_id: attached STRING_GENERAL]): BOOLEAN
+			result_attached: Result /= Void
+			result_contains_attached_items: (attached {DS_LIST [detachable ANY]} Result as l_result) and then not l_result.has (Void)
+			result_contains_valid_items: Result.for_all (agent (a_ia_item: TUPLE [title: STRING_32; context_id: STRING_32]): BOOLEAN
+				require
+					a_ia_item_attached: a_ia_item /= Void
+					title_attached: a_ia_item.title /= Void
+					context_id_attached: a_ia_item.context_id /= Void
 				do
-					Result := not a_ia_item.title.is_empty and not a_ia_item.context_id.is_empty and then is_valid_context_id (a_ia_item.context_id)
+					Result := not a_ia_item.title.is_empty and then
+						not a_ia_item.context_id.is_empty and then
+						is_valid_context_id (a_ia_item.context_id)
 				end)
 		end
 

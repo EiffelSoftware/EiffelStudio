@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	value: attached STRING_32
+	value: STRING_32
 			-- The actual value, having been processed
 		do
 			if has_value_been_evaluated then
@@ -27,15 +27,16 @@ feature -- Access
 			end
 			create Result.make_from_string (internal_value)
 		ensure then
+			result_attached: Result /= Void
 			has_value_been_evaluated: has_value_been_evaluated
 		end
 
 feature -- Status report
 
 	has_value_been_evaluated: BOOLEAN
-			-- Indicates if `value' has been evaluated
+			-- Indicates if `value' has been evaluated.
 		do
-			Result := (internal_value = Void)
+			Result := internal_value /= Void
 		ensure
 			internal_value_attached: Result implies internal_value /= Void
 		end
@@ -72,7 +73,7 @@ feature {NONE} -- Basic operations
 		require
 			not_has_value_been_evaluated: not has_value_been_evaluated
 		local
-			l_result: attached STRING_32
+			l_result: STRING_32
 			l_value: like calculate_value
 			retried: BOOLEAN
 		do
@@ -83,9 +84,13 @@ feature {NONE} -- Basic operations
 				l_value := default_value
 			end
 
-			if l_value /= Void and not l_value.is_empty then
-				create l_result.make (l_value.count)
-				l_result.append_string (l_value)
+			if l_value /= Void
+				if not l_value.is_empty then
+					create l_result.make (l_value.count)
+					l_result.append_string (l_value)
+				else
+					Result := l_value
+				end
 			else
 				create l_result.make_empty
 			end
@@ -98,7 +103,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -111,22 +116,22 @@ feature {NONE} -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

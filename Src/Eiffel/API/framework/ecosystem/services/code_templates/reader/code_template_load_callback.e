@@ -28,11 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like code_factory; a_parser: attached like xml_parser)
+	make (a_factory: like code_factory; a_parser: like xml_parser)
 			-- Initializes a XML load callback using a code factory.
 			--
 			-- `a_factory': A factory for creating code template nodes.
 			-- `a_parser': An XML parser to use to process the callbacks.
+		require
+			a_factory_attached: a_factory /= Void
+			a_parser_attached: a_parser /= Void
 		do
 			code_factory := a_factory
 			make_es_callbacks (a_parser)
@@ -52,7 +55,7 @@ feature {NONE} -- Access
 	last_declaration: detachable CODE_DECLARATION
 			-- Last literal code declaration processed.
 
-	code_factory: attached CODE_FACTORY
+	code_factory: CODE_FACTORY
 			-- Factory for generating code template nodes.
 
 feature {NONE} -- Status report
@@ -63,10 +66,12 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	format_utilities: attached CODE_FORMAT_UTILITIES
+	format_utilities: CODE_FORMAT_UTILITIES
 			-- Shared access to code formatting utilies.
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Basic operations
@@ -76,18 +81,21 @@ feature {NONE} -- Basic operations
 		do
 			Precursor {XM_STATE_LOAD_CALLBACKS}
 			last_code_template_definition := Void
+			last_declaration := Void
 		ensure then
 			last_code_template_definition_detached: last_code_template_definition = Void
+			last_declaration_detached: last_declaration = Void
 		end
 
 feature -- Formatting
 
-	format_template (a_template: attached STRING_32): attached STRING_32
+	format_template (a_template: STRING_32): STRING_32
 			-- Formats a template examining extracting it if any template delimiter are defined.
 			--
 			-- `a_template': The orginal template text to extract a delimited template from
 			-- `Result': The extracted template.
 		require
+			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
 		local
 			l_delimiter: STRING_32
@@ -126,6 +134,8 @@ feature -- Formatting
 			else
 				Result := a_template
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Process
@@ -185,15 +195,18 @@ feature {NONE} -- Production processing
 			-- Processes the top-level code template node.
 		require
 			last_code_template_definition_detached: last_code_template_definition = Void
+		local
+			l_definition: like last_code_template_definition
 		do
-			last_code_template_definition := code_factory.create_code_template_defintion
+			l_definition := code_factory.new_code_template_defintion
+			last_code_template_definition := l_definition
 
 				-- Add built-in declarations
 
 				-- Adds built-in 'selected' text declaration
-			last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name, last_code_template_definition.declarations))
+			l_definition.declarations.extend (code_factory.new_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name, last_code_template_definition.declarations))
 				-- Adds built-in 'cursor' text declaration
-			last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name, last_code_template_definition.declarations))
+			l_definition.declarations.extend (code_factory.new_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name, last_code_template_definition.declarations))
 		ensure
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		end
@@ -210,9 +223,15 @@ feature {NONE} -- Production processing
 			-- Processes a metadata title.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
+		local
+			l_definition: like last_code_template_definition
+			l_content: like current_content
 		do
-			if not current_content.is_empty then
-				last_code_template_definition.metadata.title := current_content
+			l_content := current_content
+			if not l_content.is_empty then
+				l_definition := last_code_template_definition
+				check l_definition_attached: l_definition /= Void end
+				l_definition.metadata.title := l_content
 			end
 		end
 
@@ -220,9 +239,15 @@ feature {NONE} -- Production processing
 			-- Processes a metadata literal description.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
+		local
+			l_definition: like last_code_template_definition
+			l_content: like current_content
 		do
-			if not current_content.is_empty then
-				last_code_template_definition.metadata.description := current_content
+			l_content := current_content
+			if not l_content.is_empty then
+				l_definition := last_code_template_definition
+				check l_definition_attached: l_definition /= Void end
+				l_definition.metadata.description := l_content
 			end
 		end
 
@@ -230,9 +255,15 @@ feature {NONE} -- Production processing
 			-- Processes a metadata author.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
+		local
+			l_definition: like last_code_template_definition
+			l_content: like current_content
 		do
-			if not current_content.is_empty then
-				last_code_template_definition.metadata.author := current_content
+			l_content := current_content
+			if not l_content.is_empty then
+				l_definition := last_code_template_definition
+				check l_definition_attached: l_definition /= Void end
+				l_definition.metadata.author := l_content
 			end
 		end
 
@@ -240,9 +271,15 @@ feature {NONE} -- Production processing
 			-- Processes a metadata shortcut.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
+		local
+			l_definition: like last_code_template_definition
+			l_content: like current_content
 		do
-			if not current_content.is_empty then
-				last_code_template_definition.metadata.shortcut := current_content
+			l_content := current_content
+			if not l_content.is_empty then
+				l_definition := last_code_template_definition
+				check l_definition_attached: l_definition /= Void end
+				last_code_template_definition.metadata.shortcut := l_content
 			end
 		end
 
@@ -259,12 +296,15 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_categories: attached CODE_CATEGORY_COLLECTION
+			l_definition: like last_code_template_definition
+			l_categories: CODE_CATEGORY_COLLECTION
 			l_category: like current_content
 		do
 			l_category := current_content
 			if not l_category.is_empty then
-				l_categories := last_code_template_definition.metadata.categories
+				l_definition := last_code_template_definition
+				check l_definition_attached: l_definition /= Void end
+				l_categories := l_definition.metadata.categories
 				if not l_categories.has (l_category) then
 					l_categories.extend (l_category)
 				end
@@ -284,25 +324,27 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_literal: attached CODE_LITERAL_DECLARATION
+			l_literal: CODE_LITERAL_DECLARATION
 			l_attributes: like current_attributes
-			l_declarations: attached CODE_DECLARATION_COLLECTION
-			l_default: attached STRING_32
+			l_declarations: CODE_DECLARATION_COLLECTION
+			l_default: STRING_32
+			l_id: STRING
 		do
 			last_declaration := Void
 
 				-- Fetch literal ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then attached {STRING_8} l_attributes.item (at_id).as_string_8 as l_id and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then (attached l_attributes.item (at_id) as l_attribute) and then not l_attribute.is_empty then
+				l_id := l_attribute.as_string_8
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
-					l_literal := code_factory.create_code_literal_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then attached {STRING_32} l_attributes.item (at_editable) as l_editable and then not l_editable.is_empty then
+					l_literal := code_factory.new_code_literal_declaration (l_id, l_declarations)
+					if l_attributes.has (at_editable) and then (attached l_attributes.item (at_editable) as l_editable) and then not l_editable.is_empty then
 						l_literal.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 						-- Set the default value to the declaration name
 					if l_literal.is_editable then
-						create l_default.make_from_string (l_id.as_string_32)
+						create l_default.make_from_string (l_attribute)
 						l_literal.default_value := l_default
 					end
 					l_declarations.extend (l_literal)
@@ -323,30 +365,32 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_object: attached CODE_OBJECT_DECLARATION
+			l_object: CODE_OBJECT_DECLARATION
 			l_attributes: like current_attributes
-			l_declarations: attached CODE_DECLARATION_COLLECTION
-			l_default: attached STRING_32
+			l_declarations: CODE_DECLARATION_COLLECTION
+			l_default: STRING_32
+			l_id: STRING
 		do
 			last_declaration := Void
 
 				-- Fetch object ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then attached {STRING_8} l_attributes.item (at_id).as_string_8 as l_id and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then (attached l_attributes.item (at_id) as l_attribute) and then not l_attribute.is_empty then
+				l_id := l_attribute.as_string_8
 				l_declarations := last_code_template_definition.declarations
 				if l_declarations.declaration (l_id) = Void or else not is_strict then
-					l_object := code_factory.create_code_object_declaration (l_id, l_declarations)
-					if l_attributes.has (at_editable) and then attached {STRING_32} l_attributes.item (at_editable) as l_editable and then not l_editable.is_empty then
+					l_object := code_factory.new_code_object_declaration (l_id, l_declarations)
+					if l_attributes.has (at_editable) and then (attached l_attributes.item (at_editable) as l_editable) and then not l_editable.is_empty then
 						l_object.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
 
 					if l_object.is_editable then
 							-- Set the default value to the declaration name
-						create l_default.make_from_string (l_id.as_string_32)
+						create l_default.make_from_string (l_attribute)
 						l_object.default_value := l_default
 					end
 
-					if l_attributes.has (at_conforms_to) and then attached {STRING_32} l_attributes.item (at_conforms_to) as l_type and then not l_type.is_empty then
+					if l_attributes.has (at_conforms_to) and then (attached l_attributes.item (at_conforms_to) as l_type) and then not l_type.is_empty then
 							-- Set the conformance type
 						l_object.must_conform_to := l_type
 					end
@@ -382,7 +426,7 @@ feature {NONE} -- Production processing
 			last_declaration_attached: last_declaration /= Void
 			last_declaration_is_literal: ({CODE_LITERAL_DECLARATION}) #? last_declaration /= Void
 		do
-			if not current_content.is_empty and then attached {CODE_LITERAL_DECLARATION} last_declaration as l_literal then
+			if not current_content.is_empty and then (attached {CODE_LITERAL_DECLARATION} last_declaration as l_literal) then
 				l_literal.default_value := current_content
 			end
 		end
@@ -401,9 +445,9 @@ feature {NONE} -- Production processing
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
 			l_attributes: like current_attributes
-			l_templates: attached CODE_TEMPLATE_COLLECTION
-			l_version: attached CODE_VERSION
-			l_template: attached CODE_TEMPLATE
+			l_templates: CODE_TEMPLATE_COLLECTION
+			l_version: CODE_VERSION
+			l_template: CODE_TEMPLATE
 			l_text: like current_content
 		do
 			l_text := current_content
@@ -414,10 +458,10 @@ feature {NONE} -- Production processing
 			l_templates := last_code_template_definition.templates
 			l_attributes := current_attributes
 			if l_attributes.has (at_version) then
-				if attached {STRING_32} l_attributes.item (at_version) as l_value and then not l_value.is_empty then
+				if (attached l_attributes.item (at_version) as l_value) and then not l_value.is_empty then
 						-- Create a version template
 					l_version := format_utilities.parse_version (l_value, code_factory)
-					l_template := code_factory.create_code_versioned_template (l_version, l_templates)
+					l_template := code_factory.new_code_versioned_template (l_version, l_templates)
 					l_template.set_tokens_with_text (l_text)
 					last_code_template_definition.templates.extend (l_template)
 				else
@@ -425,7 +469,7 @@ feature {NONE} -- Production processing
 				end
 			else
 					-- Create an unversioned template
-				l_template := code_factory.create_code_template (l_templates)
+				l_template := code_factory.new_code_template (l_templates)
 				l_template.set_tokens_with_text (l_text)
 				l_templates.extend (l_template)
 			end
@@ -433,7 +477,7 @@ feature {NONE} -- Production processing
 
 feature {NONE} -- Action handlers
 
-	on_error (a_msg: attached STRING_32; a_line: NATURAL; a_char: NATURAL)
+	on_error (a_msg: STRING_32; a_line: NATURAL; a_char: NATURAL)
 			-- <Precursor>
 		do
 			Precursor (a_msg, a_line, a_char)
@@ -442,10 +486,10 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: attached DS_HASH_TABLE [NATURAL_8, STRING]
+			l_trans: DS_HASH_TABLE [NATURAL_8, STRING]
 		once
 			create Result.make (8)
 
@@ -515,10 +559,10 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_templates)
 		end
 
-	attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	attribute_states: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: attached DS_HASH_TABLE [NATURAL_8, STRING]
+			l_attr: DS_HASH_TABLE [NATURAL_8, STRING]
 		once
 			create Result.make (4)
 
@@ -583,8 +627,12 @@ feature {NONE} -- Attributes states
 
 	at_version: NATURAL_8            = 0x54
 
+invariant
+	code_factory_attached: code_factory /= Void
+	last_code_template_definition_attached: last_declaration /= Void implies last_code_template_definition /= Void
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -608,11 +656,11 @@ feature {NONE} -- Attributes states
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

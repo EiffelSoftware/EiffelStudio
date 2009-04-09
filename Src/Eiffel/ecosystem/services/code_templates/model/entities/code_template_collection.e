@@ -22,11 +22,8 @@ feature -- Query
 			-- Attempts to retreive the most applicable code template for the version of the compiler.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
-		local
-			l_version: attached STRING_32
 		do
-			create l_version.make_from_string ((create {SYSTEM_CONSTANTS}).compiler_version_number.version)
-			Result := applicable_item_with_version (l_version)
+			Result := applicable_item_with_version ((create {SYSTEM_CONSTANTS}).compiler_version_number.version)
 			if Result = Void then
 				Result := applicable_default_item
 			end
@@ -37,101 +34,101 @@ feature -- Query
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
 		local
-			l_template: CODE_TEMPLATE
-			l_versioned_template: CODE_VERSIONED_TEMPLATE
+			l_cursor: DS_BILINEAR_CURSOR [CODE_TEMPLATE]
 		do
-			if attached {attached DS_BILINEAR_CURSOR [attached CODE_TEMPLATE]} items.new_cursor as l_templates then
-				from l_templates.start until l_templates.after loop
-					l_template := l_templates.item
-					l_versioned_template ?= l_template
-					if l_versioned_template = Void then
+			l_cursor := items.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				if attached l_cursor.item as l_template then
+					if not attached {CODE_VERSIONED_TEMPLATE} l_template then
 							-- Template is not versioned, so take the first non-versioned
 						Result := l_template
-						l_templates.go_after
+						l_cursor.go_after
 					else
-						l_templates.forth
+						l_cursor.forth
 					end
 				end
-				check gobo_cursor_cleaned_up: l_templates.off end
 			end
+			check gobo_memory_leak: l_cursor.off end
 		ensure
-			result_is_unversioned: not attached {CODE_VERSIONED_TEMPLATE} Result as e1
+			result_is_unversioned: not attached {CODE_VERSIONED_TEMPLATE} Result
 		end
 
-	applicable_item_with_version (a_version: attached STRING_32): detachable CODE_TEMPLATE
+	applicable_item_with_version (a_version: STRING): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
+			a_version_attached: a_version /= Void
 			not_a_version_is_empty: not a_version.is_empty
 		local
-			l_version: attached CODE_VERSION
+			l_version: CODE_VERSION
 		do
-			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, create {CODE_FACTORY})
+			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, code_factory)
 			Result := applicable_item_with_code_version (l_version)
 		end
 
-	applicable_item_with_code_version (a_version: attached CODE_VERSION): detachable CODE_TEMPLATE
+	applicable_item_with_code_version (a_version: CODE_VERSION): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a version.
 			--
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			not_a_version_is_default: not a_version.is_equal (create {CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
+			a_version_attached: a_version /= Void
+			not_a_version_is_default: a_version /~ (create {CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		local
 			l_templates: like items
-			l_template: attached CODE_TEMPLATE
-			l_versioned_templates: attached DS_ARRAYED_LIST [attached CODE_VERSIONED_TEMPLATE]
-			l_ver_template: CODE_VERSIONED_TEMPLATE
-			l_next_ver_template: attached CODE_VERSIONED_TEMPLATE
-			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE]
+			l_versioned_templates: DS_ARRAYED_LIST [CODE_VERSIONED_TEMPLATE]
+			l_versioned_template: detachable CODE_VERSIONED_TEMPLATE
+			l_unversioned_template: detachable CODE_TEMPLATE
+			l_cursor: DS_BILINEAR_CURSOR [CODE_TEMPLATE]
 		do
 			l_templates := items
 			if not l_templates.is_empty then
 				if l_templates.count = 1 then
 						-- There's only one template
 					Result := l_templates.first
-					if attached {CODE_VERSIONED_TEMPLATE} Result as l_vt1 and then not l_vt1.is_compatible_with (a_version) then
+					if attached {CODE_VERSIONED_TEMPLATE} Result as l_template and then not l_template.is_compatible_with (a_version) then
 							-- The template is not usable, so unset it.
 						Result := Void
 					end
 				else
 						-- Find most applicable templates
 					create l_versioned_templates.make_default
+						-- Compile a list of versioned templates
 					l_cursor := l_templates.new_cursor
-					if l_cursor /= Void then
-							-- Compile a list of versioned templates
-						from l_cursor.start until l_cursor.after loop
-							if attached {CODE_VERSIONED_TEMPLATE} l_cursor.item as l_vt2 then
-								l_versioned_templates.force_last (l_vt2)
-							else
-									-- Keep the unversioned template, incase there are no versioned ones
-									-- or a incompatable version.
-								l_template := l_cursor.item
-							end
-							l_cursor.forth
+					from l_cursor.start until l_cursor.after loop
+						if attached {CODE_VERSIONED_TEMPLATE} l_cursor.item as l_template then
+							l_versioned_templates.force_last (l_template)
+						else
+								-- Keep the unversioned template, incase there are no versioned ones
+								-- or a incompatable version.
+							l_unversioned_template := l_cursor.item
 						end
+						l_cursor.forth
+					end
+					check gobo_memory_leak: l_cursor.off end
 
-						if not l_versioned_templates.is_empty then
-							from l_versioned_templates.start until l_versioned_templates.after loop
-								l_next_ver_template := l_versioned_templates.item_for_iteration
-								if l_next_ver_template.is_compatible_with (a_version) then
-									if l_ver_template = Void or else l_next_ver_template.version > l_ver_template.version then
-										l_ver_template := l_next_ver_template
+					if not l_versioned_templates.is_empty then
+						from l_versioned_templates.start until l_versioned_templates.after loop
+							if attached l_versioned_templates.item_for_iteration as l_next_template then
+								if l_next_template.is_compatible_with (a_version) then
+									if l_versioned_template = Void or else l_next_template.version > l_versioned_template.version then
+										l_versioned_template := l_next_template
 									end
 								end
-								l_versioned_templates.forth
 							end
 
-								-- Set last found version
-							Result := l_ver_template
+							l_versioned_templates.forth
 						end
+					end
 
-						if Result = Void then
-								-- No versioned template was matched, use a non-versioned template if available.
-							Result := l_template
-						end
+						-- Set result with a versioned template, if set.
+					Result := l_versioned_template
+
+					if Result = Void then
+							-- No versioned template was matched, use a non-versioned template if available.
+						Result := l_unversioned_template
 					end
 				end
 			end
@@ -139,14 +136,14 @@ feature -- Query
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TEMPLATE_VISITOR_I)
+	process (a_visitor: CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_template_collection (Current)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -159,22 +156,22 @@ feature -- Visitor
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

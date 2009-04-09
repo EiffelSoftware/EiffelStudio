@@ -13,10 +13,11 @@ deferred class
 
 feature -- Access
 
-	section: attached STRING_GENERAL
+	section: STRING
 			-- String representation of the page navigation section locator.
 		deferred
 		ensure
+			result_attached: Result /= Void
 			section_not_empty: not Result.is_empty
 		end
 

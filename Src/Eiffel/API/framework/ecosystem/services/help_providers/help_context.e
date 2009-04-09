@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	frozen help_context_id: attached STRING_GENERAL
+	frozen help_context_id: STRING
 			-- <Precursor>
 		do
-			create {attached STRING_8} Result.make_empty
-			if attached {attached STRING_GENERAL} help_context as l_result then
+			create Result.make_empty
+			if attached help_context as l_result then
 				Result.append (l_result)
 			end
 		end
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	help_context: detachable STRING_GENERAL
+	help_context: STRING
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
@@ -55,7 +55,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -79,11 +79,11 @@ feature -- Status report
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -15,31 +15,35 @@ inherit
 
 feature -- Access
 
-	document_protocol: attached STRING_32
+	document_protocol: STRING
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_description: attached STRING_32
+	document_description: STRING_32
 			-- Document short description
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen kind: attached UUID
+	frozen kind: UUID
 			-- Help provider id, assigned to by the help providers service
 
 feature {HELP_PROVIDERS_S} -- Element change
 
-	frozen set_kind (a_kind: attached UUID)
+	frozen set_kind (a_kind: UUID)
 			-- Set's help provider's kind ID.
+		require
+			a_kind_attached: a_kind /= Void
 		do
 			kind := a_kind
 		ensure
@@ -48,50 +52,57 @@ feature {HELP_PROVIDERS_S} -- Element change
 
 feature -- Basic operations
 
-	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- Attempts to show help for a specific context using the current help provider
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
 			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
 		require
 			is_interface_usable: is_interface_usable
+			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
 		deferred
 		end
 
-	help_title (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING_32
+	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
 			-- A human readable title for a help document, given a context id and section.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
 			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
 		require
 			is_interface_usable: is_interface_usable
+			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)
-			if attached {attached STRING_GENERAL} a_section as l_section then
+			if attached {STRING_GENERAL} a_section as l_section then
 				Result.append ((", ").as_string_32)
 				Result.append (l_section.as_string_32)
 			end
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Query
 
-	is_valid_context_id (a_context_id: attached STRING_GENERAL): BOOLEAN
+	is_valid_context_id (a_context_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a help content context id is valid
 			--
 			-- `a_context_id': A help provider's linkable context content id to validate.
 			-- `Result': True to indicate the context id is valid; False otherwise.
 		require
+			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
 		do
 			Result := True
 		end
+
+invariant
+	kind_attached: kind /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

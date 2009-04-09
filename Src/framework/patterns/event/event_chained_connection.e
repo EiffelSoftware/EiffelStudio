@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Event connection
 
-	connect_events (a_observer: attached G)
+	connect_events (a_observer: G)
 			-- <Precursor>
 		local
 			l_link: like linked_connection
@@ -89,7 +89,7 @@ feature -- Event connection
 				attached {LINKG} a_observer as l_observer implies linked_connection.is_connected (l_observer)
 		end
 
-	disconnect_events (a_observer: attached G)
+	disconnect_events (a_observer: G)
 			-- <Precursor>
 		local
 			l_link: like linked_connection

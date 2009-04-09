@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -33,7 +33,7 @@ feature -- Test routines
 
 	basic_stress_testing
 			-- New test routine
-		indexing
+		note
 			testing:  "editor", "covers/{TEXT_PANEL}"
 		do
 			create app

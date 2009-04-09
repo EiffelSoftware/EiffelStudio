@@ -24,9 +24,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: attached like help_context_id; a_section: detachable like help_context_section)
+	make (a_id: like help_context_id; a_section: detachable like help_context_section)
 			-- Initialize a new custom help context.
 		require
+			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
@@ -39,21 +40,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 
-	help_context_section: detachable STRING_GENERAL
+	help_context_section: detachable STRING
 			-- -- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 
 feature {NONE} -- Access
 
 	internal_help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
-		local
-			l_section: detachable like help_context_section
 		do
-			l_section := help_context_section
-			if l_section /= Void then
+			if attached help_context_section as l_section then
 				create {HELP_CONTEXT_SECTION} Result.make (l_section)
 			end
 		end
@@ -70,7 +68,7 @@ invariant
 	not_help_context_section_is_empty: help_context_section /= Void implies not help_context_section.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -83,22 +81,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						cURL curl_easy_setopt callback functions' Eiffel wrappers.
 						We need this class since cURL need a c function pointer as value but

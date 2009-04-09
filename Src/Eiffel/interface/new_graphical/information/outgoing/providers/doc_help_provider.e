@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	document_protocol: attached STRING_32
+	document_protocol: STRING
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
 			create Result.make_empty
 			Result.append ("DOC")
 		end
 
-	document_description: attached STRING_32
+	document_description: STRING_32
 			-- Document short description
 		once
 			create Result.make_empty
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
 		do
 				-- For the moment, DOC is treated as normal URI
@@ -41,7 +41,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,11 +65,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

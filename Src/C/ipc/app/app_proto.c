@@ -1727,8 +1727,6 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 
 	exec_recording_enabled = 0; /* Disable execution recording status */
  
-	c_opush(NULL); /*Is needed since the stack management seems to have problems with uninitialized c stack*/
-	c_opop(); 
 	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occured, &ip);
 
 	if (ip.type == SK_VOID) {

@@ -46,17 +46,30 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 			EIF_EXIT_EIFFEL;
 			break;
 		case DLL_PROCESS_DETACH:
-			EIF_ENTER_EIFFEL;
-			reclaim ();
+			{
+				GTCX;
+				if (eif_globals) {
+					EIF_ENTER_EIFFEL;
+					reclaim();
+				}
+			}
 			break;
+
 		case DLL_THREAD_ATTACH:
 			init_rt();
 			EIF_EXIT_EIFFEL;
 			break;
+
 		case DLL_THREAD_DETACH:
-			EIF_ENTER_EIFFEL;
-			eif_thr_exit();
+			{
+				GTCX;
+				if (eif_globals) {
+					EIF_ENTER_EIFFEL;
+					eif_thr_exit();
+				}
+			}
 			break;
+
 	}
 	return TRUE;
 }

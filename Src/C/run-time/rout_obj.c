@@ -324,7 +324,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 		
 		RT_GC_WEAN_N(nb_protected);
 		nb_protected = 0;
-			;
+
 			/* We are calling a feature through an agent, in this case, we consider all calls
 			 * as qualified so that the invariant is checked. */
 		nstcall = 1;

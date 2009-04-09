@@ -17,11 +17,13 @@ inherit
 
 feature -- Status report
 
-	is_connected (a_observer: attached G): BOOLEAN
+	is_connected (a_observer: G): BOOLEAN
 			-- Determines if an event handler interface has already been connected to Current.
 			--
 			-- `a_observer': The event handler interface to test for an establish connection.
 			-- `Result': True if the event handler interface has already been connected, False otherwise.
+		require
+			a_observer_attached: a_observer /= Void
 		deferred
 		end
 
@@ -44,12 +46,13 @@ feature -- Status report
 
 feature -- Event connection
 
-	connect_events (a_observer: attached G)
+	connect_events (a_observer: G)
 			-- Connects event handler interface to Current.
 			--
 			-- `a_observer': Event handler interface to connection to current.
 		require
 			is_interface_usable: is_interface_usable
+			a_observer_attached: a_observer /= Void
 			a_observer_is_valid_connection: is_valid_connection (a_observer)
 			not_a_observer_is_connected: not is_connected (a_observer)
 		deferred
@@ -57,14 +60,14 @@ feature -- Event connection
 			a_observer_is_connected: is_connected (a_observer)
 		end
 
-	disconnect_events (a_observer: attached G)
+	disconnect_events (a_observer: G)
 			-- Connects event handler interface from Current.
 			--
 			-- `a_observer': Event handler interface to disconnection from current.
 		require
 			is_interface_usable: is_interface_usable
+			a_observer_attached: a_observer /= Void
 			a_observer_is_connected: is_connected (a_observer)
-			a_observer_is_valid: attached {G} a_observer
 		deferred
 		ensure
 			not_a_observer_is_connected: not is_connected (a_observer)

@@ -37,20 +37,17 @@ feature {NONE} -- Clean up
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
 		local
-			l_connections: like internal_connections
 			l_connection_copy: like internal_connections
-			l_connection: detachable G
 		do
 			if a_explicit then
-				l_connections := internal_connections
-				if l_connections /= Void then
+				if attached internal_connections as l_connections then
 						-- If the following is violated then some object did not disconnect the events
 					check l_connections_is_empty: l_connections.is_empty end
 					l_connection_copy := l_connections.twin
 					from l_connection_copy.start until l_connection_copy.after loop
-						l_connection := l_connection_copy.item_for_iteration
-						check l_connection_attached: attached l_connection end
-						disconnect_events (l_connection)
+						if attached l_connection_copy.item_for_iteration as l_connection then
+							disconnect_events (l_connection)
+						end
 						l_connection_copy.forth
 					end
 					l_connections.wipe_out
@@ -64,15 +61,12 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen connections: ARRAYED_LIST [detachable G]
+	frozen connections: ARRAYED_LIST [G]
 			-- Current connections to event connections.
 		require
 			is_interface_usable: is_interface_usable
-		local
-			l_result: like internal_connections
 		do
-			l_result := internal_connections
-			if attached l_result then
+			if attached internal_connections as l_result then
 				Result := l_result
 			else
 				create Result.make (1)
@@ -83,13 +77,13 @@ feature {NONE} -- Access
 			result_consistent: Result = connections
 		end
 
-	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: attached G], ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
+	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: G], ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
 			-- A very confusing looking agent to retrieve an array of tuples, containing an event type and event handler routine on an observer {G}.
 			-- The function should be implemented on the interface {I}.
 
 feature -- Status report
 
-	frozen is_connected (a_observer: attached G): BOOLEAN
+	frozen is_connected (a_observer: G): BOOLEAN
 			-- <Precursor>
 		local
 			l_connections: like internal_connections
@@ -109,10 +103,10 @@ feature -- Status report
 
 feature -- Event connection
 
-	connect_events (a_observer: attached G)
+	connect_events (a_observer: G)
 			-- <Precursor>
 		local
-			l_event_maps: detachable ARRAY [detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 			l_event_map: detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_upper, i: INTEGER
 		do
@@ -140,12 +134,10 @@ feature -- Event connection
 			connections_has_a_observer: connections.has (a_observer)
 		end
 
-	disconnect_events (a_observer: attached G)
+	disconnect_events (a_observer: G)
 			-- <Precursor>
 		local
 			l_connections: like connections
-			l_maps: ARRAY [detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			l_map: detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_action: PROCEDURE [ANY, TUPLE]
 			l_event: EVENT_TYPE [TUPLE]
 			l_upper, i: INTEGER
@@ -157,16 +149,14 @@ feature -- Event connection
 			check not_l_connections_after: not l_connections.after end
 			if not l_connections.after then
 					-- Unsubscribe to events on the observer.
-				l_maps := observer_event_action_map_fetch_action.item ([a_observer])
-				if not l_maps.is_empty then
+				if (attached observer_event_action_map_fetch_action.item ([a_observer]) as l_maps) and then not l_maps.is_empty then
 					from
 						i := l_maps.lower
 						l_upper := l_maps.upper
 					until
 						i > l_upper
 					loop
-						l_map := l_maps[i]
-						if attached l_map then
+						if attached l_maps[i] as l_map then
 							l_action := l_map.action
 							l_event := l_map.event
 							if l_event.is_subscribed (l_action) then

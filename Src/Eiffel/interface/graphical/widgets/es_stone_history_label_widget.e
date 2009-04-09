@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			history_container_set: history_container = a_container
 		end
 
-feature {NONE} -- User interface initialization
+feature {NONE} -- Initialization: User interface
 
 	build_widget_interface (a_widget: attached EV_HORIZONTAL_BOX)
 			-- <Precursor>
@@ -56,16 +56,36 @@ feature {NONE} -- User interface initialization
 			create navigate_back_button.make
 			navigate_back_button.set_pixel_buffer (mini_stock_pixmaps.general_previous_icon_buffer)
 			navigate_back_button.set_pixmap (mini_stock_pixmaps.general_previous_icon)
-			navigate_back_button.set_menu_function (agent new_navigate_back_menu)
+			navigate_back_button.set_tooltip (locale_formatter.translation (tt_navigate_back))
 			navigation_tool_bar.extend (navigate_back_button)
-			register_action (navigate_back_button.select_actions, agent on_navigate_back)
+			register_action (navigate_back_button.pointer_button_press_actions,
+				agent (ia_x: INTEGER_32; ia_y: INTEGER_32; ia_button: INTEGER_32; ia_x_tilt: REAL_64; ia_y_tilt: REAL_64; ia_pressure: REAL_64; ia_screen_x: INTEGER_32; ia_screen_y: INTEGER_32)
+					do
+						if navigate_back_button.is_sensitive then
+							if ia_button = 1 then
+								on_navigate_back
+							elseif ia_button = 3 then
+								on_show_navigate_menu (ia_x, ia_y, navigate_back_button, new_navigate_back_menu)
+							end
+						end
+					end)
 
 			create navigate_forward_button.make
 			navigate_forward_button.set_pixel_buffer (mini_stock_pixmaps.general_next_icon_buffer)
 			navigate_forward_button.set_pixmap (mini_stock_pixmaps.general_next_icon)
-			navigate_forward_button.set_menu_function (agent new_navigate_forward_menu)
+			navigate_forward_button.set_tooltip (locale_formatter.translation (tt_navigate_forward))
 			navigation_tool_bar.extend (navigate_forward_button)
-			register_action (navigate_forward_button.select_actions, agent on_navigate_forward)
+			register_action (navigation_tool_bar.pointer_button_press_actions,
+				agent (ia_x: INTEGER_32; ia_y: INTEGER_32; ia_button: INTEGER_32; ia_x_tilt: REAL_64; ia_y_tilt: REAL_64; ia_pressure: REAL_64; ia_screen_x: INTEGER_32; ia_screen_y: INTEGER_32)
+					do
+						if navigate_forward_button.is_sensitive then
+							if ia_button = 1 then
+								on_navigate_forward
+							elseif ia_button = 3 then
+								on_show_navigate_menu (ia_x, ia_y, navigate_forward_button, new_navigate_forward_menu)
+							end
+						end
+					end)
 
 			navigation_tool_bar.compute_minimum_size
 			a_widget.extend (navigation_tool_bar)
@@ -114,11 +134,14 @@ feature {NONE} -- User interface elements
 	navigation_tool_bar: SD_TOOL_BAR
 			-- History navigation tool bar.
 
-	navigate_back_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	navigate_back_button: SD_TOOL_BAR_BUTTON
 			-- Navigate back button.
 
-	navigate_forward_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	navigate_forward_button: SD_TOOL_BAR_BUTTON
 			-- Navigate forward button.
+
+	navigation_menu: EV_MENU
+			-- Navigation menu container.
 
 feature {NONE} -- User interface manipulation
 
@@ -143,6 +166,42 @@ feature {NONE} -- User interface manipulation
 			end
 		end
 
+	populate_history_menu (a_menu: EV_MENU; a_items: DS_LINEAR [HISTORY_STACK_ITEM_I])
+			-- Populates a history menu with a list of history item.
+			--
+			-- `a_menu': Menu to populate with the history items.
+			-- `a_items': A list of history items to generate a menu for.
+		require
+			is_interface_usable: is_interface_usable
+			a_menu_attached: a_menu /= Void
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+			a_items_attached: a_items /= Void
+			not_a_items_is_empty: not a_items.is_empty
+			a_items_count_small_enough: a_items.count <= max_history_items
+		local
+			l_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+			l_pixmap: EV_PIXMAP
+			l_menu_item: EV_MENU_ITEM
+		do
+			a_menu.wipe_out
+
+			create l_factory
+			from a_items.start until a_items.after loop
+				if attached {HISTORY_STACK_STONE_ITEM} a_items.item_for_iteration as l_stone_item then
+					if attached l_stone_item.stone as l_stone then
+						create l_menu_item.make_with_text (l_stone_item.description.as_string_32)
+						l_pixmap := l_factory.pixmap_from_stone (l_stone)
+						if l_pixmap /= Void then
+							l_menu_item.set_pixmap (l_pixmap)
+						end
+						l_menu_item.select_actions.extend (agent history_container.undo_to (l_stone_item))
+						a_menu.extend (l_menu_item)
+					end
+				end
+				a_items.forth
+			end
+		end
+
 feature {NONE} -- Action handlers
 
 	on_navigate_back
@@ -151,11 +210,19 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			history_container_can_undo: history_container.can_undo
+		local
+			l_application: EV_APPLICATION
 		do
-			is_navigating := True
-			history_container.undo
-			is_navigating := False
-			update_navigation
+			l_application := ev_application
+			if l_application.shift_pressed and not (l_application.ctrl_pressed or l_application.alt_pressed) then
+					-- Show menu
+				--show_navigation_menu (new_navigate_back_menu, navigate_back_button)
+			else
+				is_navigating := True
+				history_container.undo
+				is_navigating := False
+				update_navigation
+			end
 		ensure
 			is_navigating_unchanged: is_navigating = old is_navigating
 		end
@@ -166,13 +233,50 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			history_container_can_redo: history_container.can_redo
+		local
+			l_application: EV_APPLICATION
 		do
-			is_navigating := True
-			history_container.redo
-			is_navigating := False
-			update_navigation
+			l_application := ev_application
+			if l_application.shift_pressed and not (l_application.ctrl_pressed or l_application.alt_pressed) then
+					-- Show menu
+				--show_navigation_menu (new_navigate_forward_menu, navigate_forward_button)
+			else
+				is_navigating := True
+				history_container.redo
+				is_navigating := False
+				update_navigation
+			end
 		ensure
 			is_navigating_unchanged: is_navigating = old is_navigating
+		end
+
+	on_show_navigate_menu (a_x: INTEGER; a_y: INTEGER; a_button: SD_TOOL_BAR_BUTTON; a_menu: EV_MENU)
+			-- Shows a navigation menu contextually to a tool bar button.
+			--
+			-- `a_x': Relative X position.
+			-- `a_y': Relative Y position.
+			-- `a_button': A button to show the menu contextually to.
+			-- `a_menu': The menu to show contextually to a button.
+		require
+			a_x_non_negative: a_x >= 0
+			a_y_non_negative: a_y >= 0
+			a_button_attached: a_button /= Void
+			not_a_button_is_destroyed: not a_button.is_destroyed
+			a_button_has_tool_bar: a_button.tool_bar /= Void
+			a_menu_attached: a_menu /= Void
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+			not_a_menu_is_empty: not a_menu.is_empty
+		local
+			l_tool_bar: detachable SD_GENERIC_TOOL_BAR
+		do
+			l_tool_bar := a_button.tool_bar
+			if l_tool_bar /= Void then
+				if attached {EV_WIDGET} l_tool_bar as l_widget then
+					a_menu.show_at (l_widget, a_x, a_y)
+				else
+					check not_possible: False end
+				end
+			end
 		end
 
 feature {NONE} -- Event handlers
@@ -182,8 +286,10 @@ feature {NONE} -- Event handlers
 		do
 			Precursor (a_old_stone)
 			if not is_navigating then
-				history_container.put (new_history_stack_item (a_old_stone))
-				update_navigation
+				if a_old_stone /= Void then
+					history_container.put (new_history_stack_item (a_old_stone))
+					update_navigation
+				end
 			end
 		end
 
@@ -205,27 +311,14 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable:is_interface_usable
 			can_undo: history_container.can_undo
-		local
-			l_items: DS_LINEAR [HISTORY_STACK_ITEM_I]
-			l_menu_item: EV_MENU_ITEM
-			l_count: like max_history_items
 		do
-			create Result
-			l_count := max_history_items
-			l_items := history_container.top_undo_items (l_count)
-			from l_items.start until l_items.after or l_count = 0 loop
-				if attached {HISTORY_STACK_STONE_ITEM} l_items.item_for_iteration as l_stone_item then
-					if attached l_stone_item.stone then
-						create l_menu_item.make_with_text (l_stone_item.description.as_string_32)
-					else
-						create l_menu_item.make_with_text (locale_formatter.translation (l_no_history))
-					end
-
-					l_menu_item.select_actions.extend (agent history_container.undo_to (l_stone_item))
-					Result.extend (l_menu_item)
-				end
-				l_items.forth
+			if attached navigation_menu then
+				Result := navigation_menu
+			else
+				create Result
+				navigation_menu := Result
 			end
+			populate_history_menu (Result, history_container.top_undo_items (max_history_items))
 		ensure
 			not_result_is_destroyed: not Result.is_destroyed
 		end
@@ -235,22 +328,14 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable:is_interface_usable
 			can_redo: history_container.can_redo
-		local
-			l_items: DS_LINEAR [HISTORY_STACK_ITEM_I]
-			l_menu_item: EV_MENU_ITEM
-			l_count: like max_history_items
 		do
-			create Result
-			l_count := max_history_items
-			l_items := history_container.top_redo_items (l_count)
-			from l_items.start until l_items.after or l_count = 0 loop
-				if attached {HISTORY_STACK_STONE_ITEM} l_items.item_for_iteration as l_stone_item then
-					create l_menu_item.make_with_text (l_stone_item.description.as_string_32)
-					l_menu_item.select_actions.extend (agent history_container.undo_to (l_stone_item))
-					Result.extend (l_menu_item)
-				end
-				l_items.forth
+			if attached navigation_menu then
+				Result := navigation_menu
+			else
+				create Result
+				navigation_menu := Result
 			end
+			populate_history_menu (Result, history_container.top_redo_items (max_history_items))
 		ensure
 			not_result_is_destroyed: not Result.is_destroyed
 		end
@@ -258,6 +343,8 @@ feature {NONE} -- Factory
 feature {NONE} -- Internationalization
 
 	l_no_history: STRING = "Empty"
+	tt_navigate_back: STRING = "Navigate to the back in the history.%NHold SHIFT to view the jump-to history menu"
+	tt_navigate_forward: STRING = "Navigate to the forward in the history.%NHold SHIFT to view the jump-to history menu"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

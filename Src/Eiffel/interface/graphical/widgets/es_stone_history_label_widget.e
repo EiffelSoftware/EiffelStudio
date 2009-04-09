@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget based on the stone label widget ({ES_STONE_LABEL_WIDGET}) with added history management
 		capabilities. The label widget is augmented with navigation back and forth buttons and a history
@@ -177,7 +177,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Event handlers
 
-	on_stone_changed (a_old_stone: ?STONE)
+	on_stone_changed (a_old_stone: detachable STONE)
 			-- <Precursor>
 		do
 			Precursor (a_old_stone)
@@ -259,7 +259,7 @@ feature {NONE} -- Internationalization
 
 	l_no_history: STRING = "Empty"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

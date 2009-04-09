@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A EiffelStudio stone history widget.
 		]"
@@ -400,7 +400,7 @@ feature {NONE} -- Internationalization
 	l_class: STRING = "Class"
 	l_feature: STRING = "Feature"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

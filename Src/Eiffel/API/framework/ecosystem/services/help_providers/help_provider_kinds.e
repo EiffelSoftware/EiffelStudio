@@ -12,53 +12,69 @@ class
 
 feature -- Access
 
-	frozen default_help: attached UUID
+	frozen default_help: UUID
 			-- Default help system.
 		once
 				-- Compiled URI help system is the default help for now.
 			Result := raw_uri
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen chm: attached UUID
+	frozen chm: UUID
 			-- Compiled HTML help system.
 		once
 			create Result.make_from_string (chm_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen eiffel_doc: attached UUID
+	frozen eiffel_doc: UUID
 			-- Eiffel documentation help system.
 		once
 			create Result.make_from_string (eiffel_doc_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen wiki: attached UUID
+	frozen wiki: UUID
 			-- Public Eiffel Wiki help system.
 		once
 			create Result.make_from_string (wiki_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen raw_uri: attached UUID
+	frozen raw_uri: UUID
 			-- Raw URI help system
 		once
 			create Result.make_from_string (raw_uri_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen pdf: attached UUID
+	frozen pdf: UUID
 			-- PDF help system
 		once
 			create Result.make_from_string (pdf_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen doc: attached UUID
+	frozen doc: UUID
 			-- Microsoft DOC help system
 		once
 			create Result.make_from_string (doc_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
-	frozen eis_default: attached UUID
+	frozen eis_default: UUID
 			-- Default EIS provider
 		once
 			create Result.make_from_string (eis_uuid_string)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Constants
@@ -72,7 +88,7 @@ feature -- Constants
 	eis_uuid_string: STRING     = "309C1917-9AB0-44E0-AD42-53C2E5F7FD16"
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -85,22 +101,22 @@ feature -- Constants
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

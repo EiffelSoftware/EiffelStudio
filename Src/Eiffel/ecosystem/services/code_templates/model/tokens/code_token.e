@@ -18,11 +18,13 @@ inherit
 
 feature -- Query
 
-	is_valid_text (a_text: like text): BOOLEAN
+	is_valid_text (a_text: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a token string representation is a valid text for the code token.
 			--
 			-- `a_text': A string representation of the token.
 			-- `Result': True if the text is valid for the current token; False otherwise.
+		require
+			a_text_attached: a_text /= Void
 		deferred
 		end
 
@@ -34,10 +36,11 @@ feature -- Access
 			Result := text
 		end
 
-	text: attached STRING_32
+	text: STRING_32
 			-- The token text
 		deferred
 		ensure
+			result_attached: Result /= Void
 			result_is_valid_text: is_valid_text (Result)
 		end
 
@@ -50,9 +53,10 @@ feature -- Status report
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
+	process (a_visitor: CODE_TOKEN_VISITOR_I)
 			-- Visit's the current token and processes it.
 		require
+			a_visitor_attached: a_visitor /= Void
 			a_visitor_is_interface_usable: a_visitor.is_interface_usable
 		deferred
 		end
@@ -72,10 +76,11 @@ feature -- Output
 		end
 
 invariant
+	text_attached: text /= Void
 	text_is_valid_text: is_valid_text (text)
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -88,22 +93,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

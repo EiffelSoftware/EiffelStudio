@@ -15,11 +15,14 @@ inherit
 
 feature -- Access
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- A contextual identifer to link an associated help through.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_attached: help_context_id /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
@@ -29,14 +32,14 @@ feature -- Access
 		deferred
 		end
 
-	help_context_description: detachable STRING_GENERAL
+	help_context_description: detachable STRING_32
 			-- An optional description of the context.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	help_provider: attached UUID
+	help_provider: UUID
 			-- Help provider kind best used for the help context.
 			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
 			--
@@ -45,7 +48,8 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_consistent: Result.is_equal (help_provider)
+			result_attached: Result /= Void
+			result_consistent: Result ~ help_provider
 		end
 
 feature -- Status report

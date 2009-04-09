@@ -266,7 +266,7 @@ feature -- Events: Connection point
 			l_result := internal_event_list_connection
 			if l_result = Void then
 				create {EVENT_CHAINED_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S, LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: attached EVENT_LIST_OBSERVER): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: EVENT_LIST_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := << [item_added_event, agent ia_observer.on_event_item_added],
 								[item_adopted_event, agent ia_observer.on_event_item_adopted],

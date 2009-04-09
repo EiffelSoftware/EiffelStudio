@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	help_title (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING_32
+	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
 			-- <Precursor>
 		local
 			l_title: detachable STRING_32
@@ -45,10 +45,11 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: attached STRING
+	base_url: STRING
 			-- Base URL used to locate help documentation.
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_ends_with_url_separator: Result.item (Result.count) = url_separator
 		end
@@ -71,9 +72,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	full_url (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): attached STRING
+	full_url (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING
 			-- Full URL to navigate to, base on the help content context.
 		require
+			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
 		do
 			create Result.make (256)
@@ -84,10 +86,11 @@ feature {NONE} -- Query
 				Result.append (format_context_section (a_section.section))
 			end
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_title (a_url: attached STRING_GENERAL; a_trim: BOOLEAN): detachable STRING_32
+	document_title (a_url: READABLE_STRING_8; a_trim: BOOLEAN): detachable STRING_32
 			-- Attempts to retrieve a document title from a URL.
 			--
 			-- `a_url': URL to fetch a document title from
@@ -95,15 +98,16 @@ feature {NONE} -- Query
 			-- `Result': A title, or Void if not title coule be retrieved from a URL.
 		require
 			is_accessible: is_accessible -- Need to call `make' from {CURL_ACCESS}.
+			a_url_attached: a_url /= Void
 		local
 			l_curl: like curl
-			l_data: attached CURL_STRING
-			l_result: detachable STRING_GENERAL
+			l_data: CURL_STRING
+			l_result: detachable STRING
 			l_regex: like title_extract_regex
 			i: INTEGER
 		do
 			l_curl := curl
-			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, a_url)
+			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, a_url.as_string_8)
 			l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
 
 			create l_data.make_empty
@@ -114,7 +118,7 @@ feature {NONE} -- Query
 			l_result := l_data.string
 			if l_result /= Void and then not l_result.is_empty then
 				l_regex := title_extract_regex
-				l_regex.match (l_result.as_string_8)
+				l_regex.match (l_result)
 				if l_regex.has_matched then
 					Result := l_regex.captured_substring (1).as_string_32
 					if a_trim then
@@ -132,7 +136,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	show_help (a_context_id: attached STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <Precursor>
 		do
 			Precursor (full_url (a_context_id, a_section), a_section)
@@ -140,62 +144,69 @@ feature -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_context_id (a_context_id: attached STRING_GENERAL): attached STRING
+	format_context_id (a_context_id: READABLE_STRING_GENERAL): STRING
 			-- Formats the context id so it may be used in a URL.
 			--
 			-- `a_context_id': A help content context identifier to format
 			-- `Result': A formatted help context identifier for a URL
 		require
+			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
 		do
 			Result := format_context (a_context_id)
 		ensure
+			result_attached: Result /= Void
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context_section (a_section: attached STRING_GENERAL): attached STRING
+	format_context_section (a_section: READABLE_STRING_GENERAL): STRING
 			-- Formats the context section so it may be used in a URL.
 			--
 			-- `a_section': A help content context section to format
 			-- `Result': A formatted help context section for a URL
 		require
+			a_section_attached: a_section /= Void
 			not_a_section_is_empty: not a_section.is_empty
 		do
 			Result := format_context (a_section)
 		ensure
+			result_attached: Result /= Void
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context (a_context: attached STRING_GENERAL): attached STRING
+	format_context (a_context: READABLE_STRING_GENERAL): STRING
 			-- Formats the context so it may be used in a URL.
 			--
 			-- `a_context': A help content context of session context identifier to format
 			-- `Result': A formatted help context for a URL
 		require
-			not_a_context_id_is_empty: not a_context.is_empty
+			a_context_attached: a_context /= Void
+			not_a_context_is_empty: not a_context.is_empty
 		do
 			Result := a_context.as_string_8.as_attached
 			if Result ~ a_context then
 				Result := Result.twin
 			end
 		ensure
+			result_attached: Result /= Void
 			not_result_id_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Regular expressions
 
-	title_extract_regex: attached RX_PCRE_MATCHER
+	title_extract_regex: RX_PCRE_MATCHER
 			-- Regular expression to extract an HTML title
 		once
 			create Result.make
 			Result.set_caseless (True)
 			Result.compile ("\<TITLE\>([^<]*)\<\/TITLE\>")
 		ensure
+			result_attached: Result /= Void
 			result_is_compiled: Result.is_compiled
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -219,11 +230,11 @@ feature {NONE} -- Regular expressions
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

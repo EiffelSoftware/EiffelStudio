@@ -17,7 +17,7 @@ inherit
 
 feature -- Query
 
-	is_valid_file_name (a_file_name: detachable READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_file_name (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a file name is valid.
 			--
 			-- `a_file_name': The file name to check for validity.
@@ -33,7 +33,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	render_template (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]): attached STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]): STRING_32
 			-- Renders a text template.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -41,11 +41,14 @@ feature -- Basic operations
 			-- `Result': The result of rendering the template.
 		require
 			is_interface_usable: is_interface_usable
+			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	render_template_from_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]): detachable STRING_32
+	render_template_from_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]): detachable STRING_32
 			-- Renders a text template from a file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -53,11 +56,12 @@ feature -- Basic operations
 			-- `Result': The result of rendering the template.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name.as_string_8)
+			a_file_name_attached: a_file_name /= Void
+			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
 		deferred
 		end
 
-	render_template_to_file (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
 			-- Renders a text template to a destination file.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -65,12 +69,14 @@ feature -- Basic operations
 			-- `a_destination_file': The destination file to store the rendered template into.
 		require
 			is_interface_usable: is_interface_usable
+			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
+			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred
 		end
 
-	render_template_from_file_to_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
 			-- Renders a text template from a file to a destination file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -78,14 +84,16 @@ feature -- Basic operations
 			-- `a_destination_file': The destination file to store the rendered template into.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name.as_string_8)
+			a_file_name_attached: a_file_name /= Void
+			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
 			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,22 +106,22 @@ feature -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

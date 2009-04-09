@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes a cursor place-holder code token.
 		do
-			make_token_id (create {attached STRING_32}.make_from_string ({CODE_TOKEN_NAMES}.cursor_token_name))
+			make_token_id (create {STRING_32}.make_from_string ({CODE_TOKEN_NAMES}.cursor_token_name))
 		end
 
 feature -- Access
@@ -41,14 +41,14 @@ feature -- Access
 
 feature -- Visitor
 
-	process (a_visitor: attached CODE_TOKEN_VISITOR_I)
+	process (a_visitor: CODE_TOKEN_VISITOR_I)
 			-- <Precursor>
 		do
 			a_visitor.process_code_token_cursor (Current)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,22 +61,22 @@ feature -- Visitor
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

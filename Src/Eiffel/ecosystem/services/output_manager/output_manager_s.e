@@ -39,7 +39,7 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general)
+			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general, "General")
 		ensure
 			result_attached: Result /= Void
 			is_interface_usable: (attached {USABLE_I} Result as l_usable) implies l_usable.is_interface_usable
@@ -49,21 +49,24 @@ feature -- Access
 
 feature -- Query
 
-	output_or_default (a_key: UUID): OUTPUT_I
+	output_or_default (a_key: UUID; a_name: READABLE_STRING_GENERAL): OUTPUT_I
 			-- Retrieves a registered output or a default output if it has not been registered yet.
 			-- This has the side-affect of registering the output if a default output is returned.
 			--
 			-- `a_key': An output key to retrieve a registered output from.
+			-- `a_name': A new name for the default output.
 			-- `Result': An output object.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_attached: a_key /= Void
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		do
 			if is_output_available (a_key) then
 				Result := output (a_key)
 			else
-				Result := new_output (a_key)
+				Result := new_output (a_key, a_name)
 				register (Result, a_key)
 			end
 		ensure
@@ -71,25 +74,29 @@ feature -- Query
 			is_interface_usable: attached {USABLE_I} Result as l_usable implies l_usable.is_interface_usable
 			result_is_valid_output: is_valid_output (Result)
 			a_key_is_output_available: is_output_available (a_key)
-			result_consistent: Result = output_or_default (a_key)
+			result_consistent: Result = output_or_default (a_key, a_name)
 		end
 
 feature {NONE} -- Factory
 
-	new_output (a_key: UUID): OUTPUT_I
+	new_output (a_key: UUID; a_name: READABLE_STRING_GENERAL): OUTPUT_I
 			-- Creates a new output, used for the `general_output' feature.
 			--
 			-- `a_key': An output key to create a output for.
+			-- `a_name': A new name for the default output.
 			-- `Result': A new output object.
 		require
 			is_interface_usable: is_interface_usable
 			a_key_attached: a_key /= Void
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
 			not_a_key_is_output_available: not is_output_available (a_key)
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		deferred
 		ensure
 			result_attached: Result /= Void
 			is_interface_usable: attached {USABLE_I} Result as l_usable implies l_usable.is_interface_usable
+			result_name_set: Result.name.same_string_general (a_name)
 		end
 
 ;note

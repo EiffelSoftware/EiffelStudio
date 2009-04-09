@@ -32,19 +32,20 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): attached STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): STRING_32
 			-- <Precursor>
 		local
-			l_templates: attached like build_code_template
-			l_renderer: attached CODE_TEMPLATE_STRING_RENDERER
+			l_templates: like build_code_template
+			l_renderer: CODE_TEMPLATE_STRING_RENDERER
 			l_result: STRING_32
 		do
 			l_templates := build_code_template (a_template.as_string_32, a_parameters)
-			if attached {CODE_TEMPLATE} l_templates.template.applicable_default_item as l_default_template then
+			if attached l_templates.template.applicable_default_item as l_default_template then
 				create l_renderer
 				l_renderer.render_template (l_default_template, l_templates.symbol_table)
 				l_result := l_renderer.code
-				check l_result /= Void end
+				check l_result_attached: attached l_result end
+
 					-- Remove carriage return characters
 				l_result.replace_substring_all ("%R", "")
 				if preferences.misc_data.text_mode_is_windows then
@@ -57,7 +58,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): detachable STRING_32
+	render_template_from_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): detachable STRING_32
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_INPUT_FILE
@@ -65,14 +66,14 @@ feature -- Basic operations
 			l_count: INTEGER
 		do
 			l_file := file_system.new_input_file (a_file_name.as_string_8)
-			if l_file /= Void then
+			if attached l_file then
 					-- Read template contents
 				l_count := l_file.count
 				if l_count > 0 then
 					l_file.open_read
 					l_file.read_string (l_count)
 					l_contents := l_file.last_string
-					if l_contents /= Void then
+					if attached l_contents then
 						Result := render_template (l_contents, a_parameters)
 					end
 				else
@@ -81,12 +82,12 @@ feature -- Basic operations
 				l_file.close
 			end
 		rescue
-			if l_file /= Void and then not l_file.is_closed then
+			if attached l_file and then not l_file.is_closed then
 				l_file.close
 			end
 		end
 
-	render_template_to_file (a_template: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
@@ -95,19 +96,19 @@ feature -- Basic operations
 			l_rendered := render_template (a_template, a_parameters)
 			if l_rendered /= Void then
 				l_file := file_system.new_output_file (a_destination_file.as_string_8)
-				if l_file /= Void then
+				if attached l_file then
 					l_file.open_write
 					l_file.put_string (l_rendered)
 					l_file.close
 				end
 			end
 		rescue
-			if l_file /= Void and then not l_file.is_closed then
+			if attached l_file and then not l_file.is_closed then
 				l_file.close
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: attached READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]; a_destination_file: attached READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_file: KI_TEXT_OUTPUT_FILE
@@ -123,14 +124,14 @@ feature -- Basic operations
 				end
 			end
 		rescue
-			if l_file /= Void and then not l_file.is_closed then
+			if attached l_file and then not l_file.is_closed then
 				l_file.close
 			end
 		end
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: detachable STRING_32; a_parameters: detachable DS_HASH_TABLE [attached ANY, STRING]): attached TUPLE [template: attached CODE_TEMPLATE_DEFINITION; symbol_table: attached CODE_SYMBOL_TABLE]
+	build_code_template (a_template: STRING_32; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -161,9 +162,9 @@ feature {NONE} -- Basic operations
 			from l_cursor.start until l_cursor.after loop
 				l_key := l_cursor.key
 				check l_key_attached: l_key /= Void end
-				l_literal_declaration := l_factory.create_code_literal_declaration (l_key, l_declarations)
-				if attached l_cursor.item.out.as_string_32 as l_value then
-					l_literal_declaration.default_value := l_value
+				l_literal_declaration := l_factory.new_code_literal_declaration (l_key, l_declarations)
+				if attached l_cursor.item as l_item then
+					l_literal_declaration.default_value := l_item.out.as_string_32
 				end
 				l_declarations.extend (l_literal_declaration)
 				l_cursor.forth
@@ -171,7 +172,7 @@ feature {NONE} -- Basic operations
 
 				-- Create template
 			l_templates := l_definition.templates
-			l_template := l_factory.create_code_template (l_templates)
+			l_template := l_factory.new_code_template (l_templates)
 			l_template.set_tokens_with_text (a_template)
 			l_templates.extend (l_template)
 
@@ -182,8 +183,11 @@ feature {NONE} -- Basic operations
 				-- Create result
 			Result := [l_definition, l_table_builder.symbol_table]
 		ensure
+			result_attached: Result /= Void
+			result_template_attached: Result.template /= Void
+			result_symbol_table_attached: Result.symbol_table /= Void
 			result_template_is_interface_usable: Result.template.is_interface_usable
-			result_template_has_default_template: Result.template.applicable_default_item /= Void
+			result_template_default_template_attached: Result.template.applicable_default_item /= Void
 		end
 
 ;note

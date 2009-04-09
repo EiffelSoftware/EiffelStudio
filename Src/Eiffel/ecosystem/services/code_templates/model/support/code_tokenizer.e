@@ -12,25 +12,27 @@ class
 
 feature -- Basic operations
 
-	tokenize (a_template: attached STRING_32; a_factory: attached CODE_FACTORY): attached DS_ARRAYED_LIST [attached CODE_TOKEN]
+	tokenize (a_template: STRING_32; a_factory: CODE_FACTORY): DS_ARRAYED_LIST [CODE_TOKEN]
 			-- Tokenizes a code template string.
 			--
 			-- `a_template': A code template raw string to tokenize.
 			-- `a_factory': A token factory used to create the tokenized code nodes.
 			-- `Result': The result list of code tokens tokenized from the supplied template.
 		require
+			a_template_attached: a_template /= Void
 			not_a_template_is_empty: not a_template.is_empty
+			a_factory_attached: a_factory /= Void
 		local
 			c: CHARACTER_32
 			c2, c3: CHARACTER_8
 			l_count, i: INTEGER
-			l_buffer: attached STRING_32
-			l_id: attached STRING_32
-			l_token_id: attached CODE_TOKEN_ID
+			l_buffer: STRING_32
+			l_id: STRING_32
+			l_token_id: CODE_TOKEN_ID
 			l_cont: BOOLEAN
 			l_escape: BOOLEAN
 			l_match_para: BOOLEAN
-			l_id_table: DS_HASH_TABLE [attached CODE_TOKEN_ID, STRING_32]
+			l_id_table: DS_HASH_TABLE [CODE_TOKEN_ID, STRING_32]
 		do
 			create Result.make_default
 			create l_id_table.make_default
@@ -56,7 +58,7 @@ feature -- Basic operations
 								-- The start of the indentifier has been located
 							if not l_buffer.is_empty then
 									-- Create a new text token for anything left in the buffer
-								Result.force_last (a_factory.create_text_token (l_buffer.twin))
+								Result.force_last (a_factory.new_text_token (l_buffer.twin))
 								l_buffer.wipe_out
 							end
 
@@ -94,13 +96,13 @@ feature -- Basic operations
 								if l_id_table.has (l_id) then
 										-- Create a reference token, because only the first id token should be editable.
 									l_token_id := l_id_table.item (l_id)
-									Result.force_last (a_factory.create_id_ref_token (l_token_id))
+									Result.force_last (a_factory.new_id_ref_token (l_token_id))
 								else
 										-- Creates an editable id token
 									if l_id.as_string_8.is_equal ({CODE_TOKEN_NAMES}.cursor_token_name) then
-										l_token_id := a_factory.create_cursor_token
+										l_token_id := a_factory.new_cursor_token
 									else
-										l_token_id := a_factory.create_id_token (l_id)
+										l_token_id := a_factory.new_id_token (l_id)
 									end
 
 									Result.force_last (l_token_id)
@@ -117,12 +119,12 @@ feature -- Basic operations
 					end
 				elseif c.code = 10 then
 					if not l_buffer.is_empty then
-						Result.force_last (a_factory.create_text_token (l_buffer.twin))
+						Result.force_last (a_factory.new_text_token (l_buffer.twin))
 					end
 					l_buffer.wipe_out
 
 						-- Create a new line
-					Result.force_last (a_factory.create_eol_token)
+					Result.force_last (a_factory.new_eol_token)
 				elseif c = esc_specifier_char then
 						-- Toggle the escape character
 					l_escape := not l_escape
@@ -142,10 +144,14 @@ feature -- Basic operations
 			end
 
 			if not l_buffer.is_empty then
-				Result.force_last (a_factory.create_text_token (l_buffer))
+				Result.force_last (a_factory.new_text_token (l_buffer))
 			end
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+			result_contains_attached_items:
+				(attached {DS_LIST [detachable ANY]} Result as l_result) and then
+				not l_result.has (Void)
 		end
 
 feature {NONE} -- Constants
@@ -157,7 +163,7 @@ feature {NONE} -- Constants
 			-- Escape character prefix, use when escaping `id_specifier_char'
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,22 +176,22 @@ feature {NONE} -- Constants
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

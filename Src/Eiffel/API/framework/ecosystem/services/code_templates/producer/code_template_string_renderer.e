@@ -41,51 +41,60 @@ feature {NONE} -- Basic operations
 			create code.make_empty
 		ensure then
 			code_attached: code /= Void
-			code_is_empty: code.is_empty
+			code_is_empty: (attached code as l_code) and then l_code.is_empty
 		end
 
 feature {CODE_TOKEN} -- Processing
 
-	process_code_token_cursor (a_value: attached CODE_TOKEN_CURSOR)
+	process_code_token_cursor (a_value: CODE_TOKEN_CURSOR)
 			-- <Precursor>
 		do
 		end
 
-	process_code_token_eol (a_value: attached CODE_TOKEN_EOL)
+	process_code_token_eol (a_value: CODE_TOKEN_EOL)
 			-- <Precursor>
+		local
+			l_code: like code
 		do
-			code.append_character ('%N')
+			l_code := code
+			check l_code_attached: attached l_code end
+
+			l_code.append_character ('%N')
 		end
 
-	process_code_token_id (a_value: attached CODE_TOKEN_ID)
+	process_code_token_id (a_value: CODE_TOKEN_ID)
 			-- <Precursor>
 		local
 			l_table: like symbol_table
+			l_id: STRING
+			l_code: like code
 		do
+			l_code := code
+			check l_code_attached: attached l_code end
+
 			l_table := symbol_table
-			if attached {attached STRING_8} a_value.text.as_string_8 as l_id then
-				if l_table.has_id (l_id) then
-					code.append (l_table.item (l_id).value)
-				else
-					code.append (a_value.printable_text)
-				end
+			l_id := a_value.text.as_string_8
+			if l_table.has_id (l_id) then
+				l_code.append (l_table.item (l_id).value)
+			else
+				l_code.append (a_value.printable_text)
 			end
 		end
 
-	process_code_token_id_ref (a_value: attached CODE_TOKEN_ID_REF)
+	process_code_token_id_ref (a_value: CODE_TOKEN_ID_REF)
 			-- <Precursor>
 		do
 			process_code_token_id (a_value.code_token_id)
 		end
 
-	process_code_token_text (a_value: attached CODE_TOKEN_TEXT)
+	process_code_token_text (a_value: CODE_TOKEN_TEXT)
 			-- <Precursor>
 		do
 			code.append (a_value.printable_text)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,22 +107,22 @@ feature {CODE_TOKEN} -- Processing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

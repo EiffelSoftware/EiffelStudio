@@ -63,34 +63,36 @@ feature -- Access
 
 feature -- Implementation
 
-	generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- TODO
 		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
+				children.item.generate (a_servlet_class, variable_table)
 				children.forth
 			end
 		end
 
-	generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- `a_prerender_get_feature': This feature is executed before the render feature in case of a get request
-			-- `a_prerender_post_feature': Like `a_prerender_get_feature' but on a post request
-			-- `a_render_feature': This feature is executed after a_prerender_post/get_feature and renders the page
-			-- `a_afterrender_feature': This feature is executed in the end, after rendering the page
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- TODO
 		do
+			append_debug_info (a_servlet_class.render_feature)
+			append_debug_info (a_servlet_class.prerender_get_feature)
+			append_debug_info (a_servlet_class.prerender_post_feature)
+			append_debug_info (a_servlet_class.afterrender_feature)
 			if not render.is_empty then
-				a_render_feature.append_expression ("if " + render + " then")
-				internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
-				a_render_feature.append_expression ("end")
+				a_servlet_class.render_feature.append_expression ("if " + render + " then")
+				internal_generate (a_servlet_class, variable_table)
+				a_servlet_class.render_feature.append_expression ("end")
 			else
-				internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
+				internal_generate (a_servlet_class, variable_table)
 			end
 		end
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			--
 		deferred
 		end

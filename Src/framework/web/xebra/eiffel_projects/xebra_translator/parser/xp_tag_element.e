@@ -14,12 +14,14 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
+	make (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
 			-- `a_class_name': The name of the corresponding TAG-class
 		require
 			a_id_valid: not a_id.is_empty
 			a_class_name_is_valid: not a_class_name.is_empty
+			a_namespace_is_valid: a_namespace /= Void
 		do
+			namespace := a_namespace
 			class_name := a_class_name
 			id := a_id
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
@@ -45,6 +47,9 @@ feature -- Access
 
 	id: STRING
 			-- The tag id
+
+	namespace: STRING
+			-- The namespace (tag library) of the tag
 
 	multiline_argument: BOOLEAN assign set_multiline_argument
 			-- Are the arguments of the tag multiline and have to be escaped?

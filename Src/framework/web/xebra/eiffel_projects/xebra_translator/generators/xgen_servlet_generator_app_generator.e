@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			loop
 				l_servlet_gg := servlet_generator_generators.item
 				Result.append_expression ("(create {"
-					+ l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
+					+ l_servlet_gg.servlet_name.as_upper + "_G_SERVLET_GENERATOR}.make ("
 					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", %"" + l_servlet_gg.controller_type.as_upper + "%")).generate;")
 				servlet_generator_generators.forth
 			end

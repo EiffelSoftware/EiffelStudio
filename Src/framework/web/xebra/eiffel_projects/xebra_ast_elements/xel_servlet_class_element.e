@@ -1,45 +1,66 @@
 note
-	description: "Summary description for {XEB_DISPLAY_TAG}."
+	description: "[
+		{XEL_SERVLET_CLASS_ELEMENT}.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XTAG_XEB_DISPLAY_TAG
+	XEL_SERVLET_CLASS_ELEMENT
 
 inherit
-	XTAG_TAG_SERIALIZER
+	XEL_CLASS_ELEMENT
+		redefine
+			make
+		end
 
 create
 	make
 
 feature -- Initialization
 
-	make
+	make (a_name: STRING)
+			--
 		do
-			make_base
-			feature_name := ""
+			Precursor (a_name)
+			create make_feature.make ("make")
+			add_feature (make_feature)
+			create render_feature.make (Render_feature_name)
+			add_feature (render_feature)
+			create prerender_post_feature.make (Prerender_post_feature_name)
+			add_feature (prerender_post_feature)
+			create prerender_get_feature.make (Prerender_get_feature_name)
+			add_feature (prerender_get_feature)
+			create afterrender_feature.make (Afterrender_feature_name)
+			add_feature (afterrender_feature)
 		end
 
 feature -- Access
 
-	feature_name: STRING
-			-- The name of the feature to call
+	make_feature: XEL_FEATURE_ELEMENT
 
-feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- <Precursor>
-		do
-			a_servlet_class.render_feature.append_expression (Response_variable_append + "(" + Controller_variable + "." + feature_name + ".out)")
-		end
+	render_feature: XEL_FEATURE_ELEMENT
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precusor>
-		do
-			if id.is_equal ("feature") then
-				feature_name := a_attribute
-			end
-		end
+
+	prerender_post_feature: XEL_FEATURE_ELEMENT
+
+
+	prerender_get_feature: XEL_FEATURE_ELEMENT
+
+
+	afterrender_feature: XEL_FEATURE_ELEMENT
+
+
+feature {NONE} -- Constants
+
+	Render_feature_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Prerender_post_feature_name: STRING = "prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Prerender_get_feature_name: STRING = "prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	Afterrender_feature_name: STRING = "afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+
+
+feature -- If you delete this line you'll get a syntax error
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

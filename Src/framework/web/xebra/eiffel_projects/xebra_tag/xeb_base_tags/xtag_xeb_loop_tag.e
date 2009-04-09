@@ -8,9 +8,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generate
-		end
 
 create
 	make
@@ -30,22 +27,21 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		local
 			temp_var_name: STRING
 		do
-			append_debug_info (a_render_feature)
-			temp_var_name := a_render_feature.get_temp_variable
-			a_render_feature.append_local (temp_var_name, "NATURAL")
-			a_render_feature.append_expression ("from")
-			a_render_feature.append_expression (temp_var_name + " := 1")
-			a_render_feature.append_expression ("until")
-			a_render_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
-			a_render_feature.append_expression ("loop")
-			generate_children (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature, variable_table)
-			a_render_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
-			a_render_feature.append_expression ("end")
+			temp_var_name := a_servlet_class.render_feature.get_unique_identifier
+			a_servlet_class.render_feature.append_local (temp_var_name, "NATURAL")
+			a_servlet_class.render_feature.append_expression ("from")
+			a_servlet_class.render_feature.append_expression (temp_var_name + " := 1")
+			a_servlet_class.render_feature.append_expression ("until")
+			a_servlet_class.render_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
+			a_servlet_class.render_feature.append_expression ("loop")
+			generate_children (a_servlet_class, variable_table)
+			a_servlet_class.render_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
+			a_servlet_class.render_feature.append_expression ("end")
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)

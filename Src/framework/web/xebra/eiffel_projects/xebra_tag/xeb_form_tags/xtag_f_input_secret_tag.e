@@ -11,6 +11,9 @@ class
 inherit
 	XTAG_F_INPUT_TAG
 
+create
+	make
+
 feature -- Initialization
 
 	make
@@ -20,7 +23,8 @@ feature -- Initialization
 
 feature -- Implementation
 
-	internal_generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
 		end

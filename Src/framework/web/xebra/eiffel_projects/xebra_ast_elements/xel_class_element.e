@@ -28,6 +28,7 @@ feature -- Initialization
 			precursor_name := "ANY"
 			create {LINKED_LIST [XEL_FEATURE_ELEMENT]} features.make
 			create {LINKED_LIST [XEL_VARIABLE_ELEMENT]} variables.make
+			ui_count := 0
 		end
 
 feature {NONE} -- Access
@@ -45,6 +46,10 @@ feature {NONE} -- Access
 			-- The precursor class
 
 	variables: LIST [XEL_VARIABLE_ELEMENT]
+			-- Class scope variable-features
+
+	ui_count: NATURAL
+			-- Used for unique identifier generation
 
 feature -- Access
 
@@ -80,6 +85,13 @@ feature -- Access
 			-- Adds a access feature to the class
 		do
 			add_variable (create {XEL_VARIABLE_ELEMENT}.make (a_name, a_type))
+		end
+
+	get_unique_identifier: STRING
+			-- Generates a name for a unique (feature scope) temp variable
+		do
+			Result := "class_temp_" + ui_count.out
+			ui_count := ui_count + 1
 		end
 
 feature -- Implementation

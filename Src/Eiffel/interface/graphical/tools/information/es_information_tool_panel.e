@@ -109,7 +109,7 @@ feature {NONE} -- Clean up
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "26E2C799-B48A-C588-CDF1-DD47B1994B09"

@@ -187,7 +187,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"

@@ -46,7 +46,7 @@ feature {NONE} -- Access: User interface
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "75CFEDA2-3823-EF29-130A-39E686116F40"

@@ -217,7 +217,7 @@ feature -- Access: help
 			Result := (create {HELP_PROVIDER_KINDS}).wiki
 		end
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "Testing Tool (Specification)"

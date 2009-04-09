@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: STRING
 			-- <Precursor>
 		once
 			Result := "E70D5827-A00D-47EE-9E7A-B7B4BFB34CCF"

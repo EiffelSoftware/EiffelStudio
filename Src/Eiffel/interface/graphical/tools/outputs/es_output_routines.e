@@ -134,7 +134,6 @@ feature -- Output
 					root_cluster := l_root.cluster
 					a_formatter.set_context_group (root_cluster)
 
-
 					a_formatter.process_keyword_text (locale_formatter.translation (lb_root_class), Void)
 					a_formatter.add_new_line
 					a_formatter.add_indent
@@ -167,11 +166,9 @@ feature -- Output
 						a_formatter.add (creation_name)
 					end
 					a_formatter.add_new_line
-					a_formatter.add_new_line
 				end
 			else
 				a_formatter.add_comment ("System is not yet compiled.")
-				a_formatter.add_new_line
 				a_formatter.add_new_line
 			end
 		end

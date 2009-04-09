@@ -95,9 +95,6 @@ RT_LNK void rout_obj_free_args (EIF_POINTER);
 
 /* Calls */
 
-RT_LNK void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args);
-
-
 #ifdef WORKBENCH
 RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
 											 EIF_TYPED_VALUE* closed_args, int closed_count, EIF_TYPED_VALUE* open_args, 

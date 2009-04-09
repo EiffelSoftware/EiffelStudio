@@ -48,6 +48,7 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 #include "rt_garcol.h"
 #include "rt_gen_types.h"
 #include "rt_interp.h"
+#include "rt_except.h"
 #ifdef WORKBENCH
 #include <string.h>
 #endif
@@ -241,78 +242,6 @@ rt_public void rout_obj_free_args (EIF_POINTER args)
 }
 /*------------------------------------------------------------------*/
 
-rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_POINTER args)
-{
-	EIF_GET_CONTEXT
-	EIF_VALUE result, *ap;
-	char gcode, *resp;
-
-		/* Protect address in case it moves */
-	RT_GC_PROTECT(res);
-
-	ap = (EIF_VALUE *) args;
-	gcode = (FUNCTION_CAST (char,
-				(EIF_REFERENCE,
-				EIF_VALUE *,
-				EIF_VALUE *)) rout) (ap[0].r, ap + 1, &result);
-
-	resp = *(EIF_REFERENCE *) res;
-
-	switch (gcode)
-	{
-		case EIF_BOOLEAN_CODE:
-			*((EIF_BOOLEAN *) resp) = result.b;
-			break;
-		case EIF_CHARACTER_CODE:
-			*((EIF_CHARACTER *) resp) = result.c1;
-			break;
-		case EIF_REAL_64_CODE:
-			*((EIF_REAL_64 *) resp) = result.r8;
-			break;
-		case EIF_NATURAL_8_CODE:
-			*((EIF_NATURAL_8 *) resp) = result.n1;
-			break;
-		case EIF_NATURAL_16_CODE:
-			*((EIF_NATURAL_16 *) resp) = result.n2;
-			break;
-		case EIF_NATURAL_32_CODE:
-			*((EIF_NATURAL *) resp) = result.n4;
-			break;
-		case EIF_NATURAL_64_CODE:
-			*((EIF_NATURAL_64 *) resp) = result.n8;
-			break;
-		case EIF_INTEGER_8_CODE:
-			*((EIF_INTEGER_8 *) resp) = result.i1;
-			break;
-		case EIF_INTEGER_16_CODE:
-			*((EIF_INTEGER_16 *) resp) = result.i2;
-			break;
-		case EIF_INTEGER_32_CODE:
-			*((EIF_INTEGER *) resp) = result.i4;
-			break;
-		case EIF_INTEGER_64_CODE:
-			*((EIF_INTEGER_64 *) resp) = result.i8;
-			break;
-		case EIF_POINTER_CODE:
-			*((EIF_POINTER *) resp) = result.p;
-			break;
-		case EIF_REAL_32_CODE:
-			*((EIF_REAL_32 *) resp) = result.r4;
-			break;
-		case EIF_WIDE_CHAR_CODE:
-			*((EIF_WIDE_CHAR *) resp) = result.c4;
-			break;
-		default:
-			*((EIF_REFERENCE *) resp) = result.r;
-			RTAR(resp, result.r);
-			break;
-	}
-
-		/* Remove protection */
-	RT_GC_WEAN(res);
-}
-/*------------------------------------------------------------------*/
-
 #ifdef WORKBENCH
 
 #include "eif_setup.h"
@@ -325,69 +254,85 @@ rt_public void rout_obj_call_procedure_dynamic (
 	EIF_REFERENCE open_map)
 {
 	EIF_GET_CONTEXT
+	jmp_buf exenv;
 	int i = 2;
 	int args_count = open_count + closed_count;
 	int next_open = 0xFFFF;
 	int open_idx = 1;
 	int closed_idx = 1;
+	volatile rt_uint_ptr nb_protected = 0;
+	rt_uint_ptr nb_pushed = 0;
 	EIF_TYPED_VALUE* first_arg = NULL;
 	EIF_INTEGER* open_positions = NULL;
 
-	if (closed_count > 0) {
-		RT_GC_PROTECT(closed_args); /* iget() may call GC */
-	}
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+			/* Unprotect protected locals. */
+		if (nb_protected) {
+			RT_GC_WEAN_N(nb_protected);
+		}
+		ereturn ();
+	} else {
+		if (closed_count > 0) {
+			RT_GC_PROTECT(closed_args); /* iget() may call GC */
+			nb_protected++;
+		}
 
-	if (open_count > 0) {
-		open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map); 
-		RT_GC_PROTECT(open_args);
-		RT_GC_PROTECT(open_map);	
-		if (open_positions [0] == 1) {
-			first_arg = &(open_args [1]);
-			RT_GC_PROTECT (first_arg);
-			open_idx = 2;
-			if (open_count > 1) {
-				next_open = open_positions [1];
-			} 
-		} else  {
-			next_open = open_positions [0];
-		}
-	}
-	if (first_arg == NULL) {
-		first_arg = &(closed_args [1]);
-		RT_GC_PROTECT (first_arg);
-		closed_idx = 2;
-	}
-	while (i <= args_count) {
-		if (i == next_open) {
-			fill_it (iget(), &(open_args [open_idx]));
-			if (open_idx < open_count) {
-				next_open = open_positions [open_idx];
-				open_idx++;
-			} else {
-				next_open = 0xFFFF;
+		if (open_count > 0) {
+			open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map); 
+			RT_GC_PROTECT(open_args);
+			nb_protected++;
+			RT_GC_PROTECT(open_map);	
+			nb_protected++;
+			if (open_positions [0] == 1) {
+				first_arg = &(open_args [1]);
+				RT_GC_PROTECT (first_arg);
+				nb_protected++;
+				open_idx = 2;
+				if (open_count > 1) {
+					next_open = open_positions [1];
+				} 
+			} else  {
+				next_open = open_positions [0];
 			}
-		} else {
-			fill_it (iget(), &(closed_args [closed_idx]));
-			closed_idx++;
 		}
-		i = i + 1;
+		if (first_arg == NULL) {
+			first_arg = &(closed_args [1]);
+			RT_GC_PROTECT (first_arg);
+			nb_protected++;
+			closed_idx = 2;
+		}
+		while (i <= args_count) {
+			if (i == next_open) {
+				fill_it (iget(), &(open_args [open_idx]));
+				nb_pushed++;
+				if (open_idx < open_count) {
+					next_open = open_positions [open_idx];
+					open_idx++;
+				} else {
+					next_open = 0xFFFF;
+				}
+			} else {
+				fill_it (iget(), &(closed_args [closed_idx]));
+				nb_pushed++;
+				closed_idx++;
+			}
+			i = i + 1;
+		}
+		fill_it (iget(), first_arg);
+		nb_pushed++;
+		
+		RT_GC_WEAN_N(nb_protected);
+		nb_protected = 0;
+			;
+			/* We are calling a feature through an agent, in this case, we consider all calls
+			 * as qualified so that the invariant is checked. */
+		nstcall = 1;
+			/* We pass `0' for `dtype' in `dynamic_eval' because for an agent call we always have
+			 * a target object to get this from. */
+		dynamic_eval (feature_id, stype_id, 0, is_precompiled, is_basic_type, 0, is_inline_agent, nb_pushed);
+		expop(&eif_stack);
 	}
-	fill_it (iget(), first_arg);
-	
-	if (closed_count > 0) {
-		RT_GC_WEAN(closed_args);
-	}
-	if (open_count > 0) {
-		RT_GC_WEAN(open_args);
-		RT_GC_WEAN(open_map);
-	}
-	RT_GC_WEAN(first_arg);
-		/* We are calling a feature through an agent, in this case, we consider all calls
-		 * as qualified so that the invariant is checked. */
-	nstcall = 1;
-		/* We pass `0' for `dtype' in `dynamic_eval' because for an agent call we always have
-		 * a target object to get this from. */
-	dynamic_eval (feature_id, stype_id, 0, is_precompiled, is_basic_type, 0, is_inline_agent);
 }
 
 void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te) 

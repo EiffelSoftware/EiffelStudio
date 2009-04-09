@@ -174,22 +174,8 @@ doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
-doc:	<attribute name="saved_scur" return_type="struct stochunk *" export="private">
-doc:		<summary>Current feature context. Used in conjonction for registers synchronization.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data.</synchronization>
-doc:	</attribute>
-doc:	<attribute name="saved_stop" return_type="EIF_TYPED_VALUE *" export="private">
-doc:		<summary>Current feature context. Used in conjonction for registers synchronization.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data.</synchronization>
-doc:	</attribute>
 */
 rt_private unsigned long tagval = 0L;
-rt_private struct stochunk *saved_scur = NULL;
-rt_private EIF_TYPED_VALUE *saved_stop = NULL;
 
 /*
 doc:	<attribute name="inv_mark_table" return_type="char *" export="private">
@@ -239,10 +225,10 @@ rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Dbg evaluation */
 rt_shared int dbg_store_exception_trace (char* trace);
-rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured);
+rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result);
 
 /* Feature call and/or access  */
-rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);
+rt_shared void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -783,8 +769,8 @@ rt_private void interpret(int flag, int where)
 			RTDBGEAA(type, (icurrent->it_ref), body_id);
 			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
-			scur = op_stack.st_cur;		/* Save stack context */
-			stop = op_stack.st_top;		/* needed for setjmp() and calls */
+				/* Save stack context */
+			SAVE(op_stack, scur, stop);
 			dostk();					/* Record position in calling context */
 			if (is_nested)
 				icheck_inv(MTC icurrent->it_ref, scur, stop, 0);	/* Invariant */
@@ -807,9 +793,8 @@ rt_private void interpret(int flag, int where)
 			RTEAINV((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, 0 /* Invariant has no body id for now */);
 			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
-
-			scur = op_stack.st_cur;		/* Save stack context */
-			stop = op_stack.st_top;		/* needed for setjmp() and calls */
+				/* Save stack context */
+			SAVE(op_stack, scur, stop);
 			dostk();					/* Record position in calling context */
 			break;
 
@@ -3528,11 +3513,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_HOOK\n");
 #endif
 		offset = get_int32(&IC);		/* retrieve the parameter of BC_HOOK: line number */
-		saved_scur = scur;			/* save feature context */
-		saved_stop = stop;			/* save feature context */
 		dstop(dtop()->dc_exec,offset);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
-		saved_scur = NULL;			/* reset feature context */
-		saved_stop = NULL;			/* reset feature context */
 		break;
 
 	/*
@@ -3544,11 +3525,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
 		offset_n = get_int32(&IC);	/* retrieve the 2nd parameter of BC_NHOOK: line number */
-		saved_scur = scur;			/* save feature context */
-		saved_stop = stop;			/* save feature context */
 		dstop_nested(dtop()->dc_exec,offset,offset_n);	/* Debugger hook - stop point reached */ /* FIXME */
-		saved_scur = NULL;			/* reset feature context */
-		saved_stop = NULL;			/* reset feature context */
 		break;
 
 	/*
@@ -4640,7 +4617,7 @@ rt_private void eif_interp_bit_operations (void)
 /*
  * Function calling routines for debugger
  */
-rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured)
+rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occured, EIF_TYPED_VALUE *result)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
 						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
@@ -4648,84 +4625,50 @@ rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_ori
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
 						/* return the exception object if exception occurred (and set `exception_occured' to 1) */
-	{
-	/* This is the debugger dispatcher for routine calls. It is called when
-	 * the user want to dynamically evaluate a feature. Depending on the
-	 * routine's temperature, the snow version (i.e. C code) is called and the
-	 * result, if any, is left on the operational stack. The I->C pattern is
-	 * called to push the parameters on the "C stack" correctly. Otherwise,
-	 * the interpreter is called. The function returns 1 to the caller if a
-	 * resynchronization of registers is needed.
-	 * FIXME XR: I believe we save and restore things which are not needed
-	 * (in particular we save the stack context but xinterp does it too)
-	 * so if someone understands what I have written and feels like clearing it up,
-	 * they're welcome to do so (I give up: I think it works and that's enough).
-	 */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	RTED;
-	int				saved_debug_mode = debug_mode;
-	uint32			type = 0;			/* Dynamic type of the result */
-	EIF_TYPED_VALUE 	*result = NULL;		/* Result of the function (NULL if none) */
-	uint32 EIF_VOLATILE db_cstack;
- 	STACK_PRESERVE;
-	RTYD; /* declares the variables used to save the run-time stacks context */
-	RTLXD;
+{
+		/* This is the debugger dispatcher for routine calls. It is called when
+		 * the user want to dynamically evaluate a feature. */
+	EIF_GET_CONTEXT;
+	jmp_buf exenv;
+	volatile int saved_debug_mode = debug_mode;
+	uint32	type = 0;			/* Dynamic type of the result */
 
-	RTLXL;
+	REQUIRE("exception_occured not null", exception_occured);
+	REQUIRE("result not null", result);
+
 	*exception_occured = 0;
-	dstart();
-	SAVE(db_stack, dcur, dtop);
-	SAVE(op_stack, scur, stop);
-	db_cstack = d_data.db_callstack_depth;
-	
 	debug_mode = 0; /* We don't want exceptions to be caught */
 
 	excatch(&exenv);
 	if (setjmp(exenv)) {
 		*exception_occured = 1;
-		result = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-		memset (result, 0, sizeof(EIF_TYPED_VALUE));
 		result->it_ref = last_exception();
 		result->type = SK_REF;
 		if (result->it_ref != NULL) {
 			result->type = result->type | Dtype(result->it_ref);
 		}
-		
-		RESTORE(op_stack,scur,stop);
-		RESTORE(db_stack,dcur,dtop);
-		dpop();
-		RTLXE;
 		debug_mode = saved_debug_mode;
-		d_data.db_callstack_depth = db_cstack;
-		RTXSC;
-		in_assertion = saved_assertion; /* Corresponds to RTED */
 		exclear ();
-		return result;
-	}
-
-	dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0);
-
-	if (otop()!=previous_otop) { /* a result has been pushed on the stack */
-		result = opop(); 
-		type = result->type & SK_HEAD;
-		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {
-			result->type = type | Dtype(result->it_ref);
+	} else {
+		dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0, nb_pushed);
+		if (otop() != previous_otop) { /* a result has been pushed on the stack */
+			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE)); 
+			type = result->type & SK_HEAD;
+			if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {
+				result->type = type | Dtype(result->it_ref);
+			}
+		} else {
+			result->type = SK_VOID; 
 		}
+		debug_mode = saved_debug_mode;
+		expop(&eif_stack);
 	}
-
-	debug_mode = saved_debug_mode;
-
-	dpop();
-	d_data.db_callstack_depth = db_cstack;
-
-	return result;
 }
 
 /*
  * Function calling routines
  */
-rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent)
+rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
 						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
@@ -4740,78 +4683,75 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	RTED;
 	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
 	unsigned long 	stagval = tagval;	/* Save tag value */
-	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
 	unsigned char*	OLD_IC = IC;		/* IC back up */
 	uint32 			pid = 0;			/* Pattern id of the frozen feature */
 	int32 			rout_id = 0;		/* routine id of the requested feature */
-	struct stochunk *previous_scur = saved_scur;
-	EIF_TYPED_VALUE *previous_stop = saved_stop;
 	uint32 EIF_VOLATILE db_cstack;
 	STACK_PRESERVE;
 	RTYD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
 	RTLXL;
+	dstart();
 	SAVE(db_stack, dcur, dtop);
 	SAVE(op_stack, scur, stop);
 	db_cstack = d_data.db_callstack_depth;
 
-	if (is_basic_type) {
-			/* We need to create a reference to the basic type on the fly */
-		metamorphose_top(scur, stop);
-	}
-	
-	if (! is_precompiled) {
-		int stype = stype_or_origin;
-		rout_id = Routids(stype)[fid_or_offset];
-		if ((is_inline_agent) || (is_static_call)) {
-				/* For an inline agent or a static call, the call is always relative to
-				 * the type declaring the inline agent or the type target of the static call. */
-			CBodyId(body_id,rout_id,stype);
-		} else {
-			CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
-		}
-	} else {
-		int origin = stype_or_origin;
-		int offset = fid_or_offset;
-		CHECK("Not an inline agent", !is_inline_agent);
-		if (is_static_call) {
-			body_id = desc_tab[origin][dtype][offset].body_index;
-		} else {
-			body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
-		}
-	}
 	excatch(&exenv);
 	if (setjmp(exenv)) {
 		RESTORE(op_stack,scur,stop);
 		RESTORE(db_stack,dcur,dtop);
+		dpop();
 		RTLXE;
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
 		tagval = stagval;
 		IC = OLD_IC;					/* Restore IC back-up */
 		in_assertion = saved_assertion; /* Corresponds to RTED */
+		npop (nb_pushed);				/* Removed the pushed arguments. */
 		ereturn(MTC_NOARG);
-	}
-	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
-		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
-		if (tagval != stagval)		/* Interpreted function called */
-			sync_needed = 1;				/* Resynchronize registers */
 	} else {
-		/* The proper way to start the interpretation of a melted feature is to call `xinterp' 
-		 * in order to initialize the calling context (which is not done by `interpret').
-		 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
-		 */
-		xinterp(MTC melt[body_id], 0);
-		sync_needed = 1;					/* Compulsory synchronisation */
+		if (is_basic_type) {
+				/* We need to create a reference to the basic type on the fly */
+			metamorphose_top(scur, stop);
+		}
+		
+		if (! is_precompiled) {
+			int stype = stype_or_origin;
+			rout_id = Routids(stype)[fid_or_offset];
+			if ((is_inline_agent) || (is_static_call)) {
+					/* For an inline agent or a static call, the call is always relative to
+					 * the type declaring the inline agent or the type target of the static call. */
+				CBodyId(body_id,rout_id,stype);
+			} else {
+				CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
+			}
+		} else {
+			int origin = stype_or_origin;
+			int offset = fid_or_offset;
+			CHECK("Not an inline agent", !is_inline_agent);
+			if (is_static_call) {
+				body_id = desc_tab[origin][dtype][offset].body_index;
+			} else {
+				body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
+			}
+		}
+		if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
+			pid = (uint32) FPatId(body_id);
+			(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
+		} else {
+			/* The proper way to start the interpretation of a melted feature is to call `xinterp' 
+			 * in order to initialize the calling context (which is not done by `interpret').
+			 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
+			 */
+			xinterp(MTC melt[body_id], 0);
+		}
+		IC = OLD_IC;					/* Restore IC back-up */
+
+		dpop();
+		d_data.db_callstack_depth = db_cstack;
+		expop(&eif_stack);
 	}
-	IC = OLD_IC;					/* Restore IC back-up */
-	expop(&eif_stack);
-	/* restore operational stack if needed */
-	if (sync_needed==1 && previous_scur!=NULL && previous_stop!=NULL)
-		sync_registers(previous_scur, previous_stop); 
-	d_data.db_callstack_depth = db_cstack;
 }
 
 rt_private int icall(int fid, int stype, int ptype)

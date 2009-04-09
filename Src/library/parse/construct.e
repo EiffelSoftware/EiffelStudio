@@ -180,7 +180,7 @@ feature -- Element Change
 	twl_merge_left (other: CONSTRUCT)
 			-- <precursor>
 		do
-			if {l_other: like Current} other then
+			if attached {like Current} other as l_other then
 				Precursor {TWO_WAY_TREE}(l_other)
 			end
 		end
@@ -188,7 +188,7 @@ feature -- Element Change
 	twl_merge_right (other: CONSTRUCT)
 			-- <precursor>
 		do
-			if {l_other: like Current} other then
+			if attached {like Current} other as l_other then
 				Precursor {TWO_WAY_TREE}(l_other)
 			end
 		end

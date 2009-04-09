@@ -50,28 +50,6 @@ feature -- Query
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
-	active_menus (erase: BOOLEAN)
-			-- Enable all the menus and if `erase' clean
-			-- the content of the Project tool.
-		do
-			compile_menu.enable_sensitive
-			if erase then
-				develop_window.output_manager.clear
-			end
-		end
-
-	disable_menus
-			-- Disable all the menus.
-		do
-			compile_menu.disable_sensitive
-		end
-
-	update_debug_menu
-			-- Update debug menu
-		do
-			develop_window.Eb_debugger_manager.update_debugging_tools_menu_from (develop_window)
-		end
-
 	project_menu: EV_MENU
 			-- Menu for entries relative to the Project.
 
@@ -171,15 +149,6 @@ feature -- Query
 --		end
 
 feature -- Item querys
-
-	melt_menu_item: EV_MENU_ITEM
-			-- Melt menu entry
-
-	freeze_menu_item: EV_MENU_ITEM
-			-- Freeze menu entry
-
-	finalize_menu_item: EV_MENU_ITEM
-			-- Finalize menu entry
 
 	show_favorites_menu_item: EV_MENU_ITEM
 			-- Show/Hide favorites menu item.

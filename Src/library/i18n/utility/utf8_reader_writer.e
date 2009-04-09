@@ -25,7 +25,7 @@ feature -- Reading
 			file_open_readable: a_file.is_open_read
 			n_non_negative: n_bytes >= 0
 		local
-			l_read: ?STRING
+			l_read: detachable STRING
 		do
 			if n_bytes = 0 then
 				Result := ""

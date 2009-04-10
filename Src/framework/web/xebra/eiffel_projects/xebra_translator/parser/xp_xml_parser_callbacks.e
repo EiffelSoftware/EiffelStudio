@@ -21,12 +21,17 @@ feature {NONE} -- Initialization
 
 	make (a_parser: XM_PARSER; a_path: STRING)
 			-- Create XB_XML_PARSER_CALLBACKS.
+		require
+			a_path_is_valid: not a_path.is_empty
 		do
 			parser := a_parser
 			path := a_path
 			create root_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
 			create html_buf.make_empty
+		ensure
+			html_buf_is_empty: html_buf.is_empty
+			tag_stack_is_empty: tag_stack.is_empty
 		end
 
 feature -- Constants
@@ -42,20 +47,20 @@ feature -- Constants
 feature -- Access
 
 	path: STRING
-		-- The path of the file to which is being read
+			-- The path of the file to which is being read
 
 	state: INTEGER
-		-- 0 Reading_html
-		-- 1 Reading_tag
+			-- 0 Reading_html
+			-- 1 Reading_tag
 
 	html_buf: STRING
-		-- Stores html text until a tag is created from it
+			-- Stores html text until a tag is created from it
 
 	root_tag: XP_TAG_ELEMENT
-		-- Represents the root of the XB_TAG tree
+			-- Represents the root of the XB_TAG tree
 
 	tag_stack: ARRAYED_STACK [XP_TAG_ELEMENT]
-		-- The stack is used to generate the tree
+			-- The stack is used to generate the tree
 
 	taglibs: TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Tag library which should be used
@@ -99,7 +104,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message]), false)
+			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message + current_debug_information]), false)
 		end
 
 feature -- Meta
@@ -295,13 +300,17 @@ feature -- Content
 feature {NONE} -- Implementation
 
 	get_tag_lib (id: STRING): XTL_TAG_LIBRARY
-			--
+			-- Returns tag library with the name `id'
+		require
+			id_is_valid: not id.is_empty
 		do
 			Result := taglibs [id]
 		end
 
 	create_html_tag_with_text (s: STRING)
-			-- Creates a XB_TAG from s and adds it to top element on stack.
+			-- Creates a XB_TAG from `s' and adds it to top element on stack.
+		require
+			s_is_valid: not s.is_empty
 		local
 			l_tag: XP_TAG_ELEMENT
 		do
@@ -330,11 +339,16 @@ feature {NONE} -- Implementation
 			create_html_tag_with_text_put (html_buf.out)
 				-- Don't use html_buf (instead of html_buf.out), since it will be wiped_out in the html_tag as well
 			html_buf.wipe_out
+		ensure
+			html_buf_is_empty: html_buf.is_empty
+			tag_stack_didnt_change: tag_stack.count = old tag_stack.count
 		end
 
 	process_dynamic_html_attribute (local_part, value: STRING)
 			-- Extracts the name of the feature from the value
 			-- Generates an html tag element and an output call
+		require
+			local_part_is_valid: not local_part.is_empty
 		local
 			l_tag: XP_TAG_ELEMENT
 			feature_name: STRING
@@ -347,10 +361,14 @@ feature {NONE} -- Implementation
 			tag_stack.item.put_subtag (l_tag)
 				-- Don't put it on the stack
 			html_buf.append ("%"")
+		ensure
+			tag_stack_didnt_change: tag_stack.count = old tag_stack.count
 		end
 
 	process_dynamic_tag_attribute (local_part, value: STRING)
 			-- And adds an attribute
+		require
+			local_part_is_valid: not local_part.is_empty
 		local
 			feature_name: STRING
 		do
@@ -359,7 +377,7 @@ feature {NONE} -- Implementation
 		end
 
 	strip_off_dynamic_tags (a_string: STRING): STRING
-			-- Strips off the "%=" and ending "%"
+			-- Strips off the "%=" and ending "%"		
 		require
 			a_string_is_valid: a_string.starts_with ("%%=") and a_string.ends_with ("%%")
 		do
@@ -370,7 +388,7 @@ feature {NONE} -- Implementation
 			-- Queries the parser for row and column
 		do
 			if parser.position /= Void then
-				Result := "row: " + parser.position.row.out + " column: " + parser.position.column.out + " path: " + path
+				Result := "line: " + parser.position.row.out + " column: " + parser.position.column.out + " path: " + path
 			else
 				Result := "Could not determine position!"
 			end

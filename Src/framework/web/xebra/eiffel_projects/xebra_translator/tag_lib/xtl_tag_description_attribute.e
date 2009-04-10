@@ -22,7 +22,7 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	id: STRING
-		-- The id of the tag attribute
+			-- The id of the tag attribute
 
 	put (child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>

@@ -13,13 +13,13 @@
 	</target>
 	
 	<target name="compile">
-		<echo message="- Compile cURL" />
+		<echo message="- Compile [cURL]" />
 		<geant target="compile" file="build.eant" dir="Clib" 
 			reuse_variables="true" />
 	</target>
 	
 	<target name="clean">
-		<echo message="- Clean cURL" />
+		<echo message="- Clean [cURL]" />
 		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" />
 	</target>
 

@@ -27,6 +27,7 @@ feature -- Initialization
 			retried: BOOLEAN
 			l_address: like address
 		do
+			create last_string.make_empty
 			if not retried then
 				descriptor := fd;
 				create l_address.make
@@ -57,6 +58,7 @@ feature
 	make_socket
 			-- Create socket descriptor.
 		do
+			create last_string.make_empty
 			descriptor := c_socket (family, type, protocol);
 			if descriptor > -1 then
 				descriptor_available := True;

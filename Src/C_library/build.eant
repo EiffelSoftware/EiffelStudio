@@ -22,7 +22,7 @@
 		<geant target="clean" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
 	</target>
 
-	<target name="clobber" depend="clean" >
+	<target name="clobber" >
 		<geant target="clobber" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="clobber" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
 	</target>

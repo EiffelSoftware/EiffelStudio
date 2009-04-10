@@ -13,6 +13,7 @@ class
 inherit
 	DBG_EXPRESSION_EVALUATOR
 		redefine
+			apply_context,
 			reset_error
 		end
 
@@ -23,26 +24,9 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_INST_CONTEXT
-		export
-			{NONE} all
-		end
-
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
-		export
-			{NONE} all
-		end
-
-	SHARED_AST_CONTEXT
-		rename
-			Context as Ast_context
-		export
-			{NONE} all
-		end
-
-	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
 		end
@@ -87,14 +71,6 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
 			end
 		end
 
-feature -- Context
-
-	Default_context_feature: FEATURE_I
-			-- Default context feature for `context_feature'
-		once
-			Result := System.Any_class.compiled_class.feature_named ("default_create")
-		end
-
 feature {DBG_EXPRESSION_EVALUATION} -- Basic operation: Evaluation
 
 	reset_error
@@ -122,13 +98,15 @@ feature {NONE} -- Evaluation
 				init_context_with_current_callstack
 			elseif on_class then
 				init_context_address_with_current_callstack
-				set_context_data (Void, context_class, Void, Void, 0, 0)
+				context.set_data (Void, context.class_c, Void, Void, 0, 0)
+				apply_context
 			elseif on_object then
-				dobj := debugger_manager.object_manager.debugged_object (context_address, 0, 0)
+				dobj := debugger_manager.object_manager.debugged_object (context.address, 0, 0)
 				if dobj.is_erroneous then
-					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context_address.output)))
+					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
 				else
-					set_context_data (Void, dobj.dynamic_class, dobj.class_type, Void, 0, 0)
+					context.set_data (Void, dobj.dynamic_class, dobj.class_type, Void, 0, 0)
+					apply_context
 				end
 				dobj := Void
 			end
@@ -138,8 +116,8 @@ feature {NONE} -- Evaluation
 			end
 
 			if
-				(on_context and context_feature = Void)
-				or (on_class and context_class = Void)
+				(on_context and context.feature_i = Void)
+				or (on_class and context.class_c = Void)
 			then
 				dbg_error_handler.notify_error_expression_during_context_preparation
 				l_error_occurred := True
@@ -153,7 +131,7 @@ feature {NONE} -- Evaluation
 				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 				-- and if this is handle later or not
 			if on_context then
-				if context_address = Void or else context_address.is_void then
+				if context.address = Void or else context.address.is_void then
 					l_error_occurred := True
 				end
 			end
@@ -430,8 +408,8 @@ feature {BYTE_NODE} -- Visitor
 		do
 			if tmp_target_dump_value /= Void then
 				cl := tmp_target_dump_value.dynamic_class
-			elseif context_class /= Void then
-				cl := context_class
+			elseif context.class_c /= Void then
+				cl := context.class_c
 			else
 				cl := system.class_of_id (a_node.written_in)
 			end
@@ -444,7 +422,7 @@ feature {BYTE_NODE} -- Visitor
 					if tmp_target_dump_value /= Void then
 						evaluate_attribute (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi)
 					else
-						evaluate_attribute (context_address, Void, cl, fi)
+						evaluate_attribute (context.address, Void, cl, fi)
 					end
 				else
 					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_with_retrieving_attribute (a_node.attribute_name))
@@ -694,13 +672,15 @@ feature {BYTE_NODE} -- Visitor
 			l_v_i: VALUE_I
 			l_supported: BOOLEAN
 			l_has_error: BOOLEAN
+			ct: CLASS_TYPE
 		do
---FIXME: convert this to visitor !!			
-			if context_class_type /= Void then
+--FIXME: convert this to visitor !!	
+			ct := context.class_type
+			if ct /= Void then
 				if Byte_context.class_type = Void then
-					Byte_context.init (context_class_type)
+					Byte_context.init (ct)
 				else
-					Byte_context.change_class_type_context (context_class_type, context_class_type.type, context_class_type, context_class_type.type)
+					Byte_context.change_class_type_context (ct, ct.type, ct, ct.type)
 				end
 			end
 			l_type_to_create := a_node.info.type_to_create
@@ -759,7 +739,7 @@ feature {BYTE_NODE} -- Visitor
 			if on_object then
 					--| If the context is on object
 					--| then Current represent the pointed object
-				create tmp_result.make_with_value (dump_value_at_address (context_address))
+				create tmp_result.make_with_value (dump_value_at_address (context.address))
 			else
 				cse ?= application_status.current_call_stack_element
 				check cse /= Void end
@@ -768,7 +748,7 @@ feature {BYTE_NODE} -- Visitor
 					dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_unable_to_get_current_object)
 				else
 					create tmp_result.make_with_value (dv)
-					tmp_result.suggest_static_class (context_class)
+					tmp_result.suggest_static_class (context.class_c)
 				end
 			end
 		end
@@ -807,13 +787,13 @@ feature {BYTE_NODE} -- Visitor
 			if a_node.is_static_call then
 				cl := class_c_from_external_b (a_node)
 			elseif on_class then
-				cl := context_class
+				cl := context.class_c
 			end
 			if cl = Void then
 				if tmp_target_dump_value /= Void then
 					cl := tmp_target_dump_value.dynamic_class
-				elseif context_class /= Void then
-					cl := context_class
+				elseif context.class_c /= Void then
+					cl := context.class_c
 				else
 					cl := system.class_of_id (a_node.written_in)
 				end
@@ -842,18 +822,18 @@ feature {BYTE_NODE} -- Visitor
 								if tmp_target_dump_value /= Void then
 									evaluate_static_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
 								else
-									evaluate_static_routine (context_address, Void, cl, fi, params)
+									evaluate_static_routine (context.address, Void, cl, fi, params)
 								end
 							else
 								if tmp_target_dump_value /= Void then
 									evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
-								elseif context_address /= Void and then not context_address.is_void then
-									evaluate_routine (context_address, Void, cl, fi, params)
+								elseif context.address /= Void and then not context.address.is_void then
+									evaluate_routine (context.address, Void, cl, fi, params)
 								else
 									if debugger_manager.is_dotnet_project  then
 										evaluate_static_function (fi, cl, params)
 									else
-										evaluate_static_routine (context_address, Void, cl, fi, params)
+										evaluate_static_routine (context.address, Void, cl, fi, params)
 									end
 								end
 							end
@@ -862,7 +842,7 @@ feature {BYTE_NODE} -- Visitor
 						if tmp_target_dump_value /= Void then
 							evaluate_attribute (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi)
 						else
-							evaluate_attribute (context_address, tmp_target_dump_value, cl, fi)
+							evaluate_attribute (context.address, tmp_target_dump_value, cl, fi)
 						end
 					else
 						dbg_error_handler.notify_error_evaluation_during_call_evaluation (a_node, a_node.feature_name)
@@ -882,8 +862,8 @@ feature {BYTE_NODE} -- Visitor
 		do
 			if tmp_target_dump_value /= Void then
 				cl := tmp_target_dump_value.dynamic_class
-			elseif context_class /= Void then
-				cl := context_class
+			elseif context.class_c /= Void then
+				cl := context.class_c
 			else
 				cl := system.class_of_id (a_node.written_in)
 			end
@@ -924,7 +904,7 @@ feature {BYTE_NODE} -- Visitor
 								if tmp_target_dump_value /= Void then
 									evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
 								else
-									evaluate_routine (context_address, Void, cl, fi, params)
+									evaluate_routine (context.address, Void, cl, fi, params)
 								end
 							end
 						elseif fi.is_attribute then
@@ -932,7 +912,7 @@ feature {BYTE_NODE} -- Visitor
 							if tmp_target_dump_value /= Void then
 								evaluate_attribute (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi)
 							else
-								evaluate_attribute (context_address, Void, cl, fi)
+								evaluate_attribute (context.address, Void, cl, fi)
 							end
 						else
 							dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_other_than_func_cst_once_not_available (a_node))
@@ -1159,7 +1139,7 @@ feature {BYTE_NODE} -- Visitor
 				l_res := l_expr_value.has_attached_value
 				if l_res and not a_node.is_void_check then
 					cl := l_expr_value.dynamic_class
-					l_res := cl /= Void and then cl.actual_type.conform_to (context_class, a_node.info.type_to_create)
+					l_res := cl /= Void and then cl.actual_type.conform_to (context.class_c, a_node.info.type_to_create)
 				end
 				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (l_res, debugger_manager.compiler_data.boolean_class_c))
 				if l_res and attached a_node.target as l_ot then
@@ -1297,8 +1277,8 @@ feature {BYTE_NODE} -- Visitor
 		do
 			if tmp_target_dump_value /= Void then
 				cl := tmp_target_dump_value.dynamic_class
-			elseif context_class /= Void then
-				cl := context_class
+			elseif context.class_c /= Void then
+				cl := context.class_c
 			else
 				cl := debugger_manager.compiler_data.tuple_class_c
 			end
@@ -1310,7 +1290,7 @@ feature {BYTE_NODE} -- Visitor
 				if tmp_target_dump_value /= Void then
 					evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
 				else
-					evaluate_routine (context_address, Void, cl, fi, params)
+					evaluate_routine (context.address, Void, cl, fi, params)
 				end
 			else
 				dbg_error_handler.notify_error_evaluation_report_to_support (a_node)
@@ -1983,7 +1963,7 @@ feature {NONE} -- Evaluation: implementation
 					if a_target /= Void then
 						l_addr := tmp_target_dump_value.value_address
 					else
-						l_addr := context_address
+						l_addr := context.address
 					end
 					prepare_dbg_evaluation
 					Dbg_evaluator.evaluate_function_with_name (l_addr, a_target, a_feature_name, a_external_name, params)
@@ -2115,7 +2095,6 @@ feature {NONE} -- Evaluation: implementation
 					Result := True
 				end
 			end
---			Result := a_left.identical_to (a_right)
 		end
 
 feature {NONE} -- Implementation: recorded object test locals' value
@@ -2181,7 +2160,7 @@ feature -- Context: Element change
 			else
 					--| Cse can be Void if the application raised an exception
 					--| at the very beginning of the execution (for instance under dotnet)
-				context_address := cse.object_address
+				context.set_address (cse.object_address)
 				ecse ?= cse
 				if ecse = Void then
 					--| Could occurs in case of External call stack element
@@ -2189,7 +2168,8 @@ feature -- Context: Element change
 					dbg_error_handler.notify_error_expression_during_context_preparation
 				else
 					fi := ecse.routine_i
-					set_context_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
+					context.set_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
+					apply_context
 				end
 			end
 		end
@@ -2204,121 +2184,27 @@ feature -- Context: Element change
 				--| Cse can be Void if the application raised an exception
 				--| at the very beginning of the execution (for instance under dotnet)
 			if cse /= Void then
-				context_address := cse.object_address
+				context.set_address (cse.object_address)
 			end
 		end
 
-	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type; otl: like context_object_test_locals; a_bp, a_bp_nested: INTEGER)
-			-- Set context data related to `f', `c', `ct', `otl', `a_bp' and `a_bp_nested'
-		local
-			l_reset_byte_node: BOOLEAN
-			c_c_t: CLASS_TYPE
-			c_t_i: CL_TYPE_A
+	apply_context
+			-- Apply context's modification
 		do
-			if c /= Void then
-				if
-					f /= context_feature
-				then
-					context_feature := f
-					l_reset_byte_node := True
-				end
-				if context_class /~ c then
-					context_class := c
-					l_reset_byte_node := True
-				end
-				if ct /= Void then
-					c_c_t := ct
-				elseif context_class /= Void then
-					c_t_i := context_class.actual_type
-					if c_t_i.has_associated_class_type (Void) then
-						c_c_t := c_t_i.associated_class_type (Void)
-					end
-				end
-				if context_class_type /~ c_c_t then
-					context_class_type := c_c_t
-					l_reset_byte_node := True
-				end
-				if context_class = Void and context_class_type /= Void then
-					context_class_type := Void
-					l_reset_byte_node := True
-				end
-
-				if otl /~ context_object_test_locals then
-					context_object_test_locals := otl
-				end
-				if context_breakable_index /= a_bp then
-					context_breakable_index := a_bp
-				end
-				if context_bp_nested_index /= a_bp_nested then
-					context_bp_nested_index := a_bp_nested
-				end
-
-				if context_feature = Void then
-					if not on_object then
-						l_reset_byte_node := True
-						context_feature := Default_context_feature
-					end
-				end
-				if l_reset_byte_node then
-						--| this means we will recompute the EXPR_B value according to the new context				
-					reset_byte_node
-				end
+			if context.changed then
+				reset_byte_node
 			end
+			Precursor
 		end
 
 	display_context_information
 			-- Display context information in the output
 			-- for debugging purpose only
-		local
-			ca: like context_address
-			cc: like context_class
-			cct: like context_class_type
-			cf: like context_feature
-			r: BOOLEAN
 		do
-			if not r then
-				ca := context_address
-				cc := context_class
-				cct := context_class_type
-				cf := context_feature
-
+			debug ("debugger_evaluator")
 				io.put_string ("%NExpression=" + expression.text + "%N")
-				io.put_string (" address=")
-				if ca /= Void then
-					io.put_string (ca.output)
-				else
-					io.put_string ("")
-				end
-				io.put_new_line
-
-				io.put_string (" class=")
-				if cc /= Void then
-					io.put_string (cc.name_in_upper)
-				else
-					io.put_string ("")
-				end
-				io.put_new_line
-
-
-				io.put_string (" type=")
-				if cct /= Void then
-					io.put_string (cct.associated_class.name_in_upper)
-				else
-					io.put_string ("")
-				end
-				io.put_new_line
-
-				io.put_string (" feature==")
-				if cf /= Void then
-					io.put_string (cf.feature_name)
-				else
-					io.put_string ("")
-				end
-				io.put_new_line
+				io.put_string (context.to_string)
 			end
-		rescue
-			r := True
-			retry
 		end
 
 feature -- Access
@@ -2341,29 +2227,24 @@ feature -- Access
 	is_boolean_expression (f: FEATURE_I): BOOLEAN
 			-- Is `Current' a boolean query in the context of `f'?
 		local
-			old_context_object_test_locals: like context_object_test_locals
-			old_context_feature: like context_feature
-			old_context_class: like context_class
-			old_context_class_type: like context_class_type
-			old_int_expression_byte_note: like internal_byte_node
-			old_bp, old_bp_nested: INTEGER
+			ctx, bak: like context
+			ct: CLASS_TYPE
+			fi: FEATURE_I
 			bak_byte_code: BYTE_CODE
+			old_int_expression_byte_note: like internal_byte_node
 		do
 				--| Backup current context and values
-			old_context_object_test_locals := context_object_test_locals
-			old_context_feature := context_feature
-			old_context_class := context_class
-			old_context_class_type := context_class_type
+			context.backup
 			old_int_expression_byte_note := internal_byte_node
-			old_bp := context_breakable_index
-			old_bp_nested := context_bp_nested_index
 
 				--| Removed any potential error due to previous evaluation
-			error_handler.wipe_out
+			reset_error
 
 				--| prepare context
 				--| this may reset the `expression_byte_node' value
-			set_context_data (f, f.written_class, Void, Void, 0, 0) -- FIXME: we are missing object test locals here
+			ctx := context
+			ctx.set_data (f, f.written_class, Void, Void, 0, 0) -- FIXME: we are missing object test locals here
+			apply_context
 
 				--| Get expression_byte_node
 			get_byte_node
@@ -2371,21 +2252,23 @@ feature -- Access
 --| Since the Byte_context is used only by debugger and code generation
 --| there is no need to restore previous context
 --| (see below the commented line for restoring class_type_context)
-				if context_class_type /= Void then
+				ct := ctx.class_type
+				if ct /= Void then
 					if Byte_context.class_type = Void then
-						Byte_context.init (context_class_type)
+						Byte_context.init (ct)
 					else
-						Byte_context.change_class_type_context (context_class_type, context_class_type.type, context_class_type, context_class_type.type)
+						Byte_context.change_class_type_context (ct, ct.type, ct, ct.type)
 					end
 					bak_byte_code := Byte_context.byte_code
-					if context_feature /= Void then
-						Byte_context.set_current_feature (context_feature)
-						Byte_context.set_byte_code (context_feature.byte_server.item (context_feature.body_index))
+					fi := ctx.feature_i
+					if fi /= Void then
+						Byte_context.set_current_feature (fi)
+						Byte_context.set_byte_code (fi.byte_server.item (fi.body_index))
 					end
 				end
 
 				Result := expr.type.is_boolean
-				if context_class_type /= Void and Byte_context.is_class_type_changed then
+				if ct /= Void and Byte_context.is_class_type_changed then
 					Byte_context.restore_class_type_context
 				end
 				if bak_byte_code /= Void then
@@ -2395,24 +2278,21 @@ feature -- Access
 
 				--| FIXME JFIAT: check in which cases we call the is_condition
 				--| to see if it is pertinent to save.restore data ...			
-			if
-				old_context_class = Void
-				and old_context_class_type = Void
-				and old_context_feature = Void
-				and old_int_expression_byte_note = Void
-			then
+			bak := context.backup_data
+			if bak.is_valid or old_int_expression_byte_note /= Void then
+					--| Restore context and values
+				if bak.class_c = Void then
+						--| FIXME JFIAT: check this ... how to have a context_class .. not void
+						--| and pertinent ...
+					bak.set_class_c (context.class_c)
+				end
+				context.restore
+				apply_context
+				internal_byte_node := old_int_expression_byte_note
+			else
 				-- if everything was unset before, let's keep these values
 				-- we may use them again soon ...
 				-- so no need to recompute the EXPR_B again and again
-			else
-					--| Restore context and values
-				if old_context_class = Void then
-						--| FIXME JFIAT: check this ... how to have a context_class .. not void
-						--| and pertinent ...
-					old_context_class := context_class
-				end
-				set_context_data (old_context_feature, old_context_class, old_context_class_type, old_context_object_test_locals, old_bp, old_bp_nested)
-				internal_byte_node := old_int_expression_byte_note
 			end
 		ensure then
 			error_handler_cleaned: not error_handler.has_error
@@ -2429,208 +2309,19 @@ feature {NONE} -- Implementation
 			Result := dbgm.dump_value_factory.new_integer_32_value (i, dbgm.compiler_data.integer_32_class_c)
 		end
 
-	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE)
-			-- Prepare AST shared context  with `cl' and `ct'
-		require
-			cl_not_void: cl /= Void
-			ct_associated_to_cl: ct /= Void implies ct.associated_class.is_equal (cl)
-		local
-			l_ta: CL_TYPE_A
-		do
-			if ct /= Void then
-				l_ta := ct.type
-			else
-				l_ta := cl.actual_type
-			end
-			Ast_context.initialize (cl, l_ta, cl.feature_table)
-			if ct /= Void then
-				byte_context.init (ct)
-			end
-			Inst_context.set_group (cl.group)
-		end
-
 	get_byte_node
 			-- get byte node depending of the context
 		require
-			context_feature_not_void: on_context implies context_feature /= Void
-			context_class_not_void: context_class /= Void
+			context_feature_not_void: on_context implies context.feature_i /= Void
+			context_class_not_void: context.class_c /= Void
 		local
-			retried: BOOLEAN
 
-			l_ct_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
-			f_as: BODY_AS
-			l_byte_code: BYTE_CODE
-			bak_byte_code: BYTE_CODE
-			bak_cc, l_cl: CLASS_C
 		do
 			byte_node_computed := True
-			if not retried then
-				if internal_byte_node = Void then
-					error_handler.wipe_out
-
-					debug ("debugger_trace_eval_data")
-						print (generator + ".get_expression_byte_node from [" + expression.text + "]%N")
-						print ("%T%T on_context: " + on_context.out +"%N")
-						print ("%T%T on_class  : " + on_class.out +"%N")
-						print ("%T%T on_object : " + on_object.out +"%N")
-						if context_class /= Void then
-							print ("%T%T context_class : " + context_class.name_in_upper +"%N")
-						end
-						if context_address /= Void then
-							print ("%T%T context_address : " + context_address.output +"%N")
-						end
-						if context_feature /= Void then
-							print ("%T%T context_feature : " + context_feature.feature_name +"%N")
-						end
-					end
-						--| If we want to recompute the `byte_node',
-						--| we need to call `reset_byte_node'
-
-					if context_class /= Void then
-						ast_context.clear_all
-							--| Prepare Compiler context
-						prepare_contexts (context_class, context_class_type)
-
-						bak_cc := System.current_class
-						System.set_current_class (context_class)
-
-						bak_byte_code := Byte_context.byte_code
-
-						if on_context and then context_feature /= Void then
-							if not context_class.conform_to (context_feature.written_class) then
-								debug ("debugger_trace_eval_data")
-									print ("Context class {"+ context_class.name_in_upper
-											+"} does not has context feature %""+context_feature.feature_name+"%"%N")
-								end
-								--| This issue occurs for instance in {TEST}.twin
-								--| where {ISE_RUNTIME}check_assert (boolean) is called
-								--| at this point the context class is TEST,
-								--| and the context feature is `check_assert (BOOLEAN)'
-								--| but TEST doesn't conform to ISE_RUNTIME.
-								l_cl := context_feature.written_class
-								prepare_contexts (l_cl, Void)
-								System.set_current_class (l_cl)
-							else
-								l_cl := context_class
-							end
-							Ast_context.set_current_feature (context_feature)
-							Ast_context.set_written_class (context_feature.written_class)
-
-							debug ("refactor_fixme")
-								fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
-							end
-
-							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
-							if l_byte_code /= Void then
-								Byte_context.set_byte_code (l_byte_code)
-							end
-
-								--| Locals
-							f_as := context_feature.real_body
-							if f_as /= Void or True then
-								l_ct_locals := locals_builder.local_table (l_cl, context_feature, f_as)
-								if l_ct_locals /= Void then
-										--| if it failed .. let's continue anyway for now
-
-										--| Last local return a new object
-										--| so there is no need to "twin" it
-									Ast_context.set_locals (l_ct_locals)
-								end
-								add_object_test_locals_info_to_ast_context (context_feature.e_feature)
-							end
-						elseif on_object and then context_class /= Void then
-							l_cl := context_class
-							prepare_contexts (l_cl, Void)
-							System.set_current_class (l_cl)
-							ast_context.set_written_class (l_cl)
-						end
-							--| Compute and get `expression_byte_node'
-						internal_byte_node := byte_node_from_ast (expression.ast)
-							--| Reset Compiler context
-						if bak_cc /= Void then
-							System.set_current_class (bak_cc)
-						end
-						if bak_byte_code /= Void then
-							Byte_context.set_byte_code (bak_byte_code)
-						end
-						Ast_context.clear_all
-					else
-						dbg_error_handler.notify_error_exception_context_corrupted_or_not_found
-						Ast_context.clear_all
-					end
-				end
-			else
-				dbg_error_handler.notify_error_expression_during_analyse
-				error_handler.wipe_out
+			error_handler.wipe_out
+			if internal_byte_node = Void then
+				internal_byte_node := dbg_expression_checker.expression_byte_node (expression, context, dbg_error_handler)
 			end
-		ensure
-			expression_byte_node_computed: byte_node_computed
-			error_handler_cleaned: not error_handler.has_error
-		rescue
-			retried := True
-			retry
-		end
-
-	byte_node_from_ast (exp: EXPR_AS): like byte_node
-			-- compute expression_byte_node from EXPR_AS `exp'
-		require
-			context_feature_not_void: on_context implies context_feature /= Void
-		local
-			retried: BOOLEAN
-			type_check_succeed: BOOLEAN
-		do
-			if exp = Void then
-					--| How come it is Void ?
-					--| for instance, expression: create {STRING}.make_empty
-				reset_error
-				dbg_error_handler.notify_error_expression_during_analyse
-			elseif not retried then
-				reset_error
-				error_handler.wipe_out
-				Ast_context.set_is_ignoring_export (True)
-
-				dbg_expression_checker.init (ast_context)
-				debug ("debugger_trace_eval_data")
-					print (generator + ".expression_byte_node_from_ast (..) %N")
-					print ("   Ast_context -> {"
-							+ ast_context.current_class.name_in_upper
-							+ "}")
-					if ast_context.current_feature /= Void then
-						print ("." + ast_context.current_feature.feature_name)
-					end
-					print ("%N")
-				end
-				dbg_expression_checker.expression_type_check_and_code (context_feature, exp)
-				Ast_context.set_is_ignoring_export (False)
-
-				if error_handler.has_error then
-					type_check_succeed := True
-					dbg_error_handler.notify_error_list_expression_and_tag (error_handler.error_list)
-					error_handler.wipe_out
-					Result := Void
-				else
-					Result := dbg_expression_checker.last_byte_node
-				end
-			else
-				ast_context.set_is_ignoring_export (False)
-				if not type_check_succeed then
-					dbg_error_handler.notify_error_expression_type_checking_failed
-				end
-				if error_handler.has_error then
-					dbg_error_handler.notify_error_list_expression_and_tag (error_handler.error_list)
-					error_handler.wipe_out
-				else
-					if not error_occurred then
-						dbg_error_handler.notify_error_expression (Void)
-					end
-				end
-				Result := Void
-			end
-		ensure
-			error_handler_cleaned: not error_handler.has_error
-		rescue
-			retried := True
-			retry
 		end
 
 	reset_byte_node
@@ -2642,59 +2333,18 @@ feature {NONE} -- Implementation
 	internal_byte_node: like  byte_node
 			-- Cached `byte_node'
 
-feature {NONE} -- OT locals
-
-	add_object_test_locals_info_to_ast_context (f: E_FEATURE)
-			-- Add object test locals to the context
-		require
-			f_not_void: f /= Void
-		local
-			ta: TYPE_A
-			tu: TUPLE [id: ID_AS; type: TYPE_A]
-			li: LOCAL_INFO
-			l_name_id: INTEGER
-			ct: CLASS_TYPE
-			lst: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
-		do
-			ct := context_class_type
-			if ct = Void then
-				ct := f.associated_class.types.first
-			end
-			lst := context_object_test_locals
-			if lst /= Void and then	not lst.is_empty then
-				from
-					lst.start
-				until
-					lst.after
-				loop
-					tu := lst.item_for_iteration
-					l_name_id := tu.id.name_id
-					ta := tu.type
-
-					create li
-					li.set_position (Ast_context.next_object_test_local_position)
-					li.set_type (ta)
-					li.set_is_used (True)
-
-					debug ("to_implement")
-						to_implement ("Support object test locals of the same name.")
-					end
-					Ast_context.add_object_test_local (li, tu.id)
-					Ast_context.add_object_test_expression_scope (tu.id)
-					lst.forth
-				end
-			end
-		end
-
 feature {NONE} -- Compiler helpers
 
 	resolved_real_type_in_context (a_type_i: CL_TYPE_A): CL_TYPE_A
 			-- Resolved real type associated with `a_type_i'
 		require
 			a_type_i_not_void: a_type_i /= Void
+		local
+			ct: CLASS_TYPE
 		do
-			if context_class_type /= Void then
-				Result ?= byte_context.real_type_in (a_type_i, context_class_type.type)
+			ct := context.class_type
+			if ct /= Void then
+				Result ?= byte_context.real_type_in (a_type_i, ct.type)
 			end
 			if Result = Void then
 				Result := a_type_i

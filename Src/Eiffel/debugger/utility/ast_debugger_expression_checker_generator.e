@@ -20,6 +20,25 @@ inherit
 			is_void_safe
 		end
 
+	SHARED_INST_CONTEXT
+		export
+			{NONE} all
+		end
+
+	SHARED_BYTE_CONTEXT
+		rename
+			context as byte_context
+		export
+			{NONE} all
+		end
+
+	SHARED_AST_CONTEXT
+		rename
+			Context as Ast_context
+		export
+			{NONE} all
+		end
+
 feature -- Settings
 
 	reset
@@ -33,6 +52,253 @@ feature -- Properties
 
 	expression_context: AST_CONTEXT
 			-- Saved original Ast context when processing in the ancestor's context.
+
+feature -- Access: byte node
+
+	expression_byte_node (a_expression: DBG_EXPRESSION; a_context: DBG_EXPRESSION_EVALUATION_CONTEXT; a_dbg_error_handler: DBG_ERROR_HANDLER): like last_byte_node
+		require
+			a_expression_attached: a_expression /= Void
+			a_context_attached: a_context /= Void
+			a_dbg_error_handler_attached: a_dbg_error_handler /= Void
+		local
+			retried: BOOLEAN
+
+			l_ct_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
+			f_as: BODY_AS
+			l_byte_code: BYTE_CODE
+			bak_byte_code: BYTE_CODE
+			bak_cc, l_cl: CLASS_C
+		do
+			dbg_error_handler := a_dbg_error_handler
+			if not retried then
+				error_handler.wipe_out
+
+				debug ("debugger_trace_eval_data")
+					print (generator + ".get_expression_byte_node from [" + a_expression.text + "]%N")
+					print (a_context.to_string)
+				end
+					--| If we want to recompute the `byte_node',
+					--| we need to call `reset_byte_node'
+
+				l_cl := a_context.class_c
+				if l_cl /= Void then
+					ast_context.clear_all
+
+						--| backup previous data
+					bak_cc := System.current_class
+					bak_byte_code := Byte_context.byte_code
+					if a_context.on_context and then attached a_context.feature_i as fi then
+						if not l_cl.conform_to (fi.written_class) then
+							debug ("debugger_trace_eval_data")
+								io.put_string ("Context class {" + l_cl.name_in_upper	+ "} does not has context feature %"" + fi.feature_name + "%"%N")
+							end
+							--| This issue occurs for instance in {TEST}.twin
+							--| where {ISE_RUNTIME} check_assert (boolean) is called
+							--| at this point the context class is TEST,
+							--| and the context feature is `check_assert (BOOLEAN)'
+							--| but TEST doesn't conform to ISE_RUNTIME.
+							l_cl := fi.written_class
+							prepare_contexts (l_cl, Void)
+						else
+							prepare_contexts (l_cl, a_context.class_type)
+						end
+						System.set_current_class (l_cl)
+						Ast_context.set_current_feature (fi)
+						Ast_context.set_written_class (fi.written_class)
+						l_byte_code := fi.byte_server.item (fi.body_index)
+						if l_byte_code /= Void then
+							Byte_context.set_byte_code (l_byte_code)
+						end
+							--| Locals and object test locals
+						f_as := fi.real_body
+						if f_as /= Void then
+							l_ct_locals := locals_builder.local_table (l_cl, fi, f_as)
+							if l_ct_locals /= Void then
+									--| if it failed .. let's continue anyway for now
+
+									--| Last local return a new object
+									--| so there is no need to "twin" it
+								Ast_context.set_locals (l_ct_locals)
+--								from
+--									l_ct_locals.start
+--								until
+--									l_ct_locals.after
+--								loop
+--									ast_context.add_local_expression_scope (l_ct_locals.key_for_iteration)
+--									l_ct_locals.forth
+--								end
+							end
+						end
+						add_object_test_locals_info_to_ast_context (fi.e_feature, ast_context, a_context)
+					elseif a_context.on_object then
+						prepare_contexts (l_cl, Void)
+						System.set_current_class (l_cl)
+						ast_context.set_written_class (l_cl)
+					else
+						prepare_contexts (l_cl, a_context.class_type)
+						System.set_current_class (l_cl)
+					end
+
+						--| Compute and get `expression_byte_node'
+					if attached a_expression.ast as l_expr_as then
+						Result := byte_node_from_ast (l_expr_as, a_context)
+					else
+							--| How come it is Void ?
+							--| for instance, expression: create {STRING}.make_empty
+						dbg_error_handler.notify_error_expression_during_analyse
+					end
+
+						--| Revert Compiler context
+					if bak_cc /= Void then
+						System.set_current_class (bak_cc)
+					end
+					if bak_byte_code /= Void then
+						Byte_context.set_byte_code (bak_byte_code)
+					end
+					Ast_context.clear_all
+					error_handler.wipe_out
+				else
+					dbg_error_handler.notify_error_exception_context_corrupted_or_not_found
+					Ast_context.clear_all
+				end
+			else
+				a_dbg_error_handler.notify_error_expression_during_analyse
+				error_handler.wipe_out
+			end
+			dbg_error_handler := Void
+		ensure
+			error_handler_cleaned: not error_handler.has_error
+		rescue
+			retried := True
+			retry
+		end
+
+feature {NONE} -- Implementation: byte node	
+
+	dbg_error_handler: DBG_ERROR_HANDLER
+			-- Debugger error handler
+
+	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE)
+			-- Prepare AST shared context  with `cl' and `ct'
+		require
+			cl_not_void: cl /= Void
+			ct_associated_to_cl: ct /= Void implies ct.associated_class.is_equal (cl)
+		local
+			l_ta: CL_TYPE_A
+		do
+			if ct /= Void then
+				l_ta := ct.type
+			else
+				l_ta := cl.actual_type
+			end
+			Ast_context.initialize (cl, l_ta, cl.feature_table)
+			if ct /= Void then
+				byte_context.init (ct)
+			end
+			Inst_context.set_group (cl.group)
+		end
+
+	byte_node_from_ast (a_expr_as: EXPR_AS; a_context: DBG_EXPRESSION_EVALUATION_CONTEXT): like last_byte_node
+			-- compute expression_byte_node from EXPR_AS `a_expr_as'
+		require
+			exp_attached: a_expr_as /= Void
+			context_feature_not_void: a_context.on_context implies a_context.feature_i /= Void
+		local
+			retried: BOOLEAN
+			type_check_succeed: BOOLEAN
+			old_is_ignoring_export: BOOLEAN
+		do
+			if not retried then
+				debug ("debugger_trace_eval_data")
+					io.put_string (generator + ".expression_byte_node_from_ast (..) %N")
+					io.put_string ("   Ast_context -> {" + ast_context.current_class.name_in_upper + "}")
+					if ast_context.current_feature /= Void then
+						io.put_string ("." + ast_context.current_feature.feature_name)
+					end
+					io.put_string ("%N")
+				end
+
+					--| compute byte node from AST
+				old_is_ignoring_export := ast_context.is_ignoring_export
+				Ast_context.set_is_ignoring_export (True)
+				init (ast_context)
+				expression_type_check_and_code (a_context.feature_i, a_expr_as)
+				Ast_context.set_is_ignoring_export (old_is_ignoring_export)
+
+					--| check results
+				if error_handler.has_error then
+					type_check_succeed := True
+					dbg_error_handler.notify_error_list_expression_and_tag (error_handler.error_list)
+					error_handler.wipe_out
+					Result := Void
+				else
+					Result := last_byte_node
+				end
+			else
+					--| revert change and notify errors
+				ast_context.set_is_ignoring_export (old_is_ignoring_export)
+				if not type_check_succeed then
+					dbg_error_handler.notify_error_expression_type_checking_failed
+				end
+				if error_handler.has_error then
+					dbg_error_handler.notify_error_list_expression_and_tag (error_handler.error_list)
+					error_handler.wipe_out
+				else
+					if not dbg_error_handler.error_occurred then
+						dbg_error_handler.notify_error_expression (Void)
+					end
+				end
+				Result := Void
+			end
+		ensure
+			error_handler_cleaned: not error_handler.has_error
+		rescue
+			retried := True
+			retry
+		end
+
+	add_object_test_locals_info_to_ast_context (f: E_FEATURE; ctx: AST_CONTEXT; a_context: DBG_EXPRESSION_EVALUATION_CONTEXT)
+			-- Add object test locals to the context
+		require
+			f_not_void: f /= Void
+			ctx_attached: ctx /= Void
+		local
+			ta: TYPE_A
+			tu: TUPLE [id: ID_AS; type: TYPE_A]
+			li: LOCAL_INFO
+			l_name_id: INTEGER
+			ct: CLASS_TYPE
+			lst: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+		do
+			ct := a_context.class_type
+			if ct = Void then
+				ct := f.associated_class.types.first
+			end
+			lst := a_context.object_test_locals
+			if lst /= Void and then	not lst.is_empty then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					tu := lst.item_for_iteration
+					l_name_id := tu.id.name_id
+					ta := tu.type
+
+					create li
+					li.set_position (ctx.next_object_test_local_position)
+					li.set_type (ta)
+					li.set_is_used (True)
+
+					debug ("to_implement")
+						to_implement ("Support object test locals of the same name.")
+					end
+					ctx.add_object_test_local (li, tu.id)
+					ctx.add_object_test_expression_scope (tu.id)
+					lst.forth
+				end
+			end
+		end
 
 feature -- Type checking
 
@@ -316,6 +582,16 @@ feature {NONE} -- Implementation
 			else
 				Precursor {AST_FEATURE_CHECKER_GENERATOR} (l_as)
 			end
+		end
+
+feature -- Helpers
+
+	locals_builder: AST_LOCALS_INFO
+			-- Visitor to build table of locals
+		once
+			create Result
+		ensure
+			locals_builder_not_void: Result /= Void
 		end
 
 note

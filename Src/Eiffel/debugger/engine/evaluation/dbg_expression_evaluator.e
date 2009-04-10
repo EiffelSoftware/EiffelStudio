@@ -39,12 +39,7 @@ feature {NONE} -- Initialization
 			expression := expr
 			ctx := expr.context
 
-			set_on_class (ctx.on_class)
-			set_on_object (ctx.on_object)
-			set_on_context (ctx.on_context)
-
-			set_context_address (ctx.associated_address)
-			set_context_class (ctx.associated_class)
+			create context.make_from_expression_context (ctx)
 		end
 
 	initialize_dbg_error_handler
@@ -120,35 +115,33 @@ feature {DBG_EXPRESSION_EVALUATION} -- Evaluation: Access
 
 feature -- Settings
 
+	context: DBG_EXPRESSION_EVALUATION_CONTEXT
+			-- evaluation context
+
+	apply_context
+		do
+			if context.changed then
+				context.reset_changed
+			end
+		end
+
 	on_class: BOOLEAN
 			-- Is the expression relative to a class ?
+		do
+			Result := context.on_class
+		end
 
 	on_object: BOOLEAN
 			-- Is the expression relative to an object ?
+		do
+			Result := context.on_object
+		end
 
 	on_context: BOOLEAN
 			-- Is the expression relative to a context ?	
-
-	context_class_type: CLASS_TYPE
-			-- Class related to the target, in on_object context
-
-	context_class: CLASS_C
-			-- Class related to the expression
-
-	context_address: DBG_ADDRESS
-			-- Object's address related to the expression	
-
-	context_feature: FEATURE_I
-			-- Feature associated to the context
-
-	context_breakable_index: INTEGER
-			-- Breakable index position
-
-	context_bp_nested_index: INTEGER
-			-- Breakable nested index position	
-
-	context_object_test_locals: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
-			-- Object test local info associated to the context
+		do
+			Result := context.on_context
+		end
 
 	side_effect_forbidden: BOOLEAN assign set_side_effect_forbidden
 			-- Forbid potential side effect during evaluation?
@@ -160,36 +153,6 @@ feature -- Settings
 
 
 feature -- Change
-
-	set_on_class (v: like on_class)
-			-- set value of `on_class' with `v'
-		do
-			on_class := v
-		end
-
-	set_on_object (v: like on_object)
-			-- set value of `on_object' with `v'	
-		do
-			on_object := v
-		end
-
-	set_on_context (v: like on_context)
-			-- set value of `on_context' with `v'	
-		do
-			on_context := v
-		end
-
-	set_context_class (c: like context_class)
-			-- set value of `context_class' with `c'
-		do
-			context_class := c
-		end
-
-	set_context_address (c: like context_address)
-			-- set value of `context_address' with `c'
-		do
-			context_address := c
-		end
 
 	reset_error
 			-- Reset error related data

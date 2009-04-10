@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_server" uuid="DC7DD566-3701-432A-895B-5D144715CB95">
+	<target name="xebra_server">
+		<root class="XS_APPLICATION" feature="make"/>
+		<setting name="multithreaded" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf"/>
+		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
+		<cluster name="xebra_server" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="xebra_server_dotnet" extends="xebra_server">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

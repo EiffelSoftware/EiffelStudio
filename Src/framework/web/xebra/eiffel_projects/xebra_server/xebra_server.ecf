@@ -10,23 +10,17 @@
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="false"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<cluster name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\thread_utilities\" recursive="true"/>
-		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\" recursive="true"/>
+		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses.ecf"/>
+		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities.ecf"/>
+		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/temp2$</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>^/temp$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

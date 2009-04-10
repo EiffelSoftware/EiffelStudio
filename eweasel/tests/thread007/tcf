@@ -11,6 +11,10 @@ compile_result 	 ok
 c_compile_work
 c_compile_result ok
 
+execute_work	 NONE exec_output1 1
+execute_result	 ok
+compare		 exec_output1 output
+
 execute_work	 NONE exec_output1 500000
 execute_result	 ok
 compare		 exec_output1 output

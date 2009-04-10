@@ -77,7 +77,7 @@ static  char    *names [] = {
 "BC_CARG" ,
 "BC_CLIKE" ,
 "BC_CCUR" ,
-"BC_INSPECT" ,
+"BC_NOTUSED_31" ,
 "BC_RANGE" ,
 "BC_INSPECT_EXCEP" ,
 "BC_LREVERSE" ,
@@ -1227,8 +1227,6 @@ static  void    print_instructions (void)
 			case  BC_RANGE :
 				/* When part of inspect. Jump offset */
 				fprintf (ofp,"offset %d", get_int32(&ip));
-				break;
-			case  BC_INSPECT :
 				break;
 			case  BC_RETRIEVE_OLD :
 				/* Old expression */

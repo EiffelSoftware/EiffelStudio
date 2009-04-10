@@ -43,7 +43,7 @@ feature -- Access
 	Bc_carg:			CHARACTER = '%/028/';
 	Bc_clike:			CHARACTER = '%/029/';
 	Bc_ccur:			CHARACTER = '%/030/';
-	Bc_inspect:			CHARACTER = '%/031/';
+	Bc_notused_31:		CHARACTER = '%/031/';
 	Bc_range:			CHARACTER = '%/032/';
 	Bc_inspect_excep:	CHARACTER = '%/033/';
 	Bc_lreverse:		CHARACTER = '%/034/';

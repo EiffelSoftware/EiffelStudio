@@ -1038,14 +1038,13 @@ rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *target)
 	}
 
 	/* Do not create an array if id list is actually empty */
-	if (cnt == 1)
+	if (cnt == 1) {
 		return NULL;
-
-	SAFE_ALLOC(tp, EIF_TYPE_INDEX, cnt);
-
-	memcpy (tp,cid,cnt*sizeof(EIF_TYPE_INDEX));
-
-	return tp;
+	} else {
+		SAFE_ALLOC(tp, EIF_TYPE_INDEX, cnt);
+		memcpy (tp,cid,cnt*sizeof(EIF_TYPE_INDEX));
+		return tp;
+	}
 }
 
 rt_private char *wclass_name(void)

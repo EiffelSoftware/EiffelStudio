@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XU_REQUEST_FACTORY
+	XH_REQUEST_FACTORY
 
 create
 	make

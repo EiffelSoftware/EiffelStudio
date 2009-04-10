@@ -69,8 +69,10 @@ feature -- Wrapped features
 			-- See NETWORK_STREAM_SOCKET
 		do
 			mutex.lock
-			Result := socket.retrieved
+		--	Result := socket.retrieved
 			mutex.unlock
+
+			Result := " TEST TEST TEST "
 		end
 
 

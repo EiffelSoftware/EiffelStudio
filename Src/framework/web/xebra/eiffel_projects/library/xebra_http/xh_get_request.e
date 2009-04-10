@@ -38,11 +38,11 @@ feature -- Implementation
 			end
 		end
 
-	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
-			-- <Precursor>
-			-- Calls prehandle_get_request
-		do
-			servlet.prehandle_get_request (Current, response)
-		end
+--	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
+--			-- <Precursor>
+--			-- Calls prehandle_get_request
+--		do
+--			servlet.prehandle_get_request (Current, response)
+--		end
 
 end

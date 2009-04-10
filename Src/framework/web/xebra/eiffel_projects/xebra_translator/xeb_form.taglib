@@ -6,6 +6,7 @@
 	<tag id="button" class="XTAG_F_BUTTON_TAG">
 		<attribute id="value"/>
 		<attribute id="action"/>
+		<attribute id="type" />
 	</tag>
 	<tag id="input_text" class="XTAG_F_INPUT_TEXT_TAG">
 		<attribute id="value"/>

@@ -1692,15 +1692,10 @@ feature -- Implementation
 
 								-- Supplier dependances update
 							if l_is_target_of_creation_instruction then
---								create l_depend_unit.make_with_level (l_last_id, l_feature,
---									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
 								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature,
 									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
 							else
 								if is_precursor then
---									create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
---										depend_unit_level)
---									context.supplier_ids.extend (l_depend_unit)
 									context.supplier_ids.extend_depend_unit_with_level (a_precursor_type.associated_class.class_id, l_feature,
 										depend_unit_level)
 								end
@@ -1712,10 +1707,8 @@ feature -- Implementation
 										Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
 									end
 								end
-								--create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature, depend_unit_level)
 							end
---							context.supplier_ids.extend (l_depend_unit)
 
 							if l_is_assigner_call then
 								process_assigner_command (l_last_id, l_feature)
@@ -2822,6 +2815,7 @@ feature -- Implementation
 			l_has_error: BOOLEAN
 			l_current_class: CLASS_C
 			l_rout_id_set: ROUT_ID_SET
+			l_orig_result_type: TYPE_A
 		do
 			if not is_inherited then
 				if current_feature.is_invariant or else current_feature.is_inline_agent then
@@ -2926,6 +2920,7 @@ feature -- Implementation
 				end
 				create l_instatiation_type
 				l_instatiation_type.set_actual_type (l_parent_type)
+				l_orig_result_type := l_feature_i.type
 				l_feature_i := l_feature_i.instantiated (l_instatiation_type)
 					-- Now that we have the fully instantiated type, we need to adapt it to
 					-- the current class type (e.g. like Current).
@@ -2936,6 +2931,10 @@ feature -- Implementation
 					l_as.precursor_keyword.position, l_as.precursor_keyword.location_count)
 				process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
 					l_as.parameters, False, False, False, True)
+
+					-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
+					-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
+				last_type := l_orig_result_type.evaluated_type_in_descendant (l_parent_type.associated_class, context.current_class, context.current_feature)
 			else
 				reset_types
 			end

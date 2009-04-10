@@ -1039,12 +1039,18 @@ feature {NONE} -- Visitors
 					make_case_range (l_case)
 					i := i - 1
 				end
+					-- Go to else part
 				ba.append (Bc_jmp)
-				ba.mark_forward3		-- To else part
+				ba.mark_forward3
+
+					-- Generate code for the various inspect matches
 				a_node.case_list.process (Current)
 				ba.write_forward3
 			end
 			if a_node.else_part /= Void then
+					-- We need to pop the value of the expression since we do not need it anymore.
+				ba.append (bc_pop)
+				ba.append_natural_32 (1)
 				a_node.else_part.process (Current)
 			else
 				ba.append (Bc_inspect_excep)
@@ -1059,7 +1065,6 @@ feature {NONE} -- Visitors
 				ba.write_forward
 				i := i - 1
 			end
-			ba.append (Bc_inspect)
 		end
 
 	process_instr_call_b (a_node: INSTR_CALL_B)

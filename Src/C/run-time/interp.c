@@ -288,17 +288,20 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 	struct stochunk * volatile scur_o
 
 
-#define SAVE(x,y,z) \
-	{								\
-		(y) = (x).st_cur;			\
-		(z) = (x).st_top;			\
-	}
-#define RESTORE(x,y,z) \
-	{								\
-		(x).st_cur = (y);			\
-		(x).st_end = (y)->sk_end;	\
-		(x).st_top = (z);			\
-	}
+#define SAVE(stack,cur,top) \
+	(cur) = (stack).st_cur;			\
+	(top) = (stack).st_top;
+
+#define RESTORE(stack,cur,top) \
+	if (top) {								\
+		(stack).st_cur = (cur);			\
+		(stack).st_top = (top);			\
+		if (cur) { (stack).st_end = (cur)->sk_end; }	\
+	} else { /* There was no chunk allocated when saving, but allocated at excution in between */ \
+		(stack).st_cur = (stack).st_hd; \
+		(stack).st_top = (stack).st_cur->sk_arena; \
+		(stack).st_end = (stack).st_cur->sk_end; \
+	} 
 
 /* Macros to handle exceptions in routine body:
  * SET_RESCUE - set rescue handler (if any)
@@ -811,12 +814,9 @@ rt_private void interpret(int flag, int where)
 		if (flag == INTERP_CMPD) {
 			if (rescue) {	/* If there is a rescue clause */
 #ifdef ISE_GC
-				l_top = loc_set.st_top;		/* Save C local stack */
-				l_cur = loc_set.st_cur;
-				ls_top = loc_stack.st_top;	/* Save loc_stack */
-				ls_cur = loc_stack.st_cur;
-				h_top = hec_stack.st_top;	/* Save hector stack */
-				h_cur = hec_stack.st_cur;
+				SAVE(loc_set, l_cur, l_top);		/* Save C local stack */
+				SAVE(loc_stack, ls_cur, ls_top);	/* Save loc_stack */
+				SAVE(hec_stack, h_cur, h_top);		/* Save hector stack */
 #endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
@@ -844,33 +844,11 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RESCUE\n");
 #endif
-		op_stack.st_cur = scur;					/* Restore stack context */
-		op_stack.st_top = stop;
-		if (scur) op_stack.st_end = scur->sk_end;
+		RESTORE(op_stack, scur, stop);
 #ifdef ISE_GC
-		loc_set.st_cur = l_cur;
-		if (l_cur) loc_set.st_end = l_cur->sk_end;
-		loc_set.st_top = l_top;
-
-		if (ls_top){
-			loc_stack.st_cur = ls_cur;
-			if (ls_cur) loc_stack.st_end = ls_cur->sk_end;
-			loc_stack.st_top = ls_top;
-		}else if (loc_stack.st_top) { /* There was no chunk allocated when saving, but allocated at excution in between */
-			loc_stack.st_cur = loc_stack.st_hd;
-			loc_stack.st_top = loc_stack.st_cur->sk_arena;
-			loc_stack.st_end = loc_stack.st_cur->sk_end;
-		}
-
-		if (h_top) {
-			hec_stack.st_cur = h_cur;
-			if (h_cur) hec_stack.st_end = h_cur->sk_end;
-			hec_stack.st_top = h_top;
-		}else if (hec_stack.st_top) { /* There was no chunk allocated when saving, but allocated at excution in between */
-			hec_stack.st_cur = hec_stack.st_hd;
-			hec_stack.st_top = hec_stack.st_cur->sk_arena;
-			hec_stack.st_end = hec_stack.st_cur->sk_end;
-		}
+		RESTORE(loc_set, l_cur, l_top);
+		RESTORE(loc_stack, ls_cur, ls_top);
+		RESTORE(hec_stack, h_cur, h_top);
 #endif
 		sync_registers(MTC scur, stop);
 		RTEU;
@@ -1567,7 +1545,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NONE_ASSIGN\n");
 #endif
-		opop();
+		(void) opop();
 		break;
 
 	/*
@@ -2177,11 +2155,13 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			EIF_TYPED_VALUE *lower, *upper;
+			unsigned char *OLD_IC;			/* IC back-up */
 
 			upper = opop();				/* Get the upper bound */
 			lower = opop();				/* Get the lower bound */
 			last = otop();				/* Get the inspect expression value */
 			offset = get_int32(&IC);		/* Get the jump value */
+			OLD_IC = IC;
 			switch (last->type) {
 			case SK_UINT8: if (lower->it_uint32 <= (EIF_NATURAL_32) last->it_uint8 && (EIF_NATURAL_32) last->it_uint8 <= upper->it_uint32) { IC += offset; } break;
 			case SK_UINT16: if (lower->it_uint32 <= (EIF_NATURAL_32) last->it_uint16 && (EIF_NATURAL_32) last->it_uint16 <= upper->it_uint32) { IC += offset; } break;
@@ -2197,19 +2177,14 @@ rt_private void interpret(int flag, int where)
 				eif_panic(MTC "invalid inspect type");
 				/* NOTREACHED */
 			}
+				/* We have a match for the inspect value, simply pop the expression value
+				 * since we won't use it ever. */
+			if (OLD_IC != IC) {
+				(void) opop();
+			}
 		}
 		break;
 	
-	/*
-	 * End of multi-branch instruction.
-	 */
-	case BC_INSPECT:
-#ifdef DEBUG
-		dprintf(2)("BC_INSPECT\n");
-#endif
-		(void) opop();				/* Pop the inspect expression */
-		break;
-
 	/*
 	 * Unmatched inspect value.
 	 */
@@ -2217,6 +2192,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INSPECT_EXCEP\n");
 #endif
+			/* There was no match, let's remove the inspect expression value. */
+		(void) opop();
 		xraise(EN_WHEN);
 		break;
 
@@ -2942,7 +2919,7 @@ rt_private void interpret(int flag, int where)
 		{
 		uint32 i, nb_uint32 = get_uint32(&IC);
 		for (i = 0; i < nb_uint32; i++)
-			opop();
+			(void) opop();
 		}
 		break;
 
@@ -5568,8 +5545,8 @@ rt_private void pop_registers(void)
 		/* Pop the special registers */
 	nb_args = opop()->it_uint32;		/* This is the nummber of arguments */
 	nb_locals = opop()->it_uint32;	/* Add the number of locals */
-	opop(); /* Remove Result */
-	opop(); /* Remove Current */
+	(void) opop(); /* Remove Result */
+	(void) opop(); /* Remove Current */
 
 	/* Using npop() may truncate the unused chunks at the tail of the stack,
 	 * which may free the chunk where results is stored if there where a lot

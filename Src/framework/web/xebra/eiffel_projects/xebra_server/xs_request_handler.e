@@ -54,7 +54,7 @@ feature --Execution
 			l_response_message: STRING
 			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			l_i: INTEGER
-			l_request_factory: XU_REQUEST_FACTORY
+			l_request_factory: XH_REQUEST_FACTORY
 		do
 			create l_request_factory.make
 			from

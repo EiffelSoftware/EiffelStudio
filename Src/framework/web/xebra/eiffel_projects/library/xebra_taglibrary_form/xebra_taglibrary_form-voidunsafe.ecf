@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_taglibrary_form" uuid="491B4344-79AF-43CB-891B-47EDEAC11056" library_target="xebra_taglibrary_form">
+	<target name="xebra_taglibrary_form">
+		<root all_classes="true"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf"/>
+		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
+		<cluster name="xebra_taglibrary_form" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

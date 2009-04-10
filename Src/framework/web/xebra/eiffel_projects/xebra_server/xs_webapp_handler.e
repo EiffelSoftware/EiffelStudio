@@ -62,7 +62,7 @@ feature -- Basic operations
 	forward_request_to_app (l_request_message: STRING): STRING
 			--Sends a request to the correct webserver.
 		local
-			l_request_factory: XU_REQUEST_FACTORY
+			l_request_factory: XH_REQUEST_FACTORY
 			l_uri_webapp_name: STRING
 		do
 			webapps_mutex.lock

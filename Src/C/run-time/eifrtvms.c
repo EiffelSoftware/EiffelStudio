@@ -813,19 +813,74 @@ char_ptr32 eifrt_vms_nl_langinfo (nl_item item)
 
 /*** ICONV jackets ***/
 
-#include <iconv.h>
+#undef iconv
+#undef iconv_open
+#undef iconv_close
 
-size_t eifrt_vms_iconv (iconv_t cd, char_ptr_ptr32 inpbuf, size_t_ptr32 inpbytesleft, char_ptr_ptr32 outbuf, size_t_ptr32 outbytesleft)
+//size_t eifrt_vms_iconv (iconv_t cd, char_ptr_ptr32 inpbuf, size_t_ptr32 inpbytesleft, char_ptr_ptr32 outbuf, size_t_ptr32 outbytesleft)
+size_t eifrt_vms_iconv (iconv_t cd, const char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft)
 {
     size_t res;
+    char_ptr32 inpbufx, outbufx;
+    size_t inpbytesleftx, outbytesleftx;
     size_t DECC$ICONV (iconv_t cd, char_ptr_ptr32 inpbf, size_t_ptr32 inpbytleft, char_ptr_ptr32 outbf, size_t_ptr32 outbytleft);
-    res = DECC$ICONV (cd, inpbuf, inpbytesleft, outbuf, outbytesleft);
+
+#ifdef VMS_TRACE
+    char* outbuf_orig = *outbuf;
+    size_t outbytesleft_orig = *outbytesleft;
+
+    printf ("eifrtvms: iconv (0x0%07Lp, 0x0%07Lp (\"%.*s\"), %d, 0x0%07Lp, %d)\n", 
+	    cd, *inpbuf, *inpbytesleft, *inpbuf, *inpbytesleft, *outbuf, *outbytesleft);
+#endif
+
+#pragma message save
+#pragma message disable (MAYHIDELOSS)    // checked: inpbuf is obviously 32 bits here
+    inpbufx = (char_ptr32)*inpbuf;
+    outbufx = (char_ptr32)*outbuf;
+#pragma message restore
+    inpbytesleftx = *inpbytesleft;
+    outbytesleftx = *outbytesleft;
+    if (!$is_32bits(*inpbuf)) {
+	inpbufx = _malloc32 (*inpbytesleft);
+	memcpy (inpbufx, inpbuf, *inpbytesleft);
+    }
+    if (!$is_32bits(*outbuf)) {
+	outbufx = _malloc32 (*outbytesleft);
+    }
+    res = iconv (cd, &inpbufx, &inpbytesleftx, &outbufx, &outbytesleftx);
+#ifdef VMS_TRACEXXX
+    printf (" iconv returning %d (\"%.*s\" (inpbytesleft: %d, outbytesleft: %d)\n", 
+	    res, *outbytesleft - outbytesleftx, outbufx - *outbytesleft + outbytesleftx, inpbytesleftx, outbytesleftx);
+#endif
+
+    if (!$is_32bits(*inpbuf)) {
+	free (inpbufx);
+    }
+    if (!$is_32bits(*outbuf)) {
+	memcpy (*outbuf, outbufx - *outbytesleft + outbytesleftx, *outbytesleft - outbytesleftx);
+	free (outbufx);
+    }
+    *inpbuf += *inpbytesleft - inpbytesleftx;
+    *inpbytesleft = inpbytesleftx;
+    *outbuf += *outbytesleft - outbytesleftx;
+    *outbytesleft = outbytesleftx;
+
+#ifdef VMS_TRACE
+    printf (" iconv returned %d (*outbuf: \"%.*s\", inpbuf: 0x0%07Lp, inpbytesleft: %d, outbuf: 0x0%07Lp, outbytesleft: %d)\n", 
+	    res, outbytesleft_orig - *outbytesleft, outbuf_orig, *inpbuf, *inpbytesleft, *outbuf, *outbytesleft);
+#endif
+
     return res;
 }
 
 int eifrt_vms_iconv_close (iconv_t cd)
 {
     int DECC$ICONV_CLOSE (iconv_t);
+    static int level = 1;
+
+#ifdef VMS_TRACE
+    printf ("eifrtvms: %siconv_close (0x0%07Lp)\n", spaces(level), cd);
+#endif
     return DECC$ICONV_CLOSE (cd);
 }
 

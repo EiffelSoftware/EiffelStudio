@@ -57,6 +57,7 @@
 #include <unistd.h>
 #include <unixlib.h>
 #include <unixio.h>
+#include <iconv.h>
 
 /* VMS system specific includes */
 #include <descrip.h>
@@ -237,7 +238,19 @@ typedef unsigned short int ile_retlen_t;	/* type of returned length (see <iledef
 #define getenv eifrt_vms_getenv
 #define putenv eifrt_vms_putenv
 #define setenv eifrt_vms_setenv
-//#define strdup eifrt_vms_strdup
+
+/* language, locale, and i18n stuff */
+#define nl_langinfo eifrt_vms_nl_langinfo
+#undef setlocale
+#define setlocale   eifrt_vms_setlocale
+#define iconv_open  eifrt_vms_iconv_open
+#define iconv_close eifrt_vms_iconv_close
+#define iconv       eifrt_vms_iconv
+
+/* 64 bit clean wrappers for iconv library */
+size_t eifrt_vms_iconv (iconv_t cd, const char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft) ;
+int eifrt_vms_iconv_close (iconv_t cd) ;
+iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode) ;
 
 
 

@@ -46,7 +46,7 @@ fi
 
 remtrace zlib
 cd $INITIAL_DIR/C_library/zlib
-make                                                                        
+make -f Makefile.unix                                                 
 
 
 remtrace Compile the Eiffel libraries C code

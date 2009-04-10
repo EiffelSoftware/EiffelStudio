@@ -99,8 +99,27 @@ feature -- Implementation
 
 	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
 			--
+		local
+			l_text: STRING
 		do
-			a_feature.append_expression (Response_variable + ".append(%"[%N" + a_text + "%N]%")")
+			l_text := a_text.twin
+			if l_text.starts_with ("%N") then
+				l_text := l_text.substring (2, a_text.count)
+			end
+			if l_text.ends_with ("%N") then
+				l_text := l_text.substring (1, a_text.count-1)
+			end
+			if must_be_escaped (l_text) then
+				a_feature.append_expression (Response_variable_append + "(%"[%N" + l_text + "%N]%")")
+			else
+				a_feature.append_expression (Response_variable_append + "(%"" + l_text + "%")")
+			end
+		end
+
+	must_be_escaped (a_text: STRING): BOOLEAN
+			-- Checks, if there are characters which have to be escaped
+		do
+			Result := a_text.has_substring ("%"") or a_text.has_substring ("%%") or a_text.has_substring ("%N")
 		end
 
 	add_controller_call (feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
@@ -121,6 +140,7 @@ feature {XTAG_TAG_SERIALIZER} -- Constants
 		Request_variable: STRING = "request"
 		Controller_variable: STRING = "controller"
 		Response_variable_append: STRING = "response.append"
+		Response_variable_append_newline: STRING = "response.append_newline"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

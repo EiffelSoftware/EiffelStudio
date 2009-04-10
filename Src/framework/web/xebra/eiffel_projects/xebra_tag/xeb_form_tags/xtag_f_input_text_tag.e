@@ -23,9 +23,4 @@ feature -- Initialization
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- <Precursor>
-		do
-		end
-
 end

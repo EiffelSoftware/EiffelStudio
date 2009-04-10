@@ -44,4 +44,17 @@ feature -- Implementation
 			end
 		end
 
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- <Precursor>
+		local
+			input_id, variable: STRING
+		do
+			variable := variable_table [{XTAG_F_FORM_TAG}.form_var_key]
+			input_id := variable + "_" + a_servlet_class.get_unique_identifier
+			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"input%%%" name=%%%"" + input_id + "%%%" value=%%%"%" +" + variable + "." + value + " + %"%%%" />%")")
+			a_servlet_class.prerender_post_feature.append_expression ("if attached " + request_variable + ".arguments [%"" + input_id + "%"] as argument then")
+			a_servlet_class.prerender_post_feature.append_expression (variable + "." + value + " := argument")
+			a_servlet_class.prerender_post_feature.append_expression ("end")
+		end
+
 end

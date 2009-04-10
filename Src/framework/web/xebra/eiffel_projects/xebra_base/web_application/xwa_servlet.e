@@ -23,7 +23,7 @@ feature -- Access
 
 
 	current_session: XH_SESSION
-		-- Represents the session that belongs to the user that has send the current request
+			-- Represents the session that belongs to the user that has send the current request
 
 feature -- Basic Operations	
 
@@ -46,18 +46,22 @@ feature -- Basic Operations
 		end
 
 	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+			-- Handles a request before handle_request, if the request is a POST request
 		deferred
 		end
 
 	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+			-- Handles a request before handle_request, if the request is a GET request
 		deferred
 		end
 
 	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
+			-- Handles a request after handle_request
 		deferred
 		end
 
 	internal_controller: XWA_CONTROLLER
+			-- The controller associated to the servlet
 		deferred
 		end
 

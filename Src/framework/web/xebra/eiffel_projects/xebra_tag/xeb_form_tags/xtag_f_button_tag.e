@@ -21,6 +21,7 @@ feature -- Initialization
 			make_base
 			value := ""
 			action := ""
+			type := "submit"
 		end
 
 feature -- Access
@@ -32,6 +33,9 @@ feature -- Access
 			-- Name of the feature which will be executed
 			-- when the button is pressed
 
+	type: STRING
+			-- Type of the button (submit, push, etc.)
+
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
@@ -41,11 +45,11 @@ feature -- Implementation
 			variable: STRING
 		do
 			variable := variable_table [{XTAG_F_FORM_TAG}.form_var_key]
-			button_id := variable + "_" + a_servlet_class.render_feature.get_unique_identifier
+			button_id := variable + "_" + a_servlet_class.get_unique_identifier
 
-			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button name=%%%"" + button_id + "%%%" type=%%%"button%%%">" + value + "</button>%")")
+			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button type=%%%"" + type + "%%%" name=%%%"" + button_id + "%%%" type=%%%"button%%%">" + value + "</button>%")")
 			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + button_id + "%") then")
-			a_servlet_class.prerender_post_feature.append_expression (controller_variable + "." + action + "(" + variable + ")")
+			a_servlet_class.prerender_post_feature.append_expression (controller_variable + "." + action + " (" + variable + ")")
 			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
 
@@ -57,6 +61,9 @@ feature -- Implementation
 			end
 			if id.is_equal ("action") then
 				action := a_attribute
+			end
+			if id.is_equal ("type") then
+				type := a_attribute
 			end
 		end
 

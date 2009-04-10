@@ -67,6 +67,12 @@ feature -- Element change
 			html.append_string (a_string)
 		end
 
+	append_newline
+			-- Appends a new line to the html result
+		do
+			html.append_string ("%N")
+		end
+
 	put_cookie_order (a_cookie: XH_COOKIE_ORDER)
 			-- Adds a cookie_order
 		do

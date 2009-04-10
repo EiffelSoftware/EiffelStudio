@@ -34,7 +34,7 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
-			l_request_factory: XU_REQUEST_FACTORY
+			l_request_factory: XH_REQUEST_FACTORY
 
 		do
 			dprint ("I'm a new thread",2)

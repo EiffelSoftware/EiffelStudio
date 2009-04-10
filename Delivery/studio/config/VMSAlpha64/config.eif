@@ -1,9 +1,11 @@
 -- File: ISE_EIFFEL:[studio.config.$(ISE_PLATFORM)]config.eif
--- configuration file for Eiffel/VMS 5.7 (64bit) ES5SH utility
--- (where $(ISE_PLATFORM) is VMSAlpha or VMSVAX)
+-- configuration file for Eiffel/VMS 6.x (64bit) ES5SH utility
+-- (where $(ISE_PLATFORM) is VMSAlpha32, VMSAlpha64, or VMSVAX)
 --
 --
 -- History:
+--  31-Mar-2009 - dz -- Eiffel 6.3
+--  14-Feb-2008 - dz -- Eiffel 6.x
 --  24-Oct-2006 - dz -- Eiffel 5.7.63441
 --   8-Aug-2006 - dz -- Eiffel 5.7
 --  21-Sep-2005 - David Schwartz
@@ -26,7 +28,7 @@
 -- (note: the use of ES5SH_CONFIG is deprecated in favor of the command line option.)
 --
 --
--- As of this wriing, the current version of GNU make for VMS (gmake 3.81) resolves the 
+-- As of this writing, the current version of GNU make for VMS (gmake 3.81) resolves the 
 -- longstanding problem with maximum DCL command line length;  gmake now works around the
 -- limit of 2048 characters for a DCL command line, and so gmake is now the recommended 
 -- tool for building Eiffel systems on VMS. A copy of gmake is included in the Eiffel distribution 
@@ -54,11 +56,11 @@
 --
 -- 32/64 bit pointer related entries:
 --  ccflags, mtccflags:
---	for 64 bit, add  /POINT=64
+--	for 32 bit, remove /POINT=64
+--	***tbs*** determine this from ISE_PLATFORM
+--	(note: as of Eiffel 6.3, 32 bit is no longer supported on VMSAlpha)
 --  EIFFEL_SHAREABLE:
---	32 bit: ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]vms_jackets.exe/share
---	64 bit: ISE_EIFFEL:[studio.spec.VMSAlpha64.bin]vms_jackets.exe/share
---
+--	now uses $(ISE_PLATFORM) to distinguish between 64- and 32-bit 
 --
 --
 
@@ -89,9 +91,9 @@ cc/nowarn
 
 
 -- ccflags: standard C compile flags.  
---  /prefix=all is always required for DECC.
---  GTK requires use of /NAME=(AS_IS,SHORTEN)/FLOAT=IEEE/IEEE=DENORM,
---  so all Eiffel libraries and applications are compiled this way.
+--  /PREFIX=ALL is always required for DECC.
+--  GTK requires use of /NAME=(AS_IS,SHORTEN)/FLOAT=IEEE/IEEE=DENORM
+--  so all Eiffel libraries and applications are now compiled this way.
 --
 --  Special handling is performed for /DEFine and /INClude DCL qualifiers:
 --  All instances of /DEFine and /INClude are collected and specified as a
@@ -109,12 +111,9 @@ cc/nowarn
 == ccflags
 /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm/point=64
 -- was: /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm /define=(_VMS_,_WINDU_SOURCE)
--- add /POINT=64 for 64 bit pointers
 
 == mtccflags
-$ccflags /DEF=EIF_THREADS 
--- /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm /define=EIF_THREADS
--- add /POINT=64 for 64 bit pointers
+$ccflags /define=EIF_THREADS  
 
 == cpp
 
@@ -141,6 +140,7 @@ ISE_EIFFEL:[C_library.VMS.Porting.include]
 --	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$wkeiflib$suffix
 -- or	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$eiflib$suffix
 -- or	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$mt_prefix$eiflib$suffix
+-- or   EIFLIB = "$rt_lib/$prefix$eiflib$suffix"
 
 == wkeiflib
 wkbench
@@ -158,7 +158,6 @@ MT
 
 == sharedsuffix
 .exe
-
 
 
 
@@ -212,7 +211,6 @@ gmake
 
 
 
-
 == continuation
 \
 
@@ -243,25 +241,23 @@ driver.exe :
 
 -- default_rule:
 --  If this symbol is defined, its value is included in the generated Makefile.
---  It is not required for GNU make.
---  It seems to be required for MMK/MMS. 
+--  It is not required for GNU make. It seems to be required for MMK/MMS. 
 --== default_rule
 --.DEFAULT :
 --	continue
 
 
-
-
-
--- If EXTERNALS contains any options (-L), append this to the generated link.com ***explain better ***tbs***
--- Also see gtk_config_libs option
+-- xmotif_libs:
+--  If EXTERNALS contains any options (-L), append this to the generated link.com ***explain better ***tbs***
+--  Also see gtk_config_libs option
 == xmotif_libs
-sys$share:decwindows/LIBR
+sys$share:decwindows/library
+
 
 -- eiffel_shareable: shareable images (DLLs) required for execution of Eiffel generated applications.
--- If eiffel_shareable is defined, it is included in the generated link options.
+--  If eiffel_shareable is defined, it is included in the generated link options.
 == eiffel_shareable
-ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]vms_jackets.exe/share
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]vms_jackets.exe/share
 
 
 -- Eiffel 5.1 added gtk-config shell commands to Makefiles.
@@ -286,10 +282,10 @@ ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]vms_jackets.exe/share
 --  It may contain macro(s) that are further processed, then added to the
 --  EXTERNALS list in the generated link.com file.
 == gtk_config_libs
-ISE_EIFFEL:[studio.spec.VMSAlpha.bin]libgtk.exe/SHARE
-ISE_EIFFEL:[studio.spec.VMSAlpha.bin]libgdk.exe/SHARE
-ISE_EIFFEL:[studio.spec.VMSAlpha.bin]libgmodule.exe/SHARE
-ISE_EIFFEL:[studio.spec.VMSAlpha.bin]libglib.exe/SHARE
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]libgtk.exe/SHARE
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]libgdk.exe/SHARE
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]libgmodule.exe/SHARE
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]libglib.exe/SHARE
 
 
 
@@ -310,9 +306,18 @@ ISE_EIFFEL:[studio.spec.VMSAlpha.bin]libglib.exe/SHARE
 --  $ISE_LIBRARIES/C_library/libpng/libpng.a
 --  $ISE_LIBRARIES/C_library/zlib/libz.a
 == vision2-gtk-config--object
-ISE_EIFFEL:[library.vision2.spec.VMSAlpha.lib]gtk_eiffel.obj
-ISE_EIFFEL:[library.vision2.spec.VMSAlpha.lib]load_pixmap.obj
+ISE_EIFFEL:[library.vision2.spec.$(ISE_PLATFORM).lib]gtk_eiffel.obj
+ISE_EIFFEL:[library.vision2.spec.$(ISE_PLATFORM).lib]load_pixmap.obj
 `gtk-config --libs`
-ISE_EIFFEL:[C_library.libpng]png.olb/LIBR
-ISE_EIFFEL:[C_library.zlib]z.olb/LIBR
+ISE_EIFFEL:[C_library.libpng]libpng.olb/LIBR
+ISE_EIFFEL:[C_library.zlib]libz.olb/LIBR
+
+
+-- New symbols used in Eiffel 6.0 Makefiles:
+
+== rt_include
+/ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include
+
+== rt_lib
+/ISE_EIFFEL/studio/spec/$(ISE_PLATFORM)/lib
 

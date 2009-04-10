@@ -60,7 +60,7 @@ feature -- Status setting
 	set_name (a_name: like name)
 			-- Sets the name
 		require
-			a_path_is_valid: not a_path.is_empty
+			a_name_is_valid: not a_name.is_empty
 		do
 			name := a_name
 		end
@@ -149,8 +149,6 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			a_taglibs.put (l_p_callback.taglib, l_p_callback.taglib.id)
-		ensure
-			taglib_was_added: a_taglibs.count
 		end
 
 	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR

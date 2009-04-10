@@ -42,6 +42,7 @@
 #include "eif_argv.h"
 #include "eif_internal.h"
 #include "eif_object_id.h"
+#include "eif_traverse.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1527,8 +1527,7 @@ feature -- Byte code generation
 					-- Mark offset for next BC_OLD
 				ba.mark_forward
 
-				if postcondition /= Void and then
-					old_expressions /= Void then
+				if postcondition /= Void and then old_expressions /= Void then
 						-- Make byte code for old expression
 						--! Order is important since interpretor pops expression
 						--! bottom up.

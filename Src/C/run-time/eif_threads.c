@@ -1534,39 +1534,38 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	offset = eifaddr_offset (thread_object, "terminated", &ret);
 	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-	/* If no thread has been launched, the mutex isn't initialized */
-	if (!eif_children_mutex) return;
-
+		/* If no thread has been launched, the mutex isn't initialized */
+	if (eif_children_mutex) {
 #ifdef EIF_NO_CONDVAR
-	/* This version is for platforms that don't support condition
-	 * variables. If the platform doesn't support yield() either, this
-	 * function can use much of the CPU time.
-	 */
+		/* This version is for platforms that don't support condition
+		 * variables. If the platform doesn't support yield() either, this
+		 * function can use much of the CPU time.
+		 */
 
-	EIF_THR_YIELD;
-	while (!end) {
-		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-		if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
-			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
-			EIF_THR_YIELD;
-		} else {
-			end = 1;
-			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+		EIF_THR_YIELD;
+		while (!end) {
+			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+			if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+				EIF_THR_YIELD;
+			} else {
+				end = 1;
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+			}
 		}
-	}
 #else
 
-	/* This version is for platforms that support condition variables, like
-	 * the platforms supporting POSIX threads, Solaris and Vxworks (if
-	 * properly configured, ie compiled with POSIX_SCHED).
-	 */
+		/* This version is for platforms that support condition variables, like
+		 * the platforms supporting POSIX threads, Solaris and Vxworks (if
+		 * properly configured, ie compiled with POSIX_SCHED).
+		 */
 
-	EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
-	while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE)
-		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
-	EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
-
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE)
+			EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 #endif
+	}
 	RT_GC_WEAN(thread_object);
 }
 

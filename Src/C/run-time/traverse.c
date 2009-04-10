@@ -536,9 +536,14 @@ doc:	</routine>
 rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
 {
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 #ifdef ISE_GC
+		/* Fixed eweasel test#thread008 where if a GC cycle happen, while we wait for the
+		 * synchronization, then `target' might not be valid anymore. */
+	RT_GC_PROTECT(target);
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
+	RT_GC_WEAN(target);
 	referers_target = target;
 	result = matching (internal_find_referers, (EIF_TYPE_INDEX) result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));

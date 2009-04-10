@@ -923,6 +923,7 @@ test	alt-precondition-call-on-void-target	melt089  tcf fail execution melting
 test	melted-object-test-with-anchored-none	melt090  tcf fail execution melting
 test	melted-string-crash			melt091  tcf fail execution melting
 test	melted-agent-exception-crash	melt092  tcf fail execution melting agents
+test	raise-exception-inspect-branch	melt093  tcf fail execution melting
 
 -- Freezing
 

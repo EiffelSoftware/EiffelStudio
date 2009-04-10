@@ -1,0 +1,116 @@
+test_name 	raise-exception-inspect-branch
+test_description A routine which uses an inspect statement could mess up the interpreter stack if one of the branch raises an exception.
+
+copy_sub 	Ace $TEST Ace
+
+define VALUE		"1"
+define INSTRUCTIONS	""
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m1
+execute_result 	ok
+compare		exec_output_m1 output
+
+
+define VALUE		"1"
+define INSTRUCTIONS	"else"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m2
+execute_result 	ok
+compare		exec_output_m2 output
+
+
+define VALUE		"1"
+define INSTRUCTIONS	"when 1 then"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m3
+execute_result 	ok
+compare		exec_output_m3 output
+
+
+define VALUE		"2"
+define INSTRUCTIONS	"when 1 then when 2 then"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m4
+execute_result 	ok
+compare		exec_output_m4 output
+
+
+define VALUE		"3"
+define INSTRUCTIONS	"when 1 then when 2 then"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m5
+execute_result 	ok
+compare		exec_output_m5 output
+
+
+define VALUE		"3"
+define INSTRUCTIONS	"when 1 then when 2 then else"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m6
+execute_result 	ok
+compare		exec_output_m6 output
+
+
+define VALUE		"1"
+define INSTRUCTIONS	"else raise ("eweasel")"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m7
+execute_result 	ok
+compare		exec_output_m7 output
+
+
+define VALUE		"1"
+define INSTRUCTIONS	"when 1 then raise ("eweasel")"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m8
+execute_result 	ok
+compare		exec_output_m8 output
+
+
+define VALUE		"2"
+define INSTRUCTIONS	"when 1 then raise ("eweasel") when 2 then raise ("eweasel")"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m9
+execute_result 	ok
+compare		exec_output_m9 output
+
+
+define VALUE		"3"
+define INSTRUCTIONS	"when 1 then raise ("eweasel") when 2 then raise ("eweasel")"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m10
+execute_result 	ok
+compare		exec_output_m10 output
+
+
+define VALUE		"3"
+define INSTRUCTIONS	"when 1 then raise ("eweasel") when 2 then raise ("eweasel") else raise ("eweasel")"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output_m11
+execute_result 	ok
+compare		exec_output_m11 output
+
+
+test_end

@@ -123,7 +123,7 @@ feature -- Status setting
 		end
 
 	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN
-			-- Block calling thread on current condition variable.
+			-- Block calling thread on current condition variable for at most `a_timeout' milliseconds.
 			--| Return `True' is we got the condition variable on time
 			--| Otherwise return `False'
 		require

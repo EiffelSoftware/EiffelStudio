@@ -43,18 +43,24 @@ feature -- Status setting
 
 	set_output_path (a_path: like output_path)
 			-- Sets the output_path
+		require
+			a_path_is_valid: not a_path.is_empty
 		do
 			output_path := a_path
 		end
 
 	set_servlet_gen_path (a_path: like servlet_gen_path)
 			-- Sets the servlet_gen_path
+		require
+			a_path_is_valid: not a_path.is_empty
 		do
 			servlet_gen_path := a_path
 		end
 
 	set_name (a_name: like name)
 			-- Sets the name
+		require
+			a_path_is_valid: not a_path.is_empty
 		do
 			name := a_name
 		end
@@ -62,9 +68,9 @@ feature -- Status setting
 feature -- Processing
 
 	process_with_files (a_files: LIST [STRING]; a_taglib_folder: STRING)
-			-- `a_filename': Name of xeb file
-			-- `taglib_filename': Name of tag library file
-			-- Processes a file.
+			-- `a_files': Alle the files of a folder with xeb files
+			-- `a_taglib_folder': Path to the folder the tag library definitions
+			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
 		local
 			l_file: KL_TEXT_INPUT_FILE
 			l_servlet_gag: XGEN_SERVLET_GENERATOR_APP_GENERATOR
@@ -99,6 +105,8 @@ feature -- Processing
 
 	parse_taglibs (taglib_folder: STRING): TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Generates tag libraries from all the the *.taglib files in the directory
+		require
+			taglib_folder_valid: not taglib_folder.is_empty
 		local
 			l_taglib_file: KL_TEXT_INPUT_FILE
 			dir: DIRECTORY
@@ -141,9 +149,13 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			a_taglibs.put (l_p_callback.taglib, l_p_callback.taglib.id)
+		ensure
+			taglib_was_added: a_taglibs.count
 		end
 
 	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
+		require
+			servlet_name_valid: not servlet_name.is_empty
 		local
 			l_root_tag: XP_TAG_ELEMENT
 			l_parser: XM_PARSER

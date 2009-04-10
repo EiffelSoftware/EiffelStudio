@@ -59,12 +59,13 @@ feature -- Access
 		end
 
 	has_argument (a_name: STRING): BOOLEAN
-			-- Does this tag allow any arguments?
+			-- Does this tag allow the argument `a_name'?
 		require
-			a_name_is_not_empty: not a_name.is_empty
+			a_name_is_valid: not a_name.is_empty
 		do
 			Result := attached attributes [a_name]
 		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

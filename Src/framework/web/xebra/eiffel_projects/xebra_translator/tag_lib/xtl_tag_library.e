@@ -65,6 +65,8 @@ feature -- Query
 
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
 			-- Verifies that `a_attribute' belongs to `a_tag'
+		require
+			a_tag_is_valid: not a_tag.is_empty
 		do
 			if attached tags [a_tag] as tag then
 				Result := a_attribute.is_equal ("render") or tag.has_argument (a_attribute)
@@ -72,7 +74,7 @@ feature -- Query
 		end
 
 	contains (tag_id: STRING): BOOLEAN
-			-- checks, if the tag is available in the tag library
+			-- Checks, if the tag is available in the tag library
 		do
 			Result := attached tags [tag_id]
 		end

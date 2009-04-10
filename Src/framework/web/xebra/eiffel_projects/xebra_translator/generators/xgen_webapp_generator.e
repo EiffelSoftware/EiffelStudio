@@ -76,7 +76,6 @@ feature -- Basic Functionality
 			webapp_name.to_upper
 			create request_class.make (webapp_name + "_G_" + Server_con_handler_class)
 			request_class.set_inherit ("XWA_" + Server_con_handler_class)
-			request_class.add_variable_by_name_type ("name", "STRING = %"" + webapp_name + "%"")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
@@ -86,7 +85,9 @@ feature -- Basic Functionality
 			create file.make_open_write (path + webapp_name.as_lower + "_g_application.e")
 			create buf.make (file)
 			create application_class.make (webapp_name.as_upper + "_G_APPLICATION")
+			application_class.set_inherit ("XWA_APPLICATION")
 			application_class.set_constructor_name ("make")
+			application_class.add_feature (generate_feature_for_name)
 			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
 			file.close
@@ -94,25 +95,28 @@ feature -- Basic Functionality
 
 feature {NONE} -- Implementation
 
+	generate_feature_for_name: XEL_FEATURE_ELEMENT
+		do
+			create Result.make ("name: STRING")
+			Result.append_expression ("Result := %"" + webapp_name + "%"")
+		end
+
 	generate_contructor_for_application: XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
-			Result.append_expression ("create server_connection_handler.make")
+			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
 			Result.append_expression ("server_connection_handler.run")
-			Result.append_local ("server_connection_handler", webapp_name.as_upper + "_G_" + Server_con_handler_class)
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
+			s: STRING
 		do
-			create Result.make ("make")
-			Result.append_expression ("base_make")
-			--Result.append_expression ("create request_pool.make  (10, agent servlet_handler_spawner)")
-			--Result.append_expression ("create {HASH_TABLE [XH_SESSION, STRING]} session_map.make (1)")
-			--Result.append_expression ("create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)")
+			create Result.make ("make (a_name: STRING)")
+			Result.append_expression ("base_make (name)")
 			from
 				some_servlets.start
 			until

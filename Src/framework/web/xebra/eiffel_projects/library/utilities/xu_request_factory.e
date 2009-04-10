@@ -22,13 +22,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	get_request (l_request_message: STRING): detachable XH_REQUEST
+	get_request (a_request_message: STRING): detachable XH_REQUEST
 			-- Returns the correct REQUEST according to the message
 		do
-			if l_request_message[1] = {XH_GET_REQUEST}.method then
-				create {XH_GET_REQUEST} Result.make_from_message (l_request_message)
-			elseif l_request_message[1] = {XH_POST_REQUEST}.method then
-				create {XH_POST_REQUEST} Result.make_from_message (l_request_message)
+			if a_request_message[1] = {XH_GET_REQUEST}.method then
+				create {XH_GET_REQUEST} Result.make_from_message (a_request_message)
+			elseif a_request_message[1] = {XH_POST_REQUEST}.method then
+				create {XH_POST_REQUEST} Result.make_from_message (a_request_message)
 			end
 		end
 end

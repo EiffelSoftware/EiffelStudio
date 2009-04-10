@@ -33,7 +33,11 @@ feature -- Inherited Features
 
 	execute
 			-- <Precursor>
+		local
+			l_r_handler: XS_REQUEST_HANDLER
 		do
+			create l_r_handler.make (message_default_bound, message_upper_bound)
+
         	from
                 socket.listen (max_tcp_clients.as_integer_32)
             until
@@ -42,7 +46,9 @@ feature -- Inherited Features
                 socket.accept
                 dprint ("Connection to http accepted",1)
 	            if attached {NETWORK_STREAM_SOCKET} socket.accepted as thread_http_socket then
-	            	thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
+--	            	thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
+	            		--singleusermode
+	            	l_r_handler.do_execute (thread_http_socket, webapp_handler)
 				end
             end
             socket.cleanup
@@ -88,9 +94,8 @@ feature -- Status setting
 		do
 			stop := True
 			socket.cleanup
-			check
-        		socket.is_closed
-        	end
+        ensure
+        	socket.is_closed
 		end
 
 

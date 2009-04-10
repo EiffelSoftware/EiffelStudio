@@ -37,15 +37,19 @@ feature -- Implementation
 		do
 			a_servlet_class.add_variable_by_name_type (variable, data_class)
 
-			a_servlet_class.prerender_post_feature.append_expression ("create " + variable + ".make" )
-
+			a_servlet_class.make_feature.append_expression ("create " + variable + ".make" )
 			data_var := a_servlet_class.render_feature.get_unique_identifier
+
+			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + data_var + "%") then")
+
 			variable_table.put (variable, Form_var_key)
 			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"<form action=%"+"
 				+ Request_variable + ".target_uri + %" method=%%%"post%%%"%")")
 			generate_children (a_servlet_class, variable_table)
+			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + data_var + "%%%" />%")")
 			write_string_to_result ("</form>", a_servlet_class.render_feature)
-			--variable_table. (Form_var_key)
+			--variable_table. (Form_var_key) -- TODO remove the variable from the variable table
+			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)

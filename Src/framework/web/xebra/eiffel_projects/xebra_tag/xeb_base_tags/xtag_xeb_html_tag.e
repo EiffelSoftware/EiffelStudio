@@ -30,7 +30,14 @@ feature {NONE}
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			write_string_to_result (text, a_servlet_class.render_feature)
+			if not text.is_empty then
+				if is_just_whitespace (text) then
+					a_servlet_class.render_feature.append_expression (Response_variable_append_newline)
+				else
+					write_string_to_result (text, a_servlet_class.render_feature)
+				end
+			end
+
 			generate_children (a_servlet_class, variable_table)
 		end
 
@@ -39,6 +46,22 @@ feature {NONE}
 		do
 			if id.is_equal("text") then
 				text := a_attribute
+			end
+		end
+
+	is_just_whitespace (a_string: STRING): BOOLEAN
+		-- Checks, if `a_string' is only composed by whitespace characters
+		local
+			index: INTEGER
+		do
+			from
+				index := 1
+				Result := True
+			until
+				(not Result) or (index > a_string.count)
+			loop
+				Result := Result and (a_string [index].is_space or a_string [index].is_equal ('%N') or a_string [index].is_equal ('%T'))
+				index := index + 1
 			end
 		end
 

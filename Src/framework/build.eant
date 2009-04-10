@@ -22,7 +22,7 @@
 		<geant target="_build_tpl_" arguments="clean" />
 	</target>
 
-	<target name="clobber" depend="clean" >
+	<target name="clobber" >
 		<echo message="- Clobber framework" />
 		<geant target="_build_tpl_" arguments="clobber" />
 	</target>

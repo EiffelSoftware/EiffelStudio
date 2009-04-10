@@ -117,7 +117,7 @@ feature -- Basic operations
 						else
 							l_expr := l_item.expression
 							if l_expr /= Void then
-								io.put_string (" {like " + l_expr.text (leaf_as_list) + "}")
+								io.put_string (" {like " + text_of (l_expr) + "}")
 							end
 						end
 						io.put_new_line
@@ -253,7 +253,7 @@ feature {NONE} -- Element change
 			if a_text /= Void then
 				s := a_text
 			else
-				s := l_as.text (leaf_as_list)
+				s := text_of (l_as)
 				i := s.index_of ('%N', 1)
 				if i > 0 then
 					s := s.substring (1, i - 1)
@@ -287,7 +287,7 @@ feature {NONE} -- Element change
 			if a_text /= Void then
 				s := a_text
 			else
-				s := l_as.text (leaf_as_list)
+				s := text_of (l_as)
 				i := s.index_of ('%N', 1)
 				if i > 0 then
 					s := s.substring (1, i - 1)
@@ -326,6 +326,30 @@ feature {NONE} -- Element change
 --			create l_id.initialize (s)
 --			register_object_test_local (l_id, Void, l_as.expr)
 		end
+
+	text_of (a_as: AST_EIFFEL): STRING
+			-- Text associated with `a_as'
+		local
+			s: detachable STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				s := a_as.text (leaf_as_list)
+				if s /= Void then
+					Result := s
+				else
+					create Result.make_empty
+				end
+			else
+				create Result.make_empty
+			end
+		ensure
+			Result_attached: Result /= Void
+		rescue
+			retried := True
+			retry
+		end
+
 
 feature {NONE} -- Iteration
 

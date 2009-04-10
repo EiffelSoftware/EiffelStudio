@@ -90,13 +90,12 @@ feature -- Protocol Constants
 
 feature -- Status setting
 
-	shutdown
+shutdown
 			-- Stops the thread
 		do
 			stop := True
 			socket.cleanup
-			check
-        		socket.is_closed
-        	end
+        ensure
+        	socket.is_closed
 		end
 end

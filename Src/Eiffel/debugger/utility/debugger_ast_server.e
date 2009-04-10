@@ -124,9 +124,12 @@ feature -- Report
 			l_type_as: TYPE_AS
 			l_cl_type_a: CL_TYPE_A
 			l_type_a: TYPE_A
+			fi: FEATURE_I
+			li: LOCAL_INFO
 			l_old_ast_context, l_ast_context: like ast_context
 			retried: BOOLEAN
 			cl: CLASS_C
+			l_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 		do
 			if not retried then
 					--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
@@ -144,9 +147,15 @@ feature -- Report
 					cl := a_class_type.associated_class
 					l_cl_type_a := a_class_type.type
 				end
+				fi := a_feat.associated_feature_i
 				l_ast_context.clear_all
 				l_ast_context.initialize (cl, l_cl_type_a, cl.feature_table)
-				l_ast_context.set_current_feature (a_feat.associated_feature_i)
+				l_ast_context.set_current_feature (fi)
+
+				l_locals := type_vis.locals_builder.local_table (cl, fi, fi.real_body)
+				if l_locals /= Void then
+					l_ast_context.set_locals (l_locals)
+				end
 				type_vis.init (l_ast_context)
 				type_vis.set_current_feature (a_feat.associated_feature_i)
 				from
@@ -164,6 +173,13 @@ feature -- Report
 							l_type_a := type_vis.type_a_from_expr_as (a_ot_lst.item.expression)
 						end
 						Result.force ([l_item.name_id, l_type_a])
+						create li
+						li.set_position (l_ast_context.next_object_test_local_position)
+						li.set_type (l_type_a)
+						li.set_is_used (True)
+
+						l_ast_context.add_object_test_local (li, l_item.name_id)
+						l_ast_context.add_object_test_expression_scope (l_item.name_id)
 					else
 						check should_not_occur: False end
 					end

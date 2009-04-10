@@ -76,7 +76,7 @@
 		<geant target="clean_compilation" />
 	</target>
 
-	<target name="clobber" depend="clean" >
+	<target name="clobber" >
 		<geant target="_target_template_" arguments="clobber" dir="${EIFFEL_SRC}" />
 	</target>
 

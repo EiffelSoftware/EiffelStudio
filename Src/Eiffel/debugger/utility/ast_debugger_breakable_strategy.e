@@ -170,13 +170,7 @@ feature -- Query
 feature -- Access
 
 	breakable_feature_info: DBG_BREAKABLE_FEATURE_INFO
-
-
---	object_test_locals: ARRAYED_LIST [TUPLE [bp, bpn: INTEGER; name: ID_AS; type: TYPE_AS; exp: EXPR_AS]]
---			-- recorded object test locals
---		do
---			Result := breakable_feature_info.object_test_locals
---		end
+			-- Current breakable feature info
 
 feature -- Element change
 
@@ -187,9 +181,7 @@ feature -- Element change
 		do
 			l_written_in := f.written_in
 			l_current_feature_i := current_feature_i
-			if l_current_feature_i = Void or else l_written_in /= l_current_feature_i.written_in then
-				leaf_as_list := match_list_server.item (l_written_in)
-			end
+			leaf_as_list := match_list_server.item (l_written_in)
 
 			current_feature_i := f
 			current_class := c

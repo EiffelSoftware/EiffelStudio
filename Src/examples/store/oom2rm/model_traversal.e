@@ -28,10 +28,10 @@ feature
 
 	tables: LINKED_LIST [SQL_TABLE];
 			-- SQL tables of the model.
-	
+
 	keys: KEYS
 			-- Keys description.
-	
+
 	make (model: ANY; a_tables: like tables; a_keys: like keys)
 			-- Create object.
 		require
@@ -53,7 +53,7 @@ feature
 			object_not_void: object /= Void
 		local
 			nb_fields, no_field: INTEGER;
-			fld: ANY;
+			fld: detachable ANY;
 			fld_name: STRING;
 			table: SQL_TABLE
 		do
@@ -82,7 +82,7 @@ feature
 				no_field := no_field + 1
 			end;
 		end;
-	
+
 	reference_obj_action (object: ANY; name: STRING; table: SQL_TABLE)
 			-- Action for a reference type.
 		require
@@ -91,15 +91,18 @@ feature
 			table_not_void: table /= Void
 		local
 			sql_column: SQL_COLUMN
+			l_item: detachable STRING
 		do
-			if is_marked (object) or else 
+			if is_marked (object) or else
 				table_exists (object.generator) then
-				create sql_column.make (name, 
+				create sql_column.make (name,
 					to_sql (keys.reference_key (object)));
 				table.extend (sql_column);
 
 			else
-				create sql_column.make (keys.item (object.generator), 
+				l_item := keys.item (object.generator)
+				check l_item /= Void end -- FIXME: implied by ...?
+				create sql_column.make (l_item,
 					to_sql (keys.reference_key (object)));
 				table.extend (sql_column);
 				traversal (object)
@@ -123,32 +126,43 @@ feature
 		ensure
 			table_extended: table.count = old table.count + 1
 		end;
-	
+
 	list_obj_action (no_field: INTEGER; object: ANY; table: SQL_TABLE)
 			-- Action for a list type.
 		require
 			object_not_void: object /= Void;
 			table_not_void: table /= Void;
-			contents_not_void: contents (field (no_field, object)) /= Void
+			field_attached: attached field (no_field, object) as lr_field
+			contents_not_void: contents (lr_field) /= Void
 		local
 			tmp_table: SQL_TABLE;
 			sql_column: SQL_COLUMN;
 			any: ANY
+			l_field: detachable ANY
+			l_item, l_name: detachable STRING
 		do
-			create tmp_table.make_prefix (field_name (no_field, object), table.name);
+			l_name := table.name
+			check l_name /= Void end -- FIXME: implied by `table' make's postcondition, but if creation method is `linked_list_make' ?
+			create tmp_table.make_prefix (field_name (no_field, object), l_name);
 			tables.extend (tmp_table);
-			any := contents (field (no_field, object));
+			l_field := field (no_field, object)
+			check l_field /= Void end -- implied by precondition `field_attached'
+			any := contents (l_field);
 			-- Key part 1
-			create sql_column.make (keys.item (object.generator),
+			l_item := keys.item (object.generator)
+			check l_item /= Void end -- FIXME: implied by ...?
+			create sql_column.make (l_item,
 			   to_sql (keys.reference_key (object)));
 			tmp_table.extend (sql_column);
 			if is_simple_type (any) then
 				-- Key part 2
 				create sql_column.make (any.generator, to_sql (any));
-				tmp_table.extend (sql_column)	
+				tmp_table.extend (sql_column)
 			else
 				-- Key part 2
-				create sql_column.make (keys.item (any.generator),
+				l_item := keys.item (any.generator)
+				check l_item /= Void end -- FIXME: implied by ...?
+				create sql_column.make (l_item,
 				   to_sql (keys.reference_key (any)));
 				tmp_table.extend (sql_column);
 				traversal (any)
@@ -166,11 +180,11 @@ feature {NONE}
 			until
 				tables.after or Result = true
 			loop
-				Result := tables.item.name.is_equal (name)
+				Result := tables.item.name ~ name
 			end
 		end;
-				
-			
+
+
 invariant
 
 	tables_not_void: tables /= Void;

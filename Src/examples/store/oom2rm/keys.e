@@ -11,7 +11,7 @@ class KEYS inherit
 	HASH_TABLE [STRING, STRING]
 
 	INTERNAL
-		undefine 
+		undefine
 			copy,
 			is_equal
 		end
@@ -31,30 +31,34 @@ create
 feature
 
 	reference_key (table: ANY): ANY
-			-- What is the object refered by unique 
+			-- What is the object refered by unique
 			-- attribute associated with `table'.
 		require
 			table_not_void: table /= Void;
 			table_exits: has (table.generator)
 		local
 			i: INTEGER;
-			key_name: STRING;
+			key_name: detachable STRING;
+			l_result: detachable like reference_key
 		do
 			from
 				key_name := item (table.generator);
 				i := 1
 			until
-				 Result /= Void or else i > field_count (table)
+				 l_result /= Void or else i > field_count (table)
 			loop
-				if key_name.is_equal (field_name (i, table)) then
-					Result := field (i, table)
+				if key_name ~ field_name (i, table) then
+					l_result := field (i, table)
 				end;
 				i := i + 1
 			end
+
+			check l_result /= Void end -- FIXME: impled by ...?
+			Result := l_result
 		ensure
 			found: Result /= Void
 		end;
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

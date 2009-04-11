@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="select" uuid="D4FA28F9-5A8B-4C52-9878-F596FF68262D">
+	<target name="common" abstract="true">
+		<root cluster="root_cluster" class="SELECTOR" feature="make"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+	</target>
+	<target name="select_ingres" extends="common">
+		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres-safe.ecf"/>
+		<cluster name="handle" location="..\Utilities\ingres\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="select_sybase" extends="common">
+		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase-safe.ecf"/>
+		<cluster name="handle" location="..\Utilities\sybase\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="select_oracle" extends="common">
+		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle-safe.ecf"/>
+		<cluster name="handle" location="..\Utilities\oracle\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+	<target name="select_odbc" extends="common">
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
+		<cluster name="handle" location="..\Utilities\odbc\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
+</system>

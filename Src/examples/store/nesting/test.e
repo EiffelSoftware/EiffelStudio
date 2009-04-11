@@ -15,12 +15,15 @@ feature
 
 	session: DB_CONTROL
 
-	selection: DB_SELECTION
+	selection: detachable DB_SELECTION
 
 	make
 		local
 			tmp_string: STRING
 			my_action: ACTION_1_I
+			l_laststring: detachable STRING
+			l_database: like session_database
+			l_selection: like selection
 		do
 				-- Ask for user's name and password
 			io.putstring ("Database user authentication:%N")
@@ -28,30 +31,39 @@ feature
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_data_source(l_laststring.twin)
  			end
 
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
-			login (tmp_string, io.laststring)
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			login (tmp_string, l_laststring)
 			set_base
 			create session.make
 			session.connect
 			if session.is_connected then
 				io.putstring ("Database used: ")
-				io.putstring (session_database.name)
+				l_database := session_database
+				check l_database /= Void end -- FIXME: implied by `session'.is_connected?
+				io.putstring (l_database.name)
 				io.new_line
-				create selection.make
-				create my_action.make (selection)
-				selection.set_action (my_action)
-				selection.query (select_string)
+				create l_selection.make
+				selection := l_selection
+				create my_action.make (l_selection)
+				l_selection.set_action (my_action)
+				l_selection.query (select_string)
 				if session.is_ok then
-					selection.load_result
+					l_selection.load_result
 				end
-				selection.terminate
+				l_selection.terminate
 				session.disconnect
 			else
 				io.error.putstring ("Invalid user/password!%N")

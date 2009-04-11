@@ -8,13 +8,13 @@ the following:
 
 
 0) esql
-	Very useful to test you Database connection.
+	Very useful to test your Database connection.
 
 1) select
 	The basic example for a query of your Database.
 
 2) insert
-	The basic example for an insert in you Database
+	The basic example for an insert in your Database
 
 3) nesting
 	An Example of Nested queries.

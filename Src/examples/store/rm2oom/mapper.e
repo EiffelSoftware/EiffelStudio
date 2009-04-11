@@ -18,6 +18,7 @@ feature
 			repository: DB_REPOSITORY
 			session_control: DB_CONTROL
 			tmp_string: STRING
+			l_laststring: detachable STRING
 		do
 	 			-- Ask for user's name and password
 			io.putstring("Database user authentication:%N");
@@ -25,17 +26,23 @@ feature
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_data_source(l_laststring.twin)
  			end
 
 			io.putstring ("Name: ")
 			io.readline;
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			tmp_string := l_laststring.twin
 			io.putstring("Password: ");
 			io.readline;
 
 				-- Set user's name and password
-			login (tmp_string,io.laststring);
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			login (tmp_string,l_laststring);
 
 				-- Initialization of the Relational Database:
 				-- This will set various informations to perform a correct
@@ -59,17 +66,23 @@ feature
 
 				io.putstring ("%NEnter path of directory where files will be generated: ")
 				io.readline
-				path_name := io.laststring.twin
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				path_name := l_laststring.twin
 				from
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline;
-					create repository.make (io.laststring.twin);
+					l_laststring := io.laststring
+					check l_laststring /= Void end -- implied by `readline' postcondition
+					create repository.make (l_laststring.twin);
 				until
-					io.laststring.is_equal("exit")
+					io.laststring ~ "exit"
 				loop
 						-- Objects from the DB will be accessed through a
 						-- DB_REPOSITORY whose name is read from standard input
-					repository.change_name(io.laststring.twin);
+					l_laststring := io.laststring
+					check l_laststring /= Void end -- implied by `readline' postcondition
+					repository.change_name(l_laststring.twin);
 						-- Try to load some book objects from the DB
 					repository.load;
 					if not repository.exists then
@@ -93,13 +106,18 @@ feature
 
 	generate_class (repository: DB_REPOSITORY)
 			-- Generate class from `repository'.
+		require
+			path_name_attached: path_name /= Void
 		local
 			fi: PLAIN_TEXT_FILE
 			rescued: BOOLEAN
 			fn: FILE_NAME
+			l_path_name: like path_name
 		do
 			if not rescued then
-				create fn.make_from_string (path_name)
+				l_path_name := path_name
+				check l_path_name /= Void end -- implied by precondition `path_name_attached'
+				create fn.make_from_string (l_path_name)
 				fn.extend (repository.repository_name)
 				fn.add_extension (Eiffelclass_extension)
 				create fi.make_create_read_write (fn)
@@ -116,7 +134,7 @@ feature
 	Eiffelclass_extension: STRING = "e"
 			-- Extension for an Eiffel class.
 
-	path_name: STRING;
+	path_name: detachable STRING;
 			-- Class generation path name.
 
 note

@@ -25,16 +25,23 @@ feature
 		require
 			any_not_void: any /= Void
 		local
-			traversable: TRAVERSABLE [ANY];
-			array: ARRAY [ANY]
+			l_result: detachable like contents
 		do
 			if is_array (any) then
-				array ?= any;
-				Result := array_contents (array)
+				if attached {ARRAY [ANY]} any as array then
+					l_result := array_contents (array)
+				else
+					check False end -- implied by `is_array'
+				end
 			elseif is_traversable (any) then
-				traversable ?= any;
-				Result := traversable_contents (traversable)
+				if attached {TRAVERSABLE [ANY]} any as traversable then
+					l_result := traversable_contents (traversable)
+				else
+					check False end -- implied by `is_traversable'
+				end
 			end
+			check l_result /= Void end -- implied by previous if clauses
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -45,22 +52,16 @@ feature {NONE}
 			-- `some' is an array?
 		require
 			some_not_void: some /= Void
-		local
-			obj: ARRAY [ANY]
 		do
-			obj ?= some;
-			Result := obj /= Void;
+			Result := attached {ARRAY [ANY]} some
 		end;
 
 	is_traversable (some: ANY): BOOLEAN
 			-- `some' is a traversable object?
 		require
 			some_not_void: some /= Void
-		local
-			obj: TRAVERSABLE [ANY]
 		do
-			obj ?= some;
-			Result := obj /= Void;
+			Result := attached {TRAVERSABLE [ANY]} some
 		end;
 
 	array_contents (array: ARRAY [ANY]): ANY

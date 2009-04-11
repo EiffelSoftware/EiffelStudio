@@ -24,11 +24,12 @@ feature
 			my_action: ACTION_2_I
 			new_selection: DB_SELECTION
 			tuple: DB_TUPLE
-			table_name: STRING
+			l_cursor:  detachable DB_RESULT
 		do
-			create tuple.copy (selection.cursor)
-			table_name ?= tuple.item (1)
-			if table_name /= Void then
+			l_cursor := selection.cursor
+			check l_cursor /= Void end -- FIXME: implied by ...?
+			create tuple.copy (l_cursor)
+			if attached {STRING} tuple.item (1) as table_name then
 				io.putstring ("-- Column(s) for table ")
 				io.putstring (table_name)
 				io.new_line

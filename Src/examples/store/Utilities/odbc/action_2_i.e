@@ -17,7 +17,7 @@ class ACTION_2_I inherit
 		end
 
 create
-        
+
 	make
 
 feature
@@ -25,11 +25,12 @@ feature
         execute
 		local
 			tuple: DB_TUPLE
-			column_name: STRING
+			l_cursor: detachable DB_RESULT
 		do
-			create tuple.copy (selection.cursor)
-			column_name ?= tuple.item (4)
-			if column_name /= Void then
+			l_cursor := selection.cursor
+			check l_cursor /= Void end -- FIXME: implied by ...?
+			create tuple.copy (l_cursor)
+			if attached {STRING} tuple.item (4) as column_name then
 				io.putstring (column_name)
 				io.new_line
 			end

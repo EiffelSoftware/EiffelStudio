@@ -14,7 +14,7 @@ class ACTION_1_I inherit
 	ACTION_1
 
 create
-        
+
 	make
 
 feature
@@ -24,14 +24,14 @@ feature
 			my_action: ACTION_2_I
 			new_selection: DB_SELECTION
 			tuple: DB_TUPLE
-			table_name: STRING
-			table_owner:STRING
-		do      
-			create tuple.copy (selection.cursor)
-			table_name ?= tuple.item (1)
-			table_owner ?= tuple.item (2)
-			if table_name /= Void  then
-				io.putstring ("-- Column(s) for table ") 
+			l_cursor: detachable DB_RESULT
+		do
+			l_cursor := selection.cursor
+			check l_cursor /= Void end -- FIXME: implied by ...?
+			create tuple.copy (l_cursor)
+			if (attached {STRING} tuple.item (1) as table_name) and
+				(attached {STRING} tuple.item (2) as table_owner) then
+				io.putstring ("-- Column(s) for table ")
 				io.putstring (table_name)
 				io.putstring (" Owner: ")
 				io.putstring (table_owner)
@@ -51,7 +51,7 @@ feature
 
 	select_string: STRING
 		once
-			Result := 
+			Result :=
 			"select column_name from iicolumns where table_name = :table_name and table_owner = :table_owner"
 		end
 

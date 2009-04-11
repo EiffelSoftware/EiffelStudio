@@ -11,17 +11,17 @@ note
 class SQL_TABLE inherit
 
 	LINKED_LIST [SQL_COLUMN]
-		rename 
+		rename
 			make as linked_list_make
 		end;
 
 create
 
-	make, make_prefix
+	make, make_prefix, linked_list_make
 
 feature
 
-	name: STRING;
+	name: detachable STRING;
 			-- Table name.
 
 	make (a_name: STRING)
@@ -50,10 +50,14 @@ feature
 			-- Print result on `output'.
 		require
 			output_not_void: output /= Void
+		local
+			l_name: detachable STRING
 		do
 			from
 	 			output.putstring ("create table ");
-				output.putstring (name);
+	 			l_name := name
+	 			check l_name /= Void end -- FIXME: implied by `table' make's postcondition, but if creation method is `linked_list_make' ?
+				output.putstring (l_name);
 				output.putstring (" (");
 				start
 			until

@@ -34,7 +34,7 @@ create {DATABASE_CHANGE}
 
 feature -- Access
 
-	last_parsed_query : STRING
+	last_parsed_query : detachable STRING
 			-- Last parsed query
 
 feature -- Element change
@@ -48,7 +48,7 @@ feature -- Element change
 			connected: is_connected
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			tmp_string: STRING
+			tmp_string: detachable STRING
 			temp_descriptor: INTEGER
 			parsed: BOOLEAN
 		do

@@ -228,6 +228,10 @@ feature -- Access (table row values)
 	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING]
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
+		require
+			action_not_void: action /= Void
+		local
+			l_result: detachable STRING
 		do
 			create Result.make (Attribute_number)
 			from
@@ -236,7 +240,9 @@ feature -- Access (table row values)
 				description_list.after
 			loop
 				action.call ([description_list.item.twin])
-				Result.extend (action.last_result)
+				l_result := action.last_result
+				check l_result /= Void end -- FIXME: implied by nothing... bug? add precondition `action_result_not_void' ?
+				Result.extend (l_result)
 				description_list.forth
 			end
 		end

@@ -17,13 +17,13 @@ class DB_PROC inherit
 		end
 
 create -- Creation procedure
-	
+
 	make
 
 feature -- Initialization
 
 	make (a_name: STRING)
-			-- Create an interface object to create 
+			-- Create an interface object to create
 			-- and execute stored procedure.
 		require
 			a_name_not_void: a_name /= Void
@@ -50,13 +50,13 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	arguments_name: ARRAY [STRING]
+	arguments_name: detachable ARRAY [STRING]
 			-- Argument names
 		do
 			Result := implementation.arguments_name
 		end
 
-	arguments_type: ARRAY [ANY]
+	arguments_type: detachable ARRAY [ANY]
 			-- Argument types
 		do
 			Result := implementation.arguments_type
@@ -112,7 +112,7 @@ feature -- Basic operations
 				trace_output.new_line
 			end
 		end
-		
+
 	execute (destination: DB_EXPRESSION)
 			-- Execute current procedure with `destination'
 			-- be a DB_SELECTION or DB_CHANGE object mapping
@@ -174,7 +174,7 @@ feature -- Status setting
 			new_name.is_equal (name)
 			not_loaded: not loaded
 		end
-			
+
 	set_arguments (args_name: like arguments_name;
 			args_type: like arguments_type)
 			-- Set `arguments_name' of current

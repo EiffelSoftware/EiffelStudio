@@ -37,18 +37,23 @@ feature -- Initialization
 
 	make
 			-- Create an interface objet to query active base.
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
-			create ht.make (name_table_size)
-			create ht_order.make (name_table_size)
-			ht_order.compare_objects
+			create l_ht.make (name_table_size)
+			ht := l_ht
+			create l_ht_order.make (name_table_size)
+			ht_order := l_ht_order
+			l_ht_order.compare_objects
 			implementation := handle.database.db_selection
-			implementation.set_ht (ht)
-			implementation.set_ht_order (ht_order)
+			implementation.set_ht (l_ht)
+			implementation.set_ht_order (l_ht_order)
 		end
 
 feature -- Access
 
-	last_parsed_query : STRING
+	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
 		do
 			Result := implementation.last_parsed_query
@@ -56,27 +61,27 @@ feature -- Access
 
 feature -- Status report
 
-	container: LIST [DB_RESULT]
+	container: detachable LIST [DB_RESULT]
 			-- Stored cursors.
 
-	object: ANY
+	object: detachable ANY
 			-- Eiffel object to be filled in by `cursor_to_object'
 
-	cursor: DB_RESULT
+	cursor: detachable DB_RESULT
 			-- Cursor pointing to last fetched query result
 
 	is_exiting: BOOLEAN
 			-- Is exit condition of `load_result' iteration loop met?
 		do
 			Result := not is_ok or else exhausted or else
-					(stop_condition /= Void and then stop_condition.found)
+					(attached stop_condition as l_stop_condition and then l_stop_condition.found)
 		ensure
 			Result implies
 				(not is_ok or else exhausted or else
-				(stop_condition /= Void and then stop_condition.found))
+				(attached stop_condition as le_stop_condition and then le_stop_condition.found))
 		end
 
-	stop_condition: ACTION
+	stop_condition: detachable ACTION
 			-- Object providing an `execute' routine called
 			-- after each `load_result' iteration step
 
@@ -90,8 +95,12 @@ feature -- Status report
 			-- Is the `container' after?
 		require
 			container_exists: container /= Void
+		local
+			l_container: like container
 		do
-			Result := container.after
+			l_container := container
+			check l_container /= Void end -- implied by precondition `container_exists'
+			Result := l_container.after
 		end
 
 	error_m: STRING
@@ -116,9 +125,13 @@ feature -- Status setting
 			-- Make results of selection query persist in container.
 		require
 			container_exists: one_container /= Void
+		local
+			l_container: like container
 		do
-			container := one_container
-			container.start
+			l_container := one_container
+			check l_container /= Void end -- implied by precondition `container_exists'
+			container := l_container
+			l_container.start
 		ensure
 			container_set: container = one_container
 		end
@@ -139,9 +152,12 @@ feature -- Status setting
 			-- Use this before `load_result' for performance.
 		require
 			reference_exists: ref /= Void
+		local
+			l_object: like object
 		do
-			if object = Void or else
-					dynamic_type (ref) /= dynamic_type (object) then
+			l_object := object
+			if l_object = Void or else
+					dynamic_type (ref) /= dynamic_type (l_object) then
 				update_map_table := True
 			end
 			object := ref
@@ -163,15 +179,22 @@ feature -- Status setting
 		require
 			cursor_exists: cursor /= Void
 			object_exists: object /= Void
+		local
+			l_cursor: like cursor
+			l_object: like object
 		do
-			if cursor.map_table_to_create or else update_map_table then
+			l_cursor := cursor
+			l_object := object
+			check l_cursor /= Void end -- implied by precondition
+			check l_object /= Void end -- implied by precondition
+			if l_cursor.map_table_to_create or else update_map_table then
 					-- This case must only happen when `object_convert' has been
 					-- called after `load_result': each cursor's map table should be
 					-- modified to fit to new object. (Cedric)
-				cursor.update_map_table (object)
+				l_cursor.update_map_table (l_object)
 			end
 			if is_ok then
-				implementation.cursor_to_object (object, cursor)
+				implementation.cursor_to_object (l_object, l_cursor)
 			end
 		end
 
@@ -179,26 +202,36 @@ feature -- Status setting
 			-- Set `cursor' on first element of `container'.
 		require else
 			container_exists: container /= Void
+		local
+			l_container: like container
 		do
-			container.start
-			cursor := container.item
+			l_container := container
+			check l_container /= Void end -- implied by precondition `container_exists'
+			l_container.start
+			cursor := l_container.item
 		ensure then
-			container_on_first: container.isfirst
-			cursor_updated: cursor = container.item
+			container_attached: attached container as le_container
+			container_on_first: le_container.isfirst
+			cursor_updated: cursor = le_container.item
 		end
 
 	forth
 			-- Move `cursor' to next element of `container'.
 		require else
 			container_exists: container /= Void
+		local
+			l_container: like container
 		do
-			container.forth
-			if not container.after then
-				cursor := container.item
+			l_container := container
+			check l_container /= Void end -- implied by precondition `container_exists'
+			l_container.forth
+			if not l_container.after then
+				cursor := l_container.item
 			end
 		ensure then
-			container_index_moved: container.index = old container.index + 1
-			cursor_updated: not after implies cursor = container.item
+			container_attached: (attached container as le_container) and (attached old container as le_old_container)
+			container_index_moved:  le_container.index = le_old_container.index + 1
+			cursor_updated: not after implies cursor = le_container.item
 		end
 
 	reset_cursor (c: DB_RESULT)
@@ -208,7 +241,7 @@ feature -- Status setting
 			connected: is_connected
 		do
 			cursor := c
-			cursor.set_descriptor (active_selection_number)
+			c.set_descriptor (active_selection_number)
 		ensure
 			cursor_reset: cursor = c
 		end
@@ -240,39 +273,51 @@ feature -- Basic operations
 		require
 			connected: is_connected
 			is_ok: is_ok
+		local
+			l_container: like container
+			l_cursor: like cursor
+			l_object: like object
+			l_stop_condition: like stop_condition
 		do
 			from
-				if cursor = Void then
-					create cursor.make
-					cursor.set_descriptor (active_selection_number)
+				l_cursor := cursor
+				if l_cursor = Void then
+					create l_cursor.make
+					cursor := l_cursor
+					l_cursor.set_descriptor (active_selection_number)
 				else
-					cursor.update_metadata
+					l_cursor.update_metadata
 				end
 				if handle.status.found then
-					cursor.fill_in
-					if object /= Void then
+					l_cursor.fill_in
+					l_object := object
+					if l_object /= Void then
 							-- Map table will be cloned if there is
 							-- more than 1 row. (Cedric)
-						cursor.update_map_table (object)
+						l_cursor.update_map_table (l_object)
 						update_map_table := False
 					end
 				end
-				if stop_condition /= Void then
-					stop_condition.start
+				l_stop_condition := stop_condition
+				if l_stop_condition /= Void then
+					l_stop_condition.start
 				end
+				l_container := container
 			until
 				is_exiting
 			loop
-				if container /= Void then
-					container.extend (cursor)
-					cursor := cursor.deep_twin
+				if l_container /= Void then
+					l_container.extend (l_cursor)
+					l_cursor := l_cursor.deep_twin
+					cursor := l_cursor
 				end
-				if stop_condition /= Void then
-					stop_condition.execute
+				l_stop_condition := stop_condition
+				if l_stop_condition /= Void then
+					l_stop_condition.execute
 				end
 				next
 				if not is_exiting then
-					cursor.fill_in
+					l_cursor.fill_in
 				end
 			end
 		ensure
@@ -323,23 +368,34 @@ feature -- Basic operations
 
 	wipe_out
 			-- Clear selection results.
+		local
+			l_container: like container
+			l_ht: like ht
 		do
-			if container /= Void then
-				container.wipe_out
+			l_container := container
+			if l_container /= Void then
+				l_container.wipe_out
 			end
 			cursor := Void
 			object := Void
-			ht.clear_all
+
+			l_ht := ht
+			check l_ht /= Void end -- FIXME: implied by ... bug?
+			l_ht.clear_all
 		ensure
-			container_is_empty: container /= Void implies container.is_empty
+			container_is_empty: attached container as le_container implies le_container.is_empty
 			object_model_void: object = Void
 			cursor_void: cursor = Void
 		end
 
 	execute_query
 			-- Execute `query' with `last_query'.
+		local
+			l_query: like last_query
 		do
-			query (last_query)
+			l_query := last_query
+			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
+			query (l_query)
 		end
 
 feature {NONE} -- Implementation

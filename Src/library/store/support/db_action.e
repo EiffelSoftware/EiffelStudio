@@ -22,7 +22,7 @@ create
 	make
 
 feature -- Creation
-	
+
 	make (a_selection: like selection; an_item: G)
 			-- Initialize.
 		require
@@ -40,9 +40,13 @@ feature -- Actions
 	execute
 			-- Update item with current
 			-- selected item in the container.
+		local
+			l_item: like item
 		do
 			selection.cursor_to_object
-			list.extend (item.deep_twin)
+			l_item := item
+			check l_item /= Void end -- FIXME: implied by nothing... bug?
+			list.extend (l_item.deep_twin)
 		end
 
 feature -- Access

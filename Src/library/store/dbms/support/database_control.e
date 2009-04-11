@@ -24,7 +24,8 @@ feature -- Status setting and report
 		require
 			not_already_connected: not is_connected
 		local
-			temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8: STRING
+			temp1, temp2, temp3, temp4, temp5, temp6, temp8: STRING
+			temp7: detachable STRING
 		do
 			temp1 := handle.login.name
 			temp2 := handle.login.passwd

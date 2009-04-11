@@ -35,7 +35,7 @@ create {DATABASE_SELECTION}
 
 feature -- Access
 
-	last_parsed_query : STRING
+	last_parsed_query : detachable STRING
 			-- Last parsed query
 
 feature -- Basic operations
@@ -48,7 +48,7 @@ feature -- Basic operations
 			prepare_execute: not immediate_execution
 			descriptor_is_available: db_spec.descriptor_is_available
 		local
-			parsed_s: STRING
+			parsed_s: detachable STRING
 			parsed: BOOLEAN
 		do
 			descriptor := db_spec.new_descriptor
@@ -110,19 +110,20 @@ feature -- Status setting
 			object_exists: object /= Void
 		local
 			i, pos: INTEGER
-			r_any: ANY
+			r_any: detachable ANY
 			tst : BOOLEAN
-			database_data: DATABASE_DATA [G]
+			l_map_table: detachable ARRAY [INTEGER]
 		do
-			database_data ?= cursor.data
-			if database_data /= Void then
+			if attached {DATABASE_DATA [G]} cursor.data as database_data then
 				from
 					i := 1
 				until
 					i > database_data.count or not is_ok
 				loop
 					r_any := database_data.item (i)
-					pos := database_data.map_table.item (i)
+					l_map_table := database_data.map_table
+					check l_map_table /= Void end -- FIXME: implied by ... bug?
+					pos := l_map_table.item (i)
 					if r_any /= Void and pos > 0 then
 						tst := field_copy (pos, object,
 							db_spec.convert_string_type (r_any,

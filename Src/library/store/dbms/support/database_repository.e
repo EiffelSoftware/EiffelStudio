@@ -5,13 +5,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_REPOSITORY [reference G -> DATABASE create default_create end]
 
 inherit
 
 	EXCEPTIONS
-		rename 
+		rename
 			class_name as exceptions_class_name
 		end
 
@@ -74,10 +74,11 @@ feature -- Basic operations
 			col_name: STRING
 			tmp_class_name: STRING
 			s,s1,s2,s3,s4: STRING
+			l_column_name: detachable STRING
 		do
 			tmp_class_name := repository_name.as_upper
 			Create s.make(20)
-			
+
 			s.append("indexing%N")
 			s.append("%Tdescription: %"Class which allows EiffelStore to retrieve/store%%%N")
 			s.append("%T      %%the content relative to a column of the table "+tmp_class_name+"%"%N%N")
@@ -87,19 +88,21 @@ feature -- Basic operations
 			s.append("create%N%Tmake%N%N")
 
 			s.append ("%Nfeature -- Access%N%N")
-			
+
 			s1 := "feature -- Settings%N%N"
 			s3 := "feature -- Initialization%N%N%Tmake is%N%T%Tdo%N"
 			s4 := "feature -- Output%N%N%Tout: STRING is%N%T%Tdo%N%T%T%TResult := %"%"%N"
 
 			from
-				table.start 
+				table.start
 			until
 				table.off
 			loop
 				el := table.item
-				col_name := el.column_name.as_lower
-				
+				l_column_name := el.column_name
+				check l_column_name /= Void end -- FIXME: implied by ...bug
+				col_name := l_column_name.as_lower
+
 				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
 				s.append ("%T"+col_name+": ")
 				el_type := el.eiffel_type
@@ -157,7 +160,7 @@ feature -- Basic operations
 			-- Implement an ACTION operation
 		do
 			request_select.object_convert (tmp_acc_col)
-			request_select.cursor_to_object			
+			request_select.cursor_to_object
 			table.extend (tmp_acc_col.duplicate)
 			tmp_acc_col.clear_all
 		end
@@ -165,7 +168,7 @@ feature -- Basic operations
 feature -- Status setting
 
 	allocate (object: ANY; table_name: STRING)
-			-- Create a schema table `repository_name' conforming 
+			-- Create a schema table `repository_name' conforming
 			-- to `object' basic attributes.
 		require else
 			table_not_void: table_name /= Void
@@ -174,7 +177,6 @@ feature -- Status setting
 			i: INTEGER
 			ft: INTEGER
 			r_string: STRING
-			t_string: STRING
 			t_int: INTEGER
 			quoter: STRING
 			sep: STRING
@@ -215,7 +217,7 @@ feature -- Status setting
 					r_string.append (" can't be Void")
 					raise (r_string)
 				end
-				inspect ft 
+				inspect ft
 				when Integer_type then
 					r_string.append (field_name (i, object))
 					r_string.append (" ")
@@ -239,21 +241,24 @@ feature -- Status setting
 				else
 					if is_string (field (i, object)) then
 						r_string.append (field_name (i, object))
-						t_string ?= field (i, object)
-						if t_string.count < Max_char_size then
-							r_string.append (" ")
-							r_string.append (db_spec.sql_string)
-							t_int := t_string.capacity
-							if t_int = 0 then
-								t_int := 10
-							elseif t_int > Max_char_size then
-								t_int := Max_char_size - 1
+						if attached {STRING} field (i, object) as t_string then
+							if t_string.count < Max_char_size then
+								r_string.append (" ")
+								r_string.append (db_spec.sql_string)
+								t_int := t_string.capacity
+								if t_int = 0 then
+									t_int := 10
+								elseif t_int > Max_char_size then
+									t_int := Max_char_size - 1
+								end
+								r_string.append (t_int.out)
+								r_string.append (")")
+							else
+								r_string.append (" ")
+								r_string.append (db_spec.sql_string2 (Max_char_size))
 							end
-							r_string.append (t_int.out)
-							r_string.append (")")
 						else
-							r_string.append (" ")
-							r_string.append (db_spec.sql_string2 (Max_char_size))
+							check False end -- implied by `is_string (field (i, object))'
 						end
 					elseif is_date (field (i, object)) then
 						r_string.append (field_name (i, object))
@@ -283,7 +288,7 @@ feature -- Status setting
 			end
 			table.wipe_out
 		ensure then
-			not exists		
+			not exists
 		end
 
 feature -- Status report
@@ -305,16 +310,18 @@ feature -- Status report
 			Result := table.count
 		end
 
-	column_name (i :INTEGER): STRING
+	column_name (i :INTEGER): detachable STRING
 			-- Name of i-th column of table-like repository.
 		require else
 			repository_exists: exists
 			good_position: 0 < i and i <= dimension
+		local
+			l_result: detachable STRING
 		do
 			table.go_i_th (i)
-			Result := (table.item).column_name
-			if Result /= Void then
-				Result := Result.twin
+			l_result := (table.item).column_name
+			if l_result /= Void then
+				Result := l_result.twin
 			end
 		end
 
@@ -348,7 +355,7 @@ feature -- Status report
 						f_name := field_name (i, object)
 						table.start
 					until
-						table.after or f_name.is_equal (table.item.column_name)
+						table.after or f_name ~ table.item.column_name
 					loop
 						table.forth
 					end
@@ -364,7 +371,7 @@ feature -- Status report
 						when Real_type, Double_type then
 							Result := Result and (col_type = Float_type_database)
 						when Character_type then
-							Result := Result and (col_type = String_type_database 
+							Result := Result and (col_type = String_type_database
 												and el.data_length = 1)
 						when Boolean_type then
 							Result := Result and (col_type = Boolean_type_database)
@@ -432,13 +439,13 @@ feature {NONE} -- Status report
 			create Result.make
 		end
 
-	Selection_string: STRING 
+	Selection_string: STRING
 		do
 			Result := db_spec.Selection_string (rep_qualifier, rep_owner, repository_name)
 		end
 
 
-	Max_char_size: INTEGER 
+	Max_char_size: INTEGER
 		do
 			Result := db_spec.Max_char_size
 		end

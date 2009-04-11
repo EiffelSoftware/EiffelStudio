@@ -47,10 +47,10 @@ feature -- Access
 
 	Case_sensitive: BOOLEAN = True
 			-- Selection is case sensitive.
-	
+
 	Case_insensitive: BOOLEAN = False
 			-- Selection is case insensitive.
-	
+
 feature -- Status report
 
 	has_error: BOOLEAN
@@ -58,7 +58,7 @@ feature -- Status report
 		deferred
 		end
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message if an error occurred during last
 			-- database operation.
 		deferred
@@ -77,6 +77,8 @@ feature -- Status report
 
 	has_id (tablerow: DB_TABLE): BOOLEAN
 			-- Does `tablerow' have an ID and can it be found?
+		require
+			tablerow_not_void: tablerow /= Void
 		deferred
 		end
 
@@ -145,7 +147,7 @@ feature -- Basic operations: update
 			has_id: has_id (a_tablerow)
 		deferred
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

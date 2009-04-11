@@ -22,7 +22,7 @@ inherit
 		undefine
 			out, copy, is_equal
 		end
-			
+
 create
 	make
 
@@ -40,20 +40,23 @@ feature
 			parsed_s: STRING
 			parsed: BOOLEAN
 			ArgNum: INTEGER
+			l_sql_string: like sql_string
 		do
-			if sql_string = Void then
-				create sql_string.make (s.count)
+			l_sql_string := sql_string
+			if l_sql_string = Void then
+				create l_sql_string.make (s.count)
+				sql_string := l_sql_string
 			else
-				sql_string.wipe_out
+				l_sql_string.wipe_out
 			end
-			sql_string.append (s)
+			l_sql_string.append (s)
 			s.wipe_out
-			s.append (parse (sql_string))
+			s.append (parse (l_sql_string))
 			ArgNum := s.occurrences('?')
 
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)	
+				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
 			end
 			if not parsed then
 				parsed_s := s
@@ -101,7 +104,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	sql_string: STRING 
+	sql_string: detachable STRING
 
 	descriptor: INTEGER;
 

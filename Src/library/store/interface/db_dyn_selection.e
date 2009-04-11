@@ -46,6 +46,9 @@ feature -- Initialization
 			implementation.set_ht (ht)
 			init
 			implementation.init_implementation (parameters_value, parameters)
+
+			-- Satify compiler
+			db_sel_imp := implementation
 		end
 
 feature -- Element change

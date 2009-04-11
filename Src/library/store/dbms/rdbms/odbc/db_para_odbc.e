@@ -32,14 +32,14 @@ feature -- Status Setting
 			count := size
 		end
 
-	set (val: MANAGED_POINTER; pos: INTEGER)
+	set (val: detachable MANAGED_POINTER; pos: INTEGER)
 		do
 			ptr.put(val, pos)
 		end
 
 	get (pos: INTEGER): POINTER
 		local
-			l_ptr: MANAGED_POINTER
+			l_ptr: detachable MANAGED_POINTER
 		do
 			l_ptr := ptr.item (pos)
 			if l_ptr /= Void then
@@ -67,7 +67,7 @@ feature  -- Status
 
 	count: INTEGER
 
-	ptr: ARRAY[MANAGED_POINTER]
+	ptr: ARRAY[detachable MANAGED_POINTER]
 
 
 feature { NONE} -- External Features

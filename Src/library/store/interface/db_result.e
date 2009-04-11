@@ -53,13 +53,13 @@ feature -- Status report
 		do
 			Result := implementation.data
 		end
-	
+
 	map_table_to_create: BOOLEAN
-			-- Does map table need to be created? 
+			-- Does map table need to be created?
 		do
 			Result := map_table = Void
 		end
-	
+
 feature {DB_SELECTION} -- Status setting
 
 	update_map_table (obj: ANY)
@@ -93,8 +93,8 @@ feature {NONE} -- Status report
 
 	descriptor: INTEGER
 			-- Cursor descriptor
-			
-	map_table: ARRAY [INTEGER]
+
+	map_table: detachable ARRAY [INTEGER]
 			-- Map table which allows to find data position
 			-- into an Eiffel object.
 		do

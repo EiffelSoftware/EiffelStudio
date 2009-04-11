@@ -5,7 +5,7 @@ note
 	Revision: "$Revision$";
 	Product: "Environment Converter"
 
-class EC_FIELD 
+class EC_FIELD
 
 create -- Creation procedure
 
@@ -27,9 +27,9 @@ feature  -- Status report
 
 	field_type: INTEGER
 
-	field_value: ANY
+	field_value: detachable ANY
 
-	field_name: STRING
+	field_name: detachable STRING
 
 	field_rank: INTEGER
 			-- Index of this field in the father object.
@@ -48,25 +48,25 @@ feature -- Status setting
 			-- Set `use_label' with `b'.
 		do
 			use_label := b
-		ensure 
+		ensure
 			use_label = b
 		end;
 
 	set_field (type: INTEGER;n: STRING)
 			-- Set field with type `type' and name `n'.
-		require 
+		require
 			name_exists: n /= Void
 		do
 			field_type := type;
 			field_name := n.twin
 		ensure
 			field_type = type;
-			field_name.is_equal(n)
+			field_name ~ n
 		end;
 
 	set_value (v: ANY)
 			-- Set field value with `v'.
-		require 
+		require
 			value_exists: v /= Void
 		do
 			field_value := v

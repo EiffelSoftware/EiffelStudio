@@ -605,7 +605,7 @@ feature -- External features
 
 feature {NONE} -- External features
 
-	repository_name: STRING
+	repository_name: detachable STRING
 
 	is_proc: BOOLEAN
 

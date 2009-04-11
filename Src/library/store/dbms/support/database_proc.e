@@ -27,6 +27,7 @@ feature -- Initialization
 			if db_spec.has_row_number then
 				row_number := 0
 			end
+			create name.make_empty
 		end
 
 feature -- Status report
@@ -37,10 +38,10 @@ feature -- Status report
 			tuple: DB_TUPLE
 			seq: INTEGER
 			tmp_text: STRING
-			row_text: STRING
+			l_cursor: detachable DB_RESULT
 		do
 			if db_spec.support_sql_of_proc then
-     				private_selection.set_map_name (name, "name")
+					private_selection.set_map_name (name, "name")
 				if db_spec.has_row_number then
 					create tmp_text.make(1024)
 					from
@@ -48,21 +49,33 @@ feature -- Status report
 					until
 						seq > row_number
 					loop
-       					private_selection.set_map_name (seq , "seq")
-     					private_selection.query (Select_text (name))
-     					private_selection.load_result
-     					private_selection.unset_map_name ("seq")
-     					create tuple.copy (private_selection.cursor)
-     					row_text ?= tuple.item (1)
-     					tmp_text.append(row_text)
+					private_selection.set_map_name (seq , "seq")
+					private_selection.query (Select_text (name))
+					private_selection.load_result
+					private_selection.unset_map_name ("seq")
+					l_cursor := private_selection.cursor
+					check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition
+					create tuple.copy (l_cursor)
+					if attached {STRING} tuple.item (1) as row_text then
+						tmp_text.append(row_text)
+					else
+						check False end -- implied by `private_selection.query' postcondition
+					end
 						seq := seq + 1
 					end
 
 				else
 					private_selection.query (Select_text (name))
 					private_selection.load_result
-					create tuple.copy (private_selection.cursor)
-					tmp_text ?= tuple.item (1)
+					l_cursor := private_selection.cursor
+				check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition					
+					create tuple.copy (l_cursor)
+					if attached {STRING} tuple.item (1) as l_item then
+						tmp_text := l_item
+					else
+						check False end -- implied by `private_selection.query''s postcondition
+						create tmp_text.make_empty -- Satisfy compiler
+					end
 				end
 				private_selection.unset_map_name ("name")
 				Result := tmp_text
@@ -72,10 +85,10 @@ feature -- Status report
 			end
 		end
 
-	arguments_name: ARRAY [STRING]
+	arguments_name: detachable ARRAY [STRING]
 			-- Argument names of stored procedure
 
-	arguments_type: ARRAY [ANY]
+	arguments_type: detachable ARRAY [ANY]
 			-- Argument types of stored procedure
 
 feature -- Basic operations
@@ -230,10 +243,8 @@ feature {NONE} -- Implementation
 	set_p_exists
 			-- Set `p_exists'.
 		local
-			temp_int: INTEGER_REF
-			temp_dble: DOUBLE_REF
-			temp_string: STRING
 			tuple: DB_TUPLE
+			l_cursor: detachable DB_RESULT
 		do
 			if db_spec.support_proc then
 				private_selection.set_map_name (name, "name")
@@ -241,26 +252,24 @@ feature {NONE} -- Implementation
 				p_exists := handle.status.found
 				private_selection.load_result
 				private_selection.unset_map_name ("name")
-				create tuple.copy (private_selection.cursor)
+				l_cursor := private_selection.cursor
+				check l_cursor /= Void end -- implied by `private_selection.query''s postcondition
+				create tuple.copy (l_cursor)
 				if not tuple.is_empty then
-					temp_int ?= tuple.item (1)
-					if temp_int /= Void then
+					if attached {INTEGER_REF} tuple.item (1) as temp_int then
 						p_exists := temp_int > 0
 						if db_spec.has_row_number then
 							row_number := temp_int.item
 						end
 					else
-						temp_dble ?= tuple.item (1)
-						if temp_dble /= Void then
+						if attached {DOUBLE_REF} tuple.item (1) as temp_dble then
 							p_exists := temp_dble > 0.0
 							if db_spec.has_row_number then
 								row_number := temp_dble.item.truncated_to_integer
 							end
 						else
 								-- Added for ODBC, should really be abstracted
-							temp_string ?= tuple.item (3)
-							p_exists := temp_string /= Void and then not temp_string.is_empty
-
+							p_exists := attached {STRING} tuple.item (3) as temp_string and then not temp_string.is_empty
 						end
 					end
 				else
@@ -280,23 +289,27 @@ feature {NONE} -- Implementation
 			-- Map variables are used for set input arguments.
 		require
 			s_not_void: s /= Void
+			arguments_set: arguments_set
 		local
 			i: INTEGER
+			l_arguments_name: like arguments_name
 		do
 			s.append (db_spec.map_var_before)
 			from
-				i := arguments_name.lower
+				l_arguments_name := arguments_name
+				check l_arguments_name /= Void end -- implied by precondition `arguments_set'
+				i := l_arguments_name.lower
 			until
-				i > arguments_name.upper
+				i > l_arguments_name.upper
 			loop
 				if db_spec.proc_args then
 					s.append (db_spec.map_var_between)
-					s.append (arguments_name.item (i))
+					s.append (l_arguments_name.item (i))
 					s.append (" = ")
 				end
-				s.append (db_spec.map_var_name (arguments_name.item (i)))
+				s.append (db_spec.map_var_name (l_arguments_name.item (i)))
 				i := i + 1
-				if i <= arguments_name.upper then
+				if i <= l_arguments_name.upper then
 					s.extend (',')
 				end
 			end
@@ -312,19 +325,25 @@ feature {NONE} -- Implementation
 			arguments_set: arguments_set
 		local
 			i: INTEGER
+			l_arguments_name: like arguments_name
+			l_arguments_type: like arguments_type
 		do
 			s.append (db_spec.map_var_before)
 			from
-				i := arguments_name.lower
+				l_arguments_name := arguments_name
+				check l_arguments_name /= Void end -- implied by precondition `arguments_set'	
+				l_arguments_type := arguments_type
+				check l_arguments_type /= Void end -- implied by precondition `arguments_set'	
+				i := l_arguments_name.lower
 			until
-				i > arguments_name.upper
+				i > l_arguments_name.upper
 			loop
 				s.append (db_spec.map_var_between)
-				s.append (arguments_name.item (i))
+				s.append (l_arguments_name.item (i))
 				s.append (db_spec.map_var_between_2)
-				s.append (handle.all_types.db_type (arguments_type.item (i)).sql_name)
+				s.append (handle.all_types.db_type (l_arguments_type.item (i)).sql_name)
 				i := i + 1
-				if i <= arguments_name.upper then
+				if i <= l_arguments_name.upper then
 					s.extend (',')
 				end
 			end
@@ -342,10 +361,10 @@ feature {NONE} -- Status report
 	name: STRING
 			-- Stored procedure name
 
-	qualifier: STRING
+	qualifier: detachable STRING
 			-- the qualifier of the procedure
 
-	owner: STRING
+	owner: detachable STRING
 			-- the owner of the procedure
 
 	proc_name: STRING
@@ -360,18 +379,18 @@ feature {NONE} -- Status report
 			create sep.make(1)
 			quoter := db_spec.identifier_quoter
 			sep := db_spec.qualifier_seperator
-			if (qualifier /= Void and then qualifier.count > 0) then
+			if (attached qualifier as l_qualifier and then l_qualifier.count > 0) then
 				Result.append(quoter)
-				Result.append(qualifier)
+				Result.append(l_qualifier)
 				Result.append(quoter)
 			end
-			if (owner /= Void and then owner.count > 0) then
+			if (attached owner as l_owner and then l_owner.count > 0) then
 				Result.append(sep)
 				Result.append(quoter)
-				Result.append(owner)
+				Result.append(l_owner)
 				Result.append(quoter)
 			end
-			if ((owner /= Void and then owner.count > 0) or (qualifier /= Void and then qualifier.count > 0)) then
+			if ((attached owner as l_owner and then l_owner.count > 0) or (attached qualifier as l_qualifier and then l_qualifier.count > 0)) then
 				Result.append(".")
 			end
 			Result.append(quoter)
@@ -405,6 +424,8 @@ feature {NONE} -- Status report
 
 	Select_text (a_proc_name: STRING): STRING
 			-- SQL query to get procedure text.
+		require
+			a_proc_name_not_void: a_proc_name /= Void
 		do
 			Result := db_spec.Select_text (a_proc_name)
 		end

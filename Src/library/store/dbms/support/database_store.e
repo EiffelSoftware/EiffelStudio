@@ -38,10 +38,13 @@ create {DATABASE_STORE}
 feature -- Initialization
 
 	make (size: INTEGER)
+		local
+			l_ht_order: like ht_order
 		do
 			create ht.make (1)
-			create ht_order.make (1)
-			ht_order.compare_objects
+			create l_ht_order.make (1)
+			ht_order := l_ht_order
+			l_ht_order.compare_objects
 			create map_table.make (1, 10)
 			scan_make (size)
 		end
@@ -61,7 +64,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	repository: DATABASE_REPOSITORY[G]
+	repository: detachable DATABASE_REPOSITORY[G]
 			-- Associated repository
 
 	owns_repository: BOOLEAN
@@ -80,12 +83,14 @@ feature -- Basic operations
 		require
 			object_exists: object /= Void
 			owns_repository: owns_repository
-			repository_exists: repository.exists
+			repository_exists: attached repository as lr_repository and then lr_repository.exists
 		local
 			tmp_string: STRING
 			temp_descriptor: INTEGER
 			quoter: STRING
 			sep: STRING
+			l_repository: like repository
+			l_map_table: like map_table
 		do
 			update_map_table (object)
 			create quoter.make(1)
@@ -94,24 +99,28 @@ feature -- Basic operations
 			sep := db_spec.qualifier_seperator
 			sql_string.wipe_out
 			sql_string.append ("INSERT INTO ")
-			if (repository.rep_qualifier /= Void and then repository.rep_qualifier.count > 0) then
+			l_repository := repository
+			check l_repository /= Void end -- implied by precondition `owns_repository'
+			if (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0) then
 				sql_string.append(quoter)
-				sql_string.append(repository.rep_qualifier)
+				sql_string.append(l_repository.rep_qualifier)
 				sql_string.append(quoter)
 			end
-			if (repository.rep_owner /= Void and then repository.rep_owner.count > 0) then
+			if (l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) then
 				sql_string.append(sep)
 				sql_string.append(quoter)
-				sql_string.append(repository.rep_owner)
+				sql_string.append(l_repository.rep_owner)
 				sql_string.append(quoter)
 			end
-			if ((repository.rep_owner /= Void and then repository.rep_owner.count > 0) or (repository.rep_qualifier /= Void and then repository.rep_qualifier.count > 0)) then
+			if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
 				sql_string.append(".")
 			end
 			sql_string.append(quoter)
-			sql_string.append (repository.repository_name)
+			sql_string.append (l_repository.repository_name)
 			sql_string.append(quoter)
-			sql_string.append(db_spec.put_column_name(repository, map_table, object))
+			l_map_table := map_table
+			check l_map_table /= Void end -- FIXME: implied by ...bug?			
+			sql_string.append(db_spec.put_column_name(l_repository, l_map_table, object))
 			sql_string.append (" VALUES ( :XZ7Hj0sb5UU )")
 			set_map_name (object, "XZ7Hj0sb5UU")
 			tmp_string := parse (sql_string)
@@ -140,7 +149,7 @@ feature -- Basic operations
 		require
 			object_exists: obj /= Void
 			owns_repository: owns_repository
-			repository_exists: repository.exists
+			repository_exists: attached repository as lr_repository and then lr_repository.exists
 		do
 			put (obj)
 		end
@@ -150,16 +159,20 @@ feature {NONE} -- Status report
 	previous_type: INTEGER
 		-- Type of last object used to define `map_table'
 
-	map_table: ARRAY [INTEGER]
+	map_table: detachable ARRAY [INTEGER]
 		-- Correspondence table between table column rank and
 		-- attribute rank of object to be stored.
 
 	next_index (k: INTEGER): INTEGER
 			-- Value at k-th index in map table
+		local
+			l_map_table: like map_table
 		do
-			Result := map_table.item (k)
+			l_map_table := map_table
+			check l_map_table /= Void end -- FIXME: implied by ...bug?
+			Result := l_map_table.item (k)
 		ensure then
-			resulting_value: Result = map_table.item (k)
+			resulting_value: attached map_table as le_map_table and then Result = le_map_table.item (k)
 		end
 
 	sql_string: STRING
@@ -177,11 +190,13 @@ feature {NONE} -- Status setting
 			not_void_repository: repository /= Void
 		local
 			f, g, ind, idx, colind: INTEGER
-			searched_name: STRING
-			l_table: DB_TABLE
+			searched_name: detachable STRING
+			l_repository: like repository
+			l_map_table: like map_table
 		do
-			l_table ?= object
-			f := repository.dimension
+			l_repository := repository
+			check l_repository /= Void end -- implied by precondition `not_void_repository'
+			f := l_repository.dimension
 			g := field_count  (object)
 --			if l_table /= Void and then l_table.table_description.identity_column > 0 then
 --				colind := l_table.table_description.identity_column			
@@ -194,12 +209,14 @@ feature {NONE} -- Status setting
 				previous_type /= dynamic_type (object)
 			then
 				previous_type := dynamic_type (object)
-				map_table.clear_all
+				l_map_table := map_table
+				check l_map_table /= Void end -- FIXME: implied by ...bug?
+				l_map_table.clear_all
 				if db_spec.dim_rep_diff (f, g) then
 					make_default_table (g)
 				else
-					if map_table.count < f then
-						map_table.conservative_resize (1, f)
+					if l_map_table.count < f then
+						l_map_table.conservative_resize (1, f)
 					end
 					from
 						ind := 1
@@ -207,7 +224,8 @@ feature {NONE} -- Status setting
 						ind > f
 					loop
 --						if not (ind = colind) then	
-							searched_name := repository.column_name (ind)
+							searched_name := l_repository.column_name (ind)
+							check searched_name /= Void end -- FIXME: implied by ... bug?
 							searched_name.to_lower
 							from
 								idx := 1
@@ -218,9 +236,9 @@ feature {NONE} -- Status setting
 								idx := idx + 1
 							end
 							if idx > g then
-								db_spec.update_map_table_error (handle, map_table, ind)
+								db_spec.update_map_table_error (handle, l_map_table, ind)
 							else
-								map_table.put (idx, ind)
+								l_map_table.put (idx, ind)
 							end
 							ind := ind + 1
 --						else
@@ -235,18 +253,21 @@ feature {NONE} -- Status setting
 			-- Create and initialize map table of size `is' with default values.
 		local
 			j: INTEGER
+			l_map_table: like map_table
 		do
-			if map_table = Void then
-				create map_table.make (1, i)
-			elseif map_table.count < i then
-				map_table.conservative_resize (1, i)
+			l_map_table := map_table
+			if l_map_table = Void then
+				create l_map_table.make (1, i)
+				map_table := l_map_table
+			elseif l_map_table.count < i then
+				l_map_table.conservative_resize (1, i)
 			end
 			from
 				j := 1
 			until
 				j > i
 			loop
-				map_table.put (j, j)
+				l_map_table.put (j, j)
 				j := j + 1
 			end
 		end
@@ -254,11 +275,15 @@ feature {NONE} -- Status setting
 	start (object: ANY)
 			-- Set `max_index' to last non zero column rank.
 			-- (Input parameter unused)
+		local
+			l_map_table: like map_table
 		do
 			from
-				max_index := map_table.count
+				l_map_table := map_table
+				check l_map_table /= Void end -- FIXME: implied by ...bug?
+				max_index := l_map_table.count
 			until
-				map_table.item (max_index) /= 0
+				l_map_table.item (max_index) /= 0
 			loop
 				max_index := max_index - 1
 			end

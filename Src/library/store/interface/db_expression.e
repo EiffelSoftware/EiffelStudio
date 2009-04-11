@@ -12,7 +12,7 @@ deferred class DB_EXPRESSION inherit
 
 feature -- Status report
 
-	last_query: STRING
+	last_query: detachable STRING
 			-- Last SQL statement used
 
 feature -- Status setting

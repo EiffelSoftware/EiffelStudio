@@ -33,7 +33,7 @@ create -- Creation procedure
 
 feature -- Access
 
-	last_parsed_query : STRING
+	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
 		do
 			Result := implementation.last_parsed_query
@@ -62,8 +62,12 @@ feature -- Basic operations
 
 	execute_query
 			-- Execute `modify' with `last_query'.
+		local
+			l_query: like last_query
 		do
-			modify (last_query)
+			l_query := last_query
+			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
+			modify (l_query)
 		end
 
 feature {NONE} -- Implementation
@@ -75,13 +79,18 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to change active base.
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
 			implementation := handle.database.db_change
-			create ht.make (name_table_size)
-			create ht_order.make (name_table_size)
-			ht_order.compare_objects
-			implementation.set_ht (ht)
-			implementation.set_ht_order (ht_order)
+			create l_ht.make (name_table_size)
+			ht := l_ht
+			create l_ht_order.make (name_table_size)
+			ht_order := l_ht_order
+			l_ht_order.compare_objects
+			implementation.set_ht (l_ht)
+			implementation.set_ht_order (l_ht_order)
 		end
 
 note

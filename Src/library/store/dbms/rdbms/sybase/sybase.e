@@ -5,10 +5,10 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	SYBASE
 
-inherit 
+inherit
 	DATABASE
 		redefine
 			results_order,
@@ -49,9 +49,9 @@ feature -- For DATABASE_STATUS
 			end
 		end
 
-feature -- For DATABASE_CHANGE 
+feature -- For DATABASE_CHANGE
 
-	descriptor_is_available: BOOLEAN 
+	descriptor_is_available: BOOLEAN
 		do
 			Result := (syb_available_descriptor = 1)
 		end
@@ -62,7 +62,7 @@ feature -- For DATABASE_CHANGE
 		end
 
 feature -- For DATABASE_FORMAT
-	
+
 	date_to_str (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 		do
@@ -71,7 +71,7 @@ feature -- For DATABASE_FORMAT
 			Result.precede ('%'')
 			Result.extend ('%'')
 		end
-	
+
 	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'
 		do
@@ -194,7 +194,7 @@ feature -- For DATABASE_PROC
 
 	support_stored_proc: BOOLEAN = True
 
-	sql_adapt_db (sql: STRING): STRING 
+	sql_adapt_db (sql: STRING): STRING
 		do
 			Result := sql
 			Result.replace_substring_all (":", "@")
@@ -224,6 +224,7 @@ feature -- For DATABASE_PROC
 			check
 				to_be_implemented: False
 			end
+			create Result.make_empty -- FIXME: fool compiler
 		end
 
 	map_var_after: STRING = ""
@@ -233,7 +234,7 @@ feature -- For DATABASE_PROC
 			Result := "select a.text from syscomments a, sysobjects b where b.name = :name and b.id = a.id"
 		end
 
-	Select_exists (name: STRING): STRING 
+	Select_exists (name: STRING): STRING
 		do
 			Result := "select count(*) from %
 			%sysobjects where type = 'P' %
@@ -258,7 +259,7 @@ feature -- For DATABASE_REPOSITORY
 		end
 
 	sql_string: STRING = "varchar("
-	
+
 	sql_string2 (int: INTEGER): STRING
 		do
 			Result := " text"
@@ -271,8 +272,8 @@ feature -- External	features
 			Result := syb_get_error_message
 		end
 
-	
-	get_warn_message: POINTER 
+
+	get_warn_message: POINTER
 		do
 			Result := syb_get_warn_message
 		end
@@ -349,7 +350,7 @@ feature -- External	features
 			i: INTEGER
 		do
 			create l_area.make (max_len)
-			
+
 			Result := syb_put_data (no_descriptor, index, l_area.item)
 
 			check
@@ -414,7 +415,7 @@ feature -- External	features
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
-			-- is last retrieved data null? 
+			-- is last retrieved data null?
 		do
 		end
 
@@ -584,7 +585,7 @@ feature {NONE} -- External features
 
 	syb_conv_type (index: INTEGER): INTEGER
 		external
-			"C"	
+			"C"
 		end
 
 	syb_get_count (no_descriptor: INTEGER): INTEGER

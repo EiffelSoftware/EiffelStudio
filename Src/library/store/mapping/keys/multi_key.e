@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	MULTI_KEY
 
 feature -- Initialization

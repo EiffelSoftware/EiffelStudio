@@ -33,10 +33,13 @@ feature -- Initialization
 
 	make
 			-- Creation routine
+		local
+			l_ht: like ht
 		do
 			implementation := handle.database.db_dyn_change
-			create ht.make (name_table_size)
-			implementation.set_ht (ht)
+			create l_ht.make (name_table_size)
+			ht := l_ht
+			implementation.set_ht (l_ht)
 			init
 			implementation.init_implementation (parameters_value, parameters)
 		end

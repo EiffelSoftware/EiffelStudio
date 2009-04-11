@@ -58,6 +58,8 @@ feature -- For DATABASE_CHANGE
 			-- we have to hide ":" in the qualifier first, otherwise, it
 			-- will be misinterpreted by feature SQL_SCAN::parse
 			-- Only for ODBC
+		require
+			c_temp_not_void: c_temp /= Void
 		do
 		end
 
@@ -74,10 +76,12 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 			-- For ODBC, ORACLE
+		require
+			object_not_void: object /= Void
 		deferred
 		end
 
-	string_format (object: STRING): STRING
+	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'
 		deferred
 		end
@@ -100,11 +104,14 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [ANY]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [ANY]; ht_order: detachable ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
 			-- for set input arguments
 			-- For ODBC
+		require
+			uhandle_not_void: uhandle /= Void
+			sql_not_void: sql /= Void
 		do
 		end
 
@@ -119,15 +126,18 @@ feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]; obj: ANY): STRING
 			-- Add the columns names to sql_string in the feature put
+		require
+			repository_not_void: repository /= Void
+			map_table_not_void: map_table /= Void
+			obj_not_void: obj /= Void
 		local
 			i, j, nb: INTEGER
 			l_identity_index: INTEGER
-			table: DB_TABLE
+			l_column_name: detachable STRING
 		do
 			create Result.make (1)
 			Result.append (" (")
-			table ?= obj
-			if table /= Void and then not insert_auto_identity_column then
+			if attached {DB_TABLE} obj as table and then not insert_auto_identity_column then
 					-- There was an explicit requirement from the database to exclude
 					-- the identity column from the statement.
 				l_identity_index := table.table_description.identity_column
@@ -136,6 +146,7 @@ feature -- For DATABASE_STORE
 					-- all the columns.
 				l_identity_index := -1
 			end
+
 			from
 				j := 1
 				nb := repository.dimension
@@ -147,7 +158,9 @@ feature -- For DATABASE_STORE
 						Result.append (", ")
 					end
 					if l_identity_index /= j then
-						Result.append (repository.column_name (j))
+						l_column_name := repository.column_name (j)
+						check l_column_name /= Void end -- FIXME: implied by ... bug ?
+						Result.append (l_column_name)
 						i := 1
 					end
 				end
@@ -225,17 +238,26 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 	user_name_ok (uname: STRING): BOOLEAN
 			-- Can the user name be Void?
 			-- Yes only for ODBC
+		require
+			uname_not_void: uname /= Void
 		do
 			Result := uname /= Void
 		end
 
 	password_ok (upasswd: STRING): BOOLEAN
 			-- Can the user password be Void?
+		require
+			upasswd_not_void: upasswd /= Void
 		deferred
 		end
 
 	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN
 			-- Is name equal to uname and passwd equal to upasswd?
+		require
+			name_not_void: name /= Void
+			passwd_not_void: passwd /= Void
+			uname_not_void: uname /= Void
+			upasswd_not_void: upasswd /= Void
 		deferred
 		end
 
@@ -270,6 +292,8 @@ feature -- For DATABASE_PROC
 	sql_adapt_db (sql: STRING): STRING
 			-- Adapt the SQL string for the database
 			-- Only for Sybase and ODBC
+		require
+			sql_not_void: sql /= Void
 		do
 			Result := sql
 		end
@@ -335,16 +359,22 @@ feature -- For DATABASE_PROC
 
 	map_var_name (par_name: STRING): STRING
 			-- Redefined for Sybase
+		require
+			par_name_not_void: par_name /= Void
 		deferred
 		end
 
 	Select_text (proc_name: STRING): STRING
 			-- SQL query to get stored procedure text
+		require
+			proc_name_not_void: proc_name /= Void
 		deferred
 		end
 
 	Select_exists (name: STRING): STRING
 			-- SQL query to test stored procedure existing
+		require
+			name_not_void: name /= Void
 		deferred
 		end
 
@@ -367,6 +397,7 @@ feature -- For DATABASE_PROC
 			-- does not support stored procedure text retrieving
 			-- Redefined for ODBC
 		do
+			create Result.make_empty
 		end
 
 	exec_proc_not_supported
@@ -389,6 +420,10 @@ feature -- For DATABASE_REPOSITORY
 
 	Selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING
 			-- String to select the table needed
+		require
+			rep_qualifier_not_void: rep_qualifier /= Void
+			rep_owner_not_void: rep_owner /= Void
+			repository_name_not_void: repository_name /= Void
 		deferred
 		end
 
@@ -513,6 +548,8 @@ feature -- External features
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
+		require
+			ar_not_void: ar /= Void
 		deferred
 		end
 
@@ -673,7 +710,7 @@ feature -- External features
 		deferred
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING)
+	connect (user_name, user_passwd, data_source, application, hostname, roleId: STRING; rolePassWd: detachable STRING; groupId: STRING)
 			-- Connect to an ODBC database
 		deferred
 		end

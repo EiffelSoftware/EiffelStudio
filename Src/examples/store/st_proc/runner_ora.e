@@ -16,13 +16,13 @@ feature {NONE}
 
 	base_change: DB_CHANGE
 
-	proc: DB_PROC
+	proc: detachable DB_PROC
 
-	repository: DB_REPOSITORY
+	repository: detachable DB_REPOSITORY
 
 	session_control: DB_CONTROL
 
-	data_file: PLAIN_TEXT_FILE
+	data_file: detachable PLAIN_TEXT_FILE
 
 	book: BOOK2
 
@@ -31,14 +31,20 @@ feature
 	make
 		local
 			tmp_string: STRING
+			l_laststring: detachable STRING
+			l_repository: like repository
 		do
 			io.putstring ("Database user authentication:%N")
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
-			login (tmp_string, io.laststring)
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			login (tmp_string, l_laststring)
 			set_base
 
 			create session_control.make
@@ -52,9 +58,10 @@ feature
 				session_control.raise_error
 				io.putstring ("Can't connect to database.%N")
 			else
-				create repository.make (Table_name)
-				repository.load
-				if repository.exists then
+				create l_repository.make (Table_name)
+				repository := l_repository
+				l_repository.load
+				if l_repository.exists then
 					make_change_ing
 					session_control.commit
 					session_control.disconnect
@@ -71,33 +78,38 @@ feature {NONE}
 			author: STRING
 			price: REAL
 			pub_date: DATE_TIME
+			l_proc: like proc
+			l_laststring: detachable STRING
 		do
 			create author.make (10)
 			price := 222
 			create pub_date.make_now
 
-			create proc.make (Proc_name)
-			proc.load
-			proc.set_arguments (<<"new_author", "new_price", "new_date">>,
+			create l_proc.make (Proc_name)
+			proc := l_proc
+			l_proc.load
+			l_proc.set_arguments (<<"new_author", "new_price", "new_date">>,
 						<<author, price, pub_date >>)
 
-			if proc.exists then
+			if l_proc.exists then
 				io.putstring ("Stored procedure text: ")
-				io.putstring (proc.text)
+				io.putstring (l_proc.text)
 				io.new_line
 			else
-				proc.store (Select_text)
+				l_proc.store (Select_text)
 				io.putstring ("Procedure created.%N")
-				proc.load
+				l_proc.load
 			end
 
 			from
 				io.putstring ("Author? ('exit' to terminate):")
 				io.readline
 			until
-				io.laststring.is_equal ("exit")
+				io.laststring ~ ("exit")
 			loop
-				author := io.laststring.twin
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				author := l_laststring.twin
 				io.putstring ("Updating books whose author's name match: ")
 				io.putstring (author)
 				io.new_line
@@ -107,7 +119,7 @@ feature {NONE}
 				base_change.set_map_name (price, "new_price")
 				base_change.set_map_name (author, "new_author")
 
-				proc.execute (base_change)
+				l_proc.execute (base_change)
 
 				base_change.unset_map_name ("new_author")
 				base_change.unset_map_name ("new_price")

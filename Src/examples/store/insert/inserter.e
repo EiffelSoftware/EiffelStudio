@@ -20,7 +20,7 @@ feature {NONE}
 
 	session_control: DB_CONTROL
 
-	repository: DB_REPOSITORY
+	repository: detachable DB_REPOSITORY
 
 feature {NONE} -- Initialization
 
@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 		local
 			-- The object that we will use is a book
 			book: BOOK2
+			l_laststring: detachable STRING
+			l_repository: like repository
 		do
 				-- Initialize and start session
 			init
@@ -42,8 +44,10 @@ feature {NONE} -- Initialization
 					-- Does the table `db_book' exit?
 				if not table_exists (Table_name) then
 					io.putstring ("Table `DB_BOOK' does not exist...")
-					repository.allocate (book)
-					repository.load
+					l_repository := repository
+					check l_repository /= Void end -- implied by `table_exists' postcondition
+					l_repository.allocate (book)
+					l_repository.load
 					io.putstring ("Table created.%N")
 				end
 
@@ -52,10 +56,14 @@ feature {NONE} -- Initialization
 				io.new_line
 				io.putstring ("Author? ")
 				io.readline
-				book.set_author (io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				book.set_author (l_laststring.twin)
 				io.putstring ("Title? ")
 				io.readline
-				book.set_title(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				book.set_title(l_laststring.twin)
 				io.putstring ("Quantity? ")
 				io.readint
 				book.set_quantity(io.lastint)
@@ -69,7 +77,9 @@ feature {NONE} -- Initialization
 				io.readdouble
 				book.set_double_value (io.lastdouble)
 
-				base_store.set_repository (repository)
+				l_repository := repository
+				check l_repository /= Void end -- implied by `table_exists' postcondition
+				base_store.set_repository (l_repository)
 				base_store.put (book)
 
 				if not session_control.is_ok then
@@ -115,35 +125,46 @@ feature {NONE} -- Implementation
 	perform_login
 		local
 			tmp_string: STRING
+			l_laststring: detachable STRING
 		do
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_data_source(l_laststring.twin)
  			end
 
 				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition			
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
 				-- Set user's name and password
-			login (tmp_string, io.laststring)
+			login (tmp_string, l_laststring)
 		end
 
 	table_exists (table: STRING): BOOLEAN
 			-- Does table `table' exist in the database?
 		require
 			connected: session_control.is_connected
+		local
+			l_repository: like repository
 		do
 			-- Create and load the DB_REPOSITORY named 'table'
-			create repository.make (table)
-			repository.load
-			Result := repository.exists
+			create l_repository.make (table)
+			repository := l_repository
+			l_repository.load
+			Result := l_repository.exists
 		ensure
-			Result = repository.exists
+			repository_attached: attached repository as le_repository
+			Result = le_repository.exists
 		end
 
 feature {NONE}

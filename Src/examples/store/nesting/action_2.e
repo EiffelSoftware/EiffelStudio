@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ACTION_2 inherit
+deferred class ACTION_2 inherit
 
 	ACTION
 
@@ -23,7 +23,7 @@ feature
 		ensure
 			selection = sel
 		end
-        
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

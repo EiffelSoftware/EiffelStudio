@@ -10,7 +10,7 @@ inherit
 	RDB_HANDLE
 
 	ACTION
-		redefine 
+		redefine
 			execute, init
 		end
 
@@ -30,24 +30,31 @@ feature {NONE} -- Initialization
 		local
 			session_control: DB_CONTROL
 			base_update: DB_CHANGE
-			tmp_string: STRING
+			tmp_string: detachable STRING
+			l_laststring, l_name: detachable STRING
+			l_database: like session_database
 		do
 			io.putstring ("Database user authentication:%N")
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_data_source(l_laststring.twin)
  			end
 
 				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
-
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
 				-- Set user's name and password
-			login (tmp_string, io.laststring)
+			login (tmp_string, l_laststring)
 
 				-- Initialization of the Relational Database:
 				-- This will set various informations to perform a correct
@@ -55,7 +62,7 @@ feature {NONE} -- Initialization
 			set_base
 
 				-- Create usefull classes
-				-- 'session_control' provides informations control access and 
+				-- 'session_control' provides informations control access and
 				--  the status of the database.
 				-- 'base_selection' provides a SELECT query mechanism.
 				-- 'base_update' provides updating facilities.
@@ -75,7 +82,11 @@ feature {NONE} -- Initialization
 					--  The Eiffel program is now connected to the database
 				io.putstring ("%NWelcome to the SQL interpreter%N")
 				io.putstring ("Database used: ")
-				io.putstring (session_database.name)
+				l_database := session_database
+				check l_database /= Void end -- FIXME: implied by `session_control'.is_connected?
+				l_name := l_database.name
+				check l_name /= Void end -- FIXME: implied by `session_control'.is_connected?
+				io.putstring (l_name)
 				io.putstring ("%N%TType 'exit' to terminate%N%N")
 
 					-- Set action to be executed after each 'load_result' iteration step.
@@ -95,9 +106,10 @@ feature {NONE} -- Initialization
 					else
 						tmp_string := io.laststring
 					end
+					check tmp_string /= Void end -- implied by previous if clause and `read_order' postcondition
 					if is_select_statement (tmp_string) then
 							-- The query is a SELECT, so we have to use
-							-- DB_SELECTION.query 
+							-- DB_SELECTION.query
 						base_selection.query (tmp_string)
 						if session_control.is_ok then
 								-- Iterate through resulting data,
@@ -148,13 +160,13 @@ feature {NONE}
 		once
 			create Result.make (Stringlength)
 		end
-	
+
 	is_select_statement(st: STRING): BOOLEAN
 			-- Is 'st' a select statement?
 		require
 			st_not_void: st /= Void
 		do
-			st.left_adjust 
+			st.left_adjust
 			if st.count /= 0 then
 				seq_string.wipe_out
 				seq_string.append (st)
@@ -183,10 +195,13 @@ feature {NONE}
 		local
 			i: INTEGER
 			tuple: DB_TUPLE
+			l_cursor: detachable DB_RESULT
 		do
 			from
 				i := 1
-				create tuple.copy (base_selection.cursor)
+				l_cursor := base_selection.cursor
+				check l_cursor /= Void end -- FIXME: implied by ?
+				create tuple.copy (l_cursor)
 				io.new_line
 			until
 				i > tuple.count
@@ -210,11 +225,14 @@ feature {NONE}
 			r_real: REAL_REF
 			r_double: DOUBLE_REF
 			tuple: DB_TUPLE
-			r_any: ANY
+			r_any: detachable ANY
+			l_cursor: detachable DB_RESULT
 		do
 			from
 				i := 1
-				create tuple.copy (base_selection.cursor)
+				l_cursor := base_selection.cursor
+				check l_cursor /= Void end -- FIXME: implied by ...?
+				create tuple.copy (l_cursor)
 				create r_int
 				create r_real
 				create r_double
@@ -223,14 +241,14 @@ feature {NONE}
 			loop
 				r_any := tuple.item (i)
 				if r_any /= Void then
-					if r_any.conforms_to (r_int) then
-						r_int ?= r_any
+					if attached {INTEGER_REF} r_any as l_r_int then
+						r_int := l_r_int
 						io.putint (r_int.item)
-					elseif r_any.conforms_to (r_real) then
-						r_real ?= r_any
+					elseif attached {REAL_REF} r_any as l_r_real then
+						r_real := l_r_real
 						io.putreal (r_real.item)
-					elseif r_any.conforms_to (r_double) then
-						r_double ?= r_any
+					elseif attached {DOUBLE_REF} r_any as l_r_double then
+						r_double := l_r_double
 						io.putdouble (r_double.item)
 					else
 						io.putstring (r_any.out)

@@ -23,13 +23,13 @@ feature {NONE}
 
 	base_selection: DB_SELECTION
 
-	proc: DB_PROC
+	proc: detachable DB_PROC
 
-	repository: DB_REPOSITORY
+	repository: detachable DB_REPOSITORY
 
 	session_control: DB_CONTROL
 
-	data_file: PLAIN_TEXT_FILE
+	data_file: detachable PLAIN_TEXT_FILE
 
 	book: BOOK2
 
@@ -38,20 +38,28 @@ feature
 	make
 		local
 			tmp_string: STRING
+			l_laststring: detachable STRING
+			l_repository: like repository
 		do
 			io.putstring ("Database user authentication:%N")
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline'
+				set_data_source(l_laststring.twin)
  			end
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline'
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
-			login (tmp_string, io.laststring)
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline'
+			login (tmp_string, l_laststring)
 			set_base
 
 			create session_control.make
@@ -65,9 +73,10 @@ feature
 				session_control.raise_error
 				io.putstring ("Can't connect to database.%N")
 			else
-				create repository.make (Table_name)
-				repository.load
-				if repository.exists then
+				create l_repository.make (Table_name)
+				repository := l_repository
+				l_repository.load
+				if l_repository.exists then
 					make_selection
 					session_control.commit
 					session_control.disconnect
@@ -84,40 +93,45 @@ feature {NONE}
 			author: STRING
 			price: REAL
 			pub_date: DATE_TIME
+			l_laststring: detachable STRING
+			l_proc: like proc
 		do
 			create author.make (10)
 			price := 51
 			create pub_date.make (1984, 01, 01, 00, 00, 00)
 
-			create proc.make (Proc_name)
-			proc.load
-			proc.set_arguments (
+			create l_proc.make (Proc_name)
+			proc := l_proc
+			l_proc.load
+			l_proc.set_arguments (
 				<<"author", "price", "pub_date">>,
 				<<author, price, pub_date >>)
 
-			if proc.exists then
-				if proc.text /= Void then
+			if l_proc.exists then
+				if l_proc.text /= Void then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (proc.text)
+					io.putstring (l_proc.text)
 					io.new_line
 				end
 			else
-				proc.store (Select_text)
-				if proc.is_ok then
-					proc.load
+				l_proc.store (Select_text)
+				if l_proc.is_ok then
+					l_proc.load
 					io.putstring ("Procedure created.%N")
 				end
 			end
 
-			if proc.exists then
+			if l_proc.exists then
 				from
 					io.putstring ("Author? ('exit' to terminate):")
 					io.readline
 					base_selection.set_action (Current)
 				until
-					io.laststring.is_equal ("exit")
+					io.laststring ~ "exit"
 				loop
-					author := io.laststring.twin
+					l_laststring := io.laststring
+					check l_laststring /= Void end
+					author := l_laststring.twin
 					io.putstring ("Seeking for books whose author's name match: ")
 					io.putstring (author)
 					io.new_line
@@ -126,7 +140,7 @@ feature {NONE}
 					base_selection.set_map_name (price, "price")
 					base_selection.set_map_name (pub_date, "pub_date")
 
-					proc.execute (base_selection)
+					l_proc.execute (base_selection)
 					base_selection.load_result
 
 					base_selection.unset_map_name ("author")

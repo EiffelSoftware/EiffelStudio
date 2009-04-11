@@ -23,17 +23,19 @@ feature {NONE}
 
 	base_update: DB_CHANGE
 
-	repository: DB_REPOSITORY
+	repository: detachable DB_REPOSITORY
 
 	session_control: DB_CONTROL
 
-	data_file: PLAIN_TEXT_FILE
+	data_file: detachable PLAIN_TEXT_FILE
 
 	book: BOOK2
 
 feature
 
 	make
+		local
+			l_repository: like repository
 		do
 			io.putstring ("Database user authentication:%N")
 			perform_login
@@ -66,17 +68,18 @@ feature
 					-- them as Eiffel objects, or DB tuples.
 					-- The table used to store Eiffel book objects will be called
 					-- "DB_BOOK".
-				create repository.make (Table_name)
+				create l_repository.make (Table_name)
+				repository := l_repository
 
 					--  The Eiffel program is now connected to the database
 					-- Try to load table from the DB
-				repository.load
-				if not repository.exists then
+				l_repository.load
+				if not l_repository.exists then
 						-- There is no existing objects in the DB
 					io.putstring ("Loading and updating database ...%N")
 						-- Load some from file
 					load_data
-					repository.load
+					l_repository.load
 				end
 					-- Ask the user for a SELECT statement, and execute it
 				make_selection
@@ -90,47 +93,67 @@ feature {NONE}
 	perform_login
 		local
 			tmp_string: STRING
+			l_laststring: detachable STRING
 		do
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				io.putstring ("Data Source Name: ")
 				io.readline
-				set_data_source(io.laststring.twin)
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_data_source(l_laststring.twin)
 			end
 
 				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := io.laststring.twin
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
 				-- Set user's name and password
-			login (tmp_string, io.laststring)
+			l_laststring := io.laststring
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			login (tmp_string, l_laststring)
 		end
 
 	load_data
 			-- Create table in database with same structure as 'book'
 			-- and load data from file 'data.sql'.
+		require
+			repository_attached: repository /= Void
+		local
+			l_laststring: detachable STRING
+			l_repository: like repository
+			l_data_file: like data_file
 		do
 				-- Create the table for book-objects.
 				-- The name of this table has already been set to "DB_BOOK"
-			repository.allocate (book)
+			l_repository := repository
+			check l_repository /= Void end -- implied by precondition `repostory_attached'
+			l_repository.allocate (book)
 			session_control.begin
 
 			from
-				create data_file.make_open_read (Data_file_name)
+				create l_data_file.make_open_read (Data_file_name)
+				data_file := l_data_file
 			until
-				data_file.end_of_file
+				l_data_file.end_of_file
 			loop
-				data_file.readline
-				if not data_file.end_of_file then
-					io.putstring (data_file.laststring)
+				l_data_file.readline
+				if not l_data_file.end_of_file then
+					l_laststring := l_data_file.laststring
+					check l_laststring /= Void end -- implied by `readline' postcondition
+					io.putstring (l_laststring)
 					io.new_line
 						-- Insert objects in the table "DB_BOOK"
-					base_update.modify (data_file.laststring.twin)
+					l_laststring := l_data_file.laststring
+					check l_laststring /= Void end -- implied by `readline' postcondition						
+					base_update.modify (l_laststring.twin)
 				end
 			end
-			data_file.close
+			l_data_file.close
 
 				-- Commit work
 			session_control.commit
@@ -145,15 +168,18 @@ feature {NONE}
 
 		local
 			author: STRING
+			l_laststring: detachable STRING
 		do
 			from
 				io.putstring ("Author? ('exit' to terminate):")
 				io.readline
 			until
 					-- Terminate?
-				io.laststring.is_equal ("exit")
+				io.laststring ~ "exit"
 			loop
-				author := io.laststring.twin
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `read_line' postcondition
+				author := l_laststring.twin
 				io.putstring ("Seeking for books whose author's name match: ")
 				io.putstring (author)
 				io.new_line

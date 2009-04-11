@@ -14,7 +14,7 @@ class ACTION_1_I inherit
 	ACTION_1
 
 create
-        
+
 	make
 
 feature
@@ -24,15 +24,16 @@ feature
 			my_action: ACTION_2_I
 			new_selection: DB_SELECTION
 			tuple: DB_TUPLE
-			table_name: STRING
 			table_id: INTEGER_REF
-		do      
-			create tuple.copy (selection.cursor)
+			l_cursor: detachable DB_RESULT
+		do
+			l_cursor := selection.cursor
+			check l_cursor /= Void end -- FIXME: implied by ...?
+			create tuple.copy (l_cursor)
 			create table_id
-			table_name ?= tuple.item (1)
-			table_id ?= tuple.item (2)
-			if table_name /= Void and table_id /= Void then
-				io.putstring ("-- Column(s) for table ") 
+			if (attached {STRING} tuple.item (1) as table_name) and (attached {INTEGER_REF} tuple.item (2) as l_table_id) then
+				table_id := l_table_id
+				io.putstring ("-- Column(s) for table ")
 				io.putstring (table_name)
 				io.new_line
 				create new_selection.make
@@ -48,7 +49,7 @@ feature
 
 	select_string: STRING
 		once
-			Result := 
+			Result :=
 			"select name from syscolumns where id = :table_id"
 		end
 

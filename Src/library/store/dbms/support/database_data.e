@@ -28,18 +28,22 @@ feature -- Status report
 	count:  INTEGER
 		-- Number of columns in result
 
-	map_table: ARRAY [INTEGER]
+	map_table: detachable ARRAY [INTEGER]
 		-- Correspondance table between column rank and
 		-- attribute rank in mapped object
 
-	item (index: INTEGER): ANY
+	item (index: INTEGER): detachable ANY
 			-- Data at `index'-th column.
 		require else
 			index_in_range: valid_index (index)
+		local
+			l_value: like value
 		do
-			Result := value.item (index)
+			l_value := value
+			check l_value /= Void end -- FIXME: implied by precursor's precondition `value_not_void', but `require else'...
+			Result := l_value.item (index)
 		ensure then
-			returned_value: Result = value.item (index)
+			returned_value: attached value as le_value and then Result = le_value.item (index)
 		end
 
 	valid_index (index: INTEGER): BOOLEAN
@@ -52,10 +56,14 @@ feature -- Status report
 			-- Name of the `index'-th column.
 		require else
 			index_in_range: index > 0 and index <= count
+		local
+			l_select_name: like select_name
 		do
-			Result := select_name.item (index)
+			l_select_name := select_name
+			check l_select_name /= Void end -- FIXME: implied by precursor's precondition `select_name_not_void', but `require else'...
+			Result := l_select_name.item (index)
 		ensure then
-			returned_name: Result = select_name.item (index)
+			returned_name: attached select_name as le_select_name and then Result = le_select_name.item (index)
 		end
 
 feature -- Element change
@@ -66,12 +74,15 @@ feature -- Element change
 		local
 			g: INTEGER
 			ind, index: INTEGER
+			l_map_table: like map_table
 		do
 			g := field_count (object)
-			if map_table = Void then
-				create map_table.make (1, count)
-			elseif map_table.count < count then
-				map_table.conservative_resize (1, count)
+			l_map_table := map_table
+			if l_map_table = Void then
+				create l_map_table.make (1, count)
+				map_table := l_map_table
+			elseif l_map_table.count < count then
+				l_map_table.conservative_resize (1, count)
 			end
 			from
 				ind := 1
@@ -90,9 +101,9 @@ feature -- Element change
 					index := index + 1
 				end
 				if index <= g then
-					map_table.put (index, ind)
+					l_map_table.put (index, ind)
 				else
-					db_spec.update_map_table_error (handle, map_table, ind)
+					db_spec.update_map_table_error (handle, l_map_table, ind)
 				end
 				ind := ind + 1
 			end
@@ -106,14 +117,30 @@ feature -- Element change
 			date: DATE
 			time: TIME
 			get_metadata: BOOLEAN
+			l_integer: like f_integer
+			l_double: like f_double
+			l_real: like f_real
+			l_date: like f_date
+			l_boolean: like f_boolean
+			l_string: like f_string
+			l_value_size: like value_size
+			l_value_max_size: like value_max_size
+			l_database_string: like database_string
+			l_value_type: like value_type
+			l_value: like value
+			l_select_name: like select_name
 		do
-			if database_string = Void then
-				create database_string.make (selection_string_size)
+			l_database_string := database_string
+			if l_database_string = Void then
+				create l_database_string.make (selection_string_size)
+				database_string := l_database_string
 			end
 			count := db_spec.get_count (no_descriptor)
 			get_metadata := False  -- do not get metadata
-			if value = Void then
-				create value.make (1, count)
+			l_value := value
+			if l_value = Void then
+				create l_value.make (1, count)
+				value := l_value
 				create value_size.make (1, count)
 				create value_max_size.make (1, count)
 				create value_type.make (1, count)
@@ -122,152 +149,194 @@ feature -- Element change
 
 					-- `metadata_to_update' is True at the beginning of every new selection.
 			elseif metadata_to_update then
-				value.conservative_resize (1, count)
-				value_size.conservative_resize (1, count)
-				value_max_size.conservative_resize (1, count)
-				value_type.conservative_resize (1, count)
-				select_name.conservative_resize (1, count)
+				l_value.conservative_resize (1, count)
+				l_value_size := value_size
+				check l_value_size /= Void end -- implied by `fill_in' postcondition `set_together'
+				l_value_size.conservative_resize (1, count)
+
+				l_value_max_size := value_max_size
+				check l_value_max_size /= Void end -- implied by `fill_in' postcondition `set_together'
+				l_value_max_size.conservative_resize (1, count)
+
+				l_value_type := value_type
+				check l_value_type /= Void end -- implied by `fill_in' postcondition `set_together'
+				l_value_type.conservative_resize (1, count)
+
+				l_select_name := select_name
+				check l_select_name /= Void end -- implied by `fill_in' postcondition `set_together'
+				l_select_name.conservative_resize (1, count)
 				get_metadata := True --PGC
 				metadata_to_update := False
 			end
+			l_value_size := value_size
+			check l_value_size /= Void end -- implied by `fill_in' postcondition `set_together'
+			l_value_max_size := value_max_size
+			check l_value_max_size /= Void end -- implied by `fill_in' postcondition `set_together'
+			l_value_type := value_type
+			check l_value_type /= Void end -- implied by `fill_in' postcondition `set_together'
+			l_select_name := select_name
+			check l_select_name /= Void end -- implied by `fill_in' postcondition `set_together'
+
 			from
 				ind := 1
 			until
 				ind > count
 			loop
 				if get_metadata then --PGC
-					value_size.put (db_spec.get_data_len (no_descriptor, ind), ind)
-					value_max_size.put (db_spec.get_col_len (no_descriptor, ind), ind)
-					value_type.put (db_spec.get_col_type (no_descriptor, ind), ind)
-					f_string := select_name.item (ind)
-					if f_string = Void then
-						create f_string.make (1)
-						select_name.put (f_string, ind)
+					l_value_size.put (db_spec.get_data_len (no_descriptor, ind), ind)
+					l_value_max_size.put (db_spec.get_col_len (no_descriptor, ind), ind)
+					l_value_type.put (db_spec.get_col_type (no_descriptor, ind), ind)
+
+					f_string := l_select_name.item (ind)
+					l_string := f_string
+					if l_string = Void then
+						create l_string.make (1)
+						f_string := l_string
+						l_select_name.put (l_string, ind)
 					else
-						f_string.wipe_out
+						l_string.wipe_out
 					end
-					database_string.get_select_name (no_descriptor, ind)
+					l_database_string.get_select_name (no_descriptor, ind)
 						-- Due to a Problem with SQL Server through ODBC
 						-- we need to remove all the %U of the string.
 
-					f_string.append (database_string)
+					l_string.append (l_database_string)
 				end --PGC
 
-				f_any := value.item (ind)
+				f_any := l_value.item (ind)
 
 				if not db_spec.is_null_data (no_descriptor, ind) then
 
 					-- STRING TYPE
-					if value_type.item (ind) = String_type_database then
-						database_string.get_value (no_descriptor, ind)
-						if value_size.item (ind) = value_max_size.item (ind) then
-							database_string.right_adjust
+					if l_value_type.item (ind) = String_type_database then
+						l_database_string.get_value (no_descriptor, ind)
+						if l_value_size.item (ind) = l_value_max_size.item (ind) then
+							l_database_string.right_adjust
 						end
-						f_string ?= f_any
-						if f_string = Void then
-							create f_string.make_empty
+						if attached {like f_string} f_any as l_string_2 then
+							l_string_2.wipe_out
+							f_string := l_string_2
 						else
-							f_string.wipe_out
+							create f_string.make_empty
 						end
-						f_string.append (database_string)
-						value.put (f_string, ind)
+						l_string := f_string
+						check l_string /= Void end -- implied by previous if clause
+						l_string.append (l_database_string)
+						l_value.put (l_string, ind)
 
 					-- INTEGER type
-					elseif value_type.item (ind) = Integer_type_database then
+					elseif l_value_type.item (ind) = Integer_type_database then
 						if f_any = Void then
 							create f_integer
-							value.put (f_integer, ind)
+							l_value.put (f_integer, ind)
 						else
-							f_integer ?= f_any
-							if f_integer = Void then
+							if attached {like f_integer} f_any as l_integer_2 then
+								f_integer := l_integer_2
+							else
 								create f_integer
-								value.put (f_integer, ind)
+								l_value.put (f_integer, ind)
 							end
 						end
-						f_integer.set_item (db_spec.get_integer_data (no_descriptor, ind))
+						l_integer := f_integer
+						check l_integer /= Void end -- implied by previous if clause
+						l_integer.set_item (db_spec.get_integer_data (no_descriptor, ind))
 
 					-- DOUBLE type
-					elseif value_type.item (ind) = Float_type_database then
+					elseif l_value_type.item (ind) = Float_type_database then
 						if f_any = Void then
 							create f_double
-							value.put (f_double, ind)
+							l_value.put (f_double, ind)
 						else
-							f_double ?= f_any
-							if f_double = Void then
+							if attached {like f_double} f_any as l_double_2 then
+								f_double := l_double_2
+							else
 								create f_double
-								value.put (f_double, ind)
+								l_value.put (f_double, ind)
 							end
 						end
-						f_double.set_item (db_spec.get_float_data (no_descriptor, ind))
+						l_double := f_double
+						check l_double /= Void end -- implied by previous if clause
+						l_double.set_item (db_spec.get_float_data (no_descriptor, ind))
 
 					-- DATE type
-					elseif value_type.item (ind) = Date_type_database then
+					elseif l_value_type.item (ind) = Date_type_database then
 						if f_any = Void then
 							create f_date.make_now
-							value.put (f_date, ind)
+							l_value.put (f_date, ind)
 						else
-							f_date ?= f_any
-							if f_date = Void then
+							if attached {like f_date} f_any as l_date_2 then
+								f_date := l_date_2
+							else
 								create f_date.make_now
-								value.put (f_date, ind)
+								l_value.put (f_date, ind)
 							end
 						end
 						if db_spec.get_date_data (no_descriptor, ind) = 1 then
 							create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
 							create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
-							f_date.set_time (time)
-							f_date.set_date (date)
+							l_date := f_date
+							check l_date /= Void end -- implied by previous if clause
+							l_date.set_time (time)
+							l_date.set_date (date)
 						else
-							value.put (Void, ind)
+							l_value.put (Void, ind)
 						end
 
           			-- REAL type
-		           	elseif value_type.item (ind) = Real_type_database then
+		           	elseif l_value_type.item (ind) = Real_type_database then
  		            	if f_any = Void then
 							create f_real
-							value.put (f_real, ind)
+							l_value.put (f_real, ind)
 						else
-							f_real ?= f_any
-    		                if f_real = Void then
-        	                    create f_real
-            	               	value.put (f_real, ind)
+                	   		if attached {like f_real} f_any as l_real_2 then
+                	   			f_real := l_real_2
+                	   		else
+         	                    create f_real
+            	               	l_value.put (f_real, ind)
                 	   		end
            				end
-						f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
+           				l_real := f_real
+           				check l_real /= Void end -- implied by previous if clause
+						l_real.set_item (db_spec.get_real_data (no_descriptor, ind))
 
 					-- BOOLEAN type
 					else--if value_type.item (ind) = Boolean_type_database then
 						if f_any = Void then
 							create f_boolean
-							value.put (f_boolean, ind)
+							l_value.put (f_boolean, ind)
 						else
-							f_boolean ?= f_any
-							if f_boolean = Void then
+							if attached {like f_boolean} f_any as l_boolean_2 then
+								f_boolean := l_boolean_2
+							else
 								create f_boolean
-								value.put (f_boolean, ind)
+								l_value.put (f_boolean, ind)
 							end
 						end
-						f_boolean.set_item (db_spec.get_boolean_data(no_descriptor, ind))
+						l_boolean := f_boolean
+						check l_boolean /= Void end -- implied by previsoue if clause
+						l_boolean.set_item (db_spec.get_boolean_data(no_descriptor, ind))
 					end
 				else
-					value.put (Void, ind)
+					l_value.put (Void, ind)
 				end
 				ind := ind + 1
 			end
+		ensure then
+			set_together: value /= Void implies value_size /= Void and value_max_size /= Void and value_type /= Void and select_name /= Void
 		end
 
 feature {NONE} -- Status report
 
-	f_any: ANY
-	f_integer: INTEGER_REF
-	f_real: REAL_REF
-	f_double: DOUBLE_REF
-	f_boolean: BOOLEAN_REF
-	f_date: DATE_TIME
-	f_string, tmp_string: STRING
+	f_any: detachable ANY
+	f_integer: detachable INTEGER_REF
+	f_real: detachable REAL_REF
+	f_double: detachable DOUBLE_REF
+	f_boolean: detachable BOOLEAN_REF
+	f_date: detachable DATE_TIME
+	f_string: detachable STRING
 			-- Temporary variables
 
-	database_string: DATABASE_STRING_EX [G]
+	database_string: detachable DATABASE_STRING_EX [G]
 		-- String returned from the database C interface
 
 	buffer: STRING
@@ -278,19 +347,19 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	value: ARRAY [ANY]
+	value: detachable ARRAY [detachable ANY]
 		-- Array of values corresponding to a tuple
 
-	value_size: ARRAY [INTEGER]
+	value_size: detachable ARRAY [INTEGER]
 		-- Array of result value size for each column
 
-	value_max_size: ARRAY [INTEGER]
+	value_max_size: detachable ARRAY [INTEGER]
 		-- Array of column capacity
 
-	value_type: ARRAY [INTEGER]
+	value_type: detachable ARRAY [INTEGER]
 		-- Array of column result type coded according to Eiffel conventions
 
-	select_name: ARRAY [STRING];
+	select_name: detachable ARRAY [STRING];
 		-- Array of selected column names listed in select clause
 
 note

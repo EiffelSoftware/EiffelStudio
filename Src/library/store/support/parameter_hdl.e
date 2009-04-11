@@ -23,6 +23,9 @@ feature
 
 	set_map_name (n: ANY; key: STRING)
 			-- Store item `n' whith key `key'.
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
 			check
 				key_allowed: parameter_name_exist (key)
@@ -30,48 +33,80 @@ feature
 				has_parameters: parameter_count > 0
 			end
 --			set_parameter (n, key)
-			ht.put (n, key)
-			ht_order.extend (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
+			l_ht.put (n, key)
+
+			l_ht_order := ht_order
+			check l_ht_order /= Void end -- FIXME: Impplied by ...? bug?
+			l_ht_order.extend (key)
 		end
 
 	unset_map_name (key: STRING)
 			-- Remove item associated with key `key'.
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
 			check
 				key_allowed: parameter_name_exist (key)
 				prepared_statement: is_prepared
 			end
 --			set_parameter (Void, key)
-			ht.remove (key)
-			ht_order.prune (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
+			l_ht.remove (key)
+
+			l_ht_order := ht_order
+			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
+			l_ht_order.prune (key)
 		end
 
 	clear_all
+		local
+			l_parameters_value: like parameters_value
 		do
 			Precursor
-			parameters_value.clear_all
+			l_parameters_value := parameters_value
+			check l_parameters_value /= Void end -- FIXME: implied by ...bug?
+			l_parameters_value.clear_all
 		end
 
 feature -- Status report
 
 	is_mapped (key: STRING): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity ?
+		local
+			l_ht: like ht
 		do
-			Result := ht.has (key) -- and then mapped_value (key) /= Void
+			l_ht := ht
+			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
+			Result := l_ht.has (key) -- and then mapped_value (key) /= Void
 		end
 
 	mapped_value (key: STRING): ANY
 			-- Value mapped with `key'
+		local
+			l_result: detachable ANY
+			l_ht: like ht
 		do
 --			Result := parameters_value.item (parameter_name_to_position.item (key))
-			Result := ht.item (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precursor's precondition `ht_not_void'
+			l_result := l_ht.item (key)
+			check l_result /= Void end -- implied by precursor's precondition `key_mapped'
+			Result := l_result
 		end
 
 	parameter_name_exist (key : STRING) : BOOLEAN
 		require
 			not_void: key /= Void
+		local
+			l_parameters: like parameters
 		do
-			Result := parameters.has (key)
+			l_parameters := parameters
+			check l_parameters /= Void end -- FIXME: implied by ...bug?	
+			Result := l_parameters.has (key)
 		end
 
 	is_prepared: BOOLEAN
@@ -96,16 +131,22 @@ feature -- setting
 			has_parameters: parameter_count > 0
 		local
 			i : INTEGER
+			l_parameters: like parameters
+			l_parameters_value: like parameters_value
 		do
 --			parameters_value.force (value, parameter_name_to_position.item (key))
 --			parameters_value.force (value, ke))
 			from
-				i := parameters.lower
+				l_parameters := parameters
+				check l_parameters /= Void end -- FIXME: implied by ...bug? `has_parameters' is not enough
+				l_parameters_value := parameters_value
+				check l_parameters_value /= Void end -- FIXME: implied by ...bug?
+				i := l_parameters.lower
 			until
-				i > parameters.upper
+				i > l_parameters.upper
 			loop
-				if parameters.item (i).is_equal (key) then
-					parameters_value.force (value, i)
+				if l_parameters.item (i).is_equal (key) then
+					l_parameters_value.force (value, i)
 				end
 				i := i + 1
 			end
@@ -130,32 +171,48 @@ feature -- setting
 
 	setup_parameters
 			-- setup parameters_value with actual parameters value
+		require
+			ht_not_void: ht /= Void
 		local
 			i : INTEGER
+			l_item: detachable ANY
+			l_ht: like ht
+			l_parameters: like parameters
+			l_parameters_value: like parameters_value
 		do
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
 			from
-				i := parameters.lower
+				l_parameters := parameters
+				check l_parameters /= Void end -- FIXME: implied by ...bug?
+				l_parameters_value := parameters_value
+				check l_parameters_value /= Void end -- FIXME: implied by ...bug?
+				i := l_parameters.lower
 			until
-				i > parameters.upper
+				i > l_parameters.upper
 			loop
-				parameters_value.force (ht.item(parameters.item(i)), i)
+				l_item := l_ht.item(l_parameters.item(i))
+				check l_item /= Void end -- implied by...? i <= l_parameters.upper is enough?
+				l_parameters_value.force (l_item, i)
 				i := i + 1
 			end
 		end
 
 feature {PARAMETER_HDL}
 
-
-	parameters_value: ARRAY [ANY]
+	parameters_value: detachable ARRAY [ANY]
 			-- Values of the parameters of the sql statement
 
-	parameters : ARRAY[STRING]
+	parameters : detachable ARRAY[STRING]
 
 	init
+		local
+			l_parameters: like parameters
 		do
 			create parameters_value.make(1,1)
-			create parameters.make (1,1)
-			parameters.compare_objects
+			create l_parameters.make (1,1)
+			parameters := l_parameters
+			l_parameters.compare_objects
 --			create parameter_name_to_position.make (1)
 		end
 
@@ -180,6 +237,7 @@ feature {PARAMETER_HDL}
 			-- and, fill chronologically, the parameters_value array.
 		local
 --			object: ANY
+			l_parameters: like parameters
 		do
 				destination.append ("?")
 --				check
@@ -187,7 +245,9 @@ feature {PARAMETER_HDL}
 --				end
 				last := last + 1
 --				parameter_name_to_position.put (last, key)
-				parameters.force (key, last)
+				l_parameters := parameters
+				check l_parameters /= Void end -- FIXME: implied by ...bug?
+				l_parameters.force (key, last)
 		end;
 
 	last : INTEGER;

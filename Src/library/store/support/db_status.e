@@ -119,6 +119,8 @@ feature {NONE} -- Initialization
 			-- Create `implementation' handle.
 		do
 			implementation := handle.database.db_status
+			error_message_stored := ""
+			warning_message_stored := ""
 		end
 
 invariant

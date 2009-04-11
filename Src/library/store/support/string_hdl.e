@@ -5,7 +5,7 @@ note
 	Product: EiffelStore
 	Database: All_Bases
 
-class STRING_HDL
+deferred class STRING_HDL
 
 feature -- Status setting
 
@@ -13,9 +13,17 @@ feature -- Status setting
 			-- Remove all mapped keys.
 		require
 			ht_not_void: ht /= Void
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
-			ht.clear_all
-			ht_order.wipe_out
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
+			l_ht.clear_all
+
+			l_ht_order := ht_order
+			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
+			l_ht_order.wipe_out
 		end
 
 	set_map_name (n: ANY; key: STRING)
@@ -25,12 +33,20 @@ feature -- Status setting
 			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			not_key_in_table: not is_mapped (key)
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
-			ht.put (n, key)
-			ht_order.extend (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
+			l_ht.put (n, key)
+
+			l_ht_order := ht_order
+			check l_ht_order /= Void end -- FIXME: Impplied by ...? bug?
+			l_ht_order.extend (key)
 		ensure
-			ht.count = old ht.count + 1
-			ht_order.count = old ht_order.count + 1
+			(attached ht as le_ht and attached old ht as le_old_ht) and then (le_ht.count = le_old_ht.count + 1)
+			(attached ht_order as le_ht_order and attached old ht_order as le_old_ht_order) and then le_ht_order.count = le_old_ht_order.count + 1
 			mapped: is_mapped (key)
 		end
 
@@ -40,12 +56,20 @@ feature -- Status setting
 			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			item_exists: is_mapped (key)
+		local
+			l_ht: like ht
+			l_ht_order: like ht_order
 		do
-			ht.remove (key)
-			ht_order.prune (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
+			l_ht.remove (key)
+
+			l_ht_order := ht_order
+			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
+			l_ht_order.prune (key)
 		ensure
-			ht.count = old ht.count - 1
-			ht_order.count = old ht_order.count - 1
+			(attached ht as le_ht and attached old ht as le_old_ht) and then (le_ht.count = le_old_ht.count - 1)
+			(attached ht_order as le_ht_order and attached old ht_order as le_ht_old_order) and then le_ht_order.count = le_ht_old_order.count - 1
 		end
 
 feature -- Status report
@@ -55,8 +79,12 @@ feature -- Status report
 		require
 			ht_not_void: ht /= Void
 			keys_exists: key /= Void
+		local
+			l_ht: like ht
 		do
-			Result := ht.has (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
+			Result := l_ht.has (key)
 		end
 
 	mapped_value (key: STRING): ANY
@@ -65,19 +93,26 @@ feature -- Status report
 			ht_not_void: ht /= Void
 			key_exists: key /= Void
 			key_mapped: is_mapped (key)
+		local
+			l_result: detachable ANY
+			l_ht: like ht
 		do
-			Result := ht.item (key)
+			l_ht := ht
+			check l_ht /= Void end -- implied by precondition `ht_not_void'
+			l_result := l_ht.item (key)
+			check l_result /= Void end -- implied by precondition `key_mapped'
+			Result := l_result
 		ensure
 			result_exists: Result /= Void
 		end
 
 feature -- Status report
 
-	ht: DB_STRING_HASH_TABLE [ANY]
+	ht: detachable DB_STRING_HASH_TABLE [ANY]
 		-- Correspondence table between object references
 		-- and mapped keys
 
-	ht_order: ARRAYED_LIST [STRING];
+	ht_order: detachable ARRAYED_LIST [STRING];
 		-- Keys of `ht' in order of mapping
 
 note
@@ -95,6 +130,5 @@ note
 
 
 end -- class STRING_HDL
-
 
 

@@ -5,7 +5,7 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	INGRES
 
 inherit
@@ -17,7 +17,7 @@ inherit
 			map_var_between_2,
 			proc_args
 		end
-		
+
 	STRING_HANDLER
 
 feature -- Access
@@ -50,12 +50,12 @@ feature -- For DATABASE_STATUS
 feature -- For DATABASE_CHANGE
 
 
-feature -- For DATABASE_CHANGE 
+feature -- For DATABASE_CHANGE
 
 	descriptor_is_available: BOOLEAN = True
 
 feature -- For DATABASE_FORMAT
-	
+
 	date_to_str (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 		do
@@ -63,7 +63,7 @@ feature -- For DATABASE_FORMAT
 			Result.precede ('%'')
 			Result.extend ('%'')
 		end
-	
+
 	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'
 		do
@@ -78,7 +78,7 @@ feature -- For DATABASE_FORMAT
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE, DATABASE_PROC
 
-	normal_parse: BOOLEAN 
+	normal_parse: BOOLEAN
 		do
 			if is_proc then
 				Result := False
@@ -400,7 +400,7 @@ feature -- External
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
-			-- is last retrieved data null? 
+			-- is last retrieved data null?
 		do
 		end
 

@@ -5,7 +5,7 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	LOGIN [G -> DATABASE create default_create end]
 
 inherit
@@ -72,7 +72,7 @@ feature -- Status setting
 			data_source_set: data_source.is_equal(udata_source)
 		end
 
-	set_role (uroleId, urolePassWd: STRING)
+	set_role (uroleId: STRING; urolePassWd: detachable STRING)
 			-- Set role identifier of data base.
 		require
 			argument_not_void: uroleId /= Void
@@ -116,8 +116,8 @@ feature -- Status report
 	roleId: STRING
 			-- Role identifier .
 
-	rolePassWd: STRING
-			-- Role password. 
+	rolePassWd: detachable STRING
+			-- Role password.
 
 	groupId: STRING;
 			-- Group Identifier.

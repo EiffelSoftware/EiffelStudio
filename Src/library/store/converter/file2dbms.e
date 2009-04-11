@@ -61,15 +61,21 @@ feature {NONE} -- Basic operations
 
 	store_object
 			-- Insert each retrieved object from external file into database.
+		local
+			l_conv_message: like conv_message
+			l_reference: detachable ANY
 		do
-			store.put(parse.ecp_reference);
+			l_reference := parse.ecp_reference
+			check l_reference /= Void end -- implied by precursor's precondition and `parse''s invariant `ecp_reference_not_void'
+			store.put(l_reference);
 			if not control.is_ok then
 				conv_error := true;
 				conv_message := control.error_message
-				if conv_message /= Void then
-					conv_message := conv_message.twin
+				l_conv_message := conv_message
+				if l_conv_message /= Void then
+					conv_message := l_conv_message.twin
 				end
-			end	
+			end
 		end
 
 note

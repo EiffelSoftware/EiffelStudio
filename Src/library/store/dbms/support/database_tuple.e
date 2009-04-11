@@ -31,7 +31,7 @@ feature -- Status report
 	data: DATABASE_DATA [G]
 			-- Associated data description
 
-	item (index: INTEGER): ANY
+	item (index: INTEGER): detachable ANY
 			-- Value of `index' column in current row
 			-- pointed to by active database cursor
 		require
@@ -46,7 +46,7 @@ feature -- Status report
 			Result := data.valid_index (index)
 		end
 
-	map_table: ARRAY [INTEGER]
+	map_table: detachable ARRAY [INTEGER]
 			-- Association table returning k-th field 	
 			-- position mapping i-th column value of current active tuple
 		do

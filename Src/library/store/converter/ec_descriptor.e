@@ -5,7 +5,7 @@ note
 	Revision: "$Revision$";
 	Product: "Environment Converter"
 
-class EC_DESCRIPTOR inherit 
+class EC_DESCRIPTOR inherit
 
 	EC_TYPES;
 
@@ -27,7 +27,7 @@ feature -- Status report
 
 	ecd_error: BOOLEAN
 
-	ecd_message: STRING
+	ecd_message: detachable STRING
 
 	field_separator: CHARACTER
 
@@ -42,9 +42,9 @@ feature -- Status report
 	ecd_max_index: INTEGER
 			-- Index of the last field
 
-	ecd_reference_name: STRING
+	ecd_reference_name: detachable STRING
 
-	ecd_reference: ANY
+	ecd_reference: detachable ANY
 
 feature -- Status setting
 
@@ -119,7 +119,7 @@ feature -- Status setting
 	check_conformity (ref: ANY)
 			-- Check if current desciptor conforms to `ref'.
 			-- The conformity is true if and only if for each
-			-- field of the current descriptor, there is a 
+			-- field of the current descriptor, there is a
 			-- corresponding field in the Eiffel object with
 			-- the same field_name and the same field_type.
 		require
@@ -128,6 +128,7 @@ feature -- Status setting
 			i, j, nb_fields: INTEGER;
 			tmps: STRING;
 			ra, da: ARRAY [BOOLEAN]  -- Referenced and Declared array
+			l_field_name: detachable STRING
 		do
 			ecd_error := False;
 			create tmps.make(0);
@@ -135,7 +136,9 @@ feature -- Status setting
 			if ecd_min_index /= 1 then
 				tmps.wipe_out;
 				tmps.append("Type conformity error, First field `");
-				tmps.append(ecd_fields.item(ecd_min_index).field_name);
+				l_field_name := ecd_fields.item(ecd_min_index).field_name
+				check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
+				tmps.append(l_field_name);
 				tmps.append("' cannot be indexed with ");
 				tmps.append(ecd_min_index.out);
 				tmps.append(".%N");
@@ -144,7 +147,10 @@ feature -- Status setting
 			if not ecd_error and then ecd_max_index /= nb_fields then
 				tmps.wipe_out;
 				tmps.append("Type conformity error, Last field `");
-				tmps.append(ecd_fields.item(ecd_max_index).field_name);
+				l_field_name := ecd_fields.item(ecd_max_index).field_name
+				check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
+				tmps.append(l_field_name);
+
 				tmps.append("' cannot be indexed with ");
 				tmps.append(ecd_max_index.out);
 				tmps.append(".%N");
@@ -152,7 +158,7 @@ feature -- Status setting
 			end;
 			create ra.make(1,nb_fields);
 			create da.make(1,nb_fields);
-			from 
+			from
 				i:=1
 			until
 				i > nb_fields or ecd_error
@@ -170,17 +176,19 @@ feature -- Status setting
 						set_ecd_error(tmps)
 					else
 						if field_conforms (i, ref, ecd_fields.item(j)) then
-							if ra.item (i) then 
+							if ra.item (i) then
 								tmps.wipe_out;
 								tmps.append("Type conformity error, Field ");
 								tmps.append(j.out);
 								tmps.append(":`");
-								tmps.append(ecd_fields.item(j).field_name);
+								l_field_name := ecd_fields.item(j).field_name
+								check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
+								tmps.append(l_field_name);
 								tmps.append("' cannot be declared twice.%N");
 								set_ecd_error(tmps)
-							elseif da.item(j) then 
+							elseif da.item(j) then
 								tmps.wipe_out;
-								tmps.append("Type conformity fatal error: Referenced object has two identical fields%N"); 
+								tmps.append("Type conformity fatal error: Referenced object has two identical fields%N");
 								set_ecd_error(tmps)
 							else
 								ra.force(True,i);
@@ -193,17 +201,19 @@ feature -- Status setting
 				end;
 				i := i + 1
 			end;
-			if not ecd_error then 
-				from 
+			if not ecd_error then
+				from
 					i := 1
-				until 
+				until
 					i > nb_fields
 				loop
-					if not da.item(i) then 
+					if not da.item(i) then
 						tmps.append("Type conformity error, Field ");
 						tmps.append(i.out);
 						tmps.append(":`");
-						tmps.append(ecd_fields.item(i).field_name);
+						l_field_name := ecd_fields.item(i).field_name
+						check l_field_name /= Void end -- FIXME: implied by... {EC_FIELD}.field_name can be void here... bug?
+						tmps.append(l_field_name);
 						tmps.append("' does not match any reference field.%N");
 						set_ecd_error(tmps)
 					end;
@@ -224,27 +234,29 @@ feature -- Status setting
 		local
 			i, nb_fields: INTEGER;
 			tmps:STRING
+			l_f_name: like f_name
 		do
 			ecd_error := False;
 			create tmps.make(5);
 			nb_fields := field_count (ref);
 			ecd_clear;
-			from 
+			from
 				i:=1
 			until
 				i > nb_fields or ecd_error
 			loop
 				f_type := field_type (i, ref);
-				f_name := field_name (i, ref);
+				l_f_name := field_name (i, ref);
+				f_name := l_f_name
 				inspect f_type
-				when BOOLEAN_TYPE then 
-					set_field (f_name, Boolean_ttype)
-				when REAL_TYPE then 
-					set_field (f_name, Real_ttype)
-				when INTEGER_TYPE then 
-					set_field (f_name, Integer_ttype)
+				when BOOLEAN_TYPE then
+					set_field (l_f_name, Boolean_ttype)
+				when REAL_TYPE then
+					set_field (l_f_name, Real_ttype)
+				when INTEGER_TYPE then
+					set_field (l_f_name, Integer_ttype)
 				else
-					set_field (f_name, String_ttype);
+					set_field (l_f_name, String_ttype);
 				end;
 				ecd_fields.item(i).set_rank(i);
 				i := i + 1
@@ -261,7 +273,7 @@ feature {NONE} -- Status report
 
 	f_type: INTEGER;
 
-	f_name: STRING;
+	f_name: detachable STRING;
 
 feature {NONE} -- Status setting
 
@@ -277,16 +289,18 @@ feature {NONE} -- Status setting
 	field_conforms (i: INTEGER; o: ANY; f: EC_FIELD): BOOLEAN
 			-- Checks for fields confomity.
 			-- (names and types)
-		require 
+		require
 			reference_object_exists: o /= Void
+			f_exists: f /= Void
 		local
 			tmps:STRING;
 			tmpb:BOOLEAN
+			l_field_name: detachable STRING
 		do
 			create tmps.make(5);
 			f_type := field_type (i, o);
 			f_name := field_name (i, o);
-			if f.field_name.is_equal(f_name) then
+			if f.field_name ~ f_name then
 				inspect f.field_type
 				when Boolean_ttype then
 					tmpb := (f_type = BOOLEAN_TYPE)
@@ -300,14 +314,19 @@ feature {NONE} -- Status setting
 					tmpb := False;
 					tmps.append
 						("Type conformity error, Unknown declared type for field `");
-					tmps.append(f.field_name);
+					l_field_name := f.field_name
+					check l_field_name /= Void end -- FIXME: implied by... Bug here?
+					tmps.append(l_field_name);
 					tmps.append("'.%N");
 					set_ecd_error(tmps)
 				end;
-				if not tmpb and not ecd_error then 
+				if not tmpb and not ecd_error then
 					tmps.append
 						("Type conformity error, Invalid declared type for field `");
-					tmps.append(f.field_name);
+
+					l_field_name := f.field_name
+					check l_field_name /= Void end -- FIXME: implied by... Bug here?
+					tmps.append(l_field_name);
 					tmps.append("'.%N");
 					set_ecd_error(tmps)
 				end;

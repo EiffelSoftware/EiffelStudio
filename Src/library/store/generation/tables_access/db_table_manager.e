@@ -26,6 +26,8 @@ feature -- Initialization
 			create repository_table.make (1, tables.Table_number)
 			create update_parameters_table.make (1, tables.Table_number)
 			create updater_table.make (1, tables.Table_number)
+
+			remove_order_by
 		end
 
 feature -- Connection
@@ -66,7 +68,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Has an error occurred during last database operation?
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message if an error occurred during last
 			-- database operation.
 
@@ -97,36 +99,53 @@ feature -- Access
 			-- Select query to execute. Execute with `load_result_list'.
 		require
 			select_query_prepared: select_query_prepared
+		local
+			l_select_qualifiers: like select_qualifiers
+			l_select_columns: like select_columns
+			l_table_descr: like select_table_descr
 		do
-			Result := "select " + select_columns + " from " + select_table_descr.Table_name
-			if select_qualifiers /= Void then
-				Result.append (" where " + select_qualifiers)
+			l_select_columns := select_columns
+			check l_select_columns /= Void end -- implied by precondition `select_query_prepared'
+			l_table_descr := select_table_descr
+			check l_table_descr /= Void end -- implied by precondition `select_query_prepared'
+			Result := "select " + l_select_columns + " from " + l_table_descr.Table_name
+			l_select_qualifiers := select_qualifiers
+			if l_select_qualifiers /= Void then
+				Result.append (" where " + l_select_qualifiers)
 			end
 			Result.append (order_by)
 		end
 
-	select_qualifiers: STRING
+	select_qualifiers: detachable STRING
 			-- Qualifying clause of current SQL query.
 
 	database_result_list: ARRAYED_LIST [DB_TABLE]
 			-- Database result list.
+		local
+			l_result_list: like result_list
 		do
-			Result := result_list
+			l_result_list := result_list
+			check l_result_list /= Void end -- implied by precursor's precondition not `has_error'
+			Result := l_result_list
 		end
 
-	database_result: DB_TABLE
+	database_result: detachable DB_TABLE
 			-- Database unique result. Selection should
 			-- have been qualified with ID.
 		require
 			no_error: not has_error
 			is_id_selection: is_id_selection
+		local
+			l_result_list: like result_list
 		do
-			if not result_list.is_empty then
-				Result := result_list.first
+			l_result_list := result_list
+			check l_result_list /= Void end -- implied by precondition not `has_error'
+			if not l_result_list.is_empty then
+				Result := l_result_list.first
 			end
 		end
 
-	select_table_descr: DB_TABLE_DESCRIPTION
+	select_table_descr: detachable DB_TABLE_DESCRIPTION
 			-- Table description of select query to execute. Execute with `load_result_list'.
 
 feature -- Basic operations
@@ -134,8 +153,12 @@ feature -- Basic operations
 	load_result
 			-- Load result. Set `has_error'. Result is available in
 			-- `database_result' if result is unique, `database_result_list' otherwise.
+		local
+			l_table_descr: like select_table_descr
 		do
-			result_list := load_list_with_query_and_tablecode (select_query, select_table_descr.Table_code)
+			l_table_descr := select_table_descr
+			check l_table_descr /= Void end -- implied by precursor's precondition `select_query_prepared'
+			result_list := load_list_with_query_and_tablecode (select_query, l_table_descr.Table_code)
 		end
 
 	prepare_select_with_table (tablecode: INTEGER)
@@ -172,15 +195,21 @@ feature -- Basic operations
 			-- Don't change other select query parameters.
 		require
 			select_query_prepared: select_query_prepared
+		local
+			l_table_descr: like select_table_descr
+			l_select_columns: like select_columns
 		do
 			from
 				cols.start
-				select_columns := select_table_descr.description_list.i_th (cols.item)
+				l_table_descr := select_table_descr
+				check l_table_descr /= Void end -- implied by precondition `select_query_prepared'
+				l_select_columns := l_table_descr.description_list.i_th (cols.item)
+				select_columns := l_select_columns
 				cols.forth
 			until
 				cols.after
 			loop
-				select_columns.append (Values_separator + select_table_descr.description_list.i_th (cols.item))
+				l_select_columns.append (Values_separator + l_table_descr.description_list.i_th (cols.item))
 				cols.forth
 			end
 		end
@@ -190,9 +219,12 @@ feature -- Basic operations
 		local
 			q: STRING
 			sql_value: STRING
+			l_table_descr: like select_table_descr
 		do
 			sql_value := string_format (value)
-			q := select_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
+			l_table_descr := select_table_descr
+			check l_table_descr /= Void end -- implied by precursor's precondition `select_query_prepared'
+			q := l_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
 			add_qualifier (q)
 		end
 
@@ -206,15 +238,18 @@ feature -- Basic operations
 			q: STRING
 			attr, val: STRING
 			coltype: INTEGER
+			l_select_table_descr: like select_table_descr
 		do
-			attr := select_table_descr.description_list.i_th (column)
+			l_select_table_descr := select_table_descr
+			check l_select_table_descr /= Void end -- implied by precuirsor's  precondition `select_query_prepared'
+			attr := l_select_table_descr.description_list.i_th (column)
 			val := value.twin
-			coltype := select_table_descr.type_list.i_th (column)
+			coltype := l_select_table_descr.type_list.i_th (column)
 			if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
 				q := attr.twin
 			else
-				if coltype = select_table_descr.string_type or else
-						coltype = select_table_descr.character_type then
+				if coltype = l_select_table_descr.string_type or else
+						coltype = l_select_table_descr.character_type then
 					q := to_lower (attr)
 					val.to_lower
 				else
@@ -248,8 +283,8 @@ feature -- Basic operations
 			end
 					-- Gives a valid SQL string representation to `val'.
 			if like_type (type) or else
-					coltype = select_table_descr.string_type or else
-					coltype = select_table_descr.character_type then
+					coltype = l_select_table_descr.string_type or else
+					coltype = l_select_table_descr.character_type then
 				val := string_format (val)
 			end
 			q.append (val)
@@ -259,10 +294,14 @@ feature -- Basic operations
 	set_id_qualifier (id_value: STRING)
 			-- Prepared select query will select table row with id `id_value'.
 		require
-			has_id: select_table_descr.id_code /= select_table_descr.No_id
+			has_id: attached select_table_descr as lr_table_descr and then lr_table_descr.id_code /= lr_table_descr.No_id
+		local
+			l_table_descr: like select_table_descr
 		do
 			remove_qualifiers
-			add_value_qualifier (select_table_descr.Id_code, id_value)
+			l_table_descr := select_table_descr
+			check l_table_descr /= Void end -- implied by precondition `has_id'
+			add_value_qualifier (l_table_descr.Id_code, id_value)
 			is_id_selection := True
 		ensure
 			is_id_selection: is_id_selection
@@ -273,11 +312,14 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 			value_not_void: value /= Void
+		local
+			l_select_qualifiers: like select_qualifiers
 		do
-			if select_qualifiers = Void then
-				select_qualifiers := value.twin
+			l_select_qualifiers := select_qualifiers
+			if l_select_qualifiers = Void then
+				l_select_qualifiers := value.twin
 			else
-				select_qualifiers.append (Space + And_operator + Space + value)
+				l_select_qualifiers.append (Space + And_operator + Space + value)
 			end
 		end
 
@@ -296,8 +338,12 @@ feature -- Basic operations
 			-- Order result by attribute of code `column'.
 		require
 			select_query_prepared: select_query_prepared
+		local
+			l_table_descr: like select_table_descr
 		do
-			order_by := Space + Order_by_clause + Space + select_table_descr.description_list.i_th (column)
+			l_table_descr := select_table_descr
+			check l_table_descr /= Void end -- implied by `select_query_prepared'
+			order_by := Space + Order_by_clause + Space + l_table_descr.description_list.i_th (column)
 		end
 
 	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER])
@@ -307,8 +353,11 @@ feature -- Basic operations
 			column_list_not_void: column_list /= Void
 		local
 			descr_list: ARRAYED_LIST [STRING]
+			l_select_table_descr: like select_table_descr
 		do
-			descr_list := select_table_descr.description_list
+			l_select_table_descr := select_table_descr
+			check l_select_table_descr /= Void end -- implied by precondition `select_query_prepared'
+			descr_list := l_select_table_descr.description_list
 			if not column_list.is_empty then
 				order_by := Space + Order_by_clause + Space + descr_list.i_th (column_list.first)
 				from
@@ -335,33 +384,41 @@ feature -- Basic operations
 
 feature -- Queries
 
-	load_data_with_select (s: STRING): ANY
+	load_data_with_select (s: STRING): detachable ANY
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
+		local
+			l_error_message: detachable STRING
 		do
 			has_error := False
 			Result := database_manager.load_data_with_select (s)
 			if database_manager.has_error then
 				has_error := True
-				error_message := selection_failed (s) + database_manager.error_message
+				l_error_message := database_manager.error_message
+				check l_error_message /= Void end -- implied by `has_error'
+				error_message := selection_failed (s) + l_error_message
 			end
 		end
 
-	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): ARRAYED_LIST [DB_TABLE]
+	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): detachable ARRAYED_LIST [DB_TABLE]
 			-- Load list of table rows from `query'. Table rows type is
 			-- table of code `tablecode'.
 		require
+			query_not_void: query /= Void
 			is_valid_code: is_valid_code (tablecode)
 		local
 			obj: DB_TABLE
+			l_error_message: detachable STRING
 		do
 			obj := tables.obj (tablecode)
 			has_error := False
 			Result ?= database_manager.load_list_with_select (query, obj)
 			if database_manager.has_error then
 				has_error := True
-				error_message := selection_failed (query) + database_manager.error_message
+				l_error_message := database_manager.error_message
+				check l_error_message /= Void end -- implied by `has_error'
+				error_message := selection_failed (query) + l_error_message
 			end
 		end
 
@@ -371,11 +428,15 @@ feature -- General command
 			-- Execute SQL `query' and commit changes.
 		require
 			not_void: query /= Void
+		local
+			l_error_message: detachable STRING
 		do
 			database_manager.execute_query (query)
 			if database_manager.has_error then
 				has_error := True
-				error_message := Command_failed + database_manager.error_message
+				l_error_message := database_manager.error_message
+				check l_error_message /= Void end -- implied by `has_error'
+				error_message := Command_failed + l_error_message
 			end
 		end
 
@@ -387,6 +448,7 @@ feature -- Update
 			table_descr: DB_TABLE_DESCRIPTION
 			rescued: BOOLEAN
 			updater: DB_CHANGE
+			l_error_message: detachable STRING
 		do
 			if not rescued then
 				has_error := False
@@ -404,7 +466,9 @@ feature -- Update
 				commit
 				if database_manager.has_error then
 					has_error := True
-					error_message := Update_failed + database_manager.error_message
+					l_error_message := database_manager.error_message
+					check l_error_message /= Void end -- implied by `has_error'
+					error_message := Update_failed + l_error_message
 				end
 			else
 				has_error := True
@@ -417,16 +481,13 @@ feature -- Update
 
 feature -- Creation
 
-	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): ANY
+	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): detachable ANY
 			-- Next available ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
 			has_id: table_descr.id_code /= table_descr.No_id
 		local
-			res: ANY
-			double_ref: DOUBLE_REF
-			integer_ref: INTEGER_REF
-			real_ref: REAL_REF
+			res: detachable ANY
 			type_code: INTEGER
 		do
 			type_code := table_descr.type_list.i_th (table_descr.id_code)
@@ -434,14 +495,11 @@ feature -- Creation
 			if type_code = table_descr.Date_time_type then
 				Result := create {DATE_TIME}.make_now
 			else
-				double_ref ?= res
-				integer_ref ?= res
-				real_ref ?= res
-				if double_ref /= Void then
+				if attached {DOUBLE_REF} res as double_ref then
 					Result := double_ref.item + 1
-				elseif integer_ref /= Void then
+				elseif attached {INTEGER_REF} res as integer_ref then
 					Result := integer_ref.item + 1
-				elseif real_ref /= Void then
+				elseif attached {REAL_REF} res as real_ref then
 					Result := real_ref.item + 1
 				elseif type_code = table_descr.Double_type or type_code = table_descr.real_type then
 					Result := 1.0
@@ -452,6 +510,8 @@ feature -- Creation
 					error_message := id_creation_failed (table_descr.Table_name)
 				end
 			end
+		ensure
+			result_not_void: not has_error implies Result /= Void
 		end
 
 	set_id_and_create_tablerow, create_item_with_id (an_obj: DB_TABLE)
@@ -459,9 +519,12 @@ feature -- Creation
 			-- a valid ID.
 		local
 			table_descr: DB_TABLE_DESCRIPTION
+			l_id: detachable ANY
 		do
 			table_descr := an_obj.table_description
-			table_descr.set_id (new_id_for_tablerow (table_descr))
+			l_id := new_id_for_tablerow (table_descr)
+			check l_id /= Void end -- FIXME: implied by `new_id_for_tablerow''s postcondition if `not has_error', otherwise... bug...?
+			table_descr.set_id (l_id)
 			create_item_with_tablecode (an_obj, table_descr.table_code)
 		end
 
@@ -598,6 +661,8 @@ feature {NONE} -- Update implementation
 
 	parameter (s: STRING): STRING
 			-- Prepend "N_" to `s'.
+		require
+			s_not_void: s /= Void
 		do
 			Result := "N_" + s
 		end
@@ -608,22 +673,29 @@ feature {NONE} -- Creation implementation
 			--Store in the DB object `an_obj'.
 		local
 			rep: DB_REPOSITORY
+			l_error_message: detachable STRING
+			l_error_message_2: detachable STRING
 		do
 			has_error := False
 			rep := repository (tablecode)
 			if database_manager.has_error or else not rep.exists then
 				has_error := True
-				error_message := Creation_failed + repository_failed (tables.name_list.i_th (tablecode))
+				l_error_message_2 := Creation_failed + repository_failed (tables.name_list.i_th (tablecode))
+				error_message := l_error_message_2
 				if database_manager.has_error then
-					error_message.append (database_manager.error_message)
+					l_error_message := database_manager.error_message
+					check l_error_message /= Void end  -- implied by `has_error'
+					l_error_message_2.append (l_error_message)
 				else
-					error_message.append (No_repository)
+					l_error_message_2.append (No_repository)
 				end
 			else
 				database_manager.insert_with_repository (an_obj, rep)
 				if database_manager.has_error then
 					has_error := True
-					error_message := Creation_failed + database_manager.error_message
+					l_error_message := database_manager.error_message
+					check l_error_message /= Void end  -- implied by `has_error'
+					error_message := Creation_failed + l_error_message
 				end
 			end
 		end
@@ -669,13 +741,16 @@ feature {NONE} -- Deletion implementation
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
 			q: STRING
+			l_error_message: detachable STRING
 		do
 			q := "delete from " + description.Table_name + " where " + description.id_name
 				+ " = " + description.printable_id
 			database_manager.execute_query (q)
 			if database_manager.has_error then
 				has_error := True
-				error_message := Deletion_failed + database_manager.error_message
+				l_error_message := database_manager.error_message
+				check l_error_message /= Void end -- implied by `has_error'
+				error_message := Deletion_failed + l_error_message
 			end
 		end
 
@@ -707,20 +782,32 @@ feature {NONE} -- Implementation
 
 	session_control: DB_CONTROL
 			-- Session control.
+		require
+			created: database_manager.session_control_created
+		local
+			l_session_control: detachable DB_CONTROL
 		once
-			Result := database_manager.session_control
+			l_session_control := database_manager.session_control
+			check l_session_control /= Void end -- implied by precondition `created'
+			Result := l_session_control
+		ensure
+			not_void: Result /= Void
 		end
 
 	database_handle_name: STRING
 			-- Database handle name.
+		local
+			l_handle_name: like db_handle_name
 		do
-			if db_handle_name = Void then
-				db_handle_name := database_manager.database_handle_name
+			l_handle_name := db_handle_name
+			if l_handle_name = Void then
+				l_handle_name := database_manager.database_handle_name
+				db_handle_name := l_handle_name
 			end
-			Result := db_handle_name
+			Result := l_handle_name
 		end
 
-	db_handle_name: STRING
+	db_handle_name: detachable STRING
 			-- Database handle name.
 
 	Oracle_handle_name: STRING = "ORACLE"
@@ -731,6 +818,8 @@ feature {NONE} -- Implementation
 
 	string_format (s: STRING): STRING
 			-- String representation in SQL of `s'.
+		require
+			s_not_void: s /= Void
 		do
 			Result := database_manager.string_format (s)
 		end
@@ -741,13 +830,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	select_columns: STRING
+	select_columns: detachable STRING
 			-- Columns to select from a selection statement.
 
 	order_by: STRING
 			-- SQL 'order by' clause.
 
-	result_list: ARRAYED_LIST [DB_TABLE]
+	result_list: detachable ARRAYED_LIST [DB_TABLE]
 			-- Last executed query result list.
 
 	repository_table: ARRAY [DB_REPOSITORY]
@@ -773,6 +862,8 @@ feature {NONE} -- SQL query construction
 
 	to_lower (a_attribute: STRING): STRING
 			-- Oracle SQL representation of the value in lower case for `a_attribute'.
+		require
+			a_attribute_not_void: a_attribute /= Void
 		do
 			Result := "lower (" + a_attribute + ")"
 		end
@@ -796,6 +887,8 @@ feature {NONE} -- Error messages
 
 	selection_failed (query: STRING): STRING
 			-- Database selection failed.
+		require
+			query_not_void: query /= Void
 		do
 			Result := "Database selection failed:%NSQL query was: "
 					+ query + "%NDatabase message is: "

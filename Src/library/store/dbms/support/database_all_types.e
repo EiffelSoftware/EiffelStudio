@@ -34,10 +34,14 @@ feature -- Initialization
 
 feature -- Access
 
-	db_type (object: ANY): DB_TYPE
+	db_type (object: ANY): detachable DB_TYPE
 			-- DB_TYPE instance associated to `object'
+		require
+			object_not_void: object /= Void
 		do
-			Result := item (dynamic_type (object))
+			if attached {like db_type} item (dynamic_type (object)) as l_result then
+				Result := l_result
+			end
 		ensure
 			result_value: Result = item (dynamic_type (object))
 		end

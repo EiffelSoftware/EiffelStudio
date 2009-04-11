@@ -14,7 +14,7 @@ class
 
 inherit
 	DB_CLASS_GENERATOR
-	
+
 feature -- Status report
 
 	description_set: BOOLEAN
@@ -22,7 +22,7 @@ feature -- Status report
 		do
 			Result := table_name_list /= Void
 		end
-	
+
 feature -- Basic operations
 
 	set_table_names (table_names: ARRAYED_LIST [DB_REPOSITORY])
@@ -44,8 +44,12 @@ feature {NONE} -- Implementation
 		local
 			mapped_item: STRING
 			table_name: STRING
+			l_table_name_list: like table_name_list
+			l_result_block: like result_block
 		do
-			table_name := table_name_list.i_th (column_number).repository_name.as_lower
+			l_table_name_list := table_name_list
+			check l_table_name_list /= Void end -- FIXME: implied by nothing... bug?
+			table_name := l_table_name_list.i_th (column_number).repository_name.as_lower
 			mapped_item := template_block.twin
 			mapped_item.replace_substring_all (tags.Lower_class_name, table_name)
 			to_initcap (table_name)
@@ -53,18 +57,24 @@ feature {NONE} -- Implementation
 			table_name.to_upper
 			mapped_item.replace_substring_all (tags.Upper_class_name, table_name)
 			mapped_item.replace_substring_all (tags.Iterator, column_number.out)
-			result_block.append (mapped_item)
+			l_result_block := result_block
+			check l_result_block /= Void end -- FIXME: implied by ... bug?
+			l_result_block.append (mapped_item)
 		end
-		
+
 	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
+		local
+			l_table_name_list: like table_name_list
 		do
-			Result := table_name_list.count
+			l_table_name_list := table_name_list
+			check l_table_name_list /= Void end -- FIXME: bug?
+			Result := l_table_name_list.count
 		end
-		
-	table_name_list: ARRAYED_LIST [DB_REPOSITORY];
+
+	table_name_list: detachable ARRAYED_LIST [DB_REPOSITORY];
 			-- Database table name list.
-			
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

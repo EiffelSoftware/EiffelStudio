@@ -25,14 +25,18 @@ feature -- Initialization
 		end
 
 feature -- Access
-		
+
 	db_type (object: ANY): DB_TYPE
 			-- DB_TYPE instance of `object'
 		require
 			object_not_void: object /= Void
 			object_is_register: is_registered (object)
+		local
+			l_result: detachable DB_TYPE
 		do
-			Result := implementation.db_type (object)
+			l_result := implementation.db_type (object)
+			check l_result /= Void end -- implied by precondition `object_is_register'
+			Result := l_result
 		ensure
 			Result = implementation.db_type (object)
 		end

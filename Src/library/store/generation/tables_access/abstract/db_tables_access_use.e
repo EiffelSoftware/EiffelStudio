@@ -29,8 +29,12 @@ feature {NONE} -- Access
 			-- Abstract description of database tables.
 		require
 			tables_set: tables_set
+		local
+			l_item: detachable DB_TABLES_ACCESS
 		do
-			Result := tables_cell.item
+			l_item := tables_cell.item
+			check l_item /= Void end -- implied by precondition `tables_set'
+			Result := l_item
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -49,7 +53,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	tables_cell: CELL [DB_TABLES_ACCESS]
+	tables_cell: CELL [detachable DB_TABLES_ACCESS]
 			-- `tables' cell.
 		once
 			create Result.put (Void)

@@ -9,7 +9,7 @@ note
 	Product: EiffelStore
 	Database: All_Bases
 
-class
+deferred class
 	DB_TABLE_CLASS_GENERATOR
 
 inherit
@@ -17,7 +17,7 @@ inherit
 		redefine
 			generate_file
 		end
-	
+
 feature -- Access
 
 	generated_file_name: STRING
@@ -28,7 +28,7 @@ feature -- Access
 		do
 			Result := gfn
 		end
-		
+
 feature -- Status report
 
 	description_set: BOOLEAN
@@ -36,7 +36,7 @@ feature -- Status report
 		do
 			Result := table_description /= Void
 		end
-	
+
 feature -- Basic operations
 
 	set_table_description (a_table_description: DB_REPOSITORY)
@@ -55,19 +55,22 @@ feature -- Basic operations
 			-- template file content.
 		local
 			class_name: STRING
+			l_gfc: like gfc
 		do
 			Precursor
 			class_name := table_description.repository_name.as_upper
 			class_name.replace_substring_all (" ", "_")
-			gfc.replace_substring_all (tags.upper_class_name, class_name)
+			l_gfc := gfc
+			check l_gfc /= Void end -- implied by precursor's postcondition
+			l_gfc.replace_substring_all (tags.upper_class_name, class_name)
 			class_name.to_lower
 			gfn := class_name + Class_file_extension
 			if gfn.has ('$') then
 				gfn.replace_substring_all ("$", "")
 			end
-			gfc.replace_substring_all (tags.lower_class_name, class_name)
+			l_gfc.replace_substring_all (tags.lower_class_name, class_name)
 			to_initcap (class_name)
-			gfc.replace_substring_all (tags.initcap_class_name, class_name)
+			l_gfc.replace_substring_all (tags.initcap_class_name, class_name)
 --			gfc.replace_substring_all (tags.Attribute_count, table_description.column_number.out)
 		end
 
@@ -81,22 +84,26 @@ feature {NONE} -- Implementation
 			attribute_name, tn: STRING
 			mapped_item: STRING
 			column: COLUMNS [DATABASE]
+			l_result_block: like result_block
+			l_column_name: detachable STRING
 		do
 			column := table_description.column_i_th (column_number)
 			manage_type (column)
-			if type_correspond then		
+			if type_correspond then
 				mapped_item := attribute_block.twin
-				attribute_name := column.column_name.as_lower
+				l_column_name := column.column_name
+				check l_column_name /= Void end -- FIXME: implied by ...bug?
+				attribute_name := l_column_name.as_lower
 				mapped_item.replace_substring_all (tags.Lower_attribute_name, attribute_name)
 				to_initcap (attribute_name)
 				mapped_item.replace_substring_all (tags.Initcap_attribute_name, attribute_name)
 				attribute_name.to_upper
 				mapped_item.replace_substring_all (tags.Upper_attribute_name, attribute_name)
 				mapped_item.replace_substring_all (tags.Iterator, column_number.out)
-				
+
 					-- The value `column_id' is not properly set for Oracle.
 		--		mapped_item.replace_substring_all (tags.Iterator, column.column_id.out)
-		
+
 				tn := type_name.twin
 				mapped_item.replace_substring_all (tags.Upper_type_name, tn)
 				tn.to_lower
@@ -104,16 +111,18 @@ feature {NONE} -- Implementation
 				to_initcap (tn)
 				mapped_item.replace_substring_all (tags.Initcap_type_name, tn)
 				mapped_item.replace_substring_all (tags.Type_default_value, type_default_value)
-				result_block.append (mapped_item)
+				l_result_block := result_block
+				check l_result_block /= Void end -- FIXME: bug?
+				l_result_block.append (mapped_item)
 			end
 		end
-		
+
 	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
 		do
 			Result := table_description.column_number
 		end
-		
+
 	Class_file_extension: STRING = ".e"
 			-- Extension for an Eiffel class file.
 
@@ -122,7 +131,7 @@ feature {NONE} -- Implementation
 
 	type_name: STRING
 			-- Name (in uppercase) of last managed attribute column type.
-			
+
 	type_default_value: STRING
 			-- Default value for last managed attribute column type.
 
@@ -163,7 +172,7 @@ feature {NONE} -- Implementation
 				type_default_value := Boolean_type_default_value
 			end
 		end
-		
+
 	gfn: STRING
 			-- `generated_file_name' implementation.
 
@@ -172,37 +181,37 @@ feature {NONE} -- Implementation
 
 	Integer_type_name: STRING = "INTEGER"
 			-- Integer type name.
-			
+
 	Double_type_name: STRING = "DOUBLE"
 			-- Double type name.
-			
+
 	Boolean_type_name: STRING = "BOOLEAN"
 			-- Boolean type name.
-			
+
 	Character_type_name: STRING = "CHARACTER"
 			-- Character type name.
-			
+
 	String_type_name: STRING = "STRING"
 			-- String type name.
-			
+
 	Date_type_name: STRING = "DATE_TIME"
 			-- Date type name.
-			
+
 	Integer_type_default_value: STRING = "0"
 			-- Integer type default_value.
-			
+
 	Double_type_default_value: STRING = "0.0"
 			-- Double type default_value.
-			
+
 	Boolean_type_default_value: STRING = "False"
 			-- Boolean type default_value.
-			
+
 	Character_type_default_value: STRING = "'%U'"
 			-- Character type default_value.
-			
+
 	String_type_default_value: STRING = "%"%""
 			-- String type default_value.
-						
+
 	Date_type_default_value: STRING = "create {DATE_TIME}.make_now";
 			-- Date type default_value.
 

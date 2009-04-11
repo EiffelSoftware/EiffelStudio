@@ -18,8 +18,12 @@ feature -- Access
 			-- Content of file mapped to database table associated to table description.
 		require
 			is_ok: is_ok
+		local
+			l_gfc: like gfc
 		do
-			Result := gfc
+			l_gfc := gfc
+			check l_gfc /= Void end -- implied by precondition `is_ok', maybe should add a invariant?
+			Result := l_gfc
 		end
 
 feature -- Status report
@@ -27,7 +31,7 @@ feature -- Status report
 	is_ok: BOOLEAN
 			-- Is file properly generated?
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message.
 
 	template_content_set: BOOLEAN
@@ -35,12 +39,12 @@ feature -- Status report
 		do
 			Result := template_content /= Void
 		end
-	
+
 	description_set: BOOLEAN
 			-- Is description for mapping set?
 		deferred
 		end
-		
+
 feature -- Basic operations
 
 	set_template_content (a_template_content: STRING)
@@ -63,30 +67,38 @@ feature -- Basic operations
 			attr_tag: STRING
 			attr_tag_index, attr_tag_end_index, tag_close_index: INTEGER
 			template_block: STRING
+			l_result_block: like result_block
+			l_template_content: like template_content
+			l_gfc: like gfc
 		do
-			gfc := template_content.twin
-			gfc.replace_substring_all (tags.Attribute_count, description_count.out)
+			l_template_content := template_content
+			check l_template_content /= Void end -- implied by precondition `content_set'
+			l_gfc := l_template_content.twin
+			gfc := l_gfc
+			l_gfc.replace_substring_all (tags.Attribute_count, description_count.out)
 			from
-				attr_tag_index := gfc.substring_index (tags.attribute_block, 1)
+				attr_tag_index := l_gfc.substring_index (tags.attribute_block, 1)
 			until
 				attr_tag_index = 0
 			loop
-				tag_close_index := gfc.index_of (tags.tag_close, attr_tag_index + 1)
+				tag_close_index := l_gfc.index_of (tags.tag_close, attr_tag_index + 1)
 				if tag_close_index /= 0 then
-					attr_tag := gfc.substring (attr_tag_index, tag_close_index)
+					attr_tag := l_gfc.substring (attr_tag_index, tag_close_index)
 					tags.parse_tag (attr_tag)
 					if tags.is_valid_attribute_tag then
-						attr_tag_end_index := gfc.substring_index (tags.Attribute_block_end, attr_tag_index + attr_tag.count)
+						attr_tag_end_index := l_gfc.substring_index (tags.Attribute_block_end, attr_tag_index + attr_tag.count)
 						if attr_tag_end_index /= 0 then
-							template_block := gfc.substring (attr_tag_index + attr_tag.count, attr_tag_end_index - 1)
+							template_block := l_gfc.substring (attr_tag_index + attr_tag.count, attr_tag_end_index - 1)
 							create_result_block (template_block)
-							gfc.replace_substring (result_block, attr_tag_index, attr_tag_end_index + tags.Attribute_block_end.count - 1)
-							attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_index)
+							l_result_block := result_block
+							check l_result_block /= Void end -- implied by `create_result_block''s postcondition
+							l_gfc.replace_substring (l_result_block, attr_tag_index, attr_tag_end_index + tags.Attribute_block_end.count - 1)
+							attr_tag_index := l_gfc.substring_index (tags.attribute_block, attr_tag_index)
 						else
-							attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_index + attr_tag.count)
+							attr_tag_index := l_gfc.substring_index (tags.attribute_block, attr_tag_index + attr_tag.count)
 						end
 					else
-						attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_index + 1)
+						attr_tag_index := l_gfc.substring_index (tags.attribute_block, attr_tag_index + 1)
 					end
 				else
 						-- Search is finished.
@@ -94,6 +106,8 @@ feature -- Basic operations
 				end
 			end
 			is_ok := True
+		ensure
+			set: gfc /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -133,20 +147,20 @@ feature {NONE} -- Implementation
 			-- at `index'. Append result to `result_block'.
 		deferred
 		end
-	
+
 	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
 		deferred
 		end
-		
-	result_block: STRING
+
+	result_block: detachable STRING
 			-- Concatenation of blocks corresponding to the mapping of
 			-- a block (defined with tags) to a database entity (table or attribute).
-	
-	gfc: STRING
+
+	gfc: detachable STRING
 			-- `generated_file_content' implementation.
 
-	template_content: STRING
+	template_content: detachable STRING
 			-- Template file content for class to generate.
 
 	tags: DB_TEMPLATE_TAGS
@@ -154,7 +168,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
+
 	to_initcap (string: STRING)
 			-- Change lower case `string' to `string' with initial capital character.
 		require
@@ -167,7 +181,7 @@ feature {NONE} -- Implementation
 			initial := initial.upper
 			string.put (initial, 1)
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

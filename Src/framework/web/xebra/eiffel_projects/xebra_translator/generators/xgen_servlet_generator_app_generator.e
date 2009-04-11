@@ -78,24 +78,17 @@ feature -- Basic functionality
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="false" is_void_safe="false" syntax_level="1">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
+		<library name="xebra_tags" location="\home\sandrod\workspace\xebra\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf"/>
 		<cluster name="servlet_gen" location=".\" recursive="true">
-			<option is_attached_by_default="false" is_void_safe="false">
-			</option>
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="utilities" location="$XEBRA_DEV\eiffel_projects\xebra_base\utilities\"/>
-		<cluster name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\xebra_ast_elements\"/>
-		<cluster name="xebra_base" location="$XEBRA_DEV\eiffel_projects\xebra_base\"/>
-		<cluster name="xebra_tag" location="$XEBRA_DEV\eiffel_projects\xebra_tag\" recursive="true"/>
 	</target>
 </system>
 			]")

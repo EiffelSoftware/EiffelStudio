@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_ast_elements" uuid="F7A1D2BF-811E-4B0B-91C6-4F6B3AB27DB1" library_target="xebra_ast_elements">
 	<target name="xebra_ast_elements">
 		<root all_classes="true"/>
-		<library name="base-safe" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
 		<cluster name="xebra_ast_elements" location=".\" recursive="true">
 			<file_rule>

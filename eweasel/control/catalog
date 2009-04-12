@@ -97,7 +97,7 @@ test	native_signal_number_in_exception	except023 tcf pass exception
 test	native_error_number_in_exception	except024 tcf pass exception
 test	native_error_number_ise_io_error	except025 tcf pass exception
 test	buffer_overflows_printing_trace		except026 tcf pass exception
-test	static_buffer_for_trace_not_thread_safe	except027 tcf pass exception
+test	static_buffer_for_trace_not_thread_safe	except027 tcf pass exception multithreaded
 test	assertion_violations_in_onces		except028 tcf pass exception
 test	exception_on_invalid_object_has_no_trace	except029 tcf pass exception
 test	incorrect_once_trace_at_first_call	except030 tcf pass exception
@@ -1058,10 +1058,10 @@ test	cond-timedwait-failure		thread001	tcf pass multithreaded
 test	nested-thread-exit-failure	thread002	tcf fail multithreaded
 test	memory-leak-in-eif-thr-wait	thread003	tcf pass multithreaded
 test	creating-string-runtime-panic	thread004	tcf pass multithreaded
-test	mem-info-update-crash-after-threads	thread005	tcf pass multitheaded
-test	panic-when-too-many-allocation	thread006	tcf pass multitheaded
-test	join-with-no-children-leaks	thread007	tcf pass multitheaded
-test	memory-referers-not-thread-safe	thread008	tcf pass multitheaded
+test	mem-info-update-crash-after-threads	thread005	tcf pass multithreaded
+test	panic-when-too-many-allocation	thread006	tcf pass multithreaded
+test	join-with-no-children-leaks	thread007	tcf pass multithreaded
+test	memory-referers-not-thread-safe	thread008	tcf pass multithreaded
 
 -- Execution
 
@@ -1255,7 +1255,7 @@ test	negative-hexadecimal		exec187  tcf pass execution
 test	integer-overflow-type		exec188  tcf pass execution
 test	global-once-feature		exec189  tcf pass execution multithreaded
 test	once-in-generic-class		exec190  tcf pass execution multithreaded
-test	once-with-exception		exec191  tcf pass execution
+test	once-with-exception		exec191  tcf pass execution multithreaded
 test	system-return-code		exec192 tcf pass execution
 test	catch-stack-overflow		exec193 tcf pass execution
 test	thread-assertion-monitoring	exec194 tcf pass execution multithreaded
@@ -1732,7 +1732,7 @@ test	ptf-read-number-routines	lib027	 tcf pass library file
 test	es-encoding-conversion		lib028	 tcf pass library encoding
 test	ptf-read-number-routines-2	lib029	 tcf pass library file
 test	file-type-queries-wrong		lib030	 tcf pass library file
-test	file-append-not-thread-safe	lib031	 tcf pass library file
+test	file-append-not-thread-safe	lib031	 tcf pass library file multithreaded
 
 
 

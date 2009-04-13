@@ -10,7 +10,7 @@ class
 	CODE_COMPLETION_WINDOW
 
 inherit
-	EV_POPUP_WINDOW
+	SD_SIZABLE_POPUP_WINDOW
 		redefine
 			show
 		end
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 
 			make_with_shadow
-			enable_user_resize
+
 			option_bar_box := build_option_bar
 			create vbox
 			vbox.extend (choice_list)
@@ -174,7 +174,7 @@ feature -- Status Setting
 			check
 				show_needed: show_needed
 			end
-			Precursor {EV_POPUP_WINDOW}
+			Precursor {SD_SIZABLE_POPUP_WINDOW}
 			choice_list.set_focus
 			select_closest_match
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
@@ -1481,11 +1481,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

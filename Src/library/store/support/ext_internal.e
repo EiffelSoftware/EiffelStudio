@@ -137,7 +137,7 @@ feature -- Basic operations
 			elseif ftype = Boolean_type then
 				set_boolean_field (i, object, False)
 			elseif ftype = Reference_type then
---				set_reference_field (i, object, Void) -- FIXIT: Should we add a new feature to {INTERNAL} set_reference_field to default?
+				set_reference_field (i, object, Void)
 			else
 				Result := False
 			end

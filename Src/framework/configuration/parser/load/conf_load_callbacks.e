@@ -11,7 +11,9 @@ class
 inherit
 	XM_CALLBACKS_NULL
 		redefine
-			on_error
+			on_error,
+			on_finish,
+			on_start
 		end
 
 	CONF_FILE_CONSTANTS
@@ -41,6 +43,9 @@ feature -- Status
 	last_warning: ARRAYED_LIST [CONF_ERROR_PARSE]
 			-- The last warning messages from the parser.
 
+	current_namespace: detachable STRING
+			-- Current namespace
+
 feature -- Callbacks
 
 	on_error (a_message: STRING)
@@ -48,6 +53,13 @@ feature -- Callbacks
 		do
 			is_invalid_xml := True
 			set_parse_error_message (a_message)
+		end
+
+	on_start, on_finish
+			-- <Precursor>
+		do
+				-- Reset namespace information.
+			current_namespace := Void
 		end
 
 feature -- Setting
@@ -90,20 +102,39 @@ feature {NONE} -- Implementation
 
 	check_version (a_value: STRING)
 			-- Check that `a_value' is the correct version.
+		local
+			namespace: like current_namespace
 		do
+			namespace := current_namespace
 			if a_value = Void then
-					-- no version
+					-- No namespace is specified.
 				set_error (create {CONF_ERROR_VERSION})
-			elseif a_value.is_equal (namespace_1_0_0) then
-					-- 5.7 release
-					-- this is fully compatible with the current version
-					-- so we don't have to do anything special
-			elseif a_value.is_equal (latest_namespace) then
-					-- current version
-			else
-					-- unknown version
-					-- we try to be forward compatible to a certain degree
-				is_unknown_version := True
+			elseif namespace = Void then
+					-- This is a top-level element, its namespace will be used for processing of the complete configuration file.
+				if a_value.is_equal (namespace_1_0_0) then
+						-- 5.7 release
+						-- this is fully compatible with the current version
+						-- so we don't have to do anything special
+					namespace := namespace_1_0_0
+				elseif a_value.is_equal (namespace_1_2_0) then namespace := namespace_1_2_0
+				elseif a_value.is_equal (namespace_1_3_0) then namespace := namespace_1_3_0
+				elseif a_value.is_equal (namespace_1_4_0) then namespace := namespace_1_4_0
+				elseif a_value.is_equal (namespace_1_5_0) then namespace := namespace_1_5_0
+				elseif a_value.is_equal (latest_namespace) then namespace := latest_namespace
+						-- current version
+				else
+						-- unknown version
+						-- we try to be forward compatible to a certain degree
+					is_unknown_version := True
+					namespace := a_value
+				end
+					-- Record the current namespace for future use.
+				current_namespace := namespace
+			elseif namespace /~ a_value then
+					-- Nested element has some different namespace.
+					-- Instead of reporting an error it's possible to skip the elements from a different namespace.
+					-- The XML schema should be adjusted to allow this.
+				set_error (create {CONF_ERROR_VERSION})
 			end
 		end
 
@@ -163,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -176,21 +207,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

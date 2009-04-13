@@ -82,7 +82,7 @@ feature -- Basic operatons
 				create l_mod.make (a_class)
 				l_mod.prepare
 				if l_mod.is_prepared and then l_mod.is_ast_available then
-					l_use_old_syntax := a_class.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete
+					l_use_old_syntax := a_class.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete
 
 						-- Parsed successfully.
 					l_name := l_mod.license_name

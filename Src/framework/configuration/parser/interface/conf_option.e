@@ -30,20 +30,38 @@ inherit
 			is_equal
 		end
 
+create
+	default_create,
+	make_6_3,
+	make_6_4
+
 feature {NONE} -- Creation
 
 	default_create
+			-- Initialize options to the defaults of the current version.
 		do
 			if is_63_compatible then
-				create syntax_level.make (syntax_level_obsolete, syntax_level_count)
+				make_6_3
 			else
-				create syntax_level.make (syntax_level_transitional, syntax_level_count)
-					-- Uncomment the line below once all libraries
-					-- have been converted to Void-safe.
+				make_6_4
+			end
+		end
+
+	make_6_3
+			-- Initialize options to the defaults of 6.3.
+		do
+			create syntax.make (syntax_name, syntax_index_obsolete)
+		end
+
+	make_6_4
+			-- Initialize options to the defaults of 6.4.
+		do
+			create syntax.make (syntax_name, syntax_index_transitional)
+				-- Uncomment the line below once all libraries
+				-- have been converted to Void-safe.
 --				is_full_class_checking := True
 --				is_attached_by_default := True
 --				is_void_safe := True
-			end
 		end
 
 feature -- Status
@@ -84,7 +102,7 @@ feature -- Status
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
 				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
 				is_cat_call_detection_configured or is_attached_by_default_configured or is_void_safe_configured or
-				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void or syntax_level.is_set)
+				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void or syntax.is_set)
 		end
 
 feature -- Status update
@@ -203,32 +221,34 @@ feature -- Access, stored in configuration file
 	description: STRING
 			-- A description about the options.
 
-feature -- Access: syntax level
+feature -- Access: syntax
 
-	syntax_level: CONF_VALUE_CHOICE
+	syntax: CONF_VALUE_CHOICE
 			-- Expected variant of source code syntax
 
-	syntax_level_obsolete: NATURAL_8 = 0
-			-- Option value for obsolete syntax
+	syntax_index_obsolete: NATURAL_8 = 1
+			-- Option index for obsolete syntax
 
-	syntax_level_transitional: NATURAL_8 = 1
-			-- Option value for transitional syntax
+	syntax_index_transitional: NATURAL_8 = 2
+			-- Option index for transitional syntax
 
-	syntax_level_standard: NATURAL_8 = 2
-			-- Option value for standard syntax
+	syntax_index_standard: NATURAL_8 = 3
+			-- Option index for standard syntax
 
-	syntax_level_count: NATURAL_8 = 3
-			-- Total number of different values of `syntax_level'
-
-	is_valid_syntax_level (value: NATURAL_8): BOOLEAN
-			-- Is `value' a valid syntax level?
+	is_valid_syntax_value (value: READABLE_STRING_32): BOOLEAN
+			-- Is `value' a valid syntax value?
 		do
-			inspect value
-			when syntax_level_obsolete, syntax_level_transitional, syntax_level_standard then
-				Result := True
-			else
-				-- False by default
-			end
+			Result := syntax.is_valid_item (value)
+		end
+
+feature {NONE} -- Access: syntax
+
+	syntax_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `syntax' option
+		once
+			Result := <<"obsolete", "transitional", "standard">>
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Access, stored in configuration file.
@@ -473,7 +493,7 @@ feature -- Duplication
 			else
 				namespace := Void
 			end
-			syntax_level := other.syntax_level.twin
+			syntax := other.syntax.twin
 			if attached {like warnings} other.warnings as w then
 				warnings := w.twin
 			else
@@ -510,7 +530,7 @@ feature -- Comparison
 			and then is_warning_configured = other.is_warning_configured
 			and then equal (local_namespace, other.local_namespace)
 			and then equal (namespace, other.namespace)
-			and then syntax_level.is_equal (other.syntax_level)
+			and then syntax.is_equal (other.syntax)
 			and then equal (warnings, other.warnings)
 			then
 				Result := True
@@ -527,7 +547,7 @@ feature -- Comparison
 				is_attached_by_default = other.is_attached_by_default and
 				is_void_safe = other.is_void_safe and
 				is_trace = other.is_trace and
-				syntax_level.is_equal (other.syntax_level) and
+				syntax.is_equal (other.syntax) and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
@@ -576,53 +596,52 @@ feature -- Merging
 					namespace := Void
 				end
 				if not is_profile_configured then
-					is_profile_configured := other.is_profile_configured
+					is_profile_configured := other.is_profile_configured or else is_profile /~ other.is_profile
 					is_profile := other.is_profile
 				end
 				if not is_trace_configured then
-					is_trace_configured := other.is_trace_configured
+					is_trace_configured := other.is_trace_configured or else is_trace /~ other.is_trace
 					is_trace := other.is_trace
 				end
 				if not is_optimize_configured then
-					is_optimize_configured := other.is_optimize_configured
+					is_optimize_configured := other.is_optimize_configured or else is_optimize /~ other.is_optimize
 					is_optimize := other.is_optimize
 				end
 				if not is_debug_configured then
-					is_debug_configured := other.is_debug_configured
+					is_debug_configured := other.is_debug_configured or else is_debug /~ other.is_debug
 					is_debug := other.is_debug
 				end
 				if not is_warning_configured then
-					is_warning_configured := other.is_warning_configured
+					is_warning_configured := other.is_warning_configured or else is_warning /~ other.is_warning
 					is_warning := other.is_warning
 				end
 				if not is_msil_application_optimize_configured then
-					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
+					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
 					is_msil_application_optimize := other.is_msil_application_optimize
 				end
 				if not is_full_class_checking_configured then
-					is_full_class_checking_configured := other.is_full_class_checking_configured
+					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
 					is_full_class_checking := other.is_full_class_checking
 				end
 				if not is_cat_call_detection_configured then
-					is_cat_call_detection_configured := other.is_cat_call_detection_configured
+					is_cat_call_detection_configured := other.is_cat_call_detection_configured or else is_cat_call_detection /~ other.is_cat_call_detection
 					is_cat_call_detection := other.is_cat_call_detection
 				end
 				if not is_attached_by_default_configured then
-					is_attached_by_default_configured := other.is_attached_by_default_configured
+					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
 					is_attached_by_default := other.is_attached_by_default
 				end
 				if not is_void_safe_configured then
-					is_void_safe_configured := other.is_void_safe_configured
+					is_void_safe_configured := other.is_void_safe_configured or else is_void_safe /~ other.is_void_safe
 					is_void_safe := other.is_void_safe
 				end
-				syntax_level.set_safely (other.syntax_level)
+				syntax.set_safely (other.syntax)
 			end
 		end
 
 invariant
 	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
-	syntax_level_attached: syntax_level /= Void
-	syntax_level_count_set: syntax_level.count = syntax_level_count
+	syntax_attached: syntax /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

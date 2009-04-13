@@ -289,10 +289,10 @@ feature -- Action
 				else
 					parser.set_has_syntax_warning (False)
 				end
-				inspect l_options.syntax_level.item
-				when {CONF_OPTION}.syntax_level_obsolete then
+				inspect l_options.syntax.index
+				when {CONF_OPTION}.syntax_index_obsolete then
 					parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
-				when {CONF_OPTION}.syntax_level_transitional then
+				when {CONF_OPTION}.syntax_index_transitional then
 					parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
 				else
 					parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
@@ -2245,7 +2245,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -244,10 +244,10 @@ feature -- Access
 			-- Is obsolete syntax used in the source code?
 		do
 			inspect
-				options.syntax_level.item
+				options.syntax.index
 			when
-				{CONF_OPTION}.syntax_level_obsolete,
-				{CONF_OPTION}.syntax_level_transitional
+				{CONF_OPTION}.syntax_index_obsolete,
+				{CONF_OPTION}.syntax_index_transitional
 			then
 				Result := True
 			else
@@ -258,10 +258,10 @@ feature -- Access
 			-- Is obsolete syntax used in the source code?
 		do
 			inspect
-				options.syntax_level.item
+				options.syntax.index
 			when
-				{CONF_OPTION}.syntax_level_standard,
-				{CONF_OPTION}.syntax_level_transitional
+				{CONF_OPTION}.syntax_index_standard,
+				{CONF_OPTION}.syntax_index_transitional
 			then
 				Result := True
 			else
@@ -537,7 +537,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -53,7 +53,7 @@ feature {NONE} -- Output
 			l_target: CONF_TARGET
 		do
 			l_target := (create {SHARED_EIFFEL_PROJECT}).eiffel_universe.target
-			if l_target /= Void and then l_target.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+			if l_target /= Void and then l_target.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 					-- Use old syntax
 				stream.put_line ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword)
 			else

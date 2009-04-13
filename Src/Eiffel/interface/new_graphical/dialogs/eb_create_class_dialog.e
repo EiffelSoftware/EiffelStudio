@@ -352,7 +352,7 @@ feature {NONE} -- Basic operations
 					end
 
 						-- Note keyword
-					if cluster.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+					if cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 							-- Use old syntax
 						l_params.put_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 					else

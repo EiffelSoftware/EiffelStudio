@@ -57,7 +57,7 @@ feature {NONE} -- Printing
 				print_indentation
 
 				l_target := system.universe.target
-				if l_target /= Void and then l_target.options.syntax_level.item = {CONF_OPTION}.syntax_level_obsolete then
+				if l_target /= Void and then l_target.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 						-- Use old syntax
 					output_stream.put_line ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword)
 				else

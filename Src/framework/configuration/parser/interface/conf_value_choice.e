@@ -13,65 +13,134 @@ inherit
 			out
 		end
 
+	DEBUG_OUTPUT
+		redefine
+			out
+		end
+
 create {CONF_OPTION}
 
 	make
 
 feature {NONE} -- Creation
 
-	make (default_item: like item; total: like count)
-			-- Create a new object with index set to `default_item' and `total' as a number of available indexes.
-			-- Use `put' to select the index explicitly.
+	make (items: ARRAY [READABLE_STRING_32]; default_index: like index)
+			-- Create a new object with `items' as allowed option values and `index' set to `default_index'.
+			-- Use `put' or `put_index' to select the index explicitly.
 		require
-			is_default_item_in_total: default_item < total
+			items_attached: items /= Void
+			is_normalized: items.lower = 1
+			is_default_item_present: items.lower <= default_index and default_index <= items.upper
 		do
-			item := default_item
-			count := total
+			index := default_index
+			content := items
 		ensure
-			item_set: item = default_item
-			count_set: count = total
+			index_set: index = default_index
+			content_set: content = items
+			count_set: count = items.count
 			not_is_set: not is_set
+		end
+
+feature -- Status report
+
+	is_valid_item (value: like item): BOOLEAN
+			-- Does `value' represent a valid item for this option?
+		require
+			value_attached: value /= Void
+		do
+			Result := content.has (value)
 		end
 
 feature -- Access
 
-	item: NATURAL_8 assign put
+	index: NATURAL_8 assign put_index
 			-- Currently selected index (if any)
+
+	item: READABLE_STRING_32 assign put
+			-- Current value (if any)
+		do
+			if is_set then
+				Result := content [index]
+			else
+				Result := ""
+			end
+		end
 
 	count: NATURAL_8
 			-- Total number of available indexes
+		do
+			Result := content.count.to_natural_8
+		ensure
+			expected_result: Result = content.count
+		end
 
 feature -- Modification
+
+	put_index (value: like index)
+			-- Set `index' to `value'.
+		require
+			value_small_enough: value < count
+		do
+			index := value
+			is_set := True
+		ensure
+			index_set: index = value
+			is_set: is_set
+		end
 
 	put (value: like item)
 			-- Set `item' to `value'.
 		require
-			value_small_enough: value < count
+			value_attached: value /= Void
+			is_valid_item: is_valid_item (value)
 		do
-			item := value
+			from
+				index := content.lower.to_natural_8
+			until
+				item.is_equal (value)
+			loop
+				index := index + 1
+			variant
+				content.upper - index + 1
+			end
 			is_set := True
 		ensure
-			item_set: item = value
+			item_set: item.is_equal (value)
 			is_set: is_set
 		end
 
 feature -- Output
 
 	out: STRING
+			-- <Precursor>
+		do
+			Result := item.out
+		end
+
+	debug_output: STRING
+			-- <Precursor>
 		do
 			if is_set then
-				Result := item.out
+				Result := item
 			else
-				Result := ""
+				Result := "default ("
+				Result.append_string_general (content [index])
+				Result.append_character (')')
 			end
 		end
 
+feature {CONF_VALUE_CHOICE} -- Content
+
+	content: ARRAY [READABLE_STRING_32]
+			-- All possible `item' values
+
 invariant
 	positive_count: count > 0
-	item_in_range: item < count
+	attached_content: content /= Void
+	index_in_range: index < count
 
 note
-	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,10 +164,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

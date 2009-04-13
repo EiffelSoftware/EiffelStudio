@@ -140,10 +140,10 @@ feature -- Basic operation
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
 		do
-			inspect a_options.syntax_level.item
-			when {CONF_OPTION}.syntax_level_obsolete then
+			inspect a_options.syntax.index
+			when {CONF_OPTION}.syntax_index_obsolete then
 				a_parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_64_syntax)
-			when {CONF_OPTION}.syntax_level_transitional then
+			when {CONF_OPTION}.syntax_index_transitional then
 				a_parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_64_syntax)
 			else
 				a_parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)

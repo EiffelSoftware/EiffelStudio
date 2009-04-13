@@ -201,18 +201,18 @@ feature {NONE} -- Implementation
 				l_choice_prop.set_refresh_action (
 					agent (i: CONF_OPTION): STRING_32
 						do
-							inspect i.syntax_level.item
-							when {CONF_OPTION}.syntax_level_obsolete then
+							inspect i.syntax.index
+							when {CONF_OPTION}.syntax_index_obsolete then
 								Result := conf_interface_names.option_syntax_level_obsolete_name
-							when {CONF_OPTION}.syntax_level_transitional then
+							when {CONF_OPTION}.syntax_index_transitional then
 								Result := conf_interface_names.option_syntax_level_transitional_name
-							when {CONF_OPTION}.syntax_level_standard then
+							when {CONF_OPTION}.syntax_index_standard then
 								Result := conf_interface_names.option_syntax_level_standard_name
 							end
 						end
 					(an_inherited_options)
 				)
-				if an_options.syntax_level.is_set then
+				if an_options.syntax.is_set then
 					l_choice_prop.enable_overriden
 				else
 					l_choice_prop.enable_inherited
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 				l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?,
 					agent (o: CONF_OPTION; p: STRING_CHOICE_PROPERTY)
 						do
-							if o.syntax_level.is_set then
+							if o.syntax.is_set then
 								p.enable_overriden
 							else
 								p.enable_inherited
@@ -228,19 +228,19 @@ feature {NONE} -- Implementation
 						end
 					(an_options, l_choice_prop)
 				))
-				l_choice_prop.use_inherited_actions.extend (agent (o: CONF_OPTION) do o.syntax_level.unset end (an_options))
+				l_choice_prop.use_inherited_actions.extend (agent (o: CONF_OPTION) do o.syntax.unset end (an_options))
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
 				l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.redraw)
 			end
-			if an_options.syntax_level.is_set then
-				inspect an_options.syntax_level.item
-				when {CONF_OPTION}.syntax_level_obsolete then
+			if an_options.syntax.is_set then
+				inspect an_options.syntax.index
+				when {CONF_OPTION}.syntax_index_obsolete then
 					l_choice_prop.set_value (l_choice_prop.item_strings [1])
-				when {CONF_OPTION}.syntax_level_transitional then
+				when {CONF_OPTION}.syntax_index_transitional then
 					l_choice_prop.set_value (l_choice_prop.item_strings [2])
-				when {CONF_OPTION}.syntax_level_standard then
+				when {CONF_OPTION}.syntax_index_standard then
 					l_choice_prop.set_value (l_choice_prop.item_strings [3])
 				end
 			end
@@ -249,11 +249,11 @@ feature {NONE} -- Implementation
 					do
 						if value /= Void then
 							if value.is_equal (conf_interface_names.option_syntax_level_obsolete_name) then
-								o.syntax_level.put ({CONF_OPTION}.syntax_level_obsolete)
+								o.syntax.put_index ({CONF_OPTION}.syntax_index_obsolete)
 							elseif value.is_equal (conf_interface_names.option_syntax_level_transitional_name) then
-								o.syntax_level.put ({CONF_OPTION}.syntax_level_transitional)
+								o.syntax.put_index ({CONF_OPTION}.syntax_index_transitional)
 							else
-								o.syntax_level.put ({CONF_OPTION}.syntax_level_standard)
+								o.syntax.put_index ({CONF_OPTION}.syntax_index_standard)
 							end
 						end
 					end

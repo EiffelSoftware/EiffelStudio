@@ -179,10 +179,10 @@ feature {NONE} -- Implementation
 			-- Get eis container structure keyword from parser.
 			-- Either note or indexing
 		local
-			l_syntax_level: CONF_VALUE_CHOICE
+			l_syntax: CONF_VALUE_CHOICE
 		do
-			l_syntax_level := context_class.options.syntax_level
-			if l_syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete  then
+			l_syntax := context_class.options.syntax
+			if l_syntax.index /= {CONF_OPTION}.syntax_index_obsolete  then
 				Result := "note"
 			else
 				Result := "indexing"
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

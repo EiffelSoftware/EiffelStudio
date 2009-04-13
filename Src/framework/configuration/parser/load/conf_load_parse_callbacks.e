@@ -243,7 +243,7 @@ feature -- Callbacks
 				when t_note then
 					process_element_under_note
 				else
-						-- Process attributs of elements under the first level of note.
+						-- Process attributes of elements under the first level of note.
 					if note_level > 0 then
 						process_element_under_note
 					end
@@ -342,6 +342,7 @@ feature -- Callbacks
 					uses_list.clear_all
 					overrides_list.clear_all
 					group_list.clear_all
+					set_default_options (current_target, a_namespace)
 					current_target := Void
 				when t_file_rule then
 					current_file_rule := Void
@@ -1168,7 +1169,7 @@ feature {NONE} -- Implementation attribute processing
 			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class,
 			l_warning, l_msil_application_optimize, l_full_class_checking,
 			l_cat_call_detection, l_is_attached_by_default, l_is_void_safe,
-			l_syntax_level: STRING
+			l_syntax_level, l_syntax: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
@@ -1183,6 +1184,7 @@ feature {NONE} -- Implementation attribute processing
 			l_is_attached_by_default := current_attributes.item (at_is_attached_by_default)
 			l_is_void_safe := current_attributes.item (at_is_void_safe)
 			l_syntax_level := current_attributes.item (at_syntax_level)
+			l_syntax := current_attributes.item (at_syntax)
 
 			current_option := factory.new_option
 			if l_trace /= Void then
@@ -1254,11 +1256,27 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
 				end
 			end
-			if l_syntax_level /= Void then
-				if l_syntax_level.is_natural_8 and then current_option.is_valid_syntax_level (l_syntax_level.to_natural_8) then
-					current_option.syntax_level.put (l_syntax_level.to_natural_8)
+			if l_syntax_level /= Void and then current_namespace <= namespace_1_4_0 then
+				if l_syntax_level.is_natural_8 then
+					inspect l_syntax_level.to_natural_8
+					when 0 then
+						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_obsolete)
+					when 1 then
+						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_transitional)
+					when 2 then
+						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_standard)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
+					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
+				end
+			end
+			if l_syntax /= Void and then current_namespace >= namespace_1_5_0 then
+				if current_option.is_valid_syntax_value (l_syntax) then
+					current_option.syntax.put (l_syntax)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax"))
 				end
 			end
 
@@ -1664,6 +1682,42 @@ feature {NONE} -- Implementation content processing
 				current_file_rule.add_include (current_content)
 			else
 				set_error (create {CONF_ERROR_REGEXP}.make (current_content))
+			end
+		end
+
+feature {NONE}
+
+	set_default_options (t: like current_target; namespace: like namespace_1_0_0)
+			-- Set default options depending on the supplied schema.
+		require
+			t_attached: t /= Void
+		local
+			o: detachable CONF_OPTION
+		do
+			if namespace /~ latest_namespace then
+					-- Option settings are different from the current defauls, we need to set them if they are not set yet.
+				o := t.options
+				if o = Void then
+					o := factory.new_option
+				end
+				if namespace ~ namespace_1_5_0 then
+						-- Use the defaults of ES 6.4.
+					o.merge (default_options_6_4)
+				elseif
+					namespace ~ namespace_1_4_0 or else
+					namespace ~ namespace_1_3_0 or else
+					namespace ~ namespace_1_2_0 or else
+					namespace ~ namespace_1_0_0
+				then
+						-- Use the defaults of ES 6.3 and below.
+					o.merge (default_options_6_3)
+				else
+						-- Unknown version, do not change anything just in case it is above the current one.
+					o := Void
+				end
+				if o /= Void then
+					t.set_options (o)
+				end
 			end
 		end
 
@@ -2097,6 +2151,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
 			l_attr.force (at_is_void_safe, "is_void_safe")
 			l_attr.force (at_syntax_level, "syntax_level")
+			l_attr.force (at_syntax, "syntax")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -2296,6 +2351,24 @@ feature {NONE} -- Implementation state transitions
 			Result.force (t_note)
 		end
 
+feature {NONE} -- Default options
+
+	default_options_6_4: CONF_OPTION
+			-- Default options of 6.4
+		once
+			create Result.make_6_4
+		ensure
+			result_attached: Result /= Void
+		end
+
+	default_options_6_3: CONF_OPTION
+			-- Default options of 6.3
+		once
+			create Result.make_6_3
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Implementation constants
 
 		-- Tag states
@@ -2407,6 +2480,7 @@ feature {NONE} -- Implementation constants
 	at_is_attached_by_default: INTEGER = 1060
 	at_is_void_safe: INTEGER = 1061
 	at_syntax_level: INTEGER = 1062
+	at_syntax: INTEGER = 1063
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

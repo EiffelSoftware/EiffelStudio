@@ -917,7 +917,7 @@ feature -- Version
 
 feature -- Element change
 
-	set_reference_field (i: INTEGER; object: ANY; value: ANY)
+	set_reference_field (i: INTEGER; object: ANY; value: detachable ANY)
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -1980,7 +1980,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_set_reference_field (i: INTEGER; object: ANY; value: SYSTEM_OBJECT)
+	internal_set_reference_field (i: INTEGER; object: ANY; value: detachable SYSTEM_OBJECT)
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1

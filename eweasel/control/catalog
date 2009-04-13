@@ -1062,6 +1062,7 @@ test	mem-info-update-crash-after-threads	thread005	tcf pass multithreaded
 test	panic-when-too-many-allocation	thread006	tcf pass multithreaded
 test	join-with-no-children-leaks	thread007	tcf pass multithreaded
 test	memory-referers-not-thread-safe	thread008	tcf pass multithreaded
+test	exception-in-thread-failure	thread009	tcf pass multitheaded
 
 -- Execution
 

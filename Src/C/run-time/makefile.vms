@@ -87,7 +87,7 @@ LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
 	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
-	option.c compress.c console.c memory_analyzer.c
+	option.c compress.c console.c
 
 #OTHER = main.c except.c
 
@@ -258,8 +258,7 @@ EOBJ = \
 	wcompress.obj \
 	wconsole.obj \
 	bmain.obj \
-	bexcept.obj \
-	wmemory_analyzer.obj
+	bexcept.obj
 
 MT_LOBJ_EXTRA = \
 	$(MTIDRS_OBJ) 
@@ -308,12 +307,7 @@ MT_LOBJ = \
 	MTcompress.obj \
 	MTconsole.obj \
 	MTmain.obj \
-	MTexcept.obj \
-	MTmemory_analyzer.obj
-
-
-
-NETWORK = network.olb
+	MTexcept.obj
 
 
 

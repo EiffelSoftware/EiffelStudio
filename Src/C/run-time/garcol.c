@@ -1315,8 +1315,9 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef EIF_THREADS 
-			CHECK ("Root thread", eif_thr_is_root ());
-			eif_thread_cleanup ();
+			if (eif_thr_is_root ()) {
+				eif_thread_cleanup ();
+			}
 #endif	/* EIF_THREADS */
 
 #ifdef ISE_GC

@@ -67,18 +67,21 @@ extern "C" {
  * Structure used to give arguments to a new thread
  */
  
-typedef struct {
+typedef struct tag_rt_thr_context rt_thr_context;
+
+struct tag_rt_thr_context {
 	EIF_OBJECT current;				/* Root object of Thread creator. */
 	EIF_PROCEDURE routine;			/* routine `execute' of thread. */
-	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
-	int *addr_n_children;			/* Number of thread children. */
+	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all'. */
+	volatile int n_children;		/* Number of direct thread children. */
+	volatile int is_alive;			/* Is Current thread still alive? */
+	volatile int is_root;			/* Is Current thread the thread that started all? */
 #ifndef EIF_NO_CONDVAR
-	EIF_COND_TYPE *children_cond;	/* For `join_all'.*/
+	EIF_COND_TYPE *children_cond;	/* For `join_all'. */
 #endif  
 	EIF_THR_TYPE *tid;				/* Thread id of new thread. */
-} start_routine_ctxt_t;
-
-
+	rt_thr_context *parent_context;	/* Context of parent thread, NULL if root class. */
+};
 
 typedef struct tag_rt_globals
 {
@@ -94,14 +97,8 @@ typedef struct tag_rt_globals
 
 		/* eif_threads.c */
 	eif_global_context_t *eif_globals;
-	start_routine_ctxt_t *eif_thr_context_cx;
-	EIF_THR_TYPE *eif_thr_id_cx;		/* thread id of current thread */
-	int n_children_cx;					/* Number or child threads */
+	rt_thr_context *eif_thr_context_cx;
 	EIF_THR_TYPE *last_child_cx;		/* Task id of the last created thread */
-	EIF_MUTEX_TYPE *children_mutex_cx;	/* Mutex for join, join_all */
-#ifndef EIF_NO_CONDVAR
-	EIF_COND_TYPE *children_cond_cx;	/* Condition variable for join, join_all */
-#endif
 #ifdef ISE_GC
 		/* Synchronizations for GC*/
 	int volatile gc_thread_status_cx;
@@ -323,10 +320,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 
 	/* eif_threads.c */
 #define eif_thr_context		(rt_globals->eif_thr_context_cx)	/* rt_public */
-#define eif_thr_id			(rt_globals->eif_thr_id_cx)	/* rt_public */
-#define n_children			(rt_globals->n_children_cx)
-#define eif_children_mutex 	(rt_globals->children_mutex_cx)
-#define eif_children_cond 	(rt_globals->children_cond_cx)
 #define last_child			(rt_globals->last_child_cx)
 #define gc_thread_status	(rt_globals->gc_thread_status_cx)
 #define gc_thread_collection_count	(rt_globals->gc_thread_collection_count_cx)

@@ -356,7 +356,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 #ifdef FIXME_LYNX
 #define EIF_THR_EXIT(arg) \
 	pthread_exit(NULL);\
-	pthread_detach (eif_thr_id) ;
+	pthread_detach (eif_thr_context->tid) ;
 #else /* POSIX_10034A */
 #define EIF_THR_EXIT(arg)           pthread_exit(NULL)
 #endif	/* POSIX_10034A */

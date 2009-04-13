@@ -2309,7 +2309,6 @@ feature -- Title part
 	t_Object_viewer_tool: STRING_32				do Result := locale.translation ("Object Viewer")	end
 	t_Favorites_tool: STRING_32					do Result := locale.translation ("Favorites")	end
 	t_Failed: STRING_32						do Result := locale.translation ("Failed") end
-	t_information_tool: STRING_32 				do Result := locale.translation ("Information (EIS)") end
 	t_result: STRING_32 							do Result := locale.translation ("Result")	end
 	t_metric_tool: STRING_32 					do Result := locale.translation ("Metrics")	end
 	t_Object_tool: STRING_32						do Result := locale.translation ("Objects")	end
@@ -2742,11 +2741,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class INTERFACE_NAMES

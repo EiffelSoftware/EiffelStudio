@@ -64,7 +64,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_tool_title: STRING = "Eiffel Information System"
+	t_tool_title: STRING = "Info"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

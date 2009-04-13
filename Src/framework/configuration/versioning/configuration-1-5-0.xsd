@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-4-0"
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" elementFormDefault="qualified">
+	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-5-0"
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" elementFormDefault="qualified">
 
 	<xs:element name="system">
 		<xs:complexType>
@@ -129,7 +129,15 @@
 		<xs:attribute name="full_class_checking" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_attached_by_default" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_void_safe" type="xs:boolean" use="optional"/>
-		<xs:attribute name="syntax_level" type="xs:int" use="optional"/>
+		<xs:attribute name="syntax" use="optional" default="transitional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="obsolete"/>
+					<xs:enumeration value="transitional"/>
+					<xs:enumeration value="standard"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="setting">

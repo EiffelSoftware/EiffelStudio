@@ -24,6 +24,14 @@ feature {NONE} -- Implementation
 			create {SD_WINDOW_IMP} implementation.make (Current)
 		end
 
+	make_with_shadow
+			-- Feature place holder for Windows version {SD_WINDOW}
+			-- On Linux, it do nothing since Linux doesn't support Window shadow by default
+			-- On Windows, because {SD_WINDOW} inherit {EV_POPUP_WINDOW}, so it set shadow on Current window			
+		do
+			default_create
+		end
+
 	initialize
 			-- Redefine
 		local

@@ -128,7 +128,7 @@
 		<xs:attribute name="full_class_checking" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_attached_by_default" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_void_safe" type="xs:boolean" use="optional"/>
-		<xs:attribute name="syntax_level" type="xs:int" use="optional"/>
+		<xs:attribute name="syntax_level" type="xs:int" use="optional" default="0"/>
 	</xs:complexType>
 
 	<xs:complexType name="setting">

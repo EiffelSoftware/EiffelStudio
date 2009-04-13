@@ -390,7 +390,10 @@ feature {NONE} -- Implementation
 		local
 			l_warning: SYNTAX_WARNING
 		do
+				-- FIXME: Manu 04/11/2009. We do not yet raise a warning for 6.4 	
+				-- because we do not have yet an automatic converter for our customers.
 			if
+				False and then
 				(attached {CLASS_C} eiffel_parser.current_class as l_class_c and then
 				l_class_c.lace_class.options.is_warning_enabled (w_syntax))
 			then

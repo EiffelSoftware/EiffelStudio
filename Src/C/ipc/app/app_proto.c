@@ -582,7 +582,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_nested = wh.wh_nested;		/* breakable nested index */
 
 #ifdef EIF_THREADS
-		dthread_id = (rt_uint_ptr) eif_thr_id;
+		dthread_id = (rt_uint_ptr) eif_thr_context->tid;
 #else
 		dthread_id = (rt_uint_ptr) 0;
 #endif

@@ -619,23 +619,21 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 
 #ifdef EIF_THREADS
 rt_shared void eif_set_thr_context (void) {
-	/* Initialize thread context for non Eiffel Threads.
-     * There is not much to initialize, but this is necessary
-	 * so that `eif_thr_is_root ()' can distinguish the root thread
-	 * from the others.	
-	 */
-
+		/* Initialize thread context for non Eiffel Threads.
+		 * There is not much to initialize, but this is necessary
+		 * so that `eif_thr_is_root ()' can distinguish the root thread
+		 * from the others.	*/
 	RT_GET_CONTEXT	
-	start_routine_ctxt_t *rout;
-	REQUIRE ("eif_globals not null", rt_globals);	
-	rout = (start_routine_ctxt_t *) eif_malloc (sizeof (start_routine_ctxt_t));
-	if (rout == NULL) {
-		eif_panic ("Couldn't allocate thread context");
+	if (rt_globals && !eif_thr_context) {
+		eif_thr_context = (rt_thr_context *) eif_malloc (sizeof (rt_thr_context));
+		if (eif_thr_context == NULL) {
+			eif_panic ("Couldn't allocate thread context");
+		} else {
+			memset (eif_thr_context, 0, sizeof (rt_thr_context));
+			eif_thr_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+			eif_thr_context->is_alive = 1;
+		}
 	}
-	memset (rout, 0, sizeof (start_routine_ctxt_t));
-		/* Fill with NULL, since not allocated from run-time. 
-		 * This avoid some problem when reclaiminhgg. */
-	eif_thr_context = rout;
 }
 #endif	/* EIF_THREADS */
 

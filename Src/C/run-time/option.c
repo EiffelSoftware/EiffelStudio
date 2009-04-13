@@ -479,7 +479,7 @@ rt_shared void exitprf(void)
 		execution_time = process_time(); 
 
 #ifdef EIF_THREADS
-		sprintf(buffer, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_thr_id);
+		sprintf(buffer, "%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_thr_context->tid);
 		file_name = malloc (strlen(profile_output_file) + strlen(buffer) + 2);
 		file_name[0] = '\0';
 		strcat (file_name, profile_output_file);
@@ -670,7 +670,7 @@ rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dty
 			EIF_TRACE_LOCK
 			print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-			print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
+			print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->tid);
 #endif
 			for (i = 0; i < trace_call_level - 1; i++)
 				print_err_msg (stderr, "|  ");		/* Print preceding spaces */
@@ -706,7 +706,7 @@ rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtyp
 	EIF_TRACE_LOCK
 	print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
+		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->tid);
 #endif
 
 	for (i = 0; i < trace_call_level; i++)

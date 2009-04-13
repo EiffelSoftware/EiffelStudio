@@ -891,12 +891,9 @@ feature {NONE} -- Implementation
 									last_class := current_class
 								end
 							else
+									-- When processing creation target, `last_class' should always be `current_class'.
 								l_feat := feature_in_class (current_class, l_rout_id_set)
-								if last_type /= Void then
-									last_class := last_type.associated_class
-								else
-									last_class := current_class
-								end
+								last_class := current_class
 							end
 						else
 							if last_type /= Void then
@@ -1033,11 +1030,11 @@ feature {NONE} -- Implementation
 						if processing_creation_target then
 							if last_type = Void then
 								l_type := l_feat.type.actual_type
-								last_type := current_class.actual_type
 							else
 									-- A static type in creation as.
 								l_type := last_type
 							end
+							last_type := current_class.actual_type
 						else
 							l_type := l_feat.type
 									-- If it has a like argument type, we solve the type from the arguments.
@@ -1055,8 +1052,7 @@ feature {NONE} -- Implementation
 							end
 							l_type := l_type.actual_type
 						end
-							-- Creation method does not need instantiation
-						if l_type.is_loose and then not processing_creation_target then
+						if l_type.is_loose then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
 						else
 							last_type := l_type

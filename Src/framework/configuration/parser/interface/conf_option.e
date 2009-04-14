@@ -51,12 +51,14 @@ feature {NONE} -- Creation
 			-- Initialize options to the defaults of 6.3.
 		do
 			create syntax.make (syntax_name, syntax_index_obsolete)
+			create void_safety.make (void_safety_name, void_safety_index_none)
 		end
 
 	make_6_4
 			-- Initialize options to the defaults of 6.4.
 		do
 			create syntax.make (syntax_name, syntax_index_transitional)
+			create void_safety.make (void_safety_name, void_safety_index_none)
 				-- Uncomment the line below once all libraries
 				-- have been converted to Void-safe.
 --				is_full_class_checking := True
@@ -93,15 +95,12 @@ feature -- Status
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
 
-	is_void_safe_configured: BOOLEAN
-			-- Is `is_void_safe' configured?
-
 	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
 				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
-				is_cat_call_detection_configured or is_attached_by_default_configured or is_void_safe_configured or
+				is_cat_call_detection_configured or is_attached_by_default_configured or void_safety.is_set or
 				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void or syntax.is_set)
 		end
 
@@ -170,13 +169,6 @@ feature -- Status update
 			is_attached_by_default := False
 		end
 
-	unset_is_void_safe
-			-- Unset `is_void_safe'.
-		do
-			is_void_safe_configured := False
-			is_void_safe := False
-		end
-
 feature -- Access, stored in configuration file
 
 	assertions: CONF_ASSERTIONS
@@ -215,9 +207,6 @@ feature -- Access, stored in configuration file
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
 
-	is_void_safe: BOOLEAN
-			-- Is source code void safe?
-
 	description: STRING
 			-- A description about the options.
 
@@ -235,18 +224,36 @@ feature -- Access: syntax
 	syntax_index_standard: NATURAL_8 = 3
 			-- Option index for standard syntax
 
-	is_valid_syntax_value (value: READABLE_STRING_32): BOOLEAN
-			-- Is `value' a valid syntax value?
-		do
-			Result := syntax.is_valid_item (value)
-		end
-
 feature {NONE} -- Access: syntax
 
 	syntax_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `syntax' option
 		once
 			Result := <<"obsolete", "transitional", "standard">>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Access: void safety
+
+	void_safety: CONF_VALUE_CHOICE
+			-- Void safety option
+
+	void_safety_index_none: NATURAL_8 = 1
+			-- Option index for no void safety
+
+	void_safety_index_initialization: NATURAL_8 = 2
+			-- Option index for selective void safety
+
+	void_safety_index_all: NATURAL_8 = 3
+			-- Option index for total void safety
+
+feature {NONE} -- Access: void safety
+
+	void_safety_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `void_safety' option
+		once
+			Result := <<"none", "initialization", "all">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -424,16 +431,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
-	set_is_void_safe (v: BOOLEAN)
-			-- Set `is_void_safe' to `v'.
-		do
-			is_void_safe_configured := True
-			is_void_safe := v
-		ensure
-			is_void_safe_set: is_void_safe = v
-			is_void_safe_configured: is_void_safe_configured
-		end
-
 	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
@@ -448,17 +445,17 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
-			if attached {like assertions} other.assertions as a then
+			if attached other.assertions as a then
 				assertions := a.twin
 			else
 				assertions := Void
 			end
-			if attached {like debugs} other.debugs as d then
+			if attached other.debugs as d then
 				debugs := d.twin
 			else
 				debugs := Void
 			end
-			if attached {like description} other.description as s then
+			if attached other.description as s then
 				description := s.twin
 			else
 				description := Void
@@ -479,22 +476,21 @@ feature -- Duplication
 			is_profile_configured := other.is_profile_configured
 			is_trace := other.is_trace
 			is_trace_configured := other.is_trace_configured
-			is_void_safe := other.is_void_safe
-			is_void_safe_configured := other.is_void_safe_configured
 			is_warning := other.is_warning
 			is_warning_configured := other.is_warning_configured
-			if attached {like local_namespace} other.local_namespace as l then
+			if attached other.local_namespace as l then
 				local_namespace := l.twin
 			else
 				local_namespace := Void
 			end
-			if attached {like namespace} other.namespace as n then
+			if attached other.namespace as n then
 				namespace := n.twin
 			else
 				namespace := Void
 			end
+			void_safety := other.void_safety.twin
 			syntax := other.syntax.twin
-			if attached {like warnings} other.warnings as w then
+			if attached other.warnings as w then
 				warnings := w.twin
 			else
 				warnings := Void
@@ -524,12 +520,11 @@ feature -- Comparison
 			and then is_profile_configured = other.is_profile_configured
 			and then is_trace = other.is_trace
 			and then is_trace_configured = other.is_trace_configured
-			and then is_void_safe = other.is_void_safe
-			and then is_void_safe_configured = other.is_void_safe_configured
 			and then is_warning = other.is_warning
 			and then is_warning_configured = other.is_warning_configured
 			and then equal (local_namespace, other.local_namespace)
 			and then equal (namespace, other.namespace)
+			and then void_safety.is_equal (other.void_safety)
 			and then syntax.is_equal (other.syntax)
 			and then equal (warnings, other.warnings)
 			then
@@ -540,14 +535,16 @@ feature -- Comparison
 	is_equal_options (other: like Current): BOOLEAN
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
 		do
-			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
-				is_optimize = other.is_optimize and is_profile = other.is_profile and
+			Result := equal (assertions, other.assertions) and
+				is_debug = other.is_debug and
+				is_optimize = other.is_optimize and
+				is_profile = other.is_profile and
 				is_full_class_checking = other.is_full_class_checking and
 				is_cat_call_detection = other.is_cat_call_detection and
 				is_attached_by_default = other.is_attached_by_default and
-				is_void_safe = other.is_void_safe and
 				is_trace = other.is_trace and
-				syntax.is_equal (other.syntax) and
+				void_safety.index = other.void_safety.index and
+				syntax.index = other.syntax.index and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
@@ -631,10 +628,7 @@ feature -- Merging
 					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
 					is_attached_by_default := other.is_attached_by_default
 				end
-				if not is_void_safe_configured then
-					is_void_safe_configured := other.is_void_safe_configured or else is_void_safe /~ other.is_void_safe
-					is_void_safe := other.is_void_safe
-				end
+				void_safety.set_safely (other.void_safety)
 				syntax.set_safely (other.syntax)
 			end
 		end
@@ -642,6 +636,7 @@ feature -- Merging
 invariant
 	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
 	syntax_attached: syntax /= Void
+	void_safety_attached: void_safety /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

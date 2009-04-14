@@ -1169,7 +1169,7 @@ feature {NONE} -- Implementation attribute processing
 			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class,
 			l_warning, l_msil_application_optimize, l_full_class_checking,
 			l_cat_call_detection, l_is_attached_by_default, l_is_void_safe,
-			l_syntax_level, l_syntax: STRING
+			l_void_safety, l_syntax_level, l_syntax: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
@@ -1183,6 +1183,7 @@ feature {NONE} -- Implementation attribute processing
 			l_cat_call_detection := current_attributes.item (at_cat_call_detection)
 			l_is_attached_by_default := current_attributes.item (at_is_attached_by_default)
 			l_is_void_safe := current_attributes.item (at_is_void_safe)
+			l_void_safety := current_attributes.item (at_void_safety)
 			l_syntax_level := current_attributes.item (at_syntax_level)
 			l_syntax := current_attributes.item (at_syntax)
 
@@ -1249,11 +1250,22 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
 				end
 			end
-			if l_is_void_safe /= Void then
+			if l_is_void_safe /= Void and then current_namespace <= namespace_1_4_0 then
 				if l_is_void_safe.is_boolean then
-					current_option.set_is_void_safe (l_is_void_safe.to_boolean)
+					if l_is_void_safe.to_boolean then
+						current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+					else
+						current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
+					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
+				end
+			end
+			if l_void_safety /= Void and then current_namespace >= namespace_1_5_0 then
+				if current_option.void_safety.is_valid_item (l_void_safety) then
+					current_option.void_safety.put (l_void_safety)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
 				end
 			end
 			if l_syntax_level /= Void and then current_namespace <= namespace_1_4_0 then
@@ -1273,7 +1285,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if l_syntax /= Void and then current_namespace >= namespace_1_5_0 then
-				if current_option.is_valid_syntax_value (l_syntax) then
+				if current_option.syntax.is_valid_item (l_syntax) then
 					current_option.syntax.put (l_syntax)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax"))
@@ -2150,6 +2162,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_cat_call_detection, "cat_call_detection")
 			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
 			l_attr.force (at_is_void_safe, "is_void_safe")
+			l_attr.force (at_void_safety, "void_safety")
 			l_attr.force (at_syntax_level, "syntax_level")
 			l_attr.force (at_syntax, "syntax")
 			Result.force (l_attr, t_option)
@@ -2479,8 +2492,9 @@ feature {NONE} -- Implementation constants
 	at_cat_call_detection: INTEGER = 1059
 	at_is_attached_by_default: INTEGER = 1060
 	at_is_void_safe: INTEGER = 1061
-	at_syntax_level: INTEGER = 1062
-	at_syntax: INTEGER = 1063
+	at_void_safety: INTEGER = 1062
+	at_syntax_level: INTEGER = 1063
+	at_syntax: INTEGER = 1064
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

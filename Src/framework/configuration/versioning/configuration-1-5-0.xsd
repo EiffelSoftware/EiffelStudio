@@ -128,7 +128,15 @@
 		<xs:attribute name="msil_application_optimize" type="xs:boolean" use="optional"/>
 		<xs:attribute name="full_class_checking" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_attached_by_default" type="xs:boolean" use="optional"/>
-		<xs:attribute name="is_void_safe" type="xs:boolean" use="optional"/>
+		<xs:attribute name="void_safety" use="optional" default="none">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="none"/>
+					<xs:enumeration value="initialization"/>
+					<xs:enumeration value="all"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="syntax" use="optional" default="transitional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">

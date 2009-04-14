@@ -181,39 +181,59 @@ rt_public char* eifrt_vms_filespec (const char* filespec, char* buf)
 }
 
 /* Given a VMS path (directory), return the directory file name (eg. dev:[dir.sub] ==> dev:[dir]sub.dir */
-rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
+rt_public char* eifrt_vms_directory_file_name (const char* a_dir, char* a_buf)
 {
 	struct FAB fab = cc$rms_fab;
 	struct NAM nam = cc$rms_nam;
 	char esb[NAM$C_MAXRSS +1], rsb[NAM$C_MAXRSS +1];
 	const char* dnm = "[ERROR__DIRECTORY_NOT_SPECIFIED]";
 	VMS_STS sts;
-	char vms_dir [PATH_MAX +1];
-
-	//if (strchr(dir, '/')) {	    /* if dir contains a '/' it might be a Unix filespec */
-		int res = decc$to_vms (dir, stupid_vms_trick, 0, 2);
-		if (res) dir = strcpy (vms_dir, stupid_vms_name);
-	//}
-	/* perform a parse on the name supplied */
-	/* ***VMS FIXME*** change to use NAML (64 bit) blocks to remove warnings and potential pointer truncation */
+	char vms_dir [PATH_MAX +1];	// ***VMS FIXME*** not extended filespec compliant
 #if __INITIAL_POINTER_SIZE > 32
-	fab.fab$l_dna = (char*)dnm; 
-	fab.fab$l_fna = (char*)dir; 
+	__char_ptr32 dir32 = NULL;
+#endif
+
+	//REQUIRE ("not a UNIX filespec", !strchr (a_dir, '/'));
+	//if (strchr(a_dir, '/')) {	    /* if a_dir contains a '/' it might be a Unix filespec */
+		int res = decc$to_vms (a_dir, stupid_vms_trick, 0, 2);
+		if (res == 1) 
+			a_dir = strcpy (vms_dir, stupid_vms_name);
+	//}
+
+	/* perform a parse on the name supplied */
+#if __INITIAL_POINTER_SIZE > 32
+#pragma message save
+#pragma message disable (MAYHIDELOSS)    // checked: pointers are 32 bits
+	if ($is_32bits (a_dir)) {
+	    fab.fab$l_fna = (__char_ptr32)a_dir;    // checked: ptr is 32 bit
+	    dir32 = NULL;
+	} else {
+	    fab.fab$l_fna = dir32 = _strdup32 (a_dir);
+	    fab.fab$l_fna = dir32;
+	}
+	REQUIRE ("dnm is short pointer", $is_32bits(dnm));
+	fab.fab$l_dna = (__char_ptr32)dnm;	// checked: pointer to static data must be 32 bits
+#pragma message restore
 #else
 	fab.fab$l_dna = (char*)dnm; 
-	fab.fab$l_fna = (char*)dir; 
+	fab.fab$l_fna = (char*)a_dir; 
 #endif
-	fab.fab$b_dns = strlen(dnm);
-	fab.fab$b_fns = strlen(dir);
+	fab.fab$b_fns = strlen (a_dir);
+	fab.fab$b_dns = strlen (dnm);	/* ***VMS FIXME*** change to use NAML (64 bit) blocks to allow extended filespecs */
 	fab.fab$l_nam = &nam;
 	nam.nam$l_esa = esb; nam.nam$b_ess = sizeof esb -1;
-	nam.nam$l_rsa = rsb; nam.nam$b_rss = sizeof rsb -1;
+	//nam.nam$l_rsa = rsb; nam.nam$b_rss = sizeof rsb -1;
 	/* VMS debug note: use nam.nam$r_nop_overlay. { nam$b_nop | nam$r_nop_bits } to examine. */
 	nam.nam$b_nop |= NAM$M_SYNCHK;	/* request syntax check only, no lookup */
 	sts = sys$parse (&fab);
+#if __INITIAL_POINTER_SIZE > 32
+	if (dir32 != NULL)
+	    free (dir32);
+	dir32 = NULL;
+#endif
 	if (VMS_FAILURE(sts)) {
 		/* parse failed; ensure expanded and resultant string length is zero */
-		nam.nam$b_esl = nam.nam$b_rsl = 0;
+		nam.nam$b_esl = 0; nam.nam$b_rsl = 0;
 	}
 	/* if directory present and name, type, and version are missing (just delimiters) */
 	if (nam.nam$b_dir && nam.nam$b_name == 0 && nam.nam$b_type <= 1 && nam.nam$b_ver <= 1) {
@@ -222,7 +242,7 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 		char *subdir;
 		int len;
 
-		REQUIRE ("", nam.nam$l_dir + nam.nam$b_dir == nam.nam$l_name || !nam.nam$l_name);
+		REQUIRE ("filename follows directory or else filename is absent", nam.nam$l_dir + nam.nam$b_dir == nam.nam$l_name || !nam.nam$l_name);
 
 		/* find the last [sub]directory name (.sub]) and make it the file name .DIR (]sub.DIR) */
 		if (*(dirend -1) == '.') --dirend;	/* handle terminal . case ("[dir.]") */
@@ -251,15 +271,16 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 		}
 		strcpy (dirend, ".DIR");
 
-		/* return result in caller buffer, allocate space if null. */
 		CHECK ("", nam.nam$l_node == esb);
-		if (!buf) 
-			buf = malloc (strlen(esb) +1);
-		if (buf)
-			strcpy (buf, esb);
-		return buf;
+	} else {
+		strcpy (esb, a_dir);
 	}
-	return NULL;
+	/* return result in caller buffer, allocate space if null. */
+	if (!a_buf) 
+		a_buf = malloc (strlen(esb) +1);
+	if (a_buf)
+		strcpy (a_buf, esb);
+	return a_buf;
 } /* end eifrt_vms_directory_file_name() */
 
 /* Returns full filename of current program image executable.  Places	    */

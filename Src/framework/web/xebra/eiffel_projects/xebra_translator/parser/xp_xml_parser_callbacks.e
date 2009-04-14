@@ -104,7 +104,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message + current_debug_information]), false)
+			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message + current_debug_information + "%N in '" + path + "'%N"]), false)
 		end
 
 feature -- Meta

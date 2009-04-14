@@ -160,8 +160,8 @@ feature -- Processing
 			l_p_callback: XP_XML_PARSER_CALLBACKS
 		do
 			create {XM_EIFFEL_PARSER} l_parser.make
-			--l_parser.set_dtd_resolver (create {XP_EXTERNAL_RESOLVER})
-			--l_parser.set_entity_resolver (create {XP_EXTERNAL_RESOLVER})
+			l_parser.set_dtd_resolver (create {XP_EXTERNAL_RESOLVER})
+			l_parser.set_entity_resolver (create {XP_EXTERNAL_RESOLVER})
 			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
 			l_p_callback.put_taglibs (a_taglib)
 			l_parser.set_callbacks (l_p_callback)

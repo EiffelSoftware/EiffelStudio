@@ -237,7 +237,7 @@ feature -- Access
 	is_void_safe: BOOLEAN
 			-- Does class use void-safe constructs?
 		do
-			Result := options.is_void_safe
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_syntax_obsolete: BOOLEAN

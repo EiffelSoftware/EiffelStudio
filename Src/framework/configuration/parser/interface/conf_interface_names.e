@@ -316,14 +316,22 @@ feature -- Option names and descriptions
 	option_is_attached_by_default_name: STRING_GENERAL do Result := locale.translation ("Are types attached by default?") end
 	option_is_attached_by_default_description: STRING_GENERAL do Result := locale.translation ("Are types without explicit attachment mark considered attached?") end
 
-	option_is_void_safe_name: STRING_GENERAL do Result := locale.translation ("Is source code void safe?") end
-	option_is_void_safe_description: STRING_GENERAL do Result := locale.translation ("Shall feature calls on targets of detachable types be reported as errors?") end
+	option_void_safety_name: STRING_GENERAL do Result := locale.translation ("Void safety") end
+	option_void_safety_description: STRING_GENERAL do Result := locale.translation ("%
+		%Void safety level the source code should provide:%
+		% None - void safety is not checked at all;%
+		% On demand - entities of attached type are ensured to be properly initialized;%
+		% Complete - all void safety validity rules are checked%
+	%") end
+	option_void_safety_none_name: STRING_GENERAL do Result := locale.translation ("No void safety") end
+	option_void_safety_initialization_name: STRING_GENERAL do Result := locale.translation ("On demand void safety") end
+	option_void_safety_all_name: STRING_GENERAL do Result := locale.translation ("Complete void safety") end
 
-	option_syntax_level_name: STRING_GENERAL do Result := locale.translation ("Syntax level") end
-	option_syntax_level_description: STRING_GENERAL do Result := locale.translation ("Variant of syntax used in source code") end
-	option_syntax_level_obsolete_name: STRING_GENERAL do Result := locale.translation ("Obsolete syntax") end
-	option_syntax_level_transitional_name: STRING_GENERAL do Result := locale.translation ("Transitional syntax") end
-	option_syntax_level_standard_name: STRING_GENERAL do Result := locale.translation ("Standard syntax") end
+	option_syntax_name: STRING_GENERAL do Result := locale.translation ("Syntax") end
+	option_syntax_description: STRING_GENERAL do Result := locale.translation ("Variant of syntax used in source code") end
+	option_syntax_obsolete_name: STRING_GENERAL do Result := locale.translation ("Obsolete syntax") end
+	option_syntax_transitional_name: STRING_GENERAL do Result := locale.translation ("Transitional syntax") end
+	option_syntax_standard_name: STRING_GENERAL do Result := locale.translation ("Standard syntax") end
 
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Warning names.

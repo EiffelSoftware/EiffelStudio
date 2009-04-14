@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			vb2.extend (l_padding)
 
 				-- Void-Safe check
-			if target.options.is_void_safe then
+			if target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
 				create l_void_safe_check.make_with_text ("Show only Void-Safe libraries")
 				l_void_safe_check.enable_select
 				l_void_safe_check.select_actions.extend (agent on_void_safe_check_selected)
@@ -333,14 +333,12 @@ feature {NONE} -- Actions
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (l_fn)
 				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system then
-					if attached {CONF_TARGET} l_system.library_target as l_target then
-						if not void_safe_check.is_selected or else l_target.options.is_void_safe then
-							on_library_selected (l_system, l_fn.as_string_8.as_attached)
-						else
-							prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn.as_string_8.as_attached), Void)
-						end
-					else
+					if not attached {CONF_TARGET} l_system.library_target as l_target then
 						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
+					elseif not void_safe_check.is_selected or else l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
+						on_library_selected (l_system, l_fn.as_string_8.as_attached)
+					else
+						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn.as_string_8.as_attached), Void)
 					end
 				end
 			end
@@ -379,7 +377,7 @@ feature {NONE} -- Action handlers
 				i > nb
 			loop
 				l_row := l_grid.row (i)
-				if l_show_all or else (attached {CONF_TARGET} l_row.data as l_target and then l_target.options.is_void_safe) then
+				if l_show_all or else (attached {CONF_TARGET} l_row.data as l_target and then l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all) then
 					l_row.show
 				else
 					l_row.hide
@@ -494,7 +492,7 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-				if l_show_void_safe_only and then not l_target.options.is_void_safe then
+				if l_show_void_safe_only and then l_target.options.void_safety.index /= {CONF_OPTION}.void_safety_index_all then
 						-- The library is not Void-Safe, hide it if showing only Void-Safe libraries.
 					l_row.hide
 				end

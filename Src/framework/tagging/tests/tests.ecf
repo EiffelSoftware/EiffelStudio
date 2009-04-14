@@ -13,6 +13,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" use_application_options="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
 		<tests name="tests" location=".\" recursive="true">

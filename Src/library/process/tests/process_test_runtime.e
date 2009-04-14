@@ -33,7 +33,7 @@ feature -- Test routines
 			l_fail_cell: CELL [BOOLEAN]
 			l_process: like current_process
 		do
-			create l_fail_cell
+			create l_fail_cell.put (False)
 			create_process ("an_executable_with_this_name_should_not_exist", Void)
 			l_process := current_process
 			check l_process /= Void end
@@ -53,9 +53,9 @@ feature -- Test routines
 			l_start_cell, l_launch_cell, l_exit_cell: CELL [BOOLEAN]
 			l_process: like current_process
 		do
-			create l_start_cell
-			create l_launch_cell
-			create l_exit_cell
+			create l_start_cell.put (False)
+			create l_launch_cell.put (False)
+			create l_exit_cell.put (False)
 			create_echo_process (Void)
 			l_process := current_process
 			check l_process /= Void end
@@ -79,7 +79,7 @@ feature -- Test routines
 			l_terminate_cell: CELL [BOOLEAN]
 			l_process: like current_process
 		do
-			create l_terminate_cell
+			create l_terminate_cell.put (False)
 			create l_args.make (1)
 			l_args.force ("--stdin")
 			create_echo_process (l_args)
@@ -98,10 +98,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

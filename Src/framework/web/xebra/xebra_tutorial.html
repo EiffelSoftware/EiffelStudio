@@ -85,11 +85,13 @@ h3 {
 <p>&nbsp;</p>
 <h2>Run the Xebra Server</h2>
 <ul>
-  <li>Open the eiffel project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf</span></li>
+  <li>Open the eiffel project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf</span><br />
+    <br />
+  </li>
   <li>Compile and Run</li>
 </ul>
 <p>&nbsp;</p>
-<h2>Create the Web Application</h2>
+<h2>Run the Xebrawebapp (simple web application)</h2>
 <p>You can use the tutorial web application <span class="code">xebrawebapp</span> at <span class="code">$XEBRA_DEV/websites/xebrawebapp</span> to start. To use it do the following:</p>
 <ul>
   <li>Create the Folder <span class="code">$APACHE2/htdocs/xebrawebapp<br />
@@ -100,36 +102,69 @@ h3 {
     ./generate-webapp.sh</span><br />
     <br />
     </li>
-  <li>Open the project in eiffelstudio, compile and run <br />
+  <li>Open the project at <span class="code">$XEBRA_DEV/websites/xebrawebapp/</span> in eiffelstudio and compile<br />
       <br />
   </li>
-  <li>Run the xebra server and make sure the correct apache is running<br />
+  <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
       <br />
   </li>
-  <li>Browse to <span class="code">http://localhost/xebrawebapp/hello.xeb</span>, you should see &quot;Hello World!&quot; <br />
-  </li>
+  <li>Browse to <span class="code">http://localhost/xebrawebapp/hello.xeb</span>, you should see &quot;Hello World!&quot;</li>
 </ul>
 <p>&nbsp;</p>
+<h2>Run the Demoapplication (advanced web application)</h2>
+<ul><li>
+  <p>You can use the tutorial web application <span class="code">demoapplication</span> at <span class="code">$XEBRA_DEV/websites/demoapplication</span> to start. To use it do the following:</p>
+    <ul>
+      <li>Create the Folder <span class="code">$APACHE2/htdocs/demoapplication<br />
+        <br />
+      </span></li>
+      <li>Copy the folder <span class="code">$XEBRA_DEV/</span><span class="code">websites/demoapplication/html/images</span> to<span class="code"> $APACHE2/htdocs/demoapplication<br />
+        <br />
+      </span></li>
+    </ul>
+    <ul>
+      <li>Run<br />
+        <span class="code">cd $XEBRA_DEV/websites/demoapplication/<br />
+          ./generate-webapp.sh</span><br />
+        <br />
+      </li>
+      <li>Open the project at <span class="code">$XEBRA_DEV/websites/demoapplication/</span> in eiffelstudio and compile<br />
+        <br />
+      </li>
+      <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
+        <br />
+      </li>
+      <li>Browse to <span class="code">http://localhost/demoapplication/home.xeb</span>, you should see the site:</li>
+    </ul>
+    <br />
+  </li>
+</ul>
+<h2>Create a new Web Application</h2>
 <p>If you want to create your own application remember the following important steps:
-</p>
+  <span class="code"><br />
+</span></p>
 <ul>
-  <li>Include the following clusters  <span class="code">$XEBRA_DEV/eiffel_projects/xebra_base</span> and  <span class="code">$XEBRA_DEV/eiffel_projects/thread_utilities<br />
-    <br />
-  </span></li>
-  <li>Add the libraries <span class="code">NET,  TIME, UUID_GENERATOR, THREAD</span><br />
-    <br />
+  <li>Add the libraries
+    <ul>
+      <li><span class="code">base.ecf </span>(not void-safe)<span class="code">,</span></li>
+      <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_http/xebra_http.ecf</span></li>
+      <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_web_application/xebra_web_application.ecf</span></li>
+      <li>don't use precompile<br />
+        <br />
+        </li>
+    </ul>
   </li>
   <li>Create the folder: <span class="code">$WEBAPP/servlet_gen</span><br />
     <br />
   </li>
   <li>Create the xeb files in  <span class="code">$WEBAPP</span><br />
-  <br />
+    <br />
   </li>
   <li>Create a new class <span class="code">(YOURNAME)_CONTROLLER</span> that inherits from <span class="code">XWA_CONTROLLER</span> and add the following feature
-  <br />
-  <span class="code">on_page_load<br />
-  do<br />
-  end</span><br />
+    <br />
+    <span class="code">on_page_load<br />
+    do<br />
+    end</span><br />
     <br />
   </li>
   <li>Add the following creation procedure<br />
@@ -139,8 +174,8 @@ h3 {
     end</span><br />
     <br />
   </li>
-  <li>Change the root class to <span class="code">(YOURNAME)_APPLICATION<br />
-      </span><br />
+  <li>Change the root class to <span class="code">(YOURNAME)_G_APPLICATION<br />
+    </span><br />
   </li>
   <li>Set project settings - target - advanced - multithreaded to true<span class="code"><br />
     <br />
@@ -153,15 +188,7 @@ h3 {
   </span></li>
   <li>Open the project in eiffelstudio, compile and run </li>
 </ul>
-<p><br />
-</p>
-<h2>Help</h2>
-<ul>
-  <li>If there is a 404, apache is not running correctly or mod_xebra was not installed correctly. Also, maybe you missed the <span class="code">AddHandler mod_xebra .xeb</span> command.</li>
-  <li>If there is the Fail Whale, mod_xebra could not connect to Xebra Server or a smiliar error. Consult the apache error log.</li>
-</ul>
-<p><br />
-</p>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 </body>

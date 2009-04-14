@@ -140,13 +140,7 @@ feature -- Callbacks
 								set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
 							end
 						else
-							if is_unknown_version then
-									-- unknown version, just add a warning
-								set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
-							else
-									-- known version, this is an error
-								set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
-							end
+							report_unknown_attribute (a_local_part)
 						end
 					else
 							-- Put undefined attributes in `current_attributes_undefined'.
@@ -1250,45 +1244,61 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
 				end
 			end
-			if l_is_void_safe /= Void and then current_namespace <= namespace_1_4_0 then
-				if l_is_void_safe.is_boolean then
-					if l_is_void_safe.to_boolean then
-						current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+			if l_is_void_safe /= Void then
+				if is_unknown_version or else current_namespace <= namespace_1_4_0 then
+					if l_is_void_safe.is_boolean then
+						if l_is_void_safe.to_boolean then
+							current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+						else
+							current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
+						end
 					else
-						current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
+					report_unknown_attribute ("is_void_safe")
 				end
 			end
-			if l_void_safety /= Void and then current_namespace >= namespace_1_5_0 then
-				if current_option.void_safety.is_valid_item (l_void_safety) then
-					current_option.void_safety.put (l_void_safety)
+			if l_void_safety /= Void then
+				if is_unknown_version or else current_namespace >= namespace_1_5_0 then
+					if current_option.void_safety.is_valid_item (l_void_safety) then
+						current_option.void_safety.put (l_void_safety)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+					report_unknown_attribute ("void_safety")
 				end
 			end
-			if l_syntax_level /= Void and then current_namespace <= namespace_1_4_0 then
-				if l_syntax_level.is_natural_8 then
-					inspect l_syntax_level.to_natural_8
-					when 0 then
-						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_obsolete)
-					when 1 then
-						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_transitional)
-					when 2 then
-						current_option.syntax.put_index ({CONF_OPTION}.syntax_index_standard)
+			if l_syntax_level /= Void then
+				if is_unknown_version or else current_namespace <= namespace_1_4_0 then
+					if l_syntax_level.is_natural_8 then
+						inspect l_syntax_level.to_natural_8
+						when 0 then
+							current_option.syntax.put_index ({CONF_OPTION}.syntax_index_obsolete)
+						when 1 then
+							current_option.syntax.put_index ({CONF_OPTION}.syntax_index_transitional)
+						when 2 then
+							current_option.syntax.put_index ({CONF_OPTION}.syntax_index_standard)
+						else
+							set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
+						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
+					report_unknown_attribute ("syntax_level")
 				end
 			end
-			if l_syntax /= Void and then current_namespace >= namespace_1_5_0 then
-				if current_option.syntax.is_valid_item (l_syntax) then
-					current_option.syntax.put (l_syntax)
+			if l_syntax /= Void then
+				if is_unknown_version or else current_namespace >= namespace_1_5_0 then
+					if current_option.syntax.is_valid_item (l_syntax) then
+						current_option.syntax.put (l_syntax)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax"))
+					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax"))
+					report_unknown_attribute ("syntax")
 				end
 			end
 
@@ -2362,6 +2372,20 @@ feature {NONE} -- Implementation state transitions
 		once
 			create Result.make (1)
 			Result.force (t_note)
+		end
+
+	report_unknown_attribute (name: STRING)
+			-- Report that attributes `name' is unknown for the current element.
+		require
+			name_attached: name /= Void
+		do
+			if is_unknown_version then
+					-- unknown version, just add a warning
+				set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (name))
+			else
+					-- known version, this is an error
+				set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (name))
+			end
 		end
 
 feature {NONE} -- Default options

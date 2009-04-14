@@ -1,0 +1,33 @@
+body,td,th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+}
+body {
+	background-color: #FFFFFF;
+}
+a:link {
+	color: #6A9B9B;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #4D7477;
+}
+a:hover {
+	text-decoration: none;
+	color: #98C6CE;
+}
+a:active {
+	text-decoration: none;
+}
+a {
+	font-weight: bold;
+}
+
+.style1 {color: #B2CCCD}
+
+.style2 {
+	color: #CCCCCC;
+	font-weight: bold;
+}

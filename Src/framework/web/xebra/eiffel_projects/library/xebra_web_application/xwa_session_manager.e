@@ -13,13 +13,13 @@ class
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialzation
 
 	make
 			-- Initialization for `Current'.
 		do
 			create sessions.make (16)
-			create sessions_mutext.make
+			--create--sessions_mutext.make
 		end
 
 feature -- Constants
@@ -29,7 +29,7 @@ feature -- Constants
 feature -- Access
 
 	sessions: HASH_TABLE [XH_SESSION, STRING]
-	sessions_mutext: MUTEX
+	--sessions_mutext: MUTEX
 
 
 feature -- Basic operations
@@ -41,7 +41,7 @@ feature -- Basic operations
 		local
 			l_session: detachable like get_current_session
 		do
-			sessions_mutext.lock
+			--sessions_mutext.lock
 			if attached a_request.get_cookie (Uuid) as l_cookie then
 				l_session := sessions.item (l_cookie.value)
 				if l_session /= Void and then not l_session.has_expired then
@@ -53,7 +53,7 @@ feature -- Basic operations
 			else
 				Result := new_session (a_response)
 			end
-			sessions_mutext.unlock
+			--sessions_mutext.unlock
 		end
 
 	renew_session (l_session: XH_SESSION ; a_response: XH_RESPONSE)
@@ -61,11 +61,11 @@ feature -- Basic operations
 		local
 			l_cookie_order: XH_COOKIE_ORDER
 		do
-			sessions_mutext.lock
+			--sessions_mutext.lock
 			create l_cookie_order.make (Uuid, l_session.uuid)
 			l_cookie_order.max_age := l_session.max_age
 			a_response.put_cookie_order (l_cookie_order)
-			sessions_mutext.unlock
+			--sessions_mutext.unlock
 		end
 
 	new_session (a_response: XH_RESPONSE): XH_SESSION
@@ -74,7 +74,7 @@ feature -- Basic operations
 			l_session: XH_SESSION
 			l_cookie_order: XH_COOKIE_ORDER
 		do
-			sessions_mutext.lock
+			--sessions_mutext.lock
 			create l_session.make
 			l_session.max_age := 1000
 			sessions.put (l_session, l_session.uuid)
@@ -83,6 +83,6 @@ feature -- Basic operations
 			create l_cookie_order.make (Uuid, l_session.uuid)
 			l_cookie_order.max_age := 1000
 			a_response.put_cookie_order (l_cookie_order)
-			sessions_mutext.unlock
+			--sessions_mutext.unlock
 		end
 end

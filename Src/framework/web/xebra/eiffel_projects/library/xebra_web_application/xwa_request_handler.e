@@ -27,9 +27,11 @@ feature -- Access
 feature -- Processing
 
 process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
-					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET; a_request_handler: XWA_SERVER_CONN_HANDLER)
+					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET;  a_request_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
+
+			-- TODO was ist hier genau der witz, dass man einen XWA_SERVER_CONN_HANDLER mitgibt? das kann sicher besser geloest werden. ist auch heike wegen thread!
 		local
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
@@ -37,7 +39,6 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 			l_request_factory: XH_REQUEST_FACTORY
 
 		do
-			dprint ("I'm a new thread",2)
 			create l_request_factory.make
 			l_new_request := l_request_factory.get_request (a_request_message)
 			create l_response.make_empty

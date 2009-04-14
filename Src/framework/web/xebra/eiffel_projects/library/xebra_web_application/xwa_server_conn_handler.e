@@ -126,11 +126,16 @@ feature -- Implementation
 
     process_request
               -- Receive a request, handle it in new thread, and send it back.
+        local
+        	l_request_handler: XWA_REQUEST_HANDLER
         do
+        	create l_request_handler.make
             if socket.is_connected then
 	            if attached {STRING} socket.retrieved as l_request_message then
 	            	dprint ("Incoming request, spawning new thread...",1)
-	 	        	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
+	 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
+	 	        		--singleusermode
+	 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
 	            else
 					socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
 	            end

@@ -35,7 +35,7 @@ feature -- Basic Operations
 			internal_controller.set_current_request (a_request)
 			internal_controller.set_current_session (current_session)
 			internal_controller.on_page_load
-		--	a_request.call_pre_handler (Current, a_response)
+			a_request.call_pre_handler (Current, a_response)
 			handle_request (a_request, a_response)
 			afterhandle_request (a_request, a_response)
 		end

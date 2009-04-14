@@ -33,11 +33,14 @@ h3 {
 <body>
 <h1>Xebra Tutorial (CURRENTLY NOT VALID)</h1>
 <p>Eiffel source is expected to be in <span class="code">$EIFFEL_SRC,</span> and the c libraries are expected to be compiled</p>
+<p>&nbsp;</p>
 <h2 align="left">Checkout</h2>
 <ul>
   <li>Checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="code">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="code">$XEBRA_DEV</span></li>
 </ul>
+<p>&nbsp;</p>
 <h2>Setup mod_xebra </h2>
+<p><strong>Note</strong>: Mod_xebra does currently not run with the apache that comes with ubuntu. </p>
 <ul>
   <li>  Download apache unix source httpd-2.2.11 from <span class="code"><a href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a></span><a href="http://httpd.apache.org/download.cgi"><br />
     <br />
@@ -85,31 +88,44 @@ h3 {
   <li>Open the eiffel project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf</span></li>
   <li>Compile and Run</li>
 </ul>
+<p>&nbsp;</p>
 <h2>Create the Web Application</h2>
+<p>You can use the tutorial web application <span class="code">xebrawebapp</span> at <span class="code">$XEBRA_DEV/websites/xebrawebapp</span> to start. To use it do the following:</p>
 <ul>
-  <li>Create a new eiffel project at <span class="code">$WEBAPP</span> with the name <span class="code">xebrawebapp</span></li>
+  <li>Create the Folder <span class="code">$APACHE2/htdocs/xebrawebapp<br />
+  </span></li>
 </ul>
+<ul><li>Run<br />
+    <span class="code">cd $XEBRA_DEV/websites/xebrawebapp/<br />
+    ./generate-webapp.sh</span><br />
+    <br />
+    </li>
+  <li>Open the project in eiffelstudio, compile and run <br />
+      <br />
+  </li>
+  <li>Run the xebra server and make sure the correct apache is running<br />
+      <br />
+  </li>
+  <li>Browse to <span class="code">http://localhost/xebrawebapp/hello.xeb</span>, you should see &quot;Hello World!&quot; <br />
+  </li>
+</ul>
+<p>&nbsp;</p>
+<p>If you want to create your own application remember the following important steps:
+</p>
 <ul>
-  <li>Include the following clusters (all in <span class="code">$XEBRA_DEV/eiffel_projects/</span>): xebra_base, thread_utilities<br />
+  <li>Include the following clusters  <span class="code">$XEBRA_DEV/eiffel_projects/xebra_base</span> and  <span class="code">$XEBRA_DEV/eiffel_projects/thread_utilities<br />
+    <br />
+  </span></li>
+  <li>Add the libraries <span class="code">NET,  TIME, UUID_GENERATOR, THREAD</span><br />
     <br />
   </li>
-  <li>Create a new folder: <span class="code">$WEBAPP/servlet_gen</span><br />
-  <br />  
+  <li>Create the folder: <span class="code">$WEBAPP/servlet_gen</span><br />
     <br />
   </li>
-  <li>Create a file <span class="code">$WEBAPP/hello.xeb</span> with the following content<br />
-    <span class="code">&lt;html&gt;<br />
-&lt;body&gt;<br />
-Hello &lt;xeb:call feature=&quot;world&quot;/&gt;!<br />
-&lt;/body&gt;<br />
-&lt;/html&gt;</span><br />
+  <li>Create the xeb files in  <span class="code">$WEBAPP</span><br />
   <br />
   </li>
-  <li>Create a new class in the eiffel project <span class="code">XEBRAWEBAPP_CONTROLLER</span> that inherits from <span class="code">XWA_CONTROLLER</span> and add the following two features<br />
-    <span class="code">world: STRING<br /> 
-    do<br />
-    Result := &quot;World&quot;<br />
-  end</span><br />
+  <li>Create a new class <span class="code">(YOURNAME)_CONTROLLER</span> that inherits from <span class="code">XWA_CONTROLLER</span> and add the following feature
   <br />
   <span class="code">on_page_load<br />
   do<br />
@@ -123,31 +139,22 @@ Hello &lt;xeb:call feature=&quot;world&quot;/&gt;!<br />
     end</span><br />
     <br />
   </li>
-  <li>Change the root class to <span class="code">XEBRAWEBAPP_SERVER_CONN_HANDLER<br />
+  <li>Change the root class to <span class="code">(YOURNAME)_APPLICATION<br />
+      </span><br />
+  </li>
+  <li>Set project settings - target - advanced - multithreaded to true<span class="code"><br />
     <br />
   </span></li>
-  <li>Adapt the three files <span class="code">generate-webapp.sh,</span> <span class="code">input_servlet_gen.txt</span> and <span class="code">input_translator.txt</span> in <span class="code">$XEBRA_DEV/eiffel_projects/xebra_translator/</span> by replacing &quot;<span class="code">demoapplication</span>&quot; with &quot;<span class="code">xebrawebapp</span>&quot;<br />
-    Run <br />
-    <span class="code">cd $XEBRA_DEV/eiffel_projects/xebra_translator/</span><br />
-    <span class="code">./generate-webapp.sh xebrawebapp</span><br />
-    If there are no errors, the files are generated to <span class="code">$WEBAPP</span>.<br />  
+  <li>Adapt the three files <span class="code">generate-webapp.sh,</span> <span class="code">input_servlet_gen.txt</span> and <span class="code">input_translator.txt</span> to match the new paths<br />  
     <br />
   </li>
-  <li>Create the folder <span class="code">$APACHE2/htdocs/xebrawebapp<br />
+  <li>Create the folder <span class="code">$APACHE2/htdocs/(YOURNAME)<br />
     <br />
   </span></li>
-  <li>Compile and Run the new eiffel project</li>
+  <li>Open the project in eiffelstudio, compile and run </li>
 </ul>
-<p>&nbsp;</p>
-<h2>See the Web Application</h2>
-<ul>
-  <li>Make sure no other apache is running.<br />
-    <br />
-  </li>
-  <li>Browse to <span class="code"><a href="http://localhost/xebrawebapp/hello.xeb">http://localhost/xebrawebapp/hello.xeb</a></span><br />
-    <br />
-  </li>
-</ul>
+<p><br />
+</p>
 <h2>Help</h2>
 <ul>
   <li>If there is a 404, apache is not running correctly or mod_xebra was not installed correctly. Also, maybe you missed the <span class="code">AddHandler mod_xebra .xeb</span> command.</li>

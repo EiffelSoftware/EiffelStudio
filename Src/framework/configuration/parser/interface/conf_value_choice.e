@@ -140,6 +140,7 @@ feature {CONF_VALUE_CHOICE} -- Content
 invariant
 	positive_count: count > 0
 	attached_content: content /= Void
+	is_value_comparison: content.object_comparison
 	index_in_range: index < count
 
 note

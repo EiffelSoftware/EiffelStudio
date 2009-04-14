@@ -1,5 +1,5 @@
 note
-	description : "Runns the xebra translator"
+	description : "Runs the xebra translator"
 	date        : "$Date$"
 	revision    : "$Revision$"
 

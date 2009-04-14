@@ -34,6 +34,7 @@ feature {NONE} -- Creation
 		do
 			index := default_index
 			content := items
+			content.compare_objects
 		ensure
 			index_set: index = default_index
 			content_set: content = items
@@ -79,7 +80,8 @@ feature -- Modification
 	put_index (value: like index)
 			-- Set `index' to `value'.
 		require
-			value_small_enough: value < count
+			value_large_enough: value > 0
+			value_small_enough: value <= count
 		do
 			index := value
 			is_set := True
@@ -94,6 +96,8 @@ feature -- Modification
 			value_attached: value /= Void
 			is_valid_item: is_valid_item (value)
 		do
+				-- Option should be marked as set to get non-empty strings from `item'
+			is_set := True
 			from
 				index := content.lower.to_natural_8
 			until
@@ -103,7 +107,6 @@ feature -- Modification
 			variant
 				content.upper - index + 1
 			end
-			is_set := True
 		ensure
 			item_set: item.is_equal (value)
 			is_set: is_set

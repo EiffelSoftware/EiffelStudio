@@ -8,29 +8,29 @@ define NA "--"
 define NT ""
 copy_sub	test.e $CLUSTER test.e
 
-define VOID_SAFE_A "true"
-define VOID_SAFE_TEST "true"
+define VOID_SAFETY_A "all"
+define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error TEST VDRD(2) VDRD(2)
 abort_compile
 
-define VOID_SAFE_A "false"
-define VOID_SAFE_TEST "true"
+define VOID_SAFETY_A "none"
+define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error TEST VDRD(2) VDRD(2)
 abort_compile
 
-define VOID_SAFE_A "true"
-define VOID_SAFE_TEST "false"
+define VOID_SAFETY_A "all"
+define VOID_SAFETY_TEST "none"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error A VUTA(2) VJAR
 abort_compile
 
-define VOID_SAFE_A "false"
-define VOID_SAFE_TEST "false"
+define VOID_SAFETY_A "none"
+define VOID_SAFETY_TEST "none"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok
@@ -41,29 +41,29 @@ define NA ""
 define NT "--"
 copy_sub	test.e $CLUSTER test.e
 
-define VOID_SAFE_A "true"
-define VOID_SAFE_TEST "true"
+define VOID_SAFETY_A "all"
+define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error TEST VUAR(2) VEVI VUTA(2) VUTA(2) VJAR; A VUTA(2) VJAR
 abort_compile
 
-define VOID_SAFE_A "false"
-define VOID_SAFE_TEST "true"
+define VOID_SAFETY_A "none"
+define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error TEST VUAR(2) VEVI VUTA(2) VUTA(2) VJAR
 abort_compile
 
-define VOID_SAFE_A "true"
-define VOID_SAFE_TEST "false"
+define VOID_SAFETY_A "all"
+define VOID_SAFETY_TEST "none"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	validity_error A VUTA(2) VJAR
 abort_compile
 
-define VOID_SAFE_A "false"
-define VOID_SAFE_TEST "false"
+define VOID_SAFETY_A "none"
+define VOID_SAFETY_TEST "none"
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok

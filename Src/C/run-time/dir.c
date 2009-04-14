@@ -439,11 +439,11 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 	else	return (EIF_BOOLEAN) TRUE;
 
 #elif defined EIF_VMS
-	/* Here is a major stupid: stat accepts unix directory paths, access does not! */
-	/* return (EIF_BOOLEAN) (access(name, R_OK) != -1);           wont work!     */
+	int result;
 	char vms_path [PATH_MAX +1];
-	int dbg = access((name), R_OK);
-	int result = access(eifrt_vms_directory_file_name (name, vms_path), R_OK);
+	result = access (name, R_OK);
+	if (result == -1) 
+	    result = access (eifrt_vms_directory_file_name (name, vms_path), R_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
 #elif defined EIF_WINDOWS
@@ -498,11 +498,12 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 	else	return (EIF_BOOLEAN) TRUE;
 
 #elif defined EIF_VMS
-
-	/* This requies write and delete access on the directory to be true. */
+	/* n.b. this requires both write and delete access on the directory to be true. */
+	int result;
 	char vms_path [PATH_MAX +1];
-	int dbg = access((name), W_OK);
-	int result = access(eifrt_vms_directory_file_name (name, vms_path), W_OK);
+	result = access (name, W_OK);
+	if (result == -1)
+	    result = access (eifrt_vms_directory_file_name (name, vms_path), W_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
 #elif defined EIF_WINDOWS
@@ -561,13 +562,16 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 		return (EIF_BOOLEAN) TRUE;
 
 #elif defined EIF_VMS
+	int result;
 	char vms_path [PATH_MAX +1];
-	int dbg = access((name), X_OK);
-	int result = access(eifrt_vms_directory_file_name (name, vms_path), X_OK);
+	result = access (name, X_OK);
+	if (result == -1)
+	    result = access (eifrt_vms_directory_file_name (name, vms_path), X_OK);
 	return (EIF_BOOLEAN) (result != -1);
 
 #elif defined EIF_WINDOWS
 	return (EIF_BOOLEAN) (access (name, 0) != -1);
+
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
@@ -655,14 +659,6 @@ rt_public void eif_dir_delete(char *name)
 #ifdef  MY_VMS_WRAPPERS
 typedef struct { size_t siz; int magic; DIR* dirp; char *prev; } EIF_VMS_DIR;
 static const int magic = 7652;
-#ifdef moose
-#undef opendir   
-#undef closedir  
-#undef rewinddir 
-#undef readdir   
-#undef seekdir   
-#undef telldir   
-#endif
 
 /* define the local readdir package macros to call the underlying readdir functions. */
 /* #ifdef USE_VMS_JACKETS */ /* if using VMS Porting package ("The Jackets") -- see eif_portable.h */
@@ -681,7 +677,7 @@ static const int magic = 7652;
 #define DECC_SEEKDIR	DECC$SEEKDIR
 #define DECC_TELLDIR	DECC$TELLDIR
 /* #endif */ /* VMS_JACKETS */
-#endif /* MY_VMS_WRAPPERS */
+
 
 rt_public DIR* eif_vms_opendir (const char *dir_name)
 {
@@ -783,6 +779,7 @@ rt_public long eif_vms_telldir (DIR* notadirp)
 #endif
 }
 
+#endif /* MY_VMS_WRAPPERS */
 
 #ifdef EIF_VMS_V6_ONLY
 char * dir_dot_dir (char * duplicate)

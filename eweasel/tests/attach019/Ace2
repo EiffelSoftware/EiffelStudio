@@ -9,7 +9,7 @@
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\">
-			<option is_attached_by_default="true" is_void_safe="true"/>
+			<option is_attached_by_default="true" void_safety="all"/>
 		</cluster>
 	</target>
 </system>

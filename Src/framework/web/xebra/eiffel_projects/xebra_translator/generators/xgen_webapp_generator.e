@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING; a_global_state: XWA_GLOBAL_STATE)")
+			create Result.make ("make (a_name: STRING; a_global_state: " + webapp_name.as_upper + "_GLOBAL_STATE)")
 			Result.append_expression ("base_make (a_name)")
 			from
 				some_servlets.start

@@ -31,3 +31,17 @@ a {
 	color: #CCCCCC;
 	font-weight: bold;
 }
+
+tr.tableheader {
+	background: #666666;
+	font-weight: bold;
+	font-color: #CCCCCC;	
+}
+
+td.loginback {
+	background: #000 url(images/login.gif);
+}
+
+td.template_18_back {
+	background: #000 url(images/template_18.gif);
+}

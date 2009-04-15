@@ -27,7 +27,7 @@ feature -- Access
 feature -- Processing
 
 process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
-					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET;  a_request_handler: XWA_SERVER_CONN_HANDLER)
+					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET;  a_server_conn_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 
@@ -50,7 +50,7 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 			loop
 				create l_response.make_empty
 				dprint ("Searching matching servlet...",2)
-				l_servlet := find_servlet (l_new_request, a_request_handler)
+				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
 				if attached l_servlet then
 					dprint ("Handing over to matching servlet...",2)
 					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
@@ -76,13 +76,13 @@ feature {NONE} -- Internal Processing
 			 end
 		end
 
-	find_servlet (a_request: XH_REQUEST; a_request_handler: XWA_SERVER_CONN_HANDLER): detachable XWA_SERVLET
+	find_servlet (a_request: XH_REQUEST; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): detachable XWA_SERVLET
 			-- Searches for the servlet requested by `request'
 			-- 1. Stateless servlet?
 			-- 2. Servlet in session?
 			-- 3. If not found := Void
 		do
-			if attached {XWA_STATELESS_SERVLET} a_request_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+			if attached {XWA_STATELESS_SERVLET} a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
 				Result := l_servlet
 			else
 			--	Result := request.session.get_stateful_servlet

@@ -34,11 +34,16 @@ feature -- Access
 
 feature -- Status Change
 
-	register (a_name: STRING; a_socket: NETWORK_SOCKET)
+	register (a_name: STRING; a_socket: NETWORK_SOCKET): BOOLEAN
 			-- Registers a new webapp in webapps
 		do
 			webapps_mutex.lock
-			webapps.extend (a_socket, a_name)
+			if not webapps.has (a_name) then
+				webapps.extend (a_socket, a_name)
+				Result := True
+			else
+				Result := False
+			end
 			webapps_mutex.unlock
 		end
 

@@ -46,9 +46,13 @@ feature -- Inherited Features
 					  if attached {STRING} l_socket.retrieved as l_buf then
 						 if l_buf.has_substring (Key_register) then
 						  	l_buf.remove_head (l_buf.substring_index (Key_register, 1) + Key_register.count-1)
-						  	webapp_handler.register (l_buf, l_socket)
-						  	l_socket.independent_store (Key_register_ack)
-						  	dprint ("New application registered '" + l_buf + "'.", 1)
+						  	if webapp_handler.register (l_buf, l_socket) then
+							  	l_socket.independent_store (Key_register_ack)
+							  	dprint ("New application registered '" + l_buf + "'.", 1)
+							else
+								l_socket.independent_store ("Sorry, no")
+								eprint ("Could not register '" + l_buf + "'.")
+							end
 						  else
 						  	eprint ("Invalid registration, shutting down socket.")
 						  	l_socket.cleanup

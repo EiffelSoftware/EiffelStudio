@@ -112,13 +112,21 @@
           <xeb:if condition="authenticated_admin">
           <tr>
             <th scope="row"></th>
-            <td><input type="submit" name="Submit" id="Submit" value="Submit" />
-              <input type="submit" name="Delete" id="Delete" value="Delete" />
+            <td>
             </td>
           </tr>
           </xeb:if>
         </table>
+          <xeb:if condition="authenticated_admin">
+        <input type="submit" name="Edit" id="Edit" value="Edit" />
+          </xeb:if>
       </form>
+      <xeb:if condition="authenticated_admin">
+      <form action="delete.xeb" method="post" id="form1">
+        <input type="submit" name="Delete" id="Delete" value="Delete" />
+        <input type="hidden" name="id" id="id" value="%=get_res_id_from_args%"/>
+       </form>
+      </xeb:if> 
       <!-- InstanceEndEditable --></td>
     <td></td>
   </tr>

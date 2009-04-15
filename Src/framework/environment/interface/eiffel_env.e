@@ -366,6 +366,77 @@ feature -- Query
 			result_exists: (Result /= Void and a_must_exist) implies (create {DIRECTORY}.make (Result)).exists
 		end
 
+	platform_priority_file_name (a_file_name: READABLE_STRING_GENERAL; a_use_simple: BOOLEAN; a_must_exist: BOOLEAN): detachable FILE_NAME
+			-- Retrieve a Eiffel installation path, taking a platform specific path as a priority
+			--
+			-- `a_dir': A base directory to affix with the platform name.
+			-- `a_use_simple': True to use the Windows/Unix platform name; False to use ISE_PLATFORM.
+			-- `a_must_exist': True if the directory must exist to return a result; False otherwise.
+			-- `Result': A platform path or Void if the path does not exist.
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_is_empty: not a_file_name.is_empty
+		local
+			l_file: STRING
+			l_path: like platform_priority_path
+			i: INTEGER
+		do
+			l_file := a_file_name.as_string_8
+			i := l_file.last_index_of (operating_environment.directory_separator, l_file.count)
+			if i > 0 then
+				l_path := platform_priority_path (l_file.substring (1, i - 1), a_use_simple, a_must_exist)
+				if l_path /= Void then
+					create Result.make_from_string (l_path)
+					Result.extend (l_file.substring (i + 1, l_file.count))
+					if a_must_exist and then not (create {RAW_FILE}.make (Result)).exists then
+							-- The directory does not exist
+						Result := Void
+					end
+				end
+
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_exists: (Result /= Void and a_must_exist) implies (create {RAW_FILE}.make (Result)).exists
+		end
+
+	platform_priority_path (a_dir: READABLE_STRING_GENERAL; a_use_simple: BOOLEAN; a_must_exist: BOOLEAN): detachable DIRECTORY_NAME
+			-- Retrieve a Eiffel installation path, taking a platform specific path as a priority
+			--
+			-- `a_dir': A base directory to affix with the platform name.
+			-- `a_use_simple': True to use the Windows/Unix platform name; False to use ISE_PLATFORM.
+			-- `a_must_exist': True if the directory must exist to return a result; False otherwise.
+			-- `Result': A platform path or Void if the path does not exist.
+		require
+			a_dir_attached: a_dir /= Void
+			not_a_dir_is_empty: not a_dir.is_empty
+		local
+			l_platform: like eiffel_platform
+		do
+			create Result.make_from_string (a_dir.as_string_8)
+			if a_use_simple then
+				if {PLATFORM}.is_windows then
+					Result.extend (windows_name)
+				else
+					Result.extend (unix_name)
+				end
+			else
+				l_platform := eiffel_platform
+				if not l_platform.is_empty then
+					Result.extend (l_platform)
+				elseif a_must_exist then
+					Result := Void
+				end
+			end
+			if a_must_exist and then Result /= Void and then not (create {DIRECTORY}.make (Result)).exists then
+					-- The directory does not exist
+				Result := Void
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_exists: (Result /= Void and a_must_exist) implies (create {DIRECTORY}.make (Result)).exists
+		end
+
 feature -- Directories (top-level)
 
 	install_path: DIRECTORY_NAME

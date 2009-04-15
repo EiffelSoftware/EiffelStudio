@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("make")
 			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
-			Result.append_expression ("server_connection_handler.run")
+			--Result.append_expression ("server_connection_handler.run")
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT

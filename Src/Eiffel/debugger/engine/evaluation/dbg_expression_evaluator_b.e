@@ -2278,15 +2278,15 @@ feature -- Access
 
 				--| FIXME JFIAT: check in which cases we call the is_condition
 				--| to see if it is pertinent to save.restore data ...			
-			bak := context.backup_data
-			if bak.is_valid or old_int_expression_byte_note /= Void then
+			bak := ctx.backup_data
+			if (bak /= Void and then bak.is_valid) or old_int_expression_byte_note /= Void then
 					--| Restore context and values
 				if bak.class_c = Void then
 						--| FIXME JFIAT: check this ... how to have a context_class .. not void
 						--| and pertinent ...
 					bak.set_class_c (context.class_c)
 				end
-				context.restore
+				ctx.restore
 				apply_context
 				internal_byte_node := old_int_expression_byte_note
 			else

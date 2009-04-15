@@ -22,8 +22,8 @@
 		<option syntax_level="1">
 			<assertions precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
 		<cluster name="text_processing" location=".\" recursive="true"/>
 	</target>
 </system>

@@ -13,10 +13,8 @@ inherit
 
 feature -- Path name operations
 
-	null_file_name: STRING is
+	null_file_name: STRING = "nul"
 			-- File name which represents null input or output
-		do
-		end
 	
 	full_file_name (dir_name, f_name: STRING): STRING is
 			-- Full name of file in directory `dir_name'

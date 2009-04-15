@@ -1,17 +1,21 @@
-indexing
-	description: "Connects to database"
-	author: "Fabio Zünd & Massimiliano Gentile & Yanick Fratantonio"
-	date: "2008-12-14"
-	revision: "1.0"
+note
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	DEMOAPPLICATION_DATABASE
+	DEMOAPPLICATION_MYSQL_DATABASE
 inherit
-	DATABASE_APPL [ODBC]
+--	DATABASE_APPL [ODBC]
+--	DEMOAPPLICATION_DATABASE
 
 
-create
-	make
+--create
+--	make
 
 
 feature -- Constants
@@ -26,110 +30,109 @@ feature -- Constants
 
 feature -- DB access
 
-	session_control: DB_CONTROL
-	base_update: DB_CHANGE
-	base_selection: DB_SELECTION
-	repository: DB_REPOSITORY
-	storage: DB_STORE
+--	session_control: DB_CONTROL
+--	base_update: DB_CHANGE
+--	base_selection: DB_SELECTION
+--	repository: DB_REPOSITORY
+--	storage: DB_STORE
 
 
 
 feature -- database control
 
-	make  is
-			-- Creation
-		do
-			-- No open here, just create
-			is_connected := False
-		end
-
-	is_connected: BOOLEAN
-			-- Check if already connected to the database.
-
-	close is
-			-- Terminate session
-		do
-			session_control.disconnect
-			is_connected := False
-		end
-
-	open: BOOLEAN is
-			-- Open the connection with the database
-		do
-			set_data_source(datasource)
-
-			-- Set user's name and password
-			login (username, password)
-
-			-- Initialization of the Relational Database:
-			-- This will set various informations to perform a correct
-			-- Connection to the Relational database
-			set_base
-
-			-- Create usefull classes
-			-- 'session_control' provides informations control access and
-			--  the status of the database.
-			-- 'base_selection' provides a SELECT query mechanism.
-			-- 'base_update' provides updating facilities.
-			create session_control.make
-			create base_selection.make
-			create base_update.make
-
-			-- Start session
-			session_control.connect
-
-			if  session_control.is_connected then
-
-				Result := True
-			else
-					-- Something went wrong, and the connection failed
-				session_control.raise_error
-				Result := False
-			end
-
-			is_connected := Result
-		end
+--	make  is
+--			-- Creation
+--		do
+--			-- No open here, just create
+--			is_connected := False
+--		end
 
 
-	query_not_evil (msg: STRING): BOOLEAN is
-			-- Checks if msg contains harmful sql-keywords
-		require
-			msg_not_Void: msg /= Void
-		local
-			ok: BOOLEAN
-		do
-			ok := True
 
-			if msg.as_lower.has_substring ("select") then
-				ok := False
-			end
+--	close is
+--			-- Terminate session
+--		do
+--			session_control.disconnect
+--			is_connected := False
+--		end
 
-			if msg.as_lower.has_substring (";") then
-				ok := False
-			end
+--	open: BOOLEAN is
+--			-- Open the connection with the database
+--		do
+--			set_data_source(datasource)
 
-			if msg.as_lower.has_substring ("insert") then
-				ok :=  False
-			end
+--			-- Set user's name and password
+--			login (username, password)
 
-			if msg.as_lower.has_substring ("alter") then
-				ok :=  False
-			end
+--			-- Initialization of the Relational Database:
+--			-- This will set various informations to perform a correct
+--			-- Connection to the Relational database
+--			set_base
 
-			if msg.as_lower.has_substring ("*") then
-				ok :=  False
-			end
+--			-- Create usefull classes
+--			-- 'session_control' provides informations control access and
+--			--  the status of the database.
+--			-- 'base_selection' provides a SELECT query mechanism.
+--			-- 'base_update' provides updating facilities.
+--			create session_control.make
+--			create base_selection.make
+--			create base_update.make
 
-			if msg.as_lower.has_substring ("delete") then
-				ok := False
-			end
+--			-- Start session
+--			session_control.connect
 
-			if msg.as_lower.has_substring ("table") then
-				ok :=  False
-			end
+--			if  session_control.is_connected then
 
-			Result := ok
-		end
+--				Result := True
+--			else
+--					-- Something went wrong, and the connection failed
+--				session_control.raise_error
+--				Result := False
+--			end
+
+--			is_connected := Result
+--		end
+
+
+--	query_not_evil (msg: STRING): BOOLEAN is
+--			-- Checks if msg contains harmful sql-keywords
+--		require
+--			msg_not_Void: msg /= Void
+--		local
+--			ok: BOOLEAN
+--		do
+--			ok := True
+
+--			if msg.as_lower.has_substring ("select") then
+--				ok := False
+--			end
+
+--			if msg.as_lower.has_substring (";") then
+--				ok := False
+--			end
+
+--			if msg.as_lower.has_substring ("insert") then
+--				ok :=  False
+--			end
+
+--			if msg.as_lower.has_substring ("alter") then
+--				ok :=  False
+--			end
+
+--			if msg.as_lower.has_substring ("*") then
+--				ok :=  False
+--			end
+
+--			if msg.as_lower.has_substring ("delete") then
+--				ok := False
+--			end
+
+--			if msg.as_lower.has_substring ("table") then
+--				ok :=  False
+--			end
+
+--			Result := ok
+--		end
 
 
 --		reset is
@@ -1124,4 +1127,5 @@ feature -- database control
 
 
 end
+
 

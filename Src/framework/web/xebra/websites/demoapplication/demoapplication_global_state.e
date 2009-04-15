@@ -21,12 +21,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create database.make
-			--database.open
+		--	create database.make
+		--	if not database.open then
+		--		print ("ERROR DATENBAANK")
+		--	end
 		end
 
 feature -- Access
 
-	database: DEMOAPPLICATION_DATABASE
+--	database: DEMOAPPLICATION_DATABASE
 
 end

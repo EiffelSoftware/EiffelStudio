@@ -104,7 +104,8 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
-			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
+			Result.append_expression ("create {DEMOAPPLICATION_GLOBAL_STATE} global_state.make")
+			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name, global_state)")
 			Result.append_expression ("server_connection_handler.execute")
 		end
 
@@ -114,7 +115,7 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING)")
+			create Result.make ("make (a_name: STRING; a_global_state: XWA_GLOBAL_STATE)")
 			Result.append_expression ("base_make (a_name)")
 			from
 				some_servlets.start
@@ -123,7 +124,7 @@ feature {NONE} -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make , %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make (a_global_state), %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end

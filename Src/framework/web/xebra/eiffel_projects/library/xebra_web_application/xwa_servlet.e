@@ -13,17 +13,20 @@ inherit
 
 feature {XWA_SERVLET} -- Initialization
 
-	base_make
+	base_make (a_global_state: XWA_GLOBAL_STATE)
 			-- Will be executed by inheritant class
 		do
 			create current_session.make
+			global_state := a_global_state
 		end
 
 feature -- Access
 
-
 	current_session: XH_SESSION
 			-- Represents the session that belongs to the user that has send the current request
+
+	global_state: XWA_GLOBAL_STATE
+			-- The global state of the web application
 
 feature -- Basic Operations	
 

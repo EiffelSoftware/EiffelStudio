@@ -42,6 +42,8 @@ feature -- Constants
 	Reading_html: INTEGER = 0
 	Reading_tag: INTEGER = 1
 
+	Configuration_tag: STRING = "page"
+
 	parser: XM_PARSER
 
 feature -- Access
@@ -96,7 +98,7 @@ feature -- Document
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.		
 		do
-		--	error_manager.set_last_error (create {XERROR_PARSE}.make (["Xml declarations not yet supported"]), false)
+			--error_manager.set_last_error (create {XERROR_PARSE}.make (["Xml declarations not yet supported " + current_debug_information + " in " + path]), false)
 		end
 
 feature -- Errors

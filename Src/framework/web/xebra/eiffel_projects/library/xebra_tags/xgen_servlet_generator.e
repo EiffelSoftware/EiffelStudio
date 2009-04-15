@@ -28,7 +28,7 @@ feature --
 			-- Serializes the request feature of the {SERVLET}
 		do
 			a_class.make_feature.append_expression ("base_make (a_global_state)")
-			a_class.make_feature.append_expression ("create controller." + constructor_name)
+			a_class.make_feature.append_expression ("create controller." + constructor_name + " (a_global_state)")
 		end
 
 	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT

@@ -132,7 +132,6 @@ feature -- Implementation
         	create l_request_handler.make
             if socket.is_connected then
 	            if attached {STRING} socket.retrieved as l_request_message then
-	            	dprint ("Incoming request, spawning new thread...",1)
 	 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
 	 	        		--singleusermode
 	 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)

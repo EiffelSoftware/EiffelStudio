@@ -42,21 +42,12 @@ feature -- Access
 	server_connection_handler: XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
 
+	global_state: XWA_GLOBAL_STATE
+			-- Holds variables valid for all users		
+
 	name: STRING
 			-- The name of the web application
 		deferred
 		end
-
-feature -- Measurement
-
-feature -- Element change
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
 
 end

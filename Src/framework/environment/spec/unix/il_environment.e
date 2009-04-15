@@ -71,17 +71,20 @@ feature -- Access
 		require
 			is_dotnet_installed: is_dotnet_installed
 		do
+			create Result.make_empty
 		end
 
 	dotnet_framework_sdk_bin_path: STRING
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		do
+			create Result.make_empty
 		end
 
 	dotnet_framework_sdk_path: STRING
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		do
+			create Result.make_empty
 		end
 
 	installed_runtimes: ARRAYED_LIST [STRING]
@@ -124,6 +127,7 @@ feature -- Query
 		require
 			a_debug_not_void: a_debug /= Void
 		do
+			create Result.make_empty
 		end
 
 invariant

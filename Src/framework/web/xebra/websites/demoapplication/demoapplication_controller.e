@@ -66,7 +66,7 @@ feature -- Basic Operations
 		end
 
 	authenticated_admin: BOOLEAN
-			-- Tests if session contains authenticated flag.
+			-- Tests if session contains authenticated flag and user is admin
 		do
 			Result := False
 
@@ -80,7 +80,7 @@ feature -- Basic Operations
 		end
 
 	get_res_id_from_args: STRING
-			--
+			-- Retrieve reservartion ID from request arguments
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
@@ -89,7 +89,7 @@ feature -- Basic Operations
 		end
 
 	get_res_name_from_args: STRING
-			--
+			-- Retrieve reservartion name from request arguments
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
@@ -107,7 +107,7 @@ feature -- Basic Operations
 		end
 
 	get_res_date_from_args: STRING
-			--
+			-- Retrieve reservartion date from request arguments
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
@@ -125,7 +125,7 @@ feature -- Basic Operations
 		end
 
 	get_res_persons_from_args: STRING
-			--
+			-- Retrieve reservartion persons from request arguments
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
@@ -143,7 +143,7 @@ feature -- Basic Operations
 		end
 
 	get_res_description_from_args: STRING
-			--
+			-- Retrieve reservartion description from request arguments
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
@@ -162,45 +162,42 @@ feature -- Basic Operations
 
 
 	not_authenticated: BOOLEAN
-			--
+			-- Helper
 		do
 			Result := not authenticated
 		end
 
 	not_authenticated_admin: BOOLEAN
+			-- Helper
 		do
 			Result := not authenticated_admin
 		end
 
-	del_url: STRING
-			--
-		do
-			Result := "reservations.xeb?del=" + reservations.item_for_iteration.id.out
-		end
 
-	delete
-			--
+	delete: STRING
+			-- Deletes an entry
 		local
 			done: BOOLEAN
 		do
-			if authenticated_admin then
-				if attached {STRING} current_request.arguments["id"] as id and then
-					attached {STRING} current_request.arguments["delete"] then
+			Result := "ERROR: ID not found"
 
-					from
-						reservations.start
-						done := false
-					until
-						reservations.after or done
-					loop
-						if reservations.item_for_iteration.id.out.is_equal (id) then
-							reservations.remove
-							done := True
-						else
-							reservations.forth
-						end
+			if attached {STRING} current_request.arguments["id"] as id then
+				from
+					reservations.start
+					done := false
+				until
+					reservations.after or done
+				loop
+					if reservations.item_for_iteration.id.out.is_equal (id) then
+						reservations.remove
+						done := True
+						Result := "Reservation successfully deleted."
+					else
+						reservations.forth
 					end
 				end
+			else
+				Result := "ERROR: ID is missing"
 			end
 		end
 
@@ -245,7 +242,7 @@ feature -- Basic Operations
 
 
 	logout
-			-- logs out]
+			-- Removes the user from the session
 		do
 			if attached current_session as session  then
 					session.remove ("auth")
@@ -253,7 +250,7 @@ feature -- Basic Operations
 		end
 
 	login
-			-- sets the authenticated flat to true
+			-- Adds the user to the session
 		do
 			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
 				if attached users[name] as user and then
@@ -267,7 +264,7 @@ feature -- Basic Operations
 		end
 
 	username: STRING
-			--
+			-- Gets username of logged in user
 		do
 			Result := ""
 

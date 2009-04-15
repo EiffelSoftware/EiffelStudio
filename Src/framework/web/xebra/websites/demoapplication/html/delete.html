@@ -48,33 +48,13 @@
       </ul></td>
     <td class="template_18_back"><img src="images/template_18.gif" width="30" height="113" alt="" /></td>
     <td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
-        <h2><span class="style1">Login</span>        </h2>
-        <xeb:call feature="login"/>
-        <xeb:if condition="authenticated">
-        	<p>You have  successfully been logged in.</p>
-        </xeb:if>    
-        <xeb:if condition="not_authenticated">
-        <form id="1" name="login_form" method="post" action="login.xeb">
-      <div align="center">
-        <table width="300" border="0" cellpadding="3" cellspacing="5" bgcolor="#FFFFFF">
-          <tr>
-            <td bgcolor="#666666" class="style2">Name</td>
-            <td bgcolor="#666666"><label>
-              <input type="text" name="name" id="name" />
-            </label></td>
-          </tr>
-          <tr bgcolor="#333333">
-            <td bgcolor="#666666" class="style2">Password</td>
-            <td bgcolor="#666666"><input type="password" name="password" id="password" />            </td>
-          </tr>
-        </table>
-      </div>
-      <p align="center">
-        <input type="submit" name="submit" id="submit" value="Login" />
-      </p>
-    </form> 
-    </xeb:if>  
-	<!-- InstanceEndEditable --></td>
+     <xeb:if condition="not_authenticated_admin">
+      	<xeb:redirect url="login.xeb"/>
+     </xeb:if>   
+     <xeb:if condition="authenticated_admin">
+     <p><xeb:display feature="delete"/></p>
+      </xeb:if> 
+      <!-- InstanceEndEditable --></td>
     <td></td>
   </tr>
   <tr>

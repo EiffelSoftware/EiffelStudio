@@ -59,7 +59,7 @@ feature --
 			else
 				servlet_class.set_inherit (Stateless_servlet_class)
 			end
-			servlet_class.set_inherit (Stateless_servlet_class)
+			servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
 			servlet_class.set_constructor_name ("make")
 			servlet_class.add_variable_by_name_type ("controller", controller_type)
 			build_make_for_servlet_generator (servlet_class)

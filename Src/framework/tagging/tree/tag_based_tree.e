@@ -258,6 +258,12 @@ feature {NONE} -- Events
 		local
 			l_tags: attached DS_HASH_SET [attached STRING]
 		do
+				-- We must update the tags of an item if they have changed before the item is removed,
+				-- or else the tree is inconsistent with the tags from the item
+			if a_item.has_changed then
+				on_item_changed (a_collection, a_item)
+			end
+
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)
 			if l_tags.is_empty then
 				remove_untagged_item (a_item)
@@ -334,10 +340,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

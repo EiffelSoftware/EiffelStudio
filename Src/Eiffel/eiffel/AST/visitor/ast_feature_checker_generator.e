@@ -380,7 +380,7 @@ feature {NONE} -- Internal type checking
 		do
 			c := context.current_class
 				-- Optimization: skip deferred classes and those without attributes.
-			if not c.is_deferred and then is_void_safe (c) and then not c.skeleton.is_empty then
+			if not c.is_deferred and then is_void_safe_initialization (c) and then not c.skeleton.is_empty then
 				creators := c.creators
 					-- Check if the current feature is a creation procedure.
 				if
@@ -435,12 +435,21 @@ feature {NONE} -- Implementation: Context
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
-	is_void_safe (a_class: CLASS_C): BOOLEAN
-			-- Is code being check for void-safety on `a_class'?
+	is_void_safe_call (a_class: CLASS_C): BOOLEAN
+			-- Is code being check for void-safe calls on `a_class'?
+		require
+
+			a_class_attached: a_class /= Void
+		do
+			Result := a_class.lace_class.is_void_safe_call
+		end
+
+	is_void_safe_initialization (a_class: CLASS_C): BOOLEAN
+			-- Is code being check for void-safe initialization on `a_class'?
 		require
 			a_class_attached: a_class /= Void
 		do
-			Result := a_class.lace_class.is_void_safe
+			Result := a_class.lace_class.is_void_safe_initialization
 		end
 
 	is_inherited: BOOLEAN
@@ -1235,7 +1244,7 @@ feature -- Implementation
 				end
 			end
 
-			if l_vkcn3 = Void and then not is_static and then not a_type.is_attached and then is_void_safe (l_context_current_class) then
+			if l_vkcn3 = Void and then not is_static and then not a_type.is_attached and then is_void_safe_call (l_context_current_class) then
 				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
 			end
 
@@ -1793,13 +1802,9 @@ feature -- Implementation
 										-- it might be still safe to use the attribute in the expression
 										-- before actual reattachment takes place.
 									last_reinitialized_variable := - l_feature.feature_name_id
-								elseif not l_result_type.is_attached and then context.is_attribute_attached (l_feature.feature_name_id) then
+								elseif context.is_attribute_attached (l_feature.feature_name_id) then
 										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
-									if is_void_safe (context.current_class) then
-										l_result_type := l_result_type.as_attached_type
-									else
-										l_result_type := l_result_type.as_implicitly_attached
-									end
+									l_result_type := l_result_type.as_attached_in (context.current_class)
 									last_type := l_result_type
 								end
 							end
@@ -1876,14 +1881,8 @@ feature -- Implementation
 			if error_level = l_error_level then
 					-- Update type stack
 				create l_tuple_type.make (system.tuple_id, last_expressions_type)
-				if not l_tuple_type.is_attached then
-						-- Type of tuple is always attached
-					if is_void_safe (context.current_class) then
-						l_tuple_type := l_tuple_type.as_attached_type
-					elseif not l_tuple_type.is_implicitly_attached then
-						l_tuple_type := l_tuple_type.as_implicitly_attached
-					end
-				end
+					-- Type of tuple is always attached
+				l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_tuple_type, context.current_class)
 				last_tuple_type := l_tuple_type
 				last_type := l_tuple_type
@@ -1942,12 +1941,10 @@ feature -- Implementation
 			l_has_error: BOOLEAN
 			l_has_array_target: BOOLEAN
 			l_current_class: CLASS_C
-			l_current_class_void_safe: BOOLEAN
 			l_context: like context
 		do
 			l_context := context
 			l_current_class := l_context.current_class
-			l_current_class_void_safe := is_void_safe (l_current_class)
 			reset_for_unqualified_call_checking
 				-- Get target for manifest array creation (either through assignment or
 				-- argument passing).
@@ -2026,14 +2023,8 @@ feature -- Implementation
 								-- support that, so we remove the anchors.
 							l_array_type := l_array_type.deep_actual_type
 						end
-						if not l_array_type.is_attached then
-								-- Type of a manifest array is always attached
-							if l_current_class_void_safe then
-								l_array_type := l_array_type.as_attached_type
-							elseif not l_array_type.is_implicitly_attached then
-								l_array_type := l_array_type.as_implicitly_attached
-							end
-						end
+							-- Type of a manifest array is always attached
+						l_array_type := l_array_type.as_attached_in (l_current_class)
 						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
@@ -2114,12 +2105,8 @@ feature -- Implementation
 							create l_generics.make (1, 1)
 							l_generics.put (l_type_a, 1)
 							create l_array_type.make (system.array_id, l_generics)
-							if l_current_class_void_safe then
-									-- Type of a manifest array is always attached
-								l_array_type := l_array_type.as_attached_type
-							else
-								l_array_type := l_array_type.as_implicitly_attached
-							end
+								-- Type of a manifest array is always attached.
+							l_array_type := l_array_type.as_attached_in (l_current_class)
 							instantiator.dispatch (l_array_type, l_current_class)
 						end
 					else
@@ -2127,12 +2114,8 @@ feature -- Implementation
 						create l_generics.make (1, 1)
 						l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
 						create l_array_type.make (system.array_id, l_generics)
-						if l_current_class_void_safe then
-								-- Type of a manifest array is always attached
-							l_array_type := l_array_type.as_attached_type
-						else
-							l_array_type := l_array_type.as_implicitly_attached
-						end
+							-- Type of a manifest array is always attached.
+						l_array_type := l_array_type.as_attached_in (l_current_class)
 						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
@@ -2174,14 +2157,10 @@ feature -- Implementation
 		local
 			t: like last_type
 		do
+				-- Constants are always of an attached type
 			t := string_type
-			if t /= Void and then not t.is_attached then
-					-- Constants are always of an attached type
-				if is_void_safe (context.current_class) then
-					t := t.as_attached_type
-				elseif not t.is_implicitly_attached then
-					t := t.as_implicitly_attached
-				end
+			if t /= Void then
+				t := t.as_attached_in (context.current_class)
 			end
 			last_type := t
 			if is_byte_node_enabled then
@@ -2277,19 +2256,12 @@ feature -- Implementation
 							-- before actual reattachment takes place.
 						last_reinitialized_variable := result_name_id
 					elseif context.is_result_attached then
-						if not l_feat_type.is_attached then
-								-- "Result" is of a detachable type, but it's safe
-								-- to use it as an attached one.
-							if is_void_safe (context.current_class) then
-								l_feat_type := l_feat_type.as_attached_type
-							else
-								l_feat_type := l_feat_type.as_implicitly_attached
-							end
-						end
+							-- "Result" is safe to be used as an attached type.
+						l_feat_type := l_feat_type.as_attached_in (context.current_class)
 					elseif
 						l_feat_type.is_initialization_required and then
 						not context.local_initialization.is_result_set and then
-						is_void_safe (context.current_class)
+						is_void_safe_initialization (context.current_class)
 					then
 							-- Result is not properly initialized.
 						error_handler.insert_error (create {VEVI}.make_result (context, l_as))
@@ -2559,14 +2531,8 @@ feature -- Implementation
 					l_as.set_argument_position (l_arg_pos)
 					l_as.set_class_id (class_id_of (l_type))
 				end
-				if not l_type.is_attached and then
-					context.is_argument_attached (l_as.feature_name.name_id)
-				then
-					if is_void_safe (l_context_current_class) then
-						l_type := l_type.as_attached_type
-					elseif not l_type.is_implicitly_attached then
-						l_type := l_type.as_implicitly_attached
-					end
+				if context.is_argument_attached (l_as.feature_name.name_id) then
+					l_type := l_type.as_attached_in (l_context_current_class)
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
@@ -2604,21 +2570,14 @@ feature -- Implementation
 							-- before actual reattachment takes place.
 						last_reinitialized_variable := l_as.feature_name.name_id
 					elseif context.is_local_attached (l_as.feature_name.name_id) then
-						if not l_type.is_attached then
-								-- Local is of a detachable type, but it's safe
-								-- to use it as an attached one.
-							if is_void_safe (context.current_class) then
-								l_type := l_type.as_attached_type
-							else
-								l_type := l_type.as_implicitly_attached
-							end
-						end
+							-- Local is safe to be used as of an attached type.
+						l_type := l_type.as_attached_in (context.current_class)
 					elseif
 						l_type.is_initialization_required and then
 						not context.local_initialization.is_local_set (l_local_info.position)
 					then
 							-- Local is not properly initialized.
-						if is_void_safe (context.current_class) then
+						if is_void_safe_initialization (context.current_class) then
 							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
 						end
 							-- Mark that the local is initialized.
@@ -2735,14 +2694,8 @@ feature -- Implementation
 						l_as.set_argument_position (l_arg_pos)
 						l_as.set_class_id (class_id_of (last_type))
 					end
-					if not last_type.is_attached and then
-						context.is_argument_attached (l_as.feature_name.name_id)
-					then
-						if is_void_safe (context.current_class) then
-							last_type := last_type.as_attached_type
-						elseif not last_type.is_implicitly_attached then
-							last_type := last_type.as_implicitly_attached
-						end
+					if context.is_argument_attached (l_as.feature_name.name_id) then
+						last_type := last_type.as_attached_in (context.current_class)
 					end
 				end
 			else
@@ -3058,7 +3011,7 @@ feature -- Implementation
 
 				-- Check if some arguments are attached because of an inherited precondition.
 				-- Avoid doing it when there are no inherited preconditions.
-			if is_void_safe (context.current_class) and then
+			if context.current_class.lace_class.is_void_safe_conformance and then
 				not (current_feature.has_precondition and then current_feature.assert_id_set = Void)
 			then
 				create precondition_scope.make (current_feature, context)
@@ -3100,7 +3053,7 @@ feature -- Implementation
 					not l_as.is_external and then
 					not context.local_initialization.is_result_set and then
 					not current_feature.is_deferred and then
-					is_void_safe (context.current_class)
+					is_void_safe_initialization (context.current_class)
 				then
 						-- Result is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
@@ -3402,15 +3355,8 @@ feature -- Implementation
 				l_as.id_list.go_i_th (l_index)
 				l_as.id_list.forth
 			end
-			last_type := strip_type
-			if not last_type.is_attached then
-					-- Type of strip expression is always attached.
-				if is_void_safe (context.current_class) then
-					last_type := last_type.as_attached_type
-				elseif not last_type.is_implicitly_attached then
-					last_type := last_type.as_implicitly_attached
-				end
-			end
+				-- Type of strip expression is always attached.
+			last_type := strip_type.as_attached_in (context.current_class)
 			if l_needs_byte_node then
 				last_byte_node := l_strip
 			end
@@ -3721,14 +3667,8 @@ feature -- Implementation
 			l_type := last_type
 			if l_type /= Void then
 				create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
-				if not l_type_type.is_attached then
-						-- The type is always attached
-					if is_void_safe (context.current_class) then
-						l_type_type := l_type_type.as_attached_type
-					elseif not l_type_type.is_implicitly_attached then
-						l_type_type := l_type_type.as_implicitly_attached
-					end
-				end
+					-- The type is always attached.
+				l_type_type := l_type_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_type_type, context.current_class)
 				last_type := l_type_type
 				if is_byte_node_enabled then
@@ -3951,7 +3891,7 @@ feature -- Implementation
 				end
 
 				l_error_level := error_level
-				if not last_type.is_attached and then is_void_safe (l_context_current_class) then
+				if not last_type.is_attached and then is_void_safe_call (l_context_current_class) then
 					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
 				end
 				if l_is_multi_constrained then
@@ -4337,7 +4277,7 @@ feature -- Implementation
 									l_target_type := l_left_type
 							end
 
-							if not l_target_type.is_attached and then is_void_safe (l_context_current_class) then
+							if not l_target_type.is_attached and then is_void_safe_call (l_context_current_class) then
 								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
 							end
 
@@ -4851,13 +4791,7 @@ feature -- Implementation
 				check_type (l_as.type)
 				local_type := last_type
 				if local_type /= Void then
-					if not local_type.is_attached then
-						if is_void_safe (context.current_class) then
-							local_type := local_type.as_attached_type
-						elseif not local_type.is_implicitly_attached then
-							local_type := local_type.as_implicitly_attached
-						end
-					end
+					local_type := local_type.as_attached_in (context.current_class)
 					if not is_inherited then
 							-- No need to recheck for obsolete classes when checking inherited code.
 						local_type.check_for_obsolete_class (context.current_class, context.current_feature)
@@ -4883,13 +4817,7 @@ feature -- Implementation
 				if l_as.is_attached_keyword and local_type = Void then
 						-- Set `local_type' to the type of the expression and make it attached.
 					local_type := last_type
-					if not local_type.is_attached then
-						if is_void_safe (context.current_class) then
-							local_type := local_type.as_attached_type
-						elseif not local_type.is_implicitly_attached then
-							local_type := local_type.as_implicitly_attached
-						end
-					end
+					local_type := local_type.as_attached_in (context.current_class)
 				end
 				check local_type_attached: local_type /= Void end
 				if local_id /= Void or l_as.type /= Void then
@@ -5973,7 +5901,6 @@ feature -- Implementation
 			l_error_level: NATURAL_32
 			l_warning_count: INTEGER
 			l_reinitialized_variable: like last_reinitialized_variable
-			l_current_class_void_safe: BOOLEAN
 		do
 			l_error_level := error_level
 			break_point_slot_count := break_point_slot_count + 1
@@ -5997,7 +5924,6 @@ feature -- Implementation
 				-- that's why we reset it.
 			is_target_of_creation_instruction := False
 
-			l_current_class_void_safe := is_void_safe (context.current_class)
 			l_target_type := last_type
 			if l_target_type /= Void then
 				if not last_access_writable then
@@ -6012,13 +5938,9 @@ feature -- Implementation
 						l_as.type.process (Current)
 						l_explicit_type := last_type
 							-- If `l_explicit_type' is Void then we stop the process here.
-						if l_explicit_type /= Void and then not l_explicit_type.is_attached then
+						if l_explicit_type /= Void then
 								-- Creation type is always attached
-							if l_current_class_void_safe then
-								l_explicit_type := l_explicit_type.as_attached_type
-							elseif not l_explicit_type.is_implicitly_attached then
-								l_explicit_type := l_explicit_type.as_implicitly_attached
-							end
+							l_explicit_type := l_explicit_type.as_attached_in (context.current_class)
 							last_type := l_explicit_type
 						end
 					end
@@ -6062,12 +5984,9 @@ feature -- Implementation
 								instantiator.dispatch (l_explicit_type, context.current_class)
 								l_creation_type := l_explicit_type
 							else
-								l_creation_type := l_target_type
-								if not l_creation_type.is_attached and then l_current_class_void_safe then
-										-- Creation type is always attached.
-									l_creation_type := l_creation_type.as_attached_type
-									last_type := l_creation_type
-								end
+									-- Creation type is always attached.
+								l_creation_type := l_target_type.as_attached_in (context.current_class)
+								last_type := l_creation_type
 							end
 
 								-- Check call validity for creation.
@@ -6126,15 +6045,9 @@ feature -- Implementation
 					l_vgcc3.set_location (l_as.type.start_location)
 					error_handler.insert_error (l_vgcc3)
 				else
-					if not l_creation_type.is_attached then
-							-- Type of a creation expression is always attached.
-						if is_void_safe (context.current_class) then
-							l_creation_type := l_creation_type.as_attached_type
-						elseif not l_creation_type.is_implicitly_attached then
-							l_creation_type := l_creation_type.as_implicitly_attached
-						end
-						last_type := l_creation_type
-					end
+						-- Type of a creation expression is always attached.
+					l_creation_type := l_creation_type.as_attached_in (context.current_class)
+					last_type := l_creation_type
 					instantiator.dispatch (l_creation_type, context.current_class)
 
 						-- Check call validity for creation.
@@ -8263,7 +8176,6 @@ feature {NONE} -- Agents
 			l_expr: EXPR_B
 			l_array_of_opens: ARRAY_CONST_B
 			l_operand_node: OPERAND_B
-			l_current_class_void_safe: BOOLEAN
 			l_is_qualified_call: BOOLEAN
 		do
 				-- When the agent is a qualified call, we need to remove the anchors because otherwise
@@ -8295,17 +8207,9 @@ feature {NONE} -- Agents
 				create l_result_type.make (System.procedure_class_id, l_generics)
 			end
 
-			l_current_class_void_safe := is_void_safe (context.current_class)
-			l_type := a_target_type
-			if not l_type.is_attached then
-					-- Type of the first actual generic parameter of the routine type
-					-- should always be attached.
-				if l_current_class_void_safe then
-					l_type := l_type.as_attached_type
-				elseif not l_type.is_implicitly_attached then
-					l_type := l_type.as_implicitly_attached
-				end
-			end
+				-- Type of the first actual generic parameter of the routine type
+				-- should always be attached.
+			l_type := a_target_type.as_attached_in (context.current_class)
 			l_generics.put (l_type, 1)
 
 			if a_has_args then
@@ -8448,24 +8352,13 @@ feature {NONE} -- Agents
 
 				-- Create open argument type tuple
 			create l_tuple_type.make (System.tuple_id, l_oargtypes)
-			l_current_class_void_safe := is_void_safe (context.current_class)
-			if not l_tuple_type.is_attached then
-					-- Type of an argument tuple is always attached.
-				if l_current_class_void_safe then
-					l_tuple_type := l_tuple_type.as_attached_type
-				elseif not l_tuple_type.is_implicitly_attached then
-					l_tuple_type := l_tuple_type.as_implicitly_attached
-				end
-			end
+				-- Type of an argument tuple is always attached.
+			l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
 				-- Insert it as second generic parameter of ROUTINE.
 			l_generics.put (l_tuple_type, 2)
 
 				-- Type of an agent is always attached.
-			if l_current_class_void_safe then
-				l_result_type := l_result_type.as_attached_type
-			else
-				l_result_type := l_result_type.as_implicitly_attached
-			end
+			l_result_type := l_result_type.as_attached_in (context.current_class)
 
 			if is_byte_node_enabled then
 				create l_routine_creation

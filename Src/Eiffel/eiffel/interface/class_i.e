@@ -234,10 +234,22 @@ feature -- Access
 			Result := options.is_attached_by_default
 		end
 
-	is_void_safe: BOOLEAN
-			-- Does class use void-safe constructs?
+	is_void_safe_call: BOOLEAN
+			-- Should feature call target be attached?
 		do
 			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+		end
+
+	is_void_safe_conformance: BOOLEAN
+			-- Should attachment status be taken into account when checking conformance?
+		do
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+		end
+
+	is_void_safe_initialization: BOOLEAN
+			-- Should attached entities be property set before use?
+		do
+			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_syntax_obsolete: BOOLEAN

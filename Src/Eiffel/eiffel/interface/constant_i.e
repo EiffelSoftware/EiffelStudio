@@ -108,14 +108,8 @@ feature -- Settings
 			vqmc: VQMC
 		do
 			Precursor {ENCAPSULATED_I} (feat_tbl)
-			if not type.is_attached then
-					-- Type of constant is always attached.
-				if feat_tbl.associated_class.lace_class.is_void_safe then
-					type := type.as_attached_type
-				elseif not type.is_implicitly_attached then
-					type := type.as_implicitly_attached
-				end
-			end
+				-- Type of constant is always attached.
+			type := type.as_attached_in (feat_tbl.associated_class)
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then
 				value.set_real_type (actual_type)
@@ -512,7 +506,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

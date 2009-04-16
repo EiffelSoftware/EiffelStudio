@@ -844,6 +844,25 @@ feature -- Attachment properties
 			result_not_attached: not Result.is_attached
 		end
 
+	as_attached_in (c: CLASS_C): like Current
+			-- Attached or implicitly attached variant of current type depending on the void safety status of contextual class `c'.
+		require
+			c_attached: c /= Void
+		do
+			Result := Current
+			if not is_attached then
+				if c.lace_class.is_void_safe_conformance then
+					Result := as_attached_type
+				elseif not is_implicitly_attached then
+					Result := as_implicitly_attached
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			result_is_attached: c.lace_class.is_void_safe_conformance implies Result.is_attached
+			result_is_implicitly_attached: Result.is_implicitly_attached
+		end
+
 	as_implicitly_detachable: like Current
 			-- Implicitly detachable type
 		do

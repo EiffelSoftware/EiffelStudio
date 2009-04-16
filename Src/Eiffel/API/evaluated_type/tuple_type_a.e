@@ -179,7 +179,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					other_count := other_generics.count
-					Result := count >= other_count and then (a_context_class.lace_class.is_void_safe implies is_attachable_to (tuple_type))
+					Result := count >= other_count and then (a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (tuple_type))
 				until
 					(i > other_count) or else (not Result)
 				loop

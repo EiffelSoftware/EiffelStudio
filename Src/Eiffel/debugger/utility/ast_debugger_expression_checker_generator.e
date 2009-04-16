@@ -17,7 +17,7 @@ inherit
 			check_type,
 			feature_with_name_using,
 			match_list_of_class,
-			is_void_safe
+			is_void_safe_call
 		end
 
 	SHARED_INST_CONTEXT
@@ -441,7 +441,7 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
-	is_void_safe (a_class: CLASS_C): BOOLEAN
+	is_void_safe_call (a_class: CLASS_C): BOOLEAN
 			-- <Precursor>
 			-- Never check void-safety for debugger's expressions
 		do

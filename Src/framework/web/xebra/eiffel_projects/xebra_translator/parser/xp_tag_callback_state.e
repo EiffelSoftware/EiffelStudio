@@ -19,6 +19,7 @@ feature -- Initialization
 feature -- Access
 
 	on_start_tag (a_namespace, a_prefix, l_local_part : STRING)
+			-- <Precursor>
 		local
 			l_taglib: XTL_TAG_LIBRARY
 			l_class_name: STRING
@@ -43,12 +44,14 @@ feature -- Access
 		end
 
 	on_content (a_content: STRING)
+			-- <Precursor>
 		do
 			parser_callback.set_state_html
 			parser_callback.state.on_content (a_content)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+			-- <Precursor>
 		do
 --			if a_prefix.is_empty or not taglibs.has_key (a_prefix) then
 --				if not l_prefix.is_empty then
@@ -64,6 +67,7 @@ feature -- Access
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+			-- <Precursor>
 		local
 			taglib: XTL_TAG_LIBRARY
 			l_value, l_local_part: STRING
@@ -91,6 +95,7 @@ feature -- Access
 		end
 
 	on_start_tag_finish
+			-- <Precursor>
 		do
 		end
 

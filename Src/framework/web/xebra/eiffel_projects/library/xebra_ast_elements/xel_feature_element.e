@@ -43,12 +43,15 @@ feature -- Initialization
 			locals := some_locals
 			content := a_content
 			variable_count := 0
+			is_once := False
 		end
 
 feature {NONE} -- Access
 
 	variable_count: NATURAL
 			-- Used to generate unique identifiers
+
+	is_once: BOOLEAN
 
 feature -- Access
 
@@ -96,6 +99,11 @@ feature -- Access
 			variable_count := variable_count + 1
 		end
 
+	set_once
+		do
+			is_once := True
+		end		
+
 feature -- Implementation
 
 	serialize (buf:XU_INDENDATION_STREAM)
@@ -116,7 +124,11 @@ feature -- Implementation
 				end
 				buf.unindent
 			end
-			buf.put_string ("do")
+			if is_once then
+				buf.put_string ("once")
+			else
+				buf.put_string ("do")
+			end
 			buf.indent
 			from
 				content.start

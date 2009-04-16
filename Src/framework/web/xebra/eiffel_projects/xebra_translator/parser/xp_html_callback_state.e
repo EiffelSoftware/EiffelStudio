@@ -18,6 +18,7 @@ feature -- Initialization
 feature -- Access
 
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
+			-- <Precursor>
 		local
 			l_prefix: STRING
 		do
@@ -35,11 +36,13 @@ feature -- Access
 		end
 
 	on_content (a_content: STRING)
+			-- <Precursor>
 		do
 			parser_callback.html_buf.append (a_content)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+			-- <Precursor>
 		local
 			l_prefix: STRING
 		do
@@ -57,6 +60,7 @@ feature -- Access
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+			-- <Precursor>
 		local
 			l_prefix, l_value, l_local_part: STRING
 		do
@@ -74,6 +78,7 @@ feature -- Access
 		end
 
 	on_start_tag_finish
+			-- <Precursor>
 		do
 			parser_callback.html_buf.append (">")
 		end

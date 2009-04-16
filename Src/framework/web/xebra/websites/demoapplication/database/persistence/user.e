@@ -15,9 +15,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_password: STRING; a_is_admin: BOOLEAN)
+	make (a_id: INTEGER; a_name: STRING; a_password: STRING; a_is_admin: BOOLEAN)
 			-- Initialization for `Current'.
 		do
+			id := a_id
 			name:= a_name
 			password:= a_password
 			is_admin:= a_is_admin
@@ -25,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	id: INTEGER
 	name: STRING
 	password: STRING
 	is_admin: BOOLEAN
 
-feature {NONE} -- Implementation
 
 end

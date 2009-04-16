@@ -12,7 +12,8 @@ deferred class
 
 feature -- Initialization
 
-	base_make
+	make
+			-- Initializes current
 		do
 			create {XH_GET_REQUEST} current_request.make_empty
 		end
@@ -25,12 +26,6 @@ feature -- Access
 	current_session: detachable XH_SESSION
 		-- Represents the session that belongs to the user that has send the current request
 
-feature -- Events
-
-	on_page_load
-			--
-		deferred
-		end
 
 feature -- Status Change
 

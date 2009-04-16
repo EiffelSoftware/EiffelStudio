@@ -12,6 +12,10 @@ class
 
 inherit
 	XWA_CONTROLLER
+		redefine
+			make
+		end
+	G_SHARED_DEMOAPPLICATION_GLOBAL_STATE
 
 create
 	make
@@ -21,29 +25,24 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
-			base_make
-
+			Precursor
 			--fake reservations
-			create reservations.make (10)
-			reservations.extend (create {RESERVATION}.make ("1", "Fabio Zuend", "23/11/2009", "3", "blablablablablabla description"))
-			reservations.extend (create {RESERVATION}.make ("2", "Fabio Zuend", "21/11/2009", "2", "blablablablablabla description"))
-			reservations.extend (create {RESERVATION}.make ("3", "Fabio Zuend", "24/11/2009", "33", "blablablablablabla description"))
-			reservations.extend (create {RESERVATION}.make ("4", "Fabio Zuend", "25/11/2009", "5", "blablablablablabla description"))
-			reservations.extend (create {RESERVATION}.make ("5", "Fabio Zuend", "26/11/2009", "1", "blablablablablabla description"))
+--			create reservations.make (10)
+--			reservations.extend (create {RESERVATION}.make ("1", "Fabio Zuend", "23/11/2009", "3", "blablablablablabla description"))
+--			reservations.extend (create {RESERVATION}.make ("2", "Fabio Zuend", "21/11/2009", "2", "blablablablablabla description"))
+--			reservations.extend (create {RESERVATION}.make ("3", "Fabio Zuend", "24/11/2009", "33", "blablablablablabla description"))
+--			reservations.extend (create {RESERVATION}.make ("4", "Fabio Zuend", "25/11/2009", "5", "blablablablablabla description"))
+--			reservations.extend (create {RESERVATION}.make ("5", "Fabio Zuend", "26/11/2009", "1", "blablablablablabla description"))
 
 
-			--fake users
-			create users.make(3)
-			users.put (create {USER}.make ("admin", "123", True), "admin")
-			users.put (create {USER}.make ("fabio", "123", False), "fabio")
+--			--fake users
+--			create users.make(3)
+--			users.put (create {USER}.make ("admin", "123", True), "admin")
+--			users.put (create {USER}.make ("fabio", "123", False), "fabio")
 		end
 
 
 feature -- Access
-
-	reservations: ARRAYED_LIST [RESERVATION]
-
-	users: HASH_TABLE [USER, STRING]
 
 feature -- Basic Operations
 
@@ -84,7 +83,9 @@ feature -- Basic Operations
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
-				Result := id
+				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
+					Result := res.id.out
+				end
 			end
 		end
 
@@ -93,15 +94,8 @@ feature -- Basic Operations
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
-				from
-					reservations.start
-				until
-					reservations.after
-				loop
-					if reservations.item_for_iteration.id.out.is_equal (id) then
-						Result := reservations.item_for_iteration.name
-					end
-					reservations.forth
+				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
+					Result := res.name
 				end
 			end
 		end
@@ -111,15 +105,8 @@ feature -- Basic Operations
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
-				from
-					reservations.start
-				until
-					reservations.after
-				loop
-					if reservations.item_for_iteration.id.out.is_equal (id) then
-						Result := reservations.item_for_iteration.date
-					end
-					reservations.forth
+				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
+					Result := res.date
 				end
 			end
 		end
@@ -129,15 +116,8 @@ feature -- Basic Operations
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
-				from
-					reservations.start
-				until
-					reservations.after
-				loop
-					if reservations.item_for_iteration.id.out.is_equal (id) then
-						Result := reservations.item_for_iteration.persons
-					end
-					reservations.forth
+				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
+					Result := res.persons.out
 				end
 			end
 		end
@@ -147,15 +127,8 @@ feature -- Basic Operations
 		do
 			Result := ""
 			if attached {STRING} current_request.arguments["id"] as id then
-				from
-					reservations.start
-				until
-					reservations.after
-				loop
-					if reservations.item_for_iteration.id.out.is_equal (id) then
-						Result := reservations.item_for_iteration.descripion
-					end
-					reservations.forth
+				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
+					Result := res.description
 				end
 			end
 		end
@@ -182,64 +155,19 @@ feature -- Basic Operations
 			Result := "ERROR: ID not found"
 
 			if attached {STRING} current_request.arguments["id"] as id then
-				from
-					reservations.start
-					done := false
-				until
-					reservations.after or done
-				loop
-					if reservations.item_for_iteration.id.out.is_equal (id) then
-						reservations.remove
-						done := True
-						Result := "Reservation successfully deleted."
-					else
-						reservations.forth
-					end
-				end
+				global_state.db.delete_reservation (id.to_integer_32)
+				Result := "Reservation successfully deleted."
 			else
 				Result := "ERROR: ID is missing"
 			end
 		end
 
-	edit
-			--
-		local
-			done: BOOLEAN
-		do
-			if authenticated_admin then
-				if attached {STRING} current_request.arguments["id"] as id and
-				   attached {STRING} current_request.arguments["name"] as name and
-				   attached {STRING} current_request.arguments["date"] as date and
-				   attached {STRING} current_request.arguments["persons"] as persons and
-				   attached {STRING} current_request.arguments["description"] as description then
 
---					from
---						reservations.start
---						done := false
---					until
---						reservations.after or done
---					loop
---						if reservations.item_for_iteration.id.out.is_equal (id) then
---							reservations.remove
---							done := true
---						else
---							reservations.forth
---						end
---					end
-
-					reservations.extend (create {RESERVATION}.make (id, name, date, persons, description))
-
-
-				end
-			end
-		end
-
-	detail_url: STRING
-			--
-		do
-			Result := "details.xeb?id=" + reservations.item_for_iteration.id.out
-		end
-
+--	detail_url: STRING
+--			-- Generates a url for viewing details of a reservation
+--		do
+--			Result := "details.xeb?id=" + reservations.item_for_iteration.id.out
+--		end
 
 	logout
 			-- Removes the user from the session
@@ -249,15 +177,16 @@ feature -- Basic Operations
 				end
 		end
 
-	login
+	login: STRING
 			-- Adds the user to the session
 		do
+			Result := "Invalid username/password"
+
 			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
-				if attached users[name] as user and then
-					(user.name.is_equal (name) and
-					user.password.is_equal (password)) then
+				if attached {USER} global_state.db.valid_login (name, password) as user then
 					if attached current_session as session  then
-						session.force (user, "auth")
+						session.put (user, "auth")
+						Result := "Successfully logged in."
 					end
 				end
 			end
@@ -274,19 +203,5 @@ feature -- Basic Operations
 				end
 			end
 		end
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Element change
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
 
 end

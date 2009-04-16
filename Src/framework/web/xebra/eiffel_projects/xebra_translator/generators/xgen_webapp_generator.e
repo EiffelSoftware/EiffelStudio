@@ -59,6 +59,7 @@ feature -- Basic Functionality
 			-- Generates all the classes (except the servlets) for the webapp and links them together.
 			--  1. {XWA_SERVER_CONNECTION_HANDLER}
 			--  2. {APPLICATION} which starts the application
+			--  3. {G_SHARED_X_GLOBAL_STATE} which contains global state of the application
 		require
 			path_is_not_empty: not path.is_empty
 			webapp_name_is_not_empty: not webapp_name.is_empty
@@ -74,7 +75,7 @@ feature -- Basic Functionality
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			create request_class.make (webapp_name.as_upper + "_G_" + Server_con_handler_class)
-			request_class.set_inherit ("XWA_" + Server_con_handler_class)
+			request_class.set_inherit ("XWA_" + Server_con_handler_class + " redefine make end")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
 			request_class.serialize (buf)
@@ -90,9 +91,26 @@ feature -- Basic Functionality
 			application_class.add_feature (generate_contructor_for_application)
 			application_class.serialize (buf)
 			file.close
+
+				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
+			create file.make_open_write (path + "g_shared_" + webapp_name.as_lower + "_global_state.e")
+			create buf.make (file)
+			create application_class.make ("G_SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
+			application_class.set_inherit ("ANY")
+			application_class.add_feature (generate_once_feature_for_global_state)
+			application_class.serialize (buf)
+			file.close
 		end
 
 feature {NONE} -- Implementation
+
+	generate_once_feature_for_global_state: XEL_FEATURE_ELEMENT
+		do
+			create Result.make ("global_state: DEMOAPPLICATION_GLOBAL_STATE")
+			Result.set_once
+			Result.append_expression ("create Result.make")
+		end
+
 
 	generate_feature_for_name: XEL_FEATURE_ELEMENT
 		do
@@ -104,8 +122,7 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
-			Result.append_expression ("create {DEMOAPPLICATION_GLOBAL_STATE} global_state.make")
-			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name, global_state)")
+			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
 			Result.append_expression ("server_connection_handler.execute")
 		end
 
@@ -115,8 +132,8 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING; a_global_state: " + webapp_name.as_upper + "_GLOBAL_STATE)")
-			Result.append_expression ("base_make (a_name)")
+			create Result.make ("make (a_name: STRING)")
+			Result.append_expression ("Precursor (a_name)")
 			from
 				some_servlets.start
 			until
@@ -124,7 +141,7 @@ feature {NONE} -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make (a_global_state), %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end

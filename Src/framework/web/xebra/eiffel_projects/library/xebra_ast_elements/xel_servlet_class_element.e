@@ -23,7 +23,7 @@ feature -- Initialization
 			--
 		do
 			Precursor (a_name)
-			create make_feature.make ("make (a_global_state: XWA_GLOBAL_STATE)")
+			create make_feature.make ("make")
 			add_feature (make_feature)
 			create render_feature.make (Render_feature_name)
 			add_feature (render_feature)

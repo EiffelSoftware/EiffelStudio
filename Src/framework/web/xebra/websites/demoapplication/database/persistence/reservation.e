@@ -15,23 +15,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: STRING; a_name: STRING;	a_date:  STRING; a_persons: STRING; a_description: STRING)
+	make (a_id: INTEGER; a_name: STRING;	a_date:  STRING; a_persons: INTEGER; a_description: STRING)
 			-- Initialization for `Current'.
 		do
 			id := a_id
 			name := a_name
 			date:=  a_date
-			persons:= a_persons.out
-			descripion:= a_description
+			persons:= a_persons
+			description:= a_description
 		end
 
 feature -- Access
 
-	id: STRING
+	id: INTEGER
 	name: STRING
 	date:  STRING
-	persons: STRING
-	descripion: STRING
+	persons: INTEGER
+	description: STRING
 
 
 end

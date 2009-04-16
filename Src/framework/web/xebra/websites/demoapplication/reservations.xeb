@@ -65,7 +65,7 @@
               <td>Details</td>
             </xeb:if>
           </tr>
-          <xeb:iterate list="reservations" variable="reservation"
+          <xeb:iterate list="global_state.reservations" variable="reservation"
                 type="RESERVATION">
             <tr>
               <td><xeb:variable id="reservation" feature="name" /></td>

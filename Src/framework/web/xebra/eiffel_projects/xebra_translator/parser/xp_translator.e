@@ -36,7 +36,7 @@ feature -- Access
 	name: STRING assign set_name
 			-- Name of the system
 
-	taglibs: TABLE [XTL_TAG_LIBRARY, STRING]
+	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Taglib which should be used to validate the xeb files
 
 feature -- Status setting
@@ -103,7 +103,7 @@ feature -- Processing
 			l_webapp_generator.generate
 		end
 
-	parse_taglibs (taglib_folder: STRING): TABLE [XTL_TAG_LIBRARY, STRING]
+	parse_taglibs (taglib_folder: STRING): HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Generates tag libraries from all the the *.taglib files in the directory
 		require
 			taglib_folder_valid: not taglib_folder.is_empty
@@ -151,7 +151,7 @@ feature -- Processing
 			a_taglibs.put (l_p_callback.taglib, l_p_callback.taglib.id)
 		end
 
-	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
+	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: HASH_TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
 		require
 			servlet_name_valid: not servlet_name.is_empty
 		local

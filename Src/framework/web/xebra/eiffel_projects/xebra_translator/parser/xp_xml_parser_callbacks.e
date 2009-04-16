@@ -29,6 +29,9 @@ feature {NONE} -- Initialization
 			create root_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
 			create html_buf.make_empty
+			create state_html.make (Current)
+			create state_tag.make (Current)
+			state := state_html
 		ensure
 			html_buf_is_empty: html_buf.is_empty
 			tag_stack_is_empty: tag_stack.is_empty
@@ -51,9 +54,18 @@ feature -- Access
 	path: STRING
 			-- The path of the file to which is being read
 
-	state: INTEGER
+--	state: INTEGER
 			-- 0 Reading_html
 			-- 1 Reading_tag
+
+	state: XP_CALLBACK_STATE
+			-- The current state of the parser
+
+	state_tag: XP_TAG_CALLBACK_STATE
+			-- The instance for the state = tag
+
+	state_html: XP_HTML_CALLBACK_STATE
+			-- The instance for the state = html
 
 	html_buf: STRING
 			-- Stores html text until a tag is created from it
@@ -64,13 +76,14 @@ feature -- Access
 	tag_stack: ARRAYED_STACK [XP_TAG_ELEMENT]
 			-- The stack is used to generate the tree
 
-	taglibs: TABLE [XTL_TAG_LIBRARY, STRING]
+	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Tag library which should be used
 
-	put_taglibs (a_taglibs: TABLE [XTL_TAG_LIBRARY, STRING])
+	put_taglibs (a_taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING])
 			-- Adds a taglib to the parser
 		do
 			taglibs := a_taglibs
+			--taglibs.put (generate_configuration_taglib, Configuration_tag)
 		end
 
 feature -- Document
@@ -80,6 +93,7 @@ feature -- Document
 		do
 			tag_stack.wipe_out
 			tag_stack.put (root_tag)
+			create {XP_HTML_CALLBACK_STATE} state.make (Current)
 		ensure then
 			only_root_on_stack: tag_stack.count = 1
 		end
@@ -143,17 +157,18 @@ feature -- Tag
 			l_taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_prefix then
-				if taglibs.valid_key (a_prefix) then
-					if state = Reading_html then
-						create_html_tag_put
-					end
-					state := Reading_tag
-				else
-					state := Reading_html
-				end
+--				if taglibs.valid_key (a_prefix) then
+--					if state = Reading_html then
+--						create_html_tag_put
+--					end
+--					state := Reading_tag
+--				else
+--					state := Reading_html
+--				end
+				l_prefix := a_prefix
 			else
 				l_prefix := ""
-				state := Reading_html
+--				state := Reading_html
 			end
 
 			if attached a_local_part then
@@ -162,25 +177,27 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			if state = Reading_tag then
-				l_taglib := get_tag_lib (a_prefix)
-				l_class_name := l_taglib.get_class_for_name (l_local_part)
-				if l_class_name.is_empty then
-					l_class_name := Html_tag_name
-				end
-				create l_tmp_tag.make (a_prefix, a_local_part, l_class_name, current_debug_information)
-				tag_stack.item.put_subtag (l_tmp_tag)
-				tag_stack.put (l_tmp_tag)
-				if not l_taglib.contains (l_local_part) then
+			state.on_start_tag (a_namespace, l_prefix, l_local_part)
 
-					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
-				end
-			elseif state = Reading_html then
-				if not l_prefix.is_empty then
-					l_prefix := l_prefix + ":"
-				end
-				html_buf.append ("<" + l_prefix +  l_local_part)
-			end
+--			if state = Reading_tag then
+--				l_taglib := get_tag_lib (a_prefix)
+--				l_class_name := l_taglib.get_class_for_name (l_local_part)
+--				if l_class_name.is_empty then
+--					l_class_name := Html_tag_name
+--				end
+--				create l_tmp_tag.make (a_prefix, a_local_part, l_class_name, current_debug_information)
+--				tag_stack.item.put_subtag (l_tmp_tag)
+--				tag_stack.put (l_tmp_tag)
+--				if not l_taglib.contains (l_local_part) then
+
+--					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
+--				end
+--			elseif state = Reading_html then
+--				if not l_prefix.is_empty then
+--					l_prefix := l_prefix + ":"
+--				end
+--				html_buf.append ("<" + l_prefix +  l_local_part)
+--			end
 		ensure then
 			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = Reading_html
 		end
@@ -216,35 +233,37 @@ feature -- Tag
 				l_value := ""
 			end
 
+			state.on_attribute (l_namespace, l_prefix, l_local_part, l_value)
+
 				-- All variables initialized
-			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
-				taglib := get_tag_lib (tag_stack.item.namespace)
-				if not taglib.contains (tag_stack.item.id) then
-					l_value := "undefined tag: '" + tag_stack.item.id + "'"
-					l_local_part := "text"
-				elseif  taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
-					if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
-						process_dynamic_tag_attribute (l_local_part, l_value)
-					else
-						if tag_stack.item.has_attribute (l_local_part) then
-							error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
-						else
-							tag_stack.item.put_attribute (l_local_part, l_value)
-						end
-					end
-				else
-					error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
-				end
-			elseif state = Reading_html then
-				if not l_prefix.is_empty then
-					l_prefix := l_prefix + ":"
-				end
-				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
-					process_dynamic_html_attribute (l_local_part, l_value)
-				else
-					html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
-				end
-			end
+--			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
+--				taglib := get_tag_lib (tag_stack.item.namespace)
+--				if not taglib.contains (tag_stack.item.id) then
+--					l_value := "undefined tag: '" + tag_stack.item.id + "'"
+--					l_local_part := "text"
+--				elseif  taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
+--					if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
+--						process_dynamic_tag_attribute (l_local_part, l_value)
+--					else
+--						if tag_stack.item.has_attribute (l_local_part) then
+--							error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+--						else
+--							tag_stack.item.put_attribute (l_local_part, l_value)
+--						end
+--					end
+--				else
+--					error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+--				end
+--			elseif state = Reading_html then
+--				if not l_prefix.is_empty then
+--					l_prefix := l_prefix + ":"
+--				end
+--				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
+--					process_dynamic_html_attribute (l_local_part, l_value)
+--				else
+--					html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
+--				end
+--			end
 		ensure then
 			stack_does_not_change: tag_stack.count = old tag_stack.count
 		end
@@ -252,9 +271,10 @@ feature -- Tag
 	on_start_tag_finish
 			-- End of start tag.
 		do
-			if state = Reading_html then
-				html_buf.append (">")
-			end
+			state.on_start_tag_finish
+--			if state = Reading_html then
+--				html_buf.append (">")
+--			end
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
@@ -276,15 +296,17 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			if l_prefix.is_empty or not taglibs.valid_key (a_prefix) then
-				if not l_prefix.is_empty then
-					l_prefix := l_prefix + ":"
-				end
-				html_buf.append ("</" + l_prefix  + l_local_part + ">")
-				create_html_tag_put
-			else
-				tag_stack.remove
-			end
+			state.on_end_tag (a_namespace, l_prefix, l_local_part)
+
+--			if l_prefix.is_empty or not taglibs.valid_key (a_prefix) then
+--				if not l_prefix.is_empty then
+--					l_prefix := l_prefix + ":"
+--				end
+--				html_buf.append ("</" + l_prefix  + l_local_part + ">")
+--				create_html_tag_put
+--			else
+--				tag_stack.remove
+--			end
 		end
 
 feature -- Content
@@ -295,11 +317,12 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			state := Reading_html
-			html_buf.append (a_content)
+			--state := Reading_html
+			state.on_content (a_content)
+			--html_buf.append (a_content)
 		end
 
-feature {NONE} -- Implementation
+feature {XP_CALLBACK_STATE} -- Implementation
 
 	get_tag_lib (id: STRING): XTL_TAG_LIBRARY
 			-- Returns tag library with the name `id'
@@ -396,6 +419,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_state_html
+			-- Sets the state to the html object
+		do
+			state := state_html
+		end
+
+	set_state_tag
+			-- Sets the state to the tag object
+		do
+			state := state_tag
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

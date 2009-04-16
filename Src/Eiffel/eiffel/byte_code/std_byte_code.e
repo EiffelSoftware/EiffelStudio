@@ -1475,7 +1475,6 @@ feature -- Byte code generation
 	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
 			-- Generate compound byte code
 		local
-			have_assert, has_old: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 		do
 				-- Allocate memory for once manifest strings if required
@@ -1518,8 +1517,7 @@ feature -- Byte code generation
 				context.set_assertion_type (0)
 			end
 
-			has_old := (old_expressions /= Void) or else (inh_assert.has_old_expression)
-			if has_old then
+			if old_expressions /= Void or else inh_assert.has_old_expression then
 				context.set_assertion_type (In_postcondition)
 				ba.append (Bc_start_eval_old)
 					-- Mark offset for the end of old expression evaluation.

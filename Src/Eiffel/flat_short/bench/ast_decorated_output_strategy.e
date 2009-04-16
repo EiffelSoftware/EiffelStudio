@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 	process_char_as (l_as: CHAR_AS)
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_character_text (l_as.string_value)
+				text_formatter_decorator.process_character_text (l_as.string_32_value)
 			end
 			last_type := character_type
 		end

@@ -33,7 +33,6 @@ feature -- Basic Operations
 			current_session := a_session_manager.get_current_session (a_request, a_response)
 			internal_controller.set_current_request (a_request)
 			internal_controller.set_current_session (current_session)
-			internal_controller.on_page_load
 			a_request.call_pre_handler (Current, a_response)
 			handle_request (a_request, a_response)
 			afterhandle_request (a_request, a_response)

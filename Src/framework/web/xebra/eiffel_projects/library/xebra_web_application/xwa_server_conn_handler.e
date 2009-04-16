@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Implementation
 
-	base_make (a_name: STRING)
+	make (a_name: STRING)
 			-- Initialization of classes.
 		do
 			name := a_name

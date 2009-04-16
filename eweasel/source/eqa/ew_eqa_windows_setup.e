@@ -60,6 +60,19 @@ feature -- Config
 			not_void: Result /= Void
 		end
 
+	ise_platform: STRING
+			-- ISE_PLATFORM environment variable
+		require
+			environment_set: is_environment_set
+		local
+			l_env: EXECUTION_ENVIRONMENT
+		once
+			create l_env
+			Result := l_env.get ("ISE_PLATFORM")
+		ensure
+			not_void: Result /= Void
+		end
+
 	output_path: DIRECTORY_NAME
 			-- eweasel output path
 		require
@@ -178,7 +191,7 @@ feature -- Command
 
 			l_eweasel_63.init ("$ISE_EIFFEL\eweasel\control\init")
 
-			l_eweasel_63.define ("ISE_PLATFORM", "windows")
+			l_eweasel_63.define ("ISE_PLATFORM", ise_platform)
 			l_eweasel_63.define ("EWEASEL", "$ISE_EIFFEL\eweasel")
 			l_eweasel_63.define ("INCLUDE", "$EWEASEL\control")
 			l_eweasel_63.define ("EWEASEL_PLATFORM", "WINDOWS")

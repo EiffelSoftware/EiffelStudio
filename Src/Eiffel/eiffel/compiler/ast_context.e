@@ -563,19 +563,8 @@ feature -- Setting
 			current_class := a_class
 			create current_class_type
 			current_class_type.set_actual_type (a_type)
-			if current_class.lace_class.is_void_safe then
-				if not current_class_type.is_attached then
-						-- Current is always attached
-					current_class_type.set_attached_mark
-				end
-			else
-				if not current_class_type.is_attached and then
-					not current_class_type.is_implicitly_attached
-				then
-						-- Current is always attached
-					current_class_type.set_is_implicitly_attached
-				end
-			end
+				-- Current is always attached.
+			current_class_type := current_class_type.as_attached_in (current_class)
 			current_feature_table := a_feat_tbl
 			written_class := Void
 			from

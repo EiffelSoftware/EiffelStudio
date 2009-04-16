@@ -667,7 +667,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 						end
 						Result := other_class_type.class_id = system.system_object_id
 					end
-					if Result and then a_context_class.lace_class.is_void_safe then
+					if Result and then a_context_class.lace_class.is_void_safe_conformance then
 							-- We should still verify that the attachment marks are taken into account.
 						Result := is_attachable_to (other_class_type)
 					end

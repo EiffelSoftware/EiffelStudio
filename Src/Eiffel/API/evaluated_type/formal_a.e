@@ -460,7 +460,7 @@ feature -- Access
     				-- 1. !G conforms to G, ?G and !G.
 					-- 2. G conforms to G and ?G.
     				-- 3. ?G only conforms to ?G.
-				if not a_context_class.lace_class.is_void_safe then
+				if not a_context_class.lace_class.is_void_safe_conformance then
 						-- Case 0. In non-void-safe mode attachment status is not taken into account.
 					Result := True
 				elseif is_implicitly_attached then

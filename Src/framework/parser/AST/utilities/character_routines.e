@@ -340,7 +340,10 @@ feature {NONE} -- Implementation
 				end
 			else
 				code := char.natural_32_code
-				if code < {ASCII}.First_printable.to_natural_32 then
+				if
+					code < {ASCII}.First_printable.to_natural_32 or
+					(code > {ASCII}.Last_printable.to_natural_32 and code <= iso_8859_1_apc)
+				then
 					Result.grow (Result.count + 6)
 					Result.append ("%%/")
 					Result.append_natural_32 (code);
@@ -406,7 +409,10 @@ feature {NONE} -- Implementation
 				end
 			else
 				code := char.code;
-				if code < {ASCII}.First_printable then
+				if
+					code < {ASCII}.First_printable or
+					(code > {ASCII}.Last_printable and code <= iso_8859_1_apc.as_integer_32)
+				then
 					Result.grow (Result.count + 6)
 					Result.append_string ("%%/")
 					Result.append_integer (code);
@@ -419,6 +425,12 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 			Result_different: Result /= char_to_string (char, Void, for_string)
 		end
+
+	iso_8859_1_del: NATURAL_32 = 127
+			-- DEL, the first character in the second unprintable section in ISO-8859-1.
+
+	iso_8859_1_apc: NATURAL_32 = 159
+			-- APC, the last character in the second unprintable section in ISO-8859-1.
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

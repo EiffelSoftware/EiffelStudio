@@ -238,6 +238,7 @@ feature -- Set
 			-- Set `short_title'.
 		require
 			a_short_title_not_void: a_short_title /= Void
+			not_too_long: a_short_title.count < 1000
 		do
 			short_title := a_short_title
 			internal_state.change_title (a_short_title, Current)

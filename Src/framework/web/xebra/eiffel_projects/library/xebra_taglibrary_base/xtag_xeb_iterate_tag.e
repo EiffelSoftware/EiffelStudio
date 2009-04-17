@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		do
 			temp_list := a_servlet_class.render_feature.get_unique_identifier
 			a_servlet_class.render_feature.append_local (variable, type)
-			a_servlet_class.render_feature.append_expression (temp_list " := " Controller_variable + "." + list)
+			a_servlet_class.render_feature.append_expression (temp_list + " := " + Controller_variable + "." + list)
 			a_servlet_class.render_feature.append_expression ("from")
 			a_servlet_class.render_feature.append_expression (temp_list + ".start")
 			a_servlet_class.render_feature.append_expression ("until")

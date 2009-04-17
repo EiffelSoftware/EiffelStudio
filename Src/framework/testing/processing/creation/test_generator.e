@@ -25,12 +25,12 @@ inherit
 			{NONE} all
 		end
 
-	AUTO_TEST_COMMAND_LINE_PARSER
-		export
-			{NONE} all
-		redefine
-			class_names
-		end
+--	AUTO_TEST_COMMAND_LINE_PARSER
+--		export
+--			{NONE} all
+--		redefine
+--			class_names
+--		end
 
 	AUT_SHARED_INTERPRETER_INFO
 		export
@@ -218,16 +218,21 @@ feature {NONE} -- Basic operations
 						elseif attached test_task as l_task then
 							l_error_handler := session.error_handler
 							if l_task.has_next_step then
-								if time_out.minute > 99 then
-									l_cancel := l_error_handler.counter = 0
-								else
-									l_cancel := l_error_handler.remaining_time.second <= 0
+								if session.options.time_out.second_count > 0 then
+									update_remaining_time
+									if l_error_handler.remaining_time.second_count <= 0 then
+										l_cancel := True
+									end
+								end
+								if session.options.test_count > 0 then
+									if l_error_handler.counter = 0 then
+										l_cancel := True
+									end
 								end
 								if l_cancel then
 									l_task.cancel
 								else
 									l_task.step
-									update_remaining_time
 									l_repo := session.result_repository_builder.result_repository
 									l_witnesses := l_repo.witnesses
 									if not l_witnesses.is_empty and then l_witnesses.last /= last_witness then
@@ -265,10 +270,10 @@ feature {NONE} -- Basic operations
 							end
 						else
 							if attached {AUT_RANDOM_STRATEGY} test_task as l_task then
-								if is_text_statistics_format_enabled then
+								if session.options.is_text_statistics_format_enabled then
 									generate_text_statistics (session.result_repository_builder.result_repository, l_task.classes_under_test)
 								end
-								if is_html_statistics_format_enabled then
+								if session.options.is_html_statistics_format_enabled then
 									generate_html_statistics (session.result_repository_builder.result_repository, l_task.classes_under_test)
 								end
 							end
@@ -335,13 +340,10 @@ feature {NONE} -- Implementation
 		do
 			check_environment_variable
 			set_precompile (False)
-			output_dirname := file_system.pathname (system.eiffel_project.project_directory.testing_results_path, "auto_test")
-			create time_out.make (0, 0, 0, 0, 15, 0)
+
 			l_error_handler := session.error_handler
 
-			process_configuration
-
-			create l_file_name.make_from_string (output_dirname)
+			create l_file_name.make_from_string (session.output_dirname)
 			l_file_name.extend ("log")
 			l_file_name.set_file_name ("error")
 			l_file_name.add_extension ("log")
@@ -358,42 +360,18 @@ feature {NONE} -- Implementation
 				l_error_handler.set_info_null
 			end
 
-			if should_display_help_message then
-				l_error_handler.report_info_message (help_message)
+			if session.options.should_display_help_message then
+				l_error_handler.report_info_message (session.options.help_message)
 				is_finished := True
 			else
 
 				generate_interpreter
 
-				if not is_finished then
-					l_error_handler.set_start_time (system_clock.date_time_now)
-				else
+				if is_finished then
 					test_suite.propagate_error ("Unable to use workbench executable for interpreter", [], Current)
 					is_finished := True
 				end
 			end
-		end
-
-	process_configuration
-			-- use `configuration' to initialize AutoTest settings
-		do
-			is_slicing_enabled := configuration.is_slicing_enabled
-			is_ddmin_enabled := configuration.is_ddmin_enabled
-			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled
-
-			create time_out.make (0, 0, 0, 0, configuration.time_out.as_integer_32, 0)
-
-			if configuration.seed > 0 then
-				random.set_seed (configuration.seed.to_integer_32)
-			else
-				random.set_seed ((create {TIME}.make_now).milli_second)
-			end
-			is_text_statistics_format_enabled := True
-			is_html_statistics_format_enabled := configuration.is_html_output
-
-			proxy_time_out := configuration.proxy_time_out.as_integer_32
-
-			create {DS_ARRAYED_LIST [attached STRING]} class_names.make_from_linear (configuration.types)
 		end
 
 feature {NONE} -- Interpreter generation
@@ -410,17 +388,17 @@ feature {NONE} -- Interpreter generation
 			log_dirname: STRING
 		do
 				-- Setup paths for interpreter generation.
-			log_dirname := file_system.pathname (output_dirname, "log")
+			log_dirname := file_system.pathname (session.output_dirname, "log")
 
 			--create factory.make (a_session)
 				-- We generate the skeleton of the interpreter when asked.
 				-- Interpreter skeleton only need to be generated once.				
-			if not just_test then
+			if not session.options.just_test then
 				--factory.generate_interpreter_skeleton (interpreter_base_dirname)
 			end
 
 				-- Melt system with interpreter as its new root.			
-			compile_project (class_names)
+			compile_project (session.options.class_names)
 			if system.eiffel_project.successful then
 				system.make_update (False)
 				compute_interpreter_root_class
@@ -487,21 +465,25 @@ feature{NONE} -- Test case generation and execution
 			l_strategy: AUT_RANDOM_STRATEGY
 			l_itp: like new_interpreter
 			l_session: like session
+			l_error_handler: AUT_ERROR_HANDLER
 		do
 			test_task := Void
 			l_itp := new_interpreter
 			if l_itp /= Void then
 
 				l_session := session
+				l_error_handler := l_session.error_handler
 				l_itp.add_log_processor (l_session.result_repository_builder)
 				l_itp.set_is_logging_enabled (True)
 
 				create l_strategy.make (l_itp, system, l_session.error_handler)
-				l_strategy.add_class_names (class_names)
+				l_strategy.add_class_names (session.options.class_names)
 
-				l_session.error_handler.report_random_testing
-				if time_out.minute > 99 then
-					l_session.error_handler.set_counter (time_out.minute.to_natural_32)
+				l_error_handler.report_random_testing
+
+				l_error_handler.set_start_time (system_clock.date_time_now)
+				if l_session.options.test_count > 0 then
+					l_error_handler.set_counter (session.options.test_count)
 				end
 
 				l_strategy.start
@@ -511,6 +493,9 @@ feature{NONE} -- Test case generation and execution
 
 	update_remaining_time
 			-- Update `error_handler.remaining_time' and mark in the proxy log every elapsed minute.
+		require
+			running: is_running
+			time_out_set: session.options.time_out /= Void
 		local
 			duration: DT_DATE_TIME_DURATION
 			time_left: DT_DATE_TIME_DURATION
@@ -524,14 +509,12 @@ feature{NONE} -- Test case generation and execution
 				times_duration_logged := times_duration_logged + 1
 			end
 
-			time_left := time_out - duration
+			time_left := session.options.time_out - duration
 			time_left.set_time_canonical
 			if time_left.second_count < 0 then
 				create time_left.make (0, 0, 0, 0, 0, 0)
 			end
-			if time_out.minute < 100 then
-				session.error_handler.set_remaining_time (time_left)
-			end
+			session.error_handler.set_remaining_time (time_left)
 		ensure
 			remaining_time_set: session.error_handler.remaining_time /= Void
 		end
@@ -589,8 +572,8 @@ feature{NONE} -- Test result analyizing
 		local
 			text_generator: AUT_TEXT_STATISTICS_GENERATOR
 		do
-			if is_text_statistics_format_enabled then
-				create text_generator.make ("pre_minimization_", file_system.pathname (output_dirname, "result"), system, a_class_name_list)
+			if session.options.is_text_statistics_format_enabled then
+				create text_generator.make ("pre_minimization_", file_system.pathname (session.output_dirname, "result"), system, a_class_name_list)
 				text_generator.generate (a_result_repository)
 				if text_generator.has_fatal_error then
 					session.error_handler.report_text_generation_error
@@ -606,7 +589,7 @@ feature{NONE} -- Test result analyizing
 		local
 			l_generator: AUT_TEXT_STATISTICS_GENERATOR
 		do
-			create l_generator.make ("", file_system.pathname (output_dirname, "result"), system, a_class_name_list)
+			create l_generator.make ("", file_system.pathname (session.output_dirname, "result"), system, a_class_name_list)
 			l_generator.generate (a_result_repository)
 			if l_generator.has_fatal_error then
 				session.error_handler.report_text_generation_error
@@ -622,7 +605,7 @@ feature{NONE} -- Test result analyizing
 		local
 			l_generator: AUT_HTML_STATISTICS_GENERATOR
 		do
-			create l_generator.make (file_system.pathname (output_dirname, "result"), system, a_class_name_list)
+			create l_generator.make (file_system.pathname (session.output_dirname, "result"), system, a_class_name_list)
 			l_generator.set_repository (a_result_repo)
 			l_generator.start
 			statistics_task := l_generator
@@ -706,7 +689,7 @@ feature {NONE} -- Factory
 		do
 			l_session := session
 			l_itp_gen := l_session.interpreter_generator
-			l_itp_gen.create_interpreter (file_system.pathname (output_dirname, "log"))
+			l_itp_gen.create_interpreter (file_system.pathname (session.output_dirname, "log"))
 			Result := l_itp_gen.last_interpreter
 		end
 

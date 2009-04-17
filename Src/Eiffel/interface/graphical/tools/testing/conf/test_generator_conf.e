@@ -23,13 +23,17 @@ feature {NONE} -- Initialization
 	make (a_preference: TEST_PREFERENCES)
 			-- <Precursor>
 		local
-			l_timeout, l_proxy, l_seed: INTEGER
+			l_timeout, l_test_count, l_proxy, l_seed: INTEGER
 		do
 			create types_cache.make_default
 			Precursor (a_preference)
 			l_timeout := a_preference.autotest_timeout.value
 			if l_timeout > 0 then
 				time_out_cache := l_timeout.to_natural_32
+			end
+			l_test_count := a_preference.autotest_test_count.value
+			if l_test_count > 0 then
+				test_count_cache := l_test_count.to_natural_32
 			end
 			l_proxy := a_preference.autotest_proxy_timeout.value
 			if l_proxy > 0 then
@@ -60,6 +64,14 @@ feature -- Access
 			result_equals_cache: Result = time_out_cache
 		end
 
+	test_count: NATURAL
+			-- <Precursor>
+		do
+			Result := test_count_cache
+		ensure then
+			result_equals_cache: Result = test_count_cache
+		end
+
 	proxy_time_out: NATURAL
 			-- <Precursor>
 		do
@@ -83,6 +95,9 @@ feature -- Access: cache
 
 	time_out_cache: like time_out assign set_time_out
 			-- Cache for `time_out'
+
+	test_count_cache: like test_count assign set_test_count
+			-- Cache for `test_count'
 
 	proxy_time_out_cache: like proxy_time_out assign set_proxy_time_out
 			-- Cache for `proxy_time_out'		
@@ -173,6 +188,14 @@ feature -- Status setting
 			time_out_set: time_out_cache = a_time_out
 		end
 
+	set_test_count (a_test_count: like test_count)
+			-- Set `test_count' to `a_test_count'.
+		do
+			test_count_cache := a_test_count
+		ensure
+			test_count_set: test_count_cache = a_test_count
+		end
+
 	set_proxy_time_out (a_proxy_time_out: like proxy_time_out)
 			-- Set `proxy_time_out' to `a_proxy_time_out'.
 		do
@@ -207,10 +230,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

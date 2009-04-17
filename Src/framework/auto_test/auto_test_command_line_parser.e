@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			finalize_option: AP_FLAG
 			output_dir_option: AP_STRING_OPTION
 			time_out_option: AP_INTEGER_OPTION
+			test_count_option: AP_INTEGER_OPTION
 			seed_option: AP_INTEGER_OPTION
 			statistics_format_op: AP_STRING_OPTION
 			time: TIME
@@ -105,6 +106,10 @@ feature {NONE} -- Initialization
 			create time_out_option.make ('t', "time-out")
 			time_out_option.set_description ("Time used for testing (in minutes). Default is 15 minutes.")
 			parser.options.force_last (time_out_option)
+
+			create test_count_option.make ('c', "count")
+			test_count_option.set_description ("Maximum number of tests to be executed, 0 means no restriction. Default is 0.")
+			parser.options.force_last (test_count_option)
 
 			create seed_option.make ('e', "seed")
 			seed_option.set_description ("Integer seed to initialize pseudo-random number generation with. If not specified seed is intialized with current time.")
@@ -184,8 +189,16 @@ feature {NONE} -- Initialization
 					output_dirname := output_dir_option.parameter
 				end
 
-				if time_out_option.was_found then
+				if time_out_option.was_found and then time_out_option.parameter >= 0 then
 					create time_out.make (0, 0 ,0, 0, time_out_option.parameter, 0)
+				else
+					create time_out.make (0, 0, 0, 0, default_time_out.as_integer_32, 0)
+				end
+
+				if test_count_option.was_found then
+					if test_count_option.parameter > 0 then
+						test_count := test_count_option.parameter.as_natural_32
+					end
 				end
 
 				if seed_option.was_found then
@@ -258,6 +271,7 @@ feature {NONE} -- Initialization
 			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled
 
 			create time_out.make (0, 0, 0, 0, a_conf.time_out.as_integer_32, 0)
+			test_count := a_conf.test_count
 
 			if a_conf.seed > 0 then
 				random.set_seed (a_conf.seed.to_integer_32)
@@ -289,6 +303,11 @@ feature -- Status report
 	time_out: DT_DATE_TIME_DURATION
 			-- Maximal time to test;
 			-- A timeout value of `0' means no time out.
+
+	test_count: NATURAL
+			-- Maximum number of tests to be executed
+			--
+			-- Note: a value of `0' means no upper limit
 
 	is_debug_mode_enabled: BOOLEAN
 			-- Should the interpreter runtime be compiled with
@@ -337,6 +356,11 @@ feature -- Status report
 	help_message: STRING
 			-- Help message for command line arguments
 			-- This value is only set if help option presents.
+
+feature {NONE} -- Constants
+
+	default_time_out: NATURAL = 5
+			-- Default value for `time_out' in minutes
 
 invariant
 	minimization_is_either_slicing_or_ddmin: is_minimization_enabled implies (is_slicing_enabled xor is_ddmin_enabled)

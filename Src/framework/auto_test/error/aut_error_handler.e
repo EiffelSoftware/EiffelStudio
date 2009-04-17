@@ -75,7 +75,7 @@ feature -- Access
 			Result := "1.3.2"
 		end
 
-	remaining_time: DT_DATE_TIME_DURATION
+	remaining_time: detachable DT_DATE_TIME_DURATION
 			-- Remaining time for testing
 
 	start_time: DT_DATE_TIME
@@ -255,10 +255,11 @@ feature -- Reporting messages
 			text: STRING
 		do
 			create text.make (100)
-			if remaining_time /= Void then
-				remaining_time.time_duration.append_to_string (text)
+			if attached remaining_time as l_time then
+				l_time.time_duration.append_to_string (text)
 				text.append_string (": ")
-			else
+			end
+			if counter > 0 then
 				text.append_natural_32 (counter)
 				text.append_string (": ")
 			end
@@ -507,10 +508,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

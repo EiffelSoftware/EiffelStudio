@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_assigner: like assigner; a_executable: like executable)
+	make (a_assigner: like assigner; a_executable: like executable; a_working_directory: like working_directory)
 			-- Initizialize `Current'
 			--
 			-- `a_assigner': Assigner for retrieving test to be executed.
@@ -34,14 +34,18 @@ feature {NONE} -- Initialization
 		do
 			make_controller (a_assigner)
 			executable := a_executable
+			working_directory := a_working_directory
 		ensure
 			executable_set: executable = a_executable
+			working_directory_set: working_directory = a_working_directory
 		end
 
 feature {NONE} -- Access
 
 	executable: attached STRING
 			-- Name of executable for `process'
+
+	working_directory: attached STRING
 
 	process: detachable PROCESS
 			-- Process
@@ -68,7 +72,7 @@ feature -- Status setting
 	launch_evaluator (a_args: attached LIST [attached STRING])
 			-- <Precursor>
 		do
-			process := process_factory.process_launcher (executable, a_args, Void)
+			process := process_factory.process_launcher (executable, a_args, working_directory)
 
 			process.enable_launch_in_new_process_group
 			process.set_separate_console (False)

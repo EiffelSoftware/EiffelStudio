@@ -86,10 +86,12 @@ feature -- Access
 		end
 
 	long_title: STRING_32
-			-- Client programmer's widget's long title. Which is shown at SD_TITLE_BAR.
+			-- Client programmer's widget's long title.
+			-- The long title is used in all title bars where are enough space.
 
 	short_title: STRING_32
-			-- Client programmer's widget's short title. Which is shown at SD_TAB_STUB.		
+			-- Client programmer's widget's short title.
+			-- The short title is used in all tabs where are not enough space. 	
 
 	pixmap: like internal_pixmap
 			-- Client programmer's widget's pixmap.

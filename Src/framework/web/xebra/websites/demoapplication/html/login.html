@@ -5,7 +5,13 @@
 <title>Xebra Demo Application</title>
 <!-- InstanceEndEditable -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<style type="text/css">
+<!--
+.style3 {color: #FF0000}
+-->
+</style>
+<!-- InstanceEndEditable -->
 <link href="style.css" rel="stylesheet" type="text/css" />
 <!-- InstanceParam name="region2" type="boolean" value="true" -->
 </head>
@@ -49,27 +55,28 @@
     <td class="template_18_back"><img src="images/template_18.gif" width="30" height="113" alt="" /></td>
     <td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
         <h2><span class="style1">Login</span>        </h2>
-        <p><xeb:display feature="login"/></p>  
+        <p><span class="error"><xeb:display feature="login"/></span></p>  
         <xeb:if condition="not_authenticated">
         <form id="1" name="login_form" method="post" action="login.xeb">
-      <div align="center">
-        <table width="300" border="0" cellpadding="3" cellspacing="5" bgcolor="#FFFFFF">
+     
+        <table width="400" border="0" cellpadding="2" cellspacing="2" bgcolor="#FFFFFF">
           <tr>
-            <td bgcolor="#666666" class="style2">Name</td>
-            <td bgcolor="#666666"><label>
+            <td>Name</td>
+            <td><label>
               <input type="text" name="name" id="name" />
             </label></td>
           </tr>
-          <tr bgcolor="#333333">
-            <td bgcolor="#666666" class="style2">Password</td>
-            <td bgcolor="#666666"><input type="password" name="password" id="password" />            </td>
+          <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" id="password" />            </td>
+          </tr>        
+          <tr><td></td>
+              <td><input type="submit" name="submit" id="submit" value="Login" /></td>
           </tr>
-        </table>
-      </div>
-      <p align="center">
-        <input type="submit" name="submit" id="submit" value="Login" />
-      </p>
-    </form> 
+           </table>
+     
+   
+        </form> 
     </xeb:if>  
 	<!-- InstanceEndEditable --></td>
     <td></td>

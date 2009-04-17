@@ -31,11 +31,12 @@ h3 {
 </head>
 
 <body>
-<h1>Xebra Tutorial (currently invalid)</h1>
+<h1>Xebra Tutorial </h1>
+<h2>Notes</h2>
+<p><strong>Use Xebra revision 78297 for this tutorial</strong>.</p>
 <p>Eiffel source is expected to be in <span class="code">$EIFFEL_SRC,</span> and the c libraries are expected to be compiled</p>
 <p>The tutorial is written for Ubuntu 8.10</p>
-<p>&nbsp;</p>
-<h2 align="left">Checkout</h2>
+<h2>Checkout</h2>
 <ul>
   <li>Checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="code">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="code">$XEBRA_DEV</span></li>
 </ul>
@@ -77,7 +78,10 @@ h3 {
   <br />
   </li>
   <li> Restart apache (if necessary, you need to stop and start instead of restart)<br />
-    <span class="code">sudo <strong>$APACHE2/bin/</strong>apachectl restart</span><br />
+  <span class="code">sudo <strong>$APACHE2/bin/</strong>apachectl restart</span><br />
+  <br />
+  </li>
+  <li>Browse to <span class="code">http://localhost/test.xeb</span>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
     <br />
   </li>
   <li> Hint: keep an eye on the apache error log<br />
@@ -89,7 +93,11 @@ h3 {
   <li>Open the eiffel project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf</span><br />
     <br />
   </li>
-  <li>Compile and Run</li>
+  <li>Compile and Run<br />
+    <br />
+  </li>
+  <li>Browse again to <span class="code">http://localhost/test.xeb</span>.You should see a Xebra Server Error Report (also with the Fail Whale) with a message saying &quot;Cannot find web application ' ' &quot;<br />
+</li>
 </ul>
 <p>&nbsp;</p>
 <h2>Run the Xebrawebapp (simple web application)</h2>
@@ -101,6 +109,7 @@ h3 {
 <ul><li>Run<br />
     <span class="code">cd $XEBRA_DEV/websites/xebrawebapp/<br />
     ./generate-webapp.sh</span><br />
+    (due to a current bug, you have to run the script twice)<br />
     <br />
     </li>
   <li>Open the project at <span class="code">$XEBRA_DEV/websites/xebrawebapp/</span> in eiffelstudio and compile<br />
@@ -114,31 +123,16 @@ h3 {
 <p>&nbsp;</p>
 <h2>Run the Demoapplication (advanced web application)</h2>
 <ul><li>
-  <p>You can use the tutorial web application <span class="code">demoapplication</span> at <span class="code">$XEBRA_DEV/websites/demoapplication</span> to start. To use it do the following:</p>
-    <ul>
-      <li>Install mysql<br />
-        <br />
-      </li>
-      <li>      Install libmyodbc, run<br />  
-        <span class="code">sudo apt-get install libmyodbc</span><br />  
-          <span class="code"><br />
-      </span></li>
-      <li>Copy the file<span class="code"> $XEBRA_DEV/websites/demoapplication/database/odbc.ini</span> to <span class="code">/etc/</span><br />
-        </li>
-      <li></li>
-      <li></li>
-      <li><br />
-      </li>
-      <li>Run the sql script......./././././././././../.<br />  
-        <br />
-      </li>
-      <li>Create the Folder <span class="code">$APACHE2/htdocs/demoapplication<br />
+  <p>You can use the tutorial web application <span class="code">demoapplication</span> at <span class="code">$XEBRA_DEV/websites/demoapplication</span> to start. To use it do the following:  
+      <br />
+    </p>
+    <ul><li>Create the Folder <span class="code">$APACHE2/htdocs/demoapplication<br />
         <br />
       </span></li>
       <li>Copy the folder <span class="code">$XEBRA_DEV/</span><span class="code">websites/demoapplication/html/images</span> to<span class="code"> $APACHE2/htdocs/demoapplication</span><br />
         <br />
       </li>
-      <li>Copy <span class="code">$XEBRA_DEV/websites/demoapplication/html/style.css</span> to <span class="code">$APACHE2/htdocs/demoapplication</span><span class="code"><br />
+      <li>Copy <span class="code">$XEBRA_DEV/websites/demoapplication/html/style.css</span> to <span class="code">$APACHE2/htdocs/demoapplication</span><span class="code">/<br />
         <br />
       </span></li>
     </ul>
@@ -146,6 +140,7 @@ h3 {
       <li>Run<br />
         <span class="code">cd $XEBRA_DEV/websites/demoapplication/<br />
           ./generate-webapp.sh</span><br />
+          (due to a current bug, you have to run the script twice)<br />
         <br />
       </li>
       <li>Open the project at <span class="code">$XEBRA_DEV/websites/demoapplication/</span> in eiffelstudio and compile<br />
@@ -154,7 +149,7 @@ h3 {
       <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
         <br />
       </li>
-      <li>Browse to <span class="code">http://localhost/demoapplication/home.xeb</span>, you should see the site:</li>
+      <li>Browse to <span class="code">http://localhost/demoapplication/home.xeb</span>, you should see the site</li>
     </ul>
     <br />
   </li>
@@ -166,7 +161,7 @@ h3 {
 <ul>
   <li>Add the libraries
     <ul>
-      <li><span class="code">base.ecf </span>(not void-safe)<span class="code">,</span></li>
+      <li><span class="code">base-safe.ecf</span><span class="code">,</span></li>
       <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_http/xebra_http.ecf</span></li>
       <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_web_application/xebra_web_application.ecf</span></li>
       <li>don't use precompile<br />
@@ -180,18 +175,10 @@ h3 {
   <li>Create the xeb files in  <span class="code">$WEBAPP</span><br />
     <br />
   </li>
-  <li>Create a new class <span class="code">(YOURNAME)_CONTROLLER</span> that inherits from <span class="code">XWA_CONTROLLER</span> and add the following feature
+  <li>Create a new class <span class="code">(YOURNAME)_CONTROLLER</span> that inherits from <span class="code">XWA_CONTROLLER</span><br />
     <br />
-    <span class="code">on_page_load<br />
-    do<br />
-    end</span><br />
-    <br />
-  </li>
-  <li>Add the following creation procedure<br />
-    <span class="code">make<br />
-    do<br />
-    base_make<br />
-    end</span><br />
+    </li>
+  <li>Create a new class <span class="code">(YOURNAME)_GLOBAL_STATE</span><br />
     <br />
   </li>
   <li>Change the root class to <span class="code">(YOURNAME)_G_APPLICATION<br />
@@ -203,13 +190,7 @@ h3 {
   <li>Adapt the three files <span class="code">generate-webapp.sh,</span> <span class="code">input_servlet_gen.txt</span> and <span class="code">input_translator.txt</span> to match the new paths<br />  
     <br />
   </li>
-  <li>Create the folder <span class="code">$APACHE2/htdocs/(YOURNAME)<br />
-    <br />
-  </span></li>
-  <li>Open the project in eiffelstudio, compile and run </li>
+  <li>Create the folder <span class="code">$APACHE2/htdocs/(YOURNAME)</span></li>
 </ul>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 </body>
 </html>

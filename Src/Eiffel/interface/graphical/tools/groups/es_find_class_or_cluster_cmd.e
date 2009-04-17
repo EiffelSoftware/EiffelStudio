@@ -160,7 +160,7 @@ feature {NONE} -- Internationalization
 
 	l_name: STRING = "Locate"
 	m_menu_name: STRING = "Locate in Groups Tool"
-	tt_tool_tip: STRING = "Locate the class or cluster currently in the editor.%NYou can also pick and class or cluster and drop it here"
+	tt_tool_tip: STRING = "Locate the class or cluster currently in the editor.%NYou can also pick a class or a cluster and drop it here"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -20,7 +20,7 @@ feature -- Initialization
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]} tags.make (10)
 		end
 
-feature {NONE} -- Access
+feature {XTL_TAG_LIBRARY} -- Access
 
 	tags: HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]
 			-- All the tags defined in th is tag library
@@ -77,6 +77,12 @@ feature -- Query
 			-- Checks, if the tag is available in the tag library
 		do
 			Result := attached tags [tag_id]
+		end
+
+	create_tag (a_prefix, a_local_part, a_class_name, a_debug_information: STRING): XP_TAG_ELEMENT
+			-- Creates the appropriate XP_TAG_ELEMENT
+		do
+			create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 		end
 
 note

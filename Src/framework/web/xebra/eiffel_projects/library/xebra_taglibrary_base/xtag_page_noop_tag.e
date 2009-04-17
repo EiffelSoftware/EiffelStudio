@@ -1,10 +1,12 @@
 note
-	description: "Summary description for {XEB_ITERATE_TAG}."
+	description: "Summary description for {XTAG_PAGE_NOOP_TAG}."
 	date: "$Date$"
 	revision: "$Revision$"
+	xeb_tag: "call"
+	xeb_argument: "feature: BOOLEAN"
 
 class
-	XTAG_XEB_ITERATE_TAG
+	XTAG_PAGE_NOOP_TAG
 
 inherit
 	XTAG_TAG_SERIALIZER
@@ -17,57 +19,19 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			list := ""
-			variable := ""
-			type := ""
 		end
 
-feature {NONE} -- Access
-
-	list: STRING
-			-- The items over which we want to iterate
-
-	variable: STRING
-			-- Name of the variable
-
-	type: STRING
-			-- Type of the variable
-
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
-		local
-			temp_list: STRING
-		do
-			temp_list := a_servlet_class.render_feature.get_unique_identifier
-			a_servlet_class.render_feature.append_local (variable, type)
-			a_servlet_class.render_feature.append_expression (temp_list " := " Controller_variable + "." + list)
-			a_servlet_class.render_feature.append_expression ("from")
-			a_servlet_class.render_feature.append_expression (temp_list + ".start")
-			a_servlet_class.render_feature.append_expression ("until")
-			a_servlet_class.render_feature.append_expression (temp_list + ".after")
-			a_servlet_class.render_feature.append_expression ("loop")
-			a_servlet_class.render_feature.append_expression (variable + " := " + temp_list + ".item")
-			generate_children (a_servlet_class, variable_table)
-			a_servlet_class.render_feature.append_expression (temp_list + ".forth")
-			a_servlet_class.render_feature.append_expression ("end")
+		do			
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
-			if id.is_equal ("list") then
-				list := a_attribute
-			end
-			if id.is_equal ("variable") then
-				variable := a_attribute
-			end
-			if id.is_equal ("type") then
-				type := a_attribute
-			end
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

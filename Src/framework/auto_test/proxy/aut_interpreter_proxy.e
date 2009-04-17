@@ -706,6 +706,7 @@ feature{NONE} -- Process scheduling
 		local
 			arguments: ARRAYED_LIST [STRING]
 			l_body_id: INTEGER
+			l_workdir: STRING
 		do
 				-- $MELT_PATH needs to be set here in only to allow debugging.
 			execution_environment.set_variable_value ("MELT_PATH", melt_path)
@@ -715,7 +716,8 @@ feature{NONE} -- Process scheduling
 			l_body_id := injected_feature_body_id - 1
 			create arguments.make_from_array (<<"localhost", port.out, l_body_id.out, injected_feature_pattern_id.out, interpreter_log_filename, "-eif_root", interpreter_root_class_name + "." + interpreter_root_feature_name>>)
 
-			create process.make (executable_file_name, arguments, ".")
+			l_workdir := system.lace.directory_name
+			create process.make (executable_file_name, arguments, l_workdir)
 			process.set_timeout (0)
 			process.launch (agent stdout_reader.put_string)
 		end

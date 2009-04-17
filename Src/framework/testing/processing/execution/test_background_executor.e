@@ -43,14 +43,18 @@ feature {NONE} -- Factory
 	create_evaluator: attached TEST_EVALUATOR_CONTROLLER
 			-- <Precursor>
 		local
+			l_project: E_PROJECT
 			l_exec: attached STRING
+			l_workdir: attached STRING
 			l_assigner: like assigner
 		do
+			l_project := test_suite.eiffel_project
 				-- TODO: use temporary executable
-			create l_exec.make_from_string (test_suite.eiffel_project.system.application_name (True))
+			create l_exec.make_from_string (l_project.system.application_name (True))
+			create l_workdir.make_from_string (l_project.lace.directory_name)
 			l_assigner := assigner
 			check l_assigner /= Void end
-			create {TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (l_assigner, l_exec)
+			create {TEST_BACKGROUND_EVALUATOR_CONTROLLER} Result.make (l_assigner, l_exec, l_workdir)
 		end
 
 note
@@ -78,10 +82,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

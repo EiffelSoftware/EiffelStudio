@@ -124,7 +124,11 @@ feature {NONE} -- Implementation
 					port_cell.put (min_port)
 				end
 				current_port := port_cell.item
-				create Result.make_loopback_server_by_port (current_port)
+
+					-- Client currently not able to connect to loopback server (Arno 04/17/2009)
+				--create Result.make_loopback_server_by_port (current_port)
+				create Result.make_server_by_port (current_port)
+
 				l_attempts := l_attempts + 1
 			end
 			if Result.is_open_read then

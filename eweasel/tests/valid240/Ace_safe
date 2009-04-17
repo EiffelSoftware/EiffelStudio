@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test">
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="make"/>
-		<option warning="true" full_class_checking="true" is_void_safe="true" is_attached_by_default="true">
+		<option warning="true" full_class_checking="true" _void_safety="all" is_attached_by_default="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		$EWEASEL_DOTNET_SETTING

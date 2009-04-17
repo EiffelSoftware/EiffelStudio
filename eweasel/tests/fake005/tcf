@@ -124,3 +124,5 @@ c_compile_result ok
 execute_work NONE exec_output1
 execute_result ok
 compare exec_output1 output
+
+test_end

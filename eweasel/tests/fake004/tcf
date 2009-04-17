@@ -31,4 +31,5 @@ compile_melted
 compile_result 	validity_error TEST1 VTCG
 -- VTGD(2)
 
+test_end
 

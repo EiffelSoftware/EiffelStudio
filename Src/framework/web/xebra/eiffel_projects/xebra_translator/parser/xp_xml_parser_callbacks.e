@@ -20,37 +20,32 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parser: XM_PARSER; a_path: STRING)
-			-- Create XB_XML_PARSER_CALLBACKS.
+			-- {Create XB_XML_PARSER_CALLBACKS}.
 		require
 			a_path_is_valid: not a_path.is_empty
 		do
 			parser := a_parser
 			path := a_path
-			create root_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
+			create root_tag.make ("xeb", "html", {XP_HTML_CALLBACK_STATE}.Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
-			create html_buf.make_empty
 			create state_html.make (Current)
 			create state_tag.make (Current)
 			state := state_html
 			controller_class := "STRING"
+			create {HASH_TABLE [XTL_TAG_LIBRARY, STRING]} taglibs.make (4)
+			taglibs.put (generate_configuration_taglib, Configuration_tag)
 		ensure
-			html_buf_is_empty: html_buf.is_empty
 			tag_stack_is_empty: tag_stack.is_empty
 		end
 
 feature -- Constants
 
-	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
-	Output_tag_name: STRING = "XTAG_XEB_OUTPUT_CALL_TAG"
-
-	Reading_html: INTEGER = 0
-	Reading_tag: INTEGER = 1
-
 	Configuration_tag: STRING = "page"
 
-	parser: XM_PARSER
-
 feature -- Access
+
+	parser: XM_PARSER
+			-- The parser which uses Current
 
 	path: STRING
 			-- The path of the file to which is being read
@@ -67,9 +62,6 @@ feature -- Access
 	state_html: XP_HTML_CALLBACK_STATE
 			-- The instance for the state = html
 
-	html_buf: STRING
-			-- Stores html text until a tag is created from it
-
 	root_tag: XP_TAG_ELEMENT
 			-- Represents the root of the XB_TAG tree
 
@@ -82,8 +74,7 @@ feature -- Access
 	put_taglibs (a_taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING])
 			-- Adds a taglib to the parser
 		do
-			taglibs := a_taglibs
-			taglibs.put (generate_configuration_taglib, Configuration_tag)
+			taglibs.merge (a_taglibs)
 		end
 
 feature -- Document
@@ -101,18 +92,14 @@ feature -- Document
 	on_finish
 			-- Called when parsing finished.
 		do
-			if not html_buf.is_empty then
-				create_html_tag_put
-			end
+			state.on_finish
 		ensure then
 			only_root_on_stack: tag_stack.count = 1
-			buffer_is_empty: html_buf.is_empty
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.		
 		do
-			--error_manager.set_last_error (create {XERROR_PARSE}.make (["Xml declarations not yet supported " + current_debug_information + " in " + path]), false)
 		end
 
 feature -- Errors
@@ -120,7 +107,8 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message + current_debug_information + "%N in '" + path + "'%N"]), false)
+			error_manager.set_last_error (create {XERROR_PARSE}.make
+				([a_message + current_debug_information + "%N in '" + path + "'%N"]), false)
 		end
 
 feature -- Meta
@@ -129,7 +117,8 @@ feature -- Meta
 			-- Processing instruction.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
+			error_manager.set_last_error (create {XERROR_PARSE}.make
+				(["INSTRUCTIONS not yet implemented"]), False)
 		end
 
 	on_comment (a_content: STRING)
@@ -137,10 +126,6 @@ feature -- Meta
 			-- Atomic: single comment produces single event
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			--if state = Reading_tag then
-			--	state := Reading_html
-			--end
-			--html_buf.append ("<!--" + a_content + "-->")
 		end
 
 feature -- Tag
@@ -169,7 +154,8 @@ feature -- Tag
 
 			state.on_start_tag (a_namespace, l_prefix, l_local_part)
 		ensure then
-			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = Reading_html
+			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count)
+											implies state = state_html
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
@@ -244,9 +230,7 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			--state := Reading_html
 			state.on_content (a_content)
-			--html_buf.append (a_content)
 		end
 
 feature {XP_CALLBACK_STATE} -- Implementation
@@ -259,88 +243,12 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			Result := taglibs [id]
 		end
 
-	create_html_tag_with_text (s: STRING)
-			-- Creates a XB_TAG from `s' and adds it to top element on stack.
-		require
-			s_is_valid: not s.is_empty
-		local
-			l_tag: XP_TAG_ELEMENT
-		do
-			if not s.is_empty then
-				create l_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
-				tag_stack.item.put_subtag (l_tag)
-			end
-		end
-
-	create_html_tag_with_text_put (s: STRING)
-			-- Creates a XB_TAG from s and adds it to top element on stack and then pushes it onto the stack.
-		local
-			l_tag: XP_TAG_ELEMENT
-		do
-			if not s.is_empty then
-				create l_tag.make ("xeb", "html", Html_tag_name, current_debug_information)
-				l_tag.put_attribute ("text", s)
-				l_tag.multiline_argument := True
-				tag_stack.item.put_subtag (l_tag)
-			end
-		end
-
-	create_html_tag_put
-			-- Creates a XB_TAG from html_buf and adds it to top element on stack then pushes it onto the stack.
-		do
-			create_html_tag_with_text_put (html_buf.out)
-				-- Don't use html_buf (instead of html_buf.out), since it will be wiped_out in the html_tag as well
-			html_buf.wipe_out
-		ensure
-			html_buf_is_empty: html_buf.is_empty
-			tag_stack_didnt_change: tag_stack.count = old tag_stack.count
-		end
-
-	process_dynamic_html_attribute (local_part, value: STRING)
-			-- Extracts the name of the feature from the value
-			-- Generates an html tag element and an output call
-		require
-			local_part_is_valid: not local_part.is_empty
-		local
-			l_tag: XP_TAG_ELEMENT
-			feature_name: STRING
-		do
-			html_buf.append (" " + local_part + "=%"")
-			create_html_tag_put
-			create l_tag.make ("xeb", "output", Output_tag_name, current_debug_information)
-			feature_name := strip_off_dynamic_tags (value)
-			l_tag.put_attribute ("value", feature_name)
-			tag_stack.item.put_subtag (l_tag)
-				-- Don't put it on the stack
-			html_buf.append ("%"")
-		ensure
-			tag_stack_didnt_change: tag_stack.count = old tag_stack.count
-		end
-
-	process_dynamic_tag_attribute (local_part, value: STRING)
-			-- And adds an attribute
-		require
-			local_part_is_valid: not local_part.is_empty
-		local
-			feature_name: STRING
-		do
-			feature_name := strip_off_dynamic_tags (value)
-			tag_stack.item.put_attribute (local_part, "controller." + feature_name)
-		end
-
-	strip_off_dynamic_tags (a_string: STRING): STRING
-			-- Strips off the "%=" and ending "%"		
-		require
-			a_string_is_valid: a_string.starts_with ("%%=") and a_string.ends_with ("%%")
-		do
-			Result := a_string.substring (3, a_string.count - 1)
-		end
-
 	current_debug_information: STRING
 			-- Queries the parser for row and column
 		do
 			if parser.position /= Void then
-				Result := "line: " + parser.position.row.out + " column: " + parser.position.column.out + " path: " + path
+				Result := "line: " + parser.position.row.out
+					+ " column: " + parser.position.column.out + " path: " + path
 			else
 				Result := "Could not determine position!"
 			end
@@ -350,19 +258,24 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			-- Sets the state to the html object
 		do
 			state := state_html
+		ensure
+			state_set: state = state_html
 		end
 
 	set_state_tag
 			-- Sets the state to the tag object
 		do
 			state := state_tag
+		ensure
+			state_set: state = state_tag
 		end
 
 	generate_configuration_taglib: XTL_HARDWIRED_TAG_LIB
 			-- Generates the tablig with the page configurations
 		do
 			create Result.make_hard_wired (Configuration_tag)
-			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.make_with_agent ("controller", agent controller_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("controller", agent controller_configuration_handler))
 		end
 
 	controller_configuration_handler (id, value: STRING)

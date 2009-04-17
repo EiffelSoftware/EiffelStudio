@@ -32,7 +32,7 @@ feature -- Access
 				l_taglib := parser_callback.get_tag_lib (a_prefix)
 				l_class_name := l_taglib.get_class_for_name (l_local_part)
 				if l_class_name.is_empty then
-					l_class_name := parser_callback.Html_tag_name
+					l_class_name := {XP_HTML_CALLBACK_STATE}.Html_tag_name
 				end
 				l_tmp_tag := l_taglib.create_tag (a_prefix, l_local_part, l_class_name, parser_callback.current_debug_information)
 				parser_callback.tag_stack.item.put_subtag (l_tmp_tag)
@@ -53,15 +53,6 @@ feature -- Access
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
 		do
---			if a_prefix.is_empty or not taglibs.has_key (a_prefix) then
---				if not l_prefix.is_empty then
---					l_prefix := l_prefix + ":"
---				end
---				html_buf.append ("</" + l_prefix  + l_local_part + ">")
---				create_html_tag_put
---			else
---				tag_stack.remove
---			end
 			parser_callback.tag_stack.remove
 			parser_callback.set_state_html
 		end
@@ -81,7 +72,7 @@ feature -- Access
 			elseif  taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
 				if
 				l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
-					parser_callback.process_dynamic_tag_attribute (l_local_part, l_value)
+					process_dynamic_tag_attribute (l_local_part, l_value)
 				else
 					if parser_callback.tag_stack.item.has_attribute (l_local_part) then
 						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
@@ -97,6 +88,24 @@ feature -- Access
 	on_start_tag_finish
 			-- <Precursor>
 		do
+		end
+
+	on_finish
+			-- <Precursor>
+		do
+			parser_callback.set_state_html
+			parser_callback.state.on_finish
+		end
+
+	process_dynamic_tag_attribute (local_part, value: STRING)
+			-- Adds an attribute
+		require
+			local_part_is_valid: not local_part.is_empty
+		local
+			feature_name: STRING
+		do
+			feature_name := strip_off_dynamic_tags (value)
+			parser_callback.tag_stack.item.put_attribute (local_part, "controller." + feature_name)
 		end
 
 end

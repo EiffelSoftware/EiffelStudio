@@ -76,9 +76,8 @@ feature -- Processing
 			l_servlet_gag: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_generator: XGEN_WEBAPP_GENERATOR
 		do
-
-
 			create l_servlet_gag.make
+			taglibs := parse_taglibs (a_taglib_folder)
 			from
 				a_files.start
 			until
@@ -90,8 +89,6 @@ feature -- Processing
 					if not l_file.is_open_read then
 						error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 					else
-						taglibs := parse_taglibs (a_taglib_folder)
-							-- Taglib has to be reset to bind the agent for the page tag lib to a new parser
 						print ("Processing '" + l_file.name + "'...%N")
 						l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglibs, l_file.name))
 						l_file.close

@@ -9,6 +9,12 @@ note
 class
 	AUT_SESSION
 
+inherit
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -39,6 +45,22 @@ feature -- Access: environment
 	options: AUTO_TEST_COMMAND_LINE_PARSER
 			-- AutoTest options provided by user
 
+	output_dirname: STRING
+			-- Directory name where all output (except generated test cases) should be written to.
+		local
+			l_cache: like cached_output_dirname
+		do
+			l_cache := cached_output_dirname
+			if l_cache = Void then
+				l_cache := options.output_dirname
+				if l_cache = Void then
+					l_cache := file_system.pathname (eiffel_system.eiffel_project.project_directory.testing_results_path, "auto_test")
+				end
+				cached_output_dirname := l_cache
+			end
+			Result := l_cache
+		end
+
 feature -- Access: testing
 
 	interpreter_generator: AUT_INTERPRETER_GENERATOR
@@ -61,6 +83,9 @@ feature {NONE} -- Access: cache
 
 	cached_interpreter_generator: detachable like interpreter_generator
 			-- Cache for `interpreter_generator'
+
+	cached_output_dirname: detachable like output_dirname
+			-- Cache for `output_dirname'
 
 invariant
 	error_handler_uses_eiffel_system: error_handler.system = eiffel_system

@@ -33,6 +33,17 @@ feature {NONE} -- Initialization
 			auto_test_arguments_set: auto_test_arguments /= Void and then auto_test_arguments.count = a_arguments.count
 		end
 
+feature {NONE} -- Access
+
+	current_state: NATURAL_8
+			-- Last state
+
+	compiling_state: NATURAL_8 = 1
+	executing_state: NATURAL_8 = 2
+	replaying_state: NATURAL_8 = 3
+	minimizing_state: NATURAL_8 = 4
+	generating_state: NATURAL_8 = 5
+
 feature -- Properties
 
 	name: STRING
@@ -94,8 +105,9 @@ feature -- Execution
 
 					-- Timing
 				if l_ap.time_out /= Void then
-					l_conf.set_time_out (l_ap.time_out.second_count.to_natural_32)
+					l_conf.set_time_out ((l_ap.time_out.second_count // 60).as_natural_32)
 				end
+				l_conf.set_test_count (l_ap.test_count)
 				if l_ap.proxy_time_out > 0 then
 					l_conf.set_proxy_time_out (l_ap.proxy_time_out.to_natural_32)
 				end
@@ -119,9 +131,6 @@ feature -- Execution
 			else
 
 			end
-
-
-		--	create l_auto_test.execute (system.eiffel_project, auto_test_arguments, create {TEST_PROJECT_HELPER})
 		end
 
 	auto_test_arguments: detachable DS_LIST [STRING]
@@ -161,7 +170,7 @@ feature -- Execution
 			end
 			auto_test_arguments := Void
 		ensure then
-			auto_test_arguments_attached: auto_test_arguments /= Void
+		--	auto_test_arguments_attached: auto_test_arguments /= Void
 		end
 
 feature {NONE} -- Events
@@ -176,15 +185,30 @@ feature {NONE} -- Events
 
 				if l_generator.is_running then
 					if l_generator.is_compiling then
-						print_string ("Compiling%N")
+						if current_state /= compiling_state then
+							print_string ("Compiling%N")
+							current_state := compiling_state
+						end
 					elseif l_generator.is_executing then
-						print_string ("Executing random tests%N")
+						if current_state /= executing_state then
+							print_string ("Executing random tests%N")
+							current_state := executing_state
+						end
 					elseif l_generator.is_replaying_log then
-						print_string ("Replaying log%N")
+						if current_state /= replaying_state then
+							print_string ("Replaying log%N")
+							current_state := replaying_state
+						end
 					elseif l_generator.is_minimizing_witnesses then
-						print_string ("Minimizing witnesses%N")
+						if current_state /= minimizing_state then
+							print_string ("Minimizing witnesses%N")
+							current_state := minimizing_state
+						end
 					elseif l_generator.is_generating_statistics then
-						print_string ("Generating statistics%N")
+						if current_state /= generating_state then
+							print_string ("Generating statistics%N")
+							current_state := generating_state
+						end
 					end
 				end
 			end

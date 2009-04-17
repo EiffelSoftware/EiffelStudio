@@ -24,7 +24,16 @@ feature -- Access
 	time_out: NATURAL
 			-- Time in minutes used for testing.
 			--
-			-- Note: is zero, default will be used.
+			-- Note: if zero, default will be used.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	test_count: NATURAL
+			-- Maximum number of tests that will be executed.
+			--
+			-- Note: if zero, no restriction will be applied.
 		require
 			usable: is_interface_usable
 		deferred

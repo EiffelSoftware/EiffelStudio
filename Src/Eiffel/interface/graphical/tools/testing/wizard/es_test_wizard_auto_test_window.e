@@ -65,7 +65,10 @@ feature {NONE} -- Initialization
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
 			create timeout_field
-			timeout_field.value_range.resize_exactly (1, {INTEGER_32}.max_value)
+			timeout_field.value_range.resize_exactly (0, {INTEGER_32}.max_value)
+
+			create test_count_field
+			test_count_field.value_range.resize_exactly (0, {INTEGER_32}.max_value)
 
 			create proxy_time_out
 			proxy_time_out.value_range.resize_exactly (1, {INTEGER_32}.max_value)
@@ -78,6 +81,7 @@ feature {NONE} -- Initialization
 			create html_output
 
 			append_option (l_vbox, b_timeout, timeout_field)
+			append_option (l_vbox, b_test_count, test_count_field)
 			append_option (l_vbox, b_proxy_timeout, proxy_time_out)
 			append_option (l_vbox, b_seed, create {EV_CELL})
 			append_option (l_vbox, " ", seed)
@@ -210,6 +214,7 @@ feature {NONE} -- Initialization
 			l_types: STRING_32
 		do
 			timeout_field.set_text (conf.time_out_cache.out)
+			test_count_field.set_text (conf.test_count_cache.out)
 			proxy_time_out.set_text (conf.proxy_time_out_cache.out)
 			seed.set_text (conf.seed_cache.out)
 			if conf.is_ddmin_enabled_cache then
@@ -271,6 +276,9 @@ feature {NONE} -- Access: widgets
 
 	timeout_field: EV_SPIN_BUTTON
 			-- Text field containing time out
+
+	test_count_field: EV_SPIN_BUTTON
+			-- Text field containing maximum number of routine invokations
 
 	proxy_time_out: EV_SPIN_BUTTON
 			-- Text field containing proxy time out
@@ -479,6 +487,7 @@ feature {NONE} -- Basic operations
 		do
 			l_conf := conf
 			l_conf.time_out_cache := timeout_field.value.to_natural_32
+			l_conf.test_count_cache := test_count_field.value.to_natural_32
 			l_conf.proxy_time_out_cache := proxy_time_out.value.to_natural_32
 			l_conf.seed_cache := seed.value.to_natural_32
 			l_conf.is_ddmin_enabled_cache := ddmin_checkbox.is_selected
@@ -492,6 +501,7 @@ feature {NONE} -- Internationalization
 	t_subtitle: STRING = "Define commands to run auto test"
 
 	b_timeout: STRING = "Duration (minutes)"
+	b_test_count: STRING = "Duration (invokations)"
 	b_proxy_timeout: STRING = "Routine timeout (seconds)"
 	b_seed: STRING = "Random number generation seed"
 	b_ddmin: STRING = "Use ddmin for minimization"

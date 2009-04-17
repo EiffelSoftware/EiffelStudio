@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			prepare_routine := l_factory.new_boolean_preference_value (a_manager, full_name (prepare_routine_name), prepare_routine_default)
 			clean_routine := l_factory.new_boolean_preference_value (a_manager, full_name (clean_routine_name), clean_routine_default)
 			autotest_timeout := l_factory.new_integer_preference_value (a_manager, full_name (autotest_timeout_name), autotest_timeout_default)
+			autotest_test_count := l_factory.new_integer_preference_value (a_manager, full_name (autotest_test_count_name), autotest_test_count_default)
 			autotest_proxy_timeout := l_factory.new_integer_preference_value (a_manager, full_name (autotest_proxy_timeout_name), autotest_proxy_timeout_default)
 			autotest_seed := l_factory.new_integer_preference_value (a_manager, full_name (autotest_seed_name), autotest_seed_default)
 			autotest_ddmin_minimization := l_factory.new_boolean_preference_value (a_manager, full_name (autotest_ddmin_name), autotest_ddmin_default)
@@ -59,6 +60,9 @@ feature -- Access
 
 	autotest_timeout: INTEGER_PREFERENCE
 			-- Number of minutes AutoTest runs random tests
+
+	autotest_test_count: INTEGER_PREFERENCE
+			-- Maximum number of invocations AutoTest performs
 
 	autotest_proxy_timeout: INTEGER_PREFERENCE
 			-- Number of seconds waited for routine to return
@@ -104,6 +108,9 @@ feature {NONE} -- Constants
 	autotest_timeout_name: STRING = "autotest.duration"
 	autotest_timeout_default: INTEGER = 3
 
+	autotest_test_count_name: STRING = "autotest.test_count"
+	autotest_test_count_default: INTEGER = 0
+
 	autotest_proxy_timeout_name: STRING = "autotest.proxy_timeout"
 	autotest_proxy_timeout_default: INTEGER = 2
 
@@ -144,10 +151,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

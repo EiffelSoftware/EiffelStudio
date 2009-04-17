@@ -18,6 +18,7 @@ feature -- Initialization
 feature -- Access
 
 	parser_callback: XP_XML_PARSER_CALLBACKS
+			-- The parser callbacks on which the tags should be added
 
 	on_start_tag (a_namespace, a_prefix, a_local_part : STRING)
 			-- Handle strings on start tag
@@ -54,6 +55,19 @@ feature -- Access
 	on_start_tag_finish
 			-- Handle strings on end tag
 		deferred
+		end
+
+	on_finish
+			-- Handle strings on finish
+		deferred
+		end
+
+	strip_off_dynamic_tags (a_string: STRING): STRING
+			-- Strips off the "%=" and ending "%"		
+		require
+			a_string_is_valid: a_string.starts_with ("%%=") and a_string.ends_with ("%%")
+		do
+			Result := a_string.substring (3, a_string.count - 1)
 		end
 
 end

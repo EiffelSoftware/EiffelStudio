@@ -559,6 +559,15 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		/* gen_conf.c */
 	eif_gen_conf_thread_cleanup ();
 
+		/* sig.c */
+#ifdef HAS_SIGALTSTACK
+	if (c_sig_stk) {
+		eif_rt_xfree(c_sig_stk->ss_sp);
+		eif_rt_xfree(c_sig_stk);
+		c_sig_stk = NULL;
+	}
+#endif
+
 		/* First free content of `eif_globals'. */
 #ifdef EIF_WINDOWS
 		/* WEL data if any */

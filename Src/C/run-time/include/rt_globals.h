@@ -147,7 +147,9 @@ typedef struct tag_rt_globals
 		/* sig.c */
 	int esigblk_cx;						/* By default, signals are not blocked */
 	struct s_stack sig_stk_cx;			/* Initialized by initsig() */
-
+#ifdef HAS_SIGALTSTACK
+	stack_t *c_sig_stk_cx;
+#endif
 		/* retrieve.c */
 	struct htable *rt_table_cx;
 	int32 nb_recorded_cx;
@@ -366,6 +368,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 	/* sig.c */
 #define esigblk				(rt_globals->esigblk_cx)		/* rt_shared */
 #define sig_stk				(rt_globals->sig_stk_cx)		/* rt_shared */
+#define c_sig_stk			(rt_globals->c_sig_stk_cx)		/* rt_private */
 
 	/* retrieve.c */
 #define rt_table						(rt_globals->rt_table_cx)

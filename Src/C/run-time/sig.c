@@ -124,29 +124,20 @@ doc:	</attribute>
 */
 rt_shared struct s_stack sig_stk;
 
-#endif /* EIF_THREADS */
 
 #ifdef HAS_SIGALTSTACK
 /*
-doc:	<attribute name="c_sig_stk" return_type="stack_t" export="private">
+doc:	<attribute name="c_sig_stk" return_type="stack_t *" export="private">
 doc:		<summary>Stack used for evaluation signal handlers.</summary>
 doc:		<access>Read/Write once on initialization</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_private stack_t c_sig_stk;
-
-/*
-doc:	<attribute name="is_sigaltstack" return_type="int" export="private">
-doc:		<summary>Flag to check if alternative signal stack is used. 1 using alternative stack, 0 otherwise. </summary>
-doc:		<access>Read/Write once on initialization</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:	</attribute>
-*/
-rt_private int is_sigaltstack;
+rt_private stack_t *c_sig_stk;
 #endif
+
+#endif /* EIF_THREADS */
 
 #ifdef EIF_VMS	/* signal handling control for CECIL: only on VMS for now */
 rt_private struct ex_vect* esig_cecil_exvect;
@@ -178,6 +169,7 @@ void (*rt_signal (int sig, void (*handler)(int)))(int)
 #ifndef HAS_SIGACTION
 	return signal(sig, handler);
 #else
+	RT_GET_CONTEXT
 	struct sigaction action;
 	struct sigaction old_action;
 								
@@ -187,7 +179,7 @@ void (*rt_signal (int sig, void (*handler)(int)))(int)
 		/* To avoid reseting the mask when entering the signal handler. */
 	action.sa_flags = SA_NODEFER;
 #ifdef HAS_SIGALTSTACK
-	if ((is_sigaltstack) && (sig == SIGSEGV)) {
+	if ((sig == SIGSEGV) && (c_sig_stk)) {
 		action.sa_flags |= SA_ONSTACK;
 	}
 #endif
@@ -594,10 +586,6 @@ rt_shared void initsig(void)
 	sig_stk.s_max = 0;				/* First free location */
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
-#ifdef EIF_THREADS
-	if (eif_thr_is_root()) {
-#endif
-
 #ifdef HAS_SIGALTSTACK
 		/* To make sure that stack overflow are properly handled, we allocate
 		 * a stack for signal handling where handler will be executed when
@@ -605,16 +593,28 @@ rt_shared void initsig(void)
 		 * By default we allocate 4 times the default SIGSTKSZ which has
 		 * been shown to be enough. See eweasel test#excep016 as a test to
 		 * see if this is good enough. */
-	c_sig_stk.ss_sp = eif_rt_xcalloc(4 * SIGSTKSZ, 1);	
-	c_sig_stk.ss_flags = 0;
-	c_sig_stk.ss_size = 4 * SIGSTKSZ;
+	c_sig_stk = (stack_t *) eif_rt_xcalloc(sizeof(stack_t), 1);
+	if (c_sig_stk) {
+		c_sig_stk->ss_sp = eif_rt_xcalloc(SIGSTKSZ, 4);	
+		if (c_sig_stk->ss_sp) {
+			c_sig_stk->ss_flags = 0;
+			c_sig_stk->ss_size = 4 * SIGSTKSZ;
 
-	if (sigaltstack(&c_sig_stk, NULL) == 0) {
-		is_sigaltstack = 1;
+			if (sigaltstack(c_sig_stk, NULL) != 0) {
+				eif_rt_xfree(c_sig_stk->ss_sp);
+				eif_rt_xfree(c_sig_stk);
+				c_sig_stk = NULL;
+			}
+		} else {
+			eif_rt_xfree (c_sig_stk);
+			c_sig_stk = NULL;
+		}
 	}
-	else {
-		is_sigaltstack = 0;
-	}
+#endif
+
+
+#ifdef EIF_THREADS
+	if (eif_thr_is_root()) {
 #endif
 
 	for (sig = 1; sig < EIF_NSIG; sig++) {

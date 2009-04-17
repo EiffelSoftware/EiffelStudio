@@ -44,22 +44,14 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			end
 		end
 
-	show_text_in_project_toolbar: BOOLEAN
-			-- Show selected text in the project toolbar?
-		do
-			Result := show_text_in_project_toolbar_preference.value
-		end
-
-	show_all_text_in_project_toolbar: BOOLEAN
-			-- Show all selected text in the project toolbar?
-		do
-			Result := show_all_text_in_project_toolbar_preference.value
-		end
-
 	project_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
-			Result := project_toolbar_layout_preference.value
+			Result := <<"System_tool__visible", "Melt_project__visible", "Open_help_tool__visible", "System_info__visible", "Force_debug_mode__visible",
+				"Separator", "Enable_bkpt__visible", "Disable_bkpt__visible", "Clear_bkpt__visible", "Bkpt_info__visible", "Separator", "Ignore_breakpoints_cmd__hidden",
+				"Exec_debug__visible", "Exec_restart_debug__hidden", "Exec_stop__hidden", "Exec_quit__hidden", "Separator", "Exec_step__visible", "Exec_into__visible",
+				"Exec_out__visible", "Exec_no_stop__hidden", "Assertion_checking_handler__hidden", "Run_final__hidden", "Freeze_project__hidden", "Finalize_project__hidden",
+				"Override_scan__hidden", "Discover_melt__hidden">>
 		end
 
 	local_vs_object_proportion: REAL
@@ -159,7 +151,6 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	display_agent_details_preference: BOOLEAN_PREFERENCE
 	show_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
-	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	watch_tools_layout_preference: ARRAY_PREFERENCE
 	move_up_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
@@ -191,14 +182,14 @@ feature -- Toolbar Convenience
 	retrieve_project_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the project toolbar using the available commands in `command_pool'
 		do
-			Result := retrieve_toolbar_items (command_pool, project_toolbar_layout_preference.value)
-			if show_text_in_project_toolbar then
-				-- 	enable_important_text feature is not available now, we do it in the future.	
+			Result := retrieve_toolbar_items (command_pool, project_toolbar_layout)
+			-- if show_text_in_project_toolbar then
+				-- 	FIXME: enable_important_text feature is not available now, we do it in the future.	
 				--	codes are something like this: Result.enable_important_text
-			elseif show_all_text_in_project_toolbar then
-				-- enable_text_displayed feature is not available now, we do it in the future.
+			-- elseif show_all_text_in_project_toolbar then
+				-- FIXME: enable_text_displayed feature is not available now, we do it in the future.
 				-- codes are somehing like this: Result.enable_text_displayed
-			end
+			-- end
 		end
 
 	save_project_toolbar (project_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM])
@@ -240,7 +231,6 @@ feature -- Preference Strings
 	watch_tools_layout_string: STRING = "debugger.watch_tools_layout"
 	display_agent_details_string: STRING = "debugger.display_agent_details"
 	grid_column_layout_prefix: STRING = "debugger.grid_column_layout_"
-	project_toolbar_layout_string: STRING = "debugger.project_toolbar_layout"
 	show_text_in_project_toolbar_string: STRING = "debugger.show_text_in_project_toolbar"
 	show_all_text_in_project_toolbar_string: STRING = "debugger.show_all_text_in_project_toolbar"
 	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
@@ -259,9 +249,6 @@ feature {NONE} -- Implementation
 			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
 			last_saved_stack_path_preference.set_hidden (True)
 			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 500)
-			show_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_project_toolbar_string, True)
-			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_project_toolbar_string, True)
-			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			local_vs_object_proportion_preference := l_manager.new_string_preference_value (l_manager, local_vs_object_proportion_string, "0.5")
 			local_vs_object_proportion_preference.set_hidden (True)
 
@@ -296,9 +283,6 @@ invariant
 	preferences_not_void: preferences /= Void
 	last_saved_stack_path_preference_not_void: last_saved_stack_path_preference /= Void
 	default_expanded_view_size_preference_not_void: default_expanded_view_size_preference /= Void
-	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
-	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
-	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
 	local_vs_object_proportion_preference_not_void: local_vs_object_proportion_preference /= Void
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
@@ -320,7 +304,7 @@ invariant
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -344,11 +328,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DEBUG_TOOL_DATA

@@ -29,6 +29,10 @@ feature {EB_PREFERENCES} -- Initialization
 			-- Update default value for docking library.
 			on_auto_hide_animation_speed_changed
 			on_show_all_applicable_docking_indicators_changed
+
+			-- default value
+			width := 950;
+			height := 650;
 		ensure
 			preferences_not_void: preferences /= Void
 		end
@@ -38,57 +42,30 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 
 	width: INTEGER
 			-- Width for the development window
-		do
-			Result := width_preference.value
-		end
 
 	height: INTEGER
 			-- Height for the development window
-		do
-			Result := height_preference.value
-		end
 
 	x_position: INTEGER
 			-- X position for development windows
-		do
-			Result := x_position_preference.value
-		end
 
 	y_position: INTEGER
 			-- Y position for development windows
-		do
-			Result := y_position_preference.value
-		end
 
 	maximized_width: INTEGER
-			-- Width for the development window
-		do
-			Result := maximized_width_preference.value
-		end
+			-- Width for the development window when maximized
 
 	maximized_height: INTEGER
-			-- Height for the development window
-		do
-			Result := maximized_height_preference.value
-		end
+			-- Height for the development window when maximized
 
 	maximized_x_position: INTEGER
-			-- X position for development windows
-		do
-			Result := maximized_x_position_preference.value
-		end
+			-- X position for development windows when maximized
 
 	maximized_y_position: INTEGER
-			-- Y position for development windows
-		do
-			Result := maximized_y_position_preference.value
-		end
+			-- Y position for development windows when maximized
 
 	is_maximized: BOOLEAN
 			-- Is the development window maximized?
-		do
-			Result := is_maximized_preference.value
-		end
 
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
@@ -102,13 +79,21 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 	general_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
-			Result := general_toolbar_layout_preference.value
+			Result := <<"New_tab__visible", "New_window__hidden", "New_editor__hidden", "New_context_window__hidden", "Open_file__hidden",
+				"New_class__hidden", "New_feature__hidden", "Open_shell__visible", "Save_file__visible", "Save_all_file__visible", "Separator",
+				"Undo__visible", "Redo__visible", "Separator", "Editor_cut__visible", "Editor_copy__visible", "Editor_paste__visible", "Separator",
+				"ES_GROUP_TOOL__hidden", "ES_FEATURES_TOOL__hidden", "ES_SEARCH_TOOL__visible", "Separator", "Send_to_context__visible",
+				"New_cluster__hidden", "Remove_class_cluster__hidden", "Toggle_stone__hidden", "Raise_all__hidden", "Minimize_all__hidden",
+				"Print__hidden", "ES_OUTPUT_TOOL__hidden", "ES_DIAGRAM_TOOL__hidden", "ES_CLASS_TOOL__hidden", "ES_FEATURE_RELATION_TOOL__hidden",
+				"ES_DEPENDENCY_TOOL__hidden", "ES_METRICS_TOOL__hidden", "ES_CONSOLE_TOOL__hidden", "ES_C_OUTPUT_TOOL__hidden", "ES_ERROR_LIST_TOOL__hidden",
+				"ES_FAVORITES_TOOL__hidden", "ES_WINDOWS_TOOL__hidden", "ES_PROPERTIES_TOOL__hidden", "ES_DEBUGGER_BREAKPOINTS_TOOL__hidden",
+				"ES_SEARCH_REPORT__hidden", "ES_INFORMATION_TOOL__hidden">>
 		end
 
 	refactoring_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
-			Result := refactoring_toolbar_layout_preference.value
+			Result := <<"RF_pull__visible", "RF_rename__visible", "Separator", "RF_undo__visible", "RF_redo__visible">>
 		end
 
 	max_history_size: INTEGER
@@ -214,33 +199,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	estudio_dbg_menu_accelerator_allowed_preference: BOOLEAN_PREFERENCE
 			-- When `estudio_dbg_menu_enabled_preference' is True, whether show eiffel studio debug menu by accelerator ?
 
-	width_preference: INTEGER_PREFERENCE
-	height_preference: INTEGER_PREFERENCE
-			-- Widght and height for the development window
-
-	x_position_preference: INTEGER_PREFERENCE
-	y_position_preference: INTEGER_PREFERENCE
-			-- X, Y position for development window
-
-	maximized_width_preference: INTEGER_PREFERENCE
-	maximized_height_preference: INTEGER_PREFERENCE
-			-- Widght and height for the development window when maximized
-
-	maximized_x_position_preference: INTEGER_PREFERENCE
-	maximized_y_position_preference: INTEGER_PREFERENCE
-			-- X, Y position for development window when maximized
-
 	is_force_debug_mode_preference: BOOLEAN_PREFERENCE
 			-- Is the development window force debug mode?
-
-	is_maximized_preference: BOOLEAN_PREFERENCE
-			-- Is the development window maximized?
-
-	general_toolbar_layout_preference: ARRAY_PREFERENCE
-			-- General toolbar layout.
-
-	refactoring_toolbar_layout_preference: ARRAY_PREFERENCE
-			-- Refactoring toolbar layout.
 
 	max_history_size_preference: INTEGER_PREFERENCE
 
@@ -284,46 +244,36 @@ feature -- Element change
 	save_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
-			width_preference.set_value (a_width)
-			height_preference.set_value (a_height)
-			preferences.save_preference (width_preference)
-			preferences.save_preference (height_preference)
+			width := a_width
+			height := a_height
 		end
 
 	save_maximized_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
-			maximized_width_preference.set_value (a_width)
-			maximized_height_preference.set_value (a_height)
-			preferences.save_preference (maximized_width_preference)
-			preferences.save_preference (maximized_height_preference)
+			maximized_width := a_width
+			maximized_height := a_height
 		end
 
 	save_window_state (a_minimized, a_maximized: BOOLEAN)
 			-- Save the window state of the window.
 		do
 			is_minimized := a_minimized
-
-			is_maximized_preference.set_value (a_maximized)
-			preferences.save_preference (is_maximized_preference)
+			is_maximized := a_maximized
 		end
 
 	save_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
-			x_position_preference.set_value (a_x)
-			y_position_preference.set_value (a_y)
-			preferences.save_preference (x_position_preference)
-			preferences.save_preference (y_position_preference)
+			x_position := a_x
+			y_position := a_y
 		end
 
 	save_maximized_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
-			maximized_x_position_preference.set_value (a_x)
-			maximized_y_position_preference.set_value (a_y)
-			preferences.save_preference (maximized_x_position_preference)
-			preferences.save_preference (maximized_y_position_preference)
+			maximized_x_position := a_x
+			maximized_y_position := a_y
 		end
 
 	save_force_debug_mode (a_bool: BOOLEAN)
@@ -357,18 +307,7 @@ feature -- Basic operations
 
 feature {NONE} -- Preference Strings
 
-	width_string: STRING = "interface.development_window.width"
-	height_string: STRING = "interface.development_window.height"
-	x_position_string: STRING = "interface.development_window.x_position"
-	y_position_string: STRING = "interface.development_window.y_position"
-	maximized_width_string: STRING = "interface.development_window.maximized_width"
-	maximized_height_string: STRING = "interface.development_window.maximized_height"
-	maximized_x_position_string: STRING = "interface.development_window.maximized_x_position"
-	maximized_y_position_string: STRING = "interface.development_window.maximized_y_position"
 	is_force_debug_mode_string: STRING = "interface.development_window.is_force_debug_mode"
-	is_maximized_string: STRING = "interface.development_window.is_maximized"
-	general_toolbar_layout_string: STRING = "interface.development_window.general_toolbar_layout"
-	refactoring_toolbar_layout_string: STRING = "interface.development_window.refactoring_toolbar_layout"
 	max_history_size_string: STRING = "interface.development_window.maximum_history_size"
 	remember_completion_list_size_string: STRING = "interface.development_window.remember_completion_list_size"
 	completion_list_width_string: STRING = "interface.development_window.completion_list_width"
@@ -398,19 +337,7 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER
 		do
 			create l_manager.make (preferences, "development_window")
-
-			width_preference := l_manager.new_integer_preference_value (l_manager, width_string, 490)
-			height_preference := l_manager.new_integer_preference_value (l_manager, height_string, 500)
-			x_position_preference := l_manager.new_integer_preference_value (l_manager, x_position_string, 10)
-			y_position_preference := l_manager.new_integer_preference_value (l_manager, y_position_string, 10)
-			maximized_width_preference := l_manager.new_integer_preference_value (l_manager, width_string, 490)
-			maximized_height_preference := l_manager.new_integer_preference_value (l_manager, height_string, 500)
-			maximized_x_position_preference := l_manager.new_integer_preference_value (l_manager, x_position_string, 10)
-			maximized_y_position_preference := l_manager.new_integer_preference_value (l_manager, y_position_string, 10)
 			is_force_debug_mode_preference := l_manager.new_boolean_preference_value (l_manager, is_force_debug_mode_string, False)
-			is_maximized_preference := l_manager.new_boolean_preference_value (l_manager, is_maximized_string, False)
-			general_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, general_toolbar_layout_string, <<"ES_OUTPUT_TOOL__visible;New_tab__visible;New_window__hidden;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__hidden;New_feature__hidden;Open_shell__visible;Save_file__visible;Save_all_file__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;ES_GROUP_TOOL__hidden;ES_FEATURES_TOOL__hidden;ES_SEARCH_TOOL__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;ES_OUTPUT_TOOL__hidden;ES_DIAGRAM_TOOL__hidden;ES_CLASS_TOOL__hidden;ES_FEATURE_RELATION_TOOL__hidden;ES_DEPENDENCY_TOOL__hidden;ES_METRICS_TOOL__hidden;ES_CONSOLE_TOOL__hidden;ES_C_OUTPUT_TOOL__hidden;ES_ERROR_LIST_TOOL__hidden;ES_FAVORITES_TOOL__hidden;ES_WINDOWS_TOOL__hidden;ES_PROPERTIES__hidden;ES_BREAKPOINTS__hidden;ES_SEARCH_REPORT__hidden">>)
-			refactoring_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, refactoring_toolbar_layout_string, <<"RF_pull__visible", "RF_rename__visible", "Separator", "RF_undo__visible", "RF_redo__visible">>)
 			max_history_size_preference := l_manager.new_integer_preference_value (l_manager, max_history_size_string, 10)
 			remember_completion_list_size_preference := l_manager.new_boolean_preference_value (l_manager, remember_completion_list_size_string, True)
 			completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, completion_list_height_string, 100)
@@ -471,26 +398,14 @@ feature {NONE} -- Implementation
 
 invariant
 	preferences_not_void_not_void: preferences /= Void
-	width_preference_not_void: width_preference /= Void
-	height_preference_not_void: height_preference /= Void
-	x_position_preference_not_void: x_position_preference /= Void
-	y_position_preference_not_void: y_position_preference /= Void
-	maximized_width_preference_not_void: maximized_width_preference /= Void
-	maximized_height_preference_not_void: maximized_height_preference /= Void
-	maximized_x_position_preference_not_void: maximized_x_position_preference /= Void
-	maximized_y_position_preference_not_void: maximized_y_position_preference /= Void
 	is_force_debug_mode_preference_not_void: is_force_debug_mode_preference /= Void
-	is_maximized_preference_not_void: is_maximized_preference /= Void
-	general_toolbar_layout_preference_not_void: general_toolbar_layout_preference /= Void
-	refactoring_toolbar_layout_preference_not_void: refactoring_toolbar_layout_preference /= Void
 	max_history_size_preference_not_void: max_history_size_preference /= Void
-
 	estudio_dbg_menu_allowed_preference_not_void: estudio_dbg_menu_allowed_preference /= Void
 	estudio_dbg_menu_accelerator_allowed_preference_not_void: estudio_dbg_menu_accelerator_allowed_preference /= Void
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -503,22 +418,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DEVELOPMENT_WINDOW_PREFERENCES

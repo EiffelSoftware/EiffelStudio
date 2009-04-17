@@ -56,7 +56,9 @@ feature -- Command
 			if(create {SHARED_WORKBENCH}).workbench.system_defined then
 				l_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_data_id)
 			end
-
+			if l_data = Void then
+				l_data ?= develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)
+			end
 			if l_data = Void then
 				l_data := develop_window.development_window_data
 			end

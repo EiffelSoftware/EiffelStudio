@@ -18,7 +18,8 @@ inherit
 
 create
 
-	make
+	make,
+	make_as_creator
 
 feature {NONE} -- Initialization
 
@@ -35,6 +36,23 @@ feature {NONE} -- Initialization
 			feature_set: feature_ = a_feature
 			type_set: type = a_type
 		end
+
+	make_as_creator (a_feature: like feature_; a_type: like type)
+			-- Create new object representing feature
+			-- `a_feature' of type `a_type' as a creator.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+		do
+			feature_ := a_feature
+			type := a_type
+			is_creator := True
+		ensure
+			feature_set: feature_ = a_feature
+			type_set: type = a_type
+			is_creator_set: is_creator
+		end
+
 
 feature -- Access
 

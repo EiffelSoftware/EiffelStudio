@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			l_selected_type := selected_feature.type
 
 			if selected_feature.is_creator then
-				create creator.make (system, interpreter, l_selected_type, feature_table)
+				create creator.make_with_queue (system, interpreter, l_selected_type, feature_table, queue)
 				creator.set_creation_procedure (l_selected_feature)
 				sub_task := creator
 			else

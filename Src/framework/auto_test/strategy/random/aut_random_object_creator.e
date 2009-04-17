@@ -28,7 +28,8 @@ inherit
 
 create
 
-	make
+	make,
+	make_with_queue
 
 feature {NONE} -- Initialization
 
@@ -52,6 +53,26 @@ feature {NONE} -- Initialization
 			interpreter_set: interpreter = an_interpreter
 			type_set: type = a_type
 			steps_completed: steps_completed
+		end
+
+	make_with_queue (a_system: like system; an_interpreter: like interpreter; a_type: like type; a_feature_table: like feature_table; a_queue: like queue)
+			-- Create new feature caller.
+		require
+			a_system_not_void: a_system /= Void
+			a_interpreter_not_void: an_interpreter /= Void
+			a_type_not_void: a_type /= Void
+			a_type_associated_with_class: a_type.has_associated_class
+			creation_procedure_exists: not exported_creators (a_type.associated_class, a_system).is_empty
+			a_feature_table_attached: a_feature_table /= Void
+		do
+			make (a_system, an_interpreter, a_type, a_feature_table)
+			queue := a_queue
+		ensure
+			system_set: system = a_system
+			interpreter_set: interpreter = an_interpreter
+			type_set: type = a_type
+			steps_completed: steps_completed
+			queue_set: queue = a_queue
 		end
 
 feature -- Status
@@ -130,6 +151,9 @@ feature -- Execution
 			else
 				receiver := interpreter.variable_table.new_variable
 				interpreter.create_object (receiver, type, creation_procedure, input_creator.receivers)
+				if queue /= Void then
+					queue.mark (create {AUT_FEATURE_OF_TYPE}.make_as_creator (creation_procedure, interpreter.variable_table.variable_type (receiver)))
+				end
 				if not interpreter.variable_table.is_variable_defined (receiver) then
 					-- There was an error creating the object.
 					receiver := Void
@@ -781,6 +805,9 @@ feature {NONE} -- Steps
 	feature_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C]
 		-- Table used to store features in a class
 
+	queue: detachable AUT_DYNAMIC_PRIORITY_QUEUE
+			-- Queue
+
 invariant
 	system_not_void: system /= Void
 	interpreter_not_void: interpreter /= Void
@@ -788,4 +815,35 @@ invariant
 	type_has_associated_class: type.has_associated_class
 	receiver_defined: receiver /= Void implies interpreter.variable_table.is_variable_defined (receiver)
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

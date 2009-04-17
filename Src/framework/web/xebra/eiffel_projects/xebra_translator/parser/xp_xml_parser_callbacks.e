@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			create state_html.make (Current)
 			create state_tag.make (Current)
 			state := state_html
+			controller_class := "STRING"
 		ensure
 			html_buf_is_empty: html_buf.is_empty
 			tag_stack_is_empty: tag_stack.is_empty
@@ -54,9 +55,8 @@ feature -- Access
 	path: STRING
 			-- The path of the file to which is being read
 
---	state: INTEGER
-			-- 0 Reading_html
-			-- 1 Reading_tag
+	controller_class: STRING
+			-- The class of the handling controller
 
 	state: XP_CALLBACK_STATE
 			-- The current state of the parser
@@ -83,7 +83,7 @@ feature -- Access
 			-- Adds a taglib to the parser
 		do
 			taglibs := a_taglibs
-			--taglibs.put (generate_configuration_taglib, Configuration_tag)
+			taglibs.put (generate_configuration_taglib, Configuration_tag)
 		end
 
 feature -- Document
@@ -130,7 +130,6 @@ feature -- Meta
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
 			error_manager.set_last_error (create {XERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
-			--	html_buf.append ("<instruction " + a_name + "++" + a_content + "instruction>")
 		end
 
 	on_comment (a_content: STRING)
@@ -157,18 +156,9 @@ feature -- Tag
 			l_taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_prefix then
---				if taglibs.valid_key (a_prefix) then
---					if state = Reading_html then
---						create_html_tag_put
---					end
---					state := Reading_tag
---				else
---					state := Reading_html
---				end
 				l_prefix := a_prefix
 			else
 				l_prefix := ""
---				state := Reading_html
 			end
 
 			if attached a_local_part then
@@ -178,26 +168,6 @@ feature -- Tag
 			end
 
 			state.on_start_tag (a_namespace, l_prefix, l_local_part)
-
---			if state = Reading_tag then
---				l_taglib := get_tag_lib (a_prefix)
---				l_class_name := l_taglib.get_class_for_name (l_local_part)
---				if l_class_name.is_empty then
---					l_class_name := Html_tag_name
---				end
---				create l_tmp_tag.make (a_prefix, a_local_part, l_class_name, current_debug_information)
---				tag_stack.item.put_subtag (l_tmp_tag)
---				tag_stack.put (l_tmp_tag)
---				if not l_taglib.contains (l_local_part) then
-
---					error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
---				end
---			elseif state = Reading_html then
---				if not l_prefix.is_empty then
---					l_prefix := l_prefix + ":"
---				end
---				html_buf.append ("<" + l_prefix +  l_local_part)
---			end
 		ensure then
 			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count) implies state = Reading_html
 		end
@@ -234,36 +204,6 @@ feature -- Tag
 			end
 
 			state.on_attribute (l_namespace, l_prefix, l_local_part, l_value)
-
-				-- All variables initialized
---			if state = Reading_tag then -- Probably better to wrap the state in to classes (Cyclomatic Complexity!)
---				taglib := get_tag_lib (tag_stack.item.namespace)
---				if not taglib.contains (tag_stack.item.id) then
---					l_value := "undefined tag: '" + tag_stack.item.id + "'"
---					l_local_part := "text"
---				elseif  taglib.argument_belongs_to_tag (l_local_part, tag_stack.item.id) then
---					if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
---						process_dynamic_tag_attribute (l_local_part, l_value)
---					else
---						if tag_stack.item.has_attribute (l_local_part) then
---							error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
---						else
---							tag_stack.item.put_attribute (l_local_part, l_value)
---						end
---					end
---				else
---					error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
---				end
---			elseif state = Reading_html then
---				if not l_prefix.is_empty then
---					l_prefix := l_prefix + ":"
---				end
---				if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
---					process_dynamic_html_attribute (l_local_part, l_value)
---				else
---					html_buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
---				end
---			end
 		ensure then
 			stack_does_not_change: tag_stack.count = old tag_stack.count
 		end
@@ -272,9 +212,6 @@ feature -- Tag
 			-- End of start tag.
 		do
 			state.on_start_tag_finish
---			if state = Reading_html then
---				html_buf.append (">")
---			end
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
@@ -297,16 +234,6 @@ feature -- Tag
 			end
 
 			state.on_end_tag (a_namespace, l_prefix, l_local_part)
-
---			if l_prefix.is_empty or not taglibs.valid_key (a_prefix) then
---				if not l_prefix.is_empty then
---					l_prefix := l_prefix + ":"
---				end
---				html_buf.append ("</" + l_prefix  + l_local_part + ">")
---				create_html_tag_put
---			else
---				tag_stack.remove
---			end
 		end
 
 feature -- Content
@@ -430,6 +357,22 @@ feature {XP_CALLBACK_STATE} -- Implementation
 		do
 			state := state_tag
 		end
+
+	generate_configuration_taglib: XTL_HARDWIRED_TAG_LIB
+			-- Generates the tablig with the page configurations
+		do
+			create Result.make_hard_wired (Configuration_tag)
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.make_with_agent ("controller", agent controller_configuration_handler))
+		end
+
+	controller_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:controller tags
+		do
+			if id.is_equal ("class") then
+				controller_class := value
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

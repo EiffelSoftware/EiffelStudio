@@ -34,7 +34,7 @@ feature -- Access
 				if l_class_name.is_empty then
 					l_class_name := parser_callback.Html_tag_name
 				end
-				create l_tmp_tag.make (a_prefix, l_local_part, l_class_name, parser_callback.current_debug_information)
+				l_tmp_tag := l_taglib.create_tag (a_prefix, l_local_part, l_class_name, parser_callback.current_debug_information)
 				parser_callback.tag_stack.item.put_subtag (l_tmp_tag)
 				parser_callback.tag_stack.put (l_tmp_tag)
 				if not l_taglib.contains (l_local_part) then

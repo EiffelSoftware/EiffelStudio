@@ -860,7 +860,7 @@ feature -- Attachment properties
 		ensure
 			result_attached: Result /= Void
 			result_is_attached: c.lace_class.is_void_safe_conformance implies Result.is_attached
-			result_is_implicitly_attached: Result.is_implicitly_attached
+			result_is_implicitly_attached: Result.is_attached or else Result.is_implicitly_attached
 		end
 
 	as_implicitly_detachable: like Current

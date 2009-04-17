@@ -65,21 +65,50 @@
               <td>Details</td>
             </xeb:if>
           </tr>
-          <xeb:iterate list="global_state.reservations" variable="reservation"
+          <xeb:iterate list="global_state.db.reservations" variable="reservation"
                 type="RESERVATION">
             <tr>
               <td><xeb:variable id="reservation" feature="name" /></td>
               <td><xeb:variable id="reservation" feature="date" /></td>
-              <td><xeb:variable id="reservation" feature="persons" /></td>
+              <td><xeb:variable id="reservation" feature="persons.out" /></td>
               <xeb:if condition="authenticated_admin">
-                <td class="style2"><a href="%=detail_url%">Edit </a></td>
+                <td class="style2"><a href="">Edit </a></td>
               </xeb:if>
               <xeb:if condition="not_authenticated_admin">
-                <td class="style2"><a href="%=detail_url%">Details</a></td>
+                <td class="style2"><a href="">Details</a></td>
               </xeb:if>
             </tr>
           </xeb:iterate>
         </table>
+      </xeb:if>
+      <xeb:if condition="authenticated_admin">
+      	<h2 class="style1">New Reservation</h2>
+        <form id="form1" name="form1" method="post" action="insert.xeb">
+          <table width="400" border="0">
+            <tr>
+              <td>Name</td>
+              <td><input type="text" name="name" id="name" /></td>
+            </tr>
+            <tr>
+              <td>Date</td>
+              <td><input type="text" name="date" id="date" /></td>
+            </tr>
+            <tr>
+              <td>Persons</td>
+              <td><input type="text" name="persons" id="persons" /></td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div align="center">
+                <input type="submit" name="submit" id="submit" value="Submit" />
+              </div></td>
+            </tr>
+          </table>
+          
+        </form>
       </xeb:if>
       <!-- InstanceEndEditable --></td>
     <td></td>

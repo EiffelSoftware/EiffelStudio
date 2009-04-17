@@ -26,19 +26,6 @@ feature {NONE} -- Initialization
 			--
 		do
 			Precursor
-			--fake reservations
---			create reservations.make (10)
---			reservations.extend (create {RESERVATION}.make ("1", "Fabio Zuend", "23/11/2009", "3", "blablablablablabla description"))
---			reservations.extend (create {RESERVATION}.make ("2", "Fabio Zuend", "21/11/2009", "2", "blablablablablabla description"))
---			reservations.extend (create {RESERVATION}.make ("3", "Fabio Zuend", "24/11/2009", "33", "blablablablablabla description"))
---			reservations.extend (create {RESERVATION}.make ("4", "Fabio Zuend", "25/11/2009", "5", "blablablablablabla description"))
---			reservations.extend (create {RESERVATION}.make ("5", "Fabio Zuend", "26/11/2009", "1", "blablablablablabla description"))
-
-
---			--fake users
---			create users.make(3)
---			users.put (create {USER}.make ("admin", "123", True), "admin")
---			users.put (create {USER}.make ("fabio", "123", False), "fabio")
 		end
 
 
@@ -46,10 +33,24 @@ feature -- Access
 
 feature -- Basic Operations
 
-	on_page_load
-			--
+	insert: STRING
+			-- Inserts a new reservation into the db
 		do
+				Result := "Default Error"
 
+				if attached {STRING} current_request.arguments["name"] as name and
+				   attached {STRING} current_request.arguments["date"] as date and
+				   attached {STRING} current_request.arguments["persons"] as persons and
+				   attached {STRING} current_request.arguments["description"] as description then
+
+					if global_state.db.insert_reservation (name, date, persons.to_integer_32, description) then
+						Result := "New reservations successfully inserted."
+					else
+						Result := "Error inserting reservation"
+					end
+				else
+					Result := "Error, not enough arguments"
+				end
 		end
 
 	authenticated: BOOLEAN
@@ -180,7 +181,7 @@ feature -- Basic Operations
 	login: STRING
 			-- Adds the user to the session
 		do
-			Result := "Invalid username/password"
+			Result := ""
 
 			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
 				if attached {USER} global_state.db.valid_login (name, password) as user then
@@ -188,7 +189,12 @@ feature -- Basic Operations
 						session.put (user, "auth")
 						Result := "Successfully logged in."
 					end
+
+				else
+					Result := "Invalid username/password"
 				end
+			else
+				Result := ""
 			end
 		end
 

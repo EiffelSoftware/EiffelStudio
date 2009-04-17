@@ -23,6 +23,12 @@ feature {NONE} -- Initialization
 		do
 			create reservations.make
 			create users.make (2)
+
+			users.force ( create {USER}.make (1, "fabio", "123", False), "fabio")
+			users.force ( create {USER}.make (1, "admin", "123", True), "admin")
+
+			reservations.force (create {RESERVATION}.make (1, "Fabio Zuend", "2009-02-06", 4, "Big event!"))
+
 		end
 
 feature -- Access
@@ -76,17 +82,20 @@ feature -- Basic Operations
 			end
 		end
 
-	valid_login (a_name: STRING; a_password: STRING): BOOLEAN
+	valid_login (a_name: STRING; a_password: STRING): detachable USER
 			-- Tries to log in a user.	
 		do
-			Result := False
-
 			if attached {USER} users[a_name] as user then
 				if user.password.is_equal (a_password) then
-					Result := True
+					Result := user
 				end
 			end
 		end
 
-
+	insert_reservation (a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING): BOOLEAN
+			-- Inserts a new reseravation
+		do
+			reservations.force (create {RESERVATION}.make (reservations.count+1, a_name, a_date, a_persons, a_description))
+			Result := True
+		end
 end

@@ -45,6 +45,16 @@ feature -- Basic Operations
 		deferred
 		end
 
+	reservations: LINKED_LIST [RESERVATION]
+			-- Retrieves all reservations
+		deferred
+		end
+
+	insert_reservation (a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING): BOOLEAN
+			-- Inserts a new reseravation
+		deferred
+		end
+
 --	get_all_reservations: LIST [RESERVATION]
 --			-- Retrieves all users
 --		deferred
@@ -55,7 +65,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	valid_login (a_name: STRING; a_password: STRING): BOOLEAN
+	valid_login (a_name: STRING; a_password: STRING): detachable USER
 			-- Tries to log in a user.	
 		deferred
 		end

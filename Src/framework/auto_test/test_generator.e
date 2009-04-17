@@ -25,13 +25,6 @@ inherit
 			{NONE} all
 		end
 
---	AUTO_TEST_COMMAND_LINE_PARSER
---		export
---			{NONE} all
---		redefine
---			class_names
---		end
-
 	AUT_SHARED_INTERPRETER_INFO
 		export
 			{NONE} all
@@ -211,7 +204,9 @@ feature {NONE} -- Basic operations
 							l_task.step
 							if not l_task.has_next_step then
 									-- TODO: Only create test class for new witness
-								create current_results.make_from_linear (l_task.minimized_witness.classifications)
+								l_witness := l_task.minimized_witness
+								session.used_witnesses.force_last (l_witness)
+								create current_results.make_from_linear (l_witness.classifications)
 								create_new_class
 								current_results := Void
 							end
@@ -238,17 +233,19 @@ feature {NONE} -- Basic operations
 									if not l_witnesses.is_empty and then l_witnesses.last /= last_witness then
 										l_witness := l_witnesses.last
 										if l_witness.is_fail then
-											l_minimize_task := minimize_task
-											if l_minimize_task = Void then
-												l_itp := new_interpreter
-												if l_itp /= Void then
-													create l_minimize_task.make (l_itp, system, l_error_handler)
-													minimize_task := l_minimize_task
+											if not session.used_witnesses.there_exists (agent {AUT_WITNESS}.is_same_bug (l_witness)) then
+												l_minimize_task := minimize_task
+												if l_minimize_task = Void then
+													l_itp := new_interpreter
+													if l_itp /= Void then
+														create l_minimize_task.make (l_itp, system, l_error_handler)
+														minimize_task := l_minimize_task
+													end
 												end
-											end
-											if l_minimize_task /= Void then
-												l_minimize_task.set_witness (l_witness)
-												l_minimize_task.start
+												if l_minimize_task /= Void then
+													l_minimize_task.set_witness (l_witness)
+													l_minimize_task.start
+												end
 											end
 										end
 										last_witness := l_witness

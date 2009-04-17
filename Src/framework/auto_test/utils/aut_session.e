@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			create error_handler.make (eiffel_system)
 			create options.make_with_configuration (a_conf, error_handler)
 			create result_repository_builder.make (eiffel_system)
+			create used_witnesses.make_default
 		ensure
 			eiffel_system_set: eiffel_system = a_system
 		end
@@ -78,6 +79,9 @@ feature -- Access: testing
 			-- Shared repository builder
 			--
 			-- Note: currently there is only one repository per session
+
+	used_witnesses: DS_ARRAYED_LIST [AUT_WITNESS]
+			-- Witness which have been minimized and for which a test was created
 
 feature {NONE} -- Access: cache
 

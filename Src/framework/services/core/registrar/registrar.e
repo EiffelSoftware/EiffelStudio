@@ -20,7 +20,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	REGISTRAR [G, K -> HASHABLE]
 
 inherit
@@ -28,8 +28,8 @@ inherit
 
 	DISPOSABLE_SAFE
 
-create
-	make
+--create
+--	make
 
 feature {NONE} -- Initialization
 
@@ -73,14 +73,14 @@ feature -- Access
 	active_registrations: DS_LINEAR [G]
 			-- <Precursor>
 		local
-			l_result: DS_LINEAR [G]
 			l_list: DS_ARRAYED_LIST [G]
 			l_cursor: DS_LINEAR_CURSOR [CONCEALER_I [G]]
 			l_concealer: detachable CONCEALER_I [G]
 			l_object: detachable G
 		do
-			l_result := internal_active_registrations
-			if l_result = Void then
+			if attached internal_active_registrations as l_result then
+				Result := l_result
+			else
 				create l_list.make_default
 				l_cursor := registrations.new_cursor
 				from l_cursor.start until l_cursor.after loop
@@ -89,7 +89,7 @@ feature -- Access
 					if l_concealer.is_revealed then
 						l_object := l_concealer.object
 						if l_object /= Void then
-							if not attached {USABLE_I} l_object as l_usable or else l_usable.is_interface_usable then
+							if (not attached {USABLE_I} l_object as l_usable) or else l_usable.is_interface_usable then
 								l_list.force_last (l_object)
 							end
 						end
@@ -98,8 +98,6 @@ feature -- Access
 				end
 				Result := l_list
 				internal_active_registrations := Result
-			else
-				Result := l_result
 			end
 		end
 
@@ -116,19 +114,19 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_valid_registration_key (a_key: attached K): BOOLEAN
+	is_valid_registration_key (a_key: K): BOOLEAN
 			-- <Precursor>
 		do
 			Result := attached {USABLE_I} a_key as l_usable implies l_usable.is_interface_usable
 		end
 
-	is_valid_registration (a_item: attached G): BOOLEAN
+	is_valid_registration (a_item: G): BOOLEAN
 			-- <Precursor>
 		do
 			Result := attached {USABLE_I} a_item as l_usable implies l_usable.is_interface_usable
 		end
 
-	is_registered (a_key: attached K): BOOLEAN
+	is_registered (a_key: K): BOOLEAN
 			-- <Precursor>
 		do
 			Result := table.has (a_key)
@@ -138,10 +136,17 @@ feature -- Status report
 
 feature -- Query
 
-	registration alias "[]" (a_key: attached K): attached G
+	registration alias "[]" (a_key: K): G
 			-- <Precursor>
+		local
+			l_item: CONCEALER_I [G]
+			l_result: detachable G
 		do
-			Result := table.item (a_key).object.as_attached
+			l_item := table.item (a_key)
+			check l_item_attached: l_item /= Void end
+			l_result := l_item.object
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Basic operations

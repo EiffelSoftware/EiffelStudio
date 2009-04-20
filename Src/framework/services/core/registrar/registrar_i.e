@@ -16,7 +16,6 @@ inherit
 
 	DISPOSABLE_I
 
---inherit {NONE}
 	EVENT_CONNECTION_POINT_I [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]
 		rename
 			connection as registrar_connection
@@ -31,12 +30,12 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = active_registrations
---			result_contains_attached_items: not Result.has (Void)
+--			result_contains_attached_items: (attached {DS_LINEAR [detachable G]} as l_result) and then not l_result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: G): BOOLEAN
 				do
 					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
 				end)
+			result_consistent: Result = active_registrations
 		end
 
 	registrations: DS_LINEAR [CONCEALER_I [G]]
@@ -46,12 +45,12 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = registrations
---			result_contains_attached_items: not Result.has (Void)
+--			result_contains_attached_items: (attached {DS_LINEAR [detachable G]} as l_result) and then not l_result.has (Void)
 			result_contains_usable_items: Result.for_all (agent (ia_item: CONCEALER_I [G]): BOOLEAN
 				do
 					Result := attached {USABLE_I} ia_item as l_usable implies l_usable.is_interface_usable
 				end)
+			result_consistent: Result = registrations
 		end
 
 feature -- Status report

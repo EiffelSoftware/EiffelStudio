@@ -2167,6 +2167,7 @@ test	void-safety-level								attach058 tcf pass void_safe validity dotnet attac
 test	voidness-cap-in-assertion						attach059 tcf pass void_safe scope
 test	like-current-void-safety						attach060 tcf pass void_safe anchored_types
 test	object-test-in-inherited-assertions				attach061 tcf pass void_safe object_test fixed
+test	detaching-attached-variable-in-loop				attach062 tcf pass void_safe scope validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

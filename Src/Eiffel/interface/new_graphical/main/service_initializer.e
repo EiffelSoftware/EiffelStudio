@@ -17,14 +17,26 @@ feature -- Services
 			--
 			-- `a_container': The service container to add services to.
 		do
+			a_container.register_with_activator ({ENVIRONMENT_S}, agent new_environment_service, False)
 			a_container.register_with_activator ({EVENT_LIST_S}, agent new_event_list_service, False)
 			a_container.register_with_activator ({LOGGER_S}, agent new_logger_service, False)
+			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 			a_container.register_with_activator ({SESSION_MANAGER_S}, agent new_session_manager_service, False)
 			a_container.register_with_activator ({TEST_SUITE_S}, agent new_testing_service, False)
-			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 		end
 
 feature {NONE} -- Factory
+
+	new_environment_service: detachable ENVIRONMENT_S
+			-- Creates the environement service.
+		do
+			create {ENVIRONMENT} Result.make
+			if Result.is_interface_usable then
+				register_environment_variables (Result)
+			end
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
 
 	new_event_list_service: detachable EVENT_LIST_S
 			-- Creates the event list service.
@@ -46,7 +58,9 @@ feature {NONE} -- Factory
 			-- Creates the output manager service
 		do
 			create {OUTPUT_MANAGER} Result.make
-			register_outputs (Result)
+			if Result.is_interface_usable then
+				register_outputs (Result)
+			end
 		end
 
 	new_session_manager_service: detachable SESSION_MANAGER_S
@@ -61,18 +75,38 @@ feature {NONE} -- Factory
 			-- Create test suite service
 		do
 			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
-			register_test_suite_processors (Result)
+			if Result.is_interface_usable then
+				register_test_suite_processors (Result)
+			end
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
+feature {NONE} -- Registeration: Environemtn
+
+	register_environment_variables (a_service: ENVIRONMENT_S)
+			-- Registers all built-in, static environment variables.
+			--
+			-- `a_service': The service interface to register the variables/value pairs on.
+		require
+			a_service_attached: a_service /= Void
+			a_service_is_interface_usable: a_service.is_interface_usable
+		do
+				-- Add the environment variables used for the external URIs
+			a_service.set_environment_variable ("http://dev.eiffel.com", "ISE_WIKI")
+			a_service.set_environment_variable ("http://www.eiffelroom.com", "EIFFELROOM")
+			a_service.set_environment_variable ("http://doc.eiffel.com", "ISE_DOC")
+			a_service.set_environment_variable ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
+		end
+
 feature {NONE} -- Registration: Output
 
-	register_outputs (a_service: attached OUTPUT_MANAGER_S)
+	register_outputs (a_service: OUTPUT_MANAGER_S)
 			-- Registers all default output providers with the output managers service.
 			--
 			-- `a_service': The service interface to register the outputs on.
 		require
+			a_service_attached: a_service /= Void
 			a_service_is_interface_usable: a_service.is_interface_usable
 		local
 			l_kinds: OUTPUT_MANAGER_KINDS
@@ -96,6 +130,7 @@ feature {NONE} -- Registrations: Testing
 			--
 			-- `a_service': Service in which test processors are registered.
 		require
+			a_service_attached: a_service /= Void
 			a_service_usable: a_service.is_interface_usable
 		local
 			a_registrar: TEST_PROCESSOR_REGISTRAR_I

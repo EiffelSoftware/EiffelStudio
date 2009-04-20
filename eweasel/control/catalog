@@ -460,6 +460,7 @@ test	bogus-vuta-on-procedure-target		valid244 tcf pass validity attached void_sa
 test	explicit-anchored-expanded-creation-type valid245 tcf pass validity
 test	inherited-conversion-to-like-current	valid246 tcf pass validity
 test	undetected-vycq-error				valid247 tcf pass validity conversion
+test	infix-prefix-alias-compatibility	valid248 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

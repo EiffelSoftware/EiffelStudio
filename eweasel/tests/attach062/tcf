@@ -1,0 +1,10 @@
+test_name 	 detaching-attached-variable-in-loop
+test_description Variable considered attached before a loop because of a CAP should not be considered attached if it is detached in the loop body.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VUTA
+
+test_end

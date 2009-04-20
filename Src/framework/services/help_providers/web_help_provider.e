@@ -20,29 +20,6 @@ inherit
 			show_help
 		end
 
-	CURL_ACCESS
-		export
-			{NONE} all
-		end
-
-feature -- Access
-
-	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
-			-- <Precursor>
-		local
-			l_title: detachable STRING_32
-		do
-			if is_accessible then
-					-- `is_accessible' requires calling {CURL_ACCESS}.make
-				l_title := document_title (full_url (a_context_id, a_section), False)
-			end
-			if l_title /= Void then
-				Result := l_title
-			else
-				Result := Precursor {RAW_URI_HELP_PROVIDER} (a_context_id, a_section)
-			end
-		end
-
 feature {NONE} -- Access
 
 	base_url: STRING
@@ -68,6 +45,32 @@ feature {NONE} -- Access
 			Result := '#'
 		ensure
 			result_is_printable: Result.is_printable
+		end
+
+feature -- Query
+
+	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
+			-- <Precursor>
+		local
+			l_title: detachable STRING_32
+		do
+			if is_accessible then
+					-- `is_accessible' requires calling {CURL_ACCESS}.make
+				l_title := document_title (full_url (a_context_id, a_section), False)
+			end
+			if l_title /= Void then
+				Result := l_title
+			else
+				Result := Precursor {RAW_URI_HELP_PROVIDER} (a_context_id, a_section)
+			end
+		end
+
+feature {NONE} -- Status report
+
+	is_accessible: BOOLEAN
+			-- Temporary
+		do
+			Result := True
 		end
 
 feature {NONE} -- Query
@@ -100,38 +103,78 @@ feature {NONE} -- Query
 			is_accessible: is_accessible -- Need to call `make' from {CURL_ACCESS}.
 			a_url_attached: a_url /= Void
 		local
-			l_curl: like curl
-			l_data: CURL_STRING
 			l_result: detachable STRING
+			l_protcol: detachable HTTP_PROTOCOL
 			l_regex: like title_extract_regex
+			l_url: HTTP_URL
 			i: INTEGER
+			retried: BOOLEAN
 		do
-			l_curl := curl
-			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, a_url.as_string_8)
-			l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
-
-			create l_data.make_empty
-			curl.setopt_curl_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
-
-			perform
-
-			l_result := l_data.string
-			if l_result /= Void and then not l_result.is_empty then
-				l_regex := title_extract_regex
-				l_regex.match (l_result)
-				if l_regex.has_matched then
-					Result := l_regex.captured_substring (1).as_string_32
-					if a_trim then
-						i := Result.last_index_of ('-', Result.count)
-						if i > 1 then
-							Result.keep_head (i - 1)
-							Result.prune_all_trailing (' ')
+			if not retried then
+					-- Create URL string
+				create l_url.make (a_url.as_string_8)
+				create l_protcol.make (l_url)
+				l_protcol.set_connect_timeout (30)
+				l_protcol.set_timeout (60)
+				l_protcol.set_port (80)
+				l_protcol.set_read_mode
+				l_protcol.open
+				if l_protcol.is_open then
+					l_protcol.initiate_transfer
+					if l_protcol.transfer_initiated then
+							-- Fetch the document
+						l_regex := title_extract_regex
+						create l_result.make (256)
+						l_protcol.set_read_buffer_size (256)
+						from
+							l_protcol.read
+						until
+							Result /= Void or else
+							l_protcol.error or else
+							not l_protcol.is_packet_pending
+						loop
+							if attached l_protcol.last_packet as l_packet then
+								l_result.append (l_packet)
+								l_regex.match (l_result)
+								if l_regex.has_matched then
+									Result := l_regex.captured_substring (1).as_string_32
+								end
+							end
+							if Result = Void and then l_protcol.is_packet_pending then
+								l_protcol.read
+							end
 						end
+						if Result = Void and then attached l_protcol.last_packet as l_packet then
+							l_result.append (l_packet)
+							l_regex.match (l_result)
+							if l_regex.has_matched then
+								Result := l_regex.captured_substring (1).as_string_32
+							end
+						end
+
+						if attached Result and then a_trim then
+							i := Result.last_index_of ('-', Result.count)
+							if i > 1 then
+								Result.keep_head (i - 1)
+								Result.prune_all_trailing (' ')
+							end
+						end
+					else
+						-- Not good!
 					end
+					l_protcol.close
+				else
+					-- Timed out!
 				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+		rescue
+			if attached l_protcol and then l_protcol.is_open then
+				l_protcol.close
+			end
+			retried := True
+			retry
 		end
 
 feature -- Basic operations

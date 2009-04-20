@@ -138,26 +138,23 @@ feature {NONE} -- Basic operations
 			if help_providers.is_service_available and then has_focus then
 					-- Look for help contexts
 				l_uri_scavenger := help_uri_scavenger
-				if attached {attached EB_SMART_EDITOR} Current as l_editor then
-					l_uri_scavenger.probe (l_editor)
-					if l_uri_scavenger.has_probed then
-						l_contexts := l_uri_scavenger.scavenged_contexts
-						if not l_contexts.is_empty then
-							if l_contexts.count > 1 then
-									-- Multiple pieces of help available, show dialog
-								create l_dialog.make
-								l_dialog.set_links (l_contexts)
-								l_dialog.show_on_active_window
-							else
-									-- Only one piece of help available.
-								on_help_requested (l_contexts.first)
-							end
+				l_uri_scavenger.probe (Current)
+				if l_uri_scavenger.has_probed then
+					l_contexts := l_uri_scavenger.scavenged_contexts
+					if not l_contexts.is_empty then
+						if l_contexts.count > 1 then
+								-- Multiple pieces of help available, show dialog
+							create l_dialog.make
+							l_dialog.set_links (l_contexts)
+							l_dialog.show_on_active_window
+						else
+								-- Only one piece of help available.
+							on_help_requested (l_contexts.first)
 						end
 					end
 				end
 			end
 		end
-
 
 feature -- Content change
 

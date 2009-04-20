@@ -286,7 +286,7 @@ feature {NONE} -- Component view factory
 			l_item := selected_item
 			if l_item /= Void then
 				if attached {ES_EIS_ENTRY_GRID} eis_tool_widget.entry_list as lt_grid and then lt_grid.is_usable then
-					if attached {ES_EIS_TREE_TAG_ITEM} selected_item as lt_item and then attached {STRING_32} lt_item.text.as_string_32 as lt_string then
+					if attached {ES_EIS_TREE_TAG_ITEM} selected_item as lt_item and then attached lt_item.text.as_string_32 as lt_string then
 						if tag_header.first = lt_item then
 								-- Empty string indicates to view entries without tag.
 							create {ES_EIS_TAG_VIEW}Result.make (create {STRING_32}.make_empty, lt_grid)
@@ -397,11 +397,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -37,10 +37,10 @@ feature -- Basic operation
 		do
 			if
 				attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section and then
-				attached {EIS_ENTRY} lt_section.entry as lt_entry and then
+				attached lt_section.entry as lt_entry and then
 				lt_entry.source /= Void and then
 				not lt_entry.source.is_empty and then
-				attached {STRING} lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
+				attached lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
 			then
 				last_entry := lt_entry
 				format_uris (lt_src)

@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 
 	make (a_notable: attached CONF_NOTABLE; a_force: BOOLEAN)
 			-- Initialize with `a_notable'.
+			-- Force extracting if `a_force'.
 		do
 			notable := a_notable
 			create eis_entries.make (2)
@@ -36,8 +37,10 @@ feature -- Access
 		local
 			l_conf_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if not attached internal_eis_full_entries as lt_full_entries then
-				if attached {CONF_TARGET} notable as lt_target then
+			if attached internal_eis_full_entries as lt_full_entries then
+				Result := lt_full_entries
+			else
+				if attached {CONF_TARGET} notable then
 					Result := eis_entries
 				elseif attached {CONF_CLUSTER} notable as lt_group and then attached {CONF_TARGET} lt_group.target as lt_group_target then
 					create l_conf_extractor.make (lt_group_target, True)
@@ -47,8 +50,6 @@ feature -- Access
 					Result := eis_entries
 				end
 				internal_eis_full_entries := Result
-			else
-				Result := internal_eis_full_entries
 			end
 		end
 
@@ -75,7 +76,7 @@ feature {NONE} -- Implementation
 			else
 				check not_possible: False end
 			end
-			if attached {STRING} l_id as lt_id then
+			if attached l_id as lt_id then
 				l_entries := storage.entry_server.entries
 				l_entries.search (lt_id)
 				if not l_entries.found or force_extracting then
@@ -88,7 +89,7 @@ feature {NONE} -- Implementation
 							l_notes.after
 						loop
 							l_note := l_notes.item_for_iteration
-							if attached {EIS_ENTRY} eis_entry_from_conf_note (l_note, lt_id) as lt_entry then
+							if attached eis_entry_from_conf_note (l_note, lt_id) as lt_entry then
 								eis_entries.force (lt_entry)
 							end
 							l_notes.forth

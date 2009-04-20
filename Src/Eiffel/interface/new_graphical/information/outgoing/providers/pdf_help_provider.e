@@ -39,10 +39,10 @@ feature -- Basic operations
 			l_str: attached STRING
 		do
 			if attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section then
-				if attached {EIS_ENTRY} lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached {STRING} lt_entry.source.as_string_8.twin as lt_src then
+				if attached lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached lt_entry.source.as_string_8.twin as lt_src then
 					last_entry := lt_entry
 					format_uris (lt_src)
-					if attached {HASH_TABLE [STRING_32, STRING_32]} lt_entry.others as lt_others then
+					if attached lt_entry.others as lt_others then
 						lt_others.search (pdf_type_string.as_string_32)
 						if lt_others.found then
 							if lt_others.found_item.is_case_insensitive_equal (pdf_type_file_string.as_string_32) then
@@ -89,7 +89,7 @@ feature -- Basic operations
 		do
 			l_args := pdf_arguments_from_entry (a_entry)
 			a_string.append (acrobat_command_string)
-			if attached {STRING} l_args as lt_args then
+			if attached l_args as lt_args then
 				a_string.append (acrobat_action_string)
 				a_string.append (quoted_string (lt_args))
 				a_string.append (" ")
@@ -102,7 +102,7 @@ feature -- Basic operations
 			l_result: STRING
 			l_found: BOOLEAN
 		do
-			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others then
+			if attached a_entry.others as lt_others then
 				create l_result.make (5)
 				lt_others.search (acrobat_page)
 				if lt_others.found then

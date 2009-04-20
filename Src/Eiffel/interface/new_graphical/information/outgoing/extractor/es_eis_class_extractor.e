@@ -51,7 +51,9 @@ feature -- Access
 		local
 			l_conf_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if not attached {like eis_full_entries} internal_eis_full_entries as lt_full_entries then
+			if attached internal_eis_full_entries as lt_full_entries then
+				Result := lt_full_entries
+			else
 				if attached {CONF_CLUSTER} class_i.config_class.group as lt_cluster then
 					create l_conf_extractor.make (lt_cluster, True)
 					Result := l_conf_extractor.eis_full_entries.twin
@@ -60,8 +62,6 @@ feature -- Access
 					Result := eis_entries
 				end
 				internal_eis_full_entries := Result
-			else
-				Result := internal_eis_full_entries
 			end
 		end
 
@@ -138,7 +138,7 @@ feature {NONE} -- Basic operations
 			create l_class_modifier.make (class_i)
 			l_class_modifier.prepare
 				-- Compute EIS entries.
-			if l_class_modifier.is_ast_available and then attached {CLASS_AS} l_class_modifier.ast as l_class_as then
+			if l_class_modifier.is_ast_available and then attached l_class_modifier.ast as l_class_as then
 				probe_ast (l_class_as)
 					-- Register extracted entries to EIS storage.
 					-- We register empty entries to show that there is really not
@@ -165,10 +165,10 @@ feature {NONE} -- Basic operations
 			l_class := class_i.config_class
 
 				-- Add top and bottom class indexing clauses.
-			if attached {INDEXING_CLAUSE_AS} a_ast.bottom_indexes as lt_clause3 then
+			if attached a_ast.bottom_indexes as lt_clause3 then
 				extract_enties_from_index_clause (lt_clause3, False)
 			end
-			if attached {INDEXING_CLAUSE_AS} a_ast.top_indexes as lt_clause4 then
+			if attached a_ast.top_indexes as lt_clause4 then
 				extract_enties_from_index_clause (lt_clause4, False)
 			end
 
@@ -194,7 +194,7 @@ feature {NONE} -- Basic operations
 								if location >= l_feature.start_location.position  and then location <= l_feature.end_location.position then
 										-- Set feature name, for URI replacement
 									l_feature_name := l_feature.feature_name.name
-									if attached {INDEXING_CLAUSE_AS} l_feature.indexes as lt_clause1 then
+									if attached l_feature.indexes as lt_clause1 then
 										extract_enties_from_index_clause (lt_clause1, True)
 									end
 								end
@@ -219,7 +219,7 @@ feature {NONE} -- Basic operations
 							loop
 								l_feature := l_features.item
 								eis_feature_id := id_solution.id_of_feature_ast (l_class, l_feature)
-								if attached {INDEXING_CLAUSE_AS} l_feature.indexes as lt_clause2 then
+								if attached l_feature.indexes as lt_clause2 then
 									extract_enties_from_index_clause (lt_clause2, True)
 								end
 								l_features.forth
@@ -243,13 +243,13 @@ feature {NONE} -- Formatting
 			until
 				a_clause.after
 			loop
-				if attached {INDEX_AS} a_clause.item as lt_index then
+				if attached a_clause.item as lt_index then
 					if a_for_feature then
 						l_id := eis_feature_id
 					else
 						l_id := eis_class_id
 					end
-					if attached {EIS_ENTRY} eis_entry_from_index (lt_index, l_id) as lt_eis_entry then
+					if attached eis_entry_from_index (lt_index, l_id) as lt_eis_entry then
 						eis_entries.force (lt_eis_entry)
 					end
 				end

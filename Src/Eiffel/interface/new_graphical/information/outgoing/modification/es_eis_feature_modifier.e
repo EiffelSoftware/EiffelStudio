@@ -115,7 +115,7 @@ feature -- Modification: Feature
 				until
 					l_indexes.after or l_found
 				loop
-					if attached {INDEX_AS} l_indexes.item as lt_index then
+					if attached l_indexes.item as lt_index then
 						l_entry := eis_entry_from_index (lt_index, l_feature_id)
 						if l_entry /= Void and then l_entry.same_entry (a_entry) then
 							if l_indexes.count = 1 and then a_clean_empty_clause then
@@ -184,11 +184,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

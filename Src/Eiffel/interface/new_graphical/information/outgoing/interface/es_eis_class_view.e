@@ -58,8 +58,8 @@ feature -- Operation
 					l_class_modifier.commit
 
 					if
-						attached {EIS_ENTRY} l_class_modifier.last_create_entry as lt_entry and then
-						attached {STRING} id_solution.id_of_class (class_i.config_class) as lt_id
+						attached l_class_modifier.last_create_entry as lt_entry and then
+						attached id_solution.id_of_class (class_i.config_class) as lt_id
 					then
 						storage.register_entry (lt_entry, lt_id, class_i.date)
 						if extracted_entries = Void then
@@ -135,7 +135,7 @@ feature {NONE} -- Access
 			l_feature: E_FEATURE
 			l_modifier: ES_EIS_CLASS_MODIFIER
 		do
-			if attached {STRING} a_entry.id as lt_id then
+			if attached a_entry.id as lt_id then
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.class_type then
 					if attached {CLASS_I} id_solution.class_of_id (lt_id) as lt_class then
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			-- Background color of `a_entry'
 		do
 			if
-				attached {STRING} a_entry.id as lt_id and then
+				attached a_entry.id as lt_id and then
 				(lt_id.is_equal (component_id) or id_solution.most_possible_type_of_id (lt_id) = id_solution.feature_type)
 			then
 					-- Default background color without change
@@ -393,11 +393,11 @@ feature {NONE} -- Implementation
 			-- Component ID
 		do
 			if internal_component_id = Void then
-				if attached {STRING} computed_component_id as lt_id then
+				if attached computed_component_id as lt_id then
 					Result := lt_id
 				end
 			else
-				if attached {STRING} internal_component_id as lt_id1 then
+				if attached internal_component_id as lt_id1 then
 					Result := lt_id1
 				end
 			end
@@ -421,20 +421,20 @@ feature {NONE} -- Callbacks
 			l_new_entry: attached EIS_ENTRY
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_name then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_name then
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
 						-- Do nothing when the name is not actually changed
 				else
 					if entry_editable (lt_entry) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
+							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_name (lt_name)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry1 then
+							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_name (lt_name)
@@ -459,20 +459,20 @@ feature {NONE} -- Callbacks
 			l_new_entry: attached EIS_ENTRY
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_protocol then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_protocol then
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
 					if entry_editable (lt_entry) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
+							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_protocol (lt_protocol)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry1 then
+							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_protocol (lt_protocol)
@@ -497,20 +497,20 @@ feature {NONE} -- Callbacks
 			l_new_entry: attached EIS_ENTRY
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_source then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_source then
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else
 					if entry_editable (lt_entry) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
+							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_source (lt_source)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry1 then
+							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_source (lt_source)
@@ -536,9 +536,9 @@ feature {NONE} -- Callbacks
 			l_tags: attached ARRAYED_LIST [STRING_32]
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_tags then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_tags then
 					 -- |FIXME: Bad conversion, should not convert to string_8.
-				if attached {STRING} lt_tags.as_string_8 as lt_tags_str_8 then
+				if attached lt_tags.as_string_8 as lt_tags_str_8 then
 					l_tags := parse_tags (lt_tags_str_8)
 					l_tags.compare_objects
 				end
@@ -554,7 +554,7 @@ feature {NONE} -- Callbacks
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry1 then
+							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_tags (l_tags)
@@ -584,7 +584,7 @@ feature {NONE} -- Callbacks
 			l_others: attached HASH_TABLE [STRING_32, STRING_32]
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {STRING_32} a_item.text as lt_others then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_others then
 				l_others := parse_others (lt_others)
 				l_others.compare_objects
 				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
@@ -592,14 +592,14 @@ feature {NONE} -- Callbacks
 				else
 					if entry_editable (lt_entry) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
+							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_others (l_others)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry1 then
+							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_others (l_others)

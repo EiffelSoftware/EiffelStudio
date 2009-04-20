@@ -19,7 +19,8 @@ inherit
 			auto_hide_tab_with,
 			restore,
 			zone,
-			change_title,
+			change_long_title,
+			change_short_title,
 			change_pixmap,
 			change_tab_tooltip,
 			show,
@@ -164,12 +165,24 @@ feature -- Redefine
 			end
 		end
 
-	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			zone.set_title (a_title)
+			if content /= Void and then content.type = {SD_ENUMERATION}.tool then
+				zone.set_title (a_title)
+			end
 		ensure then
-			set: a_title /= Void implies zone.title.is_equal (a_title.as_string_32)
+			set: a_title /= Void implies zone.title ~ (a_title.as_string_32)
+		end
+
+	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+			-- <Precursor>
+		do
+			if content /= Void and then content.type = {SD_ENUMERATION}.editor then
+				zone.set_title (a_title)
+			end
+		ensure then
+			set: a_title /= Void implies zone.title ~ (a_title.as_string_32)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)

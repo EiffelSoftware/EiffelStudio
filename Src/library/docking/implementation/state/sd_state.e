@@ -314,8 +314,15 @@ feature -- Properties
 
 feature {SD_CONTENT} -- SD_CONTENT called functions.
 
-	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
-			-- Change title
+	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+			-- Change short title
+		require
+			a_title_not_void: a_title /= Void
+		do
+		end
+		
+	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+			-- Change long title
 		require
 			a_title_not_void: a_title /= Void
 		do

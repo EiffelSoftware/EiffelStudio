@@ -161,6 +161,14 @@ feature -- Query
 	window: SD_PANEL
 			-- Window
 
+	title: STRING_32
+			-- Texts on title bar
+		do
+			Result := window.title_bar.title
+		ensure
+			not_void: Result /= Void
+		end
+
 	has_focus: BOOLEAN
 			-- If `Current' has focus?
 		do
@@ -177,6 +185,16 @@ feature -- Command
 			else
 				window.title_bar.disable_focus_color
 			end
+		end
+
+	set_title (a_title: STRING_GENERAL)
+			-- Set title of title bar.
+		require
+			a_title_not_void: a_title /= Void
+		do
+			window.title_bar.set_title (a_title)
+		ensure
+			set: window.title_bar.title ~ a_title
 		end
 
 	destroy

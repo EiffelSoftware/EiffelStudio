@@ -14,7 +14,8 @@ inherit
 			show,
 			close,
 			stick,
-			change_title,
+			change_short_title,
+			change_long_title,
 			change_pixmap,
 			hide,
 			set_focus,
@@ -139,12 +140,22 @@ feature -- Redefine
 			retry
 		end
 
- 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+ 	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			tab_stub.set_text (a_title)
 		ensure then
-			set: tab_stub.text = a_title
+			set: tab_stub.text ~ a_title
+		end
+
+ 	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+			-- <Precursor>
+		do
+			if zone /= Void then
+				zone.set_title (a_title)
+			end
+		ensure then
+			set: zone.title ~ a_title
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)

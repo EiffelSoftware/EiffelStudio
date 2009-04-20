@@ -229,7 +229,7 @@ feature -- Set
 			a_long_title_not_void: a_long_title /= Void
 		do
 			long_title := a_long_title
-			internal_state.change_title (a_long_title, Current)
+			internal_state.change_long_title (a_long_title, Current)
 		ensure
 			set: a_long_title.as_string_32.is_equal (long_title)
 		end
@@ -241,7 +241,7 @@ feature -- Set
 			not_too_long: a_short_title.count < 1000
 		do
 			short_title := a_short_title
-			internal_state.change_title (a_short_title, Current)
+			internal_state.change_short_title (a_short_title, Current)
 		ensure
 			set: a_short_title.as_string_32.is_equal (short_title)
 		end

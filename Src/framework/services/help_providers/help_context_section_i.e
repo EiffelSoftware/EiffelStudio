@@ -1,72 +1,27 @@
 note
 	description: "[
-		The default EiffelSoftware Eiffel Documentation help provider.
-	]"
+			An interface implementation to further page navigation, once a context page reference has been
+			located.
+		]"
+	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class
-	EIFFEL_DOC_HELP_PROVIDER
-
-inherit
-	WEB_HELP_PROVIDER
-		redefine
-			section_url_separator,
-			format_context
-		end
-
-create
-	default_create,
-	make -- Use to access page title, if needed!
+deferred class
+	HELP_CONTEXT_SECTION_I
 
 feature -- Access
 
-	document_protocol: STRING
-			-- <Precursor>
-		once
-			create Result.make_from_string ("eiffeldoc")
+	section: STRING
+			-- String representation of the page navigation section locator.
+		deferred
+		ensure
+			result_attached: Result /= Void
+			section_not_empty: not Result.is_empty
 		end
 
-	document_description: STRING_32
-			-- <Precursor>
-		once
-			create Result.make_from_string ("Eiffel Documentation")
-		end
-
-feature {NONE} -- Access
-
-	base_url: STRING
-			-- <Precursor>
-		once
-			create Result.make_from_string ("http://docs.eiffel.com/isedoc/uuid/")
-		end
-
-	section_url_separator: CHARACTER
-			-- <Precursor>
-		once
-			Result := '/'
-		end
-
-feature {NONE} -- Formatting
-
-	format_context (a_context: READABLE_STRING_GENERAL): STRING
-			-- <Precursor>
-		local
-			l_count, i: INTEGER
-		do
-			create Result.make_from_string (a_context.as_string_8)
-			l_count := Result.count
-			from i := 1 until i > l_count loop
-				if Result.item (i).is_space then
-					Result.put ('-', i)
-				end
-				i := i + 1
-			end
-		end
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

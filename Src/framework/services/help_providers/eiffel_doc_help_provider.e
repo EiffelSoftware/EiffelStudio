@@ -1,6 +1,6 @@
 note
 	description: "[
-		A Wiki-base help provider for navigating to help documentation found on the Eiffel public Wiki (dev.eiffel.com)
+		The default EiffelSoftware Eiffel Documentation help provider.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,30 +8,30 @@ note
 	revision: "$Revision $"
 
 class
-	WIKI_HELP_PROVIDER
+	EIFFEL_DOC_HELP_PROVIDER
 
 inherit
 	WEB_HELP_PROVIDER
 		redefine
+			section_url_separator,
 			format_context
 		end
 
 create
-	default_create,
-	make -- Use to access page title, if needed!
-
+	make
+	
 feature -- Access
 
 	document_protocol: STRING
 			-- <Precursor>
 		once
-			create Result.make_from_string ("wiki")
+			create Result.make_from_string ("eiffeldoc")
 		end
 
 	document_description: STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("Wiki")
+			create Result.make_from_string ("Eiffel Documentation")
 		end
 
 feature {NONE} -- Access
@@ -39,12 +39,18 @@ feature {NONE} -- Access
 	base_url: STRING
 			-- <Precursor>
 		once
-			create Result.make_from_string ("http://dev.eiffel.com/")
+			create Result.make_from_string ("http://docs.eiffel.com/isedoc/uuid/")
+		end
+
+	section_url_separator: CHARACTER
+			-- <Precursor>
+		once
+			Result := '/'
 		end
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: STRING_GENERAL): STRING
+	format_context (a_context: READABLE_STRING_GENERAL): STRING
 			-- <Precursor>
 		local
 			l_count, i: INTEGER
@@ -52,17 +58,17 @@ feature {NONE} -- Formatting
 			create Result.make_from_string (a_context.as_string_8)
 			l_count := Result.count
 			from i := 1 until i > l_count loop
-				if Result.item (i) = ' ' then
-					Result.put ('_', i)
+				if Result.item (i).is_space then
+					Result.put ('-', i)
 				end
 				i := i + 1
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

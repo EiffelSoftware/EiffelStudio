@@ -35,8 +35,22 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen kind: UUID
-			-- Help provider id, assigned to by the help providers service
+	frozen kind: UUID assign set_kind
+			-- Help provider id, assigned to by the help providers service.
+		attribute
+			create Result
+		end
+
+feature {NONE} -- Access
+
+	context_variables: HASH_TABLE [STRING, READABLE_STRING_8]
+			-- Custom table of context variables
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature {HELP_PROVIDERS_S} -- Element change
 
@@ -50,20 +64,28 @@ feature {HELP_PROVIDERS_S} -- Element change
 			kind_set: kind = a_kind
 		end
 
-feature -- Basic operations
+feature -- Status report
 
-	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
-			-- Attempts to show help for a specific context using the current help provider
+	is_valid_context_id (a_context_id: READABLE_STRING_GENERAL): BOOLEAN
+			-- Determines if a help content context id is valid
 			--
-			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
-			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
+			-- `a_context_id': A help provider's linkable context content id to validate.
+			-- `Result': True to indicate the context id is valid; False otherwise.
 		require
-			is_interface_usable: is_interface_usable
 			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
-			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
+		do
+			Result := True
+		end
+
+	is_launched: BOOLEAN
+			-- Indicates if the last call to `show_help' was successful.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
+
+feature -- Query
 
 	help_title (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I): STRING_32
 			-- A human readable title for a help document, given a context id and section.
@@ -87,25 +109,26 @@ feature -- Basic operations
 			not_result_is_empty: not Result.is_empty
 		end
 
-feature -- Query
+feature -- Basic operations
 
-	is_valid_context_id (a_context_id: READABLE_STRING_GENERAL): BOOLEAN
-			-- Determines if a help content context id is valid
+	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
+			-- Attempts to show help for a specific context using the current help provider
 			--
-			-- `a_context_id': A help provider's linkable context content id to validate.
-			-- `Result': True to indicate the context id is valid; False otherwise.
+			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
+			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
 		require
+			is_interface_usable: is_interface_usable
 			a_context_id_attached: a_context_id /= Void
 			not_a_context_id_is_empty: not a_context_id.is_empty
-		do
-			Result := True
+			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
+		deferred
 		end
 
-invariant
-	kind_attached: kind /= Void
+--invariant
+	--kind_attached: kind /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -118,22 +141,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -27,7 +27,7 @@ feature {NONE} -- Variable expansion
 	last_entry: detachable EIS_ENTRY
 			-- Last shown entry.
 
-	context_variables: attached HASH_TABLE [STRING_8, STRING_8]
+	context_variables: HASH_TABLE [STRING, READABLE_STRING_8]
 			-- A table of context variables, indexed by a variable name
 		local
 			l_type: NATURAL

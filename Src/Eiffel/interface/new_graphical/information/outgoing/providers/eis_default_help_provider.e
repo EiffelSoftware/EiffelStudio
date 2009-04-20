@@ -14,6 +14,9 @@ inherit
 			show_help
 		end
 
+create
+	make
+
 feature -- Access
 
 	document_protocol: STRING

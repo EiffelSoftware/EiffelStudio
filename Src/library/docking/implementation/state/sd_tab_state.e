@@ -20,7 +20,8 @@ inherit
 			move_to_docking_zone,
 			dock_at_top_level,
 			content,
-			change_title,
+			change_short_title,
+			change_long_title,
 			change_pixmap,
 			change_tab_tooltip,
 			close,
@@ -504,13 +505,21 @@ feature -- Redefine
 
 feature {SD_CONTENT} -- Redefine
 
-	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
+			-- <Precursor>
+		do
+			if tab_zone.has (a_content) then
+				tab_zone.set_short_title (a_title, a_content)
+			end
+		end
+
+	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
 			-- See bug#14623
 			if tab_zone.has (a_content) then
-				tab_zone.set_title (a_title, a_content)
+				tab_zone.set_long_title (a_title, a_content)
 			end
 		end
 

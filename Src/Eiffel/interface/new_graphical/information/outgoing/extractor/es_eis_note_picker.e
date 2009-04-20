@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 					l_index_list.after
 				loop
 					l_atomic := l_index_list.item_for_iteration
-					if attached {STRING} l_atomic.string_value as lt_string then
+					if attached l_atomic.string_value as lt_string then
 						create l_attribute_pair.make_from_string (lt_string.twin)
 						l_attribute_pair.left_adjust
 						l_attribute_pair.right_adjust
@@ -84,8 +84,8 @@ feature {NONE} -- Implementation
 						l_attribute_pair.right_adjust
 						if attribute_regex_matcher.matches (l_attribute_pair) then
 							if
-								attached {STRING} attribute_regex_matcher.captured_substring (1) as lt_key and then
-								attached {STRING} attribute_regex_matcher.captured_substring (2) as lt_value
+								attached attribute_regex_matcher.captured_substring (1) as lt_key and then
+								attached attribute_regex_matcher.captured_substring (2) as lt_value
 							then
 								lt_key.left_adjust
 								lt_key.right_adjust
@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 						l_attributes.after
 					loop
 						if
-							attached {STRING} l_attributes.key_for_iteration as lt_key and then
-							attached {STRING} l_attributes.item_for_iteration as lt_value
+							attached l_attributes.key_for_iteration as lt_key and then
+							attached l_attributes.item_for_iteration as lt_value
 						then
 							lt_key.left_adjust
 							lt_key.right_adjust
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			-- Parse `a_tag_string' into an array.
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		do
-			if attached {STRING_32} a_tag_string.as_string_32 as lt_tag_string then
+			if attached a_tag_string.as_string_32 as lt_tag_string then
 				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) as lt_splitted then
 					lt_splitted.do_all (
 							agent (aa_string: STRING_32)
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			-- "other1=value1, other2=value2, other3=value3"
 			-- Or ""other1=value1", other2=value2, "other3=value3""
 		do
-			if attached {STRING_32} a_others_string as lt_tag_string then
+			if attached a_others_string as lt_tag_string then
 				if attached {ARRAYED_LIST [STRING_32]} lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
 					create Result.make (1)
 					lt_splitted.do_all (
@@ -210,8 +210,8 @@ feature {NONE} -- Implementation
 									aa_string.right_adjust
 									if attribute_regex_matcher.matches (aa_string) then
 										if
-											attached {STRING} attribute_regex_matcher.captured_substring (1) as lt_key and then
-											attached {STRING} attribute_regex_matcher.captured_substring (2) as lt_value
+											attached attribute_regex_matcher.captured_substring (1) as lt_key and then
+											attached attribute_regex_matcher.captured_substring (2) as lt_value
 										then
 											lt_key.left_adjust
 											lt_key.right_adjust

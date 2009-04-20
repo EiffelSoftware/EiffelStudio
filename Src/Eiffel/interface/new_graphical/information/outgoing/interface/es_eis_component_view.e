@@ -183,14 +183,14 @@ feature {NONE} -- Sorting
 		do
 			inspect cached_column
 			when column_location then
-				if attached {STRING} u.id as lt_id_u then
-					if attached {STRING} v.id as lt_id_v then
+				if attached u.id as lt_id_u then
+					if attached v.id as lt_id_v then
 						type_u := id_solution.most_possible_type_of_id (lt_id_u)
 						type_v := id_solution.most_possible_type_of_id (lt_id_v)
 						if type_u = type_v then
 								-- Type is the same, compare the name
 							if type_u = id_solution.target_type then
-								if attached {CONF_TARGET} id_solution.target_of_id (lt_id_u) as lt_target_u and then attached {CONF_TARGET} id_solution.target_of_id (lt_id_v) as lt_target_v then
+								if attached id_solution.target_of_id (lt_id_u) as lt_target_u and then attached id_solution.target_of_id (lt_id_v) as lt_target_v then
 									Result := lt_target_u.name < lt_target_v.name
 								else
 										-- Simply compare there ids.
@@ -212,8 +212,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_name then
-				if attached {STRING_32} u.name as lt_name_u then
-					if attached {STRING_32} v.name as lt_name_v then
+				if attached u.name as lt_name_u then
+					if attached v.name as lt_name_v then
 						Result := lt_name_u < lt_name_v
 					else
 						Result := True
@@ -223,8 +223,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_protocol then
-				if attached {STRING_32} u.protocol as lt_protocol_u then
-					if attached {STRING_32} v.protocol as lt_protocol_v then
+				if attached u.protocol as lt_protocol_u then
+					if attached v.protocol as lt_protocol_v then
 						Result := lt_protocol_u < lt_protocol_v
 					else
 						Result := True
@@ -234,8 +234,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_source then
-				if attached {STRING_32} u.source as lt_source_u then
-					if attached {STRING_32} v.source as lt_source_v then
+				if attached u.source as lt_source_u then
+					if attached v.source as lt_source_v then
 						Result := lt_source_u < lt_source_v
 					else
 						Result := True
@@ -245,8 +245,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_tags then
-				if attached {STRING_32} u.tags_as_string as lt_tags_u then
-					if attached {STRING_32} v.tags_as_string as lt_tags_v then
+				if attached u.tags_as_string as lt_tags_u then
+					if attached v.tags_as_string as lt_tags_v then
 						Result := lt_tags_u < lt_tags_v
 					else
 						Result := True
@@ -256,8 +256,8 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_others then
-				if attached {STRING_32} u.others_as_string as lt_others_u then
-					if attached {STRING_32} v.others_as_string as lt_others_v then
+				if attached u.others_as_string as lt_others_u then
+					if attached v.others_as_string as lt_others_v then
 						Result := lt_others_u < lt_others_v
 					else
 						Result := True
@@ -457,7 +457,7 @@ feature {NONE} -- Events
 					-- Setup background colors
 					-- Put a special backgroud color if the line of entry is from inherited.
 
-				if attached {EV_COLOR} background_color_of_entry (l_eis_entry) as lt_color then
+				if attached background_color_of_entry (l_eis_entry) as lt_color then
 					Result.set_background_color (lt_color)
 				end
 			elseif a_row = eis_grid.row_count and then new_entry_possible then

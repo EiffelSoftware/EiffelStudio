@@ -37,9 +37,9 @@ feature {NONE} -- Variable expansion
 			l_class: CONF_CLASS
 			l_feature: E_FEATURE
 		do
-			if attached {EIS_ENTRY} last_entry as entry then
+			if attached last_entry as entry then
 				create Result.make (5)
-				if attached {STRING} entry.id as l_id then
+				if attached entry.id as l_id then
 					l_target := id_solution.target_of_id (l_id)
 					l_type := id_solution.most_possible_type_of_id (l_id)
 					if l_type = id_solution.feature_type then
@@ -52,16 +52,16 @@ feature {NONE} -- Variable expansion
 						l_group := id_solution.group_of_id (l_id)
 					end
 
-					if attached {STRING} id_solution.last_target_name as lt_target then
+					if attached id_solution.last_target_name as lt_target then
 						Result.force (lt_target, {ES_EIS_TOKENS}.target_name_var_name)
 					end
-					if attached {STRING} id_solution.last_group_name as lt_group then
+					if attached id_solution.last_group_name as lt_group then
 						Result.force (lt_group, {ES_EIS_TOKENS}.group_name_var_name)
 					end
-					if attached {STRING} id_solution.last_class_name as lt_class then
+					if attached id_solution.last_class_name as lt_class then
 						Result.force (lt_class, {ES_EIS_TOKENS}.class_name_var_name)
 					end
-					if attached {STRING} id_solution.last_feature_name as lt_feature then
+					if attached id_solution.last_feature_name as lt_feature then
 						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
 					end
 						-- Add variables defined in the target.
@@ -76,7 +76,7 @@ feature {NONE} -- Variable expansion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,11 +100,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

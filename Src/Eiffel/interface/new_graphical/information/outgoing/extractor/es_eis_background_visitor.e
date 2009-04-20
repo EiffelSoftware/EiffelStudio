@@ -51,7 +51,7 @@ feature -- Operation
 			end
 
 				-- Setup background visiting
-			if attached {CONF_TARGET} universe.target as lt_target then
+			if attached universe.target as lt_target then
 				lt_target.process (Current)
 				if background_procedures.count > 0 then
 					on_progress_start (background_procedures.count)
@@ -156,14 +156,14 @@ feature {NONE} -- Implementation
 			l_conf_tuple.t_procedure := l_procedure
 			background_procedures.extend (l_procedure)
 
-			if a_group.classes_set and then attached {ARRAYED_LIST [CONF_CLASS]} a_group.classes.linear_representation as lt_classes then
+			if a_group.classes_set and then attached a_group.classes.linear_representation as lt_classes then
 					-- Collect actions to be managed.
 				from
 					lt_classes.start
 				until
 					lt_classes.after
 				loop
-					if attached {CONF_CLASS} lt_classes.item as lt_class then
+					if attached lt_classes.item as lt_class then
 						create l_tuple
 						l_procedure := agent process_class_internal (l_tuple)
 						l_tuple.t_class := lt_class
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 		local
 			l_extractor: ES_EIS_CONF_EXTRACTOR
 		do
-			if attached {CONF_NOTABLE} a_tuple.t_notable as lt_notable then
+			if attached a_tuple.t_notable as lt_notable then
 				create l_extractor.make (lt_notable, False)
 			end
 			background_procedures.prune_all (a_tuple.t_procedure)
@@ -269,11 +269,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

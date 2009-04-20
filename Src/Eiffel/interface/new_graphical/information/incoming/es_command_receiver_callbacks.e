@@ -94,7 +94,7 @@ feature -- Callbacks
 			if action_found then
 					-- EIS incoming module
 				if action_module.is_case_insensitive_equal ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module) then
-					if attached {STRING} action.twin as lt_action then
+					if attached action.twin as lt_action then
 						if lt_action.starts_with ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol) then
 							lt_action.remove_head ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol.count)
 								-- Remove the trailing '/' if any.
@@ -215,14 +215,14 @@ feature {NONE} -- EIS implementation
 			l_uuid: UUID
 		do
 			eis_component_found_table.search (system_id)
-			if eis_component_found_table.found and then attached {STRING} eis_component_found_table.found_item as lt_string then
+			if eis_component_found_table.found and then attached eis_component_found_table.found_item as lt_string then
 				l_tuple := name_and_uuid_from_raw_string (lt_string)
 				l_system_name := l_tuple.name
 				l_system_uuid := l_tuple.uuid
 			end
 
 			eis_component_found_table.search (target_id)
-			if eis_component_found_table.found and then attached {STRING} eis_component_found_table.found_item as lt_string1 then
+			if eis_component_found_table.found and then attached eis_component_found_table.found_item as lt_string1 then
 				l_tuple := name_and_uuid_from_raw_string (lt_string1)
 				l_target_name := l_tuple.name
 				l_target_uuid := l_tuple.uuid
@@ -267,9 +267,9 @@ feature {NONE} -- EIS implementation
 						command_accepted := True
 
 							-- Place to search and open possible project.
-						if attached {STRING} preferences.misc_data.eis_path as lt_path then
+						if attached preferences.misc_data.eis_path as lt_path then
 							project_searcher.search_project (lt_path, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
-							if project_searcher.project_found and then attached {STRING} project_searcher.found_project as lt_project then
+							if project_searcher.project_found and then attached project_searcher.found_project as lt_project then
 								discard_start_dialog := True
 									-- Trying to open the project directly, the starting window is not needed anymore.
 								if starting_dialog /= Void and then not starting_dialog.is_destroyed then
@@ -716,7 +716,7 @@ feature {NONE} -- Access
 	action: detachable STRING;
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -740,11 +740,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

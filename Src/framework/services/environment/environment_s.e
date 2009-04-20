@@ -24,8 +24,21 @@ inherit
 
 feature -- Access
 
+	variables: LINEAR [READABLE_STRING_8]
+			-- A complete list of registered environment variables.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = variables
+		end
+
 	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable
+			-- Retrieves an associated values given a variable name.
 			--
+			-- `a_name': A variable name to retrieve an associated value for.
+			-- `Result': An associated value or Void if the variable has not been set.
 		require
 			is_interface_usable: is_interface_usable
 			a_name_attached: a_name /= Void
@@ -36,7 +49,29 @@ feature -- Access
 feature -- Element change
 
 	set_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+			-- Sets a variable in the Current environment.
+			-- Note: This does not effect the environment variables themselves. To change the environment
+			--       and any associated environment variable use `set_environment_variable'
 			--
+			-- `a_value': An associated value to bind to a given variable name.
+			-- `a_name' : The name of the variable to set.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_value_is_empty: a_value /= Void and then not a_value.is_empty
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		deferred
+		ensure
+			a_name_is_set: (attached a_value) and then is_set (a_name)
+			not_a_name_is_set: (not attached a_value) implies not is_set (a_name)
+			a_name_set: is_set (a_name) and then ((attached variable (a_name) as l_value) and then l_value ~ a_value)
+		end
+
+	set_environment_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+			-- Like `set_variable' but will force the setting of an environment varable also.
+			--
+			-- `a_value': An associated value to bind to a given variable name.
+			-- `a_name' : The name of the variable to set.
 		require
 			is_interface_usable: is_interface_usable
 			not_a_value_is_empty: a_value /= Void and then not a_value.is_empty
@@ -70,8 +105,8 @@ feature -- Query
 			-- in `variable'.
 			--
 			-- `a_string': The string to expand.
-			-- `a_keep': True to retain any unmatched variables in the result; False otherwise.
-			-- `Result': An expanded string.
+			-- `a_keep'  : True to retain any unmatched variables in the result; False otherwise.
+			-- `Result'  : An expanded string.
 		require
 			a_string_attached: a_string /= Void
 		deferred
@@ -84,8 +119,8 @@ feature -- Query
 --			-- in `variable'.
 --			--
 --			-- `a_string': The string to expand.
---			-- `a_keep': True to retain any unmatched variables in the result; False otherwise.
---			-- `Result': An expanded string.
+--			-- `a_keep'  : True to retain any unmatched variables in the result; False otherwise.
+--			-- `Result'  : An expanded string.
 --		require
 --			a_string_attached: a_string /= Void
 --		deferred
@@ -97,6 +132,9 @@ feature -- Events
 
 	value_changed_event: EVENT_TYPE_I [TUPLE [sender: ENVIRONMENT_S; name: detachable READABLE_STRING_GENERAL]]
 			-- Event call when a value changes.
+			--
+			-- sender: The Current environment object publishing the event.
+			-- name  : A variable name bound to the changed/removed value.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

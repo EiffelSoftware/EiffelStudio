@@ -453,6 +453,7 @@ feature -- Commands
 			l_editor_area: EV_WIDGET
 			l_main_area: SD_MULTI_DOCK_AREA
 		do
+			restore_maximized_editor
 			if orignal_editor_parent /= Void then
 				l_main_area := internal_docking_manager.query.inner_container_main
 				l_editor_area := l_main_area.item
@@ -518,6 +519,20 @@ feature -- Commands
 					end
 				end
 			end
+
+	restore_maximized_editor
+			-- Restore maximized editor in main window if possible
+		local
+			l_zone: SD_ZONE
+		do
+			l_zone := internal_docking_manager.zones.maximized_zone_in_main_window
+			if l_zone /= Void then
+				check maximized: l_zone.is_maximized end
+				if attached {SD_UPPER_ZONE} l_zone as l_upper_zone then
+					l_upper_zone.restore_from_maximized
+				end
+			end
+		end
 
 	show_displayed_floating_windows_in_idle
 			-- Show all displayed floating windows again for Solaris CDE.

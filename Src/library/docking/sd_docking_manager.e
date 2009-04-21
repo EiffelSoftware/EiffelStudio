@@ -496,6 +496,14 @@ feature -- Command
 			command.restore_minimized_editors
 		end
 
+	restore_maximized_editor
+			-- Restore maximized editor in main window if possible
+		require
+			not_destroyed: not is_destroyed
+		do
+			command.restore_maximized_editor
+		end
+
 	show_displayed_floating_windows_in_idle
 			-- Show all displayed floating windows again for Solaris CDE.
 			-- This feature fix bug#13645

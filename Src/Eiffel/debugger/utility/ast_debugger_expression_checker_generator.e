@@ -63,8 +63,6 @@ feature -- Access: byte node
 		local
 			retried: BOOLEAN
 
-			l_ct_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
-			f_as: BODY_AS
 			l_byte_code: BYTE_CODE
 			bak_byte_code: BYTE_CODE
 			bak_cc, l_cl: CLASS_C
@@ -110,26 +108,7 @@ feature -- Access: byte node
 							Byte_context.set_byte_code (l_byte_code)
 						end
 							--| Locals and object test locals
-						f_as := fi.real_body
-						if f_as /= Void then
-							l_ct_locals := locals_builder.local_table (l_cl, fi, f_as)
-							if l_ct_locals /= Void then
-									--| if it failed .. let's continue anyway for now
-
-									--| Last local return a new object
-									--| so there is no need to "twin" it
-								Ast_context.set_locals (l_ct_locals)
---								from
---									l_ct_locals.start
---								until
---									l_ct_locals.after
---								loop
---									ast_context.add_local_expression_scope (l_ct_locals.key_for_iteration)
---									l_ct_locals.forth
---								end
-							end
-						end
-						add_object_test_locals_info_to_ast_context (fi.e_feature, ast_context, a_context)
+						add_local_info_to_ast_context (fi.e_feature, ast_context, a_context)
 					elseif a_context.on_object then
 						prepare_contexts (l_cl, Void)
 						System.set_current_class (l_cl)
@@ -257,23 +236,41 @@ feature {NONE} -- Implementation: byte node
 			retry
 		end
 
-	add_object_test_locals_info_to_ast_context (f: E_FEATURE; ctx: AST_CONTEXT; a_context: DBG_EXPRESSION_EVALUATION_CONTEXT)
-			-- Add object test locals to the context
+	add_local_info_to_ast_context (f: E_FEATURE; ctx: AST_CONTEXT; a_context: DBG_EXPRESSION_EVALUATION_CONTEXT)
+			-- Add local variable info to the context (local, object test locals, ...)
 		require
 			f_not_void: f /= Void
 			ctx_attached: ctx /= Void
 		local
 			ta: TYPE_A
-			tu: TUPLE [id: ID_AS; type: TYPE_A]
-			li: LOCAL_INFO
+			tu: TUPLE [id: ID_AS; li: LOCAL_INFO]
 			l_name_id: INTEGER
 			ct: CLASS_TYPE
-			lst: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+			lst: detachable LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
+			l_local_table: HASH_TABLE [LOCAL_INFO, INTEGER]
 		do
 			ct := a_context.class_type
 			if ct = Void then
 				ct := f.associated_class.types.first
 			end
+
+			l_local_table := a_context.local_table.twin
+			if l_local_table /= Void and then not l_local_table.is_empty then
+					--| if it failed .. let's continue anyway for now
+
+					--| Last local is a cached value, so let's twin it
+				ctx.set_locals (l_local_table.twin)
+				ctx.init_local_scopes
+				from
+					l_local_table.start
+				until
+					l_local_table.after
+				loop
+					ctx.add_local_expression_scope (l_local_table.key_for_iteration)
+					l_local_table.forth
+				end
+			end
+
 			lst := a_context.object_test_locals
 			if lst /= Void and then	not lst.is_empty then
 				from
@@ -283,17 +280,11 @@ feature {NONE} -- Implementation: byte node
 				loop
 					tu := lst.item_for_iteration
 					l_name_id := tu.id.name_id
-					ta := tu.type
-
-					create li
-					li.set_position (ctx.next_object_test_local_position)
-					li.set_type (ta)
-					li.set_is_used (True)
 
 					debug ("to_implement")
 						to_implement ("Support object test locals of the same name.")
 					end
-					ctx.add_object_test_local (li, tu.id)
+					ctx.add_object_test_local (tu.li, tu.id)
 					ctx.add_object_test_expression_scope (tu.id)
 					lst.forth
 				end
@@ -582,16 +573,6 @@ feature {NONE} -- Implementation
 			else
 				Precursor {AST_FEATURE_CHECKER_GENERATOR} (l_as)
 			end
-		end
-
-feature -- Helpers
-
-	locals_builder: AST_LOCALS_INFO
-			-- Visitor to build table of locals
-		once
-			create Result
-		ensure
-			locals_builder_not_void: Result /= Void
 		end
 
 note

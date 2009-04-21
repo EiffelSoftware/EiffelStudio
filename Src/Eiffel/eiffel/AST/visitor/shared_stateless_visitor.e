@@ -50,14 +50,6 @@ feature -- Access
 			feature_checker_not_void: Result /= Void
 		end
 
-	locals_builder: AST_LOCALS_INFO
-			-- Visitor to build table of locals
-		once
-			create Result
-		ensure
-			locals_builder_not_void: Result /= Void
-		end
-
 	type_a_checker: TYPE_A_CHECKER
 			-- Visitor to check TYPE_A types.
 		once

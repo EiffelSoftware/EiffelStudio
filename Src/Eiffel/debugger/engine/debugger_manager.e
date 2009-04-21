@@ -1639,6 +1639,7 @@ feature -- Debugging events
 				bl.forth
 			end
 			reset_class_c_data
+			debugger_ast_server.reset
 
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_debugging_terminated (Current))
 		end

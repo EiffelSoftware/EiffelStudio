@@ -426,6 +426,7 @@ feature {NONE} -- Implementation
 
 						local_decl_grps := local_decl_grps_from (rout)
 						rout_i := routine_i
+							--| FIXME:jfiat: Could we have a more linear (1 level) list .. as object test locals?
 						if local_decl_grps /= Void then
 							from
 								local_decl_grps.start
@@ -482,7 +483,7 @@ feature {NONE} -- Implementation
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
-									l_type := l_ot_locals.item.type
+									l_type := l_ot_locals.item.li.type
 									if l_type /= Void then
 										l_stat_class := static_class_for_local_from_type_a (l_type, rout_i, l_wc)
 									else

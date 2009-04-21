@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 feature -- Element change
 
 	set_data (f: like feature_i; c: like class_c; ct: like class_type;
-				otl: like object_test_locals; a_bp, a_bp_nested: INTEGER)
+				loctab: like local_table; otl: like object_test_locals;
+				a_bp, a_bp_nested: INTEGER)
 			-- Set context data related to `f', `c', `ct', `otl', `a_bp' and `a_bp_nested', ..
 		local
 			l_reset_byte_node: BOOLEAN
@@ -74,6 +75,9 @@ feature -- Element change
 					l_reset_byte_node := True
 				end
 
+				if loctab /~ local_table then
+					local_table := loctab
+				end
 				if otl /~ object_test_locals then
 					object_test_locals := otl
 				end
@@ -187,7 +191,7 @@ feature -- Backup
 			bak: like backup_data
 		do
 			bak := backup_data
-			set_data (bak.feature_i, bak.class_c, bak.class_type, bak.object_test_locals, bak.breakable_index, bak.bp_nested_index)
+			set_data (bak.feature_i, bak.class_c, bak.class_type, bak.local_table, bak.object_test_locals, bak.breakable_index, bak.bp_nested_index)
 		end
 
 feature -- Access
@@ -210,7 +214,10 @@ feature -- Access
 	bp_nested_index: INTEGER
 			-- Breakable nested index position	
 
-	object_test_locals: detachable LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+	local_table: detachable HASH_TABLE [LOCAL_INFO, INTEGER]
+			-- Local variable table
+
+	object_test_locals: detachable LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
 			-- Object test local info associated to the context
 
 feature -- Element change

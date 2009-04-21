@@ -136,7 +136,27 @@ feature -- Properties
 			end
 		end
 
-	object_test_locals_info: LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+	local_table: HASH_TABLE [LOCAL_INFO, INTEGER]
+			-- Local variables table
+		local
+			l_result: detachable like local_table
+		do
+			l_result := private_local_table
+			if l_result = Void then
+				if routine /= Void and dynamic_type /= Void then
+					l_result := debugger_manager.debugger_ast_server.local_table (dynamic_type, routine)
+				end
+				if l_result = Void then
+					l_result := empty_local_table
+				end
+				private_local_table := l_result
+			end
+			Result := l_result
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	object_test_locals_info: LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
 			-- List of object test local's info
 		local
 			l_result: detachable like object_test_locals_info
@@ -147,7 +167,7 @@ feature -- Properties
 					l_result := debugger_manager.debugger_ast_server.object_test_locals (dynamic_type, routine, break_index, break_nested_index)
 				end
 				if l_result = Void then
-					create {ARRAYED_LIST [TUPLE [ID_AS, TYPE_A]]} l_result.make (0)
+					create {ARRAYED_LIST [TUPLE [ID_AS, LOCAL_INFO]]} l_result.make (0)
 				end
 				private_object_test_locals_info := l_result
 			end
@@ -260,6 +280,9 @@ feature {NONE} -- Implementation Properties
 	private_result: like result_value
 			-- Associated result
 
+	private_local_table: like local_table
+			-- Associated local variables table
+
 	private_object_test_locals_info: like object_test_locals_info
 			-- Associated list of object test local's resolved info
 
@@ -275,6 +298,14 @@ feature {NONE} -- Implementation helper
 		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
+		end
+
+feature {NONE} -- Implementation
+
+	empty_local_table: HASH_TABLE [LOCAL_INFO, INTEGER]
+			-- Empty local table
+		once
+			create Result.make (0)
 		end
 
 invariant

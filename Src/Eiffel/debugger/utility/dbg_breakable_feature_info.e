@@ -19,10 +19,13 @@ feature {NONE} -- Initialization
 		require
 			a_feat_attached: a_feat /= Void
 		do
+			class_c := a_feat.associated_class
+			feature_i := a_feat.associated_feature_i
+
 			feature_id := a_feat.feature_id
-			class_id := a_feat.associated_class.class_id
-			create {ARRAYED_LIST [DBG_BREAKABLE_POINT_INFO]} points.make (10)
-			create {ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]} object_test_locals.make (5)
+			class_id := class_c.class_id
+			create points.make (10)
+			create object_test_locals.make (5)
 		end
 
 feature -- Access
@@ -33,17 +36,39 @@ feature -- Access
 	breakable_nested_count: INTEGER
 			-- Last nested breakable index
 
+	class_c: CLASS_C
+			-- Associated class_c
+
+	feature_i: FEATURE_I
+			-- Associated feature_i
+
 	feature_id: INTEGER
 			-- Associated feature's id
 
 	class_id: INTEGER
 			-- Associated class's id
 
-	points: LIST [DBG_BREAKABLE_POINT_INFO]
+	points: ARRAYED_LIST [DBG_BREAKABLE_POINT_INFO]
 			-- List of breakable point (including nested location)
 
-	object_test_locals: LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
+	locals: detachable LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
+			-- List of local's info	
+
+	object_test_locals: ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
 			-- List of object test local's info
+
+feature -- Access: resolved
+
+	resolved: BOOLEAN
+			-- Local variables resolved?
+
+	local_table: detachable HASH_TABLE [LOCAL_INFO, INTEGER]
+			-- Table of resolved local variables info.
+			-- require	resolved: resolved attribute end
+
+	object_test_locals_resolved: ARRAYED_LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
+			-- List of object test local's info
+			-- require	resolved: resolved attribute end
 
 feature -- Backup
 
@@ -52,7 +77,7 @@ feature -- Backup
 			if v /= Void then
 				object_test_locals := v
 			else
-				create {ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]} object_test_locals.make (5)
+				create object_test_locals.make (5)
 			end
 		ensure
 			object_test_locals_attached: object_test_locals /= Void
@@ -94,6 +119,30 @@ feature -- Breakable data
 		end
 
 feature -- Change
+
+	set_resolved (b: BOOLEAN)
+			-- Set current as resolved for local variables
+		do
+			resolved := b
+		end
+
+	set_locals (a_locals: like locals)
+			-- Set `locals' to `a_locals'
+		do
+			locals := a_locals
+		end
+
+	set_local_table (a_local_table: like local_table)
+			-- Set `local_table' to `a_local_table'
+		do
+			local_table := a_local_table
+		end
+
+	set_object_table_locals_resolved (a_object_test_locals_resolved: like object_test_locals_resolved)
+			-- Set `object_test_locals_resolved' to `a_object_test_locals_resolved'
+		do
+			object_test_locals_resolved := a_object_test_locals_resolved
+		end
 
 	add_point (a_class: CLASS_C; a_line: INTEGER; a_text: STRING)
 			-- Add breakable point info

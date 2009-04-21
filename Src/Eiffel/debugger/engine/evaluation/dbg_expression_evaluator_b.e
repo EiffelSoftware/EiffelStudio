@@ -98,14 +98,14 @@ feature {NONE} -- Evaluation
 				init_context_with_current_callstack
 			elseif on_class then
 				init_context_address_with_current_callstack
-				context.set_data (Void, context.class_c, Void, Void, 0, 0)
+				context.set_data (Void, context.class_c, Void, Void, Void, 0, 0)
 				apply_context
 			elseif on_object then
 				dobj := debugger_manager.object_manager.debugged_object (context.address, 0, 0)
 				if dobj.is_erroneous then
 					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
 				else
-					context.set_data (Void, dobj.dynamic_class, dobj.class_type, Void, 0, 0)
+					context.set_data (Void, dobj.dynamic_class, dobj.class_type, Void, Void, 0, 0)
 					apply_context
 				end
 				dobj := Void
@@ -2168,7 +2168,7 @@ feature -- Context: Element change
 					dbg_error_handler.notify_error_expression_during_context_preparation
 				else
 					fi := ecse.routine_i
-					context.set_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
+					context.set_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.local_table, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
 					apply_context
 				end
 			end
@@ -2243,7 +2243,7 @@ feature -- Access
 				--| prepare context
 				--| this may reset the `expression_byte_node' value
 			ctx := context
-			ctx.set_data (f, f.written_class, Void, Void, 0, 0) -- FIXME: we are missing object test locals here
+			ctx.set_data (f, f.written_class, Void, Void, Void, 0, 0) -- FIXME: we are missing locals and object test locals here
 			apply_context
 
 				--| Get expression_byte_node

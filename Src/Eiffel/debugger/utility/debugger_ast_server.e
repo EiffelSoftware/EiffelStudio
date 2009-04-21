@@ -14,6 +14,16 @@ inherit
 			context as ast_context
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -41,25 +51,37 @@ feature -- Acces
 
 feature -- Report
 
-	object_test_locals (a_class_type: CLASS_TYPE; a_feat: E_FEATURE; a_bp, a_bp_nested: INTEGER): ARRAYED_LIST [TUPLE [id: ID_AS; type: TYPE_A]]
+	local_table (a_class_type: CLASS_TYPE; a_feat: E_FEATURE): detachable HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Object test locals from `a_feat' in the context of class `a_class_type'
 		require
 			a_class_type /= Void
 			a_feat /= Void
+		local
+			l_breakable_feature_info: detachable DBG_BREAKABLE_FEATURE_INFO
 		do
---			if attached create {AST_DEBUGGER_OBJECT_TEST_LOCAL_VISITOR} as vis then
---				vis.get_object_test_locals (a_feat.ast)
---				if attached vis.object_test_locals as l_object_test_locals then
---						--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
---					Result := resolved_object_test_locals (a_class_type, a_feat, l_object_test_locals)
---				end
---			end
-
-			if attached breakable_feature_info (a_feat) as l_info then
-				if attached l_info.object_test_locals as l_locals then
-						--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
-					Result := resolved_object_test_locals (a_class_type, a_feat, l_locals)
+			l_breakable_feature_info := breakable_feature_info (a_feat)
+			if l_breakable_feature_info /= Void then
+				if l_breakable_feature_info /= Void and then not l_breakable_feature_info.resolved then
+					resolve_breakable_feature_info (l_breakable_feature_info)
 				end
+				Result := l_breakable_feature_info.local_table
+			end
+		end
+
+	object_test_locals (a_class_type: CLASS_TYPE; a_feat: E_FEATURE; a_bp, a_bp_nested: INTEGER): ARRAYED_LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
+			-- Object test locals from `a_feat' in the context of class `a_class_type'
+		require
+			a_class_type /= Void
+			a_feat /= Void
+		local
+			l_breakable_feature_info: detachable DBG_BREAKABLE_FEATURE_INFO
+		do
+			l_breakable_feature_info := breakable_feature_info (a_feat)
+			if l_breakable_feature_info /= Void then
+				if l_breakable_feature_info /= Void and then not l_breakable_feature_info.resolved then
+					resolve_breakable_feature_info (l_breakable_feature_info)
+				end
+				Result := l_breakable_feature_info.object_test_locals_resolved
 			end
 		end
 
@@ -70,11 +92,13 @@ feature -- Report
 			l_storage: like breakable_feature_info_storage
 			i, j, l, u: INTEGER
 			f: FEATURE_I
+			cl_id: INTEGER
 		do
 			f := a_feat.associated_feature_i
+			cl_id := a_feat.associated_class.class_id
 			l_storage := breakable_feature_info_storage
 			if l_storage /= Void then
-				i := breakable_feature_info_index (f)
+				i := breakable_feature_info_index (f, cl_id)
 				if i > 0 then
 					check valid_index: l_storage.valid_index (i) end
 					Result := l_storage [i]
@@ -112,78 +136,129 @@ feature -- Report
 			end
 		end
 
-	resolved_object_test_locals (a_class_type: CLASS_TYPE; a_feat: E_FEATURE; a_ot_lst: LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]): ARRAYED_LIST [TUPLE [id: ID_AS; type: TYPE_A]]
-			-- Object test locals from `a_feat' in the context of class `a_class_type'
+	resolve_breakable_feature_info (a_bfi: DBG_BREAKABLE_FEATURE_INFO)
 		require
-			a_ot_lst_attached: a_ot_lst /= Void
-			a_class_type /= Void
-			a_feat /= Void
+			a_bfi_attached: a_bfi /= Void
+			a_bfi_not_yet_resolved: not a_bfi.resolved
 		local
-			type_vis: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
-			l_item: DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO
-			l_type_as: TYPE_AS
-			l_cl_type_a: CL_TYPE_A
-			l_type_a: TYPE_A
-			fi: FEATURE_I
-			li: LOCAL_INFO
+			i: INTEGER
 			l_old_ast_context, l_ast_context: like ast_context
-			retried: BOOLEAN
+			fi: FEATURE_I
 			cl: CLASS_C
-			l_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
+			l_local_table_resolved: like local_table
+			l_object_test_locals_resolved: like object_test_locals
+
+			l_locals: LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
+			l_loc: TUPLE [id: INTEGER; type: TYPE_AS]
+
+			l_object_test_locals: detachable LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
+			l_ot_loc: DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO
+
+			l_id: ID_AS
+			l_name_id: INTEGER
+			l_type_as, l_last_type_as: TYPE_AS
+			l_cl_type_a: CL_TYPE_A
+			l_solved_type_a: TYPE_A
+			li: LOCAL_INFO
+			l_feat_tbl: FEATURE_TABLE
+			l_dbg_type_checker: like dbg_type_checker
+			l_type_a_checker: like type_a_checker
+			l_type_a_generator: like type_a_generator
+			retried: BOOLEAN
 		do
 			if not retried then
-					--| FIXME jfiat [2009/03/16] : we should cache `vis.object_test_locals', to avoid recomputation...
-				create type_vis
 				l_ast_context := ast_context
 				if l_ast_context.current_class /= Void then
 					l_old_ast_context := l_ast_context.save
 				else
 					l_old_ast_context := l_ast_context.twin
 				end
-				if a_class_type = Void then
-					cl := a_feat.associated_class
-					l_cl_type_a := cl.actual_type
-				else
-					cl := a_class_type.associated_class
-					l_cl_type_a := a_class_type.type
-				end
-				fi := a_feat.associated_feature_i
+
+				fi := a_bfi.feature_i
+				cl := a_bfi.class_c
+--				if a_class_type = Void then
+--					l_cl_type_a := l_class_c.actual_type
+--				else
+--					cl := a_class_type.associated_class
+--					l_cl_type_a := a_class_type.type
+--				end
+				l_cl_type_a := cl.actual_type
+				l_feat_tbl := cl.feature_table --| fi.written_class.feature_table
+
 				l_ast_context.clear_all
-				l_ast_context.initialize (cl, l_cl_type_a, cl.feature_table)
+				l_ast_context.initialize (cl, l_cl_type_a, l_feat_tbl)
 				l_ast_context.set_current_feature (fi)
 
-				l_locals := type_vis.locals_builder.local_table (cl, fi, fi.real_body)
-				if l_locals /= Void then
-					l_ast_context.set_locals (l_locals)
-				end
-				type_vis.init (l_ast_context)
-				type_vis.set_current_feature (a_feat.associated_feature_i)
-				from
-					create Result.make (a_ot_lst.count)
-					a_ot_lst.start
-				until
-					a_ot_lst.after
-				loop
-					l_item := a_ot_lst.item
-					if l_item /= Void then
-						l_type_as := l_item.type
-						if l_type_as /= Void then
-							l_type_a := type_vis.type_a_from_type_as (l_type_as)
-						else
-							l_type_a := type_vis.type_a_from_expr_as (a_ot_lst.item.expression)
-						end
-						Result.force ([l_item.name_id, l_type_a])
-						create li
-						li.set_position (l_ast_context.next_object_test_local_position)
-						li.set_type (l_type_a)
-						li.set_is_used (True)
+				l_type_a_checker := type_a_checker
+				l_type_a_generator := type_a_generator
 
-						l_ast_context.add_object_test_local (li, l_item.name_id)
-						l_ast_context.add_object_test_expression_scope (l_item.name_id)
-					else
-						check should_not_occur: False end
+				l_dbg_type_checker := dbg_type_checker
+				l_dbg_type_checker.init (l_ast_context)
+				l_dbg_type_checker.set_current_feature (fi)
+
+				l_type_a_checker.init_for_checking (fi, l_feat_tbl.associated_class, Void, Void)
+
+				l_locals := a_bfi.locals
+				if l_locals /= Void then
+					from
+						create l_local_table_resolved.make (l_locals.count)
+						a_bfi.set_local_table (l_local_table_resolved)
+						l_locals.start
+						i := 1
+					until
+						l_locals.after
+					loop
+						l_loc := l_locals.item
+						l_type_as := l_loc.type
+						if l_type_as /~ l_last_type_as then --| minor optimization
+							l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
+							l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
+						end
+						l_name_id := l_loc.id
+						create li -- .make (l_name_id)
+						li.set_position (i)
+						li.set_type (l_solved_type_a)
+						l_local_table_resolved.put (li, l_name_id)
+						l_locals.forth
+						i := i + 1
 					end
-					a_ot_lst.forth
+				end
+				if l_local_table_resolved /= Void then
+					l_ast_context.set_locals (l_local_table_resolved.twin)
+				end
+
+				l_object_test_locals := a_bfi.object_test_locals
+				if l_object_test_locals /= Void then
+					from
+						create l_object_test_locals_resolved.make (l_object_test_locals.count)
+						a_bfi.set_object_table_locals_resolved (l_object_test_locals_resolved)
+						l_object_test_locals.start
+					until
+						l_object_test_locals.after
+					loop
+						l_ot_loc := l_object_test_locals.item
+						if l_ot_loc /= Void then
+							l_type_as := l_ot_loc.type
+							if l_type_as /= Void then
+								l_solved_type_a := l_dbg_type_checker.type_a_from_type_as (l_type_as)
+							else
+								l_solved_type_a := l_dbg_type_checker.type_a_from_expr_as (l_ot_loc.expression)
+							end
+							l_id := l_ot_loc.name_id
+							create li --.make (l_id.name_id)
+							li.set_position (l_ast_context.next_object_test_local_position)
+							li.set_type (l_solved_type_a)
+--							li.set_is_used (True)
+
+							l_object_test_locals_resolved.force ([l_id, li])
+
+							l_ast_context.add_object_test_local (li, l_id)
+							l_ast_context.add_object_test_expression_scope (l_id)
+						else
+							check should_not_occur: False end
+						end
+						l_object_test_locals.forth
+					end
 				end
 				l_ast_context.restore (l_old_ast_context)
 			else
@@ -191,6 +266,7 @@ feature -- Report
 					l_ast_context.restore (l_old_ast_context)
 				end
 			end
+			a_bfi.set_resolved (True)
 		rescue
 			retried := True
 			retry
@@ -198,10 +274,15 @@ feature -- Report
 
 feature {NONE} -- Implementation
 
+	dbg_type_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
+		once
+			create Result
+		end
+
 	ast_debugger_breakable_strategy: detachable AST_DEBUGGER_BREAKABLE_STRATEGY
 			-- Visitor to get debugger's data from AST
 
-	breakable_feature_info_index (a_feat: FEATURE_I): INTEGER
+	breakable_feature_info_index (a_feat: FEATURE_I; a_cl_id: INTEGER): INTEGER
 			-- Is already computed, return index of result for `a_feat'
 			-- from `breakable_feature_info_storage'	
 		local
@@ -220,7 +301,8 @@ feature {NONE} -- Implementation
 					if
 						l_item /= Void and then
 						l_item.feature_id = a_feat.feature_id and then
-						l_item.class_id = a_feat.written_in
+						l_item.class_id = a_cl_id
+--						l_item.class_id = a_feat.written_in
 					then
 						Result := i
 					end

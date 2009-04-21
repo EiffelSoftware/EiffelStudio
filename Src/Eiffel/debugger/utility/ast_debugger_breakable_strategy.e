@@ -419,36 +419,61 @@ feature {NONE} -- Iteration
 	process_routine_as (l_as: ROUTINE_AS)
 		local
 			l_info: like breakable_feature_info
-			l_body_ot_lst, l_inherited_ot_lst: LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
+			l_body_ot_lst, l_inherited_ot_lst: ARRAYED_LIST [DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO]
+			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			l_id_list: IDENTIFIER_LIST
+			l_local_vars: detachable ARRAYED_LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
 		do
-			if
-				not current_feature_i.is_inline_agent and then
-				attached flatten_inherited_assertions (current_feature_i, current_class) as l_flatten_inherited_assertions
-			then
-				l_info := breakable_feature_info
+			l_info := breakable_feature_info
+			if not current_feature_i.is_inline_agent then
+					--| Get locals info
+				l_locals := l_as.locals
+				if l_locals /= Void and not l_locals.is_empty then
+					from
+						create l_local_vars.make (2 * l_locals.count)
+						l_locals.start
+					until
+						l_locals.after
+					loop
+						from
+							l_id_list := l_locals.item.id_list
+							l_id_list.start
+						until
+							l_id_list.after
+						loop
+							l_local_vars.force ([l_id_list.item, l_locals.item.type])
+							l_id_list.forth
+						end
+						l_locals.forth
+					end
+				end
+				l_info.set_locals (l_local_vars)
 
-				l_body_ot_lst := l_info.object_test_locals
-				--| Due to compiler behavior, the object test locals' order is not AST logical.
-				--| So let's handle the good order for the debugger.
+					--| Get other info, such as object test locals
+				if attached flatten_inherited_assertions (current_feature_i, current_class) as l_flatten_inherited_assertions then
+					l_body_ot_lst := l_info.object_test_locals
+					--| Due to compiler behavior, the object test locals' order is not AST logical.
+					--| So let's handle the good order for the debugger.
 
-				l_info.change_object_test_locals (Void)
-				l_inherited_ot_lst := l_info.object_test_locals
-				process_inherited_preconditions (l_flatten_inherited_assertions)
-				l_info.change_object_test_locals (l_body_ot_lst)
+					l_info.change_object_test_locals (Void)
+					l_inherited_ot_lst := l_info.object_test_locals
+					process_inherited_preconditions (l_flatten_inherited_assertions)
+					l_info.change_object_test_locals (l_body_ot_lst)
 
-				safe_process (l_as.precondition)
-				safe_process (l_as.locals)
-				l_as.routine_body.process (Current)
+					safe_process (l_as.precondition)
+					safe_process (l_as.locals)
+					l_as.routine_body.process (Current)
 
-				l_info.change_object_test_locals (l_inherited_ot_lst)
-				process_inherited_postconditions (l_flatten_inherited_assertions)
-				l_info.change_object_test_locals (l_body_ot_lst)
+					l_info.change_object_test_locals (l_inherited_ot_lst)
+					process_inherited_postconditions (l_flatten_inherited_assertions)
+					l_info.change_object_test_locals (l_body_ot_lst)
 
-				safe_process (l_as.postcondition)
-				safe_process (l_as.rescue_clause)
-				l_info.append_object_test_locals (l_inherited_ot_lst)
-			else
-				Precursor (l_as)
+					safe_process (l_as.postcondition)
+					safe_process (l_as.rescue_clause)
+					l_info.append_object_test_locals (l_inherited_ot_lst)
+				else
+					Precursor (l_as)
+				end
 			end
 			if not l_as.is_deferred then
 					--| end

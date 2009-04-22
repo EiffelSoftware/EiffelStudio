@@ -80,13 +80,21 @@ feature {NONE} -- Basic operations
 			end
 
 			if attached a_parser.configuration_files as l_files then
-				io.put_string ("%NBeginning conversion of ")
+				io.put_string ("Beginning conversion of ")
 				io.put_integer (l_files.count)
 				io.put_string (" file")
 				if l_files.count > 1 then
 					io.put_string ("(s)")
 				end
 				io.put_string (".%N")
+
+				if a_parser.is_compatibile then
+					io.put_string ("Using 6.3 compatibility mode%N")
+				end
+					-- Set the compatibility mode.
+				(create {CONF_DEFAULT_OPTION_SETTING}).set_is_63_compatible (a_parser.is_compatibile)
+
+				io.new_line
 
 				from l_files.start until l_files.after loop
 					if attached l_files.item as l_file_name then
@@ -99,11 +107,9 @@ feature {NONE} -- Basic operations
 							l_dest_file_name := l_file_name
 						end
 						if modify_configuration (l_file_name, l_dest_file_name, l_modifier, l_replaced) then
-							if l_add_safe_suffix then
-								io.put_string ("File saved to: ")
-								io.put_string (l_dest_file_name)
-								io.new_line
-							end
+							io.put_string ("File saved to: ")
+							io.put_string (l_dest_file_name)
+							io.new_line
 						end
 						io.new_line
 					end
@@ -173,6 +179,8 @@ feature {NONE} -- Basic operations
 									io.error.put_string ("Error: Unable to write to the file, please check the permissions!%N")
 									exit_code := 5
 								end
+							else
+								io.put_string ("No changes were made in the configuration file.%N")
 							end
 						end
 					else

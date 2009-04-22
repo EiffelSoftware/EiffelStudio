@@ -48,7 +48,7 @@ feature {NONE} -- Basic operations
 			end
 			l_void_choice := a_options.void_safety
 			l_void_choice.unset
-			if not l_void_choice.is_set or else l_void_choice.index /= {CONF_OPTION}.void_safety_index_all then
+			if l_void_choice.index /= {CONF_OPTION}.void_safety_index_all then
 				l_void_choice.put_index ({CONF_OPTION}.void_safety_index_all)
 			end
 		end

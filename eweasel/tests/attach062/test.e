@@ -20,6 +20,10 @@ feature
 			loop
 				if s.item (i) = 'b' then
 					s := Void
+				elseif attached s as v then
+					v.put ('b', i)
+				elseif attached {TEST} s then
+					(agent do end).call ([])
 				end
 				i := i - 1
 			end

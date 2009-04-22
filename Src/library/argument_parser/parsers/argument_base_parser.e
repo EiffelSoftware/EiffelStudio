@@ -1223,25 +1223,25 @@ feature {NONE} -- Validation
 	frozen expand_switch_group (a_group: ARGUMENT_GROUP): ARGUMENT_GROUP
 			-- Expands a group of switch `a_group' to include any item associated appurtenance switches.
 			--
-			-- `a_group':
-			-- `Result':
+			-- `a_group': A group to expand.
+			-- `Result': The expanded group of switches.
 		require
 			a_group_attached: a_group /= Void
 		local
-			l_group_switches: ARRAYED_SET [ARGUMENT_SWITCH]
+			l_group_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_switch_dependencies: like switch_dependencies
 			l_switch: ARGUMENT_SWITCH
 			l_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_upper, i: INTEGER
 		do
-			l_group_switches := a_group.switches
+			l_group_switches := a_group.switches.twin
 			l_switch_dependencies := switch_dependencies
 
 			create l_switches.make_from_array (l_group_switches)
 			if not l_switch_dependencies.is_empty then
 				from l_group_switches.start until l_group_switches.after loop
 					l_switch := l_group_switches.item
-					if attached {ARRAY [ARGUMENT_SWITCH]} l_switch_dependencies [l_switch] as l_appurtenances then
+					if attached l_switch_dependencies [l_switch] as l_appurtenances then
 						from
 							i := l_appurtenances.lower
 							l_upper := l_appurtenances.upper
@@ -1251,11 +1251,13 @@ feature {NONE} -- Validation
 							l_switch := l_appurtenances[i]
 							if not l_switches.has (l_switch) then
 								l_switches.extend (l_switch)
+								if not l_group_switches.has (l_switch) then
+									l_group_switches.extend (l_switch)
+									check not_l_group_switches_after: not l_group_switches.after end
+								end
 							end
 							i := i + 1
 						end
-					else
-						check False end
 					end
 					l_group_switches.forth
 				end
@@ -2099,11 +2101,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

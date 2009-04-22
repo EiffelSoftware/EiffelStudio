@@ -93,6 +93,16 @@ feature -- Status report
 			has_non_void_safe_option_switch: Result implies has_option (non_void_safe_option_switch)
 		end
 
+	is_compatibile: BOOLEAN
+			-- Indicates if the configuration can be used with the 6.3 compatible mode.
+		require
+			is_successful: is_successful
+		do
+			Result := has_option (compat_mode_switch)
+		ensure
+			has_compat_mode_switch: Result implies has_option (compat_mode_switch)
+		end
+
 feature {NONE} -- Access: Usage
 
 	name: STRING = "Void-Safe Conversion Tool"
@@ -124,14 +134,15 @@ feature {NONE} -- Access: Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (add_safe_suffix_switch, "Adds the -safe suffix to all references libraries and duplicates the input file to a file with a -safe suffix.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (replace_switch, "Replaces any existing destination file, when the 'add-safe-suffix' is used." , True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (non_void_safe_option_switch, "Removes the Void-Safe configuration options from all specified configuration files.", False, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (compat_mode_switch, "Respects the 6.3 compatibility mode and default settings.", True, False))
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- <Precursor>
 		once
 			create Result.make (2)
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (void_safe_option_switch)>>, True))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (non_void_safe_option_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (void_safe_option_switch), switch_of_name (compat_mode_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (non_void_safe_option_switch), switch_of_name (compat_mode_switch)>>, True))
 		end
 
 	switch_dependencies: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]
@@ -148,6 +159,7 @@ feature {NONE} -- Switches
 	add_safe_suffix_switch: STRING = "a|add-safe-suffix"
 	replace_switch: STRING = "r|replace"
 	non_void_safe_option_switch: STRING = "n|non-void-safe"
+	compat_mode_switch: STRING = "c|compat"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

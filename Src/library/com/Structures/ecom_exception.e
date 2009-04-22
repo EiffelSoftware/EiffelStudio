@@ -62,14 +62,6 @@ feature --  Access
 			end
 		end
 
-	throwing_exception: detachable EXCEPTION
-			-- The exception throwing current exception
-		do
-			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
-				Result := l_com_failure.throwing_exception
-			end
-		end
-
 	hresult: INTEGER
 			-- Original HRESULT.
 		do

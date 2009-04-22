@@ -143,6 +143,10 @@ feature {NONE} -- Basic operations
 				end
 				l_libraries.forth
 			end
+
+			if attached a_target.precompile as l_precompile then
+				convert_void_safe_library (l_precompile)
+			end
 		end
 
 	convert_void_safe_library (a_library: CONF_LIBRARY)

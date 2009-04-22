@@ -66,6 +66,12 @@ function isedoc_whatlinkshere($node) {
         $output .= _isedoc_display_references("Parent page (from $bn):", array($n->nid => $n));
       }
   }
+  /* Backlink */
+  $l_url = url("node/".$node->nid, array('absolute' => True));
+  $output .= "<strong>External links:</strong><ul>";
+  $output .= "<li>".l('Search at Wikipedia ...', "http://en.wikipedia.org/w/index.php?title=Special:LinkSearch&target=" . rawurlencode($l_url)) . "</li>";
+  $output .= "<li>".l('Search with Google ...', "http://www.google.com/search?q=" . rawurlencode ('link:' . $l_url))."</li>";
+  $output .= "</ul>";
   return $output;
 }
 function _isedoc_display_references($tit, $lst) {

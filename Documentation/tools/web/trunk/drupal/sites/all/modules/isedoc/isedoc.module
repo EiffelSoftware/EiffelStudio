@@ -49,7 +49,12 @@ function isedoc_block($op = 'list', $delta = 0) {
 		$n = menu_get_object();
 		if ($n) {
 		  $links[] = l('What links here','node/'.$n->nid.'/whatlinkshere');
+
+                  $l_url = url("node/".$n->nid, array('absolute' => True));
+		  $links[] = l('Wikipedia backlinks', "http://en.wikipedia.org/w/index.php?title=Special:LinkSearch&target=" . rawurlencode($l_url));
+		  $links[] = l('Google backlinks', "http://www.google.com/search?q=" . rawurlencode ('link:' . $l_url));
 		}
+
 		if (user_access('admin isedoc')) {
 			$links[] = l('Update books','isedoc/update/_');
 		}

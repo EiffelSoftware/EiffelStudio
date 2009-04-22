@@ -14,7 +14,7 @@ inherit
 
 feature
 
-	is_less alias "<" (other: like Current): BOOLEAN
+	infix "<" (other: like Current): BOOLEAN
 		do
 
 		end

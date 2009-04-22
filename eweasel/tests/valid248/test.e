@@ -16,7 +16,6 @@ feature
 	t4: TEST4
 	t5: TEST5
 	t6: TEST6
-	t7: TEST7
 	t8: TEST8
 
 end

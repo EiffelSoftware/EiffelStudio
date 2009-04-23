@@ -106,7 +106,7 @@ feature -- Status report
 	is_valid_operator (op: STRING): BOOLEAN
 			-- Is `op' a valid operator name?
 		do
-			Result := is_valid_free_operator (op) or else basic_operators.has (op.as_lower)
+			Result := op /= Void and then (basic_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
 	is_valid_binary_operator (op: STRING): BOOLEAN

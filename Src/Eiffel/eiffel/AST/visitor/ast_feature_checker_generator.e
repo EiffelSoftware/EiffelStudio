@@ -864,6 +864,7 @@ feature -- Roundtrip
 						l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
 						l_as.set_feature_name (l_feature_name)
 					end
+					context.put_inline_agent (l_feature, l_as)
 				else
 					l_cur_feature := context.current_feature
 					if l_cur_feature.is_invariant then
@@ -871,7 +872,11 @@ feature -- Roundtrip
 					else
 						l_enclosing_feature := l_cur_feature.enclosing_feature
 					end
-					l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+					l_feature := context.inline_agent (l_as)
+					if l_feature = Void then
+						l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+						context.put_inline_agent (l_feature, l_as)
+					end
 				end
 			end
 
@@ -945,10 +950,9 @@ feature -- Roundtrip
 			l_context := Void
 
 			if error_level = l_error_level then
-				l_body_code ?= l_feature_checker.last_byte_node
-
 				if not is_inherited then
 					if is_byte_node_enabled then
+						l_body_code ?= l_feature_checker.last_byte_node
 						l_body_code.set_start_line_number (l_as.body.start_location.line)
 							-- When an inline agent X of an enclosing feature f is a client of
 							-- feature g, we make the enclosing feature f a client of g.
@@ -4821,15 +4825,21 @@ feature -- Implementation
 				end
 				check local_type_attached: local_type /= Void end
 				if local_id /= Void or l_as.type /= Void then
-					create local_info
-					local_info.set_type (local_type)
-					local_info.set_position (context.next_object_test_local_position)
+						-- Avoid generating new object test local record when processing loop body multiple times.
 					if local_id /= Void then
-						context.add_object_test_local (local_info, local_id)
-					else
-						context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
+						local_info := context.unchecked_object_test_local (local_id)
 					end
-					local_info.set_is_used (True)
+					if local_info = Void and then (local_id /= Void or else l_needs_byte_node) then
+						create local_info
+						local_info.set_type (local_type)
+						local_info.set_position (context.next_object_test_local_position)
+						if local_id /= Void then
+							context.add_object_test_local (local_info, local_id)
+						else
+							context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
+						end
+						local_info.set_is_used (True)
+					end
 
 					if l_needs_byte_node then
 						expr ?= last_byte_node
@@ -4865,8 +4875,6 @@ feature -- Implementation
 			l_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			l_error_level: NATURAL_32
 		do
-			context.inline_agent_counter.reset
-			context.hidden_local_counter.reset
 			last_byte_node := Void
 			l_error_level := error_level
 			reset_for_unqualified_call_checking
@@ -6321,6 +6329,7 @@ feature -- Implementation
 			l_variant: VARIANT_B
 			s: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
+			e: like error_level
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6380,20 +6389,32 @@ feature -- Implementation
 				if l_as.compound /= Void then
 						-- Type check the loop compound
 					context.enter_realm
-						-- After the loop we have to merge current and loop body
-						-- scope information, so the current one is saved here.
-					context.save_sibling
-					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
-					s := context.scope
-					scope_matcher.add_scopes (l_as.stop)
-					process_compound (l_as.compound)
-					if l_needs_byte_node then
-						l_list ?= last_byte_node
-						l_loop.set_compound (l_list)
+					from
+						e := error_level
+						create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
+						s := context.scope
+						check
+							has_at_least_one_iteration: not context.is_sibling_dominating
+						end
+					until
+						context.is_sibling_dominating or else e /= error_level
+					loop
+							-- Record most recent scope information before the loop body, so that
+							-- it can be compared with the information after the loop body on next iteration.
+						context.update_sibling
+						scope_matcher.add_scopes (l_as.stop)
+						process_compound (l_as.compound)
+							-- Save byte code if `is_byte_node_enabled' is set to `True'
+							-- and set it to `False' to avoid regenerating it next time.
+							-- The original value will be restored from `l_needs_byte_node'.
+						if is_byte_node_enabled then
+							l_list ?= last_byte_node
+							l_loop.set_compound (l_list)
+							is_byte_node_enabled := False
+						end
+						context.set_scope (s)
 					end
-					context.set_scope (s)
-						-- Take into account loop body scope information.
-					context.save_sibling
+					is_byte_node_enabled := l_needs_byte_node
 					context.leave_realm
 						-- Take exit condition into account.
 					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
@@ -6620,8 +6641,6 @@ feature -- Implementation
 			s: INTEGER
 		do
 			break_point_slot_count := 0
-			context.inline_agent_counter.reset
-			context.hidden_local_counter.reset
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)

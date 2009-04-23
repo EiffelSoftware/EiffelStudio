@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			create inline_agent_counter
 			create hidden_local_counter
+			create inline_agents.make (1, 0)
 			create_local_containers
 			create attributes.make (0)
 		end
@@ -80,12 +81,34 @@ feature -- Access
 	supplier_ids: FEATURE_DEPENDANCE
 			-- Supplier units
 
-	inline_agent_counter: COUNTER
-			-- counter for managing the inline agents that are enclosed in the current feature
-
 	hidden_local_counter: COUNTER
 			-- Counter for managing hidden locals needed for object test where user does not specify
 			-- a local.
+
+	inline_agents: ARRAY [TUPLE [f: FEATURE_I; ast: INLINE_AGENT_CREATION_AS]]
+			-- Inline agents with their feature descriptors corresponding to their AST for the current FEATURE_AS.
+
+	inline_agent (a: INLINE_AGENT_CREATION_AS): FEATURE_I
+			-- Feature descriptor, associated with the given AST `a'.
+		require
+			a_attached: a /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := inline_agents.count
+			until
+				i <= 0 or else inline_agents [i].ast = a
+			loop
+				i := i - 1
+			end
+			if i > 0 then
+				Result := inline_agents [i].f
+			end
+		end
+
+	inline_agent_counter: COUNTER
+			-- counter for managing the inline agents that are enclosed in the current feature
 
 	current_inline_agent_body: BODY_AS
 			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
@@ -131,6 +154,31 @@ feature -- Access
 			end
 			if not Result then
 				Result := scopes.has (id)
+			end
+		end
+
+feature -- Modification
+
+	put_inline_agent (f: FEATURE_I; a: INLINE_AGENT_CREATION_AS)
+			-- Store feature descriptor `f' for an inline agent `a'.
+		require
+			f_attached: f /= Void
+			a_attached: a /= Void
+		local
+			i: INTEGER
+		do
+				-- Check that the given AST has no feature descriptor yet.
+			from
+				i := inline_agents.count
+			until
+				i <= 0 or else inline_agents [i].ast = a
+			loop
+				i := i - 1
+			end
+			if i = 0 then
+					-- AST `a' is not yet registered.
+					-- Register it now.
+				inline_agents.force ([f, a], inline_agents.count + 1)
 			end
 		end
 
@@ -197,6 +245,16 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 				end
 			variant
 				i
+			end
+		end
+
+	unchecked_object_test_local (id: ID_AS): LOCAL_INFO
+			-- Information about object-test local of name `id' (if any) regardless of current scope
+		require
+			id_attached: id /= Void
+		do
+			if object_test_locals.has (id) then
+				Result := object_test_locals.item (id)
 			end
 		end
 
@@ -331,6 +389,13 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Tracker of initialized stable attributes
+
+	is_sibling_dominating: BOOLEAN
+			-- Does variable information of a sibling dominate the previous one (if any)?
+		do
+				-- At the moment only local variables are tracked to become (potentially) detached.
+			Result := local_scope.keeper.is_sibling_dominating
+		end
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
@@ -514,12 +579,21 @@ feature -- Local initialization and scopes: nesting
 		end
 
 	save_sibling
-			-- Save variable information of a sibling in a complex instrution.
+			-- Save scope information of a sibling in a complex instrution and restart recording using the outer scope.
 			-- For example, Then_part of Elseif condition.
 		do
 			local_initialization.keeper.save_sibling
 			local_scope.keeper.save_sibling
 			attribute_initialization.keeper.save_sibling
+		end
+
+	update_sibling
+			-- Update scope information of a sibling in a complex instrution and reuse it for the current scope.
+			-- For example, Loop body.
+		do
+			local_initialization.keeper.update_sibling
+			local_scope.keeper.update_sibling
+			attribute_initialization.keeper.update_sibling
 		end
 
 	leave_realm
@@ -786,6 +860,9 @@ feature -- Managing the type stack
 			last_conversion_info := Void
 			supplier_ids.wipe_out
 			written_class := Void
+			inline_agent_counter.reset
+			hidden_local_counter.reset
+			create inline_agents.make (1, 0)
 			clear_local_context
 		end
 
@@ -829,6 +906,8 @@ feature {NONE} --Internals
 invariant
 	locals_attached: locals /= Void
 	object_test_locals_attached: object_test_locals /= Void
+	inline_agents_attached: inline_agents /= Void
+	inline_agents_normalized: inline_agents.lower = 1
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

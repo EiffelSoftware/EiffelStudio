@@ -29,6 +29,27 @@ feature -- Status report: variables
 			Result := {like count}.max_value
 		end
 
+feature {NONE} -- Status report
+
+	is_dominating: BOOLEAN
+			-- <Precursor>
+		local
+			s: like scope
+			i: INTEGER
+		do
+			s := inner_scopes.item
+			if s /= scope then
+				from
+					i := count
+				until
+					i <= 0 or else s [i] and then not scope [i]
+				loop
+					i := i - 1
+				end
+			end
+			Result := i <= 0
+		end
+
 feature -- Modification: variables
 
 	start_scope (index: like count)

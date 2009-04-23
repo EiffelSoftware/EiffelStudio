@@ -8,13 +8,13 @@ copy_raw 	k_str.e $CLUSTER k_str.e
 copy_raw 	uc_str.e $CLUSTER uc_str.e
 
 compile_melted
-compile_result 	ok
+compile_result 	syntax_warning STR 14; UC_STR 14; UC_STR 23
 
 copy_raw 	str_rev1.e $CLUSTER str.e
 copy_raw 	r_str.e $CLUSTER r_str.e
 
 compile_melted
-compile_result	ok
+compile_result	syntax_warning R_STR 13; STR 12
 
 copy_raw 	uc_str_rev1.e $CLUSTER uc_str.e
 

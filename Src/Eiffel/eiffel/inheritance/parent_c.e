@@ -119,16 +119,13 @@ feature
 	is_renaming (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent renaming `feature_name_id'?
 		do
-			Result := 	renaming /= Void
-						and then renaming.has (feature_name_id)
+			Result := renaming /= Void and then renaming.has (feature_name_id)
 		end;
 
 	is_redefining (feature_name_id: INTEGER): BOOLEAN
 			-- is the current parent redefining `feature_name_id'?
 		do
-			Result := 	redefining /= Void
-						and then
-						redefining.has (feature_name_id)
+			Result := redefining /= Void and then redefining.has (feature_name_id)
 		end
 
 	has_redefining: BOOLEAN
@@ -146,9 +143,7 @@ feature
 	is_undefining (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent undefining `feature_name_id'?
 		do
-			Result :=	undefining /= Void
-						and then
-						undefining.has (feature_name_id)
+			Result := undefining /= Void and then undefining.has (feature_name_id)
 		end
 
 	is_selecting (feature_name_id: INTEGER): BOOLEAN
@@ -181,6 +176,11 @@ feature
 			if local_renaming /= Void then
 				from
 					parent_table := parent.feature_table
+						-- We have to work on a copy because the code below
+						-- in `check_inherited_name' needs to modify `renaming'.
+						-- When support for `infix/prefix' is completely dropped then
+						-- we can remove the line below for improving performance.
+					local_renaming := local_renaming.twin
 					local_renaming.start
 				until
 					local_renaming.after
@@ -191,14 +191,15 @@ feature
 					new_name_id := feature_renaming.feature_name_id
 					new_name := names_heap.item (new_name_id)
 					alias_name_id := feature_renaming.alias_name_id
-					if not parent_table.has_id (old_name_id) then
+					check_inherited_name (old_name_id, parent_table)
+					if not has_inherited_name then
 						create vhrc1
 						vhrc1.set_class (System.current_class)
 						vhrc1.set_parent (parent)
 						vhrc1.set_feature_name (old_name)
 						Error_handler.insert_error (vhrc1)
 					elseif is_mangled_infix (new_name) then
-						f := parent_table.item_id (old_name_id)
+						f := inherited_feature
 						if f.argument_count /= 1 or else f.type.is_void then
 							create vhrc5
 							vhrc5.set_class (System.current_class)
@@ -207,7 +208,7 @@ feature
 							Error_handler.insert_error (vhrc5)
 						end;
 					elseif is_mangled_prefix (new_name) then
-						f := parent_table.item_id (old_name_id)
+						f := inherited_feature
 						if f.argument_count /= 0 or else f.type.is_void then
 							create vhrc4
 							vhrc4.set_class (System.current_class)
@@ -217,7 +218,7 @@ feature
 						end
 					elseif alias_name_id > 0 then
 						vfav := Void
-						f := parent_table.item_id (old_name_id)
+						f := inherited_feature
 						if alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
 							if f.argument_count = 0 or else f.type.is_void then
 									-- Bracket features should have at least one argument and a return type.
@@ -236,11 +237,11 @@ feature
 								if f.argument_count = 1 then
 										-- Ensure the alias name is in binary form.
 									names_heap.put (infix_feature_name_with_symbol (alias_name))
-									local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+									feature_renaming.set_alias_name_id (names_heap.found_item)
 								else
 										-- Ensure the alias name is in unary form.
 									names_heap.put (prefix_feature_name_with_symbol (alias_name))
-									local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+									feature_renaming.set_alias_name_id (names_heap.found_item)
 									if feature_renaming.has_convert_mark then
 											-- Unary operator cannot have convert mark
 										create {VFAV3_VHRC} vfav
@@ -264,7 +265,7 @@ feature
 		end
 
 	check_validity2
-			-- Check validity of the redefine clause and select clause.
+			-- Check validity of the exports, undefine, redefine and select clauses.
 			-- `table' is the feature table produced by the second pass
 		local
 			parent_table: FEATURE_TABLE
@@ -290,8 +291,10 @@ feature
 					feature_name_id := local_redefining.item_for_iteration
 						-- Take care of renaming
 					real_name_id := renaming_of (feature_name_id)
-
-					if real_name_id <= 0 or else not parent_table.has_id (real_name_id) then
+					if real_name_id > 0 then
+						check_inherited_name (real_name_id, parent_table)
+					end
+					if real_name_id <= 0 or not has_inherited_name then
 						create vdrs1
 						vdrs1.set_class (System.current_class)
 						vdrs1.set_parent (parent)
@@ -313,8 +316,10 @@ feature
 					feature_name_id := local_selecting.item_for_iteration
 						-- Take care of renaming
 					real_name_id := renaming_of (feature_name_id)
-
-					if real_name_id <= 0 or else not parent_table.has_id (real_name_id) then
+					if real_name_id > 0 then
+						check_inherited_name (real_name_id, parent_table)
+					end
+					if real_name_id <= 0 or not has_inherited_name then
 						create vmss1
 						vmss1.set_class (System.current_class)
 						vmss1.set_parent (parent)
@@ -336,8 +341,10 @@ feature
 					feature_name_id := local_undefining.item_for_iteration
 						-- Take care of renaming
 					real_name_id := renaming_of (feature_name_id)
-
-					if real_name_id <= 0 or else not parent_table.has_id (real_name_id) then
+					if real_name_id > 0 then
+						check_inherited_name (real_name_id, parent_table)
+					end
+					if real_name_id <= 0 or not has_inherited_name then
 						create vdus1
 						vdus1.set_class (System.current_class)
 						vdus1.set_parent (parent)
@@ -359,8 +366,10 @@ feature
 					feature_name_id := local_exports.key_for_iteration
 						-- Take care of renamings
 					real_name_id := renaming_of (feature_name_id)
-
-					if real_name_id <= 0 or else not parent_table.has_id (real_name_id) then
+					if real_name_id > 0 then
+						check_inherited_name (real_name_id, parent_table)
+					end
+					if real_name_id <= 0 or not has_inherited_name then
 						create vlel2
 						vlel2.set_class (System.current_class)
 						vlel2.set_parent (parent)
@@ -383,7 +392,7 @@ feature
 		do
 			from
 				local_selecting := selecting
-				local_selected := Selected
+				local_selected := selected
 				local_selecting.start
 			until
 				local_selecting.after
@@ -486,6 +495,59 @@ feature -- Debug
 				io.error.put_string (names_heap.item (a_list.item_for_iteration))
 				io.error.put_new_line
 				a_list.forth
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	has_inherited_name: BOOLEAN
+			-- Check if last call to `check_inherited_name' was successful.
+
+	inherited_feature: detachable FEATURE_I
+			-- Object associated to found feature in `check_inherited_name'.
+			-- Void if not found.
+
+	check_inherited_name (a_name_id: INTEGER; a_feat_tbl: FEATURE_TABLE)
+			-- Does `a_name_id' exist in `a_feat_tbl' taken into account
+			-- that if `a_name_id' is a prefix/infix name, and not present
+			-- in the ancestor, we check if there is an alias routine with
+			-- the same operator.
+			-- Set `has_inherited_name' to True if found, False otherwise.
+			-- Set `inherited_feature' with feature found, Void otherwise.
+		require
+			a_name_id_positive: a_name_id > 0
+			a_feat_tbl_attached: a_feat_tbl /= Void
+		local
+			l_name: STRING
+		do
+			inherited_feature := a_feat_tbl.item_id (a_name_id)
+			has_inherited_name := inherited_feature /= Void
+			if not has_inherited_name then
+				l_name := names_heap.item (a_name_id)
+				if (is_mangled_infix (l_name) or is_mangled_prefix (l_name)) then
+					inherited_feature := a_feat_tbl.item_alias_id (a_name_id)
+					has_inherited_name := inherited_feature /= Void
+					if has_inherited_name then
+							-- Find out if there is already a rename clause for `a_name_id', if one is
+							-- found, we replace its content with the real inherited name (i.e. the alias
+							-- version). If not, we create a new rename entry which uses as old name
+							-- the inherited name and the infix/prefix name as new name.
+						if renaming /= Void then
+							renaming.search (a_name_id)
+						end
+						if renaming /= Void and then renaming.found then
+								-- We replace the exiting renaming `infix "op" as XXX' into
+								-- `yyy alias "op" as XXX'.
+							renaming.replace_key (inherited_feature.feature_name_id, a_name_id)
+						else
+							if renaming = Void then
+								create renaming.make (1)
+							end
+							renaming.put (create {RENAMING}.make (a_name_id, a_name_id,
+								inherited_feature.has_convert_mark), inherited_feature.feature_name_id)
+						end
+					end
+				end
 			end
 		end
 

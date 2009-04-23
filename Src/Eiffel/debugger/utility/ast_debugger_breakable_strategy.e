@@ -27,6 +27,8 @@ inherit
 			process_nested_as
 		end
 
+	REFACTORING_HELPER
+
 	SHARED_SERVER
 
 	SHARED_EIFFEL_PROJECT
@@ -175,18 +177,23 @@ feature -- Access
 feature -- Element change
 
 	initialize_current_context (f: like current_feature_i; c: like current_class)
+		require
+			f_attached: f /= Void
 		local
 			l_written_in: INTEGER
-			l_current_feature_i: like current_feature_i
 		do
 			l_written_in := f.written_in
-			l_current_feature_i := current_feature_i
 			leaf_as_list := match_list_server.item (l_written_in)
 
 			current_feature_i := f
-			current_class := c
 			current_source_class := f.written_class
 			current_source_feature_i := current_source_class.feature_of_rout_id_set (f.rout_id_set)
+
+			if c /= Void then
+				current_class := c
+			else
+				current_class := current_source_class
+			end
 		ensure
 			current_context_set: current_feature_i /= Void and
 								 current_class /= Void and
@@ -488,10 +495,23 @@ feature {NONE} -- Iteration
 		do
 			if attached breakable_feature_info.breakable_data as l_old_breakable_data then
 				breakable_feature_info.reset_breakable_data
+				l_old_ctx_data := context_data
 
 				f := current_class.feature_of_rout_id (l_as.inl_rout_id)
-				l_old_ctx_data := context_data
+				if f = Void then
+					f := current_source_class.feature_of_rout_id (l_as.inl_rout_id)
+				end
+				if f = Void then
+					debug ("refactor_fixme")
+						fixme ("the feature should not be Void.")
+					end
+					--| Let's use current_feature in this case.
+					--| but we really need to reset the various containers
+					--| Or maybe use a boolean to disable recording ...
+					f := current_feature_i
+				end
 				initialize_current_context (f, current_class)
+
 				Precursor (l_as)
 				restore_context_data (l_old_ctx_data)
 				breakable_feature_info.restore_breakable_data (l_old_breakable_data)

@@ -61,13 +61,13 @@ feature {NONE} -- Basic operations
 			l_vs_modifier: CONFIGURATION_VOID_SAFE_MODIFIER
 			l_modifier: CONFIGURATION_MODIFIER
 			l_add_safe_suffix: BOOLEAN
-			l_replaced: BOOLEAN
+			l_replace: BOOLEAN
 			l_dest_file_name: STRING
 		do
 			if a_parser.is_void_safe then
 				l_add_safe_suffix := a_parser.is_safe_suffix_added
 				if l_add_safe_suffix then
-					l_replaced := a_parser.is_allow_overwrite
+					l_replace := a_parser.is_allow_overwrite
 				end
 
 				create l_vs_modifier
@@ -106,10 +106,19 @@ feature {NONE} -- Basic operations
 						else
 							l_dest_file_name := l_file_name
 						end
-						if modify_configuration (l_file_name, l_dest_file_name, l_modifier, l_replaced) then
+						if modify_configuration (l_file_name, l_dest_file_name, l_modifier, l_replace) then
 							io.put_string ("File saved to: ")
 							io.put_string (l_dest_file_name)
 							io.new_line
+						end
+						if exit_code = 0 and then l_add_safe_suffix and then l_file_name /~ l_dest_file_name then
+								-- Copy over a license file.
+							l_dest_file_name := file_helpers.license_file_name (l_dest_file_name)
+							if copy_license_file (file_helpers.license_file_name (l_file_name), l_dest_file_name, l_replace) then
+								io.put_string ("Found a copied the configuration license file: ")
+								io.put_string (l_dest_file_name)
+								io.new_line
+							end
 						end
 						io.new_line
 					end
@@ -201,6 +210,55 @@ feature {NONE} -- Basic operations
 			retried := True
 			retry
 		end
+
+	copy_license_file (a_file_name: STRING; a_dest_file_name: STRING; a_replace: BOOLEAN): BOOLEAN
+			-- Modifies a configuration file.
+			--
+			-- `a_file_name': The source file name to take an original license file from.
+			-- `a_dest_file': A destination source file, which the license will be copied too.
+			-- `a_replace': True to replace the destination file if it exists; False otherwise.
+			-- `Result': True if a copy was made; False otherwise.
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_dest_file_name_attached: a_dest_file_name /= Void
+			not_a_dest_file_name_is_empty: not a_dest_file_name.is_empty
+		local
+			l_file: PLAIN_TEXT_FILE
+			l_dest_file: PLAIN_TEXT_FILE
+			retried: BOOLEAN
+		do
+			create l_file.make (a_file_name)
+			if l_file.exists then
+				if l_file.is_readable then
+					create l_dest_file.make (a_dest_file_name)
+					if a_replace or not l_dest_file.exists then
+						if not l_dest_file.exists or else l_dest_file.is_writable then
+							l_file.open_read
+							l_dest_file.open_write
+							l_file.copy_to (l_dest_file)
+							l_file.close
+							l_dest_file.close
+							Result := True
+						else
+							io.error.put_string ("Warning: Unable to write to the license file, please check the permissions!%N")
+						end
+					end
+				else
+					io.error.put_string ("Warning: Unable to read the associated license file!%N")
+				end
+			end
+		rescue
+			if attached l_file and then not l_file.is_closed then
+				l_file.close
+			end
+			if attached l_dest_file and then not l_dest_file.is_closed then
+				l_dest_file.close
+			end
+			retried := True
+			retry
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

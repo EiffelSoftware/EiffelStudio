@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	internal_generate_access (
 			external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B];
 			nb: INTEGER; a_ret_type: TYPE_A)
-		
+
 			-- Generate inline C external call.
 		require
 			external_name_not_void: external_name /= Void
@@ -102,15 +102,8 @@ feature {NONE} -- Implementation
 				-- Special processing of operators that have a name not suitable
 				-- for C code generation.
 			l_name := external_name.twin
-			if is_mangled_name (l_name) then
-				if is_mangled_alias_name (l_name) then
-					l_name := extract_alias_name (l_name)
-				elseif is_mangled_infix (l_name) then
-					l_name := extract_symbol_from_infix (l_name)
-				else
-					check is_prefix: is_mangled_prefix (l_name) end
-					l_name := extract_symbol_from_prefix (l_name)
-				end
+			if is_mangled_alias_name (l_name) then
+				l_name := extract_alias_name (l_name)
 				operator_table.search (l_name)
 				if operator_table.found then
 					l_name := operator_table.found_item.twin

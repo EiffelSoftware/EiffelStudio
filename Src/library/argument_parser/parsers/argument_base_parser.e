@@ -259,7 +259,7 @@ feature {NONE} -- Measurement
 	max_columns: NATURAL
 			-- Maximum columns to display in the terminal
 		once
-			Result := c_get_term_columns.as_natural_32
+			Result := {ARGUMENT_EXTERNALS}.c_get_term_columns.as_natural_32
 			if Result = 0 then
 				Result := {INTEGER_32}.max_value.as_natural_32
 			else
@@ -2136,58 +2136,6 @@ feature {NONE} -- Implementation: Internal cache
 	internal_argument_source: detachable like argument_source
 			-- Cached version of `arugment_source'.
 			-- Note: Do not use directly!
-
-feature {NONE} -- Externals
-
-	c_get_term_columns: INTEGER
-		external
-			"C inline"
-		alias
-			"[
-				#ifdef EIF_WINDOWS
-				
-				// Windows code
-				#include <windows.h>
-				#include <stdio.h>
-				CONSOLE_SCREEN_BUFFER_INFO csbInfo;
-				
-				if (GetConsoleScreenBufferInfo (GetStdHandle(STD_OUTPUT_HANDLE), &csbInfo)) {
-					return csbInfo.dwSize.X;
-				} else {
-					return 0;
-				}
-				
-				#else
-				
-				// *nix code
-				#include <sys/ioctl.h>
-				#include <termios.h>
-
-				#ifdef TIOCGSIZE
-					struct ttysize win;
-				    if (ioctl (STDIN_FILENO, TIOCGSIZE, &win))
-				        return 0;
-				    else
-				        return win.ts_cols;
-				#elif defined TIOCGWINSZ
-					struct winsize win;
-				    if (ioctl (STDIN_FILENO, TIOCGWINSZ, &win))
-				        return 0;
-				    else
-				        return win.ws_col;
-				#else
-				    {
-				        const char *s;
-				        s = getenv ("COLUMNS");
-				        if (s)
-				            return strtoi (s, 0, 10);
-				        else
-				            return 0;
-				    }
-				#endif
-				#endif
-			]"
-		end
 
 invariant
 	not_is_non_switch_argument_required: not is_allowing_non_switched_arguments implies not is_non_switch_argument_required

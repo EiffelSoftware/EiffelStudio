@@ -33,7 +33,7 @@
 			</condition>
 		</library>
 		<cluster name="eweasel" location="$EWEASEL\source\" recursive="true">
-			<option full_class_checking="true">
+			<option full_class_checking="true" syntax_level="1">
 			</option>
 		</cluster>
 	</target>

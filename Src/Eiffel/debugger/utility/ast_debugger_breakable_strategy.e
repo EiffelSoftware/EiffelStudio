@@ -61,8 +61,11 @@ feature -- Basic operations
 		do
 			breakable_feature_info := a_info
 			initialize_current_context (a_feat, a_class)
-			if attached a_feat.body as l_as then
+			if attached a_feat.real_body as l_as then
 				l_as.process (Current)
+			end
+			debug ("debugger_trace_breakable")
+				display_breakable_feature_info
 			end
 			breakable_feature_info := Void
 		ensure
@@ -71,22 +74,24 @@ feature -- Basic operations
 
 	display_breakable_feature_info
 		do
-			if
-				attached breakable_feature_info as l_info and then
-				attached l_info.points as l_points
-			then
-				from
-					l_points.start
-				until
-					l_points.after
-				loop
-					if attached l_points.item as l_item then
-						io.put_string (l_item.debug_output)
-						io.put_new_line
-					else
-						check no_void_item: False end
+			debug ("debugger_trace_breakable")
+				if
+					attached breakable_feature_info as l_info and then
+					attached l_info.points as l_points
+				then
+					from
+						l_points.start
+					until
+						l_points.after
+					loop
+						if attached l_points.item as l_item then
+							io.put_string (l_item.debug_output)
+							io.put_new_line
+						else
+							check no_void_item: False end
+						end
+						l_points.forth
 					end
-					l_points.forth
 				end
 			end
 		end
@@ -98,35 +103,37 @@ feature -- Basic operations
 			l_type: detachable TYPE_AS
 			l_expr: detachable EXPR_AS
 		do
-			if attached breakable_feature_info.object_test_locals as l_lst then
-				create fi.make (3)
-				from
-					l_lst.start
-				until
-					l_lst.after
-				loop
-					l_item := l_lst.item
-					if l_item /= Void then
-						io.put_string (fi.formatted (l_item.breakable_index))
-						if l_item.breakable_nested_index > 0 then
-							io.put_character ('+')
-							io.put_integer (l_item.breakable_nested_index)
-						end
-						io.put_string (": OT local %'" + l_item.name_id.name + "%'")
-						l_type := l_item.type
-						if l_type /= Void then
-							io.put_string (" {" + l_type.dump + "}")
-						else
-							l_expr := l_item.expression
-							if l_expr /= Void then
-								io.put_string (" {like " + text_of (l_expr) + "}")
+			debug ("debugger_trace_breakable")
+				if attached breakable_feature_info.object_test_locals as l_lst then
+					create fi.make (3)
+					from
+						l_lst.start
+					until
+						l_lst.after
+					loop
+						l_item := l_lst.item
+						if l_item /= Void then
+							io.put_string (fi.formatted (l_item.breakable_index))
+							if l_item.breakable_nested_index > 0 then
+								io.put_character ('+')
+								io.put_integer (l_item.breakable_nested_index)
 							end
+							io.put_string (": OT local %'" + l_item.name_id.name + "%'")
+							l_type := l_item.type
+							if l_type /= Void then
+								io.put_string (" {" + l_type.dump + "}")
+							else
+								l_expr := l_item.expression
+								if l_expr /= Void then
+									io.put_string (" {like " + text_of (l_expr) + "}")
+								end
+							end
+							io.put_new_line
+						else
+							check no_void_item: False end
 						end
-						io.put_new_line
-					else
-						check no_void_item: False end
+						l_lst.forth
 					end
-					l_lst.forth
 				end
 			end
 		end
@@ -171,7 +178,7 @@ feature -- Query
 
 feature -- Access
 
-	breakable_feature_info: DBG_BREAKABLE_FEATURE_INFO
+	breakable_feature_info: detachable DBG_BREAKABLE_FEATURE_INFO
 			-- Current breakable feature info
 
 feature -- Element change
@@ -248,29 +255,33 @@ feature {NONE} -- Element change
 			s: STRING
 			i, l_line: INTEGER
 			fi: FORMAT_INTEGER
+			l_info: like breakable_feature_info
 		do
-			if a_text /= Void then
-				s := a_text
-			else
-				s := text_of (l_as)
-				i := s.index_of ('%N', 1)
-				if i > 0 then
-					s := s.substring (1, i - 1)
+			l_info := breakable_feature_info
+			if l_info /= Void then
+				if a_text /= Void then
+					s := a_text
 				else
-					s := s.string
+					s := text_of (l_as)
+					i := s.index_of ('%N', 1)
+					if i > 0 then
+						s := s.substring (1, i - 1)
+					else
+						s := s.string
+					end
+					s.right_adjust
+					if s.count > 50 then
+						s.keep_head (47)
+						s.append_string ("...")
+					end
 				end
-				s.right_adjust
-				if s.count > 50 then
-					s.keep_head (47)
-					s.append_string ("...")
+				create fi.make (3)
+				l_line := a_line
+				if l_line = 0 then
+					l_line := l_as.start_location.line
 				end
+				l_info.add_point (current_source_class, l_line, s)
 			end
-			create fi.make (3)
-			l_line := a_line
-			if l_line = 0 then
-				l_line := l_as.start_location.line
-			end
-			breakable_feature_info.add_point (current_source_class, l_line, s)
 		end
 
 	register_nested_breakable (l_as: AST_EIFFEL)
@@ -282,31 +293,40 @@ feature {NONE} -- Element change
 		local
 			s: STRING
 			i, l_line: INTEGER
+			l_info: like breakable_feature_info
 		do
-			if a_text /= Void then
-				s := a_text
-			else
-				s := text_of (l_as)
-				i := s.index_of ('%N', 1)
-				if i > 0 then
-					s := s.substring (1, i - 1)
+			l_info := breakable_feature_info
+			if l_info /= Void then
+				if a_text /= Void then
+					s := a_text
 				else
-					s := s.string
+					s := text_of (l_as)
+					i := s.index_of ('%N', 1)
+					if i > 0 then
+						s := s.substring (1, i - 1)
+					else
+						s := s.string
+					end
+					s.right_adjust
+					s.keep_head (50)
 				end
-				s.right_adjust
-				s.keep_head (50)
+				l_line := a_line
+				if l_line = 0 then
+					l_line := l_as.start_location.line
+				end
+				l_info.add_nested_point (current_source_class, l_line, s)
 			end
-			l_line := a_line
-			if l_line = 0 then
-				l_line := l_as.start_location.line
-			end
-			breakable_feature_info.add_nested_point (current_source_class, l_line, s)
 		end
 
 	register_object_test_local (a_name: ID_AS; a_type: detachable TYPE_AS; a_exp: detachable EXPR_AS)
 			-- Register object test local info
+		local
+			l_info: like breakable_feature_info
 		do
-			breakable_feature_info.add_object_test_local (a_name, a_type, a_exp)
+			l_info := breakable_feature_info
+			if l_info /= Void then
+				l_info.add_object_test_local (a_name, a_type, a_exp)
+			end
 		end
 
 	register_variant_local (a_variant_as: VARIANT_AS)
@@ -432,7 +452,7 @@ feature {NONE} -- Iteration
 			l_local_vars: detachable ARRAYED_LIST [TUPLE [id: INTEGER; type: TYPE_AS]]
 		do
 			l_info := breakable_feature_info
-			if not current_feature_i.is_inline_agent then
+			if l_info /= Void then --and not current_feature_i.is_inline_agent then
 					--| Get locals info
 				l_locals := l_as.locals
 				if l_locals /= Void and not l_locals.is_empty then
@@ -490,31 +510,14 @@ feature {NONE} -- Iteration
 
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
 		local
-			l_old_ctx_data: like context_data
-			f: FEATURE_I
+			l_info: like breakable_feature_info
 		do
-			if attached breakable_feature_info.breakable_data as l_old_breakable_data then
-				breakable_feature_info.reset_breakable_data
-				l_old_ctx_data := context_data
+			l_info := breakable_feature_info
 
-				f := current_class.feature_of_rout_id (l_as.inl_rout_id)
-				if f = Void then
-					f := current_source_class.feature_of_rout_id (l_as.inl_rout_id)
-				end
-				if f = Void then
-					debug ("refactor_fixme")
-						fixme ("the feature should not be Void.")
-					end
-					--| Let's use current_feature in this case.
-					--| but we really need to reset the various containers
-					--| Or maybe use a boolean to disable recording ...
-					f := current_feature_i
-				end
-				initialize_current_context (f, current_class)
-
+			if l_info /= Void then
+				breakable_feature_info := Void
 				Precursor (l_as)
-				restore_context_data (l_old_ctx_data)
-				breakable_feature_info.restore_breakable_data (l_old_breakable_data)
+				breakable_feature_info := l_info
 			else
 				check False end
 			end
@@ -550,7 +553,6 @@ feature {NONE} -- Implementation: Iteration
 	process_inherited_preconditions (a_lst_assert: like flatten_inherited_assertions)
 		require
 			a_lst_assert_attached: a_lst_assert /= Void
-			not_inline_agent: not current_feature_i.is_inline_agent
 		local
 			l_as: detachable REQUIRE_AS
 			l_old_data: like context_data
@@ -619,7 +621,6 @@ feature {NONE} -- Implementation: Iteration
 		require
 			a_feat_attached: a_feat /= Void
 			a_class_attached: a_class /= Void
-			not_inline_agent: not a_feat.is_inline_agent
 		local
 			i: INTEGER
 			l_inh_info: INH_ASSERT_INFO

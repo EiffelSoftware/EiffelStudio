@@ -116,7 +116,7 @@ feature {NONE} -- Access
 	notable: attached CONF_NOTABLE
 			-- The item to extract EIS info from.
 
-	internal_eis_full_entries: like eis_full_entries;
+	internal_eis_full_entries: detachable like eis_full_entries;
 			-- Cached full entries
 
 note

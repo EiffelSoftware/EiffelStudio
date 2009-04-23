@@ -11,7 +11,8 @@ class
 inherit
 	ES_EIS_ENTRY_HELP_PROVIDER
 		redefine
-			show_help
+			show_help,
+			context_variables
 		end
 
 create
@@ -49,6 +50,29 @@ feature -- Basic operation
 				format_uris (lt_src)
 				launch_uri (lt_src)
 			end
+		end
+
+	es_built_in_variables: HASH_TABLE [STRING, STRING]
+			-- ES built-in variables.
+			-- These variables should ideally be built into a configure file.
+		once
+			create Result.make (5)
+			Result.put ("http://dev.eiffel.com", "ISE_WIKI")
+			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
+			Result.put ("http://doc.eiffel.com", "ISE_DOC")
+			Result.put ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
+			Result.put ("http://doc.eiffel.com/isedoc/eis/", "ISE_DOC_REF")
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	context_variables: HASH_TABLE [STRING_8, READABLE_STRING_8]
+			-- <precursor>
+		do
+			Result := es_built_in_variables.twin
+			Result.merge (Precursor)
 		end
 
 note

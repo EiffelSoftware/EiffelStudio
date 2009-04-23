@@ -34,6 +34,27 @@ feature -- Status report: nesting
 			Result := outer_scopes.count
 		end
 
+feature {AST_CONTEXT} -- Status report
+
+	is_sibling_dominating: BOOLEAN
+			-- <Precursor>
+		do
+			if has_siblings then
+					-- Compare siblings.
+				Result := is_dominating
+			end
+		end
+
+feature {NONE} -- Status report
+
+	is_dominating: BOOLEAN
+			-- Does variable information of a sibling dominate the previous one?
+		require
+			is_nested: nesting_level > 0
+			has_siblings: has_siblings
+		deferred
+		end
+
 feature {AST_CONTEXT} -- Modification: nesting
 
 	enter_realm
@@ -46,6 +67,9 @@ feature {AST_CONTEXT} -- Modification: nesting
 			scope := duplicate (scope)
 				-- Reserve stack for sibling information.
 			inner_scopes.extend (scope.default)
+		ensure then
+			not_has_siblings: not has_siblings
+			not_is_sibling_dominating: not is_sibling_dominating
 		end
 
 	update_realm
@@ -56,8 +80,7 @@ feature {AST_CONTEXT} -- Modification: nesting
 		end
 
 	save_sibling
-			-- Save scope information of a sibling
-			-- in a complex instrution.
+			-- Save scope information of a sibling in a complex instrution and restart recording using the outer scope.
 			-- For example, Then_part of Elseif condition.
 		do
 			if has_siblings then
@@ -69,6 +92,25 @@ feature {AST_CONTEXT} -- Modification: nesting
 			end
 				-- Start new scope from the state of an outer one.
 			scope := duplicate (outer_scopes.item)
+		ensure then
+			has_siblings: has_siblings
+		end
+
+	update_sibling
+			-- Update scope information of a sibling in a complex instrution and reuse it for the current scope.
+			-- For example, Loop body.
+		do
+			if has_siblings then
+					-- Merge sibling scope information.
+				merge_siblings
+			else
+					-- Record new sibling scope information.
+				inner_scopes.replace (duplicate (scope))
+			end
+				-- Start new scope from the state of an updated inner one.
+			scope := duplicate (inner_scopes.item)
+		ensure then
+			has_siblings: has_siblings
 		end
 
 	leave_realm
@@ -103,6 +145,8 @@ feature {NONE} -- Modification: nesting
 	merge_siblings
 			-- Merge sibling scope information from `scope'
 			-- into `inner_scopes.item'.
+		require
+			has_siblings: has_siblings
 		deferred
 		end
 

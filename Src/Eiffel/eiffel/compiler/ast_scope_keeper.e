@@ -15,7 +15,17 @@ inherit
 		export
 			{AST_ARGUMENT_SCOPE_TRACKER} start_scope
 		redefine
+			update_sibling,
 			start_scope
+		end
+
+feature {AST_CONTEXT} -- Status report
+
+	is_sibling_dominating: BOOLEAN
+			-- Does variable information of a sibling dominate the previous one (if any)?
+		require
+			is_nested: nesting_level > 0
+		deferred
 		end
 
 feature {AST_ARGUMENT_SCOPE_TRACKER, AST_LOCAL_SCOPE_TRACKER} -- Modification: variables
@@ -26,6 +36,15 @@ feature {AST_ARGUMENT_SCOPE_TRACKER, AST_LOCAL_SCOPE_TRACKER} -- Modification: v
 			index_large_enough: index > 0
 			index_small_emough: index <= count
 		deferred
+		end
+
+feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CHECKER} -- Modification: nesting
+
+	update_sibling
+			-- <Precursor>
+		deferred
+		ensure then
+			is_sibling_dominating: is_sibling_dominating
 		end
 
 note

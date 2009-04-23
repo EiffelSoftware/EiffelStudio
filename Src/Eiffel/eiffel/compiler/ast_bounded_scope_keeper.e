@@ -30,6 +30,17 @@ feature -- Status report: variables
 			-- Maximum value of `count'
 			--| One bit is reserved to indicate a non-empty stack element
 
+feature {NONE} -- Status report
+
+	is_dominating: BOOLEAN
+			-- <Precursor>
+		local
+			s: like scope
+		do
+			s := inner_scopes.item
+			Result := s - (s & scope) = 0
+		end
+
 feature -- Modification: variables
 
 	start_scope (index: like count)

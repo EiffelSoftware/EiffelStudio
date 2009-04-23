@@ -61,8 +61,18 @@ feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CH
 		end
 
 	save_sibling
-			-- Save variable information of a sibling in a complex instrution.
+			-- Save scope information of a sibling in a complex instrution and restart recording using the outer scope.
 			-- For example, Then_part of Elseif condition.
+		require
+			is_nested: nesting_level > 0
+		deferred
+		ensure
+			is_nesting_level_preserved: nesting_level = old nesting_level
+		end
+
+	update_sibling
+			-- Update scope information of a sibling in a complex instrution and reuse it for the current scope.
+			-- For example, Loop body.
 		require
 			is_nested: nesting_level > 0
 		deferred

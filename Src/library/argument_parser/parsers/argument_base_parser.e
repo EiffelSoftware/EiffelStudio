@@ -254,6 +254,24 @@ feature {NONE} -- Element change
 			non_switched_argument_validator_set: non_switched_argument_validator = a_validator
 		end
 
+feature {NONE} -- Measurement
+
+	max_columns: NATURAL
+			-- Maximum columns to display in the terminal
+		once
+			if not {PLATFORM}.is_windows then
+					-- No Windows support yet
+				Result := c_get_term_columns.as_natural_32
+			end
+			if Result = 0 then
+				Result := {NATURAL}.max_value
+			else
+				Result := Result.max (25)
+			end
+		ensure
+			result_reasonable: Result >= 25
+		end
+
 feature -- Status report
 
 	is_successful: BOOLEAN
@@ -1385,7 +1403,6 @@ feature {NONE} -- Output
 		local
 			l_errors: like error_messages
 			l_cursor: CURSOR
-			l_item: STRING
 			l_error: STRING
 			l_tab_string: STRING
 		do
@@ -1401,11 +1418,7 @@ feature {NONE} -- Output
 				io.error.put_string (tab_string)
 				io.error.put_string ("> ")
 
-				l_item := l_errors.item
-				create l_error.make (2 + tab_string.count + l_item.count)
-				l_error.append (l_item)
-				l_error.replace_substring_all ("%N", l_tab_string)
-
+				l_error := format_terminal_text (l_errors.item, tab_string.count.as_natural_8 + 2)
 				io.error.put_string (l_error)
 				io.error.new_line
 				l_errors.forth
@@ -1429,8 +1442,7 @@ feature {NONE} -- Output
 			l_switch: ARGUMENT_SWITCH
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_value_switches: ARRAYED_LIST [ARGUMENT_VALUE_SWITCH]
-			l_nl: STRING
-			l_tabbed_nl: STRING
+			l_padding: INTEGER
 			l_max_len: INTEGER
 			l_name: STRING
 			l_arg_name: STRING
@@ -1478,7 +1490,6 @@ feature {NONE} -- Output
 			end
 
 			l_switches := available_visible_switches
-			l_nl := "%N"
 
 				-- Retrieve option max length for alignment
 			l_cursor := l_switches.cursor
@@ -1493,9 +1504,6 @@ feature {NONE} -- Output
 				end
 				l_switches.forth
 			end
-
-			create l_tabbed_nl.make_filled (' ', l_nl.count + tab_string.count + 1 + l_max_len)
-			l_tabbed_nl.insert_string (l_nl, 1)
 
 			l_inline_args := is_showing_argument_usage_inline
 
@@ -1526,19 +1534,21 @@ feature {NONE} -- Output
 				if l_switch.optional then
 					l_desc.append (once " (Optional)")
 				end
+				l_padding := l_name.count + tab_string.count + 2
+				l_desc := format_terminal_text (l_desc, l_padding.as_natural_8)
 				if l_inline_args and then attached {ARGUMENT_VALUE_SWITCH} l_switch as l_value_switch_2 then
 					l_arg_name := l_value_switch_2.arg_name
-					l_desc.append (once "%N<")
+					l_desc.append_character ('%N')
+					l_desc.append (create {STRING}.make_filled (' ', l_padding))
+					l_desc.append_character ('<')
 					l_desc.append (l_arg_name)
 					l_desc.append (once ">: ")
 					if l_value_switch_2.is_value_optional then
 						l_desc.append (once "(Optional) ")
 					end
-					l_arg_desc := l_value_switch_2.arg_description.twin
-					l_arg_desc.replace_substring_all ("%N", "%N" + create {STRING}.make_filled (' ', l_arg_name.count + 4))
+					l_arg_desc := format_terminal_text (l_value_switch_2.arg_description, (l_padding + l_arg_name.count + 4).as_natural_8)
 					l_desc.append (l_arg_desc)
 				end
-				l_desc.replace_substring_all (l_nl, l_tabbed_nl)
 
 				io.put_string (tab_string)
 				io.put_string (l_name)
@@ -1562,9 +1572,6 @@ feature {NONE} -- Output
 					l_value_switches.forth
 				end
 
-				create l_tabbed_nl.make_filled (' ', l_nl.count + 6 + l_max_len)
-				l_tabbed_nl.insert_string (l_nl, 1)
-
 				from l_value_switches.start until l_value_switches.after loop
 					l_value_switch := l_value_switches.item
 
@@ -1579,9 +1586,7 @@ feature {NONE} -- Output
 						l_name.insert_string (l_arg_name, 2)
 						l_name.insert_character ('>', l_arg_name.count + 2)
 
-						l_desc := l_value_switch.arg_description.twin
-						l_desc.replace_substring_all (l_nl, l_tabbed_nl)
-
+						l_desc := format_terminal_text (l_value_switch.arg_description, (l_arg_name.count + tab_string.count + 4).as_natural_8)
 						io.put_string (tab_string)
 						io.put_string (l_name)
 						io.put_string (once ": ")
@@ -1771,6 +1776,69 @@ feature {NONE} -- Usage
 		ensure
 			result_attached: Result /= Void
 			a_group_unmoved: a_group.cursor ~ old a_group.cursor
+		end
+
+	frozen format_terminal_text (a_text: STRING; a_left_padding: NATURAL_8): STRING
+			-- Formats the text for display on a terminal so that it is correctly wrapped..
+			--
+			-- `a_text': The text to format.
+			-- `a_left_padding': Padding, in columns, the description will be indented by.
+			-- `Result': A formatted text to fit the terminal.
+		require
+			a_text_attached: a_text /= Void
+			not_a_text_is_empty: not a_text.is_empty
+		local
+			l_columns: INTEGER
+			l_lines: LIST [STRING]
+			l_padding: STRING
+			i: INTEGER
+		do
+			l_lines := a_text.split ('%N')
+			l_columns := max_columns.as_integer_32 - a_left_padding
+
+				-- The lines need to be justified.
+			create l_padding.make_filled (' ', a_left_padding)
+			create Result.make (a_text.count + (l_lines.count * (a_left_padding + 1)))
+			from l_lines.start until l_lines.after loop
+				if attached l_lines.item as l_line then
+					if not Result.is_empty then
+						Result.append_character ('%N')
+						Result.append (l_padding)
+					end
+
+					if l_line.count > l_columns then
+							-- The line is too long, trim it
+						from
+							i := l_line.count.min (l_columns)
+						until
+							i = 0 or else l_line.item (i).is_space or else l_line.item (i) = '-'
+						loop
+							i := i - 1
+						end
+						if i = 0 then
+								-- No whitespace found.
+							i := l_columns
+						end
+
+						Result.append (l_line.substring (1, i))
+						l_line.keep_tail (l_line.count - i)
+						l_line.left_adjust
+					else
+							-- The line is within the maximum bounds.
+						Result.append (l_line)
+						l_line.wipe_out
+					end
+					if l_line.is_empty then
+						l_lines.forth
+					end
+				else
+					l_lines.forth
+				end
+			end
+
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	extended_usage: STRING
@@ -2071,6 +2139,43 @@ feature {NONE} -- Implementation: Internal cache
 	internal_argument_source: detachable like argument_source
 			-- Cached version of `arugment_source'.
 			-- Note: Do not use directly!
+
+feature {NONE} -- Externals
+
+	c_get_term_columns: INTEGER
+		external
+			"C inline"
+		alias
+			"[
+				#if EIF_OS != EIF_WINDOWS
+				#include <sys/ioctl.h>
+				#include <termios.h>
+
+				#ifdef TIOCGSIZE
+					struct ttysize win;
+				    if (ioctl (STDIN_FILENO, TIOCGSIZE, &win))
+				        return 0;
+				    else
+				        return win.ts_cols;
+				#elif defined TIOCGWINSZ
+					struct winsize win;
+				    if (ioctl (STDIN_FILENO, TIOCGWINSZ, &win))
+				        return 0;
+				    else
+				        return win.ws_col;
+				#else
+				    {
+				        const char *s;
+				        s = getenv ("COLUMNS");
+				        if (s)
+				            return strtoi (s, 0, 10);
+				        else
+				            return 0;
+				    }
+				#endif
+				#endif
+			]"
+		end
 
 invariant
 	not_is_non_switch_argument_required: not is_allowing_non_switched_arguments implies not is_non_switch_argument_required

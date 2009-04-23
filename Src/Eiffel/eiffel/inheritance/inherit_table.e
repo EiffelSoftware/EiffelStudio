@@ -244,6 +244,9 @@ feature
 				-- We also check if renamed features are available
 			merge_parent_list_and_check_renamings (parents)
 
+				-- Check adaptation clauses of parents
+			parents.check_validity2
+
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
 			end
@@ -255,8 +258,6 @@ feature
 			unused_feature_id_table.wipe_out
 
 			analyze
-				-- Check adaptation clauses of parents
-			parents.check_validity2
 				-- Check-sum error after analysis fo the inherited
 				-- features
 			if error_handler.error_level /= l_error_level then
@@ -1129,6 +1130,32 @@ end;
 		do
 				-- Now, compute the routine id set of the feature.	
 			inherit_feat := item (feature_name_id);
+				-- Check if it is not by any chance the case where `feature_i' is an infix/prefix
+				-- routine and the inherited member is using the new `alias' form. Note that we only
+				-- look for deferred routines, since if we had a concrete inherited routine, we would
+				-- have something in the adaptation clause to either rename/redefine/undefine the inherited
+				-- routine with the same name.
+			if inherit_feat = Void and (feature_i.is_prefix or feature_i.is_infix) then
+				from
+					start
+				until
+					after or else inherit_feat /= Void
+				loop
+					if attached item_for_iteration.deferred_features as l_features then
+						from
+							l_features.start
+						until
+							l_features.after or else inherit_feat /= Void
+						loop
+							if l_features.item.a_feature.alias_name_id = feature_name_id then
+								inherit_feat := item_for_iteration
+							end
+							l_features.forth
+						end
+					end
+					forth
+				end
+			end
 
 				-- Find out if there previously was a feature with name
 				-- `feature_name'

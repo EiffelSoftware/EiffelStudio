@@ -5644,7 +5644,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval85 := ast_factory.new_infix_as (yyvs16.item (yyvsp16), yyvs12.item (yyvsp12)) 
+				yyval85 := ast_factory.new_infix_as (yyvs16.item (yyvsp16), yyvs12.item (yyvsp12))
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
+						once "Use the alias form of the infix routine."))
+				end
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp85 := yyvsp85 + 1
@@ -5680,7 +5686,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval85 := ast_factory.new_prefix_as (yyvs16.item (yyvsp16), yyvs12.item (yyvsp12)) 
+				yyval85 := ast_factory.new_prefix_as (yyvs16.item (yyvsp16), yyvs12.item (yyvsp12))
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
+						once "Use the alias form of the prefix routine."))
+				end
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp85 := yyvsp85 + 1

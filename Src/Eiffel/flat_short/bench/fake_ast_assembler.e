@@ -60,11 +60,11 @@ feature -- Assembler
 			eiffel_list: EIFFEL_LIST [FEATURE_NAME]
 			l_op: STRING_AS
 			l_id: ID_AS
-			l_is_frozen: BOOLEAN
+			l_frozen_keyword: KEYWORD_AS
 		do
 			f_name := a_name
 			new_feature_as := a_ast
-			l_is_frozen := f_name.is_frozen
+			l_frozen_keyword := f_name.frozen_keyword
 			if target_feature.is_infix then
 				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
@@ -90,7 +90,7 @@ feature -- Assembler
 				l_id.set_index (f_name.internal_name.index)
 				create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 			end
-			f_name.set_is_frozen (l_is_frozen)
+			f_name.set_frozen_keyword (l_frozen_keyword)
 			create eiffel_list.make (1);
 			eiffel_list.extend (f_name);
 			new_feature_as.set_feature_names (eiffel_list);

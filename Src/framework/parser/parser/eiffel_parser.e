@@ -5496,7 +5496,6 @@ end
 
 				yyval85 := yyvs85.item (yyvsp85)
 				if yyval85 /= Void then
-					yyval85.set_is_frozen (True)
 					yyval85.set_frozen_keyword (yyvs12.item (yyvsp12))
 				end
 			

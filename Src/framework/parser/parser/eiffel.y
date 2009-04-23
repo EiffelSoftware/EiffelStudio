@@ -778,7 +778,6 @@ New_feature: Extended_feature_name
 			{
 				$$ := $2
 				if $$ /= Void then
-					$$.set_is_frozen (True)
 					$$.set_frozen_keyword ($1)
 				end
 			}

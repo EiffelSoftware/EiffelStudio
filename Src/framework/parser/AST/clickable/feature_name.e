@@ -65,6 +65,9 @@ feature -- Status report
 
 	is_frozen: BOOLEAN
 			-- Is the name of the feature frozen?
+		do
+			Result := frozen_keyword /= Void
+		end
 
 	is_infix: BOOLEAN
 			-- Is the feature name an infixed notation?
@@ -157,22 +160,12 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
-	set_is_frozen (v: BOOLEAN)
-			-- Set `is_frozen' with `v'.
-		do
-			is_frozen := v
-		ensure
-			is_frozen_set: is_frozen = v
-		end
-
 	set_frozen_keyword (l: KEYWORD_AS)
 			-- Set location of the associated "frozen" keyword to `l'.
 		do
-			if l /= Void then
-				frozen_keyword_index := l.index
-			end
+			frozen_keyword := l
 		ensure
-			frozen_keyword_set: l /= Void implies frozen_keyword_index = l.index
+			frozen_keyword_set: frozen_keyword = l
 		end
 
 feature -- Comparison
@@ -183,21 +176,8 @@ feature -- Comparison
 
 feature -- Location
 
-	frozen_keyword_index: INTEGER
-			-- Index of keyword "frozen" (if any)
-
-	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	frozen_keyword: KEYWORD_AS
 			-- Keyword "frozen" (if any)
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := frozen_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
 
 feature {NONE} -- Implementation: helper functions
 
@@ -222,7 +202,7 @@ invariant
 	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -246,11 +226,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FEATURE_NAME

@@ -259,12 +259,9 @@ feature {NONE} -- Measurement
 	max_columns: NATURAL
 			-- Maximum columns to display in the terminal
 		once
-			if not {PLATFORM}.is_windows then
-					-- No Windows support yet
-				Result := c_get_term_columns.as_natural_32
-			end
+			Result := c_get_term_columns.as_natural_32
 			if Result = 0 then
-				Result := {NATURAL}.max_value
+				Result := {INTEGER_32}.max_value.as_natural_32
 			else
 				Result := Result.max (25)
 			end
@@ -2147,7 +2144,7 @@ feature {NONE} -- Externals
 			"C inline"
 		alias
 			"[
-				#if EIF_OS == EIF_WINDOWS
+				#ifdef EIF_WINDOWS
 				
 				// Windows code
 				#include <windows.h>

@@ -19,9 +19,9 @@ feature {NONE} -- Initialization
 				create file.make (file_name)
 				if file.exists then
 					file.open_read
-					file.readstream (file.count)
+					file.read_stream (file.count)
 					file.close
-					parse_file_contents (file.laststring)
+					parse_file_contents (file.last_string)
 				end
 				initialized_cell.put (True)
 			end

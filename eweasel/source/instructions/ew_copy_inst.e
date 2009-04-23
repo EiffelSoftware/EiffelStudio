@@ -206,11 +206,11 @@ feature {NONE}  -- Implementation
 			until
 				src.end_of_file
 			loop
-				src.readline;
+				src.read_line;
 				if substitute then
-					line := env.substitute (src.laststring);
+					line := env.substitute (src.last_string);
 				else
-					line := src.laststring;
+					line := src.last_string;
 				end;
 				if not src.end_of_file then
 					dest.put_string (line);

@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 			internal_name.set_index (op.index)
 			if l /= Void then
 				internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
-				infix_prefix_keyword_index := l.index
 			end
+			infix_prefix_keyword := l
 		ensure
-			infix_prefix_keyword_set: l /= Void implies infix_prefix_keyword_index = l.index
+			infix_prefix_keyword_set: infix_prefix_keyword = l
 		end
 
 feature -- Visitor
@@ -55,21 +55,8 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	infix_prefix_keyword_index: INTEGER
-		-- Index of keyword "infix" or "prefix" associated with this structure.
-
-	infix_prefix_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	infix_prefix_keyword: KEYWORD_AS
 		-- Keyword "infix" or "prefix" associated with this structure.
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := infix_prefix_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
 
 feature -- Properties
 
@@ -132,13 +119,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
-			if a_list /= Void and frozen_keyword_index /= 0 then
-				Result := frozen_keyword (a_list)
-			end
+			Result := frozen_keyword
 			if Result = Void or else Result.is_null then
-				if a_list /= Void and infix_prefix_keyword_index /= 0 then
-					Result := infix_prefix_keyword (a_list)
-				else
+				Result := infix_prefix_keyword
+				if Result = Void then
 					Result := alias_name.first_token (a_list)
 				end
 			end
@@ -153,7 +137,7 @@ invariant
 	alias_name_not_void: alias_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,11 +161,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

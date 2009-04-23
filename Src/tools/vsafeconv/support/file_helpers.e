@@ -12,8 +12,8 @@ class
 
 feature -- Query
 
-	safe_file_name (a_file_name: STRING): STRING
-			-- Generated a safe suffixed file name from an original file name.
+	safe_file_name (a_file_name: READABLE_STRING_8): STRING
+			-- Generates a safe suffixed file name from an original file name.
 			--
 			-- `a_file_name': An original file name to suffix.
 			-- `Result': A safe suffixed file name.
@@ -21,7 +21,7 @@ feature -- Query
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
-			l_ext: detachable STRING
+			l_ext: detachable READABLE_STRING_8
 			nb: INTEGER
 			i: INTEGER
 		do
@@ -45,15 +45,15 @@ feature -- Query
 					Result.append (safe_file_name_suffix)
 				end
 			else
-				create Result.make_from_string (a_file_name)
+				Result.append (a_file_name)
 			end
 		ensure
 			result_attached: Result /= Void
 			not_a_result_is_empty: not Result.is_empty
 		end
 
-	unsafe_file_name (a_file_name: STRING): STRING
-			-- Generated a unsafe suffixed file name from an original file name.
+	unsafe_file_name (a_file_name: READABLE_STRING_8): STRING
+			-- Generates a unsafe suffixed file name from an original file name.
 			--
 			-- `a_file_name': An original file name to unsuffix.
 			-- `Result': A unsafe file name.
@@ -61,7 +61,7 @@ feature -- Query
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
-			l_ext: detachable STRING
+			l_ext: detachable READABLE_STRING_8
 			nb: INTEGER
 			i: INTEGER
 		do
@@ -81,16 +81,53 @@ feature -- Query
 					Result.append (a_file_name.substring (i, nb))
 				end
 			else
-				create Result.make_from_string (a_file_name)
+				Result.append (a_file_name)
 			end
 		ensure
 			result_attached: Result /= Void
 			not_a_result_is_empty: not Result.is_empty
 		end
 
+	license_file_name (a_file_name: READABLE_STRING_8): STRING
+			-- Generates a license file name from a configuration file name.
+			--
+			-- `a_file_name': An original file name create a license file name from.
+			-- `Result': A license file name.
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		local
+			l_ext: detachable READABLE_STRING_8
+			nb: INTEGER
+			i: INTEGER
+		do
+			nb := a_file_name.count
+			create Result.make_from_string (a_file_name)
+			i := a_file_name.last_index_of ('.', nb)
+			if i = 0 then
+				i := nb
+			end
+			if i > license_extension.count then
+				l_ext := a_file_name.substring ((i - license_extension.count), i - 1)
+			end
+			if l_ext = Void or else l_ext /~ license_extension then
+				if i < nb  then
+					Result.keep_head (i)
+				else
+					Result.append_character ('.')
+				end
+				Result.append (license_extension)
+			end
+		ensure
+			result_attached: Result /= Void
+			not_a_result_is_empty: not Result.is_empty
+		end
+
+
 feature {NONE} -- Constants
 
 	safe_file_name_suffix: STRING = "-safe"
+	license_extension: STRING = "lic"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

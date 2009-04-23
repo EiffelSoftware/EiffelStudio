@@ -2147,7 +2147,22 @@ feature {NONE} -- Externals
 			"C inline"
 		alias
 			"[
-				#if EIF_OS != EIF_WINDOWS
+				#if EIF_OS == EIF_WINDOWS
+				
+				// Windows code
+				#include <windows.h>
+				#include <stdio.h>
+				CONSOLE_SCREEN_BUFFER_INFO csbInfo;
+				
+				if (GetConsoleScreenBufferInfo (GetStdHandle(STD_OUTPUT_HANDLE), &csbInfo)) {
+					return csbInfo.dwSize.X;
+				} else {
+					return 0;
+				}
+				
+				#else
+				
+				// *nix code
 				#include <sys/ioctl.h>
 				#include <termios.h>
 

@@ -110,11 +110,11 @@ feature {NONE} -- Implementation
 			until
 				tcf.end_of_file or parse_error
 			loop
-				tcf.readline;
+				tcf.read_line;
 				if not tcf.end_of_file then
 					line_number := line_number + 1;
-					create line.make (tcf.laststring.count);
-					line.append (tcf.laststring);
+					create line.make (tcf.last_string.count);
+					line.append (tcf.last_string);
 					parse_line (line);
 					if not parse_error and last_test /= Void then
 						tests.extend (last_test);

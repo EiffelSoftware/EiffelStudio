@@ -93,7 +93,7 @@ feature {NONE}  -- Implementation
 				eof1 := file1.end_of_file;
 				eof2 := file2.end_of_file;
 				if not eof1 and not eof2 then
-					if file1.lastchar /= file2.lastchar then
+					if file1.last_character /= file2.last_character then
 						unequal := True;
 					end
 				elseif (eof1 and not eof2) or (eof2 and not eof1) then

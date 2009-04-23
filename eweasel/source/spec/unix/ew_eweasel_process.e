@@ -45,17 +45,17 @@ feature -- Creation
 			k, count: INTEGER
 		do
 			debug
-				io.putstring ("%NStart: " );
-				io.putstring (cmd); io.putchar (' ');
+				io.put_string ("%NStart: " );
+				io.put_string (cmd); io.put_character (' ');
 				from
 					args.start;
 				until
 					args.after
 				loop
-					io.putstring (args.item); io.putchar (' ');
+					io.put_string (args.item); io.put_character (' ');
 					args.forth;
 				end
-				io.putstring ("End%N" );
+				io.put_string ("End%N" );
 			end;
 
 			count := args.count

@@ -124,7 +124,7 @@ feature {NONE} -- Access
 	eis_feature_id: like eis_class_id
 			-- Current feature ID for EIS entry.
 
-	internal_eis_full_entries: like eis_full_entries
+	internal_eis_full_entries: detachable like eis_full_entries
 			-- Cached full entries
 
 feature {NONE} -- Basic operations

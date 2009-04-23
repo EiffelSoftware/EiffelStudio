@@ -26,45 +26,31 @@ feature -- Queries
 
 	is_mangled_alias_name (alias_name: STRING): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
+			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
 		require
 			alias_name_not_void: alias_name /= Void
 		do
-			if
-				syntax_checker.is_bracket_alias_name (alias_name) or else
-				not alias_name.is_empty and then
-				alias_name.item (alias_name.count) = '%"' and then
-				(
-					alias_name.count > infix_str.count + 1 and then
-					alias_name.substring_index (infix_str, 1) = 1 and then
-					syntax_checker.is_valid_binary_operator (alias_name.substring (infix_str.count + 1, alias_name.count - 1))
-				or else
-					alias_name.count > prefix_str.count + 1 and then
-					alias_name.substring_index (prefix_str, 1) = 1 and then
-					syntax_checker.is_valid_unary_operator (alias_name.substring (prefix_str.count + 1, alias_name.count - 1))
-				)
-			then
-				Result := True
-			end
+			Result := not alias_name.is_empty and then
+				(syntax_checker.is_bracket_alias_name (alias_name) or
+				(alias_name.item (alias_name.count) = '"') and then
+				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
+				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
 		end
 
 	is_mangled_infix (name: STRING): BOOLEAN
-			-- Does `name' represent an internal name of an infix feature?
+			-- Does `name' represent an internal name of an infix feature, i.e. "infix "op""?
 		require
 			name_not_void: name /= Void
 		do
-			if name.count > Infix_str.count then
-				Result := name.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1
-			end
+			Result := name.starts_with (Infix_str)
 		end
 
 	is_mangled_prefix (name: STRING): BOOLEAN
-			-- Does `name' represent an internal name of a prefix feature?
+			-- Does `name' represent an internal name of a prefix feature, i.e. "prefix "op""?
 		require
 			name_not_void: name /= Void
 		do
-			if name.count > Prefix_str.count then
-				Result := name.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1
-			end
+			Result := name.starts_with (Prefix_str)
 		end
 
 feature -- Basic operations

@@ -299,8 +299,9 @@ feature -- Action
 				end
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
-				Result := parser.root_node
-				if Result /= Void then
+				if not error_handler.has_error then
+					Result := parser.root_node
+					check no_error_implies_not_void: Result /= Void end
 						-- Update `date' attribute.
 					Result.set_date (l_lace_class.file_date)
 					if not Result.class_name.name.is_case_insensitive_equal (l_lace_class.name) then

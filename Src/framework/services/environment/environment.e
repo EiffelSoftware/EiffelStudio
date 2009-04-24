@@ -182,9 +182,12 @@ feature -- Status report
 		do
 			l_name := a_name.as_string_8
 			Result := table.has (l_name)
-			if not Result and then is_eiffel_layout_defined then
-				l_value := eiffel_layout.get_environment (l_name)
-				Result := attached l_value and then not l_value.is_empty
+			if not Result then
+				l_value := execution_environment.get (l_name)
+				if l_value = Void and then is_eiffel_layout_defined then
+					l_value := eiffel_layout.get_environment (l_name)
+				end
+				Result := attached l_value
 			end
 		end
 

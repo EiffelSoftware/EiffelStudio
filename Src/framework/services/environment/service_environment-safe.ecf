@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="service_environment" uuid="C100127C-D9D4-4017-B008-2AAADC15BBA8" library_target="service_environment">
+	<target name="service_environment">
+		<description>A service to access and monitor changes to the executing environment.</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>tests</exclude>
+		</file_rule>
+		<file_rule>
+			<exclude>/unix$</exclude>
+			<exclude>/gtk$</exclude>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</file_rule>
+		<file_rule>
+			<exclude>/mswin$</exclude>
+			<exclude>/windows$</exclude>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
+		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe.ecf"/>
+		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
+		<cluster name="service_environment" location=".\" recursive="true"/>
+	</target>
+</system>

@@ -102,10 +102,7 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
-			if Result.is_interface_usable then
-				register_test_suite_processors (Result)
-				(create {EV_SHARED_APPLICATION}).ev_application.add_idle_action (agent Result.synchronize_processors)
-			end
+			register_test_suite_processors (Result)
 		end
 
 	new_wizard_service: detachable WIZARD_ENGINE_S

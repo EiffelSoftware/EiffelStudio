@@ -77,6 +77,15 @@ feature -- Access
 			registrar_usable: Result.is_interface_usable
 		end
 
+	scheduler: attached TEST_PROCESSOR_SCHEDULER_I
+			-- Scheduler for launching test processors
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			schduler_usable: Result.is_interface_usable
+		end
+
 feature -- Status report
 
 	count_executed: NATURAL
@@ -98,29 +107,6 @@ feature -- Status report
 		require
 			usable: is_interface_usable
 		deferred
-		end
-
-feature -- Status setting
-
-	synchronize_processors
-			-- Synchronize `tests' with status of processors.
-			--
-			-- Note: this routine should be called whenever the system becomes idle
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	launch_processor (a_processor: attached TEST_PROCESSOR_I; a_arg: attached TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
-			-- Launch test processor and notify all observers
-		require
-			usable: is_interface_usable
-			project_initialized: is_project_initialized
-			processor_ready: a_processor.is_ready
-			processor_suitable: a_processor.is_valid_configuration (a_arg)
-		deferred
-		ensure
-			not_blocking_equals_running: not a_blocking = a_processor.is_idle
 		end
 
 feature {TEST_PROCESSOR_I} -- Status setting

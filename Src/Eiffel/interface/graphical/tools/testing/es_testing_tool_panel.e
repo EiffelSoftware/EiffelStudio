@@ -626,7 +626,7 @@ feature {NONE} -- Events: test execution
 			else
 				create l_conf.make (a_type ~ debug_executor_type)
 			end
-			launch_processor (a_type, l_conf, False)
+			launch_processor (a_type, l_conf)
 		end
 
 	on_stop

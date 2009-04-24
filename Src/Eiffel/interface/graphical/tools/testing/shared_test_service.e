@@ -122,7 +122,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	frozen launch_processor (a_type: attached TYPE [TEST_PROCESSOR_I]; a_conf: attached TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
+	frozen launch_processor (a_type: attached TYPE [TEST_PROCESSOR_I]; a_conf: attached TEST_PROCESSOR_CONF_I)
 			-- Launch processor with provided configuration. If unable to launch processor, report errors
 			-- through `on_error'.
 			--
@@ -143,7 +143,7 @@ feature {NONE} -- Basic operations
 					l_proc := l_registrar.processor (a_type, l_service)
 					if l_proc.is_ready then
 						if l_proc.is_valid_configuration (a_conf) then
-							l_service.launch_processor (l_proc, a_conf, a_blocking)
+							l_service.scheduler.launch_processor (l_proc, a_conf)
 						else
 							l_code := configuration_not_valid_code
 						end

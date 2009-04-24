@@ -58,6 +58,11 @@ feature {NONE} -- Initialization
 			register_locator (create {TEST_UNCOMPILED_LOCATOR}.make)
 
 			synchronize
+			if (create {SHARED_FLAGS}).is_gui then
+				create {EV_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
+			else
+				create {TTY_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
+			end
 		end
 
 feature -- Access
@@ -77,6 +82,9 @@ feature -- Access
 				Result := empty_processor_list
 			end
 		end
+
+	scheduler: TEST_PROCESSOR_SCHEDULER_I
+			-- <Precursor>
 
 feature {NONE} -- Access
 
@@ -111,47 +119,6 @@ feature -- Status report
 
 	count_failing: NATURAL
 			-- <Precursor>
-
-feature -- Status setting
-
-	synchronize_processors
-			-- <Precursor>
-		local
-			l_proc: attached TEST_PROCESSOR_I
-		do
-			from
-				internal_processors.start
-			until
-				internal_processors.after
-			loop
-				l_proc := internal_processors.item_for_iteration
-				internal_processors.forth
-				if l_proc.is_idle then
-					if l_proc.is_finished then
-						stop_task (l_proc)
-					else
-						proceed_task (l_proc)
-					end
-				end
-			end
-		end
-
-	launch_processor (a_processor: attached TEST_PROCESSOR_I; a_arg: attached TEST_PROCESSOR_CONF_I; a_blocking: BOOLEAN)
-			-- <Precursor>
-		do
-			a_processor.start (a_arg)
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			processor_launched_event.publish ([as_attached, a_processor.as_attached])
-
-			if a_blocking then
-				from until
-					a_processor.is_finished
-				loop
-					proceed_task (a_processor)
-				end
-				stop_task (a_processor)
-			end
-		end
 
 feature {TEST_PROCESSOR_I} -- Status setting
 
@@ -314,45 +281,6 @@ feature {NONE} -- Element change
 			Precursor (a_id)
 		end
 
-feature {NONE} -- Basic operations
-
-	proceed_task (a_processor: attached TEST_PROCESSOR_I)
-			-- Make `a_processor' proceed with its task. Notify observers of events.
-		require
-			a_processor_usable: a_processor.is_interface_usable
-			a_processor_running: a_processor.is_running
-			a_processor_idle: a_processor.is_idle
-			not_a_processor_fininshed: not a_processor.is_finished
-			a_processor_launched_by_current: a_processor.test_suite = Current
-		do
-			a_processor.proceed
-			if a_processor.is_finished then
-					-- Note: replace `as_attached' with Current when compiler treats Current as attached
-				processor_finished_event.publish ([as_attached, a_processor.as_attached])
-			else
-					-- Note: replace `as_attached' with Current when compiler treats Current as attached
-				processor_proceeded_event.publish ([as_attached, a_processor.as_attached])
-			end
-		end
-
-	stop_task (a_processor: attached TEST_PROCESSOR_I)
-			-- Stop `a_processor' and notify observers as long as processor is not running.
-		require
-			a_processor_usable: a_processor.is_interface_usable
-			a_processor_running: a_processor.is_running
-			a_processor_idle: a_processor.is_idle
-			a_processor_fininshed: a_processor.is_finished
-			a_processor_launched_by_current: a_processor.test_suite = Current
-		do
-			a_processor.stop
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			processor_stopped_event.publish_if ([as_attached, a_processor.as_attached],
-				agent (ts: attached like Current; p: attached TEST_PROCESSOR_I): BOOLEAN
-					do
-						Result := not p.is_running
-					end)
-		end
-
 feature -- Events
 
 	processor_launched_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
@@ -398,10 +326,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

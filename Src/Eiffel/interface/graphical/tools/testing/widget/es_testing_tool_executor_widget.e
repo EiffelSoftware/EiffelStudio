@@ -146,9 +146,9 @@ feature {NONE} -- Events: widgets
 				create l_conf.make_with_tests (l_list, l_is_dbg)
 			end
 			if l_is_dbg then
-				launch_processor (debug_executor_type, l_conf, False)
+				launch_processor (debug_executor_type, l_conf)
 			else
-				launch_processor (background_executor_type, l_conf, False)
+				launch_processor (background_executor_type, l_conf)
 			end
 		end
 

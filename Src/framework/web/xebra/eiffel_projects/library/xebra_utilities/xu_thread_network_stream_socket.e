@@ -11,7 +11,8 @@ class
 	XU_THREAD_NETWORK_STREAM_SOCKET
 
 create
-	make_client_by_port
+	make_client_by_port,
+	make_server_by_port
 
 feature {NONE} -- Initialization
 
@@ -20,6 +21,13 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create socket.make_client_by_port (a_peer_port, a_peer_host)
+			create mutex.make
+		end
+
+	make_server_by_port (a_port: INTEGER)
+			-- <Precursor>
+		do
+			create socket.make_server_by_port (a_port)
 			create mutex.make
 		end
 
@@ -71,7 +79,23 @@ feature -- Wrapped features
 			mutex.lock
 				Result := socket.retrieved
 			mutex.unlock
-			
+
+		end
+
+	accept
+			-- See NETWORK_STREAM_SOCKET
+		do
+			mutex.lock
+			socket.accept
+			mutex.unlock
+		end
+
+	listen (a_i: INTEGER)
+			-- See NETWORK_STREAM_SOCKET
+		do
+			mutex.lock
+			socket.listen (a_i)
+			mutex.unlock
 		end
 
 

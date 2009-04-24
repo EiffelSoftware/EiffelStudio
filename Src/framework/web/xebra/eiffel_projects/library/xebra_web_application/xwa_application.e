@@ -13,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	base_make
+	make
 			-- Initialization for `Current'.
 		do
 				print ("%N%N%N")

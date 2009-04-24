@@ -1,5 +1,9 @@
 note
-	description: "Handles incoming requests from http_module and sends it to the appropriate XebraApp {XB_MOD_HANDLER}."
+	description: "[
+
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,18 +48,20 @@ feature {NONE} -- Access
 
 feature --Execution
 
-	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_webapp_handler: XS_WEBAPP_HANDLER)
+	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
 			a_http_socket: not a_http_socket.is_closed
 		local
+			l_webapp_handler: XS_WEBAPP_HANDLER
 			l_request_message: STRING
-			l_response_message: STRING
+			l_response: XH_RESPONSE
 			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
 			l_i: INTEGER
 			l_request_factory: XH_REQUEST_FACTORY
 		do
+			create l_webapp_handler.make (a_webapps)
 			create l_request_factory.make
 			from
 				l_request_message := ""
@@ -74,10 +80,10 @@ feature --Execution
            		end
            	end
 
-			l_response_message := a_webapp_handler.forward_request_to_app (l_request_message)
+			l_response := l_webapp_handler.forward_request_to_app (l_request_message)
 
 			dprint ("Sending response to http",2)
-			send_message_to_http (l_response_message, a_http_socket)
+			send_message_to_http (l_response.render_to_string, a_http_socket)
 
          	a_http_socket.cleanup
             check

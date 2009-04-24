@@ -28,10 +28,15 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core.ecf"/>
+		<library name="service_environment" location="$EIFFEL_SRC\framework\services\environment\service_environment.ecf"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
+		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="service_help_providers" location=".\" recursive="true"/>
 	</target>
 </system>

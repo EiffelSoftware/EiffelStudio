@@ -44,7 +44,7 @@ feature -- Basic Operations
 				   attached {STRING} current_request.arguments["description"] as description then
 
 					if global_state.db.insert_reservation (name, date, persons.to_integer_32, description) then
-						Result := "New reservations successfully inserted."
+						Result := "New reservation successfully inserted."
 					else
 						Result := "Error inserting reservation"
 					end

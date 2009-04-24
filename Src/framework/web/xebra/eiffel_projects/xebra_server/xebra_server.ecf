@@ -12,10 +12,10 @@
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses.ecf" readonly="false"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf" readonly="false"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

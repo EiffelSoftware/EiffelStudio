@@ -4,10 +4,10 @@
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf"/>
+		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 		<cluster name="xebra_web_application" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

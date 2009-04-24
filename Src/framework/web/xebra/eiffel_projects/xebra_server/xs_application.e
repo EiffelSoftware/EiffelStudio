@@ -1,7 +1,11 @@
 note
-	description : "Xebra server run class"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		Xebra Server run class
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	XS_APPLICATION

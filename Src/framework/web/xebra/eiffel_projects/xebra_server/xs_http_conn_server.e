@@ -18,15 +18,15 @@ create make
 
 feature -- Initialization
 
-	make  (a_webapp_handler: XS_WEBAPP_HANDLER)
+	make  (a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
 			-- Initializes current
 		do
-			webapp_handler := a_webapp_handler
-            create socket.make_server_by_port (default_http_server_port)
+			webapps := a_webapps
+            create http_socket.make_server_by_port (default_http_server_port)
             create thread_pool.make (max_thread_number, agent request_handler_spawner)
             stop := False
 		ensure
-			webapp_handler_set: a_webapp_handler = webapp_handler
+			webapps_set: webapps = a_webapps
        	end
 
 feature -- Inherited Features
@@ -39,21 +39,21 @@ feature -- Inherited Features
 			create l_r_handler.make (message_default_bound, message_upper_bound)
 
         	from
-                socket.listen (max_tcp_clients.as_integer_32)
+                http_socket.listen (max_tcp_clients.as_integer_32)
             until
             	stop
             loop
-                socket.accept
+                http_socket.accept
                 dprint ("Connection to http accepted",1)
-	            if attached {NETWORK_STREAM_SOCKET} socket.accepted as thread_http_socket then
---	            	thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
+	            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
+--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 	            		--singleusermode
-	            	l_r_handler.do_execute (thread_http_socket, webapp_handler)
+	            	l_r_handler.do_execute (thread_http_socket, webapps)
 				end
             end
-            socket.cleanup
+            http_socket.cleanup
         	check
-        		socket.is_closed
+        		http_socket.is_closed
         	end
 		end
 
@@ -61,11 +61,11 @@ feature -- Access
 
 	thread_pool: DATA_THREAD_POOL [XS_REQUEST_HANDLER]
 
-	socket: NETWORK_STREAM_SOCKET
+	http_socket: NETWORK_STREAM_SOCKET
 			-- The socket
 
-	webapp_handler: XS_WEBAPP_HANDLER
-			-- Stores registered Webapps and is able to send/receive request and responses
+	webapps: HASH_TABLE [XS_WEBAPP, STRING]
+
 
 	stop: BOOLEAN
 			-- Set true to stop accept loop
@@ -93,9 +93,9 @@ feature -- Status setting
 			-- Stops the thread
 		do
 			stop := True
-			socket.cleanup
+			http_socket.cleanup
         ensure
-        	socket.is_closed
+        	http_socket.is_closed
 		end
 
 

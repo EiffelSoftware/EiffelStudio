@@ -1,80 +1,84 @@
 note
-	description: "Summary description for {ES_TEST_WIZARD_FINAL_WINDOW}."
+	description: "Summary description for {EV_TEST_PROCESSOR_SCHEDULER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_TEST_WIZARD_FINAL_WINDOW
+class
+	EV_TEST_PROCESSOR_SCHEDULER
 
 inherit
-	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
+	TEST_PROCESSOR_SCHEDULER
 		redefine
-			is_final_state,
-			wizard_information
+			make
 		end
 
-	ES_TEST_WIZARD_WINDOW
-		redefine
-			is_final_state,
-			wizard_information,
-			on_processor_launch_error
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_test_suite: like test_suite)
+			-- <Precursor>
+		do
+			Precursor (a_test_suite)
+			create timer.make_with_interval (0)
+			timer.actions.extend (agent perform_iterations)
 		end
 
 feature {NONE} -- Access
 
-	wizard_information: ES_TEST_WIZARD_INFORMATION
-			-- Information user has provided to the wizard
+	timer: EV_TIMEOUT
+			-- Timer used to invoke `perform_iterations'
 
-	factory_type: attached TYPE [TEST_CREATOR_I]
-			-- Factory type used to create tests
-		deferred
-		end
+feature {NONE} -- Implementation
 
-feature -- Status report
-
-	is_interface_usable: BOOLEAN = True
-			-- <Precursor>
-
-	has_error: BOOLEAN
-			-- Has error occured launching processor?
-
-feature {NONE} -- Status report
-
-	is_final_state: BOOLEAN
+	launch_iteration (a_sleep_time: like duration)
 			-- <Precursor>
 		do
-			Result := True
-		end
-
-feature {NONE} -- Basic operations
-
-	proceed_with_current_info
-			-- <Precursor>
-		local
-			l_conf: TEST_CREATOR_CONF
-		do
-			l_conf := wizard_information.current_conf
-			check l_conf /= Void end
-			has_error := False
-			launch_processor (factory_type, l_conf)
-			if not has_error then
-				cancel_actions
+			if a_sleep_time > 0 then
+				timer.set_interval (a_sleep_time.as_integer_32)
+			else
+				timer.set_interval (0)
+				ev_application.add_idle_action_kamikaze (timer.actions.first)
 			end
 		end
 
-feature {NONE} -- Events
-
-	on_processor_launch_error (a_error: attached STRING_32; a_type: attached TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
-			-- <Precursor>
+	perform_iterations
+			-- Iteratively call `iterate', allowing EV events to be processed in between.
+		require
+			not_iterating: not is_iterating
+		local
+			l_done: BOOLEAN
 		do
-			has_error := True
-			Precursor (a_error, a_type, a_code)
+			from
+				timer.set_interval (0)
+			until
+				l_done
+			loop
+				iterate
+				if processors.is_empty then
+					l_done := True
+				else
+					if requested_sleep_time > 0 then
+						timer.set_interval (requested_sleep_time.to_integer_32)
+						l_done := True
+					else
+						ev_application.process_events
+					end
+				end
+			end
+		ensure
+			not_iterating: not is_iterating
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

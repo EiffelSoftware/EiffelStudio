@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
 			a_test_suite.test_suite_connection.connect_events (Current)
-			launch_processor (a_type, a_conf, True)
+			launch_processor (a_type, a_conf)
 			a_test_suite.test_suite_connection.disconnect_events (Current)
 		end
 

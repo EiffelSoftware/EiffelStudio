@@ -22,6 +22,11 @@ inherit
 create
 	make
 
+feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+
+	sleep_time: NATURAL = 0
+			-- <Precursor>
+
 feature {NONE} -- Status report
 
 	is_creating_new_class: BOOLEAN

@@ -110,6 +110,19 @@ feature -- Status report
 			finished_implies_one: is_finished implies Result = {REAL} 1.0
 		end
 
+feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+
+	sleep_time: NATURAL
+			-- Number of milliseconds `Current' wants to sleep during idle?
+			--
+			-- Note: this value can vary between different idle phases.
+		require
+			usable: is_interface_usable
+			running: is_running
+			idle: is_idle
+		deferred
+		end
+
 feature -- Query
 
 	frozen is_valid_configuration (a_arg: attached TEST_PROCESSOR_CONF_I): BOOLEAN
@@ -154,7 +167,7 @@ feature -- Status setting
 			stop_requested: is_stop_requested
 		end
 
-feature {TEST_SUITE_S} -- Status setting
+feature {TEST_SUITE_S, TEST_PROCESSOR_SCHEDULER_I} -- Status setting
 
 	frozen start (a_arg: attached TEST_PROCESSOR_CONF_I)
 			-- Start performing a task for given configuration.

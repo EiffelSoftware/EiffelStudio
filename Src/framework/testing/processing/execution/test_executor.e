@@ -120,6 +120,13 @@ feature -- Status report
 			Result := evaluators.is_empty
 		end
 
+feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+
+	sleep_time: NATURAL = 50
+			-- <Precursor>
+			--
+			-- TODO: make this value vary depending if we received any new results in last `proceed'.
+
 feature {NONE} -- Status report
 
 	is_compiled: BOOLEAN

@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	ACTIVE_DICTIONARY [G, K -> HASHABLE]
 
 inherit
@@ -15,8 +15,8 @@ inherit
 
 	DISPOSABLE_SAFE
 
---create
---	make
+create
+	make
 
 feature {NONE} -- Initialization
 
@@ -170,7 +170,7 @@ feature -- Basic operations
 			end
 		end
 
-	find_keys (a_item: G): DS_HASH_SET [K]
+	find (a_item: G): DS_HASH_SET [K]
 			-- <Precursor>
 		local
 			l_table: like table

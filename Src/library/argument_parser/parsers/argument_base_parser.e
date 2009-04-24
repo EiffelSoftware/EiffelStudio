@@ -263,6 +263,11 @@ feature {NONE} -- Measurement
 			if Result = 0 then
 				Result := {INTEGER_32}.max_value.as_natural_32
 			else
+				if {PLATFORM}.is_windows then
+						-- Negate a single column because of Windows soft-wrapping behavior causes an extra line
+						-- break when a line is the exact length of the terminal width.
+					Result := Result - 1
+				end
 				Result := Result.max (25)
 			end
 		ensure
@@ -1540,10 +1545,12 @@ feature {NONE} -- Output
 					l_desc.append_character ('<')
 					l_desc.append (l_arg_name)
 					l_desc.append (once ">: ")
+					create l_arg_desc.make (32)
 					if l_value_switch_2.is_value_optional then
-						l_desc.append (once "(Optional) ")
+						l_arg_desc.append (once "(Optional) ")
 					end
-					l_arg_desc := format_terminal_text (l_value_switch_2.arg_description, (l_padding + l_arg_name.count + 4).as_natural_8)
+					l_arg_desc.append (l_value_switch_2.arg_description)
+					l_arg_desc := format_terminal_text (l_arg_desc, (l_padding + l_arg_name.count + 4).as_natural_8)
 					l_desc.append (l_arg_desc)
 				end
 
@@ -2174,3 +2181,4 @@ note
 		]"
 
 end
+

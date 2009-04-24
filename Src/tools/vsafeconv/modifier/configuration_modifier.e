@@ -101,7 +101,7 @@ feature -- Basic operations
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
 				-- First configuration the void-safe options.
-			l_targets := a_system.targets
+			l_targets := a_system.targets.twin
 			if l_targets /= Void then
 				from l_targets.start until l_targets.after loop
 					if (attached l_targets.item_for_iteration as l_target) then

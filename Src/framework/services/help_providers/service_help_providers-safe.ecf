@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="service_help_providers" uuid="1afa5810-f6f8-483f-a4ba-280e4e74252c" library_target="service_help_providers">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="service_help_providers" uuid="1AFA5810-F6F8-483F-A4BA-280E4E74252C" library_target="service_help_providers">
 	<target name="service_help_providers">
 		<description>A service to display context sensitive help from an application.</description>
 		<root all_classes="true"/>
@@ -28,10 +28,15 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp-safe.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
 		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core-safe.ecf"/>
+		<library name="service_environment" location="$EIFFEL_SRC\framework\services\environment\service_environment-safe.ecf"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
+		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher-safe.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<cluster name="service_help_providers" location=".\" recursive="true"/>
 	</target>
 </system>

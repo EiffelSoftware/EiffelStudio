@@ -19,7 +19,19 @@
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
+				<exclude>/tests$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/windows$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/unix$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
 	</target>

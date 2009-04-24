@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			make_multi_parser (False, True)
 			set_non_switched_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
+			set_is_showing_argument_usage_inline (False)
 		end
 
 feature -- Access

@@ -12,6 +12,10 @@ class
 
 inherit
 	CONFIGURATION_MODIFIER
+		redefine
+			convert_system,
+			convert_void_safe_target
+		end
 
 feature -- Status report
 
@@ -30,7 +34,33 @@ feature -- Status setting
 			is_safe_suffix_used_set: is_safe_suffix_used = a_used
 		end
 
+feature -- Basic operations
+
+	convert_system (a_system: CONF_SYSTEM)
+			-- <Precursor>
+		local
+			l_target: detachable CONF_TARGET
+		do
+			l_target := a_system.library_target
+			Precursor (a_system)
+			if is_safe_suffix_used then
+				a_system.set_name (file_helpers.safe_file_name (a_system.name))
+				if l_target /= Void then
+					a_system.set_library_target (l_target)
+				end
+			end
+		end
+
 feature {NONE} -- Basic operations
+
+	convert_void_safe_target (a_target: CONF_TARGET)
+			-- <Precursor>
+		do
+			Precursor (a_target)
+			if is_safe_suffix_used then
+				a_target.set_name (file_helpers.safe_file_name (a_target.name))
+			end
+		end
 
 	convert_void_safe_options (a_options: CONF_OPTION)
 			-- <Precursor>

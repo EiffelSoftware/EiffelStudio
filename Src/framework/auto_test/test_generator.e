@@ -186,7 +186,8 @@ feature {NONE} -- Basic operations
 	proceed_process
 			-- <Precursor>
 		local
-			l_total: INTEGER
+			l_total, l_remaining: INTEGER
+			l_totalc, l_remainingc: NATURAL
 			l_progress: REAL
 			l_cancel: BOOLEAN
 			l_witnesses: DS_LIST [AUT_WITNESS]
@@ -216,19 +217,31 @@ feature {NONE} -- Basic operations
 								current_results := Void
 							end
 						elseif attached test_task as l_task then
+							update_remaining_time
 							l_error_handler := session.error_handler
 							if l_task.has_next_step then
-								if session.options.time_out.second_count > 0 then
-									update_remaining_time
-									if l_error_handler.remaining_time.second_count <= 0 then
+								l_total := session.options.time_out.second_count
+								if l_total > 0 then
+									l_remaining := l_error_handler.remaining_time.second_count
+									l_progress := l_remaining/l_total
+									if l_remaining <= 0 then
 										l_cancel := True
 									end
 								end
-								if session.options.test_count > 0 then
-									if l_error_handler.counter = 0 then
+								l_totalc := session.options.test_count
+								if l_totalc > 0 then
+									l_remainingc := l_error_handler.counter
+									l_progress := l_progress.min (l_remainingc/l_totalc)
+									if l_remainingc = 0 then
 										l_cancel := True
 									end
 								end
+								if l_total = 0 and l_totalc = 0 then
+									l_progress := {REAL} 0.5
+								else
+									l_progress := {REAL} 1.0 - l_progress
+								end
+								internal_progress := {REAL} 0.1 + ({REAL} 0.5)*l_progress
 								if l_cancel then
 									l_task.cancel
 								else
@@ -487,7 +500,8 @@ feature{NONE} -- Test case generation and execution
 				if l_session.options.test_count > 0 then
 					l_error_handler.set_counter (session.options.test_count)
 				end
-
+				update_remaining_time
+				
 				l_strategy.start
 				test_task := l_strategy
 			end

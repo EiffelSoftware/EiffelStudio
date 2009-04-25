@@ -303,12 +303,12 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_line (")")
 			dedent
 			print_indentation
-			output_stream.put_string ("if {l_ot")
-			output_stream.put_integer (ot_counter.to_integer_32)
-			output_stream.put_string (": ")
+			output_stream.put_string ("if attached {")
 			output_stream.put_string (l_type)
 			--output_stream.put_string (variable_type_name (a_request.target))
-			output_stream.put_line ("} last_object then")
+			output_stream.put_string ("} last_object as l_ot")
+			output_stream.put_integer (ot_counter.to_integer_32)
+			output_stream.put_line (" then")
 			indent
 			print_indentation
 			output_stream.put_string (variable_name (a_request.target))
@@ -339,9 +339,7 @@ feature {AUT_REQUEST} -- Processing
 				l_rec_type := variable_type (a_request.receiver)
 				l_use_ot := not (l_rec_type.is_basic or l_rec_type.name.is_equal (system.any_type.name))
 				if l_use_ot then
-					output_stream.put_string ("if {l_ot")
-					output_stream.put_integer (ot_counter.to_integer_32)
-					output_stream.put_string (": ")
+					output_stream.put_string ("if attached {")
 					output_stream.put_string (variable_type_name (a_request.receiver))
 					output_stream.put_string ("} ")
 				else
@@ -374,6 +372,8 @@ feature {AUT_REQUEST} -- Processing
 					output_stream.put_string ("last_object")
 				end
 				if l_use_ot then
+					output_stream.put_string (" as l_ot")
+					output_stream.put_integer (ot_counter.to_integer_32)
 					output_stream.put_line (" then")
 					indent
 					print_indentation
@@ -404,9 +404,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 			print_indentation
 			if l_use_ot then
-				output_stream.put_string ("if {l_ot")
-				output_stream.put_integer (ot_counter.to_integer_32)
-				output_stream.put_string (": ")
+				output_stream.put_string ("if attached {")
 				output_stream.put_string (variable_type_name (a_request.receiver))
 				output_stream.put_string ("} ")
 			else
@@ -415,6 +413,8 @@ feature {AUT_REQUEST} -- Processing
 			end
 			a_request.expression.process (expression_printer)
 			if l_use_ot then
+				output_stream.put_string (" as l_ot")
+				output_stream.put_integer (ot_counter.to_integer_32)
 				output_stream.put_line (" then")
 				indent
 				print_indentation

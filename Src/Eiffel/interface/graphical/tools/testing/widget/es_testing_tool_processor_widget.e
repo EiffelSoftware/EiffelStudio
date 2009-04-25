@@ -223,10 +223,14 @@ feature {NONE} -- Events: processor
 			   processor.is_running and then
 			   not processor.is_finished
 			then
-				stop_button.enable_sensitive
+				if not stop_button.is_sensitive then
+					stop_button.enable_sensitive
+				end
 				progress_bar.set_proportion (processor.progress)
 			else
-				stop_button.disable_sensitive
+				if stop_button.is_sensitive then
+					stop_button.disable_sensitive
+				end
 			end
 		end
 

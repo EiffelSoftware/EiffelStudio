@@ -42,8 +42,9 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := v.feature_ = u.feature_ and
-							v.type.is_equivalent (u.type) and
+				Result := v.feature_ = u.feature_ and then
+							v.type.same_type (u.type) and then
+							v.type.is_equivalent (u.type) and then
 							v.is_creator = u.is_creator
 
 			end

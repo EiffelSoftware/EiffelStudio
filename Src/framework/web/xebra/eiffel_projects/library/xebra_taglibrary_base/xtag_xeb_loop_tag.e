@@ -32,8 +32,7 @@ feature {NONE} -- Implementation
 		local
 			temp_var_name: STRING
 		do
-			temp_var_name := a_servlet_class.render_feature.get_unique_identifier
-			a_servlet_class.render_feature.append_local (temp_var_name, "NATURAL")
+			temp_var_name := a_servlet_class.render_feature.new_local ("NATURAL")
 			a_servlet_class.render_feature.append_expression ("from")
 			a_servlet_class.render_feature.append_expression (temp_var_name + " := 1")
 			a_servlet_class.render_feature.append_expression ("until")

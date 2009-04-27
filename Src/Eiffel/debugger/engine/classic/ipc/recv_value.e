@@ -124,6 +124,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 		local
 			cl: CLASS_C
 			add: attached DBG_ADDRESS
+			l_type_id: INTEGER
 		do
 			fixme ("[
 				Maybe we should modified the runtime, to add the 'SPECIAL' case
@@ -131,16 +132,18 @@ feature	{} -- Initialization of the C/Eiffel interface
 				For now, this looks like a hack, but this is working.
 				]")
 			create add.make_from_pointer (ref)
-			if Eiffel_system.valid_dynamic_id (type + 1) then
-				cl := Eiffel_system.class_of_dynamic_id (type + 1, False)
+			l_type_id := type + 1
+			if Eiffel_system.valid_dynamic_id (l_type_id) then
+				cl := Eiffel_system.class_of_dynamic_id (l_type_id, False)
 				if cl /= Void and then cl.is_special then
-					create {SPECIAL_VALUE} item.make_set_ref (add, type + 1)
+					create {SPECIAL_VALUE} item.make_set_ref (add, l_type_id)
 				else
-					create {REFERENCE_VALUE} item.make (add, type + 1)
+					create {REFERENCE_VALUE} item.make (add, l_type_id)
 				end
 			else
-				check False end
-				create {REFERENCE_VALUE} item.make (add, type + 1)
+					--| The runtime is sending the debugger a wrong id ...
+					--| then let's handle such case
+				create {DUMMY_MESSAGE_DEBUG_VALUE} item.make_with_details (add.as_string, "Invalid type id: " + l_type_id.out, 0)
 			end
 		end
 
@@ -228,14 +231,14 @@ feature {NONE} -- External routines
 			d_nat8, d_nat16, d_nat32, d_nat64,
 			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double,
 			d_ref, d_point, d_bits, d_error, d_exception_ref, d_void: POINTER)
-		
+
 				-- Check: C/ipc/ewb/ewb_dumped.c
 		external
 			"C"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -248,22 +251,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class RECV_VALUE

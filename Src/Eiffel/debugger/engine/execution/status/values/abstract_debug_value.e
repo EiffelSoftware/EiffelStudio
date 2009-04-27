@@ -275,6 +275,7 @@ invariant
 
 	non_void_name: name /= Void;
 	valid_attribute: is_attribute implies e_class /= Void
+	valid_dynamic_class: attached dynamic_class as cl implies not cl.is_deferred
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

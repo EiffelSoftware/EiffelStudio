@@ -115,51 +115,9 @@ Test every_trace_has_root (except031): passed
 Test trace_has_no_pass (except032): passed
 Test precondition-violation-infinite-loop (except033): passed
 Test last-exception-not-cleared (except034): passed
-Test code-compatible-io-failure (except035): failed
-	Description: Show the behavior that IO_FAILURE raised as Runtime_io_exception by the runtime return a correct exception code. This is compatible to {EXCEPTIONS}.exception after the merging Io_exception and Runtime_io_exception.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/except035/tcf at line 11
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
-Test original_routines_in_exceptions (except036): failed
-	Description: Tests to ensure correct behaviors of original* routines in {EXCEPTIONS}.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/except036/tcf at line 13
-	Original text:    if not DOTNET compare    exec_output output
-	Substituted text: if not DOTNET compare    exec_output output
-	Reason: files being compared do not have identical contents
-
-Test exception_cause (except037): failed
-	Description: Tests to demo the behavior of `{EXCEPTION}.cause'.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/except037/tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Validity error in class TEST code VEEN
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test code-compatible-io-failure (except035): passed
+Test original_routines_in_exceptions (except036): passed
+Test exception_cause (except037): passed
 Test basic-non-conforming-inheritance (noncon001): passed
 Test non-conforming-inheritance-conformance (noncon002): passed
 Test non-conforming-inheritance-incrementality (noncon003): passed
@@ -234,9 +192,9 @@ Test repeated-onces (replication006): passed
 Test nc-replication-not-apply-vmcs (replication007): failed
 	Description: Show the behavior routines from non-conforming inheritance should not apply VMCS rule.
 	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/replication007/tcf at line 13
-	Original text:    compare output 	exec_output1
-	Substituted text: compare output 	exec_output1
-	Reason: file with actual output not found
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
 
 Test test-auto-resize (fake002): passed
 Test many-similar-class-names (fake003): passed
@@ -1144,6 +1102,7 @@ Test undetected-vycq-error (valid247): failed
 		Validity error in class TEST2 code VYCQ(3)
 		Final status:  paused 
 
+Test infix-prefix-alias-compatibility (valid248): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -1177,21 +1136,7 @@ Test svalid-inherit-labeled-tuple (svalid009): passed
 Test svalid-inherit-labeled-tuple-assign (svalid010): passed
 Test conversion-take-deanchored-form (svalid011): passed
 Test inherited-conversion-crash (svalid012): passed
-Test unused-local-warning-not-repeated (svalid013): failed
-	Description: When full class checking is enabled, compiler should not repeat unused local warnings for descendants of the class with the feature containing unused locals
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/svalid013/tcf at line 12
-	Original text:    compile_result validity_warning PARENT Unused_local_warning
-	Substituted text: compile_result validity_warning PARENT Unused_local_warning
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class CHILD1 code Unused_local_warning
-		Validity error in class CHILD2 code Unused_local_warning
-		Validity error in class PARENT code Unused_local_warning
-		Final status:  completed 
-	Expected result:
-		Validity error in class PARENT code Unused_local_warning
-		Final status:  completed 
-
+Test unused-local-warning-not-repeated (svalid013): passed
 Test inline-agent-inherited-crash (svalid014): passed
 Test svalid-multi-constraint-inheritance (svalid015): passed
 Test svalid-conversion-validity-error (svalid016): passed
@@ -1207,22 +1152,7 @@ Test svalid-inherited-invariant-not-checked (svalid017): failed
 		Validity error in class TEST code VGCC(6)
 		Final status:  paused 
 
-Test svalid-invalid-parent (svalid018): failed
-	Description: A class compiled in void-safe mode inherits from a class compiled in non-void-safe mode which contains some unsafe void code. The compiler crashes if one is using a conversion on an unattached entities.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/svalid018/tcf at line 10
-	Original text:    compile_result validity_error TEST VGCC(6)
-	Substituted text: compile_result validity_error TEST VGCC(6)
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class CHILD code VUTA(2)
-		Validity error in class CHILD code VUTA(2)
-		Validity error in class CHILD code VUTA(2)
-		Validity error in class CHILD code VUTA(2)
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VGCC(6)
-		Final status:  paused 
-
+Test svalid-invalid-parent (svalid018): passed
 Test svalid-conversion-with-binary (svalid019): passed
 Test svalid-undetected-vwoe (svalid020): passed
 Test simple-catcall (catcall001): passed
@@ -1573,17 +1503,7 @@ Test turn-off-multithreaded (incr184): passed
 Test change-cplusplus-to-c (incr185): passed
 Test redefine-to-rename-refreeze (incr186): passed
 Test env-in-braces-bogus-vd01 (incr187): passed
-Test constant-variable-constant (incr188): failed
-	Description: A system creates an instance of a class and prints the value of its only feature, which is a constant INTEGER attribute.  After initial compilation, the constant is changed to an INTEGER variable.  System execution still produces the correct result.  Then the feature is changed back to an INTEGER constant and changes are melted.  System execution then dies with a segmentation violation.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/incr188/tcf at line 38
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test constant-variable-constant (incr188): passed
 Test freeze-print-int64-array (incr189): passed
 Test vsta-sneak (incr190): passed
 Test refinalize-with-assertions (incr191): passed
@@ -1636,13 +1556,7 @@ Test remove-constraint-veen-sneak (incr220): failed
 
 Test vuex-weasel (incr221): passed
 Test change-system-name (incr222): passed
-Test function-attribute-constant (incr223): failed
-	Description: A system creates an instance of a class and prints the value of its only feature, which is a function returning INTEGER.  After initial compilation where the system is frozen, the constant is changed to an INTEGER attribute and changes are melted.  System execution still produces the correct result.  Then the feature is changed to an INTEGER constant and changes are melted.  System execution then produces the wrong result (the value returned by the original function).
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/incr223/tcf at line 41
-	Original text:    compare exec_output3 output3
-	Substituted text: compare exec_output3 output3
-	Reason: files being compared do not have identical contents
-
+Test function-attribute-constant (incr223): passed
 Test vdpr-weasel (incr224): passed
 Test change-anchor-type-finalize (incr225): failed
 	Description: A class has a routine `try (t: like n): like t' which just returns its argument, where `n: INTEGER is 47'.  After initial compilation where the system is melted, the declaration of `n' is changed to `n: DOUBLE is 13.25' and the system is finalized.  System execution then produces the wrong result (13 if finalized with inlining, -NaN if finalized without inlining and -O2, internal compiler error in gcc 3.2.2 if finalized without inlining and -O3).
@@ -1661,7 +1575,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	  (version 6.4.7.7848 GPL Edition - solaris-sparc-64)
+	  (version 6.4.7.8382 GPL Edition - solaris-sparc-64)
 	There is already a project compiled in "/maxwell/dave/eweasel/incr226"
 	It needs to be deleted before a precompilation.
 	
@@ -1896,19 +1810,14 @@ Test add-default-create-invalid-vtec (incr303): failed
 
 Test change-base-library-to-base-safe (incr304): failed
 	Description: After initial compilation where the "base" library is used, the compiler correctly reports some VEVI errors.  When the problem is corrected by changing the configuration file to use the "base-safe" library, resuming compilation causes the compiler to crashes in degree 6.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/incr304/tcf at line 10
-	Original text:    compile_result validity_error STRING_8 VEVI; STRING_32 VEVI; C_STRING VEVI VEVI; CELL VEVI
-	Substituted text: compile_result validity_error STRING_8 VEVI; STRING_32 VEVI; C_STRING VEVI VEVI; CELL VEVI
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/incr304/tcf at line 14
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  aborted system_failed had_exception () 
 	Expected result:
-		Validity error in class CELL code VEVI
-		Validity error in class C_STRING code VEVI
-		Validity error in class C_STRING code VEVI
-		Validity error in class STRING_32 code VEVI
-		Validity error in class STRING_8 code VEVI
-		Final status:  paused 
+		Final status:  completed 
 
 Test add-then-remove-vlec-via-generic (incr305): failed
 	Description: After initial compilation an actual generic is changed from TEST2 to TEST2 [DOUBLE], which introduces a VLEC error.  When the compiler detects the error, the actual generic is changed back to its original value but the compiler still reports a VLEC error.
@@ -2087,17 +1996,7 @@ Test melted-putreal-wrong (melt008): passed
 Test invariant-melt-panic (melt009): passed
 Test weird-sprintf-melt-panic (melt010): manual
 Test manifest-array-int-double (melt011): passed
-Test raise-exception-call-self (melt012): failed
-	Description: A routine which conditionally raises an exception has a rescue clause which at first calls the routine itself before retrying, then later just unconditionally retries.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/melt012/tcf at line 18
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed had_panic 
-	Expected result:
-		Final status:  completed 
-
+Test raise-exception-call-self (melt012): passed
 Test invalid-assertion-level (melt013): passed
 Test creation-proc-modify-target (melt014): passed
 Test nested-expanded-creation (melt015): passed
@@ -2240,28 +2139,8 @@ Test inherited-like-current-object-test (melt084): failed
 	Expected result:
 		Final status:  completed 
 
-Test melted-anchored-precursor-object-test (melt085): failed
-	Description: An object test `attached precursor as y' causes a segmentation fault when called in a routine with an anchored return type but only if the system is melted.  Removing an attribute that appears to be unrelated makes system execution work correctly.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/melt085/tcf at line 13
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
-Test melted-anchored-precursor-in-tuple (melt086): failed
-	Description: An expression `[precursor]' in a routine with an anchored return type causes system execution to run out of memory but only if the system is melted.  Removing an attribute that appears to be unrelated makes system execution work correctly.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/melt086/tcf at line 13
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test melted-anchored-precursor-object-test (melt085): passed
+Test melted-anchored-precursor-in-tuple (melt086): passed
 Test redefined-once-with-alt-precondition (melt087): failed
 	Description: A once function with a True precondition is redefined in a descendant with an alternate True precondition.  System execution ends with a segmentation fault if the once function is called in the descendant and the system is melted.  Frozen code works correctly.
 	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/melt087/tcf at line 13
@@ -2302,6 +2181,9 @@ Test melted-object-test-with-anchored-none (melt090): failed
 	Expected result:
 		Final status:  completed 
 
+Test melted-string-crash (melt091): passed
+Test melted-agent-exception-crash (melt092): passed
+Test raise-exception-inspect-branch (melt093): passed
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/freez001/tcf at line 28
@@ -2537,7 +2419,7 @@ Test gc-expanded-allocating-memory-in-special-2 (runtime006): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  system_failed 
 	Expected result:
 		Final status:  completed 
 
@@ -2556,16 +2438,13 @@ Test overflow-special-expanded-resizing (runtime013): failed
 
 Test cond-timedwait-failure (thread001): passed
 Test nested-thread-exit-failure (thread002): passed
-Test memory-leak-in-eif-thr-wait (thread003): failed
-	Description: Show memory leak in `eif_thr_wait' calling RT_GC_PROTECT(thread_object) without an RT_GC_WEAN if `eif_children_mutex' is NULL.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/thread003/tcf at line 15
-	Original text:    compare exec_output1 output
-	Substituted text: compare exec_output1 output
-	Reason: files being compared do not have identical contents
-
+Test memory-leak-in-eif-thr-wait (thread003): passed
 Test creating-string-runtime-panic (thread004): passed
 Test mem-info-update-crash-after-threads (thread005): passed
 Test panic-when-too-many-allocation (thread006): passed
+Test join-with-no-children-leaks (thread007): passed
+Test memory-referers-not-thread-safe (thread008): passed
+Test exception-in-thread-failure (thread009): passed
 Test print-double (exec001): passed
 Test bit-out-wrong (exec002): passed
 Test real-conform-double (exec003): passed
@@ -2705,7 +2584,7 @@ Test print-null-get-nothing (exec081): passed
 Test cloned-int-passed-to-double (exec082): passed
 Test deep-clone-bit (exec083): failed
 	Description: A routine repeatedly does `deep_clone (b)' where `b' is of type BIT 32.  System execution ends with an exception trace (on the first iteration if system is frozen or after a large number of iterations if system is melted).
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec083/tcf at line 18
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec083/tcf at line 28
 	Original text:    execute_result ok
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
@@ -2949,17 +2828,7 @@ Test once-with-exception (exec191): failed
 		Final status:  completed 
 
 Test system-return-code (exec192): passed
-Test catch-stack-overflow (exec193): failed
-	Description: Ensure that we can catch a stack overflow and finish gracefully.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec193/tcf at line 14
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  silent_failure 
-	Expected result:
-		Final status:  completed 
-
+Test catch-stack-overflow (exec193): skipped
 Test thread-assertion-monitoring (exec194): passed
 Test last-exception-after-call (exec195): passed
 Test inspect-on-character-interval (exec196): passed
@@ -3078,17 +2947,7 @@ Test anchor-on-feature-with-formal (exec262): passed
 Test generating-type-of-type-parameter (exec263): passed
 Test agent-on-attribute-with-open-target (exec264): passed
 Test generator-on-typed-pointer (exec265): passed
-Test feature-call-on-basic-generic (exec266): failed
-	Description: A call to a feature from ANY on a formal generic in a derivation with basic type should not cause incorrect code.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec266/tcf at line 19
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test feature-call-on-basic-generic (exec266): passed
 Test expanded-formal-attached-to-reference (exec267): passed
 Test tuple-with-basic-type (exec268): failed
 	Description: Basic type passed into feature with ANY as formal parameter type cannot be used in agent with that basic type as open operand.
@@ -3162,25 +3021,9 @@ Test self-init-attribute-non-void-safe (exec294): passed
 Test check-invariant-attached-by-default (exec295): passed
 Test self-init-attribute-void-safe (exec296): passed
 Test check-invariant-void-safe (exec297): passed
-Test out-wrong-for-natural-attribute (exec298): failed
-	Description: The value of a NATURAL attribute is displayed incorrectly when printed
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec298/tcf at line 12
-	Original text:    compare exec_output1 output
-	Substituted text: compare exec_output1 output
-	Reason: files being compared do not have identical contents
-
+Test out-wrong-for-natural-attribute (exec298): passed
 Test invariant-crash-with-attached-parent (exec299): passed
-Test deep-twin-expanded-type (exec300): failed
-	Description: Calling deep_twin on an object of an expanded type results in a seg fault at runtime
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec300/tcf at line 15
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed had_panic 
-	Expected result:
-		Final status:  completed 
-
+Test deep-twin-expanded-type (exec300): passed
 Test attempt-on-type-none (exec301): failed
 	Description: A system that calls {NONE}.attempt ("Weasel") gets a seg fault when executed
 	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/exec301/tcf at line 11
@@ -3252,6 +3095,8 @@ Test expanded-object-test-creates-objects (exec309): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test out-on-long-attribute-buffer-overflow (exec310): passed
+Test profile-with-invariant (exec311): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -3374,17 +3219,7 @@ Test precomp-lib-wrong-version (term103): manual
 Test generic-anchor-call-precursor (term104): passed
 Test temporary-bug-1 (term105): passed
 Test print-array-anchored-generic (term106): passed
-Test add-remove-vcch-freeze (term107): failed
-	Description: A system has a class that inherits a deferred feature `value', which is of type string, and effects it with a string constant.  After initial compilation, the effecting feature name is changed, introducing a VCCH(1) error.  When compiler reports the error, feature is changed back to `value' and compilation finishes.  But when the system is then frozen, the compiler dies with a segmentation fault in `real_body_id'.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/term107/tcf at line 30
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test add-remove-vcch-freeze (term107): passed
 Test generic-static-constant (term108): passed
 Test static-call-on-none (term109): passed
 Test assign-attempt-manifest-array (term110): passed
@@ -3764,6 +3599,7 @@ Test storable-with-attached-type-by-62 (store018): passed
 Test storable-with-attached-type-1 (store019): passed
 Test storable-with-attached-type-by-63 (store020): passed
 Test storable-removing-attachment-marks (store021): passed
+Test store-expanded-class-type-2 (store022): passed
 Test rename-inherited-wrong-flat (flat001): manual
 Test flat-after-change (flat002): manual
 Test flat-feature-two-defs (flat003): manual
@@ -3820,6 +3656,20 @@ Test ptf-read-number-routines-2 (lib029): failed
 	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/lib029/tcf at line 13
 	Original text:    compare exec_output output
 	Substituted text: compare exec_output output
+	Reason: files being compared do not have identical contents
+
+Test file-type-queries-wrong (lib030): failed
+	Description: A call to queries such as {FILE}.is_socket returns the wrong answer in many cases
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/lib030/tcf at line 14
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
+Test file-append-not-thread-safe (lib031): failed
+	Description: Calling {FILE}.append on different FILE objects writing different output files is not thread-safe, due to use of static local in external `file_append'
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/lib031/tcf at line 17
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
 Test tuple-manipulation (tuple001): passed
@@ -4063,43 +3913,16 @@ Test external-inline-boolean (fixed131): passed
 Test class-name-in-multiline-string (fixed132): passed
 Test generic-constraint-to-none (fixed133): passed
 Test crash-degree-minus-1 (fixed134): passed
-Test roundtrip-test (rdtp001): failed
-	Description: Tests for a bunch of eiffel classes, wether the round trip works or not
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/rdtp001/tcf at line 17
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error code VD00
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test roundtrip-number-denoted-character (rdtp002): failed
-	Description: Tests for roundtrip parse to handle number denoted character correctly.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/rdtp002/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error code VD00
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test roundtrip-test (rdtp001): passed
+Test roundtrip-number-denoted-character (rdtp002): passed
 Test supplier-preconditions (assert001): passed
 Test use-application-options-assertions (assert002): passed
 Test undefined-assertion-merge (assert003): failed
 	Description: Inheriting assertions from an undefined routine should work when merged.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/assert003/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Syntax error in class TEST at line 6
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/assert003/tcf at line 14
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
 
 Test multi-constraint-basics (multicon001): passed
 Test multi-constraint-creation (multicon002): passed
@@ -4212,23 +4035,7 @@ Test correct-attached-predicate-precedence-semantics (attach011): passed
 Test object-test-chain (attach012): passed
 Test object-test-code-generation (attach013): passed
 Test read-only-void-test-in-assertion (attach014): passed
-Test scope-after-combined-expression (attach015): failed
-	Description: If an expression that starts void-safe scope of an entity is combined by a conjunctive or disjunctive expression, the scope should still can be applied.
-	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/attach015/tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Validity error in class TEST code VUTA(2)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test scope-after-combined-expression (attach015): passed
 Test anchored-object-test-local (attach016): passed
 Test object-test-in-assertion (attach017): passed
 Test object-test-finalization-crash (attach018): passed
@@ -4358,6 +4165,22 @@ Test bogus-vevi-when-inherit-expanded (attach055): failed
 Test stable-attribute-redeclaration (attach056): passed
 Test stable-attribute-caps (attach057): passed
 Test void-safety-level (attach058): passed
+Test voidness-cap-in-assertion (attach059): passed
+Test like-current-void-safety (attach060): passed
+Test object-test-in-inherited-assertions (attach061): passed
+Test detaching-attached-variable-in-loop (attach062): passed
+Test void-assigned-to-stable-attribute (attach063): failed
+	Description: Void assigned to a stable attribute should raise an error.
+	Execution error in file /home/eiffel/svn/trunk/eweasel/tests/attach063/tcf at line 8
+	Original text:    compile_result validity_error TEST VJAR
+	Substituted text: compile_result validity_error TEST VJAR
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code VJAR
+		Final status:  paused 
+
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -4395,8 +4218,8 @@ Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test dotnet-special-handling-crash (dotnet112): passed
 
-Passed:  1761 / 2027  (87%)
-Failed:  245 / 2027  (13%)
-Manual:  17 / 2027  (1%)
-Skipped:  4 / 2027  (1%)
+Passed:  1795 / 2044  (88%)
+Failed:  227 / 2044  (12%)
+Manual:  17 / 2044  (1%)
+Skipped:  5 / 2044  (1%)
 

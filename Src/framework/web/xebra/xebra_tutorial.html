@@ -24,7 +24,7 @@ h3 {
 	font-size: 17px;
 	font-style: normal;
 	font-weight: bold;
-	color: #000000;
+	color: #11AADD;
 }
 -->
 </style>
@@ -43,7 +43,7 @@ h3 {
 <p>&nbsp;</p>
 <h2>Setup mod_xebra </h2>
 <p><strong>Note</strong>: Mod_xebra does currently not run with the apache distribution that comes with ubuntu. </p>
-<p><strong>Note</strong>: If you are running Ubuntu 8.10 on amd64 you can try to use the compiled version of apache  at <span class="code">$XEBRA_DEV/c_projects/mod_xebra/apache2-2-11_modXebra.tar.gz</span>. Just extract it and run <span class="code">sudo bin/apachectl start</span> </p>
+<p><strong>Note</strong>: If you are running Ubuntu 8.10 on amd64 you can try to use the compiled version of apache (with mod_xebra) at <span class="code">$XEBRA_DEV/c_projects/mod_xebra/apache2-2-11_modXebra.tar.gz</span>. Just extract it and run <br /><span class="code">sudo bin/apachectl start</span><br /> Note: this file  was newly added in  revision 78374.</p>
 <ul>
   <li>  Download apache unix source httpd-2.2.11 from <span class="code"><a href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a></span><a href="http://httpd.apache.org/download.cgi"><br />
     <br />
@@ -57,7 +57,7 @@ h3 {
     <span class="code">CFLAGS=&quot;-ggdb&quot; ./configure --prefix=/home/fabioz/apache2</span><br />
     with CFLAGs you can add compiler flags like -ggdb (which generates debug information for gdb)<br />
     then run<br />
-    <span class="code"><strong>make</strong><br />
+    <span class="code"><strong>make</strong>o<br />
   <strong>make install</strong></span><br />
   <br />
   </li>
@@ -162,7 +162,7 @@ h3 {
 <ul>
   <li>Add the libraries
     <ul>
-      <li><span class="code">base-safe.ecf</span><span class="code">,</span></li>
+      <li><span class="code">base-safe.ecf</span><span class="code"></span></li>
       <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_http/xebra_http.ecf</span></li>
       <li><span class="code">$XEBRA_DEV/eiffel_projects/library/xebra_web_application/xebra_web_application.ecf</span></li>
       <li>don't use precompile<br />

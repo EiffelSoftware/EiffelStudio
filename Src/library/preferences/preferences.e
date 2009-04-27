@@ -568,14 +568,10 @@ feature {NONE} -- Implementation
 
 										-- Found preference default value
 									pref_value := sub_node.text
-									if pref_value /= Void then
-										if att_pref_value /= Void and then not att_pref_value.is_empty then
-											pref_value.prepend (att_pref_value)
-										end
-										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
-									else
-										check sub_node_has_text: False end
+									if att_pref_value /= Void and then not att_pref_value.is_empty then
+										pref_value.prepend (att_pref_value)
 									end
+									default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
 								end
 							end
 						end

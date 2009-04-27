@@ -329,14 +329,14 @@ feature {NONE} -- Actions
 			end
 
 			browse_dialog.show_modal_to_window (Current)
-			if attached {STRING_32} browse_dialog.file_name as l_fn and then not l_fn.is_empty then
+			if attached browse_dialog.file_name as l_fn and then not l_fn.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (l_fn)
-				if not l_loader.is_error and then attached {CONF_SYSTEM} l_loader.last_system as l_system then
-					if not attached {CONF_TARGET} l_system.library_target as l_target then
+				if not l_loader.is_error and then attached l_loader.last_system as l_system then
+					if not attached l_system.library_target as l_target then
 						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
-					elseif not void_safe_check.is_selected or else l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
-						on_library_selected (l_system, l_fn.as_string_8.as_attached)
+					elseif (not attached void_safe_check as l_check) or else (not l_check.is_selected or else l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all) then
+						on_library_selected (l_system, l_fn.as_string_8)
 					else
 						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn.as_string_8.as_attached), Void)
 					end

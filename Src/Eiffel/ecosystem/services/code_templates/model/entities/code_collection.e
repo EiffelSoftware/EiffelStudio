@@ -93,9 +93,9 @@ feature {NONE} -- Implementation: Internal cache
 			-- Default generic item
 
 invariant
-	internal_items_attached: internal_items /= Void
-	internal_items_contains_attached_items:
-		(attached {DS_LIST [detachable G]} internal_items as l_internal_items) and then not l_internal_items.has (internal_default_item)
+	internal_items_attached: is_initialized implies internal_items /= Void
+	internal_items_contains_attached_items: is_initialized implies
+		((attached {DS_LIST [detachable G]} internal_items as l_internal_items) and then not l_internal_items.has (internal_default_item))
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

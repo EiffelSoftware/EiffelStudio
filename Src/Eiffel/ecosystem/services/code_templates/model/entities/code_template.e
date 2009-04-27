@@ -160,10 +160,10 @@ feature {NONE} -- Internal implementation cache
 			-- Mutable version of `tokens'
 
 invariant
-	internal_tokens_attached: internal_tokens /= Void
-	internal_tokens_contains_attached_items:
-		(attached {DS_LINEAR [detachable ANY]} internal_tokens as l_tokens) and then
-		not l_tokens.has (Void)
+	internal_tokens_attached: is_initialized implies  internal_tokens /= Void
+	internal_tokens_contains_attached_items: is_initialized implies
+		((attached {DS_LINEAR [detachable ANY]} internal_tokens as l_tokens) and then
+		not l_tokens.has (Void))
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -161,13 +161,13 @@ feature -- Visitor
 		end
 
 invariant
-	metadata_attached: metadata /= Void
+	metadata_attached: is_initialized implies metadata /= Void
 	metadata_parent_set: is_initialized implies metadata.parent = Current
-	declarations_attached: declarations /= Void
+	declarations_attached: is_initialized implies declarations /= Void
 	declarations_parent_set: is_initialized implies declarations.parent = Current
-	templates_attached: templates /= Void
+	templates_attached: is_initialized implies templates /= Void
 	templates_parent_set: is_initialized implies templates.parent = Current
-	code_factory_attached: code_factory /= Void
+	code_factory_attached: is_initialized implies code_factory /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

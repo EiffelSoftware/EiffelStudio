@@ -74,7 +74,7 @@ feature -- Visitor
 		end
 
 invariant
-	default_value_attached: default_value /= Void
+	default_value_attached: is_initialized implies default_value /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

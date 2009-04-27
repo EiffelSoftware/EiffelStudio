@@ -120,11 +120,11 @@ feature -- Visitor
 		end
 
 invariant
-	title_attached: title /= Void
-	description_attached: description /= Void
-	author_attached: author /= Void
-	shortcut_attached: shortcut /= Void
-	categories_attached: categories /= Void
+	title_attached: is_initialized implies title /= Void
+	description_attached: is_initialized implies description /= Void
+	author_attached: is_initialized implies author /= Void
+	shortcut_attached: is_initialized implies shortcut /= Void
+	categories_attached: is_initialized implies categories /= Void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

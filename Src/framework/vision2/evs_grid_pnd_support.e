@@ -33,11 +33,13 @@ feature -- Access
 			-- Last picked item	
 			-- Void if no item is picked.	
 
-	pick_start_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM]]
+	pick_start_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_COORDINATE]]
 			-- Actions to be performed when pick starts from given grid item.
 			-- Each agent in this should be responsible for certain kind of grid item.
 			-- In an agent, `last_pebble' should be set through `set_last_pebble' if a pebble is confiremed to be returned and
 			-- possible item redraw should be done also.
+			-- For bug#14291
+			-- EV_COORDINATE parameter is original X, Y pointer position (relative to grid top-left) when right click menu just popuped
 		do
 			if pick_start_actions_internal = Void then
 				create pick_start_actions_internal
@@ -194,8 +196,8 @@ feature{NONE} -- Implementation
 			l_position: EV_COORDINATE
 		do
 			if not pick_start_actions.is_empty then
-				l_position := grid.pointer_position
-				pick_start_actions.call ([grid_item_at_position (grid, l_position.x, l_position.y)])
+				create l_position.make (a_x, a_y + grid.header.height)
+				pick_start_actions.call ([grid_item_at_position (grid, l_position.x, l_position.y), l_position])
 			end
 		end
 
@@ -210,4 +212,35 @@ feature{NONE} -- Implementation
 			last_picked_item_cleared: last_picked_item = Void
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

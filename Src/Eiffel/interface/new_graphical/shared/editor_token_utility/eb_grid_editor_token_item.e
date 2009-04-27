@@ -612,18 +612,26 @@ feature -- Pick and drop
 			Precursor (a_index)
 		end
 
+	token_index_at_position (a_coordinate: EV_COORDINATE): INTEGER
+			-- Index of token located at `a_coordinate'
+			-- 0 if no token is below that position.
+		require
+			not_void: a_coordinate /= Void
+		local
+			l_relative_position: like relative_pointer_position
+		do
+			l_relative_position := relative_position (Current, a_coordinate.x, a_coordinate.y)
+			Result := token_index_at_imp (l_relative_position)
+		end
+
 	token_index_at_current_position: INTEGER
 			-- Index of token that is current position
 			-- 0 if no token is below that position.
 		local
-			l_editor_token_text: like editor_token_text
 			l_relative_position: like relative_pointer_position
 		do
-			l_editor_token_text := editor_token_text
-			if not l_editor_token_text.tokens.is_empty then
-				l_relative_position := relative_pointer_position (Current)
-				Result := l_editor_token_text.token_index_at_position (l_relative_position.x, l_relative_position.y)
-			end
+			l_relative_position := relative_pointer_position (Current)
+			Result := token_index_at_imp (l_relative_position)
 		end
 
 	editor_token_pebble (a_index: INTEGER): ANY
@@ -646,14 +654,14 @@ feature -- Pick and drop
 			is_pick_on_text_set: is_pick_on_text = b
 		end
 
-	on_pick: ANY
+	on_pick (a_orignal_pointer_position: EV_COORDINATE): ANY
 			-- Action to be performed when pick starts
 			-- Return value is the picked pebble if any.
 		local
 			l_index: INTEGER
 			l_stone: STONE
 		do
-			l_index := token_index_at_current_position
+			l_index := token_index_at_position (a_orignal_pointer_position)
 			if l_index > 0 then
 				l_stone ?= editor_token_pebble (l_index)
 				if l_stone /= Void then
@@ -662,7 +670,7 @@ feature -- Pick and drop
 					set_last_picked_item (l_index)
 				end
 			elseif is_component_pebble_enabled then
-				l_index := component_index_at_pointer_position
+				l_index := component_index_at_position (a_orignal_pointer_position)
 				if l_index > 0 then
 					set_last_picked_item (l_index)
 					Result := pick_component (l_index)
@@ -832,8 +840,21 @@ feature{NONE} -- Implementation
 			Result := Current
 		end
 
+	token_index_at_imp (a_relative_position: EV_COORDINATE): INTEGER
+			-- Implementation for `token_index_at_position' and `token_index_at_current_position'
+		require
+			not_void: a_relative_position /= Void
+		local
+			l_editor_token_text: like editor_token_text
+		do
+			l_editor_token_text := editor_token_text
+			if not l_editor_token_text.tokens.is_empty then
+				Result := l_editor_token_text.token_index_at_position (a_relative_position.x, a_relative_position.y)
+			end
+		end
+
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -857,11 +878,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

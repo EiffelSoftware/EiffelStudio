@@ -597,13 +597,13 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	evs_on_pebble_function (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
+	evs_on_pebble_function (a_item: EV_GRID_ITEM; a_orignal_pointer_position: EV_COORDINATE; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
 		local
 			l_pebble: ANY
 		do
 			l_pebble := on_pebble_function (a_item)
 			if l_pebble = Void then
-				Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}(a_item, a_grid_support)
+				Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}(a_item, a_orignal_pointer_position, a_grid_support)
 			end
 		end
 

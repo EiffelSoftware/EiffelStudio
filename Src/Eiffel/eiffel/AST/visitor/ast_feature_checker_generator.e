@@ -1803,9 +1803,11 @@ feature -- Implementation
 								if l_is_in_assignment or else l_is_target_of_creation_instruction then
 										-- The attribute might change its attachment status.
 										-- It is recorded for future checks because
-										-- it might be still safe to use the attribute in the expression
+										-- it might be still unsafe to use the attribute in the expression
 										-- before actual reattachment takes place.
 									last_reinitialized_variable := - l_feature.feature_name_id
+									l_result_type := l_result_type.as_attached_in (context.current_class)
+									last_type := l_result_type
 								elseif context.is_attribute_attached (l_feature.feature_name_id) then
 										-- Attribute is of a detachable type, but it's safe to use it as an attached one.
 									l_result_type := l_result_type.as_attached_in (context.current_class)

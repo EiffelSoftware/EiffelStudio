@@ -254,7 +254,7 @@ feature {NONE} -- Implementation: byte node
 				ct := f.associated_class.types.first
 			end
 
-			l_local_table := a_context.local_table.twin
+			l_local_table := a_context.local_table
 			if l_local_table /= Void and then not l_local_table.is_empty then
 					--| if it failed .. let's continue anyway for now
 

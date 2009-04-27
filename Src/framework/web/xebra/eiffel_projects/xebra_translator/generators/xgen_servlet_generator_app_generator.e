@@ -104,19 +104,31 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("make")
 			Result.append_local ("path", "STRING")
+			Result.append_local ("controller_types", "ARRAYED_LIST [STRING]")
 			Result.append_expression ("if  Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
 			Result.append_expression ("else")
 			Result.append_expression ("path := Arguments.argument (1)")
+
 			from
 				servlet_generator_generators.start
 			until
 				servlet_generator_generators.after
 			loop
 				l_servlet_gg := servlet_generator_generators.item
+				Result.append_expression ("create controller_types.make (" + l_servlet_gg.controller_types.count.out + ")")
+				from
+					l_servlet_gg.controller_types.start
+				until
+					l_servlet_gg.controller_types.after
+				loop
+					Result.append_expression ("controller_types.extend (%"" + l_servlet_gg.controller_types.item.as_upper + "%")")
+					l_servlet_gg.controller_types.forth
+				end
+
 				Result.append_expression ("(create {"
 					+ l_servlet_gg.servlet_name.as_upper + "_G_SERVLET_GENERATOR}.make ("
-					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", %"" + l_servlet_gg.controller_type.as_upper + "%")).generate;")
+					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", controller_types)).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")

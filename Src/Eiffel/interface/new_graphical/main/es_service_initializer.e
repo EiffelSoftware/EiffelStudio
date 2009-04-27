@@ -162,37 +162,37 @@ feature {NONE} -- Registration: Help
 		do
 			create l_kinds
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {EIFFEL_DOC_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)
 				end, l_kinds.eiffel_doc)
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {WIKI_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)
 				end, l_kinds.wiki)
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {RAW_URI_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)
 				end, l_kinds.raw_uri)
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {PDF_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)
 				end, l_kinds.pdf)
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {DOC_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)
 				end, l_kinds.doc)
 
-			a_service.register_with_activator (agent: HELP_PROVIDER_I
+			a_service.register_with_activator (agent: attached HELP_PROVIDER_I
 				do
 					create {EIS_DEFAULT_HELP_PROVIDER} Result.make (
 						agent (preferences.misc_data.internet_browser_preference).string_value)

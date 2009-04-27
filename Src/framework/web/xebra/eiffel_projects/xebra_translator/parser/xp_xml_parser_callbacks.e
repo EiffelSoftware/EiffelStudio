@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			create state_html.make (Current)
 			create state_tag.make (Current)
 			state := state_html
-			controller_class := "STRING"
+			create {ARRAYED_LIST [STRING]} controller_classes.make (1)
 			create {HASH_TABLE [XTL_TAG_LIBRARY, STRING]} taglibs.make (4)
 			taglibs.put (generate_configuration_taglib, Configuration_tag)
 		ensure
@@ -50,7 +50,7 @@ feature -- Access
 	path: STRING
 			-- The path of the file to which is being read
 
-	controller_class: STRING
+	controller_classes: LIST [STRING]
 			-- The class of the handling controller
 
 	state: XP_CALLBACK_STATE
@@ -231,6 +231,8 @@ feature -- Content
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
 			state.on_content (a_content)
+		ensure then
+			stack_does_not_change: tag_stack.count = old tag_stack.count
 		end
 
 feature {XP_CALLBACK_STATE} -- Implementation
@@ -252,6 +254,8 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			else
 				Result := "Could not determine position!"
 			end
+		ensure
+			result_not_empty: not result.is_empty
 		end
 
 	set_state_html
@@ -276,13 +280,70 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			create Result.make_hard_wired (Configuration_tag)
 			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
 				make_with_agent ("controller", agent controller_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("include", agent include_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("extend", agent extend_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("define_region", agent define_region_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("redefine_region", agent redefine_region_configuration_handler))
+			Result.put (create {XTL_AGENT_TAG_DESCRIPTION}.
+				make_with_agent ("template", agent template_configuration_handler))
+		end
+
+	noop (id, value: STRING)
+			-- Does nothing
+		do
+			-- Nothing at all
 		end
 
 	controller_configuration_handler (id, value: STRING)
 			-- Handles #Configuration_tag:controller tags
 		do
 			if id.is_equal ("class") then
-				controller_class := value
+				controller_classes.extend(value)
+			end
+		end
+
+	include_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:include tags
+		do
+			if id.is_equal ("path") then
+				-- Add a tag_element which searches for the appropriate template and includes it
+			end
+		end
+
+	extend_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:extend tags
+		do
+			if id.is_equal ("extend") then
+				-- Add a tag_element which searches for the appropriate template and extends it
+			end
+		end
+
+
+	define_region_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:extend tags
+		do
+			if id.is_equal ("define_region") then
+				-- Add a tag_element which searches for the appropriate template and extends it
+			end
+		end
+
+	redefine_region_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:extend tags
+		do
+			if id.is_equal ("redefine_region") then
+				-- Add a tag_element which searches for the appropriate template and extends it
+			end
+		end
+
+	template_configuration_handler (id, value: STRING)
+			-- Handles #Configuration_tag:extend tags
+		do
+			if id.is_equal ("redefine_region") then
+				-- Add a tag_element which searches for the appropriate template and extends it
 			end
 		end
 

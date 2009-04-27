@@ -122,10 +122,12 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
-			Result.append_expression ("port := 55005")
-			Result.append_expression ("TODO READ THIS FROM ARGUMENTS")
-			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
+			Result.append_expression ("if Arguments.argument_count /= 1 then")
+			Result.append_expression ("print (%"usage: webapp listening_port%%N%")")
+			Result.append_expression ("else")
+			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32)")
 			Result.append_expression ("Precursor")
+			Result.append_expression ("end")
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT

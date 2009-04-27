@@ -48,7 +48,7 @@ feature {NONE} -- Access
 
 feature --Execution
 
-	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
+	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_compile_service: XS_COMPILE_SERVICE)
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
@@ -61,7 +61,7 @@ feature --Execution
 			l_i: INTEGER
 			l_request_factory: XH_REQUEST_FACTORY
 		do
-			create l_webapp_handler.make (a_webapps)
+			create l_webapp_handler.make (a_compile_service)
 			create l_request_factory.make
 			from
 				l_request_message := ""

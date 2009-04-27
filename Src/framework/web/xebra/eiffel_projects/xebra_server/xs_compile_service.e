@@ -16,15 +16,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
+	make
 			-- Initialization for `Current'.
 		do
-			webapps := a_webapps
+			create webapps.make (1)
+
+				--insert a fake app. normally the XS_COMPILE_SERVICE would add new webapps to this list once they are compiled and running
+			webapps.force (create {XS_WEBAPP}.make ("demoapplication", 55005), "demoapplication")
+
 		end
 
 feature --
 
 	webapps: HASH_TABLE [XS_WEBAPP, STRING]
+
 
 feature -- Status setting
 

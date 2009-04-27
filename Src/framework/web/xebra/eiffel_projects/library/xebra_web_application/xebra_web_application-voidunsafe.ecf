@@ -2,6 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_web_application" uuid="4DA691E3-8905-46B6-B1C6-537F192BD17A" library_target="xebra_web_application">
 	<target name="xebra_web_application">
 		<root all_classes="true"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf" readonly="false"/>

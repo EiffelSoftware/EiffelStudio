@@ -21,18 +21,12 @@ feature -- Initialization
 	make
 			-- Creates a server which listens to requests from http servers and from xebra apps
 		do
-
-			create webapps.make (1)
-
-
-			--insert a fake app. normally the XS_COMPILE_SERVICE would add new webapps to this list once they are compiled and running
-			webapps.force (create {XS_WEBAPP}.make ("demoapplication", 55005), "demoapplication")
-
+			create compile_service.make
 
 			print ("%N%N%N")
 			print ("Starting Xebra Server...%N")
 			dprint ("Launching HTTP Connection Server...",1)
-			create http_connection_server.make (webapps)
+			create http_connection_server.make (compile_service)
 			http_connection_server.launch
 		--	dprint ("Launching Web App Connection Server...",1)
 		--	create app_connection_server.make (webapp_handler)
@@ -63,7 +57,7 @@ feature -- Access
 --	app_connection_server: XS_APP_CONN_SERVER
 --			-- Handles connections to xebra web application requests (for registration)
 
-	webapps: HASH_TABLE [XS_WEBAPP, STRING]
-			-- The webapps that have to be available for all threads
+
+	compile_service: XS_COMPILE_SERVICE
 
 end

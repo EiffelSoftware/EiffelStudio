@@ -27,7 +27,7 @@ feature -- Access
 feature -- Processing
 
 process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
-					 a_socket: XU_THREAD_NETWORK_STREAM_SOCKET;  a_server_conn_handler: XWA_SERVER_CONN_HANDLER)
+					 a_socket: NETWORK_STREAM_SOCKET;  a_server_conn_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 

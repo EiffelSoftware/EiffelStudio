@@ -82,7 +82,7 @@ feature -- Query
 					but.parent.destroy
 				end
 				but.destroy
-				but := Void
+				button := Void
 			end
 		end
 

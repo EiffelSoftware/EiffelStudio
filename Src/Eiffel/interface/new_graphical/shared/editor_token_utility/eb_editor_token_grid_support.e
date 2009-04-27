@@ -84,11 +84,12 @@ feature -- Access
 
 feature -- Pick and drop support for grid items
 
-	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
+	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_orignal_pointer_position: EV_COORDINATE; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
 			-- Action performed when pick on `a_item'.
 			-- `a_grid_support' is responsible for managing pick and drop for `a_item'.
 		require
 			a_grid_support_attached: a_grid_support /= Void
+			not_void: a_orignal_pointer_position /= Void
 		local
 			l_item: ES_GRID_PICKABLE_ITEM
 			l_grid: EV_GRID
@@ -97,7 +98,7 @@ feature -- Pick and drop support for grid items
 			if a_item /= Void and then a_item.is_parented then
 				l_item ?= a_item
 				if l_item /= Void and then l_item.grid_item.is_parented then
-					l_stone ?= l_item.on_pick
+					l_stone ?= l_item.on_pick (a_orignal_pointer_position)
 					if l_stone /= Void then
 						l_grid := l_item.grid_item.parent
 						set_last_picked_item (l_item.grid_item)
@@ -217,7 +218,7 @@ feature -- Setting
 			-- actions in `pick_end_actions' will be invoked when pick ends.
 		do
 			Precursor
-			pick_start_actions.extend (agent on_pick_start_from_grid_pickable_item (?, Current))
+			pick_start_actions.extend (agent on_pick_start_from_grid_pickable_item (?, ?, Current))
 			pick_end_actions.extend (agent on_pick_ended_from_grid_pickable_item)
 		end
 
@@ -339,35 +340,35 @@ feature {NONE} -- Memory Management
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

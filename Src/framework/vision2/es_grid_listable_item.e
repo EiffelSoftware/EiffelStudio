@@ -72,30 +72,30 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	component_index_at_position (a_orignal_pointer_position: EV_COORDINATE): INTEGER
+			-- 1-based Index component at `a_orignal_pointer_position'
+			-- 0 if no such component is found.
+		require
+			not_void: a_orignal_pointer_position /= Void
+		local
+			l_coordinate: EV_COORDINATE
+			l_pos: like component_position
+			l_rec: EV_RECTANGLE
+		do
+			l_coordinate := relative_position (grid_item, a_orignal_pointer_position.x, a_orignal_pointer_position.y)
+			Result := component_index_at_imp (l_coordinate)
+		end
+
 	component_index_at_pointer_position: INTEGER
 			-- 1-based Index component at current pointer position
-			-- 0 if no such component is fould.
+			-- 0 if no such component is found.
 		local
 			l_coordinate: EV_COORDINATE
 			l_pos: like component_position
 			l_rec: EV_RECTANGLE
 		do
 			l_coordinate := relative_pointer_position (grid_item)
-			l_pos := component_position
-			if not l_pos.is_empty then
-				from
-					l_pos.start
-				until
-					l_pos.after or Result > 0
-				loop
-					l_rec := l_pos.item
-					if l_rec.has_x_y (l_coordinate.x, l_coordinate.y) then
-						Result := l_pos.index
-					else
-						l_pos.forth
-					end
-				end
-			end
+			Result := component_index_at_imp (l_coordinate)
 		end
 
 	pick_component (i: INTEGER): ANY
@@ -352,6 +352,31 @@ feature{NONE} -- Implementation
 	veto_general_tooltip_function_internal: like veto_general_tooltip_function
 			-- Implementation of `veto_general_tooltip_function'
 
+	component_index_at_imp (a_relative_position: EV_COORDINATE): INTEGER
+			-- Implementation for `component_index_at_position' and `component_index_at_curernt_position'
+		require
+			not_void: a_relative_position /= Void
+		local
+			l_pos: like component_position
+			l_rec: EV_RECTANGLE
+		do
+			l_pos := component_position
+			if not l_pos.is_empty then
+				from
+					l_pos.start
+				until
+					l_pos.after or Result > 0
+				loop
+					l_rec := l_pos.item
+					if l_rec.has_x_y (a_relative_position.x, a_relative_position.y) then
+						Result := l_pos.index
+					else
+						l_pos.forth
+					end
+				end
+			end
+		end
+
 feature{NONE} -- component actions maintaining
 
 	install_component_actions
@@ -578,7 +603,7 @@ feature{NONE} -- Actions for components
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -602,11 +627,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

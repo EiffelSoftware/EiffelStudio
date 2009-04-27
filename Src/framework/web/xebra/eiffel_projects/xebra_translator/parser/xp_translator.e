@@ -155,6 +155,7 @@ feature -- Processing
 			servlet_name_valid: not servlet_name.is_empty
 		local
 			l_root_tag: XP_TAG_ELEMENT
+			l_controller_classes: LIST [STRING]
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
 			xternal_resolver: XP_EXTERNAL_RESOLVER
@@ -169,7 +170,8 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			l_root_tag := l_p_callback.root_tag
-			create Result.make (servlet_name, l_p_callback.controller_class.as_upper, False, l_root_tag, output_path)
+			l_controller_classes := l_p_callback.controller_classes
+			create Result.make (servlet_name, l_controller_classes, False, l_root_tag, output_path)
 		end
 
 feature {NONE} -- Implementation

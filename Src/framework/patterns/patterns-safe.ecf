@@ -4,6 +4,7 @@
 		<description>Collection of patterns.</description>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>tests</exclude>
 		</file_rule>
 		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">

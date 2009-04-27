@@ -85,7 +85,7 @@ feature -- Basic Functionality
 			create file.make_open_write (path + webapp_name.as_lower + "_g_application.e")
 			create buf.make (file)
 			create application_class.make (webapp_name.as_upper + "_G_APPLICATION")
-			application_class.set_inherit ("XWA_APPLICATION")
+			application_class.set_inherit ("XWA_APPLICATION redefine make end")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_feature_for_name)
 			application_class.add_feature (generate_contructor_for_application)
@@ -122,8 +122,10 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
+			Result.append_expression ("port := 55005")
+			Result.append_expression ("TODO READ THIS FROM ARGUMENTS")
 			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name)")
-			Result.append_expression ("server_connection_handler.execute")
+			Result.append_expression ("Precursor")
 		end
 
 	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT

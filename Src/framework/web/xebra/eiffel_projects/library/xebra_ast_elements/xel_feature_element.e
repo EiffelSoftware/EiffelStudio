@@ -92,11 +92,18 @@ feature -- Access
 			append_expression ("%T-- " + comment)
 		end
 
-	get_unique_identifier: STRING
+	new_uid: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do
 			Result := "temp_" + variable_count.out
 			variable_count := variable_count + 1
+		end
+
+	new_local (type: STRING): STRING
+			-- Generates a new local variable and returns its unique identifier
+		do
+			Result := new_uid
+			append_local (Result, type)
 		end
 
 	set_once

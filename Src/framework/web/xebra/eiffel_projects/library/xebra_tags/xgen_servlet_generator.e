@@ -10,32 +10,39 @@ deferred class
 feature --
 
 	path: STRING
-	servlet_name: STRING
-	stateful: BOOLEAN
-	controller_type: STRING
+		-- Path to which the servlet is generated
 
-	make (a_path, a_servlet_name: STRING; a_stateful: BOOLEAN; a_controller_type: STRING)
+	servlet_name: STRING
+		-- The name of the servlet
+
+	stateful: BOOLEAN
+		-- Is the servlet stateful?
+
+	controller_types: LIST [STRING]
+		-- All the used controllers (main page and subpages)
+
+	make (a_path, a_servlet_name: STRING; a_stateful: BOOLEAN; a_controller_types: LIST [STRING])
 		require
 			path_is_not_empty: not a_path.is_empty
 		do
 			path := a_path
 			servlet_name := a_servlet_name
 			stateful := a_stateful
-			controller_type := a_controller_type
+			controller_types := a_controller_types
 		end
 
 	build_make_for_servlet_generator (a_class: XEL_SERVLET_CLASS_ELEMENT)
 			-- Serializes the request feature of the {SERVLET}
 		do
 			a_class.make_feature.append_expression ("Precursor")
-			a_class.make_feature.append_expression ("create controller." + constructor_name )
+			a_class.make_feature.append_expression ("create controller." + constructor_name )	
 		end
 
 	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
 			-- Serializes the request feature of the {SERVLET}
 		do
 			create Result.make ("internal_controller: XWA_CONTROLLER")
-			Result.append_expression ("Result := controller")
+			Result.append_expression ("Result := controller [0]")
 		end
 
 	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)
@@ -61,7 +68,14 @@ feature --
 			end
 			servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
 			servlet_class.set_constructor_name ("make")
-			servlet_class.add_variable_by_name_type ("controller", controller_type)
+			from
+				controller_types.start
+			until
+				controller_types.after
+			loop
+				servlet_class.add_variable_by_name_type ("controller", controller_types.item)
+				controller_types.forth
+			end
 			build_make_for_servlet_generator (servlet_class)
 			servlet_class.add_feature (build_internal_controller_for_servlet)
 			build_handle_request_feature_for_servlet (servlet_class, get_root_tag)

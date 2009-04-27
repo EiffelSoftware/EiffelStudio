@@ -11,14 +11,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_servlet_name, a_controller_type: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING)
+	make (a_servlet_name: STRING; a_controller_types: LIST [STRING]; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING)
 			-- `a_servlet_name': The name of ther servlet which has to be generated
-			-- `a_controller_type': The type of the controller
+			-- `a_controller_types': The types of the controllers
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
 		do
 			servlet_name := a_servlet_name
-			controller_type := a_controller_type
+			controller_types := a_controller_types
 			stateful := a_stateful
 			root_tag := a_root_tag
 			path := a_path
@@ -31,8 +31,8 @@ feature {NONE} -- Access
 
 feature -- Basic functionality
 
-	controller_type: STRING
-			-- The type of the controller
+	controller_types: LIST [STRING]
+			-- The types of the controllers
 
 	servlet_name: STRING
 			-- The name of ther servlet which has to be generated

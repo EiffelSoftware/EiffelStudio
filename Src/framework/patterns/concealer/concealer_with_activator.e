@@ -128,7 +128,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 invariant
-	activator_attached: is_interface_usable implies (is_revealed implies attached activator)
+	activator_attached: is_interface_usable implies (not is_revealed implies attached activator)
 	activator_detached: is_interface_usable implies (is_revealed implies not attached activator)
 	is_revealed: is_interface_usable implies (internal_object /= Void implies is_revealed)
 

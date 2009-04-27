@@ -18,15 +18,15 @@ create make
 
 feature -- Initialization
 
-	make  (a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
+	make  (a_compile_service: XS_COMPILE_SERVICE)
 			-- Initializes current
 		do
-			webapps := a_webapps
+			compile_service := a_compile_service
             create http_socket.make_server_by_port (default_http_server_port)
             create thread_pool.make (max_thread_number, agent request_handler_spawner)
             stop := False
 		ensure
-			webapps_set: webapps = a_webapps
+			compile_service_set: compile_service = a_compile_service
        	end
 
 feature -- Inherited Features
@@ -48,7 +48,7 @@ feature -- Inherited Features
 	            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
 --					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 	            		--singleusermode
-	            	l_r_handler.do_execute (thread_http_socket, webapps)
+	            	l_r_handler.do_execute (thread_http_socket, compile_service)
 				end
             end
             http_socket.cleanup
@@ -64,7 +64,7 @@ feature -- Access
 	http_socket: NETWORK_STREAM_SOCKET
 			-- The socket
 
-	webapps: HASH_TABLE [XS_WEBAPP, STRING]
+	compile_service: XS_COMPILE_SERVICE
 
 
 	stop: BOOLEAN

@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			port := a_port
 			is_running := False
+			is_compiled := False
 		ensure
 			name_set: name = a_name
 			port_set: port = a_port
@@ -28,6 +29,7 @@ feature -- Access
 	name: STRING
 	port: INTEGER
 	is_running: BOOLEAN
+	is_compiled: BOOLEAN
 
 
 feature -- Measurement

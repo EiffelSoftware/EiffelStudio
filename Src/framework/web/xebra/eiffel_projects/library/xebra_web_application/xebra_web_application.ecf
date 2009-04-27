@@ -4,6 +4,7 @@
 		<root all_classes="true"/>
 		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
 		</option>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities.ecf"/>

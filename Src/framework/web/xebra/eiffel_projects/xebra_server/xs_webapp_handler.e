@@ -18,22 +18,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
+	make (a_compile_service: XS_COMPILE_SERVICE)
 			-- Initialization for `Current'.
 		do
 		--	create webapps_mutex.make
-			webapps := a_webapps
-			create compile_service.make (webapps)
+			compile_service := a_compile_service
+		ensure
+			compile_service_set: compile_service = a_compile_service
 		end
 
 feature -- Constants
 
 	Default_app_server_host: STRING = "localhost"
 
-	webapps: HASH_TABLE [XS_WEBAPP, STRING]
 
 feature -- Access
-
 
 	compile_service: XS_COMPILE_SERVICE
 
@@ -117,7 +116,7 @@ feature {NONE} -- Implementation
 			local
 				l_webapp_socket: NETWORK_STREAM_SOCKET
 			do
-				if attached {XS_WEBAPP} webapps[a_webapp_name] as l_app then
+				if attached {XS_WEBAPP} compile_service.webapps[a_webapp_name] as l_app then
 
 					create l_webapp_socket.make_client_by_port (l_app.port, Default_app_server_host)
 					dprint ("Connecting to " + a_webapp_name + "@" + l_app.port.out,2)

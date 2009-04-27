@@ -39,7 +39,7 @@ feature -- Access
 			-- The name of the web app
 
 
-	xserver_socket: XU_THREAD_NETWORK_STREAM_SOCKET
+	xserver_socket: NETWORK_STREAM_SOCKET
 
 feature -- Implementation
 
@@ -61,22 +61,27 @@ feature -- Implementation
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
 		do
-			dprint ("Xebra Webapp ready to rock...",1)
+			create l_request_handler.make
         	from
                 xserver_socket.listen (10)
             until
             	stop
             loop
                 xserver_socket.accept
-                dprint ("Connection to Xebra Server accepted",1)
-
-	             if attached {STRING} xserver_socket.retrieved as l_request_message then
-	 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, xserver_socket, Current))
-	 	        		--singleusermode
-	 	        	l_request_handler.process_servlet (session_manager, l_request_message, xserver_socket, Current)
-	            else
-					xserver_socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
-	            end
+                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
+	                dprint ("Connection to Xebra Server accepted",1)
+		             if attached {STRING} socket.retrieved as l_request_message then
+		 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
+		 	        		--singleusermode
+		 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
+		            else
+						socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
+		            end
+		            socket.cleanup
+		            check
+			        	socket.is_closed
+			       	end
+		         end
             end
 
             xserver_socket.cleanup

@@ -81,14 +81,15 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	module_name: attached STRING_32
+	module_name: STRING
 			-- The library module name, without an extension.
 		deferred
 		ensure
+			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	minimum_version: detachable STRING_32
+	minimum_version: detachable STRING
 			-- The library module's minimum supported version.
 		deferred
 		ensure
@@ -107,7 +108,7 @@ feature -- Status report
 
 feature -- Query
 
-	api_pointer (a_api_name: READABLE_STRING_GENERAL): POINTER
+	api_pointer (a_api_name: READABLE_STRING_8): POINTER
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.
@@ -124,7 +125,7 @@ feature -- Query
 
 feature {NONE} -- Basic operations
 
-	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- Attempts to load a library from a module name.
 			--
 			--| Note: Redefine if the API needs to load a library using a path, or some other special

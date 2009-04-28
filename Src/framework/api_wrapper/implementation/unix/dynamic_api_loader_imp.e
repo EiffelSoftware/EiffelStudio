@@ -15,19 +15,19 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
-			l_name: attached EV_GTK_C_STRING
+			l_name: EV_GTK_C_STRING
 			l_result: BOOLEAN
 		do
-			create l_name.set_with_eiffel_string (a_api_name.as_string_32)
+			l_name := a_api_name.as_string_8
 			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
 		end
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME
@@ -52,12 +52,12 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_path: EV_GTK_C_STRING
 		do
-			create l_path.set_with_eiffel_string (a_path.as_string_32)
+			l_path := a_path.as_string_8
 			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)
 		end
 

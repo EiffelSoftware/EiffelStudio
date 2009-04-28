@@ -1,5 +1,0 @@
-<document title=".NET Installation instructions" output="studio">
-	<meta_data/>
-	<paragraph>
-		<paragraph>Before installing the .NET components for Eiffel for .NET you need to install either the .NET Framework, the .NET Framework SDK or Visual Studio .NET. If you do not have any of those installed, the installation program will prompt you with a warning because no .NET features support will be installed. </paragraph>
-	</paragraph></document>

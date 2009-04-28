@@ -1,5 +1,0 @@
-<document output="studio" title="EiffelCOM Introduction">
-	<meta_data/>
-	<paragraph>
-		<paragraph>The EiffelCOM library provides support classes for the code generated    by the EiffelCOM wizard. It has wrappings for standard COM data types    such as VARIANT, SAFEARRAY, CURRENCY, DECIMAL, IUnknown, IDispatch, etc.</paragraph>
-	</paragraph></document>

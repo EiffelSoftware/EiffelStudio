@@ -1,8 +1,0 @@
-<document title="Software Installation" output="studio">	
-	<meta_data></meta_data>	
-	<paragraph>			
-		<paragraph>For detailed installation instructions please follow the link for the product your are installing.</paragraph>					
-		<heading><size>2</size><link><url>studio/index.xml</url><label>EiffelStudio 6.3</label></link></heading>
-		<heading><size>2</size><link><url>thirdparty/index.xml</url><label>Third Party Tools</label></link></heading>
-	</paragraph>
-</document>

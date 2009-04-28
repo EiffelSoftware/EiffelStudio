@@ -1,5 +1,0 @@
-<document title="Creating handles" output="studio">
-	<meta_data></meta_data>
-	<paragraph>Once you have created a link to show the relationship between the classes in your system you may wish to organize them.  One technique for doing this easily is to create handles in the links.  A handle is simply a point anywhere along the link that causes the link to change direction.  To create a handle just click the mouse at the exact point on the link you wish to put the handle and then drag it to where you want the handle to be positioned in the overall diagram.  You can create as many handles as you wish and use them to organize you diagram so that it is easier to interpret and so that links do not get too jumbled and become 
-	incoherent.</paragraph>
-</document>

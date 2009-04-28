@@ -1,0 +1,18 @@
+
+test_name 	remove-syntax-error-crash
+test_description When a class with a syntax error is compiled (with no precompiled library), the compiler reports the error correctly.  But when the error is removed and compilation is resumed, the compiler crashes.
+
+define		END "nd"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	syntax_error TEST 12
+
+define		END "end"
+copy_sub 	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
+
+test_end

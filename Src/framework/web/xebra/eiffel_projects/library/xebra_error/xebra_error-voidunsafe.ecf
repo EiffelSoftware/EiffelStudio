@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_error"  uuid="55B2E046-5F31-4518-BCAC-14C7CCBA2295" library_target="xebra_error">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_error" uuid="55B2E046-5F31-4518-BCAC-14C7CCBA2295" library_target="xebra_error">
 	<target name="xebra_error">
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

@@ -33,9 +33,9 @@ h3 {
 <body>
 <h1>Xebra Tutorial </h1>
 <h2>Notes</h2>
-<p><strong>Use Xebra revision ??? for this tutorial</strong>.</p>
+<p><strong>Use Xebra revision 78423 for this tutorial</strong>.</p>
 <p>Eiffel source is expected to be in <span class="code">$EIFFEL_SRC</span></p>
-<p>The tutorial is written for Ubuntu 8.10</p>
+<p>This tutorial was tested on Ubuntu 8.10 with eiffel source rev 78423 and EiffelStudio 6.4.7.8212</p>
 <h2>Checkout</h2>
 <ul>
   <li>Checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="code">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="code">$XEBRA_DEV</span></li>
@@ -64,15 +64,7 @@ h3 {
   </li>
   <li> Compile the module by running<br />
     <span class="code"><strong>cd $XEBRA_DEV/c_projects/mod_xebra</strong><br />
-    <strong>$APACHE2/bin/apxs -c -Wc,-ggdb 
-    
-    
-    (old) -I$EIFFEL_SRC/C/run-time -I$EIFFEL_SRC/C/run-time/include 
-    
-    (new) -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include -I$EIFFEL_SRC/C/run-time/include 
-    
-    
-    mod_xebra.c mod_xebra.h</strong></span><br />
+    <strong>$APACHE2/bin/apxs -c -Wc,-ggdb -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include -I$EIFFEL_SRC/C/run-time/include mod_xebra.c mod_xebra.h</strong></span><br />
     <br />
   </li>
   <li> Install the module to apache by running<br />
@@ -91,7 +83,7 @@ h3 {
   <span class="code">sudo <strong>$APACHE2/bin/</strong>apachectl restart</span><br />
   <br />
   </li>
-  <li>Browse to <span class="code">http://localhost/test.xeb</span>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
+  <li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
     <br />
   </li>
   <li> Hint: keep an eye on the apache error log<br />
@@ -106,7 +98,7 @@ h3 {
   <li>Compile and Run<br />
     <br />
   </li>
-  <li>Browse again to <span class="code">http://localhost/test.xeb</span>.You should see a Xebra Server Error Report (also with the Fail Whale) with a message saying &quot;Cannot find web application ' ' &quot;<br />
+  <li>Browse again to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see a Xebra Server Error Report (also with the Fail Whale) with a message saying &quot;Cannot find web application ' ' &quot;<br />
 </li>
 </ul>
 <p>&nbsp;</p>
@@ -131,7 +123,7 @@ h3 {
   <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
       <br />
   </li>
-  <li>Browse to <span class="code">http://localhost/xebrawebapp/hello.xeb</span>, you should see &quot;Hello World!&quot;</li>
+  <li>Browse to <a href="http://localhost/xebrawebapp/hello.xeb">http://localhost/xebrawebapp/hello.xeb</a>, you should see &quot;Hello World!&quot;</li>
 </ul>
 <p>&nbsp;</p>
 <h2>Run the Demoapplication (advanced web application)</h2>
@@ -165,7 +157,7 @@ h3 {
       <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
         <br />
       </li>
-      <li>Browse to <span class="code">http://localhost/demoapplication/home.xeb</span>, you should see the site</li>
+      <li>Browse to <a href="http://localhost/demoapplication/home.xeb">http://localhost/demoapplication/home.xeb</a>, you should see the site</li>
     </ul>
     <br />
   </li>

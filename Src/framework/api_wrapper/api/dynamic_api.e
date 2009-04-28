@@ -143,7 +143,7 @@ feature {NONE} -- Basic operations
 			Result := api_loader.load_library (a_name, a_version)
 		end
 
-feature {SHARED_DYNAMIC_API} -- Externals
+feature {DYNAMIC_SHARED_API} -- Externals
 
 	module_handle: POINTER
 			-- Initialized module handle

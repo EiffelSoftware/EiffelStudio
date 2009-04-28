@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	SHARED_DYNAMIC_API
+	DYNAMIC_SHARED_API
 
 inherit
 	USABLE_I

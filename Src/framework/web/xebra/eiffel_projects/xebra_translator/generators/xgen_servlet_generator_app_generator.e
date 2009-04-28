@@ -71,27 +71,8 @@ feature -- Basic functionality
 			file.close
 
 				-- Generate the .ecf file
-
 			create file.make_open_write (a_path + "servlet_gen.ecf")
-			file.put_string ("[
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
-	<target name="servlet_gen">
-		<root class="APPLICATION" feature="make"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
-		<library name="xebra_tags" location="\home\sandrod\workspace\xebra\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf"/>
-		<cluster name="servlet_gen" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
-			]")
+			file.put_string (servlet_gen_ecf)
 			file.close
 		end
 
@@ -127,12 +108,36 @@ feature {NONE} -- Implementation
 				end
 
 				Result.append_expression ("(create {"
-					+ l_servlet_gg.servlet_name.as_upper + "_G_SERVLET_GENERATOR}.make ("
+					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "SERVLET_GENERATOR}.make ("
 					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", controller_types)).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
 		end
+
+feature -- Constants
+
+	Generator_Prefix: STRING = "g_"
+
+	servlet_gen_ecf: STRING = "[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
+	<target name="servlet_gen">
+		<root class="APPLICATION" feature="make"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
+		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf"/>
+		<cluster name="servlet_gen" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
+	]"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

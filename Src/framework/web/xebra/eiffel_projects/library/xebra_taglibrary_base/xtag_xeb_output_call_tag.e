@@ -30,7 +30,7 @@ feature -- Implementation
 	internal_generate (servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
 		do
-			servlet_class.render_feature.append_expression (Response_variable_append + "(" + Controller_variable + "." + text + ".out)")
+			servlet_class.render_feature.append_expression (Response_variable_append + "(" + current_controller_id + "." + text + ".out)")
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)

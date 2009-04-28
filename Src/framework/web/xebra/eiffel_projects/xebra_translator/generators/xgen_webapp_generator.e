@@ -71,10 +71,10 @@ feature -- Basic Functionality
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			webapp_name.to_lower
-			create file.make_open_write (path + webapp_name + "_g_" + Server_con_handler_class.as_lower + ".e")
+			create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
 			buf.set_ind_character ('%T')
-			create request_class.make (webapp_name.as_upper + "_G_" + Server_con_handler_class)
+			create request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
 			request_class.set_inherit ("XWA_" + Server_con_handler_class + " redefine make end")
 			request_class.set_constructor_name ("make")
 			request_class.add_feature (generate_constructor_for_request_handler (servlets))
@@ -82,9 +82,9 @@ feature -- Basic Functionality
 			file.close
 
 				-- Generate the {APPLICATION} class
-			create file.make_open_write (path + webapp_name.as_lower + "_g_application.e")
+			create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 			create buf.make (file)
-			create application_class.make (webapp_name.as_upper + "_G_APPLICATION")
+			create application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
 			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION redefine make end")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_feature_for_name)
@@ -93,9 +93,9 @@ feature -- Basic Functionality
 			file.close
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
-			create file.make_open_write (path + "g_shared_" + webapp_name.as_lower + "_global_state.e")
+			create file.make_open_write (path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 			create buf.make (file)
-			create application_class.make ("G_SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
+			create application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
 			application_class.set_inherit ("ANY")
 			application_class.add_feature (generate_once_feature_for_global_state)
 			application_class.serialize (buf)
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			Result.append_expression ("if Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage: webapp listening_port%%N%")")
 			Result.append_expression ("else")
-			Result.append_expression ("create " + "{" + webapp_name.as_upper + "_G_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32)")
+			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32)")
 			Result.append_expression ("Precursor")
 			Result.append_expression ("end")
 		end
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			loop
 				servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ servlet.servlet_name.as_upper + "_G_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+					+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
 				some_servlets.forth
 			end
 		end
@@ -152,6 +152,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Constants
 
 	Server_con_handler_class: STRING = "SERVER_CONN_HANDLER"
+	Generator_Prefix: STRING = "g_"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

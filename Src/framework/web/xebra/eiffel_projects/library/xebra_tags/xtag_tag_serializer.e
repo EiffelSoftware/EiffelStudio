@@ -14,6 +14,7 @@ feature -- Initialization
 		do
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
 			render := ""
+			current_controller_id := ""
 		end
 
 feature {NONE} -- Access
@@ -26,6 +27,8 @@ feature {NONE} -- Access
 			-- rendering
 
 feature -- Access
+
+	current_controller_id: STRING
 
 	debug_information: STRING assign set_debug_information
 			-- Row and column of original xeb file
@@ -63,22 +66,10 @@ feature -- Access
 
 feature -- Implementation
 
-	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING]; controller_identifier: STRING)
 			-- TODO
 		do
-			from
-				children.start
-			until
-				children.after
-			loop
-				children.item.generate (a_servlet_class, variable_table)
-				children.forth
-			end
-		end
-
-	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- TODO
-		do
+			current_controller_id := controller_identifier
 			append_debug_info (a_servlet_class.render_feature)
 			append_debug_info (a_servlet_class.prerender_get_feature)
 			append_debug_info (a_servlet_class.prerender_post_feature)
@@ -89,6 +80,19 @@ feature -- Implementation
 				a_servlet_class.render_feature.append_expression ("end")
 			else
 				internal_generate (a_servlet_class, variable_table)
+			end
+		end
+
+	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- TODO
+		do
+			from
+				children.start
+			until
+				children.after
+			loop
+				children.item.generate (a_servlet_class, variable_table, current_controller_id)
+				children.forth
 			end
 		end
 
@@ -125,7 +129,7 @@ feature -- Implementation
 	add_controller_call (feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
 			--
 		do
-			a_feature.append_expression (Controller_variable + "." + feature_name)
+			a_feature.append_expression (current_controller_id + "." + feature_name)
 		end
 
 	append_debug_info (a_feature: XEL_FEATURE_ELEMENT)
@@ -138,7 +142,6 @@ feature {XTAG_TAG_SERIALIZER} -- Constants
 
 		Response_variable: STRING = "response"
 		Request_variable: STRING = "request"
-		Controller_variable: STRING = "controller"
 		Response_variable_append: STRING = "response.append"
 		Response_variable_append_newline: STRING = "response.append_newline"
 

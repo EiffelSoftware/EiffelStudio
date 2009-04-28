@@ -52,9 +52,9 @@ feature -- Basic functionality
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_open_write (a_path + servlet_name.as_lower + "_g_servlet_generator.e")
+			create file.make_open_write (a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e")
 			create buf.make (file)
-			create servlet_gen_class.make (servlet_name.as_upper + "_G_SERVLET_GENERATOR")
+			create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "SERVLET_GENERATOR")
 			servlet_gen_class.set_inherit (Servlet_generator_class)
 			servlet_gen_class.set_constructor_name ("make")
 			servlet_gen_class.add_feature (build_generate_for_servlet_generator)
@@ -79,6 +79,7 @@ feature -- Constants
 
 	Tag_serializer_class: STRING = "XTAG_TAG_SERIALIZER"
 	Servlet_generator_class: STRING = "XGEN_SERVLET_GENERATOR"
+	Generator_Prefix: STRING = "g_"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

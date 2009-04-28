@@ -32,7 +32,7 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			if not children.is_empty then
-				a_servlet_class.render_feature.append_expression ("if " + Controller_variable + "." + condition + " then")
+				a_servlet_class.render_feature.append_expression ("if " + current_controller_id + "." + condition + " then")
 				generate_children (a_servlet_class, variable_table)
 				a_servlet_class.render_feature.append_expression ("end")
 			end

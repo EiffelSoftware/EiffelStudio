@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		do
 			a_servlet_class.render_feature.append_local (variable, type)
 			temp_list := a_servlet_class.render_feature.new_local ("LIST [" + type + "]")
-			a_servlet_class.render_feature.append_expression (temp_list + " := " + Controller_variable + "." + list)
+			a_servlet_class.render_feature.append_expression (temp_list + " := " + current_controller_id + "." + list)
 			a_servlet_class.render_feature.append_expression ("from")
 			a_servlet_class.render_feature.append_expression (temp_list + ".start")
 			a_servlet_class.render_feature.append_expression ("until")

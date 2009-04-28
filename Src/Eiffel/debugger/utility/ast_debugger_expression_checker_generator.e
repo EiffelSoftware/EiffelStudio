@@ -247,6 +247,7 @@ feature {NONE} -- Implementation: byte node
 			l_name_id: INTEGER
 			ct: CLASS_TYPE
 			lst: detachable LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
+			l_names: HASH_TABLE [STRING, INTEGER]
 			l_local_table: HASH_TABLE [LOCAL_INFO, INTEGER]
 		do
 			ct := a_context.class_type
@@ -274,18 +275,29 @@ feature {NONE} -- Implementation: byte node
 			lst := a_context.object_test_locals
 			if lst /= Void and then	not lst.is_empty then
 				from
+					create l_names.make (lst.count)
 					lst.start
 				until
 					lst.after
 				loop
 					tu := lst.item_for_iteration
 					l_name_id := tu.id.name_id
-
-					debug ("to_implement")
-						to_implement ("Support object test locals of the same name.")
+					if l_names.has_key (l_name_id) then
+						--| Same object test local name !!!
+						-- For now, let's ignore it.
+						-- kind of fixed bug#15708
+						debug ("debugger_evaluator")
+							print ("To avoid VUOT error, ignore object test local name with existing name%N")
+						end
+						debug ("to_implement")
+							to_implement ("Support object test locals of the same name.")
+						end
+					else
+						l_names.force (tu.id.name, l_name_id)
+						ctx.add_object_test_local (tu.li, tu.id)
+						ctx.add_object_test_expression_scope (tu.id)
 					end
-					ctx.add_object_test_local (tu.li, tu.id)
-					ctx.add_object_test_expression_scope (tu.id)
+
 					lst.forth
 				end
 			end

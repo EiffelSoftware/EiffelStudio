@@ -6,7 +6,7 @@ define		END "nd"
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 
-compile_melted
+compile_quick_melted
 compile_result 	syntax_error TEST 12
 
 define		END "end"

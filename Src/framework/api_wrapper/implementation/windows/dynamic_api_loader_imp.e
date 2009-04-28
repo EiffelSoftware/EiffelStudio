@@ -15,7 +15,7 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_name: C_STRING
@@ -26,7 +26,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME
@@ -52,12 +52,12 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_path: WEL_STRING
 		do
-			create l_path.make (a_path.as_string_32)
+			create l_path.make (a_path.as_string_8)
 			Result := c_load_library (l_path.item)
 		end
 

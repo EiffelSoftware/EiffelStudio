@@ -21,14 +21,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like api_feature_name)
+	make (a_name: READABLE_STRING_8)
 			-- Initializes a API unavailable exception with an API function or variable name.
 			--
 			-- `a_name': An API function or variable name.
 		require
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			api_feature_name := a_name
+			create api_feature_name.make_from_string (a_name)
 			set_message (once "dynamic feature unavailable")
 		ensure
 			api_feature_name_set: api_feature_name = a_name
@@ -36,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	api_feature_name: STRING
+	api_feature_name: IMMUTABLE_STRING_8
 			-- The API feature name.
 
 feature {NONE} -- Access
@@ -46,7 +47,7 @@ feature {NONE} -- Access
 		do
 			create Result.make (40)
 			Result.append ("The API function or variable `")
-			Result.append (api_feature_name)
+			Result.append_string_general (api_feature_name)
 			Result.append ("' is not available.")
 		ensure then
 			result_attached: Result /= Void

@@ -25,13 +25,13 @@ inherit
 
 feature -- Query
 
-	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_GENERAL): POINTER
+	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		do
 			Result := bridge.api_pointer (a_hnd, a_api_name)
 		end
 
-	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable READABLE_STRING_GENERAL): POINTER
+	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable READABLE_STRING_8): POINTER
 			-- Retrieves a pointer to a library's API, and raises an exception if the API feature was not
 			-- found.
 			--
@@ -43,7 +43,7 @@ feature -- Query
 			a_api_name_attached: a_api_name /= Void
 			not_a_api_name_is_empty: not a_api_name.is_empty
 		local
-			l_exception: attached DYNAMIC_API_UNAVAILABLE_EXCEPTION
+			l_exception: DYNAMIC_API_UNAVAILABLE_EXCEPTION
 		do
 			Result := api_pointer (a_hnd, a_api_name)
 			if Result = default_pointer then
@@ -56,13 +56,13 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		do
 			Result := bridge.load_library (a_name, a_version)
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		do
 			Result := bridge.load_library_from_path (a_path)

@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Query
 
-	api_pointer (a_api_name: READABLE_STRING_GENERAL): POINTER
+	api_pointer (a_api_name: READABLE_STRING_8): POINTER
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.

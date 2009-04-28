@@ -85,7 +85,7 @@ feature -- Basic Functionality
 			create file.make_open_write (path + webapp_name.as_lower + "_g_application.e")
 			create buf.make (file)
 			create application_class.make (webapp_name.as_upper + "_G_APPLICATION")
-			application_class.set_inherit ("XWA_APPLICATION redefine make end")
+			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION redefine make end")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_feature_for_name)
 			application_class.add_feature (generate_contructor_for_application)
@@ -136,8 +136,8 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING)")
-			Result.append_expression ("Precursor (a_name)")
+			create Result.make ("make (a_name: STRING; a_port: INTEGER)")
+			Result.append_expression ("Precursor (a_name, a_port)")
 			from
 				some_servlets.start
 			until

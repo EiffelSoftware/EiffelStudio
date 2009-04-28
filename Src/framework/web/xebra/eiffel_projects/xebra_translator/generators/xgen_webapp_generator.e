@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 			Result.append_expression ("create Result.make")
 		end
 
-
 	generate_feature_for_name: XEL_FEATURE_ELEMENT
 		do
 			create Result.make ("name: STRING")

@@ -133,6 +133,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append_expression ("end")
 		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -40,6 +40,7 @@ feature {NONE} -- Implementation
 		local
 			temp_list: STRING
 		do
+			a_servlet_class.render_feature.append_local (variable, type)
 			temp_list := a_servlet_class.render_feature.new_local ("LIST [" + type + "]")
 			a_servlet_class.render_feature.append_expression (temp_list + " := " + Controller_variable + "." + list)
 			a_servlet_class.render_feature.append_expression ("from")
@@ -66,7 +67,6 @@ feature {NONE} -- Implementation
 				type := a_attribute
 			end
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

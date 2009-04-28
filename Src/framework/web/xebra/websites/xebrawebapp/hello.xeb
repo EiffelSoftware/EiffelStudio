@@ -1,4 +1,5 @@
 <html>
+<page:controller class="CONTROLLER"/>
 <body>
 Hello <xeb:display feature="world"/>!
 </body>

@@ -1,6 +1,6 @@
 note
 	description: "[
-		Default controller for the tutorial xebra webapp
+		Provides features for the servlets
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,21 +8,22 @@ note
 	revision: "$Revision$"
 
 class
-	XEBRAWEBAPP_CONTROLLER
+	CONTROLLER
 
 inherit
-	XWA_CONTROLLER
+	XWA_CONTROLLER redefine	make end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization	
 
 	make
-			-- Initialization for `Current'.
+			-- Initializes 'Current'
 		do
-			base_make
+			Precursor
 		end
+
 
 feature -- Services
 
@@ -32,9 +33,4 @@ feature -- Services
 			Result := "World"
 		end
 
-feature -- Inherited
-
-	on_page_load
-		do
-		end
 end

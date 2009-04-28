@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebrawebapp" uuid="ADBC6109-4D45-4BFD-A06C-B845A761DD8F">
+	<target name="xebrawebapp">
+		<root class="XEBRAWEBAPP_G_APPLICATION" feature="make"/>
+		<setting name="multithreaded" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf"/>
+		<cluster name="xebrawebapp" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

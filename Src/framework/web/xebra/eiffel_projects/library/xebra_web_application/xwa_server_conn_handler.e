@@ -55,7 +55,7 @@ feature -- Implementation
 		ensure
 			name_set: a_name = name
 		end
-
+		
 	execute
 			-- Waits for connections from the Xebra Server
 		local

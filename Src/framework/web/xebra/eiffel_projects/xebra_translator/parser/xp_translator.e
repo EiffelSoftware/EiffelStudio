@@ -158,12 +158,12 @@ feature -- Processing
 			l_controller_classes: LIST [STRING]
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
-			xternal_resolver: XP_EXTERNAL_RESOLVER
+			l_xternal_resolver: XP_EXTERNAL_RESOLVER
 		do
-			create xternal_resolver
+			create l_xternal_resolver
 			create {XM_EIFFEL_PARSER} l_parser.make
-			l_parser.set_dtd_resolver (xternal_resolver)
-			l_parser.set_entity_resolver (xternal_resolver)
+			l_parser.set_dtd_resolver (l_xternal_resolver)
+			l_parser.set_entity_resolver (l_xternal_resolver)
 			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
 			l_p_callback.put_taglibs (a_taglib)
 			l_parser.set_callbacks (l_p_callback)

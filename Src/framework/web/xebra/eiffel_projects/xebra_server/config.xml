@@ -1,0 +1,6 @@
+<xebra_server_config>
+	<webapps>
+		<webapp name="demoapplication" port="55005"/>
+		<webapp name="xebrawebapp" port="55006"/>
+	</webapps>
+</xebra_server_config>

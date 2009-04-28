@@ -28,17 +28,20 @@ feature -- Basic Operations
 
 	pre_handle_request (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
+		local
+			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
 			dprint ("Processing request...", 3)
 			current_session := a_session_manager.get_current_session (a_request, a_response)
+			l_internal_controllers := internal_controllers
 			from
-				internal_controllers.start
+				l_internal_controllers.start
 			until
-				internal_controllers.after
+				l_internal_controllers.after
 			loop
-				internal_controllers.item.set_current_request (a_request)
-				internal_controllers.item.set_current_session (current_session)
-				internal_controllers.forth
+				l_internal_controllers.item.set_current_request (a_request)
+				l_internal_controllers.item.set_current_session (current_session)
+				l_internal_controllers.forth
 			end
 			a_request.call_pre_handler (Current, a_response)
 			handle_request (a_request, a_response)

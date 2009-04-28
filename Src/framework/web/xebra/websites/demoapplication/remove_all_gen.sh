@@ -1,4 +1,4 @@
 rm -Rf EIFGENs
 rm -Rf servlet_gen/*.*
 rm -Rf servlet_gen/EIFGENs
-rm *_g_*
+rm g_*

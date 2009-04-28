@@ -2,8 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="thread_utilities" uuid="A5250033-B4A1-454B-B52B-28DA12E9567A" library_target="thread_utilities">
 	<target name="thread_utilities">
 		<root all_classes="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
-		</library>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<cluster name="thread_utilities" location=".\" recursive="true">
 			<file_rule>

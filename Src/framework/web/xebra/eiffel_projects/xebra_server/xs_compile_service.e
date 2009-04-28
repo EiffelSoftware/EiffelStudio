@@ -16,14 +16,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_webapps: HASH_TABLE [XS_WEBAPP, STRING])
 			-- Initialization for `Current'.
 		do
-			create webapps.make (1)
-
-				--insert a fake app. normally the XS_COMPILE_SERVICE would add new webapps to this list once they are compiled and running
-			webapps.force (create {XS_WEBAPP}.make ("demoapplication", 55005), "demoapplication")
-
+			webapps := a_webapps
+		ensure
+			webapps_set: webapps = a_webapps
 		end
 
 feature --
@@ -37,7 +35,7 @@ feature -- Status setting
 			-- Makes sure the webapp is compiled
 			-- Returns false if it could not be compiled
 		do
-			dprint ("compile not implemented",1)
+			dprint ("'XS_COMPILE_SERVICE.compile' not implemented, assuming '" + a_name + "' is compiled!",1)
 --			if attached {XS_WEBAPP} webapps[a_name] as webapp then
 --				dprint ("webapp was found!",3)
 
@@ -64,7 +62,7 @@ feature -- Status setting
 			-- Makes sure the webapp is running
 			-- Returns False if it could not be run
 		do
-			dprint ("run not implemented",1)
+			dprint ("'XS_COMPILE_SERVICE.run' not implemented, assuming '" + a_name + "' is running",1)
 --			if attached {XS_WEBAPP} webapps[a_name] as webapp then
 --				dprint ("webapp was found!",3)
 --			end

@@ -33,7 +33,7 @@ h3 {
 <body>
 <h1>Xebra Tutorial </h1>
 <h2>Notes</h2>
-<p><strong>Use Xebra revision 78296 for this tutorial</strong>.</p>
+<p><strong>Use Xebra revision ??? for this tutorial</strong>.</p>
 <p>Eiffel source is expected to be in <span class="code">$EIFFEL_SRC</span></p>
 <p>The tutorial is written for Ubuntu 8.10</p>
 <h2>Checkout</h2>
@@ -100,7 +100,7 @@ h3 {
 <p>&nbsp;</p>
 <h2>Run the Xebra Server</h2>
 <ul>
-  <li>Open estudio in a terminal and open the project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf</span><br />
+  <li>Open estudio in a terminal and open the project <span class="code">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf</span><br />
     <br />
   </li>
   <li>Compile and Run<br />
@@ -122,7 +122,10 @@ h3 {
     (due to a current bug, you have to run the script twice)<br />
     <br />
     </li>
-  <li>Open estudio in a terminal and open the project at <span class="code">$XEBRA_DEV/websites/xebrawebapp/</span>  and compile<br />
+  <li>Open estudio in a terminal and open the project at <span class="code">$XEBRA_DEV/websites/xebrawebapp/xebrawebapp-voidunsafe.ecf</span>  and compile<br />
+      <br />
+  </li>
+  <li>Add Execution Parameter "55006"<br />
       <br />
   </li>
   <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
@@ -153,9 +156,12 @@ h3 {
           (due to a current bug, you have to run the script twice)<br />
         <br />
       </li>
-      <li>Open estudio in a terminal and open the project at <span class="code">$XEBRA_DEV/websites/demoapplication/</span>  and compile<br />
+      <li>Open estudio in a terminal and open the project at <span class="code">$XEBRA_DEV/websites/demoapplication/demoapplication-voidunsafe.ecf</span>  and compile<br />
         <br />
       </li>
+      <li>Add Execution Parameter "55005"<br />
+      <br />
+  	</li>
       <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
         <br />
       </li>
@@ -164,7 +170,7 @@ h3 {
     <br />
   </li>
 </ul>
-<h2>Create a new Web Application</h2>
+<h2>Create a new Web Application (Under construction)</h2>
 <p>If you want to create your own application remember the following important steps:
   <span class="code"><br />
 </span></p>

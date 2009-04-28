@@ -24,12 +24,12 @@ feature -- Initialization
 		local
 			l_printer: ERROR_CUI_PRINTER
 		do
-			create compile_service.make
 
 			dprint ("%N%N%N",1)
 			dprint ("Starting Xebra Server...",1)
 			dprint ("Reading configuration...",1)
 			create server_config.make_from_file (Default_server_config_path)
+			create compile_service.make (server_config.webapps)
 
 			create l_printer.default_create
 			if error_manager.has_warnings then

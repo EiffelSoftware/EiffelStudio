@@ -35,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-		process_file (a_file: STRING)
+	process_file (a_file: STRING)
 			-- Parses file and sets all config attributes
 		local
 			l_file: KL_TEXT_INPUT_FILE

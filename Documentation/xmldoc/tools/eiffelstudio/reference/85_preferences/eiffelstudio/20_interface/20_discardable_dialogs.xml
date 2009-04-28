@@ -1,5 +1,0 @@
-<document title="Discardable dialogs" output="studio">
-	<meta_data/>
-	<paragraph>
-		<paragraph>Some dialogs in EiffelStudio include a check box labeled "Do not show me again". If you select it, the dialog will not be shown the next time the same situation occurs. The "dialogs" sub-category of "Interface" in the preferences lists the state of those discardable dialogs: a boolean preference is associated with each of them. The window will be shown if and only if the corresponding preference is set to True.</paragraph>
-	</paragraph></document>

@@ -35,14 +35,21 @@ feature --
 			-- Serializes the request feature of the {SERVLET}
 		do
 			a_class.make_feature.append_expression ("Precursor")
-			a_class.make_feature.append_expression ("create controller." + constructor_name )	
+			from
+				controller_types.start
+			until
+				controller_types.after
+			loop
+				a_class.make_feature.append_expression ("create controller.make")	
+				controller_types.forth
+			end
 		end
 
 	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
 			-- Serializes the request feature of the {SERVLET}
 		do
 			create Result.make ("internal_controller: XWA_CONTROLLER")
-			Result.append_expression ("Result := controller [0]")
+			Result.append_expression ("Result := controller")
 		end
 
 	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)

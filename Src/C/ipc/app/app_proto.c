@@ -1060,31 +1060,25 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 
 				reference = *(EIF_REFERENCE *)o_ref;
 				if (reference) {
+					int32 dtype = Dtype(reference);
 					ref_flags = HEADER(reference)->ov_flags;
-					if (ref_flags & EO_C) {
-						sk_type = SK_POINTER;
-						app_twrite (&sk_type, sizeof(uint32));
-						app_twrite (reference, sizeof(EIF_POINTER));
-					} else {
-						int32 dtype = Dtype(reference);
-						app_twrite (&sk_type, sizeof(uint32));
-						if (ref_flags & EO_SPEC) {
-							EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
-							is_special = EIF_TRUE;
-							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
-							app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
-							if (is_tuple) {
-								app_twrite (&dtype, sizeof(int32));
-								app_twrite (&reference, sizeof(EIF_POINTER));
-							} else {
-								rec_sinspect (reference, EIF_TRUE);
-							}
-						} else {
-							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
-							app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+					app_twrite (&sk_type, sizeof(uint32));
+					if (ref_flags & EO_SPEC) {
+						EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
+						is_special = EIF_TRUE;
+						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+						app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+						if (is_tuple) {
 							app_twrite (&dtype, sizeof(int32));
 							app_twrite (&reference, sizeof(EIF_POINTER));
+						} else {
+							rec_sinspect (reference, EIF_TRUE);
 						}
+					} else {
+						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+						app_twrite (&dtype, sizeof(int32));
+						app_twrite (&reference, sizeof(EIF_POINTER));
 					}
 				} else {
 					is_void = EIF_TRUE;
@@ -1253,21 +1247,6 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 						is_void = EIF_FALSE;
-					} else if (HEADER(reference)->ov_flags & EO_C) {
-						sk_type = SK_POINTER;
-						app_twrite (&sk_type, sizeof(uint32));
-						app_twrite (&reference, sizeof(EIF_POINTER));
-						sk_type = SK_REF;
-
-						dtype = Dtype(reference);
-						app_twrite (&sk_type, sizeof(uint32));
-
-						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
-						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
-						app_twrite (&dtype, sizeof(int32));
-						app_twrite (&reference, sizeof(EIF_POINTER));
-
-						is_special = EIF_FALSE;
 					} else {
 						dtype = Dtype(reference);
 						app_twrite (&sk_type, sizeof(uint32));

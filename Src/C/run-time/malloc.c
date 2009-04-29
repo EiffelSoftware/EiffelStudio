@@ -1406,7 +1406,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 #endif
 
 	ENSURE ("Special object", HEADER (object)->ov_flags & EO_SPEC);
-	ENSURE ("Eiffel object", !(HEADER (object)->ov_flags & EO_C));
 	ENSURE ("Valid new size", (HEADER (object)->ov_size & B_SIZE) >= new_size);
 
 		/* The accounting of memory used by Eiffel is not accurate here, but it is
@@ -1499,18 +1498,7 @@ doc:	</routine>
 rt_public EIF_REFERENCE cmalloc(size_t nbytes)
 {
 #ifdef ISE_GC
-	EIF_REFERENCE arena;		/* C arena allocated */
-
-	arena = eif_rt_xmalloc(nbytes, C_T, GC_OFF);
-
-		/* The C object does not use its Eiffel flags field in the header. However,
-		 * we set the EO_C bit. This will help the GC because it won't need
-		 * extra-tests to skip the C arenas referenced by Eiffel objects.
-		 */
-	if (arena)
-		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
-
-	return arena;
+	return eif_rt_xmalloc(nbytes, C_T, GC_OFF);
 #else
 	return (EIF_REFERENCE) eif_malloc (nbytes);
 #endif
@@ -2537,15 +2525,6 @@ rt_public void eif_rt_xfree(register void * ptr)
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
-	flush;
-	if (DEBUG & 128) {					/* Print type and class name */
-		EIF_REFERENCE obj = (EIF_REFERENCE) (zone + 1);
-		if (zone->ov_size & B_FWD)		/* Object was forwarded */
-			obj = zone->ov_fwd;
-		if (!(HEADER(obj)->ov_flags & EO_C))
-			printf("eif_rt_xfree: %s object [%d]\n",
-				System(Dtype(obj)).cn_generator, Dtype(obj));
-	}
 	flush;
 #endif
 

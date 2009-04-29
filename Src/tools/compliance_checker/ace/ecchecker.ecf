@@ -35,7 +35,7 @@
 		</cluster>
 	</target>
 	<target name="ecchecker_app" extends="ecchecker_library">
-		<root feature="make_sta" class="EC_MAIN"/>
+		<root class="EC_MAIN" feature="make_sta"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<cluster name="eiffel_compliant_check" location="..\" recursive="true">

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="compile_all" uuid="AC65C561-50E6-4F17-A196-8EFF64A88F9B">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="compile_all" uuid="AC65C561-50E6-4F17-A196-8EFF64A88F9B">
 	<target name="compile_all">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true">
+		<option warning="true" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

@@ -46,6 +46,7 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 			EIF_EXIT_EIFFEL;
 			break;
 		case DLL_PROCESS_DETACH:
+#ifdef EIF_THREADS
 			{
 				GTCX;
 				if (eif_globals) {
@@ -53,14 +54,20 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 					reclaim();
 				}
 			}
+#else
+			reclaim();
+#endif
 			break;
 
 		case DLL_THREAD_ATTACH:
+#ifdef EIF_THREADS
 			init_rt();
 			EIF_EXIT_EIFFEL;
+#endif
 			break;
 
 		case DLL_THREAD_DETACH:
+#ifdef EIF_THREADS
 			{
 				GTCX;
 				if (eif_globals) {
@@ -68,6 +75,7 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 					eif_thr_exit();
 				}
 			}
+#endif
 			break;
 
 	}

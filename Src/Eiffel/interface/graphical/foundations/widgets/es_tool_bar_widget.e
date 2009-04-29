@@ -208,7 +208,10 @@ feature {NONE} -- Access
 				l_items := new_right_tool_bar_items
 				if l_items /= Void then
 					create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
-					Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+					if attached tool_bar_widget as l_tool_bar and then not l_tool_bar.items.is_empty then
+							-- Add a separator only if there are items on the left hand side.
+						Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+					end
 					l_items.do_all (agent Result.extend)
 					l_cell.put (Result)
 				end

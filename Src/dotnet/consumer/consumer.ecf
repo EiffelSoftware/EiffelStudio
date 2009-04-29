@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<version major="6" minor="4" release="7" build="7751"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1" namespace="EiffelSoftware.MetadataConsumer">
+		<option warning="true" syntax="transitional" namespace="EiffelSoftware.MetadataConsumer">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>

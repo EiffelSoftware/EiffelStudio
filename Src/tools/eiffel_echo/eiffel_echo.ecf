@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffel_echo" uuid="B6AB7E8A-344C-4A6C-9F9B-2E9F2D55570A">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffel_echo" uuid="B6AB7E8A-344C-4A6C-9F9B-2E9F2D55570A">
 	<target name="eiffel_echo">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf" readonly="false"/>

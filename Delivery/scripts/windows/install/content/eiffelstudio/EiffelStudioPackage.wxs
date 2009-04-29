@@ -146,7 +146,8 @@
 							/>
 						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (6.3 compatibility mode)"
 							Description="EiffelStudio development environment backward compatible with EiffelStudio 6.3" Show="normal"
-							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe -compat"
+							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+							Arguments="-compat"
 							/>
 						<Shortcut Id="estudio.exe2" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
 							Description="EiffelStudio development environment" Show="normal"

@@ -778,7 +778,6 @@ New_feature: Extended_feature_name
 			{
 				$$ := $2
 				if $$ /= Void then
-					$$.set_is_frozen (True)
 					$$.set_frozen_keyword ($1)
 				end
 			}
@@ -806,12 +805,26 @@ Feature_name: Identifier_as_lower
 	;
 
 Infix: TE_INFIX Infix_operator
-			{ $$ := ast_factory.new_infix_as ($2, $1) }
+			{
+				$$ := ast_factory.new_infix_as ($2, $1)
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the alias form of the infix routine."))
+				end
+			}
 	;
 
 
 Prefix: TE_PREFIX Prefix_operator
-			{ $$ := ast_factory.new_prefix_as ($2, $1) }
+			{
+				$$ := ast_factory.new_prefix_as ($2, $1)
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the alias form of the prefix routine."))
+				end
+			}
 	;
 
 Alias: TE_ALIAS Alias_name Alias_mark

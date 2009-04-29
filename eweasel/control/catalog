@@ -827,6 +827,7 @@ test	execution-failure-after-vevi		incr319	tcf fail incrementality
 test	switch-to-conforming-inheritance	incr320	tcf fail incrementality
 test	eif-gen-conf-init-crash			incr321	tcf fail incrementality
 test	function-to-attribute-refinalize	incr322	tcf fail incrementality
+test	change-obsolete-syntax-to-transitional	incr323	tcf fail incrementality
 
 
 -- Melting

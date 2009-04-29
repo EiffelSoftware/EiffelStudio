@@ -102,6 +102,10 @@ feature {NONE} -- Initialization
 			create menu_item.make_with_text_and_action ("Check all routines in system", agent on_check_routines)
 			extend (menu_item)
 
+				--| Interface comparer
+			create menu_item.make_with_text_and_action ("Compare libraries", agent on_compare_library_classes)
+			extend (menu_item)
+
 			extend (create {EV_MENU_SEPARATOR})
 
 				--| Debug
@@ -220,6 +224,14 @@ feature {NONE} -- Access
 		end
 
 	feature_checker_window: CELL [EB_FEATURE_CHECKER_TOOL]
+			-- Link to window
+		once
+			create Result.put (Void)
+		ensure
+			feature_checker_window_not_void: Result /= Void
+		end
+
+	compare_library_classes_window: CELL [EB_COMPARE_LIBRARY_CLASSES_TOOL]
 			-- Link to window
 		once
 			create Result.put (Void)
@@ -601,6 +613,25 @@ feature {NONE} -- Actions
 					feature_checker_tool.set_development_window (dw)
 				end
 				feature_checker_tool.show
+			end
+		end
+
+	on_compare_library_classes
+			-- Window that let you specify two libraries and compare their classes.
+		local
+			dw: EB_DEVELOPMENT_WINDOW
+			compile_library_tool: EB_COMPARE_LIBRARY_CLASSES_TOOL
+		do
+			dw := window_manager.last_focused_development_window
+			if dw /= Void and then dw.eiffel_project.initialized then
+				compile_library_tool := compare_library_classes_window.item
+				if compile_library_tool = Void then
+					create compile_library_tool.make (dw)
+					compare_library_classes_window.put (compile_library_tool)
+				else
+					compile_library_tool.set_development_window (dw)
+				end
+				compile_library_tool.show
 			end
 		end
 

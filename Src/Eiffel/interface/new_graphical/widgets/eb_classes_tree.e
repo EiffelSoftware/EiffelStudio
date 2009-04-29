@@ -358,6 +358,42 @@ feature -- Activation
 			end
 		end
 
+	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING
+			-- `Result' is a path name representing `tree_node' in the
+			-- form "base.kernel.COMPARABLE".
+		require
+			tree_node_not_void: tree_node /= Void
+		local
+			l_parent: EV_TREE_NODE
+		do
+			from
+				l_parent ?= tree_node.parent
+				Result := tree_node.text
+			until
+				l_parent = Void
+			loop
+				Result.prepend_character ('.')
+				Result.prepend (l_parent.text)
+				l_parent ?= l_parent.parent
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	select_item_from_path (a_path: STRING)
+			-- Select item associated with `a_path' if any.
+		require
+			a_path_not_void: a_path /= Void
+		do
+				-- If an item was selected before the rebuild, re-select
+				-- the item.
+			select_tree_item (a_path, Current)
+			if selected_item /= Void and is_displayed then
+					-- Ensure that the selected item is visible on screen.
+				ensure_item_visible (selected_item)
+			end
+		end
+
 feature -- Observer pattern
 
 	refresh
@@ -623,28 +659,6 @@ feature {NONE} -- Rebuilding
 		end
 
 feature {NONE} -- Implementation
-
-	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING
-			-- `Result' is a path name representing `tree_node' in the
-			-- form "base.kernel.COMPARABLE".
-		require
-			tree_node_not_void: tree_node /= Void
-		local
-			l_parent: EV_TREE_NODE
-		do
-			from
-				l_parent ?= tree_node.parent
-				Result := tree_node.text
-			until
-				l_parent = Void
-			loop
-				Result.prepend_character ('.')
-				Result.prepend (l_parent.text)
-				l_parent ?= l_parent.parent
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
 
 	on_key_pushed (a_key: EV_KEY)
 			-- If `a_key' is enter, set a stone in the development window.

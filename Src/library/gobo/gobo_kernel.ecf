@@ -24,11 +24,6 @@
 		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
-			<file_rule>
-				<exclude>/misc/kl_comparable.e$</exclude>
-				<exclude>/misc/kl_numeric.e$</exclude>
-				<exclude>/misc/kl_string.e$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="override" location="override\library\kernel" recursive="true"/>
 		<cluster name="override_generated" location="override\generated\library\kernel" recursive="true"/>

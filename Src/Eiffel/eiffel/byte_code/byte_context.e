@@ -1883,8 +1883,7 @@ feature -- Access
 	generate_gc_hooks (compound_or_post: BOOLEAN)
 			-- In case there are some local reference variables,
 			-- generate the hooks for the GC by filling the local variable
-			-- array. Unfortunately, I cannot use bzero() on the array, in
-			-- case it would be a function call--RAM.
+			-- array.
 			--| `compound_or_post' indicate the generation of hooks
 			--| for the compound or post- pre- or invariant routine. -- FREDD
 		local
@@ -1928,25 +1927,15 @@ feature -- Access
 						reference_type: not reg.is_current implies reg.c_type.is_pointer
 					end
 
-					if
-						((reg.is_predefined or reg.is_temporary)
-						and not (reg.is_current or reg.is_argument)
-						and not (reg.is_result and compound_or_post))
-					then
-						buf.put_local_registration (position, rname)
-					else
-						if (reg.c_type.is_bit) and (reg.is_argument) then
-								-- Clone argument if it is bit
-							buf.put_local_registration (position, rname)
-							buf.put_new_line
-							buf.put_string (rname)
-							buf.put_string (once " = RTCB(")
-							buf.put_string (rname)
-							buf.put_character (')')
-							buf.put_character (';')
-						else
-							buf.put_local_registration (position, rname)
-						end
+					buf.put_local_registration (position, rname)
+					if (reg.c_type.is_bit) and (reg.is_argument) then
+							-- Clone argument if it is bit
+						buf.put_new_line
+						buf.put_string (rname)
+						buf.put_string (once " = RTCB(")
+						buf.put_string (rname)
+						buf.put_character (')')
+						buf.put_character (';')
 					end
 					position := position + 1
 					l_table.forth

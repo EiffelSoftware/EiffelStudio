@@ -735,59 +735,86 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_class_name: STRING
 			l_classes: LIST [CLASS_I]
 			l_count: INTEGER
+			l_kernel_library: CONF_LIBRARY
 		do
-			from
-				a_set.start
-			until
-				a_set.after
-			loop
-				l_class_name := a_set.key_for_iteration
-				l_classes := classes_with_name (l_class_name)
-				l_count := l_classes.count
-				if l_count > 1 then
-						-- Small workaround when a requested basic class also exists in the Universe
-						-- in a .NET assembly. In that case we decide to ignore the .NET classes if
-						-- there is at least one Eiffel class.
-						-- FIXME: we should use the UUID for EiffelBase and only look there for those
-						-- classes. This would speed up the lookup dramatically.
-					if not l_classes.for_all (agent {CLASS_I}.is_external_class) then
-						from
-							l_classes.start
-						until
-							l_classes.after
-						loop
-							if l_classes.item.is_external_class then
-								l_classes.remove
-							else
-								l_classes.forth
-							end
+				-- First search for the EiffelBase library whose UUID is known.
+				-- Commented for the moment untill there is agreement.
+--			l_kernel_library := eiffel_base_library
+			if l_kernel_library /= Void then
+				from
+					a_set.start
+				until
+					a_set.after
+				loop
+					if not l_kernel_library.classes.has (a_set.key_for_iteration) then
+						create vd23
+						vd23.set_class_name (l_class_name)
+						if not a_except.has (l_class_name) then
+							error_handler.insert_error (vd23)
 						end
-							-- Reflect possible changes to the number of classes.
-						l_count := l_classes.count
+					else
+						if attached {CLASS_I} l_kernel_library.classes.item (a_set.key_for_iteration) as l_class_i  then
+							a_set.item_for_iteration.call ([l_class_i])
+						else
+							check False end
+						end
 					end
+					a_set.forth
 				end
-				if l_count = 0 then
-					create vd23
-					vd23.set_class_name (l_class_name)
-					if not a_except.has (l_class_name) then
-						error_handler.insert_error (vd23)
+			else
+				from
+					a_set.start
+				until
+					a_set.after
+				loop
+					l_class_name := a_set.key_for_iteration
+					l_classes := classes_with_name (l_class_name)
+					l_count := l_classes.count
+					if l_count > 1 then
+							-- Small workaround when a requested basic class also exists in the Universe
+							-- in a .NET assembly. In that case we decide to ignore the .NET classes if
+							-- there is at least one Eiffel class.
+							-- FIXME: we should use the UUID for EiffelBase and only look there for those
+							-- classes. This would speed up the lookup dramatically.
+						if not l_classes.for_all (agent {CLASS_I}.is_external_class) then
+							from
+								l_classes.start
+							until
+								l_classes.after
+							loop
+								if l_classes.item.is_external_class then
+									l_classes.remove
+								else
+									l_classes.forth
+								end
+							end
+								-- Reflect possible changes to the number of classes.
+							l_count := l_classes.count
+						end
 					end
-					-- if we have two results it's possible that we got a class which is overriden and the override itself
-					-- return the class that is overriden
-				elseif l_count = 2 and then l_classes.i_th (1).actual_class = l_classes.i_th (2) then
-					a_set.item_for_iteration.call ([l_classes.i_th (1)])
-				elseif l_count = 2 and then l_classes.i_th (2).actual_class = l_classes.i_th (1) then
-					a_set.item_for_iteration.call ([l_classes.i_th (2)])
-				elseif l_count > 1 then
-					create vd24
-					vd24.set_class_name (l_class_name)
-					vd24.set_cluster (l_classes.first.group)
-					vd24.set_other_cluster (l_classes.i_th (2).group)
-					error_handler.insert_error (vd24)
-				else
-					a_set.item_for_iteration.call ([l_classes.first])
+					if l_count = 0 then
+						create vd23
+						vd23.set_class_name (l_class_name)
+						if not a_except.has (l_class_name) then
+							error_handler.insert_error (vd23)
+						end
+						-- if we have two results it's possible that we got a class which is overriden and the override itself
+						-- return the class that is overriden
+					elseif l_count = 2 and then l_classes.i_th (1).actual_class = l_classes.i_th (2) then
+						a_set.item_for_iteration.call ([l_classes.i_th (1)])
+					elseif l_count = 2 and then l_classes.i_th (2).actual_class = l_classes.i_th (1) then
+						a_set.item_for_iteration.call ([l_classes.i_th (2)])
+					elseif l_count > 1 then
+						create vd24
+						vd24.set_class_name (l_class_name)
+						vd24.set_cluster (l_classes.first.group)
+						vd24.set_other_cluster (l_classes.i_th (2).group)
+						error_handler.insert_error (vd24)
+					else
+						a_set.item_for_iteration.call ([l_classes.first])
+					end
+					a_set.forth
 				end
-				a_set.forth
 			end
 		end
 
@@ -846,6 +873,27 @@ feature {NONE} -- Implementation
 
 	group_visited: ARRAYED_LIST [CONF_GROUP]
 			-- Group visited used by `group_of_name_recursive_imp'
+
+	eiffel_base_library: CONF_LIBRARY
+			-- Search for library whose UUID matches the known one for EiffelBase. This library
+			-- is the one that should include all the known classes of the compiler.
+		local
+			l_libraries: HASH_TABLE [CONF_LIBRARY, STRING_8]
+			l_uuid: UUID
+		do
+			from
+				l_libraries := target.libraries
+				l_libraries.start
+				create l_uuid.make_from_string ("6D7FF712-BBA5-4AC0-AABF-2D9880493A01")
+			until
+				l_libraries.after or Result /= Void
+			loop
+				if l_libraries.item_for_iteration.library_target.system.uuid ~ l_uuid then
+					Result := l_libraries.item_for_iteration
+				end
+				l_libraries.forth
+			end
+		end
 
 invariant
 	new_target_in_conf_system: (conf_system /= Void and new_target /= Void) implies new_target.system = conf_system

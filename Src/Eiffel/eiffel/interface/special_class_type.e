@@ -669,7 +669,7 @@ feature {NONE} -- C code generation
 						buffer.put_new_line
 						buffer.put_string ("RTLI(1);")
 						buffer.put_new_line
-						buffer.put_string ("RTLR(0, Current);")
+						buffer.put_current_registration (0)
 							-- Create expanded type based on the actual generic parameter, and not
 							-- on the recorded derivation (as it would not work if `gen_param' is
 							-- generic. (See eweasel test#exec282 nd test#exec283 for an example where

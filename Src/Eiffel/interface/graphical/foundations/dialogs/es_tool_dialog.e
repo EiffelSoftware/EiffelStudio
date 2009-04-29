@@ -118,7 +118,9 @@ feature {NONE} -- Access
                 l_items := create_right_tool_bar_items
                 if l_items /= Void then
                     create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
-                    Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+                    if attached tool_bar_widget as l_tool_bar and then not l_tool_bar.items.is_empty then
+                    	Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+                    end
                     l_items.do_all (agent Result.extend)
                     l_cell.put (Result)
                 end
@@ -244,11 +246,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

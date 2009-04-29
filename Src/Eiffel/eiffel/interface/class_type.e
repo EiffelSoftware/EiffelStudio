@@ -1574,10 +1574,10 @@ feature -- Structure generation
 --			l_gen_type ?= a_type.adapted_in (type)
 --			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
 					-- The dynamic type has to be set after setting the flags.
-					-- Also note that we use EO_C as those expanded cannot move.
+					-- Also note that we use EO_STACK as those expanded cannot move.
 				buffer.put_new_line
 				buffer.put_string (a_name)
-				buffer.put_string (".overhead.ov_flags = EO_EXP | EO_C")
+				buffer.put_string (".overhead.ov_flags = EO_EXP | EO_STACK")
 				if has_creation_routine then
 						-- Class has an expanded attribute we need to give it the EO_COMP flag.
 					buffer.put_string (" | EO_COMP;")

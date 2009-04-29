@@ -72,7 +72,8 @@ RT_LNK struct stack oms_set;	/* Once manifest strings */
 #define EO_OLD		0x0020		/* Object belongs to the old generation */
 #define EO_REM		0x0010		/* Object belongs to the remembered set */
 #define EO_NEW		0x0008		/* Object is new, outside scavenge zone */
-#define EO_C		0x0004		/* Object is a C one (malloc'ed) */
+#define EO_STACK	0x0004		/* Object is allocated on C stack (not malloc'ed) */
+#define EO_C		EO_STACK	/* For backward compatibility */
 #define EO_EXP		0x0002		/* Object is an expanded one */
 #define EO_COMP		0x0001		/* Composite (has expanded or special) */
 #define EO_MOVED	(EO_NEW | EO_MARK)
@@ -80,7 +81,7 @@ RT_LNK struct stack oms_set;	/* Once manifest strings */
 /*
  * Object type.
  */
-#define eif_is_nested_expanded(flags) (((flags) & (EO_EXP | EO_REF)) == (EO_EXP))
+#define eif_is_nested_expanded(flags) (((flags) & (EO_EXP | EO_REF | EO_STACK)) == (EO_EXP))
 #define eif_is_boxed_expanded(flags)  (((flags) & (EO_EXP | EO_REF)) == (EO_EXP | EO_REF))
 #define eif_is_expanded(flags)        (((flags) & (EO_EXP)) == (EO_EXP))
 

@@ -209,9 +209,6 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 	flags  = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
 	dtype = Dtype(object);
 
-	if (flags & EO_C)						/* Not an Eiffel object */
-		return;;
-
 	if ((uint32) object % MEM_ALIGNBYTES) {
 		num++;
 		printf("memck: object 0x%lx is mis-aligned.\n", object);
@@ -260,9 +257,9 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 		printf("memck: object 0x%lx is EO_REM and EO_NEW.\n", object);
 	}
 
-	if ((flags & EO_C) && (flags & EO_SPEC)) {
+	if ((flags & EO_STACK) && (flags & EO_SPEC)) {
 		num++;
-		printf("memck: object 0x%lx is EO_C and EO_SPEC.\n", object);
+		printf("memck: object 0x%lx is EO_STACK and EO_SPEC.\n", object);
 	}
 
 	if (eif_is_nested_expanded(flags) && (flags & EO_SPEC)) {
@@ -434,9 +431,6 @@ rt_private void check_chunk(register5 char *chunk, register6 char *arena, int ty
 		if (!(size & B_BUSY) && type != ZONE_T)		/* Object is free */
 			continue;
 
-		if (zone->ov_flags & EO_C)		/* Not an Eiffel object */
-			continue;
-
 		if (type == CHUNK_T) {			/* Not in scavenge zone */
 
 			if (((struct chunk *) chunk)->ck_type == C_T && size & B_C)
@@ -594,12 +588,6 @@ rt_private void check_obj(char *object)
 	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
 	dtype = Dtype(object);
 
-	if (flags & EO_C) {						/* Not an Eiffel object */
-		mflags = HEADER(object)->ov_size;
-		c_mem += (mflags & B_SIZE) + OVERHEAD;
-		return;;
-	}
-
 	if (dtype <= scount)
 		type_use[dtype]++;
 
@@ -642,11 +630,6 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 
 		if (!(size & B_BUSY) && type != ZONE_T)		/* Object is free */
 			continue;
-
-		if (zone->ov_flags & EO_C) {	/* Not an Eiffel object */
-			check_obj(arena);
-			continue;
-		}
 
 		if (type == CHUNK_T) {			/* Not in scavenge zone */
 

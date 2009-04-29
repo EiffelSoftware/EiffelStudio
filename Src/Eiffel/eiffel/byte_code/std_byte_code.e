@@ -718,12 +718,12 @@ end
 						end
 						l_class_type.generate_expanded_overhead_size (buf)
 							-- We reset the flags since now we have an expanded on the C stack,
-							-- thus it cannot move hence the EO_C flag.
+							-- thus it cannot move hence the EO_STACK flag.
 						buf.put_string (");")
 						buf.put_new_line
 						buf.put_string ("sarg")
 						buf.put_integer (i)
-						buffer.put_string (".overhead.ov_flags = EO_EXP | EO_C")
+						buffer.put_string (".overhead.ov_flags = EO_EXP | EO_STACK")
 						if l_class_type.has_creation_routine then
 								-- Class has an expanded attribute we need to give it the EO_COMP flag.							
 							buffer.put_string (" | EO_COMP;")

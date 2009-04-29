@@ -432,6 +432,21 @@ doc:	</attribute>
 */
 rt_shared uint32 overflow_stack_limit = 0;
 
+/*
+doc:	<attribute name="c_stack_object_set" return_type="struct stack" export="private">
+doc:		<summary>Stack containing all objects whose memory is allocated on the stack. They are added during marking and unmarked at the end of a GC cycle.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private struct stack c_stack_object_set = {
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
+};
+
 
 	/* Signature of marking functions. They take the address where
 	 * reference is stored (to be updated by `mark_overflow_stack'
@@ -640,6 +655,7 @@ rt_private void internal_marking(MARKER marking, int moving);
 rt_private void full_mark(EIF_CONTEXT_NOARG);			/* Marks all reachable objects */
 rt_private void full_sweep(void);			/* Removes all un-marked objects */
 rt_private void run_collector(void);		/* Wrapper for full collections */
+rt_private void unmark_c_stack_objects (void);
 
 /* Stack markers */
 rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move);	/* Marks a collector's stack */
@@ -1389,6 +1405,7 @@ rt_private void run_collector(void)
 	full_mark(MTC_NOARG);		/* Mark phase */
 	full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	full_sweep();			/* Sweep phase */
+	unmark_c_stack_objects ();
 
 	/* After a full collection (this routine is only called for a full mark
 	 * and sweep or a partial scavenging), give generation scavenging a try
@@ -2111,6 +2128,44 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 	ENSURE ("Overflow stack empty", overflow_stack_count == 0);
 }
 
+/*
+doc:	<routine name="unmark_c_stack_objects" return_type="void" export="private">
+doc:		<summary>When objects are allocated on the C stack, we need to unmark them at the end of a GC cycle, because none of the existing code will unmark it since they are only referenced usually through `loc_set' or `loc_stack'. At the end of this routine, the stack is emptied.</summary>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+
+rt_private void unmark_c_stack_objects (void)
+{
+	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
+	rt_uint_ptr roots;			/* Number of roots in each chunk */
+	struct stchunk *s;			/* To walk through each stack's chunk */
+	int done;					/* Top of stack not reached yet */
+
+		/* Only do some processing if the stack was created. */
+	if (c_stack_object_set.st_top) {
+		done = 0;
+		for (s = c_stack_object_set.st_hd; s && !done; s = s->sk_next) {
+			object = s->sk_arena;					/* Start of stack */
+			if (s != c_stack_object_set.st_cur)		/* Before current pos? */
+				roots = s->sk_end - object;			/* The whole chunk */
+			else {
+				roots = c_stack_object_set.st_top - object;		/* Stop at the top */
+				done = 1;							/* Reached end of stack */
+			}
+			for (; roots > 0; roots--, object++) {
+				CHECK("Object is marked", HEADER(*object)->ov_flags & EO_MARK);
+				CHECK("Object is on C stack", HEADER(*object)->ov_flags & EO_STACK);
+				HEADER(*object)->ov_flags &= ~EO_MARK;
+			}
+		}
+
+			/* Reset the content of the stack. This is not great for performance since
+			 * we will most likely reallocate the stack at the next GC cycle. */
+		st_reset(&c_stack_object_set);
+	}
+}
 
 rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 {
@@ -2140,10 +2195,13 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		/* Stack overflow protection */
 	overflow_stack_depth++;
 	if (overflow_stack_depth > overflow_stack_limit) {
-		epush(&overflow_stack_set, a_root);
-		overflow_stack_count++;
-		overflow_stack_depth--;
-		return root;
+			/* If we can add to the stack overflow recursion, then we do it, otherwise
+			 * we hope we will have enough stack to complete the GC cycle. */
+		if (epush(&overflow_stack_set, a_root) != -1) {
+			overflow_stack_count++;
+			overflow_stack_depth--;
+			return root;
+		}
 	}
 
 	/* Initialize the variables for the loop */
@@ -2208,8 +2266,8 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 				goto done;				/* So it has been already processed */
 			}
 
-			if (flags & (EO_MARK | EO_C))	/* Already marked or C object */
-				goto done;				/* Object processed and did not move */
+			if (flags & EO_MARK)	/* Already marked */
+				goto done;			/* Object processed and did not move */
 
 			if (offset & GC_GEN && !(size & B_BUSY)) {
 				current = scavenge(current, &sc_to.sc_top);	/* Simple scavenging */
@@ -2248,20 +2306,24 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		 */
 
 		/* If current object is already marked, it has been (or is)
-		 * studied. So return immediately. Idem if object is a C one.
+		 * studied. So return immediately.
 		 */
-		if (flags & (EO_MARK | EO_C))
+		if (flags & EO_MARK)
 			goto done;
 
-
-		/* Expanded objects have no 'ov_size' field. Instead, they have a
-		 * pointer to the object which holds them. This is needed by the
-		 * scavenging process, so that we can update the internal references
-		 * to the expanded in the scavenged object.
-		 * It's useless to mark an expanded, because it has only one reference
-		 * on itself, in the object which holds it.
-		 */
+			/* Expanded objects have no 'ov_size' field. Instead, they have a
+			 * pointer to the object which holds them. This is needed by the
+			 * scavenging process, so that we can update the internal references
+			 * to the expanded in the scavenged object.
+			 * It's useless to mark an expanded, because it has only one reference
+			 * on itself, in the object which holds it.
+			 */
 		if (!eif_is_nested_expanded(flags)) {
+			if (flags & EO_STACK) {
+					/* Object is on the C stack, so we need to record it to unmark it later. */
+					/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
+				epush(&c_stack_object_set, current);
+			}
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
 		}
@@ -2455,63 +2517,47 @@ rt_private void full_sweep(void)
 		for (
 			zone = (union overhead *) arena;
 			(EIF_REFERENCE) zone < end;
-			zone = (union overhead *) (((EIF_REFERENCE) zone) + size + OVERHEAD)
+			zone = (union overhead *) (((EIF_REFERENCE) zone) + (size & B_SIZE) + OVERHEAD)
 		) {
 			size = zone->ov_size;			/* Size and flags */
-
 			if (!(size & B_BUSY)) {
-				/* Object belongs to the free list (not busy).
-				 */
-				size &= B_SIZE;				/* Keep only pure size */
-				continue;					/* Skip block */
-			}
-
-
-			if (size & B_C) {
+					/* Object belongs to the free list (not busy).  */
+			} else if (size & B_C) {
 				/* Object is a C one.
-				 * However, any Eiffel object (i.e. any object not bearing
-				 * the EO_C mark) is marked during the marking phase and has
+				 * However, any Eiffel object is marked during the marking phase and has
 				 * to be unmarked now. It is not freed however, since it is
 				 * marked B_C and hence is under user control. Moreover, we
 				 * would not be able to remove the reference from hector.
 				 */
-				size &= B_SIZE;				/* Keep only pure size */
 				zone->ov_flags &= ~EO_MARK;	/* Unconditionally unmark it */
-				continue;					/* Skip block */
-			}
-
-			size &= B_SIZE;					/* Remove block flags */
-			flags = zone->ov_flags;			/* Fetch Eiffel flags */
-
-			if (flags & EO_MARK) { 					/* Object is marked */
-				zone->ov_flags = flags & ~EO_MARK;	/* Unmark it */
-				continue;							/* And skip it */
-			}
-
-			/* Expanded objects are within normal objects and therefore
-			 * cannot be explicitely removed. I assume it is impossible
-			 * to reference an expanded object directly (via another object
-			 * reference)--RAM.
-			 */
-
-			gfree(zone);		/* Object is freed */
+			} else {
+				flags = zone->ov_flags;			/* Fetch Eiffel flags */
+				if (flags & EO_MARK) { 					/* Object is marked */
+					zone->ov_flags = flags & ~EO_MARK;	/* Unmark it */
+				} else {
+						/* Expanded objects are within normal objects and therefore
+						 * cannot be explicitely removed. I assume it is impossible
+						 * to reference an expanded object directly (via another object
+						 * reference)--RAM.
+						 */
+					gfree(zone);		/* Object is freed */
 #ifdef FULL_SWEEP_DEBUG
-		printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
-			(union overhead *) zone + 1,
-			HEADER( (union overhead *) zone + 1 )->ov_dftype,
-			zone->ov_size & B_SIZE,
-			((union overhead *) zone + 1),
-			zone->ov_size & B_FWD ? "forwarded" : "",
-			zone->ov_flags & EO_MARK ? "marked" : "",
-			zone->ov_flags & EO_REF ? "ref" : "",
-			zone->ov_flags & EO_COMP ? "cmp" : "",
-			zone->ov_flags & EO_SPEC ? "spec" : "",
-			zone->ov_flags & EO_NEW ? "new" : "",
-			zone->ov_flags & EO_OLD ? "old" : "",
-			((zone->ov_flags & EO_AGE) >> 24) / 2);
-		
-
+				printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
+					(union overhead *) zone + 1,
+					HEADER( (union overhead *) zone + 1 )->ov_dftype,
+					zone->ov_size & B_SIZE,
+					((union overhead *) zone + 1),
+					zone->ov_size & B_FWD ? "forwarded" : "",
+					zone->ov_flags & EO_MARK ? "marked" : "",
+					zone->ov_flags & EO_REF ? "ref" : "",
+					zone->ov_flags & EO_COMP ? "cmp" : "",
+					zone->ov_flags & EO_SPEC ? "spec" : "",
+					zone->ov_flags & EO_NEW ? "new" : "",
+					zone->ov_flags & EO_OLD ? "old" : "",
+					((zone->ov_flags & EO_AGE) >> 24) / 2);
 #endif	/* FULL_SWEEP_DEBUG */
+				}
+			}
 		}
 	}
 
@@ -3379,17 +3425,39 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 
 	zone = HEADER(root);
 
-	/* Expanded objects are held in one object, and a pseudo-reference field
-	 * in the father object points to them. However, the scavenging process
-	 * does not update this reference. Instead, the expanded header knows how to
-	 * reach the header of the father object. If scavenging is on, we reach the
-	 * expanded once the father has been scavenged, and we get the new address
-	 * by following the forwarding pointer left behind. Nearly a kludge.
-	 * Let A be the address of the original object (zone below) and A' (new) the
-	 * address of the scavenged object (given by following the forwarding
-	 * pointer left) and P the pointed expanded object in the original (root).
-	 * Then the address of the scavenged expanded is A'+(P-A).
-	 */
+		/* If object has the EO_STACK mark, then it means that it cannot move. So we have
+		 * to return immediately. */
+	if (zone->ov_flags & EO_STACK) {
+		CHECK ("EO_STACK not in Generation Scavenge From zone",
+			!((rt_g_data.status & GC_GEN) &&
+			(root > sc_from.sc_arena) && 
+			(root <= sc_from.sc_end)));
+		CHECK ("EO_STACK not in Generation Scavenge TO zone",
+			!((rt_g_data.status & GC_GEN) &&
+			(root > sc_to.sc_arena) && 
+			(root <= sc_to.sc_end)));				
+		CHECK ("EO_STACK not in Partial Scavenge From zone.",
+			!((rt_g_data.status & GC_PART) &&
+			(root > ps_from.sc_active_arena) && 
+			(root <= ps_from.sc_end)));
+		CHECK ("EO_STACK not in Partial Scavenge TO zone.",
+			!((rt_g_data.status & GC_PART) &&
+			(root > ps_to.sc_active_arena) && 
+			(root <= ps_to.sc_end)));
+		return root;
+	}
+
+		/* Expanded objects are held in one object, and a pseudo-reference field
+		 * in the father object points to them. However, the scavenging process
+		 * does not update this reference. Instead, the expanded header knows how to
+		 * reach the header of the father object. If scavenging is on, we reach the
+		 * expanded once the father has been scavenged, and we get the new address
+		 * by following the forwarding pointer left behind. Nearly a kludge.
+		 * Let A be the address of the original object (zone below) and A' (new) the
+		 * address of the scavenged object (given by following the forwarding
+		 * pointer left) and P the pointed expanded object in the original (root).
+		 * Then the address of the scavenged expanded is A'+(P-A).
+		 */
 	if (eif_is_nested_expanded(zone->ov_flags)) {
 			/* Compute original object's address (before scavenge) */
 		EIF_REFERENCE exp;					/* Expanded data space */
@@ -3454,9 +3522,8 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 	 * marked. Besides, we need to cut recursion to prevent loops.
 	 */
 	if (zone->ov_size & B_C) {
-		if (!(zone->ov_flags & EO_C))	/* Not a C object */
-			zone->ov_flags |= EO_MARK;	/* Mark it */
-		return root;					/* Leave object where it is */
+		zone->ov_flags |= EO_MARK;	/* Mark it */
+		return root;				/* Leave object where it is */
 	}
 
 	root = *top;						/* New location in 'to' space */
@@ -3536,6 +3603,7 @@ rt_private int generational_collect(void)
 
 	mark_new_generation(MTC_NOARG);		/* Mark all new reachable objects */
 	full_update();				/* Sweep the youngest generation */
+	unmark_c_stack_objects ();			/* Unmark all objects allocated on C stack. */
 	if (gen_scavenge & GS_ON)
 		swap_gen_zones();		/* Swap generation scavenging spaces */
 
@@ -3685,10 +3753,13 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		/* Stack overflow protection */
 	overflow_stack_depth++;
 	if (overflow_stack_depth > overflow_stack_limit) {
-		epush(&overflow_stack_set, a_root);
-		overflow_stack_count++;
-		overflow_stack_depth--;
-		return root;
+			/* If we can add to the stack overflow recursion, then we do it, otherwise
+			 * we hope we will have enough stack to complete the GC cycle. */
+		if (epush(&overflow_stack_set, a_root) != -1) {
+			overflow_stack_count++;
+			overflow_stack_depth--;
+			return root;
+		}
 	}
 
 	/* Initialize the variables for the loop */
@@ -3737,7 +3808,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		}
 
 		flags = zone->ov_flags;			/* Fetch Eiffel flags */
-		if (flags & (EO_MARK | EO_C))	/* Object has been already processed? */
+		if (flags & EO_MARK)			/* Object has been already processed? */
 			goto done;					/* Exit the procedure */
 
 		if (flags & EO_OLD) {			/* Old object unmarked */
@@ -3745,6 +3816,13 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				zone->ov_flags = flags | EO_MARK;
 			} else						/* Old object is not remembered */
 				goto done;				/* Skip it--object did not move */
+		}
+
+		if (flags & EO_STACK) {
+				/* Object is on the C stack, so we need to record it to unmark it later. */
+				/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
+			epush(&c_stack_object_set, current);
+			zone->ov_flags = flags | EO_MARK;
 		}
 
 		/* If we reach an expanded object, then we already dealt with the object
@@ -3762,10 +3840,9 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				*prev = current;
 		}
 
-		/* It's useless to mark an expanded, because it has only one reference
-		 * on itself, in the object which holds it. Scavengend objects need not
-		 * any mark either, as the forwarding mark tells that they are alive.
-		 */
+			/* It's useless to mark an expanded which has a prent object since the later is marked.
+			 * Scavengend objects need not any mark either, as the forwarding mark
+			 * tells that they are alive. */
 		if (!eif_is_nested_expanded(flags) && (flags & EO_NEW)) {
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
@@ -3923,7 +4000,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			return root;				/* Do nothing for expanded objects */
 	}
 
-	if (zone->ov_size & B_C)	/* Eiffel object not under GC control */
+	if ((flags & EO_STACK) || (zone->ov_size & B_C))	/* Eiffel object not under GC control */
 		return root;			/* Leave it alone */
 
 	/* Get the age of the object, update it and fill in the age table.
@@ -4135,8 +4212,10 @@ rt_private void update_moved_set(void)
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
 					if (zone->ov_flags & EO_NEW)	/* It's a new one */
+							/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 						epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Update reference */
 				} else if (EO_MOVED == (zone->ov_flags & EO_MOVED))
+						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 					epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Remain as is */
 			}
 		}
@@ -4154,6 +4233,7 @@ rt_private void update_moved_set(void)
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
+							/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 						epush(&new_stack, (EIF_REFERENCE)(zone+1));		/* Remains "as is" */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
 					} else if (!(flags & EO_REM))		/* Not remembered */
@@ -4174,6 +4254,7 @@ rt_private void update_moved_set(void)
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
+						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 					epush(&new_stack,(EIF_REFERENCE)(zone+1));	/* Remains "as is" */
 			}
 		}
@@ -4290,6 +4371,7 @@ rt_private void update_rem_set(void)
 			 */
 
 			if (refers_new_object(current))	/* Object deserves remembering? */
+					/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 				epush(&new_stack, current);	/* Save it for posterity */
 			else
 				HEADER(current)->ov_flags &= ~EO_REM;	/* Not remembered */
@@ -4401,8 +4483,7 @@ rt_private void update_memory_set (void)
 			 * dispose routine on it and remove it from the stack. 
 			 */
 
-			if (zone->ov_size & B_FWD)	/* Object survived GS collection. */
-			{
+			if (zone->ov_size & B_FWD) {	/* Object survived GS collection. */
 				current = zone->ov_fwd;		/* Update entry. */
 
 				CHECK ("Has dispose routine", Disp_rout (Dtype (HEADER (current) + 1)));
@@ -4410,10 +4491,10 @@ rt_private void update_memory_set (void)
 
 				if (!(HEADER (current)->ov_flags & (EO_OLD | EO_NEW)))
 										/* Forwarded object is still in GSZ. */
+						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
 					epush(&new_stack, current);		/* Save it in the stack. */
-			}
-			else 									/* Object is dead. */
-			{										/* Call dispose routine.*/
+			} else {
+					/* Object is dead, we call dispose routine.*/
 				CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
 
 				dtype = zone->ov_dtype;	/* Need it for dispose.	*/ 

@@ -1378,6 +1378,9 @@ feature {NONE} -- Added features for ENUM types.
 			r: REAL_32
 		do
 			l_type := val.get_type
+				-- Note: The following code still use assignment attempt because
+				-- using object test does not work as it test for exact types whereas
+				-- assignment attempt was also doing some magic conversion.
 			if l_type ~ Double_type then
 				d ?= val
 				Result := bytes_to_string ({BIT_CONVERTER}.get_bytes_double (d))

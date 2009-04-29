@@ -26,9 +26,9 @@ compare exec_output_m output
 
 compile_frozen
 compile_result ok
-execute_work NONE exec_output_w
 c_compile_work
 c_compile_result ok
+execute_work NONE exec_output_w
 execute_result ok
 compare exec_output_w output
 

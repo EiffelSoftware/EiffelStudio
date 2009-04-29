@@ -869,9 +869,7 @@ feature {NONE} -- Generation
 						buffer.put_integer (reference_arg_count + 1)
 						buffer.put_string (");")
 						buffer.put_new_line
-						buffer.put_string ("RTLR(0,")
-						buffer.put_string (l_current_name)
-						buffer.put_string (");")
+						buffer.put_local_registration (0, l_current_name)
 						from
 							names := agent_arg_names (l_type, args, omap, a_oargs_encapsulated)
 							i := args_count
@@ -881,19 +879,11 @@ feature {NONE} -- Generation
 							buffer.put_new_line
 							if reference_arg [i] then
 									-- Mark for GC.
-								buffer.put_string ("RTLR(")
-								buffer.put_integer (reference_arg_count)
-								buffer.put_character (',')
-								buffer.put_string (names [i + 1])
-								buffer.put_string (");")
+								buffer.put_local_registration (reference_arg_count, names [i + 1]);
 								reference_arg_count := reference_arg_count - 1
 							elseif formal_arg [i] then
 									-- Mark for GC.
-								buffer.put_string ("RTLR(")
-								buffer.put_integer (reference_arg_count)
-								buffer.put_string (",arg")
-								buffer.put_integer (i)
-								buffer.put_string (");")
+								buffer.put_local_registration (reference_arg_count, "arg" + i.out);
 								reference_arg_count := reference_arg_count - 1
 							end
 							i := i - 1

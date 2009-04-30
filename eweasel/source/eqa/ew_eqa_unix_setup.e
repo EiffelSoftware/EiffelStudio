@@ -33,7 +33,7 @@ feature -- Command
 			l_eweasel_63.init ("$ISE_EIFFEL/control/init")
 
 			-- Copy from $EWEASEL\bin\run_eweasel_filter
-			l_eweasel_63.define ("ISE_PLATFORM", "linux-x86-64")
+			l_eweasel_63.define ("ISE_PLATFORM", ise_platform)
 			l_eweasel_63.define ("EWEASEL", "$ISE_EIFFEL/eweasel")
 			l_eweasel_63.define ("INCLUDE", "$EWEASEL/control")
 			l_eweasel_63.define ("EWEASEL_PLATFORM", "UNIX")

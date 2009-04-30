@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 						from
 							done := False
 						until
-							done or else i > length
+							done or else Result = Void or else i > length
 						loop
 	    					ch := src.item (i)
 	    					i := i + 1
@@ -367,7 +367,6 @@ feature {NONE} -- Implementation
 								val := val | hex_character_to_integer (ch)
 								if val > 0xffff then
 		    						Result := Void
-		    						done := True
 		    					else
 		    						saw_xdigit := True
 		    					end
@@ -376,17 +375,14 @@ feature {NONE} -- Implementation
 		    					if not saw_xdigit then
 		    						if colon_position /= -1  then
 		    							Result := Void
-		    							done := True
 		    						else
 		    							colon_position := j
 		    						end
 		    					elseif i > length then
 									Result := Void
-									done := True
 		    					else
 	    							if j + INT16SZ > {INET6_ADDRESS}.INADDRSZ + 1 then
 										Result := Void
-										done := True
 									else
 	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
 	    								j := j + 1
@@ -400,12 +396,10 @@ feature {NONE} -- Implementation
 								ia4 := src.substring(curtok, length);
 								if dot_count (ia4) /= 3 then
 		    						Result := Void
-		    						done := True
 								else
 									v4addr := text_to_numeric_format_v4 (ia4);
 									if v4addr = Void then
 		    							Result := Void
-		    							done := True
 									else
 										from
 											k := 1
@@ -422,7 +416,6 @@ feature {NONE} -- Implementation
 								end
 							else
 								Result := Void
-								done := True
 		    				end
 		    			end
 		    			if Result /= Void then

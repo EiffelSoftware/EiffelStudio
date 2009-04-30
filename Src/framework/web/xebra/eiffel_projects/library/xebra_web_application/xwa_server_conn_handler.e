@@ -10,8 +10,7 @@ deferred class
 
 inherit
 	THREAD
-	XU_DEBUG_OUTPUTTER
-	XU_ERROR_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 feature -- Constants
 
@@ -55,12 +54,13 @@ feature -- Implementation
 		ensure
 			name_set: a_name = name
 		end
-		
+
 	execute
 			-- Waits for connections from the Xebra Server
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
 		do
+			set_outputter_name (name)
 			create l_request_handler.make
         	from
                 xserver_socket.listen (10)
@@ -68,19 +68,21 @@ feature -- Implementation
             	stop
             loop
                 xserver_socket.accept
-                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
-	                dprint ("Connection to Xebra Server accepted",1)
-		             if attached {STRING} socket.retrieved as l_request_message then
-		 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
-		 	        		--singleusermode
-		 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
-		            else
-						socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
-		            end
-		            socket.cleanup
-		            check
-			        	socket.is_closed
-			       	end
+                if not stop then
+	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
+		                o.dprint ("Connection to Xebra Server accepted",1)
+			             if attached {STRING} socket.retrieved as l_request_message then
+			 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
+			 	        		--singleusermode
+			 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
+			            else
+							socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
+			            end
+			            socket.cleanup
+			            check
+				        	socket.is_closed
+				       	end
+			         end
 		         end
             end
 
@@ -88,6 +90,7 @@ feature -- Implementation
         	check
         		xserver_socket.is_closed
         	end
+        	exit
 		end
 
 

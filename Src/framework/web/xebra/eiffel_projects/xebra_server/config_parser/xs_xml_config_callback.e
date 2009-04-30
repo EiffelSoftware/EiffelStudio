@@ -26,12 +26,16 @@ feature {NONE} -- Initialization
 			create webapps.make (1)
 			create state_webapp.make (current)
 			create state_default.make (current)
+			create state_webapps_root.make (current)
+
 		ensure
 
 		end
 
-feature -- Constants
+feature -- Attributes to be collected
 
+	webapps: ARRAYED_STACK [XS_WEBAPP]
+	webapps_root: STRING assign set_webapps_root
 
 feature -- Access
 
@@ -41,14 +45,14 @@ feature -- Access
 	path: STRING
 			-- The path of the file to which is being read
 
-	webapps: ARRAYED_STACK [XS_WEBAPP]
-
-
 	state: XS_CALLBACK_STATE
 			-- The current state of the parser
 
 	state_webapp: XS_CALLBACK_STATE_WEBAPP
 			-- The instance for the state = webapp
+
+	state_webapps_root: XS_CALLBACK_STATE_WAROOT
+			-- The instance for the state = webapps_root		
 
 	state_default: XS_CALLBACK_STATE_DEFAULT
 		-- The instance for the state = default	
@@ -145,6 +149,8 @@ feature -- Tag
 
 			if l_local_part.is_equal (state_webapp.tag) then
 				set_state_webapp
+			elseif l_local_part.is_equal (state_webapps_root.tag)  then
+				set_state_webapps_root
 			else
 				set_state_default
 			end
@@ -235,6 +241,14 @@ feature  --
 			state_set: state = state_webapp
 		end
 
+	set_state_webapps_root
+			-- Sets the state to the state_webapps_root object
+		do
+			state := state_webapps_root
+		ensure
+			state_set: state = state_webapps_root
+		end
+
 	set_state_default
 			-- Sets the state to  default
 		do
@@ -243,6 +257,13 @@ feature  --
 			state_set: state = state_default
 		end
 
+	set_webapps_root (a_webapps_root: STRING)
+			-- Sets webapps_root
+		do
+			webapps_root := a_webapps_root
+		ensure
+			webapps_root_set: webapps_root = a_webapps_root
+		end
 
 
 note

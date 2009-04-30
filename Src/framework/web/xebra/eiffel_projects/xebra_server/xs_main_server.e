@@ -11,8 +11,9 @@ class
     XS_MAIN_SERVER
 
 inherit
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 	ERROR_SHARED_ERROR_MANAGER
+	EIFFEL_RUNTIME_EXCEPTION undefine out end
 
 create
     make
@@ -24,12 +25,12 @@ feature -- Initialization
 		local
 			l_printer: ERROR_CUI_PRINTER
 		do
-
-			dprint ("%N%N%N",1)
-			dprint ("Starting Xebra Server...",1)
-			dprint ("Reading configuration...",1)
+			set_outputter_name ("XEBSRV")
+			print ("%N%N%N")
+			o.iprint ("Starting Xebra Server...")
+			o.dprint ("Reading configuration...",1)
 			create server_config.make_from_file (Default_server_config_path)
-			create compile_service.make (server_config.webapps)
+			create compile_service.make (server_config)
 
 			create l_printer.default_create
 			if error_manager.has_warnings then
@@ -40,33 +41,38 @@ feature -- Initialization
 				error_manager.trace_last_error (l_printer)
 			else
 
-				dprint ("Launching HTTP Connection Server...",1)
+				o.dprint ("Launching HTTP Connection Server...",1)
 				create http_connection_server.make (compile_service)
-				http_connection_server.launch
-			--	dprint ("Launching Web App Connection Server...",1)
-			--	create app_connection_server.make (webapp_handler)
-			--	app_connection_server.launch
+				if not http_connection_server.is_bound then
+					o.eprint ("Socket could not be bound!", generating_type)
+				else
+					http_connection_server.launch
 
-				dprint ("Xebra Server ready to rock...",1)
+					o.iprint ("Xebra Server ready to rock...")
 
-				dprint ("(enter 'x' to shut down)",1)
-				from
-					io.read_character
-				until
-					io.last_character.is_equal ('x')
-				loop
-					io.read_character
+					o.iprint ("(enter 'x' to shut down)")
+					from
+						io.read_character
+					until
+						io.last_character.is_equal ('x')
+					loop
+						io.read_character
+					end
 				end
 
-				dprint ("Shutting down...",1)
-				--webapp_handler.close_all
-				http_connection_server.shutdown
-			--	app_connection_server.shutdown
-				dprint ("Bye!",1)
 			end
+
+			o.iprint ("Shutting down...")
+			o.dprint ("Terminating Web Applications...",3)
+			server_config.stop_apps
+			o.dprint ("Waiting for http_connection_server to shutdown...", 3)
+			http_connection_server.shutdown
+			o.iprint ("All done. Bye!")
+		--	raise
 		end
 
 feature -- Access
+
 
 	http_connection_server: XS_HTTP_CONN_SERVER
 			-- Handles connections to http server requests
@@ -83,5 +89,33 @@ feature -- Constants
 
 --	Default_server_config_path: STRING = "$XEBRA_DEV/eiffel_projects/xebra_server/config.xml"
 	Default_server_config_path: STRING = "config.xml"
+
+
+
+
+feature -- TEST
+
+	frozen code: INTEGER
+			-- Exception code
+		do
+			if internal_code = {EXCEP_CONST}.Out_of_memory then
+				Result := internal_code
+			else
+					-- Default to `No_more_memory'.
+				Result := {EXCEP_CONST}.No_more_memory
+			end
+		end
+
+	set_code (a_code: like code)
+			-- Set `code' with `a_code'.
+		do
+			internal_code := code
+		end
+
+	frozen internal_meaning: STRING = "Xebra Server successfully shut down."
+
+	internal_code: like code
+			-- Internal code
+
 
 end

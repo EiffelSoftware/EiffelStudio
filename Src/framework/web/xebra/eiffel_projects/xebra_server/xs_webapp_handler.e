@@ -11,7 +11,7 @@ class
 	XS_WEBAPP_HANDLER
 
 inherit
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 create
 	make
@@ -97,7 +97,11 @@ feature  -- Implementation
 					if compile_service.run (l_uri_webapp_name) then
 						Result :=  send (l_uri_webapp_name, l_request_message)
 					else
-						Result := (create {XER_CANNOT_RUN_APP}.make (l_uri_webapp_name)).render_to_response
+						if compile_service.launch_failed (l_uri_webapp_name) then
+							Result := (create {XER_LAUNCH_FAILED}.make (l_uri_webapp_name)).render_to_response
+						else
+							Result := (create {XER_APP_STARTING}.make (l_uri_webapp_name)).render_to_response
+						end
 					end
 				else
 					Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
@@ -116,29 +120,29 @@ feature {NONE} -- Implementation
 			local
 				l_webapp_socket: NETWORK_STREAM_SOCKET
 			do
-				if attached {XS_WEBAPP} compile_service.webapps[a_webapp_name] as l_app then
+				if attached {XS_WEBAPP} compile_service.server_config.webapps[a_webapp_name] as l_app then
 
 					create l_webapp_socket.make_client_by_port (l_app.port, Default_app_server_host)
-					dprint ("Connecting to " + a_webapp_name + "@" + l_app.port.out,2)
+					o.dprint ("Connecting to " + l_app.name + "@" + l_app.port.out,2)
 					l_webapp_socket.connect
 		            if  l_webapp_socket.is_connected then
-						dprint ("Forwarding request", 2)
+						o.dprint ("Forwarding request", 2)
 			            l_webapp_socket.independent_store (a_request_message)
-			            dprint ("Waiting for response", 2)
+			            o.dprint ("Waiting for response", 2)
 						if attached {XH_RESPONSE} l_webapp_socket.retrieved as l_response then
-							dprint ("Response retrieved", 2)
+							o.dprint ("Response retrieved", 2)
 			            	Result := l_response
 			            else
 			            	Result := (create {XER_BAD_RESPONSE}.make (a_webapp_name)).render_to_response
 			            end
 			        else
 			        	Result := (create {XER_CANNOT_CONNECT}.make (a_webapp_name)).render_to_response
+			        	--we could stop the webapp process here and restart it
 			        end
 	            else
 					Result := (create {XER_CANNOT_FIND_APP}.make (a_webapp_name)).render_to_response
 				end
 			end
-
 
 
 end

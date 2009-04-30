@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Represents a specific response
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,9 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XER_CANNOT_RUN_APP
+	XER_APP_STARTING
 
 inherit
+	X_INFO_RESPONSE
 	XER_SERVER
 
 create
@@ -24,6 +25,6 @@ feature -- Access
 			if arg.is_empty then
 				arg := " "
 			end
-			Result := "Cannot find run application '" + arg + "' "
+			Result := "Application '" + arg + "' is starting..."
 		end
 end

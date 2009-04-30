@@ -9,7 +9,7 @@ deferred class
 	XWA_SERVLET
 
 inherit
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 feature {XWA_SERVLET} -- Initialization
 
@@ -22,7 +22,7 @@ feature {XWA_SERVLET} -- Initialization
 feature -- Access
 
 	current_session: XH_SESSION
-			-- Represents the session that belongs to the user that has send the current request
+			-- Represents the session that belongs to the user that has sent the current request
 
 feature -- Basic Operations	
 
@@ -31,7 +31,7 @@ feature -- Basic Operations
 		local
 			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
-			dprint ("Processing request...", 3)
+			o.dprint ("Processing request...", 3)
 			current_session := a_session_manager.get_current_session (a_request, a_response)
 			l_internal_controllers := internal_controllers
 			from

@@ -10,7 +10,7 @@ class
 	XWA_REQUEST_HANDLER
 
 inherit
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 create
 	make
@@ -49,19 +49,19 @@ process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STR
 				l_new_request = Void
 			loop
 				create l_response.make_empty
-				dprint ("Searching matching servlet...",2)
+				o.dprint ("Searching matching servlet...",2)
 				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
 				if attached l_servlet then
-					dprint ("Handing over to matching servlet...",2)
+					o.dprint ("Handing over to matching servlet...",2)
 					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
-					dprint ("No matching servlet found.",2)
+					o.dprint ("No matching servlet found.",2)
 					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
 					l_new_request := Void
 				end
 			end
-			dprint ("Sending back response...", 2)
+			o.dprint ("Sending back response...", 2)
 		   	a_socket.independent_store (l_response)
 		end
 

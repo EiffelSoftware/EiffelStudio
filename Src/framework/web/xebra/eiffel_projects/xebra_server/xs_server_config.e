@@ -9,7 +9,7 @@ class
 
 inherit
 	ERROR_SHARED_ERROR_MANAGER
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 create
 	make_empty, make_from_file
@@ -32,6 +32,22 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	webapps: HASH_TABLE [XS_WEBAPP, STRING]
+	webapps_root: STRING
+
+feature -- Status Change
+
+	stop_apps
+			-- Terminates all process from webapps
+		do
+			from
+				webapps.start
+			until
+				webapps.after
+			loop
+				webapps.item_for_iteration.stop
+				webapps.forth
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -47,15 +63,18 @@ feature {NONE} -- Implementation
 			if not l_file.is_open_read then
 				error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
 			else
-				dprint ("Reading config file '" + l_file.name + "'",2)
+				o.dprint ("Reading config file '" + l_file.name + "'",2)
 				create {XM_EIFFEL_PARSER} l_parser.make
 				create {XS_XML_CONFIG_CALLBACK} l_p_callback.make (l_parser, l_file.name)
 				l_parser.set_callbacks (l_p_callback)
 				l_parser.parse_from_stream (l_file)
 
 				webapps := l_p_callback.webapps_hash
+				webapps_root := l_p_callback.webapps_root
 				l_file.close
 
 			end
 		end
+
+
 end

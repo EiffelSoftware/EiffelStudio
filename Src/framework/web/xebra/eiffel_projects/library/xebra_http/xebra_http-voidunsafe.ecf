@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="xebra_http" uuid="41C39020-EA64-4C68-9DCF-87DC5D882F9C" library_target="xebra_http">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_http" uuid="41C39020-EA64-4C68-9DCF-87DC5D882F9C" library_target="xebra_http">
 	<target name="xebra_http">
 		<root all_classes="true"/>
+		<option syntax="transitional">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
 		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf"/>

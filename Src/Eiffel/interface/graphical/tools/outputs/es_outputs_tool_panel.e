@@ -26,6 +26,22 @@ inherit
 			create_right_tool_bar_items
 		end
 
+	ES_HELP_CONTEXT
+		export
+			{NONE} all
+		redefine
+			is_help_available,
+			help_provider,
+			help_context_section,
+			help_context_id,
+			help_context_description
+		end
+
+	ES_OUTPUTS_COMMANDER_I
+		export
+			{ES_OUTPUTS_COMMANDER_I} all
+		end
+
 	OUTPUT_MANAGER_OBSERVER
 		redefine
 			on_output_unregistered,
@@ -39,11 +55,6 @@ inherit
 		redefine
 			on_output_locked,
 			on_output_unlocked
-		end
-
-	ES_OUTPUTS_COMMANDER_I
-		export
-			{ES_OUTPUTS_COMMANDER_I} all
 		end
 
 create {ES_OUTPUTS_TOOL}
@@ -138,10 +149,44 @@ feature {NONE} -- Access
 
 feature -- Access: Help
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: attached STRING
 			-- <Precursor>
-		once
-			Result := "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
+		do
+			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
+				Result := l_context.help_context_id
+			else
+				Result := once "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
+			end
+		end
+
+	help_context_section: detachable HELP_CONTEXT_SECTION_I
+			-- <Precursor>
+		do
+			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
+				Result := l_context.help_context_section
+			else
+				Result := Precursor
+			end
+		end
+
+	help_context_description: detachable STRING_32
+			-- <Precursor>
+		do
+			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
+				Result := l_context.help_context_description
+			else
+				Result := Precursor
+			end
+		end
+
+	help_provider: UUID
+			-- <Precursor>
+		do
+			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
+				Result := l_context.help_provider
+			else
+				Result := Precursor
+			end
 		end
 
 feature {NONE} -- Access: User interface
@@ -250,6 +295,18 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := True
+		end
+
+feature {NONE} -- Status report
+
+	is_help_available: BOOLEAN
+			-- <Precursor>
+		do
+			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
+				Result := l_context.is_help_available
+			else
+				Result := Precursor
+			end
 		end
 
 feature {NONE} -- Helpers

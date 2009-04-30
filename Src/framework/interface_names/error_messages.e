@@ -17,6 +17,15 @@ feature -- General purpose
 
 	e_unknown_error: attached STRING_32 do Result := locale.translation ("Unknown error.") end
 
+feature -- File
+
+	e_file_does_not_exists (a_file_name: STRING_GENERAL): STRING_32 do Result := locale.translation ("The file '$1' does not exist.") end
+	e_folder_does_not_exists (a_file_name: STRING_GENERAL): STRING_32 do Result := locale.translation ("The file '$1' does not exist.") end
+
+feature -- Project
+
+	e_must_open_project: STRING_32 do Result := locale.translation ("This function can only be performed once a project has been opened.%NPlease open a project and try again.") end
+
 feature -- Code template
 
 	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): attached STRING_32 do Result := locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
@@ -37,7 +46,7 @@ feature -- Prompts
 	e_save_session_data_failed: attached STRING_32 do Result := locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -50,22 +59,22 @@ feature -- Prompts
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

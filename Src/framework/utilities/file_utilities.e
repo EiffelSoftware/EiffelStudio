@@ -513,10 +513,10 @@ feature {NONE} -- Basic operations
 					loop
 						create l_path_name.make_from_string (l_dn)
 						l_path_name.extend (l_directories.item (i))
-						if attached {STRING} l_path_name.string as l_path then
+						if attached {STRING} l_path_name.string as l_path and then is_path_applicable (l_path, Void, a_exclude) then
 								-- Note: checking applicablity of the path does not check the include expression. This is because
 								--       directories can be excluded but not included. Files can be included.
-							Result.append_last (internal_scan_for_files (l_path, (a_levels - 1).max (-1), Void, a_exclude, True))
+							Result.append_last (internal_scan_for_files (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						end
 						i := i + 1
 					end

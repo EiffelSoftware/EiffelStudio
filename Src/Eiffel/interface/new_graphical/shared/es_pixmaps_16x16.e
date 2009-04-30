@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -2418,6 +2418,26 @@ feature -- Icons
 			has_named_icon: has_named_icon (tool_contract_editor_name)
 		once
 			Result := named_icon_buffer (tool_contract_editor_name)
+		ensure
+			tool_contract_editor_icon_buffer_attached: Result /= Void
+		end
+
+	frozen tool_terminal_icon: EV_PIXMAP
+			-- Access to 'contract editor' pixmap.
+		require
+			has_named_icon: has_named_icon (tool_terminal_name)
+		once
+			Result := named_icon (tool_terminal_name)
+		ensure
+			tool_contract_editor_icon_attached: Result /= Void
+		end
+
+	frozen tool_terminal_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'contract editor' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (tool_terminal_name)
+		once
+			Result := named_icon_buffer (tool_terminal_name)
 		ensure
 			tool_contract_editor_icon_buffer_attached: Result /= Void
 		end
@@ -8283,7 +8303,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
@@ -8463,6 +8483,7 @@ feature -- Constants: Icon names
 	tool_errors_list_with_errors_name: STRING = "tool errors list with errors"
 	tool_errors_list_with_warnings_name: STRING = "tool errors list with warnings"
 	tool_contract_editor_name: STRING = "tool contract editor"
+	tool_terminal_name: STRING = "tool terminal"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -8881,6 +8902,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 5], tool_errors_list_with_errors_name)
 			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 5], tool_errors_list_with_warnings_name)
 			a_table.put ([{NATURAL_8} 32, {NATURAL_8} 5], tool_contract_editor_name)
+			a_table.put ([{NATURAL_8} 33, {NATURAL_8} 5], tool_terminal_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 7], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 7], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 7], project_freeze_name)

@@ -336,7 +336,11 @@ feature -- Callbacks
 					uses_list.clear_all
 					overrides_list.clear_all
 					group_list.clear_all
-					set_default_options (current_target, a_namespace)
+					if current_target.extends = Void then
+							-- Set default options for the standalone target in case the old schema is being processed.
+							-- Extension targets do not need it because the options are inherited from the standalone ones.
+						set_default_options (current_target, a_namespace)
+					end
 					current_target := Void
 				when t_file_rule then
 					current_file_rule := Void

@@ -20,4 +20,5 @@ del *.il? > cleanup_output.txt 2>&1
 del config.sh > cleanup_output.txt 2>&1
 del Makefile > cleanup_output.txt 2>&1
 del make.bat > cleanup_output.txt 2>&1
+del *.exe.manifest > cleanup_output.txt 2>&1
 if exist cleanup_output.txt del cleanup_output.txt

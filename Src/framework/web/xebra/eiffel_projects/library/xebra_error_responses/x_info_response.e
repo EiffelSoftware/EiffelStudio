@@ -1,6 +1,6 @@
 note
 	description: "[
-		Represents an error response page
+		Represents a infromation response page
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	X_ERROR_RESPONSE
+	X_INFO_RESPONSE
 
 inherit
 	X_RESPONSE
@@ -18,12 +18,15 @@ feature -- Access
 	title: STRING
 			-- The type (title) of the Response
 		do
-			Result := "Error Report"
+			Result := "Information"
 		end
 
 	deco_color: STRING
 			-- The color of the decoration
 		do
-			Result := "#F15922"
+			Result := "#6CC5C3"
 		end
+
 end
+
+

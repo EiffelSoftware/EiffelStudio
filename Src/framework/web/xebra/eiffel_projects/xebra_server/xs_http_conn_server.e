@@ -12,7 +12,7 @@ class
 
 inherit
 	THREAD
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 create make
 
@@ -37,24 +37,27 @@ feature -- Inherited Features
 			l_r_handler: XS_REQUEST_HANDLER
 		do
 			create l_r_handler.make (message_default_bound, message_upper_bound)
-
-        	from
+			set_outputter_name ("XEBSRV")
+			from
                 http_socket.listen (max_tcp_clients.as_integer_32)
             until
             	stop
             loop
                 http_socket.accept
-                dprint ("Connection to http accepted",1)
-	            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
---					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
-	            		--singleusermode
-	            	l_r_handler.do_execute (thread_http_socket, compile_service)
+                if not stop then
+	                o.dprint ("Connection to http accepted",1)
+		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
+	--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
+		            		--singleusermode
+		            	l_r_handler.do_execute (thread_http_socket, compile_service)
+					end
 				end
             end
             http_socket.cleanup
         	check
         		http_socket.is_closed
         	end
+        	exit
 		end
 
 feature -- Access
@@ -66,9 +69,17 @@ feature -- Access
 
 	compile_service: XS_COMPILE_SERVICE
 
-
 	stop: BOOLEAN
 			-- Set true to stop accept loop
+
+feature -- Status
+
+	is_bound: BOOLEAN
+			-- Checks if the socket could be bound
+		do
+			Result := http_socket.is_bound
+		end
+
 
 feature -- Constants
 
@@ -94,8 +105,6 @@ feature -- Status setting
 		do
 			stop := True
 			http_socket.cleanup
-        ensure
-        	http_socket.is_closed
 		end
 
 
@@ -107,5 +116,6 @@ feature {POOLED_THREAD} -- Implementation
 			-- Used for the thread_manager.
 		do
 			create Result.make (message_default_bound, message_upper_bound)
+
 		end
 end

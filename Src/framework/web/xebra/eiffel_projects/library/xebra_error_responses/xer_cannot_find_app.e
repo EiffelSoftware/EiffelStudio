@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Represents a specific response
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -11,6 +11,7 @@ class
 	XER_CANNOT_FIND_APP
 
 inherit
+	X_ERROR_RESPONSE
 	XER_SERVER
 
 create
@@ -24,6 +25,6 @@ feature -- Access
 			if arg.is_empty then
 				arg := " "
 			end
-			Result := "Cannot find web application '" + arg + "' "
+			Result := "No configuration found for webapp '" + arg + "' "
 		end
 end

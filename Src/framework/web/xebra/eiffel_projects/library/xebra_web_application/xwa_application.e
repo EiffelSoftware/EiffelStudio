@@ -10,7 +10,8 @@ note
 deferred class
 	XWA_APPLICATION
 
-
+inherit
+	XU_SHARED_OUTPUTTER
 
 feature {NONE} -- Initialization
 
@@ -18,14 +19,15 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 				if attached server_connection_handler as server  then
+					set_outputter_name (name)
 					print ("%N%N%N")
-					print ("Starting " + name + "%N")
+					o.iprint ("Starting " + name)
 
 					server.launch
 
-					print ("Xebra Wep Application ready to rock...%N")
+					o.iprint ("Xebra Wep Application ready to rock...")
 
-					print ("(enter 'x' to shut down)%N")
+					o.iprint ("(enter 'x' to shut down)")
 					from
 						io.read_character
 					until
@@ -34,9 +36,9 @@ feature {NONE} -- Initialization
 						io.read_character
 					end
 
-					print ("Shutting down...%N")
+					o.iprint ("Shutting down...")
 					server.shutdown
-					print ("Bye!%N")
+					o.iprint ("Bye!")
 				end
 		end
 

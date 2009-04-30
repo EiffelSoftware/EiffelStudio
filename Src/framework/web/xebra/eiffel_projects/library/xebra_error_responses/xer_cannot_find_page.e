@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Represents a specific response
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -11,6 +11,7 @@ class
 	XER_CANNOT_FIND_PAGE
 
 inherit
+	X_ERROR_RESPONSE
 	XER_APP
 
 create

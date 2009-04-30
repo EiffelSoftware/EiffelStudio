@@ -11,7 +11,7 @@ class
 	XS_REQUEST_HANDLER
 
 inherit
-	XU_DEBUG_OUTPUTTER
+	XU_SHARED_OUTPUTTER
 
 create
 	make
@@ -82,7 +82,7 @@ feature --Execution
 
 			l_response := l_webapp_handler.forward_request_to_app (l_request_message)
 
-			dprint ("Sending response to http",2)
+			o.dprint ("Sending response to http",2)
 			send_message_to_http (l_response.render_to_string, a_http_socket)
 
          	a_http_socket.cleanup

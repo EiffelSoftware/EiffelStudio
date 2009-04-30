@@ -1,4 +1,5 @@
 <xebra_server_config>
+	<webapps_root path="/home/fabioz/xebra/websites"/>	
 	<webapps>
 		<webapp name="demoapplication" port="55005"/>
 		<webapp name="xebrawebapp" port="55006"/>

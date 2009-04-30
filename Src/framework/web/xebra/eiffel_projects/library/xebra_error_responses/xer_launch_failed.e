@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XER_CANNOT_CONNECT
+	XER_LAUNCH_FAILED
 
 inherit
 	X_ERROR_RESPONSE
@@ -22,7 +22,10 @@ feature -- Access
 	message: STRING
 			-- <Precursor>
 		do
-			Result := "Cannot connect to web application '" + arg + "'"
+			if arg.is_empty then
+				arg := " "
+			end
+			Result := "Failed to launch web application '" + arg + "' "
 		end
 
 end

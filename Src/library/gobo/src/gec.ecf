@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="gec">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gec" uuid="C284F9F8-C279-48FA-81EA-7898735604B4">
 	<target name="gec">
 		<root class="GEC" feature="execute"/>
 		<option trace="false" profile="false" debug="false" warning="true">
@@ -24,9 +24,9 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_string" location="$ISE_LIBRARY\library\gobo\gobo_string.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<cluster name="gec" location="$ISE_LIBRARY\library\gobo\svn\src\gec\" recursive="true"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_tools" uuid="2B649FF3-040D-459C-9694-80365BF5A8AE" library_target="gobo_tools">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_tools" uuid="2B649FF3-040D-459C-9694-80365BF5A8AE" library_target="gobo_tools">
 	<target name="gobo_tools">
 		<description>gobo tools library</description>
 		<root all_classes="true"/>
@@ -29,10 +29,10 @@
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="override_generated" location="override\generated\library\tools\" recursive="true"/>
 		<cluster name="tools" location="svn\library\tools\" recursive="true">
 			<option namespace="Tools">
 			</option>
 		</cluster>
-		<cluster name="override_generated" location="override\generated\library\tools" recursive="true"/>
 	</target>
 </system>

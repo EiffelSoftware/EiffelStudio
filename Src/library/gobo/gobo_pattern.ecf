@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_pattern" uuid="7E1DC8DA-7EE8-4350-A49A-4EB023EE2DA3" library_target="gobo_pattern">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_pattern" uuid="7E1DC8DA-7EE8-4350-A49A-4EB023EE2DA3" library_target="gobo_pattern">
 	<target name="gobo_pattern">
 		<description>gobo pattern library</description>
 		<root all_classes="true"/>
@@ -28,4 +28,3 @@
 		</cluster>
 	</target>
 </system>
-

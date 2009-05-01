@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
 	<target name="geyacc">
 		<root class="GEYACC" feature="execute"/>
 		<option trace="false" profile="false" debug="false" warning="true">
@@ -25,6 +25,6 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="geyacc" location="$ISE_LIBRARY\library\gobo\svn\src\geyacc"/>
+		<cluster name="geyacc" location="$ISE_LIBRARY\library\gobo\svn\src\geyacc\"/>
 	</target>
 </system>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_lexical" uuid="6C83C78B-D8F2-4101-9E3C-EF8E8A7CD816" library_target="gobo_lexical">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_lexical" uuid="6C83C78B-D8F2-4101-9E3C-EF8E8A7CD816" library_target="gobo_lexical">
 	<target name="gobo_lexical">
 		<description>gobo lexical library</description>
 		<root all_classes="true"/>
@@ -21,17 +21,16 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
-		<library name="gobo_structure" location="gobo_structure.ecf"/>
-		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
-		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<library name="gobo_parse" location="gobo_parse.ecf"/>
+		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
 		<library name="gobo_regexp" location="gobo_regexp.ecf"/>
+		<library name="gobo_structure" location="gobo_structure.ecf"/>
+		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
 			<option namespace="Lexical">
 			</option>
 		</cluster>
-		<cluster name="override_generated" location="override\generated\library\lexical" recursive="true"/>
+		<cluster name="override_generated" location="override\generated\library\lexical\" recursive="true"/>
 	</target>
 </system>
-

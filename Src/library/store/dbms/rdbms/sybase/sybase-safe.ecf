@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="sybase" uuid="19811CD1-BEAC-41EA-AA07-C5447429CB88" library_target="db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="sybase" uuid="19811CD1-BEAC-41EA-AA07-C5447429CB88" library_target="db">
 	<target name="db">
 		<description>Sybase access library for EiffelStore.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 		</option>
 		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
 			<condition>

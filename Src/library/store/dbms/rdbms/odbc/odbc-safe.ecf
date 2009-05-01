@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="odbc" uuid="D6944D5E-28BF-4C19-820B-183F5DA1FF76" library_target="db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="odbc" uuid="D6944D5E-28BF-4C19-820B-183F5DA1FF76" library_target="db">
 	<target name="db">
 		<description>ODBC access library for EiffelStore.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+		<option full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all">
 		</option>
 		<external_include location="$(ISE_LIBRARY)\library\store\dbms\rdbms\odbc\Clib">
 			<condition>

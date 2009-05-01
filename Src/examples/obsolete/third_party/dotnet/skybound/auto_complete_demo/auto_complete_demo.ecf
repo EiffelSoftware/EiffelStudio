@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="auto_complete_demo" uuid="12D0C350-3976-4752-968B-48352312335A">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="auto_complete_demo" uuid="12D0C350-3976-4752-968B-48352312335A">
 	<target name="auto_complete_demo">
 		<root class="STARTUP" feature="make_sta"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="console_application" value="false"/>

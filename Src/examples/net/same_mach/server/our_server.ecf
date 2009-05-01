@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="same_mach_server" uuid="D5EED05B-0716-4835-A63E-CEB8C4FC1572">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="same_mach_server" uuid="D5EED05B-0716-4835-A63E-CEB8C4FC1572">
 	<target name="same_mach_server">
 		<root cluster="root_cluster" class="OUR_SERVER" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base-safe.ecf"/>

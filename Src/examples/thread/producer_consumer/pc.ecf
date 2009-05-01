@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="pc" uuid="EAF6B53E-E697-4D84-9248-F5FF88E5F9A5">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="pc" uuid="EAF6B53E-E697-4D84-9248-F5FF88E5F9A5">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="PC" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>

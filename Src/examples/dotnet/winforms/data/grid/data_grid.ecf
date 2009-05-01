@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="data_grid" uuid="5E561A3D-9291-47DE-A1DB-324C597FAC59">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="data_grid" uuid="5E561A3D-9291-47DE-A1DB-324C597FAC59">
 	<target name="data_grid">
 		<root cluster="root_cluster" class="DATA_GRID" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="msil_generation" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>

@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test_all_widgets" uuid="7728A168-5BEC-4CF5-97F8-247DA702CBF7">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test_all_widgets" uuid="7728A168-5BEC-4CF5-97F8-247DA702CBF7">
 	<target name="test_all_widgets">
-		<description>
-			EiffelVision test_all_widgets example
-		</description>
+		<description>EiffelVision test_all_widgets example</description>
 		<root class="DEMO" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true" postcondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 			<warning name="syntax" enabled="false"/>

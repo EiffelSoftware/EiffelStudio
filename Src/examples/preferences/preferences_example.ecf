@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
 	<target name="common" abstract="true">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="obsolete_feature" enabled="false"/>
 			<warning name="syntax" enabled="false"/>

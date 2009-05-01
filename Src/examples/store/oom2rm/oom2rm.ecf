@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="oom2rm" uuid="B78D5335-6A07-4A86-B2EB-B9E5C6E8C684">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="oom2rm" uuid="B78D5335-6A07-4A86-B2EB-B9E5C6E8C684">
 	<target name="oom2rm">
 		<root cluster="root_cluster" class="SAMPLE" feature="make"/>
 		<option warning="true">

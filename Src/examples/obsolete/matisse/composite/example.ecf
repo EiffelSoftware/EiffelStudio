@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="example" uuid="C095D6D7-FDA1-4EB1-8F11-509D68FCF163">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="example" uuid="C095D6D7-FDA1-4EB1-8F11-509D68FCF163">
 	<target name="example">
 		<root cluster="root_cluster" class="EXAMPLE_COMPOSITE_OBJECT" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<external_object location="$MTS_ROOT\lib\matisse.lib"/>
 		<external_object location="$ISE_LIBRARY\library\matisse\matisse_externals\Clib\mt_support.lib"/>
@@ -16,13 +17,13 @@
 					<visible class="MT_EXCEPTIONS"/>
 				</cluster>
 				<cluster name="matisse_retrieval" location="$|matisse_retrieval\">
-					<visible class="MT_AA_HASH_TABLE" feature="make"/>
+					<visible class="MT_RR_HASH_TABLE" feature="make"/>
 					<visible class="MT_RA_HASH_TABLE" feature="make"/>
 					<visible class="MT_AR_HASH_TABLE" feature="make"/>
-					<visible class="MT_ARRAYED_LIST" feature="make"/>
 					<visible class="MT_ARRAY" feature="make"/>
+					<visible class="MT_ARRAYED_LIST" feature="make"/>
 					<visible class="MT_HASH_TABLE" feature="make"/>
-					<visible class="MT_RR_HASH_TABLE" feature="make"/>
+					<visible class="MT_AA_HASH_TABLE" feature="make"/>
 					<visible class="MT_LINKED_LIST" feature="make"/>
 					<visible class="MT_LINKED_STACK" feature="make"/>
 				</cluster>

@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="predef_client" uuid="970609FD-9868-4F51-BD28-D7F7C11C18A7">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="predef_client" uuid="970609FD-9868-4F51-BD28-D7F7C11C18A7">
 	<target name="predef_client">
 		<root class="OUR_CLIENT" feature="make_client"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base-safe.ecf"/>

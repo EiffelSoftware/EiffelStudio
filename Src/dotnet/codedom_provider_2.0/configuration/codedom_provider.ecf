@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelsoftware.codedom" uuid="CB76EC4F-25F4-4A53-9D2A-54135BB271B5">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.codedom" uuid="CB76EC4F-25F4-4A53-9D2A-54135BB271B5">
 	<target name="codedom_provider_common">
 		<description>Codedom provider</description>
 		<root cluster="codedom_provider" class="CODE_DOM_PROVIDER" feature="default_create"/>

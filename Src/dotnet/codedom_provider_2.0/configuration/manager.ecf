@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="manager" uuid="56B27D8D-8B31-42f6-BEAC-94CB4BE01F24">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="manager" uuid="56B27D8D-8B31-42F6-BEAC-94CB4BE01F24">
 	<target name="manager_common" abstract="true">
-		<description>
-			Eiffel Codedom Manager utility
-		</description>
-		
-		<root feature="make_and_launch" class="ECDM_APPLICATION"/>
-		<option syntax_level="1"/>
+		<description>Eiffel Codedom Manager utility</description>
+		<root class="ECDM_APPLICATION" feature="make_and_launch"/>
 		<version major="5" minor="7" release="426" build="0"/>
-		
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
 		<setting name="cls_compliant" value="true"/>
+		<setting name="console_application" value="false"/>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="ecdpman2_0"/>
 		<setting name="il_verifiable" value="true"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="true"/>
@@ -23,48 +19,37 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
-		<setting name="console_application" value="false"/>
-		<setting name="executable_name" value="ecdpman2_0"/>
-
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>
-
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
-
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
-		
-		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\manager">
-			<option namespace="EiffelSoftware.Codedom.Manager" />
+		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop\" recursive="true">
+			<option namespace="Eclop">
+			</option>
 		</cluster>
-
-		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common">
-			<option namespace="EiffelSoftware.Codedom.Tools" />
+		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\manager\">
+			<option namespace="EiffelSoftware.Codedom.Manager">
+			</option>
 		</cluster>
-
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\eclop" recursive="true">
-			<option namespace="Eclop" />
+		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common\">
+			<option namespace="EiffelSoftware.Codedom.Tools">
+			</option>
 		</cluster>
 	</target>
-	
 	<target name="manager_debug" extends="manager_common">
-		<setting name="line_generation" value="true"/>		
 		<option debug="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
-		</option>		
+		</option>
+		<setting name="line_generation" value="true"/>
 	</target>
-
 	<target name="manager_release" extends="manager_common">
-		<setting name="line_generation" value="false"/>
 		<option debug="false">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>		
+			<assertions/>
+		</option>
+		<setting name="line_generation" value="false"/>
 	</target>
 </system>

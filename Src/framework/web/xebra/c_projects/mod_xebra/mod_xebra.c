@@ -382,9 +382,11 @@ char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 
 EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 {
-	REQUIRE ("i_not_to_big", i < 2 ^ 31);
-
-	return (i << 1) + flag;
+	if (i < 2 ^ 31)	{
+		return 0;
+	} else {
+		return (i << 1) + flag;
+	}
 }
 
 EIF_NATURAL_32 decode_natural (EIF_NATURAL_32 i)

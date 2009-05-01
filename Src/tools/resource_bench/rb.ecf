@@ -1,20 +1,19 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="rb" uuid="A72D5A62-3DBA-4492-B060-56D691FA4D40">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="rb" uuid="A72D5A62-3DBA-4492-B060-56D691FA4D40">
 	<target name="rb">
-		<root feature="make" class="APPLICATION"/>
+		<root class="APPLICATION" feature="make"/>
 		<option trace="false" profile="false" debug="false">
-			<assertions precondition="True" postcondition="True" check="True" invariant="false" loop="false"/>
+			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="console_application" value="False"/>
 		<setting name="dead_code_removal" value="True"/>
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
 		<library name="parse" location="$ISE_LIBRARY\library\parse\parse.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-
 		<cluster name="interface" location=".\interface\"/>
 		<cluster name="lexical" location=".\lexical\"/>
 		<cluster name="sem_expression" location=".\semantic\expression\"/>

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="escln" uuid="5D30096C-E0B3-49FA-B3CF-194014591BD6" library_target="escln">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="escln" uuid="5D30096C-E0B3-49FA-B3CF-194014591BD6" library_target="escln">
 	<target name="escln" abstract="true">
 		<description>An application used to clean, backup and restore developmental configuration data for EiffelStudio</description>
 		<root class="APPLICATION" feature="make"/>
@@ -29,6 +30,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<cluster name="compiler_structures" location="$EIFFEL_SRC\Eiffel\eiffel\structures\"/>
 		<cluster name="escln" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
@@ -36,7 +38,6 @@
 				<exclude>/main$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_structures" location="$EIFFEL_SRC\Eiffel\eiffel\structures\"/>
 	</target>
 	<target name="escln_graphical" extends="escln">
 		<cluster name="graphical" location=".\main\graphical\" recursive="true"/>

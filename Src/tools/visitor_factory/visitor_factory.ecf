@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="visitor_factory" uuid="2B32C8AB-5F13-48FF-8F2C-97BD6AB67453">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="visitor_factory" uuid="2B32C8AB-5F13-48FF-8F2C-97BD6AB67453">
 	<description>A tools used to generate visitor patterns in Eiffel uses classes locatable in a directory structure.</description>
 	<target name="visitor_factory">
 		<root cluster="visitor_factory" class="APPLICATION" feature="make"/>

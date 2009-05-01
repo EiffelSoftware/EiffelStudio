@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffelstudio-tests" uuid="42C6BA80-6C4E-4AEA-8EE0-CD48A6D2B597" library_target="eiffelstudio-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelstudio-tests" uuid="42C6BA80-6C4E-4AEA-8EE0-CD48A6D2B597" library_target="eiffelstudio-tests">
 	<description>Unit-tests for EiffelStudio.</description>
 	<target name="eiffelstudio-tests">
 		<root class="ANY" feature="default_create"/>
@@ -8,7 +8,7 @@
 			<exclude>/tests</exclude>
 			<exclude>/EIFGENs</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>

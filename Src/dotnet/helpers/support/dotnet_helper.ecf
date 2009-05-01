@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="class_merger" uuid="2C9704C7-E65F-4680-84BC-6B27E4AECFC1" library_target="dotnet_helper">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="class_merger" uuid="2C9704C7-E65F-4680-84BC-6B27E4AECFC1" library_target="dotnet_helper">
 	<target name="dotnet_helper">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1" namespace="EiffelSoftware.Helpers">
+		<option warning="true" namespace="EiffelSoftware.Helpers">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="msil_generation" value="True"/>

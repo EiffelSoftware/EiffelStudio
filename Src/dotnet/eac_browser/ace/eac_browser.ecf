@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eac_browser" uuid="6D32A198-6ED4-4B14-B236-3F635244C54E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eac_browser" uuid="6D32A198-6ED4-4B14-B236-3F635244C54E">
 	<target name="eac_browser">
 		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
-		<option trace="false" profile="false" debug="false" warning="true" syntax_level="1">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 			<warning name="syntax" enabled="false"/>

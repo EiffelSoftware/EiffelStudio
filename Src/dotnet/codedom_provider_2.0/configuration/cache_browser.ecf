@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="eiffelsoftware.codedom.cachebrowser" uuid="7748DE6F-CC93-47B4-BE13-1A308A728B0A"
-	 library_target="cache_browser">
-	 
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.codedom.cachebrowser" uuid="7748DE6F-CC93-47B4-BE13-1A308A728B0A" library_target="cache_browser">
 	<target name="cache_browser">
-		<description>
-			Codedom provider consumer
-		</description>
+		<description>Codedom provider consumer</description>
 		<root class="ANY"/>
 		<version major="5" minor="7" release="426" build="0"/>
-		
-		<setting name="line_generation" value="false"/>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser2_0"/>
 		<setting name="il_verifiable" value="true"/>
+		<setting name="line_generation" value="false"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
@@ -24,13 +16,10 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom.CacheBrowser2_0"/>
-		
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\base.ecf"/>
-
-		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true" >
-			<option namespace="EiffelSoftware.CodeDom.CacheBrowser" />
+		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true">
+			<option namespace="EiffelSoftware.CodeDom.CacheBrowser">
+			</option>
 		</library>
-
 	</target>
 </system>

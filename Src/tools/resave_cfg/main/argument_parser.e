@@ -41,7 +41,7 @@ feature -- Access
 			is_successful: is_successful
 		local
 			l_options: like values
-			l_result: DS_ARRAYED_LIST [!STRING]
+			l_result: DS_ARRAYED_LIST [attached STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -65,7 +65,7 @@ feature -- Access
 			is_successful: is_successful
 		local
 			l_options: like values
-			l_result: DS_ARRAYED_LIST [!STRING]
+			l_result: DS_ARRAYED_LIST [attached STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -93,19 +93,19 @@ feature -- Access
 
 feature {NONE} -- Usage
 
-	non_switched_argument_name: !STRING = "path"
+	non_switched_argument_name: STRING = "path"
 			--  <Precursor>
 
-	non_switched_argument_description: !STRING = "An Eiffel configuration file or a directory"
+	non_switched_argument_description: STRING = "An Eiffel configuration file or a directory"
 			--  <Precursor>
 
-	non_switched_argument_type: !STRING = "Eiffel configuration file/directory"
+	non_switched_argument_type: STRING = "Eiffel configuration file/directory"
 			--  <Precursor>
 
-	name: !STRING = "savecfg"
+	name: STRING = "savecfg"
 			--  <Precursor>
 
-	version: !STRING
+	version: attached STRING
 			--  <Precursor>
 		once
 			create Result.make (5)
@@ -116,7 +116,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (1)

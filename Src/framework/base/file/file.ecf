@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd"
-		name="text" uuid="5e23ff3a-2d3d-49c1-ae72-c42544010a3a" library_target="file">
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="text" uuid="5E23FF3A-2D3D-49C1-AE72-C42544010A3A" library_target="file">
 	<target name="file">
-		<option namespace="EiffelSoftware.Framework"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
-		<cluster name="file" location="."/>
+		<option namespace="EiffelSoftware.Framework">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<cluster name="file" location=".\"/>
 	</target>
 </system>

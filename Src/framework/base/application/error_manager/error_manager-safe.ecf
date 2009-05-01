@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
 	<target name="error_manager" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Framework">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Framework">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<library name="text" location="$EIFFEL_SRC\framework\base\text\text-safe.ecf" readonly="true"/>

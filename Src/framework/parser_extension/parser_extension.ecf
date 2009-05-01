@@ -6,7 +6,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option namespace="EiffelSoftware.Language">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>

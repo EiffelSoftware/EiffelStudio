@@ -1,39 +1,46 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="capture" uuid="5B2F992F-9901-4651-B85E-5F683DFACB0C" library_target="gui_testing">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="capture" uuid="5B2F992F-9901-4651-B85E-5F683DFACB0C" library_target="gui_testing">
 	<target name="gui_testing">
 		<description>Framework to faciliate GUI testing with Vision2.
 Copyright (c) 1984-2006, Eiffel Software and others.
 Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>		
-		<cluster name="implementation" location="implementation" recursive="true">
+		<cluster name="implementation" location="implementation\" recursive="true">
 			<file_rule>
-				<condition><dotnet value="false"/></condition>
 				<exclude>/\.svn$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="interface" location="interface" recursive="true">
+		<cluster name="interface" location="interface\" recursive="true">
 			<file_rule>
-				<condition><dotnet value="false"/></condition>
 				<exclude>/\.svn$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="shared" location="shared" recursive="true">
+		<cluster name="shared" location="shared\" recursive="true">
 			<file_rule>
-				<condition><dotnet value="false"/></condition>
 				<exclude>/\.svn$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="support" location="support" recursive="true">
+		<cluster name="support" location="support\" recursive="true">
 			<file_rule>
-				<condition><dotnet value="false"/></condition>
 				<exclude>/\.svn$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
 		</cluster>
 	</target>

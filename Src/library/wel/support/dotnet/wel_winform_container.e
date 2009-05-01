@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 		local
 			l_previous_hwnd: POINTER
 		do
-			control_make (a_parent, "WINFORM_CONTAINER")
 			create winform_container.make
+			winform := an_item
+			control_make (a_parent, "WINFORM_CONTAINER")
 			an_item.set_parent (winform_container)
 			l_previous_hwnd := {WEL_API}.set_parent (winform_container.handle, item)
-			winform := an_item
 		ensure
 			parent_set: parent = a_parent
 			exists: exists

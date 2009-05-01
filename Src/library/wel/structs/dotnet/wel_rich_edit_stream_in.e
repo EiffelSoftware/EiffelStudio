@@ -19,16 +19,19 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize the C variables.
+		local
+			l_stream_in_delegate: like stream_in_delegate
 		do
 			Precursor {WEL_RICH_EDIT_STREAM}
-			create stream_in_delegate.make (Current, $internal_callback)
-			cwel_set_editstream_in_procedure_address (stream_in_delegate)
+			create l_stream_in_delegate.make (Current, $internal_callback)
+			cwel_set_editstream_in_procedure_address (l_stream_in_delegate)
+			stream_in_delegate := l_stream_in_delegate
 			cwel_editstream_set_pfncallback_in (item)
 		end
 
 feature -- Access
 
-	buffer: MANAGED_POINTER
+	buffer: detachable MANAGED_POINTER note option: stable attribute end
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
@@ -63,7 +66,7 @@ feature {NONE} -- Implementation
 			Result := stream_result
 		end
 
-	stream_in_delegate: WEL_RICH_EDIT_STREAM_IN_DELEGATE
+	stream_in_delegate: detachable WEL_RICH_EDIT_STREAM_IN_DELEGATE
 
 feature {NONE} -- Externals
 
@@ -79,7 +82,7 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_set_editstream_in_procedure_address (address: WEL_RICH_EDIT_STREAM_IN_DELEGATE)
+	cwel_set_editstream_in_procedure_address (address: like stream_in_delegate)
 		external
 			"C [macro %"estream.h%"] (EIF_POINTER)"
 		end

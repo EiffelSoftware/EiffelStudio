@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			a_file_exists: a_file.exists
 			a_file_is_open_read: a_file.is_open_read
 		do
-			rich_edit_stream_in_make
 			file := a_file
 			is_unicode_data := False
+			rich_edit_stream_in_make
 		ensure
 			file_set: file = a_file
 			not_is_unicode: not is_unicode_data

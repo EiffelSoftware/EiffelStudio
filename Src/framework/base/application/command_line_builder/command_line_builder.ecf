@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-		name="command_line_builder" uuid="44612348-a48f-4d96-b4f1-95117fa1dfe5" library_target="command_line_builder" >
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="command_line_builder" uuid="44612348-A48F-4D96-B4F1-95117FA1DFE5" library_target="command_line_builder">
 	<target name="command_line_builder">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
-		<cluster name="command_line_builder" location="." recursive="true"/>
+		<option namespace="EiffelSoftware.Framework">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<cluster name="command_line_builder" location=".\" recursive="true"/>
 	</target>
 </system>

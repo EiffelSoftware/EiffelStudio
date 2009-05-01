@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
 	<target name="error_manager" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework" syntax_level="1"/>
+		<option namespace="EiffelSoftware.Framework">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="text" location="$EIFFEL_SRC\framework\base\text\text.ecf" readonly="true"/>
 		<cluster name="error_mananger" location=".\" recursive="true">
-			<option namespace="ErrorManager"/>
+			<option namespace="ErrorManager">
+			</option>
 		</cluster>
 	</target>
 </system>

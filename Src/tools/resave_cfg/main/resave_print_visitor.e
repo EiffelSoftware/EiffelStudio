@@ -8,9 +8,23 @@ class
 
 inherit
 	CONF_PRINT_VISITOR
+		redefine
+			append_options
+		end
 
 create
 	make
+
+feature {NONE} -- Implementation
+
+	append_options (an_options: CONF_OPTION; a_class: STRING_8)
+			-- <Precursor>
+		do
+--			if an_options /= Void and then an_options.syntax.is_set then
+--				an_options.syntax.unset
+--			end
+			Precursor (an_options, a_class)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

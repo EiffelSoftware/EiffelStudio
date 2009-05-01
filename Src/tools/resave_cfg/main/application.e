@@ -245,7 +245,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	ecf_printer: CONF_PRINT_VISITOR
+	ecf_printer: RESAVE_PRINT_VISITOR
 			-- Configuration printer
 		once
 			create Result.make

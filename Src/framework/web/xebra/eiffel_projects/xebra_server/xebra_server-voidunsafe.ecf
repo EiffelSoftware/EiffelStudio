@@ -3,6 +3,7 @@
 	<target name="xebra_server">
 		<root class="XS_APPLICATION" feature="make"/>
 		<option syntax="transitional">
+			<assertions/>
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

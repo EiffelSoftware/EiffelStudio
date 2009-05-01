@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 				l_parser.set_callbacks (l_p_callback)
 				l_parser.parse_from_stream (l_file)
 
-				webapps := l_p_callback.webapps_hash
+				webapps := l_p_callback.retrieve_webapps_hash
 				webapps_root := l_p_callback.webapps_root
 				l_file.close
 

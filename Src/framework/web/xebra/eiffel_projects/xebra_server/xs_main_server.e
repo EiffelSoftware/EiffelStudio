@@ -13,7 +13,6 @@ class
 inherit
 	XU_SHARED_OUTPUTTER
 	ERROR_SHARED_ERROR_MANAGER
-	EIFFEL_RUNTIME_EXCEPTION undefine out end
 
 create
     make
@@ -30,7 +29,7 @@ feature -- Initialization
 			o.iprint ("Starting Xebra Server...")
 			o.dprint ("Reading configuration...",1)
 			create server_config.make_from_file (Default_server_config_path)
-			create compile_service.make (server_config)
+			--create compile_service.make (server_config)
 
 			create l_printer.default_create
 			if error_manager.has_warnings then
@@ -40,9 +39,8 @@ feature -- Initialization
 			if not error_manager.is_successful then
 				error_manager.trace_last_error (l_printer)
 			else
-
 				o.dprint ("Launching HTTP Connection Server...",1)
-				create http_connection_server.make (compile_service)
+				create http_connection_server.make (server_config)
 				if not http_connection_server.is_bound then
 					o.eprint ("Socket could not be bound!", generating_type)
 				else
@@ -68,7 +66,8 @@ feature -- Initialization
 			o.dprint ("Waiting for http_connection_server to shutdown...", 3)
 			http_connection_server.shutdown
 			o.iprint ("All done. Bye!")
-		--	raise
+			
+			(create {EXCEPTIONS}).die (0)
 		end
 
 feature -- Access
@@ -81,7 +80,7 @@ feature -- Access
 --			-- Handles connections to xebra web application requests (for registration)
 
 
-	compile_service: XS_COMPILE_SERVICE
+--	compile_service: XS_COMPILE_SERVICE
 
 	server_config: XS_SERVER_CONFIG
 
@@ -89,33 +88,5 @@ feature -- Constants
 
 --	Default_server_config_path: STRING = "$XEBRA_DEV/eiffel_projects/xebra_server/config.xml"
 	Default_server_config_path: STRING = "config.xml"
-
-
-
-
-feature -- TEST
-
-	frozen code: INTEGER
-			-- Exception code
-		do
-			if internal_code = {EXCEP_CONST}.Out_of_memory then
-				Result := internal_code
-			else
-					-- Default to `No_more_memory'.
-				Result := {EXCEP_CONST}.No_more_memory
-			end
-		end
-
-	set_code (a_code: like code)
-			-- Set `code' with `a_code'.
-		do
-			internal_code := code
-		end
-
-	frozen internal_meaning: STRING = "Xebra Server successfully shut down."
-
-	internal_code: like code
-			-- Internal code
-
 
 end

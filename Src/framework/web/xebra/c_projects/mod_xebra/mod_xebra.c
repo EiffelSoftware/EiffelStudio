@@ -382,7 +382,7 @@ char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 
 EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 {
-	if (i < 2 ^ 31)	{
+	if (i > 0x7FFFFFFF)	{
 		return 0;
 	} else {
 		return (i << 1) + flag;

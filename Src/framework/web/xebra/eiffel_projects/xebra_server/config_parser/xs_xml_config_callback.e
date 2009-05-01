@@ -24,10 +24,11 @@ feature {NONE} -- Initialization
 			parser := a_parser
 			path := a_path
 			create webapps.make (1)
+			webapps_root := ""
 			create state_webapp.make (current)
 			create state_default.make (current)
 			create state_webapps_root.make (current)
-
+			finished_parsing := False
 		ensure
 
 		end
@@ -38,6 +39,10 @@ feature -- Attributes to be collected
 	webapps_root: STRING assign set_webapps_root
 
 feature -- Access
+
+	finished_parsing: BOOLEAN
+			-- True if parsing has finished
+
 
 	parser: XM_PARSER
 			-- The parser which uses Current
@@ -57,16 +62,21 @@ feature -- Access
 	state_default: XS_CALLBACK_STATE_DEFAULT
 		-- The instance for the state = default	
 
-	webapps_hash: HASH_TABLE [XS_WEBAPP, STRING]
-			-- Converts the sack to a hashtable
+	retrieve_webapps_hash: HASH_TABLE [XS_WEBAPP, STRING]
+			-- Adds the root workdir to each webapp
+			-- Converts the stack to a hashtable
 			-- Removes the stack!!
+		require
+			finished_parsing
+			root_available: not webapps_root.is_empty
+			webapps_available: webapps.count > 0
 		do
-			create Result.make (1)
 			from
-
+				create Result.make (1)
 			until
 				webapps.is_empty
 			loop
+				webapps.item.set_root (webapps_root)
 				Result.force (webapps.item, webapps.item.name)
 				webapps.remove
 			end
@@ -90,6 +100,7 @@ feature -- Document
 			-- Called when parsing finished.
 		do
 			state.on_finish
+			finished_parsing := True
 --		ensure then
 --			only_root_on_stack: tag_stack.count = 1
 		end
@@ -231,7 +242,11 @@ feature -- Content
 			state.on_content (a_content)
 		end
 
-feature  --
+feature -- Operatiosn
+
+
+
+feature  -- Setter
 
 	set_state_webapp
 			-- Sets the state to the webapp object

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="gobo_test" uuid="8561E49E-2C18-4E8A-9E8F-7EBADB96F0D3" library_target="gobo_test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_test" uuid="8561E49E-2C18-4E8A-9E8F-7EBADB96F0D3" library_target="gobo_test">
 	<target name="gobo_test">
 		<root all_classes="true"/>
 		<file_rule>
@@ -21,10 +21,10 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\gobo_pattern.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>

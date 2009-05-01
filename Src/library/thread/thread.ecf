@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
 	<target name="thread">
 		<description>EiffelThread: Multithreading facilities for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -9,7 +9,7 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

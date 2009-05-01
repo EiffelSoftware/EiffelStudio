@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="web" uuid="D728E3D6-B7ED-4153-B2D5-D1C9B91D9FE3" library_target="web">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="web" uuid="D728E3D6-B7ED-4153-B2D5-D1C9B91D9FE3" library_target="web">
 	<target name="web">
 		<description>EiffelWeb: CGI handling in Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<cluster name="cgi_facilities" location="cgi_facilities\" recursive="true"/>

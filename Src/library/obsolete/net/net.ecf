@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="net" uuid="65E3E91A-6C89-45B1-9F59-079A081D32DC" library_target="net">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="net" uuid="65E3E91A-6C89-45B1-9F59-079A081D32DC" library_target="net">
 	<target name="net">
 		<description>Net library: Networking library with serialization facilities.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library.Net" syntax_level="1">
+		<option namespace="EiffelSoftware.Library.Net">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_object location="$(ISE_LIBRARY)/library/obsolete/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">

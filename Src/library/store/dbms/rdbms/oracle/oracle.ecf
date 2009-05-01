@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="oracle" uuid="06C674E8-084B-4297-96D1-CAC17F9A0FAF" library_target="db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="oracle" uuid="06C674E8-084B-4297-96D1-CAC17F9A0FAF" library_target="db">
 	<target name="db">
 		<description>Oracle access library for EiffelStore.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,6 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option syntax_level="1"/>
 		<external_include location="$(ISE_LIBRARY)\library\store\dbms\rdbms\oracle\Clib">
 			<condition>
 				<platform value="windows"/>

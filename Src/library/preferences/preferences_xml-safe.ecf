@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="preferences" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences">
 	<target name="preferences">
 		<description>Preferences library.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,12 +8,11 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<!-- For now, only batch is void-safe. Remove next line, when Vision2 is ready -->
 		<variable name="batch_preferences" value="true"/>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>

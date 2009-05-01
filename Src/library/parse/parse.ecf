@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="parse" uuid="6E3E2790-880E-4193-ABE6-27D129A0E48D" library_target="parse">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="parse" uuid="6E3E2790-880E-4193-ABE6-27D129A0E48D" library_target="parse">
 	<target name="parse">
 		<description>Parse library: Parsing facilities.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library" syntax_level="1">
+		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>

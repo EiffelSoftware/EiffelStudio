@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="memory_analyzer" uuid="BF699013-E4A2-4C7F-AA12-4376BEA92D93" library_target="memory_analyzer">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="memory_analyzer" uuid="BF699013-E4A2-4C7F-AA12-4376BEA92D93" library_target="memory_analyzer">
 	<target name="memory_analyzer">
 		<description>Memory analyzer library: Track down your memory usage within your application.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,8 +8,6 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option syntax_level="1">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>

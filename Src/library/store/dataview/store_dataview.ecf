@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="store_dataview" uuid="68C53B25-2D27-4aa2-9966-261222D8D436" library_target="store_dataview">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="store_dataview" uuid="68C53B25-2D27-4AA2-9966-261222D8D436" library_target="store_dataview">
 	<target name="store_dataview">
 		<description>EiffelStore Dataview: Vision2 front end for visualizing and updating data from EiffelStore.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,13 +8,13 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library.Store.DataView" syntax_level="1">
+		<option namespace="EiffelSoftware.Library.Store.DataView">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<cluster name="dataview" location=".\" recursive="true" />
+		<cluster name="dataview" location=".\" recursive="true"/>
 	</target>
 </system>

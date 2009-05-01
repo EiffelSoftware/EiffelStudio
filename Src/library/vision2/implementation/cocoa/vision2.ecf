@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="vision2" uuid="FF177272-9E24-4282-941E-60889FC503EB" library_target="vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="vision2" uuid="FF177272-9E24-4282-941E-60889FC503EB" library_target="vision2">
 	<target name="vision2">
 		<description>EiffelVision2: Multiplatform graphical library of reusable components for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -10,7 +10,7 @@
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\vision2\spec\include">
@@ -83,17 +83,18 @@
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="cocoa" location="$ISE_LIBRARY/library/cocoa/cocoa.ecf" readonly="false">
+		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf" readonly="false">
 			<condition>
 				<platform value="macintosh"/>
 			</condition>
-		</library>		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		</library>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<cluster name="contrib" location="contrib\" recursive="true">
 			<option namespace="Vision2.Contrib">
@@ -116,14 +117,14 @@
 				<platform excluded_value="windows macintosh"/>
 			</condition>
 		</cluster>
-		<cluster name="implementation_mac" location="implementation/cocoa/" recursive="true">
-			<condition>
-				<platform value="macintosh"/>
-			</condition>
-		</cluster>
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">
 			<option namespace="Vision2.$$Implementation.Interface">
 			</option>
+		</cluster>
+		<cluster name="implementation_mac" location="implementation\cocoa\" recursive="true">
+			<condition>
+				<platform value="macintosh"/>
+			</condition>
 		</cluster>
 		<cluster name="implementation_mswin" location="implementation\mswin\" recursive="true">
 			<condition>

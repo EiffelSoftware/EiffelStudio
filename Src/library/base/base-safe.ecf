@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="base-safe" uuid="78C5B555-00D4-4F4F-A06F-5E123CFCA0D1" library_target="base-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="base-safe" uuid="78C5B555-00D4-4F4F-A06F-5E123CFCA0D1" library_target="base-safe">
 	<target name="base-safe">
 		<description>FreeELKS: Library of reusable components for Eiffel.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -7,7 +7,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="1" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>

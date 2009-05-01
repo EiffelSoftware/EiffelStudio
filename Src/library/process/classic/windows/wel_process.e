@@ -362,7 +362,7 @@ feature
 						std_output := l_tuple.p1
 						child_output := l_tuple.p2
 					else
-						child_output := file_handle.create_file_inheritable (output_file_name, False)
+						child_output := file_handle.create_file_inheritable (output_file_name, True)
 						std_output := default_pointer
 					end
 					is_std_output_open := True
@@ -386,7 +386,7 @@ feature
 							std_error := l_tuple.p1
 							child_error := l_tuple.p2
 						else
-							child_error := file_handle.create_file_inheritable (error_file_name, False)
+							child_error := file_handle.create_file_inheritable (error_file_name, True)
 							std_error := default_pointer
 						end
 						Result.set_std_error (child_error)

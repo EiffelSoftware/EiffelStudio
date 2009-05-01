@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 			else
 				l_output_fn := output_file_name
 				if l_output_fn /= Void and then not l_output_fn.is_empty then
-					create out_file.make_open_write (l_output_fn)
+					create out_file.make_open_append (l_output_fn)
 				end
 			end
 
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 				else
 					l_error_fn := error_file_name
 					if l_error_fn /= Void and then not l_error_fn.is_empty then
-						create err_file.make_open_write (l_error_fn)
+						create err_file.make_open_append (l_error_fn)
 					end
 				end
 			end

@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create `text'.
 		do
-			Precursor {WEL_RICH_EDIT_STREAM_OUT}
 			create text.make (0)
+			Precursor {WEL_RICH_EDIT_STREAM_OUT}
 		end
 
 feature -- Access

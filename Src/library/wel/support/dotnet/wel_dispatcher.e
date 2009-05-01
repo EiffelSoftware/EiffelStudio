@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 	dispatcher_object: GC_HANDLE
 			-- Handle to Current.
 			
-	window_delegate, dialog_delegate: WEL_DISPATCHER_DELEGATE
+	window_delegate, dialog_delegate: detachable WEL_DISPATCHER_DELEGATE note option: stable attribute end
 			-- Delegate for callbacks.
 			
 	dispose
@@ -48,12 +48,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_set_window_procedure_address (address: WEL_DISPATCHER_DELEGATE)
+	cwel_set_window_procedure_address (address: like window_delegate)
 		external
 			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end
 
-	cwel_set_dialog_procedure_address (address: WEL_DISPATCHER_DELEGATE)
+	cwel_set_dialog_procedure_address (address: like dialog_delegate)
 		external
 			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end

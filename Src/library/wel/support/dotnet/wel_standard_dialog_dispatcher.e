@@ -16,9 +16,12 @@ feature {NONE} -- Initialization
 
 	begin_activate
 			-- Initialize the C variables.
+		local
+			l_dialog_delegate: like dialog_delegate
 		do
-			create dialog_delegate.make (Current, $standard_dialog_procedure)
-			cwel_set_standard_dialog_procedure_address (dialog_delegate)
+			create l_dialog_delegate.make (Current, $standard_dialog_procedure)
+			cwel_set_standard_dialog_procedure_address (l_dialog_delegate)
+			dialog_delegate := l_dialog_delegate
 		end
 
 	end_activate
@@ -36,10 +39,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	dialog_delegate: WEL_DISPATCHER_DELEGATE
+	dialog_delegate: detachable WEL_DISPATCHER_DELEGATE
 			-- Delegate for callbacks.
 
-	cwel_set_standard_dialog_procedure_address (address: WEL_DISPATCHER_DELEGATE)
+	cwel_set_standard_dialog_procedure_address (address: like dialog_delegate)
 		external
 			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end

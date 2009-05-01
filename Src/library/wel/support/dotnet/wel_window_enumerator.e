@@ -9,6 +9,8 @@ class
 	WEL_WINDOW_ENUMERATOR
 	
 inherit
+	ANY
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
@@ -23,12 +25,14 @@ feature -- Access
 			a_window_exists: a_window.exists
 		local
 			window_enumerator_delegate: WEL_ENUM_WINDOW_DELEGATE
+			l_result: like internal_children
 		do
 			print ("Something happened%N")
-			create internal_children.make (1)
+			create l_result.make (1)
+			internal_children := l_result
+			Result := l_result
 			create window_enumerator_delegate.make (Current, $enumerate_child_windows_callback)
 			cwel_enum_child_windows_procedure (window_enumerator_delegate, a_window.item)
-			Result := internal_children
 			internal_children := Void
 		ensure
 			result_not_void: Result /= Void
@@ -36,7 +40,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_children: ARRAYED_LIST [WEL_WINDOW]
+	internal_children: detachable ARRAYED_LIST [WEL_WINDOW]
 			-- Temporary container for `enumerate'. Used by `enumerate_child_windows_callback'.
 	
 	enumerate_child_windows_callback (child_hwnd: POINTER)
@@ -44,12 +48,14 @@ feature {NONE} -- Implementation
 		require
 			child_hwnd_not_null: child_hwnd /= default_pointer
 		local
-			wnd: WEL_WINDOW
+			wnd: detachable WEL_WINDOW
 		do
-			if is_window (child_hwnd) then
-				wnd := window_of_item (child_hwnd)
-				if wnd /= Void and then wnd.exists then
-					internal_children.extend (wnd)
+			if attached internal_children as l_children then
+				if is_window (child_hwnd) then
+					wnd := window_of_item (child_hwnd)
+					if wnd /= Void and then wnd.exists then
+						l_children.extend (wnd)
+					end
 				end
 			end
 		end	

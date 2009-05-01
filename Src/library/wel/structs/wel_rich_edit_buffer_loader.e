@@ -32,9 +32,9 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			rich_edit_stream_in_make
 			string := a_string
 			last_position := 1
+			rich_edit_stream_in_make
 		ensure
 			string_set: string = a_string
 		end

@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			a_file_exists: a_file.exists
 			a_file_is_open_write: a_file.is_open_write
 		do
-			rich_edit_stream_out_make
 			file := a_file
+			rich_edit_stream_out_make
 		ensure
 			file_set: file = a_file
 		end

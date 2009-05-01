@@ -32,9 +32,12 @@ feature {NONE} -- Initialization
 		require
 			dc_not_void: dc /= Void
 			dc_exits: dc.exists
+		local
+			l_font_enumerator_delegate: like font_enumerator_delegate
 		do
-			create font_enumerator_delegate.make (Current, $update_current)
-			cwel_set_enum_font_fam_procedure_address (font_enumerator_delegate)
+			create l_font_enumerator_delegate.make (Current, $update_current)
+			cwel_set_enum_font_fam_procedure_address (l_font_enumerator_delegate)
+			font_enumerator_delegate := l_font_enumerator_delegate
 			font_enumerator_object := {GC_HANDLE}.alloc (Current)
 			cwel_set_font_family_enumerator_object
 				({GC_HANDLE}.to_pointer (font_enumerator_object))
@@ -108,7 +111,7 @@ feature {NONE} -- Memory management
 	font_enumerator_object: GC_HANDLE
 			-- Handle to Current object.
 
-	font_enumerator_delegate: WEL_ENUM_FONT_DELEGATE
+	font_enumerator_delegate: detachable WEL_ENUM_FONT_DELEGATE
 			-- Delegate for callbacks.
 
 	dispose
@@ -118,7 +121,7 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Externals
 
-	cwel_set_enum_font_fam_procedure_address (address: WEL_ENUM_FONT_DELEGATE)
+	cwel_set_enum_font_fam_procedure_address (address: like font_enumerator_delegate)
 		external
 			"C [macro %"enumfont.h%"]"
 		end

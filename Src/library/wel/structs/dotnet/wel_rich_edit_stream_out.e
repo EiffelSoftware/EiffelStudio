@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer: MANAGED_POINTER
+	buffer: detachable MANAGED_POINTER
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
@@ -45,17 +45,17 @@ feature {NONE} -- Implementation
 	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER
 			-- `buffer' contains `length' characters.
 		do
-			if buffer = Void then
-				create buffer.share_from_pointer (a_buffer, a_length)
+			if attached buffer as l_buffer then
+				l_buffer.set_from_pointer (a_buffer, a_length)
 			else
-				buffer.set_from_pointer (a_buffer, a_length)
+				create buffer.share_from_pointer (a_buffer, a_length)
 			end
 			stream_result := 0
 			write_buffer
 			Result := stream_result
 		end
 
-	stream_out_delegate: WEL_RICH_EDIT_STREAM_OUT_DELEGATE
+	stream_out_delegate: detachable WEL_RICH_EDIT_STREAM_OUT_DELEGATE
 
 feature {NONE} -- Externals
 
@@ -64,7 +64,7 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_set_editstream_out_procedure_address (address: WEL_RICH_EDIT_STREAM_OUT_DELEGATE)
+	cwel_set_editstream_out_procedure_address (address: like stream_out_delegate)
 		external
 			"C [macro %"estream.h%"]"
 		end

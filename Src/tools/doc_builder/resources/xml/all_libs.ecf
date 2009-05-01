@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="all_libs" uuid="421b5ac5-2bb3-4fcc-b0aa-8fee6c843802">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="all_libs" uuid="421B5AC5-2BB3-4FCC-B0AA-8FEE6C843802">
 	<target name="all_libs">
 		<description>All libraries</description>
 		<root all_classes="true"/>
-		<setting name="platform" value="windows"/>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<setting name="platform" value="windows"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf" readonly="true"/>
 		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.ecf" readonly="true"/>
@@ -17,13 +18,17 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" readonly="true"/>
 		<library name="parse" location="$ISE_LIBRARY\library\parse\parse.ecf" readonly="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="true">
-			<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+			</condition>
 		</library>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf" readonly="true">
-			<condition><platform excluded_value="windows"/></condition>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
 		</library>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="true"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>		
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<library name="web" location="$ISE_LIBRARY\library\web\web.ecf" readonly="true"/>

@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="emake" uuid="8203E1F8-74EA-45FE-943E-741249BB611A">
 	<target name="emake">
 		<root class="EIFFEL_MAKE" feature="make"/>
-		<option trace="false" profile="false" debug="false" syntax="transitional">
+		<option trace="false" profile="false" debug="false">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="console_application" value="True"/>

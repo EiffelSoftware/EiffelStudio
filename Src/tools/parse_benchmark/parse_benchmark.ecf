@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="pbmark" uuid="581ECF33-8FF6-4619-B168-878008DC77A1">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="pbmark" uuid="581ECF33-8FF6-4619-B168-878008DC77A1">
 	<target name="pbmark">
 		<description>Parser bench marker for benchmarking parser speed.</description>
 		<root cluster="parser_benchmark" class="APPLICATION" feature="make"/>

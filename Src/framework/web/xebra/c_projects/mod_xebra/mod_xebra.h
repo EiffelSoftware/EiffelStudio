@@ -31,7 +31,6 @@
 
 #include <time.h>
 
-#include "rt_assert.h"
 #include "eif_eiffel.h"
 
 #include <httpd.h>

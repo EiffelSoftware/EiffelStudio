@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.codedom.base" uuid="190A6272-E25A-42be-AD95-D336828D769D" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.codedom.base" uuid="190A6272-E25A-42BE-AD95-D336828D769D" library_target="base">
 	<target name="base">
-		<description>
-			Codedom provider base
-		</description>
+		<description>Codedom provider base</description>
 		<root class="ANY"/>
 		<version major="5" minor="7" release="426" build="0"/>
-		
-		<setting name="line_generation" value="False"/>
 		<setting name="cls_compliant" value="True"/>
 		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="executable_name" value="EiffelSoftware.Codedom.Base2_0"/>
 		<setting name="il_verifiable" value="True"/>
+		<setting name="line_generation" value="False"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="dll"/>
@@ -18,8 +16,6 @@
 		<setting name="msil_use_optimized_precompile" value="True"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
-		<setting name="executable_name" value="EiffelSoftware.Codedom.Base2_0"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 	</target>
 </system>

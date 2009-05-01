@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="precomp_dotnet_base-mt" uuid="B864C9F3-34D1-4401-A972-039C7920614E" library_target="base-mt">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="precomp_dotnet_base-mt" uuid="B864C9F3-34D1-4401-A972-039C7920614E" library_target="base-mt">
 	<target name="base-mt">
 		<description>Base library</description>
-		<root class="ANY" all_classes="false"/>
-		<setting name="multithreaded" value="true"/>
-		<setting name="msil_generation" value="true"/>
-		<setting name="msil_generation_type" value="dll"/>
+		<root class="ANY"/>
+		<option>
+			<assertions precondition="true"/>
+		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="EiffelSoftware.Library.BaseMt"/>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
+		<setting name="msil_generation" value="true"/>
+		<setting name="msil_generation_type" value="dll"/>
+		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>
 </system>

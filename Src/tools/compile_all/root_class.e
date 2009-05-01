@@ -298,6 +298,7 @@ feature {NONE} -- Implementation
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
 			if arguments.is_log_verbose then
+				add_data_to_file (l_file + ".log", a_target.system.file_name, a_target.name)
 				l_prc_launcher.redirect_output_to_file (l_file+".log")
 			else
 				l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
@@ -316,6 +317,35 @@ feature {NONE} -- Implementation
 				end
 				io.new_line
 			end
+		end
+
+	add_data_to_file (a_file_name: STRING; a_config, a_target: STRING)
+			-- Insert some data in `a_file_name' saying what we are compiling and when.
+		require
+			a_file_name_attached: a_file_name /= Void
+			a_config_attached: a_config /= Void
+			a_target_attached: a_target /= Void
+		local
+			retried: BOOLEAN
+			l_file: PLAIN_TEXT_FILE
+			l_date: DATE_TIME
+		do
+			if not retried then
+				create l_date.make_now
+				create l_file.make_open_append (a_file_name)
+				l_file.put_string ("**********************************************************************%N")
+				l_file.put_string ("Date: ")
+				l_file.put_string (l_date.out)
+				l_file.put_string ("%NCompiling target %"")
+				l_file.put_string (a_target)
+				l_file.put_string ("%" from config %"")
+				l_file.put_string (a_config)
+				l_file.put_string ("%"%N%N")
+				l_file.close
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Error handling

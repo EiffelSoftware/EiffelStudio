@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="eweasel_st">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="eweasel_st">
 	<target name="common" abstract="true">
 		<root class="EWEASEL" feature="make_and_execute"/>
 		<file_rule>
@@ -18,7 +18,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option warning="true">
+		<option warning="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -32,10 +32,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="eweasel" location="$EWEASEL\source\" recursive="true">
-			<option full_class_checking="true" syntax_level="1">
-			</option>
-		</cluster>
+		<cluster name="eweasel" location="$EWEASEL\source\" recursive="true"/>
 	</target>
 	<target name="eweasel_st" extends="common">
 		<root class="EW_EWEASEL_ST" feature="make_and_execute"/>
@@ -45,5 +42,8 @@
 		<root class="EW_EWEASEL_MT" feature="make_and_execute"/>
 		<setting name="executable_name" value="eweasel-mt"/>
 		<setting name="multithreaded" value="true"/>
+	</target>
+	<target name="all" extends="common">
+		<root all_classes="true"/>
 	</target>
 </system>

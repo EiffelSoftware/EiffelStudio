@@ -18,13 +18,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_compile_service: XS_COMPILE_SERVICE)
+	make (a_server_config: XS_SERVER_CONFIG)
 			-- Initialization for `Current'.
 		do
 		--	create webapps_mutex.make
-			compile_service := a_compile_service
+			server_config := a_server_config
 		ensure
-			compile_service_set: compile_service = a_compile_service
+			server_config_set: server_config = a_server_config
 		end
 
 feature -- Constants
@@ -34,43 +34,12 @@ feature -- Constants
 
 feature -- Access
 
-	compile_service: XS_COMPILE_SERVICE
+	server_config: XS_SERVER_CONFIG
 
 
 --	webapps_mutex: MUTEX
 
 feature -- Status Change
-
---	register (a_name: STRING; a_socket: NETWORK_SOCKET): BOOLEAN
---			-- Registers a new webapp in webapps
---		do
---			webapps_mutex.lock
---			if not webapps.has (a_name) then
---				webapps.extend (a_socket, a_name)
---				Result := True
---			else
---				Result := False
---			end
---			webapps_mutex.unlock
---		end
-
---	close_all
---			-- Closes all connections to webapps
---		do
---			webapps_mutex.lock
---			from
---				webapps.start
---			until
---				webapps.after
---			loop
---				webapps.item_for_iteration.cleanup
---				webapps.forth
---			end
---			webapps_mutex.unlock
---		end
-
-feature -- Basic operations
-
 
 
 feature  -- Implementation
@@ -83,33 +52,48 @@ feature  -- Implementation
 			l_uri_webapp_name: STRING
 
 		do
-			--webapps_mutex.lock
 			create Result.make_empty
 			create l_request_factory.make
 
-            	-- Decode only uri of request (TODO)
+
             if attached {XH_REQUEST} l_request_factory.get_request (l_request_message) as l_request then
 				l_uri_webapp_name := l_request.target_uri.substring (2, l_request.target_uri.index_of ('/', 2))
 				l_uri_webapp_name.remove_tail (1)
 
-
-				if compile_service.compile (l_uri_webapp_name) then
-					if compile_service.run (l_uri_webapp_name) then
-						Result :=  send (l_uri_webapp_name, l_request_message)
-					else
-						if compile_service.launch_failed (l_uri_webapp_name) then
-							Result := (create {XER_LAUNCH_FAILED}.make (l_uri_webapp_name)).render_to_response
+				if attached {XS_WEBAPP} server_config.webapps[l_uri_webapp_name] as webapp then
+					if webapp.can_compile then
+						if webapp.compile then
+							if webapp.can_run  then
+								if webapp.run then
+									Result :=  send (webapp.name, l_request_message)
+								else
+		--								if compile_service.is_launch_failed (l_uri_webapp_name) then
+		--									Result := (create {XER_LAUNCH_FAILED}.make (l_uri_webapp_name)).render_to_response
+		--								else
+										Result := (create {XER_APP_STARTING}.make (l_uri_webapp_name)).render_to_response
+		--								end
+								end
+							else
+								o.eprint ("Cannot run!", generating_type)
+								Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
+							end
 						else
-							Result := (create {XER_APP_STARTING}.make (l_uri_webapp_name)).render_to_response
+--							if compile_service.is_compiling_failed (l_uri_webapp_name) then
+--								Result := (create {XER_COMPILING_FAILED}.make (l_uri_webapp_name)).render_to_response
+--							else
+								Result := (create {XER_APP_COMPILING}.make (l_uri_webapp_name)).render_to_response
+--							end
 						end
+					else
+						o.eprint ("Cannot compile!", generating_type)
+						Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
 					end
 				else
-					Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
+					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_response
 				end
             else
-            	Result := (create {XER_CANNOT_COMPILE_APP}.make ("")).render_to_response
+            	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
             end
-           	--webapps_mutex.unlock
 		end
 
 
@@ -120,7 +104,7 @@ feature {NONE} -- Implementation
 			local
 				l_webapp_socket: NETWORK_STREAM_SOCKET
 			do
-				if attached {XS_WEBAPP} compile_service.server_config.webapps[a_webapp_name] as l_app then
+				if attached {XS_WEBAPP} server_config.webapps[a_webapp_name] as l_app then
 
 					create l_webapp_socket.make_client_by_port (l_app.port, Default_app_server_host)
 					o.dprint ("Connecting to " + l_app.name + "@" + l_app.port.out,2)

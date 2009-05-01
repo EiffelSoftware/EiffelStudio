@@ -18,15 +18,15 @@ create make
 
 feature -- Initialization
 
-	make  (a_compile_service: XS_COMPILE_SERVICE)
+	make  (a_server_config: XS_SERVER_CONFIG)
 			-- Initializes current
 		do
-			compile_service := a_compile_service
+			server_config := a_server_config
             create http_socket.make_server_by_port (default_http_server_port)
             create thread_pool.make (max_thread_number, agent request_handler_spawner)
             stop := False
 		ensure
-			compile_service_set: compile_service = a_compile_service
+			server_config_set: server_config = a_server_config
        	end
 
 feature -- Inherited Features
@@ -49,7 +49,7 @@ feature -- Inherited Features
 		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
 	--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 		            		--singleusermode
-		            	l_r_handler.do_execute (thread_http_socket, compile_service)
+		            	l_r_handler.do_execute (thread_http_socket, server_config)
 					end
 				end
             end
@@ -67,7 +67,7 @@ feature -- Access
 	http_socket: NETWORK_STREAM_SOCKET
 			-- The socket
 
-	compile_service: XS_COMPILE_SERVICE
+	server_config: XS_SERVER_CONFIG
 
 	stop: BOOLEAN
 			-- Set true to stop accept loop

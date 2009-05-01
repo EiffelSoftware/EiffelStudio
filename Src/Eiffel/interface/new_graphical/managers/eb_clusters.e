@@ -832,7 +832,6 @@ feature {NONE} -- Implementation
 			config_up_to_date: not a_group.target.system.date_has_changed
 		local
 			retried: BOOLEAN
-			l_cl: CONF_CLUSTER
 			l_sys: CONF_SYSTEM
 			l_fr: CONF_FILE_RULE
 		do
@@ -843,21 +842,38 @@ feature {NONE} -- Implementation
 				if a_path.is_empty then
 					if a_group.is_cluster then
 						a_group.target.remove_cluster (a_group.name)
+						if attached {CONF_CLUSTER} a_group as l_cl then
+							if attached l_cl.parent as l_parent then
+								l_parent.remove_child (l_cl)
+							end
+						else
+							check must_be_cluster: False end
+						end
 					elseif a_group.is_library then
 						a_group.target.remove_library (a_group.name)
 					elseif a_group.is_assembly then
 						a_group.target.remove_assembly (a_group.name)
 					elseif a_group.is_override then
 						a_group.target.remove_override (a_group.name)
+						if attached {CONF_OVERRIDE} a_group as l_ov then
+							if attached l_ov.parent as l_parent then
+								l_parent.remove_child (l_ov)
+							end
+						else
+							check must_be_override: False end
+						end
 					else
 						check should_not_reach: False end
 					end
 					a_group.invalidate
 				else
-					l_cl ?= a_group
-					create l_fr.make
-					l_fr.add_exclude (build_pattern (a_path))
-					l_cl.add_file_rule (l_fr)
+					if attached {CONF_CLUSTER} a_group as l_cl then
+						create l_fr.make
+						l_fr.add_exclude (build_pattern (a_path))
+						l_cl.add_file_rule (l_fr)
+					else
+						check must_be_cluster: False end
+					end
 				end
 					-- store it to disk
 				l_sys.store
@@ -940,11 +956,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

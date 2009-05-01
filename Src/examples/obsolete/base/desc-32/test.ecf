@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="B2D380BA-4561-4952-8A57-94695C72BFBA">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test" uuid="B2D380BA-4561-4952-8A57-94695C72BFBA">
 	<target name="test">
 		<description>-- EiffelBase:</description>
 		<root cluster="root_cluster" class="TEST" feature="make"/>
 		<option warning="true">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions/>
 		</option>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

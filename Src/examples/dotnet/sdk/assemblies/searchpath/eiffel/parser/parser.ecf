@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="parser" library_target="parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="parser" uuid="D2A9DBD0-2B11-4882-8CC3-C0CBC7CB5E07" library_target="parser">
 	<target name="parser">
 		<root cluster="parser" class="PARSER" feature="default_create"/>
 		<option>
@@ -10,14 +10,10 @@
 		<setting name="executable_name" value="parser"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="dll"/>
-		
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<cluster name="parser" location=".\"/>
 	</target>
 </system>

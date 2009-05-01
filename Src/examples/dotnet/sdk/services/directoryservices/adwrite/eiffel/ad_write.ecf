@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="ad_write" uuid="7D36BB45-D94F-4742-BC8D-52BBC8C973A1">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="ad_write" uuid="7D36BB45-D94F-4742-BC8D-52BBC8C973A1">
 	<target name="ad_write">
 		<root cluster="ad_write" class="AD_WRITE" feature="main"/>
 		<option namespace="EiffelSoftware.Samples">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="dotnet_naming_convention" value="True"/>
-		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system.directoryservices" location="$ISE_DOTNET_FRAMEWORK\System.DirectoryServices.dll"/>
-		<cluster name="ad_write" location=".\">
-		</cluster>
+		<cluster name="ad_write" location=".\"/>
 	</target>
 </system>
-

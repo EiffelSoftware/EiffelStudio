@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="culture_region">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="culture_region" uuid="937FFAE8-2D24-4B6D-BF51-B56864408768">
 	<target name="culture_region">
 		<root cluster="culture_region" class="CULTURE_REGION" feature="main"/>
 		<option>
@@ -9,13 +9,9 @@
 		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		
 		<cluster name="culture_region" location=".\"/>
 	</target>
 </system>

@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="simple" uuid="6EDF3DE2-50B2-42B6-89F5-BD84C163BF86">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="simple" uuid="6EDF3DE2-50B2-42B6-89F5-BD84C163BF86">
 	<target name="common" abstract="true">
 		<root class="TESTROOT" feature="make"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="classic" extends="common">

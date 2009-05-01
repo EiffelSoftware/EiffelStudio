@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="eiffel_scan" uuid="0B80447F-59D4-4A57-B683-65906CC4D778">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffel_scan" uuid="0B80447F-59D4-4A57-B683-65906CC4D778">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
-		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<debug name="lex_output" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>

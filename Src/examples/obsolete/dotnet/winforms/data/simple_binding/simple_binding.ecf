@@ -1,17 +1,18 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="simple_binding" uuid="7D2D75F2-5F02-4BA0-B44F-BDD120145A43">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="simple_binding" uuid="7D2D75F2-5F02-4BA0-B44F-BDD120145A43">
 	<target name="simple_binding">
 		<root class="SIMPLE_BINDING" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="msil_generation" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>		
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>		
-		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\system.drawing.dll" prefix="DRAWING_"/>		
-		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>		
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\system.drawing.dll" prefix="DRAWING_"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

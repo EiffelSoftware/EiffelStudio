@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="simple_service">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="simple_service" uuid="CA7B9B35-955A-49A5-A0CA-C7A54F4D43FE">
 	<target name="simple_service">
 		<root cluster="simple_service" class="SIMPLE_SERVICE" feature="main"/>
 		<option namespace="EiffelSoftware.Samples">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="dotnet_naming_convention" value="True"/>
-		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll">
-			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
 			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
 		</assembly>
 		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"/>

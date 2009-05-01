@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="regex_replace">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="regex_replace" uuid="20742464-FFA9-4655-8BBF-4C44C0707EF9">
 	<target name="regex_replace">
 		<root cluster="regex_replace" class="REGEX_MATCHER" feature="main"/>
 		<option namespace="EiffelSoftware.Samples">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="dotnet_naming_convention" value="True"/>
-		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
-		<cluster name="regex_replace" location=".\">
-		</cluster>
+		<cluster name="regex_replace" location=".\"/>
 	</target>
 </system>

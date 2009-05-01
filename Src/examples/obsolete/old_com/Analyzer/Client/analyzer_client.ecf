@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="analyzer_client" uuid="2F4A8A18-17A0-401B-80CE-533E8022F770">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="analyzer_client" uuid="2F4A8A18-17A0-401B-80CE-533E8022F770">
 	<target name="analyzer_client">
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<precompile name="precompile" location="$ISE_PRECOMP\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf">
-			<visible class="EOLE_PICTURE_DISP"/>
-			<visible class="EOLE_DISPATCH"/>
-			<visible class="EOLE_FONT_DISP"/>
-			<visible class="EOLE_PERSIST"/>
-			<visible class="EOLE_PROVIDE_CLASS_INFO"/>
-			<visible class="EOLE_CONNPT_CONTAINER"/>
-			<visible class="EOLE_UNKNOWN"/>
-			<visible class="EOLE_CLASS_FACTORY"/>
-			<visible class="EOLE_CALL_DISPATCHER"/>
-			<visible class="EOLE_PICTURE"/>
-			<visible class="EOLE_FONT"/>
-			<visible class="EOLE_CONNECTION_POINT"/>
-			<visible class="EOLE_ENUM_UNKNOWN"/>
-			<visible class="EOLE_ENUM_CONNECTIONS"/>
-			<visible class="EOLE_ENUM_CONNECTION_POINTS"/>
-			<visible class="EOLE_STORAGE"/>
 			<visible class="EOLE_STREAM"/>
-			<visible class="EOLE_FILE_TIME"/>
+			<visible class="EOLE_CONNPT_CONTAINER"/>
+			<visible class="EOLE_FONT_DISP"/>
+			<visible class="EOLE_CURRENCY"/>
+			<visible class="EOLE_DOCUMENTATION"/>
+			<visible class="EOLE_ENUM_CONNECTION_POINTS"/>
+			<visible class="EOLE_DISPPARAMS"/>
+			<visible class="EOLE_SAFEARRAY_BOUNDS"/>
+			<visible class="EOLE_ENUM_CONNECTIONS"/>
+			<visible class="EOLE_PICTURE_DISP"/>
+			<visible class="EOLE_ENUM_UNKNOWN"/>
 			<visible class="EOLE_SIZE"/>
+			<visible class="EOLE_CALL_DISPATCHER"/>
+			<visible class="EOLE_BSTR"/>
+			<visible class="EOLE_SAFEARRAY"/>
+			<visible class="EOLE_EXCEPINFO"/>
+			<visible class="EOLE_TYPE_LIB_RESULT"/>
+			<visible class="EOLE_STORAGE"/>
+			<visible class="EOLE_CLASS_FACTORY"/>
+			<visible class="EOLE_FILE_TIME"/>
+			<visible class="EOLE_FONT"/>
 			<visible class="EOLE_CONNECTDATA"/>
 			<visible class="EOLE_TEXTMETRIC"/>
-			<visible class="EOLE_DISPPARAMS"/>
+			<visible class="EOLE_CONNECTION_POINT"/>
 			<visible class="EOLE_REFERENCE"/>
-			<visible class="EOLE_SAFEARRAY"/>
-			<visible class="EOLE_BSTR"/>
-			<visible class="EOLE_CURRENCY"/>
+			<visible class="EOLE_PROVIDE_CLASS_INFO"/>
+			<visible class="EOLE_UNKNOWN"/>
+			<visible class="EOLE_PICTURE"/>
 			<visible class="EOLE_DLL_ENTRY"/>
-			<visible class="EOLE_TYPE_LIB_RESULT"/>
-			<visible class="EOLE_DOCUMENTATION"/>
-			<visible class="EOLE_EXCEPINFO"/>
+			<visible class="EOLE_DISPATCH"/>
+			<visible class="EOLE_PERSIST"/>
 			<visible class="EOLE_SELECT_PICTURE"/>
-			<visible class="EOLE_SAFEARRAY_BOUNDS"/>
 		</library>
-
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

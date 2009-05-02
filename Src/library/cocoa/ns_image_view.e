@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_CONTROL
+		redefine
+			new
+		end
 
 create
 	new
@@ -19,7 +22,6 @@ feature
 		do
 			cocoa_object := image_view_new
 		end
-
 
 	set_image (a_image: NS_IMAGE)
 		do

@@ -12,9 +12,10 @@ inherit
 		redefine
 			new
 		end
-		
+
 create
-	new
+	new,
+	make_shared
 
 feature
 

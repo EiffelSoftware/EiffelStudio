@@ -76,8 +76,15 @@ feature
 --		end
 
 	run_modal_for_directory_file_types (a_path: NS_STRING; a_name: NS_STRING; a_file_types: NS_ARRAY [NS_STRING]): INTEGER
+		local
+			l_name: POINTER
 		do
-			Result := open_panel_run_modal_for_directory_file_types(cocoa_object, a_path.cocoa_object, a_name.cocoa_object, a_file_types.cocoa_object)
+			if a_name /= void then
+				l_name := a_name.cocoa_object
+			else
+				l_name := nil
+			end
+			Result := open_panel_run_modal_for_directory_file_types(cocoa_object, a_path.cocoa_object, l_name, a_file_types.cocoa_object)
 		end
 
 	run_modal_for_types (a_file_types: NS_ARRAY[NS_STRING]): INTEGER

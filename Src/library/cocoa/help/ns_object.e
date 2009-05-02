@@ -7,7 +7,10 @@ note
 class
 	NS_OBJECT
 
-feature {NS_OBJECT}
+create
+	make_shared
+
+feature {NS_OBJECT} -- For internal use by the framework only
 
 	make_shared (a_pointer: POINTER)
 		do
@@ -32,6 +35,12 @@ feature -- Constants
 			"return NSFontAttributeName;"
 		end
 
+	frozen nil: POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return nil;"
+		end
 
 feature {NONE} -- Shared functionality
 
@@ -47,4 +56,6 @@ feature {NS_OBJECT} -- Should be used by classes in native only
 	cocoa_object: POINTER
 	 	-- The C-pointer to the Cocoa object
 
+invariant
+	cocoa_object_allocated: cocoa_object /= void
 end

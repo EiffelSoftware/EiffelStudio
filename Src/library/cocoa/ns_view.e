@@ -17,7 +17,7 @@ create
 	new,
 	new_custom
 
-feature
+feature -- Creation
 
 	new_shared (ptr: POINTER)
 			--
@@ -37,6 +37,8 @@ feature
 			cocoa_object := custom_view_new ($current, $draw)
 		end
 
+feature -- Properties
+
 	set_frame (a_rect: NS_RECT)
 		do
 			view_set_frame (cocoa_object, a_rect.item)
@@ -46,6 +48,12 @@ feature
 		do
 			create Result.make
 			view_frame (cocoa_object, Result.item)
+		end
+
+	bounds: NS_RECT
+		do
+			create Result.make
+			view_bounds (cocoa_object, Result.item)
 		end
 
 	add_subview (a_subview: NS_VIEW)
@@ -73,9 +81,33 @@ feature
 			Result := view_is_hidden (cocoa_object)
 		end
 
+	is_flipped : BOOLEAN
+		do
+			Result := view_is_flipped (cocoa_object)
+		end
+
 	remove_from_superview
 		do
 			view_remove_from_superview (cocoa_object)
+		end
+
+	convert_point_to_base (a_point: NS_POINT): NS_POINT
+		do
+			create Result.make
+			view_convert_point_to_base (cocoa_object, a_point.item, Result.item)
+		end
+
+	convert_point_to_view (a_point: NS_POINT; a_view: NS_VIEW): NS_POINT
+		local
+			l_view: POINTER
+		do
+			create Result.make
+			if a_view /= void then
+				l_view := a_view.cocoa_object
+			else
+				l_view := nil
+			end
+			view_convert_point_to_view (cocoa_object, a_point.item, l_view, Result.item)
 		end
 
 feature {NONE} -- callback
@@ -123,6 +155,13 @@ feature {NONE} -- Objective-C interface
 			]"
 		end
 
+	frozen view_bounds (a_view: POINTER; a_res: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
+		end
+
 	frozen view_add_subview (a_view: POINTER; a_subview: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -151,6 +190,13 @@ feature {NONE} -- Objective-C interface
 			"return [(NSView*)$a_view isHidden];"
 		end
 
+	frozen view_is_flipped (a_view: POINTER) : BOOLEAN
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view isFlipped];"
+		end
+
 	frozen view_remove_from_superview (a_view: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -170,6 +216,20 @@ feature {NONE} -- Objective-C interface
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSView*)$a_view setNeedsDisplay: $a_flag];"
+		end
+
+	frozen view_convert_point_to_base (a_view: POINTER; a_point: POINTER; res: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSPoint point = [(NSView*)$a_view convertPointToBase: *(NSPoint*)$a_point]; memcpy($res, &point, sizeof(NSPoint));"
+		end
+
+	frozen view_convert_point_to_view (a_view: POINTER; a_point: POINTER; a_to_view: POINTER; res: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSPoint point = [(NSView*)$a_view convertPoint: *(NSPoint*)$a_point toView: $a_to_view]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
 indexing

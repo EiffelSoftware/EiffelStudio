@@ -4,16 +4,26 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	NS_CONTROL
 
 inherit
 	NS_VIEW
-		undefine
+		redefine
 			new
 		end
 
-feature
+create
+	new
+
+feature -- Creation
+
+	new
+		do
+			cocoa_object := control_new
+		end
+
+feature -- ...
 
 	double_value: DOUBLE
 		do
@@ -52,6 +62,11 @@ feature
 			create Result.make_shared (control_font (cocoa_object))
 		end
 
+	set_cell (a_cell: NS_CELL)
+		do
+			control_set_cell (cocoa_object, a_cell.cocoa_object)
+		end
+
 feature {NONE} -- callback
 
 	target
@@ -63,6 +78,13 @@ feature {NONE} -- callback
 
 feature {NONE} -- Objective-C implementation
 
+	frozen control_new: POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSControl new];"
+		end
+
 --+ (void)setCellClass:(Class)factoryId;
 --+ (Class)cellClass;
 
@@ -70,7 +92,13 @@ feature {NONE} -- Objective-C implementation
 --- (void)sizeToFit;
 --- (void)calcSize;
 --- (id)cell;
---- (void)setCell:(NSCell *)aCell;
+	frozen control_set_cell (a_control: POINTER; a_cell: POINTER)
+			--- (void)setCell:(NSCell *)aCell;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_control setCell: $a_cell];"
+		end
 --- (id)selectedCell;
 --- (id)target;
 	frozen control_set_target (a_control: POINTER; a_target: POINTER)

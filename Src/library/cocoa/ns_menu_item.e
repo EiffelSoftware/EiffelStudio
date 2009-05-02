@@ -14,7 +14,7 @@ create
 	new,
 	separator_item
 
-feature
+feature -- Creation
 
 	new
 		do
@@ -25,6 +25,8 @@ feature
 		do
 			cocoa_object := menu_item_separator_item
 		end
+
+feature -- Access
 
 	set_submenu (a_menu: NS_MENU)
 		do
@@ -43,6 +45,16 @@ feature
 			action := an_action
 			menu_item_set_target (cocoa_object, target_new ($current, $target))
 			menu_item_set_action (cocoa_object)
+		end
+
+	set_key_equivalent (a_string: STRING_GENERAL)
+		do
+			menu_item_set_key_equivalent (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+		end
+
+	set_key_equivalent_modifier_mask (a_mask: INTEGER)
+		do
+			menu_item_set_key_equivalent_modifier_mask (cocoa_object, a_mask)
 		end
 
 feature {NONE} -- callback
@@ -107,9 +119,21 @@ feature {NONE} -- Implementation
 
 --- (BOOL)isSeparatorItem;
 
---- (void)setKeyEquivalent:(NSString *)aKeyEquivalent;
+	frozen menu_item_set_key_equivalent (a_menu_item: POINTER; a_nsstring: POINTER)
+			--- (void)setKeyEquivalent:(NSString *)aKeyEquivalent;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSMenuItem*)$a_menu_item setKeyEquivalent: $a_nsstring];"
+		end
 --- (NSString *)keyEquivalent;
---- (void)setKeyEquivalentModifierMask:(NSUInteger)mask;
+	frozen menu_item_set_key_equivalent_modifier_mask (a_menu_item: POINTER; a_mask: INTEGER)
+			--- (void)setKeyEquivalentModifierMask:(NSUInteger)mask;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSMenuItem*)$a_menu_item setKeyEquivalentModifierMask: $a_mask];"
+		end
 --- (NSUInteger)keyEquivalentModifierMask;
 
 --- (NSString *)userKeyEquivalent;
@@ -191,4 +215,33 @@ feature {NONE} -- Implementation
 --@end
 
 
+feature -- Key Mask Constants (should be in NS_EVENT)
+
+	frozen shift_key_mask: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSShiftKeyMask;"
+		end
+
+	frozen alternate_key_mask: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSAlternateKeyMask;"
+		end
+
+	frozen command_key_mask: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSCommandKeyMask;"
+		end
+
+	frozen control_key_mask: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSControlKeyMask;"
+		end
 end

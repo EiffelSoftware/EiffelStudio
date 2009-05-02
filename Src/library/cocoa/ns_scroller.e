@@ -14,6 +14,7 @@ inherit
 		end
 
 create
+	make_shared,
 	new,
 	init_with_frame
 

@@ -13,10 +13,31 @@ inherit
 	NS_OBJECT
 
 create
-	make_shared
+	make_shared,
+	array_with_objects_count
 
 feature
 
+	array_with_objects_count (a_objects: LIST[T])
+		local
+			l_objects: MANAGED_POINTER
+			i: INTEGER
+		do
+			create l_objects.make (a_objects.count)
+			from
+				a_objects.start
+				i := 0
+			until
+				a_objects.after
+			loop
+				l_objects.put_pointer (a_objects.item.cocoa_object, i*4)
+				i := i + 1
+				a_objects.forth
+			end
+			cocoa_object := array_array_with_objects_count (l_objects.item, a_objects.count)
+		end
+
+feature
 	count: INTEGER
 		do
 			Result := array_count (cocoa_object)
@@ -185,6 +206,13 @@ feature
 ----		end
 
 feature -- Objective-C implementation
+
+	frozen array_array_with_objects_count (a_objects: POINTER; a_count: INTEGER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSArray arrayWithObjects: $a_objects count: $a_count];"
+		end
 
 	frozen array_count (a_array: POINTER): INTEGER
 		external

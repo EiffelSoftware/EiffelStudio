@@ -84,4 +84,21 @@ feature -- Objective-C implementation
 		alias
 			"[(NSPanel*)$a_panel setWorksWhenModal: $a_flag];"
 		end
+
+feature -- Constants
+
+	frozen ok_button: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSOKButton;"
+		end
+
+	frozen cancel_button: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSCancelButton;"
+		end
+
 end

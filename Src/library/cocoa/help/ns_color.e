@@ -15,9 +15,14 @@ create
 	white_color,
 	control_color,
 	control_background_color,
-	color_with_calibrated_red_green_blue_alpha
+	control_text_color,
+	shadow_color,
+	highlight_color,
+	color_with_calibrated_red_green_blue_alpha,
+	color_with_pattern_image,
+	make_shared
 
-feature
+feature -- Creation
 
 	blue_color
 		do
@@ -39,9 +44,29 @@ feature
 			cocoa_object := color_control_background_color
 		end
 
+	control_text_color
+		do
+			cocoa_object := color_control_text_color
+		end
+
+	shadow_color
+		do
+			cocoa_object := color_shadow_color
+		end
+
+	highlight_color
+		do
+			cocoa_object := color_highlight_color
+		end
+
 	color_with_calibrated_red_green_blue_alpha (r, g, b, a: REAL)
 		do
 			cocoa_object := color_color_with_calibrated_red_green_blue_alpha (r, g, b, a)
+		end
+
+	color_with_pattern_image (a_image: NS_IMAGE)
+		do
+			cocoa_object := color_color_with_pattern_image (a_image.cocoa_object)
 		end
 
 	set
@@ -57,6 +82,33 @@ feature
 	set_stroke
 		do
 			color_set_stroke (cocoa_object)
+		end
+
+feature -- Components
+
+	red_component: REAL
+		do
+			Result := color_red_component (cocoa_object)
+		end
+
+	green_component: REAL
+		do
+			Result := color_green_component (cocoa_object)
+		end
+
+	blue_component: REAL
+		do
+			Result := color_blue_component (cocoa_object)
+		end
+
+	color_using_color_space (a_color_space: NS_COLOR_SPACE): NS_COLOR
+		do
+			Result := create {NS_COLOR}.make_shared (color_color_using_color_space (cocoa_object, a_color_space.cocoa_object))
+		end
+
+	color_using_color_space_name (a_color_space: NS_STRING): NS_COLOR
+		do
+			Result := create {NS_COLOR}.make_shared (color_color_using_color_space_name (cocoa_object, a_color_space.cocoa_object))
 		end
 
 feature {NONE} -- Objective-C implementation
@@ -126,8 +178,22 @@ feature {NONE} -- Objective-C implementation
 --+ (NSColor *)brownColor;	/* 0.6, 0.4, 0.2 RGB */
 --+ (NSColor *)clearColor;	/* 0.0 white, 0.0 alpha */
 
---+ (NSColor *)controlShadowColor;		// Dark border for controls
---+ (NSColor *)controlDarkShadowColor;		// Darker border for controls
+	frozen color_control_shadow_color: POINTER
+			--+ (NSColor *)controlShadowColor;		// Dark border for controls
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor controlShadowColor];"
+		end
+
+	frozen color_control_dark_shadow_color: POINTER
+			--+ (NSColor *)controlDarkShadowColor;		// Darker border for controls
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor controlDarkShadowColor];"
+		end
+
 	frozen color_control_color: POINTER
 			--+ (NSColor *)controlColor;			// Control face and old window background color
 		external
@@ -135,9 +201,23 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [NSColor controlColor];"
 		end
---+ (NSColor *)controlHighlightColor;		// Light border for controls
---+ (NSColor *)controlLightHighlightColor;	// Lighter border for controls
---+ (NSColor *)controlTextColor;			// Text on controls
+
+	frozen color_control_highlight_color: POINTER
+			--+ (NSColor *)controlHighlightColor;		// Light border for controls
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor controlHighlightColor];"
+		end
+
+	frozen color_control_light_highlight_color: POINTER
+			--+ (NSColor *)controlLightHighlightColor;	// Lighter border for controls
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor controlLightHighlightColor];"
+		end
+
 	frozen color_control_background_color: POINTER
 			--+ (NSColor *)controlBackgroundColor;		// Background of large controls (browser, tableview, clipview, ...)
 		external
@@ -145,6 +225,15 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [NSColor controlBackgroundColor];"
 		end
+
+	frozen color_control_text_color: POINTER
+			--+ (NSColor *)controlTextColor;			// Text on controls
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor controlTextColor];"
+		end
+
 --+ (NSColor *)selectedControlColor;		// Control face for selected controls
 --+ (NSColor *)secondarySelectedControlColor;	// Color for selected controls when control is not active (that is, not focused)
 --+ (NSColor *)selectedControlTextColor;		// Text on selected controls
@@ -167,8 +256,21 @@ feature {NONE} -- Objective-C implementation
 --+ (NSColor *)selectedMenuItemColor;		// Highlight color for menus
 --+ (NSColor *)selectedMenuItemTextColor;		// Highlight color for menu text
 
---+ (NSColor *)highlightColor;     	     	// Highlight color for UI elements (this is abstract and defines the color all highlights tend toward)
---+ (NSColor *)shadowColor;     			// Shadow color for UI elements (this is abstract and defines the color all shadows tend toward)
+	frozen color_highlight_color: POINTER
+			--+ (NSColor *)highlightColor;     	     	// Highlight color for UI elements (this is abstract and defines the color all highlights tend toward)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor highlightColor];"
+		end
+
+	frozen color_shadow_color: POINTER
+			--+ (NSColor *)shadowColor;     			// Shadow color for UI elements (this is abstract and defines the color all shadows tend toward)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor shadowColor];"
+		end
 
 --+ (NSColor *)headerColor;			// Background color for header cells in Table/OutlineView
 --+ (NSColor *)headerTextColor;			// Text color for header cells in Table/OutlineView
@@ -207,15 +309,6 @@ feature {NONE} -- Objective-C implementation
 			"[(NSColor*)$a_color setStroke];"
 		end
 
---/* Set the color: Sets the fill and stroke colors in the current drawing context. If the color doesn't know about alpha, it's set to 1.0. Should be implemented by subclassers.
---*/
---- (void)set;
-
---/* Set the fill or stroke colors individually. These should be implemented by subclassers.
---*/
---- (void)setFill;
---- (void)setStroke;
-
 --/* Get the color space of the color. Should be implemented by subclassers.
 --*/
 --- (NSString *)colorSpaceName;
@@ -229,13 +322,25 @@ feature {NONE} -- Objective-C implementation
 
 --If colorSpace is nil, then the most appropriate color space is used.
 --*/
---- (NSColor *)colorUsingColorSpaceName:(NSString *)colorSpace;
+	frozen color_color_using_color_space_name (a_color: POINTER; a_color_space: POINTER): POINTER
+			--- (NSColor *)colorUsingColorSpaceName:(NSString *)colorSpace;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSColor*)$a_color colorUsingColorSpaceName: $a_color_space];"
+		end
 --- (NSColor *)colorUsingColorSpaceName:(NSString *)colorSpace device:(NSDictionary *)deviceDescription;
 
 
 --/* colorUsingColorSpace: will convert existing color to a new colorspace and create a new color, which will likely have different component values but look the same. It will return the same color if the colorspace is already the same as the one specified.  Will return nil if conversion is not possible.
 --*/
---- (NSColor *)colorUsingColorSpace:(NSColorSpace *)space;
+	frozen color_color_using_color_space (a_color: POINTER; a_color_space: POINTER): POINTER
+			--- (NSColor *)colorUsingColorSpace:(NSColorSpace *)space;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSColor*)$a_color colorUsingColorSpace: $a_color_space];"
+		end
 
 
 --/* Blend using the NSCalibratedRGB color space. Both colors are converted into the calibrated RGB color space, and they are blended by taking fraction of color and 1 - fraction of the receiver. The result is in the calibrated RGB color space. If the colors cannot be converted into the calibrated RGB color space the blending fails and nil is returned.
@@ -262,9 +367,26 @@ feature {NONE} -- Objective-C implementation
 
 --/* Get the red, green, or blue components of NSCalibratedRGB or NSDeviceRGB colors.
 --*/
---- (CGFloat)redComponent;
---- (CGFloat)greenComponent;
---- (CGFloat)blueComponent;
+	frozen color_red_component (a_color: POINTER): REAL
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSColor*)$a_color redComponent];"
+		end
+
+	frozen color_green_component (a_color: POINTER): REAL
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSColor*)$a_color greenComponent];"
+		end
+
+	frozen color_blue_component (a_color: POINTER): REAL
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSColor*)$a_color blueComponent];"
+		end
 --- (void)getRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha;
 
 --/* Get the components of NSCalibratedRGB or NSDeviceRGB colors as hue, saturation, or brightness.
@@ -290,13 +412,11 @@ feature {NONE} -- Objective-C implementation
 --- (void)getCyan:(CGFloat *)cyan magenta:(CGFloat *)magenta yellow:(CGFloat *)yellow black:(CGFloat *)black alpha:(CGFloat *)alpha;
 
 
---#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
 --/* For colors with custom colorspace; get the colorspace and individual floating point components, including alpha. Note that all these methods will work for other NSColors which have floating point components. They will raise exceptions otherwise, like other existing colorspace-specific methods.
 --*/
 --- (NSColorSpace *)colorSpace;
 --- (NSInteger)numberOfComponents;
 --- (void)getComponents:(CGFloat *)components;
---#endif
 
 
 --/* Get the alpha component. For colors which do not have alpha components, this will return 1.0 (opaque).
@@ -311,7 +431,13 @@ feature {NONE} -- Objective-C implementation
 
 --/* Pattern methods. Note that colorWithPatternImage: mistakenly returns a non-autoreleased color in 10.1.x and earlier. This has been fixed in (NSAppKitVersionNumber >= NSAppKitVersionNumberWithPatternColorLeakFix), for apps linked post-10.1.x.
 --*/
---+ (NSColor *)colorWithPatternImage:(NSImage*)image;
+	frozen color_color_with_pattern_image (a_image: POINTER): POINTER
+			--+ (NSColor *)colorWithPatternImage:(NSImage*)image;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSColor colorWithPatternImage: $a_image];"
+		end
 --- (NSImage *)patternImage;
 
 --/* Draws the color and adorns it to indicate the type of color. Used by colorwells, swatches, and other UI objects that need to display colors. Implementation in NSColor simply draws the color (with an indication of transparency if the color isn't fully opaque); subclassers can draw more stuff as they see fit.

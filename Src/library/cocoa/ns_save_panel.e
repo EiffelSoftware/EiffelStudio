@@ -9,12 +9,22 @@ class
 
 inherit
 	NS_PANEL
-	redefine
-		set_title
-	end
+		redefine
+			set_title,
+			title
+		end
 
-feature
+create
+	save_panel
 
+feature -- Creation
+
+	save_panel
+		do
+			cocoa_object := save_panel_save_panel
+		end
+
+feature -- Access
 --	url : NS_URL
 --		do
 --			Result := save_panel_url(cocoa_object)
@@ -140,7 +150,7 @@ feature
 			save_panel_set_prompt(cocoa_object, a_prompt.cocoa_object)
 		end
 
-	title : NS_STRING
+	title : STRING
 		do
 --			Result := save_panel_title(cocoa_object)
 		end
@@ -207,7 +217,14 @@ feature
 
 feature -- Objective-C implementation
 
---	frozen save_panel__u_r_l (a_save_panel: POINTER): POINTER
+	frozen save_panel_save_panel: POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSSavePanel savePanel];"
+		end
+
+--	frozen save_panel_url (a_save_panel: POINTER): POINTER
 --		external
 --			"C inline use <Cocoa/Cocoa.h>"
 --		alias

@@ -12,7 +12,8 @@ inherit
 
 create
 	init_by_referencing_file,
-	init_with_size
+	init_with_size,
+	image_named
 
 feature --
 
@@ -24,6 +25,11 @@ feature --
 	init_with_size (a_size: NS_SIZE)
 		do
 			cocoa_object := image_init_with_size (a_size.item)
+		end
+
+	image_named (a_name: STRING_GENERAL)
+		do
+			cocoa_object := image_image_named ((create {NS_STRING}.make_with_string (a_name)).cocoa_object)
 		end
 
 	size : TUPLE [width, height: INTEGER]
@@ -62,7 +68,13 @@ feature --
 
 feature {NONE} -- Objective-C implementation
 
---+ (id)imageNamed:(NSString *)name;	/* If this finds & creates the image, only name is saved when archived */
+	frozen image_image_named (a_name: POINTER) : POINTER
+			--+ (id)imageNamed:(NSString *)name;	/* If this finds & creates the image, only name is saved when archived */
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSImage imageNamed: $a_name];"
+		end
 
 	frozen image_init_with_size (a_size: POINTER) : POINTER
 			--- (id)initWithSize:(NSSize)aSize;
@@ -212,13 +224,29 @@ feature {NONE} -- Objective-C implementation
 --- (BOOL)isTemplate;
 --- (void)setTemplate:(BOOL)isTemplate;
 
-feature -- Constants
+feature -- NSCompositingOperation Constants
 
 	frozen composite_source_over: INTEGER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return NSCompositeSourceOver;"
+		end
+
+	frozen composite_xor: INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSCompositeXOR;"
+		end
+
+feature {NS_IMAGE_CONSTANTS} -- Named Images
+
+	frozen image_name_info: POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return NSImageNameInfo;"
 		end
 
 end

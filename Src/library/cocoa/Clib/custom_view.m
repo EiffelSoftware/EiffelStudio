@@ -17,6 +17,10 @@ indexing
 			dirtyRect.size.width, dirtyRect.size.height );
 	}
 
+	- (BOOL)isFlipped {
+		return YES;
+	}
+
 	- (EIF_REFERENCE)initWithCallbackObject:(EIF_REFERENCE)a_callbackObject andMethod:(drawRectTYPE)a_callbackMethod {
 		callbackObject = eif_protect(a_callbackObject);
 		callbackMethod = a_callbackMethod;

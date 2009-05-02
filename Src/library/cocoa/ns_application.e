@@ -21,7 +21,7 @@ feature {NONE} -- internal use of the native layer only
 			cocoa_object := a_pointer
 		end
 
-feature
+feature -- Creation
 
 	init
 		do
@@ -29,6 +29,8 @@ feature
 			new_shared (application_get)
 			application_finish_launching (cocoa_object)
 		end
+
+feature -- Access
 
 	next_event (a_matching_mask: INTEGER; a_until_date: POINTER; a_in_mode: INTEGER; a_dequeue: BOOLEAN): POINTER
 		do
@@ -48,6 +50,34 @@ feature
 	set_main_menu (a_menu: NS_MENU)
 		do
 			application_set_main_menu (cocoa_object, a_menu.cocoa_object)
+		end
+
+	set_application_icon_image (a_image: NS_IMAGE)
+		do
+			application_set_application_icon_image (cocoa_object, a_image.cocoa_object)
+		end
+
+	terminate
+		do
+			application_terminate (cocoa_object, cocoa_object)
+		end
+
+	run_modal_for_window (a_window: NS_WINDOW): INTEGER
+		do
+			Result := application_run_modal_for_window (cocoa_object, a_window.cocoa_object)
+		end
+
+	fix_apple_menu
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[
+				{
+					NSMenu* menu = [NSMenu new];
+					[menu setValue:@"NSAppleMenu" forKey:@"name"];
+					[NSApp performSelector:@selector(setAppleMenu:) withObject:menu];
+				}
+			]"
 		end
 
 feature {NONE} -- Implementation
@@ -81,6 +111,13 @@ feature {NONE} -- Implementation
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[NSApp setMainMenu: $a_menu];"
+		end
+
+	frozen application_set_application_icon_image (a_application, a_image: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[NSApp setApplicationIconImage: $a_image];"
 		end
 
 	frozen application_update_windows (a_application: POINTER)
@@ -142,7 +179,13 @@ feature {NONE} -- Implementation
 		end
 
 --- (void)run;
---- (NSInteger)runModalForWindow:(NSWindow *)theWindow;
+	frozen application_run_modal_for_window (a_application: POINTER; a_window: POINTER): INTEGER
+			--- (NSInteger)runModalForWindow:(NSWindow *)theWindow;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSApplication*)$a_application runModalForWindow: $a_window];"
+		end
 --- (void)stop:(id)sender;
 --- (void)stopModal;
 --- (void)stopModalWithCode:(NSInteger)returnCode;
@@ -151,7 +194,13 @@ feature {NONE} -- Implementation
 --- (NSModalSession)beginModalSessionForWindow:(NSWindow *)theWindow;
 --- (NSInteger)runModalSession:(NSModalSession)session;
 --- (void)endModalSession:(NSModalSession)session;
---- (void)terminate:(id)sender;
+	frozen application_terminate (a_application: POINTER; a_sender: POINTER)
+			--- (void)terminate:(id)sender;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSApplication*)$a_application terminate: $a_sender];"
+		end
 
 --enum {
 --      NSCriticalRequest = 0,

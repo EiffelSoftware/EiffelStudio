@@ -149,10 +149,24 @@ feature
 --			bezier_path_get_line_dash_count_phase (cocoa_object, a_pattern, a_count.cocoa_object, a_phase)
 --		end
 
---	set_line_dash_count_phase( a_pattern: POINTER[FLOAT]; a_count: INTEGER; a_phase: REAL)
---		do
---			bezier_path_set_line_dash_count_phase (cocoa_object, a_pattern, a_count, a_phase)
---		end
+	set_line_dash_count_phase (a_pattern: LIST[REAL]; a_phase: REAL)
+		local
+			l_pattern: MANAGED_POINTER
+			i: INTEGER
+		do
+			create l_pattern.make (a_pattern.count)
+			from
+				a_pattern.start
+				i := 0
+			until
+				a_pattern.after
+			loop
+				l_pattern.put_real_32 (a_pattern.item, i)
+				i := i + 4
+				a_pattern.forth
+			end
+			bezier_path_set_line_dash_count_phase (cocoa_object, l_pattern.item, a_pattern.count, a_phase)
+		end
 
 	stroke
 		do
@@ -224,10 +238,15 @@ feature
 --			bezier_path_set_associated_points_at_index (cocoa_object, a_points.cocoa_object, a_index)
 --		end
 
---	append_bezier_path( a_path: NS_BEZIER_PATH)
---		do
---			bezier_path_append_bezier_path (cocoa_object, a_path.cocoa_object)
---		end
+	append_bezier_path (a_path: NS_BEZIER_PATH)
+		do
+			bezier_path_append_bezier_path (cocoa_object, a_path.cocoa_object)
+		end
+
+	append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (a_center: NS_POINT; a_radius: REAL; a_start_angle, a_end_angle: REAL)
+		do
+			bezier_path_append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (cocoa_object, a_center.item, a_radius, a_start_angle, a_end_angle)
+		end
 
 --	append_bezier_path_with_rect( a_rect: NS_RECT)
 --		do
@@ -437,12 +456,12 @@ feature {NONE} -- Objective-C implementation
 --			"[(NSBezierPath*)$a_bezier_path getLineDash: $a_pattern count: $a_count phase: $a_phase];"
 --		end
 
---	frozen bezier_path_set_line_dash_count_phase (a_bezier_path: POINTER; a_pattern: POINTER[FLOAT]; a_count: INTEGER; a_phase: REAL)
---		external
---			"C inline use <Cocoa/Cocoa.h>"
---		alias
---			"[(NSBezierPath*)$a_bezier_path setLineDash: $a_pattern count: $a_count phase: $a_phase];"
---		end
+	frozen bezier_path_set_line_dash_count_phase (a_bezier_path: POINTER; a_pattern: POINTER; a_count: INTEGER; a_phase: REAL)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSBezierPath*)$a_bezier_path setLineDash: $a_pattern count: $a_count phase: $a_phase];"
+		end
 
 	frozen bezier_path_stroke (a_bezier_path: POINTER)
 		external
@@ -528,7 +547,7 @@ feature {NONE} -- Objective-C implementation
 			"return [(NSBezierPath*)$a_bezier_path elementCount];"
 		end
 
-	frozen bezier_path_element_at_index (a_bezier_path: POINTER; a_index: INTEGER): POINTER
+	frozen bezier_path_element_at_index (a_bezier_path: POINTER; a_index: INTEGER): INTEGER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -547,6 +566,13 @@ feature {NONE} -- Objective-C implementation
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSBezierPath*)$a_bezier_path appendBezierPath: $a_path];"
+		end
+
+	frozen bezier_path_append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (a_bezier_path: POINTER; a_center: POINTER; a_radius: REAL; a_start_angle, a_end_angle: REAL)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSBezierPath*)$a_bezier_path appendBezierPathWithArcWithCenter: *(NSPoint*) $a_center radius: $a_radius startAngle: $a_start_angle endAngle: $a_end_angle];"
 		end
 
 --	frozen bezier_path_append_bezier_path_with_rect (a_bezier_path: POINTER; a_rect: POINTER)
@@ -570,7 +596,7 @@ feature {NONE} -- Objective-C implementation
 --			"[(NSBezierPath*)$a_bezier_path appendBezierPathWithOvalInRect: $a_rect];"
 --		end
 
-	frozen bezier_path_append_bezier_path_with_glyph_in_font (a_bezier_path: POINTER; a_glyph: POINTER; a_font: POINTER)
+	frozen bezier_path_append_bezier_path_with_glyph_in_font (a_bezier_path: POINTER; a_glyph: INTEGER; a_font: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

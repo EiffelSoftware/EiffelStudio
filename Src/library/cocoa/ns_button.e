@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_CONTROL
+		redefine
+			new
+		end
 
 create
 	new

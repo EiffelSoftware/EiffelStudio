@@ -119,20 +119,6 @@ feature {NONE} -- Objective-C implementation
 			"return [NSPrintPanel printPanel];"
 		end
 
-	frozen print_panel_localized_summary_items (a_print_panel: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSPrintPanel*)$a_print_panel localizedSummaryItems];"
-		end
-
-	frozen print_panel_key_paths_for_values_affecting_preview (a_print_panel: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSPrintPanel*)$a_print_panel keyPathsForValuesAffectingPreview];"
-		end
-
 	frozen print_panel_add_accessory_controller (a_print_panel: POINTER; a_accessory_controller: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"

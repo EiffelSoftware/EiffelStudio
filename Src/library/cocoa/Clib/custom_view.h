@@ -19,6 +19,7 @@ typedef EIF_REFERENCE (*drawRectTYPE) (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, 
 	drawRectTYPE callbackMethod;
 }
 	- (void)drawRect:(NSRect)dirtyRect;
+	- (BOOL)isFlipped;
 	- (EIF_REFERENCE)initWithCallbackObject:(EIF_REFERENCE)a_object andMethod:(drawRectTYPE)a_method;
 @end
 

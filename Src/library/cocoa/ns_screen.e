@@ -10,10 +10,16 @@ class
 inherit
 	NS_OBJECT
 
+create
+	make_shared
 
 feature
 
-
+	frame: NS_RECT
+		do
+			create Result.make
+			screen_frame (cocoa_object, Result.item)
+		end
 
 feature {NONE} -- Objective-C implementation
 
@@ -22,7 +28,18 @@ feature {NONE} -- Objective-C implementation
 --+ (NSScreen *)deepestScreen;
 
 --- (NSWindowDepth)depth;
---- (NSRect)frame;
+	frozen screen_frame (a_screen: POINTER; a_res: POINTER)
+			--- (NSRect)frame;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[
+				{
+					NSRect frame = [(NSScreen*)$a_screen frame];
+					memcpy ($a_res, &frame, sizeof(NSRect));
+				}
+			]"
+		end
 --- (NSRect)visibleFrame;
 --- (NSDictionary *)deviceDescription;
 

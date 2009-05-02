@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_CONTROL
+		redefine
+			new
+		end
 
 create
 	new
@@ -16,7 +19,6 @@ create
 feature
 
 	new
-			--
 		do
 			cocoa_object := text_field_new
 		end

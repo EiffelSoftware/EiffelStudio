@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 			is_compiled := False
 
-			is_process_exited := False
+		--	is_process_exited := False
 			is_compile_process_exited := False
 			is_compiling := False
 			is_running := False
@@ -58,7 +58,7 @@ feature -- Access Attributes
 
 feature -- Access Utilities
 
-	compiler: STRING = "/usr/local/home/fabioz/Eiffel64/studio/spec/linux-x86-64/bin/ecb"
+	compiler: STRING = "/usr/local/home/fabioz/Eiffel64/studio/spec/linux-x86-64/bin/ec"
 			-- The filename of the compiler used to compile webapplications
 
 	compiler_args: STRING
@@ -66,7 +66,7 @@ feature -- Access Utilities
 		require
 			not_empty_initialized: not is_empty
 		do
-			Result  := "-config " + name + "-voidunsafe.ecf -target " + name + " -c_compile -clean"
+			Result  := "-config " + name + "-voidunsafe.ecf -target " + name + " -c_compile -stop"
 		end
 
 	run_workdir: STRING
@@ -101,24 +101,57 @@ feature -- Access Process
 --	is_launched: BOOLEAN assign set_is_launched
 --	is_launch_failed: BOOLEAN assign set_is_launch_failed
 	process: detachable PROCESS assign set_process
-	is_process_exited: BOOLEAN
+--	is_process_exited: BOOLEAN
 	is_running: BOOLEAN
 
 feature -- Status setting
 
-	stop
-			-- Stops the process
+	shutdown_all
+			-- Terminate the compile process and send shutdown signal to webapp
 		do
-			if attached {PROCESS} process as p then
-				o.dprint ("Terminating " + name  + "", 4)
-				p.terminate
+			shutdown
+			kill_compile
+		end
+
+	shutdown
+			-- Send shutdown signal to webapp
+		local
+				l_webapp_socket: NETWORK_STREAM_SOCKET
+			do
+				create l_webapp_socket.make_client_by_port (port, {XS_SERVER_CONFIG}.Default_app_server_host)
+				o.dprint ("Shutdown connect to " + name + "@" + port.out, 4)
+				l_webapp_socket.connect
+	            if  l_webapp_socket.is_connected then
+					o.dprint ("Sending shutdown signal", 2)
+		            l_webapp_socket.independent_store (Shutdown_message)
+		         else
+		         	o.eprint ("Cannot shutdown connect to '" + name + "'", generating_type)
+				end
+
+				(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
+				kill_process
 			end
 
+
+	kill_process
+			-- Terminates the process
+		do
+			if attached {PROCESS} process as p then
+				o.dprint ("Terminating " + name  + "", 2)
+				p.terminate
+				is_running := False
+			end
+		end
+
+	kill_compile
+			-- Terminates the compile process		
+		do
 			if attached {PROCESS} compile_process as p then
-				o.dprint ("Terminating compile process of " + name  + "", 4)
+				o.dprint ("Terminating compile process of " + name  + "", 2)
 				p.terminate
 			end
 		end
+
 
 feature -- Operations
 
@@ -134,7 +167,7 @@ feature -- Operations
 			Result := False
 			create l_args.make
 			l_args.force (port.out)
-			if is_running and then not is_process_exited then
+			if is_running then
 				Result := True
 			else
 					-- Launch process
@@ -149,7 +182,7 @@ feature -- Operations
 
 	compile: BOOLEAN
 			-- Returns true if the webapp is compiled
-			-- Initiates compiling if its not compiled
+			-- Initiates compiling if its not compiled and if necessair
 		require
 			not_empty_initialized: not is_empty
 			can_compile: can_compile
@@ -158,11 +191,13 @@ feature -- Operations
 			l_cmd: STRING
 		do
 			Result := False
-			if is_compile_process_exited then
-				Result := True
-			else
+			if is_compiling_necessary then
+					-- Stop the process
+				if is_running then
+					shutdown
+				end
+					-- Launch compiling
 				if not is_compiling then
-						-- Launch compiling
 					l_cmd :=  compiler + " " + compiler_args
 					create l_process_factory
 					compile_process := l_process_factory.process_launcher_with_command_line (compiler + " " + compiler_args, compile_workdir)
@@ -171,6 +206,8 @@ feature -- Operations
 					compile_process.launch
 					is_compiling := True
 				end
+			else
+				Result := True
 			end
 		end
 
@@ -189,20 +226,62 @@ feature -- Stauts
 		do
 			Result := False
 			create l_file.make (a_filename)
-		Result :=		l_file.exists
---			if l_file.is_open_read then
---				Result := True
---				l_file.close
---			end
-			if not Result then
-				o.eprint ("File '" + a_filename  + "' does not exist!", generating_type)
-			end
+			Result := l_file.exists
 		end
 
 	can_compile: BOOLEAN
 			-- Checks if there is a valid compiler available
 		do
 			Result := file_exists (compiler)
+		end
+
+	is_compiling_necessary: BOOLEAN
+			-- Check if the webapps has to be (re)compiled
+			-- Returns True iff
+			--			executable does not exits
+			--			or one of the .e files is newer than the executable
+			--			or a ecf file is newer than the executable
+		require
+			not_empty_initialized: not is_empty
+		local
+			l_dir: DIRECTORY
+			l_files: LIST [STRING]
+			l_file: RAW_FILE
+			l_exec_access_date: INTEGER
+			l_melted_file: STRING
+		do
+			Result := False
+			if can_run then
+				l_melted_file := run_workdir + "/" + name + ".melted"
+				if file_exists (l_melted_file) then
+					l_exec_access_date := (create {RAW_FILE}.make (l_melted_file)).date
+					create l_dir.make (root + "/" + name)
+					l_files := l_dir.linear_representation
+					from
+						l_files.start
+					until
+						l_files.after or Result
+					loop
+						if l_files.item_for_iteration.ends_with (".e") or l_files.item_for_iteration.ends_with (".ecf") then
+							create l_file.make (root + "/" + name + "/" + l_files.item_for_iteration)
+						--	l_file.open_read
+						--	if l_file.is_open_read then
+								if (l_file.date > l_exec_access_date) then
+									Result := True
+									o.dprint ("File '" + l_file.name + "' is newer (" + l_file.date.out + ")  than executable (" + l_exec_access_date.out + "), compiling neseccary",5)
+								end
+						--		l_file.close
+						--	end
+						end
+						l_files.forth
+					end
+				else
+					Result := True
+				end
+			 else
+			 	o.dprint ("Cannot find webap executable '" + name + "', compiling neseccary",5)
+			 	Result := True
+			 end
 		end
 
 	can_run: BOOLEAN
@@ -216,13 +295,13 @@ feature -- Used as agents
 	set_is_compile_process_exited
 			-- Sets
 		do
-			is_compile_process_exited := True
+			is_compiling := False
 		end
 
 	set_is_process_exited
 			-- Sets
 		do
-			is_process_exited := True
+			is_running := False
 		end
 
 --	compile_process_out (a_out: STRING)
@@ -263,6 +342,10 @@ feature -- Used as agents
 --				is_compile_process_failed := False
 --				is_compile_process_launched := True
 --		end
+
+feature -- Constants
+
+	Shutdown_message: STRING = "#KAMIKAZE#"
 
 feature -- Status setting Compiling
 

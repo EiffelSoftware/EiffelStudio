@@ -29,8 +29,6 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	Default_app_server_host: STRING = "localhost"
-
 
 feature -- Access
 
@@ -61,32 +59,36 @@ feature  -- Implementation
 				l_uri_webapp_name.remove_tail (1)
 
 				if attached {XS_WEBAPP} server_config.webapps[l_uri_webapp_name] as webapp then
-					if webapp.can_compile then
-						if webapp.compile then
-							if webapp.can_run  then
-								if webapp.run then
-									Result :=  send (webapp.name, l_request_message)
+					if server_config.assume_webapps_are_running then
+						Result :=  send (webapp.name, l_request_message)
+					else
+						if webapp.can_compile then
+							if webapp.compile then
+								if webapp.can_run  then
+									if webapp.run then
+										Result :=  send (webapp.name, l_request_message)
+									else
+			--								if compile_service.is_launch_failed (l_uri_webapp_name) then
+			--									Result := (create {XER_LAUNCH_FAILED}.make (l_uri_webapp_name)).render_to_response
+			--								else
+											Result := (create {XER_APP_STARTING}.make (l_uri_webapp_name)).render_to_response
+			--								end
+									end
 								else
-		--								if compile_service.is_launch_failed (l_uri_webapp_name) then
-		--									Result := (create {XER_LAUNCH_FAILED}.make (l_uri_webapp_name)).render_to_response
-		--								else
-										Result := (create {XER_APP_STARTING}.make (l_uri_webapp_name)).render_to_response
-		--								end
+									o.eprint ("Cannot run!", generating_type)
+									Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
 								end
 							else
-								o.eprint ("Cannot run!", generating_type)
-								Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
+	--							if compile_service.is_compiling_failed (l_uri_webapp_name) then
+	--								Result := (create {XER_COMPILING_FAILED}.make (l_uri_webapp_name)).render_to_response
+	--							else
+									Result := (create {XER_APP_COMPILING}.make (l_uri_webapp_name)).render_to_response
+	--							end
 							end
 						else
---							if compile_service.is_compiling_failed (l_uri_webapp_name) then
---								Result := (create {XER_COMPILING_FAILED}.make (l_uri_webapp_name)).render_to_response
---							else
-								Result := (create {XER_APP_COMPILING}.make (l_uri_webapp_name)).render_to_response
---							end
+							o.eprint ("Cannot compile!", generating_type)
+							Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
 						end
-					else
-						o.eprint ("Cannot compile!", generating_type)
-						Result := (create {XER_BAD_SERVER_ERROR}.make ("")).render_to_response
 					end
 				else
 					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_response
@@ -106,7 +108,7 @@ feature {NONE} -- Implementation
 			do
 				if attached {XS_WEBAPP} server_config.webapps[a_webapp_name] as l_app then
 
-					create l_webapp_socket.make_client_by_port (l_app.port, Default_app_server_host)
+					create l_webapp_socket.make_client_by_port (l_app.port, {XS_SERVER_CONFIG}.Default_app_server_host)
 					o.dprint ("Connecting to " + l_app.name + "@" + l_app.port.out,2)
 					l_webapp_socket.connect
 		            if  l_webapp_socket.is_connected then
@@ -121,7 +123,8 @@ feature {NONE} -- Implementation
 			            end
 			        else
 			        	Result := (create {XER_CANNOT_CONNECT}.make (a_webapp_name)).render_to_response
-			        	--we could stop the webapp process here and restart it
+			        		--we could stop the webapp process here and restart it
+			        	l_app.kill_process
 			        end
 	            else
 					Result := (create {XER_CANNOT_FIND_APP}.make (a_webapp_name)).render_to_response

@@ -56,17 +56,18 @@ feature -- Initialization
 					loop
 						io.read_character
 					end
-				end
 
+					o.iprint ("Shutting down...")
+					o.dprint ("Terminating Web Applications...",3)
+					server_config.stop_apps
+					o.dprint ("Waiting for http_connection_server to shutdown...", 3)
+					http_connection_server.shutdown
+				end
 			end
 
-			o.iprint ("Shutting down...")
-			o.dprint ("Terminating Web Applications...",3)
-			server_config.stop_apps
-			o.dprint ("Waiting for http_connection_server to shutdown...", 3)
-			http_connection_server.shutdown
+
 			o.iprint ("All done. Bye!")
-			
+
 			(create {EXCEPTIONS}).die (0)
 		end
 

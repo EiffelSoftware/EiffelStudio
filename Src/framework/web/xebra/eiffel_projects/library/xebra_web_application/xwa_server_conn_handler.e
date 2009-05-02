@@ -37,15 +37,19 @@ feature -- Access
 	name: STRING
 			-- The name of the web app
 
+	application: XWA_APPLICATION
+			-- Callback to xwa_application
+			-- used to shutdown the application
 
 	xserver_socket: NETWORK_STREAM_SOCKET
 
 feature -- Implementation
 
-	make (a_name: STRING; a_port: INTEGER)
+	make (a_name: STRING; a_port: INTEGER; a_applicaiton: XWA_APPLICATION)
 			-- Initialization of classes.
 		do
 			name := a_name
+			application := a_applicaiton
 			create session_manager.make
 			create request_pool.make  (10, agent servlet_handler_spawner)
 			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
@@ -53,6 +57,7 @@ feature -- Implementation
 			stop := False
 		ensure
 			name_set: a_name = name
+			application_set:  application = a_applicaiton
 		end
 
 	execute
@@ -67,6 +72,7 @@ feature -- Implementation
             until
             	stop
             loop
+            	o.dprint ("Waiting for request from http server...", 2)
                 xserver_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
@@ -74,7 +80,9 @@ feature -- Implementation
 			             if attached {STRING} socket.retrieved as l_request_message then
 			 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
 			 	        		--singleusermode
-			 	        	l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
+			 	        	if not handle_shutdown_signal (l_request_message) then
+			 	        		l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
+			 	        	end
 			            else
 							socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
 			            end
@@ -93,7 +101,15 @@ feature -- Implementation
         	exit
 		end
 
-
+	handle_shutdown_signal (a_request: STRING): BOOLEAN
+			-- If shutdown signal is detected initiate shutdown and return True
+		do
+			Result := False
+			if a_request.starts_with ("#KAMIKAZE#") then
+				shutdown
+				Result := True
+			end
+		end
 
 	servlet_handler_spawner: XWA_REQUEST_HANDLER
 			-- Spawns {SERVLET_HANDLER}s for the `request_pool'.
@@ -106,7 +122,9 @@ feature -- Status setting
 	shutdown
 			-- Stops the thread and closes connections
 		do
+			o.dprint ("Shutting down...", 1)
 			stop := True
+			application.set_stop (True)
 			xserver_socket.cleanup
 			check
         		xserver_socket.is_closed

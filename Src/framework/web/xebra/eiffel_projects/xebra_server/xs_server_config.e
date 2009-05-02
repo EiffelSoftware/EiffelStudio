@@ -31,8 +31,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	assume_webapps_are_running: BOOLEAN = False
+
+
 	webapps: HASH_TABLE [XS_WEBAPP, STRING]
 	webapps_root: STRING
+
+feature -- Constants
+
+	Default_app_server_host: STRING = "localhost"
 
 feature -- Status Change
 
@@ -44,7 +51,7 @@ feature -- Status Change
 			until
 				webapps.after
 			loop
-				webapps.item_for_iteration.stop
+				webapps.item_for_iteration.shutdown_all
 				webapps.forth
 			end
 		end
@@ -71,6 +78,7 @@ feature {NONE} -- Implementation
 
 				webapps := l_p_callback.retrieve_webapps_hash
 				webapps_root := l_p_callback.webapps_root
+				o.dprint ("Configured " + webapps.count.out + " webapps at '" + webapps_root + "'", 4)
 				l_file.close
 
 			end

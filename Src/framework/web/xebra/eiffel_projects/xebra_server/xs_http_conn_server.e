@@ -43,9 +43,11 @@ feature -- Inherited Features
             until
             	stop
             loop
+            	o.dprint ("Waiting for request from http server...", 2)
                 http_socket.accept
                 if not stop then
-	                o.dprint ("Connection to http accepted",1)
+                	o.dprint ("%N__________________________________%N",2)
+	                o.dprint ("Connection to http server accepted",1)
 		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
 	--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 		            		--singleusermode

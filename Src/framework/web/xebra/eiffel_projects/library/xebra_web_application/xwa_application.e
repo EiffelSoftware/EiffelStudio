@@ -22,23 +22,28 @@ feature {NONE} -- Initialization
 					set_outputter_name (name)
 					print ("%N%N%N")
 					o.iprint ("Starting " + name)
-
 					server.launch
+
 
 					o.iprint ("Xebra Wep Application ready to rock...")
 
-					o.iprint ("(enter 'x' to shut down)")
+				--	o.iprint ("(enter 'x' to shut down)")
+
 					from
-						io.read_character
+						stop := False
 					until
-						io.last_character.is_equal ('x')
+						stop
 					loop
 						io.read_character
+						if io.last_character.is_equal ('x') then
+							stop := True
+						end
 					end
-
+					
 					o.iprint ("Shutting down...")
 					server.shutdown
 					o.iprint ("Bye!")
+
 				end
 		end
 
@@ -50,6 +55,18 @@ feature -- Access
 	name: STRING
 			-- The name of the web application
 		deferred
+		end
+
+	stop: BOOLEAN
+
+feature -- Setter
+
+	set_stop (a_stop: BOOLEAN)
+			-- Setter
+		do
+			stop := a_stop
+		ensure
+			stop_set: stop = a_stop
 		end
 
 end

@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {AUT_PROXY_EVENT}."
+	description: "[
+		Abstract notion of a proxy event, which is currently either a request sent to the interpreter
+		or a response received afterwards.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

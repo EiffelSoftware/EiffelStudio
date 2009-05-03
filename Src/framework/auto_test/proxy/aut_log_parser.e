@@ -1,7 +1,7 @@
 note
 	description:
 
-		"Parses AutoTest log files and passes requests/responses to an {AUT_LOG_PROCESSOR}"
+		"Parses AutoTest log files and passes requests/responses to an {AUT_PROXY_EVENT_OBSERVER}"
 
 	copyright: "Copyright (c) 2006, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -11,6 +11,10 @@ note
 class AUT_LOG_PARSER
 
 inherit
+	AUT_PROXY_EVENT_PRODUCER
+		rename
+			make as make_producer
+		end
 
 	ERL_G_TYPE_ROUTINES
 		export {NONE} all end
@@ -36,6 +40,8 @@ feature {NONE} -- Initialization
 			a_system_not_void: a_system /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
+			make_producer
+
 			system := a_system
 			error_handler := an_error_handler
 			create response_parser.make (system)
@@ -49,9 +55,15 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Was an error detected during last parsing?
 
+	is_executing: BOOLEAN = False
+			-- <Precursor>
+
+	is_replaying: BOOLEAN do end
+			-- <Precursor>
+
 feature -- Parsing
 
-	parse_stream (an_input_stream: KI_TEXT_INPUT_STREAM; a_log_processor: AUT_LOG_PROCESSOR)
+	parse_stream (an_input_stream: KI_TEXT_INPUT_STREAM)
 			-- Parse log from `an_input_stream'.
 			-- Save parsed requests along with their responses in `request_history'.
 		require
@@ -61,7 +73,6 @@ feature -- Parsing
 			line: STRING
 		do
 			request_parser.set_filename (an_input_stream.name)
-			a_log_processor.report_begin
 			from
 				has_error := False
 				create last_response_text.make (default_response_length)
@@ -79,7 +90,7 @@ feature -- Parsing
 							-- the start request will be handled, otherwise, the line is ignored.
 						if line.same_string (proxy_has_started_and_connected_message) then
 							-- We are in the "start" request.
-							report_request_line (line, a_log_processor)
+							report_request_line (line)
 						end
 					else
 						if line.count >= interpreter_log_prefix.count and then line.substring (1, interpreter_log_prefix.count).same_string (interpreter_log_prefix) then
@@ -87,13 +98,12 @@ feature -- Parsing
 							report_response_line (line)
 						else
 								-- Report that some request other than "start" request is found in current line.
-							report_request_line (line, a_log_processor)
+							report_request_line (line)
 						end
 					end
 				end
 				line_number := line_number + 1
 			end
-			a_log_processor.report_finish
 		end
 
 feature {NONE} -- Reporting
@@ -111,7 +121,7 @@ feature {NONE} -- Reporting
 			last_response_text.append_character ('%N')
 		end
 
-	report_request_line (a_line: STRING; a_log_processor: AUT_LOG_PROCESSOR)
+	report_request_line (a_line: STRING)
 			-- Report that `a_line' of some type of request is found.
 			-- This request should not be a "start" request.
 		require
@@ -129,7 +139,7 @@ feature {NONE} -- Reporting
 				response_parser.parse_invoke_response
 				l_last_response := response_parser.last_response
 				check l_last_response /= Void end
-				a_log_processor.report_response (l_last_response)
+				report_event (l_last_response)
 
 				last_response_text.wipe_out
 			end
@@ -141,7 +151,7 @@ feature {NONE} -- Reporting
 
 			has_error := request_parser.has_error
 			if not has_error and attached request_parser.last_request as l_last_request then
-				a_log_processor.report_request (l_last_request)
+				report_event (l_last_request)
 			end
 		end
 

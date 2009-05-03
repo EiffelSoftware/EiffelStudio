@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 				-- Start sub task.
 			sub_task.start
 			error_handler.decrease_counter
-			error_handler.report_feature_selection (l_selected_type, l_selected_feature)
+			error_handler.report_feature_selection_old (l_selected_type, l_selected_feature)
 		end
 
 	sub_task: AUT_TASK
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 invariant
 	queue_not_void: queue /= Void
 	error_handler_not_void: error_handler /= Void
-	interpreter_not_in_replay_mode: not interpreter.is_in_replay_mode
+	interpreter_not_in_replay_mode: not interpreter.is_replaying
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

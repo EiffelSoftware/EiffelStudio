@@ -7,31 +7,23 @@ note
 	revision: "$Revision$"
 
 deferred class
-	AUT_LOG_PROCESSOR
+	AUT_PROXY_EVENT_OBSERVER
 
 feature -- Basic operations
 
-	report_begin
-			-- Start logging.
-		deferred
-		end
-
-	report_request (a_request: AUT_REQUEST)
+	report_request (a_producer: AUT_PROXY_EVENT_PRODUCER; a_request: AUT_REQUEST)
 			-- Process new request.
 			--
+			-- `a_producer' Producer that triggered `a_request'.
 			-- `a_request': Last request sent to interpreter.
 		deferred
 		end
 
-	report_response (a_response: AUT_RESPONSE)
+	report_response (a_producer: AUT_PROXY_EVENT_PRODUCER; a_response: AUT_RESPONSE)
 			-- Process new response.
 			--
+			-- `a_producer' Producer that triggered `a_response'.
 			-- `a_response': Last response reveiced from interpreter.
-		deferred
-		end
-
-	report_finish
-			-- Terminate logging.
 		deferred
 		end
 

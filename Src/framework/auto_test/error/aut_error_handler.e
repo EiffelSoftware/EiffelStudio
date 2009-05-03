@@ -100,6 +100,9 @@ feature -- Access
 	system: SYSTEM_I
 			-- System
 
+	start_count: like counter
+			-- Initial value for `counter'
+
 	counter: NATURAL
 			-- Counter indicating how many subtasks have been executed so far
 
@@ -121,6 +124,13 @@ feature -- Status setting
 			info_file := null_output_stream
 		ensure
 			not_verbose: not is_verbose
+		end
+
+	reset_counters (a_start_count: like start_count)
+			-- Set `start_count' and `counter' to `a_start_count'.
+		do
+			start_count := a_start_count
+			counter := a_start_count
 		end
 
 	set_start_time (a_start_time: like start_time)
@@ -159,12 +169,6 @@ feature -- Status setting
 			if counter > 0 then
 				counter := counter - 1
 			end
-		end
-
-	set_counter (a_value: like counter)
-			-- Set `counter' to 0
-		do
-			counter := a_value
 		end
 
 feature -- Reporting messages
@@ -246,7 +250,74 @@ feature -- Reporting messages
 			report_info_message (text)
 		end
 
-	report_feature_selection (a_type: TYPE_A; a_feature: FEATURE_I)
+	report_feature_invocation (a_type: TYPE_A; a_feature: FEATURE_I; a_arguments: DS_LIST [ITP_EXPRESSION]; a_target: ITP_VARIABLE; a_receiver: detachable ITP_VARIABLE; a_creation_procedure: BOOLEAN)
+			-- Report that feature will be invoked by interpreter.
+			--
+			-- `a_type': Type where feature is defined.
+			-- `a_feature': Actual feature.
+			-- `a_arguments': Arguments with which feature will be invoked.
+			-- `a_target': Target variable for invocation
+			-- `a_creation_procedure': True if invocation is for object creation, false otherwise.
+		require
+			a_type_attached: a_type /= Void
+			a_feature_attached: a_feature /= Void
+			a_arguments_attached: a_arguments /= Void
+			a_arguments_vaild: not a_arguments.has (Void)
+			a_target_attached: a_target /= Void
+			creation_implies_receiver_detached: a_creation_procedure implies (a_receiver = Void)
+		local
+			text: STRING
+			l_expr_printer: AUT_EXPRESSION_PRINTER
+		do
+			create text.make (100)
+			create l_expr_printer.make_string (text)
+			if attached remaining_time as l_time then
+				l_time.time_duration.append_to_string (text)
+				text.append_string (": ")
+			end
+			if start_count > 0 then
+				text.append_natural_32 (counter)
+				text.append_string (": ")
+			end
+			if a_creation_procedure then
+				text.append_string ("create {")
+				text.append_string (type_name (a_type, a_feature))
+			elseif attached a_receiver then
+				a_receiver.process (l_expr_printer)
+				text.append_string (" := ")
+			end
+			if a_creation_procedure then
+				text.append_string ("} ")
+			end
+			a_target.process (l_expr_printer)
+			text.append_string (".")
+			text.append_string (a_feature.feature_name)
+			if not a_arguments.is_empty then
+				text.append_string (" (")
+				from
+					a_arguments.start
+				until
+					a_arguments.after
+				loop
+					a_arguments.item_for_iteration.process (l_expr_printer)
+					if not a_arguments.is_last then
+						text.append_string (", ")
+					end
+					a_arguments.forth
+				end
+				text.append_string (")")
+			end
+			if not a_creation_procedure then
+				text.append_string ("     [")
+				a_target.process (l_expr_printer)
+				text.append_string (" instance of ")
+				text.append_string (type_name (a_type, a_feature))
+				text.append_string ("]")
+			end
+			report_info_message (text)
+		end
+
+	report_feature_selection_old (a_type: TYPE_A; a_feature: FEATURE_I)
 			-- Report that feature `a_feature' of type `a_type' has been selected for testing.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -255,14 +326,7 @@ feature -- Reporting messages
 			text: STRING
 		do
 			create text.make (100)
-			if attached remaining_time as l_time then
-				l_time.time_duration.append_to_string (text)
-				text.append_string (": ")
-			end
-			if counter > 0 then
-				text.append_natural_32 (counter)
-				text.append_string (": ")
-			end
+			text.append_string ("selected ")
 			text.append_string (type_name (a_type, a_feature))
 			text.append_string (".")
 			text.append_string (a_feature.feature_name)

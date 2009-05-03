@@ -11,7 +11,7 @@ note
 class AUT_RESULT_REPOSITORY_BUILDER
 
 inherit
-	AUT_LOG_RECORDER
+	AUT_PROXY_EVENT_RECORDER
 		redefine
 			make,
 			process_start_request,
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (a_system: like system)
 			-- <Precursor>
 		do
-			Precursor {AUT_LOG_RECORDER} (a_system)
+			Precursor {AUT_PROXY_EVENT_RECORDER} (a_system)
 			create result_repository.make
 		end
 
@@ -75,6 +75,9 @@ feature {NONE} -- Implementation
 			witness: AUT_WITNESS
 		do
 			create witness.make (request_history, last_start_index, request_history.count)
+			if witness.is_fail then
+				print ("FAILS!%N")
+			end
 			result_repository.add_witness (witness)
 		end
 

@@ -7,10 +7,10 @@ note
 	revision: "$Revision$"
 
 class
-	AUT_LOG_RECORDER
+	AUT_PROXY_EVENT_RECORDER
 
 inherit
-	AUT_LOG_PROCESSOR
+	AUT_PROXY_EVENT_OBSERVER
 
 	AUT_REQUEST_PROCESSOR
 
@@ -55,13 +55,7 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	report_begin
-			-- <Precursor>
-		do
-			request_history.wipe_out
-		end
-
-	report_request (a_request: AUT_REQUEST)
+	report_request (a_producer: AUT_PROXY_EVENT_PRODUCER; a_request: AUT_REQUEST)
 			-- <Precursor>
 		do
 			if attached last_request as l_request then
@@ -70,7 +64,7 @@ feature -- Basic operations
 			last_request := a_request
 		end
 
-	report_response (a_response: AUT_RESPONSE)
+	report_response (a_producer: AUT_PROXY_EVENT_PRODUCER; a_response: AUT_RESPONSE)
 			-- <Precursor>
 		do
 			last_response := a_response
@@ -82,8 +76,8 @@ feature -- Basic operations
 			last_response := Void
 		end
 
-	report_finish
-			-- <Precursor>
+	cleanup
+			-- Process last request still waiting for response if any.
 		do
 			if attached last_request as l_request then
 				process_request (l_request)

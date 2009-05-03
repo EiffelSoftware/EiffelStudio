@@ -199,7 +199,7 @@ invariant
 	request_list_cursor_not_void: request_list_cursor /= Void
 	no_request_void: not request_list.has (Void)
 	request_list_cursor_valid: request_list_cursor.container = request_list
-	interpreter_in_replay_mode: interpreter.is_in_replay_mode
+	interpreter_in_replay_mode: interpreter.is_replaying
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

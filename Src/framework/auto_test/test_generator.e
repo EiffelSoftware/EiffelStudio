@@ -209,7 +209,7 @@ feature {NONE} -- Basic operations
 						if attached minimize_task as l_task and then l_task.has_next_step then
 							l_task.step
 							if not l_task.has_next_step then
-									-- TODO: Only create test class for new witness
+								print ("creating test class%N")
 								l_witness := l_task.minimized_witness
 								session.used_witnesses.force_last (l_witness)
 								create current_results.make_from_linear (l_witness.classifications)
@@ -221,6 +221,7 @@ feature {NONE} -- Basic operations
 							l_error_handler := session.error_handler
 							if l_task.has_next_step then
 								l_total := session.options.time_out.second_count
+								l_progress := {REAL} 1.0
 								if l_total > 0 then
 									l_remaining := l_error_handler.remaining_time.second_count
 									l_progress := l_remaining/l_total
@@ -248,6 +249,8 @@ feature {NONE} -- Basic operations
 									l_task.step
 									l_repo := session.result_repository_builder.result_repository
 									l_witnesses := l_repo.witnesses
+										-- TODO: it is possible that more than one witness is added per `step', so we need to
+										--       check for the last `k' witnesses added (Arno: 05/03/2009)
 									if not l_witnesses.is_empty and then l_witnesses.last /= last_witness then
 										l_witness := l_witnesses.last
 										if l_witness.is_fail then
@@ -488,7 +491,7 @@ feature{NONE} -- Test case generation and execution
 
 				l_session := session
 				l_error_handler := l_session.error_handler
-				l_itp.add_log_processor (l_session.result_repository_builder)
+				l_itp.add_observer (l_session.result_repository_builder)
 				l_itp.set_is_logging_enabled (True)
 
 				create l_strategy.make (l_itp, system, l_session.error_handler)
@@ -497,11 +500,9 @@ feature{NONE} -- Test case generation and execution
 				l_error_handler.report_random_testing
 
 				l_error_handler.set_start_time (system_clock.date_time_now)
-				if l_session.options.test_count > 0 then
-					l_error_handler.set_counter (session.options.test_count)
-				end
+				l_error_handler.reset_counters (session.options.test_count)
 				update_remaining_time
-				
+
 				l_strategy.start
 				test_task := l_strategy
 			end
@@ -564,7 +565,7 @@ feature{NONE} -- Test result analyizing
 			a_log_loader_attached: a_log_loader /= Void
 		local
 			log_stream: KL_TEXT_INPUT_FILE
-			l_recorder: AUT_LOG_RECORDER
+			l_recorder: AUT_PROXY_EVENT_RECORDER
 		do
 			create log_stream.make (a_log_file_name)
 			log_stream.open_read
@@ -573,7 +574,10 @@ feature{NONE} -- Test result analyizing
 				create Result.make (0)
 			else
 				create l_recorder.make (system)
-				a_log_loader.parse_stream (log_stream, l_recorder)
+				a_log_loader.add_observer (l_recorder)
+				a_log_loader.parse_stream (log_stream)
+				a_log_loader.remove_observer (l_recorder)
+				l_recorder.cleanup
 				Result := l_recorder.request_history
 			end
 			log_stream.close

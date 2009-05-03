@@ -11,6 +11,11 @@ note
 class AUT_INTERPRETER_PROXY
 
 inherit
+	AUT_PROXY_EVENT_PRODUCER
+		rename
+			make as make_event_producer
+		end
+
 	AUT_RESPONSE_PARSER
 		rename
 			make as make_response_parser
@@ -80,6 +85,8 @@ feature {NONE} -- Initialization
 		local
 			l_itp_class: like interpreter_class
 		do
+			make_event_producer
+
 			l_itp_class := interpreter_class
 
 
@@ -117,8 +124,6 @@ feature {NONE} -- Initialization
 			set_is_logging_enabled (True)
 			set_is_speed_logging_enabled (True)
 			set_is_test_case_index_logging_enabled (True)
-
-			create log_processors.make_default
 		ensure
 			executable_file_name_set: executable_file_name = an_executable_file_name
 			system_set: system = a_system
@@ -153,7 +158,12 @@ feature -- Status
 			result_implies_launched: Result implies process.is_launched
 		end
 
-	is_in_replay_mode: BOOLEAN
+	is_executing: BOOLEAN = True
+			-- <Precursor>
+			--
+			-- Note: `Current' always sends request to an interpreter.
+
+	is_replaying: BOOLEAN
 			-- Is Current in replay mode?
 			-- If so, no extra "type" request will be generated
 			-- after every "assign" request and every query invokation.
@@ -187,10 +197,6 @@ feature -- Access
 			valid_filename: Result.is_equal (proxy_log_file.name)
 		end
 
-feature {NONE} -- Access
-
-	log_processors: DS_ARRAYED_LIST [AUT_LOG_PROCESSOR]
-
 feature -- Settings
 
 	set_timeout (a_timeout: INTEGER)
@@ -214,9 +220,9 @@ feature -- Settings
 	set_is_in_replay_mode (b: BOOLEAN)
 			-- Set `is_in_replay_mode' with `b'.
 		do
-			is_in_replay_mode := b
+			is_replaying := b
 		ensure
-			is_in_replay_mode_set: is_in_replay_mode = b
+			is_in_replay_mode_set: is_replaying = b
 		end
 
 	set_proxy_log_filename (a_filename: like proxy_log_filename)
@@ -493,7 +499,7 @@ feature -- Execution
 			end
 			stop_process_on_problems (last_response)
 			if is_ready and normal_response /= Void and then normal_response.exception = Void then
-				if not is_in_replay_mode then
+				if not is_replaying then
 						-- If we are not in replay mode, we generate "type" request to get the
 						-- dynamic type of the assignment target. If we are in replay mode,
 						-- the "type" request will be already in the replay list, so we don't need to
@@ -526,7 +532,7 @@ feature -- Execution
 				is_ready := False
 			end
 			stop_process_on_problems (last_response)
-			if is_ready and then not is_in_replay_mode then
+			if is_ready and then not is_replaying then
 					-- If we are not in replay mode, we generate "type" request to get the
 					-- dynamic type of the assignment target. If we are in replay mode,
 					-- the "type" request will be already in the replay list, so we don't need to
@@ -577,10 +583,18 @@ feature -- Response parsing
 
 	parse_response
 			-- Parse response from interpreter, store it in `last_response'.
+		local
+			l_response: like last_response
 		do
 			Precursor
 
+			l_response := last_response
+			check l_response /= Void end
+			report_event (l_response)
+
 				-- Print `last_response' into log file when `is_logging_enabled'.
+				--
+				-- Note: this will be removed once logging is implemented as an observer
 			if is_logging_enabled then
 				last_response.process (response_printer)
 			end
@@ -638,49 +652,6 @@ feature -- Response parsing
 			last_response := raw_response_analyzer.response
 		end
 
-feature -- Element change
-
-	add_log_processor (a_processor: AUT_LOG_PROCESSOR)
-			-- Add log processor to end of `log_processor'.
-			--
-			-- `a_processor': Log processor to be added to list.
-		do
-			log_processors.force_last (a_processor)
-		ensure
-			increased: log_processors.count = old log_processors.count + 1
-			added: log_processors.last = a_processor
-		end
-
-	remove_log_processor (a_processor: AUT_LOG_PROCESSOR)
-			-- Remove all instances of a given log processor from `log_processors'.
-			--
-			-- `a_processor': Log processor to be removed from list.
-		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [AUT_LOG_PROCESSOR]
-		do
-			from
-				l_cursor := log_processors.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_cursor.search_forth (a_processor)
-				if not l_cursor.off then
-					l_cursor.remove
-				end
-			end
-		ensure
-			removed: not log_processors.has (a_processor)
-		end
-
-	wipe_out_log_processors
-			-- Remove all log processors from `log_processors'.
-		do
-			log_processors.wipe_out
-		ensure
-			removed: log_processors.is_empty
-		end
-
 feature {NONE} -- Process scheduling
 
 	process: AUT_PROCESS_CONTROLLER
@@ -734,7 +705,7 @@ feature{NONE} -- Process scheduling
 					-- Log request
 				l_last_request := last_request
 				check l_last_request /= Void end
-				log_processors.do_all (agent {AUT_LOG_PROCESSOR}.report_request (l_last_request))
+				report_event (l_last_request)
 
 --				is_ready := False
 				if process.input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
@@ -822,7 +793,7 @@ feature -- Socket IPC
 	cleanup
 			-- Clean up Current proxy.
 		do
-			log_processors.wipe_out
+			observers.wipe_out
 			if socket /= Void then
 				cleanup_socket
 			end

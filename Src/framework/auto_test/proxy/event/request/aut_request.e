@@ -10,6 +10,9 @@ note
 
 deferred class AUT_REQUEST
 
+inherit
+	AUT_PROXY_EVENT
+
 feature {NONE} -- Initialization
 
 	make (a_system: like system)
@@ -81,6 +84,14 @@ feature -- Change
 			test_case_index := a_index
 		ensure
 			test_case_index_set: test_case_index = a_index
+		end
+
+feature {AUT_PROXY_EVENT_PRODUCER} -- Basic operations
+
+	publish (a_producer: AUT_PROXY_EVENT_PRODUCER; a_observer: AUT_PROXY_EVENT_OBSERVER)
+			-- <Precursor>
+		do
+			a_observer.report_request (a_producer, Current)
 		end
 
 feature -- Processing

@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {AUT_PROXY_EVENT_PRODUCER}."
+	description: "[
+		Objects that trigger events of type {AUT_PROXY_EVENT} and notify a list of observers.
+		
+		`Current' can either be executing these events through an interpreter or realoading them from
+		a log file.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

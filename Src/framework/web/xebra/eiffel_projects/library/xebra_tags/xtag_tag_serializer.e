@@ -28,7 +28,12 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	current_controller_id: STRING
+	current_controller_id: STRING assign set_controller_id
+
+	set_controller_id (a_id: STRING)
+		do
+			current_controller_id := a_id
+		end
 
 	debug_information: STRING assign set_debug_information
 			-- Row and column of original xeb file
@@ -64,16 +69,23 @@ feature -- Access
 			debug_information := a_debug_information
 		end
 
+	generates_something: BOOLEAN
+		do
+			Result := True
+		end
+
 feature -- Implementation
 
-	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING]; controller_identifier: STRING)
-			-- TODO
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+			-- Wrapps around the internal_generate feature to add debug information and handle the "render" option
 		do
-			current_controller_id := controller_identifier
-			append_debug_info (a_servlet_class.render_feature)
-			append_debug_info (a_servlet_class.prerender_get_feature)
-			append_debug_info (a_servlet_class.prerender_post_feature)
-			append_debug_info (a_servlet_class.afterrender_feature)
+			if generates_something then
+				append_debug_info (a_servlet_class.render_feature)
+				append_debug_info (a_servlet_class.prerender_get_feature)
+				append_debug_info (a_servlet_class.prerender_post_feature)
+				append_debug_info (a_servlet_class.afterrender_feature)
+			end
+
 			if not render.is_empty then
 				a_servlet_class.render_feature.append_expression ("if " + render + " then")
 				internal_generate (a_servlet_class, variable_table)
@@ -84,14 +96,14 @@ feature -- Implementation
 		end
 
 	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
-			-- TODO
+			-- Generates all the children
 		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.generate (a_servlet_class, variable_table, current_controller_id)
+				children.item.generate (a_servlet_class, variable_table)
 				children.forth
 			end
 		end

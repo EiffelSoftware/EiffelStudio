@@ -73,6 +73,7 @@ feature -- Access
 			-- Adds a feature to the class.
 		do
 			features.extend (a_feature)
+			a_feature.parent_class := Current
 		end
 
 	add_variable (a_variable: XEL_VARIABLE_ELEMENT)

@@ -121,10 +121,11 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("make")
+
 			Result.append_expression ("if Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage: webapp listening_port%%N%")")
 			Result.append_expression ("else")
-			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32)")
+			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32, Current)")
 			Result.append_expression ("Precursor")
 			Result.append_expression ("end")
 		end
@@ -135,16 +136,18 @@ feature {NONE} -- Implementation
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING; a_port: INTEGER)")
-			Result.append_expression ("Precursor (a_name, a_port)")
+			create Result.make ("make (a_name: STRING; a_port: INTEGER; a_application: XWA_APPLICATION)")
+			Result.append_expression ("Precursor (a_name, a_port, a_application)")
 			from
 				some_servlets.start
 			until
 				some_servlets.after
 			loop
 				servlet := some_servlets.item
-				Result.append_expression ("stateless_servlets.put (create {"
-					+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+				if not servlet.is_template then
+						Result.append_expression ("stateless_servlets.put (create {"
+							+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+				end
 				some_servlets.forth
 			end
 		end

@@ -37,13 +37,27 @@ feature {NONE} -- Access
 	parameters: HASH_TABLE [STRING, STRING]
 			-- The parameters of the tag [value, parameter id]
 
-	children: LIST [XP_TAG_ELEMENT]
-			-- All the children of the tag
-
 	debug_information: STRING
 			-- Debug information (row and column in the xeb file)
 
 feature -- Access
+
+	controller_id: STRING assign set_controller_id
+			-- The id of the controller which should be used
+
+	set_controller_id (a_id: STRING)
+		do
+			controller_id := a_id
+		end
+
+	retrieve_value (a_id: STRING): STRING
+			-- Retrieves the value of the parameter with the the id `a_id'
+		do
+			Result := parameters [a_id]
+		end
+
+	children: LIST [XP_TAG_ELEMENT]
+			-- All the children of the tag
 
 	id: STRING
 			-- The tag id
@@ -93,16 +107,56 @@ feature --Basic Implementation
 			attribute_has_been_added: old parameters.count + 1 = parameters.count
 		end
 
-	build_tag_tree (a_feature: XEL_FEATURE_ELEMENT)
+	build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]; root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		do
-			internal_build_tag_tree (a_feature, True)
+			internal_build_tag_tree (a_feature, templates, root_template, True)
+		end
+
+	copy_tag_tree: like Current
+			-- Copies the tag and its children
+		do
+			create Result.make (namespace, id, class_name, debug_information)
+			Result.multiline_argument := multiline_argument
+			Result.controller_id := controller_id
+			from
+				parameters.start
+			until
+				parameters.after
+			loop
+				Result.put_attribute (parameters.key_for_iteration, parameters.item_for_iteration)
+				parameters.forth
+			end
+			from
+				children.start
+			until
+				children.after
+			loop
+				Result.put_subtag (children.item.copy_tag_tree)
+				children.forth
+			end
+		end
+
+	accept (visitor: XP_TAG_ELEMENT_VISITOR)
+			-- Element part of the Visitor Pattern
+		do
+			visitor.visit_tag_element (Current)
+			from
+				children.start
+			until
+				children.after
+			loop
+				children.item.accept (visitor)
+				children.forth
+			end
 		end
 
 feature {XP_TAG_ELEMENT} -- Implementation
 
-	internal_build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; is_root: BOOLEAN)
+	internal_build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]; root_template: XGEN_SERVLET_GENERATOR_GENERATOR; is_root: BOOLEAN)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
+		require
+			controller_id_set: attached controller_id -- Doesn't work?
 		do
 			a_feature.append_comment (debug_information)
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
@@ -113,6 +167,10 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				a_feature.append_expression ("stack.item.add_to_body (temp)")
 			end
 			build_attributes (a_feature, parameters)
+			if attached controller_id then
+				a_feature.append_expression ("temp.current_controller_id := %"" + controller_id + "%"")
+			end
+
 			--build_attributes (a_feature, dynamic_parameters)
 
 			if has_children then
@@ -122,7 +180,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				until
 					children.after
 				loop
-					children.item.internal_build_tag_tree (a_feature, False)
+					children.item.internal_build_tag_tree (a_feature, templates, root_template, False)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")

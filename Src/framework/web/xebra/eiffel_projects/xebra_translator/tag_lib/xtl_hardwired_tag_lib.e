@@ -35,7 +35,7 @@ feature -- Access
 			-- Creates the appropriate XP_TAG_ELEMENT
 		do
 			if attached {XTL_AGENT_TAG_DESCRIPTION} tags [a_local_part] as tag then
-				create {XP_AGENT_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information, tag.attribute_handler)
+					create {XP_AGENT_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information, tag.attribute_handler)
 			else
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			end

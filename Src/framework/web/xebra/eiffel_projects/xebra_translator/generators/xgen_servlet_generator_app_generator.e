@@ -46,17 +46,20 @@ feature -- Basic functionality
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
+			serv_gen_copy: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 		do
 				-- Generate the servlet generators
+
 			from
 				servlet_generator_generators.start
+				serv_gen_copy := servlet_generator_generators.duplicate (servlet_generator_generators.count)
 			until
 				servlet_generator_generators.after
 			loop
 				servlet_generator_generator := servlet_generator_generators.item
-				--create file.make_open_write (a_path + servlet_generator_generator.servlet_name.as_lower + "_g_servlet_generator.e")
-				create buf.make (file)
-				servlet_generator_generator.generate (a_path)
+				if not servlet_generator_generator.is_template then
+					servlet_generator_generator.generate (a_path, serv_gen_copy)
+				end
 				servlet_generator_generators.forth
 			end
 
@@ -85,7 +88,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("make")
 			Result.append_local ("path", "STRING")
-			Result.append_local ("controller_types", "ARRAYED_LIST [STRING]")
+			Result.append_local ("controller_table", "HASH_TABLE [STRING, STRING]")
 			Result.append_expression ("if  Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
 			Result.append_expression ("else")
@@ -97,22 +100,28 @@ feature {NONE} -- Implementation
 				servlet_generator_generators.after
 			loop
 				l_servlet_gg := servlet_generator_generators.item
-				Result.append_expression ("create controller_types.make (" + l_servlet_gg.controller_types.count.out + ")")
-				from
-					l_servlet_gg.controller_types.start
-				until
-					l_servlet_gg.controller_types.after
-				loop
-					Result.append_expression ("controller_types.extend (%"" + l_servlet_gg.controller_types.item.as_upper + "%")")
-					l_servlet_gg.controller_types.forth
+				if not l_servlet_gg.is_template then
+					build_controller_table (Result, l_servlet_gg)
+					Result.append_expression ("(create {"
+						+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "SERVLET_GENERATOR}.make ("
+						+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", controller_table)).generate;")
 				end
-
-				Result.append_expression ("(create {"
-					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "SERVLET_GENERATOR}.make ("
-					+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", controller_types)).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
+		end
+
+	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
+		do
+			a_feature.append_expression ("create controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
+			from
+				a_servlet_gg.controller_table.start
+			until
+				a_servlet_gg.controller_table.after
+			loop
+				a_feature.append_expression ("controller_table.put (%"" + a_servlet_gg.controller_table.item_for_iteration +"%", %""+ a_servlet_gg.controller_table.key_for_iteration+"%")")
+				a_servlet_gg.controller_table.forth
+			end
 		end
 
 feature -- Constants

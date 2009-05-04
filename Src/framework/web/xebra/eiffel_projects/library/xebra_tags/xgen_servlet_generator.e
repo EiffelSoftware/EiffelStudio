@@ -18,21 +18,21 @@ feature --
 	stateful: BOOLEAN
 		-- Is the servlet stateful?
 
-	controller_types: LIST [STRING]
-		-- All the used controllers (main page and subpages)
+	internal_root_tag: XTAG_TAG_SERIALIZER
+		-- root_tag cache
 
-	controller_identifiers: LIST [STRING]
-		-- Unique variable names for the controllers
+	controller_id_table: HASH_TABLE [STRING, STRING]
+		-- All the used controllers and their respective class. Key: identifier; Value: Class
 
-	make (a_path, a_servlet_name: STRING; a_stateful: BOOLEAN; a_controller_types: LIST [STRING])
+	make (a_path, a_servlet_name: STRING; a_stateful: BOOLEAN; a_controller_id_table: HASH_TABLE [STRING, STRING])
 		require
 			path_is_not_empty: not a_path.is_empty
 		do
 			path := a_path
 			servlet_name := a_servlet_name
 			stateful := a_stateful
-			controller_types := a_controller_types
-			create {ARRAYED_LIST [STRING]} controller_identifiers.make (a_controller_types.count)
+			internal_root_tag := get_root_tag
+			controller_id_table := a_controller_id_table
 		end
 
 	build_make_for_servlet_generator (a_class: XEL_SERVLET_CLASS_ELEMENT)
@@ -41,41 +41,28 @@ feature --
 			uid: STRING
 		do
 			a_class.make_feature.append_expression ("Precursor")
+			a_class.make_feature.append_expression ("create {ARRAYED_LIST [XWA_CONTROLLER]} internal_controllers.make (" + controller_id_table.count.out + ")")
 			from
-				controller_types.start
+				controller_id_table.start
 			until
-				controller_types.after
+				controller_id_table.after
 			loop
-				uid := a_class.get_unique_identifier
-				a_class.make_feature.append_expression ("create " + uid + ".make")	
-				controller_identifiers.extend (uid)
-				controller_types.forth
+				a_class.make_feature.append_expression ("create " + controller_id_table.key_for_iteration + ".make")
+				a_class.make_feature.append_expression ("internal_controllers.extend (" + controller_id_table.key_for_iteration + ")")
+				controller_id_table.forth
 			end
 		end
 
-	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
-			-- Serializes the request feature of the {SERVLET}
-		require
-			identifiers_have_been_set: (not controller_identifiers.is_empty) and (controller_types.count.is_equal (controller_identifiers.count))
-		do
-			create Result.make ("internal_controllers: LIST [XWA_CONTROLLER]")
-			Result.append_expression ("create {ARRAYED_LIST [XWA_CONTROLLER]} Result.make (" + controller_identifiers.count.out + ")")
-			from
-				controller_identifiers.start
-			until
-				controller_identifiers.after
-			loop
-				Result.append_expression ("Result.extend (" + controller_identifiers.item + ")")
-				controller_identifiers.forth
-			end
-		end
+--	build_internal_controller_for_servlet: XEL_FEATURE_ELEMENT
+--			-- Serializes the request feature of the {SERVLET}
+--		do
+--			create Result.make ("internal_controllers: LIST [XWA_CONTROLLER]")
+--		end
 
-	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; root_tag: XTAG_TAG_SERIALIZER)
+	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; a_root_tag: XTAG_TAG_SERIALIZER)
 			-- Serializes the request feature of the {SERVLET}		
-		require
-			identifiers_have_been_set: (not controller_identifiers.is_empty) and (controller_types.count.is_equal (controller_identifiers.count))
 		do
-			root_tag.generate (a_class, create {HASH_TABLE [STRING, STRING]}.make (10), controller_identifiers [1])
+			a_root_tag.generate (a_class, create {HASH_TABLE [STRING, STRING]}.make (5))
 		end
 
 	generate
@@ -96,18 +83,17 @@ feature --
 			servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
 			servlet_class.set_constructor_name ("make")
 			build_make_for_servlet_generator (servlet_class)
-			servlet_class.add_feature (build_internal_controller_for_servlet)
-			build_handle_request_feature_for_servlet (servlet_class, get_root_tag)
 			from
-				controller_types.start
-				controller_identifiers.start
+				controller_id_table.start
 			until
-				controller_types.after or controller_identifiers.after
+				controller_id_table.after
 			loop
-				servlet_class.add_variable_by_name_type (controller_identifiers.item, controller_types.item)
-				controller_types.forth
-				controller_identifiers.forth
+				servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
+				controller_id_table.forth
 			end
+			--servlet_class.add_feature (build_internal_controller_for_servlet)
+			servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
+			build_handle_request_feature_for_servlet (servlet_class, internal_root_tag)
 			servlet_class.serialize (buf)
 			file.close
 		end

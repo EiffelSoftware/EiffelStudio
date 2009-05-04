@@ -31,9 +31,10 @@ feature {NONE} -- Initialization
 			parser: AUT_AP_PARSER
 			version_option: AP_FLAG
 			quiet_option: AP_FLAG
+			debug_option: AP_FLAG
 			just_test_option: AP_FLAG
 --			ecf_target_option: AP_STRING_OPTION
-			deep_manual_option: AP_FLAG
+--			deep_manual_option: AP_FLAG
 			disable_manual_option: AP_FLAG
 			disable_auto_option: AP_FLAG
 			benchmark_option: AP_FLAG
@@ -63,6 +64,10 @@ feature {NONE} -- Initialization
 			quiet_option.set_description ("Be quiet.")
 			parser.options.force_last (quiet_option)
 
+			create debug_option.make ('d', "debug")
+			debug_option.set_description ("Append debugging output to log.")
+			parser.options.force_last (debug_option)
+
 			create just_test_option.make ('j', "just-test")
 			just_test_option.set_description ("Skip compilation and generation of interpreter and go right to testing.")
 			parser.options.force_last (just_test_option)
@@ -71,9 +76,9 @@ feature {NONE} -- Initialization
 --			ecf_target_option.set_description ("Target (from supplied ECF file) that should be used for testing.")
 --			parser.options.force_last (ecf_target_option)
 
-			create deep_manual_option.make ('d', "deep-manual")
-			deep_manual_option.set_description ("Enable deep relevancy check for manual strategy.")
-			parser.options.force_last (deep_manual_option)
+--			create deep_manual_option.make ('d', "deep-manual")
+--			deep_manual_option.set_description ("Enable deep relevancy check for manual strategy.")
+--			parser.options.force_last (deep_manual_option)
 
 			create disable_manual_option.make ('m', "disable-manual")
 			disable_manual_option.set_description ("Disable manual testing strategy.")
@@ -95,9 +100,9 @@ feature {NONE} -- Initialization
 			minimize_option.set_description ("Minimize with a certain algorithm.")
 			parser.options.force_last (minimize_option)
 
-			create finalize_option.make ('f', "finalize")
-			finalize_option.set_description ("Use finalized intepreter. (Better performance, but no melting)")
-			parser.options.force_last (finalize_option)
+--			create finalize_option.make ('f', "finalize")
+--			finalize_option.set_description ("Use finalized intepreter. (Better performance, but no melting)")
+--			parser.options.force_last (finalize_option)
 
 			create output_dir_option.make ('o', "output-dir")
 			output_dir_option.set_description ("Output directory for reflection library")
@@ -144,6 +149,10 @@ feature {NONE} -- Initialization
 				error_handler.enable_verbose
 			end
 
+			if debug_option.was_found then
+				is_debugging := True
+			end
+
 			just_test := just_test_option.was_found
 
 --			if ecf_target_option.was_found then
@@ -151,10 +160,10 @@ feature {NONE} -- Initialization
 --			end
 
 			is_manual_testing_enabled := not disable_manual_option.was_found
-			is_deep_relevancy_enabled := deep_manual_option.was_found
+			is_deep_relevancy_enabled := False -- deep_manual_option.was_found
 			is_automatic_testing_enabled := not disable_auto_option.was_found
 			is_minimization_enabled := not disable_minimize_option.was_found
-			is_debug_mode_enabled := not finalize_option.was_found
+--			is_debug_mode_enabled := not finalize_option.was_found
 
 			if benchmark_option.was_found then
 				error_handler.enable_benchmarking
@@ -309,7 +318,7 @@ feature -- Status report
 			--
 			-- Note: a value of `0' means no upper limit
 
-	is_debug_mode_enabled: BOOLEAN
+--	is_debug_mode_enabled: BOOLEAN
 			-- Should the interpreter runtime be compiled with
 			-- assertion checking on?
 
@@ -356,6 +365,9 @@ feature -- Status report
 	help_message: STRING
 			-- Help message for command line arguments
 			-- This value is only set if help option presents.
+
+	is_debugging: BOOLEAN
+			-- True if debugging output should be written to log.
 
 feature {NONE} -- Constants
 

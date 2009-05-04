@@ -80,4 +80,11 @@ feature -- Status report
 		deferred
 		end
 
+	is_debugging: BOOLEAN
+			-- Should debugging output be printed to log?
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
 end

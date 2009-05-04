@@ -114,6 +114,9 @@ feature -- Access: cache
 	is_html_output_cache: like is_html_output assign set_html_output
 			-- Cache for `is_html_output'
 
+	is_debugging_cache: like is_debugging assign set_debugging
+			-- Cache for `is_debugging'
+
 feature -- Status report
 
 	is_new_class: BOOLEAN = True
@@ -143,7 +146,15 @@ feature -- Status report
 		do
 			Result := is_html_output_cache
 		ensure then
-			result_equals_cache: Result = is_html_output
+			result_equals_cache: Result = is_html_output_cache
+		end
+
+	is_debugging: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_debugging_cache
+		ensure then
+			result_equals_cache: Result = is_debugging_cache
 		end
 
 feature -- Status setting
@@ -170,6 +181,14 @@ feature -- Status setting
 			is_html_output_cache := a_is_html_output
 		ensure
 			is_html_output_set: is_html_output_cache = a_is_html_output
+		end
+
+	set_debugging (a_is_debugging: like is_debugging)
+			-- Set `is_debugging' to `a_is_debugging'.
+		do
+			is_debugging_cache := a_is_debugging
+		ensure
+			is_debugging_set: is_debugging_cache = a_is_debugging
 		end
 
 	set_seed (a_seed: like seed)

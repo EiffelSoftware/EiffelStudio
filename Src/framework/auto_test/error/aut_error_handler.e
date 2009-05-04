@@ -20,6 +20,8 @@ inherit
 			report_info_message
 		end
 
+	AUT_PROXY_EVENT_OBSERVER
+
 	AUT_SHARED_TYPE_FORMATTER
 
 	AUT_SHARED_INTERPRETER_INFO
@@ -35,10 +37,12 @@ feature{NONE} -- Initialization
 		require
 			a_system_attached: a_system /= Void
 		do
-			system := a_system
 			make_standard
+			debug_file := null_output_stream
+			system := a_system
 			set_info_null
 			set_warning_null
+			create request_printer.make
 		ensure
 			error_file_set: error_file = std.error
 			warning_file_set: warning_file = null_output_stream
@@ -53,6 +57,12 @@ feature -- Status report
 		do
 			Result := (info_file /= null_output_stream) and
 						(warning_file /= null_output_stream)
+		end
+
+	is_debugging: BOOLEAN
+			-- Is `debug_file' set to something other than the null output stream?
+		do
+			Result := debug_file /= null_output_stream
 		end
 
 	has_error: BOOLEAN
@@ -105,6 +115,15 @@ feature -- Access
 
 	counter: NATURAL
 			-- Counter indicating how many subtasks have been executed so far
+
+	debug_file: KI_TEXT_OUTPUT_STREAM
+			-- File where debug information is logged
+			--
+			-- Note: default value is `null_output_stream'
+
+feature {NONE} -- Access
+
+	request_printer: AUT_SIMPLE_REQUEST_PRINTER
 
 feature -- Status setting
 
@@ -163,12 +182,121 @@ feature -- Status setting
 			benchmarking_enabled: is_benchmarking
 		end
 
-	decrease_counter
-			-- Increase `counter' by one.
+	set_debug_null
+			-- Set `debug_file' to null stream.
 		do
-			if counter > 0 then
-				counter := counter - 1
+			debug_file := null_output_stream
+		ensure
+			debug_file_set: debug_file = Void
+		end
+
+	set_debug_standard
+			-- Set `debug_file' to standard output
+		do
+			debug_file := std.error
+		ensure
+			debug_file_set: debug_file = std.error
+		end
+
+	set_debug_to_file (a_file: like debug_file)
+			-- Set `debug_file' to given output stream.
+			--
+			-- `a_file': File to be used for debugging output.
+		do
+			debug_file := a_file
+		ensure
+			debug_file_set: debug_file = a_file
+		end
+
+feature -- Basic operations
+
+	report_error_message (an_error: STRING)
+			-- Report `an_error'.
+		do
+			Precursor (an_error)
+			error_file.flush
+			has_error := True
+		ensure then
+			has_error: has_error
+		end
+
+	report_warning_message (a_warning: STRING_8)
+			-- <Precursor>
+		do
+			Precursor (a_warning)
+			warning_file.flush
+		end
+
+	report_info_message (an_info: STRING_8)
+			-- <Precursor>
+		do
+			Precursor (an_info)
+			info_file.flush
+		end
+
+	report_debug_message (a_debug_info: STRING_8)
+			-- Report a debug information
+		local
+			l_any: ANY
+		do
+			l_any := Current
+			debug_file.put_string ("debug: ")
+			debug_file.put_line (a_debug_info)
+			debug_file.flush
+		end
+
+feature -- Report events
+
+	report_request (a_producer: AUT_PROXY_EVENT_PRODUCER; a_request: AUT_REQUEST)
+			-- <Precursor>
+		local
+			l_msg: STRING
+		do
+			if
+				(a_producer.is_executing and then not a_producer.is_replaying) and
+				attached {AUT_CALL_BASED_REQUEST} a_request as l_caller
+			then
+				create l_msg.make (100)
+				if counter > 0 then
+					counter := counter - 1
+				end
+				if attached remaining_time as l_time then
+					l_time.time_duration.append_to_string (l_msg)
+					l_msg.append_string (": ")
+				end
+				if start_count > 0 then
+					l_msg.append_natural_32 (counter)
+					l_msg.append_string (": ")
+				end
+				if attached {AUT_CREATE_OBJECT_REQUEST} l_caller then
+					l_msg.append_string ("create ")
+				end
+				l_msg.append_string (type_name (l_caller.target_type, l_caller.feature_to_call))
+				l_msg.append_character ('.')
+				l_msg.append_string (l_caller.feature_to_call.feature_name)
+				report_info_message (l_msg)
 			end
+			if is_debugging then
+				create l_msg.make (100)
+				a_request.process (request_printer)
+				l_msg.append_string (request_printer.last_string)
+				if a_producer.is_executing then
+					if a_producer.is_replaying then
+						l_msg.append_string (" [replaying]")
+					else
+						l_msg.append_string (" [testing]")
+					end
+				else
+					l_msg.append_string (" [parsed]")
+				end
+				report_debug_message (l_msg)
+			end
+		end
+
+	report_response (a_producer: AUT_PROXY_EVENT_PRODUCER; a_response: AUT_RESPONSE)
+			-- <Precursor>
+		do
+			-- TODO: possible info/debug output describing the received response?
 		end
 
 feature -- Reporting messages
@@ -250,74 +378,7 @@ feature -- Reporting messages
 			report_info_message (text)
 		end
 
-	report_feature_invocation (a_type: TYPE_A; a_feature: FEATURE_I; a_arguments: DS_LIST [ITP_EXPRESSION]; a_target: ITP_VARIABLE; a_receiver: detachable ITP_VARIABLE; a_creation_procedure: BOOLEAN)
-			-- Report that feature will be invoked by interpreter.
-			--
-			-- `a_type': Type where feature is defined.
-			-- `a_feature': Actual feature.
-			-- `a_arguments': Arguments with which feature will be invoked.
-			-- `a_target': Target variable for invocation
-			-- `a_creation_procedure': True if invocation is for object creation, false otherwise.
-		require
-			a_type_attached: a_type /= Void
-			a_feature_attached: a_feature /= Void
-			a_arguments_attached: a_arguments /= Void
-			a_arguments_vaild: not a_arguments.has (Void)
-			a_target_attached: a_target /= Void
-			creation_implies_receiver_detached: a_creation_procedure implies (a_receiver = Void)
-		local
-			text: STRING
-			l_expr_printer: AUT_EXPRESSION_PRINTER
-		do
-			create text.make (100)
-			create l_expr_printer.make_string (text)
-			if attached remaining_time as l_time then
-				l_time.time_duration.append_to_string (text)
-				text.append_string (": ")
-			end
-			if start_count > 0 then
-				text.append_natural_32 (counter)
-				text.append_string (": ")
-			end
-			if a_creation_procedure then
-				text.append_string ("create {")
-				text.append_string (type_name (a_type, a_feature))
-			elseif attached a_receiver then
-				a_receiver.process (l_expr_printer)
-				text.append_string (" := ")
-			end
-			if a_creation_procedure then
-				text.append_string ("} ")
-			end
-			a_target.process (l_expr_printer)
-			text.append_string (".")
-			text.append_string (a_feature.feature_name)
-			if not a_arguments.is_empty then
-				text.append_string (" (")
-				from
-					a_arguments.start
-				until
-					a_arguments.after
-				loop
-					a_arguments.item_for_iteration.process (l_expr_printer)
-					if not a_arguments.is_last then
-						text.append_string (", ")
-					end
-					a_arguments.forth
-				end
-				text.append_string (")")
-			end
-			if not a_creation_procedure then
-				text.append_string ("     [")
-				a_target.process (l_expr_printer)
-				text.append_string (" instance of ")
-				text.append_string (type_name (a_type, a_feature))
-				text.append_string ("]")
-			end
-			report_info_message (text)
-		end
-
-	report_feature_selection_old (a_type: TYPE_A; a_feature: FEATURE_I)
+	report_feature_selection (a_type: TYPE_A; a_feature: FEATURE_I)
 			-- Report that feature `a_feature' of type `a_type' has been selected for testing.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -325,12 +386,14 @@ feature -- Reporting messages
 		local
 			text: STRING
 		do
-			create text.make (100)
-			text.append_string ("selected ")
-			text.append_string (type_name (a_type, a_feature))
-			text.append_string (".")
-			text.append_string (a_feature.feature_name)
-			report_info_message (text)
+			if is_debugging then
+				create text.make (100)
+				text.append_string ("selected ")
+				text.append_string (type_name (a_type, a_feature))
+				text.append_string (".")
+				text.append_string (a_feature.feature_name)
+				report_debug_message (text)
+			end
 		end
 
 	report_no_time_for_testing (a_time_out: DT_TIME_DURATION)
@@ -438,30 +501,6 @@ feature -- Reporting errors
 			-- Report that a fatal error during file generation happened.
 		do
 			report_error_message ("A fatal error happened during file generation")
-		end
-
-	report_error_message (an_error: STRING)
-			-- Report `an_error'.
-		do
-			precursor (an_error)
-			error_file.flush
-			has_error := True
-		ensure then
-			has_error: has_error
-		end
-
-	report_warning_message (a_warning: STRING_8)
-			-- <Precursor>
-		do
-			Precursor (a_warning)
-			warning_file.flush
-		end
-
-	report_info_message (an_info: STRING_8)
-			-- <Precursor>
-		do
-			Precursor (an_info)
-			info_file.flush
 		end
 
 	report_invalid_time_out_value (a_value: STRING)

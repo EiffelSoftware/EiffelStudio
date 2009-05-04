@@ -86,20 +86,22 @@ feature -- Generation
 		local
 			absolute_pathname: STRING
 			executable_filename: STRING
+			l_new: like last_interpreter
 		do
-			last_interpreter := Void
 			file_system.recursive_create_directory (a_log_dirname)
 			executable_filename := system.eiffel_system.application_name (True)
 
 			--compute_interpreter_root_class
 			if file_system.file_exists (executable_filename) and interpreter_root_class /= Void then
-				create last_interpreter.make (
+				create l_new.make (
 					executable_filename,
 					system,
 					file_system.pathname (a_log_dirname, "interpreter_log.txt"),
 					file_system.pathname (a_log_dirname, "proxy_log.txt"),
 					session.error_handler)
+				l_new.add_observer (session.error_handler)
 			end
+			last_interpreter := l_new
 		end
 
 note

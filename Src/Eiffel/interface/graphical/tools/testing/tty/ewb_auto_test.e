@@ -127,6 +127,7 @@ feature -- Execution
 					end
 				end
 				l_conf.set_new_class_name("NEW_AUTO_TEST")
+				l_conf.set_debugging (l_ap.is_debugging)
 				launch_ewb_processor (a_test_suite, generator_factory_type, l_conf)
 			else
 

@@ -142,11 +142,6 @@ feature -- Element change
 				add_result (cs.item)
 				cs.forth
 			end
-			if a_witness.is_fail then
-				print ("Added failing witness " + ($a_witness).out + " %N")
-			else
-				print ("Added witness " + ($a_witness).out + " %N")
-			end
 		ensure
 			witnesses.has (a_witness)
 		end

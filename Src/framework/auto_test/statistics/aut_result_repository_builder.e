@@ -75,9 +75,6 @@ feature {NONE} -- Implementation
 			witness: AUT_WITNESS
 		do
 			create witness.make (request_history, last_start_index, request_history.count)
-			if witness.is_fail then
-				print ("FAILS!%N")
-			end
 			result_repository.add_witness (witness)
 		end
 

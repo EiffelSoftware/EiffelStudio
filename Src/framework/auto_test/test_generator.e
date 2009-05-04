@@ -209,7 +209,6 @@ feature {NONE} -- Basic operations
 						if attached minimize_task as l_task and then l_task.has_next_step then
 							l_task.step
 							if not l_task.has_next_step then
-								print ("creating test class%N")
 								l_witness := l_task.minimized_witness
 								session.used_witnesses.force_last (l_witness)
 								create current_results.make_from_linear (l_witness.classifications)
@@ -339,7 +338,7 @@ feature {NONE} -- Basic operations
 				if l_task.has_next_step then
 					l_task.cancel
 				end
-				test_task := Void
+				minimize_task := Void
 			end
 			last_witness := Void
 			internal_session := Void
@@ -372,10 +371,14 @@ feature {NONE} -- Implementation
 				l_error_handler.set_error_file (l_file)
 				l_error_handler.set_warning_file (l_file)
 				l_error_handler.set_info_file (l_file)
+				if configuration.is_debugging then
+					l_error_handler.set_debug_to_file (l_file)
+				end
 			else
 				l_error_handler.set_error_null
 				l_error_handler.set_warning_null
 				l_error_handler.set_info_null
+				l_error_handler.set_debug_null
 			end
 
 			if session.options.should_display_help_message then

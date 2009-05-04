@@ -221,8 +221,7 @@ feature {NONE} -- Implementation
 
 				-- Start sub task.
 			sub_task.start
-			error_handler.decrease_counter
-			error_handler.report_feature_selection_old (l_selected_type, l_selected_feature)
+			error_handler.report_feature_selection (l_selected_type, l_selected_feature)
 		end
 
 	sub_task: AUT_TASK

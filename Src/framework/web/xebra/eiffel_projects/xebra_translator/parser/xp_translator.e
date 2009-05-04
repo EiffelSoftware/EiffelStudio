@@ -155,23 +155,27 @@ feature -- Processing
 			servlet_name_valid: not servlet_name.is_empty
 		local
 			l_root_tag: XP_TAG_ELEMENT
-			l_controller_classes: LIST [STRING]
+			l_controller_class: STRING
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
-			l_xternal_resolver: XP_EXTERNAL_RESOLVER
+			l_external_resolver: XP_EXTERNAL_RESOLVER
+			l_controller_resolver: XP_CONTROLLER_SET_VISITOR
 		do
-			create l_xternal_resolver
+			create l_external_resolver
 			create {XM_EIFFEL_PARSER} l_parser.make
-			l_parser.set_dtd_resolver (l_xternal_resolver)
-			l_parser.set_entity_resolver (l_xternal_resolver)
+			l_parser.set_dtd_resolver (l_external_resolver)
+			l_parser.set_entity_resolver (l_external_resolver)
 			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
 			l_p_callback.put_taglibs (a_taglib)
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
 
 			l_root_tag := l_p_callback.root_tag
-			l_controller_classes := l_p_callback.controller_classes
-			create Result.make (servlet_name, l_controller_classes, False, l_root_tag, output_path)
+				-- Sets the controller_id of all the tags
+			l_controller_class := l_p_callback.controller_class
+			create Result.make (servlet_name, False, l_root_tag, output_path, l_p_callback.is_template, l_controller_class)
+			--create l_controller_resolver.make (servlet_name + "_controller")
+			--l_root_tag.accept (l_controller_resolver)
 		end
 
 feature {NONE} -- Implementation

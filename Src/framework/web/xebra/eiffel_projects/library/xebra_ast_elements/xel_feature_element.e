@@ -55,6 +55,15 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	parent_class: XEL_CLASS_ELEMENT assign set_parent_class
+			-- The class in which this feature is contained
+
+	set_parent_class (a_parent_class: XEL_CLASS_ELEMENT)
+			-- Sets the parent_class.
+		do
+			parent_class := a_parent_class
+		end
+
 	signature: STRING
 			-- Signature of the feature
 
@@ -109,7 +118,7 @@ feature -- Access
 	set_once
 		do
 			is_once := True
-		end		
+		end
 
 feature -- Implementation
 

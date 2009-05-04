@@ -10,6 +10,9 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
+		redefine
+			generates_something
+		end
 
 create
 	make
@@ -25,13 +28,16 @@ feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
 			-- <Precursor>
-		do			
+		do
+			generate_children (a_servlet_class, variable_table)
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 		end
+
+	generates_something: BOOLEAN = False
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

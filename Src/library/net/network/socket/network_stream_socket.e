@@ -35,7 +35,7 @@ create
 	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_loopback_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
-	make_from_fd
+	make_from_descriptor_and_address, create_from_descriptor
 
 feature -- Initialization
 
@@ -107,7 +107,7 @@ feature -- Initialization
 
 feature {NETWORK_STREAM_SOCKET} -- Initialization
 
-	make_from_fd (a_fd: INTEGER; a_address: like address)
+	make_from_descriptor_and_address (a_fd: INTEGER; a_address: like address)
 		require
 			a_fd_positive: a_fd > 0
 			a_address_positive: a_address /= Void
@@ -126,6 +126,18 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			address_set: address = a_address
 			family_valid: family = a_address.family;
 			opened_all: is_open_write and is_open_read
+		end
+
+	create_from_descriptor (a_fd: INTEGER)
+			-- Given a file descriptor create the associated socket object.
+		require
+			a_fd_positive: a_fd > 0
+		local
+			l_address: like address
+		do
+			create l_address.make_localhost (0)
+			c_sock_name (a_fd, l_address.socket_address.item, l_address.socket_address.count)
+			make_from_descriptor_and_address (a_fd, l_address)
 		end
 
 feature
@@ -185,7 +197,7 @@ feature
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
 				last_fd := l_last_fd
 				if return > 0 then
-					create l_accepted.make_from_fd (return, l_address.twin);
+					create l_accepted.make_from_descriptor_and_address (return, l_address.twin);
 					l_accepted.set_peer_address (pass_address)
 					accepted := l_accepted
 				end
@@ -397,6 +409,12 @@ feature {NONE} -- Externals
 		alias
 			"en_socket_stream_accept"
 		end
+
+	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER) is
+			-- External c routine that returns the socket name.
+		external
+			"C"
+		end;
 
 	c_set_sock_opt_linger (an_fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER
 		external

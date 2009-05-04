@@ -1205,7 +1205,7 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 	status = stat (name, &buf);
 #endif
 
-#ifdef EIF_SOLARIS
+#if (EIF_OS == EIF_OS_SUNOS) || (EIF_OS == EIF_OS_LINUX)
 	if (status == -1) {
 			/* If the file is larger than what our file routines can handle
 			 * it does not mean that the file does not exist. It does but we
@@ -1237,7 +1237,7 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 	status = stat(name, &buf);
 #endif
 
-#ifdef EIF_SOLARIS
+#if (EIF_OS == EIF_OS_SUNOS) || (EIF_OS == EIF_OS_LINUX)
 	if (status == -1) {
 			/* If the file is larger than what our file routines can handle
 			 * it does not mean that the file does not exist. It does but we

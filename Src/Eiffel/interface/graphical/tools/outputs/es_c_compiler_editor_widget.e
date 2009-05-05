@@ -126,7 +126,7 @@ feature {NONE} -- Query
 			l_ctrl := ev_application.ctrl_pressed
 
 			if attached {CLUSTER_STONE} a_stone as l_group then
-				Result := l_group.cluster_i.location.evaluated_directory
+				Result := l_group.group.location.evaluated_directory
 			elseif attached {CLASSC_STONE} a_stone as l_class then
 				if attached {FEATURE_STONE} a_stone as l_feature then
 						-- Retrieve the feature specific information.

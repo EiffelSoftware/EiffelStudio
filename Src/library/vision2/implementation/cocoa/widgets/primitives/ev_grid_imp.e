@@ -62,29 +62,22 @@ feature {NONE} -- Initialization
 			-- Create grid
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create {NS_VIEW}cocoa_item.new
 		end
 
 	initialize
 			-- Initialize `Current'
-		local
-			color_imp: EV_COLOR_IMP
+--		local
+--			color_imp: EV_COLOR_IMP
 		do
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 
-			create focused_selection_color
-			color_imp ?= focused_selection_color.implementation
---			color_imp.set_with_system_id (wel_color_constants.color_highlight)
-			create non_focused_selection_color
-			color_imp ?= non_focused_selection_color.implementation
---			color_imp.set_with_system_id (wel_color_constants.color_btnface)
-			create focused_selection_text_color
-			color_imp ?= focused_selection_text_color.implementation
---			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
-			create non_focused_selection_text_color
-			color_imp ?= non_focused_selection_text_color.implementation
---			color_imp.set_with_system_id (wel_color_constants.color_btntext)
+			create focused_selection_color.make_with_rgb (1, 0, 0)
+			create non_focused_selection_color.make_with_rgb (1, 1, 0)
+			create focused_selection_text_color.make_with_rgb (0, 1, 0)
+			create non_focused_selection_text_color.make_with_rgb (0, 0, 1)
+--			color_imp ?= non_focused_selection_text_color.implementation
 
 			set_is_initialized (True)
 		end
@@ -113,7 +106,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			Result := 6
 		end
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
+	string_size (a_string: STRING_GENERAL; a_font: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT
@@ -121,19 +114,22 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- not include the horizontal overhang or underhang. This can
 			-- make quite a difference on certain platforms.
 		local
-			a_font_imp: EV_FONT_IMP
-			a_width, a_height: INTEGER
-			l_app_imp: like app_implementation
+			l_font_imp: EV_FONT_IMP
+			l_string: NS_STRING
+			l_attributes: NS_DICTIONARY
+			l_size: NS_SIZE
 		do
-			if s.is_empty then
+			if a_string.is_empty then
 				tuple.put_integer (0, 1)
 				tuple.put_integer (0, 2)
 			else
-				a_font_imp ?= f.implementation
-				l_app_imp := app_implementation
+				l_font_imp ?= a_font.implementation
+				create l_string.make_with_string (a_string)
+				create l_attributes.dictionary_with_object_for_key (l_font_imp.cocoa_item, l_font_imp.cocoa_item.font_attribute_name)
+				l_size := l_string.size_with_attributes (l_attributes)
 
-				tuple.put_integer (a_width, 1)
-				tuple.put_integer (a_height, 2)
+				tuple.put_integer (l_size.width, 1)
+				tuple.put_integer (l_size.height, 2)
 			end
 		end
 

@@ -22,7 +22,8 @@ inherit
 
 	EV_WINDOW_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -32,29 +33,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize_client_area
-			-- Setup client area of window
+	initialize
 		do
-		end
-
-feature {NONE} -- Implementation
-
-	call_window_state_event (a_window_state: INTEGER)
-			-- Call either minimize, maximize or restore actions for window
-		do
-		end
-
-	call_accelerators (a_v2_key_value, accel_mods: INTEGER)
-			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
-		do
+			Precursor {EV_WINDOW_IMP}
+			create icon_name.make_empty
 		end
 
 feature -- Access
 
 	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
-		do
-		end
 
 	icon_pixmap: EV_PIXMAP
 			-- Window icon.
@@ -75,55 +63,57 @@ feature -- Status setting
 	raise
 			-- Request that window be displayed above all other windows.
 		do
+			window.make_key_and_order_front
 		end
 
 	lower
 			-- Request that window be displayed below all other windows.
 		do
+			window.order_back
 		end
 
 	minimize
 			-- Display iconified/minimised.
 		do
+			window.miniaturize
 		end
-
 
 	maximize
 			-- Display at maximum size.
 		do
+			if not window.is_zoomed then
+				window.zoom
+			end
 		end
 
 	restore
 			-- Restore to original position when minimized or maximized.
 		do
+			if window.is_zoomed then
+				window.zoom
+			end
 		end
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL)
-			-- Assign `an_icon_name' to `icon_name'.
+	set_icon_name (a_icon_name: STRING_GENERAL)
+			-- Assign `a_icon_name' to `icon_name'.
 		do
+			icon_name := a_icon_name
 		end
 
-	set_icon_pixmap (an_icon: EV_PIXMAP)
-			-- Assign `an_icon' to `icon'.
+	set_icon_pixmap (a_icon: EV_PIXMAP)
+			-- Assign `a_icon' to `icon'.
+		local
+			l_pix_imp: EV_PIXMAP_IMP
 		do
-			icon_pixmap := an_icon
+			-- FIXME Mac Issue: This is problematic because on the Mac there is a application icon in the dock, but usually no window icon (there may be one for document windows... should probably go with that)
+			icon_pixmap := a_icon
+			l_pix_imp ?= a_icon.implementation
+			app_implementation.application.set_application_icon_image (l_pix_imp.image)
 		end
-
-feature {NONE} -- Implementation
-
-	default_wm_decorations: INTEGER
-			-- Default WM decorations of `Current'.?
-		do
-		end
-
-feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
-
-	icon_name_holder: STRING_32
-			-- Name holder for applications icon name
 
 	interface: EV_TITLED_WINDOW;
 

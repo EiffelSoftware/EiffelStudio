@@ -66,10 +66,10 @@ feature {NONE} -- Initialization
 			-- Create the window.
 		do
 			base_make (an_interface)
-			create {NS_WINDOW}cocoa_item.init_with_control_rect_style_mask_backing_defer (0, 0, 100, 100,
+			create {NS_WINDOW}cocoa_item.init_with_control_rect_style_mask_backing_defer (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask.bit_or ({NS_WINDOW}.miniaturizable_window_mask).bit_or ({NS_WINDOW}.resizable_window_mask), True)
-			window.make_key_and_order_front ({EV_ANY_IMP}.null)
-			window.order_out ({EV_ANY_IMP}.null)
+			window.make_key_and_order_front
+			window.order_out
 			allow_resize
 			new_delegate
 			window.set_delegate (current)
@@ -94,7 +94,6 @@ feature {NONE} -- Initialization
 
 			internal_is_border_enabled := True
 			user_can_resize := True
-			create title.make_empty
 			set_is_initialized (True)
 		end
 
@@ -242,8 +241,11 @@ feature -- Measurement
 
 	y_position, screen_y: INTEGER
 			-- Y coordinate of `Current'
+		local
+			l_frame: NS_RECT
 		do
-			Result := window.frame.origin.y
+			l_frame := window.frame
+			Result := window.screen.frame.size.height - l_frame.origin.y - l_frame.size.height
 		end
 
 	set_x_position (a_x: INTEGER)
@@ -262,7 +264,7 @@ feature -- Measurement
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			window.set_frame (a_x, a_y, width, height)
+			window.set_frame (create {NS_RECT}.make_rect(a_x, window.screen.frame.size.height - a_y, width, height))
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
@@ -321,7 +323,8 @@ feature -- Measurement
 
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 		do
-			window.set_frame (a_x_position, a_y_position, a_width, a_height)
+
+			window.set_frame (create {NS_RECT}.make_rect(a_x_position, a_y_position, a_width, a_height))
 		end
 
 feature -- Layout implementation
@@ -425,10 +428,13 @@ feature  -- Access
 			-- Current item.
 
 	title: STRING_32
-			-- Application name to be displayed by
-			-- the window manager.
+			-- Application name to be displayed by the window manager.
+		do
+			Result := window.title.as_string_32
+		end
 
 	menu_bar: EV_MENU_BAR
+			-- FIXME Mac Issue: Menu-Bars are Application-wide
 			-- Horizontal bar at top of client area that contains menu's.
 
 feature -- Status setting
@@ -499,18 +505,14 @@ feature -- Status setting
 			if show_actions_internal /= Void then
 				show_actions_internal.call (Void)
 			end
-			window.make_key_and_order_front ({EV_ANY_IMP}.null)
+			window.make_key_and_order_front
 			notify_change (nc_minsize, item_imp)
 		end
-
-	call_show_actions: BOOLEAN
-		-- Should the `show_actions_internal' be called?
-		-- used to ensure they are only called once.
 
 	hide
 			-- Unmap the Window from the screen.
 		do
-			window.order_out ({EV_ANY_IMP}.null)
+			window.order_out
 		end
 
 feature -- Element change
@@ -546,8 +548,7 @@ feature -- Element change
 	set_title (new_title: STRING_GENERAL)
 			-- Set `title' to `new_title'.
 		do
-			title := new_title
-			window.set_title(new_title)
+			window.set_title (new_title)
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR)
@@ -560,7 +561,8 @@ feature -- Element change
 			mb_imp.set_parent_window_imp (Current)
 
 			-- TODO attach the menubar to the current window / application in cocoa and switch on window switch
-			current.app_implementation.application.set_main_menu (mb_imp.menu)
+			app_implementation.application.set_main_menu (mb_imp.menu)
+			app_implementation.application.fix_apple_menu
 		end
 
 	remove_menu_bar
@@ -597,25 +599,11 @@ feature {NONE} -- Implementation
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
-			if a_has_focus then
-			else
-				on_set_focus_event (default_pointer)
-			end
 			Precursor {EV_CONTAINER_IMP} (a_has_focus)
 		end
 
-	previous_x_position, previous_y_position: INTEGER
-		-- Positions of previously set x and y coordinates of `Current'.
-
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
-		do
-		end
-
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	on_set_focus_event (a_widget_ptr: POINTER)
-			-- The focus of a widget has changed within `Current'.
 		do
 		end
 
@@ -624,9 +612,10 @@ feature {EV_INTERMEDIARY_ROUTINES}
 	call_close_request_actions
 			-- Call the close request actions.
 		do
+			close_request_actions.call ([])
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 
 	interface: EV_WINDOW;
 		-- Interface object of `Current'
@@ -636,7 +625,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Result ?= cocoa_item
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

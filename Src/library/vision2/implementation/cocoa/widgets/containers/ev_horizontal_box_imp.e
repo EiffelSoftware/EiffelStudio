@@ -33,7 +33,7 @@ feature {NONE} -- Basic operation
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			set_children_width (client_width + 2 * border_width, False)
+			set_children_width (client_width, False)
 		end
 
 	set_children_width (a_width: INTEGER; originator: BOOLEAN)

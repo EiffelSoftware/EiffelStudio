@@ -146,7 +146,7 @@ feature -- Measurement
 			t := internal_font.string_size (a_text)
 			a_width := t.width
 			a_height := t.height
-			internal_set_minimum_size (a_width.abs + 20, a_height.abs + 10)
+			internal_set_minimum_size (a_width.abs + 30, a_height.abs + 10)
 		end
 
 feature -- Sensitivity

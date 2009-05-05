@@ -53,7 +53,7 @@ create
 feature {NONE} -- Initialization
 
 		make (an_interface: like interface)
-			-- Create Textfield on a user_pane
+			-- Create Cocoa textfield
 		do
 			base_make (an_interface)
 			create {NS_TEXT_FIELD}cocoa_item.new
@@ -98,16 +98,21 @@ feature -- Status setting
 	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		do
+			text := text + a_text
+			text_field.set_string_value (text)
 		end
 
 	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		do
+			text := a_text + text
+			text_field.set_string_value (text)
 		end
 
 	set_capacity (len: INTEGER)
 			-- Set the maximum number of characters that `Current' can hold to `len'.
 		do
+
 		end
 
 	capacity: INTEGER

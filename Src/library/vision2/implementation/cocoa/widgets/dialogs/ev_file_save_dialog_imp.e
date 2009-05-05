@@ -19,13 +19,21 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			initialize
+			initialize,
+			window
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
+
+	make (an_interface: like interface)
+			-- Create a window with a parent.
+		do
+			base_make (an_interface)
+			create save_panel.save_panel
+		end
 
 	initialize
 		do
@@ -35,6 +43,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	window: NS_WINDOW
+		do
+			Result ?= save_panel
+		end
+
 	interface: EV_FILE_SAVE_DIALOG
 
 	file_chooser_action: INTEGER
@@ -43,18 +56,6 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
-
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FILE_SAVE_DIALOG_IMP
 

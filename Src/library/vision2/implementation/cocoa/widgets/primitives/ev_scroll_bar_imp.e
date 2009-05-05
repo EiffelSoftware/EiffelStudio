@@ -16,8 +16,7 @@ inherit
 
 	EV_GAUGE_IMP
 		undefine
-			minimum_height,
-			minimum_width,
+			set_default_minimum_size,
 			set_value
 		redefine
 			interface

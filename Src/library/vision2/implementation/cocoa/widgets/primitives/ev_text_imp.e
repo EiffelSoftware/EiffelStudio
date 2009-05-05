@@ -24,9 +24,7 @@ inherit
 			initialize,
 			create_change_actions,
 			dispose,
-			default_key_processing_blocked,
-			minimum_height,
-			minimum_width
+			default_key_processing_blocked
 		end
 
 	EV_FONTABLE_IMP
@@ -154,6 +152,7 @@ feature -- Status setting
 	insert_text (a_text: STRING_GENERAL)
 		do
 			text.insert_string (a_text, caret_position)
+			text_view.set_string (text)
 		end
 
 	set_text (a_text: STRING_GENERAL)
@@ -167,12 +166,14 @@ feature -- Status setting
 			-- Append `a_text' to `text'.	
 		do
 			text.append (a_text)
+			text_view.set_string (text)
 		end
 
 	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend 'txt' to `text'.
 		do
 			text.prepend (a_text)
+			text_view.set_string (text)
 		end
 
 	delete_text (start, finish: INTEGER)
@@ -180,6 +181,7 @@ feature -- Status setting
 			-- both sides include.
 		do
 			text.remove_substring (start, finish)
+			text_view.set_string (text)
 		end
 
 feature -- Basic operation
@@ -249,20 +251,6 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing.
 		do
-		end
-
-feature -- Minimum size
-
-	minimum_height: INTEGER
-			-- Minimum height that the widget may occupy.
-		do
-			Result := 1 -- Hardcoded, TODO calculate a meaningful height depending on the content
-		end
-
-	minimum_width: INTEGER
-			-- Minimum width that the widget may occupy.
-		do
-			Result := 40 -- Hardcoded, TODO calculate a meaningful width depending on the content
 		end
 
 feature {NONE} -- Implementation

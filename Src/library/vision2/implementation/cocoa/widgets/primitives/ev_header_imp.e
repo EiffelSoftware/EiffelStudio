@@ -18,14 +18,15 @@ inherit
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
 			interface,
-			initialize
+			initialize,
+			insert_i_th
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
 			initialize,
-			call_button_event_actions
+			set_default_minimum_size
 		end
 
 	EV_FONTABLE_IMP
@@ -36,6 +37,8 @@ inherit
 
 	EV_HEADER_ACTION_SEQUENCES_IMP
 
+	NS_OUTLINE_VIEW_DATA_SOURCE[ANY]
+
 create
 	make
 
@@ -45,7 +48,20 @@ feature -- Initialization
 			-- Create an empty Tree.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+--			create w.new
+--			w.set_frame (create {NS_RECT}.make_rect (0, 0, 0, 18))
+--			create h.new
+--			w.set_cell (h)
+
+			create container.new
+			container.set_frame (create {NS_RECT}.make_rect (0, 0, 0, 18))
+			container.set_has_horizontal_scroller (False)
+			container.set_has_vertical_scroller (False)
+
+			create outline_view.new
+			container.set_document_view (outline_view)
+			outline_view.set_data_source (current)
+			cocoa_item := container
 		end
 
 	initialize
@@ -57,40 +73,37 @@ feature -- Initialization
 			set_is_initialized (True)
 		end
 
-	dummy_item: EV_HEADER_ITEM
-
-	resize_model  (a_columns: INTEGER)
-			-- Resize the data model to match the number of columns
-		do
-
-		end
-
 feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
-	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
-		-- Reusable item resize tuple.
-
-	set_call_item_resize_start_actions (a_flag: BOOLEAN)
-			-- Set `call_item_resize_start_actions' to `a_flag'.
+	insert_i_th (v: like item; i: INTEGER_32)
+		local
+			v_imp: EV_HEADER_ITEM_IMP
 		do
-
+			Precursor {EV_ITEM_LIST_IMP} (v, i)
+			v_imp ?= v.implementation
+			outline_view.add_table_column (v_imp.table_column)
 		end
 
-	item_has_resized
-			-- The item has finished resizing so call `item_resize_end_actions'.
+	number_of_children_of_item (an_item: ANY): INTEGER
 		do
-
 		end
 
-	on_resize (a_item: EV_HEADER_ITEM)
-			-- `a_item' has resized.
+	is_item_expandable (an_item: ANY): BOOLEAN
 		do
-
 		end
 
-	call_item_resize_start_actions: BOOLEAN
-	call_item_resize_end_actions: BOOLEAN
-		-- Should the appropriate item resize actions be called?
+	child_of_item (an_index: INTEGER; an_item: ANY): ANY
+		do
+		end
+
+	object_value_for_table_column_by_item (a_table_column: POINTER; an_item: ANY): POINTER
+		do
+		end
+
+	set_default_minimum_size
+		do
+			internal_set_minimum_size (0, 18)
+		end
 
 feature {NONE} -- Implementation
 
@@ -101,21 +114,11 @@ feature {NONE} -- Implementation
 
 		end
 
-	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Call pointer_button_press_actions or pointer_double_press_actions
-			-- depending on event type in first position of `event_data'.
-		do
-
-		end
-
 	call_item_resize_actions
 			-- Call the item resize end actions.
 		do
 
 		end
-
-	model_count: INTEGER
-		-- Number of cells available in model
 
 	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
@@ -123,20 +126,12 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	outline_view: NS_OUTLINE_VIEW
+
+	container: NS_SCROLL_VIEW
+
 	interface: EV_HEADER;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
-
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

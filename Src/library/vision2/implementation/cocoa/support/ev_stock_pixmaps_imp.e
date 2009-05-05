@@ -92,6 +92,7 @@ feature -- Access
 			-- Pixmap used as default icon for new windows.
 		do
 			create Result
+			Result.set_with_named_file ("/System/Library/Frameworks/AppKit.framework/Versions/C/Resources/NSDefaultApplicationIcon.tiff")
 		end
 
 	load_named (a_name: NS_STRING): EV_PIXMAP

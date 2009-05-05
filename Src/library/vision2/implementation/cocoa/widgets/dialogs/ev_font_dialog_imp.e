@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		do
 			selected_button := Void
 
-			font_panel.make_key_and_order_front ({EV_ANY_IMP}.null)
+			font_panel.make_key_and_order_front
 
 			selected_button := ev_ok
 			interface.ok_actions.call (Void)

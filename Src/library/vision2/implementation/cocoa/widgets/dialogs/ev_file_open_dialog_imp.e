@@ -18,7 +18,8 @@ inherit
 			make,
 			interface,
 			initialize,
-			window
+			window,
+			show_modal_to_window
 		end
 
 create
@@ -28,18 +29,44 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface)
 			-- Create a window with a parent.
-		local
-			button: INTEGER
 		do
 			base_make (an_interface)
 			create open_panel.open_panel
-			button := open_panel.run_modal
 		end
 
 	initialize
 		do
 			Precursor
 			--set_title ("Open")
+		end
+
+	show_modal_to_window (a_window: EV_WINDOW)
+			-- Note: OS X does not present a list with file types to select from. The files displayed are any of those in the filter
+		local
+			button: INTEGER
+			l_file_types: NS_ARRAY[NS_STRING]
+			l_filters: ARRAYED_LIST[NS_STRING]
+		do
+			create l_filters.make (filters.count)
+			from
+				filters.start
+			until
+				filters.after
+			loop
+				l_filters.extend (create {NS_STRING}.make_with_string (filters.item.filter.substring (3, filters.item.filter.count))) -- cut off the beginning "*." part
+				filters.forth
+			end
+			create l_file_types.array_with_objects_count (l_filters)
+			open_panel.set_allowed_file_types (l_file_types)
+
+			button := open_panel.run_modal
+			if button =  {NS_PANEL}.ok_button then
+				selected_button := internal_accept
+				interface.open_actions.call (Void)
+			elseif button = {NS_PANEL}.cancel_button then
+				selected_button := ev_cancel
+				interface.cancel_actions.call (Void)
+			end
 		end
 
 feature {NONE} -- Access

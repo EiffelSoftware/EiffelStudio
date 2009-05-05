@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 				servlet := some_servlets.item
 				if not servlet.is_template then
 						Result.append_expression ("stateless_servlets.put (create {"
-							+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower  + ".xeb%")")
+							+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower + ".xeb%")")
 				end
 				some_servlets.forth
 			end

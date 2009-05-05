@@ -551,11 +551,11 @@ feature -- Comparison
 
 feature -- Merging
 
-	merge (other: like Current)
-			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
+	merge_client (other: like Current)
+			-- Merge with client options `other', if the values aren't defined in `Current' take the values of `other'.
+			-- Apply this only for options that can be overridden by the client.
 		local
 			l_tmp: like debugs
-			l_namespace: like local_namespace
 		do
 			if other /= Void then
 				if assertions = Void then
@@ -574,23 +574,6 @@ feature -- Merging
 					l_tmp := other.warnings.twin
 					l_tmp.merge (warnings)
 					warnings := l_tmp
-				end
-					-- Computation of `namespace' by using values in `other'.
-				if other.namespace /= Void then
-					l_namespace := other.namespace
-				else
-					l_namespace := other.local_namespace
-				end
-				if l_namespace /= Void then
-					if local_namespace /= Void then
-						namespace := l_namespace + "." + local_namespace
-					else
-						namespace := l_namespace.twin
-					end
-				elseif local_namespace /= Void then
-					namespace := local_namespace.twin
-				else
-					namespace := Void
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured or else is_profile /~ other.is_profile
@@ -615,6 +598,35 @@ feature -- Merging
 				if not is_msil_application_optimize_configured then
 					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
 					is_msil_application_optimize := other.is_msil_application_optimize
+				end
+			end
+		end
+
+	merge (other: like Current)
+			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
+			-- Apply this to all options.
+		local
+			l_tmp: like debugs
+			l_namespace: like local_namespace
+		do
+			if other /= Void then
+				merge_client (other)
+					-- Computation of `namespace' by using values in `other'.
+				if other.namespace /= Void then
+					l_namespace := other.namespace
+				else
+					l_namespace := other.local_namespace
+				end
+				if l_namespace /= Void then
+					if local_namespace /= Void then
+						namespace := l_namespace + "." + local_namespace
+					else
+						namespace := l_namespace.twin
+					end
+				elseif local_namespace /= Void then
+					namespace := local_namespace.twin
+				else
+					namespace := Void
 				end
 				if not is_full_class_checking_configured then
 					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking

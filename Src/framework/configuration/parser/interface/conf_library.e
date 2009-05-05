@@ -109,20 +109,23 @@ feature -- Access queries
 	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-				-- get local options
+				-- Only options that can be overridden should be taken from the local definition,
+				-- so `internal_options' cannot be used as a starting point, the clean object is used instead.
+			create Result
+
+				-- Apply local options if present.
 			if internal_options /= Void then
-				Result := internal_options.twin
-			else
-				create Result
+				Result.merge_client (internal_options)
 			end
 
-				-- use options specified in the library
+				-- Apply options of the application if required.
+			if use_application_options then
+				Result.merge_client (target.options)
+			end
+
+				-- Apply options specified in the library.
 			if library_target /= Void then
 				Result.merge (library_target.options)
-			end
-				-- use options of the application
-			if use_application_options then
-				Result.merge (target.options)
 			end
 		end
 

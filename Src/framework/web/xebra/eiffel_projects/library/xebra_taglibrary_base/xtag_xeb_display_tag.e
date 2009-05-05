@@ -34,7 +34,7 @@ feature -- Implementation
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precusor>
+			-- <Precursor>
 		do
 			if id.is_equal ("feature") then
 				feature_name := a_attribute

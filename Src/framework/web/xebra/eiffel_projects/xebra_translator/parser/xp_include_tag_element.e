@@ -29,6 +29,7 @@ feature -- Access
 				template: XGEN_SERVLET_GENERATOR_GENERATOR
 				child: XP_TAG_ELEMENT
 				tag_visitor: XP_REGION_TAG_ELEMENT_VISITOR
+				uid_visitor: XP_UID_TAG_VISITOR
 				regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
 				uid: STRING
 			do
@@ -52,7 +53,9 @@ feature -- Access
 					end
 
 					uid := root_template.next_unique_identifier
-					create tag_visitor.make (regions, uid)
+					create tag_visitor.make (regions)
+					create uid_visitor.make_with_uid (uid)
+					template.root_tag.accept (uid_visitor)
 					template.root_tag.accept (tag_visitor)
 						-- Updates the regions. Additionally it sets the controller name
 					root_template.add_controller (uid, template.controller_class)

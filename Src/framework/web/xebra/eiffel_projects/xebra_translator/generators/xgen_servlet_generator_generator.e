@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			servlet_name := a_servlet_name
 			stateful := a_stateful
-			root_tag := a_root_tag
+			root_tag := a_root_tag.copy_tag_tree
 			path := a_path
 			is_template := a_is_template
 			uid_counter := 0
@@ -44,8 +44,13 @@ feature -- Access
 	next_unique_identifier: STRING
 			-- Generates a unique identifier for the controllers
 		do
-			Result := "controller_" + uid_counter.out
 			uid_counter := uid_counter + 1
+			Result := unique_identifier
+		end
+
+	unique_identifier: STRING
+		do
+			Result := "controller_" + uid_counter.out
 		end
 
 	add_controller (a_identifier: STRING; a_class: STRING)
@@ -112,10 +117,14 @@ feature {NONE} -- Implementation
 			generate_feature: XEL_FEATURE_ELEMENT
 			uid: STRING
 			visitor: XP_REGION_TAG_ELEMENT_VISITOR
+			uid_visitor: XP_UID_TAG_VISITOR
 		do
 			uid := next_unique_identifier
 			add_controller (uid, controller_class)
-			create visitor.make (create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0), uid)
+			create visitor.make (create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0))
+			create uid_visitor.make_with_uid (uid)
+			root_tag.accept (uid_visitor)
+				-- Update the uid for the controller BEFORE adding the regions
 			root_tag.accept (visitor)
 			create generate_feature.make ("get_root_tag: " + Tag_serializer_class)
 			a_class.add_feature (generate_feature)

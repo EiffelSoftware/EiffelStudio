@@ -2558,7 +2558,7 @@ end
 				create {VFAC1} vfac.make (system.current_class, Current)
 			elseif assigner.argument_count /= argument_count + 1 then
 				create {VFAC2} vfac.make (system.current_class, Current)
-			elseif not assigner.arguments.first.actual_type.same_as (type.actual_type) then
+			elseif not assigner.arguments.first.actual_type.conform_to (system.current_class, type.actual_type) then
 				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then
 				assigner_arguments := assigner.arguments

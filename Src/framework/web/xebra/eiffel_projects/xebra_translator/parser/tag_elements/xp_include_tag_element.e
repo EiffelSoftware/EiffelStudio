@@ -23,7 +23,12 @@ feature -- Initialization
 
 feature -- Access
 
-	internal_build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]; root_template: XGEN_SERVLET_GENERATOR_GENERATOR; is_root: BOOLEAN)
+	internal_build_tag_tree (
+					a_feature: XEL_FEATURE_ELEMENT;
+					templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
+					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
+					is_root: BOOLEAN;
+					leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 				-- Adds the needed expressions which build the tree of Current with the correct classes
 			local
 				template: XGEN_SERVLET_GENERATOR_GENERATOR
@@ -39,6 +44,7 @@ feature -- Access
 				create regions.make (4)
 
 				if has_children then
+					-- from here to...
 					from
 						children.start
 					until
@@ -49,17 +55,22 @@ feature -- Access
 						if child.id.is_equal ("define_region") then
 							regions.put (child.children, child.retrieve_value ("id"))
 						end
+							--
 						children.forth
 					end
-
+					-- ...here: ugly!
+					regions.merge (leftover_regions)
 					uid := root_template.next_unique_identifier
 					create tag_visitor.make (regions)
 					create uid_visitor.make_with_uid (uid)
 					template.root_tag.accept (uid_visitor)
+						-- Sets the controller name. Don't switch position with the next line
 					template.root_tag.accept (tag_visitor)
-						-- Updates the regions. Additionally it sets the controller name
+						-- Updates the regions. If region matches, it is consumed.
 					root_template.add_controller (uid, template.controller_class)
-					template.root_tag.internal_build_tag_tree (a_feature, templates, root_template, is_root)
+					template.root_tag.internal_build_tag_tree (a_feature, templates, root_template, is_root, regions)
+						-- Note that the regions have been changed by the visitor `tag_visitor' and only the unused regions
+						-- are still in the table.
 				end
 			end
 

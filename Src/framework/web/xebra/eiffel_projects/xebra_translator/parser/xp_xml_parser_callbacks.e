@@ -54,6 +54,7 @@ feature -- Access
 			-- Defines if a xeb file is a template (i.e. has unimplemented regions)
 
 	set_is_template (a_is_template: BOOLEAN)
+			-- Sets whether Current is a temlate or not
 		do
 			is_template := a_is_template
 		end

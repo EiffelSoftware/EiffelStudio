@@ -42,13 +42,14 @@ feature -- Access
 			-- controller instvars of the resulting servlet
 
 	next_unique_identifier: STRING
-			-- Generates a unique identifier for the controllers
+			-- Generates a new unique identifier for the controllers
 		do
 			uid_counter := uid_counter + 1
 			Result := unique_identifier
 		end
 
 	unique_identifier: STRING
+			-- Returns the last controller uid
 		do
 			Result := "controller_" + uid_counter.out
 		end
@@ -131,7 +132,8 @@ feature {NONE} -- Implementation
 			generate_feature.append_local ("stack", "ARRAYED_STACK [" + Tag_serializer_class + "]")
 			generate_feature.append_local ("root_tag, temp", Tag_serializer_class)
 			generate_feature.append_expression ("create stack.make (10)")
-			root_tag.build_tag_tree (generate_feature, templates, Current)
+			root_tag.build_tag_tree (generate_feature, templates, Current, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0))
+
 			generate_feature.append_expression ("Result := root_tag")
 		end
 

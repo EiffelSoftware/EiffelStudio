@@ -105,6 +105,7 @@ feature -- Basic Functionality
 feature {NONE} -- Implementation
 
 	generate_once_feature_for_global_state: XEL_FEATURE_ELEMENT
+			-- Builds the global state feature
 		do
 			create Result.make ("global_state: DEMOAPPLICATION_GLOBAL_STATE")
 			Result.set_once
@@ -112,6 +113,7 @@ feature {NONE} -- Implementation
 		end
 
 	generate_feature_for_name: XEL_FEATURE_ELEMENT
+			-- Builds the name access
 		do
 			create Result.make ("name: STRING")
 			Result.append_expression ("Result := %"" + webapp_name.as_lower + "%"")

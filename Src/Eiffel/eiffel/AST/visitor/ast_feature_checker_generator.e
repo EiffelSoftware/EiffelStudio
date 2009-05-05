@@ -567,6 +567,9 @@ feature {NONE} -- Implementation: State
 	last_assigner_command: FEATURE_I
 			-- Last assigner command associated with a feature
 
+	last_assigner_type: TYPE_A
+			-- Type of the expected type for source of assigner call.
+
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
 
@@ -670,6 +673,7 @@ feature -- Settings
 			last_calls_target_type := Void
 			is_type_compatible := [False, Void]
 			last_assigner_command := Void
+			last_assigner_type := Void
 			set_is_inherited (False)
 			inline_agent_byte_codes := Void
 		end
@@ -1724,7 +1728,7 @@ feature -- Implementation
 							end
 
 							if l_is_assigner_call then
-								process_assigner_command (l_last_id, l_feature)
+								process_assigner_command (l_last_type, l_last_constrained, l_feature)
 							end
 
 							if l_needs_byte_node then
@@ -4008,7 +4012,7 @@ feature -- Implementation
 									end
 								end
 								if l_is_assigner_call then
-									process_assigner_command (l_last_class.class_id, l_prefix_feature)
+									process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 								end
 
 								if l_needs_byte_node then
@@ -4333,7 +4337,7 @@ feature -- Implementation
 							end
 
 							if l_is_assigner_call then
-								process_assigner_command (l_left_id, last_infix_feature)
+								process_assigner_command (l_target_type, l_left_constrained, last_infix_feature)
 							end
 
 							if l_needs_byte_node then
@@ -5135,152 +5139,158 @@ feature -- Implementation
 			target_type := last_type
 			target_assigner := last_assigner_command
 			if target_type /= Void then
-				l_as.source.process (Current)
-				if last_type /= Void then
-					l_warning_count := error_handler.warning_list.count
-					process_type_compatibility (target_type)
-					source_type := last_type
-					if not is_type_compatible.is_compatible then
-						create vbac1
-						context.init_error (vbac1)
-						vbac1.set_source_type (source_type)
-						vbac1.set_target_type (target_type)
-						vbac1.set_location (l_as.start_location)
-						error_handler.insert_error (vbac1)
-					elseif l_warning_count /= error_handler.warning_list.count then
-						error_handler.warning_list.last.set_location (l_as.start_location)
-					end
-
-					if is_type_compatible.is_compatible and then target_assigner = Void and then not l_is_tuple_access then
-							-- If we have no `target_assigner' and the last access is not a tuple access
-							-- then we have an error.
-						create vbac2
-						context.init_error (vbac2)
-						vbac2.set_location (l_as.start_location)
-						error_handler.insert_error (vbac2)
-					else
-						if
-							not is_inherited and then
-							is_type_compatible.conversion_info /= Void and then
-							is_type_compatible.conversion_info.has_depend_unit
-						then
-							l_as.set_source (l_as.source.converted_expression (
-								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
+				if target_assigner = Void and then not l_is_tuple_access then
+						-- If we have no `target_assigner' and the last access is not a tuple access
+						-- then we have an error.
+					create vbac2
+					context.init_error (vbac2)
+					vbac2.set_location (l_as.start_location)
+					error_handler.insert_error (vbac2)
+				else
+					l_as.source.process (Current)
+					if last_type /= Void then
+						l_warning_count := error_handler.warning_list.count
+							-- Now we check that if there is an assigner, that the type of the `source'
+							-- matches the type of the first argument of the assigner.
+						if target_assigner /= Void then
+							target_type := last_assigner_type
 						end
-
-						if is_byte_node_enabled then
-								-- Preserve source byte node
-							source_byte_node ?= last_byte_node
-
-								-- Discriminate over expression kind:
-								-- it should be either a qualified call,
-								-- a binary or an unary
-							outer_nested_b ?= target_byte_node
-							binary_b ?= target_byte_node
-							unary_b ?= target_byte_node
-							external_b ?= target_byte_node
-							if external_b /= Void then
-								--| Do nothing (for external static calls)
-							elseif outer_nested_b /= Void then
-								call_b := outer_nested_b
-									-- Find end of call chain
-								from
-									inner_nested_b ?= outer_nested_b.message
-								until
-									inner_nested_b = Void
-								loop
-									outer_nested_b := inner_nested_b
-									inner_nested_b ?= outer_nested_b.message
-								end
-									-- Evaluate assigner command arguments
-								access_b ?= outer_nested_b.message
-								check
-									access_b_not_void: access_b /= Void
-								end
-									-- Get the multi_constrait_static if one exists
-								l_multi_constraint_static := access_b.multi_constraint_static
-								arguments := access_b.parameters
-							elseif binary_b /= Void then
-									-- Create call chain
-								outer_nested_b := binary_b.nested_b
-								call_b := outer_nested_b
-									-- Evaluate assigner command arguments
-								create arguments.make (1)
-								create argument
-								argument.set_expression (binary_b.right)
-								argument.set_attachment_type (binary_b.attachment)
-								if not system.il_generation then
-									-- It is pretty important that we use `actual_type.is_formal' and not
-									-- just `is_formal' because otherwise if you have `like x' and `x: G'
-									-- then we would fail to detect that.
-									argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-								end
-								arguments.extend (argument)
-							else
-								check
-									unary_b_not_void: unary_b /= Void
-								end
-									-- Create call chain
-								outer_nested_b := unary_b.nested_b
-								call_b := outer_nested_b
-									-- There are no arguments in unary expression
+						process_type_compatibility (target_type)
+						source_type := last_type
+						if not is_type_compatible.is_compatible then
+							create vbac1
+							context.init_error (vbac1)
+							vbac1.set_source_type (source_type)
+							vbac1.set_target_type (target_type)
+							vbac1.set_location (l_as.start_location)
+							error_handler.insert_error (vbac1)
+						else
+							if l_warning_count /= error_handler.warning_list.count then
+								error_handler.warning_list.last.set_location (l_as.start_location)
+							end
+							if
+								not is_inherited and then
+								is_type_compatible.conversion_info /= Void and then
+								is_type_compatible.conversion_info.has_depend_unit
+							then
+								l_as.set_source (l_as.source.converted_expression (
+									create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 							end
 
-							if l_is_tuple_access then
-									-- When assigning to a tuple, we simply transform the tuple
-									-- access by giving a source.
-								l_tuple_access_b ?= access_b
-								check l_tuple_access_not_void: l_tuple_access_b /= Void end
-								l_tuple_access_b.set_line_number (l_as.start_location.line)
-								create argument
-								argument.set_expression (source_byte_node)
-								argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
-								argument.set_is_for_tuple_access (True)
-								l_tuple_access_b.set_source (argument)
-								last_byte_node := target_byte_node
-							else
-									-- Evaluate assigner command arguments:
-									--   first is a source of an assigner command
-									--   next are those from target call
-								if arguments = Void then
-									create assigner_arguments.make (1)
-								else
-									create assigner_arguments.make (arguments.count + 1)
-								end
-								create argument
-								argument.set_expression (source_byte_node)
-								argument.set_attachment_type (target_type)
-								if not system.il_generation then
-									-- It is pretty important that we use `actual_type.is_formal' and not
-									-- just `is_formal' because otherwise if you have `like x' and `x: G'
-									-- then we would fail to detect that.
-									argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-								end
-								assigner_arguments.extend (argument)
-								if arguments /= Void then
-									assigner_arguments.append (arguments)
-								end
-									-- Evaluate assigner command byte node
-								access_b := target_assigner.access (void_type, True)
-								access_b.set_parameters (assigner_arguments)
+							if is_byte_node_enabled then
+									-- Preserve source byte node
+								source_byte_node ?= last_byte_node
 
-								if l_multi_constraint_static /= Void then
-										-- We are in the multi constraint case, set the multi constraint static
-									access_b.set_multi_constraint_static (l_multi_constraint_static)
+									-- Discriminate over expression kind:
+									-- it should be either a qualified call,
+									-- a binary or an unary
+								outer_nested_b ?= target_byte_node
+								binary_b ?= target_byte_node
+								unary_b ?= target_byte_node
+								external_b ?= target_byte_node
+								if external_b /= Void then
+									--| Do nothing (for external static calls)
+								elseif outer_nested_b /= Void then
+									call_b := outer_nested_b
+										-- Find end of call chain
+									from
+										inner_nested_b ?= outer_nested_b.message
+									until
+										inner_nested_b = Void
+									loop
+										outer_nested_b := inner_nested_b
+										inner_nested_b ?= outer_nested_b.message
+									end
+										-- Evaluate assigner command arguments
+									access_b ?= outer_nested_b.message
+									check
+										access_b_not_void: access_b /= Void
+									end
+										-- Get the multi_constrait_static if one exists
+									l_multi_constraint_static := access_b.multi_constraint_static
+									arguments := access_b.parameters
+								elseif binary_b /= Void then
+										-- Create call chain
+									outer_nested_b := binary_b.nested_b
+									call_b := outer_nested_b
+										-- Evaluate assigner command arguments
+									create arguments.make (1)
+									create argument
+									argument.set_expression (binary_b.right)
+									argument.set_attachment_type (binary_b.attachment)
+									if not system.il_generation then
+										-- It is pretty important that we use `actual_type.is_formal' and not
+										-- just `is_formal' because otherwise if you have `like x' and `x: G'
+										-- then we would fail to detect that.
+										argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
+									end
+									arguments.extend (argument)
+								else
+									check
+										unary_b_not_void: unary_b /= Void
+									end
+										-- Create call chain
+									outer_nested_b := unary_b.nested_b
+									call_b := outer_nested_b
+										-- There are no arguments in unary expression
 								end
 
-								if external_b = Void then
-										-- Replace end of call chain with an assigner command
-									access_b.set_parent (outer_nested_b)
-									outer_nested_b.set_message (access_b)
+								if l_is_tuple_access then
+										-- When assigning to a tuple, we simply transform the tuple
+										-- access by giving a source.
+									l_tuple_access_b ?= access_b
+									check l_tuple_access_not_void: l_tuple_access_b /= Void end
+									l_tuple_access_b.set_line_number (l_as.start_location.line)
+									create argument
+									argument.set_expression (source_byte_node)
+									argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
+									argument.set_is_for_tuple_access (True)
+									l_tuple_access_b.set_source (argument)
+									last_byte_node := target_byte_node
 								else
-										-- Set external static assigner
-									check call_b_unattached: call_b = Void end
-									call_b := access_b
+										-- Evaluate assigner command arguments:
+										--   first is a source of an assigner command
+										--   next are those from target call
+									if arguments = Void then
+										create assigner_arguments.make (1)
+									else
+										create assigner_arguments.make (arguments.count + 1)
+									end
+									create argument
+									argument.set_expression (source_byte_node)
+									argument.set_attachment_type (target_type)
+									if not system.il_generation then
+										-- It is pretty important that we use `actual_type.is_formal' and not
+										-- just `is_formal' because otherwise if you have `like x' and `x: G'
+										-- then we would fail to detect that.
+										argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
+									end
+									assigner_arguments.extend (argument)
+									if arguments /= Void then
+										assigner_arguments.append (arguments)
+									end
+										-- Evaluate assigner command byte node
+									access_b := target_assigner.access (void_type, True)
+									access_b.set_parameters (assigner_arguments)
+
+									if l_multi_constraint_static /= Void then
+											-- We are in the multi constraint case, set the multi constraint static
+										access_b.set_multi_constraint_static (l_multi_constraint_static)
+									end
+
+									if external_b = Void then
+											-- Replace end of call chain with an assigner command
+										access_b.set_parent (outer_nested_b)
+										outer_nested_b.set_message (access_b)
+									else
+											-- Set external static assigner
+										check call_b_unattached: call_b = Void end
+										call_b := access_b
+									end
+									create l_instr.make (call_b, l_as.start_location.line)
+									l_instr.set_line_pragma (l_as.line_pragma)
+									last_byte_node := l_instr
 								end
-								create l_instr.make (call_b, l_as.start_location.line)
-								l_instr.set_line_pragma (l_as.line_pragma)
-								last_byte_node := l_instr
 							end
 						end
 					end
@@ -7742,7 +7752,7 @@ feature {NONE} -- Implementation
 			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
 		end
 
-	process_assigner_command (target_class_id: INTEGER; target_query: FEATURE_I)
+	process_assigner_command (a_target_type, a_target_constrained_type: TYPE_A; target_query: FEATURE_I)
 			-- Attempt to calculate an assigner call associated with `target_query'
 			-- called on type of `target_class_id'. Make the result available in
 			-- `last_assigner_command'. Register client dependance on the target
@@ -7750,22 +7760,34 @@ feature {NONE} -- Implementation
 		require
 			target_query_not_void: target_query /= Void
 		local
-			assigner_name: STRING
-			assigner_command: FEATURE_I
+			l_assigner_name: STRING
+			l_assigner_command: FEATURE_I
+			l_type: TYPE_A
+			l_target_class_id: INTEGER
 		do
-			assigner_name := target_query.assigner_name
-			if assigner_name = Void then
+			l_assigner_name := target_query.assigner_name
+			if l_assigner_name = Void then
 				last_assigner_command := Void
+				last_assigner_type := Void
 			else
-				assigner_command := target_query.written_class.feature_named (assigner_name)
-				if assigner_command /= Void then
+				l_assigner_command := target_query.written_class.feature_named (l_assigner_name)
+				if l_assigner_command /= Void then
 						-- Evaluate assigner command in context of target type
-					assigner_command := system.class_of_id (target_class_id).feature_of_rout_id
-						(assigner_command.rout_id_set.first)
+					l_target_class_id := a_target_constrained_type.associated_class.class_id
+					l_assigner_command := system.class_of_id (l_target_class_id).feature_of_rout_id
+						(l_assigner_command.rout_id_set.first)
+					check
+						assigner_command_attached: l_assigner_command /= Void
+						assigner_command_valid: l_assigner_command.argument_count >= 1
+					end
 						-- Suppliers update
-					context.supplier_ids.extend_depend_unit_with_level (target_class_id, assigner_command, depend_unit_level)
+					context.supplier_ids.extend_depend_unit_with_level (l_target_class_id, l_assigner_command, depend_unit_level)
+					l_type := l_assigner_command.arguments.i_th (1).formal_instantiation_in (
+						a_target_type.as_implicitly_detachable, a_target_constrained_type.as_implicitly_detachable,
+						l_target_class_id).actual_type
 				end
-				last_assigner_command := assigner_command
+				last_assigner_command := l_assigner_command
+				last_assigner_type := l_type
 			end
 		end
 

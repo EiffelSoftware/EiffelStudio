@@ -71,6 +71,8 @@ feature -- Access
 
 	extend_depend_unit_with_level (a_class_id: INTEGER; a_feature: FEATURE_I; a_context: NATURAL_16)
 			-- Optimized extend to avoid creating unnecessary depend units when they already exist.
+		require
+			a_feature_attached: a_feature /= Void
 		local
 			l_depend_unit: DEPEND_UNIT
 		do

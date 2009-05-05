@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 	make (c_id: INTEGER; f: FEATURE_I)
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences.
+		require
+			f_attached: f /= Void
 		do
 			make_with_level (c_id, f, 0)
 		end
@@ -49,6 +51,8 @@ feature {NONE} -- Initialization
 	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16)
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences in a given context.
+		require
+			f_attached: f /= Void
 		do
 			class_id := c_id
 			if f.is_attribute and then f.rout_id_set.count > 1 then
@@ -100,6 +104,8 @@ feature -- Status Setting
 
 	set_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16)
 			-- Reset `Current'
+		require
+			f_attached: f /= Void
 		do
 			make_with_level (c_id, f, a_context)
 		end

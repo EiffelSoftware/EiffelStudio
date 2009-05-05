@@ -19,6 +19,13 @@ inherit
 create
 	make
 
+feature -- Access
+
+	wsdk_60: STRING = "WSDK60"
+	wsdk_61: STRING = "WSDK61"
+	wsdk_70: STRING = "WSDK70"
+			-- Constants defining the various supported SDKs
+
 feature {NONE} -- Access
 
 	batch_file_name: STRING
@@ -29,10 +36,12 @@ feature {NONE} -- Access
 			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
 				create l_result.make (256)
 				l_result.append (l_layout.config_eif_path)
-				if code.is_equal ("WSDK60") then
+				if code.is_equal (wsdk_60) then
 					l_result.append ("\windows_sdk_v6.0.bat")
-				elseif code.is_equal ("WSDK61") then
+				elseif code.is_equal (wsdk_61) then
 					l_result.append ("\windows_sdk_v6.1.bat")
+				elseif code.is_equal (wsdk_70) then
+					l_result.append ("\windows_sdk_v7.0.bat")
 				end
 			end
 

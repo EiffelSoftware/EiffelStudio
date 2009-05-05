@@ -13,19 +13,10 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize,
-			show_modal_to_window,
-			show,
-			destroy
+			initialize
 		end
 
 feature {NONE} -- Initialization
-
-	make (an_interface: like interface)
-			-- Create a window with a parent.
-		do
-			base_make (an_interface)
-		end
 
 	initialize
 			-- Setup action sequences.
@@ -39,12 +30,6 @@ feature {NONE} -- Initialization
 
 			set_is_initialized (True)
 		end
-
-	show
-			-- Run the created Dialog
-		do
-		end
-
 
 feature -- Access
 
@@ -113,8 +98,6 @@ feature -- Element change
 				filter_name.append (")")
 			end
 
-			remove_file_filters
-
 			if not a_filter.is_equal ("*.*") then
 			end
 
@@ -128,62 +111,11 @@ feature -- Element change
 	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
+			start_directory := a_path
+			save_panel.set_directory (create {NS_STRING}.make_with_string (a_path))
 		end
 
 feature {NONE} -- Implementation
-
-	remove_file_filters
-			-- Remove current file filters of `Current'
-		local
-			a_filter_list: POINTER
-			a_filter: POINTER
-			i: INTEGER
-		do
-			if a_filter_list /= NULL then
-				from
-				until
-					a_filter = NULL
-				loop
-					i := i + 1
-				end
-			end
-		end
-
-	show_modal_to_window (a_window: EV_WINDOW)
-			-- Show `Current' modal to `a_window' until the user closes it
-		local
-			filter_string_list: LIST [STRING_32]
-			current_filter_string, current_filter_description: STRING_GENERAL
-		do
-			if not filters.is_empty then
-				remove_file_filters
-			end
-			from
-				filters.start
-			until
-				filters.off
-			loop
-				current_filter_string ?= filters.item.item (1)
-				current_filter_description ?= filters.item.item (2)
-				if current_filter_string /= Void then
-					filter_string_list := current_filter_string.to_string_32.split (';')
-					if current_filter_description /= Void then
-						from
-							filter_string_list.start
-						until
-							filter_string_list.off
-						loop
-							if filter_string_list.item.is_equal ("*.*") then
-							else
-							end
-							filter_string_list.forth
-						end
-					end
-				end
-				filters.forth
-			end
-			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)
-		end
 
 	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
@@ -195,10 +127,7 @@ feature {NONE} -- Implementation
 
 	internal_filename: STRING
 
-	destroy
-			-- Clean up
-		do
-		end
+	save_panel: NS_SAVE_PANEL
 
 	interface: EV_FILE_DIALOG;
 

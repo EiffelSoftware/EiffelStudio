@@ -32,11 +32,7 @@ inherit
 			make,
 			interface,
 			has_focus,
-			on_focus_changed,
 			dispose,
-			set_text,
-			prepend_text,
-			append_text,
 			cocoa_set_size
 		end
 
@@ -74,6 +70,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create combo_box.new
+			text_field := combo_box
 			cocoa_item := combo_box
 		end
 
@@ -82,11 +79,8 @@ feature {NONE} -- Initialization
 	call_selection_action_sequences
 			-- Call the appropriate selection action sequences
 		do
-
+			select_actions.call ([])
 		end
-
-	previous_selected_item_imp: EV_LIST_ITEM_IMP
-		-- Item that was selected previously.
 
 	initialize
 			-- Connect action sequences to signals.
@@ -99,11 +93,13 @@ feature {NONE} -- Initialization
 			-- Insert `v' at position `i'.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v, i)
+			combo_box.insert_item_with_object_value_at_index (create {NS_STRING}.make_with_string (v.text), i-1)
 		end
 
 	remove_i_th (an_index: INTEGER)
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+			combo_box.remove_item_at_index (an_index - 1)
 		end
 
 feature -- Status report
@@ -111,81 +107,58 @@ feature -- Status report
 	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		do
+
 		end
 
 	selected_item: EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		do
-			from
-				start
-			until
-				off
-			loop
-				forth
-			end
+			Result := i_th (combo_box.index_of_selected_item + 1)
 		end
 
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- List of all the selected items. Used for list_item.is_selected implementation.
 		do
+			create Result.make (1)
+			Result.put (i_th (combo_box.index_of_selected_item + 1))
 		end
 
-	select_item (an_index: INTEGER)
+	select_item (a_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		do
+			combo_box.select_item_at_index (a_index - 1)
 		end
 
-	deselect_item (an_index: INTEGER)
+	deselect_item (a_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		do
+			combo_box.deselect_item_at_index (a_index - 1)
 		end
 
 	clear_selection
 			-- Clear the item selection of `Current'.
+		local
+			i: INTEGER
 		do
-		end
-
-feature -- Status setting
-
-	set_maximum_text_length (len: INTEGER)
-			-- Set the length of the longest text size in characters that `Current' can display.
-		do
-		end
-
-	set_text (a_text: STRING_GENERAL)
-			-- Assign `a_text' to `text'.
-		do
-		end
-
-	append_text (a_text: STRING_GENERAL)
-			-- Append `a_text' to the end of the text.
-		do
-		end
-
-	prepend_text (a_text: STRING_GENERAL)
-			-- Prepend `a_text' to the end of the text.
-		do
+			from
+				i := 0
+			until
+				i < count
+			loop
+				combo_box.deselect_item_at_index (i)
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Implementation
-
-	on_focus_changed (a_has_focus: BOOLEAN)
-			-- Focus for `Current' has changed'.
-		do
-		end
 
 	is_list_shown: BOOLEAN
-		-- Is combo list current shown?
 
-	retrieve_toggle_button_signal_connection_id: INTEGER
-		-- Signal connection id used when finding the toggle button of `Current'.
-
-feature {NONE} -- Implementation
 	dispose
 			do
-				precursor {EV_LIST_ITEM_LIST_IMP}
-				precursor {EV_TEXT_FIELD_IMP}
+				Precursor {EV_LIST_ITEM_LIST_IMP}
+				Precursor {EV_TEXT_FIELD_IMP}
 			end
 
 	pixmaps_size_changed

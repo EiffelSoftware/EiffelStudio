@@ -114,6 +114,7 @@ feature -- Basic operation
 				set_is_destroyed (True)
 				destroy_actions.call (Void)
 			end
+			application.terminate
 		end
 
 feature -- Status report

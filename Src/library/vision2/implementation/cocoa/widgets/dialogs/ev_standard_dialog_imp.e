@@ -51,15 +51,17 @@ feature -- Status setting
 
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
+		local
+			button: INTEGER
 		do
---			selected_button := Void
+			button := app_implementation.application.run_modal_for_window (window)
 
-			if selected_button /= Void then
-				if selected_button.is_equal (internal_accept) then
-					interface.ok_actions.call (Void)
-				elseif selected_button.is_equal (ev_cancel) then
-					interface.cancel_actions.call (Void)
-				end
+			if button =  {NS_PANEL}.ok_button then
+				selected_button := internal_accept
+				interface.ok_actions.call (Void)
+			elseif button = {NS_PANEL}.cancel_button then
+				selected_button := ev_cancel
+				interface.cancel_actions.call (Void)
 			end
 		end
 

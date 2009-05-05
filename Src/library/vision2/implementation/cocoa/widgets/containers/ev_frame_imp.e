@@ -104,7 +104,7 @@ feature -- Layout
 			if item_imp /= Void and item_imp.is_show_requested then
 				mw := item_imp.minimum_width
 			end
-			--mw := mw + client_x + border_width
+			mw := mw + client_x --+ border_width
 			--mw := mw.max (text_width + 2 * Text_padding)			
 			internal_set_minimum_width (mw)
 		end
@@ -132,12 +132,14 @@ feature -- Layout
 				mh := item_imp.minimum_height
 			end
 			mh := mh + client_y
-			--mw := mw + client_x + border_width
+			mw := mw + client_x --+ border_width
 			--mw := mw.max (text_width + 2 * Text_padding)			
 			internal_set_minimum_size (mw, mh)
 		end
 
-	client_y: INTEGER is 22;
+	client_x: INTEGER is 14;
+
+	client_y: INTEGER is 14;
 
 feature {EV_ANY_I} -- Implementation
 

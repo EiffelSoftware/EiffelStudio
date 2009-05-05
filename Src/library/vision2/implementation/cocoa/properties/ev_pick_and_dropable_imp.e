@@ -29,11 +29,28 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	screen_x: INTEGER
 			-- Horizontal position of the client area on screen,
 		do
+			Result := top_level_window_imp.window.convert_base_to_screen (
+				cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
+			).x
 		end
 
 	screen_y: INTEGER
 			-- Vertical position of the client area on screen,
+		local
+			l_window: NS_WINDOW
+			screen_height: INTEGER
+			position_in_window, position_on_screen: NS_POINT
 		do
+			-- Translate the coordinate to a top-left coordinate system
+			l_window := top_level_window_imp.window
+			screen_height := l_window.screen.frame.size.height
+			if cocoa_view.is_flipped then
+				position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
+			else
+				position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, cocoa_view.frame.size.height), void)
+			end
+			position_on_screen := l_window.convert_base_to_screen (position_in_window)
+			Result :=  screen_height - position_on_screen.y
 		end
 
 	x_position: INTEGER
@@ -50,7 +67,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := cocoa_view.frame.origin.y
 		end
 
-feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES,  LAYOUT_INSPECTOR} -- Implementation
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.

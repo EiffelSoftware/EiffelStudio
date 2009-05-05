@@ -28,13 +28,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
-
-	call_selection_action_sequences
-			-- Call appropriate selection action sequences
-		deferred
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -45,9 +38,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_PND_DEFERRED_ITEM_PARENT
 

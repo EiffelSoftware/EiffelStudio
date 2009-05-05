@@ -211,7 +211,7 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		do
-			draw_segment (x, y, x, y)
+			draw_segment (x, y, x, y+1)
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
@@ -480,7 +480,7 @@ feature -- filling operations
 		do
 		end
 
-feature {EV_DRAWABLE_IMP} -- Implementation
+feature {EV_DRAWABLE_IMP, EV_TITLED_WINDOW_IMP} -- Implementation
 
 	image: NS_IMAGE
 

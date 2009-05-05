@@ -37,7 +37,7 @@ feature {NONE} -- Basic operation
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			set_children_height (a_height + 2 * border_width, False)
+			set_children_height (a_height, False)
 		end
 
 -- TODO?: abstract to box to avoid duplicated code

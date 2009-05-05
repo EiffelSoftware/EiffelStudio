@@ -43,16 +43,11 @@ feature -- Initialization
 
 feature -- Minimum size
 
-	minimum_height: INTEGER
-			-- Minimum height that the widget may occupy.
-		do
-			Result := 50
-		end
-
-	minimum_width: INTEGER
-			-- Minimum width that the widget may occupy.
-		do
-		end
+   	set_default_minimum_size
+   			-- Platform dependant initializations.
+   		do
+			internal_set_minimum_width ({NS_SCROLLER}.scroller_width)
+ 		end
 
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32)
 		local

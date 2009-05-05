@@ -156,10 +156,10 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Precursor ( v, i )
 			set_item_position ( v, 0, 0 )
-			if is_user_min_height_set or else is_user_min_width_set then
-				set_item_size (v, v.minimum_width, v.minimum_height)
-			end
---			set_item_size ( v, v.minimum_width, v.minimum_height )
+--			if is_user_min_height_set or else is_user_min_width_set then
+--				set_item_size (v, v.minimum_width, v.minimum_height)
+--			end
+			set_item_size ( v, v.minimum_width, v.minimum_height )
 		end
 
 	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)

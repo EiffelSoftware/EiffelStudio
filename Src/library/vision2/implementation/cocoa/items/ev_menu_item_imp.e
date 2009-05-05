@@ -92,13 +92,23 @@ feature -- Element change
 	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			l_text: STRING
+			l_text: STRING_32
+			l_split_list: LIST [STRING_32]
 			i: INTEGER
 			a_menu_imp: EV_MENU_ITEM_LIST_IMP
 		do
-			Precursor {EV_TEXTABLE_IMP} (a_text)
+			l_text := a_text.as_string_32
+			l_split_list :=  l_text.split ('%T')
+			if l_split_list.count = 2 then
+				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
+				l_text := (l_split_list @ 1).as_string_32
+				set_key_equivalent (l_split_list @ 2)
+			else
+				Precursor {EV_TEXTABLE_IMP} (a_text)
+				l_text := a_text.as_string_32
+			end
+
 			-- Get rid of the & sign which denotes a shortcut key
-			l_text := a_text.as_string_8
 			i := l_text.substring_index ("&", 1)
 			if i /= 0 then
 				l_text := l_text.substring (1, i - 1) + l_text.substring (i + 1, l_text.count)
@@ -109,6 +119,25 @@ feature -- Element change
 			if a_menu_imp /= void then
 				a_menu_imp.menu.set_title (l_text)
 			end
+		end
+
+	set_key_equivalent (a_text: STRING_32)
+		local
+			l_key_mask: INTEGER
+			l_split_list: LIST [STRING_32]
+		do
+			l_split_list :=  a_text.split ('+')
+			menu_item.set_key_equivalent (l_split_list.last.as_lower)
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Ctrl").is_equal(other) end) then
+				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.control_key_mask)
+			end
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Shift").is_equal(other) end) then
+				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.shift_key_mask)
+			end
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Alt").is_equal(other) end) then
+				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.alternate_key_mask)
+			end
+			menu_item.set_key_equivalent_modifier_mask (l_key_mask)
 		end
 
 feature -- Measurement

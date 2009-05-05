@@ -14,16 +14,13 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface,
-			set_item_width,
-			set_item_height
+			interface
 		end
 
 	EV_CELL_IMP
 		redefine
 			interface,
 			make,
-			on_removed_item,
 			replace,
 			compute_minimum_width,
 			compute_minimum_height,
@@ -52,13 +49,15 @@ feature -- Access
 
 	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
-		do
-		end
+--		do
+--			Result := scroll_view.bounds.origin.x
+--		end
 
 	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
-		do
-		end
+--		do
+--			Result := scroll_view.bounds.origin.y
+--		end
 
 feature -- Element change
 
@@ -76,47 +75,28 @@ feature -- Element change
 				on_new_item (v_imp)
 			end
 			item := v
-		end
-
-	block_resize_actions
-			-- Block any resize actions that may occur.
-		do
-		end
-
-	unblock_resize_actions
-			-- Unblock all resize actions.
-		do
+			ev_apply_new_size (x_position, y_position, width, height, False)
 		end
 
 	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
-			internal_set_offset (a_x, -1)
+			scroll_view.content_view.scroll_to_point (create {NS_POINT}.make_point (a_x, y_offset))
+			x_offset := a_x
 		end
 
 	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
 		do
-		 internal_set_offset (-1, a_y)
+			scroll_view.content_view.scroll_to_point (create {NS_POINT}.make_point (x_offset, a_y))
+			y_offset := a_y
 		end
 
 	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		do
-			internal_set_item_size (a_width, a_height)
-		end
-
-	set_item_width (a_width: INTEGER)
-			-- Set `a_widget.width' to `a_width'.
-		do
-			internal_set_item_size (a_width, -1)
-		end
-
-	set_item_height (a_height: INTEGER)
-			-- Set `a_widget.height' to `a_height'.
-		do
-			internal_set_item_size (-1, a_height)
+			item_imp.parent_ask_resize (a_width, a_height)
 		end
 
 feature -- Layout
@@ -161,38 +141,6 @@ feature -- Layout
 				item_imp.ev_apply_new_size (l_x_position, l_y_position, l_width, l_height, True)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	internal_set_offset (a_x, a_y: INTEGER)
-		do
-		end
-
-	internal_set_container_size (a_height, a_width: INTEGER_32)
-		do
-		end
-
-	internal_set_item_size (a_width, a_height: INTEGER)
-			-- Set `a_widget.width' to `a_width'.
-			-- Set `a_widget.height' to `a_height'.
-		do
-		end
-
-	on_removed_item (an_item_imp: EV_WIDGET_IMP)
-			-- Reset minimum size.
-		do
-			an_item_imp.set_parent_imp (Void)
-		end
-
-	internal_x_offset, internal_y_offset: INTEGER
-
-	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
-			-- Set `value' of adjustment `l_adj' to `a_value'.
-		require
-			l_adj_not_null: l_adj /= default_pointer
-		do
-
-  		end
 
 feature {EV_ANY_I} -- Implementation
 

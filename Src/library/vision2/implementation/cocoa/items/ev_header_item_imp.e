@@ -21,7 +21,8 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_text
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -31,7 +32,8 @@ inherit
 
 	EV_ITEM_IMP
 		redefine
-			interface
+			interface,
+			width
 		end
 
 create
@@ -43,7 +45,8 @@ feature -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create table_column.new
+			cocoa_item := table_column
 		end
 
 	initialize
@@ -60,13 +63,13 @@ feature -- Initialization
 
 feature -- Access
 
-	minimum_width: INTEGER is 10
+	minimum_width: INTEGER
 		-- Lower bound on `width' in pixels.
 
-	minimum_height: INTEGER is 10
+	minimum_height: INTEGER
 		-- Lower bound on `width' in pixels.
 
-	maximum_width: INTEGER is 10
+	maximum_width: INTEGER
 		-- Upper bound on `width' in pixels.
 
 	user_can_resize: BOOLEAN
@@ -89,24 +92,40 @@ feature -- Access
 
 feature -- Status setting
 
-	set_maximum_width (a_width: INTEGER)
-			-- Assign `a_maximum_width' in pixels to `maximum_width'.
-			-- If `width' is greater than `a_maximum_width', resize.
+	set_text (a_text: STRING_GENERAL)
 		do
-
+			table_column.header_cell.set_string_value (create {NS_STRING}.make_with_string (a_text))
 		end
 
-	set_minimum_width (a_width: INTEGER)
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
+			minimum_width := a_minimum_width
+			if width < minimum_width then
+				set_width (minimum_width)
+			end
+		end
 
+	set_maximum_width (a_maximum_width: INTEGER)
+			-- Assign `a_maximum_width' in pixels to `maximum_width'.
+			-- If `width' is greater than `a_maximum_width', resize.
+		do
+			maximum_width := a_maximum_width
+			if width > maximum_width then
+				set_width (maximum_width)
+			end
 		end
 
 	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		do
+			table_column.set_width (a_width)
+		end
 
+	width: INTEGER
+		do
+			Result := table_column.width.floor
 		end
 
 	resize_to_content
@@ -114,8 +133,12 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		do
-
+			table_column.size_to_fit
 		end
+
+feature {EV_HEADER_IMP} -- Implementation
+
+	table_column: NS_TABLE_COLUMN
 
 feature {NONE} -- Implementation
 

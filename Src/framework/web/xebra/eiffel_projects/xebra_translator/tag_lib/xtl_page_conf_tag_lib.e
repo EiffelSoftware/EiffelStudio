@@ -74,6 +74,7 @@ feature -- Access
 		end
 
 	handle_controller_attribute (a_id, a_value: STRING)
+			-- Handles attribute reading while parsing
 		do
 			if a_id.is_equal ("class") then
 				parser_callback.put_class_name (a_value)

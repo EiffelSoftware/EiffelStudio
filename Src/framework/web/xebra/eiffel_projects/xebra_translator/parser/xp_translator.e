@@ -138,6 +138,7 @@ feature -- Processing
 		end
 
 	process_taglib_with_stream (a_taglibs: TABLE [XTL_TAG_LIBRARY, STRING]; a_stream: KI_CHARACTER_INPUT_STREAM)
+			-- Trasforms stream to tag library and adds it to `a_taglibs'
 		local
 			l_parser: XM_PARSER
 			l_p_callback: XP_TAGLIB_PARSER_CALLBACKS
@@ -151,6 +152,7 @@ feature -- Processing
 		end
 
 	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: HASH_TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
+			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
 			servlet_name_valid: not servlet_name.is_empty
 		local
@@ -174,8 +176,6 @@ feature -- Processing
 				-- Sets the controller_id of all the tags
 			l_controller_class := l_p_callback.controller_class
 			create Result.make (servlet_name, False, l_root_tag, output_path, l_p_callback.is_template, l_controller_class)
-			--create l_controller_resolver.make (servlet_name + "_controller")
-			--l_root_tag.accept (l_controller_resolver)
 		end
 
 feature {NONE} -- Implementation

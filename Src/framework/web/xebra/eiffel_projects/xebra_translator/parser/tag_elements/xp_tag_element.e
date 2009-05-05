@@ -107,10 +107,14 @@ feature --Basic Implementation
 			attribute_has_been_added: old parameters.count + 1 = parameters.count
 		end
 
-	build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]; root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
+	build_tag_tree (
+				a_feature: XEL_FEATURE_ELEMENT;
+				templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
+				root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
+				leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		do
-			internal_build_tag_tree (a_feature, templates, root_template, True)
+			internal_build_tag_tree (a_feature, templates, root_template, True, leftover_regions)
 		end
 
 	copy_tag_tree: like Current
@@ -153,8 +157,13 @@ feature --Basic Implementation
 
 feature {XP_TAG_ELEMENT} -- Implementation
 
-	internal_build_tag_tree (a_feature: XEL_FEATURE_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]; root_template: XGEN_SERVLET_GENERATOR_GENERATOR; is_root: BOOLEAN)
-			-- Adds the needed expressions which build the tree of Current with the correct classes
+	internal_build_tag_tree (
+					a_feature: XEL_FEATURE_ELEMENT;
+					templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
+					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
+					is_root: BOOLEAN;
+					leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
+				-- Adds the needed expressions which build the tree of Current with the correct classes
 		require
 			controller_id_set: attached controller_id -- Doesn't work?
 		do
@@ -180,7 +189,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				until
 					children.after
 				loop
-					children.item.internal_build_tag_tree (a_feature, templates, root_template, False)
+					children.item.internal_build_tag_tree (a_feature, templates, root_template, False, leftover_regions)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")

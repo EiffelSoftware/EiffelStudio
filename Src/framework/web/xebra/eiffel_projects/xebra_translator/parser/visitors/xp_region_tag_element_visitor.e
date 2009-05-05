@@ -1,12 +1,12 @@
 note
 	description: "[
-		{XP_AGENT_TAG_VISITOR}.
+		{XP_REGION_TAG_ELEMENT_VISITOR}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XP_AGENT_TAG_VISITOR
+	XP_REGION_TAG_ELEMENT_VISITOR
 
 inherit
 	XP_TAG_ELEMENT_VISITOR
@@ -16,32 +16,38 @@ create
 
 feature -- Initialization
 
-	make (a_tag_element_agent, a_include_tag_element_agent, a_region_tag_element_agent: PROCEDURE [ANY, TUPLE [XP_TAG_ELEMENT]])
+	make (a_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 			-- `regions': Mapping between region name and tag tree
 		do
+			regions := a_regions
 		end
 
-feature{NONE} -- Access
+feature {NONE}
 
-		tag_element_agent, include_tag_element_agent, region_tag_element_agent: PROCEDURE [ANY, TUPLE [XP_TAG_ELEMENT]]
+	regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
+			-- Regions of a template
 
 feature -- Access
 
 	visit_tag_element (tag: XP_TAG_ELEMENT)
 			-- Precursor
 		do
-			tag_element_agent.call ([tag])
+			-- Do nothing
 		end
 
 	visit_include_tag_element (tag: XP_INCLUDE_TAG_ELEMENT)
 			-- Precursor
 		do
-			include_tag_element_agent.call ([tag])
+			-- Do nothing
 		end
 
 	visit_region_tag_element (tag: XP_REGION_TAG_ELEMENT)
+			-- Precursor
 		do
-			region_tag_element_agent.call ([tag])
+			if attached regions [tag.retrieve_value ("id")] as region then
+				tag.set_region (region)
+				regions [tag.retrieve_value ("id")] := Void
+			end
 		end
 
 end

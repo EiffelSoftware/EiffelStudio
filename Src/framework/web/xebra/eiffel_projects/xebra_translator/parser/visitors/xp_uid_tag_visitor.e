@@ -40,6 +40,7 @@ feature -- Access
 		end
 
 	visit_region_tag_element (tag: XP_REGION_TAG_ELEMENT)
+			-- Precursor
 		do
 			tag.set_controller_id (uid)
 		end

@@ -112,6 +112,7 @@ feature {NONE} -- Implementation
 		end
 
 	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
+			-- Builds the table [controller_uid, controller_type]
 		do
 			a_feature.append_expression ("create controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
 			from
@@ -127,6 +128,7 @@ feature {NONE} -- Implementation
 feature -- Constants
 
 	Generator_Prefix: STRING = "g_"
+		-- Prefix of generated classes
 
 	servlet_gen_ecf: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -149,6 +151,7 @@ feature -- Constants
 	</target>
 </system>
 	]"
+		-- The .ecf file
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

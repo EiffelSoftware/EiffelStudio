@@ -20,6 +20,8 @@ deferred class NETWORK_RESOURCE inherit
 		end
 
 	EXCEPTIONS
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end

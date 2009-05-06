@@ -86,6 +86,8 @@ feature {NONE} -- Initialization
 --			drop_actions.extend (~on_cluster_drop)
 			create classes_double_click_agents.make
 			create cluster_double_click_agents.make
+			create classes_single_click_agents.make
+			create cluster_single_click_agents.make
 			create expanded_clusters.make (20)
 			set_minimum_height (20)
 			enable_default_tree_navigation_behavior (False, False, False, True)
@@ -262,6 +264,18 @@ feature -- Activation
 			-- Add a double click action for classes.
 		do
 			cluster_double_click_agents.extend (p)
+		end
+
+	add_single_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+			-- Add a single click action for classes.
+		do
+			classes_single_click_agents.extend (p)
+		end
+
+	add_single_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+			-- Add a single click action for classes.
+		do
+			cluster_single_click_agents.extend (p)
 		end
 
 	show_stone (a_stone: STONE)
@@ -829,6 +843,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: EB_CLASSES_TREE_FOLDER_ITEM
 			l_group: EB_SORTED_CLUSTER
+			l_agents: like classes_double_click_agents
 		do
 			from
 				a_grps.start
@@ -848,21 +863,42 @@ feature {NONE} -- Implementation
 					if textable /= Void then
 						l_item.associate_textable_with_classes (textable)
 					end
+
+					l_agents := classes_double_click_agents
 					from
-						classes_double_click_agents.start
+						l_agents.start
 					until
-						classes_double_click_agents.after
+						l_agents.after
 					loop
-						l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
-						classes_double_click_agents.forth
+						l_item.add_double_click_action_to_classes (l_agents.item)
+						l_agents.forth
 					end
+					l_agents := cluster_double_click_agents
 					from
-						cluster_double_click_agents.start
+						l_agents.start
 					until
-						cluster_double_click_agents.after
+						l_agents.after
 					loop
-						l_item.add_double_click_action_to_cluster (cluster_double_click_agents.item)
+						l_item.add_double_click_action_to_cluster (l_agents.item)
 						cluster_double_click_agents.forth
+					end
+					l_agents := classes_single_click_agents
+					from
+						l_agents.start
+					until
+						l_agents.after
+					loop
+						l_item.add_single_click_action_to_classes (l_agents.item)
+						l_agents.forth
+					end
+					l_agents := cluster_single_click_agents
+					from
+						l_agents.start
+					until
+						l_agents.after
+					loop
+						l_item.add_single_click_action_to_cluster (l_agents.item)
+						l_agents.forth
 					end
 				end
 				a_grps.forth
@@ -1015,13 +1051,30 @@ feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 	cluster_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on clusters.
 
+	classes_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+			-- Agents associated to single-click on classes.
+
+	cluster_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+			-- Agents associated to single-click on clusters.
+
+	set_last_pressed_item (a_item: like last_pressed_item)
+			-- Set `last_pressed_item' with `a_item'
+		do
+			last_pressed_item := a_item
+		end
+
+	last_pressed_item: EB_CLASSES_TREE_ITEM
+			-- Last pressed item.
+
 invariant
 	classes_double_click_agents_not_void: classes_double_click_agents /= Void
 	cluster_double_click_agents_not_void: cluster_double_click_agents /= Void
+	classes_single_click_agents_not_void: classes_single_click_agents /= Void
+	cluster_single_click_agents_not_void: cluster_single_click_agents /= Void
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1034,22 +1087,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -2175,6 +2175,7 @@ test	like-current-void-safety						attach060 tcf pass void_safe anchored_types
 test	object-test-in-inherited-assertions				attach061 tcf pass void_safe object_test fixed
 test	detaching-attached-variable-in-loop				attach062 tcf pass void_safe scope validity
 test	void-assigned-to-stable-attribute				attach063 tcf pass void_safe stable attribute validity
+test	void-assigned-to-object-test-with-create		attach064 tcf pass void_safe object_test
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

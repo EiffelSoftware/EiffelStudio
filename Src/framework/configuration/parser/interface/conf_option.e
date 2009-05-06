@@ -606,7 +606,6 @@ feature -- Merging
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
 			-- Apply this to all options.
 		local
-			l_tmp: like debugs
 			l_namespace: like local_namespace
 		do
 			if other /= Void then

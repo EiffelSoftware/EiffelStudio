@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			managed_tags.compare_objects
 
 			make_without_targets (a_context_menu_factory)
-			add_double_click_action_to_classes (agent on_class_double_click)
-			add_double_click_action_to_cluster (agent on_cluster_double_click)
+			add_single_click_action_to_classes (agent on_button_press_action)
+			add_single_click_action_to_cluster (agent on_button_press_action)
 			key_release_actions.extend (agent on_key_released)
 			eis_tool_widget := a_widget
 
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 		do
 			create l_target_node.make (a_target)
 			l_target_node.set_data (a_target)
-			l_target_node.pointer_double_press_actions.extend (agent on_target_double_click)
+			l_target_node.pointer_button_press_actions.extend (agent on_button_press_action)
 			a_list.extend (l_target_node)
 			if a_target = universe.target then
 				build_tree_on_list (l_target_node)
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 		do
 			create l_item.make (interface_names.l_items_without_tag)
 			l_item.set_pixmap (pixmaps.icon_pixmaps.information_no_tag_icon)
-			l_item.pointer_double_press_actions.extend (agent on_tag_double_clicked)
+			l_item.pointer_button_press_actions.extend (agent on_button_press_action)
 			tag_header.extend (l_item)
 
 			create managed_tags.make
@@ -152,7 +152,7 @@ feature {NONE} -- Initialization
 					l_managed_tags.after
 				loop
 					create l_item.make (l_managed_tags.item_for_iteration)
-					l_item.pointer_double_press_actions.extend (agent on_tag_double_clicked)
+					l_item.pointer_button_press_actions.extend (agent on_button_press_action)
 					tag_header.extend (l_item)
 					l_managed_tags.forth
 				end
@@ -182,6 +182,12 @@ feature -- Operation
 			end
 		end
 
+	item_selected
+			-- Show content of selected item
+		do
+			on_component_click (selected_item)
+		end
+
 feature -- Access
 
 	current_view: detachable ES_EIS_COMPONENT_VIEW [ANY]
@@ -192,7 +198,7 @@ feature -- Access
 
 feature {NONE} -- Actions
 
-	on_class_double_click (	x_rel: INTEGER;
+	on_button_press_action (x_rel: INTEGER;
 							y_rel: INTEGER;
 							button: INTEGER;
 							x_tilt: DOUBLE;
@@ -200,64 +206,24 @@ feature {NONE} -- Actions
 							pression: DOUBLE;
 							x_abs: INTEGER;
 							y_abs: INTEGER)
-			-- Display entries corresponding to the class double clicked.
 		do
-			on_component_click
-		end
-
-	on_cluster_double_click (x_rel: INTEGER;
-							y_rel: INTEGER;
-							button: INTEGER;
-							x_tilt: DOUBLE;
-							y_tilt: DOUBLE;
-							pression: DOUBLE;
-							x_abs: INTEGER;
-							y_abs: INTEGER)
-			-- Display entries corresponding to the cluster double clicked.
-		do
-			on_component_click
-		end
-
-	on_target_double_click (x_rel: INTEGER;
-							y_rel: INTEGER;
-							button: INTEGER;
-							x_tilt: DOUBLE;
-							y_tilt: DOUBLE;
-							pression: DOUBLE;
-							x_abs: INTEGER;
-							y_abs: INTEGER)
-			-- Display entries corresponding to the target double clicked.
-		do
-			on_component_click
-		end
-
-	on_tag_double_clicked (x_rel: INTEGER;
-							y_rel: INTEGER;
-							button: INTEGER;
-							x_tilt: DOUBLE;
-							y_tilt: DOUBLE;
-							pression: DOUBLE;
-							x_abs: INTEGER;
-							y_abs: INTEGER)
-			-- Display entries corresponding to the double double clicked
-		do
-			on_component_click
+			on_component_click (last_pressed_item)
 		end
 
 	on_key_released (a_key: EV_KEY)
 			-- On key released
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				on_component_click
+				on_component_click (selected_item)
 			end
 		end
 
-	on_component_click
+	on_component_click (a_item: detachable EV_TREE_NODE)
 			-- On target/cluster/class item clicked
 		local
 			l_view: ES_EIS_COMPONENT_VIEW [ANY]
 		do
-			l_view := view_from_selected_item
+			l_view := view_from_item (a_item)
 			if l_view /= Void then
 					-- If old view is void
 				if old_view = Void or else not l_view.same_view (old_view) then
@@ -277,16 +243,16 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Component view factory
 
-	view_from_selected_item: detachable ES_EIS_COMPONENT_VIEW [ANY]
+	view_from_item (a_item: detachable EV_TREE_NODE): detachable ES_EIS_COMPONENT_VIEW [ANY]
 			-- Get view from
 		local
-			l_item: EV_TREE_NODE
+			l_item: detachable EV_TREE_NODE
 			l_sorted_cluster: detachable EB_SORTED_CLUSTER
 		do
-			l_item := selected_item
+			l_item := a_item
 			if l_item /= Void then
 				if attached {ES_EIS_ENTRY_GRID} eis_tool_widget.entry_list as lt_grid and then lt_grid.is_usable then
-					if attached {ES_EIS_TREE_TAG_ITEM} selected_item as lt_item and then attached lt_item.text.as_string_32 as lt_string then
+					if attached {ES_EIS_TREE_TAG_ITEM} l_item as lt_item and then attached lt_item.text.as_string_32 as lt_string then
 						if tag_header.first = lt_item then
 								-- Empty string indicates to view entries without tag.
 							create {ES_EIS_TAG_VIEW}Result.make (create {STRING_32}.make_empty, lt_grid)
@@ -322,7 +288,7 @@ feature {NONE} -- EIS observer
 				managed_tags.extend (a_tag)
 
 				create l_node.make (a_tag)
-				l_node.pointer_double_press_actions.extend (agent on_tag_double_clicked)
+				l_node.pointer_button_press_actions.extend (agent on_button_press_action)
 					-- Here we plus one to shift the mapping between `managed_tags'
 					-- and items under `tag_header'.
 					-- This is because the first item is ocuppied by "Item without tag".

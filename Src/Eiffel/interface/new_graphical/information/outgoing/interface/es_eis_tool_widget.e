@@ -305,10 +305,12 @@ feature -- Callbacks
 					l_conv_class ?= l_window.stone
 					if l_conv_class /= Void then
 						tree.show_class (l_conv_class.class_i)
+						tree.item_selected
 					else
 						l_conv_cluster ?= l_window.stone
 						if l_conv_cluster /= Void then
 							tree.show_subfolder (l_conv_cluster.group, l_conv_cluster.path)
+							tree.item_selected
 						else
 								-- The current stone is neither a class stone nor a cluster stone.
 							prompts.show_warning_prompt (Warning_messages.w_Choose_class_or_cluster, l_window.window, Void)
@@ -385,7 +387,7 @@ invariant
 	panel_not_void: panel /= Void
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -409,11 +411,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

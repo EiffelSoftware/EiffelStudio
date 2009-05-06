@@ -10,7 +10,7 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
-		<library name="api_wrapper" location="$EIFFEL_SRC\framework\api_wrapper\api_wrapper-safe.ecf">
+		<library name="api_wrapper" location="$EIFFEL_SRC\library\api_wrapper\api_wrapper-safe.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>

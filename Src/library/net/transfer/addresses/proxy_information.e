@@ -55,7 +55,7 @@ feature -- Status setting
 		ensure
 			host_set: host = h
 		end
-			
+
 	set_port (p: INTEGER)
 			-- Set port to `p'.
 		require

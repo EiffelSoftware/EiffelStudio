@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	TRANSFER_MANAGER_BUILDER
 
 feature -- Access

@@ -24,13 +24,13 @@ feature -- Status report
 
 	Default_port: INTEGER = 80
 			-- Number of default port for service (Answer: 80)
-			
+
 	Is_proxy_supported: BOOLEAN = True
 			-- Are proxy connections supported? (Answer: yes)
 
 	Has_username: BOOLEAN = True;
 			-- Can address contain a username?
-			
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -13,7 +13,7 @@ note
 		   %using the character '\'"
 
 class CHARACTER_SET inherit
-	
+
 	TO_SPECIAL [BOOLEAN]
 		redefine
 			default_create
@@ -75,7 +75,7 @@ feature -- Status report
 			end
 			Result := not Result
 		end
-		
+
 feature -- Status setting
 
 	define (s: STRING)
@@ -110,7 +110,7 @@ feature -- Element change
 		do
 			process_string (s, True)
 		end
-		
+
 feature -- Removal
 
 	remove (s: STRING)
@@ -121,7 +121,7 @@ feature -- Removal
 		do
 			process_string (s, False)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	process_string (s: STRING; for_addition: BOOLEAN)

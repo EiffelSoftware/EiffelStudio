@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	TRANSACTION
 
 feature -- Access
@@ -16,26 +16,26 @@ feature -- Access
 			-- Current source
 		deferred
 		end
-	
+
 	target: DATA_RESOURCE
 			-- Current target
 		deferred
 		end
-	
+
 feature -- Measurement
 
 	count: INTEGER
 			-- Number of transactions
 		deferred
 		end
-	 
+
 feature -- Status report
 
 	is_correct: BOOLEAN
 			-- Is transaction set up correctly?
 		deferred
 		end
-	 
+
 	error: BOOLEAN
 			-- Has an error occurred in current transaction?
 		do
@@ -46,14 +46,14 @@ feature -- Status report
 			-- Has the transaction succeeded?
 		deferred
 		end
-	 
+
 feature -- Status setting
 
 	reset_error
 			-- Reset error flag.
 		deferred
 		end
-	 
+
 feature -- Basic operations
 
 	execute
@@ -62,7 +62,7 @@ feature -- Basic operations
 			correct_transaction: is_correct
 		deferred
 		end
-	 
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

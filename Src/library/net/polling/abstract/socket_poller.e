@@ -21,7 +21,7 @@ feature -- Creation
 			make_service_list;
 			set_poll_all;
 			set_no_discard
-			
+
 		end;
 
 	make_active (a_poll_delay: INTEGER)
@@ -197,7 +197,7 @@ feature {NONE} -- execution
 				listen_list_forth
 			end
 		end
-			
+
 
 feature {NONE} -- implementation
 
@@ -234,7 +234,7 @@ feature {NONE} -- implementation
 
 	make_service_list
 			-- Create three sublists regarding service sockets.
-		do	
+		do
 			create service_socket_list.make;
 			create service_command_list.make;
 			create service_argument_list.make;

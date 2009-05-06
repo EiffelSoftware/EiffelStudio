@@ -37,7 +37,7 @@ feature -- Access
 			Result.append ("://")
 			Result.append (name)
 		end
-			
+
 feature -- Status report
 
 	is_correct: BOOLEAN
@@ -45,41 +45,41 @@ feature -- Status report
 		do
 			Result := name.is_valid
 		end
-	 
+
 	Default_port: INTEGER = 0
 			-- Default port number for service (Answer: 0)
 			-- (The 'file' service does not use a port.)
 
 	Is_proxy_supported: BOOLEAN = False
 			-- Are proxy connections supported? (Answer: no)
-	 
+
 	proxy_host_ok (host: STRING): BOOLEAN
 	 		-- Is host name of proxy correct?
 		do
 			Result := False
 		end
-	
+
 	Is_password_accepted: BOOLEAN = False
 			-- Can a password be set? (Answer: no)
-	
+
 	Is_hashable: BOOLEAN = False
 			-- Are objects of this type hashable? (Answer: no)
 
 	Has_username: BOOLEAN = False
 			-- Can address contain a username? (Answer: no)
-	 
+
 feature -- Status setting
 
 	set_username (un: STRING)
 			-- Set username.
 		do
 		end
-	 
+
 	set_password (pw: STRING)
 			-- Set password.
 		do
 		end
-	 
+
 feature {NONE} -- Basic operations
 
 	analyze

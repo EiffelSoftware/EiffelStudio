@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATA_RESOURCE_ERROR_CONSTANTS
 
 feature {NONE} -- Constants
@@ -15,9 +15,9 @@ feature {NONE} -- Constants
 	File_not_found: INTEGER = 1
 
 	Write_error: INTEGER = 2
-	
+
 	Connection_refused: INTEGER = 3
-	
+
 	No_such_user: INTEGER = 4
 
 	Access_denied: INTEGER = 5
@@ -27,11 +27,11 @@ feature {NONE} -- Constants
 	Permission_denied: INTEGER = 7
 
 	Transfer_failed: INTEGER = 8
-	
+
 	Transmission_error: INTEGER = 9
-	
+
 	Connection_timeout: INTEGER = 10
-	
+
 feature -- Status report
 
 	error_text (code: INTEGER): STRING

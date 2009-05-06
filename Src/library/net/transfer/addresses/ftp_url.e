@@ -39,7 +39,7 @@ feature -- Status report
 
 	Default_port: INTEGER = 21
 			-- Number of default port for service (Answer: 21)
-			
+
 	Is_proxy_supported: BOOLEAN = True
 			-- Are proxy connections supported? (Answer: yes)
 

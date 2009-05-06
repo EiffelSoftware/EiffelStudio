@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	TRANSFER_COMMAND_CONSTANTS
 
 feature {NONE} -- Constants for FTP
@@ -27,15 +27,15 @@ feature {NONE} -- Constants for FTP
 	Ftp_retrieve_command: STRING = "RETR"
 
 	Ftp_store_command: STRING = "STOR"
-	
+
 feature {NONE} -- Constants for HTTP
 
 	Http_get_command: STRING = "GET"
 
 	Http_version: STRING = "HTTP/1.0"
-	
+
 	Http_host_header: STRING = "Host"
-	
+
 	Http_Authorization_header: STRING = "Authorization"
 
 	Http_end_of_header_line: STRING = "%R%N"

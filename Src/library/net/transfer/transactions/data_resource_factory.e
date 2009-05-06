@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATA_RESOURCE_FACTORY
 
 feature -- Access

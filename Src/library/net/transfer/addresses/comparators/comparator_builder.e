@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	COMPARATOR_BUILDER
 
 feature -- Access

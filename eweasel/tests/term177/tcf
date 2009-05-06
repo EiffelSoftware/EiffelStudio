@@ -1,0 +1,13 @@
+test_name 	argument-anchors-formal-crash
+test_description When you use a feature which has a like argument and that the actual argument is a formal generic then the compiler crashes when it should not.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+test_end

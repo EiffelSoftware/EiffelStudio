@@ -3,7 +3,11 @@ class
 
 feature
 
-	dup (a: ANY): like a
+	dup alias "&" (a: ANY): like a
+		do
+		end
+
+	bracket alias "[]" (a: ANY): like a
 		do
 		end
 

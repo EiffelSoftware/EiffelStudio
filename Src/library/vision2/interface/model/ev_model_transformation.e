@@ -194,7 +194,7 @@ feature -- Basic operation
 			l_area.put (0.0, 6);		l_area.put (0.0, 7);		l_area.put (1.0, 8)
 		end
 
-	infix "*" (other: like Current): like Current
+	product alias "*" (other: like Current): like Current
 			-- Calculate result := Current * other.
 		require
 			other_not_void: other /= Void

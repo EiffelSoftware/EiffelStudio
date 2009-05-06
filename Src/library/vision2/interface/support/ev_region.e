@@ -53,7 +53,7 @@ feature -- Element Change
 
 feature -- Access
 
-	intersect, infix "and", infix "&" (a_region: EV_REGION): EV_REGION
+	intersect alias "and", conjuncted alias "&" (a_region: EV_REGION): EV_REGION
 			-- Intersection of `a_region' with `Current' .
 		require
 			a_region_valid: a_region /= Void and then not a_region.is_destroyed
@@ -64,7 +64,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	union, infix "or", infix "|" (a_region: EV_REGION): EV_REGION
+	union alias "or", disjuncted alias "|" (a_region: EV_REGION): EV_REGION
 			-- Union of `a_region' with `Current'.
 		require
 			a_region_valid: a_region /= Void and then not a_region.is_destroyed
@@ -75,7 +75,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	subtract, infix "-" (a_region: EV_REGION): EV_REGION
+	subtract alias "-" (a_region: EV_REGION): EV_REGION
 			-- `a_region' subtracted from `Current'.
 		require
 			a_region_valid: a_region /= Void and then not a_region.is_destroyed
@@ -86,7 +86,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	exclusive_or, infix "xor" (a_region: EV_REGION): EV_REGION
+	exclusive_or alias "xor" (a_region: EV_REGION): EV_REGION
 			-- Exclusive or `a_region' with `Current'.
 		require
 			a_region_valid: a_region /= Void and then not a_region.is_destroyed

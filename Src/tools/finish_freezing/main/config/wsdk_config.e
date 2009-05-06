@@ -42,6 +42,9 @@ feature {NONE} -- Access
 					l_result.append ("\windows_sdk_v6.1.bat")
 				elseif code.is_equal (wsdk_70) then
 					l_result.append ("\windows_sdk_v7.0.bat")
+				else
+						-- We will use the default batch file.
+					l_result := Void
 				end
 			end
 

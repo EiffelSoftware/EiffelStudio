@@ -141,25 +141,27 @@ feature {NONE} -- Basic operations
 		local
 			pos, pos2: INTEGER
 			l_sep_pos: INTEGER
+			l_address: like address
 		do
-			pos := address.index_of ('/', 1)
+			create l_address.make_from_string (address)
+			pos := l_address.index_of ('/', 1)
 			if pos = 0 then
 					-- Make sure there is a `/'
-				address.extend ('/')
-				pos := address.count
+				l_address.extend ('/')
+				pos := l_address.count
 			end
-			l_sep_pos := address.substring_index ("//", 1)
+			l_sep_pos := l_address.substring_index ("//", 1)
 			if pos > 1 and l_sep_pos = 0 and
-				address.substring_index (Service + ":", 1) = 0 then
-				host := address.substring (1, pos - 1)
-				address.remove_head (pos)
-				path := address.twin
+				l_address.substring_index (Service + ":", 1) = 0 then
+				host := l_address.substring (1, pos - 1)
+				l_address.remove_head (pos)
+				path := l_address.string
 			elseif l_sep_pos > 0 and
-				address.substring_index (Service + ":", 1) > 0 then
-				pos2 := address.index_of ('/', pos + 2)
-				host := address.substring (pos + 2, pos2 - 1)
-				address.remove_head (pos2)
-				path := address.twin
+				l_address.substring_index (Service + ":", 1) > 0 then
+				pos2 := l_address.index_of ('/', pos + 2)
+				host := l_address.substring (pos + 2, pos2 - 1)
+				l_address.remove_head (pos2)
+				path := l_address.string
 			end
 
 			if not host.is_empty and has_username and

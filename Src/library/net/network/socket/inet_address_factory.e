@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 		    					else
 	    							if j + INT16SZ > {INET6_ADDRESS}.INADDRSZ + 1 then
 										Result := Void
-									else
+									elseif Result /= Void then
 	    								Result.put (((val |>> 8) & 0xff).as_natural_8, j)
 	    								j := j + 1
 	    								Result.put ((val & 0xff).as_natural_8, j)
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 									v4addr := text_to_numeric_format_v4 (ia4);
 									if v4addr = Void then
 		    							Result := Void
-									else
+									elseif Result /= Void then
 										from
 											k := 1
 										until

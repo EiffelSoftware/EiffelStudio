@@ -242,7 +242,6 @@ feature {NONE} -- Implementation: byte node
 			f_not_void: f /= Void
 			ctx_attached: ctx /= Void
 		local
-			ta: TYPE_A
 			tu: TUPLE [id: ID_AS; li: LOCAL_INFO]
 			l_name_id: INTEGER
 			ct: CLASS_TYPE

@@ -283,18 +283,18 @@ feature {NONE} -- Pick and Drop implementation
 				t.pebble := ost
 				t.accept_cursor := ost.stone_cursor
 				t.deny_cursor := ost.X_stone_cursor
-				--When compiler is fixed use: t := [ost, ost.stone_cursor, ost.X_stone_cursor]
-				internal_items_stone_data[col_value_index] := t
-				internal_items_stone_data[col_type_index] := t
+					-- When compiler is fixed use: t := [ost, ost.stone_cursor, ost.X_stone_cursor]
+				internal_items_stone_data.put (t, col_value_index)
+				internal_items_stone_data.put (t, col_type_index)
 			else
 				ocl := object_dynamic_class
 				if ocl /= Void then
-					create {CLASSC_STONE} clst.make (ocl)
+					create clst.make (ocl)
 					create t
 					t.pebble := clst
 					t.accept_cursor := clst.stone_cursor
 					t.deny_cursor := clst.X_stone_cursor
-					--When compiler is fixed use: t := [clst, clst.stone_cursor, clst.X_stone_cursor]
+						-- When compiler is fixed use: t := [clst, clst.stone_cursor, clst.X_stone_cursor]
 					internal_items_stone_data[col_type_index] := t
 				end
 			end

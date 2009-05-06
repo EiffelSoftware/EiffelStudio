@@ -21,9 +21,11 @@ feature
 			objects.linear_representation.do_all (
 				agent (g: G; r: ARRAYED_LIST [G]) do
 					r.extend(internal.dup(g))
+					r.extend(internal & g)
+					r.extend(internal [g])
 				end (?, l_res))
 
-			copy_fields(l_res.first, v)
+			internal.copy_fields(l_res.first, v)
 		end
 
 end

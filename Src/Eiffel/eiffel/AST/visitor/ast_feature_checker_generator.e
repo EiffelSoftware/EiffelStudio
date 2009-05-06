@@ -5128,6 +5128,7 @@ feature -- Implementation
 			break_point_slot_count := break_point_slot_count + 1
 
 				-- Set assigner call flag for target expression
+			last_assigner_command := Void
 			is_assigner_call := True
 			l_as.target.process (Current)
 			l_is_tuple_access := is_last_access_tuple_access
@@ -5137,8 +5138,8 @@ feature -- Implementation
 			end
 			target_byte_node := last_byte_node
 			target_type := last_type
-			target_assigner := last_assigner_command
 			if target_type /= Void then
+				target_assigner := last_assigner_command
 				if target_assigner = Void and then not l_is_tuple_access then
 						-- If we have no `target_assigner' and the last access is not a tuple access
 						-- then we have an error.

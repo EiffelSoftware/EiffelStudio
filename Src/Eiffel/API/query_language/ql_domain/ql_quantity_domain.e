@@ -22,6 +22,9 @@ inherit
 		end
 
 	QL_VECTOR
+		rename
+			minus as vector_minus
+		end
 
 create
 	make

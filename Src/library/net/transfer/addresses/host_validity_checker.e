@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	HOST_VALIDITY_CHECKER
 
 feature -- Status report

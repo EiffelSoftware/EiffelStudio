@@ -38,10 +38,10 @@ feature -- Access
 
 	source: DATA_RESOURCE
 			-- Current source
-	
+
 	target: DATA_RESOURCE
 			-- Current target
-	
+
 feature -- Measurement
 
 	count: INTEGER = 1
@@ -58,9 +58,9 @@ feature -- Status report
 	succeeded: BOOLEAN
 			-- Has the transaction succeeded?
 		do
-			Result := not error and then not source.is_packet_pending and 
+			Result := not error and then not source.is_packet_pending and
 				(source.bytes_transferred = target.bytes_transferred) and
-				(source.is_count_valid implies 
+				(source.is_count_valid implies
 				source.count = target.bytes_transferred)
 		end
 

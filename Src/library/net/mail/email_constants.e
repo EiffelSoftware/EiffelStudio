@@ -59,7 +59,7 @@ feature -- Constants for email headers (Authorized keys for the Hashtables)
 
 	H_reply_to: STRING = "Reply-to"
 
-	Default_headers: ARRAY [STRING] 
+	Default_headers: ARRAY [STRING]
 		once
 			create Result.make_from_array (<<H_to, H_from, H_cc, H_bcc, H_reply_to>>)
 		end

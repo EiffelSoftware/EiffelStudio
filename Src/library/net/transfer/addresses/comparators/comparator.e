@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	COMPARATOR
 
 feature -- Access
@@ -21,10 +21,10 @@ feature -- Access
 			-- Does comparator contain `c'?
 		deferred
 		end
-	
+
 invariant
 
-	no_empty_comparator: character_set /= Void and then 
+	no_empty_comparator: character_set /= Void and then
 			not character_set.is_empty
 
 note

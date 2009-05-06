@@ -43,11 +43,11 @@ feature -- Access
 		do
 			Result := lower <= c and c <= upper
 		end
-		
+
 feature {NONE} -- Implementation
 
 	lower: CHARACTER
-	
+
 	upper: CHARACTER;
 
 note

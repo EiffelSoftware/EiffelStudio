@@ -16,7 +16,7 @@ inherit
 		redefine
 			is_equal, copy
 		end
-		
+
 create
 	make
 

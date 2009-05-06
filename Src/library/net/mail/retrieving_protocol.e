@@ -12,7 +12,7 @@ deferred class RETRIEVING_PROTOCOL inherit
 
 feature -- Basic operations
 
-	execute_transfer 
+	execute_transfer
 			-- Do the transfer.
 		deferred
 		end

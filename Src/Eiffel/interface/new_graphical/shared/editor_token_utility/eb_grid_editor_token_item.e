@@ -660,8 +660,15 @@ feature -- Pick and drop
 		local
 			l_index: INTEGER
 			l_stone: STONE
+			l_pointer_position: EV_COORDINATE
 		do
-			l_index := token_index_at_position (a_orignal_pointer_position)
+			l_pointer_position := a_orignal_pointer_position.twin
+			-- `a_orignal_pointer_position' is grid virtual pointer position, but `token_index_at_position' need screen position
+			-- Adapt it to screen position. See bug#14364
+			l_pointer_position.set_y (l_pointer_position.y - parent.virtual_y_position)
+			l_pointer_position.set_x (l_pointer_position.x - parent.virtual_x_position)
+			l_index := token_index_at_position (l_pointer_position)
+
 			if l_index > 0 then
 				l_stone ?= editor_token_pebble (l_index)
 				if l_stone /= Void then

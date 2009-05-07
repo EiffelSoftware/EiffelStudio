@@ -81,6 +81,7 @@ feature -- Access
 			s := display_message
 			if s /= Void then
 				Result := Debugger_manager.Dump_value_factory.new_manifest_string_value (display_message.as_string_8, dynamic_class)
+				Result.invalidate_value
 			end
 		end
 

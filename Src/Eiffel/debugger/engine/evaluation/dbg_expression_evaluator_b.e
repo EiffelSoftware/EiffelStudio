@@ -2054,14 +2054,16 @@ feature {NONE} -- Evaluation: implementation
 			else
 				dbg_error_handler.notify_error_evaluation_report_to_support (Void)
 			end
-			if a_boolean /= Void and then
-				a_boolean.has_value and then
-				(attached a_boolean.value as a_value) and then
-				a_value.is_type_boolean
-			then
-				Result := a_value.as_dump_value_basic.value_boolean
-			else
-				dbg_error_handler.notify_error_evaluation_report_to_support (Void)
+			if not error_occurred then
+				if a_boolean /= Void and then
+					a_boolean.has_value and then
+					(attached a_boolean.value as a_value) and then
+					a_value.is_type_boolean
+				then
+					Result := a_value.as_dump_value_basic.value_boolean
+				else
+					dbg_error_handler.notify_error_evaluation_report_to_support (Void)
+				end
 			end
 		end
 

@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				dmp := a_target
+				check is_valid_value: dmp.is_valid_value end
 				if dmp.is_basic then
 					fi := realf
 					par := par + 4

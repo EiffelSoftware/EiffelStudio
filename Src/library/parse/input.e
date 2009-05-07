@@ -136,7 +136,9 @@ feature  -- Input
 			retrieved_file: RAW_FILE
 		do
 			create retrieved_file.make_open_read (filename);
-			analyzer ?= retrieved_file.retrieved;
+			if attached {like analyzer} retrieved_file.retrieved as l_ana then
+				analyzer := l_ana
+			end
 			retrieved_file.close
 		end;
 

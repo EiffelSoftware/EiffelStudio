@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	DYNAMIC_API_LOADER_IMP
+	DYNAMIC_API_LOADER
 
 inherit
 	DYNAMIC_API_LOADER_I
@@ -26,7 +26,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME
@@ -55,9 +55,9 @@ feature -- Basic operations
 	load_library_from_path (a_path: READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
-			l_path: WEL_STRING
+			l_path: C_STRING
 		do
-			create l_path.make (a_path.as_string_8)
+			create l_path.make (a_path)
 			Result := c_load_library (l_path.item)
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <windows.h>"
 		alias
-			"return (EIF_POINTER) LoadLibrary ((LPCTSTR)$a_path);"
+			"return (EIF_POINTER) LoadLibraryA ((LPCTSTR)$a_path);"
 		end
 
 	c_get_proc_address (a_hnd: POINTER; a_api_name: POINTER): POINTER

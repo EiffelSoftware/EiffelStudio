@@ -1,9 +1,6 @@
 note
 	description: "[
-		A dynamic API loader for accessing libraries and loaded library API functions and variables.
-		
-		Note: This class is not indented for direct use as {DYNAMIC_API} providers a safer model. However direct access
-		      to loading or querying for an API feature may be necessary, hence the interface is available.
+		The GTK implementation of the dynamic API loader {DYNAMIC_API_LOADER}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,72 +11,63 @@ class
 	DYNAMIC_API_LOADER
 
 inherit
-	ANY
-
-	BRIDGE [DYNAMIC_API_LOADER_I]
-		export
-			{NONE} all
-		end
-
 	DYNAMIC_API_LOADER_I
 
 feature -- Query
 
 	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
 			-- <Precursor>
-		do
-			Result := bridge.api_pointer (a_hnd, a_api_name)
-		end
-
-	api_pointer_with_raise (a_hnd: POINTER; a_api_name: detachable READABLE_STRING_8): POINTER
-			-- Retrieves a pointer to a library's API, and raises an exception if the API feature was not
-			-- found.
-			--
-			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
-			-- `a_api_name': The API feature name to fetch a pointer to.
-			-- `Result': A pointer to an API feature.
-		require
-			not_a_hnd_is_null: a_hnd /= default_pointer
-			a_api_name_attached: a_api_name /= Void
-			not_a_api_name_is_empty: not a_api_name.is_empty
 		local
-			l_exception: DYNAMIC_API_UNAVAILABLE_EXCEPTION
+			l_name: C_STRING
+			l_result: BOOLEAN
 		do
-			Result := api_pointer (a_hnd, a_api_name)
-			if Result = default_pointer then
-				create l_exception.make (a_api_name.as_string_8.as_attached)
-				l_exception.raise
-			end
-		ensure
-			not_result_is_null: Result /= default_pointer
+			create l_name.make (a_api_name)
+			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
 		end
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8): POINTER
 			-- <Precursor>
+		local
+			l_fn: FILE_NAME
+			l_mac_fn: FILE_NAME
 		do
-			Result := bridge.load_library (a_name, a_version)
+			create l_fn.make_from_string (a_name.as_string_8)
+			if {PLATFORM}.is_mac then
+				l_mac_fn := l_fn.twin
+				if a_version /= Void then
+					l_mac_fn.add_extension (a_version.as_string_8)
+				end
+				l_mac_fn.add_extension (once "dylib")
+				Result := load_library_from_path (l_mac_fn.string)
+			end
+			if Result = default_pointer then
+					-- Not a Mac or dylib not found, attempt so
+				l_fn.add_extension (once "so")
+				if a_version /= Void then
+					l_fn.add_extension (a_version.as_string_8)
+				end
+				Result := load_library_from_path (l_fn.string)
+			end
 		end
 
 	load_library_from_path (a_path: READABLE_STRING_8): POINTER
 			-- <Precursor>
+		local
+			l_path: C_STRING
 		do
-			Result := bridge.load_library_from_path (a_path)
+			create l_path.make (a_path)
+			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)
 		end
 
 	unload_library (a_hnd: POINTER)
 			-- <Precursor>
+		local
+			l_result: BOOLEAN
 		do
-			bridge.unload_library (a_hnd)
-		end
-
-feature {NONE} -- Factory
-
-	new_bridge: attached DYNAMIC_API_LOADER_I
-			-- <Precursor>
-		do
-			create {DYNAMIC_API_LOADER_IMP} Result
+			l_result := {EV_GTK_EXTERNALS}.g_module_close (a_hnd)
+			check library_freed: l_result end
 		end
 
 ;note

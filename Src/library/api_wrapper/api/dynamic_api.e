@@ -11,8 +11,6 @@ deferred class
 	DYNAMIC_API
 
 inherit
-	USABLE_I
-
 	DISPOSABLE
 		export
 			{NONE} dispose
@@ -99,7 +97,7 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- <Precursor>
+			-- Indicates if the dynamic API interface can be used.
 		do
 			Result := module_handle /= default_pointer
 		ensure then

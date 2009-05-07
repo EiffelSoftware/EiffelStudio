@@ -29,6 +29,29 @@ feature -- Query
 		deferred
 		end
 
+	api_pointer_with_raise (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
+			-- Retrieves a pointer to a library's API, and raises an exception if the API feature was not
+			-- found.
+			--
+			-- `a_hnd': A valid handle pointer to a loaded dynamic library.
+			-- `a_api_name': The API feature name to fetch a pointer to.
+			-- `Result': A pointer to an API feature.
+		require
+			not_a_hnd_is_null: a_hnd /= default_pointer
+			a_api_name_attached: a_api_name /= Void
+			not_a_api_name_is_empty: not a_api_name.is_empty
+		local
+			l_exception: DYNAMIC_API_UNAVAILABLE_EXCEPTION
+		do
+			Result := api_pointer (a_hnd, a_api_name)
+			if Result = default_pointer then
+				create l_exception.make (a_api_name.as_string_8)
+				l_exception.raise
+			end
+		ensure
+			not_result_is_null: Result /= default_pointer
+		end
+
 feature -- Basic operations
 
 	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER

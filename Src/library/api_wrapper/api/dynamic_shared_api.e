@@ -11,8 +11,6 @@ deferred class
 	DYNAMIC_SHARED_API
 
 inherit
-	USABLE_I
-
 	DISPOSABLE
 		rename
 			dispose as clean_up
@@ -63,10 +61,10 @@ feature -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- <Precursor>
+			-- Indicates if the dynamic API interface can be used.
 		do
 			Result := api.is_interface_usable and then module_handle /= default_pointer
-		ensure then
+		ensure
 			api_is_interface_usable: Result implies api.is_interface_usable
 			not_module_handle_is_null: Result implies module_handle /= default_pointer
 		end

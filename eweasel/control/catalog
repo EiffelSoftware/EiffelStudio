@@ -1553,6 +1553,7 @@ test	create-generic-constrained-by-none	term174	tcf fail termination
 test	create-constrained-generic-crash	term175	tcf fail termination
 test	remove-syntax-error-crash		term176	tcf fail termination
 test	argument-anchors-formal-crash	term177	tcf pass termination
+test	small-eif-stack-chunk		term178	tcf pass termination skip
 
 -- Config
 

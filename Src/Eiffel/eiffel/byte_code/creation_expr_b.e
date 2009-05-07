@@ -12,7 +12,7 @@ inherit
 	ACCESS_B
 		redefine
 			analyze, unanalyze, parameters,
-			generate, register, get_register,
+			generate, register, get_register, propagate,
 			enlarged, size, is_simple_expr, is_single, is_type_fixed,
 			line_number, set_line_number, has_call, allocates_memory
 		end
@@ -52,6 +52,11 @@ feature -- Register
 
 	count_register: REGISTER
 			-- Store size of SPECIAL instance to create is stored if needed.
+
+	propagate (r: REGISTRABLE)
+			-- Do nothing
+		do
+		end
 
 feature -- C code generation
 
@@ -349,7 +354,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

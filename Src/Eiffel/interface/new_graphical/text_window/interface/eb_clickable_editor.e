@@ -320,9 +320,11 @@ feature -- Possibly delayed operations
 
 	scroll_to_end_when_ready
 			-- scroll to position `pos' in characters
-			-- does not need the text to be fully loaded			
+			-- does not need the text to be fully loaded
+		local
+			l_deferred_action: PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]
 		do
-			if text_is_fully_loaded then
+			if text_is_fully_loaded or text_displayed.cursor /= Void then
 				if text_displayed.cursor /= Void then
 					if text_displayed.has_selection then
 						text_displayed.disable_selection
@@ -334,7 +336,11 @@ feature -- Possibly delayed operations
 					refresh
 				end
 			else
-				after_reading_text_actions.extend (agent scroll_to_end_when_ready)
+				l_deferred_action := agent scroll_to_end_when_ready
+				if not after_reading_text_actions.has (l_deferred_action) then
+						-- Ensure the scroll action is not added twice.
+					after_reading_text_actions.extend (l_deferred_action)
+				end
 			end
 		end
 

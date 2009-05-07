@@ -2,7 +2,7 @@ note
 	description: "System's root class for multithreaded %
 	%cecil example"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 
 class
 	BANK_ACCOUNT
@@ -15,11 +15,11 @@ feature -- Initialization
 
 	make
 		do
-			
+
 		end;
 
 feature -- Cecil
-	
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

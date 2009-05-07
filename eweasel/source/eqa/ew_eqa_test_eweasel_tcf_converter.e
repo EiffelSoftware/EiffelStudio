@@ -364,6 +364,12 @@ feature {NONE} -- Implementation
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 3 end
 				Result := "copy_bin (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+			elseif l_keyword ~ copy_file_keyword then
+				l_arg := a_instruction.orig_arguments
+				check not_void: l_arg /= Void and then not l_arg.is_empty end
+				l_list := broken_into_words (l_arg)
+				check count_right: l_list.count = 3 end
+				Result := "copy_file (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
 			elseif l_keyword.is_equal (copy_raw_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end

@@ -290,6 +290,7 @@ feature -- Command
 		local
 			l_dir: DIRECTORY
 			l_list: ARRAYED_LIST [STRING_8]
+			l_sorted_list: SORTED_TWO_WAY_LIST [STRING_8]
 			l_dir_name: DIRECTORY_NAME
 			l_current_test_prefix: STRING
 			l_class_name: STRING
@@ -301,19 +302,34 @@ feature -- Command
 			from
 				create converter.make_default
 				converter.set_ignore_non_exist_test_cases (True)
-				l_list := l_dir.linear_representation
 
-				l_list.start
-				last_test_prefix := test_case_prefix (l_list.item)
+				from
+                    -- Sort all items in `l_dir'
+                    -- Otherwise, on Windows, items in `l_dir' is alphabetical, but not case for Unix platforms.
+                    -- Un-sorted list will cause eweasel converter contain only one test case in one generated Eiffel class.
+					l_list := l_dir.linear_representation
+					create l_sorted_list.make
+					l_list.start
+				until
+					l_list.after
+				loop
+					l_sorted_list.extend (l_list.item)
+
+					l_list.forth
+				end
+				check same_size: l_list.count = l_sorted_list.count end
+
+				l_sorted_list.start
+				last_test_prefix := test_case_prefix (l_sorted_list.item)
 			until
-				l_list.after
+				l_sorted_list.after
 			loop
 				create l_dir_name.make_from_string (a_dir)
-				l_dir_name.extend (l_list.item)
+				l_dir_name.extend (l_sorted_list.item)
 
-				l_current_test_prefix := test_case_prefix (l_list.item)
+				l_current_test_prefix := test_case_prefix (l_sorted_list.item)
 				if not last_test_prefix.is_equal (l_current_test_prefix) and converter.is_flush_needed then
-					check first_time_must_pass: l_list.index /= 1 end
+					check first_time_must_pass: l_sorted_list.index /= 1 end
 					l_class_name := a_output_file_prefix + "_" + last_test_prefix
 					converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), l_class_name)
 					all_converted_classes.extend (l_class_name)
@@ -321,9 +337,9 @@ feature -- Command
 				end
 				last_test_prefix := l_current_test_prefix
 
-				convert_tcf_in_folder (l_dir_name, l_list.item)
+				convert_tcf_in_folder (l_dir_name, l_sorted_list.item)
 
-				l_list.forth
+				l_sorted_list.forth
 			end
 
 			if converter.is_flush_needed then

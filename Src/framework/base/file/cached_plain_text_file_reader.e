@@ -141,6 +141,9 @@ feature -- Query
 
 			read_line (a_line)
 			Result := last_string
+			if Result = Void then
+				create Result.make_empty
+			end
 
 			position := l_pos
 			read_lines := l_lines
@@ -235,7 +238,7 @@ feature -- Basic operations
 					last_string := l_buffer
 				end
 			else
-					-- Do nothing because there is not enought lines
+					-- Do nothing because there is not enough lines
 				check last_string_detached: last_string = Void end
 			end
 		ensure

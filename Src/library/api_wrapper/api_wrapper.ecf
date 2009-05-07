@@ -22,16 +22,9 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
-		<library name="threading" location="$EIFFEL_SRC\framework\threading\threading.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
-			</condition>
-		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
-			<condition>
-				<platform value="windows"/>
 			</condition>
 		</library>
 		<cluster name="api_wrapper" location=".\" recursive="true">

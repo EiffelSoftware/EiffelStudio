@@ -155,7 +155,7 @@ feature -- Redefine
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: zone.title ~ a_title
+			set: zone /= Void implies zone.title ~ a_title
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)

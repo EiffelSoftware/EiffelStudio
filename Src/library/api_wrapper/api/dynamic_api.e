@@ -33,7 +33,7 @@ feature {NONE} -- Initialize
 		end
 
 	initialize
-			-- Initializes Current after the library has been loaded
+			-- Initializes Current after the library has been successfully loaded.
 		require
 			not_module_handle_is_null: module_handle /= default_pointer
 		deferred
@@ -138,7 +138,9 @@ feature {NONE} -- Basic operations
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		do
-			Result := api_loader.load_library (a_name, a_version)
+			if api_loader.is_dynamic_library_supported then
+				Result := api_loader.load_library (a_name, a_version)
+			end
 		end
 
 feature {DYNAMIC_SHARED_API} -- Externals

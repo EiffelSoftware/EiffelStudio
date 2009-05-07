@@ -13,6 +13,13 @@ note
 deferred class
 	DYNAMIC_API_LOADER_I
 
+feature -- Status report
+
+	is_dynamic_library_supported: BOOLEAN
+			-- Inidcates if dynamic libraries are supported by the OS.
+		deferred
+		end
+
 feature -- Query
 
 	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
@@ -23,6 +30,7 @@ feature -- Query
 			-- `Result': A pointer to an API feature or `default_pointer' if the API routine could not be
 			--           found.
 		require
+			is_dynamic_library_supported: is_dynamic_library_supported
 			not_a_hnd_is_null: a_hnd /= default_pointer
 			a_api_name_attached: a_api_name /= Void
 			not_a_api_name_is_empty: not a_api_name.is_empty
@@ -37,6 +45,7 @@ feature -- Query
 			-- `a_api_name': The API feature name to fetch a pointer to.
 			-- `Result': A pointer to an API feature.
 		require
+			is_dynamic_library_supported: is_dynamic_library_supported
 			not_a_hnd_is_null: a_hnd /= default_pointer
 			a_api_name_attached: a_api_name /= Void
 			not_a_api_name_is_empty: not a_api_name.is_empty
@@ -61,6 +70,7 @@ feature -- Basic operations
 			-- `a_version': An optional version string of the library to load.
 			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
 		require
+			is_dynamic_library_supported: is_dynamic_library_supported
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
@@ -73,6 +83,7 @@ feature -- Basic operations
 			-- `a_path': The path to a dynamic library.
 			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
 		require
+			is_dynamic_library_supported: is_dynamic_library_supported
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		deferred
@@ -83,6 +94,7 @@ feature -- Basic operations
 			--
 			-- `a_hnd': The module handle pointer returned from `load_library' or `load_library_from_path'.
 		require
+			is_dynamic_library_supported: is_dynamic_library_supported
 			not_a_hnd_is_null: a_hnd /= default_pointer
 		deferred
 		end

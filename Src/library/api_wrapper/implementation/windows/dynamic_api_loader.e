@@ -13,6 +13,11 @@ class
 inherit
 	DYNAMIC_API_LOADER_I
 
+feature -- Status report
+
+	is_dynamic_library_supported: BOOLEAN = True
+			-- <Precursor>
+
 feature -- Query
 
 	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER

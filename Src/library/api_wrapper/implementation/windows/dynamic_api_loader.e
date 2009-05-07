@@ -26,7 +26,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
 			l_fn: FILE_NAME

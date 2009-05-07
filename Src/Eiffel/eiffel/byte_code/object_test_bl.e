@@ -246,7 +246,7 @@ feature -- C code generation
 						then
 								-- There is no need to check actual object type,
 								-- because it always conforms to an object test local type.
-							if register_propagated and then target = expression.register then
+							if register_propagated and then target = expression.register or else target = register then
 									-- Target is already set to the expression value.
 								if source_type.is_attached then
 									result_value := true_constant

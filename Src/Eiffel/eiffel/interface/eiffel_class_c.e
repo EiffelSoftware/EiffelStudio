@@ -265,6 +265,7 @@ feature -- Action
 			l_uuid: STRING
 			l_system: CONF_SYSTEM
 			l_lace_class: like lace_class
+			l_error_level: NATURAL_32
 		do
 			create file.make (file_name)
 			file.open_read
@@ -279,6 +280,7 @@ feature -- Action
 				Error_handler.insert_error (vd21)
 			else
 				has_unique := False
+				l_error_level := error_handler.error_level
 
 					-- Call Eiffel parser
 				parser := Eiffel_parser
@@ -299,7 +301,7 @@ feature -- Action
 				end
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
-				if not error_handler.has_error then
+				if l_error_level = error_handler.error_level then
 					Result := parser.root_node
 					check no_error_implies_not_void: Result /= Void end
 						-- Update `date' attribute.
@@ -446,6 +448,7 @@ feature -- Element change
 			file_is_readable: file_is_readable
 		local
 			prev_class: CLASS_C
+			l_error_level: NATURAL_32
 			l_date: INTEGER
 		do
 			debug ("fixme")
@@ -458,7 +461,7 @@ feature -- Element change
 					]")
 			end
 
-			check no_error: not error_handler.has_error end
+			l_error_level := error_handler.error_level
 			prev_class := System.current_class
 			System.set_current_class (Current)
 				-- If we are saving, there will be a parse anyway because
@@ -472,7 +475,7 @@ feature -- Element change
 					-- If there is no stored AST, or if the date stored in the AST
 					-- is different from the one on disk, we rebuild the AST.
 				Result := build_ast (False, False)
-				if Result /= Void and then not error_handler.has_error then
+				if Result /= Void and then l_error_level = error_handler.error_level then
 					Result.set_class_id (class_id)
 						-- Although it is not very nice to store in the server, it will save
 						-- a lot of parsing when switching back and forth between classes.
@@ -2259,21 +2262,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

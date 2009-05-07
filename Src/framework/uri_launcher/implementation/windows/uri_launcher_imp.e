@@ -13,39 +13,19 @@ class
 inherit
 	URI_LAUNCHER_I
 
--- inherit {NONE}
-	SHARED_API_MARSHALLER
-		export
-			{NONE} all
-		end
-
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: READABLE_STRING_8): BOOLEAN
 			-- <Precursor>
 		local
-			l_cleaner: detachable API_MARSHALLER_AUTO_CLEANER
-			l_op: POINTER
-			l_uri: POINTER
+			l_uri: C_STRING
 			l_null: POINTER
 		do
 			check is_windows: {PLATFORM}.is_windows end
 
-				-- Marshal c-data
-			create l_cleaner.make (marshaller)
-			l_op := marshaller.string_to_tstring ("open")
-			l_uri := marshaller.string_to_tstring (a_uri)
-			l_cleaner.auto_free (l_op)
-			l_cleaner.auto_free (l_uri)
-
 				-- Return values greater than 32 represent a success, see MS documentation on ShellExecute.
-			Result := cwin_shell_execute (l_null, l_null, l_uri, l_null, l_null, cwin_sw_shownormal) > 32
-
-			l_cleaner.clean
-		rescue
-			if l_cleaner /= Void then
-				l_cleaner.clean
-			end
+			create l_uri.make (a_uri)
+			Result := cwin_shell_execute (l_null, l_null, l_uri.item, l_null, l_null, cwin_sw_shownormal) > 32
 		end
 
 feature {NONE} -- Externals
@@ -55,7 +35,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <shellapi.h>"
 		alias
-			"return (EIF_INTEGER) ShellExecute ((HWND) $a_hwnd, (LPCTSTR) $a_operation, (LPCTSTR) $a_file, (LPCTSTR) $a_params, (LPCTSTR) $a_directory, (int) $a_show_cmd);"
+			"return (EIF_INTEGER) ShellExecuteA ((HWND) $a_hwnd, (LPCTSTR) $a_operation, (LPCTSTR) $a_file, (LPCTSTR) $a_params, (LPCTSTR) $a_directory, (int) $a_show_cmd);"
 		end
 
 	cwin_sw_shownormal: INTEGER

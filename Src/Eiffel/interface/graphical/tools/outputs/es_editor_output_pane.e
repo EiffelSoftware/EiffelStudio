@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			a_widget.editor.disable_editable
 			a_widget.editor.disable_has_breakable_slots
 			a_widget.editor.set_read_only (True)
+			a_widget.editor.set_focus
 
 				-- Set up a redirection for all dropped stones so they are forwarded to the correct
 				-- default tool.
@@ -84,7 +85,7 @@ feature {NONE} -- Initialization
 						l_cursor := l_table.new_cursor
 						from l_cursor.start until l_cursor.after loop
 							if attached l_cursor.item as l_widget then
-								l_widget.scroll_editor_to_end (False)
+								l_widget.scroll_editor_to_end (True)
 							end
 							l_cursor.forth
 						end

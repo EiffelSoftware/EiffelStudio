@@ -13,6 +13,16 @@ class
 inherit
 	DYNAMIC_API_LOADER_I
 
+feature -- Status report
+
+	is_dynamic_library_supported: BOOLEAN
+			-- <Precursor>
+		do
+			Result := {EV_GTK_EXTERNALS}.g_module_supported
+		ensure then
+			g_module_supported: Result implies {EV_GTK_EXTERNALS}.g_module_supported
+		end
+
 feature -- Query
 
 	api_pointer (a_hnd: POINTER; a_api_name: READABLE_STRING_8): POINTER
@@ -58,7 +68,11 @@ feature -- Basic operations
 			l_path: C_STRING
 		do
 			create l_path.make (a_path)
-			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0)
+				-- Second parameter specifies to bind symbols only when necessary, instead of doing it all on load.
+				-- Note: Using flag 0x2 (G_MODULE_BIND_LOCAL) may resolve potential issues with symbol name conflicts
+				--       but it is not used because it may cause problems for multi-threaded applications, but if it
+				--       creates a issue with conflicts then this may have to be used.
+			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0x1)
 		end
 
 	unload_library (a_hnd: POINTER)

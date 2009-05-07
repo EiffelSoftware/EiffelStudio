@@ -1,6 +1,6 @@
 note
 	description: "[
-		The GTK implementation of the dynamic API loader {DYNAMIC_API_LOADER}.
+		The GTK implementation of the dynamic API loader {DYNAMIC_API_I}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

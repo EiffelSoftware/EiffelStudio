@@ -1890,7 +1890,6 @@ feature -- Signature instantiation
 				-- Instantiation of the arguments
 			from
 				i := 1
-				l_arguments := arguments
 				if l_arguments /= Void then
 					nb := l_arguments.count
 				end

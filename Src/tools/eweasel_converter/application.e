@@ -16,6 +16,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			l_all_test: ALL_EWEASEL_TEST_CASES
 		do
 			--| Add your code here
 			create argument_parser.make
@@ -65,9 +67,18 @@ feature {NONE} -- Implementation
 			a_top_source_dir_not_void: a_top_source_dir /= Void
 			a_dest_test_case_dir_not_void: a_dest_test_case_dir /= Void
 		local
+			l_platform: PLATFORM
 			l_setup: EW_EQA_WINDOWS_SETUP
 		do
-			create l_setup.make
+			create l_platform
+			if l_platform.is_windows then
+				create l_setup.make
+			elseif l_platform.is_unix then
+				create {EW_EQA_UNIX_SETUP} l_setup.make
+			else
+				check not_supported_yet: False end
+			end
+
 			l_setup.setup
 			l_setup.convert_all_tcf_in (a_top_source_dir, a_dest_test_case_dir, "test")
 		end
@@ -97,10 +108,10 @@ feature {NONE} -- Implementation
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

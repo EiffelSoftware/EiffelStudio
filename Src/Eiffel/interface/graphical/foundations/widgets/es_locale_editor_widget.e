@@ -13,6 +13,7 @@ class
 inherit
 	ES_EDITOR_WIDGET
 		redefine
+			on_after_initialized,
 			new_right_tool_bar_items
 		end
 
@@ -22,16 +23,84 @@ create
 convert
 	widget: {EV_WIDGET}
 
+feature {NONE} -- Initialization
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+
+				-- Set the default string.
+			locale_selection.set_strings (locale_table.linear_representation)
+				-- Force a change.
+			on_locale_preference_changed
+				-- Receive notification when the user changes the preference.
+			register_action (preferences.misc_data.locale_id_preference.change_actions, agent on_locale_preference_changed)
+		end
+
+feature -- Access
+
+	encoding: detachable ENCODING
+			-- Last set locale encoding.
+
 feature {NONE} -- Access
 
+	locale_table: HASH_TABLE [STRING_32, READABLE_STRING_8]
+			-- Table of locales, indexed by a locale ID.
+			--
+			-- Key: Locale ID.
+			-- Value: Locale description.
+		local
+			l_names: LOCALE_NAMES
+		once
+			l_names := (create {SHARED_BENCH_NAMES}).locale_names
+			Result := l_names.locales_from_array (preferences.misc_data.locale_id_preference.value)
 
+				-- Add name for "Unselected" entry.
+			--Result.force (interface_names.l_unselected, "")
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	locale_id_table: HASH_TABLE [READABLE_STRING_8, STRING_32]
+			-- Table of locales, indexed by a locale description.
+			--
+			-- Key: Locale description.
+			-- Value: Locale ID.
+		local
+			l_locale_table: like locale_table
+			l_value: READABLE_STRING_8
+			l_key: STRING_32
+		once
+			l_locale_table := locale_table
+			create Result.make (l_locale_table.count)
+			from l_locale_table.start until l_locale_table.after loop
+				l_value := l_locale_table.key_for_iteration
+				l_key := l_locale_table.item_for_iteration
+				if l_key /= Void and then l_value /= Void then
+					Result.force (l_value, l_key)
+				end
+				l_locale_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature {NONE} -- Access: User interface
 
 	locale_selection: attached EV_COMBO_BOX
 			-- Combo box to select the locale
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Helpers
+
+	locale_manager: SHARED_LOCALE
+			-- Access to the shared local manager
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature {NONE} -- Action handlers
 
@@ -40,8 +109,51 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+		local
+			l_locale: I18N_LOCALE
+			l_id: STRING
+			l_text: STRING
 		do
+			encoding := Void
+			l_text := locale_selection.text
+			if l_text /= Void and then not l_text.is_empty then
+				l_id := locale_id_table.item (l_text)
+				if l_id /= Void then
+					l_locale := (create {SHARED_LOCALE}).locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_id))
+					if l_locale.info.code_page /= Void then
+						create encoding.make (l_locale.info.code_page)
+					end
+				end
+			end
+		end
 
+	on_locale_preference_changed
+			-- Called when the locale preference changed.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_locale_id: STRING
+			l_text: detachable STRING_32
+			l_table: like locale_table
+		do
+			l_locale_id := preferences.misc_data.locale_id
+			if l_locale_id /= Void and then not l_locale_id.is_empty then
+				l_table := locale_table
+				if l_table.has (l_locale_id) then
+					l_text := l_table.item (l_locale_id)
+					check
+						l_text_attached: l_text/= Void
+						not_l_text_is_empty: not l_text.is_empty
+					end
+					locale_selection.enable_edit
+					locale_selection.set_text (l_text)
+					locale_selection.disable_edit
+
+						-- Trigger notification
+					on_locale_changed
+				end
+			end
 		end
 
 feature {NONE} -- Factory
@@ -62,16 +174,20 @@ feature {NONE} -- Factory
 				Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 			end
 
+				-- Locale label
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			create l_label.make_with_text (locale_formatter.translation (lb_locale))
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
+
+				-- Locale selection
 			create l_combo
+			l_combo.disable_edit
 			l_combo.set_minimum_width (200)
 			register_action (l_combo.change_actions, agent on_locale_changed)
-			l_hbox.extend (l_combo)
 			locale_selection := l_combo
+			l_hbox.extend (l_combo)
 
 			create l_widget.make (l_hbox)
 			Result.put_last (l_widget)

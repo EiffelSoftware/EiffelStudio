@@ -43,6 +43,11 @@ feature {NONE} -- Initialization
 			a_editor.disable_editable
 			a_editor.disable_line_numbers
 			a_editor.disable_has_breakable_slots
+			a_editor.set_auto_scroll (True)
+
+				-- Fake processing, to ensure the scroll to end works correctly
+			a_editor.handle_before_processing (False)
+			a_editor.handle_after_processing
 		end
 
 feature {NONE} -- Clean up
@@ -113,7 +118,7 @@ feature -- Basic operations
 		do
 			l_editor := editor
 			if l_editor.is_interface_usable then
-				if l_editor.text_is_fully_loaded then
+				if (attached l_editor.text_displayed as l_text_displayed) and then l_text_displayed.cursor /= Void then
 					l_text := l_editor.text_displayed
 					if a_force or else l_text.last_line = l_text.current_line then
 						l_editor.scroll_to_end_when_ready

@@ -1486,9 +1486,9 @@ feature -- Implementation
 
 											-- Take care of anchoring to argument
 										if l_formal_arg_type.is_like_argument then
-											l_like_arg_type := l_formal_arg_type.actual_argument_type (l_arg_types)
-											l_like_arg_type :=
-												l_like_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+											l_like_arg_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id)
+											l_like_arg_type := l_like_arg_type.actual_argument_type (l_arg_types)
+											l_like_arg_type := l_like_arg_type.actual_type
 												-- Check that `l_arg_type' is compatible to its `like argument'.
 												-- Once this is done, then type checking is done on the real
 												-- type of the routine, not the anchor.
@@ -1632,6 +1632,7 @@ feature -- Implementation
 
 								-- Get the type of Current feature.
 							l_result_type := l_feature.type
+							l_result_type := l_result_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
 								-- Adapted type in case it is a formal generic parameter or a like.
 							if l_arg_types /= Void then
 								l_pure_result_type := l_result_type
@@ -1643,20 +1644,19 @@ feature -- Implementation
 										-- This fix eweasel test#term141.
 									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
 								end
-							end
-							l_result_type := l_result_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
-							if l_arg_types /= Void and then l_pure_result_type.is_like_argument and then is_byte_node_enabled then
-									-- Ensure the expandedness status of the result type matches
-									-- the expandedness status of the argument it is anchored to (if any).
-								l_like_argument ?= l_pure_result_type
-								check
-									l_like_argument_attached: l_like_argument /= Void
-								end
-								i := l_like_argument.position
-								if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
-									l_cl_type_a ?= l_result_type
-									if l_cl_type_a /= Void then
-										l_generated_result_type := l_cl_type_a.reference_type
+								if l_pure_result_type.is_like_argument and then is_byte_node_enabled then
+										-- Ensure the expandedness status of the result type matches
+										-- the expandedness status of the argument it is anchored to (if any).
+									l_like_argument ?= l_pure_result_type
+									check
+										l_like_argument_attached: l_like_argument /= Void
+									end
+									i := l_like_argument.position
+									if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
+										l_cl_type_a ?= l_result_type
+										if l_cl_type_a /= Void then
+											l_generated_result_type := l_cl_type_a.reference_type
+										end
 									end
 								end
 							end
@@ -4333,7 +4333,11 @@ feature -- Implementation
 								l_infix_type := l_target_type
 							else
 									-- Usual case
-								l_infix_type := l_infix_type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id).actual_type
+								l_infix_type := l_infix_type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id)
+								if l_infix_type.has_like_argument then
+									l_infix_type := l_infix_type.actual_argument_type (<<l_right_type>>)
+								end
+								l_infix_type := l_infix_type.actual_type
 							end
 
 							if l_is_assigner_call then
@@ -4725,9 +4729,7 @@ feature -- Implementation
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
 						if error_level = l_error_level then
-							last_type := bracket_feature.type.formal_instantiation_in (target_type.as_implicitly_detachable, constrained_target_type.as_implicitly_detachable, l_last_class_id).actual_type
 							is_qualified_call := l_is_qualified_call
-
 							if is_byte_node_enabled then
 								create nested_b
 								create target_access
@@ -9314,9 +9316,9 @@ feature {NONE} -- Implementation: catcall check
 						l_formal_arg_type := l_descendant_feature.arguments.i_th (i)
 							-- Take care of anchoring to argument
 						if l_formal_arg_type.is_like_argument then
-							l_like_arg_type := l_formal_arg_type.actual_argument_type (a_params)
-							l_like_arg_type :=
-								l_like_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
+							l_like_arg_type := l_formal_arg_type.instantiation_in (l_descendant_type, l_desc_class_id)
+							l_like_arg_type := l_like_arg_type.actual_argument_type (a_params)
+							l_like_arg_type := l_like_arg_type.actual_type
 								-- Check that `l_arg_type' is compatible to its `like argument'.
 								-- Once this is done, then type checking is done on the real
 								-- type of the routine, not the anchor.
@@ -9625,22 +9627,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1,7 +1,7 @@
 note
 	description: "System's root class"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 
 class
 	ROOT_CLASS

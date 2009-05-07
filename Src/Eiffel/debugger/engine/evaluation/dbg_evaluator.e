@@ -394,13 +394,18 @@ feature -- Concrete evaluation
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		local
+			l_addr: DBG_ADDRESS
 			l_target_dynclass, l_statcl: CLASS_C
 			l_dyntype: CLASS_TYPE
 			realf: FEATURE_I
 		do
+			l_addr := a_addr
+			if l_addr = Void and a_target /= Void then
+				l_addr := a_target.value_address
+			end
 			debug ("debugger_trace_eval")
 				print (generating_type + ".evaluate_routine :%N")
-				print ("%Taddr="); print (a_addr.output); print ("%N")
+				print ("%Taddr="); print (l_addr.output); print ("%N")
 				if a_target /= Void then
 					print ("%Ttarget=not Void : [")
 					print (a_target.full_output)
@@ -422,11 +427,11 @@ feature -- Concrete evaluation
 			elseif l_target_dynclass /= Void and then l_target_dynclass.types.count = 1 then
 				l_dyntype := l_target_dynclass.types.first
 			elseif l_target_dynclass = Void or else l_target_dynclass.types.count > 1 then
-				if a_addr /= Void and then not a_addr.is_void then
+				if l_addr /= Void and then not l_addr.is_void then
 						-- The type has generic derivations: we need to find the precise type.
-					l_dyntype := class_type_from_object_relative_to (a_addr, l_target_dynclass)
+					l_dyntype := class_type_from_object_relative_to (l_addr, l_target_dynclass)
 					if l_dyntype = Void then
-						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr.output))
+						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (l_addr.output))
 					elseif l_target_dynclass = Void then
 						l_target_dynclass := l_dyntype.associated_class
 					end
@@ -476,11 +481,11 @@ feature -- Concrete evaluation
 					if realf.is_deferred and f.is_deferred then
 						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
 					else
-						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
+						effective_evaluate_routine (l_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
 						if last_result = Void or else not last_result.has_value then
-							if a_addr /= Void then
+							if l_addr /= Void then
 								dbg_error_handler.notify_error_evaluation (
-											Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr.output, Void)
+											Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, l_addr.output, Void)
 										)
 							else
 								dbg_error_handler.notify_error_evaluation (

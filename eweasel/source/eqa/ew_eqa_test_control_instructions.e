@@ -373,6 +373,20 @@ feature -- Command
 			execute_inst (l_inst)
 		end
 
+	Copy_file (a_source_file, a_dest_directory, a_dest_file: STRING)
+			--	Similar to `copy_bin' except that it lets you copy file from anywhere to anywhere.
+		require
+			not_void: a_source_file /= Void
+			not_void: a_dest_directory /= Void
+			not_void: a_dest_file /= Void
+		local
+			l_inst: EW_TEST_INSTRUCTION
+		do
+			l_inst := test_command_table.item (Copy_file_keyword)
+			init_command (l_inst, "copy_file", a_source_file + " " + a_dest_directory + " " + a_dest_file)
+			execute_inst (l_inst)
+		end
+
 	Copy_raw (a_source_file, a_dest_directory, a_dest_file: STRING)
 			--	Copy the file named <source-file> from the source directory
 			--	$SOURCE to the <dest-directory> under the name <dest-file>.

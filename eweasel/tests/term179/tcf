@@ -1,0 +1,11 @@
+test_name 	inherit-inline-agent-with-formal
+test_description When you inherit a class which uses inline agents whose signature includes some formal general parameters and that the code is checked in a descendant without any formals, the compiler crashes.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+test_end

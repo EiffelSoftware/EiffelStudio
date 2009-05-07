@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
+	launch (a_uri: READABLE_STRING_8): BOOLEAN
 			-- <Precursor>
 		local
 			l_app: STRING
@@ -36,10 +36,10 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_with_app (a_uri: READABLE_STRING_GENERAL; a_app: READABLE_STRING_GENERAL): BOOLEAN
+	launch_with_app (a_uri: READABLE_STRING_8; a_app: READABLE_STRING_8): BOOLEAN
 			-- <Precursor>
 		local
-			l_cmd: STRING_32
+			l_cmd: STRING
 		do
 				-- Wrap the execution using sh because the calling app may be a shell script.
 			create l_cmd.make (a_app.count + 13)

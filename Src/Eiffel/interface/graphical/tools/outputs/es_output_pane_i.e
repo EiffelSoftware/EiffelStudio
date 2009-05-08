@@ -71,6 +71,13 @@ feature -- Access: User interface
 			result_consistent: Result = icon_pixmap_animations
 		end
 
+feature -- Status report
+
+	is_searchable: BOOLEAN
+			-- Indicates if the output pane is searchable.
+		deferred
+		end
+
 feature -- Query
 
 	text_from_window (a_window: SHELL_WINDOW_I): STRING_32
@@ -143,6 +150,18 @@ feature -- Basic operations
 			--
 			-- `a_window': A window to clear the output on.
 		require
+			is_interface_usable: is_interface_usable
+			a_window_attached: a_window /= Void
+			a_window_is_interface_usable: a_window.is_interface_usable
+		deferred
+		end
+
+	search_window (a_window: SHELL_WINDOW_I)
+			-- Search the output window.
+			--
+			-- `a_window': A window to search the output on.
+		require
+			is_searchable: is_searchable
 			is_interface_usable: is_interface_usable
 			a_window_attached: a_window /= Void
 			a_window_is_interface_usable: a_window.is_interface_usable

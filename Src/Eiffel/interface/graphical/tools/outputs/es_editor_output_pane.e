@@ -115,6 +115,11 @@ feature -- Access
 	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 
+feature -- Status report
+
+	is_searchable: BOOLEAN = True
+			-- <Precursor>
+
 feature -- Query
 
 	text_from_window (a_window: SHELL_WINDOW_I): STRING_32
@@ -179,6 +184,21 @@ feature -- Basic operations
 			l_widget := widget_from_window (a_window)
 			if l_widget.is_interface_usable then
 				l_widget.clear
+			end
+		end
+
+	search_window (a_window: SHELL_WINDOW_I)
+			-- <Precursor>
+		local
+			l_widget: like widget_from_window
+			l_editor: EB_CLICKABLE_EDITOR
+		do
+			l_widget := widget_from_window (a_window)
+			if l_widget.is_interface_usable then
+				l_editor := l_widget.editor
+				if l_editor.is_interface_usable then
+					l_editor.quick_search
+				end
 			end
 		end
 

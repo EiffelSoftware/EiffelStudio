@@ -19,7 +19,7 @@ feature -- Constants
 
 	AF_INET6: INTEGER
 		external
-			"C inline"
+			"C"
 		alias
 			"en_addrinfo_af_inet6"
 		end

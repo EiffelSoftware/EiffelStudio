@@ -832,6 +832,7 @@ test	function-to-attribute-refinalize	incr322	tcf fail incrementality
 test	change-obsolete-syntax-to-transitional	incr323	tcf pass incrementality
 test	vd71-called-syntax-error		incr324	tcf pass incrementality
 test	c-syntax-error				incr325	tcf pass incrementality
+test	override-checkin-crash		incr326	tcf pass termination
 
 
 -- Melting

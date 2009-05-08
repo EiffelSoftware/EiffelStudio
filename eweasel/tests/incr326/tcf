@@ -1,0 +1,30 @@
+test_name 	override-checkin-crash
+test_description When you checkin a class that was solely in the override cluster, it causes the compile to crash.
+
+define_directory OVERRIDE_CLUSTER $CLUSTER override
+define_directory NORMAL_CLUSTER $CLUSTER normal 
+define VERSION "1"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $NORMAL_CLUSTER test.e
+copy_sub 	test1.e $NORMAL_CLUSTER test1.e
+copy_sub 	test1.e.over $OVERRIDE_CLUSTER test1.e
+copy_sub 	test2.e.over $OVERRIDE_CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+define VERSION "2"
+copy_sub	test1.e.over $NORMAL_CLUSTER test1.e
+copy_sub	test2.e.over $NORMAL_CLUSTER test2.e
+copy_sub	test1.e.over $OVERRIDE_CLUSTER test1.e
+copy_sub	test2.e.over $OVERRIDE_CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+delete	$OVERRIDE_CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

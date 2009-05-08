@@ -722,6 +722,13 @@ feature -- Parse errors
 
 	e_parse_incorrect_class_opt: STRING = "Invalid class_option tag."
 
+	e_parse_incorrect_option_override (option_name: STRING): STRING
+		do
+			Result := locale.formatted_string (locale.translation ("[
+				Library option "$1" cannot be overridden outside the library.
+			]"), [option_name])
+		end
+
 	e_parse_incorrect_visible (a_parent: STRING): STRING
 		do
 			Result := "Invalid visible tag on "+a_parent+"."

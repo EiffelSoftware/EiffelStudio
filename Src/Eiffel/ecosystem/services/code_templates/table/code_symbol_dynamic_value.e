@@ -4,8 +4,8 @@ note
 		calculation.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -84,7 +84,7 @@ feature {NONE} -- Basic operations
 				l_value := default_value
 			end
 
-			if l_value /= Void
+			if l_value /= Void then
 				if not l_value.is_empty then
 					create l_result.make (l_value.count)
 					l_result.append_string (l_value)

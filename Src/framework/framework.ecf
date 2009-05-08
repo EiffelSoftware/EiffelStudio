@@ -45,7 +45,6 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="fmwk_base" location=".\base\" recursive="true"/>
 		<cluster name="fmwk_vision2" location=".\vision2\" recursive="true">
 			<condition>
 				<custom name="batch_framework" excluded_value="true"/>

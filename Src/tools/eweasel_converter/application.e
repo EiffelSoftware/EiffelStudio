@@ -16,8 +16,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
-		local
-			l_all_test: ALL_EWEASEL_TEST_CASES
 		do
 			--| Add your code here
 			create argument_parser.make

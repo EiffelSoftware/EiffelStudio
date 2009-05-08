@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	edit: ?WEL_SINGLE_LINE_EDIT
+	edit: detachable WEL_SINGLE_LINE_EDIT
 			-- Edit control
 
 	edit_text: STRING
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	setup_dialog
 			-- Restore the previous text in the edit control
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				l_edit.set_text (edit_text)
 			end
 		end
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	on_ok
 			-- Save the text from the edit control
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				edit_text := l_edit.text
 			end
 			terminate (Idok)

@@ -25,7 +25,7 @@ feature
 	make (argv: ARRAY [STRING])
 			-- Accept communication with client and exchange messages
 		local
-			soc1: ?NETWORK_STREAM_SOCKET
+			soc1: detachable NETWORK_STREAM_SOCKET
 			count: INTEGER
 		do
 			if argv.count /= 2 then
@@ -56,8 +56,8 @@ feature
 		do
 			soc1.accept
 			if
-				{soc2: NETWORK_STREAM_SOCKET} soc1.accepted and then
-				{our_new_list: OUR_MESSAGE} retrieved (soc2)
+				attached {NETWORK_STREAM_SOCKET} soc1.accepted as soc2 and then
+				attached {OUR_MESSAGE} retrieved (soc2) as our_new_list
 			then
 				from
 					our_new_list.start

@@ -26,7 +26,7 @@ feature
 	make (argv: ARRAY [STRING])
 			-- Establish communication with server, and exchange messages.
 		local
-			soc1: ?NETWORK_STREAM_SOCKET
+			soc1: detachable NETWORK_STREAM_SOCKET
 		do
 			if argv.count /= 3 then
 				io.error.putstring ("Usage: ")
@@ -61,7 +61,7 @@ feature
 			l_medium.set_for_writing
 			independent_store (our_list, l_medium, True)
 			l_medium.set_for_reading
-			if {our_new_list: OUR_MESSAGE} retrieved (l_medium, True) then
+			if attached {OUR_MESSAGE} retrieved (l_medium, True) as our_new_list then
 				from
 					our_new_list.start
 				until

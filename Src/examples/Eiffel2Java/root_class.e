@@ -16,7 +16,7 @@ feature -- Creation
 
 	make
 		local
-			class_test: ?JAVA_CLASS
+			class_test: detachable JAVA_CLASS
 			instance_of_class_test: JAVA_OBJECT
 			fid: POINTER
 			value: INTEGER

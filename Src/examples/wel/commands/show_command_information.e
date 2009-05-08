@@ -15,7 +15,7 @@ feature
 		local
 			s: STRING
 		do
-			if {mi: WEL_COMMAND_MESSAGE} message_information and then {lb: WEL_SINGLE_SELECTION_LIST_BOX} argument then
+			if attached {WEL_COMMAND_MESSAGE} message_information as mi and then attached {WEL_SINGLE_SELECTION_LIST_BOX} argument as lb then
 				if mi.from_menu or (mi.from_control and then mi.control /= lb) then
 					s := "WM_COMMAND: id="
 					s.append (mi.id.out)

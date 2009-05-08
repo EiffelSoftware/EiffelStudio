@@ -168,7 +168,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_ok_button: ?like ok_button
+	internal_ok_button: detachable like ok_button
 			-- Storage
 
 invariant

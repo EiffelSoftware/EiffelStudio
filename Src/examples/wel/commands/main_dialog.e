@@ -82,10 +82,10 @@ feature -- Basic operations
 
 feature -- Access
 
-	list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list_box: detachable WEL_SINGLE_SELECTION_LIST_BOX
 			-- List box which contains the information
 
-	check_box: ?WEL_CHECK_BOX
+	check_box: detachable WEL_CHECK_BOX
 			-- Check box to control the command execution
 
 feature {NONE} -- Implementation

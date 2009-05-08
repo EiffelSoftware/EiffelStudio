@@ -19,7 +19,7 @@ feature -- Initialization
 			l_smtp_protocol: SMTP_PROTOCOL
 			l_host: HOST_ADDRESS
 			l_email: EMAIL
-			l_smtp_server, l_sender, l_recipient, l_message: ?STRING
+			l_smtp_server, l_sender, l_recipient, l_message: detachable STRING
 		do
 				-- Get smtp server.
 			io.put_string ("Enter your SMTP server address: ")

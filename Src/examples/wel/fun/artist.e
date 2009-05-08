@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	dc: ?WEL_CLIENT_DC
+	dc: detachable WEL_CLIENT_DC
 
 	sqr_3_2: REAL = 0.86602540
 		-- sqrt (3) / 2

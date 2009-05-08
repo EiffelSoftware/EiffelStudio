@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			host: STRING
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
-			address: ?INET_ADDRESS
+			address: detachable INET_ADDRESS
 			timeout: INTEGER
 			l_socket: NETWORK_STREAM_SOCKET
 		do
@@ -113,7 +113,7 @@ feature {NONE} --Implementation
 		require
 			valid_socket: a_socket /= Void and then a_socket.is_open_read
 		local
-			l_last_string: ?STRING
+			l_last_string: detachable STRING
 		do
 			a_socket.read_line
 			l_last_string := a_socket.last_string

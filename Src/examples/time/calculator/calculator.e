@@ -19,7 +19,7 @@ feature -- Initialization
 			j: INTEGER
 			test, key, c: CHARACTER
 			date2: DATE
-			command: ?COMMAND_DATE
+			command: detachable COMMAND_DATE
 		do
 			print (" CALCULATOR FOR DATES ") print ("%N")
 			create date2.make_now

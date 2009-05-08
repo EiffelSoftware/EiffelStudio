@@ -26,7 +26,7 @@ feature
 			-- The message queue is empty.
 			-- Execute the rectangle_demo if it exists.
 		do
-			if {l_demo: RECTANGLE_DEMO} main_window.rectangle_demo and then l_demo.exists then
+			if attached {RECTANGLE_DEMO} main_window.rectangle_demo as l_demo and then l_demo.exists then
 				l_demo.draw
 			end
 		end

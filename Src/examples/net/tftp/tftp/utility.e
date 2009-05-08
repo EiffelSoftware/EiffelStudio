@@ -13,7 +13,7 @@ feature
 
 feature
 
-	send_ack (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; block_number: INTEGER) is
+	send_ack (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; block_number: INTEGER)
 			-- Send the TFPT ACK packet for block_number to the client identified by address and port
 			-- via the socket
 		require
@@ -27,7 +27,7 @@ feature
 			send_packet (socket, pkt)
 		end
 
-	send_error (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; code: INTEGER; message: STRING) is
+	send_error (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; code: INTEGER; message: STRING)
 			-- Send the TFPT ERROR packet to the client identified by address and port
 			-- via the socket
 		require
@@ -41,7 +41,7 @@ feature
 			send_packet (socket, pkt)
 		end
 
-	send_data_packet (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; block_number: INTEGER; data: MANAGED_POINTER; data_length: INTEGER) is
+	send_data_packet (socket: NETWORK_DATAGRAM_SOCKET; address: INET_ADDRESS; port: INTEGER; block_number: INTEGER; data: MANAGED_POINTER; data_length: INTEGER)
 			-- Send the TFPT DATA packet to the client identified by address and port
 			-- via the socket
 		require
@@ -55,7 +55,7 @@ feature
 			send_packet (socket, pkt)
 		end
 
-	send_packet (socket: NETWORK_DATAGRAM_SOCKET; packet: TFTP_PACKET) is
+	send_packet (socket: NETWORK_DATAGRAM_SOCKET; packet: TFTP_PACKET)
 			--
 		require
 			socket_non_void: socket /= Void
@@ -65,15 +65,15 @@ feature
 			socket.send_to (create {PACKET}.make_from_managed_pointer (packet.data_pointer), create {NETWORK_SOCKET_ADDRESS}.make_from_address_and_port (packet.host, packet.port), 0)
 		end
 
-	receive_request (socket: NETWORK_DATAGRAM_SOCKET): TFTP_REQUEST_PACKET is
+	receive_request (socket: NETWORK_DATAGRAM_SOCKET): TFTP_REQUEST_PACKET
 			-- Receive the TFTP read request or tftp write request packet.
 			-- Other packets that are not read/write requests are silently discarded
 		require
 			socket_non_void: socket /= Void
 			socket_valid: socket.is_bound and then socket.is_open_read
 		local
-			packet: ?TFTP_PACKET
-			l_result: ?TFTP_REQUEST_PACKET
+			packet: detachable TFTP_PACKET
+			l_result: detachable TFTP_REQUEST_PACKET
 		do
 			from
 			until
@@ -91,7 +91,7 @@ feature
 			Result /= Void
 		end
 
-	receive (socket: NETWORK_DATAGRAM_SOCKET): ?TFTP_PACKET is
+	receive (socket: NETWORK_DATAGRAM_SOCKET): detachable TFTP_PACKET
 			-- Receive the TFTP packet
 		require
 			socket_non_void: socket /= Void
@@ -111,7 +111,7 @@ feature
 			end
 		end
 
-	create_error_message_from_id (message_id: INTEGER; default_msg: STRING): STRING is
+	create_error_message_from_id (message_id: INTEGER; default_msg: STRING): STRING
 		do
 			if message_id > ERR_NOT_DEFINED and then message_id <= ERR_NO_SUCH_USER then
         			Result := err_strings.item(message_id + 1)
@@ -120,11 +120,11 @@ feature
 			end
 		end
 
-	create_error_message_from_packet (packet: TFTP_PACKET): STRING is
+	create_error_message_from_packet (packet: TFTP_PACKET): STRING
 		require
-			error_packet: {l_error: TFTP_ERROR_PACKET} packet
+			error_packet: attached {TFTP_ERROR_PACKET} packet as l_error
 		do
-			if {p: TFTP_ERROR_PACKET} packet then
+			if attached {TFTP_ERROR_PACKET} packet as p then
 				Result := p.message
 			else
 				Result := ""
@@ -135,7 +135,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	create_tftp_packet_from_sockaddr_managed_pointer (addr: ?NETWORK_SOCKET_ADDRESS; opcode: NATURAL_16; p: MANAGED_POINTER): TFTP_PACKET is
+	create_tftp_packet_from_sockaddr_managed_pointer (addr: detachable NETWORK_SOCKET_ADDRESS; opcode: NATURAL_16; p: MANAGED_POINTER): TFTP_PACKET
 			--
 		require
 			addr_non_void: addr /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	err_strings: ARRAY[STRING] is
+	err_strings: ARRAY[STRING]
 		once
 			Result := << "Unknown error","File not found","Access violation",
 				"Disk full or allocation exceeded", "Illegal TFTP operation",

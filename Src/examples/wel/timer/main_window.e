@@ -80,7 +80,7 @@ feature -- Access
 
 	flash_rects: ARRAY [WEL_RECT]
 
-	dc: ?WEL_CLIENT_DC
+	dc: detachable WEL_CLIENT_DC
 
 	blue_brush, green_brush, yellow_brush, red_brush: WEL_BRUSH
 

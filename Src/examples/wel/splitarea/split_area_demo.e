@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	split_area: ?WEL_SPLIT_AREA
+	split_area: detachable WEL_SPLIT_AREA
 			-- Our split area !!
 
-	rich_edit_left: ?WEL_RICH_EDIT
+	rich_edit_left: detachable WEL_RICH_EDIT
 			-- The left RichEdit control
 
-	rich_edit_right: ?WEL_RICH_EDIT
+	rich_edit_right: detachable WEL_RICH_EDIT
 			-- The right RichEdit control
 
 	background_brush: WEL_BRUSH
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			-- Wm_size message handle
 		do
 				-- Reposition & Resize the split area
-			if {l_split_area: like split_area} split_area then
+			if attached split_area as l_split_area then
 				l_split_area.move_and_resize (0, 0, a_width, a_height, True)
 			end
 		end

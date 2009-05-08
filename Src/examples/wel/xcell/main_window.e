@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 	redraw_before_move (source_is_column: BOOLEAN)
 			-- Redraw when card is selected
 		local
-			card_p: ?CARD
+			card_p: detachable CARD
 			card_a: CARD
 		do
 			card_a := active_card
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	previous_card: ?CARD
+	previous_card: detachable CARD
 			-- The previous card in the columnn of the active card.
 			-- This is necessary for efficient redrawing.
 		do

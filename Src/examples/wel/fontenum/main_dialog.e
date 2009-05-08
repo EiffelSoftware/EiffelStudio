@@ -46,19 +46,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	edit: ?WEL_MULTIPLE_LINE_EDIT
+	edit: detachable WEL_MULTIPLE_LINE_EDIT
 			-- Edit box
 
-	list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list_box: detachable WEL_SINGLE_SELECTION_LIST_BOX
 			-- List box which contains the fonts
 
-	size: ?WEL_SINGLE_LINE_EDIT
+	size: detachable WEL_SINGLE_LINE_EDIT
 			-- Edit box to input the size
 
 	current_size: INTEGER
 			-- Last size entered by the user
 
-	current_font: ?WEL_FONT
+	current_font: detachable WEL_FONT
 			-- Current font selected
 
 feature -- Basic operations

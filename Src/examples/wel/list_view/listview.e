@@ -180,9 +180,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_output: ?WEL_STATIC
+	item_output: detachable WEL_STATIC
 
-	mess_output: ?WEL_SINGLE_SELECTION_LIST_BOX
+	mess_output: detachable WEL_SINGLE_SELECTION_LIST_BOX
 
 feature -- Element change
 
@@ -201,7 +201,7 @@ feature -- Element change
 	add_mess_output (str: STRING)
 			-- Add a message to the output.
 		do
-			if {l_mess_output: like mess_output} mess_output then
+			if attached mess_output as l_mess_output then
 				l_mess_output.add_string (str)
 				l_mess_output.set_top_index (l_mess_output.count - 1)
 			end
@@ -276,7 +276,7 @@ feature -- Notifications
 			if flag_set (info.unewstate, Lvis_selected) and
 					not flag_set (info.uoldstate, Lvis_selected) then
 				lvitem := get_item (info.iitem, info.isubitem)
-				if {l_item_output: like item_output} item_output then
+				if attached item_output as l_item_output then
 					l_item_output.set_text (lvitem.text)
 				end
 			end
@@ -292,7 +292,7 @@ feature -- Notifications
 			-- A key has been pressed.
 		do
 			add_mess_output ("Key pressed :")
-			if {l_item_output: like item_output} item_output then
+			if attached item_output as l_item_output then
 				l_item_output.set_text (virtual_key.out)
 			end
 		end

@@ -56,11 +56,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list: detachable WEL_SINGLE_SELECTION_LIST_BOX
 
-	label: ?WEL_STATIC
+	label: detachable WEL_STATIC
 
-	tree_view: ?TREEVIEW
+	tree_view: detachable TREEVIEW
 
 feature {NONE} -- Implementation
 

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dialog: ?DIALOG
+	dialog: detachable DIALOG
 			-- Pizza dialog
 
 feature {NONE} -- Implementation

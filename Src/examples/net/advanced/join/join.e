@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 
 	scan_from_std_input
 		local
-			temp: ?STRING
+			temp: detachable STRING
 		do
 			std_input.initialize
 			input_poll.execute (1, 15000)
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 	check_name
 		local
-			l_name: ?STRING
+			l_name: detachable STRING
 		do
 			io.putstring ("Enter your name : ")
 			io.readline
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	connection, std_input: CONNECTION
 
 	message_out: MESSAGE
-	received: ?MESSAGE
+	received: detachable MESSAGE
 
 	client_name: STRING
 

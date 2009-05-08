@@ -19,7 +19,7 @@ feature
 
 	make (argv: ARRAY [STRING])
 		local
-			soc: ?NETWORK_DATAGRAM_SOCKET
+			soc: detachable NETWORK_DATAGRAM_SOCKET
 			ps: MEDIUM_POLLER
 			readcomm: DATAGRAM_READER
 			writecomm: SERVER_DATAGRAM_WRITER

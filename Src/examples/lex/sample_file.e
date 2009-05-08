@@ -1,7 +1,7 @@
 indexing
 	description: "Trees implemented using a linked_list representation"
-	names: tree;
-	access: fixed, cursor;
+	names: tree
+	access: fixed, cursor
 	representation: recursive, linked
 
 class SAMPLE_FILE [T] export

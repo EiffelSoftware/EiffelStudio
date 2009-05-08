@@ -15,7 +15,7 @@ feature
 		local
 			s: STRING
 		do
-			if {mi: WEL_MOVE_MESSAGE} message_information and then {lb: WEL_SINGLE_SELECTION_LIST_BOX} argument then
+			if attached {WEL_MOVE_MESSAGE} message_information as mi and then attached {WEL_SINGLE_SELECTION_LIST_BOX} argument as lb then
 				s := "WM_MOVE: new x="
 				s.append (mi.x.out)
 

@@ -42,7 +42,7 @@ feature -- Status report
 	active_card: CARD
 			-- Card that is currently selected
 
-	previous_card: ?CARD
+	previous_card: detachable CARD
 			-- If the source is a column, this card will be the
 			-- card that is one from the top in the source column.
 			-- If the column has only one card or the source is

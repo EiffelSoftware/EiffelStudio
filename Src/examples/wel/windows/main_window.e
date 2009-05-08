@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	modal: ?MODAL
+	modal: detachable MODAL
 			-- Modal dialog box
 
-	modeless: ?MODELESS
+	modeless: detachable MODELESS
 			-- Modeless dialog box
 
 feature {NONE} -- Implementation
@@ -58,11 +58,11 @@ feature {NONE} -- Implementation
 			when Cmd_exit then
 				destroy
 			when Cmd_modal_dlg then
-				if {l_modal: like modal} modal then
+				if attached modal as l_modal then
 					l_modal.activate
 				end
 			when Cmd_modeless_dlg then
-				if {l_modeless: like modeless} modeless then
+				if attached modeless as l_modeless then
 					if not l_modeless.exists then
 						l_modeless.activate
 					else

@@ -25,7 +25,7 @@ feature
 
 	our_list: OUR_MESSAGE
 
-	received: ?OUR_MESSAGE -- Type redefinition
+	received: detachable OUR_MESSAGE -- Type redefinition
 
 	make_client (argv: ARRAY [STRING])
 			-- Build list, send it, receive modified list, and print it.
@@ -67,7 +67,7 @@ feature
 	process_received
 			-- Print the contents of received in sequence.
 		do
-			if {l_received: OUR_MESSAGE} received then
+			if attached {OUR_MESSAGE} received as l_received then
 				from
 					l_received.start
 				until

@@ -103,20 +103,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: ?STRING
+	file_name: detachable STRING
 			-- File name of the active document
 
-	tool_bar: ?WEL_TOOL_BAR
+	tool_bar: detachable WEL_TOOL_BAR
 			-- Window's tool bar
 
 	tool_bar_bitmap,
-	standard_tool_bar_bitmap: ?WEL_TOOL_BAR_BITMAP
+	standard_tool_bar_bitmap: detachable WEL_TOOL_BAR_BITMAP
 			-- Tool bar Bitmaps
 
 	tool_bar_buttons: ARRAYED_LIST [WEL_TOOL_BAR_BUTTON]
 			-- Tool bar buttons
 
-	rich_edit: ?WEL_RICH_EDIT
+	rich_edit: detachable WEL_RICH_EDIT
 			-- Rich edit control
 
 feature {NONE} -- Implementation
@@ -299,10 +299,10 @@ feature {NONE} -- Implementation
 			-- Reposition the status window and the tool bar when
 			-- the window has been resized.
 		do
-			if {l_tool_bar: like tool_bar} tool_bar then
+			if attached tool_bar as l_tool_bar then
 				l_tool_bar.reposition
 			end
-			if {l_rich_edit: like rich_edit} rich_edit then
+			if attached rich_edit as l_rich_edit then
 				l_rich_edit.resize (a_width, a_height - 40)
 			end
 		end
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 		do
 			s := Title.twin
 			s.append (" - ")
-			if {l_file_name: like file_name} file_name then
+			if attached file_name as l_file_name then
 				s.append (l_file_name)
 			else
 				s.append ("Untitled")

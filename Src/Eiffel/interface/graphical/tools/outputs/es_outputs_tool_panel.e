@@ -66,8 +66,9 @@ feature {NONE} -- User interface initialization
 			-- <Precursor>
 		do
 			register_action (selection_combo.change_actions, agent on_selected_editor_changed)
-			register_action (clear_button.select_actions, agent on_clear)
 			register_action (save_button.select_actions, agent on_save)
+			register_action (search_button.select_actions, agent on_search)
+			register_action (clear_button.select_actions, agent on_clear)
 		end
 
 	on_before_initialize
@@ -79,7 +80,6 @@ feature {NONE} -- User interface initialization
 
 	on_after_initialized
 			-- <Precursor>
-			-- test {ES_OUTPUTS_TOOL_PANEL}.on_before_initialize
 		local
 			l_output_manager: like output_manager
 			l_active_outputs: attached DS_LINEAR [OUTPUT_I]
@@ -196,6 +196,9 @@ feature {NONE} -- Access: User interface
 
 	save_button: detachable SD_TOOL_BAR_BUTTON
 			-- Tool bar button used to save the content of the editor.
+
+	search_button: detachable SD_TOOL_BAR_BUTTON
+			-- Tool bar button used to search the content of the editor.
 
 	clear_button: detachable SD_TOOL_BAR_BUTTON
 			-- Tool bar button used to clear the editor.
@@ -602,6 +605,18 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_search
+			-- Called when the user requests to search the active editor.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if attached last_output as l_output then
+				check l_output.is_searchable end
+				l_output.search_window (develop_window)
+			end
+		end
+
 	on_clear
 			-- Called when the user requests to clear the active editor.
 		require
@@ -715,7 +730,9 @@ feature {LOCKABLE_I} -- Event handlers
 feature {NONE} -- Events handlers
 
 	on_output_modified (a_output: attached ES_OUTPUT_PANE_I)
-			-- Called when an output pane has been modified with new text
+			-- Called when an output pane has been modified with new text.
+			--
+			-- `a_output': The output containing modifications.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
@@ -762,6 +779,8 @@ feature {NONE} -- Events handlers
 
 	on_output_shown (a_output: attached ES_OUTPUT_PANE_I)
 			-- Called when an output pane is shown on the UI.
+			--
+			-- `a_output': The output shown on the UI.
 		require
 			is_interface_usable: is_interface_usable
 			a_output_is_interface_usable: a_output.is_interface_usable
@@ -800,6 +819,13 @@ feature {NONE} -- Events handlers
 				l_main_tool_bar.update_size
 			end
 
+				-- Enable search functionality.
+			if a_output.is_searchable then
+				search_button.enable_sensitive
+			else
+				search_button.disable_sensitive
+			end
+
 				-- Ensure the last output is set.
 			last_output := a_output
 
@@ -830,7 +856,7 @@ feature {NONE} -- Factory
 			l_widget: SD_TOOL_BAR_RESIZABLE_ITEM
 			l_tool_bar: SD_TOOL_BAR
 		do
-			create Result.make (3)
+			create Result.make (4)
 
 			create l_box
 			l_box.set_minimum_width (280)
@@ -857,6 +883,14 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (locale_formatter.translation (tt_save_output))
 			Result.put_last (l_button)
 			save_button := l_button
+
+				-- Search button
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.tool_search_icon_buffer)
+			l_button.set_pixmap (stock_pixmaps.tool_search_icon)
+			l_button.set_tooltip (locale_formatter.translation (tt_search_output))
+			Result.put_last (l_button)
+			search_button := l_button
 
 				-- Tool bar for modified outputs
 			create l_tool_bar.make
@@ -892,6 +926,7 @@ feature {NONE} -- Internationalization
 	lb_output: STRING = "Output"
 
 	tt_save_output: STRING = "Save current output to disk"
+	tt_search_output: STRING = "Search the output"
 	tt_clear_output: STRING = "Clear current output"
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 

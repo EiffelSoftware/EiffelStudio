@@ -40,27 +40,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list_box: detachable WEL_SINGLE_SELECTION_LIST_BOX
 
-	list_box_mul: ?WEL_MULTIPLE_SELECTION_LIST_BOX
+	list_box_mul: detachable WEL_MULTIPLE_SELECTION_LIST_BOX
 
-	combo_box: ?WEL_DROP_DOWN_LIST_COMBO_BOX
+	combo_box: detachable WEL_DROP_DOWN_LIST_COMBO_BOX
 
-	edit: ?WEL_SINGLE_LINE_EDIT
+	edit: detachable WEL_SINGLE_LINE_EDIT
 
-	multi_edit: ?WEL_MULTIPLE_LINE_EDIT
+	multi_edit: detachable WEL_MULTIPLE_LINE_EDIT
 
-	static: ?WEL_STATIC
+	static: detachable WEL_STATIC
 
-	button: ?WEL_PUSH_BUTTON
+	button: detachable WEL_PUSH_BUTTON
 
-	scroll_bar: ?WEL_SCROLL_BAR
+	scroll_bar: detachable WEL_SCROLL_BAR
 
-	radio1, radio2: ?WEL_RADIO_BUTTON
+	radio1, radio2: detachable WEL_RADIO_BUTTON
 
-	bcheck1, bcheck2: ?WEL_CHECK_BOX
+	bcheck1, bcheck2: detachable WEL_CHECK_BOX
 
-	group1, group2: ?WEL_GROUP_BOX
+	group1, group2: detachable WEL_GROUP_BOX
 
 	list_box_item_num: INTEGER
 
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 
 	on_vertical_scroll_control (scroll_code, position: INTEGER; bar: WEL_BAR)
 		do
-			if {l_scroll_bar: like scroll_bar} bar and then {l_static: like static} static then
+			if attached {like scroll_bar} bar as l_scroll_bar and then attached static as l_static then
 				l_scroll_bar.on_scroll (scroll_code, position)
 				l_static.set_text (l_scroll_bar.position.out)
 			end
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
 	on_horizontal_scroll_control (scroll_code, position: INTEGER; bar: WEL_BAR)
 		do
-			if {l_scroll_bar: like scroll_bar} bar and then {l_static: like static} static then
+			if attached {like scroll_bar} bar as l_scroll_bar and then attached static as l_static then
 				l_scroll_bar.on_scroll (scroll_code, position)
 				l_static.set_text (l_scroll_bar.position.out)
 			end
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 
 	menu_list_box_delete
 		do
-			if {l_list_box: like list_box} list_box then
+			if attached list_box as l_list_box then
 				l_list_box.destroy
 			end
 			list_box_menu.enable_item (Cmd_list_box_create)
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 		do
 			list_box_menu.enable_item (Cmd_list_box_current_item)
 			text_info.wipe_out
-			if {l_list_box: like list_box} list_box then
+			if attached list_box as l_list_box then
 				text_info.append ("Item ")
 				text_info.append_integer (list_box_item_num)
 				l_list_box.add_string (text_info)
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_list_box: like list_box} list_box then
+			if attached list_box as l_list_box then
 				text_info.append_integer (l_list_box.count)
 				if l_list_box.count /= 1 then
 					text_info.append (" items are present.")
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_list_box: like list_box} list_box and then l_list_box.selected then
+			if attached list_box as l_list_box and then l_list_box.selected then
 				text_info.wipe_out
 				text_info.append (l_list_box.selected_string)
 				text_info.append (" is selected.")
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 
 	menu_mul_delete
 		do
-			if {l_list_box_mul: like list_box_mul} list_box_mul then
+			if attached list_box_mul as l_list_box_mul then
 				l_list_box_mul.destroy
 			end
 			list_box_mul_menu.enable_item (Cmd_mul_create)
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 		do
 			list_box_mul_menu.enable_item (Cmd_mul_current_item)
 			text_info.wipe_out
-			if {l_list_box_mul: like list_box_mul} list_box_mul then
+			if attached list_box_mul as l_list_box_mul then
 				text_info.append ("Item ")
 				text_info.append_integer (list_box_mul_item_num)
 				l_list_box_mul.add_string (text_info)
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_list_box_mul: like list_box_mul} list_box_mul then
+			if attached list_box_mul as l_list_box_mul then
 				text_info.append_integer (l_list_box_mul.count)
 				if l_list_box_mul.count > 1 then
 					text_info.append (" items are present.")
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			text_info.wipe_out
-			if {l_list_box_mul: like list_box_mul} list_box_mul then
+			if attached list_box_mul as l_list_box_mul then
 				text_info.append_integer (l_list_box_mul.count_selected_items)
 				text_info.append (" items are selected.%N%N")
 				text_info.append ("Selected items: ")
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			if
-				{l_list_box_mul: like list_box_mul} list_box_mul and then
+				attached list_box_mul as l_list_box_mul and then
 				l_list_box_mul.count_selected_items > 0
 			then
 				text_info.wipe_out
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 
 	menu_combo_box_delete
 		do
-			if {l_combo_box: like combo_box} combo_box then
+			if attached combo_box as l_combo_box then
 				l_combo_box.hide_list
 				l_combo_box.destroy
 			end
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			text_info.wipe_out
 			text_info.append ("Item ")
 			text_info.append_integer (combo_box_item_num)
-			if {l_combo_box: like combo_box} combo_box then
+			if attached combo_box as l_combo_box then
 				l_combo_box.add_string (text_info)
 				combo_box_item_num := combo_box_item_num + 1
 			end
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_combo_box: like combo_box} combo_box then
+			if attached combo_box as l_combo_box then
 				text_info.append_integer (l_combo_box.count)
 				if l_combo_box.count > 1 then
 					text_info.append (" items are present.")
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_combo_box: like combo_box} combo_box and then l_combo_box.selected then
+			if attached combo_box as l_combo_box and then l_combo_box.selected then
 				text_info.wipe_out
 				text_info.append (l_combo_box.selected_string)
 				text_info.append (" is selected.")
@@ -585,14 +585,14 @@ feature {NONE} -- Implementation
 
 	menu_combo_show_list
 		do
-			if {l_combo_box: like combo_box} combo_box then
+			if attached combo_box as l_combo_box then
 				l_combo_box.show_list
 			end
 		end
 
 	menu_combo_hide_list
 		do
-			if {l_combo_box: like combo_box} combo_box then
+			if attached combo_box as l_combo_box then
 				l_combo_box.hide_list
 			end
 		end
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 
 	menu_button_delete
 		do
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.destroy
 			end
 			button_menu.disable_item (Cmd_button_delete)
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 
 	menu_button_enable
 		do
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.enable
 			end
 			button_menu.check_item (Cmd_button_enable)
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 
 	menu_button_disable
 		do
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.disable
 			end
 			button_menu.uncheck_item (Cmd_button_enable)
@@ -661,7 +661,7 @@ feature {NONE} -- Implementation
 
 	menu_edit_delete
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				l_edit.destroy
 			end
 			edit_menu.enable_item (Cmd_edit_create)
@@ -674,14 +674,14 @@ feature {NONE} -- Implementation
 
 	menu_edit_set_text
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				l_edit.set_text ("New text")
 			end
 		end
 
 	menu_edit_clear_text
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				l_edit.clear
 			end
 		end
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				text_info.append ("The length is ")
 				text_info.append_integer (l_edit.text_length)
 			end
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				create msg_box.make
 				msg_box.information_message_box (Current, l_edit.text, "Current text")
 			end
@@ -726,7 +726,7 @@ feature {NONE} -- Implementation
 
 	menu_multi_edit_delete
 		do
-			if {l_multi_edit: like multi_edit} multi_edit then
+			if attached multi_edit as l_multi_edit then
 				l_multi_edit.destroy
 			end
 			multi_edit_menu.enable_item (Cmd_multi_edit_create)
@@ -739,14 +739,14 @@ feature {NONE} -- Implementation
 
 	menu_multi_edit_set_text
 		do
-			if {l_multi_edit: like multi_edit} multi_edit then
+			if attached multi_edit as l_multi_edit then
 				l_multi_edit.set_text ("New text")
 			end
 		end
 
 	menu_multi_edit_clear_text
 		do
-			if {l_multi_edit: like multi_edit} multi_edit then
+			if attached multi_edit as l_multi_edit then
 				l_multi_edit.clear
 			end
 		end
@@ -756,7 +756,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_multi_edit: like multi_edit} multi_edit then
+			if attached multi_edit as l_multi_edit then
 				text_info.append ("The length is ")
 				text_info.append_integer (l_multi_edit.text_length)
 			end
@@ -768,7 +768,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_multi_edit: like multi_edit} multi_edit then
+			if attached multi_edit as l_multi_edit then
 				create msg_box.make
 				msg_box.information_message_box (Current, l_multi_edit.text, "Current text")
 			end
@@ -800,10 +800,10 @@ feature {NONE} -- Implementation
 
 	menu_scroll_bar_delete
 		do
-			if {l_static: like static} static then
+			if attached static as l_static then
 				l_static.destroy
 			end
-			if {l_scroll_bar: like scroll_bar} scroll_bar then
+			if attached scroll_bar as l_scroll_bar then
 				l_scroll_bar.destroy
 			end
 			scroll_bar_menu.disable_item (Cmd_scroll_bar_delete)
@@ -845,13 +845,13 @@ feature {NONE} -- Implementation
 
 	menu_radio_delete
 		do
-			if {l_radio1: like radio1} radio1 then
+			if attached radio1 as l_radio1 then
 				l_radio1.destroy
 			end
-			if {l_radio2: like radio2} radio2 then
+			if attached radio2 as l_radio2 then
 				l_radio2.destroy
 			end
-			if {l_group1: like group1} group1 then
+			if attached group1 as l_group1 then
 				l_group1.destroy
 			end
 			radio_menu.disable_item (Cmd_radio_delete)
@@ -864,7 +864,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_radio1: like radio1} radio1 then
+			if attached radio1 as l_radio1 then
 				text_info.append (l_radio1.text)
 				text_info.append (" is ")
 				if l_radio1.checked then
@@ -873,7 +873,7 @@ feature {NONE} -- Implementation
 					text_info.append ("unchecked.%N")
 				end
 			end
-			if {l_radio2: like radio2} radio2 then
+			if attached radio2 as l_radio2 then
 				text_info.append (l_radio2.text)
 				text_info.append (" is ")
 				if l_radio2.checked then
@@ -908,13 +908,13 @@ feature {NONE} -- Implementation
 
 	menu_check_delete
 		do
-			if {l_bcheck1: like bcheck1} bcheck1 then
+			if attached bcheck1 as l_bcheck1 then
 				l_bcheck1.destroy
 			end
-			if {l_bcheck2: like bcheck2} bcheck2 then
+			if attached bcheck2 as l_bcheck2 then
 				l_bcheck2.destroy
 			end
-			if {l_group2: like group2} group2 then
+			if attached group2 as l_group2 then
 				l_group2.destroy
 			end
 			check_menu.disable_item (Cmd_check_delete)
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
-			if {l_bcheck1: like bcheck1} bcheck1 then
+			if attached bcheck1 as l_bcheck1 then
 				text_info.append (l_bcheck1.text)
 				text_info.append (" is ")
 				if l_bcheck1.checked then
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 					text_info.append ("unchecked.%N")
 				end
 			end
-			if {l_bcheck2: like bcheck2} bcheck2 then
+			if attached bcheck2 as l_bcheck2 then
 				text_info.append (l_bcheck2.text)
 				text_info.append (" is ")
 				if l_bcheck2.checked then

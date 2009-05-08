@@ -49,11 +49,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	left_control: ?WEL_WINDOW
+	left_control: detachable WEL_WINDOW
 			-- Control in the left part of the split area.
 			-- Void if none
 
-	right_control: ?WEL_WINDOW
+	right_control: detachable WEL_WINDOW
 			-- Control in the right part of the split area.
 			-- Void if none
 
@@ -144,7 +144,7 @@ feature {NONE} -- Windows message handling
 				-- Modify this line if you don't want the split
 				-- area to resize the left control (if it's a button
 				-- for example)
-			if {l_left_control: like left_control} left_control and then l_left_control.exists then
+			if attached left_control as l_left_control and then l_left_control.exists then
 				l_left_control.move_and_resize (
 					0, 0,
 					splitter_position, a_height,
@@ -157,7 +157,7 @@ feature {NONE} -- Windows message handling
 				-- Modify this line if you don't want the split
 				-- area to resize the right control (if it's a button
 				-- for example)
-			if {l_right_control: like right_control} right_control and then l_right_control.exists then
+			if attached right_control as l_right_control and then l_right_control.exists then
 				l_right_control.move_and_resize (
 					splitter_position + separator_width, 0,
 					a_width - (splitter_position + separator_width), a_height,

@@ -39,7 +39,7 @@ feature
 
 	mode: INTEGER
 
-	file: ?RAW_FILE
+	file: detachable RAW_FILE
 
 	state: INTEGER
 
@@ -47,7 +47,7 @@ feature
 
 feature -- Initialization
 
-	make (a_server: SERVER_THREAD; a_frontend: TFTP_FRONTEND; a_packet: TFTP_REQUEST_PACKET) is
+	make (a_server: SERVER_THREAD; a_frontend: TFTP_FRONTEND; a_packet: TFTP_REQUEST_PACKET)
 		require
 			server_non_void: a_server /= Void
 			frontend_non_void: a_frontend /= Void
@@ -80,7 +80,7 @@ feature -- Initialization
 
 feature
 
-	execute is
+	execute
 			-- Routine executed by new thread.
 		do
 			if opcode = {TFTP_PACKET}.wrq then
@@ -90,7 +90,7 @@ feature
 			end
     	end
 
-	process_write_request is
+	process_write_request
 		local
 			block_number: INTEGER
 			in_block_number: INTEGER
@@ -128,13 +128,13 @@ feature
 					done
 				loop
 					-- Wait for DATA packet
-					if {in_packet: TFTP_PACKET} receive (socket) then
+					if attached {TFTP_PACKET} receive (socket) as in_packet then
 						in_opcode := in_packet.opcode
 						if in_opcode = {TFTP_PACKET}.error then
 							frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
 							dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
 							terminate
-						elseif {data_packet: TFTP_DATA_PACKET} in_packet then
+						elseif attached {TFTP_DATA_PACKET} in_packet as data_packet then
 							in_block_number := data_packet.block_number
 							if in_block_number = block_number then
 								dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode,
@@ -171,7 +171,7 @@ feature
 			end
 		end
 
-	process_read_request is
+	process_read_request
 		local
 			block_number: INTEGER
 			in_block_number: INTEGER
@@ -212,14 +212,14 @@ feature
 						loop
 							send_data_packet (socket, remote_address, remote_port, block_number, in_buffer, count)
 								-- Wait for response ack
-							if {in_packet: TFTP_PACKET} receive (socket) then
+							if attached {TFTP_PACKET} receive (socket) as in_packet then
 								in_opcode := in_packet.opcode
 								if in_opcode = {TFTP_PACKET}.error then
 									frontend.log_message_by_address (remote_address, 1, create_error_message_from_packet (in_packet))
 									dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_INCOMPLETE, {TFTP_PACKET}.error, create_error_message_from_packet (in_packet))
 									done := True
 									terminate
-								elseif {ack_packet: TFTP_ACK_PACKET} in_packet then
+								elseif attached {TFTP_ACK_PACKET} in_packet as ack_packet then
 									in_block_number := ack_packet.block_number
 									if in_block_number /= block_number then
 										dispatch_tftp_event (remote_address, remote_port, {TFTP_EVENT}.REQUEST_OUTOFORDER, in_opcode, "Received ACK packet #" + in_block_number.out + " instead of #" + block_number.out)
@@ -247,11 +247,11 @@ feature
 			end
 		end
 
-	write_data (data_packet: TFTP_DATA_PACKET) is
+	write_data (data_packet: TFTP_DATA_PACKET)
 			--
 		require
 			data_packet_non_void: data_packet /= Void
-			valid_file: {l_file: like file} file and then l_file.is_open_write
+			valid_file: attached file as l_file and then l_file.is_open_write
 		local
 			l_file_loc: like file
 		do
@@ -261,11 +261,11 @@ feature
 			l_file_loc.put_managed_pointer (data_packet.data_pointer, data_packet.data_offset, data_packet.data_length)
 		end
 
-	read_data (p: MANAGED_POINTER; length: INTEGER): INTEGER is
+	read_data (p: MANAGED_POINTER; length: INTEGER): INTEGER
 			--
 		require
 			p_non_void: p /= Void
-			valid_file: {l_file: like file} file and then l_file.is_open_write
+			valid_file: attached file as l_file and then l_file.is_open_write
 		local
 			l_file_loc: like file
 		do
@@ -276,9 +276,9 @@ feature
 			Result := l_file_loc.bytes_read
 		end
 
-	terminate is
+	terminate
 		do
-			if {l_file: like file} file then
+			if attached file as l_file then
 				l_file.close
 				file := Void
 			end
@@ -288,7 +288,7 @@ feature
 			server.worker_terminated (id)
 		end
 
-	setup_file_writer: INTEGER is
+	setup_file_writer: INTEGER
 		local
 			l_file: like file
 		do
@@ -303,7 +303,7 @@ feature
 			end
 		end
 
-	setup_file_reader: INTEGER is
+	setup_file_reader: INTEGER
 		local
 			l_file: like file
 		do
@@ -323,7 +323,7 @@ feature
 			end
 		end
 
-	dispatch_tftp_event (an_address: INET_ADDRESS; a_port: INTEGER; an_id: INTEGER; an_opcode: INTEGER; an_arg: STRING) is
+	dispatch_tftp_event (an_address: INET_ADDRESS; a_port: INTEGER; an_id: INTEGER; an_opcode: INTEGER; an_arg: STRING)
 		require
 			server_non_void: server /= Void
 			addres_non_void: an_address /= Void
@@ -331,24 +331,24 @@ feature
       			server.dispatch_tftp_event (create {TFTP_EVENT}.make (an_address, a_port, an_id, an_opcode, an_arg))
 		end
 
-	bad_file(a_message: STRING) is
+	bad_file(a_message: STRING)
 		require
 			message_non_void: a_message /= Void
 		do
       			send_error (socket, remote_address, remote_port, 0, a_message)
 		end
 
-	build_request_info is
+	build_request_info
 		do
 			-- TODO
 		end
 
-	time: C_DATE is
+	time: C_DATE
 		once
 			create Result
 		end
 
-	milliseconds: INTEGER is
+	milliseconds: INTEGER
 		do
 			time.update
 			Result := time.millisecond_now + time.second_now * 1000 + time.minute_now * 60000

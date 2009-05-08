@@ -29,7 +29,7 @@ feature --Initialization
 
 feature -- Access
 
-	input_method_editor: ?WEL_INPUT_METHOD_EDITOR
+	input_method_editor: detachable WEL_INPUT_METHOD_EDITOR
 		-- The input method editor (IME) associated with the current input locale
 
 	input_locale: POINTER
@@ -191,7 +191,7 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				Result := l_input_method_editor.opened
 			end
 		end
@@ -209,7 +209,7 @@ feature -- IME Access
 			imm_has_ime: has_ime (input_locale)
 			a_prop_type:
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				Result := l_input_method_editor.get_property (a_prop_type)
 			end
 		ensure
@@ -222,7 +222,7 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.dialog_configure (a_parent)
 			end
 		end
@@ -233,7 +233,7 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.regword_configure (a_parent)
 			end
 		end
@@ -244,7 +244,7 @@ feature -- IME Access
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.dictionary_configure (parent)
 			end
 		end
@@ -280,7 +280,7 @@ feature --Status Setting
 	ime_open (a_input_context: POINTER)
 			-- Open the IME associated with 'a_input_context'
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.open
 			end
 		end
@@ -288,7 +288,7 @@ feature --Status Setting
 	ime_close (a_input_context: POINTER)
 			-- Open the IME associated with 'a_input_context'
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.close
 			end
 		end
@@ -345,7 +345,7 @@ feature --Status Setting
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.move_composition_window (a_x, a_y)
 			end
 		end
@@ -356,7 +356,7 @@ feature --Status Setting
 			imm_enabled: enabled
 			imm_has_ime: has_ime (input_locale)
 		do
-			if {l_input_method_editor: like input_method_editor} input_method_editor then
+			if attached input_method_editor as l_input_method_editor then
 				l_input_method_editor.move_status_window (a_x, a_y)
 			end
 		end

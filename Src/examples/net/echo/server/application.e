@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			prefer_ipv4_stack: BOOLEAN
 			listen_socket: NETWORK_STREAM_SOCKET
 			accept_timeout: INTEGER
-			l_address: ?NETWORK_SOCKET_ADDRESS
+			l_address: detachable NETWORK_SOCKET_ADDRESS
 		do
 			port := 12111
 
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			valid_socket: socket /= Void and then socket.is_bound
 		local
 			done: BOOLEAN
-			client_socket: ?NETWORK_STREAM_SOCKET
+			client_socket: detachable NETWORK_STREAM_SOCKET
 		do
 			from
 				done := False
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			socket_valid: socket.is_open_read and then socket.is_open_write
 		local
 			done: BOOLEAN
-			l_address, l_peer_address: ?NETWORK_SOCKET_ADDRESS
+			l_address, l_peer_address: detachable NETWORK_SOCKET_ADDRESS
 		do
 			l_address := socket.address
 			l_peer_address := socket.peer_address
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			socket_attached: client_socket /= Void
 			socket_valid: client_socket.is_open_read and then client_socket.is_open_write
 		local
-			message: ?STRING
+			message: detachable STRING
 		do
 				-- Limit client message size to 10
 				-- It's here just to demonstrate the usage of the `read_line_until' routine

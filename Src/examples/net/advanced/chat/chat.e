@@ -32,7 +32,7 @@ feature
 	max_to_poll: INTEGER
 
 	message_out: MESSAGE
-	received: ?MESSAGE
+	received: detachable MESSAGE
 
 	poll: MEDIUM_POLLER
 
@@ -87,7 +87,7 @@ feature
 				connections.after or stop
 			loop
 				if connections.item.is_waiting then
-					if {l_message_in: MESSAGE} retrieved (connections.item.active_medium) then
+					if attached {MESSAGE} retrieved (connections.item.active_medium) as l_message_in then
 						if l_message_in.new then
 							connections.item.set_client_name (l_message_in.client_name)
 							create message_out.make
@@ -123,7 +123,7 @@ feature
 
 	broadcast
 		local
-			client_name: ?STRING
+			client_name: detachable STRING
 		do
 			client_name := message_out.client_name
 			if client_name /= Void then
@@ -185,7 +185,7 @@ feature
 
 	send_already_connected
 		local
-			l_name: ?STRING
+			l_name: detachable STRING
 			l_flow: like outflow
 		do
 			create message_out.make

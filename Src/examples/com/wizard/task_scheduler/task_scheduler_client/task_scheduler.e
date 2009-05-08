@@ -1,7 +1,7 @@
 note
 	description: "Task Scheduler"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 
 class
 	TASK_SCHEDULER

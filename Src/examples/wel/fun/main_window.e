@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	maze: ?MAZE
+	maze: detachable MAZE
 
-	artist: ?ARTIST
+	artist: detachable ARTIST
 
-	maze_button, artist_button, fun_button: ?WEL_PUSH_BUTTON
+	maze_button, artist_button, fun_button: detachable WEL_PUSH_BUTTON
 
 feature {NONE} -- Implementation
 

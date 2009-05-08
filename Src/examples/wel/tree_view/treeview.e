@@ -277,7 +277,7 @@ feature -- Notifications
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW)
 			-- Selection has changed from one item to another.
 		local
-			tree_item: ?WEL_TREE_VIEW_ITEM
+			tree_item: detachable WEL_TREE_VIEW_ITEM
 		do
 			add_mess_output ("Selection changed")
 			tree_item := info.new_item

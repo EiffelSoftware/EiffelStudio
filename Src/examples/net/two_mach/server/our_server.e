@@ -27,7 +27,7 @@ feature
 			-- Accept communication with client and exchange messages
 		local
 			count: INTEGER
-			soc1: ?NETWORK_STREAM_SOCKET
+			soc1: detachable NETWORK_STREAM_SOCKET
 		do
 			if argv.count /= 2 then
 				io.error.putstring ("Usage: ")
@@ -58,10 +58,10 @@ feature
 			l_medium: SED_MEDIUM_READER_WRITER
 		do
 			soc1.accept
-			if {soc2: NETWORK_STREAM_SOCKET} soc1.accepted then
+			if attached {NETWORK_STREAM_SOCKET} soc1.accepted as soc2 then
 				create l_medium.make (soc2)
 				l_medium.set_for_reading
-				if {our_new_list: OUR_MESSAGE} retrieved (l_medium, True) then
+				if attached {OUR_MESSAGE} retrieved (l_medium, True) as our_new_list then
 					from
 						our_new_list.start
 					until

@@ -33,13 +33,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	log_font: ?WEL_LOG_FONT
+	log_font: detachable WEL_LOG_FONT
 			-- Selected log font
 
-	font: ?WEL_FONT
+	font: detachable WEL_FONT
 			-- Selected font
 
-	color: ?WEL_COLOR_REF
+	color: detachable WEL_COLOR_REF
 			-- Selected color
 
 	txt: STRING
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 					invalidate
 				end
 			when Cmd_choose_font then
-				if {l_log_font: like log_font} log_font then
+				if attached log_font as l_log_font then
 						-- To select the previous font (optional)
 					choose_font.set_log_font (l_log_font)
 				end
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 					invalidate
 				end
 			when Cmd_choose_color then
-				if {l_color: like color} color then
+				if attached color as l_color then
 						-- To select the previous color (optional)
 					choose_color.set_rgb_result (l_color)
 				end
@@ -118,10 +118,10 @@ feature {NONE} -- Implementation
 			-- Paint the text with the selected font and the
 			-- selected color.
 		do
-			if {l_color: like color} color then
+			if attached color as l_color then
 				dc.set_text_color (l_color)
 			end
-			if {l_font: like font} font then
+			if attached font as l_font then
 				dc.select_font (l_font)
 			end
 			dc.rectangle (0, 0, rect.width, rect.height)

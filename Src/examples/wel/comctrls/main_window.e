@@ -151,23 +151,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static: ?WEL_STATIC
+	static: detachable WEL_STATIC
 
-	progress_bar: ?WEL_PROGRESS_BAR
+	progress_bar: detachable WEL_PROGRESS_BAR
 
-	track_bar: ?WEL_TRACK_BAR
+	track_bar: detachable WEL_TRACK_BAR
 
-	status_window: ?WEL_STATUS_WINDOW
+	status_window: detachable WEL_STATUS_WINDOW
 
-	tool_bar: ?WEL_TOOL_BAR
+	tool_bar: detachable WEL_TOOL_BAR
 
-	tooltip: ?WEL_TOOLTIP
+	tooltip: detachable WEL_TOOLTIP
 
-	tool_info1, tool_info2: ?WEL_TOOL_INFO
+	tool_info1, tool_info2: detachable WEL_TOOL_INFO
 
 
 
-	rich_edit: ?WEL_RICH_EDIT
+	rich_edit: detachable WEL_RICH_EDIT
 
 	background_brush: WEL_BRUSH
 			-- Dialog boxes background color is the same than
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: ?WEL_MENU)
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: detachable WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
 		local

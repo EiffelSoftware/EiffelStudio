@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 
 	virtual_dcs_count: INTEGER = 20
 
-	palette: ?WEL_PALETTE
+	palette: detachable WEL_PALETTE
 
 	virtual_dcs: ARRAY [WEL_MEMORY_DC]
 

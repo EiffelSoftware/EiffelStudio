@@ -46,17 +46,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	brush_demo: ?BRUSH_DEMO
+	brush_demo: detachable BRUSH_DEMO
 
-	rectangle_demo: ?RECTANGLE_DEMO
+	rectangle_demo: detachable RECTANGLE_DEMO
 
-	three_d_demo: ?DEMO_3D
+	three_d_demo: detachable DEMO_3D
 
-	brush_button: ?WEL_PUSH_BUTTON
+	brush_button: detachable WEL_PUSH_BUTTON
 
-	rectangle_button: ?WEL_PUSH_BUTTON
+	rectangle_button: detachable WEL_PUSH_BUTTON
 
-	demo3d_button: ?WEL_PUSH_BUTTON
+	demo3d_button: detachable WEL_PUSH_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 		do
 			if
 				timer_id = demo_timer_id and then
-				{l_demo: like three_d_demo} three_d_demo and then
+				attached three_d_demo as l_demo and then
 				l_demo.exists and then l_demo.ready
 			then
 				l_demo.go

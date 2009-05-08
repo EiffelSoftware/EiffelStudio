@@ -54,7 +54,7 @@ feature {NONE} -- Behaviors
 
 feature {NONE} -- Implementation
 
-	clear_button: ?WEL_PUSH_BUTTON
+	clear_button: detachable WEL_PUSH_BUTTON
 			-- Clear button
 
 	class_background: WEL_WHITE_BRUSH

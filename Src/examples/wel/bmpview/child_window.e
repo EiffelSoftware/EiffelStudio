@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Access
 
-	bitmap: ?WEL_BITMAP
+	bitmap: detachable WEL_BITMAP
 			-- Bitmap selected by the user
 
 feature -- Basic operations
@@ -68,7 +68,7 @@ feature -- Basic operations
 	on_destroy
 			-- Notify `parent' that `Current' is being destroyed.
 		do
-			if {main_window: MAIN_WINDOW} parent then
+			if attached {MAIN_WINDOW} parent as main_window then
 				main_window.remove_child_reference (Current)
 			else
 				check False end

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	edit: ?WEL_SINGLE_LINE_EDIT
+	edit: detachable WEL_SINGLE_LINE_EDIT
 			-- Edit control to enter pen width
 
 	pen_width: INTEGER
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			if {l_edit: like edit} edit then
+			if attached edit as l_edit then
 				create s.make_empty
 				s.append_integer (pen_width)
 				l_edit.set_text (s)
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			-- Ensure `edit' value is an integer, save it in
 			-- `pen_width' and close the dialog box.
 		do
-			if {l_edit: like edit} edit and then l_edit.text.is_integer then
+			if attached edit as l_edit and then l_edit.text.is_integer then
 				pen_width := l_edit.text.to_integer
 				terminate (Idok)
 			end

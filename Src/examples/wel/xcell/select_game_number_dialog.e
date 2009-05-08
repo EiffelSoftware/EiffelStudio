@@ -43,7 +43,7 @@ feature -- Access
 	game_number: INTEGER
 			-- Number of cards choosen
 
-	number_edit: ?WEL_SINGLE_LINE_EDIT
+	number_edit: detachable WEL_SINGLE_LINE_EDIT
 			-- Edit control to input the game number
 
 feature {NONE} -- Implementation
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			-- Setup the dialog before
 			-- it is activated
 		do
-			if {l_number_edit: like number_edit} number_edit then
+			if attached number_edit as l_number_edit then
 				l_number_edit.set_text (game_number.out)
 			end
 		end
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_number_edit: like number_edit} number_edit then
+			if attached number_edit as l_number_edit then
 				if l_number_edit.text.is_integer then
 					if l_number_edit.text.to_integer < 1 or l_number_edit.text.to_integer > 65000 then
 						create msg_box.make

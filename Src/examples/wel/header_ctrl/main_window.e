@@ -62,11 +62,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list: detachable WEL_SINGLE_SELECTION_LIST_BOX
 
-	label: ?WEL_STATIC
+	label: detachable WEL_STATIC
 
-	header_control: ?HEADER_CONTROL
+	header_control: detachable HEADER_CONTROL
 
 feature {NONE} -- Implementation
 
@@ -95,10 +95,10 @@ feature {NONE} -- Implementation
    	on_size (size_type, a_width, a_height: INTEGER)
    			-- Wm_size message
    		do
-			if {l_header_control: like header_control} header_control then
+			if attached header_control as l_header_control then
 				l_header_control.retrieve_and_set_windows_pos (client_rect)
 			end
-			if {l_list: like list} list then
+			if attached list as l_list then
 				l_list.resize (client_rect.width, client_rect.height - 55)
 			end
 		end

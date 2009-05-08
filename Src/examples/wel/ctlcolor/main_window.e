@@ -91,13 +91,13 @@ feature -- Element change
 
 feature {NONE} -- GC tracking
 
-	frame: ?WEL_GROUP_BOX
-	foreground_button, background_button: ?MY_BUTTON
-	static: ?WEL_STATIC
-	medit: ?WEL_MULTIPLE_LINE_EDIT
-	sedit: ?WEL_SINGLE_LINE_EDIT
-	lbox: ?WEL_SINGLE_SELECTION_LIST_BOX
-	sbar: ?WEL_SCROLL_BAR
+	frame: detachable WEL_GROUP_BOX
+	foreground_button, background_button: detachable MY_BUTTON
+	static: detachable WEL_STATIC
+	medit: detachable WEL_MULTIPLE_LINE_EDIT
+	sedit: detachable WEL_SINGLE_LINE_EDIT
+	lbox: detachable WEL_SINGLE_SELECTION_LIST_BOX
+	sbar: detachable WEL_SCROLL_BAR
 
 feature {NONE} -- Implementation
 

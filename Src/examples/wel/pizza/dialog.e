@@ -88,10 +88,10 @@ feature {NONE} -- Initialization
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER)
 		do
-			if control = listbox_items and then {l_listbox_items: like listbox_items} listbox_items then
+			if control = listbox_items and then attached listbox_items as l_listbox_items then
 				items_selected := l_listbox_items.count_selected_items
 			elseif control = size then
-				if {l_size: like size} size and then l_size.selected then
+				if attached size as l_size and then l_size.selected then
 					inspect
 						l_size.selected_item
 					when 0 then
@@ -148,7 +148,7 @@ feature
 			text_info.wipe_out
 			text_info.append ("You ordered a Pizza with ")
 			if
-				{l_listbox_items: like listbox_items} listbox_items and then
+				attached listbox_items as l_listbox_items and then
 				l_listbox_items.count_selected_items > 0
 			then
 				text_info.append_integer (items_selected)
@@ -190,14 +190,14 @@ feature -- Access
 
 	size_price: INTEGER
 
-	size: ?WEL_DROP_DOWN_LIST_COMBO_BOX
+	size: detachable WEL_DROP_DOWN_LIST_COMBO_BOX
 
-	listbox_items: ?WEL_MULTIPLE_SELECTION_LIST_BOX
+	listbox_items: detachable WEL_MULTIPLE_SELECTION_LIST_BOX
 
 	radio_thin, radio_thick, radio_stuff,
-	radio_for_here, radio_to_go: ?WEL_RADIO_BUTTON
+	radio_for_here, radio_to_go: detachable WEL_RADIO_BUTTON
 
-	static_price: ?WEL_STATIC;
+	static_price: detachable WEL_STATIC;
 
 invariant
 	static_price_attached: static_price /= Void

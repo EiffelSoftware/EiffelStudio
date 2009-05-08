@@ -60,7 +60,7 @@ feature -- Access
 	pen: WEL_PEN
 			-- Pen currently selected in `dc'
 
-	line_thickness_dialog: ?LINE_THICKNESS_DIALOG
+	line_thickness_dialog: detachable LINE_THICKNESS_DIALOG
 			-- Dialog box to change line thickness
 
 	lines: LINES
@@ -69,10 +69,10 @@ feature -- Access
 	current_line: LINE
 			-- Line currently drawn by the user
 
-	open_dialog: ?WEL_OPEN_FILE_DIALOG
+	open_dialog: detachable WEL_OPEN_FILE_DIALOG
 			-- Standard dialog box to open a file
 
-	save_dialog: ?WEL_SAVE_FILE_DIALOG
+	save_dialog: detachable WEL_SAVE_FILE_DIALOG
 			-- Standard dialog box to save a file
 
 feature -- Element change
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 				end
 				l_open_dialog.activate (Current)
 				if l_open_dialog.selected then
-					if {l_lines: like lines} lines.retrieve_by_name (l_open_dialog.file_name) then
+					if attached {like lines} lines.retrieve_by_name (l_open_dialog.file_name) as l_lines then
 						lines := l_lines
 					else
 						create lines.make

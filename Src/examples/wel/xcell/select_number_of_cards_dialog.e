@@ -36,14 +36,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	number_edit: ?WEL_SINGLE_LINE_EDIT
+	number_edit: detachable WEL_SINGLE_LINE_EDIT
 			-- Edit control to input the number of cards
 
 	setup_dialog
 			-- Setup the dialog before
 			-- it is activated
 		do
-			if {l_number_edit: like number_edit} number_edit then
+			if attached number_edit as l_number_edit then
 				l_number_edit.set_text (no_cards.out)
 			end
 		end
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			if {l_number_edit: like number_edit} number_edit then
+			if attached number_edit as l_number_edit then
 				if l_number_edit.text.is_integer then
 					if l_number_edit.text.to_integer < 1 or l_number_edit.text.to_integer > 52 then
 						create msg_box.make

@@ -45,7 +45,7 @@ feature -- Access
 	pen: WEL_PEN
 			-- Pen currently selected in `dc'
 
-	line_thickness_dialog: ?LINE_THICKNESS_DIALOG
+	line_thickness_dialog: detachable LINE_THICKNESS_DIALOG
 			-- Dialog box to change line thickness
 
 feature -- Element change

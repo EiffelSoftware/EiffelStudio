@@ -87,38 +87,38 @@ feature {NONE} -- Initialization
 feature -- Access
 
 		--IMM
-	imm: ?WEL_INPUT_METHOD_MANAGER
+	imm: detachable WEL_INPUT_METHOD_MANAGER
 	input_locale: POINTER
 	input_locales: ARRAY[POINTER]
 
 		--Font
 	log_font: WEL_LOG_FONT
-	wel_font: ?WEL_FONT
+	wel_font: detachable WEL_FONT
 
 		--IME Controls
-	lang_edit: ?WEL_RICH_EDIT
-	font_list: ?WEL_DROP_DOWN_LIST_COMBO_BOX
-	avail_input_locales_combo: ?WEL_DROP_DOWN_LIST_COMBO_BOX
-	configure_ime_button: ?WEL_PUSH_BUTTON
-	ime_group_box: ?WEL_GROUP_BOX
-	ime_display_group_box: ?WEL_GROUP_BOX
+	lang_edit: detachable WEL_RICH_EDIT
+	font_list: detachable WEL_DROP_DOWN_LIST_COMBO_BOX
+	avail_input_locales_combo: detachable WEL_DROP_DOWN_LIST_COMBO_BOX
+	configure_ime_button: detachable WEL_PUSH_BUTTON
+	ime_group_box: detachable WEL_GROUP_BOX
+	ime_display_group_box: detachable WEL_GROUP_BOX
 
 	--Wel controls
-	button: ?WEL_PUSH_BUTTON
-	control_button: ?WEL_PUSH_BUTTON
-	check_box: ?WEL_CHECK_BOX
-	group_box: ?WEL_GROUP_BOX
-	radio_button: ?WEL_RADIO_BUTTON
-	drop_down_combo_box: ?WEL_DROP_DOWN_LIST_COMBO_BOX
-	single_selection_list_box: ?WEL_SINGLE_SELECTION_LIST_BOX
-	multi_selection_list_box: ?WEL_MULTIPLE_SELECTION_LIST_BOX
-	tree_view: ?WEL_TREE_VIEW
+	button: detachable WEL_PUSH_BUTTON
+	control_button: detachable WEL_PUSH_BUTTON
+	check_box: detachable WEL_CHECK_BOX
+	group_box: detachable WEL_GROUP_BOX
+	radio_button: detachable WEL_RADIO_BUTTON
+	drop_down_combo_box: detachable WEL_DROP_DOWN_LIST_COMBO_BOX
+	single_selection_list_box: detachable WEL_SINGLE_SELECTION_LIST_BOX
+	multi_selection_list_box: detachable WEL_MULTIPLE_SELECTION_LIST_BOX
+	tree_view: detachable WEL_TREE_VIEW
 
 		--Labels
-	input_locale_text, change_font_text: ?DISPLAY_TEXT
-	ime_name_text, ime_description_text, ime_property_text, ime_conversion_text: ?DISPLAY_TEXT
+	input_locale_text, change_font_text: detachable DISPLAY_TEXT
+	ime_name_text, ime_description_text, ime_property_text, ime_conversion_text: detachable DISPLAY_TEXT
 	ime_title_text_info, ime_name_text_info, ime_description_text_info,
-	ime_property_text_info, ime_conversion_text_info: ?DISPLAY_TEXT
+	ime_property_text_info, ime_conversion_text_info: detachable DISPLAY_TEXT
 
 	main_menu: WEL_MENU
 			-- Windows main menu created from resource
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			conv_mode, wel_const: INTEGER
 			l_imm: like imm
 			l_lang_edit: like lang_edit
-			l_input_editor: ?WEL_INPUT_METHOD_EDITOR
+			l_input_editor: detachable WEL_INPUT_METHOD_EDITOR
 		do
 			l_imm := imm
 			l_lang_edit := lang_edit
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			l_avail_input_locales_combo: like avail_input_locales_combo
 		do
 			if control = font_list then
-				if {l_font_list: like font_list} font_list then
+				if attached font_list as l_font_list then
 					create log_font.make (14, l_font_list.selected_string)
 					change_font (log_font)
 				end
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 				end
 				refresh
 			elseif control = control_button then
-				if {l_lang_edit: like lang_edit} lang_edit then
+				if attached lang_edit as l_lang_edit then
 					if l_lang_edit.text.is_equal ("") then
 						create tmp_str.make_from_string ("")
 					else
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 					change_controls (tmp_str)
 				end
 			elseif control = configure_ime_button then
-				if {l_imm: like imm} imm and then l_imm.enabled and then l_imm.has_ime (l_imm.input_locale) then
+				if attached imm as l_imm and then l_imm.enabled and then l_imm.has_ime (l_imm.input_locale) then
 
 					l_imm.ime_dialog_configure (item)
 				else
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	init_display
 			-- Initialise display
 		do
-			if {l_font_list: like font_list} font_list then
+			if attached font_list as l_font_list then
 				l_font_list.add_string("MS Shell Dlg")
 				l_font_list.add_string("Arial")
 				l_font_list.add_string("Georgia")
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 	init_menu
 			-- Initialize the main menu
 		do
-			if {l_imm: like imm} imm and then l_imm.has_ime (l_imm.input_locale) then
+			if attached imm as l_imm and then l_imm.has_ime (l_imm.input_locale) then
 				main_menu.enable_item (Idalphanumeric_constant)
 				main_menu.enable_item (Idsoftkeyboard_constant)
 				main_menu.enable_item (Idshapehalf_constant)
@@ -286,19 +286,19 @@ feature {NONE} -- Implementation
 			init_menu
 			init_locale_list
 			init_tree_view
-			if {l_lang_edit: like lang_edit} lang_edit then
+			if attached lang_edit as l_lang_edit then
 				l_lang_edit.set_text ("Rich Edit control")
 				l_lang_edit.hide_vertical_scroll_bar
 				l_lang_edit.hide_horizontal_scroll_bar
 			end
-			if {l_drop_down_combo_box: like drop_down_combo_box} drop_down_combo_box then
+			if attached drop_down_combo_box as l_drop_down_combo_box then
 				l_drop_down_combo_box.insert_string_at ("Drop down combo", 0)
 				l_drop_down_combo_box.select_item (0)
 			end
-			if {l_single_selection_list_box: like single_selection_list_box} single_selection_list_box then
+			if attached single_selection_list_box as l_single_selection_list_box then
 				l_single_selection_list_box.insert_string_at ("Single Selection List Box", 0)
 			end
-			if {l_multi_selection_list_box: like multi_selection_list_box} multi_selection_list_box then
+			if attached multi_selection_list_box as l_multi_selection_list_box then
 				l_multi_selection_list_box.insert_string_at ("Multiple Selection List Box", 0)
 				l_multi_selection_list_box.insert_string_at ("Multiple Selection List Box", 1)
 			end
@@ -308,10 +308,10 @@ feature {NONE} -- Implementation
 			-- Add the available input locales to the list
 		local
 			cnt, langid: INTEGER
-			lang_string: ?STRING_32
+			lang_string: detachable STRING_32
 			l_avail_input_locales_combo: like avail_input_locales_combo
 		do
-			if {l_imm: like imm} imm then
+			if attached imm as l_imm then
 				input_locales := l_imm.input_locales
 				l_avail_input_locales_combo := avail_input_locales_combo
 					-- Per creation routine postcondition and stable attribute property.
@@ -385,32 +385,32 @@ feature {NONE} -- Implementation
 		local
 			tvitem: WEL_TREE_VIEW_ITEM
 		do
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.set_text (str)
 			end
-			if {l_check_box: like check_box} check_box then
+			if attached check_box as l_check_box then
 				l_check_box.set_text (str)
 			end
-			if {l_radio_button: like radio_button} radio_button then
+			if attached radio_button as l_radio_button then
 				l_radio_button.set_text (str)
 			end
-			if {l_drop_down_combo_box: like drop_down_combo_box} drop_down_combo_box then
+			if attached drop_down_combo_box as l_drop_down_combo_box then
 				l_drop_down_combo_box.select_item (0)
 				l_drop_down_combo_box.delete_string (0)
 				l_drop_down_combo_box.insert_string_at (str, 0)
 				l_drop_down_combo_box.select_item (0)
 			end
-			if {l_single_selection_list_box: like single_selection_list_box} single_selection_list_box then
+			if attached single_selection_list_box as l_single_selection_list_box then
 				l_single_selection_list_box.delete_string (0)
 				l_single_selection_list_box.insert_string_at (str, 0)
 			end
-			if {l_multi_selection_list_box: like multi_selection_list_box} multi_selection_list_box then
+			if attached multi_selection_list_box as l_multi_selection_list_box then
 				l_multi_selection_list_box.delete_string (0)
 				l_multi_selection_list_box.insert_string_at (str, 0)
 				l_multi_selection_list_box.delete_string (1)
 				l_multi_selection_list_box.insert_string_at (str, 1)
 			end
-			if {l_tree_view: like tree_view} tree_view then
+			if attached tree_view as l_tree_view then
 				tvitem := l_tree_view.selected_item
 				tvitem.set_text (str)
 				l_tree_view.set_tree_item (tvitem)
@@ -423,13 +423,13 @@ feature {NONE} -- Implementation
 			char_format: WEL_CHARACTER_FORMAT
 			l_wel_font: like wel_font
 		do
-			if {l_font_list: like font_list} font_list then
+			if attached font_list as l_font_list then
 				create char_format.make
 				char_format.set_face_name (l_font_list.selected_string)
 				create l_wel_font.make_indirect (new_font)
 				wel_font := l_wel_font
 				l_wel_font.set_indirect (new_font)
-				if {l_lang_edit: like lang_edit} lang_edit and then l_lang_edit.text_length > 0 then
+				if attached lang_edit as l_lang_edit and then l_lang_edit.text_length > 0 then
 					l_lang_edit.select_all
 					l_lang_edit.set_character_format_selection (char_format)
 				end
@@ -449,104 +449,104 @@ feature {NONE} -- Implementation
 			l_wel_font.set_indirect (log_font)
 			if l_imm = Void or else not l_imm.has_ime (l_imm.input_locale) then
 					--hide IME info since no IME loaded
-				if {w1: DISPLAY_TEXT} ime_name_text then
+				if attached {DISPLAY_TEXT} ime_name_text as w1 then
 					w1.hide
 				end
-				if {w2: DISPLAY_TEXT} ime_description_text then
+				if attached {DISPLAY_TEXT} ime_description_text as w2 then
 					w2.hide
 				end
-				if {w3: DISPLAY_TEXT} ime_property_text then
+				if attached {DISPLAY_TEXT} ime_property_text as w3 then
 					w3.hide
 				end
-				if {w4: DISPLAY_TEXT} ime_conversion_text then
+				if attached {DISPLAY_TEXT} ime_conversion_text as w4 then
 					w4.hide
 				end
-				if {w5: DISPLAY_TEXT} ime_name_text_info then
+				if attached {DISPLAY_TEXT} ime_name_text_info as w5 then
 					w5.hide
 				end
-				if {w6: DISPLAY_TEXT} ime_description_text_info then
+				if attached {DISPLAY_TEXT} ime_description_text_info as w6 then
 					w6.hide
 				end
-				if {w7: DISPLAY_TEXT} ime_property_text_info then
+				if attached {DISPLAY_TEXT} ime_property_text_info as w7 then
 					w7.hide
 				end
-				if {w8: DISPLAY_TEXT} ime_conversion_text_info then
+				if attached {DISPLAY_TEXT} ime_conversion_text_info as w8 then
 					w8.hide
 				end
-				if {w9: DISPLAY_TEXT} configure_ime_button then
+				if attached {DISPLAY_TEXT} configure_ime_button as w9 then
 					w9.hide
 				end
-				if {w10: DISPLAY_TEXT} ime_title_text_info then
+				if attached {DISPLAY_TEXT} ime_title_text_info as w10 then
 					w10.show
 					w10.set_font (l_wel_font)
 					w10.set_text ("- " + "No IME loaded")
 				end
 			else
-				if {w11: DISPLAY_TEXT} ime_title_text_info then
+				if attached {DISPLAY_TEXT} ime_title_text_info as w11 then
 					w11.hide
 					w11.set_font (l_wel_font)
 					w11.clear
 				end
-				if {w12: DISPLAY_TEXT} ime_name_text then
+				if attached {DISPLAY_TEXT} ime_name_text as w12 then
 					w12.show
 					w12.set_font (l_wel_font)
 				end
-				if {w13: DISPLAY_TEXT} ime_name_text_info then
+				if attached {DISPLAY_TEXT} ime_name_text_info as w13 then
 					w13.show
 					w13.set_font (l_wel_font)
 					w13.set_text ("- " + l_imm.ime_filename)
 				end
-				if {w14: DISPLAY_TEXT} ime_description_text then
+				if attached {DISPLAY_TEXT} ime_description_text as w14 then
 					w14.show
 					w14.set_font (l_wel_font)
 				end
-				if {w15: DISPLAY_TEXT} ime_description_text_info then
+				if attached {DISPLAY_TEXT} ime_description_text_info as w15 then
 					w15.show
 					w15.set_font (l_wel_font)
 					w15.set_text ("- " + l_imm.ime_description)
 				end
-				if {w16: DISPLAY_TEXT} ime_property_text then
+				if attached {DISPLAY_TEXT} ime_property_text as w16 then
 					w16.show
 					w16.set_font (l_wel_font)
 				end
-				if {w17: DISPLAY_TEXT} ime_property_text_info then
+				if attached {DISPLAY_TEXT} ime_property_text_info as w17 then
 					w17.show
 					w17.set_font (l_wel_font)
 					w17.set_text (ime_properties)
 				end
-				if {w18: DISPLAY_TEXT} ime_conversion_text then
+				if attached {DISPLAY_TEXT} ime_conversion_text as w18 then
 					w18.show
 					w18.set_font (l_wel_font)
 				end
-				if {w19: DISPLAY_TEXT} ime_conversion_text_info then
+				if attached {DISPLAY_TEXT} ime_conversion_text_info as w19 then
 					w19.show
 					w19.set_font (l_wel_font)
 					w19.set_text (ime_conversion_status)
 				end
-				if {w20: DISPLAY_TEXT} configure_ime_button then
+				if attached {DISPLAY_TEXT} configure_ime_button as w20 then
 					w20.show
 					w20.set_font (l_wel_font)
 				end
 			end
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.set_font (l_wel_font)
 			end
-			if {l_check_box: like check_box} check_box then
+			if attached check_box as l_check_box then
 				l_check_box.set_font (l_wel_font)
 			end
-			if {l_radio_button: like radio_button} radio_button then
+			if attached radio_button as l_radio_button then
 				l_radio_button.set_font (l_wel_font)
 			end
-			if {l_drop_down_combo_box: like drop_down_combo_box} drop_down_combo_box then
+			if attached drop_down_combo_box as l_drop_down_combo_box then
 				l_drop_down_combo_box.set_font (l_wel_font)
 			end
-			if {l_single_selection_list_box: like single_selection_list_box} single_selection_list_box then
+			if attached single_selection_list_box as l_single_selection_list_box then
 				l_single_selection_list_box.set_font (l_wel_font)
 			end
-			if {l_multi_selection_list_box: like multi_selection_list_box} multi_selection_list_box then
+			if attached multi_selection_list_box as l_multi_selection_list_box then
 				l_multi_selection_list_box.set_font (l_wel_font)
 			end
-			if {l_tree_view: like tree_view} tree_view then
+			if attached tree_view as l_tree_view then
 				l_tree_view.set_font (l_wel_font)
 			end
 		end
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			conv_mode, sent_mode: INTEGER
 			l_imm: like imm
 			l_lang_edit: like lang_edit
-			l_input_editor: ?WEL_INPUT_METHOD_EDITOR
+			l_input_editor: detachable WEL_INPUT_METHOD_EDITOR
 		do
 			l_imm := imm
 			l_lang_edit := lang_edit
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 	refresh
 			-- Refresh display
 		do
-			if {l_imm: like imm} imm then
+			if attached imm as l_imm then
 				l_imm.switch_input_locale (input_locale)
 			end
 			setup_ime_display

@@ -66,13 +66,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list: ?WEL_SINGLE_SELECTION_LIST_BOX
+	list: detachable WEL_SINGLE_SELECTION_LIST_BOX
 
-	label: ?WEL_STATIC
+	label: detachable WEL_STATIC
 
-	list_view: ?LISTVIEW
+	list_view: detachable LISTVIEW
 
-	button: ?WEL_PUSH_BUTTON
+	button: detachable WEL_PUSH_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -101,13 +101,13 @@ feature {NONE} -- Implementation
    	on_size (size_type, a_width, a_height: INTEGER)
    			-- Wm_size message
    		do
-			if {l_list_view: like list_view} list_view then
+			if attached list_view as l_list_view then
 				l_list_view.resize (client_rect.width - 20, client_rect.height - 190)
 			end
-			if {l_list: like list} list then
+			if attached list as l_list then
 				l_list.resize (client_rect.width, 120)
 			end
-			if {l_button: like button} button then
+			if attached button as l_button then
 				l_button.move (10, height - 55)
 			end
 		end
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 	on_control_id_command (control_id: INTEGER)
 			-- A command has been received from `control_id'.
 		do
-			if control_id = 3 and then {l_list_view: like list_view} list_view then
+			if control_id = 3 and then attached list_view as l_list_view then
 				l_list_view.change_style
 			end
 		end

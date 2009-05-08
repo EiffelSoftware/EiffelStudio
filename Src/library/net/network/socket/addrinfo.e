@@ -10,21 +10,19 @@ deferred class
 
 feature -- Constants
 
-	AI_PASSIVE: INTEGER = 0x0001
-	AI_CANONNAME: INTEGER = 0x0002
-	AI_NUMERICHOST: INTEGER = 0x0004
-	AI_V4MAPPED: INTEGER = 0x0008
-	AI_ALL: INTEGER = 0x0010
-	AI_ADDRCONFIG: INTEGER = 0x0020
+	AF_INET: INTEGER
+		external
+			"C"
+		alias
+			"en_addrinfo_af_inet"
+		end
 
-	AF_UNSPEC: INTEGER = 0
-	AF_UNIX: INTEGER = 1
-	AF_INET: INTEGER = 2
-	AF_INET6: INTEGER = 23
-
-	PF_UNSPEC: INTEGER = 0
-	PF_UNIX: INTEGER = 1
-	PF_INET: INTEGER = 2
+	AF_INET6: INTEGER
+		external
+			"C inline"
+		alias
+			"en_addrinfo_af_inet6"
+		end
 
 feature -- Access
 

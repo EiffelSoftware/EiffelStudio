@@ -18,6 +18,14 @@ int en_socket_address_len() {
 	return sizeof(SOCKETADDRESS);
 }
 
+EIF_INTEGER en_addrinfo_af_inet(){
+	return AF_INET;
+}
+
+EIF_INTEGER en_addrinfo_af_inet6(){
+	return AF_INET6;
+}
+
 int en_addrinfo_ai_flags(struct addrinfo *s) {
 	return s->ai_flags;
 }

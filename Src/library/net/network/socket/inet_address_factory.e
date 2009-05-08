@@ -562,6 +562,7 @@ feature {NONE} -- Implementation
 		local
 			ai: detachable ADDRINFO
 			ia: INET_ADDRESS
+			l_family: INTEGER
 		do
 			ai := getaddrinfo(host)
 			if ai /= Void then
@@ -570,11 +571,11 @@ feature {NONE} -- Implementation
 				until
 					ai = Void
 				loop
-					inspect ai.family
-					when  {ADDRINFO}.af_inet then
+					l_family := ai.family
+					if l_family = {ADDRINFO}.af_inet then
 						create {INET4_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
 						Result.force (ia, Result.count+1)
-					when  {ADDRINFO}.af_inet6 then
+					elseif l_family = {ADDRINFO}.af_inet6 then
 						if is_ipv6_available then
 							create {INET6_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
 							Result.force (ia, Result.count+1)

@@ -1319,6 +1319,18 @@ feature {NONE} -- Implementation attribute processing
 					current_target.set_options (current_option)
 				end
 			end
+			if current_group /= Void and then attached {CONF_LIBRARY} current_group then
+				report_non_client_options (<<
+					at_namespace,
+					at_full_class_checking,
+					at_cat_call_detection,
+					at_is_attached_by_default,
+					at_is_void_safe,
+					at_void_safety,
+					at_syntax_level,
+					at_syntax
+				>>)
+			end
 		ensure
 			current_option_not_void: not is_error implies current_option /= Void
 		end
@@ -1711,7 +1723,7 @@ feature {NONE} -- Implementation content processing
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Processing of options
 
 	set_default_options (t: like current_target; namespace: like namespace_1_0_0)
 			-- Set default options depending on the supplied schema.
@@ -1744,6 +1756,25 @@ feature {NONE}
 				if o /= Void then
 					t.set_options (o)
 				end
+			end
+		end
+
+	report_non_client_options (t: ARRAY [like at_syntax])
+			-- Report any options listed in `t' that they cannot be overridden if specified in the current context (`current_attributes').
+		require
+			t_attached: t /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := t.lower
+			until
+				i > t.upper
+			loop
+				if current_attributes.has (t [i]) then
+					set_parse_warning_message (conf_interface_names.e_parse_incorrect_option_override (current_attributes.item (t [i])))
+				end
+				i := i + 1
 			end
 		end
 

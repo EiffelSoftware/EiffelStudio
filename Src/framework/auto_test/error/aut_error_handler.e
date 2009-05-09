@@ -43,6 +43,7 @@ feature{NONE} -- Initialization
 			set_info_null
 			set_warning_null
 			create request_printer.make
+			create response_printer.make
 		ensure
 			error_file_set: error_file = std.error
 			warning_file_set: warning_file = null_output_stream
@@ -124,6 +125,13 @@ feature -- Access
 feature {NONE} -- Access
 
 	request_printer: AUT_SIMPLE_REQUEST_PRINTER
+			-- Printer used for formatting requests in log messages
+
+	response_printer: AUT_SIMPLE_RESPONSE_PRINTER
+			-- Printer used for formatting responses in log messages
+
+	last_testing_request: detachable AUT_REQUEST
+			-- Last request processed by `report_request'
 
 feature -- Status setting
 
@@ -252,29 +260,9 @@ feature -- Report events
 		local
 			l_msg: STRING
 		do
-			if
-				(a_producer.is_executing and then not a_producer.is_replaying) and
-				attached {AUT_CALL_BASED_REQUEST} a_request as l_caller
-			then
-				create l_msg.make (100)
-				if counter > 0 then
-					counter := counter - 1
-				end
-				if attached remaining_time as l_time then
-					l_time.time_duration.append_to_string (l_msg)
-					l_msg.append_string (": ")
-				end
-				if start_count > 0 then
-					l_msg.append_natural_32 (counter)
-					l_msg.append_string (": ")
-				end
-				if attached {AUT_CREATE_OBJECT_REQUEST} l_caller then
-					l_msg.append_string ("create ")
-				end
-				l_msg.append_string (type_name (l_caller.target_type, l_caller.feature_to_call))
-				l_msg.append_character ('.')
-				l_msg.append_string (l_caller.feature_to_call.feature_name)
-				report_info_message (l_msg)
+			last_testing_request := Void
+			if a_producer.is_executing and then not a_producer.is_replaying then
+				last_testing_request := a_request
 			end
 			if is_debugging then
 				create l_msg.make (100)
@@ -295,8 +283,37 @@ feature -- Report events
 
 	report_response (a_producer: AUT_PROXY_EVENT_PRODUCER; a_response: AUT_RESPONSE)
 			-- <Precursor>
+		local
+			l_msg: STRING
 		do
 			-- TODO: possible info/debug output describing the received response?
+			if attached {AUT_CALL_BASED_REQUEST} last_testing_request as l_caller then
+				create l_msg.make (100)
+				if attached remaining_time as l_time then
+					l_time.time_duration.append_to_string (l_msg)
+					l_msg.append_string (": ")
+				end
+				if start_count > 0 then
+					l_msg.append_natural_32 (counter)
+					l_msg.append_string (": ")
+				end
+				if attached {AUT_CREATE_OBJECT_REQUEST} l_caller then
+					l_msg.append_string ("create ")
+				end
+				l_msg.append_string (type_name (l_caller.target_type, l_caller.feature_to_call))
+				l_msg.append_character ('.')
+				l_msg.append_string (l_caller.feature_to_call.feature_name)
+				l_msg.append_character (' ')
+				a_response.process (response_printer)
+				l_msg.append_string (response_printer.last_string)
+				report_info_message (l_msg)
+
+					-- Decrement test counter
+				if counter > 0 then
+					counter := counter - 1
+				end
+			end
+			last_testing_request := Void
 		end
 
 feature -- Reporting messages

@@ -75,6 +75,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_test_suite)
 			create source_writer
+			create output_stream.make_empty
 		end
 
 feature {NONE} -- Access
@@ -103,8 +104,14 @@ feature {NONE} -- Access
 	source_writer: TEST_GENERATED_SOURCE_WRITER
 			-- Source writer used for creating test classes
 
-	class_names: DS_LIST [STRING_8]
-			-- <Precursor>
+	output_stream: KL_STRING_OUTPUT_STREAM
+			-- String stream for storing output
+
+	output_file: detachable KL_TEXT_OUTPUT_FILE
+			-- Output file to which output should be written to
+
+	output: detachable OUTPUT_I
+			-- Output interface for printing log messages
 
 feature {NONE} -- Access: tasks
 
@@ -178,7 +185,30 @@ feature {NONE} -- Basic operations
 
 	start_process_internal (a_conf: like conf_type)
 			-- <Precursor>
+		local
+			l_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_service: OUTPUT_MANAGER_S
+			l_key: UUID
+			l_output: detachable OUTPUT_I
 		do
+			create l_consumer
+			if l_consumer.is_service_available then
+				l_service := l_consumer.service
+				l_key := (create {OUTPUT_MANAGER_KINDS}).testing
+				if
+					l_service.is_interface_usable and then
+					l_service.is_valid_registration_key (l_key) and then
+					l_service.is_output_available (l_key)
+				then
+					l_output := l_service.output (l_key)
+					if l_output.is_interface_usable and then not l_output.is_locked then
+						l_output.activate
+						l_output.lock
+						l_output.clear
+						output:= l_output
+					end
+				end
+			end
 			Precursor (a_conf)
 			create internal_session.make (system, configuration)
 		end
@@ -216,10 +246,12 @@ feature {NONE} -- Basic operations
 								current_results := Void
 							end
 						elseif attached test_task as l_task then
-							update_remaining_time
+							l_total := session.options.time_out.second_count
+							if l_total > 0 then
+								update_remaining_time
+							end
 							l_error_handler := session.error_handler
 							if l_task.has_next_step then
-								l_total := session.options.time_out.second_count
 								l_progress := {REAL} 1.0
 								if l_total > 0 then
 									l_remaining := l_error_handler.remaining_time.second_count
@@ -311,17 +343,12 @@ feature {NONE} -- Basic operations
 			elseif is_generating_statistics then
 				internal_progress := {REAL} 0.85
 			end
+			flush_output
 		end
 
 	stop_process
 			-- <Precursor>
-		local
-			l_file: detachable KI_TEXT_OUTPUT_STREAM
 		do
-			l_file := session.error_handler.error_file
-			if l_file /= Void and then l_file.is_closable then
-				l_file.close
-			end
 			if attached test_task as l_task then
 				if l_task.has_next_step then
 					l_task.cancel
@@ -343,7 +370,17 @@ feature {NONE} -- Basic operations
 			last_witness := Void
 			internal_session := Void
 			status := compile_status_code
-
+			flush_output
+			if attached output as l_output and then l_output.is_interface_usable then
+				l_output.unlock
+				output := Void
+			end
+			if attached output_file as l_file then
+				if l_file.is_closable then
+					l_file.close
+				end
+				output_file := Void
+			end
 			Precursor
 		end
 
@@ -366,19 +403,15 @@ feature {NONE} -- Implementation
 			l_file_name.add_extension ("log")
 			create l_file.make (l_file_name)
 			l_file.recursive_open_write
-
 			if l_file.is_open_write then
-				l_error_handler.set_error_file (l_file)
-				l_error_handler.set_warning_file (l_file)
-				l_error_handler.set_info_file (l_file)
-				if configuration.is_debugging then
-					l_error_handler.set_debug_to_file (l_file)
-				end
-			else
-				l_error_handler.set_error_null
-				l_error_handler.set_warning_null
-				l_error_handler.set_info_null
-				l_error_handler.set_debug_null
+				output_file := l_file
+			end
+
+			l_error_handler.set_error_file (output_stream)
+			l_error_handler.set_warning_file (output_stream)
+			l_error_handler.set_info_file (output_stream)
+			if configuration.is_debugging then
+				l_error_handler.set_debug_to_file (output_stream)
 			end
 
 			if session.options.should_display_help_message then
@@ -504,7 +537,9 @@ feature{NONE} -- Test case generation and execution
 
 				l_error_handler.set_start_time (system_clock.date_time_now)
 				l_error_handler.reset_counters (session.options.test_count)
-				update_remaining_time
+				if l_session.options.time_out.second_count > 0 then
+					update_remaining_time
+				end
 
 				l_strategy.start
 				test_task := l_strategy
@@ -535,8 +570,6 @@ feature{NONE} -- Test case generation and execution
 				create time_left.make (0, 0, 0, 0, 0, 0)
 			end
 			session.error_handler.set_remaining_time (time_left)
-		ensure
-			remaining_time_set: session.error_handler.remaining_time /= Void
 		end
 
 feature{NONE} -- Test result analyizing
@@ -700,6 +733,24 @@ feature {NONE} -- Implementation
 	times_duration_logged: INTEGER
 			-- Number of times that elapsed time has been recorded to proxy file
 
+	flush_output
+			-- Redirect output currently stored in `output_stream' to `output_file' and `output_formatter'
+			-- (if attached) and wipe out string in `output_stream'.
+		local
+			l_string: STRING
+		do
+			l_string := output_stream.string
+			if not l_string.is_empty then
+				if attached output_file as l_file then
+					l_file.put_string (l_string)
+				end
+				if attached output as l_output and then l_output.is_interface_usable then
+					l_output.formatter.add_string (l_string)
+				end
+				l_string.wipe_out
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_interpreter: detachable AUT_INTERPRETER_PROXY
@@ -735,6 +786,7 @@ feature {NONE} -- Constants
 invariant
 	not_running_implies_status_compiling: not is_running implies (status = compile_status_code)
 	running_implies_session_attached: is_running implies session /= Void
+	output_valid: (attached output as l_output and then l_output.is_interface_usable) implies l_output.is_locked
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

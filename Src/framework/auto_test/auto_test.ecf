@@ -11,6 +11,7 @@
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf"/>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>

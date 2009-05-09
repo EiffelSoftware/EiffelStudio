@@ -92,7 +92,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_prefix (a_literal: INI_LITERAL): !STRING
+	icon_prefix (a_literal: INI_LITERAL): attached STRING
 			-- Retrieves a icon prefix for `a_literal'
 		require
 			a_literal_attached: a_literal /= Void
@@ -111,10 +111,10 @@ feature {NONE} -- Query
 			Result.append_character ('_')
 		end
 
-	icon_suffix: !STRING
+	icon_suffix: attached STRING
 			-- Retrieves icon name suffix
 		do
-			if {l_suffix: STRING} suffix then
+			if attached {STRING} suffix as l_suffix then
 				Result := l_suffix
 			else
 				Result := default_icon_suffix
@@ -347,7 +347,7 @@ feature {NONE} -- Validation
 
 feature {NONE} -- Formatting
 
-	format_eiffel_name (a_name: STRING): !STRING
+	format_eiffel_name (a_name: STRING): attached STRING
 			-- Formats `a_name' into an Eiffel name
 		require
 			a_name_attached: a_name /= Void

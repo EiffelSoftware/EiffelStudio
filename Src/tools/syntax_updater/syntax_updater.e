@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
 						io.error.put_string ("Syntax error in file: " + file_name)
-						if {l_syntax1: SYNTAX_ERROR} error_handler.error_list.last then
+						if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax1 then
 							io.error.put_string (" (" + l_syntax1.line.out + ", " + l_syntax1.column.out + ")" + l_syntax1.error_message)
 						end
 						io.error.put_new_line
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 									-- We ignore syntax errors since we want to test roundtrip parsing
 									-- on valid Eiffel classes.
 								io.error.put_string ("After conversion syntax error in file: " + file_name)
-								if {l_syntax2: SYNTAX_ERROR} error_handler.error_list.last then
+								if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax2 then
 									io.error.put_string (" (" + l_syntax2.line.out + ", " + l_syntax2.column.out + ")" + l_syntax2.error_message)
 								end
 								if has_option (force_switch) then
@@ -279,7 +279,7 @@ feature {NONE} -- Arguments processing
 	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
 			-- Our arguments
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))

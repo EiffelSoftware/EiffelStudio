@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	siteable_entities: !ARRAYED_LIST [!SITE [PACKAGE]]
+	siteable_entities: attached ARRAYED_LIST [attached SITE [PACKAGE]]
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			Result := Precursor {SITE}

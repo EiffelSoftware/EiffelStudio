@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	source_option: ?ARGUMENT_OPTION
+	source_option: detachable ARGUMENT_OPTION
 			-- Source option
 		do
 			Result := option_of_name (source_switch)
 		end
 
-	destination_option: ?ARGUMENT_OPTION
+	destination_option: detachable ARGUMENT_OPTION
 			-- Destination option
 		do
 			Result := option_of_name (destination_switch)
@@ -71,7 +71,7 @@ feature {NONE} -- Usage
 	destination_switch: STRING = "dest"
 			-- Parameter name used in console
 
-	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- <Precursor>
 		once
 			create Result.make (1)

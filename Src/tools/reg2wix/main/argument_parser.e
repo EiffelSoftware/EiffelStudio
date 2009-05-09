@@ -57,24 +57,24 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING = "Registry File to WiX Conversion Tool"
+	name: attached STRING = "Registry File to WiX Conversion Tool"
 			-- <Precursor>
 
-	version: !STRING = "3.1"
+	version: attached STRING = "3.1"
 			-- <Precursor>
 
-	non_switched_argument_name: !STRING = "RegFile"
+	non_switched_argument_name: attached STRING = "RegFile"
 			-- <Precursor>
 
-	non_switched_argument_description: !STRING = "A Windows registry file."
+	non_switched_argument_description: attached STRING = "A Windows registry file."
 			-- <Precursor>
 
-	non_switched_argument_type: !STRING = "Registry file"
+	non_switched_argument_type: attached STRING = "Registry file"
 			-- <Precursor>
 
 feature {NONE} -- Switches
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		do
@@ -82,7 +82,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (out_switch, "An output file name for the generated WiX document.", True, False, "File", "Output file name.", False))
 		end
 
-	out_switch: !STRING = "out"
+	out_switch: attached STRING = "out"
 			-- Command line switches
 
 ;note

@@ -117,7 +117,7 @@ feature {NONE} -- Usage
 	non_switched_argument_name: STRING = "folder"
 			--  <Precursor>
 
-	non_switched_argument_description: !STRING = "Location to search in for Eiffel classes"
+	non_switched_argument_description: attached STRING = "Location to search in for Eiffel classes"
 			--  <Precursor>
 
 	non_switched_argument_type: STRING = "a folder"
@@ -126,7 +126,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (5)
@@ -142,14 +142,14 @@ feature {NONE} -- Switches
 
 feature {NONE} -- Switch names
 
-	include_switch: !STRING = "i|include"
-	exclude_switch: !STRING = "e|exclude"
-	class_name_switch: !STRING = "n|class-name"
-	user_data_switch: !STRING = "u|user-data"
-	recurse_switch: !STRING = "r|recursive"
-	stub_switch: !STRING = "s|stub"
-	interface_switch: !STRING = "t|interface"
-	routines_switch: !STRING = "o|routines"
+	include_switch: attached STRING = "i|include"
+	exclude_switch: attached STRING = "e|exclude"
+	class_name_switch: attached STRING = "n|class-name"
+	user_data_switch: attached STRING = "u|user-data"
+	recurse_switch: attached STRING = "r|recursive"
+	stub_switch: attached STRING = "s|stub"
+	interface_switch: attached STRING = "t|interface"
+	routines_switch: attached STRING = "o|routines"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -20,8 +20,8 @@ feature -- Access
 		ensure
 			reg_files_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			not_result_items_is_empty: Result.for_all (agent (a_item: !STRING): BOOLEAN do Result := not a_item.is_empty end)
-			result_items_exists: Result.for_all (agent (a_item: !STRING): BOOLEAN do Result := (create {RAW_FILE}.make (a_item)).exists end)
+			not_result_items_is_empty: Result.for_all (agent (a_item: attached STRING): BOOLEAN do Result := not a_item.is_empty end)
+			result_items_exists: Result.for_all (agent (a_item: attached STRING): BOOLEAN do Result := (create {RAW_FILE}.make (a_item)).exists end)
 		end
 
 	output_file_name: STRING

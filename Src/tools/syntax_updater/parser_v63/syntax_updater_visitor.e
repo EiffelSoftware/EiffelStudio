@@ -114,7 +114,7 @@ feature -- AST visiting
 			safe_process (l_as.assign_keyword (match_list))
 			safe_process (l_as.assigner)
 			c_as ?= l_as.content
-			if {l_keyword: KEYWORD_AS} l_as.is_keyword (match_list) then
+			if attached {KEYWORD_AS} l_as.is_keyword (match_list) as l_keyword then
 				if l_keyword.code = {EIFFEL_TOKENS}.te_is then
 					if c_as /= Void then
 						process_leading_leaves (l_as.is_keyword_index)
@@ -193,29 +193,29 @@ feature -- AST visiting
 				process_leading_leaves (l_index)
 				last_index := l_index
 					-- We discard the type information when it is exactly the same as the expression
-				if {l_like_id: LIKE_ID_AS} l_as.type and then l_like_id.anchor.text (match_list).is_case_insensitive_equal (l_as.expression.text (match_list)) then
+				if attached {LIKE_ID_AS} l_as.type as l_like_id and then l_like_id.anchor.text (match_list).is_case_insensitive_equal (l_as.expression.text (match_list)) then
 					context.add_string ("attached ")
 				else
 					context.add_string ("attached {")
-					if {l_leaf: LEAF_AS} l_as.type.first_token (match_list) then
+					if attached {LEAF_AS} l_as.type.first_token (match_list) as l_leaf then
 						l_index := l_leaf.index
 						last_index := l_index
 						l_as.type.process (Current)
 					end
 					context.add_string ("} ")
 				end
-				if {l_leaf: LEAF_AS} l_as.expression.first_token (match_list) then
+				if attached {LEAF_AS} l_as.expression.first_token (match_list) as l_leaf then
 					l_index := l_leaf.index
 					last_index := l_index
 					l_as.expression.process (Current)
 				end
 				context.add_string (" as ")
-				if {l_leaf: LEAF_AS} l_as.name.first_token (match_list) then
+				if attached {LEAF_AS} l_as.name.first_token (match_list) as l_leaf then
 					l_index := l_leaf.index
 					last_index := l_index
 					l_as.name.process (Current)
 				end
-				if {l_leaf: LEAF_AS} l_as.last_token (match_list) then
+				if attached {LEAF_AS} l_as.last_token (match_list) as l_leaf then
 					last_index := l_leaf.index
 				end
 			end

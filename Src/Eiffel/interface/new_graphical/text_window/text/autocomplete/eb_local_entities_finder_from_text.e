@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 					look_for_locals := True
 					l_local_string := local_string
 					if not l_local_string.is_empty then
-						entity_declaration_parser.parse_from_string (l_local_string)
+						entity_declaration_parser.parse_from_string (l_local_string, Void)
 					end
 					l_found_locals := entity_declaration_parser.entity_declaration_node
 				else
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 					look_for_locals := False
 					l_arguments_string := arguments_string
 					if not l_arguments_string.is_empty then
-						entity_declaration_parser.parse_from_string (l_arguments_string)
+						entity_declaration_parser.parse_from_string (l_arguments_string, Void)
 					end
 					l_found_args := entity_declaration_parser.entity_declaration_node
 				else
@@ -628,7 +628,7 @@ invariant
 	found_arguments_list_not_void: found_arguments_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -641,21 +641,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EB_LOCAL_ANALYZER

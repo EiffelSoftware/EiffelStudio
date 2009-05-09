@@ -53,7 +53,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	preferences_cell: CELL [?GB_PREFERENCES]
+	preferences_cell: CELL [detachable GB_PREFERENCES]
 			-- Once cell for global access to preferences.
 		once
 			create Result.put (Void)

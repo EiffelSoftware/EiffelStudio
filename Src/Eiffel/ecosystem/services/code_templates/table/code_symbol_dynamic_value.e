@@ -89,7 +89,7 @@ feature {NONE} -- Basic operations
 					create l_result.make (l_value.count)
 					l_result.append_string (l_value)
 				else
-					Result := l_value
+					l_result := l_value
 				end
 			else
 				create l_result.make_empty

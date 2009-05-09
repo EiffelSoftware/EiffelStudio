@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Environment. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -84,7 +84,7 @@ feature -- Access
 			Result.compare_objects
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ENVIRONMENT_IMP
 

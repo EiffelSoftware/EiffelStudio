@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision tool-bar radio button. Cocoa implementation%
 		% interface."
@@ -95,7 +95,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TOOL_BAR_RADIO_BUTTON;
 			-- Interface of `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision container, Cocoa implementation."
 	legal: "See notice at end of class."
@@ -176,7 +176,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_CONTAINER_IMP
 

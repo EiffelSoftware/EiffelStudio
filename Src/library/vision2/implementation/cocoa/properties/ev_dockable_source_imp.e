@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cocoa implementation of dockable source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -111,7 +111,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_SOURCE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DOCKABLE_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision horizontal box. Cocoa implementation."
 
@@ -276,7 +276,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_BOX_IMP
 

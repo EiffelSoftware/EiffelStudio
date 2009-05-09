@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision multi-column list row, Cocoa implementation."
@@ -153,7 +153,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

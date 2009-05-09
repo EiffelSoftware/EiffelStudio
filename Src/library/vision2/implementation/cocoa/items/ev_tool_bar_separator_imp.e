@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tool bar separator. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			cocoa_item := box
 		end
 
-	initialize is
+	initialize
 			--
 		do
 
@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	minimum_height: INTEGER is 10
+	minimum_height: INTEGER = 10
 
-	minimum_width: INTEGER is 10
+	minimum_width: INTEGER = 10
 
 feature -- Statur Report
 
@@ -75,7 +75,7 @@ feature {EV_ANY_I} -- Implementation
 
 	box: NS_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_SEPARATOR_I
 

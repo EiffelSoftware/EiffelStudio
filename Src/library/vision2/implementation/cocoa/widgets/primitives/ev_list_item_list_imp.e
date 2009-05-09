@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list item list, Cocoa implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -135,7 +135,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST_ITEM_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_LIST_ITEM_LIST_IMP
 

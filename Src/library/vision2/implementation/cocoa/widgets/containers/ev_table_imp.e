@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision table, Cocoa implementation"
@@ -212,7 +212,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TABLE_IMP
 

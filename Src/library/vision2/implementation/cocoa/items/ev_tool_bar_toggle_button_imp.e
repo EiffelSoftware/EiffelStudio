@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision toggle tool bar, Cocoa implementations."
 	legal: "See notice at end of class."
@@ -65,7 +65,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 

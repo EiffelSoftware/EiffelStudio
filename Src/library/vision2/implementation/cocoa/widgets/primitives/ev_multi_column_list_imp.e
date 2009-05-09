@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision multi-column-list, Cocoa implementation."
 	legal: "See notice at end of class."
@@ -254,15 +254,15 @@ feature -- Status setting
 
 feature -- Element change
 
-	hide_title_row is
+	hide_title_row
 		do
 		end
 
-	show_title_row is
+	show_title_row
 		do
 		end
 
-	column_count : INTEGER is
+	column_count : INTEGER
 		do
 		end
 
@@ -617,7 +617,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MULTI_COLUMN_LIST_IMP
 

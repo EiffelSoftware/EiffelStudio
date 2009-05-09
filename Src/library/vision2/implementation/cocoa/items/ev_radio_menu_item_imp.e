@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio menu item. Cocoa implementation."
 	-- Note: Cocoa does not support radio-buttons in menus. Use check-buttons and emulate the behaviour.
 
@@ -64,7 +64,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 
 end -- class EV_RADIO_MENU_ITEM_IMP

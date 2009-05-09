@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that creates a window that lets the user inspect the vision layout of current application"
 	author: ""
 	date: "$Date$"

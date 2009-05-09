@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cocoa implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -116,6 +116,6 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementa
 			set_is_destroyed (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

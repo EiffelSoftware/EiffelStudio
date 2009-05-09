@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List Item Cocoa Implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -125,7 +125,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
 	interface: EV_LIST_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_LIST_ITEM_IMP
 

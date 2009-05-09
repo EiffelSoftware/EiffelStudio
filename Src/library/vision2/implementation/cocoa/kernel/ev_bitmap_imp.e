@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that .... Cocoa implementation"
 	author: ""
 	date: "$Date$"
@@ -102,6 +102,6 @@ feature {NONE} -- Implementation
 
 	interface: EV_BITMAP;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BITMAP_IMP

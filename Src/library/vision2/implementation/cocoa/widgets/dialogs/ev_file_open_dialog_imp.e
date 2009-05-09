@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file open dialog. Cocoa implementation."
 
 
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_OPEN_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FILE_OPEN_DIALOG_IMP
 

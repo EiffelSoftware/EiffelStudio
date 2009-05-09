@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		Cocoa implementation.
@@ -151,7 +151,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end
 

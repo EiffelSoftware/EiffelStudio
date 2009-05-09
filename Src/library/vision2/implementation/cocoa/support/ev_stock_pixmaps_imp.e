@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities for accessing default pixmaps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -184,7 +184,7 @@ feature -- Default cursors
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_STOCK_PIXMAPS_IMP
 

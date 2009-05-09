@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision application, Cocoa implementation."
 	legal: "See notice at end of class."
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 			-- Process Cocoa events
 		local
 			event: POINTER
@@ -101,7 +101,7 @@ feature -- Basic operation
 		do
 		end
 
-	sleep (msec: INTEGER) is
+	sleep (msec: INTEGER)
 			-- Wait for `msec' milliseconds and return.
 		do
 			nano_sleep ({INTEGER_64} 1000000 * msec)
@@ -230,7 +230,7 @@ feature {EV_ANY_I}
 
 	application: NS_APPLICATION;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_APPLICATION_IMP
 

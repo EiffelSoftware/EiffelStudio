@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DIALOG_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawable. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_DRAWABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DRAWABLE_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision spin button. Cocoa Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	stepper_width: INTEGER is 15
+	stepper_width: INTEGER = 15
 
 	interface: EV_SPIN_BUTTON;
 
@@ -170,7 +170,7 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SPIN_BUTTON_IMP
 

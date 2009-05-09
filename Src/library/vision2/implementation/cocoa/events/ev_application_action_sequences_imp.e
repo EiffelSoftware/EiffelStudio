@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_APPLICATION_IMP."
 	legal: "See notice at end of class."
@@ -130,7 +130,7 @@ feature -- Event handling
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision frame. Cocoa implementation"
 	legal: "See notice at end of class."
@@ -137,9 +137,9 @@ feature -- Layout
 			internal_set_minimum_size (mw, mh)
 		end
 
-	client_x: INTEGER is 14;
+	client_x: INTEGER = 14;
 
-	client_y: INTEGER is 14;
+	client_y: INTEGER = 14;
 
 feature {EV_ANY_I} -- Implementation
 
@@ -147,7 +147,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FRAME_IMP
 

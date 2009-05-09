@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text field. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -322,7 +322,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 invariant
 	text_field /= void
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXT_FIELD_IMP
 

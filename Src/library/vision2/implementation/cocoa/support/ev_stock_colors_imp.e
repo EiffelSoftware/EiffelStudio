@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of default colors used by the system. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -84,7 +84,7 @@ feature --
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 2009, Daniel Furrer"
 end -- class EV_STOCK_COLORS_IMP
 

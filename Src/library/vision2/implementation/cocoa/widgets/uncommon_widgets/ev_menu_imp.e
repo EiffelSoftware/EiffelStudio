@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu. Cocoa implementation."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			--
 		do
 			base_make (an_interface)
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_IMP
 

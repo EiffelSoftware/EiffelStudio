@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision dynamic list. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -76,7 +76,7 @@ invariant
 
 	ev_children_not_void: is_usable implies ev_children /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DYNAMIC_LIST_IMP
 

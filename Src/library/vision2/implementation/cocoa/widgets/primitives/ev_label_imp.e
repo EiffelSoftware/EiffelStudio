@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision label, Cocoa implementation."
@@ -131,7 +131,7 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end --class LABEL_IMP
 

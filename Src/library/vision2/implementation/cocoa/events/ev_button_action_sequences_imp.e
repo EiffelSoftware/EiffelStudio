@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_BUTTON_IMP."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Event handling
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end
 

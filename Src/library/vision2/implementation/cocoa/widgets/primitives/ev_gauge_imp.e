@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision gauge. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -137,7 +137,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_GAUGE_I
 

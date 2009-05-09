@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_WINDOW_IMP."
 
@@ -44,7 +44,7 @@ feature -- Event handling
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 
 end

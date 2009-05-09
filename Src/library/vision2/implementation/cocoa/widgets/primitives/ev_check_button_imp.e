@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision check button, Cocoa implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -62,7 +62,7 @@ feature {EV_ANY_I}
 
 	interface: EV_CHECK_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_CHECK_BUTTON_IMP
 

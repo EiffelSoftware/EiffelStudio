@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision combo box, Cocoa implementation."
@@ -191,7 +191,7 @@ feature {EV_ANY_I} -- Implementation
 
 	combo_box: NS_COMBO_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_COMBO_BOX_IMP
 

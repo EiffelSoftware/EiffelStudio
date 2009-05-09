@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tree node. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -244,7 +244,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TREE_NODE_IMP
 

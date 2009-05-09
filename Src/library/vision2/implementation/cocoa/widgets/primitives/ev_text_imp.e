@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision text area, Cocoa implementation."
@@ -98,7 +98,7 @@ feature -- Access
 		do
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 		end
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- if `flag' then make the component read-write.
 			-- if not `flag' then make the component read-only.
 		do
@@ -211,7 +211,7 @@ feature -- Basic operation
 
 feature {EV_ANY, EV_ANY_I} -- Basic operation
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) the text between
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
@@ -223,30 +223,30 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 --		do
 --		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard to paste it later.
 			-- If `selectd_region' is empty, it does nothing.
 		do
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy `selected_region' into the Clipboard.
 			-- If the `selected_region' is empty, it does nothing.
 		do
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the contents of the clipboard
 			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing.
@@ -282,7 +282,7 @@ feature {EV_ANY_I} -- Implementation
 
 	text_view: NS_TEXT_VIEW;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXT_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision2 toolbar, Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -176,7 +176,7 @@ feature {EV_ANY_I} -- Interface
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_IMP
 

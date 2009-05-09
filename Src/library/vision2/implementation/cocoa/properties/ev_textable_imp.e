@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision textable. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -125,6 +125,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXTABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXTABLE_IMP

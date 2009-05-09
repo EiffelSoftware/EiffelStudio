@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision vertical box. Puts child widgets in a column. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -290,7 +290,7 @@ feature {EV_ANY_I} -- Implementation
 
     interface: EV_VERTICAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_VERTICAL_BOX_IMP
 

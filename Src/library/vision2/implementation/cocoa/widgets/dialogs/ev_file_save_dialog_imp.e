@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision file save dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FILE_SAVE_DIALOG_IMP
 

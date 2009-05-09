@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -145,6 +145,6 @@ feature {NONE} -- Implementation
 	interface: EV_HEADER_ITEM;
 		-- Interface object of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

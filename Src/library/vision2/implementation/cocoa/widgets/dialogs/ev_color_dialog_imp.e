@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision color selection dialog. Cocoa implementation."
 
 class
@@ -70,7 +70,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COLOR_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_COLOR_DIALOG_IMP
 

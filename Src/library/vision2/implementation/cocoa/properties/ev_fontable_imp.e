@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision fontable, Cocoa implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FONTABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FONTABLE_IMP
 

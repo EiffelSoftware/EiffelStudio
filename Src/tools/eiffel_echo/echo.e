@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Simple echo class which redirects input from a {INPUT_PROVIDER} to a {OUTPUT_RECEIVER}.
 	]"
@@ -48,7 +48,7 @@ feature -- Basic operations
 			not_has_next: not a_input.has_next
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

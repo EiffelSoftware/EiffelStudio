@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 
 	valid_descriptor (a_descriptor: WIZARD_COMPONENT_DESCRIPTOR): BOOLEAN
 		do
-			Result := {l_desc: WIZARD_COCLASS_DESCRIPTOR} a_descriptor
+			Result := attached {WIZARD_COCLASS_DESCRIPTOR} a_descriptor as l_desc
 		end
 
 	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR)

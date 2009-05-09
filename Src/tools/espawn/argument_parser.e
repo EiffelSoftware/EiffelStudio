@@ -131,10 +131,10 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING = "Eiffel Environment Command Spawn Utility"
+	name: attached STRING = "Eiffel Environment Command Spawn Utility"
 			-- <Precursor>
 
-	version: !STRING
+	version: attached STRING
 			-- <Precursor>
 		once
 			create Result.make (3)
@@ -143,16 +143,16 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	non_switched_argument_description: !STRING = "Command or application to execute."
+	non_switched_argument_description: attached STRING = "Command or application to execute."
 			-- <Precursor>
 
-	non_switched_argument_name: !STRING = "command"
+	non_switched_argument_name: attached STRING = "command"
 			-- <Precursor>
 
-	non_switched_argument_type: !STRING = "A command"
+	non_switched_argument_type: attached STRING = "A command"
 			-- <Precursor>
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (1)
@@ -168,7 +168,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
 
-	switch_groups: !ARRAYED_LIST [!ARGUMENT_GROUP]
+	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (2)
@@ -179,12 +179,12 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switch names
 
-	manual_switch: !STRING = "m|manual"
-	x86_switch: !STRING = "x86"
-	aync_switch: !STRING = "a|async"
-	ignore_switch: !STRING = "i|ignore"
-	list_compilers_switch: !STRING = "l|list"
-	use_compiler_switch: !STRING = "u|use"
+	manual_switch: attached STRING = "m|manual"
+	x86_switch: attached STRING = "x86"
+	aync_switch: attached STRING = "a|async"
+	ignore_switch: attached STRING = "i|ignore"
+	list_compilers_switch: attached STRING = "l|list"
+	use_compiler_switch: attached STRING = "u|use"
 
 feature {NONE} -- Externals
 

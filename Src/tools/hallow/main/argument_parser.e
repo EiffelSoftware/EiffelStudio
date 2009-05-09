@@ -114,7 +114,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (file_include_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
+			options_values_of_name (file_include_pattern_switch).do_all (agent (a_item: attached STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -130,7 +130,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (file_exclude_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
+			options_values_of_name (file_exclude_pattern_switch).do_all (agent (a_item: attached STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -146,7 +146,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (directory_include_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
+			options_values_of_name (directory_include_pattern_switch).do_all (agent (a_item: attached STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -162,7 +162,7 @@ feature -- Access
 			l_buffer: STRING
 		once
 			create l_buffer.make (100)
-			options_values_of_name (directory_exclude_pattern_switch).do_all (agent (a_item: !STRING; a_buffer: STRING)
+			options_values_of_name (directory_exclude_pattern_switch).do_all (agent (a_item: attached STRING; a_buffer: STRING)
 				do
 					if not a_buffer.is_empty then
 						a_buffer.append_character ('|')
@@ -288,16 +288,16 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING = "Hallow, Windows Installer Xml v3.0 Tool"
+	name: attached STRING = "Hallow, Windows Installer Xml v3.0 Tool"
 			-- <Precursor>
 
-	version: !STRING
+	version: attached STRING
 			-- <Precursor>
 		once
 			create Result.make_from_cil ({ASSEMBLY}.get_executing_assembly.get_name.version.to_string)
 		end
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (8)
@@ -319,13 +319,13 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over the include pattern when matching.", True, False))
 		end
 
-	non_switched_argument_name: !STRING = "directory"
+	non_switched_argument_name: attached STRING = "directory"
 			-- <Precursor>
 
-	non_switched_argument_description: !STRING = "Directory to scan for files."
+	non_switched_argument_description: attached STRING = "Directory to scan for files."
 			-- <Precursor>
 
-	non_switched_argument_type: !STRING = "A directory"
+	non_switched_argument_type: attached STRING = "A directory"
 			-- <Precursor>
 
 feature {NONE} -- Output
@@ -350,22 +350,22 @@ feature {NONE} -- Output
 
 feature {NONE} -- Switch names
 
-	generate_include_switch: !STRING = "i"
-	directory_ref_switch: !STRING = "dr"
-	one_file_per_component_switch: !STRING = "s"
-	recursive_switch: !STRING = "r"
-	directory_alias_switch: !STRING = "a"
-	verbal_name_generation_semantics_switch: !STRING = "n"
-	disk_id_switch: !STRING = "k"
-	file_include_pattern_switch: !STRING = "fi"
-	file_exclude_pattern_switch: !STRING = "fe"
-	directory_include_pattern_switch: !STRING = "di"
-	directory_exclude_pattern_switch: !STRING = "de"
-	exclude_pattern_priority_switch: !STRING = "epp"
-	merge_module_switch: !STRING = "m"
-	group_components_switch: !STRING = "g"
-	x64_switch: !STRING = "x64"
-	conditional_expression_switch: !STRING = "c"
+	generate_include_switch: attached STRING = "i"
+	directory_ref_switch: attached STRING = "dr"
+	one_file_per_component_switch: attached STRING = "s"
+	recursive_switch: attached STRING = "r"
+	directory_alias_switch: attached STRING = "a"
+	verbal_name_generation_semantics_switch: attached STRING = "n"
+	disk_id_switch: attached STRING = "k"
+	file_include_pattern_switch: attached STRING = "fi"
+	file_exclude_pattern_switch: attached STRING = "fe"
+	directory_include_pattern_switch: attached STRING = "di"
+	directory_exclude_pattern_switch: attached STRING = "de"
+	exclude_pattern_priority_switch: attached STRING = "epp"
+	merge_module_switch: attached STRING = "m"
+	group_components_switch: attached STRING = "g"
+	x64_switch: attached STRING = "x64"
+	conditional_expression_switch: attached STRING = "c"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

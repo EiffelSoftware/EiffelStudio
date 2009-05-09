@@ -1,4 +1,4 @@
-indexing
+note
 	description : "eweasel_converter application root class"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_parser /= Void
 		local
-			l_src_option, l_dest_option: ?ARGUMENT_OPTION
+			l_src_option, l_dest_option: detachable ARGUMENT_OPTION
 			l_src, l_dest: DIRECTORY
 			l_src_name, l_dest_name: DIRECTORY_NAME
 		do

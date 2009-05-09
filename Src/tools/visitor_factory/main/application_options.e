@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			a_params_attached: a_params /= Void
 			a_params_successful: a_params.is_readable
 		local
-			l_exclude_rx: ?RX_PCRE_MATCHER
+			l_exclude_rx: detachable RX_PCRE_MATCHER
 			l_list: LIST [STRING]
 			l_excludes: LIST [STRING]
 			l_array_list: ARRAYED_LIST [STRING]
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		do
 			l_list := a_params.included_files
 			if l_list.is_empty then
-				if {l_wd: STRING} (create {EXECUTION_ENVIRONMENT}).current_working_directory then
+				if attached {STRING} (create {EXECUTION_ENVIRONMENT}).current_working_directory as l_wd then
 					create l_array_list.make (1)
 					l_array_list.extend (l_wd)
 					l_list := l_array_list
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			files_attached: files /= Void
 		end
 
-	append_file_list (a_path: STRING; a_list: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN; a_expression: ?RX_PCRE_MATCHER)
+	append_file_list (a_path: STRING; a_list: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN; a_expression: detachable RX_PCRE_MATCHER)
 			-- Appends Eiffel source files located at or in `a_path' to `a_list'. If `a_path' happens to
 			-- be a directory and `a_recurse' is True then any subdirectories will also be scanned.
 			-- `a_expression' represents an excluded expression
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			if l_file.exists then
 				if l_file.is_directory or l_file.is_device then
 					create l_directory.make (a_path)
-					l_directory.filenames.do_all (agent (ia_item: STRING; ia_inner_list: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: ?RX_PCRE_MATCHER)
+					l_directory.filenames.do_all (agent (ia_item: STRING; ia_inner_list: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: detachable RX_PCRE_MATCHER)
 						require
 							ia_item_not_void: ia_item /= Void
 							ia_inner_list_not_void: ia_inner_list /= Void
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 						end (?, a_list, a_path, a_expression))
 
 					if a_recurse then
-						l_directory.directory_names.do_all (agent (ia_item: STRING; ia_files: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: ?RX_PCRE_MATCHER)
+						l_directory.directory_names.do_all (agent (ia_item: STRING; ia_files: ARRAYED_LIST [STRING]; ia_dir: STRING; ia_in_expr: detachable RX_PCRE_MATCHER)
 							require
 								ia_item_not_void: ia_item /= Void
 								ia_files_not_void: ia_files /= Void

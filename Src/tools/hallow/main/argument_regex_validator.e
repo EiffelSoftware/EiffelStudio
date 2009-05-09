@@ -18,7 +18,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: !STRING)
+	validate_value (a_value: attached STRING)
 			-- <Precursor>
 		local
 			l_exp: REGEX

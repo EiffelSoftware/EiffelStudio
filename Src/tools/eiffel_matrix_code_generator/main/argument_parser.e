@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ini_file_option: ?STRING
+	ini_file_option: detachable STRING
 			-- Frame template file name option
 		require
 			is_successful: is_successful
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end
 
-	frame_file_option: ?ARGUMENT_OPTION
+	frame_file_option: detachable ARGUMENT_OPTION
 			-- Frame template file path option
 		require
 			is_successful: is_successful
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	class_name_option: ?ARGUMENT_OPTION
+	class_name_option: detachable ARGUMENT_OPTION
 			-- Class name option
 		require
 			is_successful: is_successful
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-	output_file_name_option: ?ARGUMENT_OPTION
+	output_file_name_option: detachable ARGUMENT_OPTION
 			-- Generated output file name option
 		require
 			is_successful: is_successful

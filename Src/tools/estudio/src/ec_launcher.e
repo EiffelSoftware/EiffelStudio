@@ -317,7 +317,7 @@ feature {NONE} -- Command sender
 			command_sender_not_void: command_sender /= Void
 		do
 			last_command_handled := False
-			if {lt_action: STRING}direct_action then
+			if attached {STRING} direct_action as lt_action then
 				command_sender.send_command (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 				last_command_handled := command_sender.last_command_handled
 			end
@@ -334,7 +334,7 @@ feature {NONE} -- Command sender
 				print ("Launched process ID: " + last_launched_ec_pid.out + "%N")
 			end
 				-- We send `ec_action' rather than `direct_action' trying to conduct the explicit target of ES.
-			if {lt_action: STRING}ec_action and then last_launched_ec_pid > 0 then
+			if attached {STRING} ec_action as lt_action and then last_launched_ec_pid > 0 then
 				command_sender.send_command_process (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key, last_launched_ec_pid)
 				command_sent_trial := command_sent_trial + 1
 				last_command_handled := command_sender.last_command_handled
@@ -362,7 +362,7 @@ feature {NONE} -- Command sender
 	last_launched_ec_pid: INTEGER
 			-- Last process ID of launched ec.
 
-	command_sender: ?COMMAND_SENDER
+	command_sender: detachable COMMAND_SENDER
 			-- Command sender
 
 	is_ec_action: BOOLEAN
@@ -450,7 +450,7 @@ feature -- Environment
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
 							argument_variables.put (cmdline_argument (1), ec_action_string)
-							if {lt_string: STRING}cmdline_argument (1) then
+							if attached {STRING} cmdline_argument (1) as lt_string then
 								ec_action_parser.parse (lt_string)
 								ec_action := ec_action_parser.last_command
 								direct_action := ec_action_parser.last_direct_command

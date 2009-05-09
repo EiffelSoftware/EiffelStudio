@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Input provider retrieving line wise input from a {IO_MEDIUM}.
 	]"
@@ -38,7 +38,7 @@ feature -- Access
 			check l_last_line /= Void end
 			Result := l_last_line
 		ensure then
-			result_same_as_last_line: {l_last: like last_line} last_line and then Result.same_string (l_last)
+			result_same_as_last_line: attached last_line as l_last and then Result.same_string (l_last)
 		end
 
 feature {NONE} -- Access
@@ -46,7 +46,7 @@ feature {NONE} -- Access
 	medium: IO_MEDIUM
 			-- Medium from which input is read line wise.
 
-	last_line: ?like next
+	last_line: detachable like next
 			-- Last line retrieved from `medium'.
 
 feature -- Status report
@@ -78,7 +78,7 @@ feature -- Basic operations
 			end
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

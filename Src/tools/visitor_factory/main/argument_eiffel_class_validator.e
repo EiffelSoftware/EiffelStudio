@@ -18,7 +18,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: !STRING)
+	validate_value (a_value: attached STRING)
 			-- <Precursor>
 		do
 			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_value) then

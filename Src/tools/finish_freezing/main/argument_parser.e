@@ -65,7 +65,7 @@ feature -- Access
 			is_successful: is_successful
 			has_max_processors: has_max_processors
 		once
-			if {l_value: ARGUMENT_NATURAL_OPTION} option_of_name (nproc_switch) then
+			if attached {ARGUMENT_NATURAL_OPTION} option_of_name (nproc_switch) as l_value then
 				Result := l_value.natural_8_value
 			else
 				check False end
@@ -110,10 +110,10 @@ feature -- Query
 
 feature {NONE} -- Usage
 
-	name: !STRING = "Eiffel C/C++ Compilation Tool"
+	name: attached STRING = "Eiffel C/C++ Compilation Tool"
 			-- <Precursor>
 
-	version: !STRING
+	version: attached STRING
 			-- <Precursor>
 		once
 			create Result.make (3)
@@ -122,7 +122,7 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 		end
 
-	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (4)

@@ -89,13 +89,13 @@ feature {NONE} -- Usage
 	name: STRING = ".NET Reference Builder"
 			-- Full name of application
 
-	version: !STRING
+	version: attached STRING
 			-- Version number of application
 		once
 			Result := (({SYSTEM_OBJECT})[Current]).get_type.assembly.get_name.version.to_string
 		end
 
-	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [attached ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 			-- (export status {NONE})
 		once

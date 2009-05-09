@@ -36,7 +36,7 @@ feature {NONE} -- Access
 	class_name: STRING
 			-- Class name specified in matrix file
 
-	animation_pixmaps: !HASH_TABLE [!ARRAYED_LIST [!STRING], !STRING]
+	animation_pixmaps: attached HASH_TABLE [attached ARRAYED_LIST [attached STRING], attached STRING]
 			-- Table of pixmap animations
 
 feature -- Basic Operations
@@ -52,12 +52,12 @@ feature -- Basic Operations
 			l_cursor: CURSOR
 			l_of: STRING
 			l_buffer: STRING
-			l_temp_buffer: !STRING
+			l_temp_buffer: attached STRING
 			l_buffers: like internal_buffers
 			l_fragment: STRING
-			l_anim_pixmaps: !like animation_pixmaps
-			l_iname: !STRING
-			l_ibname: !STRING
+			l_anim_pixmaps: attached like animation_pixmaps
+			l_iname: attached STRING
+			l_ibname: attached STRING
 			l_args: ARGUMENTS
 		do
 			reset
@@ -110,10 +110,10 @@ feature -- Basic Operations
 					l_anim_pixmaps := animation_pixmaps
 					if not l_anim_pixmaps.is_empty then
 						from l_anim_pixmaps.start until l_anim_pixmaps.after loop
-							if {l_animations: ARRAYED_LIST [STRING]} l_anim_pixmaps.item_for_iteration then
+							if attached {ARRAYED_LIST [STRING]} l_anim_pixmaps.item_for_iteration as l_animations then
 								if l_animations.count > 1 then
 										-- More than one entry, so it must be an animation
-									if {l_name: STRING} l_anim_pixmaps.key_for_iteration then
+									if attached {STRING} l_anim_pixmaps.key_for_iteration as l_name then
 											-- Create feature names
 										create l_iname.make_from_string (l_name)
 										l_iname.append (icon_animation_suffix)
@@ -264,24 +264,24 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		local
-			l_base: !STRING
-			l_prefix: !STRING
-			l_isuffix: !like icon_suffix
-			l_ibsuffix: !like icon_buffer_suffix
-			l_csuffix: !like name_suffix
-			l_iname: !STRING
-			l_ibname: !STRING
-			l_cname: !STRING
-			l_aname: !STRING
-			l_animations: !ARRAYED_LIST [!STRING]
+			l_base: attached STRING
+			l_prefix: attached STRING
+			l_isuffix: attached like icon_suffix
+			l_ibsuffix: attached like icon_buffer_suffix
+			l_csuffix: attached like name_suffix
+			l_iname: attached STRING
+			l_ibname: attached STRING
+			l_cname: attached STRING
+			l_aname: attached STRING
+			l_animations: attached ARRAYED_LIST [attached STRING]
 			l_index: INTEGER
-			l_anim_regex: !like animation_regex
-			l_anim_pixmaps: !like animation_pixmaps
-			l_cvalue: !STRING
+			l_anim_regex: attached like animation_regex
+			l_anim_pixmaps: attached like animation_pixmaps
+			l_cvalue: attached STRING
 		do
 				-- Create feature prefix
 			l_prefix := icon_prefix (a_item)
-			if {l_name: STRING} a_item.name then
+			if attached {STRING} a_item.name as l_name then
 				l_name.to_lower
 
 					-- Name constants
@@ -292,7 +292,7 @@ feature {NONE} -- Processing
 				l_cname.append (l_csuffix)
 				l_cname := format_eiffel_name (l_cname)
 				create l_cvalue.make (25)
-				if {l_section: INI_SECTION} a_item.container then
+				if attached {INI_SECTION} a_item.container as l_section then
 					l_cvalue.append (section_label (l_section))
 					l_cvalue.append_character (' ')
 				end
@@ -335,7 +335,7 @@ feature {NONE} -- Processing
 					l_anim_pixmaps := animation_pixmaps
 					if l_anim_pixmaps.has (l_aname) then
 							-- An animation list already exists
-						if {l_anim_pixmaps_item: ARRAYED_LIST [!STRING]} l_anim_pixmaps.item (l_aname) then
+						if attached {ARRAYED_LIST [attached STRING]} l_anim_pixmaps.item (l_aname) as l_anim_pixmaps_item then
 							l_animations := l_anim_pixmaps_item
 						else
 							check False end
@@ -376,7 +376,7 @@ feature {NONE} -- Validation
 
 feature {NONE} -- Query
 
-	buffer (a_name: !STRING): !STRING
+	buffer (a_name: attached STRING): attached STRING
 			-- Retrieves a text buffer given a name.
 			--
 			-- 'a_name':
@@ -385,7 +385,7 @@ feature {NONE} -- Query
 			not_a_name_is_empty: not a_name.is_empty
 		do
 			if internal_buffers.has (a_name) then
-				if {s: STRING} internal_buffers.item (a_name) then
+				if attached {STRING} internal_buffers.item (a_name) as s then
 					Result := s
 				else
 					check False end
@@ -399,7 +399,7 @@ feature {NONE} -- Query
 			result_consistent: Result = buffer (a_name)
 		end
 
-	token_variable (a_name: ?STRING): !STRING
+	token_variable (a_name: detachable STRING): attached STRING
 			-- Returns a token varaible for token name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -423,7 +423,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Regular expressions
 
-	animation_regex: !RX_PCRE_MATCHER
+	animation_regex: attached RX_PCRE_MATCHER
 			-- Regular expression to match animation items
 		once
 			create Result.make
@@ -526,7 +526,7 @@ feature {NONE} -- Constants: Templates
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_buffers: !HASH_TABLE [!STRING, !STRING]
+	internal_buffers: attached HASH_TABLE [attached STRING, attached STRING]
 			-- Table of cached buffers
 			--
 			-- Key: The name of the buffer

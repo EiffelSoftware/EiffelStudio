@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				--| TODO: Remove this line if you don't want the first
 				--|       window to be shown at the start of the program.
 			first_window.show
-			if argument_count > 0 and then {s: STRING} argument (1) then
+			if argument_count > 0 and then attached {STRING} argument (1) as s then
 				first_window.add_melted_filename (s)
 			end
 		end

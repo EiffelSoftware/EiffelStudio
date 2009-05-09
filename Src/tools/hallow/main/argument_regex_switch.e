@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	value_validator: !ARGUMENT_REGEX_VALIDATOR
+	value_validator: attached ARGUMENT_REGEX_VALIDATOR
 			-- <Precursor>
 		once
 			create Result

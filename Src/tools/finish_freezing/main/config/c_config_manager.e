@@ -310,7 +310,7 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			ordered_deprecation: Result.for_all (agent (ia_item: !C_CONFIG; ia_dep: !CELL [BOOLEAN]): BOOLEAN
+			ordered_deprecation: Result.for_all (agent (ia_item: attached C_CONFIG; ia_dep: attached CELL [BOOLEAN]): BOOLEAN
 				do
 					if ia_item.is_deprecated then
 						ia_dep.put (True)

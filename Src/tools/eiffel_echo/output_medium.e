@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Output redirector printing output to a {IO_MEDIUM}.
 	]"
@@ -40,7 +40,7 @@ feature -- Basic operations
 			medium.put_string (a_string)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract objects providing clients with strings received from arbitrary sources.
 	]"
@@ -35,7 +35,7 @@ feature -- Basic operations
 		deferred
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

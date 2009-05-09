@@ -200,7 +200,7 @@ feature -- Basic operations
 
 				if l_no_compatible then
 					create l_compilers.make (1024)
-					l_manager.ordered_configs.do_all (agent (ia_buffer: !STRING; ia_config: !C_CONFIG)
+					l_manager.ordered_configs.do_all (agent (ia_buffer: attached STRING; ia_config: attached C_CONFIG)
 						do
 							if not ia_config.is_deprecated then
 									-- Only list supported configurations.

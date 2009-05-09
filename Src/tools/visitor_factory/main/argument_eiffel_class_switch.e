@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	value_validator: !ARGUMENT_EIFFEL_CLASS_VALIDATOR
+	value_validator: attached ARGUMENT_EIFFEL_CLASS_VALIDATOR
 			-- <Precursor>
 		once
 			create Result

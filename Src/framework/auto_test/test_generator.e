@@ -289,7 +289,11 @@ feature {NONE} -- Basic operations
 									if not l_witnesses.is_empty and then l_witnesses.last /= last_witness then
 										l_witness := l_witnesses.last
 										if l_witness.is_fail then
-											if not session.used_witnesses.there_exists (agent {AUT_WITNESS}.is_same_bug (l_witness)) then
+												-- If no minimization algorithm is provided, we disable test creation.
+											if
+												session.options.is_minimization_enabled and then
+												not session.used_witnesses.there_exists (agent {AUT_WITNESS}.is_same_bug (l_witness))
+											then
 												l_minimize_task := minimize_task
 												if l_minimize_task = Void then
 													l_itp := new_interpreter

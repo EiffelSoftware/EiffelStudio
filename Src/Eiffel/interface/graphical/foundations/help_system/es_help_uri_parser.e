@@ -19,13 +19,13 @@ feature -- Query
 		require
 			not_a_protocol_is_empty: not a_protocol.is_empty
 		local
-			l_providers: DS_BILINEAR_CURSOR [attached HELP_PROVIDER_I]
-			l_provider: attached HELP_PROVIDER_I
+			l_providers: DS_LINEAR_CURSOR [CONCEALER_I [HELP_PROVIDER_I]]
+			l_provider: HELP_PROVIDER_I
 		do
 			if help_providers.is_service_available then
-				l_providers := help_providers.service.help_providers.new_cursor
+				l_providers := help_providers.service.providers.new_cursor
 				from l_providers.start until l_providers.after or Result /= Void loop
-					l_provider := l_providers.item
+					l_provider := l_providers.item.object
 					if l_provider.document_protocol.as_string_8.is_case_insensitive_equal (a_protocol.as_string_8) then
 						Result := l_provider.kind
 					end
@@ -50,7 +50,7 @@ feature -- Basic operations
 			l_regex := uri_protocol_regex
 			l_regex.match (a_uri.as_string_8)
 			if l_regex.has_matched and l_regex.match_count > 2 then
-				if attached {STRING_GENERAL} l_regex.captured_substring (1) as l_protocol and attached {STRING_GENERAL} l_regex.captured_substring (2) as l_id then
+				if attached l_regex.captured_substring (1) as l_protocol and attached l_regex.captured_substring (2) as l_id then
 					if l_regex.match_count > 3 then
 						l_section := l_regex.captured_substring (3)
 					end
@@ -74,7 +74,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Factory
 
-	create_help_context (a_protocol: attached STRING_GENERAL; a_context_id: attached STRING_GENERAL; a_section: detachable STRING_GENERAL): HELP_CONTEXT_I
+	create_help_context (a_protocol: attached STRING_GENERAL; a_context_id: attached STRING; a_section: detachable STRING_GENERAL): HELP_CONTEXT_I
 			-- Creates a new help context for a given protocol.
 			--
 			-- `a_protocol': The help protocol to set on a resulting help context.
@@ -111,7 +111,7 @@ feature {NONE} -- Regular expressions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -135,11 +135,11 @@ feature {NONE} -- Regular expressions
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

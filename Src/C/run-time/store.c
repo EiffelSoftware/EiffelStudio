@@ -2185,7 +2185,7 @@ void store_write(size_t cmps_in_size)
 	while (number_left > 0) {
 		number_written = char_write_func (cmps_out_ptr, number_left);
 		if (number_written <= 0) {
-			eio();
+			eise_io("Store: Unable to write data.");
 		} else {
 			number_left -= number_written;
 			cmps_out_ptr += number_written;

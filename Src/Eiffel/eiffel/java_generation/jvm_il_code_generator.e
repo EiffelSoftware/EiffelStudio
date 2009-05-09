@@ -1581,6 +1581,16 @@ feature -- Exception handling
 		do
 		end
 
+	generate_get_rescue_level
+			-- <Precursor>
+		do
+		end
+
+	generate_set_rescue_level
+			-- <Precursor>
+		do
+		end
+
 	generate_end_exception_block
 			-- Mark end of rescue clause and end of routine.
 		do

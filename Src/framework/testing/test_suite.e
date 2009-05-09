@@ -57,12 +57,13 @@ feature {NONE} -- Initialization
 			register_locator (create {TEST_COMPILED_LOCATOR})
 			register_locator (create {TEST_UNCOMPILED_LOCATOR}.make)
 
-			synchronize
 			if (create {SHARED_FLAGS}).is_gui then
 				create {EV_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
 			else
 				create {TTY_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
 			end
+
+			synchronize
 		end
 
 feature -- Access

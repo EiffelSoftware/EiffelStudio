@@ -42,7 +42,7 @@ feature -- Constants
 	general_string: STRING				= "2431F588-3EE1-4455-AF18-8733D1A787D5"
 	eiffel_compiler_string: STRING 		= "714EF9B7-4AC6-418B-BEDC-009876372CB0"
 	c_compiler_string: STRING 			= "4ADC046F-70F6-4364-9E33-8805C8F5D242"
-	testing_string: STRING 	= "D6CF2232-99CB-47AE-B99B-6B1350728231"
+	testing_string: STRING 				= "D6CF2232-99CB-47AE-B99B-6B1350728231"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
@@ -69,11 +69,11 @@ feature -- Constants
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

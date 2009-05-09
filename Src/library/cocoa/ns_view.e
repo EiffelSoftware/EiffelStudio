@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel abstraction for a Cocoa widget"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -232,6 +232,6 @@ feature {NONE} -- Objective-C interface
 			"NSPoint point = [(NSView*)$a_view convertPoint: *(NSPoint*)$a_point toView: $a_to_view]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

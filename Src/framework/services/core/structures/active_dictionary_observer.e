@@ -22,13 +22,13 @@ feature {ACTIVE_DICTIONARY_I} -- Event handlers
 			-- `a_item'      : The object item added to the dictionary.
 			-- `a_key'       : An associated key used when extending the dictionary object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_dictionary_attached: a_dictionary /= Void
 			a_dictionary_is_interface_usable: a_dictionary.is_interface_usable
 			a_item_attached: a_item /= Void
-			is_interface_usable: {l_usable: USABLE_I} a_item implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_item as l_usable implies l_usable.is_interface_usable
 			a_key_attached: a_key /= Void
-			is_interface_usable: {l_usable: USABLE_I} a_key implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_key as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
@@ -40,14 +40,14 @@ feature {ACTIVE_DICTIONARY_I} -- Event handlers
 			-- `a_old_item'  : The changed-from object item replaced in the dictionary.
 			-- `a_key'       : An associated key used when changing the dictionary object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_dictionary_attached: a_dictionary /= Void
 			a_dictionary_is_interface_usable: a_dictionary.is_interface_usable
 			a_item_attached: a_item /= Void
-			is_interface_usable: {l_usable: USABLE_I} a_item implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_item as l_usable implies l_usable.is_interface_usable
 			a_old_item_attached: a_old_item /= Void
 			a_key_attached: a_key /= Void
-			is_interface_usable: {l_usable: USABLE_I} a_key implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} a_key as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
@@ -58,7 +58,7 @@ feature {ACTIVE_DICTIONARY_I} -- Event handlers
 			-- `a_item'      : The object item removed from the dictionary.
 			-- `a_key'       : An associated key used when removing the dictionary object.
 		require
-			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_dictionary_attached: a_dictionary /= Void
 			a_item_attached: a_item /= Void
 			a_key_attached: a_key /= Void

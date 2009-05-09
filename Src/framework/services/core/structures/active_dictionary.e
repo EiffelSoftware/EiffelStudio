@@ -33,11 +33,9 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		local
 			l_items: like table
-			l_adoptions: like adoptions
 			l_item: detachable G
 			l_key: detachable K
 			l_automation: like automation
-			l_action: PROCEDURE [ANY, TUPLE]
 		do
 			if a_explicit then
 				l_items := table
@@ -127,7 +125,7 @@ feature -- Basic operations
 			extend_internal (a_item, a_key, False)
 		end
 
-	extend_adopted (a_item: !G a_key: !K)
+	extend_adopted (a_item: attached G a_key: attached K)
 			-- <Precursor>
 		do
 				-- Perform extension.
@@ -140,7 +138,7 @@ feature -- Basic operations
 			extend_internal (a_item, a_key, False)
 		end
 
-	force_adopted (a_item: !G a_key: !K)
+	force_adopted (a_item: attached G a_key: attached K)
 			-- <Precursor>
 		do
 				-- Perform extension.
@@ -151,10 +149,7 @@ feature -- Basic operations
 			-- <Precursor>
 		local
 			l_table: like table
-			l_adoptions: like adoptions
-			l_item: ?G
-			l_action: PROCEDURE [ANY, TUPLE]
-			l_adopted: BOOLEAN
+			l_item: detachable G
 		do
 			l_table := table
 			if l_table.has (a_key) then
@@ -193,7 +188,6 @@ feature {NONE} -- Basic operations
 			l_table: like table
 			l_adoptions: like adoptions
 			l_old_item: detachable G
-			l_action: PROCEDURE [ANY, TUPLE]
 		do
 			l_table := table
 			l_adoptions := adoptions
@@ -373,19 +367,19 @@ feature -- Events: Connection point
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_item_extended_event: ?like item_extended_event
+	internal_item_extended_event: detachable like item_extended_event
 			-- Cached version of `item_extended_event'.
 			-- Note: Do not use directly!
 
-	internal_item_changed_event: ?like item_changed_event
+	internal_item_changed_event: detachable like item_changed_event
 			-- Cached version of `item_changed_event'.
 			-- Note: Do not use directly!
 
-	internal_item_pruned_event: ?like item_pruned_event
+	internal_item_pruned_event: detachable like item_pruned_event
 			-- Cached version of `item_pruned_event'.
 			-- Note: Do not use directly!
 
-	internal_active_dictionary_connection: ? like active_dictionary_connection
+	internal_active_dictionary_connection: detachable  like active_dictionary_connection
 			-- Cached version of `active_dictionary_connection'.
 			-- Note: Do not use directly!
 

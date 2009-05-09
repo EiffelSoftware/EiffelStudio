@@ -191,21 +191,25 @@ feature {NONE} -- Basic operations
 			l_key: UUID
 			l_output: detachable OUTPUT_I
 		do
-			create l_consumer
-			if l_consumer.is_service_available then
-				l_service := l_consumer.service
-				l_key := (create {OUTPUT_MANAGER_KINDS}).testing
-				if
-					l_service.is_interface_usable and then
-					l_service.is_valid_registration_key (l_key) and then
-					l_service.is_output_available (l_key)
-				then
-					l_output := l_service.output (l_key)
-					if l_output.is_interface_usable and then not l_output.is_locked then
-						l_output.activate
-						l_output.lock
-						l_output.clear
-						output:= l_output
+
+				-- TODO: remove gui check once output manager works properly in tty mode (Arno 05/09/09)
+			if (create {SHARED_FLAGS}).is_gui then
+				create l_consumer
+				if l_consumer.is_service_available then
+					l_service := l_consumer.service
+					l_key := (create {OUTPUT_MANAGER_KINDS}).testing
+					if
+						l_service.is_interface_usable and then
+						l_service.is_valid_registration_key (l_key) and then
+						l_service.is_output_available (l_key)
+					then
+						l_output := l_service.output (l_key)
+						if l_output.is_interface_usable and then not l_output.is_locked then
+							l_output.activate
+							l_output.lock
+							l_output.clear
+							output:= l_output
+						end
 					end
 				end
 			end

@@ -33,7 +33,7 @@ feature -- Access
 	count: INTEGER
 		-- Number of elements in cache
 
-	found_item: ?G
+	found_item: detachable G
 			-- Last found item
 		do
 			Result := internal_table.found_item

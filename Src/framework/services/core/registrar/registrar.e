@@ -45,10 +45,8 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		local
 			l_keys: DS_LINEAR [K]
-			l_item: detachable CONCEALER_I [G]
 			l_key: detachable K
 			l_automation: like automation
-			l_action: PROCEDURE [ANY, TUPLE]
 		do
 			if a_explicit then
 				l_keys := table.keys
@@ -171,8 +169,6 @@ feature -- Basic operations
 
 	register_with_type_activator (a_type: TYPE [G]; a_key: K)
 			-- <Precursor>
-		local
-			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
 		do
 			register_with_activator (agent (ia_type: TYPE [G]): attached G
 					-- Activator function to dynamically instantiate type.
@@ -196,8 +192,6 @@ feature -- Basic operations
 		local
 			l_table: like table
 			l_registration: detachable CONCEALER_I [G]
-			l_action: PROCEDURE [ANY, TUPLE]
-			l_adopted: BOOLEAN
 		do
 			l_table := table
 			if l_table.has (a_key) then

@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Access
 
-	help_context_id: attached STRING_GENERAL
+	help_context_id: attached STRING
 			-- A contextual identifer to link an associated help through, when no applicable widget is
 			-- selected.
 		require
@@ -29,7 +29,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	help_context_ids: attached LIST [attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]]
+	help_context_ids: attached LIST [attached TUPLE [widget: EV_WIDGET; id: attached STRING; section: detachable HELP_CONTEXT_SECTION_I]]
 			-- Contextual identifers to link an associated help through, binding context id's to a specific
 			-- widget.
 		require
@@ -47,13 +47,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation: Internal
 
-	frozen internal_help_context_id: attached STRING_GENERAL
+	frozen internal_help_context_id: STRING
 			-- <Precursor>
 		local
 			l_ids: attached like help_context_ids
-			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]
+			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING; section: detachable HELP_CONTEXT_SECTION_I]
 			l_widget: detachable EV_WIDGET
-			l_result: detachable STRING_GENERAL
+			l_result: detachable STRING
 			l_stop: BOOLEAN
 		do
 			l_widget := (create {EV_SHARED_APPLICATION}).ev_application.focused_widget
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation: Internal
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,22 +147,22 @@ feature {NONE} -- Implementation: Internal
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

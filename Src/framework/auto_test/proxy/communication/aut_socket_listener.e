@@ -125,9 +125,7 @@ feature {NONE} -- Implementation
 				end
 				current_port := port_cell.item
 
-					-- Client currently not able to connect to loopback server (Arno 04/17/2009)
-				--create Result.make_loopback_server_by_port (current_port)
-				create Result.make_server_by_port (current_port)
+				create Result.make_loopback_server_by_port (current_port)
 
 				l_attempts := l_attempts + 1
 			end
@@ -148,7 +146,7 @@ feature {NONE} -- Implementation
 			l_rescued: BOOLEAN
 		do
 			if not l_rescued then
-				create l_socket.make_client_by_port (current_port, "localhost")
+				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
 				l_socket.connect
 				l_socket.close
 			end

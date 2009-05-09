@@ -120,7 +120,7 @@ feature {NONE} -- Status setting
 		do
 			if not l_rescued then
 				if arguments.has_port_option then
-					create l_socket.make_client_by_port (arguments.port_option, "localhost")
+					create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, arguments.port_option)
 					l_socket.connect
 					if l_socket.is_connected then
 						l_socket.set_blocking

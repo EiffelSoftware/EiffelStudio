@@ -68,23 +68,22 @@ feature {NONE} -- Initialization
 				die (1)
 			end
 
-			start (l_port, l_server_url)
+			start (l_port, (create {INET_ADDRESS_FACTORY}).create_loopback)
 
 				-- Close log file.
 			log_file.close
 		end
 
-	start (a_port: INTEGER; a_server_url: STRING)
+	start (a_port: INTEGER; a_server_url: INET_ADDRESS)
 			-- Connect to EiffelStudio and initiate `main_loop'.
 		require
 			a_server_url_attached: a_server_url /= Void
-			a_server_url_not_empty: not a_server_url.is_empty
 			a_port_valid: a_port >= 0
 		local
 			l_excpt_trace: like exception_trace
 			l_trace: STRING
 		do
-			create socket.make_client_by_port (a_port, a_server_url)
+			create socket.make_client_by_address_and_port (a_server_url, a_port)
 			socket.connect
 			--socket.set_blocking
 				-- Wait for test cases and then execute test cases in a loop.

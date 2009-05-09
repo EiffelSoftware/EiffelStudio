@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {EV_COCOA_EXTERNALS}."
 	author: ""
 	date: "$Date$"

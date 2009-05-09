@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelV ision horizontal progress bar. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
 

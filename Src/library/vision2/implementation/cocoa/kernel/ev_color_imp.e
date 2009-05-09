@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision color. Cocoa implementation%N%
 		%Both REAL and 16 bit INTEGER values are stored%N%
@@ -220,7 +220,7 @@ feature {EV_ANY_I, ANY} -- Implementation
 
 	interface: EV_COLOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_COLOR_IMP
 

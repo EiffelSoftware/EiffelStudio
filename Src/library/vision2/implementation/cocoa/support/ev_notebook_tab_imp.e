@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a tab associated with a notebook item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -108,7 +108,7 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_NOTEBOOK_TAB_IMP
 

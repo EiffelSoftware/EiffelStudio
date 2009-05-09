@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list. Cocoa implementation."
 
 deferred class
@@ -54,7 +54,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_ITEM_LIST_IMP
 

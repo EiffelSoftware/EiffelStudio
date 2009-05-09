@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cocoa Implementation for EV_REGION"
 	author: ""
 	date: "$Date$"
@@ -94,6 +94,6 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

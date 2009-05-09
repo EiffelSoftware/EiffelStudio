@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision standard dialog. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -112,7 +112,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			selected_button := ev_cancel
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 
 end -- class EV_STANDARD_DIALOG_IMP

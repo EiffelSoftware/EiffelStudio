@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision accelerator. Cocoa implementation."
 
 class
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ACCELERATOR_IMP
 

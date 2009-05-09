@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision separator. Cocoa implementation"
 	legal: "See notice at end of class."
@@ -47,7 +47,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SEPARATOR_IMP
 

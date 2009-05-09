@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision widget. Cocoa implementation.%N%
 		%See ev_widget.e"
@@ -292,7 +292,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_WIDGET_IMP
 

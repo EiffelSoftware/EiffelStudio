@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision vertical range. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_RANGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_VERTICAL_RANGE_IMP
 

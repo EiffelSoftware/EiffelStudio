@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision vertical separator, Cooca implementation"
 	legal: "See notice at end of class.";
@@ -27,7 +27,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 
 end -- class EV_VERTICAL_SEPARATOR_IMP

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision password field. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PASSWORD_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_PASSWORD_FIELD_IMP
 

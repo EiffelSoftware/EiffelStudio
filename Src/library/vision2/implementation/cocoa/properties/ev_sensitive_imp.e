@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision sensitive. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_SENSITIVE;
 			-- Interface object for implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_SENSITIVE_IMP
 

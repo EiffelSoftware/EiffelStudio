@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision window. Cocoa implementation."
 
 class
@@ -620,13 +620,13 @@ feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 	interface: EV_WINDOW;
 		-- Interface object of `Current'
 
-	window: NS_WINDOW is
+	window: NS_WINDOW
 			--
 		do
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_WINDOW_IMP
 

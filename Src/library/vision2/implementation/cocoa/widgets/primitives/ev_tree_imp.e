@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision Tree, Cocoa implementation"
 	legal: "See notice at end of class."
@@ -319,7 +319,7 @@ feature {EV_ANY_I, EV_TREE_NODE_IMP} -- Implementation
 
 	outline_view: NS_OUTLINE_VIEW;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TREE_IMP
 

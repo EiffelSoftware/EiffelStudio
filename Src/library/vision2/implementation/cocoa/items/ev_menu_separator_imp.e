@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu separator. Cocoa implementation."
 
 class
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_MENU_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_SEPARATOR_IMP
 

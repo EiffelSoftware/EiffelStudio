@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Cocoa implementation."
 
 class
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			-- to be executed without raising zillions of assertion violations.
 			--| FIXME implement cited function, then remove me.
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DIALOG_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision toggle button, Cocoa implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -92,7 +92,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOGGLE_BUTTON_IMP
 

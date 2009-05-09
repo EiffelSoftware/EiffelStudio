@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision colorizable. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -101,7 +101,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COLORIZABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_COLORIZABLE_IMP
 

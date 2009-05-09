@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision beep routines. Cocoa implementation"
 	legal: "See notice at end of class."
 	keywords: "color, pixel, rgb, 8, 16, 24"
@@ -81,6 +81,6 @@ feature -- Commands
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BEEP_IMP

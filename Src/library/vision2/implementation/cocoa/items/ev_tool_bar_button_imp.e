@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision2 Toolbar button,%
 		%a specific button that goes in a tool-bar."
@@ -69,9 +69,9 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	minimum_height: INTEGER is 20
+	minimum_height: INTEGER = 20
 
-	minimum_width: INTEGER is 20
+	minimum_width: INTEGER = 20
 
 feature -- Status Report
 
@@ -208,7 +208,7 @@ feature {EV_ANY_I} -- Implementation
 
 	button: NS_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_BUTTON_IMP
 

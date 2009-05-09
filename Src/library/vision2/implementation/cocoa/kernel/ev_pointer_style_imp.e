@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cocoa implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -116,6 +116,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

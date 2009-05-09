@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision button. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -110,7 +110,7 @@ feature -- Status Setting
 		do
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			--
 		do
 			if not text.is_equal (a_text) then
@@ -187,7 +187,7 @@ feature {EV_ANY_I} -- implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-	button: NS_BUTTON is
+	button: NS_BUTTON
 			--
 		do
 			Result ?= cocoa_item
@@ -197,6 +197,6 @@ feature {EV_ANY_I} -- implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BUTTON_IMP

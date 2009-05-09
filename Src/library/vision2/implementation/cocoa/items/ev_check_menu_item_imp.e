@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision check menu. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_CHECK_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_CHECK_MENU_ITEM_IMP
 

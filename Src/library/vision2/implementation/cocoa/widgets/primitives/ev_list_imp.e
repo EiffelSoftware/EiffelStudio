@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list, Cocoa implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			Result := 55 -- Hardcoded, TODO calculate a meaningful width depending on the content
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_LIST_IMP
 

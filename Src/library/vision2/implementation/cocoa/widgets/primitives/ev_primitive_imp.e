@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision primitive, Cocoa implementation."
 	legal: "See notice at end of class."
@@ -179,6 +179,6 @@ feature -- Status report
 			is_tabable_from := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_PRIMITIVE_IMP

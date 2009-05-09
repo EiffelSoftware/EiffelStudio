@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision pixmapable. Cocoa implementation."
 
@@ -47,7 +47,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_PIXMAPABLE_IMP
 

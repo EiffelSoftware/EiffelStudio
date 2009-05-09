@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tooltipable. Cocoa implementation."
 	legal: "See notice at end of class."
@@ -51,7 +51,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOLTIPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_TOOLTIPABLE_IMP
 

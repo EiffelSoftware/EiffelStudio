@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawing area. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -120,6 +120,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DRAWING_AREA;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DRAWING_AREA_IMP

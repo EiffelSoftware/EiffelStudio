@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Eiffel Vision print dialog. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PRINT_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_PRINT_DIALOG_IMP
 

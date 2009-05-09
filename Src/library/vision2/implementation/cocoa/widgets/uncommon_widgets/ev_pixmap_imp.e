@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision pixmap, Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -229,7 +229,7 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_PIXMAP_IMP
 

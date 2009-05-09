@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for Cocoa implementation (_IMP) classes. %N%
 		%Handles interaction between Eiffel objects and Cocoa objects"
@@ -75,7 +75,7 @@ feature -- Measurement
 
 invariant
 	cocoa_view_set: cocoa_item /= void
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ANY_IMP
 

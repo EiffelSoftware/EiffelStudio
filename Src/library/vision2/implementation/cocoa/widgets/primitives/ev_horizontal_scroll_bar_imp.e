@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision horizontal scroll bar. Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -71,7 +71,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_SCROLL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item. Cocoa implementation."
 
 class
@@ -144,9 +144,9 @@ feature -- Measurement
 
 	width, height: INTEGER
 
-	minimum_width: INTEGER is 10
+	minimum_width: INTEGER = 10
 
-	minimum_height: INTEGER is 10
+	minimum_height: INTEGER = 10
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
@@ -169,7 +169,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result ?= cocoa_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_ITEM_IMP
 

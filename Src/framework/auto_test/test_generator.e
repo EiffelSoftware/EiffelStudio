@@ -193,7 +193,7 @@ feature {NONE} -- Basic operations
 		do
 
 				-- TODO: remove gui check once output manager works properly in tty mode (Arno 05/09/09)
-			if (create {SHARED_FLAGS}).is_gui then
+			if True or (create {SHARED_FLAGS}).is_gui then
 				create l_consumer
 				if l_consumer.is_service_available then
 					l_service := l_consumer.service

@@ -58,9 +58,7 @@ feature -- Status setting
 				end
 				last_port := port_counter.item
 
-					-- Client currently not able to connect to loopback server (Arno 04/17/2009)
-				--create l_socket.make_loopback_server_by_port (last_port)
-				create l_socket.make_server_by_port (last_port)
+				create l_socket.make_loopback_server_by_port (last_port)
 
 				l_tries := l_tries + 1
 			end

@@ -6,9 +6,6 @@ indexing
 class
 	APPLICATION
 
-inherit
-	ARGUMENTS
-
 create
 	make
 
@@ -17,7 +14,7 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			l_boolean: INITIALIZABLE_BOOLEAN
+			l_boolean: SETTABLE_BOOLEAN
 		do
 			create l_boolean.make_empty
 
@@ -28,7 +25,7 @@ feature {NONE} -- Initialization
 
 			l_boolean := False
 
-			if not l_boolean.value then
+			if not l_boolean then
 				print (l_boolean)
 			end
 		end

@@ -153,7 +153,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	gc_stopped = !eif_gc_ison();
 	eif_gc_stop();
 
-	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
+	Result = spmalloc (RT_SPECIAL_MALLOC_COUNT(l_found.count,sizeof (EIF_REFERENCE)), EIF_FALSE);
 	zone = HEADER (Result);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = (EIF_TYPE_INDEX) result_type;

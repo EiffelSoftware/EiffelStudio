@@ -183,11 +183,9 @@ feature {NONE} -- C code generation
 				buf.put_new_line;
 				buf.put_string ("rt_uint_ptr elem_size;");
 				buf.put_new_line;
-				buf.put_string ("elem_size = *(EIF_INTEGER *) (");
+				buf.put_string ("elem_size = RT_SPECIAL_ELEM_SIZE(")
 				array_area_reg.print_register;
-				buf.put_string (" + (HEADER(");
-				array_area_reg.print_register;
-				buf.put_string (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(EIF_INTEGER));");
+				buf.put_two_character (')', ';')
 			end;
 			from
 				expressions.start;

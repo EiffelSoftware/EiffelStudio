@@ -387,10 +387,8 @@ feature {NONE} -- C code generation
 					end
 				else
 					buffer.put_new_line
-					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * (rt_uint_ptr) (%
-						%*(EIF_INTEGER *) (Current + %
-						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
-						%sizeof(EIF_INTEGER))));")
+					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + (rt_uint_ptr) arg2 * %
+						%RT_SPECIAL_ELEM_SIZE(Current));")
 				end
 			else
 				buffer.put_new_line
@@ -553,10 +551,8 @@ feature {NONE} -- C code generation
 					end
 				else
 					buffer.put_new_line
-					buffer.put_string ("ecopy(loc1, Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (%
-						%*(EIF_INTEGER *) (Current + %
-						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
-						%sizeof(EIF_INTEGER))));")
+					buffer.put_string ("ecopy(loc1, Current + OVERHEAD + (rt_uint_ptr) arg1 * %
+						%RT_SPECIAL_ELEM_SIZE(Current));")
 				end
 				buffer.put_new_line
 				buffer.put_string ("RTLE;")
@@ -692,10 +688,8 @@ feature {NONE} -- C code generation
 				else
 					buffer.put_string ("r.")
 					type_c.generate_typed_field (buffer)
-					buffer.put_string (" = RTCL(Current + OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) (%
-						%*(EIF_INTEGER *) (Current + %
-						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
-						%sizeof(EIF_INTEGER))));%N")
+					buffer.put_string ("= RTCL(Current + OVERHEAD + (rt_uint_ptr) arg1 * %
+						%RT_SPECIAL_ELEM_SIZE(Current));")
 					buffer.put_new_line
 					buffer.put_string ("return r;")
 				end
@@ -955,7 +949,7 @@ feature {NONE} -- C code generation
 			buffer.generate_block_open
 				-- We zeroed the memory used by the SPECIAL instance.
 			buffer.put_new_line
-			buffer.put_string ("memset (Current, 0, (HEADER(Current)->ov_size & B_SIZE) - LNGPAD_2);")
+			buffer.put_string ("memset (Current, 0, RT_SPECIAL_VISIBLE_SIZE(Current));")
 			buffer.generate_block_close
 				-- Separation for formatting
 			buffer.put_new_line
@@ -980,9 +974,7 @@ feature {NONE} -- C code generation
 				buffer.put_string ("%
 					%if (")
 				buffer.put_string (arg_name)
-				buffer.put_string (">= *(EIF_INTEGER *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-						% - LNGPAD(2))) {%N%
+				buffer.put_string (">= RT_SPECIAL_COUNT(Current)) {%N%
 					%%Teraise (%"index_small_enough%", EN_RT_CHECK);%N}");
 			elseif associated_class.assertion_level.is_precondition then
 				buffer.put_new_line
@@ -1000,9 +992,7 @@ feature {NONE} -- C code generation
 					%RTCT(%"index_small_enough%", EX_PRE);%N%
 					%if (")
 				buffer.put_string (arg_name)
-				buffer.put_string ("< *(EIF_INTEGER *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-						% - LNGPAD(2))) {%N%
+				buffer.put_string ("< RT_SPECIAL_COUNT(Current)) {%N%
 					%%TRTCK;%N%
 					%} else {%N%
 					%%TRTCF;%N}%N");
@@ -1115,7 +1105,7 @@ feature -- IL code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1128,22 +1118,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

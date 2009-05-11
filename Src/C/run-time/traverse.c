@@ -59,7 +59,6 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_gen_conf.h"
 #include "rt_struct.h"
 #include "rt_interp.h"
-#include "eif_size.h"		/* For LNGPAD macros... */
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
 
@@ -788,7 +787,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		 * We turn off GC since we do not want objects to be moved. */
 	gc_stopped = !eif_gc_ison();
 	eif_gc_stop();
-	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
+	Result = spmalloc (RT_SPECIAL_MALLOC_COUNT(l_found.count, sizeof (EIF_REFERENCE)), EIF_FALSE);
 	zone = HEADER (Result);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = result_type;

@@ -35,8 +35,7 @@ inherit
 		end
 
 create
-
-	make_bound, make_targeted
+	make_bound, make_loopback_bound, make_targeted
 
 feature -- Initialization
 
@@ -63,6 +62,22 @@ feature -- Initialization
 		do
 			c_reset_error
 			addr := create_any_local
+			create an_address.make_from_address_and_port (addr, a_port)
+			make_bound_to_address (an_address)
+			timeout := default_timeout
+		ensure
+			timeout_set_to_default: timeout = default_timeout
+		end
+
+	make_loopback_bound (a_port: INTEGER)
+			-- Make a network datagram socket bound to its well
+			-- known loopback address with port `a_port'.
+		local
+			addr: INET_ADDRESS
+			an_address: NETWORK_SOCKET_ADDRESS
+		do
+			c_reset_error
+			addr := create_loopback
 			create an_address.make_from_address_and_port (addr, a_port)
 			make_bound_to_address (an_address)
 			timeout := default_timeout

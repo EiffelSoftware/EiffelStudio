@@ -78,6 +78,22 @@ feature -- Status report
 		deferred
 		end
 
+	is_auto_scrolled: BOOLEAN assign set_is_auto_scrolled
+			-- Indicates if the editor should auto scroll the content.
+		deferred
+		end
+
+feature -- Status setting
+
+	set_is_auto_scrolled (a_auto: BOOLEAN)
+			-- Set auto scroll nature of the output pane.
+			--
+			-- `a_auto': True to auto-scroll the output pane; False otherwise.
+		deferred
+		ensure
+			is_auto_scrolled_set: is_auto_scrolled = a_auto
+		end
+
 feature -- Query
 
 	text_from_window (a_window: SHELL_WINDOW_I): STRING_32

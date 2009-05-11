@@ -933,6 +933,7 @@ test	melted-string-crash			melt091  tcf fail execution melting
 test	melted-agent-exception-crash	melt092  tcf fail execution melting agents
 test	raise-exception-inspect-branch	melt093  tcf fail execution melting
 test	dollar-with-expanded-attribute-in-generic	melt094  tcf fail execution melting
+test	wrong-line-number-in-trace	melt095  tcf fail execution melting
 
 -- Freezing
 

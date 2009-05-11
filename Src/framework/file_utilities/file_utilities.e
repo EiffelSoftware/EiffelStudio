@@ -262,7 +262,6 @@ feature -- Query
 			l_separator_i: INTEGER
 			l_non_dot_i: INTEGER
 			l_count: INTEGER
-			l_stop: BOOLEAN
 		do
 			l_file_name := a_file_name.as_string_8
 			l_count := l_file_name.count
@@ -309,9 +308,6 @@ feature {NONE} -- Query
 			a_index_positive: a_index > 0
 		local
 			l_extension: like file_extension
-			l_separator: STRING
-			l_match_separator: STRING
-			l_matched: BOOLEAN
 			l_count: INTEGER
 		do
 			Result := a_base_path.as_string_8.as_attached

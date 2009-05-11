@@ -1,23 +1,23 @@
 note
 	description: "[
-		STRING implementation of INITIALIZABLE [G]
+		INTEGER implementation of SETTABLE_TYPES [G]
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
+
 class
-	INITIALIZABLE_STRING
+	SETTABLE_INTEGER
 
 inherit
-	INITIALIZABLE [STRING]
+	SETTABLE_TYPES [INTEGER]
 
 create
 	set_value,
 	make_empty
 
 convert
-	set_value ({STRING}),
-	value: {STRING}
+	set_value ({INTEGER}),
+	value: {INTEGER}
 end
 

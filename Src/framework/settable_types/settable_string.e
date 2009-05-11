@@ -1,23 +1,23 @@
 note
 	description: "[
-		BOOLEAN implementation of INITIALIZABLE [G]
+		STRING implementation of SETTABLE_TYPES [G]
 	]"
 	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
-	INITIALIZABLE_BOOLEAN
+	SETTABLE_STRING
 
 inherit
-	INITIALIZABLE [BOOLEAN]
+	SETTABLE_TYPES [STRING]
 
 create
 	set_value,
 	make_empty
 
 convert
-	set_value ({BOOLEAN}),
-	value: {BOOLEAN}
+	set_value ({STRING}),
+	value: {STRING}
 end
 

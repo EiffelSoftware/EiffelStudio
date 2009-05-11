@@ -236,7 +236,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current
+	plus alias "+" (other: like Current): like Current
 			-- Sum of current object with `other'
 		local
 			l_origin: like origin_date
@@ -253,7 +253,7 @@ feature -- Basic operations
 			origin_equal: equal (origin_date, Result.origin_date)
 		end
 
-	prefix "-": like Current
+	opposite alias "-": like Current
 			-- Unary minus
 		local
 			l_origin: like origin_date

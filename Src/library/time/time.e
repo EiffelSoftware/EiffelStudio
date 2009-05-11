@@ -221,7 +221,7 @@ feature -- Measurement
 
 feature -- Basic operations
 
-	infix "+" (t: TIME_DURATION): TIME
+	plus alias "+" (t: TIME_DURATION): TIME
 			-- Sum of the current time and duration `t'
 		require
 			t_exists: t /= Void

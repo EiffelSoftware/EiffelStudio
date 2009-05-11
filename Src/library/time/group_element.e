@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current
+	plus alias "+" (other: like Current): like Current
 			-- Sum with `other' (commutative)
 		require
 			other_exists: other /= Void
@@ -33,7 +33,7 @@ feature -- Basic operations
 			commutative: Result.is_equal (other + Current)
 		end
 
-	infix "-" (other: like Current): like Current
+	minus alias "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		require
 			other_exists: other /= Void
@@ -42,7 +42,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	prefix "+": like Current
+	identity alias "+": like Current
 			-- Unary plus
 		deferred
 		ensure
@@ -50,7 +50,7 @@ feature -- Basic operations
 			result_definition: Result.is_equal (Current)
 		end
 
-	prefix "-": like Current
+	opposite alias "-": like Current
 			-- Unary minus
 		deferred
 		ensure

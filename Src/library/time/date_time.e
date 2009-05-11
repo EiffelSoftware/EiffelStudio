@@ -317,7 +317,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	infix "+" (d: DATE_TIME_DURATION): like Current
+	plus alias "+" (d: DATE_TIME_DURATION): like Current
 			-- Sum the current object with `d'
 		require
 			d_not_void: d /= Void

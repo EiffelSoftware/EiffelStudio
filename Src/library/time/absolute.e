@@ -41,7 +41,7 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "-" (other: like Current): INTERVAL [like Current]
+	minus alias "-" (other: like Current): INTERVAL [like Current]
 			-- Interval between current object and `other'
 		require
 			other_exists: other /= Void

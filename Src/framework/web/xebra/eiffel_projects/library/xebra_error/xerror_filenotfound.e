@@ -8,32 +8,34 @@ note
 	revision: "$Revision$"
 
 class
-	
-XERROR_FILENOTFOUND
+	XERROR_FILE_NOT_FOUND
 
 inherit
 	ERROR_ERROR_INFO
-	redefine
-		make
+		rename
+			make as make_error
 		end
 
 create
 	make
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
-	make (a_context: like context)
-			-- Initializes an error.
-			--
-			-- `a_context': Any optional contextual information.
+	make (a_file_name: READABLE_STRING_8)
 		do
-			context := a_context
+			create file_name.make_from_string (a_file_name)
+			make_error ([a_file_name]);
 		end
 
+feature -- Access
+
+	file_name: IMMUTABLE_STRING_8
+			-- File name on which the error occurred
+
+feature {NONE} -- Access
 
 	dollar_description: STRING
-			-- Dollar encoded description. ${n} are replaced by array indicies.
-			-- See {STRING_FORMATTER}
+			-- <Precursor>
 		do
 			Result := "File not found {1}"
 		end

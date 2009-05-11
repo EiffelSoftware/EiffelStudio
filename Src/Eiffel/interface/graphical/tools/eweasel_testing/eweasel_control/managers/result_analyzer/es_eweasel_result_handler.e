@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	set_with_current_item (a_item: attached ES_EWEASEL_TEST_RESULT_ITEM)
 			-- Set `a_item' with Current date and time.
 		local
-			l_date_time: DT_DATE_TIME
+			l_date_time: DATE_TIME
 			l_date: DATE
 			l_time: TIME
 		do

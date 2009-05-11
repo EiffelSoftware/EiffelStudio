@@ -681,15 +681,8 @@ feature {NONE} -- Implementation commands
 			l_test_cases: like all_test_cases_from_grid
 			l_item: ES_EWEASEL_TEST_CASE_ITEM
 			l_grid: like grid
-			l_date_time: DT_DATE_TIME
-			l_date_time_ise, l_date_time_ise_utc: DATE_TIME
-			l_date_time_duration: DATE_TIME_DURATION
+			l_date_time: DATE_TIME
 		do
-			-- We have to convert file time from utc to local ourselves since it only provide utc time
-			create l_date_time_ise.make_now
-			create l_date_time_ise_utc.make_now_utc
-			l_date_time_duration := l_date_time_ise.relative_duration (l_date_time_ise_utc)
-
 			from
 				l_grid := grid
 				l_test_cases := all_test_cases_from_grid
@@ -698,15 +691,11 @@ feature {NONE} -- Implementation commands
 				l_test_cases.after
 			loop
 				l_item := l_test_cases.item
-
-					create l_date_time.make_from_epoch (l_item.class_i.file_date)
-					l_date_time.add_hours (l_date_time_duration.hour)
-					if attached {EV_GRID_LABEL_ITEM} l_grid.item (4, l_test_cases.index) as l_label_item then
-						l_label_item.set_text (l_date_time.out)
-					end
-
-					l_item.set_changed_time (l_date_time)
-
+				create l_date_time.make_from_epoch (l_item.class_i.file_date)
+				if attached {EV_GRID_LABEL_ITEM} l_grid.item (4, l_test_cases.index) as l_label_item then
+					l_label_item.set_text (l_date_time.out)
+				end
+				l_item.set_changed_time (l_date_time)
 				l_test_cases.forth
 			end
 		end
@@ -729,7 +718,7 @@ feature {NONE} -- Implementation commands
 				l_item := l_test_cases.item
 
 				l_row := l_grid.row (l_test_cases.index)
-				if attached {DT_DATE_TIME} l_item.last_run_time as l_last_run_time and attached {DT_DATE_TIME} l_item.changed_time as l_changed_time then
+				if attached l_item.last_run_time as l_last_run_time and attached l_item.changed_time as l_changed_time then
 					if l_last_run_time < l_changed_time then
 						-- Changed
 						l_row.set_background_color (colors.grid_different_value_background_color)
@@ -756,7 +745,7 @@ feature {NONE} -- Implementation commands
 			l_grid_helper: ES_EWEASEL_TEST_GRID_HELPER
 			l_changed_time: STRING_GENERAL
 			l_last_result_label_item: attached EV_GRID_LABEL_ITEM
-			l_changed_date_time, l_last_run_date_time: DT_DATE_TIME
+			l_changed_date_time, l_last_run_date_time: DATE_TIME
 		do
 			from
 				l_all_columns := all_columns_titles
@@ -939,7 +928,7 @@ feature {NONE} -- Implementation commands
 			save_test_case_to_session
 		end
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -963,11 +952,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

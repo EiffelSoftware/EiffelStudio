@@ -1,0 +1,17 @@
+
+test_name 	dollar-with-expanded-attribute-in-generic
+test_description A routine in a generic class which passes $x to a procedure, where `x' is an attribute of type G, results in a POINTER value that incorrectly equals `default_pointer', but only when system is melted.  Furthermore, printing the value of this pointer displays the non-pointer string "False".
+
+copy_sub 	Ace $TEST Ace
+
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	show.e $CLUSTER show.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

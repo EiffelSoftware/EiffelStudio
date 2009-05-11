@@ -55,7 +55,6 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "rt_macros.h"
 #include "rt_gen_types.h"
 #include "rt_globals.h"
-#include "eif_size.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"
 #include "rt_interp.h"		/* For routine call_copy */

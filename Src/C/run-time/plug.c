@@ -55,7 +55,6 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #endif
 #include "rt_bits.h"
 #include "rt_struct.h"
-#include "eif_size.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"		/* For assertions checkings. */
 #include "rt_gen_conf.h"

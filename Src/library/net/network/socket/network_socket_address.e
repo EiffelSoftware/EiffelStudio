@@ -34,7 +34,7 @@ inherit
 		end
 
 create
-	make_from_hostname_and_port, make_from_address_and_port, make_any_local, make_localhost
+	make_from_hostname_and_port, make_from_address_and_port, make_any_local, make_localhost, make_loopback
 
 feature -- Initialization
 
@@ -85,6 +85,15 @@ feature -- Initialization
 			addr: INET_ADDRESS
 		do
 			addr := create_localhost
+			socket_address := addr.sockaddr (a_port)
+		end
+
+	make_loopback (a_port: INTEGER)
+			--
+		local
+			addr: INET_ADDRESS
+		do
+			addr := create_loopback
 			socket_address := addr.sockaddr (a_port)
 		end
 

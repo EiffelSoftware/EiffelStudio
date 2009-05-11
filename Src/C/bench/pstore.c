@@ -47,7 +47,6 @@
 #include "eif_except.h"
 #include "eif_memory.h"
 #include "rt_error.h"
-#include "eif_size.h"		/* For LNGPAD macro */
 #include "rt_store.h"
 #include "pstore.h"
 #include "minilzo.h"

@@ -91,26 +91,29 @@ feature {NONE} -- User interface initialization
 			l_output_manager := output_manager
 			if l_output_manager.is_service_available then
 				l_output_manager.service.output_manager_event_connection.connect_events (Current)
-				l_active_outputs := l_output_manager.service.active_outputs
-				from l_active_outputs.start until l_active_outputs.after loop
-					if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
-						if l_first_output = Void then
-							l_first_output := l_output_pane
+				if not attached last_output then
+						-- No output is currently been set.
+					l_active_outputs := l_output_manager.service.active_outputs
+					from l_active_outputs.start until l_active_outputs.after loop
+						if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
+							if l_first_output = Void then
+								l_first_output := l_output_pane
+							end
+							extend_output (l_output_pane)
 						end
-						extend_output (l_output_pane)
+						l_active_outputs.forth
 					end
-					l_active_outputs.forth
-				end
 
-					-- Set best output
-				if attached {ES_OUTPUT_PANE_I} l_output_manager.service.general_output as l_active_output then
-						-- The general output is a EiffelStudio output pane.
-					set_output (l_active_output)
-				else
-						-- The general output is not a EiffelStudio output pane, use the first output
-						-- instead.
-					check l_first_output_attached: attached l_first_output end
-					set_output (l_first_output)
+						-- Set best output
+					if attached {ES_OUTPUT_PANE_I} l_output_manager.service.general_output as l_active_output then
+							-- The general output is a EiffelStudio output pane.
+						set_output (l_active_output)
+					else
+							-- The general output is not a EiffelStudio output pane, use the first output
+							-- instead.
+						check l_first_output_attached: attached l_first_output end
+						set_output (l_first_output)
+					end
 				end
 			else
 					-- The tool cannot be used if the output service is unavailable.
@@ -227,6 +230,14 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			l_widget: ES_WIDGET [EV_WIDGET]
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
+			if not is_initialized then
+					-- Force initialization.
+					-- We set the output to prevent initialization from setting a default output.
+				output := a_output
+				initialize
+				output := Void
+			end
+
 			if output /= a_output then
 				l_old_output := output
 				if attached l_old_output then
@@ -239,16 +250,18 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 				end
 
 				l_combo := selection_combo
-				l_actions_running := l_combo.change_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
-				if l_actions_running then
-					l_combo.change_actions.block
-				end
+				if l_combo /= Void then
+					l_actions_running := l_combo.change_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
+					if l_actions_running then
+						l_combo.change_actions.block
+					end
 
-					-- Change label in the combo box.
-				l_combo.set_text (a_output.name.as_string_32)
+						-- Change label in the combo box.
+					l_combo.set_text (a_output.name.as_string_32)
 
-				if l_actions_running then
-					l_combo.change_actions.resume
+					if l_actions_running then
+						l_combo.change_actions.resume
+					end
 				end
 
 				l_window := develop_window.as_attached

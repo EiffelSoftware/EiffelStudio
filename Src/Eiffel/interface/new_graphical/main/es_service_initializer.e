@@ -210,7 +210,6 @@ feature {NONE} -- Registration: Output
 			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make_with_icon (locale_formatter.translation (lb_general), (create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_output_icon_buffer), l_kinds.general)
 			a_service.register (create {ES_EIFFEL_COMPILER_OUTPUT_PANE}.make (locale_formatter.translation (lb_compiler)), l_kinds.eiffel_compiler)
 			a_service.register (create {ES_C_COMPILER_OUTPUT_PANE}.make (locale_formatter.translation (lb_external_compilation)), l_kinds.c_compiler)
-			a_service.register (create {ES_EDITOR_OUTPUT_PANE}.make (locale_formatter.translation (lb_testing)), l_kinds.testing)
 		end
 
 feature {NONE} -- Internationalization

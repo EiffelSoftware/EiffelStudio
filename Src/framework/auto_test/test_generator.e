@@ -200,14 +200,15 @@ feature {NONE} -- Basic operations
 					l_key := (create {OUTPUT_MANAGER_KINDS}).testing
 					if
 						l_service.is_interface_usable and then
-						l_service.is_valid_registration_key (l_key) and then
-						l_service.is_output_available (l_key)
+						l_service.is_valid_registration_key (l_key)
 					then
-						l_output := l_service.output (l_key)
-						if l_output.is_interface_usable and then not l_output.is_locked then
-							l_output.activate
-							l_output.lock
-							l_output.clear
+						l_output := l_service.output_or_default (l_key, "Testing Output")
+						if l_output.is_interface_usable then
+							if not l_output.is_locked then
+								l_output.activate
+								l_output.lock
+								l_output.clear
+							end
 							output:= l_output
 						end
 					end

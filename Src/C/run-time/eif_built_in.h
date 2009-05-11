@@ -150,12 +150,12 @@ extern "C" {
 
 /* SPECIAL class */
 #define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
-#define eif_builtin_SPECIAL_count(area)						sp_count (area)
-#define eif_builtin_SPECIAL_element_size(area)				sp_elem_size (area)
-#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, sp_count (area))
+#define eif_builtin_SPECIAL_count(area)						RT_SPECIAL_COUNT(area)
+#define eif_builtin_SPECIAL_element_size(area)				RT_SPECIAL_ELEM_SIZE(area)
+#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, RT_SPECIAL_COUNT (area))
 
 /* TUPLE class */
-#define eif_builtin_TUPLE_count(area)						(sp_count (area) - 1) /* - 1 because first argument is for object_comparison */
+#define eif_builtin_TUPLE_count(area)						(RT_SPECIAL_COUNT(area) - 1) /* - 1 because first argument is for object_comparison */
 
 #ifdef __cplusplus
 }

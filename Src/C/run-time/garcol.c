@@ -62,7 +62,6 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_gen_types.h"	/* For tuple marking */
 #include "eif_cecil.h"
 #include "rt_struct.h"
-#include "eif_size.h"		/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <string.h>
 #endif
@@ -4119,8 +4118,8 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 				/* This code is commented because not necessary. I'm leaving it there
 				 * to show that there is indeed no need to clean the extra memory because
 				 * in theory it should never be accessed. */
-				memset (new + size - LNGPAD_2, 0xFFFFFFFF , (zone->ov_size & B_SIZE) - size);
-				memcpy (new + (zone->ov_size & B_SIZE) - LNGPAD_2, root + size - LNGPAD_2, LNGPAD_2);
+				memset (new + size - RT_SPECIAL_DATA_SIZE, 0xFFFFFFFF , (zone->ov_size & B_SIZE) - size);
+				memcpy (new + (zone->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE, root + size - RT_SPECIAL_DATA_SIZE, RT_SPECIAL_DATA_SIZE);
 			}
 
 #ifdef DEBUG

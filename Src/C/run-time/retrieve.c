@@ -61,7 +61,6 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_globals.h"
 #include "rt_struct.h"
 #include "rt_compress.h"
-#include "eif_size.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For read () */
 #endif
@@ -620,8 +619,7 @@ rt_private EIF_REFERENCE new_spref (int count)
 	static EIF_TYPE_INDEX spref_type;		/* dynamic type of SPECIAL [ANY] */
 	EIF_REFERENCE result;
 	union overhead *zone;
-	result = spmalloc (
-		CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD (2), FALSE);
+	result = spmalloc (RT_SPECIAL_MALLOC_COUNT(count, sizeof(EIF_REFERENCE)), FALSE);
 	if (!result) {
 		xraise(EN_MEM);
 	}
@@ -1484,7 +1482,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 			} else {
-				newadd = spmalloc (nb_byte + LNGPAD_2, EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(spec_count,spec_elem_size), EIF_TEST(!(flags & EO_REF)));
 				RT_SPECIAL_COUNT(newadd) = spec_count;
 				RT_SPECIAL_ELEM_SIZE(newadd) = spec_elem_size;
 			}
@@ -1655,7 +1653,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 				}
 			}
 			buffer_read((char *) &count, sizeof(uint32));
-			nb_byte = CHRPAD((rt_uint_ptr) count * (rt_uint_ptr) spec_size ) + LNGPAD_2;
+			nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
 			buffer_read((char *) &elm_size, sizeof(uint32));
 
 #if DEBUG & 1
@@ -1837,7 +1835,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 				}
 			}
 			ridr_norm_int (&count);
-			nb_byte = CHRPAD((rt_uint_ptr) count * (rt_uint_ptr) spec_size ) + LNGPAD_2;
+			nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
 			ridr_norm_int (&elm_size);
 
 #if DEBUG & 1
@@ -1999,7 +1997,7 @@ rt_private EIF_REFERENCE new_special_object (EIF_TYPE_INDEX new_dftype, uint16 f
 				eise_io ("Independent retrieve: not an Eiffel object.");
 		}
 	}
-	nb_byte = CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) spec_size) + LNGPAD_2;
+	nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
 	result = spmalloc (nb_byte, EIF_TEST(!(flags & EO_REF)));
 	if (!result) {
 		xraise(EN_MEM);

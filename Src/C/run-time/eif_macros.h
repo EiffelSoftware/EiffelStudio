@@ -1395,6 +1395,42 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTTS		trace_call_level = current_call_level	/* Clean up trace levels */
 
 
+/* Macro used to get info about SPECIAL objects.
+ * RT_SPECIAL_DATA_SIZE is the additional size of the data at the end of the SPECIAL.
+ * RT_SPECIAL_MALLOC_COUNT is the macro to compute the necessary memory size for the SPECIAL.
+ * RT_SPECIAL_INFO, RT_SPECIAL_INFO_WITH_ZONE returns pointer to where `count' and `element_size'
+ *    of a special objects is stored.
+ * RT_SPECIAL_COUNT, RT_SPECIAL_COUNT_WITH_ZONE, RT_SPECIAL_COUNT_WITH_INFO returns `count'
+ *    of special objects.
+ * RT_SPECIAL_ELEM_SIZE, RT_SPECIAL_ELEM_SIZE_WITH_ZONE, RT_SPECIAL_ELEM_SIZE_WITH_INFO returns
+ *    `element_size' of items in special objects.
+ */
+#define RT_SPECIAL_DATA_SIZE	LNGPAD(2)
+#define RT_SPECIAL_VISIBLE_SIZE(spec) (RT_SPECIAL_COUNT(spec) * RT_SPECIAL_ELEM_SIZE(spec))
+#define RT_SPECIAL_MALLOC_COUNT(nb_items,item_size) \
+	((rt_uint_ptr) (CHRPAD((rt_uint_ptr) nb_items * (rt_uint_ptr) item_size) + RT_SPECIAL_DATA_SIZE))
+
+#define RT_IS_SPECIAL(obj) \
+	((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC)
+
+#define RT_SPECIAL_INFO(spec) \
+	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)
+#define RT_SPECIAL_INFO_WITH_ZONE(spec,zone) \
+	(char *) ((spec) + ((zone)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)
+
+#define RT_SPECIAL_COUNT(spec) \
+	(*(EIF_INTEGER *) RT_SPECIAL_INFO(spec))
+#define RT_SPECIAL_COUNT_WITH_ZONE(spec,zone) \
+	(*(EIF_INTEGER *) RT_SPECIAL_INFO_WITH_ZONE(spec,zone))
+#define RT_SPECIAL_COUNT_WITH_INFO(offset) \
+	(*(EIF_INTEGER *) offset)
+
+#define RT_SPECIAL_ELEM_SIZE(spec) \
+	(*(EIF_INTEGER *) (RT_SPECIAL_INFO(spec) + sizeof(EIF_INTEGER)))
+#define RT_SPECIAL_ELEM_SIZE_WITH_ZONE(spec,zone) \
+	(*(EIF_INTEGER *) (RT_SPECIAL_INFO_WITH_ZONE(spec,zone) + sizeof(EIF_INTEGER)))
+#define RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) \
+	(*(EIF_INTEGER *) (offset + sizeof(EIF_INTEGER)))
 
 /* Macros used for array optimization
  *	RTADTYPE(x) defines the variable for the dynamic type of `x'

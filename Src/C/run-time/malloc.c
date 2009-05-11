@@ -59,7 +59,6 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "eif_except.h"			/* For exception raising */
-#include "eif_size.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "rt_sig.h"
 #include "rt_err_msg.h"
@@ -979,7 +978,7 @@ rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF
 	EIF_REFERENCE offset;
 	union overhead *zone;
 
-	result = spmalloc (CHRPAD((rt_uint_ptr) nb * (rt_uint_ptr) element_size) + LNGPAD(2), atomic);
+	result = spmalloc (RT_SPECIAL_MALLOC_COUNT(nb, element_size), atomic);
 
 		/* At this stage we are garanteed to have an initialized object, otherwise an
 		 * exception would have been thrown by the call to `spmalloc'. */
@@ -1057,7 +1056,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 	uint32 t;
 	REQUIRE("Is a tuple type", To_dtype(ftype) == egc_tup_dtype);
 
-	object = spmalloc ((rt_uint_ptr) count * (rt_uint_ptr) sizeof(EIF_TYPED_VALUE) + LNGPAD_2, atomic);
+	object = spmalloc(RT_SPECIAL_MALLOC_COUNT(count, sizeof(EIF_TYPED_VALUE)), atomic);
 
 	if (object == NULL) {
 		eraise ("Tuple allocation", EN_MEM);	/* signals no more memory */
@@ -1231,7 +1230,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 	old_real_size = (rt_uint_ptr) count * (rt_uint_ptr) elem_size;	/* Size occupied by items in old special */
 	new_real_size = nbitems * (rt_uint_ptr) elem_size;	/* Size occupied by items in new special */
-	new_size = new_real_size + LNGPAD_2;		/* New required size */
+	new_size = new_real_size + RT_SPECIAL_DATA_SIZE;		/* New required size */
 
 	if (nbitems == count) {		/* OPTIMIZATION: Does resized object have same size? */
 		return ptr;				/* If so, we return unchanged `ptr'. */
@@ -2782,7 +2781,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	/* If the garbage collector is on and the object has some references, then
 	 * after attempting a coalescing we must update the count and copy the old
 	 * elemsize, since they are fetched by the garbage collector by first going
-	 * to the end of the object and then back by LNGPAD_2. Of course, this
+	 * to the end of the object and then back by RT_SPECIAL_DATA_SIZE. Of course, this
 	 * matters only if coalescing has been done, which is indicated by a
 	 * non-zero return value from coalesc.
 	 */

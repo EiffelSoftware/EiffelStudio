@@ -48,6 +48,13 @@ create
 
 feature {NONE} -- helpers
 
+	application_execution: APPLICATION_EXECUTION
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		do
+			Result := debugger_manager.application
+		end
+
 	application_status: APPLICATION_STATUS
 		require
 			application_is_executing: debugger_manager.application_is_executing
@@ -572,24 +579,15 @@ feature {BYTE_NODE} -- Visitor
 				if l = Void and r = Void then
 					dbg_error_handler.notify_error_exception_internal_issue
 				else
-					if l.has_attached_value then     --| l/=Void
-						if r.has_attached_value then --| l/=Void and r/=Void
-							b := values_with_same_type (l, r)
-								and then is_equal_evaluation_on_values (l, r)
-						else                         --| l/=Void and r=Void
-							b := False
+					if attached application_execution as app then
+						b := app.tilda_equal_evaluation (l, r, dbg_error_handler)
+						if not dbg_error_handler.error_occurred then
+							create tmp_result.make_with_value (debugger_manager.dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 						end
-					else --| l=Void
-						if r.has_attached_value then --| l=Void and r/=Void
-							b := False
-						else                         --| l=Void and r=Void
-							b := True
-						end
+					else
+						dbg_error_handler.notify_error_exception_internal_issue
 					end
 				end
-			end
-			if not error_occurred then
-				create tmp_result.make_with_value (debugger_manager.dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 			end
 		end
 
@@ -1532,10 +1530,10 @@ feature {NONE} -- Visitor: implementation
 					if a_is_not then
 						b := not b
 					end
+					if not error_occurred then
+						create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
+					end
 				end
-			end
-			if not error_occurred then
-				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 			end
 		end
 
@@ -2028,74 +2026,21 @@ feature {NONE} -- Evaluation: implementation
 			-- Compare using `is_equal'
 		require else
 			same_type: values_with_same_type (a_left, a_right)
-		local
-			cl: CLASS_C
-			f: FEATURE_I
-			params: ARRAYED_LIST [DUMP_VALUE]
-			l_tmp_result_value_backup: like tmp_result
-			l_tmp_target_backup: like tmp_target
-			a_boolean: like tmp_result
 		do
-			cl := a_left.dynamic_class
-			if cl /= Void then
-				f := is_equal_feature (cl)
-			end
-			if f /= Void then
-					-- Backup
-				l_tmp_result_value_backup := tmp_result
-				l_tmp_target_backup := tmp_target
-
-				create params.make_from_array (<<a_right.value>>)
-				evaluate_routine (Void, a_left.value, cl, f, params)
-				a_boolean := tmp_result
-				-- Restore
-				tmp_result := l_tmp_result_value_backup
-				tmp_target := l_tmp_target_backup
+			if attached application_execution as app then
+				Result := app.is_equal_evaluation (a_left, a_right, dbg_error_handler)
 			else
-				dbg_error_handler.notify_error_evaluation_report_to_support (Void)
-			end
-			if not error_occurred then
-				if a_boolean /= Void and then
-					a_boolean.has_value and then
-					(attached a_boolean.value as a_value) and then
-					a_value.is_type_boolean
-				then
-					Result := a_value.as_dump_value_basic.value_boolean
-				else
-					dbg_error_handler.notify_error_evaluation_report_to_support (Void)
-				end
+				dbg_error_handler.notify_error_exception_internal_issue
 			end
 		end
 
 	equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
 			-- Compare using ` = '
-		local
-			l_left_value, l_right_value: DUMP_VALUE
 		do
-			if a_left.has_attached_value then 		--| l/=Void
-				if a_right.has_attached_value then 	--| l/= Void and r/=Void
-					l_left_value := a_left.value
-					l_right_value := a_right.value
-					check l_left_value /= Void end
-					check l_right_value /= Void end
-					if l_left_value.type = l_right_value.type then
-						if l_left_value.is_type_expanded_object then
-							Result := is_equal_evaluation_on_values (a_left, a_right)
-						else
-							Result := l_left_value.identical_to (l_right_value)
-						end
-					else
-						Result := False
-					end
-				else					  			--| l/=Void and r=Void
-					Result := False
-				end
-			else 					 				--| l=Void
-				if a_right.has_attached_value then 	--| l= Void and r/=Void
-					Result := False
-				else					  			--| l=Void and r=Void
-					Result := True
-				end
+			if attached application_execution as app then
+				Result := app.equal_evaluation (a_left, a_right, dbg_error_handler)
+			else
+				dbg_error_handler.notify_error_exception_internal_issue
 			end
 		end
 

@@ -366,7 +366,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (d: DATE_DURATION): DATE
+	plus alias "+" (d: DATE_DURATION): DATE
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
 		require

@@ -240,14 +240,14 @@ feature -- Basic operations
 			hour_set: hour = old hour + h
 		end
 
-	infix "+" (other: like Current): like Current
+	plus alias "+" (other: like Current): like Current
 			-- Sum with `other'
 		do
 			create Result.make_fine (hour + other.hour, minute + other.minute,
 				fine_second + other.fine_second)
 		end
 
-	prefix "-": like Current
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			create Result.make_fine (-hour, -minute, -fine_second)

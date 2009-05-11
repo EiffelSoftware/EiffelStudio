@@ -35,13 +35,13 @@ feature -- Status report
 
 feature -- Element change
 
-	prefix "+": like Current
+	identity alias "+": like Current
 			-- Unary plus
 		do
 			Result := deep_twin
 		end
 
-	infix "-" (other: like Current): like Current
+	minus alias "-" (other: like Current): like Current
 			-- Difference with `other'
 		do
 			Result := Current + -other

@@ -54,7 +54,7 @@ feature -- Command
 			l_item: ES_EWEASEL_TEST_RUN_DATA_ITEM
 			l_time: TIME
 			l_date: DATE
-			l_date_time: DT_DATE_TIME
+			l_date_time: DATE_TIME
 		do
 			create l_time.make_now
 			create l_date.make_now
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -158,11 +158,11 @@ feature {NONE} -- Implementation
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

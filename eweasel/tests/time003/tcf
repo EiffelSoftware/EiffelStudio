@@ -4,8 +4,11 @@ test_description	Verify that creating dates from the number of seconds since EPO
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 
-compile_melted
+compile_frozen
 compile_result ok
+
+c_compile_work
+c_compile_result ok
 
 execute_work NONE exec_output1
 execute_result ok

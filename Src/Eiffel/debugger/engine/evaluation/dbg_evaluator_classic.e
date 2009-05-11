@@ -118,7 +118,9 @@ feature {NONE} -- Implementation
 					rout_info := System.rout_info_table.item (fi.rout_id_set.first)
 					send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, wclt.type_id - 1, par)
 				else
-					fixme ("it seems the runtime/debug is not designed to call precursor ...")
+					debug ("refactor_fixme")
+						fixme ("it seems the runtime/debug is not designed to call precursor ...")
+					end
 					send_rqst_4_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, 0, par)
 				end
 					-- Receive the Result.

@@ -20,6 +20,30 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 	Op_rt_assign_attrib:	INTEGER = 14
 	Op_rt_assign_local:		INTEGER = 15
 
+feature -- Evaluation helper
+
+	tilda_equal_evaluation (a,b: detachable ANY): BOOLEAN
+			-- Return the evaluation of `a ~ b'
+		do
+			Result := a ~ b
+		end
+
+	is_equal_evaluation (a,b: ANY): BOOLEAN
+			-- Return the evaluation of `a.is_equal (b)'	
+		require
+			a_b_attached: a /= Void and b /= Void
+		do
+			Result := a.is_equal (b)
+		end
+
+	equal_evaluation (a,b: detachable ANY): BOOLEAN
+			-- Return the evaluation of `a = b'
+		require
+			a_b_attached: a /= Void and b /= Void
+		do
+			Result := equal (a, b)
+		end
+
 feature -- Object storage Access
 
 	saved_object_to (r: detachable ANY; fn: STRING): detachable ANY

@@ -726,7 +726,6 @@ feature -- Remote access to RT_
 			end
 		end
 
-
 feature -- Remote access to Exceptions
 
 	remote_current_exception_value: EXCEPTION_DEBUG_VALUE
@@ -738,7 +737,57 @@ feature -- Remote access to Exceptions
 			Result_not_void: Result /= Void
 		end
 
+feature -- Debuggee: evaluation
+
+	tilda_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+		require
+			a_value_attached: a_value /= Void
+			a_other_value_attached: a_other_value /= Void
+		do
+			Result := two_args_resulting_boolean_evaluation ("tilda_equal_evaluation", a_value, a_other_value, error_handler)
+		end
+
+	is_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+		require
+			a_value_attached: a_value /= Void
+			a_other_value_attached: a_other_value /= Void
+		do
+			Result := two_args_resulting_boolean_evaluation ("is_equal_evaluation", a_value, a_other_value, error_handler)
+		end
+
+	equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+		require
+			a_value_attached: a_value /= Void
+			a_other_value_attached: a_other_value /= Void
+		do
+			Result := two_args_resulting_boolean_evaluation ("equal_evaluation", a_value, a_other_value, error_handler)
+		end
+
 feature -- Expression evaluation
+
+	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+		require
+			a_value_attached: a_value /= Void
+			a_other_value_attached: a_other_value /= Void
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+			dv: DUMP_VALUE
+		do
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
+				create params.make (2)
+				params.extend (a_value.value)
+				params.extend (a_other_value.value)
+				dv := query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params)
+				if dv /= Void and then
+					dv.is_valid_value and then
+					dv.is_type_boolean
+				then
+					Result := dv.as_dump_value_basic.value_boolean
+				else
+					error_handler.notify_error_evaluation_report_to_support (Void)
+				end
+			end
+		end
 
 	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): STRING_32
 			-- String representation of `{cl}.fname' evaluated on `edv'.
@@ -765,7 +814,7 @@ feature -- Expression evaluation
 			f: FEATURE_I
 			dv: DUMP_VALUE
 		do
-			if cl /= Void then
+			if is_stopped and cl /= Void then
 				f := cl.feature_named (fname)
 				if f /= Void then
 					dv := edv
@@ -792,7 +841,7 @@ feature -- Expression evaluation
 			f: FEATURE_I
 			dv: DUMP_VALUE
 		do
-			if cl /= Void then
+			if is_stopped and cl /= Void then
 				f := cl.feature_named (fname)
 				if f /= Void then
 					dv := edv
@@ -806,6 +855,39 @@ feature -- Expression evaluation
 			end
 		end
 
+	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE
+			-- Evaluation's result for `a_expr' in current context
+			-- (note: Result = Void implies an error occurred)
+		require
+			is_stopped: is_stopped
+		local
+			dbg_eval: DBG_EVALUATOR
+			tgt: DUMP_VALUE
+			rescued: BOOLEAN
+		do
+			if rescued then
+				restore_assertion_check
+				if dbg_eval /= Void then
+					dbg_eval.reset
+				end
+			elseif is_stopped then
+				tgt := obj
+				if tgt = Void and e /= Void then
+					tgt := e.dump_value
+				end
+				dbg_eval := debugger_manager.dbg_evaluator
+				dbg_eval.reset
+				dbg_eval.evaluate_attribute (Void, tgt, cl, f)
+				if not dbg_eval.error_occurred then
+					Result := dbg_eval.last_result_value
+				end
+				dbg_eval.reset
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
 	function_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): DUMP_VALUE
 			-- Evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
@@ -815,8 +897,14 @@ feature -- Expression evaluation
 		local
 			dbg_eval: DBG_EVALUATOR
 			tgt: DUMP_VALUE
+			rescued: BOOLEAN
 		do
-			if is_stopped then
+			if rescued then
+				restore_assertion_check
+				if dbg_eval /= Void then
+					dbg_eval.reset
+				end
+			elseif is_stopped then
 				tgt := obj
 				if tgt = Void and e /= Void then
 					tgt := e.dump_value
@@ -839,6 +927,9 @@ feature -- Expression evaluation
 				restore_assertion_check
 				dbg_eval.reset
 			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	routine_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): BOOLEAN
@@ -858,51 +949,25 @@ feature -- Expression evaluation
 					dbg_eval.reset
 				end
 				Result := False
-			else
-				if is_stopped then
-					tgt := obj
-					if tgt = Void and e /= Void then
-						tgt := e.dump_value
-					end
-					if tgt /= Void then
-						disable_assertion_check
-						dbg_eval := debugger_manager.dbg_evaluator
-						dbg_eval.reset
+			elseif is_stopped then
+				tgt := obj
+				if tgt = Void and e /= Void then
+					tgt := e.dump_value
+				end
+				if tgt /= Void then
+					disable_assertion_check
+					dbg_eval := debugger_manager.dbg_evaluator
+					dbg_eval.reset
 
-						dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
-						Result := not dbg_eval.error_occurred
-						restore_assertion_check
-						dbg_eval.reset
-					end
+					dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+					Result := not dbg_eval.error_occurred
+					restore_assertion_check
+					dbg_eval.reset
 				end
 			end
 		rescue
 			rescued := True
 			retry
-		end
-
-	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE
-			-- Evaluation's result for `a_expr' in current context
-			-- (note: Result = Void implies an error occurred)
-		require
-			is_stopped: is_stopped
-		local
-			dbg_eval: DBG_EVALUATOR
-			tgt: DUMP_VALUE
-		do
-			if is_stopped then
-				tgt := obj
-				if tgt = Void and e /= Void then
-					tgt := e.dump_value
-				end
-				dbg_eval := debugger_manager.dbg_evaluator
-				dbg_eval.reset
-				dbg_eval.evaluate_attribute (Void, tgt, cl, f)
-				if not dbg_eval.error_occurred then
-					Result := dbg_eval.last_result_value
-				end
-				dbg_eval.reset
-			end
 		end
 
 feature {NONE} -- Breakpoints implementation
@@ -1339,7 +1404,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1352,22 +1417,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

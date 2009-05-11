@@ -975,7 +975,7 @@ feature {DBG_EVALUATOR} -- Convertor
 			end
 		end
 
-feature {DEBUGGER_EXPORTER, DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
+feature -- Access: internal data
 
 	value_address	: like address -- string standing for the address of the object if type=Type_object
 	value_string    : STRING_32 -- String value

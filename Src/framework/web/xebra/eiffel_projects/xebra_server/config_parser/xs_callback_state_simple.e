@@ -6,32 +6,43 @@ note
 	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
-deferred class
-	XS_CALLBACK_STATE
+
+class
+	XS_CALLBACK_STATE_SIMPLE
+
+inherit
+	XS_CALLBACK_STATE redefine make end
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
+create
+	make
 
 feature -- Initialization
 
 	make (a_config_callback: XS_XML_CONFIG_CALLBACK)
+			--
 		do
-			config_callback := a_config_callback
+			Precursor (a_config_callback)
+			create pairs.make (5)
 		end
+
 
 feature -- Access
 
-	config_callback: XS_XML_CONFIG_CALLBACK
-			-- The parser callbacks on which the tags should be added
+	pairs: ARRAYED_STACK [XS_XML_SIMPLE_PAIR]
+
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
-			-- Handle strings on attribute
-		require
-			a_prefix_valid: a_prefix /= Void
-			a_local_part_valid: a_local_part /= Void
-			a_value_valid: a_value /= Void
-		deferred
+			-- <Precursor>
+		do
+			pairs.item.set_value (a_value)
 		end
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
-		deferred
+		do
+			pairs.force (create {XS_XML_SIMPLE_PAIR})
+			pairs.item.set_tag (a_local_part)
 		end
 
 end
+

@@ -12,7 +12,7 @@ class
 
 inherit
 	XM_CALLBACKS
-	ERROR_SHARED_ERROR_MANAGER
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 create
 	make
@@ -122,7 +122,7 @@ feature -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make
+			error_manager.add_error (create {XERROR_PARSE}.make
 				([a_message + current_debug_information + "%N in '" + path + "'%N"]), false)
 		end
 
@@ -132,7 +132,7 @@ feature -- Meta
 			-- Processing instruction.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make
+			error_manager.add_error (create {XERROR_PARSE}.make
 				(["INSTRUCTIONS not yet implemented"]), False)
 		end
 

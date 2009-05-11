@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_server_config: XS_SERVER_CONFIG)
+	make (a_server_config: XS_CONFIG)
 			-- Initialization for `Current'.
 		do
 			server_config := a_server_config
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	server_config: XS_SERVER_CONFIG
+	server_config: XS_CONFIG
 
 feature -- Operations
 

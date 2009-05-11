@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XS_CALLBACK_STATE_WEBAPP}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,98 +11,46 @@ class
 	XS_CALLBACK_STATE_WEBAPP
 
 inherit
-	XS_CALLBACK_STATE
-	ERROR_SHARED_ERROR_MANAGER
+	XS_CALLBACK_STATE redefine make end
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
+	make (a_config_callback: XS_XML_CONFIG_CALLBACK)
+			--
+		do
+			Precursor (a_config_callback)
+			create webapps_stack.make (5)
+		end
 
 feature -- Access
 
+	webapps_stack: ARRAYED_STACK [XS_TMP_WEBAPP]
 
 	tag: STRING = "webapp"
-
-
-feature -- Document
-
-	on_start
-			-- <Precursor>
-		do
-		end
-
-	on_finish
-			-- <Precursor>
-		do
-		end
-
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
-			-- <Precursor>
-		do
-		end
-
-feature -- Errors
-
-	on_error (a_message: STRING)
-			-- <Precursor>
-		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make ([a_message]), false)
-		end
-
-feature -- Meta
-
-	on_processing_instruction (a_name: STRING; a_content: STRING)
-			-- <Precursor>
-		do
-			error_manager.set_last_error (create {XERROR_PARSE}.make (["INSTRUCTIONS not yet implemented"]), False)
-		end
-
-	on_comment (a_content: STRING)
-			-- <Precursor>
-		do
-		end
-
-feature -- Tag
-
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
-			-- <Precursor>
-
-		do
-			config_callback.webapps.put (create {XS_WEBAPP}.make_empty)
-		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- <Precursor>
 		do
 			if a_local_part.is_equal ("name") then
-				config_callback.webapps.item.set_name (a_value)
+				webapps_stack.item.set_name (a_value)
 			elseif a_local_part.is_equal ("port") then
-				config_callback.webapps.item.set_port (a_value.to_integer_32)
+				webapps_stack.item.set_port (a_value.to_integer_32)
+			elseif a_local_part.is_equal ("host") then
+				webapps_stack.item.set_host (a_value)
 			else
-				error_manager.set_last_error (create {XERROR_PARSE}.make (["Undefined attribute in <webapp>"]), False)
+				error_manager.set_last_error (create {XERROR_PARSE}.make (["Undefined attribute in 'webapp'"]), False)
 			end
 		end
 
-	on_start_tag_finish
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
 		do
+			webapps_stack.force (create {XS_TMP_WEBAPP})
 		end
-
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
-			-- <Precursor>
-
-		do
-		end
-
-feature -- Content
-
-	on_content (a_content: STRING)
-			-- <Precursor>
-		do
-		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

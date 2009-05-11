@@ -71,8 +71,18 @@ feature --
 			buf: XU_INDENDATION_STREAM
 			servlet_class: XEL_SERVLET_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
+			l_filename: STRING
+
 		do
-			create file.make_open_write (path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
+			l_filename := path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
 			create buf.make (file)
 			create servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
 			if stateful then
@@ -96,6 +106,7 @@ feature --
 			build_handle_request_feature_for_servlet (servlet_class, internal_root_tag)
 			servlet_class.serialize (buf)
 			file.close
+
 		end
 
 	get_root_tag: XTAG_TAG_SERIALIZER

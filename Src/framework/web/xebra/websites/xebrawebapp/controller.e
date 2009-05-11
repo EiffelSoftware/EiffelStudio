@@ -30,7 +30,9 @@ feature -- Services
 	world: STRING
 			-- Returns "World"
 		do
-			Result := "World"
+			Result := "Wo2asda                                       ="
 		end
+
+	
 
 end

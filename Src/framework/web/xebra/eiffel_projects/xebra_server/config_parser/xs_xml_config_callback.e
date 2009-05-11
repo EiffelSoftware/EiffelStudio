@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XS_XML_CONFIG_CALLBACK}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +12,7 @@ class
 
 inherit
 	XM_CALLBACKS
-	ERROR_SHARED_ERROR_MANAGER
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 create
 	make
@@ -24,25 +27,26 @@ feature {NONE} -- Initialization
 			parser := a_parser
 			path := a_path
 			create webapps.make (1)
-			webapps_root := ""
 			create state_webapp.make (current)
-			create state_default.make (current)
-			create state_webapps_root.make (current)
+			create state_simple.make (current)
 			finished_parsing := False
 		ensure
 
 		end
 
-feature -- Attributes to be collected
+feature {NONE} -- Attributes to be collected (tmp)
 
-	webapps: ARRAYED_STACK [XS_WEBAPP]
-	webapps_root: STRING assign set_webapps_root
 
-feature -- Access
+
+feature --	Attrbutes to be collected
+
+	webapps: detachable HASH_TABLE [XS_TMP_WEBAPP, STRING]
+	simple_pairs: detachable HASH_TABLE [XS_XML_SIMPLE_PAIR, STRING]
+
+feature {NONE} -- Access
 
 	finished_parsing: BOOLEAN
 			-- True if parsing has finished
-
 
 	parser: XM_PARSER
 			-- The parser which uses Current
@@ -53,32 +57,44 @@ feature -- Access
 	state: XS_CALLBACK_STATE
 			-- The current state of the parser
 
+feature {NONE} -- States
+
 	state_webapp: XS_CALLBACK_STATE_WEBAPP
 			-- The instance for the state = webapp
 
-	state_webapps_root: XS_CALLBACK_STATE_WAROOT
-			-- The instance for the state = webapps_root		
+	state_simple: XS_CALLBACK_STATE_SIMPLE
+		-- The instance for the state = simple	
 
-	state_default: XS_CALLBACK_STATE_DEFAULT
-		-- The instance for the state = default	
+feature {NONE}
 
-	retrieve_webapps_hash: HASH_TABLE [XS_WEBAPP, STRING]
-			-- Adds the root workdir to each webapp
-			-- Converts the stack to a hashtable
-			-- Removes the stack!!
+	simpel_pairs_stack_to_hash: like simple_pairs
+			--
 		require
 			finished_parsing
-			root_available: not webapps_root.is_empty
-			webapps_available: webapps.count > 0
 		do
 			from
 				create Result.make (1)
 			until
-				webapps.is_empty
+				state_simple.pairs.is_empty
 			loop
-				webapps.item.set_root (webapps_root)
-				Result.force (webapps.item, webapps.item.name)
-				webapps.remove
+				Result.force (state_simple.pairs.item, state_simple.pairs.item.tag)
+				state_simple.pairs.remove
+			end
+		end
+
+
+	webapps_stack_to_hash: like webapps
+			--
+		require
+			finished_parsing
+		do
+			from
+				create Result.make (1)
+			until
+				state_webapp.webapps_stack.is_empty
+			loop
+				Result.force (state_webapp.webapps_stack.item, state_webapp.webapps_stack.item.name)
+				state_webapp.webapps_stack.remove
 			end
 		end
 
@@ -99,8 +115,11 @@ feature -- Document
 	on_finish
 			-- Called when parsing finished.
 		do
-			state.on_finish
+
 			finished_parsing := True
+			simple_pairs := simpel_pairs_stack_to_hash
+			webapps := webapps_stack_to_hash
+
 --		ensure then
 --			only_root_on_stack: tag_stack.count = 1
 		end
@@ -143,9 +162,16 @@ feature -- Tag
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			l_prefix: STRING
+			l_namespace: STRING
 			l_local_part: STRING
 			l_class_name: STRING
 		do
+			if attached a_namespace then
+				l_namespace := a_namespace
+			else
+				l_namespace := ""
+			end
+
 			if attached a_prefix then
 				l_prefix := a_prefix
 			else
@@ -160,13 +186,11 @@ feature -- Tag
 
 			if l_local_part.is_equal (state_webapp.tag) then
 				set_state_webapp
-			elseif l_local_part.is_equal (state_webapps_root.tag)  then
-				set_state_webapps_root
 			else
-				set_state_default
+				set_state_simple
 			end
 
-			state.on_start_tag (a_namespace, l_prefix, l_local_part)
+			state.on_start_tag (l_namespace, l_prefix, l_local_part)
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
@@ -206,7 +230,7 @@ feature -- Tag
 	on_start_tag_finish
 			-- End of start tag.
 		do
-			state.on_start_tag_finish
+
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
@@ -228,7 +252,7 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			state.on_end_tag (a_namespace, l_prefix, l_local_part)
+
 		end
 
 feature -- Content
@@ -239,7 +263,7 @@ feature -- Content
 			-- without a markup event in between.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			state.on_content (a_content)
+
 		end
 
 feature -- Operatiosn
@@ -256,29 +280,17 @@ feature  -- Setter
 			state_set: state = state_webapp
 		end
 
-	set_state_webapps_root
-			-- Sets the state to the state_webapps_root object
+
+	set_state_simple
+			-- Sets the state to  simple
 		do
-			state := state_webapps_root
+			state := state_simple
 		ensure
-			state_set: state = state_webapps_root
+			simple_set: state = state_simple
 		end
 
-	set_state_default
-			-- Sets the state to  default
-		do
-			state := state_default
-		ensure
-			state_set: state = state_default
-		end
 
-	set_webapps_root (a_webapps_root: STRING)
-			-- Sets webapps_root
-		do
-			webapps_root := a_webapps_root
-		ensure
-			webapps_root_set: webapps_root = a_webapps_root
-		end
+
 
 
 note

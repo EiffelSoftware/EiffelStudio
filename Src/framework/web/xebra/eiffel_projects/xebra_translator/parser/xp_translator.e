@@ -9,7 +9,7 @@ class
 	XP_TRANSLATOR
 
 inherit
-	ERROR_SHARED_ERROR_MANAGER
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 create
 	make
@@ -85,14 +85,18 @@ feature -- Processing
 			loop
 				if a_files.item.ends_with (".xeb") then
 					create l_file.make (output_path + a_files.item.twin)
-					l_file.open_read
-					if not l_file.is_open_read then
-						error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + l_file.name]), false)
+					if not l_file.exists then
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("file " + l_file.name + " does not exist"), false)
 					else
-						print ("Processing '" + l_file.name + "'...%N")
-						l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglibs, l_file.name))
-						l_file.close
-						print ("Done.%N")
+						l_file.open_read
+						if not l_file.is_open_read then
+							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + l_file.name), false)
+						else
+							print ("Processing '" + l_file.name + "'...%N")
+							l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglibs, l_file.name))
+							l_file.close
+							print ("Done.%N")
+						end
 					end
 				end
 				a_files.forth
@@ -122,11 +126,11 @@ feature -- Processing
 				if files.item.ends_with (".taglib") then
 					create l_taglib_file.make (files.item)
 					if (not l_taglib_file.exists) then
-						error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([files.item]), false)
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (files.item), false)
 					else
 						l_taglib_file.open_read
 						if not l_taglib_file.is_open_read then
-							error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make (["cannot read file " + files.item ]), false)
+							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + files.item ), false)
 						else
 							process_taglib_with_stream (Result, l_taglib_file)
 							l_taglib_file.close
@@ -188,15 +192,15 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			if l_failed then
-				error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
 			else
 				create l_file.make (a_filename)
 				if not l_file.exists then
-					error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
 				else
 					l_file.open_read
 					if not l_file.is_open_read then
-						error_manager.set_last_error (create {XERROR_FILENOTFOUND}.make ([a_filename]), false)
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
 					else
 						from until l_file.end_of_file
 						loop

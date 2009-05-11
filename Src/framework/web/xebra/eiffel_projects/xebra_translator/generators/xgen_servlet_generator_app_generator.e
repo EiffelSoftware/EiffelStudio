@@ -46,6 +46,7 @@ feature -- Basic functionality
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
+			l_filename: STRING
 			serv_gen_copy: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 		do
 				-- Generate the servlet generators
@@ -64,7 +65,17 @@ feature -- Basic functionality
 			end
 
 				-- Generate the {APPLICATION} class
-			create file.make_open_write (a_path + "application.e")
+			l_filename := a_path + "application.e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+
+			--create file.make_open_write (a_path + "application.e")
 			create buf.make (file)
 			create application_class.make ("APPLICATION")
 			application_class.set_inherit ("KL_SHARED_ARGUMENTS")
@@ -73,8 +84,18 @@ feature -- Basic functionality
 			application_class.serialize (buf)
 			file.close
 
+
 				-- Generate the .ecf file
-			create file.make_open_write (a_path + "servlet_gen.ecf")
+			l_filename := a_path + "servlet_gen.ecf"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			--create file.make_open_write (a_path + "servlet_gen.ecf")
 			file.put_string (servlet_gen_ecf)
 			file.close
 		end

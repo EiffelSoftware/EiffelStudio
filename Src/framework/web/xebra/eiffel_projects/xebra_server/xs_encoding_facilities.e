@@ -12,9 +12,7 @@ create
 feature -- Initialization
 
 	make
-		local
 		do
-
 		end
 
 feature -- Conversion
@@ -33,7 +31,7 @@ feature -- Conversion
 		do
 			result := (i & 0xFFFFFFFE) + new_flag.to_integer.as_natural_32
 		end
-		
+
 	decode_natural_and_flag (i: NATURAL): TUPLE[NATURAL, BOOLEAN]
 			--convenience feature which combines both decodings (natural and flag)
 		do

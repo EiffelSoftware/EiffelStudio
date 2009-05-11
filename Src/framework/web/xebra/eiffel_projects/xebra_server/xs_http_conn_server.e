@@ -18,12 +18,13 @@ create make
 
 feature -- Initialization
 
-	make  (a_server_config: XS_SERVER_CONFIG)
+	make  (a_server_config: XS_CONFIG)
 			-- Initializes current
 		do
 			server_config := a_server_config
             create http_socket.make_server_by_port (default_http_server_port)
-            create thread_pool.make (max_thread_number, agent request_handler_spawner)
+         --   create thread_pool.make (max_thread_number, agent request_handler_spawner)
+         	http_socket.set_accept_timeout (5000)
             stop := False
 		ensure
 			server_config_set: server_config = a_server_config
@@ -37,7 +38,7 @@ feature -- Inherited Features
 			l_r_handler: XS_REQUEST_HANDLER
 		do
 			create l_r_handler.make (message_default_bound, message_upper_bound)
-			set_outputter_name ("XEBSRV")
+			set_outputter_name ({XS_MAIN_SERVER}.Name)
 			from
                 http_socket.listen (max_tcp_clients.as_integer_32)
             until
@@ -59,17 +60,16 @@ feature -- Inherited Features
         	check
         		http_socket.is_closed
         	end
-        	exit
 		end
 
 feature -- Access
 
-	thread_pool: DATA_THREAD_POOL [XS_REQUEST_HANDLER]
+--	thread_pool: DATA_THREAD_POOL [XS_REQUEST_HANDLER]
 
 	http_socket: NETWORK_STREAM_SOCKET
 			-- The socket
 
-	server_config: XS_SERVER_CONFIG
+	server_config: XS_CONFIG
 
 	stop: BOOLEAN
 			-- Set true to stop accept loop
@@ -106,7 +106,6 @@ feature -- Status setting
 			-- Stops the thread
 		do
 			stop := True
-			http_socket.cleanup
 		end
 
 
@@ -118,6 +117,9 @@ feature {POOLED_THREAD} -- Implementation
 			-- Used for the thread_manager.
 		do
 			create Result.make (message_default_bound, message_upper_bound)
-
 		end
+		
+invariant
+	http_socket_attached: http_socket /= Void
+	server_config_attached: server_config /= Void
 end

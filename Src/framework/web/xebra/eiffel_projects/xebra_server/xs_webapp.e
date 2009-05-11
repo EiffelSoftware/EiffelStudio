@@ -1,6 +1,6 @@
 note
 	description: "[
-
+			Represents a webapp and provides features to translate, compile and run it
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,447 +12,675 @@ inherit
 	XU_SHARED_OUTPUTTER
 
 create
-	make_empty
+	make
 
 feature {NONE} -- Initialization
 
-	make_empty
-			-- Initialization for `Current'.
-		do
-			make ("", 0, "")
-		end
-
-
-	make (a_name: STRING; a_port: INTEGER; a_root: STRING)
+	make (a_webapp_config: XS_WEBAPP_CONFIG)
 			-- Initialization for `Current'.
 		require
-			a_port_pos: a_port >= 0
+			a_webapp_config_attached: a_webapp_config /= Void
 		do
-			name := a_name
-			port := a_port
-			root := a_root
+			config := a_webapp_config
 
-			is_compiled := False
+			create translate_action.make (current)
+			create compile_action.make (current)
+			create run_action.make (current)
+			create send_action.make (current)
+			create shutdown_action.make (current)
 
-		--	is_process_exited := False
-			is_compile_process_exited := False
-			is_compiling := False
-			is_running := False
+			translate_action.set_next_action (compile_action)
+			compile_action.set_next_action (run_action)
+			run_action.set_next_action (send_action)
 
 		ensure
-			name_set: name = a_name
-			port_set: port = a_port
-			root_set: root = a_root
+			config_attached: config /= Void
+			translate_action_attached: translate_action /= Void
+			compile_action_attached: compile_action /= Void
+			run_action_attached: run_action /= Void
+			send_action_attached: send_action /= Void
+			shutdown_action_attached: shutdown_action /= Void
 		end
 
-feature -- Access Attributes
+feature  -- Access
 
-	name: STRING assign set_name
-		-- The name of the webapp
+	config: XS_WEBAPP_CONFIG
+		-- Contains info about the webapp
 
-	port: INTEGER assign set_port
-		-- The port of the webapp where the server can connect to
+	translate_action: XSWA_TRANSLATE
+		-- The action to translate the webapp
 
-	root: STRING assign set_root
-		-- The root directory of the webapp
+	compile_action: XSWA_COMPILE
+		-- The action to compile the webapp
 
-feature -- Access Utilities
+	run_action: XSWA_RUN
+		-- The action to run the webapp
 
-	compiler: STRING = "/usr/local/home/fabioz/Eiffel64/studio/spec/linux-x86-64/bin/ec"
-			-- The filename of the compiler used to compile webapplications
+	send_action: XSWA_SEND
+		-- The action to send the request to the webapp
 
-	compiler_args: STRING
-			-- The arguments that are passed to the compiler
+	shutdown_Action: XSWA_SHUTDOWN
+		-- The action to shut down a webapp	
+
+	request_message: detachable STRING
+		-- The current request_message
+
+feature -- Constans
+
+	fourbillionnanoseconds: INTEGER_64 = 4000000000
+	sixbillionnanoseconds: INTEGER_64 = 6000000000
+
+feature {NONE} -- Access internal
+
+	server_config: XS_CONFIG
+			-- The attached server_config
 		require
-			not_empty_initialized: not is_empty
+			internal_server_config_attached: internal_server_config /= Void
 		do
-			Result  := "-config " + name + "-voidunsafe.ecf -target " + name + " -c_compile -stop"
+			if attached  internal_server_config as c then
+				Result := c
+			else
+				Result := create {XS_CONFIG}.make_empty
+			end
 		end
 
-	run_workdir: STRING
-			-- The working directory to execute the application
-		require
-			not_empty_initialized: not is_empty
+	internal_server_config: detachable XS_CONFIG
+		-- Internal detachable server_config
+
+feature -- Actions
+
+	start_action_chain: XH_RESPONSE
+			-- Executes the first action in the chain		
 		do
-			Result := compile_workdir + "/EIFGENs/" + name + "/W_code"
+			Result := translate_action.execute
 		end
 
-	compile_workdir: STRING
-			-- The working directory to compile the application
-		require
-			not_empty_initialized: not is_empty
+feature -- Status Setting
+
+	set_request_message (a_request_message: STRING)
+			-- Sets a_request_message
 		do
-			Result := root + "/" + name
-		end
-
-
-feature -- Access Compiling
-
-	is_compiled: BOOLEAN
---	is_compiling_failed: BOOLEAN assign set_is_compiling_failed
---	is_compile_process_launched: BOOLEAN assign set_is_compile_process_launched
---	is_compile_process_failed: BOOLEAN assign set_is_compile_process_failed
-	compile_process: detachable PROCESS assign set_compile_process
-	is_compile_process_exited: BOOLEAN
-	is_compiling: BOOLEAN
-
-feature -- Access Process
-
---	is_launched: BOOLEAN assign set_is_launched
---	is_launch_failed: BOOLEAN assign set_is_launch_failed
-	process: detachable PROCESS assign set_process
---	is_process_exited: BOOLEAN
-	is_running: BOOLEAN
-
-feature -- Status setting
-
-	shutdown_all
-			-- Terminate the compile process and send shutdown signal to webapp
-		do
-			shutdown
-			kill_compile
+			request_message := a_request_message
+		ensure
+			request_message_set: request_message = a_request_message
 		end
 
 	shutdown
-			-- Send shutdown signal to webapp
+			-- Shuts the application down
 		local
-				l_webapp_socket: NETWORK_STREAM_SOCKET
-			do
-				create l_webapp_socket.make_client_by_port (port, {XS_SERVER_CONFIG}.Default_app_server_host)
-				o.dprint ("Shutdown connect to " + name + "@" + port.out, 4)
-				l_webapp_socket.connect
-	            if  l_webapp_socket.is_connected then
-					o.dprint ("Sending shutdown signal", 2)
-		            l_webapp_socket.independent_store (Shutdown_message)
-		         else
-		         	o.eprint ("Cannot shutdown connect to '" + name + "'", generating_type)
-				end
-
-				(create {EXECUTION_ENVIRONMENT}).sleep (1000000000)
-				kill_process
+			l_dummy: XH_RESPONSE
+		do
+			if run_action.is_running then
+				l_dummy := shutdown_action.execute;
+				(create {EXECUTION_ENVIRONMENT}).sleep (sixbillionnanoseconds)
 			end
-
-
-	kill_process
-			-- Terminates the process
-		do
-			if attached {PROCESS} process as p then
-				o.dprint ("Terminating " + name  + "", 2)
-				p.terminate
-				is_running := False
-			end
+			send_action.stop
+			run_action.stop
+			compile_action.stop
+			translate_action.stop
 		end
 
-	kill_compile
-			-- Terminates the compile process		
+	set_server_config (a_config: XS_CONFIG)
+			-- Setter
 		do
-			if attached {PROCESS} compile_process as p then
-				o.dprint ("Terminating compile process of " + name  + "", 2)
-				p.terminate
-			end
+			internal_server_config := a_config
+			translate_action.set_config (a_config)
+			compile_action.set_config (a_config)
+			run_action.set_config (a_config)
+			send_action.set_config (a_config)
+			shutdown_action.set_config (a_config)
 		end
 
 
-feature -- Operations
 
-	run: BOOLEAN
-			-- Returns true if the webapp is running
-			-- Initiates launching the webapp if its not running
-		require
-			not_empty_initialized: not is_empty
-		local
-			l_process_factory: PROCESS_FACTORY
-			l_args: LINKED_LIST [STRING]
-		do
-			Result := False
-			create l_args.make
-			l_args.force (port.out)
-			if is_running then
-				Result := True
-			else
-					-- Launch process
-				create l_process_factory
-				process := l_process_factory.process_launcher (name, l_args , run_workdir )
-				process.set_on_exit_handler (agent set_is_process_exited)
-				o.dprint("Launching new process '" + run_workdir + "/" + name + " " + port.out + "'",1)
-				process.launch
-				is_running := True
-			end
-		end
 
-	compile: BOOLEAN
-			-- Returns true if the webapp is compiled
-			-- Initiates compiling if its not compiled and if necessair
-		require
-			not_empty_initialized: not is_empty
-			can_compile: can_compile
-		local
-			l_process_factory: PROCESS_FACTORY
-			l_cmd: STRING
-		do
-			Result := False
-			if is_compiling_necessary then
-					-- Stop the process
-				if is_running then
-					shutdown
-				end
-					-- Launch compiling
-				if not is_compiling then
-					l_cmd :=  compiler + " " + compiler_args
-					create l_process_factory
-					compile_process := l_process_factory.process_launcher_with_command_line (compiler + " " + compiler_args, compile_workdir)
-					compile_process.set_on_exit_handler (agent set_is_compile_process_exited)
-					o.dprint("Launching new process '" + compiler + " " + compiler_args + "'",3)
-					compile_process.launch
-					is_compiling := True
-				end
-			else
-				Result := True
-			end
-		end
+--	translate_process: detachable PROCESS
+--			-- Used to translate the xeb files
 
-feature -- Stauts
+--	gen_compile_process: detachable PROCESS
+--			-- Used to compile the servlet_gen
 
-	is_empty: BOOLEAN
-			-- Is any important attributes not set?
-		do
-			Result := (name.is_empty or (port = 0) or root.is_empty)
-		end
+--	generate_process: detachable PROCESS
+--			-- Used to run the servlet_gen
 
-	file_exists (a_filename: STRING): BOOLEAN
-			-- Checks if a file exists
-		local
-			l_file: RAW_FILE
-		do
-			Result := False
-			create l_file.make (a_filename)
-			Result := l_file.exists
-		end
+--	compile_process: detachable PROCESS
+--			-- USed to compile the webapp
 
-	can_compile: BOOLEAN
-			-- Checks if there is a valid compiler available
-		do
-			Result := file_exists (compiler)
-		end
+--	process: detachable PROCESS
+--			-- Used to run the webapp
 
-	is_compiling_necessary: BOOLEAN
-			-- Check if the webapps has to be (re)compiled
-			-- Returns True iff
-			--			executable does not exits
-			--			or one of the .e files is newer than the executable
-			--			or a ecf file is newer than the executable
-		require
-			not_empty_initialized: not is_empty
-		local
-			l_dir: DIRECTORY
-			l_files: LIST [STRING]
-			l_file: RAW_FILE
-			l_exec_access_date: INTEGER
-			l_melted_file: STRING
-		do
-			Result := False
-			if can_run then
-				l_melted_file := run_workdir + "/" + name + ".melted"
-				if file_exists (l_melted_file) then
-					l_exec_access_date := (create {RAW_FILE}.make (l_melted_file)).date
-					create l_dir.make (root + "/" + name)
-					l_files := l_dir.linear_representation
-					from
-						l_files.start
-					until
-						l_files.after or Result
-					loop
-						if l_files.item_for_iteration.ends_with (".e") or l_files.item_for_iteration.ends_with (".ecf") then
-							create l_file.make (root + "/" + name + "/" + l_files.item_for_iteration)
-						--	l_file.open_read
-						--	if l_file.is_open_read then
-								if (l_file.date > l_exec_access_date) then
-									Result := True
-									o.dprint ("File '" + l_file.name + "' is newer (" + l_file.date.out + ")  than executable (" + l_exec_access_date.out + "), compiling neseccary",5)
-								end
-						--		l_file.close
-						--	end
-						end
-						l_files.forth
-					end
-				else
-					Result := True
-				end
-			 else
-			 	o.dprint ("Cannot find webap executable '" + name + "', compiling neseccary",5)
-			 	Result := True
-			 end
-		end
+--feature {NONE} -- Paths and Args
 
-	can_run: BOOLEAN
-			-- Checks if the webapp executable has been generated
-		do
-			Result := file_exists (run_workdir + "/" + name)
-		end
-
-feature -- Used as agents
-
-	set_is_compile_process_exited
-			-- Sets
-		do
-			is_compiling := False
-		end
-
-	set_is_process_exited
-			-- Sets
-		do
-			is_running := False
-		end
-
---	compile_process_out (a_out: STRING)
---			-- Redirects output from compile_process
+--	compiler_args: STRING
+--			-- The arguments that are passed to compile the webapp
 --		do
---			o.iprint (a_out)
+--			Result  := " -config " + name + "-voidunsafe.ecf -target " + name + " -c_compile -stop"
+----			if config.finalize_webapps then
+----				Result := Result + " -finalize"
+----			end
 --		end
 
---	set_launch_failed
---			-- Setter
---		do		o.eprint ("Failed to launch process for '" + name + "'", generating_type)
---				is_launch_failed := True
---				is_launched := False
+--	gen_compiler_args: STRING
+--			-- The arguments that are passed to compile the servlet_gen	
+--		do
+--			Result  := " -config " + config.servlet_gen_ecf + " -target servlet_gen -c_compile -stop"
 --		end
 
---	set_launched
+--	translator_args: STRING
+--			-- The arguments that are passed to the translator
+--		do
+--			Result := " " + name + " ./ ./ ./" + config.servlet_gen_path + "/ ./"
+--		end
+
+--	generate_args: STRING
+--			-- The arguments that are passed to the servlet_gen
+--		do
+--			Result :=  " ./"
+--		end
+
+--	run_workdir_w : STRING
+--			-- The working directory to execute the application W_CODE
+--		do
+--			Result := app_dir  + "/EIFGENs/" + name + "/W_code"
+--		end
+
+--	app_dir: STRING
+--			-- The directory to the application
+--		do
+--			Result := config.webapps_root + "/" + name
+--		end
+
+--	melted_file_path: STRING
+--			-- Returns the path to the melted file
+--		do
+--			Result := run_workdir_w  + "/" + name + ".melted"
+--		end
+
+--feature -- Status Report
+
+--	is_compiling: BOOLEAN
+
+--	is_running: BOOLEAN
+
+--	is_translating: BOOLEAN
+
+--	file_exists (a_filename: STRING): BOOLEAN
+--			-- Checks if a file exists
+--		local
+--			l_file: RAW_FILE
+--		do
+--			Result := False
+--			create l_file.make (a_filename)
+--			Result := l_file.exists
+--		end
+
+--	can_compile: BOOLEAN
+--			-- Checks if there is a valid compiler available
+--		do
+--			Result := file_exists (config.compiler)
+--		end
+
+--	can_translate: BOOLEAN
+--			-- Checks if there is a valid translator available
+--		do
+--			Result := file_exists (config.translator)
+--		end
+
+
+--	is_translating_necessary: BOOLEAN
+--			-- Check if the webapps has to be (re)translated
+--			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
+--			-- Returns True iff for every *.xeb in app_dir a corresponding g_* does is older or does not exist.
+--		local
+--			l_dir: DIRECTORY
+--			l_files: LIST [STRING]
+--			l_xeb_file: RAW_FILE
+--			l_e_file: RAW_FILE
+--			l_s_name: STRING
+--		do
+--			Result := False
+--			create l_dir.make (app_dir)
+--			l_files := l_dir.linear_representation
+--			from
+--				l_files.start
+--			until
+--				l_files.after or Result
+--			loop
+--				if l_files.item_for_iteration.ends_with (".xeb") then
+--					create l_xeb_file.make (app_dir + "/" + l_files.item_for_iteration)
+--					l_files.item_for_iteration.remove_tail (4)
+--					l_s_name := "g_" + l_files.item_for_iteration + "_servlet.e"
+--					create l_e_file.make (app_dir + "/" + l_s_name)
+--					if l_e_file.exists then
+--						if (l_e_file.date < l_xeb_file.date) then
+--							Result := True
+--						end
+--					else
+--						Result := True
+--					end
+--				end
+--				l_files.forth
+--			end
+
+
+
+
+--		--	Result := file_is_newer_multiple (app_dir, "*.xeb",
+--		--									  app_dir, "*.e")
+
+--		--	Result := Result or not file_exists (app_dir + "/g_" + name + "_application.e")
+
+--			if Result then
+--				o.dprint ("Translating is necessary", 5)
+--			else
+--				o.dprint ("Translating is not necessary", 5)
+--			end
+--		end
+
+--	file_is_newer_multiple (a_dir1, a_ext1, a_dir2, a_ext2: STRING): BOOLEAN
+--				-- Returns True iff inside a_dir1 there is a file with a_ext1
+--				-- that is newer than all files in a_dir2 with a_ext2
+--				-- or no file in a_dir2 with a_ext2 exists
+--		local
+--			l_dir1: DIRECTORY
+--			l_dir2: DIRECTORY
+--			l_files1: LIST [STRING]
+--			l_files2: LIST [STRING]
+--			l_file: RAW_FILE
+--			l_newest2: INTEGER
+--		do
+--			Result := False
+
+--			create l_dir1.make (a_dir1)
+--			l_files1 := l_dir1.linear_representation
+--			create l_dir2.make (a_dir2)
+--			l_files2 := l_dir2.linear_representation
+
+--			if l_files2.count > 0 then
+--				l_newest2 := 0
+--				from
+--					l_files2.start
+--				until
+--					l_files2.after
+--				loop
+--					if l_files2.item_for_iteration.ends_with (a_ext2) then
+--						create l_file.make (a_dir2 + "/" + l_files2.item_for_iteration)
+--						if (l_file.date > l_newest2) then
+--							l_newest2 := l_file.date
+--						end
+--					end
+--					l_files2.forth
+--				end
+--				from
+--					l_files1.start
+--				until
+--					l_files1.after or Result
+--				loop
+--					if l_files1.item_for_iteration.ends_with (a_ext1) then
+--						create l_file.make (a_dir1 + "/" + l_files1.item_for_iteration)
+--						if (l_file.date > l_newest2) then
+--							Result := True
+--						end
+--					end
+--					l_files1.forth
+--				end
+--			else
+--				Result := True
+--			end
+--		end
+
+
+--	file_is_newer (a_file, a_dir, a_ext1, a_ext2: STRING): BOOLEAN
+--				-- Returns True iff there is a file in a_dir with a_ext1 or a_ext2
+--				-- that is newer than a_file or a_file does not exist
+--		local
+--			l_dir: DIRECTORY
+--			l_files: LIST [STRING]
+--			l_file: RAW_FILE
+--			l_exec_access_date: INTEGER
+--		do
+--			Result := False
+--			if file_exists (a_file) then
+--				l_exec_access_date := (create {RAW_FILE}.make (a_file)).date
+--				create l_dir.make (a_dir)
+--				l_files := l_dir.linear_representation
+--				from
+--					l_files.start
+--				until
+--					l_files.after or Result
+--				loop
+--					if l_files.item_for_iteration.ends_with (a_ext1) or l_files.item_for_iteration.ends_with (a_ext2) then
+--						create l_file.make (a_dir + "/" + l_files.item_for_iteration)
+--						if (l_file.date > l_exec_access_date) then
+--							Result := True
+--							o.dprint ("File '" + l_file.name + "' is newer (" + l_file.date.out + ")  than  (" + l_exec_access_date.out + ")",5)
+--						end
+--					end
+--					l_files.forth
+--				end
+--			else
+--				Result := True
+--				o.dprint ("File '" + a_file + "' does not exist.", 5)
+--			end
+--		end
+
+--	is_compiling_necessary: BOOLEAN
+--			-- Check if the webapps has to be (re)compiled
+--		do
+--			Result := file_is_newer (melted_file_path,
+--											app_dir,
+--											"*.e",
+--											"*.ecf")
+--			if Result then
+--				o.dprint ("Compiling is necessary", 5)
+--			else
+--				o.dprint ("Compiling is not necessary", 5)
+--			end
+--		end
+
+--	can_run: BOOLEAN
+--			-- Checks if the webapp executable has been generated
+--		do
+--			Result := file_exists (run_workdir_w  + "/" + name)
+--		end
+
+--feature -- Status setting
+
+--	shutdown_all
+--			-- Terminate the compile process and send shutdown signal to webapp.
+--		do
+--			shutdown
+--			kill_translate
+--			kill_compile
+--		end
+
+--	shutdown
+--			-- Send shutdown signal to webapp.
+--		local
+--				l_webapp_socket: NETWORK_STREAM_SOCKET
+--			do
+--				if is_running then
+--					create l_webapp_socket.make_client_by_port (port, host)
+--					o.dprint ("Shutdown connect to " + name + "@" + port.out, 4)
+--					l_webapp_socket.connect
+--		            if  l_webapp_socket.is_connected then
+--						o.dprint ("Sending shutdown signal", 2)
+--			            l_webapp_socket.independent_store (Shutdown_message)
+--			         else
+--			         	o.eprint ("Cannot shutdown connect to '" + name + "'", generating_type)
+--					end
+--					(create {EXECUTION_ENVIRONMENT}).sleep (2000000000)
+--				end
+--				kill_process
+--			end
+
+--	kill_process
+--			-- Terminates the process.
+--		do
+--			if attached {PROCESS} process as p then
+--				o.dprint ("Terminating " + name  + "", 2)
+--				p.terminate
+--				is_running := False
+--			end
+--		end
+
+--	kill_compile
+--			-- Terminates the compile process.		
+--		do
+--			if attached {PROCESS} compile_process as p then
+--				o.dprint ("Terminating compile process of " + name  + "", 2)
+--				p.terminate
+--			end
+--		end
+
+--	kill_translate
+--		-- Terminates the translate process.		
+--		do
+--			if attached {PROCESS} translate_process as p then
+--				o.dprint ("Terminating translate process of " + name  + "", 2)
+--				p.terminate
+--			end
+--		end
+
+--feature  {NONE} -- Operations internal
+
+--	compile_servlet_gen
+--			-- Launches the process to compile the servlet_gen
+--		do
+--			gen_compile_process := launch_process (config.compiler,
+--													gen_compiler_args,
+--													app_dir,
+--													agent gen_compile_process_exited,
+--													agent compiler_output_handler)
+--		end
+
+--	generate
+--			-- Launches the process to execute servlet_gen
+--		do
+--			generate_process := launch_process (app_dir + "/" + config.servlet_gen_exe,
+--												generate_args,
+--												app_dir,
+--												agent generate_process_exited,
+--												agent generator_output_handler)
+--		end
+
+--	launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP, detachable TUPLE]; a_output_handler: PROCEDURE [XS_WEBAPP, detachable TUPLE [detachable STRING]]): PROCESS
+--			-- Launches a process
+--		local
+--			l_process_factory: PROCESS_FACTORY
+--			l_file: RAW_FILE
+--		do
+--			create l_file.make (a_exe)
+--			if l_file.exists then
+--				l_file.make (a_dir)
+--				if l_file.exists and l_file.is_directory then
+--					create l_process_factory
+--					Result  := l_process_factory.process_launcher_with_command_line (a_exe + " " + a_args, a_dir)
+--					Result.set_on_exit_handler (a_exit_handler)
+--					Result.redirect_output_to_agent (a_output_handler)
+--					o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", 3)
+--					Result.launch
+--				else
+--					o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
+--				end
+--			else
+--				o.eprint ("File does not exist for launching process: '" + a_exe + " " + a_args + "'", generating_type)
+--			end
+--		end
+
+feature -- Operatins
+
+--	translate: BOOLEAN
+--			-- Return true if the webapp is translated
+--			-- Initiates translating (and compiling and executing servlet_gen) otherwise
+--		require
+--			can_translate: can_translate
+--		local
+--			l_process_factory: PROCESS_FACTORY
+--			l_cmd: STRING
+--		do
+--			Result := False
+--			if is_translating_necessary   then
+--					-- Stop the process
+--				if is_running then
+--					shutdown
+--				end
+--					-- Launch translating
+--				if not is_translating then
+--					translate_process := launch_process (config.translator,
+--														translator_args,
+--														app_dir,
+--														agent translate_process_exited,
+--														agent translator_output_handler)
+--					is_translating := True
+--				end
+--			else
+--				Result := True
+--			end
+--		end
+
+--	run: BOOLEAN
+--			-- Returns true if the webapp is running
+--			-- Initiates launching the webapp if its not running
+--		do
+--			Result := False
+
+--			if is_running then
+--				Result := True
+--			else
+--				process := launch_process (app_dir + "/EIFGENs/"+ name + "/W_code/" + name,
+--											port.out,
+--											run_workdir_w,
+--											agent process_exited,
+--											agent translator_output_handler)
+--				is_running := True
+--			end
+--		end
+
+--	compile: BOOLEAN
+--			-- Returns true if the webapp is compiled
+--			-- Initiates compiling if its not compiled and if necessair
+--		require
+--			can_compile: can_compile
+--		do
+--			Result := False
+--			if is_compiling_necessary   then
+--					-- Stop the process
+--				if is_running then
+--					shutdown
+--				end
+--					-- Launch compiling
+--				if not is_compiling then
+--					compile_process := launch_process (config.compiler,
+--														compiler_args,
+--														app_dir,
+--														agent compile_process_exited,
+--														agent compiler_output_handler)
+--					is_compiling := True
+--				end
+--			else
+--				Result := True
+--			end
+--		end
+
+
+--feature {NONE} -- Agents
+
+--	translator_output_handler (a_ouput: STRING)
+--			-- Forwards output to console
+--		do
+--			o.set_name ("TRANSLATOR")
+--			o.dprintn (a_ouput, 3)
+--			o.set_name ({XS_MAIN_SERVER}.name)
+--		end
+
+--	generator_output_handler (a_ouput: STRING)
+--			-- Forwards output to console
+--		do
+--			o.set_name ("SERVLET_GEN")
+--			o.dprintn (a_ouput, 3)
+--			o.set_name ({XS_MAIN_SERVER}.name)
+--		end
+
+--	compiler_output_handler (a_ouput: STRING)
+--			-- Forwards output to console
+--		do
+--			o.set_name ("COMPILER")
+--			o.dprintn (a_ouput, 3)
+--			o.set_name ({XS_MAIN_SERVER}.name)
+--		end
+
+--	compile_process_exited
+--			-- Sets is_compiling := False
+--		do
+--			is_compiling := False
+--		end
+
+--	process_exited
+--			-- Sets is_running := False
+--		do
+--			is_running := False
+--		end
+
+--	translate_process_exited
+--			-- Launch compiling of servlet_gen in gen_compile_process
+--		do
+--			set_outputter_name ({XS_MAIN_SERVER}.Name)
+--			compile_servlet_gen
+--		end
+
+--	gen_compile_process_exited
+--			-- Launch executing of servlet_gen in genrate_process
+--		do
+--			set_outputter_name ({XS_MAIN_SERVER}.Name)
+--			generate
+
+--		end
+
+--	generate_process_exited
+--			-- Sets is_translating := False
+--		do
+--			is_translating := False
+--		end
+
+--feature {NONE} -- Constants
+
+--	Shutdown_message: STRING = "#KAMIKAZE#"
+
+--feature -- Setters
+
+--	set_config (a_config: XS_CONFIG)
 --			-- Setter
 --		do
---				o.dprint ("Successfully launched '" + name + "'",2)
---				is_launched := True
---				is_launch_failed := False
-
+--			internal_server_config := a_config
 --		end
 
---	set_compile_process_failed
---			-- Setter
---		do
---				o.eprint ("Failed to launch compile process for '" + name + "'", generating_type)
---				is_compile_process_failed := True
---				is_compile_process_launched := False
---		end
-
-
---	set_compile_launched
---			-- Setter
---		do
---				o.dprint ("Successfully launched compile process for '" + name + "'",1)
---				is_compile_process_failed := False
---				is_compile_process_launched := True
---		end
-
-feature -- Constants
-
-	Shutdown_message: STRING = "#KAMIKAZE#"
-
-feature -- Status setting Compiling
-
---	set_is_compiled (a_is_compiled: BOOLEAN)
---			-- Setter
---		do
---			is_compiled := a_is_compiled
---		ensure
---			is_compiled_set: is_compiled = a_is_compiled
---		end
-
---	set_is_compiling_failed (a_is_compiling_failed: BOOLEAN)
---			-- Setter
---		do
---			is_compiling_failed := a_is_compiling_failed
---		ensure
---			compiling_failed_set:  is_compiling_failed = a_is_compiling_failed
---		end
-
---	set_is_compile_process_launched (a_is_compile_process_launched: BOOLEAN)
+--	set_name (a_name: STRING)
 --			-- Setter
 --		require
---			compile_process_attached: compile_process /= Void
+--			name_not_empty: not a_name.is_empty
 --		do
---			is_compile_process_launched := a_is_compile_process_launched
+--			name := a_name
 --		ensure
---			compile_process_launched_set:  is_compile_process_launched = a_is_compile_process_launched
+--			name_set: name = a_name
 --		end
 
---	set_is_compile_process_failed (a_is_compile_process_failed: BOOLEAN)
---			-- Setter
---		do
---			is_compile_process_failed := a_is_compile_process_failed
---		ensure
---			compile_process_failed_set: is_compile_process_failed = a_is_compile_process_failed
---		end
+----	set_root (a_root: STRING)
+----			-- Setter
+----		require
+----			root_not_empty: not a_root.is_empty
+----		do
+----			root := a_root
+----		ensure
+----			root_set: root = a_root
+----		end
 
-
-	set_compile_process (a_compile_process: detachable PROCESS)
-			-- Setter
-		do
-			compile_process := a_compile_process
-		ensure
-			compile_process_set: process = a_compile_process
-		end
-
-
-feature -- Status Setting Process
-
---	set_is_launched (a_is_launched: BOOLEAN)
+--	set_port (a_port: INTEGER)
 --			-- Setter
 --		require
---			process_attached: process /= Void
+--			a_port_pos: a_port >= 0
 --		do
---			is_launched := a_is_launched
+--			port := a_port
 --		ensure
---			is_launched_set: is_launched = a_is_launched
+--			port_set: port = a_port
 --		end
 
---	set_is_launch_failed (a_is_launch_failed: BOOLEAN)
---			-- Sets launched_failed to True
+--	set_host (a_host: STRING)
+--			-- Setter
 --		require
---			process_attached: process /= Void
+--			host_not_empty: not a_host.is_empty
 --		do
---			is_launch_failed  := a_is_launch_failed
+--			host := a_host
 --		ensure
---			launch_failed_set: is_launch_failed  = a_is_launch_failed
+--			host_set: host = a_host
 --		end
 
-	set_process (a_process: detachable PROCESS)
-			-- Setter
-		do
-			process := a_process
-		ensure
-			process_set: process = a_process
-		end
-
-
-feature -- Access Attributes
-
-	set_name (a_name: STRING)
-			-- Setter
-		require
-			name_not_empty: not a_name.is_empty
-		do
-			name := a_name
-		ensure
-			name_set: name = a_name
-		end
-
-	set_root (a_root: STRING)
-			-- Setter
-		require
-			root_not_empty: not a_root.is_empty
-		do
-			root := a_root
-		ensure
-			root_set: root = a_root
-		end
-
-	set_port (a_port: INTEGER)
-			-- Setter
-		require
-			a_port_pos: a_port >= 0
-		do
-			port := a_port
-		ensure
-			port_set: port = a_port
-		end
+invariant
+	config_attached: config /= Void
+	translate_action_attached: translate_action /= Void
+	compile_action_attached: compile_action /= Void
+	run_action_attached: run_action /= Void
+	send_action_attached: send_action /= Void
+	shutdown_action_attached: shutdown_action /= Void
+	request_message_not_empty_when_attached: request_message /= Void implies not request_message.is_empty
 end

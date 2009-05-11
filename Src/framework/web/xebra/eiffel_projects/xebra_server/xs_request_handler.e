@@ -48,7 +48,7 @@ feature {NONE} -- Access
 
 feature --Execution
 
-	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_server_config: XS_SERVER_CONFIG)
+	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_server_config: XS_CONFIG)
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
@@ -176,4 +176,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	data_attached: data /= Void
+	internal_max_size_attached: internal_max_size /= Void
+	internal_default_size_attached: internal_default_size /= Void
+	encoder_attached: encoder /= Void
 end

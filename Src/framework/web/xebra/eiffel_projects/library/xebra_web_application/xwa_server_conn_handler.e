@@ -24,7 +24,7 @@ feature -- Constants
 
 feature -- Access
 
-	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
+--	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
 			-- A thread pool for the incoming requests from the xebra server
 
 	stateless_servlets: TABLE [XWA_STATELESS_SERVLET, STRING]
@@ -34,30 +34,22 @@ feature -- Access
 	stop: BOOLEAN
 			-- Used to stop the thread
 
-	name: STRING
-			-- The name of the web app
+	config: XWA_CONFIG
 
-	application: XWA_APPLICATION
-			-- Callback to xwa_application
-			-- used to shutdown the application
 
 	xserver_socket: NETWORK_STREAM_SOCKET
 
 feature -- Implementation
 
-	make (a_name: STRING; a_port: INTEGER; a_applicaiton: XWA_APPLICATION)
+	make (a_config: XWA_CONFIG)
 			-- Initialization of classes.
 		do
-			name := a_name
-			application := a_applicaiton
+			config := a_config
 			create session_manager.make
-			create request_pool.make  (10, agent servlet_handler_spawner)
+	--		create request_pool.make  (10, agent servlet_handler_spawner)
 			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
-			create xserver_socket.make_server_by_port (a_port)
+			create xserver_socket.make_server_by_port (config.port)
 			stop := False
-		ensure
-			name_set: a_name = name
-			application_set:  application = a_applicaiton
 		end
 
 	execute
@@ -65,7 +57,7 @@ feature -- Implementation
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
 		do
-			set_outputter_name (name)
+			set_outputter_name (config.name)
 			create l_request_handler.make
         	from
                 xserver_socket.listen (10)
@@ -98,7 +90,6 @@ feature -- Implementation
         	check
         		xserver_socket.is_closed
         	end
-        	exit
 		end
 
 	handle_shutdown_signal (a_request: STRING): BOOLEAN
@@ -124,11 +115,6 @@ feature -- Status setting
 		do
 			o.dprint ("Shutting down...", 1)
 			stop := True
-			application.set_stop (True)
-			xserver_socket.cleanup
-			check
-        		xserver_socket.is_closed
-        	end
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

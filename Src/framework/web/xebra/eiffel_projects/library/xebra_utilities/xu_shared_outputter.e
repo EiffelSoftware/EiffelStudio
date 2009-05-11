@@ -9,7 +9,7 @@ feature -- Singleton
 	o: XU_OUTPUTTER
 			-- Shared access to an uuid_generator.
 		once
-			create Result
+			create Result.make
 		ensure
 			result_attached: attached Result
 		end

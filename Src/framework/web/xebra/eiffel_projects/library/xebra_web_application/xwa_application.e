@@ -13,37 +13,65 @@ deferred class
 inherit
 	XU_SHARED_OUTPUTTER
 
+
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.
+			-- Initialization for `Current'.	
+		local
+			l_parser: XWA_ARGUMENT_PARSER
+			l_exit_code: INTEGER
 		do
-				if attached server_connection_handler as server  then
-					set_outputter_name (name)
-					print ("%N%N%N")
-					o.iprint ("Starting " + name)
-					server.launch
+			create l_parser.make
+			initialize
+			l_parser.execute (agent run (l_parser))
+			if not l_parser.is_successful then
+				l_exit_code := -1
+			end
+			if l_exit_code /= 0 then
+				(create {EXCEPTIONS}).die (l_exit_code)
+			end
+		end
 
+
+feature -- Operations
+
+	initialize
+			-- Setts webapp specific attributes
+		deferred
+		end
+
+	run (a_parser: XWA_ARGUMENT_PARSER)
+			-- Runs the application
+		do
+				if attached server_connection_handler as server then
+
+					config.merge (a_parser)
+
+					set_outputter_name (config.name)
+					print ("%N%N%N")
+					o.iprint ("Starting " + config.name)
+					server.launch
 
 					o.iprint ("Xebra Wep Application ready to rock...")
 
-				--	o.iprint ("(enter 'x' to shut down)")
-
-					from
-						stop := False
-					until
-						stop
-					loop
-						io.read_character
-						if io.last_character.is_equal ('x') then
-							stop := True
+					if config.is_interactive then
+						o.iprint ("(enter 'x' to shut down)")
+						from
+							stop := False
+						until
+							stop
+						loop
+							io.read_character
+							if io.last_character.is_equal ('x') then
+								stop := True
+							end
 						end
+						o.iprint ("Shutting down...")
+						server.shutdown
+						o.iprint ("Bye!")
 					end
-					
-					o.iprint ("Shutting down...")
-					server.shutdown
-					o.iprint ("Bye!")
-
+					server.join
 				end
 		end
 
@@ -52,12 +80,9 @@ feature -- Access
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
 
-	name: STRING
-			-- The name of the web application
-		deferred
-		end
-
 	stop: BOOLEAN
+
+	config: XWA_CONFIG
 
 feature -- Setter
 

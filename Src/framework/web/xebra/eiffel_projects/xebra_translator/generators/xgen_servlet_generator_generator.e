@@ -85,9 +85,19 @@ feature -- Basic functionality
 			buf:XU_INDENDATION_STREAM
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
+			l_filename: STRING
 		do
 			if not is_template then
-				create file.make_open_write (a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e")
+				l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e"
+				create file.make (l_filename)
+				if not file.is_creatable then
+					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				end
+				file.open_write
+				if not file.is_open_write then
+					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				end
+			--	create file.make_open_write (a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e")
 				create buf.make (file)
 				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "SERVLET_GENERATOR")
 				servlet_gen_class.set_inherit (Servlet_generator_class)

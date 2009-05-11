@@ -68,10 +68,21 @@ feature -- Basic Functionality
 			request_class: XEL_CLASS_ELEMENT
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
+			l_filename: STRING
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			webapp_name.to_lower
-			create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
+			l_filename := path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+
+		--	create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			create request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
@@ -82,7 +93,16 @@ feature -- Basic Functionality
 			file.close
 
 				-- Generate the {APPLICATION} class
-			create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
+			l_filename := path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+		--	create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 			create buf.make (file)
 			create application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
 			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION redefine make end")
@@ -93,7 +113,16 @@ feature -- Basic Functionality
 			file.close
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
-			create file.make_open_write (path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
+			l_filename := path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			file.open_write
+			if not file.is_open_write then
+				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			end
+			--create file.make_open_write (path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 			create buf.make (file)
 			create application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
 			application_class.set_inherit ("ANY")

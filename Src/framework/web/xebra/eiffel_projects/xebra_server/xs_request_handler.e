@@ -174,6 +174,8 @@ feature {NONE} -- Implementation
 				end
 				read_size := Result.count
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 invariant

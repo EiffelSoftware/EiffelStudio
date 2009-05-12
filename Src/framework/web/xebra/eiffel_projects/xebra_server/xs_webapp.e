@@ -82,6 +82,8 @@ feature {NONE} -- Access internal
 			else
 				Result := create {XS_CONFIG}.make_empty
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	internal_server_config: detachable XS_CONFIG
@@ -93,6 +95,8 @@ feature -- Actions
 			-- Executes the first action in the chain		
 		do
 			Result := translate_action.execute
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Status Setting
@@ -107,11 +111,9 @@ feature -- Status Setting
 
 	shutdown
 			-- Shuts the application down
-		local
-			l_dummy: XH_RESPONSE
 		do
 			if run_action.is_running then
-				l_dummy := shutdown_action.execute;
+				shutdown_action.execute.do_nothing;
 				(create {EXECUTION_ENVIRONMENT}).sleep (sixbillionnanoseconds)
 			end
 			send_action.stop

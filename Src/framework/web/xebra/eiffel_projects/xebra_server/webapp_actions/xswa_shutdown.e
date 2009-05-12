@@ -51,6 +51,7 @@ feature {NONE} -- Implementation
 	         else
 	         	o.eprint ("Cannot shutdown connect to '" + webapp.config.name.out + "'", generating_type)
 			end
+			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_response
 		end
 
 

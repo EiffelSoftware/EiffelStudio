@@ -49,6 +49,8 @@ feature -- Access
 			else
 				Result := create {XS_CONFIG}.make_empty
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	internal_server_config: detachable XS_CONFIG
@@ -75,7 +77,7 @@ feature -- Operations
 			-- Returns a XH_RESPONSE which can be sent to the http server
 		require
 			config_set: internal_server_config /= Void
-			not_necessary_implies_hasnext: not is_necessary implies next_action /= Void
+		--	not_necessary_implies_hasnext: not is_necessary implies next_action /= Void
 		do
 			if is_necessary then
 --				if attached stop_action then
@@ -85,6 +87,8 @@ feature -- Operations
 			else
 				Result := next_action.execute
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature  -- Status report internal
@@ -142,9 +146,11 @@ feature {NONE} -- Implementation
 	internal_execute: XH_RESPONSE
 			-- The actual implementation of an action
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
-	launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE [detachable STRING]]): PROCESS
+	launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE [detachable STRING]]): detachable PROCESS
 			-- Launches a process
 		local
 			l_process_factory: PROCESS_FACTORY

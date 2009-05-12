@@ -26,6 +26,8 @@ feature -- Initialization
 
 	make (a_stream: IO_MEDIUM)
 			-- `a_stream' the stream on which it should write
+		require
+			a_stream_attached: a_stream /= Void
 		do
 			stream := a_stream
 			ind_character := '%T'
@@ -49,6 +51,8 @@ feature
 
 	put_string (a_string: STRING)
 			-- String is automatically indendated and a new line added.
+		require
+			a_string_attached: a_string /= Void
 		do
 			indendate
 			stream.put_string (a_string)
@@ -62,6 +66,8 @@ feature
 
 	append_string (a_string: STRING)
 			-- Appends a string without indendation
+		require
+			a_string_attached: a_string /= Void
 		do
 			stream.putstring (a_string)
 		end

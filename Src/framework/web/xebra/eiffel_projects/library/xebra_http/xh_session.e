@@ -20,15 +20,18 @@ feature {NONE} -- Initialization
 	 make
 			-- Creates current.		
 		do
-				uuid := uuid_generator.generate_uuid.out
-				remote_user := ""
-				expiry := 0
-				create entries.make (8)
-				encoded := entries
-				is_dirty := False
-				is_written := False
-
-				set_max_age (300)
+			uuid := uuid_generator.generate_uuid.out
+			remote_user := ""
+			expiry := 0
+			create entries.make (8)
+			is_dirty := False
+			is_written := False
+			set_max_age (300)
+		ensure
+			uuid_attached: uuid /= Void
+			remote_user_attached: remote_user /= Void
+			entries_attached: entries /= Void
+			uuid_attached: uuid /= Void
 		end
 
 feature -- Access
@@ -61,22 +64,18 @@ feature -- Status Setting
 
 	set_remote_user (a_s: STRING)
 			-- Setter.
+		require
+			not_a_s_is_detached_or_empty: a_s /= Void and then not a_s.is_empty
 		do
 			remote_user := a_s
 		ensure
 			remote_user_set: remote_user = a_s
 		end
 
-
-
-
 feature {NONE} -- Access
 
 	entries: HASH_TABLE [ANY, STRING]
     	-- Key value pairs
-
-    encoded: HASH_TABLE [ANY, STRING]
-    	-- The encoded version of the key value pairs
 
     is_dirty: BOOLEAN
     	-- Dirty flag
@@ -98,31 +97,48 @@ feature -- Basic Operations
 
 
 	put (a_value: ANY; a_key: STRING)
-			--
+			-- Puts a new pair into entries
+		require
+			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty
+			a_value_attached: a_value /= Void
 		do
 			entries.put (a_value, a_key)
-
+		ensure
+			bigger:	entries.count > old entries.count
 		end
 
 	force (a_value: ANY; a_key: STRING)
-			--
+			-- Forces a new pair into entries
+		require
+			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty
+			a_value_attached: a_value /= Void
 		do
 			entries.force (a_value, a_key)
-
+		ensure
+			bigger:	entries.count > old entries.count
 		end
 
 	get (a_key: STRING): detachable ANY
-			--
+			-- Gets an item from entries
+		require
+			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty
 		do
 			Result := entries[a_key]
 		end
 
 	remove (a_key: STRING)
-			--
+			-- Removes an item from entrie
+		require
+			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty
 		do
 			entries.remove (a_key)
 		end
 
+invariant
+			uuid_attached: uuid /= Void
+			remote_user_attached: remote_user /= Void
+			entries_attached: entries /= Void
+			uuid_attached: uuid /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

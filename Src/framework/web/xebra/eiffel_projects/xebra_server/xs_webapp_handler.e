@@ -79,6 +79,8 @@ feature  -- Implementation
             else
             	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
             end
+		ensure
+			Result_attached: Result /= Void
 		end
 --						
 --						if webapp.can_translate  then

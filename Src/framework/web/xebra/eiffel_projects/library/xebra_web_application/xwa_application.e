@@ -49,7 +49,7 @@ feature {NONE} -- Operations Internal
 				error_manager.trace_errors (l_printer)
 			else
 				check config /= Void end
-				o.iprint ("Starting " + config.name.out)
+				o.iprint ("Starting " + config.name.out + "@" + config.port.out)
 				initialize_server_connection_handler
 				run
 			end
@@ -68,6 +68,7 @@ feature {NONE} -- Operations Internal
 			-- Runs the application.
 		require
 			server_connection_handler_attached: server_connection_handler /= Void
+			config_attached: config /= Void
 		do
 			if attached server_connection_handler as server then
 				set_outputter_name (config.name)

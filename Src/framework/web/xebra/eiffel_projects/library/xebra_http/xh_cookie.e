@@ -18,8 +18,8 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_value: STRING)
 			-- Creates current.
 		require
-			a_name_not_empty: not a_name.is_empty
-			a_value_not_empty: not a_Value.is_empty
+			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
+			not_a_value_is_detached_or_empty: a_value /= Void and then not a_value.is_empty
 		do
 			name := a_name
 			value := a_value
@@ -44,4 +44,7 @@ feature -- Access
 		-- header.
 
 
+invariant
+	name_attached: name /= Void
+	value_attached: value /= Void
 end

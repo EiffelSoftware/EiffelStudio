@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XH_POST_REQUEST}.
+		POST version of REQUEST
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

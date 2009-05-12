@@ -20,6 +20,11 @@ feature {NONE} -- Initialization
 			create file.make
 			create html.make (file)
 			goto_request := ""
+		ensure
+			cookie_orders_attached: cookie_orders /= Void
+			file_attached: file /= Void
+			html_attached: html /= Void
+			goto_request_attached: goto_request /= Void
 		end
 
 feature -- Access
@@ -46,15 +51,21 @@ feature -- Access
 
 feature -- Element change
 
-	set_goto_request (a_string: STRING)
+	set_goto_request (a_goto_request: STRING)
 			-- Setter. A_string can be empty!
+		require
+			not_a_goto_request_is_detached_or_empty: a_goto_request /= Void and then not a_goto_request.is_empty
 		do
-			goto_request := a_string
+			goto_request := a_goto_request
+		ensure
+			goto_request_set: goto_request = a_goto_request
 		end
 
 
 	set_html (a_html: XU_INDENDATION_STREAM)
 			-- Sets the text
+		require
+			a_html_attached: a_html /= Void
 		do
 			html := a_html
 		ensure
@@ -63,6 +74,8 @@ feature -- Element change
 
 	append (a_string: STRING)
 			-- Appends a string to the html result
+		require
+			not_a_string_is_detached_or_empty: a_string /= Void and then not a_string.is_empty
 		do
 			html.append_string (a_string)
 		end
@@ -75,6 +88,8 @@ feature -- Element change
 
 	put_cookie_order (a_cookie: XH_COOKIE_ORDER)
 			-- Adds a cookie_order
+		require
+			a_cookie_attached: a_cookie /= Void
 		do
 			cookie_orders.put_right (a_cookie)
 		ensure
@@ -96,10 +111,14 @@ feature -- Element change
 
 			Result := Result + Html_start + file.get_text
 		ensure
-			result_not_empty: not Result.is_empty
+			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-
+invariant
+		cookie_orders_attached: cookie_orders /= Void
+		file_attached: file /= Void
+		html_attached: html /= Void
+		goto_request_attached: goto_request /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

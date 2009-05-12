@@ -51,7 +51,7 @@ feature -- Status report
 			-- <Precursor>
 			-- Check if the webapps has to be (re)translated
 			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
-			-- Returns True iff for every *.xeb in app_dir a corresponding g_* does is older or does not exist.
+			-- Returns True iff for every *.xeb in app_dir a corresponding g_* is older or does not exist.
 		local
 			l_dir: DIRECTORY
 			l_files: LIST [STRING]
@@ -188,12 +188,10 @@ feature -- Agents
 
 	generate_process_exited
 			-- Sets is_running := False and executes next action
-		local
-			l_dummy: XH_RESPONSE
 		do
 			set_outputter_name ({XS_MAIN_SERVER}.Name)
 			is_running := False
-			l_dummy := next_action.execute
+			next_action.execute.do_nothing
 		end
 end
 

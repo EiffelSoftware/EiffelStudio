@@ -25,8 +25,11 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_value: STRING)
 			-- Initialization for `Current'.
+		require else
+			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
+			not_a_value_is_detached_or_empty: a_value /= Void and then not a_value.is_empty
 		do
-			-- Initialize to default values
+				-- Initialize to default values
 			name := a_name
 			value := a_value
 			max_age := default_max_age
@@ -35,6 +38,14 @@ feature {NONE} -- Initialization
 			comment := ""
 			is_secure := false
 			version := "1"
+		ensure then
+			name_attached: name /= Void
+			value_attached: value /= Void
+			max_age_attached: max_age /= Void
+			path_attached: path /= Void
+			domain_attached: domain /= Void
+			comment_attached: comment /= Void
+			version_attached: version /= Void
 		end
 
 feature -- Access
@@ -225,4 +236,12 @@ feature {NONE} -- Implementation
 			Result := 300;
 		end
 
+invariant
+		name_attached: name /= Void
+		value_attached: value /= Void
+		max_age_attached: max_age /= Void
+		path_attached: path /= Void
+		domain_attached: domain /= Void
+		comment_attached: comment /= Void
+		version_attached: version /= Void
 end

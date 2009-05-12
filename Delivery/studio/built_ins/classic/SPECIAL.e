@@ -2,9 +2,9 @@ class SPECIAL [T]
 
 feature
 	
-	frozen item alias "[]" (i: INTEGER): T assign put is
+	frozen item alias "[]" (i: INTEGER): T assign put
 		local
-			r: ?T
+			r: detachable T
 		do
 			check
 				r_attached: r /= Void
@@ -16,7 +16,11 @@ feature
 		do
 		end
 
-	frozen put (v: T; i: INTEGER) is
+	frozen put (v: T; i: INTEGER)
+		do
+		end
+
+	frozen extend (v: T)
 		do
 		end
 

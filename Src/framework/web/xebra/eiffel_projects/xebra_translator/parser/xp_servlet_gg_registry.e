@@ -13,8 +13,11 @@ create
 feature -- Initialization
 
 	make (a_path: STRING)
+		require
+			a_path_attached: a_path /= Void
 		do
 			path := a_path
+			has_resolved := False
 			create template_registry.make (10)
 			create taglib_registry.make (10)
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_g_generators.make (10)
@@ -40,12 +43,16 @@ feature -- Access
 			-- Registry for the taglibs
 
 	retrieve_template (a_name: STRING): XP_TEMPLATE
+			-- Returns the template with the specified name or creates a new one.
 		do
 			if attached template_registry [a_name] as template then
 				Result := template
 			else
 				create Result.make_empty
+				template_registry.put (Result, a_name)
 			end
+		ensure
+			result_attached: attached Result
 		end
 
 	put_template (a_name: STRING; a_template: XP_TEMPLATE)
@@ -60,11 +67,14 @@ feature -- Access
 			has_resolved := False
 		end
 
-	put_registry (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)
+	put_tag_lib (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)
+			-- Sets the taglib with the name `a_id'
 		require
 			a_id_valid: not a_id.is_empty
 		do
 			taglib_registry [a_id] := a_taglib
+		ensure
+			taglib_set: taglib_registry [a_id] = a_taglib
 		end
 
 	resolve_all_templates
@@ -90,14 +100,36 @@ feature -- Access
 				template_registry.forth
 			end
 			has_resolved := True
+		ensure
+			has_resolved_true: has_resolved
 		end
 
 	retrieve_servlet_generator_generators: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
-			--
+			-- Returns the servlet_generator_generators
 		require
 			is_resolved: has_resolved
 		do
 			Result := servlet_g_generators
+		ensure
+			result_attached: attached Result
+		end
+
+	retrieve_taglib (a_name: STRING): XTL_TAG_LIBRARY
+			-- Returns the tag_lib with the specified name
+		require
+			a_name_valid: attached a_name and not a_name.is_empty
+		do
+			Result := taglib_registry [a_name]
+		ensure
+			result_attached: attached Result
+		end
+
+	contains_tag_lib (a_name: STRING): BOOLEAN
+			-- `a_name' the name of the the tag lib
+		require
+			a_name_valid: attached a_name and not a_name.is_empty
+		do
+			Result := taglib_registry.has_key (a_name)
 		end
 
 end

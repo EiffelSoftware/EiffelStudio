@@ -32,6 +32,8 @@ feature -- Access
 
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
+		require else
+			a_child_attached: attached a_child
 		do
 			if attached {XTL_TAG_DESCRIPTION} a_child as child then
 				tags.put (child, child.name)
@@ -40,11 +42,15 @@ feature -- Access
 			child_has_been_added: tags.count = old tags.count + 1
 		end
 
-	set_attribute (a_id: STRING; value: STRING)
+	set_attribute (a_id: STRING; a_value: STRING)
 			-- <Precursor>
+		require else
+			a_value_attached: a_value /= Void
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			if a_id.is_equal ("id") then
-				id := value
+				id := a_value
 			end
 		end
 
@@ -55,12 +61,15 @@ feature -- Query
 			-- the tag name. If no class is found
 			-- the empty string is returned
 		require
+			a_name_attached: attached a_name
 			a_name_is_not_empty: not a_name.is_empty
 		do
 			Result := ""
 			if attached tags [a_name] as tag then
 				Result := tag.class_name
 			end
+		ensure
+			attached_result: attached Result
 		end
 
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
@@ -73,16 +82,27 @@ feature -- Query
 			end
 		end
 
-	contains (tag_id: STRING): BOOLEAN
+	contains (a_tag_id: STRING): BOOLEAN
 			-- Checks, if the tag is available in the tag library
+		require
+			a_tag_id_attached: a_tag_id /= Void
+			not_a_tag_id_is_empty: not a_tag_id.is_empty
 		do
-			Result := attached tags [tag_id]
+			Result := attached tags [a_tag_id]
 		end
 
 	create_tag (a_prefix, a_local_part, a_class_name, a_debug_information: STRING): XP_TAG_ELEMENT
 			-- Creates the appropriate XP_TAG_ELEMENT
+		require
+			a_prefix_attached: a_prefix /= Void
+			a_local_part_attached: a_local_part /= Void
+			a_class_name_attached: a_class_name /= Void
+			a_debug_information_attached: a_debug_information /= Void
+			not_a_debug_information_empty: not a_debug_information.is_empty
 		do
 			create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
+		ensure
+			result_attached: attached Result
 		end
 
 note

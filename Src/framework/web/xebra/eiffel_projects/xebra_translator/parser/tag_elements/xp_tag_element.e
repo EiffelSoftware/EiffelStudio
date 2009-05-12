@@ -17,9 +17,12 @@ feature -- Initialization
 	make (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
 			-- `a_class_name': The name of the corresponding TAG-class
 		require
+			a_namespace_attached: a_namespace /= Void
+			a_id_attached: a_id /= Void
+			a_class_name_attached: a_class_name /= Void
+			a_debug_information_attached: a_debug_information /= Void
 			a_id_valid: not a_id.is_empty
 			a_class_name_is_valid: not a_class_name.is_empty
-			a_namespace_is_valid: a_namespace /= Void
 		do
 			namespace := a_namespace
 			class_name := a_class_name
@@ -28,10 +31,6 @@ feature -- Initialization
 			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
 			debug_information := a_debug_information
 		end
-
-feature {NONE} -- Access
-
-
 
 feature -- Access
 
@@ -48,14 +47,20 @@ feature -- Access
 			-- The id of the controller which should be used
 
 	set_controller_id (a_id: STRING)
+		require
+			a_id_attached: a_id /= Void
 		do
 			controller_id := a_id
 		end
 
 	retrieve_value (a_id: STRING): STRING
 			-- Retrieves the value of the parameter with the the id `a_id'
+		require
+			a_id_attached: a_id /= Void
 		do
 			Result := parameters [a_id]
+		ensure
+			attached_result: attached Result
 		end
 
 	children: LIST [XP_TAG_ELEMENT]
@@ -82,18 +87,22 @@ feature -- Access
 			Result := not children.is_empty
 		end
 
-	has_attribute (name: STRING): BOOLEAN
+	has_attribute (a_name: STRING): BOOLEAN
 			-- Does the tag already have an attribute with the id `name'
+		require
+			a_name_attached: a_name /= Void
 		do
-			Result := parameters.has_key (name)
+			Result := parameters.has_key (a_name)
 		end
 
 feature --Basic Implementation
 
-	put_subtag (child: XP_TAG_ELEMENT)
+	put_subtag (a_child: XP_TAG_ELEMENT)
 			-- Adds a tag to the list of children.
+		require
+			a_child_attached: a_child /= Void
 		do
-			children.extend (child)
+			children.extend (a_child)
 		ensure
 			child_has_been_added: old children.count + 1 = children.count
 		end
@@ -101,6 +110,7 @@ feature --Basic Implementation
 	put_attribute (a_local_part: STRING; a_value: STRING)
 			-- Sets the attribute of this tag.
 		require
+			a_local_part_attached: a_local_part /= Void
 			local_part_is_not_empty: not a_local_part.is_empty
 			value_is_not_empty: not a_value.is_empty
 		do
@@ -112,14 +122,14 @@ feature --Basic Implementation
 	build_tag_tree (
 				a_feature: XEL_FEATURE_ELEMENT;
 				templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
-				root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
-				leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
+				root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		require
+			templates_attached: templates /= Void
 			a_feature_valid: attached a_feature
 			root_template_valid: attached root_template
 		do
-			internal_build_tag_tree (a_feature, templates, root_template, True, leftover_regions)
+			internal_build_tag_tree (a_feature, templates, root_template, True)
 		end
 
 	set_parameters (a_parameters: HASH_TABLE [STRING, STRING])
@@ -166,22 +176,30 @@ feature --Basic Implementation
 				Result.put_subtag (children.item.copy_tag_tree)
 				children.forth
 			end
+		ensure
+			attached_result: attached Result
 		end
 
 	copy_self: XP_TAG_ELEMENT
 		do
 			create Result.make (namespace, id, class_name, debug_information)
 			Result.set_multiline_argument (multiline_argument)
+		ensure
+			attached_result: attached Result
 		end
 
-	accept (visitor: XP_TAG_ELEMENT_VISITOR)
+	accept (a_visitor: XP_TAG_ELEMENT_VISITOR)
 			-- Element part of the Visitor Pattern
+		require
+			visitor_attached: a_visitor /= Void
 		do
-			visitor.visit_tag_element (Current)
-			accept_children (visitor)
+			a_visitor.visit_tag_element (Current)
+			accept_children (a_visitor)
 		end
 
-	accept_children (visitor: XP_TAG_ELEMENT_VISITOR)
+	accept_children (a_visitor: XP_TAG_ELEMENT_VISITOR)
+		require
+			a_visitor_attached: a_visitor /= Void
 		local
 			i: INTEGER
 		do
@@ -191,13 +209,17 @@ feature --Basic Implementation
 			until
 				i > children.count
 			loop
-				children[i].accept (visitor)
+				children[i].accept (a_visitor)
 				i := i + 1
 			end
 		end
 
 	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Resolves all the dependencies via include
+		require
+			a_templates_attached: a_templates /= Void
+			a_pending_attached: a_pending /= Void
+			a_servlet_gen_attached: a_servlet_gen /= Void
 		do
 			from
 				children.start
@@ -215,9 +237,13 @@ feature {XP_TAG_ELEMENT} -- Implementation
 					a_feature: XEL_FEATURE_ELEMENT;
 					templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
 					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
-					is_root: BOOLEAN;
-					leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
+					is_root: BOOLEAN)
 				-- Adds the needed expressions which build the tree of Current with the correct classes
+		require
+			is_root_attached: is_root /= Void
+			templates_attached: templates /= Void
+			root_template_attached: root_template /= Void
+			a_feature_attached: a_feature /= Void
 		do
 			a_feature.append_comment (debug_information)
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
@@ -241,33 +267,36 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				until
 					children.after
 				loop
-					children.item.internal_build_tag_tree (a_feature, templates, root_template, False, leftover_regions)
+					children.item.internal_build_tag_tree (a_feature, templates, root_template, False)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")
 			end
 		end
 
-	build_attributes (a_feature: XEL_FEATURE_ELEMENT; attributes: HASH_TABLE [STRING, STRING])
+	build_attributes (a_feature: XEL_FEATURE_ELEMENT; a_attributes: HASH_TABLE [STRING, STRING])
 			-- Adds expressions which put the right attributes to the tags
+		require
+			a_feature_attached: a_feature /= Void
+			attributes_attached: a_attributes /= Void
 		do
 			from
-				attributes.start
+				a_attributes.start
 			until
-				attributes.after
+				a_attributes.after
 			loop
 				if multiline_argument then
 					a_feature.append_expression ("temp.put_attribute(%""
-						+ attributes.key_for_iteration + "%", "
-						+ "%N%"[%N" + attributes.item_for_iteration + "%N]%")"
+						+ a_attributes.key_for_iteration + "%", "
+						+ "%N%"[%N" + a_attributes.item_for_iteration + "%N]%")"
 					)
 				else
 					a_feature.append_expression ("temp.put_attribute(%""
-						+ attributes.key_for_iteration + "%", "
-						+ "%"" + attributes.item_for_iteration + "%")"
+						+ a_attributes.key_for_iteration + "%", "
+						+ "%"" + a_attributes.item_for_iteration + "%")"
 					)
 				end
-				attributes.forth
+				a_attributes.forth
 			end
 		end
 

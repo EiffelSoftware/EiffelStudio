@@ -1,49 +1,45 @@
 note
-	description: "Summary description for {TAG_DESCRIPTION_ATTRIBUTE}."
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XTL_TAG_DESCRIPTION_ATTRIBUTE
+	XERROR_FILE_NOT_CREATABLE
 
 inherit
-	XTL_TAG_LIB_ITEM
+	ERROR_ERROR_INFO
+		rename
+			make as make_error
+		end
 
 create
 	make
 
-feature {NONE}-- Initialization
+feature {NONE} -- Initialization
 
-	make
+	make (a_file_name: READABLE_STRING_8)
 		do
-			id := ""
+			create file_name.make_from_string (a_file_name)
+			make_error ([a_file_name]);
 		end
 
 feature -- Access
 
-	id: STRING
-			-- The id of the tag attribute
+	file_name: IMMUTABLE_STRING_8
+			-- File name on which the error occurred
 
-	put (child: XTL_TAG_LIB_ITEM)
+feature {NONE} -- Access
+
+	dollar_description: STRING
 			-- <Precursor>
 		do
-			-- Do nothing (XTL_TAG_DESCRIPTIONS don't have any children)
+			Result := "File not creatable {1}"
 		end
 
-	set_attribute (a_id: STRING; value: STRING)
-			-- <Precursor>
-		require else
-			a_id_is_not_empty: not a_id.is_empty
-			value_is_not_empty: not value.is_empty
-		do
-			if a_id.is_equal (id_id) then
-				id := value
-			end
-		end
-
-feature -- Constants
-
-	id_id: STRING = "id"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -23,6 +23,11 @@ create
 feature -- Initialization
 
 	make_with_arguments (a_id: STRING; a_parser_callback: XP_XML_PARSER_CALLBACKS)
+			-- `a_id': The id of the tag lib (namespace)
+			-- `a_parser_callback': The parser_callback using Current
+		require
+			a_id_attached: a_id /= Void
+			a_parser_callback_attached: a_parser_callback /= Void
 		do
 			make
 			id := a_id
@@ -32,11 +37,17 @@ feature -- Initialization
 feature {NONE} -- Access
 
 	parser_callback: XP_XML_PARSER_CALLBACKS
+			-- The parser_callback using Current
 
 feature -- Access
 
 	create_tag (a_prefix, a_local_part, a_class_name, a_debug_information: STRING): XP_TAG_ELEMENT
 			-- Creates the appropriate XP_TAG_ELEMENT
+		require else
+			a_prefix_attached: a_prefix /= Void
+			a_local_part_attached: attached a_local_part
+			a_class_name_attached: a_class_name /= Void
+			a_debug_information_attached: a_debug_information /= Void
 		do
 			if a_local_part.is_equal ("controller") then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)

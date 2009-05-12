@@ -17,6 +17,8 @@ feature {NONE} -- Initialization
 			-- `a_name': The name of the web application
 			-- `a_path': The path, where all the classes should be generated
 		require
+			a_name_attached: a_name /= Void
+			a_path_attached: a_path /= Void
 			a_name_is_not_empty: not a_name.is_empty
 			a_path_is_not_empty: not a_path.is_empty
 		do
@@ -28,6 +30,9 @@ feature {NONE} -- Initialization
 			-- `a_path': The path, where all the classes should be generated
 			-- `a_servlets': List of the servlet generator generators for the webapp
 		require
+			a_servlets_attached: a_servlets /= Void
+			a_name_attached: a_name /= Void
+			a_path_attached: a_path /= Void
 			a_name_is_not_empty: not a_name.is_empty
 			a_path_is_not_empty: not a_path.is_empty
 		do
@@ -49,8 +54,12 @@ feature -- Access
 
 	put_servlet_generator_generators (a_servlet_gg: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
 			-- Adds a servlet to the list
+		require
+			a_servlet_gg_attached: a_servlet_gg /= Void
 		do
 			servlets := a_servlet_gg
+		ensure
+			servlets_set: servlets = a_servlet_gg
 		end
 
 feature -- Basic Functionality
@@ -82,7 +91,6 @@ feature -- Basic Functionality
 				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
 			end
 
-		--	create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e")
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			create request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
@@ -139,6 +147,8 @@ feature {NONE} -- Implementation
 			create Result.make ("global_state: DEMOAPPLICATION_GLOBAL_STATE")
 			Result.set_once
 			Result.append_expression ("create Result.make")
+		ensure
+			result_attached: attached Result
 		end
 
 	generate_feature_for_name: XEL_FEATURE_ELEMENT
@@ -146,6 +156,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("name: STRING")
 			Result.append_expression ("Result := %"" + webapp_name.as_lower + "%"")
+		ensure
+			result_attached: attached Result
 		end
 
 	generate_contructor_for_application: XEL_FEATURE_ELEMENT
@@ -153,10 +165,14 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("initialize_server_connection_handler")
 			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (config)")
+		ensure
+			result_attached: attached Result
 		end
 
 	generate_constructor_for_server_conn_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
+		require
+			some_servlets_attached: attached some_servlets
 		local
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
@@ -174,6 +190,8 @@ feature {NONE} -- Implementation
 				end
 				some_servlets.forth
 			end
+		ensure
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Constants

@@ -145,7 +145,7 @@ feature -- Processing
 			create l_p_callback.make
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
-			a_registry.put_registry (l_p_callback.taglib.id, l_p_callback.taglib)
+			a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
 		end
 
 	add_template_to_registry (a_servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_path: STRING; a_registry: XP_SERVLET_GG_REGISTRY)

@@ -19,9 +19,13 @@ create
 feature -- Initialization
 
 	make (a_parser_callback: XP_XML_PARSER_CALLBACKS)
+		require else
+			a_parser_callback_attached: a_parser_callback /= Void
 		do
 			Precursor (a_parser_callback)
 			buf := ""
+		ensure then
+			buf_attached: attached buf
 		end
 
 feature -- Access
@@ -30,13 +34,14 @@ feature -- Access
 	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
 
 	buf: STRING
+			-- Buffer for the html part
 
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- <Precursor>
 		local
 			l_prefix: STRING
 		do
-			if parser_callback.taglibs.has_key (a_prefix) then
+			if parser_callback.registry.contains_tag_lib (a_prefix) then
 				create_html_tag_put
 				parser_callback.set_state_tag
 				parser_callback.state.on_start_tag (a_namespace, a_prefix, a_local_part)
@@ -60,7 +65,7 @@ feature -- Access
 		local
 			l_prefix: STRING
 		do
-			if parser_callback.taglibs.has_key (a_prefix) then
+			if parser_callback.registry.contains_tag_lib (a_prefix) then
 				create_html_tag_put
 				parser_callback.set_state_tag
 				parser_callback.state.on_end_tag (a_namespace, a_prefix, a_local_part)

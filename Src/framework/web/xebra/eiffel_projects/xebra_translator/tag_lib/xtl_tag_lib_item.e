@@ -9,17 +9,19 @@ deferred class
 
 feature -- Access
 
-	put (child: XTL_TAG_LIB_ITEM)
+	put (a_child: XTL_TAG_LIB_ITEM)
 			-- Adds a child to the list of children
+		require
+			a_child_attached: a_child /= Void
 		deferred
 		end
 
-	set_attribute (id: STRING; value: STRING)
+	set_attribute (a_id: STRING; a_value: STRING)
 			-- Sets an attribute
 			-- Might be ignored by the specific implementation
 		require
-			id_is_not_empty: not id.is_empty
-			value_is_not_empty: not value.is_empty
+			id_is_not_empty: not a_id.is_empty
+			value_is_not_empty: not a_value.is_empty
 		deferred
 		end
 

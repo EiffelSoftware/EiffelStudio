@@ -10,6 +10,9 @@ note
 class
 	XGEN_SERVLET_GENERATOR_APP_GENERATOR
 
+inherit
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 create
 	make
 
@@ -23,17 +26,24 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	put_servlet_generator_generator (servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
+	put_servlet_generator_generator (a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Adds a servlet_generator_generator to the generator_app_generator
+		require
+			a_servlet_gg_valid: attached a_servlet_gg
 		do
-			servlet_generator_generators.extend (servlet_gg)
+			servlet_generator_generators.extend (a_servlet_gg)
+		ensure
+			servlet_gg_added: servlet_generator_generators.count = old servlet_generator_generators.count + 1
 		end
 
 	put_servlet_generator_generators (a_servlet_ggs: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
+			-- Sets the list of servlet_generator_generators
 		require
 			a_servlet_ggs_attached: attached a_servlet_ggs
 		do
 			servlet_generator_generators := a_servlet_ggs
+		ensure
+			serglet_ggs_set: servlet_generator_generators = a_servlet_ggs
 		end
 
 	servlet_generator_generators: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
@@ -47,7 +57,7 @@ feature -- Basic functionality
 			--  2. {APPLICATION} The root class
 			--  3. The project file (.ecf)
 		require
-			path_is_not_empty: not a_path.is_empty
+			path_is_valid: attached a_path and not a_path.is_empty
 		local
 			buf:XU_INDENDATION_STREAM
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
@@ -56,8 +66,7 @@ feature -- Basic functionality
 			l_filename: STRING
 			serv_gen_copy: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 		do
-				-- Generate the servlet generators
-
+				-- Generate the servlet generator files
 			from
 				servlet_generator_generators.start
 				serv_gen_copy := servlet_generator_generators.duplicate (servlet_generator_generators.count)
@@ -75,14 +84,14 @@ feature -- Basic functionality
 			l_filename := a_path + "application.e"
 			create file.make (l_filename)
 			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
 			file.open_write
 			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
 
-			--create file.make_open_write (a_path + "application.e")
+				-- Create file.make_open_write (a_path + "application.e")
 			create buf.make (file)
 			create application_class.make ("APPLICATION")
 			application_class.set_inherit ("KL_SHARED_ARGUMENTS")
@@ -91,18 +100,16 @@ feature -- Basic functionality
 			application_class.serialize (buf)
 			file.close
 
-
 				-- Generate the .ecf file
 			l_filename := a_path + "servlet_gen.ecf"
 			create file.make (l_filename)
 			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
 			file.open_write
 			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
-			--create file.make_open_write (a_path + "servlet_gen.ecf")
 			file.put_string (servlet_gen_ecf)
 			file.close
 		end
@@ -141,6 +148,9 @@ feature {NONE} -- Implementation
 
 	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Builds the table [controller_uid, controller_type]
+		require
+			a_servlet_gg_attached: a_servlet_gg /= Void
+			a_feature_attached: a_feature /= Void
 		do
 			a_feature.append_expression ("create controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
 			from

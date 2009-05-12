@@ -77,13 +77,16 @@ feature -- Access
 	tag_stack: ARRAYED_STACK [XP_TAG_ELEMENT]
 			-- The stack is used to generate the tree
 
-	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
-			-- Tag library which should be used
+	registry: XP_SERVLET_GG_REGISTRY
+			-- Registry
 
-	put_taglibs (a_taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING])
+	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
+
+	put_registry (a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Adds a taglib to the parser
 		do
-			taglibs.merge (a_taglibs)
+			registry := a_registry
+			taglibs.merge (a_registry.taglib_registry)
 		end
 
 	put_class_name (a_class_name: STRING)
@@ -99,7 +102,7 @@ feature -- Document
 		do
 			tag_stack.wipe_out
 			tag_stack.put (root_tag)
-			create {XP_HTML_CALLBACK_STATE} state.make (Current)
+			state := state_html
 		ensure then
 			only_root_on_stack: tag_stack.count = 1
 		end

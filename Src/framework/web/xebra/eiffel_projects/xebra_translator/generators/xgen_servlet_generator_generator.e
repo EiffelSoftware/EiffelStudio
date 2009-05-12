@@ -7,9 +7,14 @@ class
 	XGEN_SERVLET_GENERATOR_GENERATOR
 
 create
-	make
+	make, make_empty, make_minimal
 
 feature {NONE} -- Initialization
+
+	make_minimal (a_servlet_name: STRING; a_path: STRING)
+		do
+			make (a_servlet_name, False, Void, a_path, False, "")
+		end
 
 	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING; a_is_template: BOOLEAN; a_controller_class: STRING)
 			-- `a_servlet_name': The name of ther servlet which has to be generated
@@ -17,14 +22,28 @@ feature {NONE} -- Initialization
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
 			-- `a_is_template': Is the xeb a template, and has it therefore not to be generated
+		require
+			a_servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+			a_path: not a_path.is_empty
 		do
 			servlet_name := a_servlet_name
 			stateful := a_stateful
-			root_tag := a_root_tag.copy_tag_tree
+--			root_tag := a_root_tag.copy_tag_tree
+			root_tag := a_root_tag
 			path := a_path
 			is_template := a_is_template
 			uid_counter := 0
-			controller_class := a_controller_class
+			if attached a_controller_class as a then
+				controller_class := a_controller_class
+			else
+				controller_class := ""
+			end
+
+			create controller_table.make (1)
+		end
+
+	make_empty
+		do
 			create controller_table.make (1)
 		end
 
@@ -34,6 +53,17 @@ feature {NONE} -- Access
 			-- Internal counter used to generate unique identifiers
 
 feature -- Access
+
+	absorb (a_other: XGEN_SERVLET_GENERATOR_GENERATOR)
+		do
+			servlet_name := a_other.servlet_name
+			stateful := a_other.stateful
+			root_tag := a_other.root_tag.copy_tag_tree
+			path := a_other.path
+			is_template := a_other.is_template
+			uid_counter := 0
+			controller_class := a_other.controller_class
+		end
 
 	controller_class: STRING
 			-- The class of the used controller
@@ -60,8 +90,13 @@ feature -- Access
 			controller_table.put (a_class, a_identifier)
 		end
 
-	root_tag: XP_TAG_ELEMENT
+	root_tag: XP_TAG_ELEMENT assign set_root_tag
 			-- The root tag of the parsed xeb file
+
+	set_root_tag (a_root_tag: XP_TAG_ELEMENT)
+		do
+			root_tag := a_root_tag
+		end
 
 	is_template: BOOLEAN
 			-- Is the xeb a template, and has it therefore not to be generated
@@ -100,6 +135,7 @@ feature -- Basic functionality
 			--	create file.make_open_write (a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e")
 				create buf.make (file)
 				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "SERVLET_GENERATOR")
+					-- TODO add an underline before "SERVLET_GENERATOR". Implicates change in other places as well!
 				servlet_gen_class.set_inherit (Servlet_generator_class)
 				servlet_gen_class.set_constructor_name ("make")
 				build_generate_for_servlet_generator (servlet_gen_class, templates)
@@ -130,18 +166,12 @@ feature {NONE} -- Implementation
 			visitor: XP_REGION_TAG_ELEMENT_VISITOR
 			uid_visitor: XP_UID_TAG_VISITOR
 		do
-			uid := next_unique_identifier
-			add_controller (uid, controller_class)
-			create visitor.make (create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0))
-			create uid_visitor.make_with_uid (uid)
-			root_tag.accept (uid_visitor)
-				-- Update the uid for the controller BEFORE adding the regions
-			root_tag.accept (visitor)
 			create generate_feature.make ("get_root_tag: " + Tag_serializer_class)
 			a_class.add_feature (generate_feature)
 			generate_feature.append_local ("stack", "ARRAYED_STACK [" + Tag_serializer_class + "]")
 			generate_feature.append_local ("root_tag, temp", Tag_serializer_class)
 			generate_feature.append_expression ("create stack.make (10)")
+
 			root_tag.build_tag_tree (generate_feature, templates, Current, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0))
 
 			generate_feature.append_expression ("Result := root_tag")

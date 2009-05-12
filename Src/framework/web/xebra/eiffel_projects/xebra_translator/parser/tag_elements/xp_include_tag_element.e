@@ -12,82 +12,78 @@ class
 inherit
 	XP_TAG_ELEMENT
 		redefine
-			internal_build_tag_tree,
-			accept
-			--copy_tag_tree
+			accept,
+			resolve_all_dependencies,
+			copy_self
 		end
+create
+	make
 
-create make
 
 feature -- Initialization
 
 feature -- Access
 
-	internal_build_tag_tree (
-					a_feature: XEL_FEATURE_ELEMENT;
-					templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
-					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
-					is_root: BOOLEAN;
-					leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
-				-- Adds the needed expressions which build the tree of Current with the correct classes
-			local
-				template: XGEN_SERVLET_GENERATOR_GENERATOR
-				child: XP_TAG_ELEMENT
-				tag_visitor: XP_REGION_TAG_ELEMENT_VISITOR
-				uid_visitor: XP_UID_TAG_VISITOR
-				regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
-				uid: STRING
-			do
-				a_feature.append_comment (debug_information)
-				template := retrieve_template (parameters ["template"], templates)
+	copy_self: XP_TAG_ELEMENT
+		do
+			create {XP_INCLUDE_TAG_ELEMENT} Result.make (namespace, id, class_name, debug_information)
+		end
 
-				create regions.make (4)
-
-				if has_children then
-					-- from here to...
-					from
-						children.start
-					until
-						children.after
-					loop
-						child := children.item
-
-						if child.id.is_equal ("define_region") then
-							regions.put (child.children, child.retrieve_value ("id"))
-						end
-							--
-						children.forth
-					end
-					-- ...here: ugly!
-					regions.merge (leftover_regions)
-					uid := root_template.next_unique_identifier
-					create tag_visitor.make (regions)
-					create uid_visitor.make_with_uid (uid)
-					template.root_tag.accept (uid_visitor)
-						-- Sets the controller name. Don't switch position with the next line
-					template.root_tag.accept (tag_visitor)
-						-- Updates the regions. If region matches, it is consumed.
-					root_template.add_controller (uid, template.controller_class)
-					template.root_tag.internal_build_tag_tree (a_feature, templates, root_template, is_root, regions)
-						-- Note that the regions have been changed by the visitor `tag_visitor' and only the unused regions
-						-- are still in the table.
-				end
-			end
-
-	retrieve_template (template_name: STRING; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XGEN_SERVLET_GENERATOR_GENERATOR
-			-- Retrieves the template according to the `template_name'
-		require
-			template_name_valid: not template_name.is_empty
+	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR)
+			-- Precursor
+		local
+			l_child: XP_TAG_ELEMENT
+			l_region: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
 		do
 			from
-				templates.start
+				children.start
+				create l_region.make (10)
 			until
-				templates.after
+				children.after
 			loop
-				if templates.item.servlet_name.is_equal (template_name) then
-					Result := templates.item.copy_generator
+				l_child := children.item
+				if l_child.id.is_equal ("define_region") then
+						-- We have found a region
+					l_region [l_child.retrieve_value ("id")] := l_child.children
 				end
-				templates.forth
+				children.forth
+			end
+			set_child (a_templates [retrieve_value ("template")].resolve (a_templates, l_region, a_pending, a_servlet_gen))
+		end
+
+	retrieve_next_controller_class (a_region: STRING; a_template: XGEN_SERVLET_GENERATOR_GENERATOR; a_templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): STRING
+			-- Recursively searches for the region `a_region' and returns its parent includes template controller class.
+		require
+			a_region_is_valid: not a_region.is_empty
+		local
+			l_region_seeker: XP_REGION_SEEK_VISITOR
+		do
+			Result := ""
+			if a_template.controller_class.is_empty then
+				create l_region_seeker.make (a_region)
+				a_template.root_tag.accept (l_region_seeker)
+				Result := retrieve_next_controller_class (a_region, retrieve_template (l_region_seeker.template, a_templates), a_templates)
+			else
+				Result := a_template.controller_class
+			end
+		ensure
+			class_is_set: not Result.is_empty
+		end
+
+	retrieve_template (a_template_name: STRING; a_templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XGEN_SERVLET_GENERATOR_GENERATOR
+			-- Retrieves the template according to the `template_name'
+		require
+			template_name_valid: not a_template_name.is_empty
+		do
+			from
+				a_templates.start
+			until
+				a_templates.after
+			loop
+				if a_templates.item.servlet_name.is_equal (a_template_name) then
+					Result := a_templates.item.copy_generator
+				end
+				a_templates.forth
 			end
 		end
 
@@ -95,14 +91,7 @@ feature -- Access
 			-- Element part of the Visitor Pattern
 		do
 			visitor.visit_include_tag_element (Current)
-			from
-				children.start
-			until
-				children.after
-			loop
-				children.item.accept (visitor)
-				children.forth
-			end
+			accept_children (visitor)
 		end
 
 end

@@ -12,7 +12,7 @@ class
 create
 	make
 
-feature {NONE}-- Initialization
+feature -- Initialization
 
 	make (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
 			-- `a_class_name': The name of the corresponding TAG-class
@@ -31,16 +31,18 @@ feature {NONE}-- Initialization
 
 feature {NONE} -- Access
 
-	class_name: STRING
-			-- The name of the corresponding TAG-class
+
+
+feature -- Access
 
 	parameters: HASH_TABLE [STRING, STRING]
 			-- The parameters of the tag [value, parameter id]
 
+	class_name: STRING
+			-- The name of the corresponding TAG-class
+
 	debug_information: STRING
 			-- Debug information (row and column in the xeb file)
-
-feature -- Access
 
 	controller_id: STRING assign set_controller_id
 			-- The id of the controller which should be used
@@ -88,7 +90,7 @@ feature -- Access
 
 feature --Basic Implementation
 
-	put_subtag (child: like Current)
+	put_subtag (child: XP_TAG_ELEMENT)
 			-- Adds a tag to the list of children.
 		do
 			children.extend (child)
@@ -113,16 +115,40 @@ feature --Basic Implementation
 				root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
 				leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 			-- Adds the needed expressions which build the tree of Current with the correct classes
+		require
+			a_feature_valid: attached a_feature
+			root_template_valid: attached root_template
 		do
 			internal_build_tag_tree (a_feature, templates, root_template, True, leftover_regions)
 		end
 
-	copy_tag_tree: like Current
+	set_parameters (a_parameters: HASH_TABLE [STRING, STRING])
+			-- Sets the parameters
+		require
+			a_parameters_valid: a_parameters /= Void
+		do
+			parameters := a_parameters
+		end
+
+	set_children (a_children: LIST [XP_TAG_ELEMENT])
+			-- Sets the children
+		do
+			children := a_children
+		end
+
+	set_child (a_child: XP_TAG_ELEMENT)
+			-- Empties the children list and adds `a_child' as unique child
+		do
+			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (1)
+			children.extend (a_child)
+		ensure
+			not_more_than_one_child: children.count = 1
+		end
+
+	copy_tag_tree: XP_TAG_ELEMENT
 			-- Copies the tag and its children
 		do
-			create Result.make (namespace, id, class_name, debug_information)
-			Result.multiline_argument := multiline_argument
-			Result.controller_id := controller_id
+			Result := copy_self
 			from
 				parameters.start
 			until
@@ -131,6 +157,7 @@ feature --Basic Implementation
 				Result.put_attribute (parameters.key_for_iteration, parameters.item_for_iteration)
 				parameters.forth
 			end
+
 			from
 				children.start
 			until
@@ -141,16 +168,43 @@ feature --Basic Implementation
 			end
 		end
 
+	copy_self: XP_TAG_ELEMENT
+		do
+			create Result.make (namespace, id, class_name, debug_information)
+			Result.set_multiline_argument (multiline_argument)
+		end
+
 	accept (visitor: XP_TAG_ELEMENT_VISITOR)
 			-- Element part of the Visitor Pattern
 		do
 			visitor.visit_tag_element (Current)
+			accept_children (visitor)
+		end
+
+	accept_children (visitor: XP_TAG_ELEMENT_VISITOR)
+		local
+			i: INTEGER
+		do
+				-- i is used as a iteration variable, so the list can be used concurrently
+			from
+				i := 1
+			until
+				i > children.count
+			loop
+				children[i].accept (visitor)
+				i := i + 1
+			end
+		end
+
+	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR)
+			-- Resolves all the dependencies via include
+		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.accept (visitor)
+				children.item.resolve_all_dependencies (a_templates, a_pending, a_servlet_gen)
 				children.forth
 			end
 		end
@@ -164,8 +218,6 @@ feature {XP_TAG_ELEMENT} -- Implementation
 					is_root: BOOLEAN;
 					leftover_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 				-- Adds the needed expressions which build the tree of Current with the correct classes
-		require
-			controller_id_set: attached controller_id -- Doesn't work?
 		do
 			a_feature.append_comment (debug_information)
 			a_feature.append_expression ("create {" + class_name + "} temp.make")

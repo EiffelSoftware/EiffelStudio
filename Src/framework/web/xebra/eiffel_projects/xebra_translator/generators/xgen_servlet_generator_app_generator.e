@@ -29,6 +29,13 @@ feature -- Access
 			servlet_generator_generators.extend (servlet_gg)
 		end
 
+	put_servlet_generator_generators (a_servlet_ggs: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
+		require
+			a_servlet_ggs_attached: attached a_servlet_ggs
+		do
+			servlet_generator_generators := a_servlet_ggs
+		end
+
 	servlet_generator_generators: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 		-- All the servlet_generator_generators
 

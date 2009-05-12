@@ -39,7 +39,8 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general, "General")
+			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).testing, "Testing")
+			--Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general, "General")
 		ensure
 			result_attached: Result /= Void
 			is_interface_usable: (attached {USABLE_I} Result as l_usable) implies l_usable.is_interface_usable
@@ -124,11 +125,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

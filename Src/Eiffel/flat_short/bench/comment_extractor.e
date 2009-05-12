@@ -17,10 +17,69 @@ note
 class
 	COMMENT_EXTRACTOR
 
+inherit
+	SHARED_SERVER
+		export
+			{NONE} all
+		end
+
 feature -- Query
 
+	class_comments (a_class: attached CLASS_I): detachable EIFFEL_COMMENTS
+			-- Retrieves the classes comments from a given class, uncompiled or otherwise.
+			--
+			-- `a_class': The class to extract the comments from.
+			-- `Result': A list of tokens of Void if no comments were found.
+		local
+			l_ast: CLASS_AS
+			l_indexing: INDEXING_CLAUSE_AS
+			l_index: INDEX_AS
+			l_tag: ID_AS
+			l_list: EIFFEL_LIST [ATOMIC_AS]
+			l_text: STRING
+			l_text_lines: LIST [STRING]
+			l_stop: BOOLEAN
+		do
+			create Result.make
+
+			if a_class.is_compiled and then attached a_class.compiled_class as l_class then
+				if ast_server.has (l_class.class_id) then
+					l_ast := ast_server.item (l_class.class_id)
+					l_indexing := l_ast.top_indexes
+					if not attached l_indexing then
+						l_indexing := l_ast.bottom_indexes
+					end
+					if attached l_indexing then
+						from l_indexing.start until l_indexing.after or l_stop loop
+							l_index := l_indexing.item
+							if attached l_index then
+								l_tag := l_index.tag
+								if attached l_tag and then l_tag.name.is_case_insensitive_equal (once "description") then
+									l_list := l_index.index_list
+									if l_list /= Void and then not l_list.is_empty and then attached {STRING_AS} l_list.first as l_comment then
+										l_text := l_comment.value
+										if l_text /= Void and then not l_text.is_empty then
+											l_text_lines := l_text.split ('%N')
+											from l_text_lines.start until l_text_lines.after loop
+												Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (l_text_lines.item))
+												l_text_lines.forth
+											end
+										end
+										l_stop := True
+									end
+								end
+							end
+
+							l_indexing.forth
+						end
+					end
+
+				end
+			end
+		end
+
 	feature_comments (a_feature: attached E_FEATURE): detachable EIFFEL_COMMENTS
-			-- Retrieve's the feature comments from a given compiled feature.
+			-- Retrieves the feature comments from a given compiled feature.
 			--
 			-- `a_feature': The feature to show comments for.
 			-- `Result': A list of tokens or Void if no comments were found.
@@ -215,7 +274,7 @@ feature {NONE} -- Implementation: Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -228,22 +287,22 @@ feature {NONE} -- Implementation: Query
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

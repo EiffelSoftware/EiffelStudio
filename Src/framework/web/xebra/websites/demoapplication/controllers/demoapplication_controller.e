@@ -85,7 +85,7 @@ feature -- Basic Operations
 --			Result := "details.xeb?id=" + reservations.item_for_iteration.id.out
 --		end
 
-	
+
 
 	username: STRING
 			-- Gets username of logged in user
@@ -97,6 +97,8 @@ feature -- Basic Operations
 					Result := user.name
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 end

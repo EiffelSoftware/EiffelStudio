@@ -26,6 +26,11 @@ feature {NONE} -- Initialization
 			create xserver_socket.make_server_by_port (config.port.value)
 			stop := False
 			add_servlets
+		ensure
+				config_attached: config /= Void
+				xserver_socket_attached: xserver_socket /= Void
+				session_manager_attached: session_manager /= Void
+				stateless_servlets_attached: stateless_servlets /= Void
 		end
 
 feature -- Constants
@@ -91,11 +96,9 @@ feature -- Implementation
 			         end
 		         end
             end
-
             xserver_socket.cleanup
-        	check
-        		xserver_socket.is_closed
-        	end
+        ensure then
+        	xserver_socket_closed: xserver_socket.is_closed
 		end
 
 	handle_shutdown_signal (a_request: STRING): BOOLEAN
@@ -122,12 +125,14 @@ feature -- Status setting
 			-- Adds servlets
 		deferred
 		end
-		
+
 	shutdown
 			-- Stops the thread and closes connections
 		do
 			o.dprint ("Shutting down...", 1)
 			stop := True
+		ensure
+			stopping: stop = True
 		end
 
 invariant

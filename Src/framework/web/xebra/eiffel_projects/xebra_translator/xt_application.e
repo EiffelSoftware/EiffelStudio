@@ -18,37 +18,46 @@ feature {NONE} -- Initialization
 	make
 			-- Make the application.
 		local
+			l_arg_parser: XT_ARGUMENT_PARSER
+		do
+			create l_arg_parser.make
+			l_arg_parser.execute (agent run (l_arg_parser))
+		end
+
+feature -- Operation
+
+	run (a_arg_parser: XT_ARGUMENT_PARSER)
+			-- Runns the translator
+
+		local
 			l_printer: ERROR_CUI_PRINTER
 			l_translator: XP_TRANSLATOR
 			l_dir: DIRECTORY
 		do
-			if  Arguments.argument_count /= 5 then
-				print ("Invalid arguments%N%NUsage: %N%Ttranslator project_name input_path output_path servlet_gen_path tag_lib_path%N")
+			create l_translator.make (a_arg_parser.project_name)
+			create l_dir.make (a_arg_parser.input_path)
+
+			l_translator.set_output_path (a_arg_parser.output_path)
+			l_translator.set_servlet_gen_path (a_arg_parser.servlet_gen_path)
+
+			l_translator.process_with_files (l_dir.linear_representation, a_arg_parser.tag_lib_path)
+
+			create l_printer.default_create
+			if error_manager.has_warnings then
+				error_manager.trace_warnings (l_printer)
+			end
+
+			if not error_manager.is_successful then
+				error_manager.trace_last_error (l_printer)
 			else
-				create l_translator.make (Arguments.argument (1))
-				create l_dir.make (Arguments.argument (2))
-
-				l_translator.set_output_path (Arguments.argument (3))
-				l_translator.set_servlet_gen_path (Arguments.argument (4))
-
-				l_translator.process_with_files (l_dir.linear_representation, Arguments.argument (5))
-
-				create l_printer.default_create
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
-				end
-
-				if not error_manager.is_successful then
-					error_manager.trace_last_error (l_printer)
-				else
-					print ("%NOutput generated to '")
-					print (l_translator.output_path)
-					print ("%NServlets generated to '")
-					print (l_translator.servlet_gen_path)
-					print ("'.%N")
-				end
+				print ("%NOutput generated to '")
+				print (l_translator.output_path)
+				print ("%NServlets generated to '")
+				print (l_translator.servlet_gen_path)
+				print ("'.%N")
 			end
 		end
+
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

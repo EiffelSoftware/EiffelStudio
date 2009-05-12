@@ -18,13 +18,15 @@ inherit
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.	
+			-- Initialization for `Current'.				
 		local
 			l_arg_parser: XWA_ARGUMENT_PARSER
 		do
 			print ("%N%N%N")
 			create l_arg_parser.make
 			l_arg_parser.execute (agent setup (l_arg_parser))
+		ensure
+			config_attached: config /= Void
 		end
 
 
@@ -32,6 +34,8 @@ feature {NONE} -- Operations Internal
 
 	setup (a_arg_parser: XWA_ARGUMENT_PARSER)
 			-- Sets the configuration.
+		require
+			a_arg_parser_attached: a_arg_parser /= Void
 		local
 			l_config_reader: XWA_CONFIG_READER
 			l_printer: ERROR_CUI_PRINTER
@@ -115,5 +119,6 @@ feature -- Setter
 			stop_set: stop = a_stop
 		end
 
-
+invariant
+	config_attached: config /= Void
 end

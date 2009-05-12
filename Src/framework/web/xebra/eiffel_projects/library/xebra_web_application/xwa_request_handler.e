@@ -26,12 +26,17 @@ feature -- Access
 
 feature -- Processing
 
-process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
+	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
 					 a_socket: NETWORK_STREAM_SOCKET;  a_server_conn_handler: XWA_SERVER_CONN_HANDLER)
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 
 			-- TODO was ist hier genau der witz, dass man einen XWA_SERVER_CONN_HANDLER mitgibt? das kann sicher besser geloest werden. ist auch heike wegen thread!
+		require
+			a_session_manager_attached: a_session_manager /= Void
+			not_a_request_message_is_detached_or_empty: a_request_message /= Void and then not a_request_message.is_empty
+			a_socket_attached: a_socket /= Void
+			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		local
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
@@ -69,7 +74,10 @@ feature {NONE} -- Internal Processing
 
 	post_process_response (a_response: XH_RESPONSE; a_previous_request: XH_REQUEST): detachable XH_GET_REQUEST
 			-- If a goto value is specified in a_response a
-			-- new request is generated out of it
+			-- new request is generated out of it		
+		require
+			a_response_attached: a_response /= Void
+			a_previous_request_attached: a_previous_request /= Void
 		do
 			 if not a_response.goto_request.is_empty then
 				create Result.make_goto_request (a_response.goto_request, a_previous_request)
@@ -81,6 +89,9 @@ feature {NONE} -- Internal Processing
 			-- 1. Stateless servlet?
 			-- 2. Servlet in session?
 			-- 3. If not found := Void
+		require
+			a_request_attached: a_request /= Void
+			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		do
 			if attached {XWA_STATELESS_SERVLET} a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
 				Result := l_servlet

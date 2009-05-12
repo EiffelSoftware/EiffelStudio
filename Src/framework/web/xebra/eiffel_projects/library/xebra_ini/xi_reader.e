@@ -28,6 +28,8 @@ feature -- Status report
 
 	check_attributes (a_config: G): detachable G
 			-- Checks if all attributes have been set
+		require
+			a_config_attached: a_config /= Void
 		deferred
 		end
 
@@ -35,6 +37,8 @@ feature -- Status setting
 
 	process_file (a_file_name: STRING): detachable G
 			-- Processes a config file an generates a XS_CONFIG object
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			if attached {INI_DOCUMENT} open_ini_file (a_file_name) as ini_doc then
 				Result := check_attributes (process_properties (ini_doc.properties))
@@ -46,6 +50,8 @@ feature {NONE} -- Internal Status setting
 
 	process_properties (a_properties: LIST [INI_PROPERTY]): G
 			-- Process document properties
+		require
+			a_properties_attached: a_properties /= Void
 		local
 			l_cursor: CURSOR
 			l_config: G
@@ -64,14 +70,16 @@ feature {NONE} -- Internal Status setting
 
 	process_property (a_property: INI_PROPERTY; a_config: G)
 			-- Process document properties
+		require
+			a_property_attached: a_property /= Void
+			a_config_attached: a_config /= Void
 		deferred
 		end
 
 	open_ini_file (a_file_name: STRING): detachable INI_DOCUMENT
 			-- Attempts to open `a_file_name' as an INI document.
 		require
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			error_manager_attached: error_manager /= Void
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_reader: INI_DOCUMENT_READER

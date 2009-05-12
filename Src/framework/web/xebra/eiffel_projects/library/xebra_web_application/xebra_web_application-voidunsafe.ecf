@@ -2,14 +2,19 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_web_application" uuid="4DA691E3-8905-46B6-B1C6-537F192BD17A" library_target="xebra_web_application">
 	<target name="xebra_web_application">
 		<root all_classes="true"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="error_manager" location="$ISE_LIBRARY\framework\base\application\error_manager\error_manager.ecf"/>
+		<library name="ini" location="$ISE_LIBRARY\framework\file_formats\ini.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="settable_types" location="$ISE_LIBRARY\framework\settable_types\settable_types.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf"/>
 		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<cluster name="xebra_web_application" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

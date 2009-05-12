@@ -11,45 +11,59 @@ class
 	XWA_CONFIG
 
 inherit
-	XWA_CONFIG_I
+	XI_CONFIG
 		redefine
-			default_create
+			make_empty
 		end
 
 create
-	default_create
---	make
+	make_empty
 
 feature {NONE} -- Initialization
 
-	default_create
+	make_empty
+			-- Initialization for `Current'.
 		do
-			Precursor
 			create name.make_empty
-			port := 1
+			create port.make_empty
+			create is_interactive.make_empty
 		end
-
---	make (a_name: READABLE_STRING_8; a_port: like port; a_interactive: BOOLEAN)
---			-- Initialization for `Current'.
---		do
---			name := a_name
---			port := a_port
---			is_interactive := a_interactive
---		end
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_8 assign set_name
+	name: SETTABLE_STRING assign set_name
 
-	port: NATURAL
+	port: SETTABLE_INTEGER assign set_port
 
-	is_interactive: BOOLEAN
+	is_interactive: SETTABLE_BOOLEAN assign set_is_interactive
 
 feature -- Status report
 
 feature -- Status setting
 
-feature {NONE} -- Implementation
+	set_name (a_name: like name)
+			-- Sets name
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
+	set_port  (a_port: like port)
+			-- Sets port
+		do
+			port  := a_port
+		ensure
+			port_set: port  = port
+		end
+
+	set_is_interactive (a_is_interactive: like is_interactive)
+			-- Sets is_interactive
+		do
+			is_interactive  := a_is_interactive
+		ensure
+			is_interactive_set: is_interactive  = a_is_interactive
+		end
 
 end
 

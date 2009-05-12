@@ -17,8 +17,12 @@ feature {NONE} -- Initialization
 
 	make (a_webapp: XS_WEBAPP)
 			-- Initialization for `Current'.
+		require
+			a_webapp_attached: a_webapp /= Void
 		do
 			webapp := a_webapp
+		ensure
+			a_webapp_set: equal (a_webapp, webapp)
 		end
 
 feature -- Access
@@ -165,5 +169,8 @@ feature {NONE} -- Implementation
 				o.eprint ("File does not exist for launching process: '" + a_exe + " " + a_args + "'", generating_type)
 			end
 		end
+invariant
+	webapp_attached: webapp /= Void
+	config_attached: config /= Void
 end
 

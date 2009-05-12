@@ -13,8 +13,9 @@ inherit
 create
 	make
 
-feature -- Status Change
-get_res_id_from_args: STRING
+feature -- Status Change	
+
+	get_res_id_from_args: STRING
 			-- Retrieve reservartion ID from request arguments
 		do
 			Result := ""
@@ -23,6 +24,8 @@ get_res_id_from_args: STRING
 					Result := res.id.out
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	get_res_name_from_args: STRING
@@ -34,6 +37,8 @@ get_res_id_from_args: STRING
 					Result := res.name
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	get_res_date_from_args: STRING
@@ -45,6 +50,8 @@ get_res_id_from_args: STRING
 					Result := res.date
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	get_res_persons_from_args: STRING
@@ -56,6 +63,8 @@ get_res_id_from_args: STRING
 					Result := res.persons.out
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	get_res_description_from_args: STRING
@@ -67,6 +76,8 @@ get_res_id_from_args: STRING
 					Result := res.description
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 

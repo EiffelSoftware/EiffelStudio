@@ -40,6 +40,8 @@ feature -- Access
 			is_successful: is_successful
 		do
 			Result := value
+		ensure
+			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 

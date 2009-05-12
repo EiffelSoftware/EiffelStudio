@@ -17,6 +17,8 @@ feature {XWA_SERVLET} -- Initialization
 			-- Will be executed by inheritant class
 		do
 			create current_session.make
+		ensure
+			current_session_attached: current_session /= Void
 		end
 
 feature -- Access
@@ -28,6 +30,10 @@ feature -- Basic Operations
 
 	pre_handle_request (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
+		require
+			a_session_manager_attached: a_session_manager /= Void
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
 		local
 			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
@@ -50,31 +56,46 @@ feature -- Basic Operations
 
 	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request from a client an generates a response.
+		require
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
 		deferred
 		end
 
-	prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)
+	prehandle_post_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request before handle_request, if the request is a POST request
+		require
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
 		deferred
 		end
 
-	prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)
+	prehandle_get_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a request before handle_request, if the request is a GET request
+		require
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
 		deferred
 		end
 
-	afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)
-			-- Handles a request after handle_request
+	afterhandle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)
+		require
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
 		deferred
 		end
 
 	internal_controllers: LIST [XWA_CONTROLLER]
 			-- The controller associated to the servlet
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
+invariant
+	current_session_attached: current_session /= Void
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

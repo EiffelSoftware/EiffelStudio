@@ -12,6 +12,7 @@ inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 feature -- Initialization
+
 feature -- Access
 
 	process_file (a_file_name: READABLE_STRING_8; a_action: PROCEDURE [ANY, TUPLE [file: KI_CHARACTER_INPUT_STREAM]])

@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.
+			-- Initialization for `Current'.	
 		do
 			create reservations.make
 			create users.make (2)
@@ -28,7 +28,9 @@ feature {NONE} -- Initialization
 			users.force ( create {USER}.make (1, "admin", "123", True), "admin")
 
 			reservations.force (create {RESERVATION}.make (1, "Fabio Zuend", "2009-02-06", 4, "Big event!"))
-
+		ensure
+			reservations_attached: reservations /= Void
+			users_attached: users /= Void
 		end
 
 feature -- Access
@@ -98,4 +100,8 @@ feature -- Basic Operations
 			reservations.force (create {RESERVATION}.make (reservations.count+1, a_name, a_date, a_persons, a_description))
 			Result := True
 		end
+
+invariant
+	reservations_attached: reservations /= Void
+	users_attached: users /= Void
 end

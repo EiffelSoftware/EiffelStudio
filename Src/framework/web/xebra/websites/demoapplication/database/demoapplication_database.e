@@ -30,16 +30,6 @@ feature -- Status Change
 
 feature -- Basic Operations
 
---	get_user_by_id (a_id: INTEGER): USER
---			-- Retrieves a user with an id
---		deferred
---		end
-
---	all_users: LIST [USER]
---			-- Retrieves all users
---		deferred
---		end
-
 	reservation_by_id (a_id: INTEGER): detachable RESERVATION
 			-- Retrieves a reservation with an id
 		deferred
@@ -48,17 +38,19 @@ feature -- Basic Operations
 	reservations: LINKED_LIST [RESERVATION]
 			-- Retrieves all reservations
 		deferred
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	insert_reservation (a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING): BOOLEAN
 			-- Inserts a new reseravation
+
+		require
+			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
+			not_a_date_is_detached_or_empty: a_date /= Void and then not a_date.is_empty
+			not_a_description_is_detached_or_empty: a_description /= Void and then not a_description.is_empty
 		deferred
 		end
-
---	get_all_reservations: LIST [RESERVATION]
---			-- Retrieves all users
---		deferred
---		end
 
 	delete_reservation (a_id: INTEGER)
 			-- Deletes a reservation
@@ -67,6 +59,9 @@ feature -- Basic Operations
 
 	valid_login (a_name: STRING; a_password: STRING): detachable USER
 			-- Tries to log in a user.	
+		require
+			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
+			not_a_password_detached_or_empty: a_password /= Void and then not a_password.is_empty
 		deferred
 		end
 

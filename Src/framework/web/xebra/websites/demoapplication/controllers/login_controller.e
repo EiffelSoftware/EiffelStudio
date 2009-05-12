@@ -20,7 +20,7 @@ feature -- Status Change
 		do
 			if attached current_session as session  then
 					session.remove ("auth")
-				end
+			end
 		end
 
 	login: STRING
@@ -41,6 +41,8 @@ feature -- Status Change
 			else
 				Result := ""
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 end

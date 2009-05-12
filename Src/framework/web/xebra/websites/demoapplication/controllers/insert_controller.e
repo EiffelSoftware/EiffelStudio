@@ -33,5 +33,7 @@ feature -- Status Change
 				else
 					Result := "Error, not enough arguments"
 				end
+		ensure
+			Result_attached: Result /= Void
 		end
 end

@@ -22,10 +22,14 @@ feature {NONE} -- Initialization
 			if not db.open then
 				print ("ERROR DATENBAANK")
 			end
+		ensure
+			db_attached: db /= Void
 		end
 
 feature -- Access
 
 	db: DEMOAPPLICATION_DATABASE
 
+invariant
+	db_attached: db /= Void
 end

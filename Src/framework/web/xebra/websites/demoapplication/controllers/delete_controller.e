@@ -28,5 +28,7 @@ feature -- Status Change
 			else
 				Result := "ERROR: ID is missing"
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 end

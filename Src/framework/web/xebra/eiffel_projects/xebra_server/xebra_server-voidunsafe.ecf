@@ -11,7 +11,7 @@
 		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="ini" location="\home\fabioz\local\eiffel_src\64dev\framework\file_formats\ini.ecf"/>
+		<library name="ini" location="$ISE_LIBRARY\framework\file_formats\ini.ecf"/>
 		<library name="initializable" location="$ISE_LIBRARY\framework\settable_types\settable_types.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>

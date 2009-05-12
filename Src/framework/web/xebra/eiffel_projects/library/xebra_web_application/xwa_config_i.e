@@ -10,30 +10,30 @@ note
 deferred class
 	XWA_CONFIG_I
 
-feature -- Access
+--feature -- Access
 
-	name: STRING
-		deferred
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_emmpty
-		end
+--	name: STRING
+--		deferred
+--		ensure
+--			result_attached: Result /= Void
+--			not_result_is_empty: not Result.is_emmpty
+--		end
 
-	port: NATURAL
-		deferred
-		ensure
-			result_positive: Result > 0
-		end
+--	port: NATURAL
+--		deferred
+--		ensure
+--			result_positive: Result > 0
+--		end
 
-	is_interactive: BOOLEAN
-		deferred
-		end
+--	is_interactive: BOOLEAN
+--		deferred
+--		end
 
-feature -- Basic operation
+--feature -- Basic operation
 
-	merge (a_config: XWA_CONFIG_I)
-		deferred
-		end
+--	merge (a_config: XWA_CONFIG_I)
+--		deferred
+--		end
 
 end
 

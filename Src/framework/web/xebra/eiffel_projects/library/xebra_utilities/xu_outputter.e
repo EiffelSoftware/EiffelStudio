@@ -27,11 +27,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: detachable STRING
+	name: STRING
+			-- The name of the outputter
+		do
+			if attached internal_name then
+				Result := internal_name
+			else
+				Result := "XEB"
+			end
+		end
+
+	internal_name: detachable STRING
 
 	set_name (a_name: STRING)
+		require
+			a_name_attached: a_name /= Void
 		do
-			name := a_name
+			internal_name := a_name
+		ensure
+			name_set: equal (internal_name, a_name)
 		end
 
 	debug_level: INTEGER = 10
@@ -46,6 +60,7 @@ feature -- Print
 			-- Prints a debug message only if debug level is >= a_debug_level
 		require
 			name_attached: name /= Void
+			a_msg_attached: a_msg /= Void
 		do
 			dprintn (a_msg + "%N", a_debug_level)
 		end
@@ -54,6 +69,7 @@ feature -- Print
 			-- Prints a debug message (with no %N)  only if debug level is >= a_debug_level
 		require
 			name_attached: name /= Void
+			a_msg_attached: a_msg /= Void
 		do
 			if a_debug_level <= debug_level then
 				print ("[" + name + "][DEBUG] " + a_msg )
@@ -64,6 +80,7 @@ feature -- Print
 			-- Prints an error message
 		require
 			name_attached: name /= Void
+			a_msg_attached: a_msg /= Void
 		do
 			print ("[" + name + "][ERROR in " + a_generating_type.out + "] " + a_msg + "%N")
 		end
@@ -72,6 +89,7 @@ feature -- Print
 			-- Prints an info message
 		require
 			name_attached: name /= Void
+			a_msg_attached: a_msg /= Void
 		do
 			print ("[" + name + "][INFO] " + a_msg + "%N")
 		end
@@ -80,10 +98,14 @@ feature {NONE}  -- Impl
 
 	print (a_msg: STRING)
 			-- Engulfs print with mutex
+		require
+			a_msg_attached: a_msg /= Void
 		do
 			print_mutex.lock
 			any_print (a_msg)
 			print_mutex.unlock
 		end
 
+invariant
+	print_mutex_attached: print_mutex /= Void
 end

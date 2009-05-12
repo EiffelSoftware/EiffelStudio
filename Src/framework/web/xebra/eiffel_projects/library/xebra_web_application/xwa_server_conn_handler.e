@@ -12,6 +12,22 @@ inherit
 	THREAD
 	XU_SHARED_OUTPUTTER
 
+feature {NONE} -- Initialization
+
+	make (a_config: XWA_CONFIG)
+			-- Initialization of classes.
+		require
+			a_config_attached: a_config /= Void
+		do
+			config := a_config
+			create session_manager.make
+	--		create request_pool.make  (10, agent servlet_handler_spawner)
+			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
+			create xserver_socket.make_server_by_port (config.port.value)
+			stop := False
+			add_servlets
+		end
+
 feature -- Constants
 
 	Default_listening_port: INTEGER = 55001
@@ -35,22 +51,12 @@ feature -- Access
 			-- Used to stop the thread
 
 	config: XWA_CONFIG
-
+			-- The configuration for the webapp
 
 	xserver_socket: NETWORK_STREAM_SOCKET
+			-- The socket to the server
 
 feature -- Implementation
-
-	make (a_config: XWA_CONFIG)
-			-- Initialization of classes.
-		do
-			config := a_config
-			create session_manager.make
-	--		create request_pool.make  (10, agent servlet_handler_spawner)
-			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
-			create xserver_socket.make_server_by_port (config.port)
-			stop := False
-		end
 
 	execute
 			-- Waits for connections from the Xebra Server
@@ -94,6 +100,8 @@ feature -- Implementation
 
 	handle_shutdown_signal (a_request: STRING): BOOLEAN
 			-- If shutdown signal is detected initiate shutdown and return True
+		require
+			a_request_attached: a_request /= Void
 		do
 			Result := False
 			if a_request.starts_with ("#KAMIKAZE#") then
@@ -102,20 +110,31 @@ feature -- Implementation
 			end
 		end
 
-	servlet_handler_spawner: XWA_REQUEST_HANDLER
-			-- Spawns {SERVLET_HANDLER}s for the `request_pool'.
-		do
-			create Result.make
-		end
+--	servlet_handler_spawner: XWA_REQUEST_HANDLER
+--			-- Spawns {SERVLET_HANDLER}s for the `request_pool'.
+--		do
+--			create Result.make
+--		end
 
 feature -- Status setting
 
+	add_servlets
+			-- Adds servlets
+		deferred
+		end
+		
 	shutdown
 			-- Stops the thread and closes connections
 		do
 			o.dprint ("Shutting down...", 1)
 			stop := True
 		end
+
+invariant
+	config_attached: config /= Void
+	xserver_socket_attached: xserver_socket /= Void
+	session_manager_attached: session_manager /= Void
+	stateless_servlets_attached: stateless_servlets /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

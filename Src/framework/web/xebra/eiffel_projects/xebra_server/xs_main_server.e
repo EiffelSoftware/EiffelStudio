@@ -49,6 +49,8 @@ feature -- Initialization
 			if not error_manager.is_successful then
 				error_manager.trace_errors (l_printer)
 			else
+				check server_config /= Void end
+				
 				o.dprint ("Launching HTTP Connection Server...",1)
 				create http_connection_server.make (server_config)
 				if not http_connection_server.is_bound then

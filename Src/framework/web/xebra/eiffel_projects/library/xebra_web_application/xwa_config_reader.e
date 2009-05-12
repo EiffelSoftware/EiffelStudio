@@ -8,12 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XS_WEBAPP_CONFIG_READER
+	XWA_CONFIG_READER
 
 inherit
-	ERROR_SHARED_MULTI_ERROR_MANAGER
-	XU_SHARED_OUTPUTTER
-	XI_READER [XS_WEBAPP_CONFIG]
+	XI_READER [XWA_CONFIG]
 
 create
 	make
@@ -22,12 +20,12 @@ feature {NONE} -- Internal Access
 
 	name_name: STRING = "name"
 	port_name: STRING = "port"
-	host_name: STRING = "host"
+	is_interactive_name: STRING = "is_interactive"
 
 feature -- Status report
 
 
-	check_attributes (a_config: XS_WEBAPP_CONFIG): detachable XS_WEBAPP_CONFIG
+	check_attributes (a_config: XWA_CONFIG): detachable XWA_CONFIG
 			-- Checks if all attributes have been set
 		local
 			l_ok: BOOLEAN
@@ -43,8 +41,8 @@ feature -- Status report
 				l_ok := False
 			end
 
-			if not a_config.host.is_set then
-				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (host_name), false)
+			if not a_config.is_interactive.is_set then
+				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (is_interactive_name), false)
 				l_ok := False
 			end
 
@@ -55,7 +53,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	process_property (a_property: INI_PROPERTY; a_config: XS_WEBAPP_CONFIG)
+	process_property (a_property: INI_PROPERTY; a_config: XWA_CONFIG)
 			-- Process document properties
 		local
 			l_name: STRING
@@ -70,8 +68,10 @@ feature -- Status setting
 				if l_value.is_integer_32 then
 					a_config.port := l_value.to_integer_32
 				end
-			elseif l_name.is_equal (host_name) then
-					a_config.host := l_value
+			elseif l_name.is_equal (is_interactive_name) then
+				if l_value.is_boolean then
+					a_config.is_interactive := l_value.to_boolean
+				end
 --			else
 --				error_manager.add_error (create {XERROR_UNKNOWN_CONFIG_PROPERTY}.make (l_name), false)
 			end

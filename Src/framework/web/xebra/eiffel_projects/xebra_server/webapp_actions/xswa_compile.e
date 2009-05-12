@@ -55,6 +55,11 @@ feature -- Status report
 	file_is_newer (a_file, a_dir, a_ext1, a_ext2: STRING): BOOLEAN
 				-- Returns True iff there is a file in a_dir with a_ext1 or a_ext2
 				-- that is newer than a_file or a_file does not exist
+		require
+			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
+			not_a_dir_is_detached_or_empty: a_dir /= Void and then not a_dir.is_empty
+			not_a_ext1_is_detached_or_empty: a_ext1 /= Void and then not a_ext1.is_empty
+			not_a_ext2_is_detached_or_empty: a_ext2 /= Void and then not a_ext2.is_empty
 		local
 			l_dir: DIRECTORY
 			l_files: LIST [STRING]

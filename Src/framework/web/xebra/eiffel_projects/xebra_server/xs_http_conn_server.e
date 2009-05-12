@@ -24,7 +24,7 @@ feature -- Initialization
 			server_config := a_server_config
             create http_socket.make_server_by_port (default_http_server_port)
          --   create thread_pool.make (max_thread_number, agent request_handler_spawner)
-         	http_socket.set_accept_timeout (5000)
+         	http_socket.set_accept_timeout (20000)
             stop := False
 		ensure
 			server_config_set: server_config = a_server_config
@@ -118,7 +118,7 @@ feature {POOLED_THREAD} -- Implementation
 		do
 			create Result.make (message_default_bound, message_upper_bound)
 		end
-		
+
 invariant
 	http_socket_attached: http_socket /= Void
 	server_config_attached: server_config /= Void

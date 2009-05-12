@@ -30,7 +30,7 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := webapp.config.name.out + " ./ ./ ./" + config.servlet_gen_path + "/ ./"
+			Result := " -n " + webapp.config.name.out + " -i ./ -o ./ -s ./" + config.servlet_gen_path + "/ -t ./"
 		end
 
 	generate_args: STRING
@@ -119,8 +119,8 @@ feature {NONE} -- Implementation
 				translate_process := launch_process (config.translator,
 														translator_args,
 														app_dir,
-														agent translate_process_exited,
-														agent translator_output_handler)
+														agent translate_process_exited)
+													--	agent translator_output_handler)
 				is_running := True
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.config.name.out)).render_to_response
@@ -132,8 +132,8 @@ feature {NONE} -- Implementation
 			gen_compile_process := launch_process (config.compiler,
 													gen_compiler_args,
 													app_dir,
-													agent gen_compile_process_exited,
-													agent compiler_output_handler)
+													agent gen_compile_process_exited)
+												--	agent compiler_output_handler)
 		end
 
 	generate
@@ -142,8 +142,8 @@ feature {NONE} -- Implementation
 			generate_process := launch_process (app_dir + "/" + config.servlet_gen_exe,
 												generate_args,
 												app_dir,
-												agent generate_process_exited,
-												agent generator_output_handler)
+												agent generate_process_exited)
+											--	agent generator_output_handler)
 		end
 
 feature -- Agents

@@ -50,8 +50,8 @@ feature {NONE} -- Implementation
 				run_process := launch_process (app_dir + "/EIFGENs/"+ webapp.config.name.out + "/W_code/" + webapp.config.name.out,
 											app_dir + "/config.ini",
 											run_workdir_w,
-											agent run_process_exited,
-											Void)
+											agent run_process_exited)
+										--	Void)
 				is_running := True
 			end
 			Result := (create {XER_APP_STARTING}.make (webapp.config.name.out)).render_to_response

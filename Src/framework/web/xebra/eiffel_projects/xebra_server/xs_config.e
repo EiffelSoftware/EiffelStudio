@@ -23,25 +23,8 @@ create
 
 feature {NONE} -- Initialization
 
---	make (a_webapps:  HASH_TABLE [XS_WEBAPP, STRING];
---			a_webapps_root:  STRING;
---			a_compiler:  STRING;
---			a_translator:  STRING;
---			a_finalize_webapps:  BOOLEAN;
---			a_assume_webapps_are_running:  BOOLEAN)
---			 Initialization for `Current'.
---		do
---			webapps := a_webapps
---			webapps_root :=  a_webapps_root
---			compiler := a_compiler
---			translator := a_translator
---			finalize_webapps := a_finalize_webapps
---			assume_webapps_are_running := a_assume_webapps_are_running
-
---		end
-
 	make_empty
-			--
+			-- Creates an empty XS_CONFIG with unset attributes.
 		do
 			create webapps.make (1)
 			create webapps_root.make_empty
@@ -49,6 +32,13 @@ feature {NONE} -- Initialization
 			create translator.make_empty
 			create finalize_webapps.make_empty
 			create assume_webapps_are_running.make_empty
+		ensure then
+			webapps_attached: webapps /= Void
+			webapps_root_attached: webapps_root /= Void
+			compiler_attached: compiler /= Void
+			translator_attached: translator /= Void
+			finalize_webapps_attached: finalize_webapps /= Void
+			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 		end
 
 feature -- Access
@@ -88,12 +78,16 @@ feature -- Stauts Report
 								"%N%TFinalize webapps '" + finalize_webapps.out +  "'" +
 								"%N%TAssume webapps are running  '" + assume_webapps_are_running.out + "'"
 
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Setters
 
 	set_webapps (a_webapps: like webapps)
-			-- Sets webapps
+			-- Sets webapps and assignes current to all webapps in the list
+		require
+			a_webapps_attached: a_webapps /= Void
 		do
 			webapps := a_webapps
 			from
@@ -111,6 +105,8 @@ feature -- Setters
 
 	set_webapps_root (a_webapps_root: like webapps_root)
 			-- Sets webapps_root
+		require
+			a_webapps_root_attached: a_webapps_root /= Void
 		do
 			webapps_root := a_webapps_root
 		ensure
@@ -119,6 +115,8 @@ feature -- Setters
 
 	set_compiler  (a_compiler: like compiler)
 			-- Sets compiler
+		require
+			a_compiler_attached: a_compiler /= Void
 		do
 			compiler  := a_compiler
 		ensure
@@ -127,6 +125,8 @@ feature -- Setters
 
 	set_translator (a_translator: like translator)
 			-- Sets translator
+		require
+			a_translator_attached: a_translator /= Void
 		do
 			translator  := a_translator
 		ensure
@@ -135,6 +135,8 @@ feature -- Setters
 
 	set_finalize_webapps (a_finalize_webapps: like finalize_webapps)
 			-- Sets finalize_webapps
+		require
+			a_finalize_webapps_attached: a_finalize_webapps /= Void
 		do
 			finalize_webapps := a_finalize_webapps
 		ensure
@@ -143,6 +145,8 @@ feature -- Setters
 
 	set_assume_webapps_are_running (a_assume_webapps_are_running: like assume_webapps_are_running)
 			-- Sets assume_webapps_are_running
+		require
+			a_assume_webapps_are_running_attached: a_assume_webapps_are_running /= Void
 		do
 			assume_webapps_are_running := a_assume_webapps_are_running
 		ensure

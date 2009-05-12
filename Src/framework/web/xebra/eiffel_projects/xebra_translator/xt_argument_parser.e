@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XT_ARGUMENT_PARSER}."
-	author: ""
+	description: "[
+		Parses command line arguments that configure the translator.
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +32,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
 
 feature -- Status report
 
@@ -98,7 +100,6 @@ feature -- Status report
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-
 feature {NONE} -- Access: Usage
 
 	name: STRING = "Xebra Translator"
@@ -118,13 +119,12 @@ feature {NONE} -- Access: Usage
 			-- <Precursor>
 		once
 			create Result.make (1)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (project_name_switch, "Specifies the name of the projec", False, False, "Project name", "Project name", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (project_name_switch, "Specifies the name of the project", False, False, "Project name", "Project name", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (input_path_switch, "Specifies the path to the directory with the input files", False, False, "Input path", "The input directory path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (output_path_switch, "Specifies the path to the directory where the generated files will be written.", False, False, "Ouput path", "The output path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (servlet_gen_path_switch, "Specifies the path to the directory where the servlet generator will be written", False, False, "Servlet gen path", "The servlet generator path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (tag_lib_path_switch, "Specifies the path to the tag library.", False, False, "tag lib", "The tag library", False))
 		end
-
 
 feature {NONE} -- Switches
 
@@ -133,6 +133,5 @@ feature {NONE} -- Switches
 	output_path_switch: STRING = "o|output path"
 	servlet_gen_path_switch: STRING = "s|servlet generator path"
 	tag_lib_path_switch: STRING = "t|tag library path"
-
 
 end

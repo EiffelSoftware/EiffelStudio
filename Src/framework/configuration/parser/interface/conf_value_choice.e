@@ -141,7 +141,7 @@ invariant
 	positive_count: count > 0
 	attached_content: content /= Void
 	is_value_comparison: content.object_comparison
-	index_in_range: index < count
+	index_in_range: index <= count
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -398,9 +398,8 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	EIF_TYPE_INDEX dtype;
 
 	zone = HEADER(object);
-	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-	old_count = count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
+	old_count = count = RT_SPECIAL_COUNT(object);
+	elem_size = RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 	dtype = zone->ov_dtype;
 

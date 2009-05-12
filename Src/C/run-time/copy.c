@@ -204,7 +204,6 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	union overhead *zone;		/* Pointer on source header */
 	uint16 flags;				/* Source object flags */
 	EIF_TYPE_INDEX dtype, dftype;
-	EIF_REFERENCE s_ref, r_ref;
 
 	if ((EIF_REFERENCE) 0 == source)
 		return (EIF_REFERENCE) 0;				/* Void source */
@@ -222,10 +221,8 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	HEADER(result)->ov_dtype = dtype;
 	HEADER(result)->ov_dftype = dftype;
 		/* Keep the count and the element size */
-	r_ref = RT_SPECIAL_INFO(result);
-	s_ref = RT_SPECIAL_INFO(source);
-	RT_SPECIAL_COUNT_WITH_INFO(r_ref) = RT_SPECIAL_COUNT_WITH_INFO(s_ref);
-	RT_SPECIAL_ELEM_SIZE_WITH_INFO(r_ref) = RT_SPECIAL_ELEM_SIZE_WITH_INFO (s_ref);
+	RT_SPECIAL_COUNT(result) = RT_SPECIAL_COUNT(source);
+	RT_SPECIAL_ELEM_SIZE(result) = RT_SPECIAL_ELEM_SIZE(source);
 
 	RT_GC_WEAN(source);				/* Remove GC protection */
 
@@ -434,7 +431,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 	 */
 
 	RT_GET_CONTEXT
-	EIF_REFERENCE clone, c_ref, c_field;
+	EIF_REFERENCE clone, c_field;
 	uint16 flags;
 	EIF_INTEGER count, elem_size;
 
@@ -468,8 +465,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		if (!(flags & EO_REF)){				/* No references */
 			return;
 		}
-		c_ref = RT_SPECIAL_INFO(clone);
-		count = RT_SPECIAL_COUNT_WITH_INFO (c_ref);			/* Number of items in special */
+		count = RT_SPECIAL_COUNT(clone);			/* Number of items in special */
 
 		/* If object is filled up with references, loop over it and recursively
 		 * deep clone them. If the object has expanded objects, then we need
@@ -499,7 +495,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 				}
 			}
 		} else {					/* Special filled with expanded objects */
-			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (c_ref);
+			elem_size = RT_SPECIAL_ELEM_SIZE(clone);
 			for (offset = OVERHEAD; count > 0; count--, offset += elem_size)
 				expanded_update(source, clone + offset, DEEP);
 		}
@@ -880,12 +876,10 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	union overhead *zone;			/* Malloc information zone */
 	EIF_INTEGER count;
 	rt_uint_ptr elem_size;
-	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
-	ref = RT_SPECIAL_INFO_WITH_ZONE(spobj, zone);
-	count = RT_SPECIAL_COUNT_WITH_INFO(ref);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
+	count = RT_SPECIAL_COUNT(spobj);
+	elem_size = RT_SPECIAL_ELEM_SIZE(spobj);
 
 		/* Reset all memory to zero. */
 	memset (spobj, 0, (rt_uint_ptr) count * elem_size);

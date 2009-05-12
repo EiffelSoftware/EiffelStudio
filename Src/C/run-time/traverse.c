@@ -280,7 +280,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 {
 		/* First pass of the store mechanism consisting in marking objects. */
 	EIF_GET_CONTEXT
-	char *object_ref, *reference;
+	char *reference;
 	rt_uint_ptr count, elem_size;
 	union overhead *zone;		/* Object header */
 	uint16 flags;				/* Object flags */
@@ -358,8 +358,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 		}
 
 			/* Evaluation of the number of items in the special object */
-		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
+		count = RT_SPECIAL_COUNT(object);
 
 		if (flags & EO_TUPLE) {
 				/* Don't forget that first element of TUPLE is the BOOLEAN
@@ -384,7 +383,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 				/* Special object filled with expanded objects which are
 				 * necessary not special objects. */
 			rt_uint_ptr offset = OVERHEAD;
-			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
+			elem_size = RT_SPECIAL_ELEM_SIZE(object);
 			for (i = 0; i < count; i++, offset += elem_size) {
 				internal_traversal(object + offset, p_accounting, 0);
 			}
@@ -1033,7 +1032,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
-	char *object_ref, *reference;
+	char *reference;
 	rt_uint_ptr count, elem_size, i;
 	union overhead *zone = HEADER(object);		/* Object header */
 	uint16 flags;								/* Object flags */
@@ -1067,8 +1066,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 			return object_count;
 
 		/* Evaluation of the number of items in the special object */
-		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
+		count = RT_SPECIAL_COUNT(object);
 
 		if (flags & EO_TUPLE) {
 				/* Don't forget that first element of TUPLE is the BOOLEAN
@@ -1094,7 +1092,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 			/* Special object filled with expanded objects which are
 			 * necessary not special objects.
 			 */
-			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(object_ref);
+			elem_size = RT_SPECIAL_ELEM_SIZE(object);
 			for (object += OVERHEAD; count > 0;
 					count --, object += elem_size)
 				object_count = chknomark(object,tbl,object_count);

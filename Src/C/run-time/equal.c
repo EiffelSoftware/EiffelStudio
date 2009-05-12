@@ -219,23 +219,19 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	s_zone = HEADER(source);
 	t_zone = HEADER(target);
 
-	/* First condition: same count */
-	s_ref = RT_SPECIAL_INFO_WITH_ZONE(source, s_zone);
-	t_ref = RT_SPECIAL_INFO_WITH_ZONE(target, t_zone);
-
 #ifdef DEBUG
 	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
-		source, RT_SPECIAL_COUNT_WITH_INFO (s_ref),
-		target, RT_SPECIAL_COUNT_WITH_INFO (t_ref));
+		source, RT_SPECIAL_COUNT(source),
+		target, RT_SPECIAL_COUNT(target));
 #endif
 
-	count = RT_SPECIAL_COUNT_WITH_INFO(s_ref);
-	if (count != RT_SPECIAL_COUNT_WITH_INFO(t_ref))
+	count = RT_SPECIAL_COUNT(source);
+	if (count != RT_SPECIAL_COUNT(target))
 		return EIF_FALSE;
 
 	/* Second condition: same element size */
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (s_ref);
-	if (elem_size != RT_SPECIAL_ELEM_SIZE_WITH_INFO(t_ref))
+	elem_size = RT_SPECIAL_ELEM_SIZE(source);
+	if (elem_size != RT_SPECIAL_ELEM_SIZE(target))
 		return EIF_FALSE;
 
 	s_flags = s_zone->ov_flags;
@@ -384,8 +380,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			return EIF_TRUE;
 
 		/* Evaluation of the count of the target special object */
-		t_ref = RT_SPECIAL_INFO_WITH_ZONE(target, zone);
-		count = RT_SPECIAL_COUNT_WITH_INFO(t_ref);
+		count = RT_SPECIAL_COUNT(target);
 
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_VALUE * l_source = (EIF_TYPED_VALUE *) source;
@@ -443,7 +438,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			/* Special objects filled with (non-special) expanded objects.
 			 * we call then standard isomorphism test on normal objects.
 			 */
-			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(t_ref);
+			elem_size = RT_SPECIAL_ELEM_SIZE(target);
 			for (
 				s_ref = source+OVERHEAD, t_ref = target+OVERHEAD;
 				count > 0;

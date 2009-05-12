@@ -936,8 +936,7 @@ rt_private void st_store(EIF_REFERENCE object)
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref;
 
-			o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
@@ -960,7 +959,7 @@ rt_private void st_store(EIF_REFERENCE object)
 						st_store(o_ref);
 				}
 			} else {						/* Special of composites */
-				elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+				elem_size = RT_SPECIAL_ELEM_SIZE(object);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
 					st_store(ref);
@@ -1073,11 +1072,9 @@ rt_public void gst_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
-		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
-		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-		count = (uint32) (RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
-		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
+		count = (uint32) (RT_SPECIAL_COUNT(object));
+		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
 
 		/* We have to save the number of objects in the special object */
 
@@ -1124,11 +1121,9 @@ rt_public void ist_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
-		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
-		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-		count = (uint32)(RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
-		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
+		count = (uint32)(RT_SPECIAL_COUNT(object));
+		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
 
 		/* We have to save the number of objects in the special object */
 
@@ -1250,10 +1245,9 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count;
 			rt_uint_ptr elem_size;
-			EIF_REFERENCE ref, o_ptr;
+			EIF_REFERENCE ref;
 
-			o_ptr = RT_SPECIAL_INFO(object);
-			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 
 			if (flags & EO_TUPLE) {
 				buffer_write (object, (rt_uint_ptr) count * sizeof(EIF_TYPED_VALUE));
@@ -1299,13 +1293,13 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 						case SK_REAL64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
 						case SK_POINTER: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_POINTER)); break;
 						case SK_BIT:
-							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 
 	/*FIXME: header for each object ????*/
 							buffer_write(object, (rt_uint_ptr) count*elem_size); /* %%ss arg1 was cast (struct bit *) */
 							break;
 						case SK_EXP:
-							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 							exp_dftype = eif_gen_param_id(dftype, 1);
 							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 							buffer_write((char *) (&store_flags), sizeof(uint32));
@@ -1329,7 +1323,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 					if (!(flags & EO_COMP)) {	/* Special of references */
 						buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						exp_dftype = eif_gen_param_id(dftype, 1);
 						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 						buffer_write((char *)(&store_flags), sizeof(uint32));
@@ -1470,11 +1464,10 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			EIF_REFERENCE ref, o_ptr;
+			EIF_REFERENCE ref;
 			EIF_INTEGER count, elem_size;
 
-			o_ptr = RT_SPECIAL_INFO(object);
-			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 
 			if (flags & EO_TUPLE) {
 				object_tuple_write (object);
@@ -1524,11 +1517,11 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) object, count); break;
 						case SK_BIT:
 							dgen_typ = dgen & SK_DTYPE;
-							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 							widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
 							break;
 						case SK_EXP:
-							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							elem_size = RT_SPECIAL_ELEM_SIZE(object);
 							exp_dftype = eif_gen_param_id(dftype, 1);
 							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 							widr_norm_int(&store_flags);
@@ -1552,7 +1545,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 					if (!(flags & EO_COMP)) {	/* Special of references */
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						exp_dftype = eif_gen_param_id(dftype, 1);
 						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 						widr_norm_int(&store_flags);

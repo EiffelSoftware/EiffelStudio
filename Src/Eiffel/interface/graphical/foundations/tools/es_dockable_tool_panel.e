@@ -1045,7 +1045,7 @@ feature {NONE} -- Factory
 			create Result.make
 			Result.set_pixel_buffer (stock_mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
 			Result.set_pixmap (stock_mini_pixmaps.callstack_send_to_external_editor_icon)
-			Result.set_tooltip ("Click to show the help documentation.")
+			Result.set_tooltip (locale_formatter.formatted_translation (tt_show_help, [tool_descriptor.title.as_lower]))
 			register_action (Result.select_actions, agent show_help)
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
@@ -1076,6 +1076,10 @@ feature {NONE} -- Internal implementation cache
 
     internal_right_tool_bar_widget: detachable CELL [detachable like right_tool_bar_widget]
             -- Cached version of `right_tool_bar_widget'
+
+feature {NONE} -- Internationalization
+
+	tt_show_help: STRING = "Click to show the $1 tool help documentation."
 
 invariant
     not_is_initialized: is_initializing implies not is_initialized

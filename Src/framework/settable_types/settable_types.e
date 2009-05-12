@@ -12,15 +12,18 @@ deferred class
 
 inherit
 	ANY
-	redefine
-		out
-	end
+		redefine
+			out
+		end
 
 feature -- Creation
 
 	make_empty
 			-- Creates but does not initialize
 		do
+			create_internal_value
+		ensure
+			interal_value_attached: internal_value /= void
 		end
 
 feature -- Access
@@ -30,14 +33,28 @@ feature -- Access
 			is_set: is_set
 		do
 			Result := internal_value
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Element change
 
 	set_value (a_value: G)
+		require
+			a_value_attached: a_value /= Void
 		do
 			internal_value := a_value
 			is_set := True
+		ensure
+			internal_value_set: internal_value = a_value
+			is_set: is_set = True
+		end
+
+	create_internal_value
+			-- Creates the internal_value
+		deferred
+		ensure
+			interal_value_attached: internal_value /= void
 		end
 
 feature -- Status report
@@ -48,11 +65,15 @@ feature -- Status report
 			-- Calls out of internal_value
 		do
 			Result := value.out
+		ensure then
+			Result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
 	internal_value: G
 
+invariant
+		interal_value_attached: internal_value /= void
 end
 

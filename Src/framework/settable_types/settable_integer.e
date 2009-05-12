@@ -19,5 +19,13 @@ create
 convert
 	set_value ({INTEGER}),
 	value: {INTEGER}
+
+feature -- Element change
+
+	create_internal_value
+			-- <Precursor:
+		do
+			internal_value := 0
+		end
 end
 

@@ -19,5 +19,14 @@ create
 convert
 	set_value ({STRING}),
 	value: {STRING}
+
+feature -- Element change
+
+	create_internal_value
+			-- <Precursor:
+		do
+			create internal_value.make_empty
+		end
+
 end
 

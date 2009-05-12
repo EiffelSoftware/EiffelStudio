@@ -25,7 +25,7 @@ feature -- Access
 			l_class_name: STRING
 			l_tmp_tag: XP_TAG_ELEMENT
 		do
-			if not parser_callback.taglibs.has_key (a_prefix) then
+			if not parser_callback.registry.contains_tag_lib (a_prefix) then
 				parser_callback.set_state_html
 				parser_callback.state.on_start_tag (a_namespace, a_prefix, l_local_part)
 			else

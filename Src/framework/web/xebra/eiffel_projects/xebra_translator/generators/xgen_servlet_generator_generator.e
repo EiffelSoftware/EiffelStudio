@@ -6,12 +6,20 @@ note
 class
 	XGEN_SERVLET_GENERATOR_GENERATOR
 
+inherit
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 create
 	make, make_empty, make_minimal
 
 feature {NONE} -- Initialization
 
 	make_minimal (a_servlet_name: STRING; a_path: STRING)
+		require
+			not_a_servlet_name_is_empty: not a_servlet_name.is_empty
+			not_a_path_is_empty: not a_path.is_empty
+			a_servlet_name_attached: a_servlet_name /= Void
+			a_path_attached: a_path /= Void
 		do
 			make (a_servlet_name, False, Void, a_path, False, "")
 		end
@@ -28,7 +36,6 @@ feature {NONE} -- Initialization
 		do
 			servlet_name := a_servlet_name
 			stateful := a_stateful
---			root_tag := a_root_tag.copy_tag_tree
 			root_tag := a_root_tag
 			path := a_path
 			is_template := a_is_template
@@ -55,6 +62,8 @@ feature {NONE} -- Access
 feature -- Access
 
 	absorb (a_other: XGEN_SERVLET_GENERATOR_GENERATOR)
+		require
+			a_other_attached: a_other /= Void
 		do
 			servlet_name := a_other.servlet_name
 			stateful := a_other.stateful
@@ -76,16 +85,24 @@ feature -- Access
 		do
 			uid_counter := uid_counter + 1
 			Result := unique_identifier
+		ensure
+			unique_identifier_changed: not (unique_identifier.is_equal (old unique_identifier))
+			result_set: attached Result
 		end
 
 	unique_identifier: STRING
 			-- Returns the last controller uid
 		do
 			Result := "controller_" + uid_counter.out
+		ensure
+			result_set: attached Result
 		end
 
 	add_controller (a_identifier: STRING; a_class: STRING)
 			-- `a_identifier' and `a_class' for a controller instvar of the resulting servlet
+		require
+			a_identifier_attached: a_identifier /= Void
+			a_class_attached: a_class /= Void
 		do
 			controller_table.put (a_class, a_identifier)
 		end
@@ -96,6 +113,8 @@ feature -- Access
 	set_root_tag (a_root_tag: XP_TAG_ELEMENT)
 		do
 			root_tag := a_root_tag
+		ensure
+			root_tag_set: root_tag = a_root_tag
 		end
 
 	is_template: BOOLEAN
@@ -115,6 +134,8 @@ feature -- Basic functionality
 	generate (a_path: STRING; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
 			-- Generates the servlet generator class			
 		require
+			path_is_attached: attached path
+			templates_is_attached: attached templates
 			path_is_not_empty: not a_path.is_empty
 		local
 			buf:XU_INDENDATION_STREAM
@@ -126,13 +147,13 @@ feature -- Basic functionality
 				l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e"
 				create file.make (l_filename)
 				if not file.is_creatable then
-					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+					error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 				end
 				file.open_write
 				if not file.is_open_write then
-					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 				end
-			--	create file.make_open_write (a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e")
+
 				create buf.make (file)
 				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "SERVLET_GENERATOR")
 					-- TODO add an underline before "SERVLET_GENERATOR". Implicates change in other places as well!
@@ -148,10 +169,14 @@ feature -- Basic functionality
 			-- Copies current
 		do
 			create Result.make (servlet_name, stateful, root_tag.copy_tag_tree, path, is_template, controller_class)
+		ensure
+			result_attached: attached Result
 		end
 
 	accept_tag_visitor (visitor: XP_TAG_ELEMENT_VISITOR)
 			-- applies visitor on `root_tag'
+		require
+			visitor_attached: visitor /= Void
 		do
 			root_tag.accept (visitor)
 		end
@@ -160,6 +185,9 @@ feature {NONE} -- Implementation
 
 	build_generate_for_servlet_generator (a_class: XEL_CLASS_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
 			-- Builds the feature which generates a servlet_generator
+		require
+			a_class_attached: a_class /= Void
+			templates_attached: templates /= Void
 		local
 			generate_feature: XEL_FEATURE_ELEMENT
 			uid: STRING
@@ -172,7 +200,7 @@ feature {NONE} -- Implementation
 			generate_feature.append_local ("root_tag, temp", Tag_serializer_class)
 			generate_feature.append_expression ("create stack.make (10)")
 
-			root_tag.build_tag_tree (generate_feature, templates, Current, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (0))
+			root_tag.build_tag_tree (generate_feature, templates, Current)
 
 			generate_feature.append_expression ("Result := root_tag")
 		end

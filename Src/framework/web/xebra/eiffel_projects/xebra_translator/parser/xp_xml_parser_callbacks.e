@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 			create state_tag.make (Current)
 			state := state_html
 			controller_class := ""
-			create {HASH_TABLE [XTL_TAG_LIBRARY, STRING]} taglibs.make (4)
-			taglibs.put (generate_configuration_taglib, Configuration_tag)
 		ensure
 			tag_stack_is_empty: tag_stack.is_empty
 		end
@@ -57,6 +55,8 @@ feature -- Access
 			-- Sets whether Current is a temlate or not
 		do
 			is_template := a_is_template
+		ensure
+			is_template_set: is_template = a_is_template
 		end
 
 	controller_class: STRING
@@ -80,17 +80,20 @@ feature -- Access
 	registry: XP_SERVLET_GG_REGISTRY
 			-- Registry
 
-	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 
 	put_registry (a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Adds a taglib to the parser
+		require
+			a_registry_attached: a_registry /= Void
 		do
 			registry := a_registry
-			taglibs.merge (a_registry.taglib_registry)
+			registry.put_tag_lib (Configuration_tag, generate_configuration_taglib)
 		end
 
 	put_class_name (a_class_name: STRING)
-			-- Handles #Configuration_tag:controller tags
+			-- Puts the class name
+		require
+			a_class_name_attached: a_class_name /= Void
 		do
 			controller_class := a_class_name
 		end
@@ -224,6 +227,7 @@ feature -- Tag
 		local
 			l_prefix: STRING
 			l_local_part: STRING
+			l_namespace: STRING
 		do
 			if attached a_prefix then
 				l_prefix := a_prefix
@@ -237,7 +241,13 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			state.on_end_tag (a_namespace, l_prefix, l_local_part)
+			if attached a_namespace then
+				l_namespace := a_namespace
+			else
+				l_namespace := ""
+			end
+
+			state.on_end_tag (l_namespace, l_prefix, l_local_part)
 		end
 
 feature -- Content
@@ -260,7 +270,7 @@ feature {XP_CALLBACK_STATE} -- Implementation
 		require
 			id_is_valid: not id.is_empty
 		do
-			Result := taglibs [id]
+			Result := registry.retrieve_taglib (id)
 		end
 
 	current_debug_information: STRING
@@ -273,6 +283,7 @@ feature {XP_CALLBACK_STATE} -- Implementation
 				Result := "Could not determine position!"
 			end
 		ensure
+			result_attached: attached Result
 			result_not_empty: not result.is_empty
 		end
 
@@ -296,6 +307,8 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			-- Generates the tablig with the page configurations
 		do
 			create {XTL_PAGE_CONF_TAG_LIB} Result.make_with_arguments (Configuration_tag, Current)
+		ensure
+			result_attached: attached Result
 		end
 
 note

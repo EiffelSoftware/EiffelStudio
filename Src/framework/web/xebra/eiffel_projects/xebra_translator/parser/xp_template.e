@@ -13,6 +13,9 @@ create
 feature -- Initialization
 
 	make (a_root_tag: XP_TAG_ELEMENT; a_is_template: BOOLEAN; a_controller_class: STRING; a_servlet_name: STRING)
+			-- `a_root_tag': The root tag
+			-- `a_is_template': Should the template be rendered
+			-- `a_controller_class': The used controller class
 		require
 			a_controller_class_valid: a_controller_class /= Void
 			a_servlet_name_is_valid: not a_servlet_name.is_empty

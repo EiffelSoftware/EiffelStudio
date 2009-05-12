@@ -20,12 +20,24 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		local
+			l_arg_parser: XWA_ARGUMENT_PARSER
+		do
+			print ("%N%N%N")
+			create l_arg_parser.make
+			l_arg_parser.execute (agent setup (l_arg_parser))
+		end
+
+
+feature {NONE} -- Operations Internal
+
+	setup (a_arg_parser: XWA_ARGUMENT_PARSER)
+			-- Sets the configuration.
+		local
 			l_config_reader: XWA_CONFIG_READER
 			l_printer: ERROR_CUI_PRINTER
 		do
-			print ("%N%N%N")
 			create l_config_reader.make
-			if attached l_config_reader.process_file (Default_config_path) as l_config then
+			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
 				config := l_config
 			end
 			create l_printer.default_create
@@ -38,16 +50,13 @@ feature {NONE} -- Initialization
 			else
 				check config /= Void end
 				o.iprint ("Starting " + config.name.out)
-				initialize
+				initialize_server_connection_handler
 				run
 			end
 		end
 
-
-feature -- Operations
-
-	initialize
-			-- Setts webapp specific attributes
+	initialize_server_connection_handler
+			-- Creates the server_connection_handler.
 		require
 			config_attached: config /= Void
 		deferred
@@ -56,7 +65,7 @@ feature -- Operations
 		end
 
 	run
-			-- Runs the application
+			-- Runs the application.
 		require
 			server_connection_handler_attached: server_connection_handler /= Void
 		do
@@ -90,6 +99,7 @@ feature -- Access
 			-- Returns the applications server conn handler
 
 	stop: BOOLEAN
+			-- Is used to stop the application
 
 	config: XWA_CONFIG
 			-- Configuration for the webapp
@@ -104,10 +114,5 @@ feature -- Setter
 			stop_set: stop = a_stop
 		end
 
-feature -- Constants
 
-	Default_config_path: STRING = "config.ini"
-
-invariant
-	config_attached: config /= Void
 end

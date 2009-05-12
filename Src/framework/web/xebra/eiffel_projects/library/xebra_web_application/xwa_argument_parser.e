@@ -19,8 +19,6 @@ inherit
 			{ANY} execute, has_executed, is_successful
 		end
 
-	XWA_CONFIG_I
-
 create
 	make
 
@@ -30,18 +28,18 @@ feature {NONE} -- Initialization
 			-- Initialize the argument parser.
 		do
 			make_single_parser (False, True)
-			set_non_switched_argument_validator (create {ARGUMENT_NATURAL_RANGE_VALIDATOR}.make (1, 65000))
+			set_non_switched_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
 			set_is_showing_argument_usage_inline (False)
 		end
 
 feature -- Access
 
-	port: INTEGER
+	config_filename: STRING
+			-- The path of the config file
 		require
 			is_successful: is_successful
 		do
-			check l_value_is_natural: value.is_natural end
-			Result := value.to_natural
+			Result := value
 		end
 
 
@@ -60,13 +58,13 @@ feature {NONE} -- Access: Usage
 	name: STRING = "Xebra Web Application"
 			-- <Precursor>
 
-	non_switched_argument_name: STRING = "port"
+	non_switched_argument_name: STRING = "config_filename"
 			-- <Precursor>
 
-	non_switched_argument_description: STRING = "A port on which the Xebra Server can connect to the Web Application."
+	non_switched_argument_description: STRING = "The path of the config.ini file to use."
 			-- <Precursor>
 
-	non_switched_argument_type: STRING = "N"
+	non_switched_argument_type: STRING = "file name"
 			-- <Precursor>
 
 	version: STRING
@@ -82,8 +80,8 @@ feature {NONE} -- Access: Usage
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
-			create Result.make (2)
-			Result.extend (create {ARGUMENT_SWITCH}.make (interactive_option_switch, "Runs the application in interactive mode such that the user can shut it down via console.", False, False))
+			create Result.make (1)
+		--	Result.extend (create {ARGUMENT_SWITCH}.make (interactive_option_switch, "Runs the application in interactive mode such that the user can shut it down via console.", False, False))
 		end
 
 

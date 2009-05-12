@@ -242,6 +242,7 @@
 	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Does completion list show feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_disambiguated_name" DESCRIPTION="Does completion list show disambiguated name?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_tooltip" DESCRIPTION="Does completion list show an item's desctiption as a tooltip?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_obsolete_items" DESCRIPTION="Does completion list show obsolete items?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>
@@ -650,7 +651,8 @@
 	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Show/hide signature in completion list."><SHORTCUT>F3</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Show/hide disambiguated name in completion list."><SHORTCUT>F4</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.toggle_show_obsolete_items" DESCRIPTION="Show/hide obsolete features in completion list."><SHORTCUT>F5</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Remember/forget size in completion list."><SHORTCUT>F6</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_tooltip" DESCRIPTION="Show/hide completion list tooltips."><SHORTCUT>F6</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Remember/forget size in completion list."><SHORTCUT>F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 	

@@ -19,5 +19,13 @@ create
 convert
 	set_value ({BOOLEAN}),
 	value: {BOOLEAN}
+
+feature -- Element change
+
+	create_internal_value
+			-- <Precursor:
+		do
+			internal_value := False
+		end
 end
 

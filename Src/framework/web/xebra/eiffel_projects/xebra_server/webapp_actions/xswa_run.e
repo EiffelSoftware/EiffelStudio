@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 		do
 			if  not is_running then
 				run_process := launch_process (app_dir + "/EIFGENs/"+ webapp.config.name.out + "/W_code/" + webapp.config.name.out,
-											webapp.config.port.out,
+											app_dir + "/config.ini",
 											run_workdir_w,
 											agent run_process_exited,
 											Void)

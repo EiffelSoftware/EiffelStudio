@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create print_mutex.make
+		ensure
+			print_mutex_attached: print_mutex /= Void
 		end
 
 

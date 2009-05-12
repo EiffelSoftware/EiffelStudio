@@ -1,6 +1,7 @@
 note
 	description: "[
-
+			The main component of the Server. Reads the config file,
+			launches the http connection server and handles user input.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -50,7 +51,7 @@ feature -- Initialization
 				error_manager.trace_errors (l_printer)
 			else
 				check server_config /= Void end
-				
+
 				o.dprint ("Launching HTTP Connection Server...",1)
 				create http_connection_server.make (server_config)
 				if not http_connection_server.is_bound then
@@ -73,6 +74,7 @@ feature -- Initialization
 					l_webapp_handler.stop_apps
 					o.dprint ("Waiting for http_connection_server to shutdown...", 3)
 					http_connection_server.shutdown
+					http_connection_server.join
 				end
 			end
 			o.iprint ("All done. Bye!")

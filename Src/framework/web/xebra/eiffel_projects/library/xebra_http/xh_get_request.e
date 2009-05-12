@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XH_GET_REQUEST}.
+		GET version of REQUEST
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,7 @@ feature -- Access
 feature -- Implementation
 
 	read_uri (a_the_request: STRING): STRING
+			-- <Precursor>
 		local
 			l_i: INTEGER
 		do
@@ -36,13 +37,15 @@ feature -- Implementation
 				l_i := a_the_request.substring_index ("HTTP",1)
 				Result := a_the_request.substring (5, l_i-2)
 			end
+		ensure then
+			Result_attached: Result /= Void
 		end
 
-	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
+	call_pre_handler (a_servlet: XWA_SERVLET; a_response: XH_RESPONSE)
 			-- <Precursor>
 			-- Calls prehandle_get_request
 		do
-			servlet.prehandle_get_request (Current, response)
+			a_servlet.prehandle_get_request (Current, a_response)
 		end
 
 end

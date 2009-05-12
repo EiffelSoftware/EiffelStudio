@@ -124,11 +124,9 @@ feature -- Agent
 
 	compile_process_exited
 			-- Sets is_running := False
-		local
-			l_dummy: XH_RESPONSE
 		do
 			is_running := False
-		--	l_dummy := next_action.execute
+			next_action.execute.do_nothing
 		end
 
 	compiler_output_handler (a_ouput: STRING)

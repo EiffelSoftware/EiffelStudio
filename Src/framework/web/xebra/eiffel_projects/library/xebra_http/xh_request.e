@@ -20,24 +20,43 @@ feature {NONE} -- Initialization
 			create {HASH_TABLE [STRING, STRING]} environment_vars.make (1)
 			create {HASH_TABLE [STRING, STRING]} headers_out.make (1)
 			create {HASH_TABLE [STRING, STRING]} headers_in.make (1)
+		ensure
+			the_request_attached: the_request /= Void
+			target_uri_attached: target_uri /= Void
+			request_message_attached: request_message /= Void
+			arguments_attached: arguments /= Void
+			cookies_attached: cookies/= Void
+			environment_vars_attached: environment_vars /= Void
+			arguments_attached: arguments /= Void
+			arguments_attached: arguments /= Void
 		end
 
 	make_goto_request (a_uri: STRING; a_previous_request: XH_REQUEST)
 			-- Replaces the uri in the previous request and
 		require
-			a_uri_not_empty: not a_uri.is_empty
-			a_previous_request_has_headers_in: a_previous_request.request_message.has_substring (Key_headers_in)
+			not_a_uri_is_detached_or_empty: a_uri /= Void and then not a_uri.is_empty
+			a_previous_request_has_headers_in: a_previous_request /= Void and then a_previous_request.request_message.has_substring (Key_headers_in)
 		local
 			l_i: INTEGER
 		do
 			l_i := a_previous_request.request_message.substring_index (Key_headers_in, 1)
 			make_from_message ("GET " + escape_bad_chars (a_uri) + " HTTP/1.1"
 					 + a_previous_request.request_message.substring (l_i, a_previous_request.request_message.count))
+		ensure
+			the_request_attached: the_request /= Void
+			target_uri_attached: target_uri /= Void
+			request_message_attached: request_message /= Void
+			arguments_attached: arguments /= Void
+			cookies_attached: cookies/= Void
+			environment_vars_attached: environment_vars /= Void
+			arguments_attached: arguments /= Void
+			arguments_attached: arguments /= Void
 		end
 
 	make_from_message (a_message: STRING)
 		-- Parses the string an fills attributes of the request object			
 		require
+			not_a_message_is_detached_or_empty: a_message /= Void and then not a_message.is_empty
 			is_correct_arg: a_message.item (1).is_equal (method)
 			has_args: a_message.has_substring (Key_arg)
 			a_string_not_empty: not a_message.is_empty
@@ -79,8 +98,14 @@ feature {NONE} -- Initialization
 				-- Read cookies
 			cookies := read_cookies (headers_in)
 		ensure
-			the_request_set: not the_request.is_empty
-			target_uri_set: not target_uri.is_empty
+			the_request_attached: the_request /= Void and then not the_request.is_empty
+			target_uri_attached: target_uri /= Void and then not target_uri.is_empty
+			request_message_attached: request_message /= Void
+			arguments_attached: arguments /= Void
+			cookies_attached: cookies/= Void
+			environment_vars_attached: environment_vars /= Void
+			arguments_attached: arguments /= Void
+			arguments_attached: arguments /= Void
 		end
 
 feature -- Constants
@@ -148,8 +173,11 @@ feature -- Basic Operations
 			Result := cookies.valid_key (a_name)
 		end
 
-	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
+	call_pre_handler (a_servlet: XWA_SERVLET; a_response: XH_RESPONSE)
 			-- Calls the right pre_handler on the servlet
+		require
+			a_servlet_attached: a_servlet /= Void
+			a_response_attached: a_response /= Void
 		deferred
 		end
 
@@ -157,6 +185,8 @@ feature {NONE} -- Internal processing
 
 	escape_bad_chars (a_s: STRING): STRING
 			-- Check for bad characters
+		require
+			not_a_s_is_detached_or_not_empty: a_s /= Void implies not a_s.is_empty
 		do
 			--TODO: complete, better mechanism
 			Result := a_s.twin
@@ -164,12 +194,15 @@ feature {NONE} -- Internal processing
 			Result.replace_substring_all ("?", "#qu#")
 			Result.replace_substring_all ("=", "#eq#")
 			Result.replace_substring_all ("#", "#r#")
-
+		ensure
+			Result_attached: Result /= Void
 		end
 
 
 	read_cookies (a_headers_in: HASH_TABLE [STRING, STRING]): TABLE [XH_COOKIE, STRING]
 			-- Parses a hash_table and looks for cookies.
+		require
+			a_headers_in_attached: a_headers_in /= Void
 		local
 			l_s: detachable STRING
 			l_i: INTEGER
@@ -196,6 +229,8 @@ feature {NONE} -- Internal processing
 					Result.put (create {XH_COOKIE}.make (l_name, l_value), l_name)
 				end
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	parse_table (a_string: STRING; a_key_in: STRING; a_key_key: STRING; a_key_value: STRING
@@ -204,6 +239,11 @@ feature {NONE} -- Internal processing
 			-- the first occurence of key_out. Extracts all pairs and writes
 			-- them into Result
 		require
+			not_a_string_is_detached_or_empty: a_string /= Void and then not a_string.is_empty
+			not_a_key_in_is_detached_or_empty: a_key_in /= Void and then not a_key_in.is_empty
+			not_a_key_key_is_detached_or_empty: a_key_key /= Void and then not a_key_key.is_empty
+			not_a_key_value_is_detached_or_empty: a_key_value /= Void and then not a_key_value.is_empty
+			not_a_key_out_is_detached_or_empty: a_key_out /= Void and then not a_key_out.is_empty
 			has_a_key_in: a_string.has_substring (a_key_in)
 			has_a_key_out: a_string.has_substring (a_key_out)
 			a_key_in_before_a_key_out: a_string.substring_index (a_key_in, 1) < a_string.substring_index (a_key_out, 1)
@@ -256,10 +296,21 @@ feature {NONE} -- Internal processing
 	read_uri (a_the_request: STRING): STRING
 				-- Reads the uri from a the_request
 		require
+			not_a_the_request_is_detached_or_empty: a_the_request /= Void and then not a_the_request.is_empty
 			is_http_request: a_the_request.has_substring ("HTTP")
 			has_valid_method: a_the_request.item (1).is_equal (method)
 		deferred
 		ensure
-			result_not_empty: not Result.is_empty
+			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
+
+invariant
+			the_request_attached: the_request /= Void
+			target_uri_attached: target_uri /= Void
+			request_message_attached: request_message /= Void
+			arguments_attached: arguments /= Void
+			cookies_attached: cookies/= Void
+			environment_vars_attached: environment_vars /= Void
+			arguments_attached: arguments /= Void
+			arguments_attached: arguments /= Void
 end

@@ -66,6 +66,7 @@ feature {NONE} -- Internal Status setting
 			Result := l_config
 		ensure
 			a_properties_unmoved: a_properties.cursor.is_equal (old a_properties.cursor)
+			Result_attached: Result /= Void
 		end
 
 	process_property (a_property: INI_PROPERTY; a_config: G)

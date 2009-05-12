@@ -27,8 +27,9 @@ feature -- Initialization
          	http_socket.set_accept_timeout (20000)
             stop := False
 		ensure
+			http_socket_attached: http_socket /= Void
 			server_config_set: server_config = a_server_config
-       	end
+		end
 
 feature -- Inherited Features
 
@@ -117,6 +118,8 @@ feature {POOLED_THREAD} -- Implementation
 			-- Used for the thread_manager.
 		do
 			create Result.make (message_default_bound, message_upper_bound)
+		ensure
+			Result_attached: Result /= Void
 		end
 
 invariant

@@ -379,12 +379,11 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
 	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));
  
-	ref = RT_SPECIAL_INFO(area);
-	old_count = RT_SPECIAL_COUNT_WITH_INFO(ref);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
+	old_count = RT_SPECIAL_COUNT(area);
+	elem_size = RT_SPECIAL_ELEM_SIZE(area);
 
 #ifdef ARYCPY_DEBUG
-	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, *(long*) ref, j, k);
+	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, old_count, j, k);
 #endif	/* ARYCPY_DEBUG */
 
 	/* Possible optimization: remembering process for special objects full of

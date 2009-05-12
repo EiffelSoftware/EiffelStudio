@@ -975,7 +975,6 @@ doc:	</routine>
 rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic)
 {
 	EIF_REFERENCE result = NULL;
-	EIF_REFERENCE offset;
 	union overhead *zone;
 
 	result = spmalloc (RT_SPECIAL_MALLOC_COUNT(nb, element_size), atomic);
@@ -989,10 +988,8 @@ rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF
 	zone->ov_dftype = dftype;
 	zone->ov_dtype = To_dtype(dftype);
 
-	offset = RT_SPECIAL_INFO_WITH_ZONE(result, zone);
-
-	RT_SPECIAL_COUNT_WITH_INFO(offset) = nb;
-	RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) = element_size;
+	RT_SPECIAL_COUNT(result) = nb;
+	RT_SPECIAL_ELEM_SIZE(result) = element_size;
 
 	if (flags & EO_COMP) {
 			/* It is a composite object, that is to say a special of expanded,
@@ -1065,9 +1062,8 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 		union overhead * zone = HEADER(object);
 		unsigned int i;
 		EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
-		EIF_REFERENCE ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-		RT_SPECIAL_COUNT_WITH_INFO(ref) = count;
-		RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = sizeof(EIF_TYPED_VALUE);
+		RT_SPECIAL_COUNT(object) = count;
+		RT_SPECIAL_ELEM_SIZE(object) = sizeof(EIF_TYPED_VALUE);
 			/* Mark it is a tuple object */
 		zone->ov_flags |= EO_TUPLE;
 		zone->ov_dftype = ftype;
@@ -1206,7 +1202,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 {
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
-	EIF_REFERENCE ref, object;
+	EIF_REFERENCE object;
 	unsigned int count, elem_size;
 	rt_uint_ptr old_size, new_size;					/* New and old size of special object. */
 	rt_uint_ptr old_real_size, new_real_size;		/* Size occupied by items of special */
@@ -1225,9 +1221,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	 */
 	zone = HEADER(ptr);
 	old_size = zone->ov_size & B_SIZE;	/* Old size of array */
-	ref = RT_SPECIAL_INFO_WITH_ZONE(ptr, zone);
-	count = RT_SPECIAL_COUNT_WITH_INFO(ref);		/* Current number of elements */
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
+	count = RT_SPECIAL_COUNT(ptr);		/* Current number of elements */
+	elem_size = RT_SPECIAL_ELEM_SIZE(ptr);
 	old_real_size = (rt_uint_ptr) count * (rt_uint_ptr) elem_size;	/* Size occupied by items in old special */
 	new_real_size = nbitems * (rt_uint_ptr) elem_size;	/* Size occupied by items in new special */
 	new_size = new_real_size + RT_SPECIAL_DATA_SIZE;		/* New required size */
@@ -1374,9 +1369,8 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	RT_GC_WEAN(ptr);	/* Unprotect `ptr'. No more collection is expected. */
 
 		/* Update special attributes count and element size at the end */
-	ref = RT_SPECIAL_INFO(object);
-	RT_SPECIAL_COUNT_WITH_INFO(ref) = nbitems;						/* New count */
-	RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = elem_size; 	/* New item size */
+	RT_SPECIAL_COUNT(object) = nbitems;						/* New count */
+	RT_SPECIAL_ELEM_SIZE(object) = elem_size; 	/* New item size */
 
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
@@ -2778,31 +2772,19 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	flush;
 #endif
 
-	/* If the garbage collector is on and the object has some references, then
-	 * after attempting a coalescing we must update the count and copy the old
-	 * elemsize, since they are fetched by the garbage collector by first going
-	 * to the end of the object and then back by RT_SPECIAL_DATA_SIZE. Of course, this
-	 * matters only if coalescing has been done, which is indicated by a
-	 * non-zero return value from coalesc.
-	 */
-	
-	if (size_gain != 0 && gc_flag & GC_ON && zone->ov_flags & EO_REF)
-	{
-		EIF_REFERENCE old;				/* Pointer to the old count/elemsize */
-		EIF_REFERENCE o_ref;	/* POinter to new count/elemsize */
-
-		o_ref = RT_SPECIAL_INFO_WITH_ZONE(ptr, zone);
-		old = ((EIF_REFERENCE) o_ref - size_gain);
-			/* Copy old count to new location */
-		RT_SPECIAL_COUNT_WITH_INFO(o_ref) = RT_SPECIAL_COUNT_WITH_INFO(old);
-			/* And also propagate element size */
-		RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = RT_SPECIAL_ELEM_SIZE_WITH_INFO (old);
-
-#ifdef DEBUG
-		dprintf(16)("realloc: progagated count = %d, elemsize = %d\n",
-			RT_SPECIAL_COUNT(ptr), RT_SPECIAL_ELEM_SIZE(ptr));
-		flush;
-#endif
+		/* If the garbage collector is on and the object is a SPECIAL, then
+		 * after attempting a coalescing we must update those information because
+		 * they are now invalid, we copy them from their old location.
+		 * Of course, this matters only if coalescing has been done, which is
+		 * indicated by a non-zero return value from coalesc.
+		 * The reason it is needed is because some other objects might still be
+		 * referring to `ptr' and thus the new `ptr' should be valid even if later,
+		 * in xrealloc, we end up allocating a new SPECIAL object.
+		 */
+	if ((size_gain != 0) && (gc_flag & GC_ON) && (zone->ov_flags & EO_SPEC)) {
+		EIF_REFERENCE l_info;	/* Pointer to new count/elemsize */
+		l_info = RT_SPECIAL_INFO(ptr);
+		memmove(l_info, ((char *) l_info - size_gain), RT_SPECIAL_DATA_SIZE);
 	}
 
 	i = zone->ov_size & B_SIZE;			/* Coalesc modified data in zone */

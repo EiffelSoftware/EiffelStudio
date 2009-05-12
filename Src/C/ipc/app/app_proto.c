@@ -1110,9 +1110,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	app_twrite (&object, sizeof (EIF_POINTER));
 
 	zone = HEADER(object);
-	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
-	count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
+	count = RT_SPECIAL_COUNT(object);
+	elem_size = RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 	dtype = Dtype(object);
 
@@ -1456,9 +1455,10 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
 	unsigned char error_code = 0;
 
+	REQUIRE("is_special", RT_IS_SPECIAL(object));
+
 	zone = HEADER(object);
-	o_ref = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
-	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 
 	/* Send the items within the bounds */
@@ -1492,7 +1492,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	} else {
 		switch(new_value->type & SK_HEAD) {
 			case SK_STRING:
-				*(char **)o_ref = RTMS(new_value->it_ref);
+				*(char **)object = RTMS(new_value->it_ref);
 				break;
 			default: /* Object reference */
 				o_ref = (char *) ((char **)object + attr_number);

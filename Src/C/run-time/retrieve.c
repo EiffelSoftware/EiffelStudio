@@ -630,8 +630,8 @@ rt_private EIF_REFERENCE new_spref (int count)
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = spref_type;
 	zone->ov_dtype = To_dtype(spref_type);
-	RT_SPECIAL_COUNT_WITH_ZONE(result,zone) = count;
-	RT_SPECIAL_ELEM_SIZE_WITH_ZONE(result,zone) = sizeof(EIF_REFERENCE);
+	RT_SPECIAL_COUNT(result) = count;
+	RT_SPECIAL_ELEM_SIZE(result) = sizeof(EIF_REFERENCE);
 	return result;
 }
 
@@ -1673,15 +1673,12 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 						/* Creation of Eiffel object failed */
 					xraise(EN_MEM);
 				} else {
-					EIF_REFERENCE o_ref;
-
 					HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP);
 					HEADER(newadd)->ov_dftype = dftype;
 					HEADER(newadd)->ov_dtype = dtype;
 
-					o_ref = RT_SPECIAL_INFO(newadd);
-					RT_SPECIAL_COUNT_WITH_INFO(o_ref) = count;
-					RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = spec_size;
+					RT_SPECIAL_COUNT(newadd) = count;
+					RT_SPECIAL_ELEM_SIZE(newadd) = spec_size;
 				}
 			}
 		} else {
@@ -1854,15 +1851,12 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 						/* Creation of Eiffel object failed */
 					xraise(EN_MEM);
 				} else {
-					EIF_REFERENCE o_ref;
-
 					HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP);
 					HEADER(newadd)->ov_dftype = dftype;
 					HEADER(newadd)->ov_dtype = dtype;
 
-					o_ref = RT_SPECIAL_INFO(newadd);
-					RT_SPECIAL_COUNT_WITH_INFO(o_ref) = count;
-					RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = spec_size;
+					RT_SPECIAL_COUNT(newadd) = count;
+					RT_SPECIAL_ELEM_SIZE(newadd) = spec_size;
 					spec_elm_size[dtype] = elm_size;
 				}
 			} 
@@ -2002,9 +1996,8 @@ rt_private EIF_REFERENCE new_special_object (EIF_TYPE_INDEX new_dftype, uint16 f
 	if (!result) {
 		xraise(EN_MEM);
 	} else {
-		EIF_REFERENCE o_ref = RT_SPECIAL_INFO (result);
-		RT_SPECIAL_COUNT_WITH_INFO (o_ref) = count;
-		RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref) = spec_size;
+		RT_SPECIAL_COUNT(result) = count;
+		RT_SPECIAL_ELEM_SIZE(result) = spec_size;
 		HEADER(result)->ov_flags |= flags & (EO_REF|EO_COMP);
 		HEADER(result)->ov_dftype = new_dftype;
 		HEADER(result)->ov_dtype = To_dtype(new_dftype);
@@ -2334,15 +2327,13 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 	dtype = zone->ov_dtype;
 
 	if (flags & EO_SPEC) {				/* Special object */
-		EIF_REFERENCE o_ref;
 		EIF_INTEGER count, elem_size, old_elem_size;
 
 		if (!(flags & EO_REF))			/* Special without references */
 			return;
 
 		size = zone->ov_size & B_SIZE;	
-		o_ref = RT_SPECIAL_INFO_WITH_ZONE(new_obj, zone);
-		count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
+		count = RT_SPECIAL_COUNT(new_obj);
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) new_obj;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
@@ -2367,7 +2358,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 		} else {						/* Special of expanded objects */
 			EIF_REFERENCE  old_addr;
 
-			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
+			elem_size = RT_SPECIAL_ELEM_SIZE(new_obj);
 			if (rt_kind != INDEPENDENT_STORE && rt_kind != RECOVERABLE_STORE) {
 				old_overhead = OVERHEAD;
 				old_elem_size = elem_size;
@@ -4081,10 +4072,9 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count;
 			rt_uint_ptr elem_size;
-			EIF_REFERENCE ref, o_ptr;
+			EIF_REFERENCE ref;
 
-			o_ptr = RT_SPECIAL_INFO(object);
-			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 
 			if (flags & EO_TUPLE) {
 				buffer_read(object, (rt_uint_ptr) count * sizeof(EIF_TYPED_VALUE));
@@ -4111,7 +4101,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 						uint16 hflags;
 						EIF_TYPE_INDEX hdtype, hdftype;
 
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						buffer_read((char *) &store_flags, sizeof(uint32));
 						Split_flags_dtype(hflags,hdtype,store_flags);
 						hdftype = rt_read_cid (hdtype);
@@ -4135,7 +4125,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 					case SK_BIT: {
 						/* uint32 l;*/ /* %%ss removed */
 
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						buffer_read(object, (rt_uint_ptr) count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
@@ -4156,7 +4146,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 					uint16 hflags;
 					EIF_TYPE_INDEX hdftype, hdtype;
 
-					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+					elem_size = RT_SPECIAL_ELEM_SIZE(object);
 					buffer_read((char *) &store_flags, sizeof(uint32));
 					Split_flags_dtype(hflags,hdtype,store_flags);
 					hdftype = rt_read_cid (hdtype);
@@ -4279,10 +4269,9 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
-			EIF_REFERENCE ref, o_ptr;
+			EIF_REFERENCE ref;
 
-			o_ptr = RT_SPECIAL_INFO(object);
-			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 	
 			if (flags & EO_TUPLE) {
 				object_rread_tuple(object, count);
@@ -4311,7 +4300,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 
 						uint16 hflags;
 						EIF_TYPE_INDEX hdtype, hdftype;
 
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						ridr_norm_int (&store_flags);
 						Split_flags_dtype(hflags,hdtype,store_flags);
 						hdftype = rt_id_read_cid (hdtype);
@@ -4333,7 +4322,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 
 					}
 						break;
 					case SK_BIT: 
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						elem_size = RT_SPECIAL_ELEM_SIZE(object);
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
 						break;
 					case SK_POINTER:
@@ -4356,7 +4345,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 
 					uint16 hflags;
 					EIF_TYPE_INDEX hdtype, hdftype;
 
-					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+					elem_size = RT_SPECIAL_ELEM_SIZE(object);
 					ridr_norm_int (&store_flags);
 					Split_flags_dtype(hflags,hdtype,store_flags);
 					hdftype = rt_id_read_cid (hdtype);

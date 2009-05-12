@@ -91,6 +91,12 @@ extern "C" {
 #define RT_GC_WEAN_N(n)
 #endif
 
+/* Macro used to get info about SPECIAL objects.
+ * RT_SPECIAL_INFO returns address where special objects data is stored.
+ */
+#define RT_SPECIAL_INFO(spec) \
+	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)
+
 
 /* Macro used to protect concurrent running of GC. */
 #ifdef EIF_THREADS

@@ -246,8 +246,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref;
 
-			o_ptr = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
-			count = RT_SPECIAL_COUNT_WITH_INFO (o_ptr);
+			count = RT_SPECIAL_COUNT(object);
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
@@ -273,7 +272,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 						a_object_count = pst_store(o_ref,a_object_count);
 				}
 			} else {						/* Special of composites */
-				elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ptr);
+				elem_size = RT_SPECIAL_ELEM_SIZE(object);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
 					a_object_count = pst_store(ref,a_object_count);

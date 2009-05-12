@@ -161,9 +161,9 @@ rt_private void check_ref(char *object)
 	if (flags & EO_SPEC) {
 		if (!(flags & EO_REF))
 			return;
-		refs = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		refs = RT_SPECIAL_COUNT(object);
 		if (flags & EO_COMP)
-			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(refs);
+			size = RT_SPECIAL_ELEM_SIZE(object);
 		else
 			size = REFSIZ;
 	} else

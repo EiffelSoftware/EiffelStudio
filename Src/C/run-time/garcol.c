@@ -2338,8 +2338,6 @@ marked: /* Goto label needed to avoid code duplication */
 		 */
 
 		if (flags & EO_SPEC) {
-			EIF_REFERENCE o_ref;
-
 			/* Special objects may have no references (e.g. an array of
 			 * integer or a string), so we have to skip those.
 			 */
@@ -2353,8 +2351,7 @@ marked: /* Goto label needed to avoid code duplication */
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
-			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # of items */
+			count = offset = RT_SPECIAL_COUNT(current);	/* Get # of items */
 
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) current;
@@ -2392,7 +2389,7 @@ marked: /* Goto label needed to avoid code duplication */
 				 * because we have to increment our pointers by size and I do not
 				 * want to to slow down the normal loop--RAM.
 				 */
-				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
+				size = RT_SPECIAL_ELEM_SIZE(current);	/* Item's size */
 				if (rt_g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
@@ -3855,8 +3852,6 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		 * required. Special objects full of references are also explored.
 		 */
 		if (flags & EO_SPEC) {				/* Special object */
-			EIF_REFERENCE o_ref;
-
 			/* Special objects may have no references (e.g. an array of
 			 * integer or a string), so we have to skip those.
 			 */
@@ -3869,8 +3864,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 			 * second is the size of each item (for expandeds, the overhead of
 			 * the header is not taken into account).
 			 */
-			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
-			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # items */
+			count = offset = RT_SPECIAL_COUNT(current);	/* Get # items */
 
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) current;
@@ -3905,7 +3899,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				 * way of looping over the array (we must take the size of each item
 				 * into account).
 				 */
-				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
+				size = RT_SPECIAL_ELEM_SIZE(current);	/* Item's size */
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
@@ -4569,11 +4563,9 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 	size = REFSIZ;
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	if (flags & EO_SPEC) {				/* Special object */
-		EIF_REFERENCE o_ref;
 		if (!(flags & EO_REF))			/* (see hybrid_mark() for details) */
 			return 0;					/* No references at all */
-		o_ref = RT_SPECIAL_INFO(object);
-		refs = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
+		refs = RT_SPECIAL_COUNT(object);
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 			l_item ++;
@@ -4591,7 +4583,7 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 				/* Job is now done */
 			return 0;
 		} else if (flags & EO_COMP) {			/* Composite object = has expandeds */
-			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
+			size = RT_SPECIAL_ELEM_SIZE(object);
 			object += OVERHEAD;
 				/* Recurse here on each element.
 				 * The loop for normal objects cannot be used

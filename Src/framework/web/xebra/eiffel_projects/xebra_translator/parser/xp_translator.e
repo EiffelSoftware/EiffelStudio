@@ -9,7 +9,7 @@ class
 	XP_TRANSLATOR
 
 inherit
-	ERROR_SHARED_MULTI_ERROR_MANAGER
+	XU_ERROR_MANAGED_FILE
 
 create
 	make
@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			output_path := "generated/" + a_name + "/"
 			name := a_name
+			create registry.make (output_path)
 		end
 
 feature {NONE} -- Access
@@ -36,8 +37,7 @@ feature -- Access
 	name: STRING assign set_name
 			-- Name of the system
 
-	taglibs: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
-			-- Taglib which should be used to validate the xeb files
+	registry: XP_SERVLET_GG_REGISTRY
 
 feature -- Status setting
 
@@ -68,16 +68,20 @@ feature -- Status setting
 feature -- Processing
 
 	process_with_files (a_files: LIST [STRING]; a_taglib_folder: STRING)
-			-- `a_files': Alle the files of a folder with xeb files
+			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
 		local
 			l_file: KL_TEXT_INPUT_FILE
-			l_servlet_gag: XGEN_SERVLET_GENERATOR_APP_GENERATOR
-			l_webapp_generator: XGEN_WEBAPP_GENERATOR
+			l_file_name: STRING
+			l_servlet_name: STRING
+			l_template: XP_TEMPLATE
+			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
+			l_webapp_gen: XGEN_WEBAPP_GENERATOR
 		do
-			create l_servlet_gag.make
-			taglibs := parse_taglibs (a_taglib_folder)
+			create registry.make (servlet_gen_path)
+			parse_taglibs (a_taglib_folder, registry)
+
 			from
 				a_files.start
 			until
@@ -93,7 +97,7 @@ feature -- Processing
 							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + l_file.name), false)
 						else
 							print ("Processing '" + l_file.name + "'...%N")
-							l_servlet_gag.put_servlet_generator_generator (translate_to_servlet_generator_generator (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, taglibs, l_file.name))
+							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path, registry)
 							l_file.close
 							print ("Done.%N")
 						end
@@ -101,21 +105,22 @@ feature -- Processing
 				end
 				a_files.forth
 			end
-			l_servlet_gag.generate (servlet_gen_path)
-			create l_webapp_generator.make_with_servlets (name, output_path, l_servlet_gag.servlet_generator_generators)
-			l_webapp_generator.generate
+			registry.resolve_all_templates
+			create l_generator_app_generator.make
+			l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
+			l_generator_app_generator.generate (servlet_gen_path)
+			create l_webapp_gen.make_with_servlets (name, output_path,l_generator_app_generator.servlet_generator_generators)
+			l_webapp_gen.generate
 		end
 
-	parse_taglibs (taglib_folder: STRING): HASH_TABLE [XTL_TAG_LIBRARY, STRING]
+	parse_taglibs (taglib_folder: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Generates tag libraries from all the the *.taglib files in the directory
 		require
 			taglib_folder_valid: not taglib_folder.is_empty
 		local
-			l_taglib_file: KL_TEXT_INPUT_FILE
 			dir: DIRECTORY
 			files: LIST [STRING]
 		do
-			create {HASH_TABLE [XTL_TAG_LIBRARY, STRING]} Result.make (5)
 			create dir.make (taglib_folder)
 			files := dir.linear_representation
 			from
@@ -124,24 +129,13 @@ feature -- Processing
 				files.after
 			loop
 				if files.item.ends_with (".taglib") then
-					create l_taglib_file.make (files.item)
-					if (not l_taglib_file.exists) then
-						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (files.item), false)
-					else
-						l_taglib_file.open_read
-						if not l_taglib_file.is_open_read then
-							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + files.item ), false)
-						else
-							process_taglib_with_stream (Result, l_taglib_file)
-							l_taglib_file.close
-						end
-					end
+					process_file (files.item, agent process_taglib_with_stream (a_registry, ?))
 				end
 				files.forth
 			end
 		end
 
-	process_taglib_with_stream (a_taglibs: TABLE [XTL_TAG_LIBRARY, STRING]; a_stream: KI_CHARACTER_INPUT_STREAM)
+	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Trasforms stream to tag library and adds it to `a_taglibs'
 		local
 			l_parser: XM_PARSER
@@ -151,14 +145,13 @@ feature -- Processing
 			create l_p_callback.make
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
-
-			a_taglibs.put (l_p_callback.taglib, l_p_callback.taglib.id)
+			a_registry.put_registry (l_p_callback.taglib.id, l_p_callback.taglib)
 		end
 
-	translate_to_servlet_generator_generator (servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_taglib: HASH_TABLE [XTL_TAG_LIBRARY, STRING]; a_path: STRING): XGEN_SERVLET_GENERATOR_GENERATOR
+	add_template_to_registry (a_servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_path: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
-			servlet_name_valid: not servlet_name.is_empty
+			servlet_name_valid: not a_servlet_name.is_empty
 		local
 			l_root_tag: XP_TAG_ELEMENT
 			l_controller_class: STRING
@@ -172,14 +165,14 @@ feature -- Processing
 			l_parser.set_dtd_resolver (l_external_resolver)
 			l_parser.set_entity_resolver (l_external_resolver)
 			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
-			l_p_callback.put_taglibs (a_taglib)
+			l_p_callback.put_registry (a_registry)
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
 
 			l_root_tag := l_p_callback.root_tag
 				-- Sets the controller_id of all the tags
 			l_controller_class := l_p_callback.controller_class
-			create Result.make (servlet_name, False, l_root_tag, output_path, l_p_callback.is_template, l_controller_class)
+			a_registry.put_template (a_servlet_name, create {XP_TEMPLATE}.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name))
 		end
 
 feature {NONE} -- Implementation

@@ -75,7 +75,7 @@ feature -- Access
 					process_dynamic_tag_attribute (l_local_part, l_value)
 				else
 					if parser_callback.tag_stack.item.has_attribute (l_local_part) then
-						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"  ]))
+						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value + "%">"]))
 					else
 						parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
 					end

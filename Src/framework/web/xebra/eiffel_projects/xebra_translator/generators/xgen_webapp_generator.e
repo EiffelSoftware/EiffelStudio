@@ -86,9 +86,9 @@ feature -- Basic Functionality
 			create buf.make (file)
 			buf.set_ind_character ('%T')
 			create request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
-			request_class.set_inherit ("XWA_" + Server_con_handler_class + " redefine make end")
+			request_class.set_inherit ("XWA_" + Server_con_handler_class)
 			request_class.set_constructor_name ("make")
-			request_class.add_feature (generate_constructor_for_request_handler (servlets))
+			request_class.add_feature (generate_constructor_for_server_conn_handler (servlets))
 			request_class.serialize (buf)
 			file.close
 
@@ -105,7 +105,7 @@ feature -- Basic Functionality
 		--	create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 			create buf.make (file)
 			create application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
-			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION redefine make end")
+			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (generate_feature_for_name)
 			application_class.add_feature (generate_contructor_for_application)
@@ -151,24 +151,17 @@ feature {NONE} -- Implementation
 	generate_contructor_for_application: XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the application
 		do
-			create Result.make ("make")
-
-			Result.append_expression ("if Arguments.argument_count /= 1 then")
-			Result.append_expression ("print (%"usage: webapp listening_port%%N%")")
-			Result.append_expression ("else")
-			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (name, Arguments.argument(1).to_integer_32, Current)")
-			Result.append_expression ("Precursor")
-			Result.append_expression ("end")
+			create Result.make ("initialize_server_connection_handler")
+			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (config)")
 		end
 
-	generate_constructor_for_request_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
+	generate_constructor_for_server_conn_handler (some_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]): XEL_FEATURE_ELEMENT
 			-- Generates the constructor for the request handler
 		local
 			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			s: STRING
 		do
-			create Result.make ("make (a_name: STRING; a_port: INTEGER; a_application: XWA_APPLICATION)")
-			Result.append_expression ("Precursor (a_name, a_port, a_application)")
+			create Result.make ("add_servlets")
 			from
 				some_servlets.start
 			until

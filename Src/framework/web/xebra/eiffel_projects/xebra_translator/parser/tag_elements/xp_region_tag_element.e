@@ -11,8 +11,8 @@ class
 inherit
 	XP_TAG_ELEMENT
 		redefine
-			accept
-			--copy_tag_tree
+			accept,
+			copy_self
 		end
 
 create
@@ -20,9 +20,13 @@ create
 
 feature -- Initialization
 
-
-
 feature -- Access
+
+	copy_self: XP_TAG_ELEMENT
+		do
+			create {XP_REGION_TAG_ELEMENT} Result.make (namespace, id, class_name, debug_information)
+		end
+
 
 	set_region (a_region: LIST [XP_TAG_ELEMENT])
 			-- Defines the implementation of a region
@@ -34,14 +38,7 @@ feature -- Access
 			-- Element part of the Visitor Pattern
 		do
 			visitor.visit_region_tag_element (Current)
-			from
-				children.start
-			until
-				children.after
-			loop
-				children.item.accept (visitor)
-				children.forth
-			end
+			accept_children (visitor)
 		end
 
 end

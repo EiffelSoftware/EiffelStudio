@@ -1,7 +1,11 @@
 note
-	description : "Runs the xebra translator"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+		Runns the argument parser which then runns the translator.
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	XT_APPLICATION

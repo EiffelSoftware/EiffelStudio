@@ -113,8 +113,8 @@ feature {NONE} -- Implementation
 				compile_process := launch_process (config.compiler,
 												compiler_args,
 												app_dir,
-												agent compile_process_exited,
-												agent compiler_output_handler)
+												agent compile_process_exited)
+											--	agent compiler_output_handler)
 				is_running := True
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.config.name.out)).render_to_response

@@ -17,13 +17,19 @@ create
 feature -- Initialization
 
 	make_with_uid (a_uid: STRING)
+			-- `a_uid': The unique controller identifier
+		require
+			a_uid_valid: attached a_uid and not a_uid.is_empty
 		do
 			uid := a_uid
+		ensure
+			uid_set: uid = a_uid
 		end
 
 feature -- Access
 
 	uid: STRING
+		-- The unique controller identifier
 
 feature -- Access
 
@@ -46,6 +52,8 @@ feature -- Access
 		end
 
 	set_uid_tag_if_not_set (a_uid: STRING; a_tag: XP_TAG_ELEMENT)
+		require
+			a_uid_valid: attached a_uid and not a_uid.is_empty
 		do
 			if (not attached a_tag.controller_id) or a_tag.controller_id.is_empty then
 				a_tag.set_controller_id (a_uid)

@@ -13,6 +13,7 @@ create
 feature -- Initialization
 
 	make (a_path: STRING)
+			-- a_path: The output path
 		require
 			a_path_attached: a_path /= Void
 		do
@@ -21,6 +22,8 @@ feature -- Initialization
 			create template_registry.make (10)
 			create taglib_registry.make (10)
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_g_generators.make (10)
+		ensure
+			path_set: path = a_path
 		end
 
 feature {NONE} -- Access
@@ -132,4 +135,8 @@ feature -- Access
 			Result := taglib_registry.has_key (a_name)
 		end
 
+invariant
+	template_registry_attached: template_registry /= Void
+	servlet_g_generators_attached: servlet_g_generators /= Void
+	path_attached: path /= Void
 end

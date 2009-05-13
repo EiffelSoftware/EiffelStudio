@@ -78,4 +78,6 @@ feature -- Access
 			Result := a_string.substring (3, a_string.count - 1)
 		end
 
+invariant
+	parser_callback_attached: parser_callback /= Void
 end

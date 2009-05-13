@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
 		end
 
+feature {NONE} -- Access
+
 feature -- Access
 
 	put_servlet_generator_generator (a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
@@ -74,9 +76,7 @@ feature -- Basic functionality
 				servlet_generator_generators.after
 			loop
 				servlet_generator_generator := servlet_generator_generators.item
-				if not servlet_generator_generator.is_template then
-					servlet_generator_generator.generate (a_path, serv_gen_copy)
-				end
+				servlet_generator_generator.generate (a_path, serv_gen_copy)
 				servlet_generator_generators.forth
 			end
 
@@ -135,12 +135,10 @@ feature {NONE} -- Implementation
 				servlet_generator_generators.after
 			loop
 				l_servlet_gg := servlet_generator_generators.item
-				if not l_servlet_gg.is_template then
-					build_controller_table (Result, l_servlet_gg)
-					Result.append_expression ("(create {"
-						+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "SERVLET_GENERATOR}.make ("
-						+ "path, %"" + l_servlet_gg.servlet_name + "%", " + l_servlet_gg.stateful.out + ", controller_table)).generate;")
-				end
+				build_controller_table (Result, l_servlet_gg)
+				Result.append_expression ("(create {"
+					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
+					+ "path, %"" + l_servlet_gg.servlet_name + "%", controller_table)).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
@@ -191,6 +189,8 @@ feature -- Constants
 	]"
 		-- The .ecf file
 
+invariant
+	servlet_generator_generators_attached: servlet_generator_generators /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

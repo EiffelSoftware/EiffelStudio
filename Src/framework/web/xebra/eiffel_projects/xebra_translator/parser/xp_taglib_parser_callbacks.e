@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 			--
 		do
 			create tag_stack.make (10)
+		ensure
+			tag_stack_attached: attached tag_stack
 		end
 
 feature -- Access

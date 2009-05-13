@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_REGION_TAG_ELEMENT_VISITOR}.
+		Replaces region tags of a template by the implementation stored in `regions'.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,8 +18,12 @@ feature -- Initialization
 
 	make (a_regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING])
 			-- `regions': Mapping between region name and tag tree
+		require
+			a_regions_attached:
 		do
 			regions := a_regions
+		ensure
+			regions_set: regions = a_regions
 		end
 
 feature {NONE}
@@ -29,24 +33,24 @@ feature {NONE}
 
 feature -- Access
 
-	visit_tag_element (tag: XP_TAG_ELEMENT)
+	visit_tag_element (a_tag: XP_TAG_ELEMENT)
 			-- Precursor
 		do
 			-- Do nothing
 		end
 
-	visit_include_tag_element (tag: XP_INCLUDE_TAG_ELEMENT)
+	visit_include_tag_element (a_tag: XP_INCLUDE_TAG_ELEMENT)
 			-- Precursor
 		do
 			-- Do nothing
 		end
 
-	visit_region_tag_element (tag: XP_REGION_TAG_ELEMENT)
+	visit_region_tag_element (a_tag: XP_REGION_TAG_ELEMENT)
 			-- Precursor
 		do
-			if attached regions [tag.retrieve_value ("id")] as region then
-				tag.set_region (region)
-				regions [tag.retrieve_value ("id")] := Void
+			if attached regions [a_tag.retrieve_value ("id")] as region then
+				a_tag.set_region (region)
+				regions [a_tag.retrieve_value ("id")] := Void
 			end
 		end
 

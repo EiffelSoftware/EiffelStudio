@@ -15,18 +15,19 @@ create
 feature {NONE} -- Initialization
 
 	make_minimal (a_servlet_name: STRING; a_path: STRING)
+			-- `a_servlet_name': The name of the servlet
+			-- `a_path': The path where the generator should be generated to
 		require
 			not_a_servlet_name_is_empty: not a_servlet_name.is_empty
 			not_a_path_is_empty: not a_path.is_empty
 			a_servlet_name_attached: a_servlet_name /= Void
 			a_path_attached: a_path /= Void
 		do
-			make (a_servlet_name, False, Void, a_path, False, "")
+			make (a_servlet_name, False, Void, a_path, False)
 		end
 
-	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING; a_is_template: BOOLEAN; a_controller_class: STRING)
+	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING; a_is_template: BOOLEAN)
 			-- `a_servlet_name': The name of ther servlet which has to be generated
-			-- `a_controller_types': The types of the controllers
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
 			-- `a_is_template': Is the xeb a template, and has it therefore not to be generated
@@ -35,17 +36,9 @@ feature {NONE} -- Initialization
 			a_path: not a_path.is_empty
 		do
 			servlet_name := a_servlet_name
-			stateful := a_stateful
 			root_tag := a_root_tag
 			path := a_path
-			is_template := a_is_template
 			uid_counter := 0
-			if attached a_controller_class as a then
-				controller_class := a_controller_class
-			else
-				controller_class := ""
-			end
-
 			create controller_table.make (1)
 		end
 
@@ -61,24 +54,28 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	controller_table: HASH_TABLE [STRING, STRING]
+			-- controller instvars of the resulting servlet
+
+	root_tag: XP_TAG_ELEMENT assign set_root_tag
+			-- The root tag of the parsed xeb file
+
+	servlet_name: STRING
+			-- The name of ther servlet which has to be generated
+
+	path: STRING
+			-- The path, were the servlet_generator should be generated
+
 	absorb (a_other: XGEN_SERVLET_GENERATOR_GENERATOR)
+			-- Takes all attributes of `a_other'
 		require
 			a_other_attached: a_other /= Void
 		do
 			servlet_name := a_other.servlet_name
-			stateful := a_other.stateful
 			root_tag := a_other.root_tag.copy_tag_tree
 			path := a_other.path
-			is_template := a_other.is_template
 			uid_counter := 0
-			controller_class := a_other.controller_class
 		end
-
-	controller_class: STRING
-			-- The class of the used controller
-
-	controller_table: HASH_TABLE [STRING, STRING]
-			-- controller instvars of the resulting servlet
 
 	next_unique_identifier: STRING
 			-- Generates a new unique identifier for the controllers
@@ -107,29 +104,16 @@ feature -- Access
 			controller_table.put (a_class, a_identifier)
 		end
 
-	root_tag: XP_TAG_ELEMENT assign set_root_tag
-			-- The root tag of the parsed xeb file
-
 	set_root_tag (a_root_tag: XP_TAG_ELEMENT)
+		require
+			a_root_tag_attached: attached a_root_tag
 		do
 			root_tag := a_root_tag
 		ensure
 			root_tag_set: root_tag = a_root_tag
 		end
 
-	is_template: BOOLEAN
-			-- Is the xeb a template, and has it therefore not to be generated
-
 feature -- Basic functionality
-
-	servlet_name: STRING
-			-- The name of ther servlet which has to be generated
-
-	stateful: BOOLEAN
-			-- Is the controller stateful?
-
-	path: STRING
-			-- The path, were the servlet_generator should be generated
 
 	generate (a_path: STRING; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
 			-- Generates the servlet generator class			
@@ -143,42 +127,23 @@ feature -- Basic functionality
 			file: PLAIN_TEXT_FILE
 			l_filename: STRING
 		do
-			if not is_template then
-				l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e"
-				create file.make (l_filename)
-				if not file.is_creatable then
-					error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
-				end
-				file.open_write
-				if not file.is_open_write then
-					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-				end
-
-				create buf.make (file)
-				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "SERVLET_GENERATOR")
-					-- TODO add an underline before "SERVLET_GENERATOR". Implicates change in other places as well!
-				servlet_gen_class.set_inherit (Servlet_generator_class)
-				servlet_gen_class.set_constructor_name ("make")
-				build_generate_for_servlet_generator (servlet_gen_class, templates)
-				servlet_gen_class.serialize (buf)
-				file.close
+			l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e"
+			create file.make (l_filename)
+			if not file.is_creatable then
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
-		end
+			file.open_write
+			if not file.is_open_write then
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
+			end
 
-	copy_generator: XGEN_SERVLET_GENERATOR_GENERATOR
-			-- Copies current
-		do
-			create Result.make (servlet_name, stateful, root_tag.copy_tag_tree, path, is_template, controller_class)
-		ensure
-			result_attached: attached Result
-		end
-
-	accept_tag_visitor (visitor: XP_TAG_ELEMENT_VISITOR)
-			-- applies visitor on `root_tag'
-		require
-			visitor_attached: visitor /= Void
-		do
-			root_tag.accept (visitor)
+			create buf.make (file)
+			create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
+			servlet_gen_class.set_inherit (Servlet_generator_class)
+			servlet_gen_class.set_constructor_name ("make")
+			build_generate_for_servlet_generator (servlet_gen_class, templates)
+			servlet_gen_class.serialize (buf)
+			file.close
 		end
 
 feature {NONE} -- Implementation
@@ -190,9 +155,6 @@ feature {NONE} -- Implementation
 			templates_attached: templates /= Void
 		local
 			generate_feature: XEL_FEATURE_ELEMENT
-			uid: STRING
-			visitor: XP_REGION_TAG_ELEMENT_VISITOR
-			uid_visitor: XP_UID_TAG_VISITOR
 		do
 			create generate_feature.make ("get_root_tag: " + Tag_serializer_class)
 			a_class.add_feature (generate_feature)
@@ -201,7 +163,6 @@ feature {NONE} -- Implementation
 			generate_feature.append_expression ("create stack.make (10)")
 
 			root_tag.build_tag_tree (generate_feature, templates, Current)
-
 			generate_feature.append_expression ("Result := root_tag")
 		end
 
@@ -211,6 +172,11 @@ feature -- Constants
 	Servlet_generator_class: STRING = "XGEN_SERVLET_GENERATOR"
 	Generator_Prefix: STRING = "g_"
 
+invariant
+	controller_table_attached: controller_table /= Void
+	root_tag_attached: root_tag /= Void
+	servlet_name_attached: servlet_name /= Void
+	path_attached: path /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

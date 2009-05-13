@@ -36,10 +36,6 @@ feature {NONE} -- Initialization
 			tag_stack_is_empty: tag_stack.is_empty
 		end
 
-feature -- Constants
-
-	Configuration_tag: STRING = "page"
-
 feature -- Access
 
 	parser: XM_PARSER
@@ -79,7 +75,6 @@ feature -- Access
 
 	registry: XP_SERVLET_GG_REGISTRY
 			-- Registry
-
 
 	put_registry (a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Adds a taglib to the parser
@@ -310,6 +305,10 @@ feature {XP_CALLBACK_STATE} -- Implementation
 		ensure
 			result_attached: attached Result
 		end
+
+feature -- Constants
+
+	Configuration_tag: STRING = "page"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

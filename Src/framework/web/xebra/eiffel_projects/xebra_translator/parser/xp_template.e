@@ -102,4 +102,7 @@ feature -- Basic functionality
 			a_tag.accept (l_uid_visitor)
 		end
 
+invariant
+	servlet_name_attached: servlet_name /= Void
+	root_tag_attached: root_tag /= Void
 end

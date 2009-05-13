@@ -12,16 +12,18 @@ inherit
 
 feature -- Initialization
 
-	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING])
+	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING]; a_current_file_path: STRING)
 		require
 			a_path_is_not_valid: attached a_path and not a_path.is_empty
 			a_servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+			a_current_file_path_valid: attached a_current_file_path and not a_current_file_path.is_empty
 			a_controller_id_table_attached: attached a_controller_id_table
 		do
 			path := a_path
 			servlet_name := a_servlet_name
 			internal_root_tag := get_root_tag
 			controller_id_table := a_controller_id_table
+			current_file_path := a_current_file_path
 		end
 
 feature {NONE} -- Access
@@ -40,6 +42,9 @@ feature {NONE} -- Access
 
 	controller_id_table: HASH_TABLE [STRING, STRING]
 		-- All the used controllers and their respective class. Key: identifier; Value: Class
+
+	current_file_path: STRING
+		-- The path of Current file
 
 feature -- Access
 
@@ -84,46 +89,53 @@ feature -- Basic Functionality
 	generate
 			--
 		local
-			buf: XU_INDENDATION_STREAM
-			servlet_class: XEL_SERVLET_CLASS_ELEMENT
-			file: PLAIN_TEXT_FILE
+			l_buf: XU_INDENDATION_STREAM
+			l_servlet_class: XEL_SERVLET_CLASS_ELEMENT
+			l_file: PLAIN_TEXT_FILE
 			l_filename: STRING
-
+			l_current_file: PLAIN_TEXT_FILE
 		do
+
 			l_filename := path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e"
-			o.iprint ("The servlet '" + l_filename + "' is being generated...")
-			create file.make (l_filename)
-			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
-			end
-			file.open_write
-			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
-			end
-			create buf.make (file)
-			create servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
-			if stateful then
-				servlet_class.set_inherit (Stateful_servlet_class)
+			create l_current_file.make (current_file_path)
+			create l_file.make (l_filename)
+			if (not l_file.exists) or (l_current_file.date > l_file.date) then
+				o.iprint ("The servlet '" + l_filename + "' is being generated...")
+
+				if not l_file.is_creatable then
+					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				end
+				l_file.open_write
+				if not l_file.is_open_write then
+					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+				end
+				create l_buf.make (l_file)
+				create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
+				if stateful then
+					l_servlet_class.set_inherit (Stateful_servlet_class)
+				else
+					l_servlet_class.set_inherit (Stateless_servlet_class)
+				end
+				l_servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
+				l_servlet_class.set_constructor_name ("make")
+				build_make_for_servlet_generator (l_servlet_class)
+				from
+					controller_id_table.start
+				until
+					controller_id_table.after
+				loop
+					l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
+					controller_id_table.forth
+				end
+				--servlet_class.add_feature (build_internal_controller_for_servlet)
+				l_servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
+				build_handle_request_feature_for_servlet (l_servlet_class, internal_root_tag)
+				l_servlet_class.serialize (l_buf)
+				l_file.close
+				o.iprint ("done.")
 			else
-				servlet_class.set_inherit (Stateless_servlet_class)
+				o.iprint (l_filename + " is already up to date!")
 			end
-			servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
-			servlet_class.set_constructor_name ("make")
-			build_make_for_servlet_generator (servlet_class)
-			from
-				controller_id_table.start
-			until
-				controller_id_table.after
-			loop
-				servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
-				controller_id_table.forth
-			end
-			--servlet_class.add_feature (build_internal_controller_for_servlet)
-			servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
-			build_handle_request_feature_for_servlet (servlet_class, internal_root_tag)
-			servlet_class.serialize (buf)
-			file.close
-			o.iprint ("done.")
 		end
 
 feature --Constants

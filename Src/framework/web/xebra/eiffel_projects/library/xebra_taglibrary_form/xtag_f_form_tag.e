@@ -38,7 +38,7 @@ feature -- Implementation
 			a_servlet_class.add_variable_by_name_type (variable, data_class)
 
 			a_servlet_class.make_feature.append_expression ("create " + variable + ".make" )
-			data_var := a_servlet_class.render_feature.get_unique_identifier
+			data_var := a_servlet_class.render_feature.new_uid
 
 			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + data_var + "%") then")
 

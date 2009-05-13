@@ -136,7 +136,8 @@ feature {NONE} -- Implementation
 				build_controller_table (Result, l_servlet_gg)
 				Result.append_expression ("(create {"
 					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
-					+ "path, %"" + l_servlet_gg.servlet_name + "%", controller_table)).generate;")
+					+ "path, %"" + l_servlet_gg.servlet_name + "%", controller_table, %""
+				    + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%")).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
@@ -169,12 +170,13 @@ feature -- Constants
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
 		<root class="APPLICATION" feature="make"/>
-		<option syntax="transitional">
+		<option warning="true" syntax="transitional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
-		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf"/>
+		<library name="xebra_taglibrary_form" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form-voidunsafe.ecf"/>
+		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
 		<cluster name="servlet_gen" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

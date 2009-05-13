@@ -7,6 +7,9 @@ note
 deferred class
 	XGEN_SERVLET_GENERATOR
 
+inherit
+	XU_SHARED_OUTPUTTER
+
 feature -- Initialization
 
 	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING])
@@ -88,6 +91,7 @@ feature -- Basic Functionality
 
 		do
 			l_filename := path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e"
+			o.iprint ("The servlet '" + l_filename + "' is being generated...")
 			create file.make (l_filename)
 			if not file.is_creatable then
 				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
@@ -119,7 +123,7 @@ feature -- Basic Functionality
 			build_handle_request_feature_for_servlet (servlet_class, internal_root_tag)
 			servlet_class.serialize (buf)
 			file.close
-
+			o.iprint ("done.")
 		end
 
 feature --Constants

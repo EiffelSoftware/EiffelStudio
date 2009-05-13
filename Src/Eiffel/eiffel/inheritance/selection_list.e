@@ -400,7 +400,7 @@ feature -- Conceptual Replication
 	is_less alias "<" (other: SELECTION_LIST): BOOLEAN
 			-- Is `other' less than `Current'
 		do
-			Result := True
+			Result := other /= Current
 		end
 
 feature -- Removal

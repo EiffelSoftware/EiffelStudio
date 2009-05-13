@@ -480,7 +480,7 @@ feature -- Debug
 	is_less alias "<" (other: INHERIT_FEAT): BOOLEAN
 			-- Is `other' less than `Current'
 		do
-			Result := True
+			Result := other /= Current
 		end
 
 note

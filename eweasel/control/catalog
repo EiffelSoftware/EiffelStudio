@@ -1387,6 +1387,7 @@ test	conversion-from-basic-through-any	exec308 tcf fail execution
 test	expanded-object-test-creates-objects	exec309 tcf fail execution
 test	out-on-long-attribute-buffer-overflow	exec310 tcf fail execution
 test	profile-with-invariant				exec311 tcf fail execution profile
+test	small-eif-memory-scavenge		exec312	tcf pass execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

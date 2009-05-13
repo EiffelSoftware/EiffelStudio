@@ -86,7 +86,7 @@ struct prof_info {
 /* Special additional data needed for keeping track of time depending on the implementation. */
 #ifdef EIF_WINDOWS
 #elif defined(HAS_GETRUSAGE)
-#elif define(HAS_TIMES)
+#elif defined(HAS_TIMES)
 /*
 doc:	<attribute name="rt_nb_ticks_per_second" return_type="rt_uint64" export="shared">
 doc:		<summary>Number of ticks in one seconds. Needed to compute number of nanoseconds a tick is equal to.</summary>

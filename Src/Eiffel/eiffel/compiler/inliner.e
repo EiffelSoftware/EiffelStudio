@@ -187,7 +187,11 @@ feature {NONE} -- Implementation
 							{PREDEFINED_NAMES}.move_data_name_id,
 							{PREDEFINED_NAMES}.overlapping_move_name_id,
 							{PREDEFINED_NAMES}.non_overlapping_move_name_id,
-							{PREDEFINED_NAMES}.count_name_id
+							{PREDEFINED_NAMES}.count_name_id,
+							{PREDEFINED_NAMES}.item_name_id,
+							{PREDEFINED_NAMES}.infix_at_name_id,
+							{PREDEFINED_NAMES}.at_name_id,
+							{PREDEFINED_NAMES}.put_name_id
 						then
 							-- Even if the routine is big we inline it.
 						when

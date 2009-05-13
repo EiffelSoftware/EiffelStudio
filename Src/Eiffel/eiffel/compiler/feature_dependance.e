@@ -65,8 +65,9 @@ feature -- Access
 		end;
 
 	reusable_depend_unit: DEPEND_UNIT
+			-- Reusable depend unit for optimized addition by `extend_depend_unit_with_level'.
 		once
-			create Result.make_creation_unit (0)
+			create Result.make_creation_unit (system.any_id)
 		end
 
 	extend_depend_unit_with_level (a_class_id: INTEGER; a_feature: FEATURE_I; a_context: NATURAL_16)

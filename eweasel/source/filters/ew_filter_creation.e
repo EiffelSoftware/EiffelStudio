@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creation of Eiffel test filter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,7 +11,7 @@ inherit
 
 feature -- Filtering
 
-	string_to_filter (s: STRING): EW_EIFFEL_TEST_FILTER is
+	string_to_filter (s: STRING): EW_EIFFEL_TEST_FILTER
 			-- Filter `s' represents (Void if none - i.e. if
 			-- `s' is invalid).
 		local
@@ -54,7 +54,7 @@ feature -- Filtering
 			-- Number of values (test names or test directories or
 			-- test keywords) supplied with filter
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

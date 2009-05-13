@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The EiffelWeasel automatic tester"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature  -- Creation
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- Make
 		do
 			set_output (create {EW_EWEASEL_OUTPUT_CONTROL}.make (io))
@@ -30,7 +30,7 @@ feature  -- Creation
 			end
 		end
 
-	make_and_execute (args: ARRAY [STRING]) is
+	make_and_execute (args: ARRAY [STRING])
 			-- Make and execute tests in catalog file
 		do
 			make (args)			
@@ -41,7 +41,7 @@ feature  -- Creation
 
 feature -- Commands
 
-	execute is
+	execute
 			-- Execute
 		require
 			able_to_execute: args_ok
@@ -57,7 +57,7 @@ feature -- Access
 
 feature  {NONE} -- Implementation
 
-	parse_arguments (args: ARRAY [STRING]) is
+	parse_arguments (args: ARRAY [STRING])
 			-- Parse arguments `args' and execute any defines.
 			-- Set `args_ok' to indicate whether the
 			-- arguments were OK.
@@ -242,7 +242,7 @@ feature  {NONE} -- Implementation
 			test_suite_dir_ok: args_ok implies (test_suite_directory /= Void)
 		end;
 
-	check_test_suite_dir is
+	check_test_suite_dir
 			-- Check that test suite directory exists
 			-- and issue error message if it does not.
 			-- Set `args_ok' to indicate success.
@@ -262,7 +262,7 @@ feature  {NONE} -- Implementation
 			end;
 		end;
 
-	execute_init_control_file is
+	execute_init_control_file
 			-- Parse and execute the initial test control
 			-- file in environment `environment' (possibly
 			-- modifying `environment').  If any errors
@@ -287,7 +287,7 @@ feature  {NONE} -- Implementation
 			end
 		end;
 
-	do_tests is
+	do_tests
 			-- Construct list of tests from `test_catalog_names'
 			-- and parse and execute them in `environment'
 			-- with test suite directory `test_suite_directory'.
@@ -327,12 +327,12 @@ feature  {NONE} -- Implementation
 			end
 		end;
 
-	display_help_instructions is
+	display_help_instructions
 		do
 			output.append ("Use -help option to display help", True)
 		end;
 
-	display_usage is
+	display_usage
 		do
 			output.append_new_line
 			output.append ("Usage:", True)
@@ -392,7 +392,7 @@ feature  {NONE} -- Implementation
 			output.append ("                    PLATFORM_TYPE (unix, windows, dotnet)", True)
 		end;
 
-	display_version is
+	display_version
 		do
 			output.append ("%NEiffelWeasel test execution manager", True)
 			output.append ("  (version 1.0.001)", True)
@@ -431,7 +431,7 @@ feature  {NONE} -- Implementation
 	test_suite_options: EW_TEST_SUITE_OPTIONS;
 			-- Options in effect for execution of test suite
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

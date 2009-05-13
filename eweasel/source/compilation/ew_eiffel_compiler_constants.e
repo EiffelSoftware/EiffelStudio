@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel compiler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,42 +9,42 @@ class EW_EIFFEL_COMPILER_CONSTANTS
 
 feature {NONE} -- Input prompts
 
-	Resume_prompt: STRING is "Press <Return> to resume compilation or <Q> to quit";
+	Resume_prompt: STRING = "Press <Return> to resume compilation or <Q> to quit";
 
-	Missing_precompile_prompt: STRING is "The project needs to use a precompile library, which has not been compiled.";
+	Missing_precompile_prompt: STRING = "The project needs to use a precompile library, which has not been compiled.";
 
 
 feature {NONE} -- Output constants
 
-	Pass_prefix: STRING is "[";
+	Pass_prefix: STRING = "[";
 
-	Pass_string: STRING is "Degree";
+	Pass_string: STRING = "Degree";
 
-	Syntax_error_prefix: STRING is "Syntax error";
+	Syntax_error_prefix: STRING = "Syntax error";
 
-	Syntax_warning_prefix: STRING is "Obsolete syntax";
+	Syntax_warning_prefix: STRING = "Obsolete syntax";
 
-	Validity_error_prefix: STRING is "Error code:";
+	Validity_error_prefix: STRING = "Error code:";
 
-	Validity_warning_prefix: STRING is "Warning code:";
+	Validity_warning_prefix: STRING = "Warning code:";
 
-	Class_name_prefix: STRING is "Class:";
+	Class_name_prefix: STRING = "Class:";
 
-	Aborted_prefix: STRING is "ISE Eiffel: Session aborted";
+	Aborted_prefix: STRING = "ISE Eiffel: Session aborted";
 
-	Exception_prefix: STRING is "Exception tag: ";
+	Exception_prefix: STRING = "Exception tag: ";
 
-	Exception_occurred_prefix: STRING is "Exception occurred";
+	Exception_occurred_prefix: STRING = "Exception occurred";
 
-	Failure_prefix: STRING is "ec: system execution failed.";
+	Failure_prefix: STRING = "ec: system execution failed.";
 
-	Illegal_inst_prefix: STRING is "Illegal instruction";
+	Illegal_inst_prefix: STRING = "Illegal instruction";
 
-	Finished_prefix: STRING is "System Recompiled";
+	Finished_prefix: STRING = "System Recompiled";
 
-	Panic_string: STRING is " panic";
+	Panic_string: STRING = " panic";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

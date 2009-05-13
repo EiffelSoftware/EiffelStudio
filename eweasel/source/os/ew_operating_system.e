@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic operating system services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,12 +15,12 @@ inherit
 
 feature -- Path name operations
 
-	null_file_name: STRING is
+	null_file_name: STRING
 			-- File name which represents null input or output
 		deferred
 		end
 	
-	full_file_name (dir_name, f_name: STRING): STRING is
+	full_file_name (dir_name, f_name: STRING): STRING
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		require
@@ -31,7 +31,7 @@ feature -- Path name operations
 			result_exists: Result /= Void
 		end;
 
-	executable_full_file_name (dir_name, f_name: STRING): STRING is
+	executable_full_file_name (dir_name, f_name: STRING): STRING
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		require
@@ -42,7 +42,7 @@ feature -- Path name operations
 			result_exists: Result /= Void
 		end;
 
-	full_directory_name (dir_name, subdir: STRING): STRING is
+	full_directory_name (dir_name, subdir: STRING): STRING
 			-- Full name of subdirectory `subdir' of directory 
 			-- `dir_name'
 		require
@@ -55,7 +55,7 @@ feature -- Path name operations
 
 feature -- File operations
 	
-	delete_directory_tree (dir_name: STRING) is
+	delete_directory_tree (dir_name: STRING)
 			-- Try to delete the directory tree rooted at 
 			-- `dir_name'.  Ignore any errors
 		require
@@ -75,7 +75,7 @@ feature -- File operations
 
 feature -- Date and time
 	
-	current_time_in_seconds: INTEGER is
+	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
 		deferred
@@ -83,7 +83,7 @@ feature -- Date and time
 
 feature -- Sleeping
 
-	sleep_milliseconds (n: DOUBLE) is
+	sleep_milliseconds (n: DOUBLE)
 			-- Suspend execution for `n' milliseconds.
 			-- Actual time could be longer or shorter
 		require
@@ -95,7 +95,7 @@ feature -- Sleeping
 			sleep (nanosecs)
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

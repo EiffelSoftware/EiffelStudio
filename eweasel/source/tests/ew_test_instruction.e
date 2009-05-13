@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test instruction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ deferred class EW_TEST_INSTRUCTION
 
 feature
 
-	initialize (tcf: EW_TEST_CONTROL_FILE) is
+	initialize (tcf: EW_TEST_CONTROL_FILE)
 			-- Initialize instruction from information in
 			-- `tcf'.
 			-- Set `init_ok' to indicate whether
@@ -25,7 +25,7 @@ feature
 			inst_initialize (subst_arguments);
 		end;
 
-	initialize_for_conditional (a_tcf: EW_TEST_CONTROL_FILE a_cmd, a_args: STRING) is
+	initialize_for_conditional (a_tcf: EW_TEST_CONTROL_FILE a_cmd, a_args: STRING)
 			-- Initialize instruction from information in
 			-- `tcf', but use the given `cmd' and `args' instead
 			-- of getting them indirectly from `tcf'
@@ -40,7 +40,7 @@ feature
 			inst_initialize (orig_arguments);
 		end;
 
-	inst_initialize (args: STRING) is
+	inst_initialize (args: STRING)
 			-- Do initialization specific to this particular
 			-- instruction, with substituted arguments `args'.
 		require
@@ -48,7 +48,7 @@ feature
 		deferred
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate
@@ -65,17 +65,17 @@ feature
 
 feature -- Status
 
-	init_ok: BOOLEAN is
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
 		deferred
 		end;
 
-	execute_ok: BOOLEAN is
+	execute_ok: BOOLEAN
 			-- Was last call to `execute' successful?
 		deferred
 		end;
 
-	test_execution_terminated: BOOLEAN is
+	test_execution_terminated: BOOLEAN
 			-- Did last call to `execute' indicate that
 			-- execution of test should be terminated?
 		do
@@ -93,7 +93,7 @@ feature -- Properties
 			-- Test control file object in which instruction
 			-- is being parsed
 
-	command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING] is
+	command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING]
 			-- Table for translating commands to test
 			-- instructions.
 		require
@@ -102,7 +102,7 @@ feature -- Properties
 			Result := test_control_file.command_table;
 		end;
 
-	init_environment: EW_TEST_ENVIRONMENT is
+	init_environment: EW_TEST_ENVIRONMENT
 			-- Environment during initialization of instruction.
 		require
 			tcf_not_void: test_control_file /= Void;
@@ -131,7 +131,7 @@ feature -- Properties
 
 feature -- Utilities
 
-	executable_file_error (s: STRING): STRING is
+	executable_file_error (s: STRING): STRING
 			-- If file `s' does not exist or is not a file or
 			-- is not executable, string describing the
 			-- problem.  Void otherwise
@@ -156,7 +156,7 @@ feature -- Utilities
 
 feature {NONE} -- Implementation
 
-	set_arguments (a_tcf: EW_TEST_CONTROL_FILE) is
+	set_arguments (a_tcf: EW_TEST_CONTROL_FILE)
 			-- Set `subst_arguments' and get other info from `a_tcf'
 		require
 			tcf_not_void: a_tcf /= Void;
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			line_number := a_tcf.line_number;
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

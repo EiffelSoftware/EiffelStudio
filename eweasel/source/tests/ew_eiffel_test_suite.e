@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test suite"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 
 feature  -- Creation
 
-	make (list: LIST [EW_NAMED_EIFFEL_TEST]; dir: STRING; env: EW_TEST_ENVIRONMENT) is
+	make (list: LIST [EW_NAMED_EIFFEL_TEST]; dir: STRING; env: EW_TEST_ENVIRONMENT)
 			-- Create `Current' with list of Eiffel tests `list',
 			-- test suite directory `dir' and intiial
 			-- environment for each test `env'.
@@ -32,7 +32,7 @@ feature  -- Creation
 
 feature -- Execution
 
-	execute (opts: EW_TEST_SUITE_OPTIONS) is
+	execute (opts: EW_TEST_SUITE_OPTIONS)
 			-- Execute `Current' as modified by options `opts'
 			-- and display the results
 			-- of each test and pass/fail statistics on all tests.
@@ -79,7 +79,7 @@ feature {EW_EIFFEL_TEST_EXECUTOR} -- Implementation
 			-- conducted in a sub-directory of the test
 			-- directory.
 
-	initial_environment (test: EW_NAMED_EIFFEL_TEST): EW_TEST_ENVIRONMENT is
+	initial_environment (test: EW_NAMED_EIFFEL_TEST): EW_TEST_ENVIRONMENT
 			-- Initial environment environment in which to
 			-- execute `test'.  The result may be safely
 			-- modified by the caller.
@@ -106,7 +106,7 @@ feature {EW_EIFFEL_TEST_EXECUTOR} -- Implementation
 
 feature {NONE} -- Implementation	
 
-	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING) is
+	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING)
 			-- Define an environment variable `var' in the
 			-- environment `env' to have
 			-- value `dir', which must be a directory name.
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 				end;
 		end;
 
-	announce_start (test: EW_NAMED_EIFFEL_TEST) is
+	announce_start (test: EW_NAMED_EIFFEL_TEST)
 			-- Announce the start of execution of `test'
 		require
 			test_not_void: test /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			output.flush;
 		end;
 
-	display_results (test: EW_NAMED_EIFFEL_TEST) is
+	display_results (test: EW_NAMED_EIFFEL_TEST)
 			-- Display the status of execution of `test'
 		require
 			test_not_void: test /= Void
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			output.flush;
 		end;
 
-	update_statistics (test: EW_NAMED_EIFFEL_TEST) is
+	update_statistics (test: EW_NAMED_EIFFEL_TEST)
 			-- Update cumulative statistics for a test,
 			-- based on the result of `test' if it was executed
 			-- and on its characteristics if it was not executed
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	display_summary is
+	display_summary
 			-- Display a summary of results of executing
 			-- all tests in the suite
 		local
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			output.append_new_line;
 		end;
 
-	display_stats_if_nonzero (status: STRING; num, total: INTEGER) is
+	display_stats_if_nonzero (status: STRING; num, total: INTEGER)
 			-- Display statistics for tests.  `num' tests out
 			-- of a total of `total' tests completed with
 			-- status `status'.
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	percent (num, denom: INTEGER): INTEGER is
+	percent (num, denom: INTEGER): INTEGER
 			-- Percentage represented by `num' / `denom'
 		local
 			n, d: REAL;
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			Result := (n / d * 100.0 + .49999).rounded;
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

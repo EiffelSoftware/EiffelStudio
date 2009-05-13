@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The EiffelWeasel automatic tester - multi-threaded version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ feature  {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

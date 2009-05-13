@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A C compilation result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ feature -- Properties
 	compilations_completed: BOOLEAN;
 			-- Did all compilations/links finish successfully?
 	
-	summary: STRING is
+	summary: STRING
 			-- Summary of `Current'
 		do
 			create Result.make (0);
@@ -33,12 +33,12 @@ feature -- Properties
 
 feature -- Update
 
-	set_compilations_completed (b: BOOLEAN) is
+	set_compilations_completed (b: BOOLEAN)
 		do
 			compilations_completed := b;
 		end;
 
-	update (line: STRING) is
+	update (line: STRING)
 			-- Update `Current' to reflect the presence of
 			-- `line' as next line in C compilation process output.
 		local
@@ -76,7 +76,7 @@ feature -- Update
 
 feature -- Comparison
 
-	matches (other: EW_C_COMPILATION_RESULT): BOOLEAN is
+	matches (other: EW_C_COMPILATION_RESULT): BOOLEAN
 			-- Do `Current' and `other' represent the
 			-- same compilation result?
 		require
@@ -88,17 +88,17 @@ feature -- Comparison
 
 feature {NONE} -- String constants
 
-	Failure_string1: STRING is "fatal error";
+	Failure_string1: STRING = "fatal error";
 
-	Failure_string2: STRING is "fatal:";
+	Failure_string2: STRING = "fatal:";
 
-	Failure_string3: STRING is " error ";
+	Failure_string3: STRING = " error ";
 
-	Failure_string4: STRING is "waiting for unfinished jobs";
+	Failure_string4: STRING = "waiting for unfinished jobs";
 
-	Completed_string: STRING is "c compilation completed";
+	Completed_string: STRING = "c compilation completed";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

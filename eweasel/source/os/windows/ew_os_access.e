@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to generic operating system services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,13 +8,13 @@ class EW_OS_ACCESS
 
 feature
 
-	os: EW_OPERATING_SYSTEM is
+	os: EW_OPERATING_SYSTEM
 			-- Access to generic operating system services
 		once
 			create {EW_WINDOWS_OS} Result
 		end;
 		
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

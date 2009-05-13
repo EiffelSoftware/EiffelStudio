@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {COMPILE_RESULT_VALUE}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,10 +10,10 @@ class
 
 feature
 
-	ok: INTEGER is 1
+	ok: INTEGER = 1
 			-- Ok
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

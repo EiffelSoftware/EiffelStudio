@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -23,10 +23,10 @@ feature
 --			Precursor {COPY_TEXT_INST}(a_test)
 --		end
 
-	substitute: BOOLEAN is True;
+	substitute: BOOLEAN = True;
 			-- Do not substitute lines of copied files
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

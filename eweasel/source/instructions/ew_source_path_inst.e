@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel source path test catalog instruction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	execute (tcf: EW_TEST_CATALOG_FILE) is
+	execute (tcf: EW_TEST_CATALOG_FILE)
 			-- Execute instruction from information in `tcf'.
 			-- Set `execute_ok' to indicate whether
 			-- execution was successful.
@@ -45,7 +45,7 @@ feature
 		end;
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

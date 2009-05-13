@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_FACTORY_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Query
 
-	environment: EW_TEST_ENVIRONMENT is
+	environment: EW_TEST_ENVIRONMENT
 			-- Singleton test environment
 		do
 			if environment_cell.item = Void then
@@ -21,7 +21,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	eweasel_test: EW_EIFFEL_EWEASEL_TEST is
+	eweasel_test: EW_EIFFEL_EWEASEL_TEST
 			-- Singleton eweasel test which is used for execute {EW_TEST_INST}
 		do
 			if eweasel_test_cell.item = Void then
@@ -35,7 +35,7 @@ feature -- Query
 
 feature -- Command
 
-	reset_environment_and_test is
+	reset_environment_and_test
 			-- Reset `environment' and `eweasel_test'
 		do
 			environment_cell.put (create {EW_TEST_ENVIRONMENT}.make (10))
@@ -43,7 +43,7 @@ feature -- Command
 			eweasel_test_cell.item.set_env (environment)
 		end
 
-	replace_environments_in_default (a_var: STRING_8): STRING is
+	replace_environments_in_default (a_var: STRING_8): STRING
 			--
 		require
 			not_void: a_var /= Void and then not a_var.is_empty
@@ -53,7 +53,7 @@ feature -- Command
 			not_void: Result /= Void
 		end
 
-	replace_environments (a_env: EW_TEST_ENVIRONMENT; a_var: STRING): STRING is
+	replace_environments (a_env: EW_TEST_ENVIRONMENT; a_var: STRING): STRING
 			-- Find proper arugment if possible
 			-- If not found, Result is orignal argument
 		require
@@ -77,7 +77,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	environment_cell: CELL [EW_TEST_ENVIRONMENT] is
+	environment_cell: CELL [EW_TEST_ENVIRONMENT]
 			--
 		once
 			create Result.put (Void)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	eweasel_test_cell: CELL [EW_EIFFEL_EWEASEL_TEST] is
+	eweasel_test_cell: CELL [EW_EIFFEL_EWEASEL_TEST]
 			--
 		once
 			create Result.put (Void)
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,7 +1,7 @@
-indexing
+note
 	description: "An Eiffel test filter which selects all tests with a particular test directory"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 
 class EW_FILTER_TEST_DIRECTORY
 
@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make (dir: STRING) is
+	make (dir: STRING)
 			-- Create filter which selects tests whose
 			-- test directory is `dir'
 		do
@@ -22,7 +22,7 @@ feature -- Creation
 
 feature -- Filtering
 
-	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN is
+	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN
 			-- Does `Current' select `test' for execution?
 		do
 			Result := equal (test.last_source_directory_component, test_directory)
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 	test_directory: STRING;
 			-- Directory test must have in order for test to be selected
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

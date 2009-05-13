@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_CONTROL_FILE_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_eqa (a_instructions: LINKED_LIST [EW_TEST_INSTRUCTION]; a_env: EW_TEST_ENVIRONMENT) is
+	make_eqa (a_instructions: LINKED_LIST [EW_TEST_INSTRUCTION]; a_env: EW_TEST_ENVIRONMENT)
 			-- Creation method
 		require
 			not_void: a_instructions /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			make_for_convertion
 		end
 
-	make_for_convertion is
+	make_for_convertion
 			-- Creation method for {TEST_EWEASEL_TCF_CONVERTER}
 		do
 			command_table := test_command_table
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute (a_env: EW_TEST_ENVIRONMENT) is
+	execute (a_env: EW_TEST_ENVIRONMENT)
 			-- Modified base on {TEST_CONTROL_FILE}.parse_and_execute
 		require
 			environment_not_void: a_env /= Void
@@ -57,7 +57,7 @@ feature -- Command
 			last_test := l_test
 		end
 
-	parse_file (a_filename: STRING): LIST [EW_TEST_INSTRUCTION] is
+	parse_file (a_filename: STRING): LIST [EW_TEST_INSTRUCTION]
 			-- Parse testing instructions in `a_filename'
 			-- Result is list of testing instructions
 		require
@@ -75,7 +75,7 @@ feature -- Command
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

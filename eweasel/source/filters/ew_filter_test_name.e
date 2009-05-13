@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test filter which selects all tests with a particular name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 	make
 feature -- Creation
 
-	make (name: STRING) is
+	make (name: STRING)
 			-- Create filter which selects tests named `name'
 		do
 			test_name := name;
@@ -21,7 +21,7 @@ feature -- Creation
 
 feature -- Filtering
 
-	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN is
+	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN
 			-- Does `Current' select `test' for execution?
 		do
 			Result := equal (test.test_name, test_name);
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 	test_name: STRING;
 			-- Name test must have in order for test to be selected
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

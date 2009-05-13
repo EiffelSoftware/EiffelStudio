@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Helper to setup environment values before running eweasel test cases
 																							]"
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method
 		do
 			create all_converted_classes.make (100)
@@ -109,7 +109,7 @@ feature -- Config
 			not_void: Result /= Void
 		end
 
-	setup_one_test_case (a_test_name, a_test_folder_name, a_arguments: STRING) is
+	setup_one_test_case (a_test_name, a_test_folder_name, a_arguments: STRING)
 			-- Setup for one test case
 		require
 			not_void: a_test_name /= Void
@@ -138,7 +138,7 @@ feature -- Config
 
 feature -- Query
 
-	is_file_exists (a_tcf_file: STRING): BOOLEAN is
+	is_file_exists (a_tcf_file: STRING): BOOLEAN
 			-- If `a_tcf_file' exists
 		require
 			not_void: a_tcf_file /= Void
@@ -149,7 +149,7 @@ feature -- Query
 			Result := l_file.exists
 		end
 
-	is_dir_exists (a_dir: STRING): BOOLEAN is
+	is_dir_exists (a_dir: STRING): BOOLEAN
 			-- If `a_dir' exists
 		require
 			not_void: a_dir /= Void
@@ -160,7 +160,7 @@ feature -- Query
 			Result := l_dir.exists
 		end
 
-	is_environment_set: BOOLEAN is
+	is_environment_set: BOOLEAN
 			-- If environment set?
 		local
 			l_env: EXECUTION_ENVIRONMENT
@@ -178,7 +178,7 @@ feature -- Query
 
 feature -- Command
 
-	setup is
+	setup
 			-- Setup environment for eweasel testing
 		local
 			l_eweasel_63: EW_EQA_EWEASEL_MT
@@ -259,7 +259,7 @@ feature -- Command
 			source_path (source_directory)
 		end
 
-	convert_tcf_in_folder (a_dir: STRING; a_test_name: STRING) is
+	convert_tcf_in_folder (a_dir: STRING; a_test_name: STRING)
 			-- Convert `a_tcf_file' to normal Eiffel class if there is a tcf under `a_dir'
 		require
 			not_void: a_dir /= Void
@@ -279,7 +279,7 @@ feature -- Command
 			end
 		end
 
-	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING) is
+	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING)
 			-- Convert all tcf files in `a_dir'
 			-- This feature will place all tests under a dir to one Eiffel testing class
 		require
@@ -384,7 +384,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	initial_environment (a_env: EW_TEST_ENVIRONMENT; a_test_dir_name: STRING)  is
+	initial_environment (a_env: EW_TEST_ENVIRONMENT; a_test_dir_name: STRING)
 			-- Initial environment environment in which to
 			-- execute `test'.  The result may be safely
 			-- modified by the caller.
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			a_env.define (Final_execution_dir_name, l_exec_dir)
 		end
 
-	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING) is
+	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING)
 			-- Define an environment variable `var' in the
 			-- environment `env' to have
 			-- value `dir', which must be a directory name.
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 			-- Last test case prefix
 			-- Maybe void if not set
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

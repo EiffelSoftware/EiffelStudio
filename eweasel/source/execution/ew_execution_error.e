@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test execution error explanation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,9 +14,9 @@ create
 
 feature -- Properties
 	
-	error_type: STRING is "Execution";
+	error_type: STRING = "Execution";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

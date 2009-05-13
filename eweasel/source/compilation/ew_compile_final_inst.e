@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -10,7 +10,7 @@ inherit
 	EW_START_COMPILE_INST;
 
 feature
-	compilation_options: LIST [STRING] is
+	compilation_options: LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
 			-- if Eiffel compiler is run
 		once
@@ -19,7 +19,7 @@ feature
 			Result.extend ("-finalize")
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

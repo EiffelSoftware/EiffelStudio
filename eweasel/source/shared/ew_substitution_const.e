@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -8,20 +8,20 @@ class EW_SUBSTITUTION_CONST
 
 feature {NONE}
 
-	Substitute_char: CHARACTER is '$';
+	Substitute_char: CHARACTER = '$';
 			-- Character which triggers environment variable
 			-- substitution
 
-	Quote_char: CHARACTER is '"';
+	Quote_char: CHARACTER = '"';
 			-- Character which is used for quoting environment
 			-- variable values
 	
-	Left_group_char: CHARACTER is '(';
-	Right_group_char: CHARACTER is ')';
+	Left_group_char: CHARACTER = '(';
+	Right_group_char: CHARACTER = ')';
 			-- Characters which are used for setting environment
 			-- variable name off from surrounding text
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

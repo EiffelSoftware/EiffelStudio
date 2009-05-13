@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A named Eiffel test"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature  -- Creation
 
-	make (name, last, full_src_dir, tcf_name: STRING; keys: LIST [STRING]) is
+	make (name, last, full_src_dir, tcf_name: STRING; keys: LIST [STRING])
 			-- Create `Current' with test name `name',
 			-- last source directory component `last', full
 			-- source directory name `full_src_dir'  and test
@@ -36,7 +36,7 @@ feature  -- Creation
 
 feature -- Execution
 
-	execute (env: EW_TEST_ENVIRONMENT) is
+	execute (env: EW_TEST_ENVIRONMENT)
 			-- Execute `Current' in the environment `env'.
 		local
 			tcf: EW_TEST_CONTROL_FILE;
@@ -87,7 +87,7 @@ feature -- Properties
 	keywords: LIST [STRING];
 			-- Keywords associated with this test.
 
-	has_keyword (word: STRING): BOOLEAN is
+	has_keyword (word: STRING): BOOLEAN
 			-- Is `word' one of the keywords associated with
 			-- `Current' ?
 		require
@@ -99,7 +99,7 @@ feature -- Properties
 			Result := not keywords.exhausted;
 		end;
 
-	has_one_keyword (words: LIST [STRING]): BOOLEAN is
+	has_one_keyword (words: LIST [STRING]): BOOLEAN
 			-- Is at least one keyword in `words' associated with
 			-- `Current' ?
 		require
@@ -116,7 +116,7 @@ feature -- Properties
 			end
 		end;
 
-	has_all_keywords (words: LIST [STRING]): BOOLEAN is
+	has_all_keywords (words: LIST [STRING]): BOOLEAN
 			-- Is every keyword in `words' associated with
 			-- `Current' ?
 		require
@@ -134,20 +134,20 @@ feature -- Properties
 			end
 		end
 
-	manual_execution_required: BOOLEAN is
+	manual_execution_required: BOOLEAN
 			-- Does test need to be executed manually for some
 			-- reason?
 		do
 			Result := has_keyword (Manual_keyword);
 		end;
 
-	skip_requested: BOOLEAN is
+	skip_requested: BOOLEAN
 			-- Has creator of test requested that it be skipped?
 		do
 			Result := has_keyword (Skip_keyword);
 		end;
 
-	execution_allowed: BOOLEAN is
+	execution_allowed: BOOLEAN
 			-- May test be executed?
 		do
 			Result := not manual_execution_required and not skip_requested;
@@ -156,15 +156,15 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	Manual_keyword: STRING is "manual";
+	Manual_keyword: STRING = "manual";
 			-- Keyword which indicates that a test needs
 			-- to be executed manually rather than automatically
 
-	Skip_keyword: STRING is "skip";
+	Skip_keyword: STRING = "skip";
 			-- Keyword which indicates that a test needs
 			-- to be skipped, for some reason
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

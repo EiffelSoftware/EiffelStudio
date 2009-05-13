@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING) is
+	inst_initialize (line: STRING)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -32,7 +32,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -74,7 +74,7 @@ feature
 
 feature {NONE}  -- Implementation
 
-	equal_files (file1: RAW_FILE; file2: RAW_FILE): BOOLEAN is
+	equal_files (file1: RAW_FILE; file2: RAW_FILE): BOOLEAN
 			-- Do `file1' and `file2' have identical contents?
 		require
 			source_not_void: file1 /= Void;
@@ -114,7 +114,7 @@ feature {NONE}
 			-- Name of file with expected output
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING) is
+	inst_initialize (line: STRING)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -31,7 +31,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -63,7 +63,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	delete_project_files (dir_name: STRING) is
+	delete_project_files (dir_name: STRING)
 			-- Delete all Eiffel project files (.epr files)
 			-- found in directory `dir_name'
 		local
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -11,13 +11,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	compilation_dir_name: STRING is
+	compilation_dir_name: STRING
 			-- Name of directory where compilation is to be done
 		once
 			Result := Final_execution_dir_name; 
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

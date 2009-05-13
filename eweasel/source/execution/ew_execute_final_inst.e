@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -11,13 +11,13 @@ inherit
 
 feature {NONE} -- Implementation
 	
-	execution_dir_name: STRING is
+	execution_dir_name: STRING
 			-- Name of directory where executable resides
 		once
 			Result := Final_execution_dir_name; 
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

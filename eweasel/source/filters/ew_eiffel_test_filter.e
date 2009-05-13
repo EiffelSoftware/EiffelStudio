@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test filter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,14 +8,14 @@ deferred class EW_EIFFEL_TEST_FILTER
 
 feature -- Filtering
 
-	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN is
+	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN
 			-- Does `Current' select `test' for execution?
 		require
 			test_not_void: test /= Void;
 		deferred
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

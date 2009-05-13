@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An independent process used by EiffelWeasel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: STRING; args: LIST [STRING]; inf, outf, savef: STRING) is
+	make (cmd: STRING; args: LIST [STRING]; inf, outf, savef: STRING)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -111,7 +111,7 @@ feature -- Status
 
 feature -- Control
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Send characters in `s' to process
 		require
 			string_not_void: s /= Void
@@ -124,7 +124,7 @@ feature -- Control
 			end
 		end
 
-	terminate is
+	terminate
 			-- Terminate independent process - wait for
 			-- it to exit and get its status
 		local
@@ -147,7 +147,7 @@ feature -- Control
 			suspended := False
 		end
 
-	abort is
+	abort
 			-- Abort independent process, forcibly killing
 			-- it if it is still running
 		local
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 	child_input, child_output: POINTER
 			-- Input/output given to child.
 
-	close is
+	close
 			-- Close input, output and save files
 		do
 			if std_output /= default_pointer then
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_line is
+	read_line
 			-- Read next line from process and make
 			-- available in `last_string'.  Set `end_of_file'
 			-- if no more lines available.
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_character is
+	read_character
 			-- Read next line from process and make
 			-- available in `last_string'.  Set `end_of_file'
 			-- if no more lines available.
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 	last_character: CHARACTER
 			-- Result of last call to `read_character'
 
-	startup_info: WEL_STARTUP_INFO is
+	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		local
 			l_tuple: TUPLE [POINTER, POINTER]
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			Result.set_std_error (child_output)
 		end
 
-	file_handle: EW_WEL_FILE_HANDLE is
+	file_handle: EW_WEL_FILE_HANDLE
 			-- Factory for managing HANDLE
 		once
 			create Result
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			file_handle_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

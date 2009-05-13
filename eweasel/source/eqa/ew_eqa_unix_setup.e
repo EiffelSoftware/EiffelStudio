@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Setup Unix environment variables before running eweasel tests
 																					]"

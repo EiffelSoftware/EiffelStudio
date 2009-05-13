@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel system execution result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ feature -- Properties
 	execution_finished: BOOLEAN;
 			-- Did execution finish normally (zero exit status)?
 
-	summary: STRING is
+	summary: STRING
 			-- Summary of `Current'
 		local
 			status: STRING;
@@ -53,12 +53,12 @@ feature -- Properties
 
 feature -- Modification
 
-	set_execution_finished (b: BOOLEAN) is
+	set_execution_finished (b: BOOLEAN)
 		do
 			execution_finished := b;
 		end;
 
-	set_execution_failure (b: BOOLEAN) is
+	set_execution_failure (b: BOOLEAN)
 		do
 			execution_failure := b;
 		end;
@@ -66,7 +66,7 @@ feature -- Modification
 
 feature -- Update
 
-	update (line: STRING) is
+	update (line: STRING)
 			-- Update `Current' to reflect the presence of
 			-- `line' as next line in execution output.
 		local
@@ -104,7 +104,7 @@ feature -- Update
 
 feature -- Comparison
 
-	matches (other: EW_EXECUTION_RESULT): BOOLEAN is
+	matches (other: EW_EXECUTION_RESULT): BOOLEAN
 			-- Do `Current' and `other' represent the
 			-- same execution result?
 		require
@@ -119,17 +119,17 @@ feature -- Comparison
 
 feature {NONE} -- String constants
 
-	Completed_string: STRING is "execution completed";
+	Completed_string: STRING = "execution completed";
 
-	Failed_string: STRING is "execution failed";
+	Failed_string: STRING = "execution failed";
 
-	System_failed_string: STRING is "system execution failed.";
+	System_failed_string: STRING = "system execution failed.";
 
-	Panic_string: STRING is "panic";
+	Panic_string: STRING = "panic";
 	
-	Illegal_inst_string: STRING is "illegal instruction";
+	Illegal_inst_string: STRING = "illegal instruction";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

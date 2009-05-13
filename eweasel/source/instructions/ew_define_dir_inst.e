@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING) is
+	inst_initialize (line: STRING)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -42,7 +42,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.  Always successful.
 		do
@@ -52,7 +52,7 @@ feature
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
 	
-	execute_ok: BOOLEAN is True;
+	execute_ok: BOOLEAN = True;
 			-- Calls to `execute' are always successful.
 
 feature {NONE}
@@ -63,7 +63,7 @@ feature {NONE}
 	value: STRING;
 			-- Value to be given to environment value
 	
-	make_dir_value (args: LIST [STRING]): STRING is
+	make_dir_value (args: LIST [STRING]): STRING
 			-- Directory name derived from arguments of `args'
 		do
 			from
@@ -80,7 +80,7 @@ feature {NONE}
 			end
 		end
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

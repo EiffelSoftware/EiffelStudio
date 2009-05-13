@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	inst_initialize (args: STRING) is
+	inst_initialize (args: STRING)
 			-- Initialize instruction from `args'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -103,7 +103,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	expected_compile_result: EW_EIFFEL_COMPILATION_RESULT;
 			-- Result expected from compilation
 
-	process_syntax_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT) is
+	process_syntax_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT)
 			-- Modify `cr' to reflect presence of syntax phrase
 			-- `phrase'
 		require
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 
 		end;
 
-	process_validity_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT) is
+	process_validity_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT)
 			-- Modify `cr' to reflect presence of validity phrase
 			-- `phrase'
 		require
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	real_class_name (cname: STRING): STRING is
+	real_class_name (cname: STRING): STRING
 			-- Actual class name to be used in expected
 			-- compile result
 		do
@@ -224,21 +224,21 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	No_class_name: STRING is "NONE";
+	No_class_name: STRING = "NONE";
 
-	Phrase_separator: CHARACTER is ';';
+	Phrase_separator: CHARACTER = ';';
 
-	Ok_result: STRING is "ok"
+	Ok_result: STRING = "ok"
 
-	Syntax_error_result: STRING is "syntax_error"
+	Syntax_error_result: STRING = "syntax_error"
 
-	Syntax_warning_result: STRING is "syntax_warning"
+	Syntax_warning_result: STRING = "syntax_warning"
 
-	Validity_error_result: STRING is "validity_error"
+	Validity_error_result: STRING = "validity_error"
 
-	Validity_warning_result: STRING is "validity_warning";
+	Validity_warning_result: STRING = "validity_warning";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

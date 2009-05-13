@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A queue of named Eiffel tests that can be extended %
 		%by multiple threads and worked on by multiple threads"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 			create mutex.make
 			create pending_queue.make (100)
@@ -45,14 +45,14 @@ feature -- Properties
 	
 feature -- Modification
 
-	set_results_in_catalog_order (b: BOOLEAN) is
+	set_results_in_catalog_order (b: BOOLEAN)
 		do
 			results_in_catalog_order := b
 		ensure
 			results_in_catalog_order_set: results_in_catalog_order = b
 		end;
 
-	extend (t: EW_NAMED_EIFFEL_TEST) is
+	extend (t: EW_NAMED_EIFFEL_TEST)
 			-- Add `t' to end of list of tests
 		local
 			entry: EW_EIFFEL_TEST_QUEUE_ENTRY
@@ -79,7 +79,7 @@ feature -- Modification
 			end
 		end
 
-	mark_test_completed (t: EW_NAMED_EIFFEL_TEST) is
+	mark_test_completed (t: EW_NAMED_EIFFEL_TEST)
 			-- Mark test `t' as completed (no longer awaiting
 			-- execution)
 		local
@@ -138,7 +138,7 @@ feature -- Modification
 			end
 		end
 
-	next_waiting_test: EW_NAMED_EIFFEL_TEST is
+	next_waiting_test: EW_NAMED_EIFFEL_TEST
 			-- Next test awaiting execution or Void if
 			-- no more tests
 		local
@@ -202,7 +202,7 @@ feature -- Modification
 			end
 		end
 
-	next_completed_test: EW_NAMED_EIFFEL_TEST is
+	next_completed_test: EW_NAMED_EIFFEL_TEST
 			-- Next test that has been completed and can
 			-- now be reported or Void if no more tests
 		local
@@ -266,7 +266,7 @@ feature -- Modification
 			end
 		end
 
-	set_all_tests_added is
+	set_all_tests_added
 			-- Set `all_tests_added' to true
 		do
 			debug ("threaded_eweasel")
@@ -287,7 +287,7 @@ feature -- Modification
 			end
 		end
 
-	broadcast_all_tests_completed is
+	broadcast_all_tests_completed
 			-- Broad "all tests completed" indication.
 			-- This should not be needed but is
 			-- included just in case
@@ -352,20 +352,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Obsolete
 
-	lock is
+	lock
 			-- Lock `Current' to gain exclusive access to it
 			-- (so other threads don't change it)
 		do
 			mutex.lock			
 		end
 
-	unlock is
+	unlock
 			-- Unlock `Current' to allow other threads access
 		do
 			mutex.unlock			
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

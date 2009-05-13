@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Copy file using RAW_FILE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Properties
 
-	substitute: BOOLEAN is True;
+	substitute: BOOLEAN = True;
 			-- Do not substitute lines of copied files
 
 feature {NONE} -- Implementation
 
-	copy_file (src: like new_file; env: EW_TEST_ENVIRONMENT; dest: like new_file) is
+	copy_file (src: like new_file; env: EW_TEST_ENVIRONMENT; dest: like new_file)
 			-- Append lines of file `src', with environment
 			-- variables substituted according to `env' (but
 			-- only if `substitute' is true) to
@@ -34,12 +34,12 @@ feature {NONE} -- Implementation
 			dest.close
 		end
 
-	new_file (a_file_name: STRING): RAW_FILE is
+	new_file (a_file_name: STRING): RAW_FILE
 		do
 			create Result.make (a_file_name)
 		end
 		
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to Unix-specific operating system services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,13 +8,13 @@ class EW_UNIX_OS_ACCESS
 
 feature
 
-	unix_os: EW_UNIX_OS is
+	unix_os: EW_UNIX_OS
 			-- Access to Unix-specific operating system services
 		once
 			create Result;
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

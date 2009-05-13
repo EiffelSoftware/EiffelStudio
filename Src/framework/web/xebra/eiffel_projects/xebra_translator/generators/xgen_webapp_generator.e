@@ -8,6 +8,9 @@ note
 class
 	XGEN_WEBAPP_GENERATOR
 
+inherit
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 create
 	make, make_with_servlets
 
@@ -73,70 +76,70 @@ feature -- Basic Functionality
 			path_is_not_empty: not path.is_empty
 			webapp_name_is_not_empty: not webapp_name.is_empty
 		local
-			buf:XU_INDENDATION_STREAM
-			request_class: XEL_CLASS_ELEMENT
-			application_class: XEL_CLASS_ELEMENT
-			file: PLAIN_TEXT_FILE
+			l_buf:XU_INDENDATION_STREAM
+			l_request_class: XEL_CLASS_ELEMENT
+			l_application_class: XEL_CLASS_ELEMENT
+			l_file: PLAIN_TEXT_FILE
 			l_filename: STRING
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			webapp_name.to_lower
 			l_filename := path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e"
-			create file.make (l_filename)
-			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			create l_file.make (l_filename)
+			if not l_file.is_creatable then
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
-			file.open_write
-			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			l_file.open_write
+			if not l_file.is_open_write then
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
 
-			create buf.make (file)
-			buf.set_ind_character ('%T')
-			create request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
-			request_class.set_inherit ("XWA_" + Server_con_handler_class)
-			request_class.set_constructor_name ("make")
-			request_class.add_feature (generate_constructor_for_server_conn_handler (servlets))
-			request_class.serialize (buf)
-			file.close
+			create l_buf.make (l_file)
+			l_buf.set_ind_character ('%T')
+			create l_request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
+			l_request_class.set_inherit ("XWA_" + Server_con_handler_class)
+			l_request_class.set_constructor_name ("make")
+			l_request_class.add_feature (generate_constructor_for_server_conn_handler (servlets))
+			l_request_class.serialize (l_buf)
+			l_file.close
 
 				-- Generate the {APPLICATION} class
 			l_filename := path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e"
-			create file.make (l_filename)
-			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			create l_file.make (l_filename)
+			if not l_file.is_creatable then
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
-			file.open_write
-			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			l_file.open_write
+			if not l_file.is_open_write then
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
-		--	create file.make_open_write (path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
-			create buf.make (file)
-			create application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
-			application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
-			application_class.set_constructor_name ("make")
-			application_class.add_feature (generate_feature_for_name)
-			application_class.add_feature (generate_contructor_for_application)
-			application_class.serialize (buf)
-			file.close
+
+			create l_buf.make (l_file)
+			create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
+			l_application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
+			l_application_class.set_constructor_name ("make")
+			l_application_class.add_feature (generate_feature_for_name)
+			l_application_class.add_feature (generate_contructor_for_application)
+			l_application_class.serialize (l_buf)
+			l_file.close
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
 			l_filename := path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e"
-			create file.make (l_filename)
-			if not file.is_creatable then
-				print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			create l_file.make (l_filename)
+			if not l_file.is_creatable then
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
-			file.open_write
-			if not file.is_open_write then
-				print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+			l_file.open_write
+			if not l_file.is_open_write then
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
-			--create file.make_open_write (path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
-			create buf.make (file)
-			create application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
-			application_class.set_inherit ("ANY")
-			application_class.add_feature (generate_once_feature_for_global_state)
-			application_class.serialize (buf)
-			file.close
+
+			create l_buf.make (l_file)
+			create l_application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
+			l_application_class.set_inherit ("ANY")
+			l_application_class.add_feature (generate_once_feature_for_global_state)
+			l_application_class.serialize (l_buf)
+			l_file.close
 		end
 
 feature {NONE} -- Implementation
@@ -174,8 +177,7 @@ feature {NONE} -- Implementation
 		require
 			some_servlets_attached: attached some_servlets
 		local
-			servlet: XGEN_SERVLET_GENERATOR_GENERATOR
-			s: STRING
+			l_servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
 			create Result.make ("add_servlets")
 			from
@@ -183,11 +185,9 @@ feature {NONE} -- Implementation
 			until
 				some_servlets.after
 			loop
-				servlet := some_servlets.item
-				if not servlet.is_template then
-						Result.append_expression ("stateless_servlets.put (create {"
-							+ Generator_Prefix.as_upper + servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + servlet.servlet_name.as_lower + ".xeb%")")
-				end
+				l_servlet := some_servlets.item
+				Result.append_expression ("stateless_servlets.put (create {"
+					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + l_servlet.servlet_name.as_lower + ".xeb%")")
 				some_servlets.forth
 			end
 		ensure
@@ -199,6 +199,10 @@ feature {NONE} -- Constants
 	Server_con_handler_class: STRING = "SERVER_CONN_HANDLER"
 	Generator_Prefix: STRING = "g_"
 
+invariant
+	webapp_name_attached: webapp_name /= Void
+	path_attached: path /= Void
+	servlets_attached: servlets /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -38,7 +38,7 @@ feature -- Access
 			-- The parameters of the tag [value, parameter id]
 
 	class_name: STRING
-			-- The name of the corresponding TAG-class
+			-- The name of the corresponding {XTAG_TAG_SERIALIZER}-class
 
 	debug_information: STRING
 			-- Debug information (row and column in the xeb file)
@@ -300,6 +300,11 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			end
 		end
 
+invariant
+	controller_id_attached: controller_id /= Void
+	debug_information_attached: debug_information /= Void
+	class_name_attached: class_name /= Void
+	parameters_attached: parameters /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

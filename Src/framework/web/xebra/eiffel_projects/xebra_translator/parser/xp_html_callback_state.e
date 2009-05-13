@@ -30,9 +30,6 @@ feature -- Initialization
 
 feature -- Access
 
-	Output_tag_name: STRING = "XTAG_XEB_OUTPUT_CALL_TAG"
-	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
-
 	buf: STRING
 			-- Buffer for the html part
 
@@ -169,5 +166,10 @@ feature -- Access
 				parser_callback.tag_stack.item.put_subtag (l_tag)
 			end
 		end
+
+feature -- Constnats
+
+	Output_tag_name: STRING = "XTAG_XEB_OUTPUT_CALL_TAG"
+	Html_tag_name: STRING = "XTAG_XEB_HTML_TAG"
 
 end

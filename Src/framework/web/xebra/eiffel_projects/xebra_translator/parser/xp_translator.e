@@ -109,7 +109,7 @@ feature -- Processing
 			create l_generator_app_generator.make
 			l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
 			l_generator_app_generator.generate (servlet_gen_path)
-			create l_webapp_gen.make_with_servlets (name, output_path,l_generator_app_generator.servlet_generator_generators)
+			create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
 			l_webapp_gen.generate
 		end
 
@@ -158,7 +158,6 @@ feature -- Processing
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
 			l_external_resolver: XP_EXTERNAL_RESOLVER
-			l_controller_resolver: XP_CONTROLLER_SET_VISITOR
 		do
 			create l_external_resolver
 			create {XM_EIFFEL_PARSER} l_parser.make
@@ -170,7 +169,6 @@ feature -- Processing
 			l_parser.parse_from_stream (a_stream)
 
 			l_root_tag := l_p_callback.root_tag
-				-- Sets the controller_id of all the tags
 			l_controller_class := l_p_callback.controller_class
 			a_registry.put_template (a_servlet_name, create {XP_TEMPLATE}.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name))
 		end
@@ -214,6 +212,10 @@ feature {NONE} -- Implementation
 				retry
 		end
 
+invariant
+	servlet_gen_path_attached: servlet_gen_path /= Void
+	registry_attached: registry /= Void
+	output_path_attached: output_path /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

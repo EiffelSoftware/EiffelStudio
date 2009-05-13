@@ -31,8 +31,9 @@ feature {NONE} -- Initialization
 feature -- Operation
 
 	run (a_arg_parser: XT_ARGUMENT_PARSER)
-			-- Runns the translator
-
+			-- Runs the translator
+		require
+			a_arg_parser_attached: attached a_arg_parser
 		local
 			l_printer: ERROR_CUI_PRINTER
 			l_translator: XP_TRANSLATOR

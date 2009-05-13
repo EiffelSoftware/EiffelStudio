@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	inst_initialize (args: STRING) is
+	inst_initialize (args: STRING)
 			-- Initialize instruction from `args'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -44,7 +44,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	expected_compile_result: EW_C_COMPILATION_RESULT;
 			-- Result expected from C compilations
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

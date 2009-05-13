@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel validity error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: like class_name; a_code: like validity_code) is
+	make (a_name: like class_name; a_code: like validity_code)
 			-- Create current validity error with `a_name' and `a_code'.
 		require
 			a_name_not_void: a_name /= Void
@@ -37,7 +37,7 @@ feature -- Properties
 
 feature -- Modification
 
-	set_validity_code (a_code: STRING) is
+	set_validity_code (a_code: STRING)
 		require
 			a_code_not_void: a_code /= Void
 		do
@@ -48,7 +48,7 @@ feature -- Modification
 
 feature -- Summary
 
-	summary: STRING is
+	summary: STRING
 		do
 			create Result.make (0);
 			Result.append ("Validity error");
@@ -64,12 +64,12 @@ feature -- Summary
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 		do
 			Result := class_name.is_equal (other.class_name) and validity_code.is_equal (other.validity_code)
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 			Result := class_name < other.class_name or else
 				(equal (class_name, other.class_name) and validity_code < other.validity_code)
@@ -78,7 +78,7 @@ feature -- Comparison
 invariant
 	validity_code_not_void: validity_code /= Void
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

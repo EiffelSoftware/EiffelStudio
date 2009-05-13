@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -16,7 +16,7 @@ feature -- Path name operations
 	null_file_name: STRING = "nul"
 			-- File name which represents null input or output
 	
-	full_file_name (dir_name, f_name: STRING): STRING is
+	full_file_name (dir_name, f_name: STRING): STRING
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		do
@@ -30,7 +30,7 @@ feature -- Path name operations
 			Result.append (f_name)
 		end
 
-	executable_full_file_name (dir_name, f_name: STRING): STRING is
+	executable_full_file_name (dir_name, f_name: STRING): STRING
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		do
@@ -38,7 +38,7 @@ feature -- Path name operations
 			Result.append (".exe")
 		end
 
-	full_directory_name (dir_name, subdir: STRING): STRING is
+	full_directory_name (dir_name, subdir: STRING): STRING
 			-- Full name of subdirectory `subdir' of directory 
 			-- `dir_name'
 		do
@@ -47,14 +47,14 @@ feature -- Path name operations
 
 feature -- Date and time
 	
-	current_time_in_seconds: INTEGER is
+	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
 		do
 			Result := c_current_time_in_seconds
 		end
 
-	c_current_time_in_seconds: INTEGER is
+	c_current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)	
 		external
@@ -64,7 +64,7 @@ feature -- Date and time
 		end
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

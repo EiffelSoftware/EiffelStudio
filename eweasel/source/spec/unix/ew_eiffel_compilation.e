@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,7 +22,7 @@ create
 
 feature
 
-	make (cmd: STRING; args: LIST [STRING]; save: STRING) is
+	make (cmd: STRING; args: LIST [STRING]; save: STRING)
 			-- Start a new Eiffel compilation process to
 			-- run command `cmd' with arguments `args'.
 			-- Write all output from the new process to
@@ -38,7 +38,7 @@ feature
 			output_file_available: output /= Void;
 		end;
 
-	next_compile_result: EW_EIFFEL_COMPILATION_RESULT is
+	next_compile_result: EW_EIFFEL_COMPILATION_RESULT
 		local
 			time_to_stop: BOOLEAN;
 		do
@@ -68,7 +68,7 @@ feature
 			end;
 		end;
 
-	resume is
+	resume
 			-- Resume compilation
 		do
 			put_string ("%N");
@@ -76,7 +76,7 @@ feature
 			suspended := False;
 		end;
 
-	quit is
+	quit
 			-- Quit compilation
 		do
 			put_string (quit_reply);
@@ -84,7 +84,7 @@ feature
 			suspended := False;
 		end;
 
-	terminate is
+	terminate
 			-- Terminate Eiffel compilation
 		local
 			e: EW_EIFFEL_COMPILATION_RESULT
@@ -100,7 +100,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	read_line is
+	read_line
 			-- Read next line from `input' and make
 			-- available in `last_string'.  Set `end_of_file'
 			-- if no more lines available.
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	quit_reply: STRING;
 			-- Reply to send to compiler to quit compilation
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

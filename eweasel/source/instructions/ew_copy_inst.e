@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -19,7 +19,7 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING) is
+	inst_initialize (line: STRING)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -36,7 +36,7 @@ feature
 			end
 		end;
 
-	inst_initialize_with (a_source_file, a_dest_directory, a_dest_file: STRING) is
+	inst_initialize_with (a_source_file, a_dest_directory, a_dest_file: STRING)
 			-- Initialize with arguments
 		require
 			not_void: a_source_file /= Void
@@ -48,7 +48,7 @@ feature
 			dest_file := a_dest_file
 		end
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -131,7 +131,7 @@ feature
 
 		end;
 
-	check_dates (start_date, orig_date, final_date, before_date, after_date: INTEGER fname: STRING) is
+	check_dates (start_date, orig_date, final_date, before_date, after_date: INTEGER fname: STRING)
 		do
 			if final_date <= orig_date then
 				output.append_new_line
@@ -152,13 +152,13 @@ feature
 
 feature -- Properties
 
-	substitute: BOOLEAN is
+	substitute: BOOLEAN
 			-- Should each line of copied file have
 			-- environment variable substitution applied to it?
 		deferred
 		end;
 
-	is_fast: BOOLEAN is
+	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
 		do
 			Result := get (Eweasel_fast_name) /= Void
@@ -166,7 +166,7 @@ feature -- Properties
 
 feature {NONE}  -- Implementation
 
-	ensure_dir_exists (dir_name: STRING) is
+	ensure_dir_exists (dir_name: STRING)
 			-- Try to ensure that directory `dir_name' exists
 			-- (it is not guaranteed to exist at exit).
 		require
@@ -186,7 +186,7 @@ feature {NONE}  -- Implementation
 			retry;
 		end
 
-	copy_file (src: like new_file; env: EW_TEST_ENVIRONMENT; dest: like new_file) is
+	copy_file (src: like new_file; env: EW_TEST_ENVIRONMENT; dest: like new_file)
 			-- Append lines of file `src', with environment
 			-- variables substituted according to `env' (but
 			-- only if `substitute' is true) to
@@ -235,7 +235,7 @@ feature {NONE}
 	dest_directory: STRING;
 			-- Name of destination directory
 
-	new_file (a_file_name: STRING): FILE is
+	new_file (a_file_name: STRING): FILE
 			-- Create an instance of FILE.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -250,7 +250,7 @@ feature {NONE}
 			Result := True
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

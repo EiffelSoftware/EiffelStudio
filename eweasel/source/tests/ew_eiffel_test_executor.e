@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A worker that (separate thread of control) that %
 		%executes named Eiffel tests"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute named Eiffel tests until there are
 			-- no more to be executed
 		require else
@@ -86,25 +86,25 @@ feature -- Properties
 	
 feature -- Modification
 
-	set_queue (q: EW_EIFFEL_TEST_QUEUE) is
+	set_queue (q: EW_EIFFEL_TEST_QUEUE)
 			-- Set `queue' to `q'
 		do
 			queue := q
 		end
 	
-	set_options (opts: EW_TEST_SUITE_OPTIONS) is
+	set_options (opts: EW_TEST_SUITE_OPTIONS)
 			-- Set `options' to `opts'
 		do
 			options := opts
 		end
 	
-	set_test_suite (s: EW_EIFFEL_TEST_SUITE) is
+	set_test_suite (s: EW_EIFFEL_TEST_SUITE)
 			-- Set `test_suite' to `s'
 		do
 			test_suite := s
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

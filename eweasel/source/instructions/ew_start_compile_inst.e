@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
@@ -62,7 +62,7 @@ feature
 			change_working_directory (curr_dir);
 		end;
 
-	compilation_options: LIST [STRING] is
+	compilation_options: LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
 			-- if Eiffel compiler is run
 		deferred
@@ -72,7 +72,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [STRING] is
+	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [STRING]
 			-- The arguments to the compiler for test `test'.
 		do
 			create Result.make;
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 		end;
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

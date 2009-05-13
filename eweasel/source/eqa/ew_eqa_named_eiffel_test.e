@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {NAMED_EIFFEL_TEST_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_63 (a_name, a_last_directory, a_src_directory: STRING; a_tcf: EW_EQA_TEST_CONTROL_INSTRUCTIONS; a_keys: LIST [STRING]) is
+	make_63 (a_name, a_last_directory, a_src_directory: STRING; a_tcf: EW_EQA_TEST_CONTROL_INSTRUCTIONS; a_keys: LIST [STRING])
 			-- Creation method
 		do
 			test_name := a_name
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	tcf: EW_EQA_TEST_CONTROL_INSTRUCTIONS
 			-- Related test control instructions
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

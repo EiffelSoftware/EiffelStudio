@@ -1,4 +1,4 @@
-indexing
+note
 	date: "October 9, 1997";
 	description: "A Unix process"
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {EW_UNIX_OS} -- Creation
 
-	make (fname: STRING) is
+	make (fname: STRING)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -52,7 +52,7 @@ feature {EW_UNIX_OS} -- Creation
 
 feature -- Initialization
 
-	initialize (fname: STRING) is
+	initialize (fname: STRING)
 			-- Initialize `Current' with program residing
 			-- in file `fname'
 		require
@@ -195,7 +195,7 @@ feature -- Execution properties
 			-- Status from last child process that reported
 			-- status (0 if none)
 
-	output_from_child: RAW_FILE is
+	output_from_child: RAW_FILE
 			-- File from which parent can read output coming
 			-- from spawned process, if `output_piped' is true.
 			-- If `error_same_as_output' is true, this output
@@ -209,7 +209,7 @@ feature -- Execution properties
 			result_exists: Result /= Void
 		end
 
-	input_to_child: RAW_FILE is
+	input_to_child: RAW_FILE
 			-- File to which parent can write input going to
 			-- spawned process, if `input_piped' is true
 		require
@@ -220,7 +220,7 @@ feature -- Execution properties
 			result_exists: Result /= Void
 		end
 
-	error_from_child: RAW_FILE is
+	error_from_child: RAW_FILE
 			-- File from which parent can read error input coming
 			-- from spawned process, if `error_piped' is true
 		require
@@ -233,7 +233,7 @@ feature -- Execution properties
 
 feature -- Modification
 
-	set_arguments (args: ARRAY [STRING]) is
+	set_arguments (args: ARRAY [STRING])
 			-- Set `arguments' to `args'
 		require
 			process_not_executing: not is_executing
@@ -243,7 +243,7 @@ feature -- Modification
 			arguments_set: arguments = args
 		end
 
-	set_close_nonstandard_files (b: BOOLEAN) is
+	set_close_nonstandard_files (b: BOOLEAN)
 			-- Set `close_nonstandard_files' to `b'
 		require
 			process_not_executing: not is_executing
@@ -253,7 +253,7 @@ feature -- Modification
 			value_set: close_nonstandard_files = b
 		end
 
-	set_input_file_name (fname: STRING) is
+	set_input_file_name (fname: STRING)
 			-- Set `input_file_name' to `fname', which must
 			-- be the name of an existing file readable by
 			-- the parent process
@@ -269,7 +269,7 @@ feature -- Modification
 			input_not_piped: not input_piped
 		end
 
-	set_output_file_name (fname: STRING) is
+	set_output_file_name (fname: STRING)
 			-- Set `output_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -286,7 +286,7 @@ feature -- Modification
 			output_not_piped: not output_piped
 		end
 
-	set_error_file_name (fname: STRING) is
+	set_error_file_name (fname: STRING)
 			-- Set `error_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -305,7 +305,7 @@ feature -- Modification
 			error_not_output: not error_same_as_output
 		end
 
-	set_input_piped is
+	set_input_piped
 			-- Set `input_piped' to true
 		require
 			process_not_executing: not is_executing
@@ -319,7 +319,7 @@ feature -- Modification
 			input_not_descriptor: not valid_file_descriptor (input_descriptor)
 		end
 
-	set_output_piped is
+	set_output_piped
 			-- Set `output_piped' to true
 		require
 			process_not_executing: not is_executing
@@ -333,7 +333,7 @@ feature -- Modification
 			output_not_descriptor: not valid_file_descriptor (output_descriptor)
 		end
 
-	set_error_piped is
+	set_error_piped
 			-- Set `error_piped' to true
 		require
 			process_not_executing: not is_executing
@@ -349,7 +349,7 @@ feature -- Modification
 			error_not_output: not error_same_as_output
 		end
 
-	set_error_same_as_output is
+	set_error_same_as_output
 			-- Set `error_same_as_output' to true
 		require
 			process_not_executing: not is_executing
@@ -367,7 +367,7 @@ feature -- Modification
 
 feature -- Execution
 
-	spawn_nowait is
+	spawn_nowait
 			-- Spawn process and do not wait for it to report
 			-- status before returning.  This routine may
 			-- raise an exception in the parent and/or child
@@ -399,7 +399,7 @@ feature -- Execution
 			error_pipe_set: error_piped implies error_from_child /= Void
 		end
 
-	get_status_block is
+	get_status_block
 			-- Wait for executing child process to report status
 			-- and put it in `status'.  If child has not
 			-- reported status yet, block until it does
@@ -412,7 +412,7 @@ feature -- Execution
 			process_not_executing: not is_executing
 		end
 
-	send_signal (sig: INTEGER) is
+	send_signal (sig: INTEGER)
 			-- Send signal number `sig' to child process
 		require
 			process_executing: is_executing
@@ -420,7 +420,7 @@ feature -- Execution
 			unix_send_signal (sig, process_id)
 		end
 
-	terminate_hard is
+	terminate_hard
 			-- Send a kill signal (SIGKILL) to child process
 		require
 			process_executing: is_executing
@@ -430,7 +430,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	build_argument_list is
+	build_argument_list
 			-- Build argument list for `exec_process' call
 			-- and put it in `arguments_for_exec'.
 			-- Make `process_name' argument 0 and append
@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 			arguments_for_exec := a;
 		end
 
-	open_files_and_pipes is
+	open_files_and_pipes
 			-- Open any files that the child process will use
 			-- for standard input, output or error.  Create
 			-- any pipes that will be needed
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_parent_process_files is
+	setup_parent_process_files
 			-- Setup files for parent after doing fork
 		do
 			if input_piped then
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	setup_child_process_files is
+	setup_child_process_files
 			-- Setup standard input, output and error in
 			-- child process after fork and before calling
 			-- `exec_process'
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	move_desc (source, dest: INTEGER) is
+	move_desc (source, dest: INTEGER)
 			-- If descriptor `source' is different than
 			-- descriptor `dest', duplicate `source' onto `dest'
 			-- and close `source'
@@ -703,13 +703,13 @@ feature {NONE} -- Implementation
 			-- which parent reads error input) when
 			-- `error_piped' is true
 
-	Stdin_descriptor: INTEGER is 0
+	Stdin_descriptor: INTEGER = 0
 			-- File descriptor for standard input
 
-	Stdout_descriptor: INTEGER is 1
+	Stdout_descriptor: INTEGER = 1
 			-- File descriptor for standard output
 
-	Stderr_descriptor: INTEGER is 2
+	Stderr_descriptor: INTEGER = 2
 			-- File descriptor for standard error
 
 invariant
@@ -758,7 +758,7 @@ invariant
 	valid_stdout_descriptor: valid_file_descriptor (Stdout_descriptor)
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -11,10 +11,10 @@ inherit
 
 feature
 
-	substitute: BOOLEAN is False;
+	substitute: BOOLEAN = False;
 			-- Do not substitute lines of copied files
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

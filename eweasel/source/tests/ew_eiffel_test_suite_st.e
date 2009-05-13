@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test suite - single-threaded version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature -- Execution
 
-	execute (opts: EW_TEST_SUITE_OPTIONS) is
+	execute (opts: EW_TEST_SUITE_OPTIONS)
 			-- Execute `Current' as modified by options `opts'
 			-- and display the results
 			-- of each test and pass/fail statistics on all tests.
@@ -56,7 +56,7 @@ feature -- Execution
 		end;
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test error list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 			create list.make;
 		end;
@@ -23,12 +23,12 @@ feature -- Properties
 
 feature -- Modification
 	
-	add (err: EW_ERROR) is
+	add (err: EW_ERROR)
 		do
 			list.extend (err);
 		end;
 	
-	add_list (other: EW_ERROR_LIST) is
+	add_list (other: EW_ERROR_LIST)
 			-- Add `other' to end of `Current'
 		local
 			other_list: LINKED_LIST [EW_ERROR];
@@ -46,7 +46,7 @@ feature -- Modification
 	
 feature -- Display
 	
-	display is
+	display
 			-- Display `Current' in order.
 		do
 			from
@@ -64,7 +64,7 @@ feature {EW_ERROR_LIST} -- Implementation
 
 	list: LINKED_LIST [EW_ERROR];
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

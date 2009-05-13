@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {EWEASEL_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Creation method
 		local
 			l_factory: EW_EQA_TEST_FACTORY
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Command to replace parse arguments
 
-	define (a_var, a_val: STRING) is
+	define (a_var, a_val: STRING)
 			-- Define a environment variable
 		require
 			not_void: a_val /= Void and a_var /= Void
@@ -41,7 +41,7 @@ feature -- Command to replace parse arguments
 			environment.define (a_var, a_val);
 		end
 
-	define_file (a_var: STRING; a_path: ARRAY [STRING]) is
+	define_file (a_var: STRING; a_path: ARRAY [STRING])
 			-- Define a environment variable
 		require
 			not_void: a_var /= Void
@@ -73,7 +73,7 @@ feature -- Command to replace parse arguments
 			environment.define (a_var, l_file_name)
 		end
 
-	init (a_file_name: STRING) is
+	init (a_file_name: STRING)
 			-- Set initial control file
 		require
 			not_void: a_file_name /= Void
@@ -81,14 +81,14 @@ feature -- Command to replace parse arguments
 			initial_control_file := a_file_name
 		end
 
-	catalog (a_file_name: STRING) is
+	catalog (a_file_name: STRING)
 			-- Set catalog file
 			-- Not used in 6.3
 		do
 			test_catalog_names.extend (a_file_name)
 		end
 
-	output_arg (a_dir: STRING) is
+	output_arg (a_dir: STRING)
 			-- Set output argument
 			-- See {EWEASEL}.parse_arguments
 		require
@@ -99,7 +99,7 @@ feature -- Command to replace parse arguments
 
 feature -- Start eweasel
 
-	execute_with (a_catalog: ARRAYED_LIST [EW_EQA_TEST_CATALOG_INSTRUCTIONS]) is
+	execute_with (a_catalog: ARRAYED_LIST [EW_EQA_TEST_CATALOG_INSTRUCTIONS])
 			-- Execute all tests in `a_catalog'
 			-- Not used in 6.3
 		local
@@ -123,62 +123,62 @@ feature -- Start eweasel
 
 feature -- Not implemented
 
-	keep_all is
+	keep_all
 			-- Keep all
 		do
 		end
 
-	keep_passed is
+	keep_passed
 			-- Keep passed
 		do
 		end
 
-	keep_failed is
+	keep_failed
 			-- Keep failed
 		do
 		end
 
-	clean is
+	clean
 			-- Clean
 		do
 		end
 
-	no_clean is
+	no_clean
 			-- No clean
 		do
 		end
 
-	help is
+	help
 			-- Help
 		do
 		end
 
-	filter is
+	filter
 			-- Filter
 		do
 		end
 
-	order is
+	order
 			-- Order
 		do
 		end
 
-	no_order is
+	no_order
 			-- No order
 		do
 		end
 
-	max_threads is
+	max_threads
 			-- Max threads
 		do
 		end
 
-	max_c_processes is
+	max_c_processes
 			-- Max c processes
 		do
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

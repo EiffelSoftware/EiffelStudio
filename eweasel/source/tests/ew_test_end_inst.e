@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -13,7 +13,7 @@ inherit
 		end
 
 feature
-	inst_initialize (args: STRING) is
+	inst_initialize (args: STRING)
 			-- Initialize instruction from `args'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
@@ -26,7 +26,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Always successful.
@@ -48,14 +48,14 @@ feature
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
 	
-	execute_ok: BOOLEAN is True;
+	execute_ok: BOOLEAN = True;
 			-- Calls to `execute' always succeed.
 
-	test_execution_terminated: BOOLEAN is True;
+	test_execution_terminated: BOOLEAN = True;
 			-- Did last call to `execute' indicate that
 			-- execution of test should be terminated?
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

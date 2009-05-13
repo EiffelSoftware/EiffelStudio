@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unix external routines"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ class EW_UNIX_EXTERNALS
 
 feature -- File descriptors
 
-	close_file_descriptor (fd: INTEGER) is
+	close_file_descriptor (fd: INTEGER)
 			-- Close existing open file descriptor `fd'
 		require
 			valid_descriptor: fd >= 0
@@ -24,7 +24,7 @@ feature -- File descriptors
 			]"
 		end;
 
-	duplicate_file_descriptor (old_fd, new_fd: INTEGER) is
+	duplicate_file_descriptor (old_fd, new_fd: INTEGER)
 			-- Duplicate existing file descriptor `old_fd' and
 			-- give the new file descriptor the value `new_fd'.
 			-- If `new_fd' is in use, it is first deallocated
@@ -46,19 +46,19 @@ feature -- File descriptors
 		end;
 	
 		
-	valid_file_descriptor (fd: INTEGER): BOOLEAN is
+	valid_file_descriptor (fd: INTEGER): BOOLEAN
 			-- Is `fd' in the range of valid file descriptors?
 		do
 			Result := fd >= 0
 		end
 
-	Invalid_file_descriptor: INTEGER is -1;
+	Invalid_file_descriptor: INTEGER = -1;
 			-- File descriptor which is not in valid range
 
 
 feature -- Date and time
 	
-	current_time_in_seconds: INTEGER is
+	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
 		external
@@ -74,7 +74,7 @@ feature -- Date and time
 			]"
 		end;
 
-	current_time_in_fine_seconds: DOUBLE is
+	current_time_in_fine_seconds: DOUBLE
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970), with
 			-- a fine resolution
@@ -96,7 +96,7 @@ feature -- Date and time
 
 feature -- String manipulation
 
-	str_dup (area: POINTER): POINTER is
+	str_dup (area: POINTER): POINTER
 			-- Return new copy of C string indicated by `area'
 		external
 			"C inline use <stdlib.h>, <string.h>"
@@ -115,7 +115,7 @@ feature -- String manipulation
 
 feature -- Pipes
 
-	unix_pipe (read_fd, write_fd: POINTER) is
+	unix_pipe (read_fd, write_fd: POINTER)
 			-- Create a new pipe and put the read file descriptor
 			-- in `read_fd' and the write file descriptor in
 			-- `write_fd'
@@ -141,7 +141,7 @@ feature -- Pipes
 
 feature -- Memory allocation and setting
 
-	unix_allocate_arg_memory (count: INTEGER): POINTER is
+	unix_allocate_arg_memory (count: INTEGER): POINTER
 			-- Return pointer to newly allocated memory
 			-- for `count' arguments which is not subject
 			-- to garbage collection.  `count' must
@@ -161,7 +161,7 @@ feature -- Memory allocation and setting
 			]"
 		end;
 
-	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER) is
+	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER)
 			-- Set the element of `arg_array' at position `pos' 
 			-- (relative to 0) to `arg'
 		external
@@ -177,7 +177,7 @@ feature -- Memory allocation and setting
 
 feature -- Process operations
 
-	unix_fork_process: INTEGER is
+	unix_fork_process: INTEGER
 			-- Create a new process.  Return the process id
 			-- to the parent and 0 to the child
 		external
@@ -194,7 +194,7 @@ feature -- Process operations
 			]"
 		end;
 
-	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN) is
+	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN)
 			-- Call execv or execve to overlay current process with
 			-- new one.  Does not return (raises exception
 			-- if error doing the exec)
@@ -224,7 +224,7 @@ feature -- Process operations
 			]"
 		end;
 
-	unix_kill (pid, sig: INTEGER) is
+	unix_kill (pid, sig: INTEGER)
 			-- Send signal `sig' to process(es) identified by `pid'
 		external
 			"C inline use <signal.h>, <errno.h>"
@@ -239,7 +239,7 @@ feature -- Process operations
 			]"
 		end;
 
-	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER): INTEGER is
+	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER): INTEGER
 			-- Wait for process specified by `pid'.  Block if
 			-- no process has status available if `block' is
 			-- true.  Set boolean at `status_avail_addr' to
@@ -266,7 +266,7 @@ feature -- Process operations
 			]"
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

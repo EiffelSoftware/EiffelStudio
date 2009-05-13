@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_CATALOG_FILE_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_fn: STRING) is
+	make (a_fn: STRING)
 			-- <Precursor>
 		do
 			Precursor (a_fn)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create all_test_instructions.make (300)
 		end
 
-	make_eqa is
+	make_eqa
 			-- Creation method
 		local
 			l_factory: EW_EQA_TEST_FACTORY
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_argument (a_arg: STRING) is
+	set_argument (a_arg: STRING)
 			-- Set `arguments' with `a_arg'
 		do
 			arguments := a_arg
@@ -63,14 +63,14 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	set_last_test (a_test: EW_NAMED_EIFFEL_TEST) is
+	set_last_test (a_test: EW_NAMED_EIFFEL_TEST)
 			-- <Precursor>
 		do
 			Precursor {EW_TEST_CATALOG_FILE}(a_test)
 			tests.extend (a_test)
 		end
 
-	parse_line (a_line: STRING) is
+	parse_line (a_line: STRING)
 			-- <Precursor>
 		local
 			l_pos: INTEGER;
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XMl utility routines"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	deserialize_text (a_text: STRING): XM_DOCUMENT is
+	deserialize_text (a_text: STRING): XM_DOCUMENT
 			-- Retrieve xml document from content of `a_text'.
 			-- If deserialization fails, return Void.
 		require
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	document_text (a_doc: XM_DOCUMENT): STRING is
+	document_text (a_doc: XM_DOCUMENT): STRING
 			-- Full text of `a_doc', including all tags and content.
 		require
 			doc_not_void: a_doc /= Void
@@ -65,7 +65,7 @@ feature -- Access
 			retry
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

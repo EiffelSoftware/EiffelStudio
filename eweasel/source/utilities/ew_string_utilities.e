@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String manipulation utilities"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,13 +8,13 @@ class EW_STRING_UTILITIES
 
 feature -- Character properties
 
-	is_white (c: CHARACTER): BOOLEAN is
+	is_white (c: CHARACTER): BOOLEAN
 			-- Is `c' a white space character?
 		do
 			Result := c = ' ' or c = '%T' or c = '%R' or c = '%N';
 		end;
 
-	is_identifier_char (c: CHARACTER): BOOLEAN is
+	is_identifier_char (c: CHARACTER): BOOLEAN
 			-- Is `c' an identifier character?
 		do
 			Result := (c >= 'A' and c <= 'Z') or
@@ -25,7 +25,7 @@ feature -- Character properties
 
 feature -- String properties
 
-	is_integer (s: STRING): BOOLEAN is
+	is_integer (s: STRING): BOOLEAN
 			-- Does `s' represent a valid integer?
 		require
 			string_not_void: s /= Void
@@ -63,7 +63,7 @@ feature -- String properties
 			Result := not failure;
 		end;
 
-	is_prefix (s, t: STRING): BOOLEAN is
+	is_prefix (s, t: STRING): BOOLEAN
 			-- Is `s' a prefix of `t'?
 		require
 			string1_not_void: s /= Void;
@@ -82,7 +82,7 @@ feature -- String properties
 			end
 		end;
 
-	first_white_position (s: STRING): INTEGER is
+	first_white_position (s: STRING): INTEGER
 			-- Position of first white space character in
 			-- `s' or 0 if no white space characters.
 		require
@@ -115,7 +115,7 @@ feature -- String properties
 
 feature -- String list routines
 				
-	empty_strings_removed (list: LIST [STRING]): DYNAMIC_LIST [STRING] is
+	empty_strings_removed (list: LIST [STRING]): DYNAMIC_LIST [STRING]
 			-- `list' with all elements which are empty strings
 			-- or are Void removed
 		require
@@ -141,7 +141,7 @@ feature -- String list routines
 			result_not_void: Result /= Void;
 		end;
 				
-	trim_white_space (list: LIST [STRING]) is
+	trim_white_space (list: LIST [STRING])
 			-- Remove leading and trailing blanks
 			-- from each string in `list'
 		require
@@ -163,7 +163,7 @@ feature -- String list routines
 			end;
 		end;
 				
-	broken_into_words (line: STRING): DYNAMIC_LIST [STRING] is
+	broken_into_words (line: STRING): DYNAMIC_LIST [STRING]
 			-- Result of breaking `line' into words, where each
 			-- word is terminated by white space
 		require
@@ -206,7 +206,7 @@ feature -- String list routines
 			end
 		end;
 
-	broken_at (line: STRING; sep_char: CHARACTER): DYNAMIC_LIST [STRING] is
+	broken_at (line: STRING; sep_char: CHARACTER): DYNAMIC_LIST [STRING]
 			-- Result of breaking `line' into strings separated
 			-- by character `char'.  Empty strings resulting
 			-- from two consecutive occurrences of `char' are
@@ -244,7 +244,7 @@ feature -- String list routines
 			end
 		end;
 	
-	leading_args_removed (line: STRING n: INTEGER): STRING is
+	leading_args_removed (line: STRING n: INTEGER): STRING
 			-- `line' with the first `n' white-space delimited
 			-- arguments removed
 		require
@@ -274,7 +274,7 @@ feature -- String list routines
 			result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

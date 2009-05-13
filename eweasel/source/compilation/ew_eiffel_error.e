@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel syntax error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_class_name (a_name: like class_name) is
+	set_class_name (a_name: like class_name)
 			-- Set `class_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -31,7 +31,7 @@ feature -- Setting
 invariant
 	class_name_not_void: class_name /= Void
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -11,26 +11,26 @@ inherit
 
 feature
 
-	inst_initialize (args: STRING) is
+	inst_initialize (args: STRING)
 			-- Initialize instruction from `args'.
 		do
 			failure_explanation := "unknown test instruction %"" + command + "%""
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 		do
 			failure_explanation := "unknown test instruction %"" + command + "%""
 		end;
 
-	init_ok: BOOLEAN is False;
+	init_ok: BOOLEAN = False;
 			-- Calls to `initialize' always fail.
 	
-	execute_ok: BOOLEAN is False;
+	execute_ok: BOOLEAN = False;
 			-- Calls to `execute' always fail.
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

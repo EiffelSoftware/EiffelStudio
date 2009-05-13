@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tables of Eiffel test instructions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	test_command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING] is
+	test_command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING]
 		local
 			t: EW_TEST_INSTRUCTION;
 		once
@@ -94,7 +94,7 @@ feature
 			Result.put (t, Test_end_keyword);
 		end;
 
-	test_suite_command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING] is
+	test_suite_command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING]
 		local
 			t: EW_TEST_INSTRUCTION;
 		once
@@ -115,7 +115,7 @@ feature
 			Result.put (t, Define_file_keyword);
 		end;
 
-	test_catalog_command_table: HASH_TABLE [EW_CATALOG_INSTRUCTION, STRING] is
+	test_catalog_command_table: HASH_TABLE [EW_CATALOG_INSTRUCTION, STRING]
 		local
 			t: EW_CATALOG_INSTRUCTION;
 		once
@@ -133,7 +133,7 @@ feature
 			Result.put (t, Test_63_keyword);
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

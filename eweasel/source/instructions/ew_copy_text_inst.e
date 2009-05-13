@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Copy file using PLAIN_TEXT_FILE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 
 feature {NONE} -- Implementation
 
-	new_file (a_file_name: STRING): PLAIN_TEXT_FILE is
+	new_file (a_file_name: STRING): PLAIN_TEXT_FILE
 		do
 			create Result.make (a_file_name)
 		end
 		
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

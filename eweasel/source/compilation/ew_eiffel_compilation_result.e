@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel compilation result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -66,7 +66,7 @@ feature -- Properties
 	raw_compiler_output: STRING
 			-- Raw output of compiler, if not Void
 
-	summary: STRING is
+	summary: STRING
 			-- Summary of `Current'
 		local
 			status: STRING;
@@ -142,7 +142,7 @@ feature -- Properties
 
 feature -- Update
 
-	update (line: STRING) is
+	update (line: STRING)
 			-- Update `Current' to reflect the presence of
 			-- `line' as next line in compiler output.
 		local
@@ -213,17 +213,17 @@ feature {NONE} -- State
 
 feature -- Modification
 
-	set_compilation_paused is
+	set_compilation_paused
 		do
 			compilation_paused := True;
 		end;
 
-	set_compilation_finished is
+	set_compilation_finished
 		do
 			compilation_finished := True;
 		end;
 
-	add_syntax_error (err: EW_EIFFEL_SYNTAX_ERROR) is
+	add_syntax_error (err: EW_EIFFEL_SYNTAX_ERROR)
 		require
 			error_not_void: err /= Void;
 		do
@@ -233,7 +233,7 @@ feature -- Modification
 			syntax_errors.extend (err);
 		end;
 
-	add_validity_error (err: EW_EIFFEL_VALIDITY_ERROR) is
+	add_validity_error (err: EW_EIFFEL_VALIDITY_ERROR)
 		require
 			error_not_void: err /= Void;
 		do
@@ -244,7 +244,7 @@ feature -- Modification
 			last_validity_error := err
 		end;
 
-	set_raw_compiler_output (s: STRING) is
+	set_raw_compiler_output (s: STRING)
 		require
 			s_not_void: s /= Void
 		do
@@ -253,7 +253,7 @@ feature -- Modification
 
 feature -- Comparison
 
-	matches (other: EW_EIFFEL_COMPILATION_RESULT): BOOLEAN is
+	matches (other: EW_EIFFEL_COMPILATION_RESULT): BOOLEAN
 			-- Do `Current' and `other' represent the
 			-- same compilation result?
 		require
@@ -275,21 +275,21 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	analyze_syntax_error (line: STRING) is
+	analyze_syntax_error (line: STRING)
 		require
 			line_not_void: line /= Void;
 		do
 			add_syntax_error (new_syntax_error (line));
 		end;
 
-	analyze_syntax_warning (line: STRING) is
+	analyze_syntax_warning (line: STRING)
 		require
 			line_not_void: line /= Void;
 		do
 			add_syntax_error (new_syntax_warning (line));
 		end;
 
-	new_syntax_error (line: STRING): EW_EIFFEL_SYNTAX_ERROR is
+	new_syntax_error (line: STRING): EW_EIFFEL_SYNTAX_ERROR
 		require
 			line_not_void: line /= Void;
 		local
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	new_syntax_warning (line: STRING): EW_EIFFEL_SYNTAX_ERROR is
+	new_syntax_warning (line: STRING): EW_EIFFEL_SYNTAX_ERROR
 		require
 			line_not_void: line /= Void;
 		local
@@ -371,14 +371,14 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	analyze_validity_error (line: STRING) is
+	analyze_validity_error (line: STRING)
 		require
 			line_not_void: line /= Void;
 		do
 			add_validity_error (new_validity_error (line));
 		end;
 
-	new_validity_error (line: STRING): EW_EIFFEL_VALIDITY_ERROR is
+	new_validity_error (line: STRING): EW_EIFFEL_VALIDITY_ERROR
 		require
 			line_not_void: line /= Void;
 		local
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			create Result.make (class_name, code)
 		end;
 
-	analyze_error_line (line: STRING) is
+	analyze_error_line (line: STRING)
 		require
 			line_not_void: line /= Void;
 		local
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	linked_list_matches (list1, list2: SORTED_TWO_WAY_LIST [EW_EIFFEL_ERROR]): BOOLEAN is
+	linked_list_matches (list1, list2: SORTED_TWO_WAY_LIST [EW_EIFFEL_ERROR]): BOOLEAN
 		local
 			count1, count2: INTEGER;
 			different: BOOLEAN;
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 				Result := not different;
 			end
 		end
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

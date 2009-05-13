@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An entry in queue of named Eiffel tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ create
 
 feature -- Creation
 
-	make (t: EW_NAMED_EIFFEL_TEST) is
+	make (t: EW_NAMED_EIFFEL_TEST)
 			-- Create `Current' as test awaiting execution
 		do
 			test := t
@@ -32,19 +32,19 @@ feature -- Properties
 	
 feature -- Modification
 
-	set_waiting (b: BOOLEAN) is
+	set_waiting (b: BOOLEAN)
 			-- Set `waiting' to `b'
 		do
 			waiting := b
 		end
 
-	set_in_use (b: BOOLEAN) is
+	set_in_use (b: BOOLEAN)
 			-- Set `in_use' to `b'
 		do
 			in_use := b
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

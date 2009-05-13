@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_INST_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	set_test_control_file (a_control_file: EW_EQA_TEST_CONTROL_INSTRUCTIONS) is
+	set_test_control_file (a_control_file: EW_EQA_TEST_CONTROL_INSTRUCTIONS)
 			-- Set `control_file' with `a_control_file'
 		require
 			not_void: a_control_file /= Void
@@ -34,7 +34,7 @@ feature -- Access
 	control_file: EW_EQA_TEST_CONTROL_INSTRUCTIONS
 			-- Related test control object
 
-	execute (tcf: EW_TEST_CATALOG_FILE) is
+	execute (tcf: EW_TEST_CATALOG_FILE)
 			-- <Precursor>
 		local
 			orig_args, dir_name, test_name, src_dir: STRING;
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

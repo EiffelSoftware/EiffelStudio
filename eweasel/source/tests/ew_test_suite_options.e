@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel test suite options"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,7 @@ create
 
 feature  -- Creation
 
-	make is
+	make
 		do
 			create {EW_FILTER_ALL} filter;
 			max_threads := -1
@@ -54,7 +54,7 @@ feature  -- Properties
 	
 feature -- Modification
 
-	set_keep_all is
+	set_keep_all
 		do
 			keep_all := True
 			keep_passed := False
@@ -63,7 +63,7 @@ feature -- Modification
 			keep_option_set: keep_all
 		end;
 
-	set_keep_passed is
+	set_keep_passed
 		do
 			keep_all := False
 			keep_passed := True
@@ -72,7 +72,7 @@ feature -- Modification
 			keep_option_set: keep_passed
 		end;
 
-	set_keep_failed is
+	set_keep_failed
 		do
 			keep_all := False
 			keep_passed := False
@@ -81,33 +81,33 @@ feature -- Modification
 			keep_option_set: keep_failed
 		end;
 
-	set_cleanup_requested (b: BOOLEAN) is
+	set_cleanup_requested (b: BOOLEAN)
 		do
 			is_cleanup_requested := b
 		end;
 
-	set_filter (f: EW_EIFFEL_TEST_FILTER) is
+	set_filter (f: EW_EIFFEL_TEST_FILTER)
 		do
 			filter := f;
 		ensure
 			filter_set: filter = f
 		end;
 
-	set_max_threads (n: INTEGER) is
+	set_max_threads (n: INTEGER)
 		do
 			max_threads := n
 		ensure
 			max_threads_set: max_threads = n
 		end;
 
-	set_max_c_processes (n: INTEGER) is
+	set_max_c_processes (n: INTEGER)
 		do
 			max_c_processes := n
 		ensure
 			max_c_processes_set: max_c_processes = n
 		end;
 
-	set_results_in_catalog_order (b: BOOLEAN) is
+	set_results_in_catalog_order (b: BOOLEAN)
 		do
 			results_in_catalog_order := b
 		ensure
@@ -115,7 +115,7 @@ feature -- Modification
 		end;
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

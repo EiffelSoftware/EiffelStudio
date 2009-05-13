@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,7 +30,7 @@ create
 
 feature  -- Creation
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an environment which can hold at least
 			-- `n' environment variable definitions.  The
 			-- environment will be automatically resized as
@@ -47,7 +47,7 @@ feature  -- Creation
 
 feature  -- Modification
 
-	define (var, val: STRING) is
+	define (var, val: STRING)
 			-- Define environment variable named `var' to
 			-- have value `val'.  If `var' already has a
 			-- value, override it.
@@ -58,7 +58,7 @@ feature  -- Modification
 			table.force (val, var);
 		end;
 
-	remove (var: STRING) is
+	remove (var: STRING)
 			-- Remove any association of a value with `var'.
 			-- No error if `var' does not have a value.
 		require
@@ -67,7 +67,7 @@ feature  -- Modification
 			table.remove (var);
 		end;
 
-	add_environment_variable (var: STRING) is
+	add_environment_variable (var: STRING)
 			-- Add `var' to list of operating system environment
 			-- variables that have been defined.
 		require
@@ -76,7 +76,7 @@ feature  -- Modification
 			list.extend (var);
 		end;
 
-	unset_environment_variables is
+	unset_environment_variables
 			-- Unset all operating system environment
 			-- variables that have been defined (actually,
 			-- set their values to the empty string)
@@ -92,7 +92,7 @@ feature  -- Modification
 			list.wipe_out
 		end;
 
-	set_max_c_processes (n: INTEGER) is
+	set_max_c_processes (n: INTEGER)
 		do
 			max_c_processes := n
 		ensure
@@ -101,7 +101,7 @@ feature  -- Modification
 
 feature  -- Properties
 
-	substitute_recursive (a_line: STRING): STRING is
+	substitute_recursive (a_line: STRING): STRING
 			-- Call `substitute' recursively util no '$' found anymore
 		require
 			not_void: a_line /= Void
@@ -126,7 +126,7 @@ feature  -- Properties
 			not_void: Result /= Void
 		end
 
-	substitute (line: STRING): STRING is
+	substitute (line: STRING): STRING
 			-- `line' with all environment variables replaced
 			-- by their values (or left alone if not in
 			-- environment).
@@ -190,7 +190,7 @@ feature  -- Properties
 			end;
 		end;
 
-	value (var: STRING): STRING is
+	value (var: STRING): STRING
 			-- Value associated with environment variable
 			-- `var' (Void if no associated value).
 		require
@@ -205,7 +205,7 @@ feature  -- Properties
 
 feature  -- Display
 
-	display is
+	display
 			-- Display contents of `Current'
 		local
 			keys: ARRAY [STRING];
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			-- List of operating system environment variables
 			-- that have been defined
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test catalog instruction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ deferred class EW_CATALOG_INSTRUCTION
 
 feature
 
-	execute (tcf: EW_TEST_CATALOG_FILE) is
+	execute (tcf: EW_TEST_CATALOG_FILE)
 			-- Execute instruction from information in `tcf'.
 			-- Set `execute_ok' to indicate whether
 			-- execution was successful.
@@ -30,7 +30,7 @@ feature -- Status
 			-- `execute' which was not OK (Void
 			-- if no explanation available)
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

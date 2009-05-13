@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_CATALOG_INST_ADAPTER}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	prepare is
+	prepare
 			-- Creation method
 		do
 			create catalog_file.make_eqa
@@ -54,7 +54,7 @@ feature -- Command
 			l_inst.execute (catalog_file)
 		end
 
-	source_path (a_path: STRING) is
+	source_path (a_path: STRING)
 			--	Specifies that <directory-name> is the full path name of the
 			--	directory in which the source directories for subsequent tests
 			--	reside.  Remains effective until another `source_path' occurs.
@@ -69,7 +69,7 @@ feature -- Command
 			l_inst.execute (catalog_file)
 		end
 
-	test (a_test_name, a_test_folder_name, a_arguments: STRING) is
+	test (a_test_name, a_test_folder_name, a_arguments: STRING)
 			--	Defines a test, giving it the name <test-name> and specifying
 			--	the last component of the source directory path name.  This
 			--	test name is not required to match the test name specified in
@@ -96,7 +96,7 @@ feature -- Command
 
 feature -- Query
 
-	all_tests: LINKED_LIST [EW_NAMED_EIFFEL_TEST] is
+	all_tests: LINKED_LIST [EW_NAMED_EIFFEL_TEST]
 			-- Convert new test to old test
 		require
 			ready: all_tests /= Void and then not all_tests.is_empty
@@ -109,7 +109,7 @@ feature -- Implementation
 	catalog_file: EW_EQA_TEST_CATALOG_FILE
 			-- Catalog file which contain all tests after `execute'
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

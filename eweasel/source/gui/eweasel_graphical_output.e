@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controller of all graphical output."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make (a_interface: EV_RICH_TEXT) is
+	make (a_interface: EV_RICH_TEXT)
 			-- Create
 		do			
 			interface := a_interface	
@@ -34,19 +34,19 @@ feature -- Creation
 		
 feature -- Commands
 
-	clear is
+	clear
 			-- Clear the current output
 		do
 			interface.set_text (empty_string)
 		end
 		
-	flush is
+	flush
 			-- Flush
 		do	
 			(create {EV_ENVIRONMENT}).application.process_events			
 		end		
 
-	append (output: STRING; on_new_line: BOOLEAN) is
+	append (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output
 		do
 			output.prune_all ('%R')
@@ -56,7 +56,7 @@ feature -- Commands
 			interface.append_text (output)
 		end
 		
-	append_error (output: STRING; on_new_line: BOOLEAN) is
+	append_error (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output, formatted to indicate error
 		local
 			l_format: like error_format
@@ -74,7 +74,7 @@ feature -- Commands
 			interface.disable_edit
 		end
 
-	append_new_line is
+	append_new_line
 			-- Append new line
 		do
 			interface.append_text (new_line)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	interface: EV_RICH_TEXT
 			-- Graphical widget
 			
-	error_format: EV_CHARACTER_FORMAT is
+	error_format: EV_CHARACTER_FORMAT
 			-- Error format
 		once
 			create Result
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 invariant
 	has_interface: interface /= Void
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

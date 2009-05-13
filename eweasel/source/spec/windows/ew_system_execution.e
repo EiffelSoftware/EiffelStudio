@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel system execution"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature
 
-	make (prog: STRING; args: LINKED_LIST [STRING]; execute_cmd, dir, inf, outf, savef: STRING) is
+	make (prog: STRING; args: LINKED_LIST [STRING]; execute_cmd, dir, inf, outf, savef: STRING)
 			-- Start a new process to execute `prog' with
 			-- arguments `args' using execution command
 			-- `execute_cmd' in directory `dir'.
@@ -46,7 +46,7 @@ feature
 			process_make (Shell_command, real_args, inf, outf, savef)
 		end
 
-	next_execution_result: EW_EXECUTION_RESULT is
+	next_execution_result: EW_EXECUTION_RESULT
 		local
 			time_to_stop: BOOLEAN
 		do
@@ -72,7 +72,7 @@ feature
 
 feature {NONE} -- Constant strings
 
-	Shell_command: STRING is
+	Shell_command: STRING
 			-- Path to shell command on Windows.
 		once
 			Result := (create {EXECUTION_ENVIRONMENT}).get ("COMSPEC")
@@ -85,7 +85,7 @@ feature {NONE} -- Constant strings
 			shell_command_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

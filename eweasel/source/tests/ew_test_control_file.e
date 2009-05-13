@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test control file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 feature -- Creation
 
 	make (fn: STRING; parent: EW_TEST_CONTROL_FILE;
-	  table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING]; needs_end: BOOLEAN) is
+	  table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING]; needs_end: BOOLEAN)
 			-- Create `Current' from file named `fn'
 			-- included by `inc_parent' (Void if none) using
 			-- `table' as the command to instruction
@@ -57,7 +57,7 @@ feature -- Status
 
 feature -- Parsing and execution
 
-	parse_and_execute (env: EW_TEST_ENVIRONMENT) is
+	parse_and_execute (env: EW_TEST_ENVIRONMENT)
 			-- Parse `Current' in the environment `env'.
 			-- Execute the resulting instructions if
 			-- successful.  In either case, `last_ok' is
@@ -82,7 +82,7 @@ feature -- Parsing and execution
 			end
 		end;
 
-	parse (env: EW_TEST_ENVIRONMENT) is
+	parse (env: EW_TEST_ENVIRONMENT)
 			-- Parse `Current' in the environment `env'.
 			-- Set `last_ok' to indicate whether parsing
 			-- was successful.  If successful, `instructions'
@@ -125,7 +125,7 @@ feature -- Parsing and execution
 
 feature {NONE} -- Implementation
 
-	parse_existing_file (tcf: RAW_FILE) is
+	parse_existing_file (tcf: RAW_FILE)
 			-- Parse test control file `tcf' and set
 			-- `Current' to represent it.  Set `last_ok'
 			-- to indicate whether file was parsed
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	parse_line (line: STRING) is
+	parse_line (line: STRING)
 			-- Parse test control file line and set
 			-- `last_instruction' with the corresponding
 			-- test instruction, if any.  Also, set `parse_error'
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	add_error (err: EW_ERROR) is
+	add_error (err: EW_ERROR)
 		do
 			if errors = Void then
 				create errors.make;
@@ -238,11 +238,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Comment_start: STRING is "--";
+	Comment_start: STRING = "--";
 
 feature {EW_TEST_INSTRUCTION} -- Modification
 
-	add_errors (list: EW_ERROR_LIST) is
+	add_errors (list: EW_ERROR_LIST)
 		do
 			if errors = Void then
 				create errors.make;
@@ -291,7 +291,7 @@ feature {EW_TEST_INSTRUCTION} -- State
 	last_instruction: EW_TEST_INSTRUCTION;
 			--
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controller of output.  Write output to `interface' (default is standard output)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make (a_interface: ANY) is
+	make (a_interface: ANY)
 			-- Create
 		require
 			interface_not_void: a_interface /= Void
@@ -25,24 +25,24 @@ feature -- Creation
 		
 feature -- Commands
 
-	clear is
+	clear
 			-- Clear the current output
 		do			
 		end
 		
-	flush is
+	flush
 			-- Flush
 		do
 			io.output.flush
 		end		
 
-	update is
+	update
 			-- Update
 		do			
 			flush
 		end		
 
-	append (output: STRING; on_new_line: BOOLEAN) is
+	append (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output
 		require
 			output_not_void: output /= Void
@@ -53,7 +53,7 @@ feature -- Commands
 			end
 		end
 		
-	append_error (output: STRING; on_new_line: BOOLEAN) is
+	append_error (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output, formatted to indicate error
 		require
 			output_not_void: output /= Void
@@ -61,7 +61,7 @@ feature -- Commands
 			append (output, on_new_line)
 		end
 
-	append_new_line is
+	append_new_line
 			-- Append new line
 		do
 			io.new_line	
@@ -69,10 +69,10 @@ feature -- Commands
 
 feature {NONE} -- Constants
 
-	new_line: STRING is "%N"
+	new_line: STRING = "%N"
 			-- New line character
 			
-	empty_string: STRING is
+	empty_string: STRING
 			-- Empty string
 		once
 			create Result.make_empty	
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	interface: ANY;
 			-- Output interface
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

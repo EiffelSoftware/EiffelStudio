@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test catalog"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,7 @@ create
 
 feature  -- Creation
 
-	make (tests: LIST [EW_NAMED_EIFFEL_TEST]) is
+	make (tests: LIST [EW_NAMED_EIFFEL_TEST])
 			-- Create `Current' with `tests'.
 		require
 			test_list_not_void: tests /= Void;
@@ -26,7 +26,7 @@ feature -- Properties
 	all_tests: LIST [EW_NAMED_EIFFEL_TEST];
 			-- List of all tests
 	
-	tests_matching_one_keyword (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST] is
+	tests_matching_one_keyword (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests whose keyword list contains
 			-- at least one of the keywords in `keys'.
 		require
@@ -47,7 +47,7 @@ feature -- Properties
 			end
 		end;
 
-	tests_matching_all_keywords (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST] is
+	tests_matching_all_keywords (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests whose keyword list contains
 			-- all of the keywords in `keys'.
 		require
@@ -68,7 +68,7 @@ feature -- Properties
 			end
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

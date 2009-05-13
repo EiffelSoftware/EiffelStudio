@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A C compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature
 
-	make (dir, save, freeze_cmd: STRING max_procs: INTEGER) is
+	make (dir, save, freeze_cmd: STRING max_procs: INTEGER)
 			-- Start a new process to do any necessary
 			-- C compilations (freezing) in directory `dir',
 			-- using at most `max_procs' simultaneous processes
@@ -42,7 +42,7 @@ feature
 			process_make (freeze_cmd, args, Void, Void, save);
 		end;
 
-	next_compile_result: EW_C_COMPILATION_RESULT is
+	next_compile_result: EW_C_COMPILATION_RESULT
 		local
 			time_to_stop: BOOLEAN;
 		do
@@ -66,7 +66,7 @@ feature
 			end;
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

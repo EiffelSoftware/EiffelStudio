@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test catalog file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Creation
 
-	make (fn: STRING) is
+	make (fn: STRING)
 			-- Create `Current' from test catalog file named `fn'.
 		require
 			file_name_not_void: fn /= Void
@@ -55,7 +55,7 @@ feature -- Status
 	
 feature -- Parsing
 
-	parse (env: EW_TEST_ENVIRONMENT) is
+	parse (env: EW_TEST_ENVIRONMENT)
 			-- Parse `Current' in the environment `env'.
 			-- Set `last_ok' to indicate whether parsing
 			-- was successful.  If successful, `last_catalog'
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 
 	tests: LINKED_LIST [EW_NAMED_EIFFEL_TEST];
 
-	parse_existing_file (tcf: RAW_FILE) is
+	parse_existing_file (tcf: RAW_FILE)
 			-- Parse test control file `tcf' and set
 			-- `Current' to represent it.  Set `last_ok'
 			-- to indicate whether file was parsed
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 		end;
 
 
-	parse_line (line: STRING) is
+	parse_line (line: STRING)
 			-- Parse test catalog file line and set
 			-- `last_test' with the corresponding
 			-- test, if any.  Also, set `parse_error' 
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	add_error (err: EW_ERROR) is
+	add_error (err: EW_ERROR)
 		do
 			if errors = Void then
 				create errors.make;
@@ -188,26 +188,26 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 	
-	Comment_start: STRING is "--";
+	Comment_start: STRING = "--";
 
 feature {EW_CATALOG_INSTRUCTION} -- Modification
 	
-	set_command (s: STRING) is
+	set_command (s: STRING)
 		do
 			command := s;
 		end;
 
-	set_arguments (s: STRING) is
+	set_arguments (s: STRING)
 		do
 			arguments := s;
 		end;
 
-	set_source_path (p: STRING) is
+	set_source_path (p: STRING)
 		do
 			source_path := p;
 		end;
 
-	set_last_test (t: EW_NAMED_EIFFEL_TEST) is
+	set_last_test (t: EW_NAMED_EIFFEL_TEST)
 		do
 			last_test := t;
 		end;
@@ -245,7 +245,7 @@ feature {NONE} -- State
 	last_failure_explanation: STRING;
 			-- Explanation of last parsing failure
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -11,7 +11,7 @@ inherit
 
 feature
 
-	inst_initialize (desc: STRING) is
+	inst_initialize (desc: STRING)
 			-- Initialize instruction from `args'.
 		do
 			if desc.count = 0 then
@@ -23,7 +23,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 		do
@@ -33,14 +33,14 @@ feature
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
 	
-	execute_ok: BOOLEAN is True;
+	execute_ok: BOOLEAN = True;
 			-- Calls to `execute' always succeed.
 
 feature {NONE}
 	
 	test_description: STRING;
 			-- Description of test
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

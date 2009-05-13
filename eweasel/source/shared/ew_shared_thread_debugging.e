@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	debug_mutex: MUTEX
 			-- Mutex to control access to output facilities
 			-- when debugging threaded eweasel
-		indexing
+		note
             		once_status: global 
 		once
 			create Result.make
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 
 	thread_table: HASH_TABLE [INTEGER, POINTER]
 			-- Thread numbers indexed by thread pointer
-		indexing
+		note
             		once_status: global 
 		once
 			create Result.make (100)
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
 	thread_count_cell: CELL [INTEGER]
 			-- Cell with next available thread number
-		indexing
+		note
             		once_status: global 
 		once
 			create Result.put (0)
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	Worker_type: STRING = "Worker";
 
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

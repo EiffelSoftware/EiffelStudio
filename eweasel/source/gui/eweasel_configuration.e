@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Configuration settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- New configuration loaded from file in `a_filename'
 		require
 			name_not_void: a_filename /= Void
@@ -27,7 +27,7 @@ feature -- Creation
 			parse_file_info
 		end	
 		
-	make_new (a_filename: STRING) is
+	make_new (a_filename: STRING)
 			-- New configuration
 		require
 			name_not_void: a_filename /= Void
@@ -38,7 +38,7 @@ feature -- Creation
 		
 feature -- Storage
 
-	save is
+	save
 			-- Save		
 		local
 			l_root, l_element: XM_ELEMENT
@@ -136,7 +136,7 @@ feature -- Access
 		
 feature -- Query
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current valid?  A valid configuration implies that all necessary details are available
 			-- to attempt to launch a test suite and run tests
 		do
@@ -150,7 +150,7 @@ feature -- Query
 		
 feature -- Status Setting
 
-	set_output_directory (a_dir: STRING) is
+	set_output_directory (a_dir: STRING)
 			-- Set output directory
 		require
 			dir_not_void: a_dir /= Void
@@ -161,7 +161,7 @@ feature -- Status Setting
 			dir_set: output_directory = a_dir
 		end
 		
-	set_platform_type (a_platform: STRING) is
+	set_platform_type (a_platform: STRING)
 			-- Set platform type
 		require
 			platform_not_void: a_platform /= Void
@@ -172,7 +172,7 @@ feature -- Status Setting
 			platform_set: platform_type = a_platform
 		end
 		
-	set_keep_tests (a_identifier: STRING) is
+	set_keep_tests (a_identifier: STRING)
 			-- Set keep test option
 		require
 			identifer_not_void: a_identifier /= Void
@@ -183,7 +183,7 @@ feature -- Status Setting
 			keep_set: keep_tests = a_identifier
 		end			
 		
-	set_keep_eifgens (a_flag: BOOLEAN) is
+	set_keep_eifgens (a_flag: BOOLEAN)
 			-- Set keep EIFGENs option
 		do
 			keep_eifgens := a_flag
@@ -191,7 +191,7 @@ feature -- Status Setting
 			keep_set: keep_eifgens = a_flag
 		end		
 		
-	set_include_directory (a_dir: STRING) is
+	set_include_directory (a_dir: STRING)
 			-- Set include directory
 		require
 			dir_not_void: a_dir /= Void
@@ -202,7 +202,7 @@ feature -- Status Setting
 			dir_set: include_directory = a_dir
 		end	
 		
-	set_eiffel_installation_directory (a_dir: STRING) is
+	set_eiffel_installation_directory (a_dir: STRING)
 			-- Set eiffel_installation directory
 		require
 			dir_not_void: a_dir /= Void
@@ -213,7 +213,7 @@ feature -- Status Setting
 			dir_set: eiffel_installation_directory = a_dir
 		end	
 	
-	set_eweasel_installation_directory (a_dir: STRING) is
+	set_eweasel_installation_directory (a_dir: STRING)
 			-- Set eweasel_installation directory
 		require
 			dir_not_void: a_dir /= Void
@@ -224,7 +224,7 @@ feature -- Status Setting
 			dir_set: eweasel_installation_directory = a_dir
 		end	
 	
-	set_control_file (a_file: STRING) is
+	set_control_file (a_file: STRING)
 			-- Set control file location
 		require
 			file_not_void: a_file /= Void
@@ -235,7 +235,7 @@ feature -- Status Setting
 			file_set: control_file = a_file
 		end
 		
-	set_catalog_file (a_file: STRING) is
+	set_catalog_file (a_file: STRING)
 			-- Set control file location
 		require
 			file_not_void: a_file /= Void
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 	file: PLAIN_TEXT_FILE
 			-- File
 
-	parse_file_info is
+	parse_file_info
 			-- Parse information from `file'
 		require
 			file_not_void: file /= Void
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 
-	process_element (e: XM_ELEMENT) is
+	process_element (e: XM_ELEMENT)
 			-- Read element `e'
 		require
 			e_not_void: e /= Void
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

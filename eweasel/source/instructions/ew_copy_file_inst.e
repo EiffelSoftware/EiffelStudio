@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Copy file using RAW_FILE without using $SOURCE as origin for file. Useful to copy from a full path."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature {NONE} -- Access
 
 invariant
 	
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,12 +11,12 @@ inherit
 
 feature -- Creation
 
-	make_empty is
+	make_empty
 		do
 		end;
 
 	make (fname: STRING; line_no: INTEGER; orig_text, subst_text: STRING;
-		reas: STRING) is
+		reas: STRING)
 			-- Create `Current' with `fname' and
 			-- `line_no' as the file name and line number at
 			-- which error occurred.  `orig_text' is the original
@@ -38,7 +38,7 @@ feature -- Creation
 
 feature -- Properties
 
-	error_type: STRING is
+	error_type: STRING
 			-- Type of error which occurred
 		deferred
 		end;
@@ -60,24 +60,24 @@ feature -- Properties
 
 feature -- Modification
 
-	set_file_name (n: STRING) is
+	set_file_name (n: STRING)
 		do
 			file_name := n;
 		end;
 
-	set_line_number (n: INTEGER) is
+	set_line_number (n: INTEGER)
 		do
 			line_number := n;
 		end;
 
-	set_reason (r: STRING) is
+	set_reason (r: STRING)
 		do
 			reason := r;
 		end;
 
 feature -- Display
 
-	display is
+	display
 			-- Display `Current'
 		require
 			error_type_not_void: error_type /= Void;
@@ -110,7 +110,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	display_reason is
+	display_reason
 			-- Display `reason' of `Current'
 		require
 			reason_not_void: reason /= Void;
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

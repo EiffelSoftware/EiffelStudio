@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel test constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,21 +8,21 @@ class EW_EIFFEL_TEST_CONSTANTS
 
 feature {NONE}  -- Defaults
 
-	Default_ace_name: STRING is "Ace";
+	Default_ace_name: STRING = "Ace";
 
-	Default_system_name: STRING is "test";
+	Default_system_name: STRING = "test";
 
 feature {NONE}  -- Miscellaneous constants
 
-	Eiffel_gen_directory: STRING is "EIFGENs";
+	Eiffel_gen_directory: STRING = "EIFGENs";
 
-	Work_c_code_directory: STRING is "W_code";
+	Work_c_code_directory: STRING = "W_code";
 
-	Final_c_code_directory: STRING is "F_code";
+	Final_c_code_directory: STRING = "F_code";
 
-	Eiffel_project_extension: STRING is ".epr";
+	Eiffel_project_extension: STRING = ".epr";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

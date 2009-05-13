@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel test filter which selects all tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,13 +11,13 @@ inherit
 
 feature -- Filtering
 
-	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN is
+	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN
 			-- Does `Current' select `test' for execution?
 			-- (Answer: yes.)
 		do
 			Result := True;
 		end
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

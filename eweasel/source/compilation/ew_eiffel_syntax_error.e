@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel syntax error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like class_name) is
+	make (a_name: like class_name)
 			-- Create current with `a_name' as `class_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -34,14 +34,14 @@ feature -- Properties
 
 feature -- Modification
 
-	set_line_number (n: INTEGER) is
+	set_line_number (n: INTEGER)
 		do
 			line_number := n;
 		end
 
 feature -- Summary
 
-	summary: STRING is
+	summary: STRING
 		do
 			create Result.make (0);
 			Result.append ("Syntax error in ");
@@ -59,19 +59,19 @@ feature -- Summary
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 		do
 			Result := equal (class_name, other.class_name) and
 				line_number = other.line_number
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 			Result := class_name < other.class_name or else
 				(equal (class_name, other.class_name) and line_number < other.line_number)
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

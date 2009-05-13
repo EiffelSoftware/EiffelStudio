@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String constants for configuration files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,31 +10,31 @@ class
 
 feature -- Access
 
-	root_tag: STRING is "configuration"
+	root_tag: STRING = "configuration"
 	
-	control_file_tag: STRING is "init_control_file"
+	control_file_tag: STRING = "init_control_file"
 	
-	catalog_file_tag: STRING is "catalog_file"
+	catalog_file_tag: STRING = "catalog_file"
 	
-	output_location_tag: STRING is "output_location"
+	output_location_tag: STRING = "output_location"
 	
-	keep_tag: STRING is "keep"
+	keep_tag: STRING = "keep"
 	
-	keep_eifgens_tag: STRING is "keep_eifgens_tag"
+	keep_eifgens_tag: STRING = "keep_eifgens_tag"
 	
-	include_tag: STRING is "include_dir"
+	include_tag: STRING = "include_dir"
 	
-	installation_tag: STRING is "eiffel_inst_dir"
+	installation_tag: STRING = "eiffel_inst_dir"
 
-	weasel_installation_tag: STRING is "eweasel_inst_dir"
+	weasel_installation_tag: STRING = "eweasel_inst_dir"
 	
-	platform_tag: STRING is "platform"
+	platform_tag: STRING = "platform"
 	
-	platform_type_tag: STRING is "platform_type"
+	platform_type_tag: STRING = "platform_type"
 	
-	compiler_version_tag: STRING is "compiler_version";
+	compiler_version_tag: STRING = "compiler_version";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

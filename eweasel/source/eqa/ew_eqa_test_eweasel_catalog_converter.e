@@ -1,17 +1,17 @@
-indexing
+note
 	description: "Used by {EW_EQA_TEST_EWEASEL_TCF_CONVERTER} only"
 	date: "$Date$"
 	revision: "$Revision$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_TEST_EWEASEL_CATALOG_CONVERTER
 
 feature -- Command
 
-	convert_catalog (a_input_file: STRING) is
+	convert_catalog (a_input_file: STRING)
 			-- Convert `a_input_file' which is eweasel testing catalog file
 		require
 			not_void: a_input_file /= Void
@@ -26,7 +26,7 @@ feature -- Command
 			ready: is_ready
 		end
 
-	append_related_setup (a_folder_name: STRING; a_content_to_append: STRING) is
+	append_related_setup (a_folder_name: STRING; a_content_to_append: STRING)
 			-- Append related setup line to `a_content_to_append'
 		require
 			ready: is_ready
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	catalog_file: EW_EQA_TEST_CATALOG_FILE
 			-- Related catalog file
 
-;indexing
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

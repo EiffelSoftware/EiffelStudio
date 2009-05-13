@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel compilation/execution test"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Creation
 
-	make (insts: LIST [EW_TEST_INSTRUCTION]) is
+	make (insts: LIST [EW_TEST_INSTRUCTION])
 			-- Create `Current' from the test instructions
 			-- in `insts'.
 		require
@@ -28,7 +28,7 @@ feature -- Creation
 			set_defaults;
 		end;
 
-	set_env (env: EW_TEST_ENVIRONMENT) is
+	set_env (env: EW_TEST_ENVIRONMENT)
 			--
 		do
 			environment := env
@@ -36,7 +36,7 @@ feature -- Creation
 			set: environment = env
 		end
 
-	execute (env: EW_TEST_ENVIRONMENT) is
+	execute (env: EW_TEST_ENVIRONMENT)
 			-- Execute this test in environment `env'.
 			-- Set `last_ok' to indicate whether it
 			-- executed correctly.
@@ -90,7 +90,7 @@ feature -- Status
 			-- Environment in which test is executed.
 			-- Execution may modify the environment.
 
-	copy_wait_required: BOOLEAN is
+	copy_wait_required: BOOLEAN
 			-- Must we wait for one second before copying a
 			-- file, in order to avoid a situation where the
 			-- compiler does not recognize that a file has been
@@ -101,7 +101,7 @@ feature -- Status
 
 feature -- Modification
 
-	unset_copy_wait is
+	unset_copy_wait
 			-- Change status to indicate that no wait is
 			-- needed before a file copy
 		do
@@ -112,7 +112,7 @@ feature -- Modification
 
 feature -- Display
 
-	display is
+	display
 			-- Display the test
 		do
 			output.append ("Test: ", False)
@@ -130,7 +130,7 @@ feature -- Display
 
 feature -- Test properties
 
-	set_defaults is
+	set_defaults
 			-- Set test properties to default values
 			-- where appropriate.
 		do
@@ -170,7 +170,7 @@ feature -- Test properties
 	execution_count: INTEGER;
 			-- Number of system executions started
 
-	e_compile_output_name: STRING is
+	e_compile_output_name: STRING
 			-- Name of file for output from current Eiffel
 			-- compilation
 		do
@@ -179,7 +179,7 @@ feature -- Test properties
 			Result.append_integer (e_compile_count);
 		end;
 
-	c_compile_output_name: STRING is
+	c_compile_output_name: STRING
 			-- Name of file for output from current C
 			-- compilation
 		do
@@ -188,7 +188,7 @@ feature -- Test properties
 			Result.append_integer (c_compile_count);
 		end;
 
-	execution_output_name: STRING is
+	execution_output_name: STRING
 			-- Name of file for output from current system
 			-- execution
 		do
@@ -215,37 +215,37 @@ feature -- Test properties
 
 feature {EW_TEST_INSTRUCTION} -- Set test properties
 
-	set_test_name (name: STRING) is
+	set_test_name (name: STRING)
 		do
 			test_name := name;
 		end;
 
-	set_test_description (desc: STRING) is
+	set_test_description (desc: STRING)
 		do
 			test_description := desc;
 		end;
 
-	set_system_name (name: STRING) is
+	set_system_name (name: STRING)
 		do
 			system_name := name;
 		end;
 
-	set_ace_name (name: STRING) is
+	set_ace_name (name: STRING)
 		do
 			ace_name := name;
 		end;
 
-	set_cpu_limit (limit: INTEGER) is
+	set_cpu_limit (limit: INTEGER)
 		do
 			cpu_limit := limit;
 		end;
 
-	set_e_compilation (e: EW_EIFFEL_COMPILATION) is
+	set_e_compilation (e: EW_EIFFEL_COMPILATION)
 		do
 			e_compilation := e;
 		end;
 
-	set_e_compile_start_time (t: INTEGER) is
+	set_e_compile_start_time (t: INTEGER)
 			-- Set start time of last Eiffel compilation to `t'
 		do
 			e_compile_start_time := t;
@@ -255,42 +255,42 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 			wait_required: unwaited_compilation;
 		end;
 
-	set_c_compilation (c: EW_C_COMPILATION) is
+	set_c_compilation (c: EW_C_COMPILATION)
 		do
 			c_compilation := c;
 		end;
 
-	set_e_compilation_result (e: EW_EIFFEL_COMPILATION_RESULT) is
+	set_e_compilation_result (e: EW_EIFFEL_COMPILATION_RESULT)
 		do
 			e_compilation_result := e;
 		end;
 
-	set_c_compilation_result (c: EW_C_COMPILATION_RESULT) is
+	set_c_compilation_result (c: EW_C_COMPILATION_RESULT)
 		do
 			c_compilation_result := c;
 		end;
 
-	set_execution_result (e: EW_EXECUTION_RESULT) is
+	set_execution_result (e: EW_EXECUTION_RESULT)
 		do
 			execution_result := e;
 		end;
 
-	set_instructions (l: LIST [EW_TEST_INSTRUCTION]) is
+	set_instructions (l: LIST [EW_TEST_INSTRUCTION])
 		do
 			instructions := l;
 		end;
 
-	increment_e_compile_count is
+	increment_e_compile_count
 		do
 			e_compile_count := e_compile_count + 1;
 		end;
 
-	increment_c_compile_count is
+	increment_c_compile_count
 		do
 			c_compile_count := c_compile_count + 1;
 		end;
 
-	increment_execution_count is
+	increment_execution_count
 		do
 			execution_count := execution_count + 1;
 		end;
@@ -309,7 +309,7 @@ feature {NONE}  -- Implementation
 			-- the Eiffel compiler uses dates which
 			-- only have a resolution of one second)
 
-	add_error (err: EW_ERROR) is
+	add_error (err: EW_ERROR)
 		do
 			if errors = Void then
 				create errors.make;
@@ -317,13 +317,13 @@ feature {NONE}  -- Implementation
 			errors.add (err);
 		end;
 
-	Eiffel_compile_output_prefix: STRING is "e_compile";
+	Eiffel_compile_output_prefix: STRING = "e_compile";
 
-	C_compile_output_prefix: STRING is "c_compile";
+	C_compile_output_prefix: STRING = "c_compile";
 
-	Execution_output_prefix: STRING is "execution";
+	Execution_output_prefix: STRING = "execution";
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

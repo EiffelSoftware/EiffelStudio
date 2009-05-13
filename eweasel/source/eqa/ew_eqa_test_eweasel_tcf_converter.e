@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Convert eweasel testing control file to a testing control class file
 																							]"
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Creation method which do nothing
 		do
 			prepare_catalog
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	catalog_converter: EW_EQA_TEST_EWEASEL_CATALOG_CONVERTER
 			-- Catalog file converter
 
-	prepare_catalog is
+	prepare_catalog
 			-- Prepare related catalog files
 		local
 			l_factory: EW_EQA_TEST_FACTORY
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_ignore_non_exist_test_cases (a_bool: BOOLEAN) is
+	set_ignore_non_exist_test_cases (a_bool: BOOLEAN)
 			-- Set `is_ignore_non_exist_test_cases' with `a_bool'
 		do
 			is_ignore_non_exist_test_cases := a_bool
@@ -68,7 +68,7 @@ feature -- Command
 			set: is_ignore_non_exist_test_cases = a_bool
 		end
 
-	append_one_test_routine (a_input_tcf: STRING; a_test_name: STRING) is
+	append_one_test_routine (a_input_tcf: STRING; a_test_name: STRING)
 			-- Convert testing instructions in `a_input_file'
 		require
 			not_void: a_input_tcf /= Void
@@ -87,7 +87,7 @@ feature -- Command
 			end
 		end
 
-	flush_to_output_file (a_output_file_name: STRING; a_class_name: STRING) is
+	flush_to_output_file (a_output_file_name: STRING; a_class_name: STRING)
 			-- Write `temp_converted' to `a_output_file'
 		require
 			not_void: a_output_file_name /= Void
@@ -101,7 +101,7 @@ feature -- Command
 
 feature {EW_EQA_WINDOWS_SETUP} -- Internal
 
-	write_content_to_file (a_content: STRING; a_output_file: STRING) is
+	write_content_to_file (a_content: STRING; a_output_file: STRING)
 			-- Writing converted strings to template file
 		require
 			not_void: a_output_file /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			-- Temppoary converted testing instructions
 			-- Used by `append_one_test_routine' and `flush_to_output_file' only!
 
-	convert_class_file (a_input_file, a_output_class_name: STRING) is
+	convert_class_file (a_input_file, a_output_class_name: STRING)
 				-- Convert an old eweasel testing instruction plain text file (`a_input_file') to
 				-- new style Eiffel class testing class file (`a_output_file')
 		require
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			write_content_to_file (l_converted, a_output_class_name + ".e")
 		end
 
-	convert_one_tcf (a_input_file: STRING; a_routine_name: STRING): STRING is
+	convert_one_tcf (a_input_file: STRING; a_routine_name: STRING): STRING
 			-- Convert instructions in `a_input_file' to correspond Eiffel codes
 		require
 			not_void: a_input_file /= Void
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	create_file (a_file_name: FILE_NAME): IO_MEDIUM  is
+	create_file (a_file_name: FILE_NAME): IO_MEDIUM
 			-- Create a new {IO_MEDIUM} which file name is `a_file_name'
 			-- Callers have to close `Result' themselves
 		require
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	control_file: EW_EQA_TEST_CONTROL_FILE
 			-- Tcf file
 
-	test_control_file_template_content (a_tcf_content: STRING; a_class_name: STRING): STRING is
+	test_control_file_template_content (a_tcf_content: STRING; a_class_name: STRING): STRING
 			-- Default control file template content
 		require
 			not_void: a_tcf_content /= Void
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			Result.set_file_name ("all_eweasel_test_case_template.e")
 		end
 
-	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): STRING is
+	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): STRING
 			-- Convert one testing instruction
 		require
 			not_void: a_instruction /= Void
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	decorate_quote (a_string: STRING; a_decorate_head_and_tail: BOOLEAN) is
+	decorate_quote (a_string: STRING; a_decorate_head_and_tail: BOOLEAN)
 			-- Append "%%" to "%"" except starting and ending quote
 			-- If `a_include_head_and_tail'
 		require
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	inst_initialize (sys: STRING) is
+	inst_initialize (sys: STRING)
 			-- Initialize instruction from `sys'.
 			-- Set `init_ok' to indicate whether initialization
 			-- was successful.
@@ -26,7 +26,7 @@ feature
 			end
 		end;
 
-	execute (test: EW_EIFFEL_EWEASEL_TEST) is
+	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 		do
@@ -36,14 +36,14 @@ feature
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
 	
-	execute_ok: BOOLEAN is True;
+	execute_ok: BOOLEAN = True;
 			-- Calls to `execute' always succeed.
 
 feature {NONE}
 	
 	system_name: STRING;
 			-- Name of executable file specified in Ace.
-indexing
+note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

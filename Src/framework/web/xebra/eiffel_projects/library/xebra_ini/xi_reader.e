@@ -59,7 +59,9 @@ feature {NONE} -- Internal Status setting
 			create l_config.make_empty
 			l_cursor := a_properties.cursor
 			from a_properties.start until a_properties.after loop
-				process_property (a_properties.item, l_config)
+				if a_properties.item.name /= Void and a_properties.item.value /= Void  then
+					process_property (a_properties.item, l_config)
+				end
 				a_properties.forth
 			end
 			a_properties.go_to (l_cursor)
@@ -74,6 +76,8 @@ feature {NONE} -- Internal Status setting
 		require
 			a_property_attached: a_property /= Void
 			a_config_attached: a_config /= Void
+			a_property_name_attached: a_property.name /= Void
+			a_property_value_attached: a_property.value /= Void
 		deferred
 		end
 

@@ -74,7 +74,7 @@ feature -- Status setting
 			associated_feature := a_feature
 			if
 				a_feature = Void or else
-				not (attached a_feature.associated_class as c and c.has_feature_table)
+				not (attached a_feature.associated_class as c and then c.has_feature_table)
 			then
 				feature_cmd := Void
 				associated_feature := Void

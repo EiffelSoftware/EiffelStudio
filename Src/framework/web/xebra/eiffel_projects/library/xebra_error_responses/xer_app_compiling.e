@@ -25,7 +25,7 @@ feature -- Access
 			if arg.is_empty then
 				arg := " "
 			end
-			Result := "Application '" + arg + "' is complining..."
+			Result := "Application '" + arg + "' is compiling..."
 		end
 
 end

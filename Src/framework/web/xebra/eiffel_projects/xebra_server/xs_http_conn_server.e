@@ -24,7 +24,7 @@ feature -- Initialization
 			server_config := a_server_config
             create http_socket.make_server_by_port (default_http_server_port)
          --   create thread_pool.make (max_thread_number, agent request_handler_spawner)
-         	http_socket.set_accept_timeout (20000)
+         --	http_socket.set_accept_timeout (20000)
             stop := False
 		ensure
 			http_socket_attached: http_socket /= Void

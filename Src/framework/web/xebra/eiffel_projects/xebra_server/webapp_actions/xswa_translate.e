@@ -116,6 +116,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_running then
 				webapp.shutdown
+				o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 10)
 				translate_process := launch_process (config.translator,
 														translator_args,
 														app_dir,
@@ -129,6 +130,7 @@ feature {NONE} -- Implementation
 	compile_servlet_gen
 			-- Launches the process to compile the servlet_gen
 		do
+			o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 10)
 			gen_compile_process := launch_process (config.compiler,
 													gen_compiler_args,
 													app_dir,
@@ -139,6 +141,7 @@ feature {NONE} -- Implementation
 	generate
 			-- Launches the process to execute servlet_gen
 		do
+			o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR (3) -=-=-=-=-=-=", 10)
 			generate_process := launch_process (app_dir + "/" + config.servlet_gen_exe,
 												generate_args,
 												app_dir,

@@ -47,6 +47,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			if  not is_running then
+				o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 10)
 				run_process := launch_process (app_dir + "/EIFGENs/"+ webapp.config.name.out + "/W_code/" + webapp.config.name.out,
 											app_dir + "/config.ini",
 											run_workdir_w,

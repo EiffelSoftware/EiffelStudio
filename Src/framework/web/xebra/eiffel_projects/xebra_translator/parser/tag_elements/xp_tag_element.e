@@ -69,6 +69,15 @@ feature -- Access
 	id: STRING
 			-- The tag id
 
+	date: INTEGER assign set_date
+			-- The timestamp of the corresponding file
+
+	set_date (a_date: INTEGER)
+			-- Sets the date.
+		do
+			date := a_date
+		end
+
 	namespace: STRING
 			-- The namespace (tag library) of the tag
 
@@ -121,15 +130,13 @@ feature --Basic Implementation
 
 	build_tag_tree (
 				a_feature: XEL_FEATURE_ELEMENT;
-				templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
 				root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Adds the needed expressions which build the tree of Current with the correct classes
 		require
-			templates_attached: templates /= Void
 			a_feature_valid: attached a_feature
 			root_template_valid: attached root_template
 		do
-			internal_build_tag_tree (a_feature, templates, root_template, True)
+			internal_build_tag_tree (a_feature, root_template, True)
 		end
 
 	set_parameters (a_parameters: HASH_TABLE [STRING, STRING])
@@ -227,6 +234,9 @@ feature --Basic Implementation
 				children.after
 			loop
 				children.item.resolve_all_dependencies (a_templates, a_pending, a_servlet_gen)
+				if children.item.date > date then
+					date := children.item.date
+				end
 				children.forth
 			end
 		end
@@ -235,13 +245,10 @@ feature {XP_TAG_ELEMENT} -- Implementation
 
 	internal_build_tag_tree (
 					a_feature: XEL_FEATURE_ELEMENT;
-					templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR];
 					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
 					is_root: BOOLEAN)
 				-- Adds the needed expressions which build the tree of Current with the correct classes
 		require
-			is_root_attached: is_root /= Void
-			templates_attached: templates /= Void
 			root_template_attached: root_template /= Void
 			a_feature_attached: a_feature /= Void
 		do
@@ -267,7 +274,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				until
 					children.after
 				loop
-					children.item.internal_build_tag_tree (a_feature, templates, root_template, False)
+					children.item.internal_build_tag_tree (a_feature, root_template, False)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")

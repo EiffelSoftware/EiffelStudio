@@ -66,17 +66,15 @@ feature -- Basic functionality
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 			l_filename: STRING
-			serv_gen_copy: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 		do
 				-- Generate the servlet generator files
 			from
 				servlet_generator_generators.start
-				serv_gen_copy := servlet_generator_generators.duplicate (servlet_generator_generators.count)
 			until
 				servlet_generator_generators.after
 			loop
 				servlet_generator_generator := servlet_generator_generators.item
-				servlet_generator_generator.generate (a_path, serv_gen_copy)
+				servlet_generator_generator.generate (a_path)
 				servlet_generator_generators.forth
 			end
 

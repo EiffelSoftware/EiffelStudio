@@ -16,6 +16,7 @@ inherit
 			resolve_all_dependencies,
 			copy_self
 		end
+
 create
 	make
 
@@ -49,6 +50,9 @@ feature -- Access
 				children.forth
 			end
 			set_child (a_templates [retrieve_value ("template")].resolve (a_templates, l_region, a_pending, a_servlet_gen))
+			if date < children [1].date then
+				date := children [1].date
+			end
 		end
 
 	accept (visitor: XP_TAG_ELEMENT_VISITOR)

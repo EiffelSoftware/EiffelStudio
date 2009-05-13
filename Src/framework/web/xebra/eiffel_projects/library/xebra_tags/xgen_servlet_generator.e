@@ -7,7 +7,21 @@ note
 deferred class
 	XGEN_SERVLET_GENERATOR
 
-feature --
+feature -- Initialization
+
+	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING])
+		require
+			a_path_is_not_valid: attached a_path and not a_path.is_empty
+			a_servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+			a_controller_id_table_attached: attached a_controller_id_table
+		do
+			path := a_path
+			servlet_name := a_servlet_name
+			internal_root_tag := get_root_tag
+			controller_id_table := a_controller_id_table
+		end
+
+feature {NONE} -- Access
 
 	path: STRING
 		-- Path to which the servlet is generated
@@ -24,18 +38,19 @@ feature --
 	controller_id_table: HASH_TABLE [STRING, STRING]
 		-- All the used controllers and their respective class. Key: identifier; Value: Class
 
-	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING])
-		require
-			path_is_not_empty: not a_path.is_empty
-		do
-			path := a_path
-			servlet_name := a_servlet_name
-			internal_root_tag := get_root_tag
-			controller_id_table := a_controller_id_table
+feature -- Access
+
+	get_root_tag: XTAG_TAG_SERIALIZER
+			-- Returns the root tag of the compiled xeb file
+		deferred
 		end
+
+feature {NONE} -- Implementation
 
 	build_make_for_servlet_generator (a_class: XEL_SERVLET_CLASS_ELEMENT)
 			-- Serializes the request feature of the {SERVLET}
+		require
+			a_class_attached: attached a_class
 		local
 			uid: STRING
 		do
@@ -53,10 +68,15 @@ feature --
 		end
 
 	build_handle_request_feature_for_servlet (a_class: XEL_SERVLET_CLASS_ELEMENT; a_root_tag: XTAG_TAG_SERIALIZER)
-			-- Serializes the request feature of the {SERVLET}		
+			-- Serializes the request feature of the {SERVLET}
+		require
+			a_class_attached: attached a_class
+			a_root_tag_attached: attached a_root_tag
 		do
 			a_root_tag.generate (a_class, create {HASH_TABLE [STRING, STRING]}.make (5))
 		end
+
+feature -- Basic Functionality
 
 	generate
 			--
@@ -100,11 +120,6 @@ feature --
 			servlet_class.serialize (buf)
 			file.close
 
-		end
-
-	get_root_tag: XTAG_TAG_SERIALIZER
-			-- Returns the root tag of the compiled xeb file
-		deferred
 		end
 
 feature --Constants

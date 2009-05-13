@@ -8,6 +8,7 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+	XU_SHARED_OUTPUTTER
 
 create
 	make, make_empty, make_minimal
@@ -96,6 +97,7 @@ feature -- Access
 		end
 
 	add_controller (a_identifier: STRING; a_class: STRING)
+			-- Adds a controller variable
 			-- `a_identifier' and `a_class' for a controller instvar of the resulting servlet
 		require
 			a_identifier_attached: a_identifier /= Void
@@ -105,6 +107,8 @@ feature -- Access
 		end
 
 	set_root_tag (a_root_tag: XP_TAG_ELEMENT)
+			-- Sets the root tag.
+			-- `a_root_tag': The root tag to set
 		require
 			a_root_tag_attached: attached a_root_tag
 		do
@@ -115,11 +119,11 @@ feature -- Access
 
 feature -- Basic functionality
 
-	generate (a_path: STRING; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
-			-- Generates the servlet generator class			
+	generate (a_path: STRING)
+			-- Generates the servlet generator class if needed
+			-- `a_path': The path in which the file should be generated
 		require
 			path_is_attached: attached path
-			templates_is_attached: attached templates
 			path_is_not_empty: not a_path.is_empty
 		local
 			buf:XU_INDENDATION_STREAM
@@ -127,32 +131,35 @@ feature -- Basic functionality
 			file: PLAIN_TEXT_FILE
 			l_filename: STRING
 		do
-			l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "servlet_generator.e"
+			l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e"
 			create file.make (l_filename)
 			if not file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
 			end
-			file.open_write
-			if not file.is_open_write then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-			end
+			if not (file.exists and file.date > root_tag.date) then
+					-- We have to regenerate the file, if it does not exist or it is out of date
+				file.open_write
+				if not file.is_open_write then
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
+				end
 
-			create buf.make (file)
-			create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
-			servlet_gen_class.set_inherit (Servlet_generator_class)
-			servlet_gen_class.set_constructor_name ("make")
-			build_generate_for_servlet_generator (servlet_gen_class, templates)
-			servlet_gen_class.serialize (buf)
-			file.close
+				create buf.make (file)
+				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
+				servlet_gen_class.set_inherit (Servlet_generator_class)
+				servlet_gen_class.set_constructor_name ("make")
+				build_generate_for_servlet_generator (servlet_gen_class)
+				servlet_gen_class.serialize (buf)
+				file.close
+				o.iprint ("Servlet generator generated at: " + file.name)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	build_generate_for_servlet_generator (a_class: XEL_CLASS_ELEMENT; templates: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
+	build_generate_for_servlet_generator (a_class: XEL_CLASS_ELEMENT)
 			-- Builds the feature which generates a servlet_generator
 		require
 			a_class_attached: a_class /= Void
-			templates_attached: templates /= Void
 		local
 			generate_feature: XEL_FEATURE_ELEMENT
 		do
@@ -162,7 +169,7 @@ feature {NONE} -- Implementation
 			generate_feature.append_local ("root_tag, temp", Tag_serializer_class)
 			generate_feature.append_expression ("create stack.make (10)")
 
-			root_tag.build_tag_tree (generate_feature, templates, Current)
+			root_tag.build_tag_tree (generate_feature, Current)
 			generate_feature.append_expression ("Result := root_tag")
 		end
 

@@ -10,6 +10,7 @@ class
 
 inherit
 	XU_ERROR_MANAGED_FILE
+	XU_SHARED_OUTPUTTER
 
 create
 	make
@@ -73,20 +74,19 @@ feature -- Processing
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
 		local
 			l_file: KL_TEXT_INPUT_FILE
-			l_file_name: STRING
-			l_servlet_name: STRING
-			l_template: XP_TEMPLATE
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
 		do
 			create registry.make (servlet_gen_path)
 			parse_taglibs (a_taglib_folder, registry)
 
+			o.iprint ("Processing start...")
 			from
 				a_files.start
 			until
 				a_files.after
 			loop
+
 				if a_files.item.ends_with (".xeb") then
 					create l_file.make (output_path + a_files.item.twin)
 					if not l_file.exists then
@@ -96,15 +96,15 @@ feature -- Processing
 						if not l_file.is_open_read then
 							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + l_file.name), false)
 						else
-							print ("Processing '" + l_file.name + "'...%N")
-							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path, registry)
+							o.iprint ("Processing '" + l_file.name + "'...")
+							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path, registry, l_file.time_stamp)
 							l_file.close
-							print ("Done.%N")
 						end
 					end
 				end
 				a_files.forth
 			end
+			o.iprint ("Processing done.")
 			registry.resolve_all_templates
 			create l_generator_app_generator.make
 			l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
@@ -148,7 +148,7 @@ feature -- Processing
 			a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
 		end
 
-	add_template_to_registry (a_servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_path: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
+	add_template_to_registry (a_servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_path: STRING; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
 			servlet_name_valid: not a_servlet_name.is_empty
@@ -158,6 +158,7 @@ feature -- Processing
 			l_parser: XM_PARSER
 			l_p_callback: XP_XML_PARSER_CALLBACKS
 			l_external_resolver: XP_EXTERNAL_RESOLVER
+			l_template: XP_TEMPLATE
 		do
 			create l_external_resolver
 			create {XM_EIFFEL_PARSER} l_parser.make
@@ -170,7 +171,9 @@ feature -- Processing
 
 			l_root_tag := l_p_callback.root_tag
 			l_controller_class := l_p_callback.controller_class
-			a_registry.put_template (a_servlet_name, create {XP_TEMPLATE}.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name))
+			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
+			l_template.date := a_date
+			a_registry.put_template (a_servlet_name, l_template)
 		end
 
 feature {NONE} -- Implementation

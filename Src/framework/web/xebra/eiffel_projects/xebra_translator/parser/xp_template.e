@@ -48,6 +48,15 @@ feature -- Access
 	is_template: BOOLEAN
 			-- Can the XP_TEMPLATE NOT be renderered on its own?
 
+	date: INTEGER assign set_date
+			-- The date of the corresponding .xeb-file
+
+	set_date (a_date: INTEGER)
+			-- Sets the date.
+		do
+			date := a_date
+		end
+
 feature -- Basic functionality
 
 	absorb (a_other: XP_TEMPLATE)
@@ -59,8 +68,12 @@ feature -- Basic functionality
 			root_tag := a_other.root_tag.copy_tag_tree
 		end
 
-	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_region: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
+	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_region: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
 			-- Resolves the templates "includes" and returns the tag element tree
+		require
+			a_templates_attached: attached a_templates
+			a_region_attached: attached a_region
+			a_pending_uids: attached a_pending_uids
 		local
 			l_visitor: XP_REGION_TAG_ELEMENT_VISITOR
 			l_root_tag: XP_TAG_ELEMENT
@@ -71,24 +84,27 @@ feature -- Basic functionality
 				l_uid := a_servlet_gen.next_unique_identifier
 				set_uids (l_root_tag, a_servlet_gen, l_uid, controller_class)
 				from
-					pending_uids.start
+					a_pending_uids.start
 				until
-					pending_uids.after
+					a_pending_uids.after
 				loop
-					pending_uids.item.call ([l_uid, controller_class])
-					pending_uids.forth
+					a_pending_uids.item.call ([l_uid, controller_class])
+					a_pending_uids.forth
 				end
-				pending_uids.wipe_out
+				a_pending_uids.wipe_out
 					-- All the pending uid requests have  been resolved, so the list can be emptied
 			else
 					-- Retrieve the proper controller
-				pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?))
+				a_pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?))
 			end
 
 			create l_visitor.make (a_region)
 			l_root_tag.accept (l_visitor)
 
-			l_root_tag.resolve_all_dependencies (a_templates, pending_uids, a_servlet_gen)
+			l_root_tag.resolve_all_dependencies (a_templates, a_pending_uids, a_servlet_gen)
+			if l_root_tag.date < date then
+				l_root_tag.date := date
+			end
 			Result := l_root_tag
 		end
 

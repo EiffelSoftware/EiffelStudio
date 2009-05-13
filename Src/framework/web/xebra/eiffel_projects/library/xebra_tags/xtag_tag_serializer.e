@@ -29,8 +29,11 @@ feature {NONE} -- Access
 feature -- Access
 
 	current_controller_id: STRING assign set_controller_id
+			-- The uid of the controller which should be used by this tag
 
 	set_controller_id (a_id: STRING)
+		require
+			a_id_valid: attached a_id and not a_id.is_empty
 		do
 			current_controller_id := a_id
 		end
@@ -40,6 +43,8 @@ feature -- Access
 
 	add_to_body (a_child: XTAG_TAG_SERIALIZER)
 			-- Adds a TAG to the body.
+		require
+			a_child_attached: attached a_child
 		do
 			children.extend (a_child)
 		ensure
@@ -49,6 +54,8 @@ feature -- Access
 	put_attribute (id: STRING; a_attribute: STRING)
 			-- Adds an attribute to the tag
 		require
+			id_attached: attached id
+			a_attribute_attached: attached a_attribute
 			id_is_not_empty: not id.is_empty
 		do
 			if id.is_equal ("render") then
@@ -58,13 +65,17 @@ feature -- Access
 			end
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: STRING)
 			-- Adds an attribute to the tag
+		require
+			a_id_valid: attached a_id and not a_id.is_empty
 		deferred
 		end
 
 	set_debug_information (a_debug_information: STRING)
 			-- Sets the debug information
+		require
+			a_debug_information_valid: attached a_debug_information and not a_debug_information.is_empty
 		do
 			debug_information := a_debug_information
 		end
@@ -76,8 +87,11 @@ feature -- Access
 
 feature -- Implementation
 
-	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
 			-- Wrapps around the internal_generate feature to add debug information and handle the "render" option
+		require
+			a_servlet_class_attached: attached a_servlet_class
+			a_variable_table_attached: attached a_variable_table
 		do
 			if generates_something then
 				append_debug_info (a_servlet_class.render_feature)
@@ -88,33 +102,42 @@ feature -- Implementation
 
 			if not render.is_empty then
 				a_servlet_class.render_feature.append_expression ("if " + render + " then")
-				internal_generate (a_servlet_class, variable_table)
+				internal_generate (a_servlet_class, a_variable_table)
 				a_servlet_class.render_feature.append_expression ("end")
 			else
-				internal_generate (a_servlet_class, variable_table)
+				internal_generate (a_servlet_class, a_variable_table)
 			end
 		end
 
-	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
 			-- Generates all the children
+		require
+			a_servlet_class_attached: attached a_servlet_class
+			a_variable_table_attached: attached a_variable_table
 		do
 			from
 				children.start
 			until
 				children.after
 			loop
-				children.item.generate (a_servlet_class, variable_table)
+				children.item.generate (a_servlet_class, a_variable_table)
 				children.forth
 			end
 		end
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
 			--
+		require
+			a_servlet_class_attached: attached a_servlet_class
+			a_variable_table_attached: attached a_variable_table
 		deferred
 		end
 
 	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
-			--
+			-- Writes an append instruction
+		require
+			a_text_valid: attached a_text and not a_text.is_empty
+			a_feature_attached: attached a_feature
 		local
 			l_text: STRING
 		do
@@ -134,18 +157,25 @@ feature -- Implementation
 
 	must_be_escaped (a_text: STRING): BOOLEAN
 			-- Checks, if there are characters which have to be escaped
+		require
+			a_text_attached: attached a_text
 		do
 			Result := a_text.has_substring ("%"") or a_text.has_substring ("%%") or a_text.has_substring ("%N")
 		end
 
-	add_controller_call (feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
-			--
+	add_controller_call (a_feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
+			-- Adds a call to the controller
+		require
+			a_feature_name_valid: attached a_feature_name and not a_feature_name.is_empty
+			a_feature_attached: attached a_feature
 		do
-			a_feature.append_expression (current_controller_id + "." + feature_name)
+			a_feature.append_expression (current_controller_id + "." + a_feature_name)
 		end
 
 	append_debug_info (a_feature: XEL_FEATURE_ELEMENT)
 			-- Appends debug information to the feature
+		require
+			a_feature_attached: attached a_feature
 		do
 			a_feature.append_comment (debug_information)
 		end

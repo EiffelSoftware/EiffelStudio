@@ -152,9 +152,6 @@ feature -- Tag
 		local
 			l_prefix: STRING
 			l_local_part: STRING
-			l_tmp_tag: XP_TAG_ELEMENT
-			l_class_name: STRING
-			l_taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_prefix then
 				l_prefix := a_prefix
@@ -182,7 +179,6 @@ feature -- Tag
 			l_prefix: STRING
 			l_local_part: STRING
 			l_value: STRING
-			taglib: XTL_TAG_LIBRARY
 		do
 			if attached a_namespace then
 				l_namespace := a_namespace

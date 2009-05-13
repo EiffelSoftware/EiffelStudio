@@ -110,6 +110,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_running then
 				webapp.shutdown
+				o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
 				compile_process := launch_process (config.compiler,
 												compiler_args,
 												app_dir,

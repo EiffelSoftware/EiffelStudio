@@ -67,6 +67,7 @@ feature  -- Access
 
 feature -- Constans
 
+	onebillionnanoseconds: INTEGER_64 = 1000000000
 	fourbillionnanoseconds: INTEGER_64 = 4000000000
 	sixbillionnanoseconds: INTEGER_64 = 6000000000
 
@@ -114,7 +115,7 @@ feature -- Status Setting
 		do
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
-				(create {EXECUTION_ENVIRONMENT}).sleep (sixbillionnanoseconds)
+				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
 			end
 			send_action.stop
 			run_action.stop

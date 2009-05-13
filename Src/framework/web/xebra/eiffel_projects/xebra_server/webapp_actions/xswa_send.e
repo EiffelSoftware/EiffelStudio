@@ -38,6 +38,7 @@ feature {NONE} -- Implementation
 		local
 			l_webapp_socket: NETWORK_STREAM_SOCKET
 		do
+			o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 10)
 			create l_webapp_socket.make_client_by_port (webapp.config.port, webapp.config.host)
 			o.dprint ("Connecting to " + webapp.config.name.out + "@" + webapp.config.port.out, 2)
 			l_webapp_socket.connect

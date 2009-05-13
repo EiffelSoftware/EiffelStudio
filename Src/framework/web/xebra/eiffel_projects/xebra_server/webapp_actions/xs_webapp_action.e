@@ -149,6 +149,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_attached: Result /= Void
 		end
+
 	--launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE [detachable STRING]]): detachable PROCESS
 	launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
 			-- Launches a process

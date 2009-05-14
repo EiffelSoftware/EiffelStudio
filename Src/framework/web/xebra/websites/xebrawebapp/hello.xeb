@@ -1,6 +1,6 @@
 <html>
 <page:controller class="CONTROLLER"/>
 <body>
-Helloo <xeb:display feature="world"/>!
+Hello <xeb:display feature="world"/>!
 </body>
 </html>

@@ -18,10 +18,19 @@ inherit
 create
     make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
+			-- Initialization for `Current'.
+		do
+		end
+
+feature -- Operations
+
+	run (a_arg_parser: XS_ARGUMENT_PARSER)
 			-- Creates a server which listens to requests from http servers and from xebra apps
+		require
+			a_arg_parser_attached: a_arg_parser /= Void
 		local
 			l_printer: ERROR_CUI_PRINTER
 			l_webapp_handler: XS_WEBAPP_HANDLER
@@ -34,7 +43,7 @@ feature -- Initialization
 			o.dprint ("Reading configuration...",1)
 
 			create l_config_reader.make
-			if attached l_config_reader.process_file (Default_server_config_path) as config then
+			if attached l_config_reader.process_file (a_arg_parser.config_filename) as config then
 				server_config := config
 				create l_webapp_finder.make
 				server_config.set_webapps (l_webapp_finder.search_webapps (server_config.webapps_root))
@@ -80,32 +89,16 @@ feature -- Initialization
 			o.iprint ("All done. Bye!")
 		end
 
-feature {NONE} -- Initialization
-
-
-
-
 feature -- Access
 
-	http_connection_server: XS_HTTP_CONN_SERVER
+	http_connection_server: detachable XS_HTTP_CONN_SERVER
 			-- Handles connections to http server requests
 
---	app_connection_server: XS_APP_CONN_SERVER
---			-- Handles connections to xebra web application requests (for registration)
-
-
---	compile_service: XS_COMPILE_SERVICE
-
-	server_config: XS_CONFIG
+	server_config: detachable XS_CONFIG
+			-- Contains configuration info about the server
 
 feature -- Constants
 
---	Default_server_config_path: STRING = "$XEBRA_DEV/eiffel_projects/xebra_server/config.xml"
-	Default_server_config_path: STRING = "config.ini"
-
 	Name: STRING = "XEBSRV"
 
-invariant
-	http_connection_server_attached: http_connection_server /= Void
-	server_config_attached: server_config /= Void
 end

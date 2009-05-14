@@ -46,7 +46,7 @@ feature -- Status Change
 			until
 				server_config.webapps.after
 			loop
-				server_config.webapps.item_for_iteration.shutdown
+				server_config.webapps.item_for_iteration.shutdown_all
 				server_config.webapps.forth
 			end
 		end

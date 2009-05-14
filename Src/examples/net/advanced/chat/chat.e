@@ -39,6 +39,9 @@ feature
 	make_chat (argv: ARRAY [STRING])
 		local
 			l_port: INTEGER
+			l_message_out: detachable like message_out
+			l_connections: detachable like connections
+			l_in: detachable like in
 		do
 			if argv.count /= 2 then
 				io.error.put_string ("Usage: ")
@@ -53,25 +56,34 @@ feature
 			max_to_poll := 1
 			create poll.make_read_only
 			in.set_non_blocking
-			create message_out.make
-			create connections.make
+			l_in := in
+			create l_message_out.make
+			message_out := l_message_out
+			create l_connections.make
+			connections := l_connections
 			connections.compare_objects
 			execute
 		rescue
 			io.error.putstring ("IN RESCUE%N")
-			message_out.extend ("The server is down. ")
-			message_out.extend ("See you later...%N")
-			message_out.set_over (True)
-			from
-				connections.start
-			until
-				connections.after
-			loop
-				message_out.independent_store (connections.item.active_medium)
-				connections.item.active_medium.close
-				connections.forth
+			if l_message_out /= Void then
+				l_message_out.extend ("The server is down. ")
+				l_message_out.extend ("See you later...%N")
+				l_message_out.set_over (True)
+				if l_connections /= Void then
+					from
+						l_connections.start
+					until
+						l_connections.after
+					loop
+						l_message_out.independent_store (l_connections.item.active_medium)
+						l_connections.item.active_medium.close
+						l_connections.forth
+					end
+				end
+				if l_in /= Void and then not l_in.is_closed then
+					l_in.close
+				end
 			end
-			cleanup
 		end
 
 	process_message

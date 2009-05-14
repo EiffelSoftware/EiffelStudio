@@ -25,6 +25,8 @@ feature
 		local
 			l_port: INTEGER
 			l_host: STRING
+			l_in_out: detachable like in_out
+			l_client_name: detachable like client_name
 		do
 			if argv.count /= 3 then
 				io.error.putstring ("Usage: ")
@@ -39,6 +41,7 @@ feature
 			end
 
 			check_name
+			l_client_name := client_name
 
 			make (l_port, l_host)
 			max_to_poll := in_out.descriptor + 1
@@ -55,12 +58,14 @@ feature
 			processing
 		rescue
 			io.error.putstring ("IN RESCUE%N");
-			create message_out.make
-			message_out.set_client_name (client_name)
-			message_out.set_new (False)
-			message_out.set_over (True)
-			send (message_out)
-			cleanup
+			if l_client_name /= Void and (l_in_out /= Void and then not l_in_out.is_closed) then
+				create message_out.make
+				message_out.set_client_name (l_client_name)
+				message_out.set_new (False)
+				message_out.set_over (True)
+				l_in_out.independent_store (message_out)
+				l_in_out.close
+			end
 		end
 
 feature {NONE} -- Implementation

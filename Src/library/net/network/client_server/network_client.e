@@ -36,7 +36,9 @@ feature -- Access
 	cleanup
 			-- Shut down client.
 		do
-			in_out.close
+			if not in_out.is_closed then
+				in_out.close
+			end
 		end;
 
 	send (msg : ANY)

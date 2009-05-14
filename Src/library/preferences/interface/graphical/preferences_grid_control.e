@@ -229,6 +229,13 @@ feature -- Access
 	status_label: EV_LABEL
 	filter_text_box: EV_TEXT_FIELD
 
+feature -- Obsolete
+
+	register_preference_widget (a_pref_widget: PREFERENCE_WIDGET)
+			obsolete "[090514] do not use, this had no effect at all, so this was removed"
+		do
+		end
+		
 feature -- Status Setting
 
 	set_parent_window (p: like parent_window)

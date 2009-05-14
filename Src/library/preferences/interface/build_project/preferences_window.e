@@ -12,6 +12,8 @@ note
 class
 	PREFERENCES_WINDOW
 
+obsolete "[090514] You should use PREFERENCES_GRID_DIALOG or PREFERENCES_GRID_CONTROL to embed pref into existing UI"
+
 inherit
 	PREFERENCES_WINDOW_IMP
 		redefine

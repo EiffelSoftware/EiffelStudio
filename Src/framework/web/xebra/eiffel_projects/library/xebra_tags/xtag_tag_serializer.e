@@ -80,9 +80,29 @@ feature -- Access
 			debug_information := a_debug_information
 		end
 
-	generates_something: BOOLEAN
+	generates_render: BOOLEAN
 		do
-			Result := True
+			Result := False
+		end
+
+	generates_prerender: BOOLEAN
+		do
+			Result := False
+		end
+
+	generates_postrender: BOOLEAN
+		do
+			Result := False
+		end
+
+	generates_getrender: BOOLEAN
+	do
+		Result := False
+	end
+
+	generates_afterrender: BOOLEAN
+		do
+			Result := False
 		end
 
 feature -- Implementation
@@ -93,10 +113,19 @@ feature -- Implementation
 			a_servlet_class_attached: attached a_servlet_class
 			a_variable_table_attached: attached a_variable_table
 		do
-			if generates_something then
+			if generates_render then
 				append_debug_info (a_servlet_class.render_feature)
+			end
+			if generates_prerender then
 				append_debug_info (a_servlet_class.prerender_get_feature)
+			end
+			if generates_postrender then
 				append_debug_info (a_servlet_class.prerender_post_feature)
+			end
+			if generates_getrender then
+				append_debug_info (a_servlet_class.prerender_get_feature)
+			end
+			if generates_afterrender then
 				append_debug_info (a_servlet_class.afterrender_feature)
 			end
 

@@ -103,11 +103,11 @@ feature -- Basic Functionality
 				o.iprint ("The servlet '" + l_filename + "' is being generated...")
 
 				if not l_file.is_creatable then
-					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling
 				end
 				l_file.open_write
 				if not l_file.is_open_write then
-					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling, l_ local vars
+					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling
 				end
 				create l_buf.make (l_file)
 				create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
@@ -127,14 +127,13 @@ feature -- Basic Functionality
 					l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
 					controller_id_table.forth
 				end
-				--servlet_class.add_feature (build_internal_controller_for_servlet)
 				l_servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
 				build_handle_request_feature_for_servlet (l_servlet_class, internal_root_tag)
 				l_servlet_class.serialize (l_buf)
 				l_file.close
 				o.iprint ("done.")
 			else
-				o.iprint (l_filename + " is already up to date!")
+				o.iprint ("Already up to date : " + l_filename)
 			end
 		end
 

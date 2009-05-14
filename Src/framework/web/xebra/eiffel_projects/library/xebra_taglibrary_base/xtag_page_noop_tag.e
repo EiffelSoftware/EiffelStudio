@@ -10,9 +10,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generates_something
-		end
 
 create
 	make
@@ -36,8 +33,6 @@ feature -- Implementation
 			-- <Precursor>
 		do
 		end
-
-	generates_something: BOOLEAN = False
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -8,6 +8,9 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
+		redefine
+			generates_render
+		end
 
 create
 	make
@@ -41,6 +44,7 @@ feature {NONE}
 			end
 		end
 
+	generates_render: BOOLEAN = True
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

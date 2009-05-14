@@ -11,7 +11,9 @@ deferred class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			make_base
+			make_base,
+			generates_render,
+			generates_postrender
 		end
 
 feature -- Initialization
@@ -56,5 +58,8 @@ feature -- Implementation
 			a_servlet_class.prerender_post_feature.append_expression (variable + "." + value + " := argument")
 			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
+
+	generates_render: BOOLEAN = True
+	generates_postrender: BOOLEAN = True
 
 end

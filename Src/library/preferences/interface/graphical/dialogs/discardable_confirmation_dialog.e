@@ -34,14 +34,13 @@ feature {NONE} -- Initialization
 			pixmap_box: EV_CELL -- Container to display pixmap in.
 			button_box: EV_HORIZONTAL_BOX -- Bar with all buttons of the dialog.
 		do
+			create check_button.make_with_text (Check_button_label)
+			button_box := build_buttons_box
+
 			Precursor {EV_DIALOG}
 			set_title (dialog_title)
 			set_icon_pixmap (default_pixmaps.question_pixmap)
 			disable_user_resize
-
-			create check_button.make_with_text (Check_button_label)
-
-			button_box := build_buttons_box
 
 			create label
 			label.align_text_left
@@ -107,13 +106,14 @@ feature {NONE} -- Initialization
 			Result.enable_homogeneous
 
 			ok_button := create_button (ok_button_label)
+			no_button := create_button (no_button_label)
+			cancel_button := create_button (cancel_button_label)
+			
 			Result.extend (ok_button)
 			if buttons_count >= 3 then
-				no_button := create_button (no_button_label)
 				Result.extend (no_button)
 			end
 			if buttons_count >= 2 then
-				cancel_button := create_button (cancel_button_label)
 				Result.extend (cancel_button)
 			end
 		ensure
@@ -158,6 +158,8 @@ feature -- Status setting
 
 	set_ok_action (an_agent: PROCEDURE [ANY, TUPLE])
 			-- Set the action performed when the Ok button is selected.
+		require
+			an_agent_attached: an_agent /= Void
 		do
 				-- Remove the previous `ok_action' if any.
 			if ok_action /= Void then
@@ -172,8 +174,9 @@ feature -- Status setting
 			-- Set the action performed when the No button is selected.
 		require
 			no_button_exists: buttons_count >= 3
+			an_agent_attached: an_agent /= Void
 		do
-			if no_action /= void then
+			if no_action /= Void then
 				no_button.select_actions.prune_all (no_action)
 			end
 			no_action := an_agent
@@ -184,6 +187,7 @@ feature -- Status setting
 			-- Set the action performed when the Cancel button is selected.
 		require
 			cancel_button_exists: buttons_count >= 2
+			an_agent_attached: an_agent /= Void
 		do
 				-- Remove the previous `cancel_action' if any.
 			if cancel_action /= Void then
@@ -227,13 +231,13 @@ feature {NONE} -- Implementation
 	cancel_button: EV_BUTTON
 			-- Button for "Cancel" answer.
 
-	ok_action: PROCEDURE [ANY, TUPLE]
+	ok_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Action performed when ok is selected.
 
-	cancel_action: PROCEDURE [ANY, TUPLE]
+	cancel_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Action performed when Cancel is selected.
 
-	no_action: PROCEDURE [ANY, TUPLE]
+	no_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
 			-- Action performed when ok is selected.
 
 	Layout_constants: EV_LAYOUT_CONSTANTS

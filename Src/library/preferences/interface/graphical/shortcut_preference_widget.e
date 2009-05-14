@@ -31,7 +31,6 @@ inherit
 		end
 
 create
-	make,
 	make_with_preference
 
 feature -- Access
@@ -52,15 +51,8 @@ feature -- Status Setting
 
 	set_preference (new_preference: like preference)
 			-- Set the preference.
-		local
-			tmpstr: STRING
 		do
 			Precursor (new_preference)
-			check
-				change_item_widget_created: change_item_widget /= Void
-			end
-
-			tmpstr := new_preference.string_value
 		end
 
 	show
@@ -82,11 +74,8 @@ feature {NONE} -- Command
 
 	update_preference
 			-- Updates preference.
-		local
-			sc: SHORTCUT_PREFERENCE
 		do
-			sc ?= preference
-			if sc /= Void then
+			if attached {SHORTCUT_PREFERENCE} preference as sc then
 				if not change_item_widget.text.is_empty then
 					sc.set_value_from_string (change_item_widget.text)
 				end
@@ -95,25 +84,27 @@ feature {NONE} -- Command
 
 	refresh
 			-- Refresh
-		local
-			l_preference: SHORTCUT_PREFERENCE
 		do
 			Precursor {PREFERENCE_WIDGET}
-			l_preference ?= preference
-			change_item_widget.set_text (l_preference.display_string)
+			if attached {SHORTCUT_PREFERENCE} preference as l_preference then
+				change_item_widget.set_text (l_preference.display_string)
+			else
+				check is_shortcut: False end
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	build_change_item_widget
 			-- Create and setup `change_item_widget'.
-		local
-			l_preference: SHORTCUT_PREFERENCE
 		do
-			l_preference ?= preference
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent on_change_item_widget_deactivated)
-			change_item_widget.set_text (l_preference.display_string)
+			if attached {SHORTCUT_PREFERENCE} preference as l_preference then
+				change_item_widget.set_text (l_preference.display_string)
+			else
+				check is_shortcut: False end
+			end
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 
@@ -135,16 +126,23 @@ feature {NONE} -- Implementation
 			change_item_widget.activate
 			setup_text_field
 			change_item_widget.set_text_validation_agent (agent validate_preference_text)
-			if not change_item_widget.text_field.text.is_empty then
-				change_item_widget.text_field.select_all
+			if
+				attached change_item_widget.text_field as tf and then
+				not tf.text.is_empty
+			then
+				tf.select_all
 			end
 		end
 
 	setup_text_field
 			-- Setup the text field on activation to handle properly key sequence rules.
 		do
-			change_item_widget.text_field.key_press_actions.extend (agent on_key_pressed)
-			change_item_widget.text_field.disable_edit
+			if attached change_item_widget.text_field as tf then
+				tf.key_press_actions.extend (agent on_key_pressed)
+				tf.disable_edit
+			else
+				check has_text_field: False end
+			end
 		end
 
 	on_key_pressed (a_key: EV_KEY)
@@ -153,20 +151,21 @@ feature {NONE} -- Implementation
 			l_app: EV_APPLICATION
 			l_string,
 			l_key: STRING
-			l_pref: SHORTCUT_PREFERENCE
+			tf: detachable EV_TEXT_FIELD
 		do
-			l_pref ?= preference
-			if l_pref /= Void then
+			if attached {SHORTCUT_PREFERENCE} preference as l_pref then
 				l_app := application
 				if
-					a_key.code = {EV_KEY_CONSTANTS}.key_enter
-					and then not l_app.ctrl_pressed
-					and then not l_app.shift_pressed
-					and then not l_app.alt_pressed
+					a_key.code = {EV_KEY_CONSTANTS}.key_enter and then
+					not l_app.ctrl_pressed and then
+					not l_app.shift_pressed and then
+					not l_app.alt_pressed
 				then
 					change_item_widget.deactivate
 				elseif l_pref.shortcut_keys.has (a_key.code) then
 					valid_shortcut_text := False
+					tf := change_item_widget.text_field
+					check tf /= Void end -- implied by the context
 					if l_app.ctrl_pressed or l_app.alt_pressed then
 						valid_shortcut_text := True
 						create l_string.make_empty
@@ -189,7 +188,7 @@ feature {NONE} -- Implementation
 						else
 							l_string.append (a_key.out)
 						end
-						change_item_widget.text_field.set_text (l_string)
+						tf.set_text (l_string)
 					elseif a_key.is_function then
 						valid_shortcut_text := True
 						create l_string.make_empty
@@ -198,7 +197,7 @@ feature {NONE} -- Implementation
 							l_string.append (shortcut_delimiter)
 						end
 						l_string.append (a_key.out)
-						change_item_widget.text_field.set_text (l_string)
+						tf.set_text (l_string)
 					end
 				end
 			end
@@ -229,7 +228,7 @@ feature {NONE} -- Implementation
 			is_ctrl,
 			is_shift: BOOLEAN
 			l_string,
-			l_key: STRING
+			l_key: detachable STRING
 		do
 			values := a_string.split ('+')
 			create Result.make_empty
@@ -259,18 +258,25 @@ feature {NONE} -- Implementation
 			Result.append (is_alt.out + shortcut_delimiter)
 			Result.append (is_ctrl.out + shortcut_delimiter)
 			Result.append (is_shift.out + shortcut_delimiter)
-			Result.append (l_key)
+			if l_key /= Void then
+				Result.append (l_key)
+			else
+				check has_key: False end
+			end
 		end
 
+invariant
+	preference_attached: preference /= Void
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

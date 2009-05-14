@@ -11,7 +11,8 @@ class
 inherit
 	TYPED_PREFERENCE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING]]
 		redefine
-			is_default_value
+			is_default_value,
+			init_value_from_string
 		end
 
 	PREFERENCE_CONSTANTS
@@ -22,6 +23,15 @@ inherit
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
+
+feature {NONE} -- Initialization
+
+	init_value_from_string (a_value: STRING)
+			-- Set initial value from String `a_value'
+		do
+			internal_value := [False, False, False, ""]
+			Precursor (a_value)
+		end
 
 feature -- Access
 
@@ -49,7 +59,11 @@ feature -- Access
 			l_key_code: INTEGER
 			s: STRING
 		do
-			s := value.key_string
+			if attached value as l_value then
+				s := l_value.key_string
+			else
+				create s.make_empty
+			end
 			l_key_code := key_code_from_key_string (s)
 			if l_key_code > 0 then
 				create Result.make_with_code (l_key_code)
@@ -163,13 +177,10 @@ feature -- Status Setting
 			l_value: like value
 			l_cnt: INTEGER
 			l_key_code: INTEGER
-			l_key: EV_KEY
+			l_key: detachable EV_KEY
 			l_alt, l_ctrl, l_shift: BOOLEAN
 			l_start_index, l_end_index: INTEGER
 		do
-			if internal_value = Void then
-				internal_value := [False, False, False, ""]
-			end
 			l_value := [False, False, False, ""]
 
 			from
@@ -217,25 +228,25 @@ feature -- Query
 	is_alt: BOOLEAN
 			-- Requires Alt key?
 		do
-			Result := value.alt
+			Result := attached value as l_value and then l_value.alt
 		end
 
 	is_ctrl: BOOLEAN
 			-- Requires Ctrl key?
 		do
-			Result := value.ctrl
+			Result := attached value as l_value and then l_value.ctrl
 		end
 
 	is_shift: BOOLEAN
 			-- Requires Shift key?
 		do
-			Result := value.shift
+			Result := attached value as l_value and then l_value.shift
 		end
 
 	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
-			Result := a_string /= Void and then a_string.split ('+').count >= 4
+			Result := a_string.split ('+').count >= 4
 		end
 
 	is_default_value: BOOLEAN

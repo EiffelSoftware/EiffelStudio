@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_value (a_value: like value)
+	set_value (a_value: EV_FONT)
 			-- Set the value with the wanted font.
 		require else
 			valid_font: a_value /= Void and then not a_value.is_destroyed
@@ -73,7 +73,7 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	face: STRING
+	face: detachable STRING
 			-- Font faces
 	shape,
 	weight,
@@ -130,7 +130,12 @@ feature {NONE} -- Implementation
 			check attached l_value end -- implied by precondition `has_value'
 
 			create v.make (50)
-			v.append (face)
+			if attached face as l_face then
+				v.append (l_face)
+			else
+				check has_face: False end
+			end
+
 			v.append ("-")
 			inspect l_value.shape
 			when shape_italic then

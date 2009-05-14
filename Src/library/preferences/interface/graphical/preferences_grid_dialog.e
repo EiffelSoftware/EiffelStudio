@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 
 	make_with_hidden (a_preferences: PREFERENCES; a_show_hidden_flag: BOOLEAN)
 		do
-			default_create
 			create pref_control.make_with_hidden (a_preferences, a_show_hidden_flag)
+			default_create
 			pref_control.set_parent_window (Current)
 			extend (pref_control.widget)
 			show_actions.extend (agent pref_control.on_show)

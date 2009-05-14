@@ -47,9 +47,13 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
+			has_constant: has_constant (a_name)
+		local
+			s: detachable STRING
 		do
-			Result := (all_constants.item (a_name)).twin
+			s := all_constants.item (a_name)
+			check s /= Void end -- implied by precondition `has_constant'
+			Result := s.string
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -59,11 +63,13 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
+			has_constant: has_constant (a_name)
 		local
-			l_string: STRING
+			l_string: detachable STRING
 		do
-			l_string := (all_constants.item (a_name)).twin
+			l_string := all_constants.item (a_name)
+			check l_string /= Void end -- implied by precondition `has_constant'
+			l_string := l_string.string
 			check
 				is_integer: l_string.is_integer
 			end

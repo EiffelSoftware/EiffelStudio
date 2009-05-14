@@ -23,11 +23,11 @@ feature -- Access
 
 	shortcuts: ARRAYED_LIST [MANAGED_SHORTCUT]
 
-	found_item: MANAGED_SHORTCUT
+	found_item: detachable MANAGED_SHORTCUT
 
 feature -- Status Report
 
-	has_key_combination (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN
+	has_key_combination (a_key: detachable EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN
 			-- Does this group has `a_shortcut' with the key combination?
 		local
 			l_cursor: CURSOR
@@ -51,7 +51,7 @@ feature -- Status Report
 			has_item_implies_found_item_not_void: Result implies found_item /= Void
 		end
 
-	has (a_shortcut: MANAGED_SHORTCUT): BOOLEAN
+	has (a_shortcut: detachable MANAGED_SHORTCUT): BOOLEAN
 			-- Does this group has `a_shortcut'?
 		do
 			if a_shortcut /= Void then

@@ -11,13 +11,15 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<!-- For now, only batch is void-safe. Remove next line, when Vision2 is ready -->
-		<variable name="batch_preferences" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical-safe.ecf">
+			<condition>
+				<custom name="batch_preferences" excluded_value="true"/>
+			</condition>
+		</library>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>

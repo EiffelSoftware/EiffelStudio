@@ -86,7 +86,6 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-
 				if a_files.item.ends_with (".xeb") then
 					create l_file.make (output_path + a_files.item.twin)
 					if not l_file.exists then
@@ -97,7 +96,7 @@ feature -- Processing
 							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + l_file.name), false)
 						else
 							o.iprint ("Processing '" + l_file.name + "'...")
-							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path, registry, l_file.time_stamp)
+							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path + a_files.item, registry, l_file.time_stamp)
 							l_file.close
 						end
 					end

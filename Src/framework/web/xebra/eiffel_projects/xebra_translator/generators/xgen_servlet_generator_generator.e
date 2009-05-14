@@ -151,6 +151,8 @@ feature -- Basic functionality
 				servlet_gen_class.serialize (buf)
 				file.close
 				o.iprint ("Servlet generator generated at: " + file.name)
+			else
+				o.iprint ("Already up to date: " + file.name)
 			end
 		end
 

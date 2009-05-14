@@ -10,6 +10,10 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
+		redefine
+			generates_render
+			generates_postrender
+		end
 
 create
 	make
@@ -78,6 +82,9 @@ feature -- Implementation
 				argument := a_attribute
 			end
 		end
+
+	generates_render: BOOLEAN = True
+	generates_postrender: BOOLEAN = True
 
 feature -- Constants
 

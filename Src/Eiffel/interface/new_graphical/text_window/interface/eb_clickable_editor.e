@@ -66,6 +66,7 @@ feature {NONE}-- Initialization
 				text_displayed.add_selection_observer (dev_window.agents)
 			end
 			create after_reading_text_actions.make
+			after_reading_text_actions.compare_objects
 
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
@@ -324,17 +325,15 @@ feature -- Possibly delayed operations
 		local
 			l_deferred_action: PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]
 		do
-			if text_is_fully_loaded or text_displayed.cursor /= Void then
-				if text_displayed.cursor /= Void then
-					if text_displayed.has_selection then
-						text_displayed.disable_selection
-					end
-					text_displayed.cursor.make_from_character_pos (1, number_of_lines, text_displayed)
-					if number_of_lines > number_of_lines_displayed then
-						check_cursor_position
-					end
-					refresh
+			if text_is_fully_loaded and text_displayed.cursor /= Void then
+				if text_displayed.has_selection then
+					text_displayed.disable_selection
 				end
+				text_displayed.cursor.make_from_character_pos (1, number_of_lines, text_displayed)
+				if number_of_lines > number_of_lines_displayed then
+					check_cursor_position
+				end
+				refresh
 			else
 				l_deferred_action := agent scroll_to_end_when_ready
 				if not after_reading_text_actions.has (l_deferred_action) then

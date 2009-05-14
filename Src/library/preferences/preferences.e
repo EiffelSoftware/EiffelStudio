@@ -568,6 +568,9 @@ feature {NONE} -- Implementation
 
 										-- Found preference default value
 									pref_value := sub_node.text
+									if pref_value = Void then
+										create pref_value.make_empty
+									end
 									if att_pref_value /= Void and then not att_pref_value.is_empty then
 										pref_value.prepend (att_pref_value)
 									end

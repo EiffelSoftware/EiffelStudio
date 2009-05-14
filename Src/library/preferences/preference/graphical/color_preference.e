@@ -10,9 +10,21 @@ class
 
 inherit
 	TYPED_PREFERENCE [EV_COLOR]
+		redefine
+			init_value_from_string
+		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
+
+feature {NONE} -- Initialization
+
+	 init_value_from_string (a_value: STRING)
+			-- Set initial value from String `a_value'
+		do
+			create internal_value.make_with_8_bit_rgb (0, 0, 0)
+			Precursor (a_value)
+		end
 
 feature -- Access
 

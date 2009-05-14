@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 			lab: EV_LABEL
 			tb: EV_TOOL_BAR
 		do
+			display_update_agent := agent on_preference_changed_externally
+			build_filter_icons
+
 			create box
 			widget := box
 			box.set_border_width (small_border_size)
@@ -141,7 +144,10 @@ feature {NONE} -- Initialization
 			box.disable_item_expand (hb)
 
 				--| Widget properties
-			description_location.set_background_color (description_location.parent.background_color)
+			if attached description_location.parent as p then
+				description_location.set_background_color (p.background_color)
+			end
+
 			description_location.disable_edit
 			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			description_text.disable_edit
@@ -176,11 +182,9 @@ feature {NONE} -- Initialization
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			box.resize_actions.force_extend (agent on_resize)
-			display_update_agent := agent on_preference_changed_externally
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter
-			build_filter_icons
 			filter_text_box.change_actions.extend (agent request_update_matches)
 
 			init_shortcuts
@@ -198,21 +202,19 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Main widget
 
-	close_button_action: PROCEDURE [ANY, TUPLE]
+	close_button_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action called when "Close" button is pressed.
 
-	parent_window: EV_WINDOW
+	parent_window: detachable EV_WINDOW
 			-- Parent window.  Used to display this view relative to.
 
-	parent_window_of (w: EV_WIDGET): EV_WINDOW
+	parent_window_of (w: EV_WIDGET): detachable EV_WINDOW
 			-- Computed parent window of `w'.
 		do
 			Result ?= w
-			if Result = Void and w.parent /= Void then
-				Result := parent_window_of (w.parent)
+			if Result = Void and attached w.parent as p then
+				Result := parent_window_of (p)
 			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	restore_button, apply_or_close_button: EV_BUTTON
@@ -299,8 +301,8 @@ feature -- Events
 			-- the Preferences Window.
 		do
 			preferences.save_preferences
-			if close_button_action /= Void then
-				close_button_action.call (Void)
+			if attached close_button_action as but then
+				but.call (Void)
 			end
 		end
 
@@ -309,12 +311,12 @@ feature {NONE} -- Events
 	on_preference_changed (a_pref: PREFERENCE; a_pref_widget: PREFERENCE_WIDGET)
 			-- Set the preference value to the newly entered value in the edit item.
 		local
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 			l_item: EV_GRID_ITEM
 		do
 			if a_pref_widget /= Void then
 				l_item := a_pref_widget.change_item_widget
-				if l_item /= Void and l_item.is_parented then
+				if l_item.is_parented then
 					l_row := l_item.row
 				end
 			end
@@ -332,8 +334,8 @@ feature {NONE} -- Events
 			a_pref_not_void: a_pref /= Void
 			a_row_parented: a_row /= Void and then a_row.parent /= Void
 		local
-			l_default_item: EV_GRID_LABEL_ITEM
-			l_selected_row: EV_GRID_ROW
+			l_default_item: detachable EV_GRID_LABEL_ITEM
+			l_selected_row: detachable EV_GRID_ROW
 		do
 			if not grid.selected_rows.is_empty then
 				l_selected_row := grid.selected_rows.first
@@ -365,7 +367,7 @@ feature {NONE} -- Events
 	on_preference_changed_externally (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value NOT changed in the edit item.
 		local
-			l_row: EV_GRID_ROW
+			l_row: like preference_row
 		do
 			l_row := preference_row (a_pref)
 			if l_row /= Void then
@@ -373,14 +375,14 @@ feature {NONE} -- Events
 			end
 		end
 
-	preference_row (a_pref: PREFERENCE): EV_GRID_ROW
+	preference_row (a_pref: PREFERENCE): detachable EV_GRID_ROW
 			-- Row containing `a_pref'.
 		require
 			a_pref_not_void: a_pref /= Void
 		local
 			nb: INTEGER
 			r: INTEGER
-			l_pref: PREFERENCE
+			l_pref: detachable PREFERENCE
 		do
 			nb := grid.row_count
 			if nb > 0 then
@@ -402,8 +404,7 @@ feature {NONE} -- Events
 	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE)
 			-- Set the preference value to the original default.
 		local
-			l_gitem: EV_GRID_ITEM
-			l_prefwidget: PREFERENCE_WIDGET
+			l_gitem: detachable EV_GRID_ITEM
 		do
 			a_pref.reset
 			a_item.set_text (p_default_value)
@@ -414,8 +415,7 @@ feature {NONE} -- Events
 
 			l_gitem := a_item.row.item (col_value_index)
 			if l_gitem /= Void then
-				l_prefwidget ?= l_gitem.data
-				if l_prefwidget /= Void then
+				if attached {PREFERENCE_WIDGET} l_gitem.data as l_prefwidget then
 					l_prefwidget.refresh
 				end
 			end
@@ -429,7 +429,7 @@ feature {NONE} -- Events
 			create l_confirmation_dialog
 			l_confirmation_dialog.set_text (restore_preference_string)
 			show_dialog_modal (l_confirmation_dialog)
-			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if l_confirmation_dialog.selected_button ~ (create {EV_DIALOG_CONSTANTS}).ev_ok then
 				preferences.restore_defaults
 			end
 		end
@@ -439,16 +439,17 @@ feature {NONE} -- Events
 			dlg: EV_FILE_SAVE_DIALOG
 			s: STRING_32
 			stor: PREFERENCES_STORAGE_XML
-			p: EV_WINDOW
+			p: detachable EV_WINDOW
 		do
 			create dlg.make_with_title (l_export_preferences)
 			p := parent_window
 			if p = Void then
 				p := parent_window_of (widget)
+				check p /= Void end -- Implied by `widget' being part of the UI
 			end
 			dlg.show_modal_to_window (p)
 			s := dlg.file_name
-			if s /= Void then
+			if s /= Void and then not s.is_empty then --| Cancelled
 				create stor.make_with_location (s)
 				preferences.export_to_storage (stor, False)
 			end
@@ -457,14 +458,15 @@ feature {NONE} -- Events
 	on_import
 		local
 			dlg: EV_FILE_OPEN_DIALOG
-			s: STRING_32
+			s: detachable STRING_32
 			stor: PREFERENCES_STORAGE_XML
-			p: EV_WINDOW
+			p: detachable EV_WINDOW
 		do
 			create dlg.make_with_title (l_import_preferences)
 			p := parent_window
 			if p = Void then
 				p := parent_window_of (widget)
+				check p /= Void end -- Implied by `widget' being part of the UI
 			end
 			dlg.show_modal_to_window (p)
 			s := dlg.file_name
@@ -480,7 +482,7 @@ feature {NONE} -- Events
 		local
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
-			l_pref: PREFERENCE
+			l_pref: detachable PREFERENCE
 		do
 			if not a_pref.is_default_value and then a_button = 3 then
 					-- Extract `l_pref' from row data.
@@ -507,20 +509,16 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
 			-- An item was double pressed
 		local
 			l_col_index: INTEGER
-			l_bool_preference: BOOLEAN_PREFERENCE
-			l_combo_widget: EV_GRID_CHOICE_ITEM
 		do
 			if a_item /= Void then
 				l_col_index := a_item.column.index
 				if l_col_index = col_name_index or l_col_index = col_type_index or l_col_index = col_status_index then
-					l_bool_preference ?= a_item.row.data
-					if l_bool_preference /= Void then
-						l_combo_widget ?= a_item.row.item (col_value_index)
-						if l_combo_widget /= Void then
+					if attached {BOOLEAN_PREFERENCE} a_item.row.data as l_bool_preference then
+						if attached {EV_GRID_CHOICE_ITEM} a_item.row.item (col_value_index) as l_combo_widget then
 							l_combo_widget.set_text ((not l_bool_preference.value).out)
 							l_combo_widget.deactivate_actions.call (Void)
 						end
@@ -555,48 +553,47 @@ feature {NONE} -- Events
 
 	on_grid_key_pressed (k: EV_KEY)
 			-- An key was pressed
+		require
+			k_attached: k /= Void
 		local
-			l_pref: PREFERENCE
-			l_preference_widget: PREFERENCE_WIDGET
-			l_boolean_widget: EV_GRID_CHECKABLE_LABEL_ITEM
+			l_pref: detachable PREFERENCE
 			l_row: EV_GRID_ROW
 		do
-			if k /= Void then
-				inspect
-					k.code
-				when {EV_KEY_CONSTANTS}.key_enter then
-					if not grid.selected_rows.is_empty then
-						l_row :=  grid.selected_rows.first
-						l_pref ?= l_row.data
-						if l_pref /= Void then
-							check l_row.count >= col_value_index end
-							if l_row.count >= col_value_index and then l_row.item (col_value_index) /= Void then
-								l_preference_widget ?= l_row.item (col_value_index).data
-								if l_preference_widget /= Void then
-									l_preference_widget.show
-								end
-							end
-						elseif l_row.is_expandable then
-							if l_row.is_expanded then
-								l_row.collapse
-							else
-								l_row.expand
-							end
+			inspect
+				k.code
+			when {EV_KEY_CONSTANTS}.key_enter then
+				if not grid.selected_rows.is_empty then
+					l_row := grid.selected_rows.first
+					l_pref ?= l_row.data
+					if l_pref /= Void then
+						check l_row.count >= col_value_index end
+						if
+							l_row.count >= col_value_index and then
+							attached l_row.item (col_value_index) as l_item and then
+							attached {PREFERENCE_WIDGET} l_item.data as l_preference_widget
+						then
+							l_preference_widget.show
+						end
+					elseif l_row.is_expandable then
+						if l_row.is_expanded then
+							l_row.collapse
+						else
+							l_row.expand
 						end
 					end
-				when {EV_KEY_CONSTANTS}.key_space then
-					if not grid.selected_rows.is_empty then
-						l_row :=  grid.selected_rows.first
-						if l_row.count >= col_value_index and then l_row.item (col_value_index) /= Void then
-							l_boolean_widget ?= l_row.item (col_value_index)
-							if l_boolean_widget /= Void then
-								l_boolean_widget.toggle_is_checked
-							end
-						end
-					end
-				else
-					accelerator_on_key_pressed (k)
 				end
+			when {EV_KEY_CONSTANTS}.key_space then
+				if not grid.selected_rows.is_empty then
+					l_row :=  grid.selected_rows.first
+					if
+						l_row.count >= col_value_index and then
+						attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_row.item (col_value_index) as l_boolean_widget
+					then
+						l_boolean_widget.toggle_is_checked
+					end
+				end
+			else
+				accelerator_on_key_pressed (k)
 			end
 		end
 
@@ -642,13 +639,12 @@ feature {NONE} -- Events
 			div_index := grid.header.pointed_divider_index
 			if div_index > 0 then
 				col := grid.column (div_index)
-				col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+				col.set_width (col.required_width_of_item_span (1, grid.row_count) + column_border_space)
 			end
 		end
 
 	on_header_item_single_clicked (hi: EV_HEADER_ITEM; ax,ay, a_but: INTEGER)
 		local
-			ghi: EV_GRID_HEADER_ITEM
 			col_index: INTEGER
 		do
 			if
@@ -656,9 +652,10 @@ feature {NONE} -- Events
 				and a_but = 1
 				and grid.header.pointed_divider_index = 0 --| Let's be sure no divider is clicked
 			then
-				ghi ?= hi
-				if ghi /= Void then
-					col_index := ghi.column.index
+				if attached {EV_GRID_HEADER_ITEM} hi as ghi and then
+					attached ghi.column as l_column
+				then
+					col_index := l_column.index
 					if col_index /= Value_sorting_mode then
 						if col_index = flat_sorting_info.abs then
 							flat_sorting_info := - flat_sorting_info
@@ -706,8 +703,8 @@ feature {NONE} -- Implementation
 			l_pref_hash: HASH_TABLE [EV_GRID_ROW, STRING]
 			l_pref_name,
 			l_pref_parent_full_name: STRING
-			l_sorted_preferences: LIST [PREFERENCE]
-			l_row: EV_GRID_ROW
+			l_sorted_preferences: like sorted_known_preferences_by
+			l_row: detachable EV_GRID_ROW
 			l_pref: PREFERENCE
 			show_this_pref: BOOLEAN
 		do
@@ -721,7 +718,7 @@ feature {NONE} -- Implementation
 				-- Alphabetically sort the known preferences
 			l_sorted_preferences := sorted_known_preferences_by (-Name_sorting_mode, show_hidden_preferences, preferences.preferences.linear_representation)
 
-			if not l_sorted_preferences.is_empty then
+			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 				create l_pref_hash.make (l_sorted_preferences.count)
 
 					-- Traverse the preferences in the system
@@ -766,7 +763,7 @@ feature {NONE} -- Implementation
 		local
 			l_parent_name: STRING
 			l_short_name: STRING
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 			l_grid_label: EV_GRID_LABEL_ITEM
 		do
 			if a_pref_parent_full_name.has ('.') then
@@ -776,6 +773,7 @@ feature {NONE} -- Implementation
 					add_parent_structure_preference_row (l_parent_name, a_grid_structure)
 				end
 				l_row := a_grid_structure.item (l_parent_name)
+				check l_row /= Void end -- implied by `not a_grid_structure.has (l_parent_name)' and postcondition from `add_parent_structure_preference_row'
 				l_row.insert_subrow (l_row.subrow_count + 1)
 				l_row := l_row.subrow (l_row.subrow_count)
 			else
@@ -802,7 +800,7 @@ feature {NONE} -- Implementation
 	build_flat
 			-- Fill with preferences no structure, flat list.
 		local
-			l_sorted_preferences: LIST [PREFERENCE]
+			l_sorted_preferences: like sorted_known_preferences_by
 			l_pref: PREFERENCE
 		do
 			if flat_sorting_info.abs <= grid.column_count then
@@ -825,7 +823,7 @@ feature {NONE} -- Implementation
 				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences.linear_representation)
 			end
 
-			if not l_sorted_preferences.is_empty then
+			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 					-- Traverse the preferences in the system and add to grid list
 				from
 					l_sorted_preferences.start
@@ -846,17 +844,17 @@ feature {NONE} -- Implementation
 			Result := a.index < b.index
 		end
 
-	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: LIST [PREFERENCE]): LIST [PREFERENCE]
+	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: detachable LIST [PREFERENCE]): detachable LIST [PREFERENCE]
 			-- Sorted known preferences using criteria `a_sorting_info'.
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
-			l_prefs_to_sort: LIST [PREFERENCE]
+			l_prefs_to_sort: detachable LIST [PREFERENCE]
 			l_known_pref_ht: HASH_TABLE [PREFERENCE, STRING]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]]
 			l_compare_agent: PREDICATE [ANY, TUPLE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]]
 			l_proxy_comparable: PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]
 			l_pref_index, l_pref_name, l_display_name: STRING_32
-			l_pref: PREFERENCE
+			l_pref: detachable PREFERENCE
 			l_sorting_up: BOOLEAN
 			l_sorting_criteria: INTEGER
 		do
@@ -882,7 +880,7 @@ feature {NONE} -- Implementation
 					when Type_sorting_mode then --| type name
 						l_pref_index := l_pref.string_type + "@" + l_display_name
 					when Status_sorting_mode then --| type name
-						l_pref_index := ""
+						create l_pref_index.make_empty
 						if l_pref.is_default_value then
 							l_pref_index.append (p_default_value)
 						else
@@ -894,6 +892,7 @@ feature {NONE} -- Implementation
 						l_pref_index.append ("@" + l_display_name)
 					else
 						check False end
+						create l_pref_index.make_empty
 					end
 					create l_proxy_comparable.make ([l_pref_name, l_pref_index], l_compare_agent)
 					l_sorted_preferences.extend (l_proxy_comparable)
@@ -917,8 +916,10 @@ feature {NONE} -- Implementation
 					l_pref_name := l_sorted_preferences.item.item.pref_name
 
 					l_pref := l_known_pref_ht.item (l_pref_name)
-					if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then
-						Result.extend (l_pref)
+					if l_pref /= Void then
+						if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then
+							Result.extend (l_pref)
+						end
 					end
 					if l_sorting_up then
 						l_sorted_preferences.forth
@@ -943,7 +944,7 @@ feature {NONE} -- Implementation
 			update_status_bar
 		end
 
-	add_short_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE)
+	add_short_preference_row (a_row: detachable EV_GRID_ROW; a_pref: PREFERENCE)
 			-- Add a preference as a new row display in parent `a_row'.  If `a_row' is
 			-- Void then add to end of `grid'.
 		require
@@ -1035,14 +1036,8 @@ feature {NONE} -- Implementation
 		end
 
 	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM
-			--
+			-- Grid item related to `a_pref'
 		local
-			l_bool: BOOLEAN_PREFERENCE
-			l_font: FONT_PREFERENCE
-			l_color: COLOR_PREFERENCE
-			l_array: ARRAY_PREFERENCE
-			l_shortcut: SHORTCUT_PREFERENCE
-
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
 			l_choice_widget: CHOICE_PREFERENCE_WIDGET
@@ -1050,58 +1045,48 @@ feature {NONE} -- Implementation
 			l_color_widget: COLOR_PREFERENCE_WIDGET
 			l_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET
 		do
-			l_bool ?= a_pref
-			if l_bool /= Void then
+			if attached {BOOLEAN_PREFERENCE} a_pref as l_bool then
 				l_bool_widget := new_boolean_widget (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed (?, l_bool_widget))
 				Result := l_bool_widget.change_item_widget
 				Result.set_data (l_bool_widget)
+			elseif a_pref.generating_preference_type.is_equal ("TEXT") then
+				create l_edit_widget.make_with_preference (a_pref)
+				l_edit_widget.change_actions.extend (agent on_preference_changed (?, l_edit_widget))
+				Result := l_edit_widget.change_item_widget
+				Result.set_data (l_edit_widget)
+			elseif a_pref.generating_preference_type.is_equal ("COMBO") and then
+				attached {ARRAY_PREFERENCE} a_pref as l_array
+			then
+				l_choice_widget := new_choice_widget (l_array)
+				l_choice_widget.change_actions.extend (agent on_preference_changed (?, l_choice_widget))
+				Result := l_choice_widget.change_item_widget
+				Result.set_data (l_choice_widget)
+			elseif attached {FONT_PREFERENCE} a_pref as l_font then
+				create l_font_widget.make_with_preference (l_font)
+				l_font_widget.change_actions.extend (agent on_preference_changed (?, l_font_widget))
+				l_font_widget.set_caller (Current)
+				Result := l_font_widget.change_item_widget
+				Result.set_data (l_font_widget)
+--				a_row.set_height (l_font.value.height.max (default_row_height))
+			elseif attached {COLOR_PREFERENCE} a_pref as l_color then
+				create l_color_widget.make_with_preference (l_color)
+				l_color_widget.change_actions.extend (agent on_preference_changed (?, l_color_widget))
+				l_color_widget.set_caller (Current)
+				Result := l_color_widget.change_item_widget
+				Result.set_data (l_color_widget)
+			elseif attached {SHORTCUT_PREFERENCE} a_pref as l_shortcut then
+				create l_shortcut_widget.make_with_preference (l_shortcut)
+				l_shortcut_widget.change_actions.extend (agent on_preference_changed (?, l_shortcut_widget))
+				Result := l_shortcut_widget.change_item_widget
+				Result.set_data (l_shortcut_widget)
+				l_shortcut.overridden_actions.wipe_out
+				l_shortcut.overridden_actions.extend (agent on_shortcut_overriden (l_shortcut_widget))
+				l_shortcut.modification_deny_actions.wipe_out
+				l_shortcut.modification_deny_actions.extend (agent on_shortcut_modification_denied (l_shortcut))
 			else
-				if a_pref.generating_preference_type.is_equal ("TEXT") then
-					create l_edit_widget.make_with_preference (a_pref)
-					l_edit_widget.change_actions.extend (agent on_preference_changed (?, l_edit_widget))
-					Result := l_edit_widget.change_item_widget
-					Result.set_data (l_edit_widget)
-				elseif a_pref.generating_preference_type.is_equal ("COMBO") then
-					l_array ?= a_pref
-					if l_array /= Void then
-						l_choice_widget := new_choice_widget (l_array)
-						l_choice_widget.change_actions.extend (agent on_preference_changed (?, l_choice_widget))
-						Result := l_choice_widget.change_item_widget
-						Result.set_data (l_choice_widget)
-					end
-				else
-					l_font ?= a_pref
-					if l_font /= Void then
-						create l_font_widget.make_with_preference (l_font)
-						l_font_widget.change_actions.extend (agent on_preference_changed (?, l_font_widget))
-						l_font_widget.set_caller (Current)
-						Result := l_font_widget.change_item_widget
-						Result.set_data (l_font_widget)
---						a_row.set_height (l_font.value.height.max (default_row_height))
-					else
-						l_color ?= a_pref
-						if l_color /= Void then
-							create l_color_widget.make_with_preference (l_color)
-							l_color_widget.change_actions.extend (agent on_preference_changed (?, l_color_widget))
-							l_color_widget.set_caller (Current)
-							Result := l_color_widget.change_item_widget
-							Result.set_data (l_color_widget)
-						else
-							l_shortcut ?= a_pref
-							if l_shortcut /= Void then
-								create l_shortcut_widget.make_with_preference (l_shortcut)
-								l_shortcut_widget.change_actions.extend (agent on_preference_changed (?, l_shortcut_widget))
-								Result := l_shortcut_widget.change_item_widget
-								Result.set_data (l_shortcut_widget)
-								l_shortcut.overridden_actions.wipe_out
-								l_shortcut.overridden_actions.extend (agent on_shortcut_overriden (l_shortcut_widget))
-								l_shortcut.modification_deny_actions.wipe_out
-								l_shortcut.modification_deny_actions.extend (agent on_shortcut_modification_denied (l_shortcut))
-							end
-						end
-					end
-				end
+				create Result
+				check should_not_occur: False end
 			end
 		end
 
@@ -1109,7 +1094,7 @@ feature {NONE} -- Implementation
 			-- Update the grid columns widths and borders depending on current display type
 		local
 			l_column: EV_GRID_COLUMN
-			l_preference: PREFERENCE
+			l_preference: detachable PREFERENCE
 			w: INTEGER
 			nb: INTEGER
 			cnb, c: INTEGER
@@ -1201,8 +1186,8 @@ feature {NONE} -- Implementation
 	update_status_bar
 			-- Update status bar
 		do
-			if not grid.is_tree_enabled and matches /= Void then
-				status_label.set_text (l_matches_of_total_preferences (matches.count, preferences.preferences.count))
+			if not grid.is_tree_enabled and attached matches as l_matches then
+				status_label.set_text (l_matches_of_total_preferences (l_matches.count, preferences.preferences.count))
 			else
 				status_label.set_text (l_count_preferences (preferences.preferences.count.out))
 			end
@@ -1213,13 +1198,15 @@ feature {NONE} -- Implementation
 			-- Resize all columns to it's contents.
 		local
 			col: EV_GRID_COLUMN
+			p: like grid
 		do
+			p := grid
 			col := grid.column (1)
-			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
 			col := grid.column (2)
-			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
 			col := grid.column (3)
-			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
 		end
 
 feature {NONE} -- Implementation
@@ -1252,10 +1239,10 @@ feature {NONE} -- Implementation
 			l_text: STRING_GENERAL
 		do
 			description_location.set_text (a_preference.name)
-			if a_preference.description /= Void then
+			if attached a_preference.description as d then
 					-- We know that descriptions of preference have been extacted out
 					-- from the config file.
-				l_text := try_to_translate (a_preference.description)
+				l_text := try_to_translate (d)
 			else
 				l_text := no_description_text
 			end
@@ -1394,18 +1381,22 @@ feature {NONE} -- Sorting
 
 feature {NONE} -- Filtering
 
-	update_matches_timeout: EV_TIMEOUT
+	update_matches_timeout: detachable EV_TIMEOUT
 
 	request_update_matches
 		require
 			in_flat_mode: not grid.is_tree_enabled
+		local
+			l_update_matches_timeout: like update_matches_timeout
 		do
 			cancel_delayed_update_matches
-			if update_matches_timeout = Void then
-				create update_matches_timeout
-				update_matches_timeout.actions.extend_kamikaze (agent delayed_update_matches)
+			l_update_matches_timeout := update_matches_timeout
+			if l_update_matches_timeout = Void then
+				create l_update_matches_timeout
+				update_matches_timeout := l_update_matches_timeout
+				l_update_matches_timeout.actions.extend_kamikaze (agent delayed_update_matches)
 			end
-			update_matches_timeout.set_interval (700)
+			l_update_matches_timeout.set_interval (700)
 		end
 
 	update_matches_requested: BOOLEAN
@@ -1415,8 +1406,8 @@ feature {NONE} -- Filtering
 
 	cancel_delayed_update_matches
 		do
-			if update_matches_timeout /= Void then
-				update_matches_timeout.destroy
+			if attached update_matches_timeout as l_update_matches_timeout then
+				l_update_matches_timeout.destroy
 				update_matches_timeout := Void
 			end
 		end
@@ -1437,7 +1428,8 @@ feature {NONE} -- Filtering
 
 			l_preference: PREFERENCE
 			l_prefs: LIST [PREFERENCE]
-			l_filter_engine: LX_DFA_WILDCARD
+			l_filter_engine: detachable LX_DFA_WILDCARD
+			l_matches: like matches
 		do
 			status_label.set_text (l_updating_the_view)
 			status_label.refresh_now
@@ -1449,7 +1441,8 @@ feature {NONE} -- Filtering
 				if l_match_text.is_empty then
 					matches := l_prefs
 				else
-					create {ARRAYED_LIST [PREFERENCE]} matches.make (l_prefs.count)
+					create {ARRAYED_LIST [PREFERENCE]} l_matches.make (l_prefs.count)
+					matches := l_matches
 					from
 						l_match_text := l_match_text.as_string_8
 						if l_match_text.item (1) /= '*' then
@@ -1474,10 +1467,10 @@ feature {NONE} -- Filtering
 							and l_filter_engine /= Void
 						then
 							if l_filter_engine.recognizes (s32.as_string_8) then
-								matches.extend (l_preference)
+								l_matches.extend (l_preference)
 							end
 						else
-							matches.extend (l_preference)
+							l_matches.extend (l_preference)
 						end
 						l_prefs.forth
 					end
@@ -1494,14 +1487,17 @@ feature {NONE} -- Filtering
 						if grid.row_count > 0 then
 							grid.remove_rows (1, grid.row_count)
 						end
-						grid.set_row_count_to (matches.count)
+						l_matches := matches
+						if l_matches /= Void then
+							grid.set_row_count_to (l_matches.count)
+						end
 						update_status_bar
 					end
 				end
 			end
 		end
 
-	matches: LIST [PREFERENCE]
+	matches: detachable LIST [PREFERENCE]
 
 	initialize_row_for_preference (a_row: EV_GRID_ROW; a_preference: PREFERENCE)
 			-- Initialize `a_row' with `a_preference'.
@@ -1524,35 +1520,39 @@ feature {NONE} -- Filtering
 		require
 			flat_mode: not grid.is_tree_enabled
 		local
-			l_preference: PREFERENCE
+			l_preference: detachable PREFERENCE
 			l_row: EV_GRID_ROW
+			l_item: detachable EV_GRID_ITEM
 		do
 			l_preference ?= grid.row (r).data
 			if l_preference = Void then
-				if matches.valid_index (r) then
+				if attached matches as l_matches and then l_matches.valid_index (r) then
 					--| grid indexes start at 1
 					--| list start at 1
-					l_preference := matches.i_th (r)
+					l_preference := l_matches.i_th (r)
 					l_row := grid.row (r)
 					initialize_row_for_preference (l_row, l_preference)
 				end
 			end
 
-			check l_preference /= Void end
-
 			if l_preference /= Void then
 				inspect c
 				when col_name_index then
-					Result := preference_name_column (l_preference)
+					l_item := preference_name_column (l_preference)
 				when col_type_index then
-					Result := preference_type_column (l_preference)
+					l_item := preference_type_column (l_preference)
 				when col_status_index then
-					Result := preference_status_column (l_preference)
+					l_item := preference_status_column (l_preference)
 				when col_value_index then
-					Result := preference_value_column (l_preference)
+					l_item := preference_value_column (l_preference)
 				else
 					-- Should not get here.
 				end
+			end
+			if l_item = Void then
+				create Result
+			else
+				Result := l_item
 			end
 		end
 
@@ -1561,10 +1561,10 @@ feature {NONE} -- Private attributes
 	show_full_preference_name: BOOLEAN
 			-- Show the full name of the preference in the list?
 
-	root_icon: EV_PIXMAP
+	root_icon: detachable EV_PIXMAP note option: stable attribute end
 			-- Icon for root node
 
-	folder_icon: EV_PIXMAP
+	folder_icon: detachable EV_PIXMAP note option: stable attribute end
 			-- Folder icon
 
 	default_font: EV_FONT
@@ -1603,36 +1603,32 @@ feature {NONE} -- Private attributes
 
 			bc := (create {EV_STOCK_COLORS}).Default_background_color
 
-			if icon_up = Void then
-				create icon_up.make_with_size (w, h)
-				icon_up.set_background_color (bc)
-				icon_up.clear
-				icon_up.fill_polygon (<<
-							create {EV_COORDINATE}.make_precise (0.2 * w, 0.2 * h),
-							create {EV_COORDINATE}.make_precise (0.8 * w, 0.2 * h),
-							create {EV_COORDINATE}.make_precise (0.5 * w, 0.6 * h)
-						>>)
-			end
-			if icon_down = Void then
-				create icon_down.make_with_size (w, h)
-				icon_down.set_background_color (bc)
-				icon_down.clear
-				icon_down.fill_polygon (<<
-					create {EV_COORDINATE}.make_precise (0.2 * w, 0.6 * h),
-					create {EV_COORDINATE}.make_precise (0.8 * w, 0.6 * h),
-					create {EV_COORDINATE}.make_precise (0.5 * w, 0.2 * h)
-						>>)
-			end
+			create icon_up.make_with_size (w, h)
+			icon_up.set_background_color (bc)
+			icon_up.clear
+			icon_up.fill_polygon (<<
+						create {EV_COORDINATE}.make_precise (0.2 * w, 0.2 * h),
+						create {EV_COORDINATE}.make_precise (0.8 * w, 0.2 * h),
+						create {EV_COORDINATE}.make_precise (0.5 * w, 0.6 * h)
+					>>)
+			create icon_down.make_with_size (w, h)
+			icon_down.set_background_color (bc)
+			icon_down.clear
+			icon_down.fill_polygon (<<
+				create {EV_COORDINATE}.make_precise (0.2 * w, 0.6 * h),
+				create {EV_COORDINATE}.make_precise (0.8 * w, 0.6 * h),
+				create {EV_COORDINATE}.make_precise (0.5 * w, 0.2 * h)
+					>>)
 		ensure
 			icon_up /= Void
 			icon_down /= Void
 		end
 
 	column_border_space: INTEGER = 3
-		-- Padding space for column content
+			-- Padding space for column content
 
 	default_row_height: INTEGER
-		-- Default row height
+			-- Default row height
 
 	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
 			-- Agent to be called when preference is changed outside	
@@ -1659,14 +1655,14 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class PREFERENCES_GRID_CONTROL

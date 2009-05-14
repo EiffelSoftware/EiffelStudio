@@ -14,14 +14,12 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			set_preference,
 			change_item_widget,
 			update_changes,
 			refresh
 		end
 
 create
-	make,
 	make_with_preference
 
 feature -- Access
@@ -36,15 +34,6 @@ feature -- Access
 		end
 
 feature -- Status Setting
-
-	set_preference (new_preference: like preference)
-			-- Set the preference.
-		do
-			Precursor (new_preference)
-			check
-				change_item_widget_created: change_item_widget /= Void
-			end
-		end
 
 	show
 			-- Show the widget in its editable state
@@ -63,23 +52,16 @@ feature {NONE} -- Command
 
 	update_preference
 			-- Updates preference.
-		local
-			int: INTEGER_PREFERENCE
-			str: STRING_PREFERENCE
-			list: ARRAY_PREFERENCE
 		do
-			int ?= preference
-			str ?= preference
-			list ?= preference
-			if int /= Void then
+			if attached {INTEGER_PREFERENCE} preference as int then
 				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
 					int.set_value (change_item_widget.text.to_integer)
 				else
 					int.set_value (0)
 				end
-			elseif str /= Void then
+			elseif attached {STRING_PREFERENCE} preference as str then
 				str.set_value (change_item_widget.text)
-			elseif list /= Void then
+			elseif attached {ARRAY_PREFERENCE} preference as list then
 				list.set_value_from_string (change_item_widget.text)
 			end
 		end
@@ -106,33 +88,27 @@ feature {NONE} -- Implementation
 		do
 			change_item_widget.activate
 			change_item_widget.set_text_validation_agent (agent validate_preference_text)
-			if not change_item_widget.text_field.text.is_empty then
-				change_item_widget.text_field.select_all
+			if attached change_item_widget.text_field as tf and then not tf.text.is_empty then
+				tf.select_all
 			end
 		end
 
     validate_preference_text (a_text: STRING_32): BOOLEAN
             -- Validate `a_text'.  Disallow input if text is not an integer and the preference
             -- is an INTEGER_PREFERENCE.
-        local
-            int: INTEGER_PREFERENCE
         do
-            Result := True
-            int ?= preference
-            if int /= Void and then not a_text.is_integer then
-                Result := False
-            end
+            Result := not attached {INTEGER_PREFERENCE} preference and then not a_text.is_integer
         end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

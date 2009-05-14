@@ -109,7 +109,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	value: detachable G
+	value: G
 			-- Actual value.
 		local
 			l_auto_preference: like auto_preference
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 
 feature {TYPED_PREFERENCE} -- Implementation	
 
-	previous_value: like value
+	previous_value: detachable like value
 			-- Value held before this one, if any.
 
 invariant

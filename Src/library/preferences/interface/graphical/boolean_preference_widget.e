@@ -18,7 +18,6 @@ inherit
 		end
 
 create
-	make,
 	make_with_preference
 
 feature -- Access
@@ -96,19 +95,22 @@ feature {NONE} -- Implementation
 
 	displayed_value (a_b: BOOLEAN): STRING_GENERAL
 			-- Displayed value according to `a_b'
+		local
+			s: detachable STRING_GENERAL
 		do
 			if a_b then
 				if displayed_true /= Void then
-					Result := displayed_true
+					s := displayed_true
 				end
 			else
 				if displayed_false /= Void then
-					Result := displayed_false
+					s := displayed_false
 				end
 			end
-			if Result = Void then
-				Result := a_b.out
+			if s = Void then
+				s := a_b.out
 			end
+			Result := s
 			if a_b then
 				last_displayed_true := Result
 			else
@@ -124,26 +126,26 @@ feature {NONE} -- Implementation
 			l_str: STRING_32
 		do
 			l_str := change_item_widget.text
-			if l_str.is_equal (last_displayed_true.as_string_32) then
+			if attached last_displayed_true as ldt and then l_str.is_equal (ldt.as_string_32) then
 				Result := True
 			else
 				Result := False
 			end
 		end
 
-	displayed_true, displayed_false: STRING_GENERAL
+	displayed_true, displayed_false: detachable STRING_GENERAL
 
-	last_displayed_true, last_displayed_false: STRING_GENERAL;
+	last_displayed_true, last_displayed_false: detachable STRING_GENERAL;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

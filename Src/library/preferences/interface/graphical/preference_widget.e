@@ -12,19 +12,14 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make
-			-- Create
-		do
-			create change_actions
-		end
-
 	make_with_preference (a_preference: like preference)
 			-- Make with values from `a_preference'.
 		require
 			preference_not_void: a_preference /= Void
 		do
-			make
+			create change_actions
 			set_preference (a_preference)
+			build_change_item_widget
 		ensure
 			has_preference: preference /= Void
 		end
@@ -34,7 +29,7 @@ feature -- Access
 	change_item_widget: EV_GRID_ITEM
 			-- Widget to change the item.
 
-	caller: PREFERENCE_VIEW
+	caller: detachable PREFERENCE_VIEW note option: stable attribute end
 			-- Caller view to which this preference widget currently belongs.
 
 	preference: PREFERENCE
@@ -53,10 +48,6 @@ feature -- Basic operations
 			preference_not_void: new_preference /= Void
 		do
 			preference := new_preference
-
-			if change_item_widget = Void then
-				build_change_item_widget
-			end
 		ensure
 			preference_set: preference = new_preference
 		end
@@ -74,8 +65,8 @@ feature -- Basic operations
 	destroy
 			-- Destroy all graphical objects.
 		do
-			if change_item_widget /= Void then
-				change_item_widget.destroy
+			if attached change_item_widget as w then
+				w.destroy
 			end
 		end
 
@@ -118,14 +109,14 @@ invariant
 	has_widget: preference /= Void implies change_item_widget /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

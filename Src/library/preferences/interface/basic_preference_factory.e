@@ -92,22 +92,22 @@ feature -- Access
 		end
 
 	new_boolean_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: BOOLEAN): BOOLEAN_PREFERENCE
-		obsolete "[2006-01-13] use new_boolean_preference_value."
+		obsolete "[060113] use new_boolean_preference_value."
 		do
 			Result := new_boolean_preference_value (a_manager, a_name, a_fallback_value)
 		end
 	new_integer_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: INTEGER): INTEGER_PREFERENCE
-		obsolete "[2006-01-13] use new_integer_preference_value."
+		obsolete "[060113] use new_integer_preference_value."
 		do
 			Result := new_integer_preference_value (a_manager, a_name, a_fallback_value)
 		end
 	new_string_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: STRING): STRING_PREFERENCE
-		obsolete "[2006-01-13] use new_string_preference_value."
+		obsolete "[060113] use new_string_preference_value."
 		do
 			Result := new_string_preference_value (a_manager, a_name, a_fallback_value)
 		end
 	new_array_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING]): ARRAY_PREFERENCE
-		obsolete "[2006-01-13] use new_array_preference_value."
+		obsolete "[060113] use new_array_preference_value."
 		do
 			Result := new_array_preference_value (a_manager, a_name, a_fallback_value)
 		end

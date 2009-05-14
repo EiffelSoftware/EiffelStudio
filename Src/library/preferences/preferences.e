@@ -296,7 +296,7 @@ feature -- Preference
 		end
 
 	get_resource (a_name: STRING): PREFERENCE
-		obsolete "[2006-01-13] use get_preference instead of get_resource"
+		obsolete "[060113] use get_preference instead of get_resource"
 		do
 			Result := get_preference (a_name)
 		end
@@ -315,7 +315,7 @@ feature -- Preference
 		end
 
 	get_resource_value_direct (a_name: STRING): like get_preference_value_direct
-		obsolete "[2006-01-13] use get_preference_value_direct instead of get_resource_value_direct"
+		obsolete "[060113] use get_preference_value_direct instead of get_resource_value_direct"
 		do
 			Result := get_preference_value_direct (a_name)
 		end
@@ -338,7 +338,7 @@ feature -- Preference
 		end
 
 	has_resource (a_name: STRING): BOOLEAN
-		obsolete "[2006-01-13] use has_preference instead of has_resource"
+		obsolete "[060113] use has_preference instead of has_resource"
 		do
 			Result := has_preference (a_name)
 		end
@@ -373,13 +373,13 @@ feature -- Preference
 		end
 
 	save_resource (a_preference: PREFERENCE)
-		obsolete "[2006-01-13] use save_preference instead of save_resource"
+		obsolete "[060113] use save_preference instead of save_resource"
 		do
 			save_preference (a_preference)
 		end
 
 	save_resources
-		obsolete "[2006-01-13] use save_preferences instead of save_resources"
+		obsolete "[060113] use save_preferences instead of save_resources"
 		do
 			save_preferences
 		end
@@ -426,7 +426,7 @@ feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_ST
 			-- Preferences part of Current.
 
 	resources: like preferences
-		obsolete "[2006-01-13] use preferences instead of resources"
+		obsolete "[060113] use preferences instead of resources"
 		do
 			Result := preferences
 		end

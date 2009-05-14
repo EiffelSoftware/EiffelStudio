@@ -23,7 +23,6 @@ inherit
 		end
 
 create
-	make,
 	make_with_preference
 
 feature -- Access
@@ -37,10 +36,10 @@ feature -- Access
 	preference: IDENTIFIED_FONT_PREFERENCE
 			-- Actual preference.
 
-	last_selected_value: EV_IDENTIFIED_FONT
+	last_selected_value: detachable EV_IDENTIFIED_FONT
 			-- value last selected by user.
 
-	change_item_widget: ev_grid_label_item
+	change_item_widget: EV_GRID_LABEL_ITEM
 			-- font change label.
 
 feature {preference_view} -- commands
@@ -130,7 +129,7 @@ feature {NONE} -- Implementation
 			-- Default font height in points (for display only)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -143,22 +142,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IDENTIFIED_FONT_PREFERENCE_WIDGET

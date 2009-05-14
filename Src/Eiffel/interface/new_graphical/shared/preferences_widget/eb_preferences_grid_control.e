@@ -98,7 +98,6 @@ feature -- Access
 			set_root_icon (icon_pixmaps.tool_preferences_icon)
 			set_folder_icon (icon_pixmaps.folder_preference_icon)
 			Precursor {PREFERENCES_GRID_CONTROL} (a_preferences)
-			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 		end
 
@@ -106,72 +105,37 @@ feature -- Access
 	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
 
 	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM
-			--
-		local
-			l_bp: BOOLEAN_PREFERENCE
-			l_sp: STRING_PREFERENCE
-			l_ip: INTEGER_PREFERENCE
-			l_cp: COLOR_PREFERENCE
-			l_lp: ARRAY_PREFERENCE
-			l_fp: FONT_PREFERENCE
-			l_ifp: IDENTIFIED_FONT_PREFERENCE
-			l_scp: SHORTCUT_PREFERENCE
 		do
 			create Result
 			Result.set_text (build_preference_name_to_display (a_pref))
 			if Result /= Void then
-				l_bp ?= a_pref
-				if l_bp = Void then
-					l_ip ?= a_pref
-					if l_ip = Void then
-						l_sp ?= a_pref
-						if l_sp = Void then
-							l_cp ?= a_pref
-							if l_cp = Void then
-								l_fp ?= a_pref
-								if l_fp = Void then
-									l_ifp ?= a_pref
-									if l_ifp = Void then
-										l_lp ?= a_pref
-										if l_lp = Void then
-											l_scp ?= a_pref
-											if l_scp /= Void then
-												Result.set_pixmap (icon_pixmaps.preference_shortcut_icon)
-											else
-												check False end
-											end
-										else
-											Result.set_pixmap (icon_pixmaps.preference_list_icon)
-										end
-									else
-										Result.set_pixmap (icon_pixmaps.preference_font_icon)
-									end
-								else
-									Result.set_pixmap (icon_pixmaps.preference_font_icon)
-								end
-							else
-								Result.set_pixmap (icon_pixmaps.preference_color_icon)
-							end
-						else
-							Result.set_pixmap (icon_pixmaps.preference_string_icon)
-						end
-					else
-						Result.set_pixmap (icon_pixmaps.preference_numerical_icon)
-					end
-				else
+				if attached {BOOLEAN_PREFERENCE} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_boolean_icon)
+				elseif attached {INTEGER_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_numerical_icon)
+				elseif attached {STRING_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_string_icon)
+				elseif attached {COLOR_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_color_icon)
+				elseif attached {FONT_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_font_icon)
+				elseif attached {IDENTIFIED_FONT_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_font_icon)
+				elseif attached {ARRAY_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_list_icon)
+				elseif attached {SHORTCUT_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_shortcut_icon)
+				else
+					check False end
 				end
 			end
 		end
 
 	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM
-			--
 		local
-			l_id_font: IDENTIFIED_FONT_PREFERENCE
 			l_font_widget: IDENTIFIED_FONT_PREFERENCE_WIDGET
 		do
-			l_id_font ?= a_pref
-			if l_id_font /= Void then
+			if attached {IDENTIFIED_FONT_PREFERENCE} a_pref as l_id_font then
 				create l_font_widget.make_with_preference (l_id_font)
 				l_font_widget.change_actions.extend (agent on_preference_changed (?, l_font_widget))
 				l_font_widget.set_caller (Current)
@@ -186,36 +150,36 @@ feature -- Access
 
 feature {NONE} -- Names
 
-	l_name: STRING_GENERAL							do Result := names.l_name								end
+	l_name: STRING_GENERAL							do Result := names.l_name							end
 	l_literal_value: STRING_GENERAL					do Result := names.l_Literal_value					end
-	l_status: STRING_GENERAL							do Result := names.l_status							end
-	l_type: STRING_GENERAL							do Result := names.l_type								end
-	l_request_restart: STRING_GENERAL				do Result := names.l_request_restart					end
-	p_default_value: STRING_GENERAL					do Result := names.l_default							end
-	user_value: STRING_GENERAL						do Result := names.l_user_set							end
-	auto_value: STRING_GENERAL						do Result := names.l_auto								end
-	no_description_text: STRING_GENERAL				do Result := names.l_no_description_text				end
+	l_status: STRING_GENERAL						do Result := names.l_status							end
+	l_type: STRING_GENERAL							do Result := names.l_type							end
+	l_request_restart: STRING_GENERAL				do Result := names.l_request_restart				end
+	p_default_value: STRING_GENERAL					do Result := names.l_default						end
+	user_value: STRING_GENERAL						do Result := names.l_user_set						end
+	auto_value: STRING_GENERAL						do Result := names.l_auto							end
+	no_description_text: STRING_GENERAL				do Result := names.l_no_description_text			end
 	restore_preference_string: STRING_GENERAL		do Result := names.l_restore_preference_string		end
-	shortcut_modification_denied: STRING_GENERAL		do Result := names.l_shortcut_modification_denied 	end
+	shortcut_modification_denied: STRING_GENERAL	do Result := names.l_shortcut_modification_denied 	end
 	w_Preferences_delayed_resources: STRING_GENERAL	do Result := names.l_preferences_delayed_resources	end
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 
 	l_tree_view: STRING_GENERAL						do Result := names.l_Tree_view						end
-	f_switch_to_tree_view: STRING_GENERAL 			do Result := names.f_switch_to_tree_view				end
+	f_switch_to_tree_view: STRING_GENERAL 			do Result := names.f_switch_to_tree_view			end
 	l_flat_view: STRING_GENERAL						do Result := names.l_Flat_view 						end
-	f_switch_to_flat_view: STRING_GENERAL 			do Result := names.f_switch_to_flat_view				end
-	l_updating_the_view: STRING_GENERAL 				do Result := names.l_update_the_view					end
-	l_filter: STRING_GENERAL							do Result := names.l_filter 							end
-	l_tree_or_flat_view: STRING_GENERAL					do Result := names.l_tree_or_flat_view 				end
-	l_restore_defaults: STRING_GENERAL 					do Result := names.l_restore_defaults 				end
-	l_restore_default: STRING_GENERAL					do Result := names.l_restore_default 					end
-	l_no_default_value: STRING_GENERAL 					do Result := names.l_no_default_value 				end
-	l_close: STRING_GENERAL								do Result := names.b_close 							end
-	l_display_window: STRING_GENERAL 					do Result := names.l_display_window 					end
-	l_description: STRING_GENERAL						do Result := names.l_description 						end
-	l_building_flat_view: STRING_GENERAL				do Result := names.l_building_flat_view 				end
-	l_building_tree_view: STRING_GENERAL				do Result := names.l_building_tree_view 				end
+	f_switch_to_flat_view: STRING_GENERAL 			do Result := names.f_switch_to_flat_view			end
+	l_updating_the_view: STRING_GENERAL 			do Result := names.l_update_the_view				end
+	l_filter: STRING_GENERAL						do Result := names.l_filter 						end
+	l_tree_or_flat_view: STRING_GENERAL				do Result := names.l_tree_or_flat_view 				end
+	l_restore_defaults: STRING_GENERAL 				do Result := names.l_restore_defaults 				end
+	l_restore_default: STRING_GENERAL				do Result := names.l_restore_default 				end
+	l_no_default_value: STRING_GENERAL 				do Result := names.l_no_default_value 				end
+	l_close: STRING_GENERAL							do Result := names.b_close 							end
+	l_display_window: STRING_GENERAL 				do Result := names.l_display_window 				end
+	l_description: STRING_GENERAL					do Result := names.l_description 					end
+	l_building_flat_view: STRING_GENERAL			do Result := names.l_building_flat_view 			end
+	l_building_tree_view: STRING_GENERAL			do Result := names.l_building_tree_view 			end
 
 	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL
 		do
@@ -365,7 +329,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -378,22 +342,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PREFERENCES_WINDOW

@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib mswsock.lib"
+				AdditionalDependencies="ws2_32.lib"
 				OutputFile=".\Debug\mod_xebra.so"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

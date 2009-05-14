@@ -17,6 +17,9 @@ inherit
 create
 	make
 
+create {CONF_NOTE_ELEMENT}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make (a_element_name: like element_name)

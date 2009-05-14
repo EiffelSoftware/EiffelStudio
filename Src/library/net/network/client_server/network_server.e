@@ -36,22 +36,26 @@ feature -- Access
 	cleanup
 			-- Clean close of server.
 		do
-			in.close
+			if not in.is_closed then
+				in.close
+			end
 		end;
 
 	receive
 			-- Receive activity of server.
-		local
-			l_accepted: like outflow
 		do
-			in.accept;
-			l_accepted := in.accepted;
-			if l_accepted /= Void then
-				received := l_accepted.retrieved
+			in.accept
+			if attached {like outflow} in.accepted as l_outflow then
+				outflow := l_outflow
+				if attached {like received} l_outflow.retrieved as l_received then
+					received := l_received
+				else
+					received := Void
+				end
 			else
+				outflow := Void
 				received := Void
 			end
-			outflow := l_accepted
 		end;
 
 	close

@@ -28,6 +28,7 @@ feature {NONE} -- Initialize
 			--
 			-- `a_api': The API to share.
 		require
+			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
 			api := a_api
@@ -75,13 +76,14 @@ feature -- Query
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.
-			-- `Result': A function/variable pointer of null if the function/variable was not found.
+			-- `Result': A function/variable pointer or `default_pointer' if the function/variable was not
+			--           found.
 		require
 			is_interface_usable: is_interface_usable
-			a_api_name_attached: a_api_name /= Void
+			a_api_name_attached: attached a_api_name
 			not_a_api_name_is_empty: not a_api_name.is_empty
 		do
-			Result := api_loader.api_pointer_with_raise (module_handle, a_api_name)
+			Result := api.api_pointer (a_api_name)
 		ensure
 			not_result_is_null: Result /= default_pointer
 		end
@@ -94,10 +96,12 @@ feature {NONE} -- Externals
 			api_is_interface_usable: api.is_interface_usable
 		do
 			Result := api.module_handle
+		ensure
+			not_result_is_null: Result /= default_pointer
 		end
 
 invariant
-	api_attached: api /= Void
+	api_attached: attached api
 	api_is_interface_usable: is_interface_usable implies api.is_interface_usable
 
 ;note

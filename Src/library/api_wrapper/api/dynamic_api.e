@@ -62,7 +62,9 @@ feature {NONE} -- Clean up
 	frozen dispose
 			-- <Precursor>
 		do
-			unload
+			if not is_in_final_collect then
+				unload
+			end
 		end
 
 feature {NONE} -- Clean up
@@ -77,21 +79,37 @@ feature {NONE} -- Clean up
 			module_handle_unchanged: module_handle = old module_handle
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
-	module_name: STRING
+	module_name: READABLE_STRING_8
 			-- The library module name, without an extension.
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
 		end
 
-	minimum_version: detachable STRING
+feature {NONE} -- Access
+
+	minimum_version: detachable READABLE_STRING_8
 			-- The library module's minimum supported version.
 		deferred
 		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+			not_result_is_empty: attached Result implies not Result.is_empty
+		end
+
+feature {NONE} -- Access: cache
+
+	api_pointer_cache: HASH_TABLE [HASH_TABLE [POINTER, READABLE_STRING_8], POINTER]
+			-- Cached API pointer information for the module.
+			--| Retain once-per-thread for thread-safety of cache.
+		require
+			is_interface_usable: is_interface_usable
+		once
+			create Result.make (3)
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = api_pointer_cache
 		end
 
 feature -- Status report
@@ -104,19 +122,64 @@ feature -- Status report
 			not_module_handle_is_null: Result implies module_handle /= default_pointer
 		end
 
+	is_thread_safe: BOOLEAN
+			-- Indicates the thread-safety status of the wrapped library.
+			--
+			--|If the thread-saftey status is unknown then return False.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
+		end
+
 feature -- Query
 
 	api_pointer (a_api_name: READABLE_STRING_8): POINTER
 			-- Retrieve an API function/variable pointer given an API name.
 			--
 			-- `a_api_name': An API function or variable name.
-			-- `Result': A function/variable pointer of null if the function/variable was not found.
+			-- `Result': A function/variable pointer or `default_pointer' if the function/variable was not
+			--           found.
 		require
 			is_interface_usable: is_interface_usable
-			a_api_name_attached: a_api_name /= Void
+			a_api_name_attached: attached a_api_name
 			not_a_api_name_is_empty: not a_api_name.is_empty
+		local
+			l_handle: like module_handle
+			l_cache: like api_pointer_cache
+			l_api_table: detachable HASH_TABLE [POINTER, READABLE_STRING_8]
+			l_api_name_key: STRING
+			l_cached: BOOLEAN
 		do
-			Result := api_loader.api_pointer_with_raise (module_handle, a_api_name)
+			l_handle := module_handle
+			l_cache := api_pointer_cache
+			if
+				l_cache.has (l_handle) and then
+				attached l_cache.item (l_handle) as l_table
+			then
+				l_api_table := l_table
+				if l_table.has (a_api_name) then
+					Result := l_table.item (a_api_name)
+						-- Using status flag in case the API does not exist.
+					l_cached := True
+				end
+			else
+					-- No cached table, created for caching after the pointer has been fetched.
+				create l_api_table.make (1)
+				l_cache.put (l_api_table, l_handle)
+			end
+
+			if not l_cached then
+					-- No cached version, retrieve it.
+				Result := api_loader.api_pointer_with_raise (module_handle, a_api_name)
+
+					-- Add the cache.
+					-- Note: If the above raises and exception then this code will not be executed.
+					--       This is safe because we want the exception to be raised everytime.
+				check l_api_table_attached: attached l_api_table end
+				l_api_table.put (Result, create {STRING_8}.make_from_string (a_api_name))
+			end
 		ensure
 			not_result_is_null: Result /= default_pointer
 		end
@@ -131,12 +194,12 @@ feature {NONE} -- Basic operations
 			--
 			-- `a_name': The name of the dynamic library.
 			-- `a_version': The minimum version of the library, or Void to load any version.
-			-- `Result': A module handle pointer of the loaded library or null if the library could
-			--           not be loaded.
+			-- `Result': A module handle pointer of the loaded library or `default_pointer' if the library
+			--           could not be loaded.
 		require
-			a_name_attached: a_name /= Void
+			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
-			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
+			not_a_version_is_empty: attached a_version implies not a_version.is_empty
 		do
 			if api_loader.is_dynamic_library_supported then
 				Result := api_loader.load_library (a_name, a_version)

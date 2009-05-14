@@ -32,7 +32,7 @@ feature -- Query
 		require
 			is_dynamic_library_supported: is_dynamic_library_supported
 			not_a_hnd_is_null: a_hnd /= default_pointer
-			a_api_name_attached: a_api_name /= Void
+			a_api_name_attached: attached a_api_name
 			not_a_api_name_is_empty: not a_api_name.is_empty
 		deferred
 		end
@@ -47,7 +47,7 @@ feature -- Query
 		require
 			is_dynamic_library_supported: is_dynamic_library_supported
 			not_a_hnd_is_null: a_hnd /= default_pointer
-			a_api_name_attached: a_api_name /= Void
+			a_api_name_attached: attached a_api_name
 			not_a_api_name_is_empty: not a_api_name.is_empty
 		local
 			l_exception: DYNAMIC_API_UNAVAILABLE_EXCEPTION
@@ -71,9 +71,9 @@ feature -- Basic operations
 			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
 		require
 			is_dynamic_library_supported: is_dynamic_library_supported
-			a_name_attached: a_name /= Void
+			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
-			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
+			not_a_version_is_empty: attached a_version implies not a_version.is_empty
 		deferred
 		end
 
@@ -84,7 +84,7 @@ feature -- Basic operations
 			-- `Result': A pointer to the loaded library module, or `default_pointer' if the library could not be loaded.
 		require
 			is_dynamic_library_supported: is_dynamic_library_supported
-			a_path_attached: a_path /= Void
+			a_path_attached: attached a_path
 			not_a_path_is_empty: not a_path.is_empty
 		deferred
 		end

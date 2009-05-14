@@ -55,12 +55,17 @@ feature {NONE} -- Internal Status setting
 		local
 			l_cursor: CURSOR
 			l_config: G
+			l_error: BOOLEAN
 		do
+			l_error := False
 			create l_config.make_empty
 			l_cursor := a_properties.cursor
-			from a_properties.start until a_properties.after loop
+			from a_properties.start until a_properties.after or l_error loop
 				if a_properties.item.name /= Void and a_properties.item.value /= Void  then
 					process_property (a_properties.item, l_config)
+				else
+					l_error := True
+					error_manager.add_error (create {XERROR_CONFIG_ERROR}.make , False)
 				end
 				a_properties.forth
 			end

@@ -1,22 +1,18 @@
 note
 	description: "[
-		Parses arguments to launch a webapp.
+		Parses arguments to launch xebra server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
-	XWA_ARGUMENT_PARSER
+	XS_ARGUMENT_PARSER
 
 inherit
 	ARGUMENT_SINGLE_PARSER
 		rename
 			make as make_single_parser
-		export
-			{NONE} all
-			{ANY} execute, has_executed, is_successful
 		end
 
 create
@@ -47,17 +43,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_interactive: BOOLEAN
-		--
-		require
-			is_successful: is_successful
-		do
-			Result := has_option (interactive_option_switch)
-		end
+
 
 feature {NONE} -- Access: Usage
 
-	name: STRING = "Xebra Web Application"
+	name: STRING = "Xebra Web Application Server"
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "config_filename"
@@ -89,7 +79,6 @@ feature {NONE} -- Access: Usage
 
 feature {NONE} -- Switches
 
-	interactive_option_switch: STRING = "i|interactive"
+
 
 end
-

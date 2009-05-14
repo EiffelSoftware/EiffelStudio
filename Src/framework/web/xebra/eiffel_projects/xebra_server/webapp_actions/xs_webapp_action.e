@@ -107,6 +107,45 @@ feature  -- Status report internal
 			create l_file.make (a_filename)
 			Result := l_file.exists
 		end
+		
+	file_is_newer (a_file, a_dir, a_ext1, a_ext2: STRING): BOOLEAN
+				-- Returns True iff there is a file in a_dir with a_ext1 or a_ext2
+				-- that is newer than a_file or a_file does not exist
+		require
+			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
+			not_a_dir_is_detached_or_empty: a_dir /= Void and then not a_dir.is_empty
+			not_a_ext1_is_detached_or_empty: a_ext1 /= Void and then not a_ext1.is_empty
+			not_a_ext2_is_detached_or_empty: a_ext2 /= Void and then not a_ext2.is_empty
+		local
+			l_dir: DIRECTORY
+			l_files: LIST [STRING]
+			l_file: RAW_FILE
+			l_exec_access_date: INTEGER
+		do
+			Result := False
+			if file_exists (a_file) then
+				l_exec_access_date := (create {RAW_FILE}.make (a_file)).date
+				create l_dir.make (a_dir)
+				l_files := l_dir.linear_representation
+				from
+					l_files.start
+				until
+					l_files.after or Result
+				loop
+					if l_files.item_for_iteration.ends_with (a_ext1) or l_files.item_for_iteration.ends_with (a_ext2) then
+						create l_file.make (a_dir + "/" + l_files.item_for_iteration)
+						if (l_file.date > l_exec_access_date) then
+							Result := True
+							o.dprint ("File '" + l_file.name + "' is newer (" + l_file.date.out + ")  than  (" + l_exec_access_date.out + ")",5)
+						end
+					end
+					l_files.forth
+				end
+			else
+				Result := True
+				o.dprint ("File '" + a_file + "' does not exist.", 5)
+			end
+		end
 
 feature -- Status setting
 

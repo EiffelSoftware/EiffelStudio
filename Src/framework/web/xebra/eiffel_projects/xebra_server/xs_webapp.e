@@ -117,7 +117,16 @@ feature -- Status Setting
 				shutdown_action.execute.do_nothing;
 				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
 			end
-			send_action.stop
+			run_action.stop
+		end
+		
+	shutdown_all
+			-- Shuts the application down and all process (compile and translate)
+		do
+			if run_action.is_running then
+				shutdown_action.execute.do_nothing;
+				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
+			end
 			run_action.stop
 			compile_action.stop
 			translate_action.stop

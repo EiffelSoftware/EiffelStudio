@@ -51,6 +51,25 @@ feature -- Status report
 			-- <Precursor>
 			-- Check if the webapps has to be (re)translated
 			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
+			-- Returns True iff there is a *.xeb file in app_dir which is newer than app_dir/g_name_application.e
+		do
+			Result := file_is_newer (app_dir + "/" + "g_" + webapp.config.name.out + "_application.e",
+									app_dir,
+									".xeb",
+									".xeb")
+
+			if Result then
+				o.dprint ("Translating is necessary", 5)
+			else
+				o.dprint ("Translating is not necessary", 5)
+			end
+		end
+
+
+	is_necessary_obsolete: BOOLEAN
+			-- <Precursor>
+			-- Check if the webapps has to be (re)translated
+			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
 			-- Returns True iff for every *.xeb in app_dir a corresponding g_* is older or does not exist.
 		local
 			l_dir: DIRECTORY

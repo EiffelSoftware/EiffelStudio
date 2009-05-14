@@ -2,10 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_server" uuid="DC7DD566-3701-432A-895B-5D144715CB95" readonly="false">
 	<target name="xebra_server">
 		<root class="XS_APPLICATION" feature="make"/>
-		<option trace="false" full_class_checking="true" cat_call_detection="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option trace="false" full_class_checking="false" cat_call_detection="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$ISE_LIBRARY\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities.ecf"/>

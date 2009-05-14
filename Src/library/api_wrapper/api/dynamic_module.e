@@ -1,6 +1,6 @@
 note
 	description: "[
-		An exception to represent an unavailable dynamic API function or variable.
+		Represents raw access to a dynamic API module.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,58 +8,86 @@ note
 	revision: "$Revision$"
 
 class
-	DYNAMIC_API_UNAVAILABLE_EXCEPTION
+	DYNAMIC_MODULE
 
 inherit
-	DEVELOPER_EXCEPTION
-		redefine
-			internal_meaning
+	DYNAMIC_API
+		rename
+			make as make_api
 		end
 
 create
-	make
+	make,
+	make_with_version
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialize
 
 	make (a_name: READABLE_STRING_8)
-			-- Initializes a API unavailable exception with an API function or variable name.
+			-- Initialize the dynamic module.
 			--
-			-- `a_name': An API function or variable name.
+			-- `a_name': Name of the module to load, minus any file extension.
 		require
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			create api_feature_name.make_from_string (a_name)
-			set_message (once "dynamic feature unavailable")
+			create module_name.make_from_string (a_name)
+			make_api
 		ensure
-			api_feature_name_set: api_feature_name.same_string (a_name)
+			module_name_set: module_name.same_string (a_name)
+		end
+
+	make_with_version (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8)
+			-- Initialize the dynamic module with a specific version string.
+			--
+			-- `a_name': Name of the module to load, minus any file extension.
+			-- `a_version': A minumum version of the library to load.
+		require
+			a_name_attached: attached a_name
+			not_a_name_is_empty: not a_name.is_empty
+			a_version_attached: attached a_version
+			not_a_version_is_empty: not a_version.is_empty
+		do
+			create module_name.make_from_string (a_name)
+			create minimum_version.make_from_string (a_version)
+		ensure
+			module_name_set: module_name.same_string (a_name)
+			minimum_version_attached: attached minimum_version
+			minimum_version_set: minimum_version.same_string (a_version)
+		end
+
+	initialize
+			-- <Precursor>
+		do
+		end
+
+feature {NONE} -- Clean up
+
+	clean_up
+			-- <Precursor>
+		do
 		end
 
 feature -- Access
 
-	api_feature_name: IMMUTABLE_STRING_8
-			-- The API feature name.
-
-feature {NONE} -- Access
-
-	internal_meaning: STRING
+	module_name: IMMUTABLE_STRING_8
 			-- <Precursor>
-		do
-			create Result.make (40)
-			Result.append ("The API function or variable `")
-			Result.append_string_general (api_feature_name)
-			Result.append ("' is not available.")
-		ensure then
-			result_attached: attached Result
-			not_result_is_empty: not Result.is_empty
+
+	minimum_version: detachable IMMUTABLE_STRING_8
+			-- <Precursor>
+		note
+			option: stable
+		attribute
 		end
 
+feature -- Status report
+
+	is_thread_safe: BOOLEAN = False
+			-- <Precursor>
+
 invariant
-	api_feature_name_attached: attached api_feature_name
-	not_api_feature_name: not api_feature_name.is_empty
-	message_attached: attached message /= Void
-	not_message_is_empty: attached message as l_msg and then
-		not l_msg.is_empty
+	module_name_attached: attached module_name
+	not_module_name_is_empty: not module_name.is_empty
+	not_minimum_version_is_empty: attached minimum_version implies not minimum_version.is_empty
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

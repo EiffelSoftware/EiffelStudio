@@ -80,7 +80,7 @@ feature -- Basic functionality
 
 				-- Generate the {APPLICATION} class
 			l_filename := a_path.twin
-			l_filename.set_file_name ("application.e")
+			l_filename.set_file_name (Application_name.as_lower +  ".e")
 			create file.make (l_filename)
 			if not file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -92,8 +92,8 @@ feature -- Basic functionality
 
 				-- Create file.make_open_write (a_path + "application.e")
 			create buf.make (file)
-			create application_class.make ("APPLICATION")
-			application_class.set_inherit ("KL_SHARED_ARGUMENTS")
+			create application_class.make (Application_name.as_upper)
+			application_class.set_inherit ("KL_SHARED_ARGUMENTS%N%TXU_SHARED_OUTPUTTER")
 			application_class.set_constructor_name ("make")
 			application_class.add_feature (build_constructor_for_application)
 			application_class.serialize (buf)
@@ -124,6 +124,8 @@ feature {NONE} -- Implementation
 			create Result.make ("make")
 			Result.append_local ("l_path", "STRING")
 			Result.append_local ("l_controller_table", "HASH_TABLE [STRING, STRING]")
+			Result.append_expression ("o.set_name (%"XEBSRVLGEN%")")
+			Result.append_expression ("o.set_debug_level (10)")
 			Result.append_expression ("if  Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
 			Result.append_expression ("else")
@@ -167,11 +169,13 @@ feature -- Constants
 	Generator_Prefix: STRING = "g_"
 		-- Prefix of generated classes
 
+	Application_name: STRING = "XS_GEN_APPLICATION"
+
 	servlet_gen_ecf: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
-		<root class="APPLICATION" feature="make"/>
+		<root class="XS_GEN_APPLICATION" feature="make"/>
 		<option warning="true" syntax="transitional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -179,6 +183,7 @@ feature -- Constants
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
 		<library name="xebra_taglibrary_form" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form-voidunsafe.ecf"/>
 		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 		<cluster name="servlet_gen" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

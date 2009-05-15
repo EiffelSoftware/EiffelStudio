@@ -22,12 +22,11 @@ create
 
 feature
 
-	soc1, soc2: UNIX_STREAM_SOCKET
-
 	make
 			-- Accept communication with client and exchange messages
 		local
 			count: INTEGER
+			soc1: detachable UNIX_STREAM_SOCKET
 		do
 			create soc1.make_server ("/tmp/here")
 			from
@@ -36,34 +35,36 @@ feature
 			until
 				count = 3
 			loop
-				process -- See below
+				process (soc1)-- See below
 				count := count + 1
 			end
 			soc1.cleanup
 		rescue
-			soc1.cleanup
+			if soc1 /= Void then
+				soc1.cleanup
+			end
 		end
 
-	process
+	process (soc1: UNIX_STREAM_SOCKET)
 			-- Receive a message, extend it, and send it back.
-		local
-			our_new_list: OUR_MESSAGE
 		do
 			soc1.accept
-			soc2 ?= soc1.accepted
-			our_new_list ?= retrieved (soc2)
-			from
-				our_new_list.start
-			until
-				our_new_list.after
-			loop
-				io.putstring (our_new_list.item)
-				our_new_list.forth
-				io.new_line
+			if attached soc1.accepted as soc2 then
+				if attached {OUR_MESSAGE} retrieved (soc2) as our_new_list then
+					from
+						our_new_list.start
+					until
+						our_new_list.after
+					loop
+						io.putstring (our_new_list.item)
+						our_new_list.forth
+						io.new_line
+					end
+					our_new_list.extend ("%N I'm back.%N")
+					our_new_list.independent_store (soc2)
+				end
+				soc2.close
 			end
-			our_new_list.extend ("%N I'm back.%N")
-			our_new_list.general_store (soc2)
-			soc2.close
 		end
 
 note

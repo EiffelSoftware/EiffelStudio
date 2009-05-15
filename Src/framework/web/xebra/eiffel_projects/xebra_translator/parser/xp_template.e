@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_TEMPLATE}.
+		Represents a xeb file.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

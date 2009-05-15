@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_HTML_CALLBACK_STATE}.
+		Callback state for in the state of a xebra tag. @see {XP_HTML_CALLBACK_STATE}
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

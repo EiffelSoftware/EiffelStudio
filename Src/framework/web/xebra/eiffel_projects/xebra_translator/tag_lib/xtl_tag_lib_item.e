@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XTL_TAG_LIB_ITEM}."
+	description: "[
+		Abstraction for all TAG_LIB related classes
+	]"
 	author: "sandro"
 	date: "$Date$"
 	revision: "$Revision$"

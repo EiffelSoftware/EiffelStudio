@@ -119,7 +119,6 @@ feature -- Basic Functionality
 			create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
 			l_application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
 			l_application_class.set_constructor_name ("make")
-			l_application_class.add_feature (generate_feature_for_name)
 			l_application_class.add_feature (generate_contructor_for_application)
 			l_application_class.serialize (l_buf)
 			l_file.close
@@ -152,15 +151,6 @@ feature {NONE} -- Implementation
 			create Result.make ("global_state: DEMOAPPLICATION_GLOBAL_STATE")
 			Result.set_once
 			Result.append_expression ("create Result.make")
-		ensure
-			result_attached: attached Result
-		end
-
-	generate_feature_for_name: XEL_FEATURE_ELEMENT
-			-- Builds the name access
-		do
-			create Result.make ("name: STRING")
-			Result.append_expression ("Result := %"" + webapp_name.as_lower + "%"")
 		ensure
 			result_attached: attached Result
 		end

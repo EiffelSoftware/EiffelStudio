@@ -1,6 +1,6 @@
 note
 	description: "[
-		Replaces region tags of a template by the implementation stored in `regions'.
+		Replaces {XP_REGION_TAG_ELEMENT} of a template by the implementation stored in `regions'.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

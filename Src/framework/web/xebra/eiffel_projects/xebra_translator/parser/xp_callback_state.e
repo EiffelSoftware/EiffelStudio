@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_CALLBACK_STATE}.
+		Abstraction for parsing states in the {XP_XML_PARSER_CALLBACKS}
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

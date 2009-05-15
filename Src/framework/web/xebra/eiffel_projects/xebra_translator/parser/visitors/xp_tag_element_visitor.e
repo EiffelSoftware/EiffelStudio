@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_TAG_ELEMENT_VISITOR}.
+		Abstraction for {XP_TAG_ELEMENT} tree visitors
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

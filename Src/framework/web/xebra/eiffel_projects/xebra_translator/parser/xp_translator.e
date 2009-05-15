@@ -41,13 +41,14 @@ feature -- Access
 			-- Name of the system
 
 	registry: XP_SERVLET_GG_REGISTRY
+			-- Registry to store all the extracted data
 
 feature -- Status setting
 
 	set_output_path (a_path: like output_path)
 			-- Sets the output_path
 		require
-			a_path_is_valid: not a_path.is_empty
+			a_path_is_valid: attached a_path not a_path.is_empty
 		do
 			output_path := a_path
 		end
@@ -55,7 +56,7 @@ feature -- Status setting
 	set_servlet_gen_path (a_path: like servlet_gen_path)
 			-- Sets the servlet_gen_path
 		require
-			a_path_is_valid: not a_path.is_empty
+			a_path_is_valid: attached a_path and not a_path.is_empty
 		do
 			servlet_gen_path := a_path
 		end
@@ -63,7 +64,7 @@ feature -- Status setting
 	set_name (a_name: like name)
 			-- Sets the name
 		require
-			a_name_is_valid: not a_name.is_empty
+			a_name_is_valid: attached a_name and not a_name.is_empty
 		do
 			name := a_name
 		end
@@ -74,6 +75,9 @@ feature -- Processing
 			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
+		require
+			a_files_attached: attached a_files
+			a_taglib_folder_attached: attached a_taglib_folder
 		local
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
@@ -106,6 +110,11 @@ feature -- Processing
 		end
 
 	process_xeb_file (a_file: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_file_name: STRING)
+		require
+			a_file_attached: attached a_file
+			a_file_open: a_file.is_open_read
+			a_path: attached a_path
+			a_file_name: attached a_file_name
 		do
 			o.iprint ("Processing '" + a_file.name + "'...")
 			add_template_to_registry (a_file_name.substring (1, a_file_name.index_of ('.', 1)-1), a_file, a_path, registry)
@@ -114,7 +123,10 @@ feature -- Processing
 	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
-			servlet_name_valid: not a_servlet_name.is_empty
+			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+			a_stream_attached: attached a_stream
+			a_path_attached: attached a_path
+			a_registry_attached: attached a_registry
 		local
 			l_root_tag: XP_TAG_ELEMENT
 			l_controller_class: STRING
@@ -142,7 +154,7 @@ feature -- Processing
 	parse_taglibs (taglib_folder: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Generates tag libraries from all the the *.taglib files in the directory
 		require
-			taglib_folder_valid: not taglib_folder.is_empty
+			taglib_folder_valid: attached taglib_folder and not taglib_folder.is_empty
 		local
 			dir: DIRECTORY
 			files: LIST [STRING]
@@ -163,6 +175,9 @@ feature -- Processing
 
 	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_stream: KI_CHARACTER_INPUT_STREAM)
 			-- Trasforms stream to tag library and adds it to `a_taglibs'
+		require
+			a_registry_attached: attached a_registry
+			a_stream_attached: attached a_stream
 		local
 			l_parser: XM_PARSER
 			l_p_callback: XP_TAGLIB_PARSER_CALLBACKS

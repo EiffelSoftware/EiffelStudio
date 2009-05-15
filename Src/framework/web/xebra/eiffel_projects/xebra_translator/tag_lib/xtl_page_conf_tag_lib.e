@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XTL_PAGE_CONF_TAG_LIB}.
+		Mimics a {XTL_TAG_LIBRARY} and provides a hardcoded library for <page:X> tags.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

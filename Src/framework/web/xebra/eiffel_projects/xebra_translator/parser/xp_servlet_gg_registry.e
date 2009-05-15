@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_SERVLET_GG_REGISTRY}.
+		This registry handles the storage of {XP_TEMPLATE}s and {XTL_TAG_LIBRARY}s and is delegates resolving of {XP_TEMPLATE}s
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_REGION_TAG_ELEMENT}.
+		Defines tag denoting a page:region
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

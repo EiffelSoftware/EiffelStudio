@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_EXTERNAL_RESOLVER}.
+		Dummy class for the parser callbacks
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

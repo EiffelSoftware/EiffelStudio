@@ -251,6 +251,20 @@ feature -- Modification
 			raw_compiler_output := s
 		end;
 
+	sort
+			-- Sort `syntax_errors' and `validity_errors'.
+			-- Even though they are sorted lists, they may
+			-- not be correctly sorted because items may
+			-- have been added before full key was set
+		do
+			if syntax_errors /= Void and then syntax_errors.count > 1 then
+				syntax_errors.sort
+			end
+			if validity_errors /= Void and then validity_errors.count > 1 then
+				validity_errors.sort
+			end
+		end
+
 feature -- Comparison
 
 	matches (other: EW_EIFFEL_COMPILATION_RESULT): BOOLEAN
@@ -432,12 +446,6 @@ feature {NONE} -- Implementation
 			elseif count1 /= count2 then
 				Result := False;
 			else
-					-- List have to be sorted because when we insert the errors
-					-- in the list the objects might be partially initialized.
-					-- Now we know for sure that they are properly initialized, so
-					-- sorting will yield the proper order.
-				list1.sort
-				list2.sort
 				from
 					list1.start; list2.start;
 				until

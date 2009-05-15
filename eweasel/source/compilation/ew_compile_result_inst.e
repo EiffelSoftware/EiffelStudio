@@ -99,6 +99,11 @@ feature
 						cr.set_compilation_finished;
 					end
 				end;
+				-- No need to sort expected compile result
+				-- since all key fields are known for each
+				-- syntax or validity error when it is added.
+				-- But sort it anyway, just to be safe
+				cr.sort
 				expected_compile_result := cr;
 			end
 		end;
@@ -117,6 +122,11 @@ feature
 				failure_explanation.append ("no pending Eiffel compilation result to check");
 
 			else
+				-- Make sure syntax and validity errors/warnings
+				-- are sorted.  They might not be sorted even
+				-- though they are sorted lists because items
+				-- may be added before all key fields are set
+				cr.sort
 				execute_ok := cr.matches (expected_compile_result);
 				if not execute_ok then
 					create failure_explanation.make (0);

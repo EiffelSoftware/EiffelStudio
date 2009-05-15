@@ -793,6 +793,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	zone->ov_dtype = To_dtype(result_type);
 	RT_SPECIAL_COUNT(Result) = l_found.count;
 	RT_SPECIAL_ELEM_SIZE(Result) = sizeof(EIF_REFERENCE);
+	RT_SPECIAL_CAPACITY(Result) = l_found.count;
 
 		/* Now, populate `Result' with content of `l_found'. Since we just
 		 * created a new Eiffel objects. */

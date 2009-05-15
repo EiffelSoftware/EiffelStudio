@@ -1401,8 +1401,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RT_SPECIAL_COUNT returns `count' of special objects.
  * RT_SPECIAL_ELEM_SIZE returns `element_size' of items in special objects.
  */
-#define RT_SPECIAL_DATA_SIZE	LNGPAD(2)
-#define RT_SPECIAL_VISIBLE_SIZE(spec) (RT_SPECIAL_COUNT(spec) * RT_SPECIAL_ELEM_SIZE(spec))
+#define RT_SPECIAL_DATA_SIZE	LNGPAD(3)
+#define RT_SPECIAL_VISIBLE_SIZE(spec) ((rt_uint_ptr) RT_SPECIAL_COUNT(spec) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(spec))
 #define RT_SPECIAL_MALLOC_COUNT(nb_items,item_size) \
 	((rt_uint_ptr) (CHRPAD((rt_uint_ptr) nb_items * (rt_uint_ptr) item_size) + RT_SPECIAL_DATA_SIZE))
 
@@ -1410,10 +1410,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 	((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC)
 
 #define RT_SPECIAL_COUNT(spec) \
-	(*(EIF_INTEGER *) (char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE))
+	(*(EIF_INTEGER *) ((char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)))
 
 #define RT_SPECIAL_ELEM_SIZE(spec) \
 	(*(EIF_INTEGER *) ((char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE) + sizeof(EIF_INTEGER)))
+
+#define RT_SPECIAL_CAPACITY(spec) \
+	(*(EIF_INTEGER *) ((char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE) + 2*sizeof(EIF_INTEGER)))
+
 
 /* Macros used for array optimization
  *	RTADTYPE(x) defines the variable for the dynamic type of `x'

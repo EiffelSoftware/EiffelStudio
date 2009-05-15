@@ -364,10 +364,10 @@ rt_shared union overhead * eif_header (EIF_REFERENCE object) {
 }
 /***************************************/
 
-rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
+rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 {
 	/* Reallocation of memory for an array's `area' for new count `i', keeping
-	 * the old content.(starts at `j' and is `k' long).
+	 * the old content.(starts at 0 and is `k' long).
 	 */
 
 	char *new_area, *ref;
@@ -383,7 +383,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	elem_size = RT_SPECIAL_ELEM_SIZE(area);
 
 #ifdef ARYCPY_DEBUG
-	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, old_count, j, k);
+	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, old_count, k);
 #endif	/* ARYCPY_DEBUG */
 
 	/* Possible optimization: remembering process for special objects full of
@@ -391,21 +391,11 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * we will change the order of the indices. */
 
 	new_area = sprealloc(area, i);		/* Reallocation of special object */
-							
 
-	/* Move old contents to the right position and fill in empty parts with
-	 * zeros.
-	 */
-	if ((j == 0) && (old_count == k))	/* Is this the usual case. */
+		/* Move old contents to the right position and fill in empty parts with
+		 * zeros. */
+	if (old_count == k)	/* Is this the usual case. */
 		return new_area;		/* All have been done in sprealloc () . */
-
-	/* Otherwise, in some rare cases, we may change the 
-	 * order of the items in the array. 
-	 */
-
-	memmove(new_area + (rt_uint_ptr) j * elem_size, new_area, (rt_uint_ptr) k * elem_size); /* takes care of overlaping */
-	memset (new_area, 0, (rt_uint_ptr) j * elem_size);		/* Fill empty parts of area with 0 */
-	memset (new_area + (rt_uint_ptr) (j + k) * elem_size, 0, (rt_uint_ptr) (i - j - k) * elem_size);
 
 	/* If the new area is full of references and remembered,
 	 * the information in the special table
@@ -429,17 +419,14 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 
 	exp_dftype = eif_gen_param_id (Dftype(new_area), 1);
 
-		/* Initialize expanded objects from 0 to (j - 1) */
-	new_area = sp_init(new_area, exp_dftype, 0, j - 1);
-
 #ifndef WORKBENCH
 	if (References(To_dtype(exp_dftype)) > 0) {
 #endif
 		/* If there is a header for each expanded in the special, then update expanded
-		 * offsets for k objects starting at j. */
+		 * offsets for k objects. */
 	for (
-		n = j + k - 1, ref = new_area + (n * elem_size);
-		n >= j;
+		n = k - 1, ref = new_area + (n * elem_size);
+		n >= 0;
 		n--, ref -= elem_size)
 	{
 		CHECK("size nonnegative", (ref - new_area + OVERHEAD) >= 0);
@@ -450,8 +437,8 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	}
 #endif
 	
-		/* Intialize remaining objects from (j + k) to (i - 1) */
-	new_area = sp_init(new_area, exp_dftype, j + k, i - 1);
+		/* Intialize remaining objects from k to (i - 1) */
+	new_area = sp_init(new_area, exp_dftype, k, i - 1);
 
 	return new_area;
 }

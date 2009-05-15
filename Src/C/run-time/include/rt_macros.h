@@ -92,9 +92,11 @@ extern "C" {
 #endif
 
 /* Macro used to get info about SPECIAL objects.
- * RT_SPECIAL_INFO returns address where special objects data is stored.
+ * RT_SPECIAL_AREA returns address where special data starts.
+ * RT_SPECIAL_DATA returns address where special objects data is stored.
  */
-#define RT_SPECIAL_INFO(spec) \
+#define RT_SPECIAL_AREA(spec) (spec)
+#define RT_SPECIAL_DATA(spec) \
 	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)
 
 

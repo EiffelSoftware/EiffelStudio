@@ -223,6 +223,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 		/* Keep the count and the element size */
 	RT_SPECIAL_COUNT(result) = RT_SPECIAL_COUNT(source);
 	RT_SPECIAL_ELEM_SIZE(result) = RT_SPECIAL_ELEM_SIZE(source);
+	RT_SPECIAL_CAPACITY(result) = RT_SPECIAL_CAPACITY(source);
 
 	RT_GC_WEAN(source);				/* Remove GC protection */
 
@@ -378,7 +379,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	flags = zone->ov_flags;			/* Eiffel flags */
 
 	if (flags & EO_SPEC) {
-		size = (rt_uint_ptr) RT_SPECIAL_COUNT(source) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source);
+		size = RT_SPECIAL_VISIBLE_SIZE(source);
 	} else {
 		size = EIF_Size(zone->ov_dtype);
 	}
@@ -608,7 +609,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		} else {
 			/* Copy of source object into target object with same dynamic type. Block copy here. */
 			if (flags & EO_SPEC) {
-				size = (rt_uint_ptr) RT_SPECIAL_COUNT(source) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source);
+				size = RT_SPECIAL_VISIBLE_SIZE(source);
 			} else {
 				size = EIF_Size(s_zone->ov_dtype);
 			}
@@ -664,7 +665,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 		 * a precondition it is much better than memory corruption.*/
 
 		/* FIXME: Once `copy' is not exported anymore to ANY, but just TUPLE/SPECIAL then we will be able
-		 * to add RT_SPECIAL_COUNT(target) == RT_SPECIAL_COUNT(sourcE) as precondition of `spcopy'.*/
+		 * to add RT_SPECIAL_COUNT(target) == RT_SPECIAL_COUNT(source) as precondition of `spcopy'.*/
 
 	t_count = RT_SPECIAL_COUNT(target);
 	s_count = RT_SPECIAL_COUNT(source);
@@ -864,30 +865,6 @@ rt_public void sp_copy_data (EIF_REFERENCE Current, EIF_REFERENCE source, EIF_IN
 								copying process. */
 	}
 #endif
-}
-
-rt_public void spclearall (EIF_REFERENCE spobj)
-{
-	/* Reset all elements of `spobj' to default value. Call
-	 * creation procedure of expanded objects if `spobj' is
-	 * composite.
-	 */
-
-	union overhead *zone;			/* Malloc information zone */
-	EIF_INTEGER count;
-	rt_uint_ptr elem_size;
-
-	zone = HEADER(spobj);
-	count = RT_SPECIAL_COUNT(spobj);
-	elem_size = RT_SPECIAL_ELEM_SIZE(spobj);
-
-		/* Reset all memory to zero. */
-	memset (spobj, 0, (rt_uint_ptr) count * elem_size);
-	if (zone->ov_flags & EO_COMP) {
-			/* case of a special object of expanded structures */
-			/* Initialize new expanded elements, if any */
-		sp_init (spobj, eif_gen_param_id (Dftype(spobj), 1), 0, count - 1);
-	}
 }
 
 /*

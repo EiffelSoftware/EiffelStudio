@@ -160,6 +160,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	zone->ov_dtype = To_dtype((EIF_TYPE_INDEX) result_type);
 	RT_SPECIAL_COUNT(Result) = l_found.count;
 	RT_SPECIAL_ELEM_SIZE(Result) = sizeof(EIF_REFERENCE);
+	RT_SPECIAL_CAPACITY(Result) = l_found.count;
 
 		/* Now, populate `Result' with content of `l_found'. Since we just
 		 * created a new Eiffel objects. */

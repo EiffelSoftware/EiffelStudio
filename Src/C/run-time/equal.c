@@ -139,12 +139,11 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				*/
 		
 				/* First condition: same count */
-			rt_uint_ptr s_size = RT_SPECIAL_COUNT(source);
-			if (RT_SPECIAL_COUNT(target) != s_size) {
+			if (memcmp(RT_SPECIAL_DATA(source), RT_SPECIAL_DATA(target), RT_SPECIAL_DATA_SIZE)) {
 				return EIF_FALSE;
 			} else {
 					/* Second condition: block equality */
-				return EIF_TEST(!memcmp (source, target, s_size * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(source)));
+				return EIF_TEST(!memcmp (source, target, RT_SPECIAL_VISIBLE_SIZE(source)));
 			}
 		} else if (Dftype(source) == egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */

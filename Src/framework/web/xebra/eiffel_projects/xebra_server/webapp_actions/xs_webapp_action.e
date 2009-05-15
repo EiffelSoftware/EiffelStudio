@@ -89,12 +89,8 @@ feature -- Operations
 			-- Returns a XH_RESPONSE which can be sent to the http server
 		require
 			config_set: internal_server_config /= Void
-		--	not_necessary_implies_hasnext: not is_necessary implies next_action /= Void
 		do
 			if is_necessary then
---				if attached stop_action then
---					stop_action.stop
---				end
 				Result := internal_execute
 			else
 				Result := next_action.execute

@@ -95,7 +95,11 @@ feature -- Actions
 	start_action_chain: XH_RESPONSE
 			-- Executes the first action in the chain		
 		do
-			Result := translate_action.execute
+			if server_config.assume_webapps_are_running.value then
+				Result := send_action.execute
+			else
+				Result := translate_action.execute
+			end
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -126,7 +130,7 @@ feature -- Status Setting
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
 				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
-				
+
 			end
 			run_action.stop
 			compile_action.stop

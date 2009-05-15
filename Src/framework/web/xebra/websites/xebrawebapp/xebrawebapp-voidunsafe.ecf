@@ -3,6 +3,7 @@
 	<target name="xebrawebapp">
 		<root class="G_XEBRAWEBAPP_APPLICATION" feature="make"/>
 		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="settable_types" location="$ISE_LIBRARY\framework\settable_types\settable_types.ecf"/>

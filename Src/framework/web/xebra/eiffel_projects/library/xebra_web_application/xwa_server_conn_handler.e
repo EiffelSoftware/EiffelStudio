@@ -120,6 +120,14 @@ feature -- Implementation
 --			create Result.make
 --		end
 
+feature -- Status report
+
+	is_bound: BOOLEAN
+			-- Checks if the socket could be bound
+		do
+			Result := xserver_socket.is_bound
+		end
+
 feature -- Status setting
 
 	add_servlets

@@ -80,25 +80,29 @@ feature {NONE} -- Operations Internal
 			config_attached: config /= Void
 		do
 			if attached server_connection_handler as server then
-				server.launch
-				o.iprint ("Xebra Wep Application ready to rock...")
-				if config.is_interactive.value then
-					o.iprint ("(enter 'x' to shut down)")
-					from
-						stop := False
-					until
-						stop
-					loop
-						io.read_character
-						if io.last_character.is_equal ('x') then
-							stop := True
+				if not server.is_bound then
+					o.eprint ("Socket could not be bound!", generating_type)
+				else
+					server.launch
+					o.iprint ("Xebra Wep Application ready to rock...")
+					if config.is_interactive.value then
+						o.iprint ("(enter 'x' to shut down)")
+						from
+							stop := False
+						until
+							stop
+						loop
+							io.read_character
+							if io.last_character.is_equal ('x') then
+								stop := True
+							end
 						end
+						o.iprint ("Shutting down...")
+						server.shutdown
+						o.iprint ("Bye!")
 					end
-					o.iprint ("Shutting down...")
-					server.shutdown
-					o.iprint ("Bye!")
+					server.join
 				end
-				server.join
 			end
 		end
 

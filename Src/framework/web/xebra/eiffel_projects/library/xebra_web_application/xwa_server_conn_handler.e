@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			config := a_config
 			create session_manager.make
 	--		create request_pool.make  (10, agent servlet_handler_spawner)
-			create {HASH_TABLE [XWA_STATELESS_SERVLET, STRING]} stateless_servlets.make (1)
+			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create xserver_socket.make_server_by_port (config.port.value)
 			stop := False
 			add_servlets

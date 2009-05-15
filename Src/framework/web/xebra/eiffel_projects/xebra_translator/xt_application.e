@@ -13,6 +13,7 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	KL_SHARED_ARGUMENTS
+	XU_SHARED_OUTPUTTER
 
 create
 	make
@@ -45,7 +46,7 @@ feature -- Operation
 			l_translator.set_output_path (a_arg_parser.output_path)
 			l_translator.set_servlet_gen_path (a_arg_parser.servlet_gen_path)
 
-			l_translator.process_with_files (l_dir.linear_representation, a_arg_parser.tag_lib_path)
+			l_translator.process_with_files (l_dir.linear_representation, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
 
 			create l_printer.default_create
 			if error_manager.has_warnings then
@@ -55,11 +56,8 @@ feature -- Operation
 			if not error_manager.is_successful then
 				error_manager.trace_last_error (l_printer)
 			else
-				print ("%NOutput generated to '")
-				print (l_translator.output_path)
-				print ("%NServlets generated to '")
-				print (l_translator.servlet_gen_path)
-				print ("'.%N")
+				o.iprint ("Output generated to '" + l_translator.output_path + "'")
+				o.iprint ("Servlets generated to '" + l_translator.servlet_gen_path + "'")
 			end
 		end
 

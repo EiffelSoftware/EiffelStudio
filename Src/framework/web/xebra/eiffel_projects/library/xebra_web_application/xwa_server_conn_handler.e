@@ -48,7 +48,7 @@ feature -- Access
 --	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
 			-- A thread pool for the incoming requests from the xebra server
 
-	stateless_servlets: TABLE [XWA_STATELESS_SERVLET, STRING]
+	stateless_servlets: TABLE [XWA_SERVLET, STRING]
 			-- All the servlets which do not need a state
 			-- Page id points to the thread pool of servlets
 

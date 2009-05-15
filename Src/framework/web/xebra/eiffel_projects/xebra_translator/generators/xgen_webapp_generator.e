@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_path: STRING)
+	make (a_name: STRING;a_path: FILE_NAME)
 			-- `a_name': The name of the web application
 			-- `a_path': The path, where all the classes should be generated
 		require
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_servlets (a_name, a_path, create {LINKED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]}.make)
 		end
 
-	make_with_servlets (a_name, a_path: STRING; a_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
+	make_with_servlets (a_name: STRING; a_path: FILE_NAME; a_servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR])
 			-- `a_name': The name of the web application
 			-- `a_path': The path, where all the classes should be generated
 			-- `a_servlets': List of the servlet generator generators for the webapp
@@ -49,7 +49,7 @@ feature -- Access
 	webapp_name: STRING
 			-- Defines the name of the web application
 
-	path: STRING
+	path: FILE_NAME
 			-- The path where the classes should be generated
 
 	servlets: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
@@ -80,11 +80,11 @@ feature -- Basic Functionality
 			l_request_class: XEL_CLASS_ELEMENT
 			l_application_class: XEL_CLASS_ELEMENT
 			l_file: PLAIN_TEXT_FILE
-			l_filename: STRING
+			l_filename: FILE_NAME
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
-			webapp_name.to_lower
-			l_filename := path + Generator_Prefix.as_lower + webapp_name + "_" + Server_con_handler_class.as_lower + ".e"
+			l_filename := path.twin
+			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_" + Server_con_handler_class.as_lower + ".e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -104,7 +104,8 @@ feature -- Basic Functionality
 			l_file.close
 
 				-- Generate the {APPLICATION} class
-			l_filename := path + Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e"
+			l_filename := path.twin
+			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -124,7 +125,8 @@ feature -- Basic Functionality
 			l_file.close
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
-			l_filename := path + Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e"
+			l_filename := path.twin
+			l_filename.set_file_name (Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)

@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_minimal (a_servlet_name: STRING; a_path: STRING)
+	make_minimal (a_servlet_name: STRING; a_path: FILE_NAME)
 			-- `a_servlet_name': The name of the servlet
 			-- `a_path': The path where the generator should be generated to
 		require
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			make (a_servlet_name, False, Void, a_path, False)
 		end
 
-	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: STRING; a_is_template: BOOLEAN)
+	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: FILE_NAME; a_is_template: BOOLEAN)
 			-- `a_servlet_name': The name of ther servlet which has to be generated
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
@@ -38,12 +38,13 @@ feature {NONE} -- Initialization
 		do
 			servlet_name := a_servlet_name
 			root_tag := a_root_tag
-			path := a_path
+			create path.make_from_string (a_path)
 			uid_counter := 0
 			create controller_table.make (1)
 		end
 
 	make_empty
+			-- Creates an empty {xgen_servlet_generator_generator}
 		do
 			create controller_table.make (1)
 		end
@@ -64,7 +65,7 @@ feature -- Access
 	servlet_name: STRING
 			-- The name of ther servlet which has to be generated
 
-	path: STRING
+	path: FILE_NAME
 			-- The path, were the servlet_generator should be generated
 
 	absorb (a_other: XGEN_SERVLET_GENERATOR_GENERATOR)
@@ -119,7 +120,7 @@ feature -- Access
 
 feature -- Basic functionality
 
-	generate (a_path: STRING)
+	generate (a_path: FILE_NAME)
 			-- Generates the servlet generator class if needed
 			-- `a_path': The path in which the file should be generated
 		require
@@ -129,9 +130,10 @@ feature -- Basic functionality
 			buf:XU_INDENDATION_STREAM
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
-			l_filename: STRING
+			l_filename: FILE_NAME
 		do
-			l_filename := a_path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e"
+			l_filename := a_path.twin
+			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
 			create file.make (l_filename)
 			if not file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -183,7 +185,6 @@ feature -- Constants
 
 invariant
 	controller_table_attached: controller_table /= Void
-	root_tag_attached: root_tag /= Void
 	servlet_name_attached: servlet_name /= Void
 	path_attached: path /= Void
 note

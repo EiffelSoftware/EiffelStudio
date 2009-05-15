@@ -46,7 +46,7 @@ feature -- Implementation
 			end
 		end
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
 			input_id, variable: STRING

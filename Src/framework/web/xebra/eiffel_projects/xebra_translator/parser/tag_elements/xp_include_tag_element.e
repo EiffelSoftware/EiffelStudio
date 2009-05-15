@@ -20,7 +20,6 @@ inherit
 create
 	make
 
-
 feature -- Initialization
 
 feature -- Access

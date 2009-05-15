@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make (a_path: STRING)
+	make (a_path: FILE_NAME)
 			-- a_path: The output path
 		require
 			a_path_attached: a_path /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Access
 	servlet_g_generators: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 			-- Resolved servlet_generator_generators
 
-	path: STRING
+	path: FILE_NAME
 			-- The output path
 
 feature -- Access
@@ -130,7 +130,7 @@ feature -- Access
 	contains_tag_lib (a_name: STRING): BOOLEAN
 			-- `a_name' the name of the the tag lib
 		require
-			a_name_valid: attached a_name and not a_name.is_empty
+			a_name_valid: attached a_name
 		do
 			Result := taglib_registry.has_key (a_name)
 		end

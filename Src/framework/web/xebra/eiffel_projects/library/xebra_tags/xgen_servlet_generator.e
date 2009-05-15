@@ -19,16 +19,16 @@ feature -- Initialization
 			a_current_file_path_valid: attached a_current_file_path and not a_current_file_path.is_empty
 			a_controller_id_table_attached: attached a_controller_id_table
 		do
-			path := a_path
+			create path.make_from_string (a_path)
 			servlet_name := a_servlet_name
 			internal_root_tag := get_root_tag
 			controller_id_table := a_controller_id_table
-			current_file_path := a_current_file_path
+			create current_file_path.make_from_string (a_current_file_path)
 		end
 
 feature {NONE} -- Access
 
-	path: STRING
+	path: FILE_NAME
 		-- Path to which the servlet is generated
 
 	servlet_name: STRING
@@ -43,7 +43,7 @@ feature {NONE} -- Access
 	controller_id_table: HASH_TABLE [STRING, STRING]
 		-- All the used controllers and their respective class. Key: identifier; Value: Class
 
-	current_file_path: STRING
+	current_file_path: FILE_NAME
 		-- The path of Current file
 
 feature -- Access
@@ -51,6 +51,8 @@ feature -- Access
 	get_root_tag: XTAG_TAG_SERIALIZER
 			-- Returns the root tag of the compiled xeb file
 		deferred
+		ensure
+			Result_attached: attached Result
 		end
 
 feature {NONE} -- Implementation
@@ -92,11 +94,11 @@ feature -- Basic Functionality
 			l_buf: XU_INDENDATION_STREAM
 			l_servlet_class: XEL_SERVLET_CLASS_ELEMENT
 			l_file: PLAIN_TEXT_FILE
-			l_filename: STRING
+			l_filename: FILE_NAME
 			l_current_file: PLAIN_TEXT_FILE
 		do
-
-			l_filename := path + Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e"
+			l_filename := path.twin
+			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)
 			create l_file.make (l_filename)
 			if (not l_file.exists) or (l_current_file.date > l_file.date) then
@@ -111,12 +113,7 @@ feature -- Basic Functionality
 				end
 				create l_buf.make (l_file)
 				create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
-				if stateful then
-					l_servlet_class.set_inherit (Stateful_servlet_class)
-				else
-					l_servlet_class.set_inherit (Stateless_servlet_class)
-				end
-				l_servlet_class.set_inherit (Stateless_servlet_class + " redefine make end")
+				l_servlet_class.set_inherit (Servlet_class_name + " redefine make end")
 				l_servlet_class.set_constructor_name ("make")
 				build_make_for_servlet_generator (l_servlet_class)
 				from
@@ -141,6 +138,7 @@ feature --Constants
 
 	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
 	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
+	servlet_class_name: STRING = "XWA_SERVLET"
 
 	Constructor_name: STRING = "make"
 	Response_name: STRING = "response"

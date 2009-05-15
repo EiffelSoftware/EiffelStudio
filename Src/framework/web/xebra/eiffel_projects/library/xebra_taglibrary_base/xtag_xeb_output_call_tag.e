@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_generate (servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		do
 			servlet_class.render_feature.append_expression (Response_variable_append + "(" + current_controller_id + "." + text + ".out)")
@@ -45,5 +45,5 @@ feature -- Implementation
 		end
 
 	generates_render: BOOLEAN = True
-	
+
 end

@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Basic functionality
 
-	generate (a_path: STRING)
+	generate (a_path: FILE_NAME)
 			-- Generates all the classes for the servlet_generator_app and links them together.
 			--  1. {SERLVET_GENERATOR} All the servlet generators
 			--  2. {APPLICATION} The root class
@@ -65,7 +65,7 @@ feature -- Basic functionality
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
-			l_filename: STRING
+			l_filename: FILE_NAME
 		do
 				-- Generate the servlet generator files
 			from
@@ -74,12 +74,13 @@ feature -- Basic functionality
 				servlet_generator_generators.after
 			loop
 				servlet_generator_generator := servlet_generator_generators.item
-				servlet_generator_generator.generate (a_path)
+				servlet_generator_generator.generate (a_path.twin)
 				servlet_generator_generators.forth
 			end
 
 				-- Generate the {APPLICATION} class
-			l_filename := a_path + "application.e"
+			l_filename := a_path.twin
+			l_filename.set_file_name ("application.e")
 			create file.make (l_filename)
 			if not file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -99,7 +100,8 @@ feature -- Basic functionality
 			file.close
 
 				-- Generate the .ecf file
-			l_filename := a_path + "servlet_gen.ecf"
+			l_filename := a_path.twin
+			l_filename.set_file_name ("servlet_gen.ecf")
 			create file.make (l_filename)
 			if not file.is_creatable then
 				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
@@ -120,12 +122,12 @@ feature {NONE} -- Implementation
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
 			create Result.make ("make")
-			Result.append_local ("path", "STRING")
-			Result.append_local ("controller_table", "HASH_TABLE [STRING, STRING]")
+			Result.append_local ("l_path", "STRING")
+			Result.append_local ("l_controller_table", "HASH_TABLE [STRING, STRING]")
 			Result.append_expression ("if  Arguments.argument_count /= 1 then")
 			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
 			Result.append_expression ("else")
-			Result.append_expression ("path := Arguments.argument (1)")
+			Result.append_expression ("l_path := Arguments.argument (1)")
 
 			from
 				servlet_generator_generators.start
@@ -136,7 +138,7 @@ feature {NONE} -- Implementation
 				build_controller_table (Result, l_servlet_gg)
 				Result.append_expression ("(create {"
 					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
-					+ "path, %"" + l_servlet_gg.servlet_name + "%", controller_table, %""
+					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
 				    + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%")).generate;")
 				servlet_generator_generators.forth
 			end
@@ -149,13 +151,13 @@ feature {NONE} -- Implementation
 			a_servlet_gg_attached: a_servlet_gg /= Void
 			a_feature_attached: a_feature /= Void
 		do
-			a_feature.append_expression ("create controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
+			a_feature.append_expression ("create l_controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
 			from
 				a_servlet_gg.controller_table.start
 			until
 				a_servlet_gg.controller_table.after
 			loop
-				a_feature.append_expression ("controller_table.put (%"" + a_servlet_gg.controller_table.item_for_iteration +"%", %""+ a_servlet_gg.controller_table.key_for_iteration+"%")")
+				a_feature.append_expression ("l_controller_table.put (%"" + a_servlet_gg.controller_table.item_for_iteration +"%", %""+ a_servlet_gg.controller_table.key_for_iteration+"%")")
 				a_servlet_gg.controller_table.forth
 			end
 		end

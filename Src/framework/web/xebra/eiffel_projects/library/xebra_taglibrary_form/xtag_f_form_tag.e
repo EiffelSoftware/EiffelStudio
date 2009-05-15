@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
 			data_var: STRING
@@ -52,8 +52,8 @@ feature -- Implementation
 			generate_children (a_servlet_class, variable_table)
 			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + data_var + "%%%" />%")")
 			write_string_to_result ("</form>", a_servlet_class.render_feature)
-			--variable_table. (Form_var_key) -- TODO remove the variable from the variable table
 			a_servlet_class.prerender_post_feature.append_expression ("end")
+			variable_table.remove (Form_var_key)
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: STRING)

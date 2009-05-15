@@ -48,53 +48,53 @@ feature -- Status report
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-	tag_lib_path: STRING
+	tag_lib_path: FILE_NAME
 			-- The tag_lib_path
 		require
 			is_successful: is_successful
 		do
-			Result := ""
+			create Result.make
 			if attached option_of_name (tag_lib_path_switch) as l_option then
-				Result := l_option.value
+				create Result.make_from_string (l_option.value)
 			end
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-	servlet_gen_path: STRING
+	servlet_gen_path: FILE_NAME
 			-- The servlet_gen_path
 		require
 			is_successful: is_successful
 		do
-			Result := ""
+			create Result.make
 			if attached option_of_name (servlet_gen_path_switch) as l_option then
-				Result := l_option.value
+				create Result.make_from_string (l_option.value)
 			end
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-	output_path: STRING
+	output_path: FILE_NAME
 			-- The output_path
 		require
 			is_successful: is_successful
 		do
-			Result := ""
+			create Result.make
 			if attached option_of_name (output_path_switch) as l_option then
-				Result := l_option.value
+				create Result.make_from_string (l_option.value)
 			end
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-	input_path: STRING
+	input_path: FILE_NAME
 			-- The input_path
 		require
 			is_successful: is_successful
 		do
-			Result := ""
+			create Result.make
 			if attached option_of_name (input_path_switch) as l_option then
-				Result := l_option.value
+				create Result.make_from_string (l_option.value)
 			end
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty

@@ -58,16 +58,20 @@ feature -- Access
 
 feature -- Paths
 
-	app_dir: STRING
+	app_dir: FILE_NAME
 			-- The directory to the application
 		do
-			Result := config.webapps_root + "/" + webapp.config.name.out
-		end
+			Result := config.webapps_root_filename.twin
+			Result.extend (webapp.config.name.out)
+			end
 
-	run_workdir_w : STRING
+	run_workdir_w : FILE_NAME
 			-- The working directory to execute the application W_CODE
 		do
-			Result := app_dir  + "/EIFGENs/" + webapp.config.name.out + "/W_code"
+			Result := app_dir.twin
+			Result.extend ("EIFGENs")
+			Result.extend (webapp.config.name.out)
+			Result.extend ("W_code")
 		end
 
 feature -- Operations
@@ -98,7 +102,7 @@ feature  -- Status report internal
 		deferred
 		end
 
-	file_exists (a_filename: STRING): BOOLEAN
+	file_exists (a_filename: FILE_NAME): BOOLEAN
 			-- Checks if a file exists
 		local
 			l_file: RAW_FILE
@@ -107,8 +111,8 @@ feature  -- Status report internal
 			create l_file.make (a_filename)
 			Result := l_file.exists
 		end
-		
-	file_is_newer (a_file, a_dir, a_ext1, a_ext2: STRING): BOOLEAN
+
+	file_is_newer (a_file, a_dir: FILE_NAME; a_ext1, a_ext2: STRING): BOOLEAN
 				-- Returns True iff there is a file in a_dir with a_ext1 or a_ext2
 				-- that is newer than a_file or a_file does not exist
 		require
@@ -190,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 
 	--launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE [detachable STRING]]): detachable PROCESS
-	launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
+	launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
 			-- Launches a process
 		local
 			l_process_factory: PROCESS_FACTORY

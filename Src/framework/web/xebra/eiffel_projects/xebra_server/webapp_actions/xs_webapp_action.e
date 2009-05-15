@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		A deferred class for actions that the server can perform on webapps
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -75,6 +75,14 @@ feature -- Paths
 		end
 
 feature -- Operations
+
+	config_outputter
+			-- Has to be called in every new thread (?), also in every process_exit_handler...
+		do
+			o.set_name ({XS_MAIN_SERVER}.name)
+			o.set_debug_level (config.arg_config.debug_level)
+		end
+
 
 	execute: XH_RESPONSE
 			-- Executes the action if necessary and stops the stop_action if attached.

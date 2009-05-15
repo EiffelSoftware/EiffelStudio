@@ -465,6 +465,7 @@ test	infix-prefix-alias-compatibility	valid248 tcf pass validity
 test	assigner-validity-rules				valid249 tcf pass validity
 test	assigner-wrong-vbac					valid250 tcf pass validity
 test	bogus-veen-on-object-test-local		valid251 tcf pass validity
+test	undetected-vuot-error			valid252 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

@@ -1,7 +1,7 @@
 note
 	description: "[
-		Provices access to the raw API facilities of a dynamic module loaded using OS dynamic module
-		loading policies.
+		Provices access to the raw API facilities of a dynamic module loaded from a known location
+		on disk.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,51 +9,31 @@ note
 	revision: "$Revision$"
 
 class
-	DYNAMIC_MODULE
+	DYNAMIC_FILE_MODULE
 
 inherit
-	DYNAMIC_API
+	DYNAMIC_FILE_API
 		rename
 			make as make_api
 		end
 
 create
-	make,
-	make_with_version
+	make
 
 feature {NONE} -- Initialize
 
-	make (a_name: READABLE_STRING_8)
-			-- Initialize the dynamic module.
+	make (a_path: READABLE_STRING_8)
+			-- Initialize the dynamic module with a full path.
 			--
-			-- `a_name': Name of the module to load, minus any file extension.
+			-- `a_path': The full path to the dynamic module.
 		require
-			a_name_attached: attached a_name
-			not_a_name_is_empty: not a_name.is_empty
+			a_path_attached: attached a_path
+			not_a_path_is_empty: not a_path.is_empty
 		do
-			create module_name.make_from_string (a_name)
+			create path.make_from_string (a_path)
 			make_api
 		ensure
-			module_name_set: module_name.same_string (a_name)
-		end
-
-	make_with_version (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8)
-			-- Initialize the dynamic module with a specific version string.
-			--
-			-- `a_name': Name of the module to load, minus any file extension.
-			-- `a_version': A minumum version of the library to load.
-		require
-			a_name_attached: attached a_name
-			not_a_name_is_empty: not a_name.is_empty
-			a_version_attached: attached a_version
-			not_a_version_is_empty: not a_version.is_empty
-		do
-			create minimum_version.make_from_string (a_version)
-			make (a_name)
-		ensure
-			module_name_set: module_name.same_string (a_name)
-			minimum_version_attached: attached minimum_version
-			minimum_version_set: minimum_version.same_string (a_version)
+			path_set: path.same_string (a_path)
 		end
 
 	initialize
@@ -70,15 +50,8 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	module_name: IMMUTABLE_STRING_8
+	path: IMMUTABLE_STRING_8
 			-- <Precursor>
-
-	minimum_version: detachable IMMUTABLE_STRING_8
-			-- <Precursor>
-		note
-			option: stable
-		attribute
-		end
 
 feature -- Status report
 
@@ -89,9 +62,8 @@ feature -- Status report
 		end
 
 invariant
-	module_name_attached: attached module_name
-	not_module_name_is_empty: not module_name.is_empty
-	not_minimum_version_is_empty: attached minimum_version implies not minimum_version.is_empty
+	path_attached: attached path
+	not_path_is_empty: not path.is_empty
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

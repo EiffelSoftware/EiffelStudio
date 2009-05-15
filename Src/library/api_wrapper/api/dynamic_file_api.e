@@ -1,31 +1,40 @@
 note
 	description: "[
-		Shared access to a platform-specific dynamic library API loader {DYNAMIC_API_LOADER_IMP}.
+		Base class for wrapping a dynamic library APIs using a known path to the dynamic library.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SHARED_DYNAMIC_API_LOADER
+deferred class
+	DYNAMIC_FILE_API
+
+inherit
+	DYNAMIC_API_BASE
 
 feature -- Access
 
-	frozen api_loader: DYNAMIC_API_LOADER
-			-- Shared access to the API loader.
-		note
-			once_status: global
-		once
-			create Result
+	path: READABLE_STRING_8
+			-- Full path use to load the dynamic library with.
+		deferred
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Basic operations
+
+	load_library: POINTER
+			-- <Precursor>
+		do
+			Result := api_loader.load_library_from_path (path)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

@@ -90,7 +90,6 @@ feature -- Basic functionality
 				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 			end
 
-				-- Create file.make_open_write (a_path + "application.e")
 			create buf.make (file)
 			create application_class.make (Application_name.as_upper)
 			application_class.set_inherit ("KL_SHARED_ARGUMENTS%N%TXU_SHARED_OUTPUTTER")
@@ -169,13 +168,13 @@ feature -- Constants
 	Generator_Prefix: STRING = "g_"
 		-- Prefix of generated classes
 
-	Application_name: STRING = "XS_GEN_APPLICATION"
+	Application_name: STRING = "G_APPLICATION"
 
 	servlet_gen_ecf: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
-		<root class="XS_GEN_APPLICATION" feature="make"/>
+		<root class="G_APPLICATION" feature="make"/>
 		<option warning="true" syntax="transitional">
 		</option>
 		<setting name="console_application" value="true"/>

@@ -130,6 +130,10 @@ feature {NONE} -- Basic operations
 			if is_recovery_enabled then
 				l_rescued := True
 				retry
+			else
+				if attached (create {EXCEPTIONS}).exception_manager.last_exception as l_excpt then
+					l_excpt.raise
+				end
 			end
 		end
 

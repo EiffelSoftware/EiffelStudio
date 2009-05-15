@@ -363,6 +363,8 @@ feature {NONE} -- Implementation: access
 			put ("as_attached") check found_item = as_attached_name_id end
 			put ("is_default") check found_item = is_default_name_id end
 			put ("extend") check found_item = extend_name_id end
+			put ("make_filled") check found_item = make_filled_name_id end
+			put ("make_empty") check found_item = make_empty_name_id end
 		end
 
 invariant

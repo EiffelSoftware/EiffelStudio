@@ -178,6 +178,7 @@ feature -- Constants
 		<root class="XS_GEN_APPLICATION" feature="make"/>
 		<option warning="true" syntax="transitional">
 		</option>
+		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>

@@ -415,43 +415,6 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register siz
 }
 
 /*
- * Special object count
- */
-
-rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
-{
-	/* Return the count of a special or TUPLE object */
-
-	EIF_INTEGER res; 
-
-	REQUIRE ("Not null.", spobject != NULL);
-	REQUIRE ("Must be a special object", HEADER (spobject)->ov_flags & EO_SPEC);
-
-	res = RT_SPECIAL_COUNT(spobject);
-
-	ENSURE ("Must be positive", res >= 0);
-
-	return res;
-}
-
-rt_public EIF_INTEGER sp_elem_size(EIF_REFERENCE spobject)
-{
-	/* Return the size of the element of a SPECIAL */
-
-	EIF_INTEGER res;
-
-	REQUIRE ("Not null.", spobject != NULL);
-	REQUIRE ("Must be a special object", HEADER (spobject)->ov_flags & EO_SPEC);
-
-	res = RT_SPECIAL_ELEM_SIZE(spobject);
-
-	ENSURE ("Must be positive", res >= 0);
-
-	return res;
-}
-
-
-/*
  * Invariant checking
  */
 

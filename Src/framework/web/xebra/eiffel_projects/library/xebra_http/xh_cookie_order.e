@@ -13,10 +13,9 @@ class
 
 inherit
 	XH_COOKIE
-
-	redefine
-		make
-	end
+		redefine
+			make
+		end
 
 create
 	make

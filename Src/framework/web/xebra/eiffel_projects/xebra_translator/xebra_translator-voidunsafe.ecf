@@ -4,6 +4,7 @@
 		<root class="XT_APPLICATION" feature="make"/>
 		<option syntax="transitional">
 		</option>
+		<setting name="console_application" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>

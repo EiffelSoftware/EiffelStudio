@@ -38,17 +38,74 @@ h3 {
 </head>
 
 <body>
-<h1>Xebra Tutorial </h1>
-<h2>Notes</h2>
-<p><strong>Use Xebra revision 78423 for this tutorial</strong>.</p>
-<p>This tutorial was tested on Ubuntu 8.10 with EiffelStudio 6.4.7.8212</p>
-<h2>Checkout</h2>
+<h1>Xebra Tutorial (under construction)</h1>
+<h3>Notes</h3>
+<p>Use Xebra revision ??? for this tutorial.</p>
+<p>This tutorial was tested with EiffelStudio 6.4.7.8600 (<span class="path">$ISE_EIFFEL</span>) and eiffel_src (<span class="path">$EIFFEL_SRC</span>) revision ???.</p>
+<p>The env vars <span class="path">$EIFFEL_SRC</span>, <span class="path">$ISE_EIFFEL</span>, <span class="path">$ISE_PLATFORM</span> and <span class="path">$ISE_LIBRARY</span> are expected to be set.</p>
+<h2>Windows</h2>
+<h3>Checkout Xebra</h3>
+<ul><li>Define <span class="path">$XEBRA_DEV</span> and checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="path">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="path">$XEBRA_DEV</span></li>
+</ul>
+<h3>Setup Apache</h3>
 <ul>
-  <li>Checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="path">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="path">$XEBRA_DEV</span></li>
-  
+  <li>Download apache httpd-2.2.11 windows binary  from <a href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a><br />
+    <br />
+  </li>
+  <li>Install<br />
+    <br />
+  </li>
+  <li>Copy <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects/mod_xebra_win/Debug/mod_xebra.so">mod_xebra.so</a> to your <span class="path">Apache2.2\modules</span> folder.<br />
+    <br />
+  </li>
+  <li>Add the following lines to <span class="path">Apache2.2\conf\httpd.conf</span>:<br />
+    <span class="code">LoadModule xebra_module modules/mod_xebra.so</span><br />
+    <span class="code">AddHandler mod_xebra .xeb<br />
+    XebraServer_port &quot;55000&quot;<br />
+    XebraServer_host &quot;localhost&quot;</span><br />
+  <span class="code">LogLevel debug</span></li>
+</ul>
+<ul>
+  <li>(If apache is installed as a service, stop the service<br />
+    Start apache: open a console, browse to  <span class="path">Apache2.2\bin</span> and run<br />
+    <span class="code">httpd</span><br />
+      <br />
+      </li>
+<li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
+      <br />
+      </li>
+  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory <span class="path">Apache2.2\htdocs\xebrawebapp</span> and <span class="path">Apache2.2\htdocs\demoapplication </span>respectively<span class="path">.</span></li>
+  <li><br />
+  </li>
+</ul>
+<h3>Compile the Xebra Translator</h3>
+<ul>
+  <li>Launch estudio  and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator-voidunsafe.ecf</span><br />
+      <br />
+  </li>
+  <li>Compile</li>
+</ul>
+<h3>Run the Xebra Server</h3>
+<ul>
+  <li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini </span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>, and <span class="path">webapps_root</span> to your configuration.<br />
+      <br />
+  </li>
+  <li>Launch estudio  and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf</span><br />
+      <br />
+  </li>
+  <li>Compile and run with the path to the <span class="path">config.ini </span>as argument.<br />
+      <br />
+  </li>
+  <li>Browse  to <a href="http://localhost/test.xeb">http://localhost/xebrawebapp/hello.xeb</a>. The server now translates, generates, compiles and finally runns the xebrawebpp application. </li>
+</ul>
+<h2>&nbsp;</h2>
+<h2>Ubuntu 9.04</h2>
+<h3>Checkout Xebra</h3>
+<ul>
+  <li>Define <span class="path">$XEBRA_DEV</span> and checkout xebra from <a href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/" class="path">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a> to <span class="path">$XEBRA_DEV</span></li>
 </ul>
 
-<h2>Setup mod_xebra </h2>
+<h3>Setup Apache </h3>
 <p><strong>Note</strong>: Mod_xebra does currently not run with the apache distribution that comes with ubuntu. </p>
 
 <ul>
@@ -58,15 +115,13 @@ h3 {
   <li> Extract <br />
     <br />
   </li>
-  <li> Compile and install apache:<br />
-    Define <span class="path">$APACHE2 </span>where you want to install apache to, e.g. to <span class="path">/home/apache2</span><br />
-    Run the following command:<br />
+  <li>    Define <span class="path">$APACHE2 </span>where you want to install apache to, e.g. to <span class="path">/home/apache2</span><br />
+    Run the following commands:<br />
     <span class="code">CFLAGS=&quot;-ggdb&quot; ./configure --prefix=/home/apache2</span><br />
-    (with CFLAGs you can add compiler flags like -ggdb, which generates debug information for gdb)<br />
-    then run<br />
     <span class="code"><strong>make</strong><br />
   <strong>make install</strong></span><br />
-  (see here for more info about installation: <a href="http://httpd.apache.org/docs/2.2/install.html">Install</a> ).
+  (see <a href="http://httpd.apache.org/docs/2.2/install.html">here</a> for more info about installation)
+  <br />
   <br />
   </li>
   <li> Compile the module by running<br />
@@ -88,124 +143,39 @@ h3 {
   </li>
   <li> Restart apache (if necessary, you need to stop and start instead of restart)<br />
   <span class="code">sudo <strong>$APACHE2/bin/</strong>apachectl restart</span><br />
-  <br />
+  (Make sure no other apache is running, e.g. run<br />
+   <span class="code">sudo apache2ctl stop</span><br />
+   )<br />
+    <br />
   </li>
   <li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
+      <br />
+  </li>
+  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory  <span class="path">$APACHE2/htdocs/xebrawebapp</span> and <span class="path">$APACHE2/htdocs/demoapplication </span>respectively<span class="path">.</span><br />
     <br />
   </li>
   <li> Hint: keep an eye on the apache error log<br />
     <span class="code">tail -f <strong>$APACHE2</strong>/logs/error_log</span></li>
 </ul>
-<p>&nbsp;</p>
-<h2>Run the Xebra Server</h2>
+<h3>Compile the Xebra Translator</h3>
 <ul>
+  <li>Launch estudio  and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator-voidunsafe.ecf</span><br />
+      <br />
+  </li>
+  <li>Compile</li>
+</ul>
+<h3>Run the Xebra Server</h3>
+<ul><li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini </span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>, and <span class="path">webapps_root</span> to your configuration.<br />
+    <br />
+    </li>
   <li>Open estudio in a terminal and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf</span><br />
     <br />
   </li>
-  <li>Compile and Run<br />
+  <li>Compile and Run with the path to the <span class="path">config.ini </span>as argument.<br />
     <br />
   </li>
-  <li>Browse again to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see a Xebra Server Error Report (also with the Fail Whale) with a message saying &quot;Cannot find web application ' ' &quot;<br />
-</li>
+  <li>Browse  to <a href="http://localhost/test.xeb">http://localhost/xebrawebapp/hello.xeb</a>. The server now translates, generates, compiles and finally runns the application. </li>
 </ul>
-<p>&nbsp;</p>
-<h2>Run the Xebrawebapp (simple web application)</h2>
-<p>You can use the tutorial web application <span class="path">xebrawebapp</span> at <span class="path">$XEBRA_DEV/websites/xebrawebapp</span> to start. To use it do the following:</p>
-<ul>
-  <li>Create the Folder <span class="path">$APACHE2/htdocs/xebrawebapp<br />
-  </span></li>
-</ul>
-<ul><li>Run<br />
-    <span class="code">cd $XEBRA_DEV/websites/xebrawebapp/<br />
-    ./generate-webapp.sh</span><br />
-    (due to a current bug, you have to run the script twice)<br />
-    <br />
-    </li>
-  <li>Open estudio in a terminal and open the project at <span class="path">$XEBRA_DEV/websites/xebrawebapp/xebrawebapp-voidunsafe.ecf</span>  and compile<br />
-      <br />
-  </li>
-  <li>Add Execution Parameter "55006"<br />
-      <br />
-  </li>
-  <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
-      <br />
-  </li>
-  <li>Browse to <a href="http://localhost/xebrawebapp/hello.xeb">http://localhost/xebrawebapp/hello.xeb</a>, you should see &quot;Hello World!&quot;</li>
-</ul>
-<p>&nbsp;</p>
-<h2>Run the Demoapplication (advanced web application)</h2>
-<ul><li>
-  <p>You can use the tutorial web application <span class="path">demoapplication</span> at <span class="path">$XEBRA_DEV/websites/demoapplication</span> to start. To use it do the following:  
-      <br />
-    </p>
-    <ul><li>Create the Folder <span class="path">$APACHE2/htdocs/demoapplication<br />
-        <br />
-      </span></li>
-      <li>Copy the folder <span class="path">$XEBRA_DEV/websites/demoapplication/html/images</span> to <span class="path"> $APACHE2/htdocs/demoapplication</span><br />
-        <br />
-      </li>
-      <li>Copy <span class="path">$XEBRA_DEV/websites/demoapplication/html/style.css</span> to <span class="path">$APACHE2/htdocs/demoapplication</span><span class="code">/<br />
-        <br />
-      </span></li>
-    </ul>
-    <ul>
-      <li>Run<br />
-        <span class="code">cd $XEBRA_DEV/websites/demoapplication/<br />
-          ./generate-webapp.sh</span><br />
-          (due to a current bug, you have to run the script twice)<br />
-        <br />
-      </li>
-      <li>Open estudio in a terminal and open the project at <span class="path">$XEBRA_DEV/websites/demoapplication/demoapplication-voidunsafe.ecf</span>  and compile<br />
-        <br />
-      </li>
-      <li>Add Execution Parameter "55005"<br />
-      <br />
-  	</li>
-      <li>Make sure the xebra server and the correct apache (with xebra_mod) is running, then run the web application<br />
-        <br />
-      </li>
-      <li>Browse to <a href="http://localhost/demoapplication/home.xeb">http://localhost/demoapplication/home.xeb</a>, you should see the site</li>
-    </ul>
-    <br />
-  </li>
-</ul>
-<h2>Create a new Web Application (Under construction)</h2>
-<p>If you want to create your own application remember the following important steps:
-  <span class="code"><br />
-</span></p>
-<ul>
-  <li>Add the libraries
-    <ul>
-      <li><span class="path">base-safe.ecf</span><span class="code"></span></li>
-      <li><span class="path">$XEBRA_DEV/eiffel_projects/library/xebra_http/xebra_http.ecf</span></li>
-      <li><span class="path">$XEBRA_DEV/eiffel_projects/library/xebra_web_application/xebra_web_application.ecf</span></li>
-      <li>don't use precompile<br />
-        <br />
-        </li>
-    </ul>
-  </li>
-  <li>Create the folder: <span class="path">$WEBAPP/servlet_gen</span><br />
-    <br />
-  </li>
-  <li>Create the xeb files in  <span class="path">$WEBAPP</span><br />
-    <br />
-  </li>
-  <li>Create a new class <span class="path">(YOURNAME)_CONTROLLER</span> that inherits from <span class="path">XWA_CONTROLLER</span><br />
-    <br />
-    </li>
-  <li>Create a new class <span class="path">(YOURNAME)_GLOBAL_STATE</span><br />
-    <br />
-  </li>
-  <li>Change the root class to <span class="path">(YOURNAME)_G_APPLICATION<br />
-    </span><br />
-  </li>
-  <li>Set project settings - target - advanced - multithreaded to true<span class="code"><br />
-    <br />
-  </span></li>
-  <li>Adapt the three files <span class="path">generate-webapp.sh</span>, <span class="path">input_servlet_gen.txt</span> and <span class="path">input_translator.txt</span> to match the new paths<br />  
-    <br />
-  </li>
-  <li>Create the folder <span class="path">$APACHE2/htdocs/(YOURNAME)</span></li>
-</ul>
+<h2>&nbsp;</h2>
 </body>
 </html>

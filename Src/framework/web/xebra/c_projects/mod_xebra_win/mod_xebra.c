@@ -158,10 +158,10 @@ static int xebra_handler (request_rec* r)
 	char* post_buf;
 	char* srv_hostname;
 	char* srv_port;
+	int srv_port_int;
 	char* cctype;
 	xebra_svr_cfg *srvc;
-	struct sockaddr_in clientService;
-
+	SOCKADDR_IN clientService;
 
 	srvc = ap_get_module_config (r->server->module_config,
 		&xebra_module);
@@ -183,13 +183,9 @@ static int xebra_handler (request_rec* r)
 		/* Tell the user that we could not find a usable */
 		/* WinSock DLL.*/
 		DEBUG("The Winsock dll not found!");
-		return 0;
+		return OK;
 	}
-	else
-	{
-		DEBUG("The Winsock dll found!");
-		DEBUG("The status: %s.", wsaData.szSystemStatus);
-	}
+	
 
 	/* Confirm that the WinSock DLL supports 2.2.*/
 	/* Note that if the DLL supports versions greater    */
@@ -309,13 +305,16 @@ static int xebra_handler (request_rec* r)
 	m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_socket == INVALID_SOCKET)
 	{
-		DEBUG ("Cannot connect to Xebra Server. See apache error log.");
+		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
 		WSACleanup();
 		return OK;
 	}
+	DEBUG ("Socket created.");
+
 	clientService.sin_family = AF_INET;
 	clientService.sin_addr.s_addr = inet_addr(srv_hostname);
-	clientService.sin_port = htons(srv_port);
+	srv_port_int = atoi(srv_port);
+	clientService.sin_port = htons(srv_port_int);
 	if (connect(m_socket, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR)
 	{
 		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
@@ -325,7 +324,7 @@ static int xebra_handler (request_rec* r)
 
 	DEBUG ("Connected.");
 
-	DEBUG ("Sending message.");
+	DEBUG ("Sending message...");
 
 	if (!send_message_fraged (message, m_socket, r)) {
 		//ap_rputs ("Error sending message. See error log.", r);

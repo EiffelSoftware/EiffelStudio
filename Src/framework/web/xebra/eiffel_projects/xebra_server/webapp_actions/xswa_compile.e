@@ -21,10 +21,11 @@ feature -- Access
 	compile_process: detachable PROCESS
 			-- Used to compile the webapp
 
-	melted_file_path: STRING
+	melted_file_path: FILE_NAME
 			-- Returns the path to the melted file
 		do
-			Result := run_workdir_w  + "/" + webapp.config.name.out + ".melted"
+			Result := run_workdir_w.twin
+			Result.set_file_name (webapp.config.name.out + ".melted")
 		end
 
 	compiler_args: STRING
@@ -73,7 +74,7 @@ feature {NONE} -- Implementation
 			if not is_running then
 				webapp.shutdown
 				o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
-				compile_process := launch_process (config.compiler,
+					compile_process := launch_process (config.compiler_filename,
 												compiler_args,
 												app_dir,
 												agent compile_process_exited)

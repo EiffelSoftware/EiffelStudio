@@ -30,20 +30,62 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.config.name.out + " -i ./ -o ./ -s ./" + config.servlet_gen_path + "/ -t ./"
+			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t ."
+		ensure
+			Result_attached: Result /= void
 		end
 
 	generate_args: STRING
 			-- The arguments that are passed to the servlet_gen
 		do
-			Result :=  "./"
+			Result :=  "."
+		ensure
+			Result_attached: Result /= void
 		end
 
 	gen_compiler_args: STRING
 			-- The arguments that are passed to compile the servlet_gen	
 		do
-			Result  := " -config " + config.servlet_gen_ecf + " -target servlet_gen -c_compile -stop"
+			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
+		ensure
+			Result_attached: Result /= void
 		end
+
+	servlet_gen_path: FILE_NAME
+			-- The path to the servlet_gen
+		do
+			Result := app_dir.twin
+			Result.extend ("servlet_gen")
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_exe: FILE_NAME
+			-- The path to the servlet_gen executable
+		do
+			Result := servlet_gen_path.twin
+			Result.extend ("EIFGENs")
+			Result.extend ("servlet_gen")
+			Result.extend ("W_code")
+			if {PLATFORM}.is_windows then
+				Result.set_file_name ("servlet_gen.exe")
+			else
+					Result.set_file_name ("servlet_gen")
+			end
+
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_ecf: FILE_NAME
+			-- The path to the servlet_gen executable
+		do
+			Result := servlet_gen_path.twin
+			Result.set_file_name ("servlet_gen.ecf")
+		ensure
+			Result_attached: Result /= void
+		end
+
 
 feature -- Status report
 
@@ -52,8 +94,13 @@ feature -- Status report
 			-- Check if the webapps has to be (re)translated
 			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
 			-- Returns True iff there is a *.xeb file in app_dir which is newer than app_dir/g_name_application.e
+		local
+			l_file: FILE_NAME
 		do
-			Result := file_is_newer (app_dir + "/" + "g_" + webapp.config.name.out + "_application.e",
+			l_file := app_dir.twin
+			l_file.set_file_name ("g_" + webapp.config.name.out + "_application.e")
+
+			Result := file_is_newer (l_file ,
 									app_dir,
 									".xeb",
 									".xeb")
@@ -136,7 +183,7 @@ feature {NONE} -- Implementation
 			if not is_running then
 				webapp.shutdown
 				o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 10)
-				translate_process := launch_process (config.translator,
+				translate_process := launch_process (config.translator_filename,
 														translator_args,
 														app_dir,
 														agent translate_process_exited)
@@ -150,7 +197,7 @@ feature {NONE} -- Implementation
 			-- Launches the process to compile the servlet_gen
 		do
 			o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 10)
-			gen_compile_process := launch_process (config.compiler,
+			gen_compile_process := launch_process (config.compiler_filename,
 													gen_compiler_args,
 													app_dir,
 													agent gen_compile_process_exited)
@@ -161,7 +208,7 @@ feature {NONE} -- Implementation
 			-- Launches the process to execute servlet_gen
 		do
 			o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR (3) -=-=-=-=-=-=", 10)
-			generate_process := launch_process (app_dir + "/" + config.servlet_gen_exe,
+			generate_process := launch_process (servlet_gen_exe,
 												generate_args,
 												app_dir,
 												agent generate_process_exited)

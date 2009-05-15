@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 		end
 
+
 feature -- Access
 
 	webapps:  HASH_TABLE [XS_WEBAPP, STRING]
@@ -50,11 +51,35 @@ feature -- Access
 	finalize_webapps:  SETTABLE_BOOLEAN assign set_finalize_webapps
 	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
 
-feature -- Constants
+	compiler_filename: FILE_NAME
+			-- Returns 'compiler' converted to a FILE_NAME
+		require
+			compiler_set: compiler.is_set
+		do
+			create Result.make_from_string (compiler)
+		ensure
+			Result_attached: Result /= Void
+		end
 
-	servlet_gen_path: STRING = "servlet_gen"
-	servlet_gen_exe: STRING = "servlet_gen/EIFGENs/servlet_gen/W_code/servlet_gen"
-	servlet_gen_ecf: STRING = "servlet_gen/servlet_gen.ecf"
+	translator_filename: FILE_NAME
+			-- Returns 'translator' converted to a FILE_NAME
+		require
+			translator_set: translator.is_set
+		do
+			create Result.make_from_string (translator)
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	webapps_root_filename: FILE_NAME
+			-- Returns 'webapps_root' converted to a FILE_NAME
+		require
+			webapps_root_set: webapps_root.is_set
+		do
+			create Result.make_from_string (webapps_root)
+		ensure
+			Result_attached: Result /= Void
+		end
 
 feature -- Stauts Report
 

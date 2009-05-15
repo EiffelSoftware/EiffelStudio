@@ -430,7 +430,11 @@ feature -- Reporting messages
 	report_minimization_task
 			-- Report that auto_test is now minimizing a witness.
 		do
-			report_info_message ("Minimizing a bug reproducing example (this can take overtime, to disable use '--disable-minimize').")
+			if attached remaining_time then
+				report_info_message ("Minimizing a bug reproducing example (this will affect the remaining time AutoTest can execute tests, to disable use '--disable-minimize').")
+			else
+				report_info_message ("Minimizing a bug reproducing example (to disable use '--disable-minimize').")
+			end
 		end
 
 	report_manual_testing
@@ -443,6 +447,19 @@ feature -- Reporting messages
 			-- Report that auto_test is now using the ranomd testing strategy.
 		do
 			report_info_message ("Executing automatically generated tests")
+		end
+
+	report_test_synthesis (a_class: CLASS_I)
+			-- Report that AutoTest has created a bug reproducing test case.
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_string: STRING
+		do
+			create l_string.make (100)
+			l_string.append_string ("Created new test class ")
+			l_string.append_string (a_class.name)
+			report_info_message (l_string)
 		end
 
 feature -- Reporting errors

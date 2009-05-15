@@ -500,8 +500,8 @@ feature {NONE} -- Internationalization
 	t_title: STRING = "Generate tests through AutoTest"
 	t_subtitle: STRING = "Define commands to run auto test"
 
-	b_timeout: STRING = "Duration (minutes)"
-	b_test_count: STRING = "Duration (invokations)"
+	b_timeout: STRING = "Cutoff (minutes)"
+	b_test_count: STRING = "Cutoff (invocations)"
 	b_proxy_timeout: STRING = "Routine timeout (seconds)"
 	b_seed: STRING = "Random number generation seed"
 	b_ddmin: STRING = "Use ddmin for minimization"

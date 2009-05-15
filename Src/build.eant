@@ -17,6 +17,7 @@
 		<echo message=" geant compile_workbench   Compile 'ec' workbench" />
 		<echo message=" ---- "/>
 		<echo message=" geant make_delivery       Build a complete delivery " />
+		<echo message=" geant make_delivery_menu  Build a complete delivery (interactive) " />
 		<echo message="" />
 		<echo message="defines:" />
 		<!--
@@ -82,6 +83,10 @@
 
 	<target name="make_delivery" >
 		<geant target="build_delivery" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}deliv.eant"
+			reuse_variables="true" fork="false" />
+	</target>
+	<target name="make_delivery_menu" >
+		<geant target="menu" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}menu.eant"
 			reuse_variables="true" fork="false" />
 	</target>
 

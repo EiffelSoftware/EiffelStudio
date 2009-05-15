@@ -231,6 +231,7 @@ feature {NONE} -- Basic operations
 			l_error_handler: AUT_ERROR_HANDLER
 			l_itp: AUT_INTERPRETER_PROXY
 			l_repo: AUT_TEST_CASE_RESULT_REPOSITORY
+			l_last_class: EIFFEL_CLASS_I
 		do
 			is_finished := is_stop_requested
 
@@ -247,7 +248,11 @@ feature {NONE} -- Basic operations
 								l_witness := l_task.minimized_witness
 								session.used_witnesses.force_last (l_witness)
 								create current_results.make_from_linear (l_witness.classifications)
+								l_last_class := test_suite.eiffel_project_helper.last_added_class
 								create_new_class
+								if attached test_suite.eiffel_project_helper.last_added_class as l_new_class and then l_last_class /= l_new_class then
+									session.error_handler.report_test_synthesis (l_new_class)
+								end
 								current_results := Void
 							end
 						elseif attached test_task as l_task then

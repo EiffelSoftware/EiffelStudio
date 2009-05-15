@@ -120,6 +120,7 @@ feature -- Process
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
+			type_name.append (text.as_string_8)
 		end
 
 	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)

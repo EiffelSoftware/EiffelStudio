@@ -535,12 +535,19 @@ rt_private void update_entry (struct rt_type *type_entry)
 		memset(type_entry->type_name, (int) ' ', 9);
 		eif_remove_surrounding_white_spaces (type_entry->type_name);
 		type_entry->is_reference = 1;
-	} else if ((l_count >=2) && (l_str[0] == '!')) {
+	} else if ((l_count >= 2) && (l_str[0] == '!')) {
 		l_str[0] = ' ';
+		eif_remove_surrounding_white_spaces (type_entry->type_name);
+		type_entry->is_attached = 1;
+	} else if ((l_count >= 8) && (strncmp ("attached", l_str, 8) == 0)) {
+		memset(type_entry->type_name, (int) ' ', 8);
 		eif_remove_surrounding_white_spaces (type_entry->type_name);
 		type_entry->is_attached = 1;
 	} else if ((l_count >=2) && (l_str[0] == '?')) {
 		l_str[0] = ' ';
+		eif_remove_surrounding_white_spaces (type_entry->type_name);
+	} else if ((l_count >= 10) && (strncmp ("detachable", l_str, 10) == 0)) {
+		memset(type_entry->type_name, (int) ' ', 10);
 		eif_remove_surrounding_white_spaces (type_entry->type_name);
 	}
 }

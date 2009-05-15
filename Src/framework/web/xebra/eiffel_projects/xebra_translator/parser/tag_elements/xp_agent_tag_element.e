@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_AGENT_TAG_ELEMENT}.
+		A {XP_TAG_ELEMENT} which executes an agent on setting an attribute.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

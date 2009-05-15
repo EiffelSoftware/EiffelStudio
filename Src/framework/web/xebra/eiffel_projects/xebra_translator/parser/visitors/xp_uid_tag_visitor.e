@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XP_UID_TAG_VISITOR}.
+		Sets all the uids of the {XP_TAG_ELEMENT} tree.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

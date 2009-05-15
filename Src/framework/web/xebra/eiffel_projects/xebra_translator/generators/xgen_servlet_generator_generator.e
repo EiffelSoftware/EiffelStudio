@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {SERVLET_GENERATOR_GENERATOR}."
+	description: "[
+		Creates a servlet generator file in the servlet_gen path.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

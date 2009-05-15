@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {TAG_DESCRIPTION_ATTRIBUTE}."
+	description: "[
+		Contains all the data to meta describe an attribute of a tag
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +27,7 @@ feature -- Access
 			-- The id of the tag attribute
 
 	put (child: XTL_TAG_LIB_ITEM)
-			-- <Precursor>
+			-- <Precursor>			
 		do
 			-- Do nothing (XTL_TAG_DESCRIPTIONS don't have any children)
 		end

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XU_ERROR_MANAGED_FILE}.
+		Manages the processing and ensuing error handling of a file.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

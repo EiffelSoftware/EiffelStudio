@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {TAG_DESCRIPTION}."
+	description: "[
+		Contains all the data for a tag meta description.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

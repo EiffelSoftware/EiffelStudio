@@ -349,7 +349,7 @@ static int xebra_handler (request_rec* r)
 	rv = handle_response_message (r, rmsg_buf);
 	if (rv != APR_SUCCESS)
 	{
-		ap_rputs ("Error reading message from XEbra Server. See error log.", r);
+		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
 	/* display module revision */
@@ -375,7 +375,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	char* html;
 
 	/* Extract cookie orders */
-	msg_copy =  message;//apr_pstrdup (r->pool, message);
+	msg_copy = apr_pstrdup (r->pool, message);
 	cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
 	while (cookie_order_start != NULL) {
 		DEBUG ("Extracting cookies...");

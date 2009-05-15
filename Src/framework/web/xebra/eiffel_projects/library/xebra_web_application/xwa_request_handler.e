@@ -94,7 +94,7 @@ feature {NONE} -- Internal Processing
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		do
 			o.dprint ("Looking up servlet for '" + a_request.target_uri + "'",6)
-			if attached  a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+			if attached a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
 				Result := l_servlet
 			else
 			--	Result := request.session.get_stateful_servlet

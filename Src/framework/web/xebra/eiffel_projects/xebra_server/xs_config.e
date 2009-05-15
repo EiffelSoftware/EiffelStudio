@@ -32,7 +32,9 @@ feature {NONE} -- Initialization
 			create translator.make_empty
 			create finalize_webapps.make_empty
 			create assume_webapps_are_running.make_empty
+			create arg_config.make_empty
 		ensure then
+			arg_config_attached: arg_config /= Void
 			webapps_attached: webapps /= Void
 			webapps_root_attached: webapps_root /= Void
 			compiler_attached: compiler /= Void
@@ -45,11 +47,25 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	webapps:  HASH_TABLE [XS_WEBAPP, STRING]
+			-- The webapps the server knows about
+
+	arg_config: XS_ARG_CONFIG
+			-- The config settings read from the execute arguments.		
+
 	webapps_root:  SETTABLE_STRING assign set_webapps_root
+			-- The webapps root directory. Read from config.ini
+
 	compiler:  SETTABLE_STRING assign set_compiler
+			-- The compiler (ec) filename. Read from config.ini
+
 	translator:  SETTABLE_STRING assign set_translator
+			-- The compiler (xebra_translator) filename. Read from config.ini
+
 	finalize_webapps:  SETTABLE_BOOLEAN assign set_finalize_webapps
+			-- Specifies whether webapps should be finalized. Read from config.ini
+
 	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
+			-- Specifies whether webapps should be finalized. Read from config.ini
 
 	compiler_filename: FILE_NAME
 			-- Returns 'compiler' converted to a FILE_NAME
@@ -110,7 +126,7 @@ feature -- Stauts Report
 feature -- Setters
 
 	set_webapps (a_webapps: like webapps)
-			-- Sets webapps and assignes current to all webapps in the list
+			-- Sets webapps and assignes current to all webapps in the list.
 		require
 			a_webapps_attached: a_webapps /= Void
 		do
@@ -129,7 +145,7 @@ feature -- Setters
 
 
 	set_webapps_root (a_webapps_root: like webapps_root)
-			-- Sets webapps_root
+			-- Sets webapps_root.
 		require
 			a_webapps_root_attached: a_webapps_root /= Void
 		do
@@ -139,7 +155,7 @@ feature -- Setters
 		end
 
 	set_compiler  (a_compiler: like compiler)
-			-- Sets compiler
+			-- Sets compiler.
 		require
 			a_compiler_attached: a_compiler /= Void
 		do
@@ -149,7 +165,7 @@ feature -- Setters
 		end
 
 	set_translator (a_translator: like translator)
-			-- Sets translator
+			-- Sets translator.
 		require
 			a_translator_attached: a_translator /= Void
 		do
@@ -159,7 +175,7 @@ feature -- Setters
 		end
 
 	set_finalize_webapps (a_finalize_webapps: like finalize_webapps)
-			-- Sets finalize_webapps
+			-- Sets finalize_webapps.
 		require
 			a_finalize_webapps_attached: a_finalize_webapps /= Void
 		do
@@ -169,7 +185,7 @@ feature -- Setters
 		end
 
 	set_assume_webapps_are_running (a_assume_webapps_are_running: like assume_webapps_are_running)
-			-- Sets assume_webapps_are_running
+			-- Sets assume_webapps_are_running.
 		require
 			a_assume_webapps_are_running_attached: a_assume_webapps_are_running /= Void
 		do
@@ -179,6 +195,7 @@ feature -- Setters
 		end
 
 invariant
+	arg_config_attached: arg_config /= Void
 	webapps_root_attached: webapps_root /= Void
 	webapps_attached: webapps /= Void
 	compiler_attached: compiler /= Void

@@ -44,16 +44,29 @@ feature -- Access
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
-
-feature -- Status report
-
-	is_interactive: BOOLEAN
-		--
+	debug_level: INTEGER
+			-- The debug_level
 		require
 			is_successful: is_successful
 		do
-			Result := has_option (interactive_option_switch)
+			Result := 0
+			if has_option (debug_level_switch) and then attached option_of_name (debug_level_switch) as l_option then
+				if l_option.value.is_integer then
+					Result := l_option.value.to_integer
+				end
+			end
 		end
+
+
+feature -- Status report
+
+--	is_interactive: BOOLEAN
+--		--
+--		require
+--			is_successful: is_successful
+--		do
+--			Result := has_option (interactive_option_switch)
+--		end
 
 feature {NONE} -- Access: Usage
 
@@ -83,13 +96,14 @@ feature {NONE} -- Access: Usage
 			-- <Precursor>
 		once
 			create Result.make (1)
-		--	Result.extend (create {ARGUMENT_SWITCH}.make (interactive_option_switch, "Runs the application in interactive mode such that the user can shut it down via console.", False, False))
+			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
 		end
-
 
 feature {NONE} -- Switches
 
-	interactive_option_switch: STRING = "i|interactive"
+
+	debug_level_switch: STRING = "d|debug_level"
+--	interactive_option_switch: STRING = "i|interactive"
 
 end
 

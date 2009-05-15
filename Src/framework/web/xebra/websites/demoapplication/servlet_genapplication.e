@@ -1,6 +1,6 @@
 note
 	description: "[
-		Runns the argument parser which then runns the translator.
+		THIS IS A GENERATED FILE, DO NOT EDIT!
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,62 +8,31 @@ note
 	revision: "$Revision$"
 
 class
-	XT_APPLICATION
+	APPLICATION
 
 inherit
-	ERROR_SHARED_MULTI_ERROR_MANAGER
 	KL_SHARED_ARGUMENTS
-	XU_SHARED_OUTPUTTER
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature-- Access
+
+feature-- Implementation
 
 	make
-			-- Make the application.
 		local
-			l_arg_parser: XT_ARGUMENT_PARSER
+			controller_table: HASH_TABLE [STRING, STRING]
+			path: STRING
 		do
-			create l_arg_parser.make
-			l_arg_parser.execute (agent run (l_arg_parser))
-		end
-
-feature -- Operation
-
-	run (a_arg_parser: XT_ARGUMENT_PARSER)
-			-- Runs the translator
-		require
-			a_arg_parser_attached: attached a_arg_parser
-		local
-			l_printer: ERROR_CUI_PRINTER
-			l_translator: XP_TRANSLATOR
-			l_dir: DIRECTORY
-		do
-			o.set_name ("XEBTRANS")
-			o.set_debug_level (a_arg_parser.debug_level)
-			create l_translator.make (a_arg_parser.project_name)
-			create l_dir.make (a_arg_parser.input_path)
-
-			l_translator.set_output_path (a_arg_parser.output_path)
-			l_translator.set_servlet_gen_path (a_arg_parser.servlet_gen_path)
-
-			l_translator.process_with_files (l_dir.linear_representation, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
-
-			create l_printer.default_create
-			if error_manager.has_warnings then
-				error_manager.trace_warnings (l_printer)
-			end
-
-			if not error_manager.is_successful then
-				error_manager.trace_last_error (l_printer)
+			if  Arguments.argument_count /= 1 then
+			print ("usage:serlvet_gen output_path%N")
 			else
-				o.iprint ("Output generated to '" + l_translator.output_path + "'")
-				o.iprint ("Servlets generated to '" + l_translator.servlet_gen_path + "'")
+			path := Arguments.argument (1)
 			end
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -93,8 +62,4 @@ feature -- Operation
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
-		]"
-end
-
-
-
+		]"end

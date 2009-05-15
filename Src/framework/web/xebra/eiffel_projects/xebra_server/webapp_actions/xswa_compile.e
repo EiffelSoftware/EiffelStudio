@@ -24,7 +24,7 @@ feature -- Access
 	melted_file_path: FILE_NAME
 			-- Returns the path to the melted file
 		do
-			Result := run_workdir_w.twin
+			Result := run_workdir.twin
 			Result.set_file_name (webapp.config.name.out + ".melted")
 		end
 
@@ -73,13 +73,15 @@ feature {NONE} -- Implementation
 		do
 			if not is_running then
 				webapp.shutdown
-				o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
+				if can_launch_process (config.compiler_filename, app_dir) then
+					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
 					compile_process := launch_process (config.compiler_filename,
-												compiler_args,
-												app_dir,
-												agent compile_process_exited)
-											--	agent compiler_output_handler)
-				is_running := True
+													compiler_args,
+													app_dir,
+													agent compile_process_exited)
+												--	agent compiler_output_handler)
+					is_running := True
+				end
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.config.name.out)).render_to_response
 		end

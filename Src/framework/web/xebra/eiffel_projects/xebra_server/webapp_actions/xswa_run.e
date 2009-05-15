@@ -21,6 +21,37 @@ feature -- Access
 	run_process: detachable PROCESS
 		-- Used to run the webapp
 
+	webapp_exe: FILE_NAME
+			-- The executable of the webapp
+		do
+			Result := app_dir.twin
+			Result.extend ("EIFGENs")
+			Result.extend (webapp.config.name.out)
+			Result.extend ("W_code")
+
+
+			if {PLATFORM}.is_windows then
+				Result.set_file_name (webapp.config.name.out + ".exe")
+			else
+				Result.set_file_name (webapp.config.name.out)
+			end
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	run_args: STRING
+			-- The arguments for running the webapp
+		local
+			l_f: FILE_NAME
+		do
+			l_f := app_dir.twin
+			l_f.set_file_name ("config.ini")
+			Result := l_f.string
+		ensure
+			Result_attached: Result /= Void
+		end
+
+
 feature -- Status report
 
 	is_necessary: BOOLEAN
@@ -47,13 +78,15 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			if  not is_running then
-				o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 10)
-				run_process := launch_process (app_dir + "/EIFGENs/"+ webapp.config.name.out + "/W_code/" + webapp.config.name.out,
-											app_dir + "/config.ini",
-											run_workdir_w,
-											agent run_process_exited)
-										--	Void)
-				is_running := True
+				if can_launch_process (webapp_exe, run_workdir) then
+					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 10)
+					run_process := launch_process (webapp_exe,
+												run_args,
+												run_workdir,
+												agent run_process_exited)
+											--	Void)
+					is_running := True
+				end
 			end
 			Result := (create {XER_APP_STARTING}.make (webapp.config.name.out)).render_to_response
 		end

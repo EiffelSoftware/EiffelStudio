@@ -14,13 +14,4 @@ feature -- Singleton
 			result_attached: attached Result
 		end
 
-feature -- Element Change
-
-	set_outputter_name (a_name: STRING)
-			-- Setter (Has to be done in every thread!)
-		do
-			o.set_name (a_name)
-		ensure
-			o.name = a_name
-		end
 end

@@ -65,8 +65,8 @@ feature -- Paths
 			Result.extend (webapp.config.name.out)
 			end
 
-	run_workdir_w : FILE_NAME
-			-- The working directory to execute the application W_CODE
+	run_workdir : FILE_NAME
+			-- The working directory to execute the application X_CODE
 		do
 			Result := app_dir.twin
 			Result.extend ("EIFGENs")
@@ -193,30 +193,42 @@ feature {NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
+	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
+			-- Tests if the files and dirs exist
+		local
+			l_file: RAW_FILE
+		do
+			Result := False
+			create l_file.make (a_exe)
+			if l_file.exists then
+				l_file.make (a_dir)
+				if l_file.exists and l_file.is_directory then
+					Result := True
+				else
+					o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
+				end
+			else
+				o.eprint ("File does not exist for launching process: '" + a_exe + "'", generating_type)
+			end
+
+		end
+
+
 	--launch_process (a_exe: STRING; a_args: STRING; a_dir: STRING; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE [detachable STRING]]): detachable PROCESS
 	launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
 			-- Launches a process
 		local
 			l_process_factory: PROCESS_FACTORY
-			l_file: RAW_FILE
 		do
-			create l_file.make (a_exe)
-			if l_file.exists then
-				l_file.make (a_dir)
-				if l_file.exists and l_file.is_directory then
-					create l_process_factory
-					Result  := l_process_factory.process_launcher_with_command_line (a_exe + " " + a_args, a_dir)
-					Result.set_on_exit_handler (a_exit_handler)
+			if can_launch_process (a_exe, a_dir) then
+				create l_process_factory
+				Result  := l_process_factory.process_launcher_with_command_line (a_exe + " " + a_args, a_dir)
+				Result.set_on_exit_handler (a_exit_handler)
 --					if a_output_handler /= Void then
 --						Result.redirect_output_to_agent (a_output_handler)
 --					end
-					o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", 3)
-					Result.launch
-				else
-					o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
-				end
-			else
-				o.eprint ("File does not exist for launching process: '" + a_exe + " " + a_args + "'", generating_type)
+				o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", 3)
+				Result.launch
 			end
 		end
 invariant

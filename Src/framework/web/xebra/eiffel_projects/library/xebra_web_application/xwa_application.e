@@ -43,7 +43,9 @@ feature {NONE} -- Operations Internal
 			create l_config_reader.make
 			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
 				config := l_config
+				config.arg_config.set_debug_level (a_arg_parser.debug_level)
 			end
+
 			create l_printer.default_create
 			if error_manager.has_warnings then
 				error_manager.trace_warnings (l_printer)
@@ -53,6 +55,9 @@ feature {NONE} -- Operations Internal
 				error_manager.trace_errors (l_printer)
 			else
 				check config /= Void end
+
+				o.set_name (config.name.out)
+				o.set_debug_level (config.arg_config.debug_level)
 				o.iprint ("Starting " + config.name.out + "@" + config.port.out)
 				initialize_server_connection_handler
 				run
@@ -75,7 +80,6 @@ feature {NONE} -- Operations Internal
 			config_attached: config /= Void
 		do
 			if attached server_connection_handler as server then
-				set_outputter_name (config.name)
 				server.launch
 				o.iprint ("Xebra Wep Application ready to rock...")
 				if config.is_interactive.value then

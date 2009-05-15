@@ -68,7 +68,8 @@ feature -- Implementation
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
 		do
-			set_outputter_name (config.name)
+			o.set_name (config.name.out)
+			o.set_debug_level (config.arg_config.debug_level)
 			create l_request_handler.make
         	from
                 xserver_socket.listen (10)

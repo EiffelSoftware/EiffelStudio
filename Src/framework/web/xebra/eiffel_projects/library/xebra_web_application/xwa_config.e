@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 			create name.make_empty
 			create port.make_empty
 			create is_interactive.make_empty
+			create arg_config.make_empty
 		ensure then
+			arg_config_attached: arg_config /= Void
 			name_attached: name /= Void
 			port_attached: port /= Void
 			is_interactive_attached: is_interactive /= Void
@@ -36,10 +38,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: SETTABLE_STRING assign set_name
+		-- The name of the application. Read from config.ini.
 
 	port: SETTABLE_INTEGER assign set_port
+		-- The port on which the application listens. Read from config.ini
 
 	is_interactive: SETTABLE_BOOLEAN assign set_is_interactive
+		-- Specifies whether the application should be run in interactive mode.
+		-- In interactive mode it can be close via console
+
+	arg_config: XWA_ARG_CONFIG
+			-- The config settings read from the execute arguments.		
 
 feature -- Status report
 
@@ -74,9 +83,11 @@ feature -- Status setting
 		ensure
 			is_interactive_set: is_interactive  = a_is_interactive
 		end
+		
 invariant
-		name_attached: name /= Void
-		port_attached: port /= Void
-		is_interactive_attached: is_interactive /= Void
+	arg_config_attached: arg_config /= Void
+	name_attached: name /= Void
+	port_attached: port /= Void
+	is_interactive_attached: is_interactive /= Void
 end
 

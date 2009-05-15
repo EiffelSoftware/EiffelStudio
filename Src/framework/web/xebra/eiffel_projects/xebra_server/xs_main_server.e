@@ -37,7 +37,9 @@ feature -- Operations
 			l_webapp_finder: XS_WEBAPP_FINDER
 			l_config_reader: XS_CONFIG_READER
 		do
-			set_outputter_name ({XS_MAIN_SERVER}.Name)
+			o.set_debug_level (a_arg_parser.debug_level)
+			o.set_name ({XS_MAIN_SERVER}.Name)
+
 			print ("%N%N%N")
 			o.iprint ("Starting Xebra Server...")
 			o.dprint ("Reading configuration...",1)
@@ -45,6 +47,7 @@ feature -- Operations
 			create l_config_reader.make
 			if attached l_config_reader.process_file (a_arg_parser.config_filename) as config then
 				server_config := config
+				server_config.arg_config.set_debug_level (a_arg_parser.debug_level)
 				create l_webapp_finder.make
 				server_config.set_webapps (l_webapp_finder.search_webapps (server_config.webapps_root))
 

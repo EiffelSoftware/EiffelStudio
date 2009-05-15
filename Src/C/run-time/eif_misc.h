@@ -84,7 +84,7 @@ RT_LNK void eif_system_asynchronous (char *s);
 RT_LNK char * eif_getenv(char * k); 
 RT_LNK char * eif_getenv_native(char * k); 
 
-RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k);
+RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k);
 
 #ifdef EIF_WINDOWS
 /* DLL declarations */

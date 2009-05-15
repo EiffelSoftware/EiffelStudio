@@ -41,6 +41,7 @@
 #include "eif_misc.h"
 #include "eif_argv.h"
 #include "eif_internal.h"
+#include "eif_gen_conf.h"
 #include "eif_object_id.h"
 #include "eif_traverse.h"
 
@@ -149,10 +150,15 @@ extern "C" {
 #define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
 
 /* SPECIAL class */
+#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, RT_SPECIAL_COUNT (area))
 #define eif_builtin_SPECIAL_base_address(area)				(EIF_POINTER) (area)
+#define eif_builtin_SPECIAL_capacity(area)					RT_SPECIAL_CAPACITY(area)
 #define eif_builtin_SPECIAL_count(area)						RT_SPECIAL_COUNT(area)
 #define eif_builtin_SPECIAL_element_size(area)				RT_SPECIAL_ELEM_SIZE(area)
-#define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, 0, RT_SPECIAL_COUNT (area))
+#define eif_builtin_SPECIAL_set_count(area,n)				RT_SPECIAL_COUNT(area) = n
+
+/* TYPE class */
+#define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param_id(Dftype(obj), 1))
 
 /* TUPLE class */
 #define eif_builtin_TUPLE_count(area)						(RT_SPECIAL_COUNT(area) - 1) /* - 1 because first argument is for object_comparison */

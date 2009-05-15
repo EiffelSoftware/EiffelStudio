@@ -292,6 +292,16 @@ doc:	</attribute>
 */
 rt_public void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
+/*
+doc:	<attribute name="egc_has_old_special_semantic" return_type="int" export="public">
+doc:		<summary>Is the runtime using the old semantic for SPECIAL? That is to say `count' = `capacity'.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe set once in initialization.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public int egc_has_old_special_semantic = 1;
+
 rt_public EIF_TYPE_INDEX egc_str_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;

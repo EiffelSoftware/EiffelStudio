@@ -294,10 +294,8 @@ rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int));
 
 rt_public EIF_REFERENCE rrt_make(void);
-rt_public EIF_REFERENCE irt_make(void);			/* Do the independant retrieve */
 rt_public EIF_REFERENCE grt_make(void);			/* Do the general retrieve (3.3 and later) */
 rt_public EIF_REFERENCE rrt_nmake(long int objectCount);
-rt_public EIF_REFERENCE irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
 rt_public EIF_REFERENCE grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
 rt_private void iread_header_new(EIF_CONTEXT_NOARG);
 rt_private void rread_header(EIF_CONTEXT_NOARG);
@@ -314,7 +312,6 @@ rt_private void read_header(char rt_type);
 rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count);
 rt_private EIF_REFERENCE object_rread_special (EIF_REFERENCE object, uint16 flags, EIF_TYPE_INDEX old_dtype, uint32 count);
 rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint16 new_flags, EIF_TYPE_INDEX old_dftype, rt_uint_ptr expanded_offset);
-rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype);	/* read the individual attributes of the object*/
 
 rt_private size_t readline (register char *ptr, size_t maxlen);
@@ -625,21 +622,24 @@ rt_private EIF_REFERENCE new_spref (int count)
 	}
 	zone = HEADER (result);
 	if (spref_type == 0) {
-		spref_type = (EIF_TYPE_INDEX) eif_type_id ("SPECIAL [ANY]");
+		spref_type = (EIF_TYPE_INDEX) eif_type_id ("SPECIAL [detachable ANY]");
 	}
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = spref_type;
 	zone->ov_dtype = To_dtype(spref_type);
 	RT_SPECIAL_COUNT(result) = count;
 	RT_SPECIAL_ELEM_SIZE(result) = sizeof(EIF_REFERENCE);
+	RT_SPECIAL_CAPACITY(result) = count;
+	if (!egc_has_old_special_semantic) {
+		memset(result, 0, RT_SPECIAL_VISIBLE_SIZE(result));
+	}
 	return result;
 }
 
 rt_private mismatch_table *new_mismatch_table (uint32 min_count)
 {
 	uint32 capacity = min_count;
-	mismatch_table *result = (mismatch_table *) eif_rt_xmalloc (
-			sizeof (mismatch_table), C_T, GC_OFF);
+	mismatch_table *result = (mismatch_table *) eif_rt_xmalloc (sizeof (mismatch_table), C_T, GC_OFF);
 	if (result == NULL)
 		xraise (EN_MEM);
 	if (capacity < 50)
@@ -979,13 +979,14 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
-			rt_kind_version = 0x0;
+			rt_kind_version = rt_type;
 			break;
-		case GENERAL_STORE_4_0:			/* New General store */
+		case GENERAL_STORE_4_0:
+		case GENERAL_STORE_6_4:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
-			rt_kind_version = 0x0;
+			rt_kind_version = rt_type;
 			break;
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:
@@ -999,6 +1000,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		case INDEPENDENT_STORE_5_5:
 		case INDEPENDENT_STORE_6_0:
 		case INDEPENDENT_STORE_6_3:
+		case INDEPENDENT_STORE_6_4:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = RECOVERABLE_STORE;
 			rt_kind_version = rt_type;
@@ -1067,6 +1069,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		case INDEPENDENT_STORE_5_5:
 		case INDEPENDENT_STORE_6_0:
 		case INDEPENDENT_STORE_6_3:
+		case INDEPENDENT_STORE_6_4:
 			independent_retrieve_reset ();
 			break;
 	}
@@ -1400,6 +1403,62 @@ rt_private uint32 special_generic_type (EIF_TYPE_INDEX dtype)
 	return *patterns;
 }
 
+/*
+doc:	<routine name="rt_special_element_size" return_type="uint32" export="private">
+doc:		<summary>Given a dtype find out the size of the element of a SPECIAL object.</summary>
+doc:		<param name="is_tuple" type="int">Is this a TUPLE type?</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of SPECIAL in retrieved system.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+rt_private uint32 rt_special_element_size(int is_tuple, EIF_TYPE_INDEX dtype) {
+	uint32 elm_size;
+	if (is_tuple) {
+		elm_size = sizeof(EIF_TYPED_VALUE);
+	} else {
+		uint32 dgen = special_generic_type (dtype);
+		if (!((dgen & SK_HEAD) == SK_EXP)) {
+			switch (dgen) {
+				case SK_UINT8: elm_size = sizeof (EIF_NATURAL_8); break;
+				case SK_UINT16: elm_size = sizeof (EIF_NATURAL_16); break;
+				case SK_UINT32: elm_size = sizeof (EIF_NATURAL_32); break;
+				case SK_UINT64: elm_size = sizeof (EIF_NATURAL_64); break;
+				case SK_INT8: elm_size = sizeof (EIF_INTEGER_8); break;
+				case SK_INT16: elm_size = sizeof (EIF_INTEGER_16); break;
+				case SK_INT32: elm_size = sizeof (EIF_INTEGER_32); break;
+				case SK_INT64: elm_size = sizeof (EIF_INTEGER_64); break;
+				case SK_CHAR: elm_size = sizeof (EIF_CHARACTER); break;
+				case SK_WCHAR: elm_size = sizeof (EIF_WIDE_CHAR); break;
+				case SK_BOOL: elm_size = sizeof (EIF_BOOLEAN); break;
+				case SK_REAL32: elm_size = sizeof (EIF_REAL_32); break;
+				case SK_REAL64: elm_size = sizeof (EIF_REAL_64); break;
+				case SK_POINTER: elm_size = sizeof (EIF_POINTER); break;
+				case SK_DTYPE:
+				case SK_REF: elm_size = sizeof (EIF_REFERENCE); break;
+				default:
+					if (dgen & SK_BIT) {
+						elm_size = BITOFF(dgen & SK_DTYPE);
+					} else {
+						elm_size = 0; /* To avoid C compiler warning. */
+						eise_io("Independent retrieve: not an Eiffel object.");
+					}
+			}
+		} else {
+#ifdef WORKBENCH
+			elm_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+#else
+			elm_size = EIF_Size((uint16)(dgen & SK_DTYPE));
+			if (References(dgen & SK_DTYPE) > 0) {
+				elm_size = elm_size + OVERHEAD;
+			}
+#endif
+		}
+	}
+	return elm_size;
+}
+
+
 rt_public EIF_REFERENCE rt_make(void)
 {
 		/* Make the retrieve of all objects in file */
@@ -1424,7 +1483,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	EIF_OBJECT new_hector;
 	uint16 flags;
 	EIF_TYPE_INDEX dtype, dftype;
-	uint32 spec_count, spec_elem_size = 0;
+	uint32 spec_count, spec_elem_size, spec_capacity = 0;
 	volatile size_t n = objectCount;
 #ifdef ISE_GC
 	volatile char g_status = rt_g_data.status;
@@ -1478,13 +1537,19 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Special object: read the saved size */
 			buffer_read((char *) &spec_count, (sizeof(uint32)));
 			buffer_read((char *) &spec_elem_size, (sizeof(uint32)));
+			buffer_read((char *) &spec_capacity, (sizeof(uint32)));
 			nb_byte = (rt_uint_ptr) spec_count * (rt_uint_ptr) spec_elem_size;
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 			} else {
-				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(spec_count,spec_elem_size), EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(spec_capacity,spec_elem_size), EIF_TEST(!(flags & EO_REF)));
 				RT_SPECIAL_COUNT(newadd) = spec_count;
 				RT_SPECIAL_ELEM_SIZE(newadd) = spec_elem_size;
+				RT_SPECIAL_CAPACITY(newadd) = spec_capacity;
+					/* We have to clear the area because the GC will traverse it. */
+				if (!egc_has_old_special_semantic) {
+					memset(newadd, 0, RT_SPECIAL_VISIBLE_SIZE(newadd));
+				}
 			}
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1515,7 +1580,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 		if (nb_byte > 0) {		
 				/* Read the object's body */
 			buffer_read(newadd, nb_byte);
-			CHECK("Special attributes preserved", !RT_IS_SPECIAL(newadd) || (((uint32) RT_SPECIAL_COUNT(newadd) == spec_count) && ((uint32)RT_SPECIAL_ELEM_SIZE(newadd) == spec_elem_size)));
+			CHECK("Special attributes preserved", !RT_IS_SPECIAL(newadd) || (((uint32) RT_SPECIAL_COUNT(newadd) == spec_count) && ((uint32)RT_SPECIAL_ELEM_SIZE(newadd) == spec_elem_size) && ((uint32)RT_SPECIAL_CAPACITY(newadd) == spec_capacity)));
 		}
 
 			/* Update fileds: the garbage collector should not be called
@@ -1557,7 +1622,6 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	uint16 flags;
 	EIF_TYPE_INDEX dftype, dtype;
 	uint32 store_flags;
-	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
 #ifdef ISE_GC
 	volatile char g_status = rt_g_data.status;
@@ -1607,60 +1671,18 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
-			uint32 count, elm_size;
-			rt_uint_ptr nb_byte;
-			if (flags & EO_TUPLE) {
-				spec_size = sizeof(EIF_TYPED_VALUE);
-			} else {
-				uint32 dgen;
-
-				dtype = To_dtype(dftype);
-				dgen = special_generic_type (dtype);
-
-				if (!((dgen & SK_HEAD) == SK_EXP)) {
-					switch (dgen) {
-						case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
-						case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
-						case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
-						case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
-						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
-						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
-						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
-						case SK_INT64: spec_size = sizeof (EIF_INTEGER_64); break;
-						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
-						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
-						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
-						case SK_REAL32: spec_size = sizeof (EIF_REAL_32); break;
-						case SK_REAL64: spec_size = sizeof (EIF_REAL_64); break;
-						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
-						case SK_DTYPE:
-						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
-						default:
-							if (dgen & SK_BIT) 
-								spec_size = BITOFF(dgen & SK_DTYPE);
-							else
-								eise_io("General retrieve: not an Eiffel object.");
-					}
-				} else {
-#ifdef WORKBENCH
-					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
-#else
-					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE));
-					if (References(dgen & SK_DTYPE) > 0) {
-						spec_size = spec_size + OVERHEAD;
-					}
-#endif
-				}
-			}
+			uint32 count, elm_size, capacity;
 			buffer_read((char *) &count, sizeof(uint32));
-			nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
-			buffer_read((char *) &elm_size, sizeof(uint32));
+			if (rt_kind_version < GENERAL_STORE_6_4) {
+					/* We read `elm_size' even if we actually don't use it. */
+				buffer_read((char *) &elm_size, sizeof(uint32));
+				capacity = count;
+			} else {
+				buffer_read((char *) &capacity, sizeof(uint32));
+			}
+			dtype = To_dtype(dftype);
+			elm_size = rt_special_element_size(flags & EO_TUPLE, dtype);
 
-#if DEBUG & 1
-		printf (" %x", count);
-		printf (" %x", elm_size);
-#endif
-			
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 				if (!newadd) {
@@ -1668,7 +1690,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 					xraise(EN_MEM);
 				}
 			} else {
-				newadd = spmalloc(nb_byte, EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(capacity, elm_size), EIF_TEST(!(flags & EO_REF)));
 				if (!newadd) {
 						/* Creation of Eiffel object failed */
 					xraise(EN_MEM);
@@ -1676,9 +1698,13 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 					HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP);
 					HEADER(newadd)->ov_dftype = dftype;
 					HEADER(newadd)->ov_dtype = dtype;
-
 					RT_SPECIAL_COUNT(newadd) = count;
-					RT_SPECIAL_ELEM_SIZE(newadd) = spec_size;
+					RT_SPECIAL_ELEM_SIZE(newadd) = elm_size;
+					RT_SPECIAL_CAPACITY(newadd) = capacity;
+						/* We have to clear the area because the GC will traverse it. */
+					if (!egc_has_old_special_semantic) {
+						memset(newadd, 0, RT_SPECIAL_VISIBLE_SIZE(newadd));
+					}
 				}
 			}
 		} else {
@@ -1711,185 +1737,6 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 #ifdef ISE_GC
 			/* Restore garbage collector status */
 		rt_g_data.status = g_status;
-#endif
-	return newadd;
-}
-
-rt_public EIF_REFERENCE irt_make(void)
-{
-	/* Make the retrieve of all objects in file */
-	uint32 objectCount;
-
-	/* Read the object count in the file header */
-	ridr_multi_uint32 (&objectCount, 1);
-
-#if DEBUG & 1
-		printf ("\n %ld", objectCount);
-#endif
-
-	return irt_nmake(objectCount);
-}
-
-rt_public EIF_REFERENCE irt_nmake(long int objectCount)
-{
-	/* Make the retrieve of `objectCount' objects.
-	 * Return pointer on retrived object.
-	 */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	rt_uint_ptr nb_byte;
-	char *oldadd;
-	char * volatile newadd = NULL;
-	EIF_OBJECT new_hector;
-	uint16 flags;
-	uint32 store_flags;
-	EIF_TYPE_INDEX dtype, dftype;
-	volatile uint32 spec_size = 0;
-	volatile long int n = objectCount;
-#ifdef ISE_GC
-	volatile char g_status = rt_g_data.status;
-#endif
-	jmp_buf exenv;
-	RTYD;
-
-	REQUIRE ("Positive count", objectCount > 0);
-
-#ifdef ISE_GC
-			/* Stop the GC for efficient retrieval. */
-		rt_g_data.status |= GC_STOP;
-#endif
-
-	excatch(&exenv);	/* Record pseudo execution vector */
-	if (setjmp(exenv)) {
-		rt_clean();				/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
-#ifdef ISE_GC
-		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC,
-										 * we need to make sure to restore the status
-										 * to what it originally was. */
-#endif
-		ereturn(MTC_NOARG);				/* Propagate exception */
-	}
-
-	/* Initialization of the hash table */
-	nb_recorded = 0;
-	rt_create_table (objectCount);
-
-	for (;n > 0; n--) {
-		/* Read object address */
-		ridr_multi_any ((char *) (&oldadd), 1);
-
-#if DEBUG & 1
-		printf ("\n  %lx", oldadd);
-#endif
-
-		/* Read object flags (dynamic type) */
-		ridr_norm_int (&store_flags);
-		Split_flags_dtype(flags,dtype,store_flags);
-		dftype = rt_id_read_cid (dtype);
-
-#if DEBUG & 1
-		printf (" %x", flags);
-#endif
-
-		/* Read a possible size */
-		if (flags & EO_SPEC) {
-			uint32 count, elm_size;
-			if (flags & EO_TUPLE) {
-				spec_size = sizeof(EIF_TYPED_VALUE);
-			} else {
-				uint32 dgen;
-
-				dtype = To_dtype(dftype);	/* Get the Dynamic type in the retrieving system.*/
-				dgen = special_generic_type (dtype);
-
-				if (!((dgen & SK_HEAD) == SK_EXP)) {
-					switch (dgen) {
-						case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
-						case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
-						case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
-						case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
-						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
-						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
-						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
-						case SK_INT64: spec_size = sizeof (EIF_INTEGER_64); break;
-						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
-						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
-						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
-						case SK_REAL32: spec_size = sizeof (EIF_REAL_32); break;
-						case SK_REAL64: spec_size = sizeof (EIF_REAL_64); break;
-						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
-						case SK_DTYPE:
-						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
-						default:
-							if (dgen & SK_BIT) 
-								spec_size = BITOFF(dgen & SK_DTYPE);
-							else
-								eise_io("Independent retrieve: not an Eiffel object.");
-					}
-				} else {
-					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
-				}
-			}
-			ridr_norm_int (&count);
-			nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
-			ridr_norm_int (&elm_size);
-
-#if DEBUG & 1
-		printf (" %x", count);
-		printf (" %x", elm_size);
-#endif
-			if (flags & EO_TUPLE) {
-				newadd = RTLNT(dftype);
-				if (!newadd) {
-						/* Creation of Eiffel object failed */
-					xraise(EN_MEM);
-				}
-			} else {
-				newadd = spmalloc(nb_byte, EIF_TEST(!(flags & EO_REF)));
-				if (!newadd) {
-						/* Creation of Eiffel object failed */
-					xraise(EN_MEM);
-				} else {
-					HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP);
-					HEADER(newadd)->ov_dftype = dftype;
-					HEADER(newadd)->ov_dtype = dtype;
-
-					RT_SPECIAL_COUNT(newadd) = count;
-					RT_SPECIAL_ELEM_SIZE(newadd) = spec_size;
-					spec_elm_size[dtype] = elm_size;
-				}
-			} 
-		} else {
-			/* Normal object */
-			newadd = emalloc(dftype); 
-			if (newadd == (EIF_REFERENCE) 0) {
-					/* Creation of Eiffel object failed */
-				xraise(EN_MEM);
-			}
-		}
-		
-			/* Record the new object in hector table */
-		new_hector = hrecord(newadd);
-		nb_recorded++;
-
-			/* Update unsolved references on `newadd' */
-		rt_update1 (oldadd, new_hector);
-
-			/* Read the object's body */
-		object_read (newadd, newadd, flags, To_dtype(dftype));
-
-			/* Update fileds: the garbage collector should not be called
-			 * during `rt_update2' because the object is in a very unstable
-			 * state.
-			 */
-		rt_update2(oldadd, newadd, newadd);
-
-	}
-	expop(&eif_stack);
-#ifdef ISE_GC
-		/* Restore garbage collector status */
-	rt_g_data.status = g_status;
 #endif
 	return newadd;
 }
@@ -1949,62 +1796,6 @@ rt_private void rt_dropped (register EIF_REFERENCE old, EIF_TYPE_INDEX old_type)
 	info->rtu_data.old_type = old_type;
 }
 
-rt_private EIF_REFERENCE new_special_object (EIF_TYPE_INDEX new_dftype, uint16 flags, uint32 count)
-{
-	EIF_REFERENCE result;
-	rt_uint_ptr nb_byte;
-	uint32 spec_size = 0;
-	uint32 dgen = special_generic_type (To_dtype(new_dftype));
-
-	if ((dgen & SK_HEAD) == SK_EXP) {
-#ifdef WORKBENCH
-		spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
-#else
-		spec_size = EIF_Size((uint16)(dgen & SK_DTYPE));
-		if (References(dgen & SK_DTYPE) > 0) {
-			spec_size = spec_size + OVERHEAD;
-		}
-#endif
-	} else {
-		switch (dgen) {
-		case SK_UINT8: spec_size = sizeof (EIF_NATURAL_8); break;
-		case SK_UINT16: spec_size = sizeof (EIF_NATURAL_16); break;
-		case SK_UINT32: spec_size = sizeof (EIF_NATURAL_32); break;
-		case SK_UINT64: spec_size = sizeof (EIF_NATURAL_64); break;
-		case SK_INT8:    spec_size = sizeof (EIF_INTEGER_8);  break;
-		case SK_INT16:   spec_size = sizeof (EIF_INTEGER_16); break;
-		case SK_INT32:   spec_size = sizeof (EIF_INTEGER_32); break;
-		case SK_INT64:   spec_size = sizeof (EIF_INTEGER_64); break;
-		case SK_CHAR:    spec_size = sizeof (EIF_CHARACTER);  break;
-		case SK_WCHAR:   spec_size = sizeof (EIF_WIDE_CHAR);  break;
-		case SK_BOOL:    spec_size = sizeof (EIF_BOOLEAN);    break;
-		case SK_REAL32:   spec_size = sizeof (EIF_REAL_32);       break;
-		case SK_REAL64 : spec_size = sizeof (EIF_REAL_64);     break;
-		case SK_POINTER: spec_size = sizeof (EIF_POINTER);    break;
-		case SK_DTYPE:
-		case SK_REF:     spec_size = sizeof (EIF_REFERENCE);  break;
-
-		default:
-			if (dgen & SK_BIT) 
-				spec_size = BITOFF (dgen & SK_DTYPE);
-			else
-				eise_io ("Independent retrieve: not an Eiffel object.");
-		}
-	}
-	nb_byte = RT_SPECIAL_MALLOC_COUNT(count, spec_size);
-	result = spmalloc (nb_byte, EIF_TEST(!(flags & EO_REF)));
-	if (!result) {
-		xraise(EN_MEM);
-	} else {
-		RT_SPECIAL_COUNT(result) = count;
-		RT_SPECIAL_ELEM_SIZE(result) = spec_size;
-		HEADER(result)->ov_flags |= flags & (EO_REF|EO_COMP);
-		HEADER(result)->ov_dftype = new_dftype;
-		HEADER(result)->ov_dtype = To_dtype(new_dftype);
-	} 
-	return result;
-}
-
 rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
@@ -2052,7 +1843,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 		uint16 flags;
 		uint32 store_flags;
 		EIF_TYPE_INDEX dftype;
-		uint32 count;
+		uint32 count, capacity;
 		EIF_TYPE_INDEX old_dtype;
 		EIF_REFERENCE oldadd;
 		type_descriptor *conv;
@@ -2070,20 +1861,45 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 		if (conv->new_type == TYPE_NOT_PRESENT)
 			newadd = NULL;				/* Stored type not in retrieving system */
 		else if (flags & EO_SPEC) {		/* Special object */
-			uint32 elem_size;
+			uint32 elm_size;
+			EIF_TYPE_INDEX dtype;
 			ridr_norm_int (&count);
-			ridr_norm_int (&elem_size);
-			spec_elm_size[conv->new_type] = elem_size;
+			if (rt_kind_version < INDEPENDENT_STORE_6_4) {
+					/* We read `elm_size' even if we actually don't use it. */
+				ridr_norm_int (&elm_size);
+				capacity = count;
+			} else {
+				ridr_norm_int (&capacity);
+			}
+			dtype = To_dtype(dftype);
+			elm_size = rt_special_element_size(flags & EO_TUPLE, dtype);
 			if (conv->new_dftype != TYPE_UNDEFINED) {
 				dftype = conv->new_dftype;
 			}
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
+				if (!newadd) {
+						/* Creation of Eiffel object failed */
+					xraise(EN_MEM);
+				}
 			} else {
-				newadd = new_special_object (dftype, flags, count);
-			}
-			if (!newadd) {
-				xraise(EN_MEM);
+				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(capacity, elm_size), EIF_TEST(!(flags & EO_REF)));
+				if (!newadd) {
+						/* Creation of Eiffel object failed */
+					xraise(EN_MEM);
+				} else {
+					HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP);
+					HEADER(newadd)->ov_dftype = dftype;
+					HEADER(newadd)->ov_dtype = dtype;
+					RT_SPECIAL_COUNT(newadd) = count;
+					RT_SPECIAL_ELEM_SIZE(newadd) = elm_size;
+					RT_SPECIAL_CAPACITY(newadd) = capacity;
+						/* We have to clear the area because the GC will traverse it. */
+					if (!egc_has_old_special_semantic) {
+						memset(newadd, 0, RT_SPECIAL_VISIBLE_SIZE(newadd));
+					}
+					spec_elm_size[dtype] = elm_size;
+				}
 			}
 		}
 		else {		/* Normal object */
@@ -2559,7 +2375,7 @@ rt_private void read_header(char rt_type)
 		xraise(EN_MEM);
 	}
 
-	if (rt_type == GENERAL_STORE_4_0) {
+	if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_6_4)) {
 		sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
@@ -2670,8 +2486,9 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		}
 		dtypes[dtype] = new_dtype;
 
-		if (rt_type == GENERAL_STORE_4_0)
+		if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_6_4)) {
 			sort_attributes(new_dtype);
+		}
 	}
 	eif_rt_xfree (r_buffer);
 	r_buffer = (char *) 0;
@@ -4157,205 +3974,6 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 						HEADER(ref)->ov_dtype = hdtype;
 						HEADER(ref)->ov_size = (uint32)(ref - parent);
 						gen_object_read (ref, parent, hflags, hdtype);
-					}
-				}
-			}
-		} 
-	}
-}
-
-/*
-doc:	<routine name="object_read" export="private">
-doc:		<summary>Retrieve content of `object' whose flags are `flags'. The reason why we don't query the header of `object' is that in some cases `object' may have no header (e.g. an expanded without references in a special object). Version for independent store.</summary>
-doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrieving data.</param>
-doc:		<param name="parent" type="EIF_REFERENCE">If `object' is expanded, then `parent' correspond to the object containing `object'. Otherwise `parent' is identical to `object'.</param>
-doc:		<param name="flags" type="uint16">Flags of `object'.</param>
-doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of `object'.</param>
-doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:	</routine>
-*/
-
-rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype)
-{
-	RT_GET_CONTEXT
-#if DEBUG & 1
-	int z;
-#endif
-	long attrib_offset;
-	uint32 num_attrib;
-	int *attrib_order;
-
-	num_attrib = System(dtype).cn_nbattr;
-	attrib_order = dattrib[dtype];
-
-	if (num_attrib > 0) {
-		for (; num_attrib > 0;) {
-			uint32 types_cn;
-
-			num_attrib--;
-
-			attrib_offset = get_offset(dtype, attrib_order[num_attrib]);
-			types_cn = *(System(dtype).cn_types + num_attrib);
-
-			switch (types_cn & SK_HEAD) {
-					/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
-					 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
-					 * unsigned SK_UINTXX too. */
-				case SK_UINT8: ridr_multi_uint8 ((EIF_NATURAL_8 *) (object + attrib_offset), 1); break;
-				case SK_UINT16: ridr_multi_uint16 ((EIF_NATURAL_16 *) (object + attrib_offset), 1); break;
-				case SK_UINT32: ridr_multi_uint32 ((EIF_NATURAL_32 *) (object + attrib_offset), 1); break;
-				case SK_UINT64: ridr_multi_uint64 ((EIF_NATURAL_64 *) (object + attrib_offset), 1); break;
-				case SK_INT8: ridr_multi_int8 ((EIF_INTEGER_8 *) (object + attrib_offset), 1); break;
-				case SK_INT16: ridr_multi_int16 ((EIF_INTEGER_16 *) (object + attrib_offset), 1); break;
-				case SK_INT32: ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1); break;
-				case SK_INT64: ridr_multi_int64 ((EIF_INTEGER_64 *) (object + attrib_offset), 1); break;
-				case SK_BOOL:
-				case SK_CHAR:
-					ridr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
-				case SK_WCHAR: ridr_multi_uint32 ((EIF_WIDE_CHAR *) (object + attrib_offset), 1); break;
-				case SK_REAL32: ridr_multi_float ((EIF_REAL_32 *) (object + attrib_offset), 1); break;
-				case SK_REAL64: ridr_multi_double ((EIF_REAL_64 *) (object + attrib_offset), 1); break;
-				case SK_BIT:
-						{
-							uint32 store_flags;
-							uint16 hflags;
-							EIF_TYPE_INDEX hdtype, hdftype;
-							struct bit *bptr = (struct bit *)(object + attrib_offset);
-							ridr_norm_int (&store_flags);
-							Split_flags_dtype(hflags, hdtype, store_flags);
-							hdftype = rt_id_read_cid (hdtype);
-							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
-							HEADER(bptr)->ov_dftype = hdftype;
-							HEADER(bptr)->ov_dtype = To_dtype(hdftype);
-							ridr_multi_bit (bptr, 1, 0);
-							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
-								eise_io("Basic retrieve: mismatch size for BIT object.");
-						}
-					break;
-				case SK_EXP: {
-					uint32  store_flags;
-					uint16 hflags;
-					EIF_TYPE_INDEX hdtype, hdftype;
-					EIF_REFERENCE l_buffer [1];
-
-					ridr_multi_any ((char *) l_buffer, 1);
-					ridr_norm_int (&store_flags);
-					Split_flags_dtype(hflags,hdtype,store_flags);
-					hdftype = rt_id_read_cid (hdtype);
-
-						/* No need to set `ov_size' or `ov_flags' as it is done while creating
-						 * the object */
-					object_read (object + attrib_offset, parent, hflags, To_dtype(hdftype));
-					}
-					break;
-				case SK_REF:
-					ridr_multi_any (object + attrib_offset, 1);
-#if DEBUG & 1
-					printf (" %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
-#endif
-					break;
-				case SK_POINTER:
-					ridr_multi_ptr (object + attrib_offset, 1);
-					if (eif_discard_pointer_values) {
-						*(EIF_POINTER *) (object + attrib_offset) = NULL;
-					}
-					break;
-
-				default:
-					eise_io("Basic retrieve: not an Eiffel object.");
-			}
-		} 
-	} else {
-		if (flags & EO_SPEC) {		/* Special object */
-			EIF_INTEGER count, elem_size;
-			EIF_REFERENCE ref;
-
-			count = RT_SPECIAL_COUNT(object);
-	
-			if (flags & EO_TUPLE) {
-				object_rread_tuple(object, count);
-			} else if (!(flags & EO_REF)) {			/* Special of simple types */
-				uint32 dgen;
-				dgen = special_generic_type (dtype);
-				switch (dgen & SK_HEAD) {
-						/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
-						 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
-						 * unsigned SK_UINTXX too. */
-					case SK_UINT8: ridr_multi_uint8 ((EIF_NATURAL_8 *) object, count); break;
-					case SK_UINT16: ridr_multi_uint16 ((EIF_NATURAL_16 *) object, count); break;
-					case SK_UINT32: ridr_multi_uint32 ((EIF_NATURAL_32 *) object, count); break;
-					case SK_UINT64: ridr_multi_uint64 ((EIF_NATURAL_64 *) object, count); break;
-					case SK_INT8: ridr_multi_int8 ((EIF_INTEGER_8 *)object, count); break;
-					case SK_INT16: ridr_multi_int16 ((EIF_INTEGER_16 *)object, count); break;
-					case SK_INT32: ridr_multi_int32 ((EIF_INTEGER_32 *)object, count); break;
-					case SK_INT64: ridr_multi_int64 ((EIF_INTEGER_64 *)object, count); break;
-					case SK_BOOL:
-					case SK_CHAR: ridr_multi_char ((EIF_CHARACTER *) object, count); break;
-					case SK_WCHAR: ridr_multi_uint32 ((EIF_WIDE_CHAR *) object, count); break;
-					case SK_REAL32: ridr_multi_float ((EIF_REAL_32 *)object, count); break;
-					case SK_REAL64: ridr_multi_double ((EIF_REAL_64 *)object, count); break;
-					case SK_EXP: {
-						uint32  store_flags;
-						uint16 hflags;
-						EIF_TYPE_INDEX hdtype, hdftype;
-
-						elem_size = RT_SPECIAL_ELEM_SIZE(object);
-						ridr_norm_int (&store_flags);
-						Split_flags_dtype(hflags,hdtype,store_flags);
-						hdftype = rt_id_read_cid (hdtype);
-						hdtype = To_dtype(hdftype);	/* Dynamic type in retrieving system. */
-#ifdef WORKBENCH
-						ref = object + OVERHEAD;
-#else
-						ref = object;
-#endif
-						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
-#ifdef WORKBENCH
-							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP));
-							HEADER(ref)->ov_dftype = hdftype;
-							HEADER(ref)->ov_dtype = hdtype;
-							HEADER(ref)->ov_size = (uint32)(ref - parent);
-#endif
-							object_read (ref, parent, hflags, hdtype);
-						}
-					}
-						break;
-					case SK_BIT: 
-						elem_size = RT_SPECIAL_ELEM_SIZE(object);
-						ridr_multi_bit ((struct bit *)object, count, elem_size);
-						break;
-					case SK_POINTER:
-						ridr_multi_ptr (object, count);
-						if (eif_discard_pointer_values) {
-							memset (object, 0, (rt_uint_ptr) count * sizeof(EIF_POINTER));
-						}
-						break;
-
-					default:
-						eise_io("Basic retrieve: not an Eiffel object.");
-						break;
-				}
-			} else {
-	
-				if (!(flags & EO_COMP)) {		/* Special of references */
-					ridr_multi_any (object, count);
-				} else {						/* Special of composites */
-					uint32  store_flags;
-					uint16 hflags;
-					EIF_TYPE_INDEX hdtype, hdftype;
-
-					elem_size = RT_SPECIAL_ELEM_SIZE(object);
-					ridr_norm_int (&store_flags);
-					Split_flags_dtype(hflags,hdtype,store_flags);
-					hdftype = rt_id_read_cid (hdtype);
-					hdtype = To_dtype(hdftype);	/* Dynamic type in retrieving system. */
-					for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
-						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP));
-						HEADER(ref)->ov_dftype = hdftype;
-						HEADER(ref)->ov_dtype = hdtype;
-						HEADER(ref)->ov_size = (uint32)(ref - parent);
-						object_read (ref, parent, hflags, hdtype);
 					}
 				}
 			}

@@ -821,15 +821,21 @@ rt_shared void internal_store(char *object)
 			if (eif_is_new_recoverable_format) {
 				if (eif_is_discarding_attachment_marks) {
 					c = INDEPENDENT_STORE_6_0;
-					rt_kind_version = INDEPENDENT_STORE_6_0;
-				} else {
+				} else if (egc_has_old_special_semantic) {
 					c = INDEPENDENT_STORE_6_3;
-					rt_kind_version = INDEPENDENT_STORE_6_3;
+				} else {
+					c = INDEPENDENT_STORE_6_4;
 				}
+				rt_kind_version = c;
 			}
 		}
 		else {
-			c = GENERAL_STORE_4_0;
+			if (egc_has_old_special_semantic) {
+				c = GENERAL_STORE_4_0;
+			} else {
+				c = GENERAL_STORE_6_4;
+			}
+			rt_kind_version = c;
 
 				/* Allocate the array to store the sorted attributes */
 			sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
@@ -993,7 +999,7 @@ rt_public void st_write(EIF_REFERENCE object)
 	 */
 
 	union overhead *zone;
-	uint32 size;
+	uint32 count, elem_size, capacity;
 	uint16 flags;
 	EIF_TYPE_INDEX dtype;
 	rt_uint_ptr nb_char;
@@ -1016,13 +1022,15 @@ rt_public void st_write(EIF_REFERENCE object)
 
 	if (flags & EO_SPEC) {
 			/* We have to send the complete specila information. */
-		size = RT_SPECIAL_COUNT(object);
-		nb_char = size;
-		buffer_write((char *)(&size), sizeof(uint32));
-		size = RT_SPECIAL_ELEM_SIZE(object);
-		buffer_write((char *)(&size), sizeof(uint32));
+		count = RT_SPECIAL_COUNT(object);
+		nb_char = count;
+		buffer_write((char *)(&count), sizeof(uint32));
+		elem_size = RT_SPECIAL_ELEM_SIZE(object);
+		buffer_write((char *)(&elem_size), sizeof(uint32));
+		capacity = RT_SPECIAL_CAPACITY(object);
+		buffer_write((char *)(&capacity), sizeof(uint32));
 			/* Compute actual number of bytes we need to store. */
-		nb_char = nb_char * (rt_uint_ptr) size;
+		nb_char = nb_char * (rt_uint_ptr) elem_size;
 	} else {
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size(dtype);
@@ -1051,6 +1059,9 @@ rt_public void gst_write(EIF_REFERENCE object)
 	 * used for general store
 	 */
 
+#ifdef EIF_ASSERTIONS
+	RT_GET_CONTEXT
+#endif
 	union overhead *zone;
 	uint32 store_flags;
 	uint16 flags;
@@ -1072,20 +1083,17 @@ rt_public void gst_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
-		uint32 count, elm_size;
+		uint32 count, l_extra_data;
 		count = (uint32) (RT_SPECIAL_COUNT(object));
-		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
-
-		/* We have to save the number of objects in the special object */
-
+		if (egc_has_old_special_semantic) {
+			CHECK("Proper version", rt_kind_version < GENERAL_STORE_6_4);
+			l_extra_data = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
+		} else {
+				/* We do not care about element size since it is computed on retrieval. */
+			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
+		}
 		buffer_write((char *)(&count), sizeof(uint32));
-		buffer_write((char *)(&elm_size), sizeof(uint32));
-
-#if DEBUG & 1
-		printf ("\ncount  %x", count);
-		printf (" %x", elm_size);
-#endif
-
+		buffer_write((char *)(&l_extra_data), sizeof(uint32));
 	} 
 	/* Write the body of the object */
 	gen_object_write(object, flags, Dftype(object));
@@ -1098,6 +1106,9 @@ rt_public void ist_write(EIF_REFERENCE object)
 	 * used for independent store
 	 */
 
+#ifdef EIF_ASSERTIONS
+	RT_GET_CONTEXT
+#endif
 	union overhead *zone;
 	uint32 store_flags;
 	uint16 flags;
@@ -1121,20 +1132,17 @@ rt_public void ist_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
-		uint32 count, elm_size;
+		uint32 count, l_extra_data;
 		count = (uint32)(RT_SPECIAL_COUNT(object));
-		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
-
-		/* We have to save the number of objects in the special object */
-
+		if (egc_has_old_special_semantic) {
+			CHECK("Proper version", rt_kind_version < INDEPENDENT_STORE_6_4);
+			l_extra_data = (uint32)(RT_SPECIAL_ELEM_SIZE(object));
+		} else {
+				/* We do not care about element size since it is computed on retrieval. */
+			l_extra_data = (uint32)(RT_SPECIAL_CAPACITY(object));
+		}
 		widr_norm_int(&count);
-		widr_norm_int(&elm_size);
-
-#if DEBUG & 1
-		printf ("\ncount  %x", count);
-		printf (" %x", elm_size);
-#endif
-
+		widr_norm_int(&l_extra_data);
 	} 
 	/* Write the body of the object */
 	object_write(object, flags, Dftype(object));

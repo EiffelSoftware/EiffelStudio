@@ -97,6 +97,9 @@ extern "C" {
 	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
+
+	RT_LNK int egc_has_old_special_semantic;
+
 	RT_LNK EIF_TYPE_INDEX egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK EIF_TYPE_INDEX egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK EIF_TYPE_INDEX egc_tup_dtype;				/* Dynamic type for TUPLE */

@@ -20,8 +20,10 @@ feature {NONE} -- Initialization
 	make (a_name: STRING)
 			-- Initialization for {XP_TRANSLATOR}.
 		do
-			output_path := "generated/" + a_name + "/"
+			create output_path.make_from_string ("./generated/")
+			output_path.extend (a_name)
 			name := a_name
+			create servlet_gen_path.make
 			create registry.make (output_path)
 		end
 
@@ -29,10 +31,10 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	output_path: STRING assign set_output_path
+	output_path: FILE_NAME assign set_output_path
 			-- Defines where the files should be written
 
-	servlet_gen_path: STRING assign set_servlet_gen_path
+	servlet_gen_path: FILE_NAME assign set_servlet_gen_path
 			-- Defines where the servlets should be generated
 
 	name: STRING assign set_name
@@ -68,15 +70,16 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_files (a_files: LIST [STRING]; a_taglib_folder: STRING)
+	process_with_files (a_files: LIST [STRING]; a_taglib_folder: FILE_NAME)
 			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
 		local
-			l_file: KL_TEXT_INPUT_FILE
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
+			l_path: FILE_NAME
 		do
+			l_path := output_path.twin
 			create registry.make (servlet_gen_path)
 			parse_taglibs (a_taglib_folder, registry)
 
@@ -87,19 +90,9 @@ feature -- Processing
 				a_files.after
 			loop
 				if a_files.item.ends_with (".xeb") then
-					create l_file.make (output_path + a_files.item.twin)
-					if not l_file.exists then
-						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("file " + l_file.name + " does not exist"), false)
-					else
-						l_file.open_read
-						if not l_file.is_open_read then
-							error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make ("cannot read file " + l_file.name), false)
-						else
-							o.iprint ("Processing '" + l_file.name + "'...")
-							add_template_to_registry (a_files.item.substring (1, a_files.item.index_of ('.', 1)-1), l_file, output_path + a_files.item, registry, l_file.time_stamp)
-							l_file.close
-						end
-					end
+					l_path := output_path.twin
+					l_path.set_file_name (a_files.item)
+					process_file (l_path, agent process_xeb_file (?, l_path, a_files.item))
 				end
 				a_files.forth
 			end
@@ -110,6 +103,40 @@ feature -- Processing
 			l_generator_app_generator.generate (servlet_gen_path)
 			create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
 			l_webapp_gen.generate
+		end
+
+	process_xeb_file (a_file: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_file_name: STRING)
+		do
+			o.iprint ("Processing '" + a_file.name + "'...")
+			add_template_to_registry (a_file_name.substring (1, a_file_name.index_of ('.', 1)-1), a_file, a_path, registry)
+		end
+
+	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
+		require
+			servlet_name_valid: not a_servlet_name.is_empty
+		local
+			l_root_tag: XP_TAG_ELEMENT
+			l_controller_class: STRING
+			l_parser: XM_PARSER
+			l_p_callback: XP_XML_PARSER_CALLBACKS
+			l_external_resolver: XP_EXTERNAL_RESOLVER
+			l_template: XP_TEMPLATE
+		do
+			create l_external_resolver
+			create {XM_EIFFEL_PARSER} l_parser.make
+			l_parser.set_dtd_resolver (l_external_resolver)
+			l_parser.set_entity_resolver (l_external_resolver)
+			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
+			l_p_callback.put_registry (a_registry)
+			l_parser.set_callbacks (l_p_callback)
+			l_parser.parse_from_stream (a_stream)
+
+			l_root_tag := l_p_callback.root_tag
+			l_controller_class := l_p_callback.controller_class
+			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
+			l_template.date := a_stream.time_stamp
+			a_registry.put_template (a_servlet_name, l_template)
 		end
 
 	parse_taglibs (taglib_folder: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
@@ -145,73 +172,6 @@ feature -- Processing
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
 			a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
-		end
-
-	add_template_to_registry (a_servlet_name: STRING; a_stream: KI_CHARACTER_INPUT_STREAM; a_path: STRING; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER)
-			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
-		require
-			servlet_name_valid: not a_servlet_name.is_empty
-		local
-			l_root_tag: XP_TAG_ELEMENT
-			l_controller_class: STRING
-			l_parser: XM_PARSER
-			l_p_callback: XP_XML_PARSER_CALLBACKS
-			l_external_resolver: XP_EXTERNAL_RESOLVER
-			l_template: XP_TEMPLATE
-		do
-			create l_external_resolver
-			create {XM_EIFFEL_PARSER} l_parser.make
-			l_parser.set_dtd_resolver (l_external_resolver)
-			l_parser.set_entity_resolver (l_external_resolver)
-			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
-			l_p_callback.put_registry (a_registry)
-			l_parser.set_callbacks (l_p_callback)
-			l_parser.parse_from_stream (a_stream)
-
-			l_root_tag := l_p_callback.root_tag
-			l_controller_class := l_p_callback.controller_class
-			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
-			l_template.date := a_date
-			a_registry.put_template (a_servlet_name, l_template)
-		end
-
-feature {NONE} -- Implementation
-
-	read_file (a_filename: STRING): STRING
-			--reads a file into a string			
-		local
-			l_file: PLAIN_TEXT_FILE
-			l_failed: BOOLEAN
-		do
-			Result := ""
-			if l_failed then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
-			else
-				create l_file.make (a_filename)
-				if not l_file.exists then
-					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
-				else
-					l_file.open_read
-					if not l_file.is_open_read then
-						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_filename), false)
-					else
-						from until l_file.end_of_file
-						loop
-							l_file.read_line
-
-							if attached {STRING} l_file.last_string as s then
-								Result.append(s)
-							else
-								Result.append ("")
-							end
-						end
-						l_file.close
-					end
-				end
-			end
-			rescue
-				l_failed := true
-				retry
 		end
 
 invariant

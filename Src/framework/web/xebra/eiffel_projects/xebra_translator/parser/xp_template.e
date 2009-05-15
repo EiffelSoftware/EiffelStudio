@@ -51,6 +51,8 @@ feature -- Access
 	date: INTEGER assign set_date
 			-- The date of the corresponding .xeb-file
 
+feature -- Status setting
+
 	set_date (a_date: INTEGER)
 			-- Sets the date.
 		do

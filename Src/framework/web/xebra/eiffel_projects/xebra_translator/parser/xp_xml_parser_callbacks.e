@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; a_path: STRING)
+	make (a_parser: XM_PARSER; a_path: FILE_NAME)
 			-- {Create XB_XML_PARSER_CALLBACKS}.
 		require
 			a_path_is_valid: not a_path.is_empty
 		do
 			parser := a_parser
-			path := a_path
+			path := a_path.twin
 			create root_tag.make ("xeb", "html", {XP_HTML_CALLBACK_STATE}.Html_tag_name, current_debug_information)
 			create tag_stack.make (10)
 			create state_html.make (Current)
@@ -41,7 +41,7 @@ feature -- Access
 	parser: XM_PARSER
 			-- The parser which uses Current
 
-	path: STRING
+	path: FILE_NAME
 			-- The path of the file to which is being read
 
 	is_template: BOOLEAN assign set_is_template

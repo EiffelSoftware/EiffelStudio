@@ -30,7 +30,7 @@ feature {NONE} -- Access
 
 feature {NONE}
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		do
 			if not text.is_empty then

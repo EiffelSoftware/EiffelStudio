@@ -27,6 +27,7 @@ feature -- Initialization
 			namespace := a_namespace
 			class_name := a_class_name
 			id := a_id
+			controller_id := ""
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
 			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
 			debug_information := a_debug_information

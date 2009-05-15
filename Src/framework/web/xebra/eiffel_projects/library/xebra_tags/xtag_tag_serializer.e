@@ -81,33 +81,38 @@ feature -- Access
 		end
 
 	generates_render: BOOLEAN
+			-- Does the tag write statements in the render feature?
 		do
 			Result := False
 		end
 
 	generates_prerender: BOOLEAN
+			-- Does the tag write statements in the prerender feature?
 		do
 			Result := False
 		end
 
 	generates_postrender: BOOLEAN
+			-- Does the tag write statements in the POST render feature?
 		do
 			Result := False
 		end
 
 	generates_getrender: BOOLEAN
+			-- Does the tag write statements in the GET render feature?
 	do
 		Result := False
 	end
 
 	generates_afterrender: BOOLEAN
+			-- Does the tag write statements in the afterrender feature?
 		do
 			Result := False
 		end
 
 feature -- Implementation
 
-	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			-- Wrapps around the internal_generate feature to add debug information and handle the "render" option
 		require
 			a_servlet_class_attached: attached a_servlet_class
@@ -138,7 +143,7 @@ feature -- Implementation
 			end
 		end
 
-	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
+	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			-- Generates all the children
 		require
 			a_servlet_class_attached: attached a_servlet_class
@@ -154,11 +159,12 @@ feature -- Implementation
 			end
 		end
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			--
 		require
 			a_servlet_class_attached: attached a_servlet_class
 			a_variable_table_attached: attached a_variable_table
+			current_controller_id_set: attached current_controller_id and not current_controller_id.is_empty
 		deferred
 		end
 

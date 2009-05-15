@@ -42,6 +42,11 @@ feature -- Initialization
 			signature := a_signature
 			locals := some_locals
 			content := a_content
+			create {ARRAYED_LIST [XEL_SERVLET_ELEMENT]} precontent.make (2)
+			create {ARRAYED_LIST [XEL_SERVLET_ELEMENT]} postcontent.make (2)
+			create {ARRAYED_LIST [XEL_SERVLET_ELEMENT]} requires.make (2)
+			create {ARRAYED_LIST [XEL_SERVLET_ELEMENT]} ensures.make (2)
+			feature_comment := "<Precursor>"
 			variable_count := 0
 			is_once := False
 		end
@@ -52,6 +57,7 @@ feature {NONE} -- Access
 			-- Used to generate unique identifiers
 
 	is_once: BOOLEAN
+			-- Is it a once feature?
 
 feature -- Access
 
@@ -64,14 +70,39 @@ feature -- Access
 			parent_class := a_parent_class
 		end
 
+	set_feature_comment (a_feature_comment: STRING)
+			-- Sets the feature comment.
+		require
+			a_feature_comment_valid: attached a_feature_comment and not a_feature_comment.is_empty
+		do
+			feature_comment := a_feature_comment
+		ensure
+			feature_comment_set: a_feature_comment = feature_comment
+		end
+
 	signature: STRING
 			-- Signature of the feature
+
+	feature_comment: STRING
+			-- The commment for the feature
 
 	locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING]
 			-- The local variables of the feature
 
 	content: LIST [XEL_SERVLET_ELEMENT]
 			-- The body expressions of the feature
+
+	precontent: LIST [XEL_SERVLET_ELEMENT]
+			-- The prebody expressions of the feature
+
+	postcontent: LIST [XEL_SERVLET_ELEMENT]
+			-- The postbody expressions of the feature
+
+	ensures: LIST [XEL_SERVLET_ELEMENT]
+			-- The ensure statements
+
+	requires: LIST [XEL_SERVLET_ELEMENT]
+			-- The require statements
 
 	append_local (name, type: STRING)
 			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the feature
@@ -96,10 +127,50 @@ feature -- Access
 			expression_has_been_added: old content.count + 1 = content.count
 		end
 
+	append_expression_to_start (expression: STRING)
+			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the start of the feature
+	 	require
+	 		expression_is_valid: attached expression and not expression.is_empty
+	 	do
+	 		precontent.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
+		ensure
+			expression_has_been_added: old precontent.count + 1 = precontent.count
+	 	end
+
+	append_expression_to_end (expression: STRING)
+			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the end of the feature
+	 	require
+	 		expression_is_valid: attached expression and not expression.is_empty
+	 	do
+	 		postcontent.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
+		ensure
+			expression_has_been_added: old postcontent.count + 1 = postcontent.count
+	 	end
+
 	append_comment (comment: STRING)
 		do
 			append_expression ("%T-- " + comment)
 		end
+
+	append_require (expression: STRING)
+			-- Appends a require-expression to the feature
+	 	require
+	 		expression_is_valid: attached expression and not expression.is_empty
+	 	do
+	 		requires.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
+		ensure
+			expression_has_been_added: old requires.count + 1 = requires.count
+	 	end
+
+	 append_ensure (expression: STRING)
+			-- Appends a require-expression to the feature
+	 	require
+	 		expression_is_valid: attached expression and not expression.is_empty
+	 	do
+	 		ensures.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
+		ensure
+			expression_has_been_added: old ensures.count + 1 = ensures.count
+	 	end
 
 	new_uid: STRING
 			-- Generates a name for a unique (feature scope) temp variable
@@ -116,6 +187,7 @@ feature -- Access
 		end
 
 	set_once
+			-- Set the feature to a once feature
 		do
 			is_once := True
 		end
@@ -127,6 +199,22 @@ feature -- Implementation
 		do
 			buf.put_string (signature)
 			buf.indent
+			buf.indent
+			buf.put_string ("--" + feature_comment)
+			buf.unindent
+			if not requires.is_empty then
+				buf.put_string ("require")
+				buf.indent
+				from
+					requires.start
+				until
+					requires.after
+				loop
+					requires.item_for_iteration.serialize (buf)
+					requires.forth
+				end
+				buf.unindent
+			end
 			if not locals.is_empty then
 				buf.put_string ("local")
 				buf.indent
@@ -147,6 +235,14 @@ feature -- Implementation
 			end
 			buf.indent
 			from
+				precontent.start
+			until
+				precontent.after
+			loop
+				precontent.item.serialize (buf)
+				precontent.forth
+			end
+			from
 				content.start
 			until
 				content.after
@@ -154,7 +250,28 @@ feature -- Implementation
 				content.item.serialize (buf)
 				content.forth
 			end
+			from
+				postcontent.start
+			until
+				postcontent.after
+			loop
+				postcontent.item.serialize (buf)
+				postcontent.forth
+			end
 			buf.unindent
+			if not ensures.is_empty then
+				buf.put_string ("require")
+				buf.indent
+				from
+					ensures.start
+				until
+					ensures.after
+				loop
+					ensures.item_for_iteration.serialize (buf)
+					ensures.forth
+				end
+				buf.unindent
+			end
 			buf.put_string ("end")
 			buf.unindent
 		end

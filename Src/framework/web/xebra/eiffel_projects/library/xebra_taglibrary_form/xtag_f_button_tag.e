@@ -11,7 +11,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render
+			generates_render,
 			generates_postrender
 		end
 
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
 			button_id: STRING
@@ -53,7 +53,7 @@ feature -- Implementation
 
 			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button type=%%%"" + type + "%%%" name=%%%"" + button_id + "%%%" type=%%%"button%%%">" + value + "</button>%")")
 			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + button_id + "%") then")
-			a_servlet_class.prerender_post_feature.append_expression (controller_variable + "." + action + " (" + variable + ")")
+			a_servlet_class.prerender_post_feature.append_expression (current_controller_id + "." + action + " (" + variable + ")")
 			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
 

@@ -1,6 +1,7 @@
 note
 	description: "[
-		no comment yet
+		The translate action which includes running the translator, 
+		compiling the servlet_gen and running the servlet_Gen
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -30,7 +31,7 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t ."
+			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t . -d 10"
 		ensure
 			Result_attached: Result /= void
 		end
@@ -250,21 +251,21 @@ feature -- Agents
 	translate_process_exited
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
-		--	set_outputter_name ({XS_MAIN_SERVER}.Name)
+			config_outputter
 			compile_servlet_gen
 		end
 
 	gen_compile_process_exited
 			-- Launch executing of servlet_gen in genrate_process
 		do
-		--	set_outputter_name ({XS_MAIN_SERVER}.Name)
+			config_outputter
 			generate
 		end
 
 	generate_process_exited
 			-- Sets is_running := False and executes next action
 		do
-		--	set_outputter_name ({XS_MAIN_SERVER}.Name)
+			config_outputter
 			is_running := False
 			next_action.execute.do_nothing
 		end

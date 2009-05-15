@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The action which compiles the webapp
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -91,6 +91,7 @@ feature -- Agent
 	compile_process_exited
 			-- Sets is_running := False
 		do
+			config_outputter
 			is_running := False
 			next_action.execute.do_nothing
 		end

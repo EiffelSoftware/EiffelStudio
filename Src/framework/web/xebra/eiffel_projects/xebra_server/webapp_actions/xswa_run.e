@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The action which runs the webapp
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -46,7 +46,7 @@ feature -- Access
 		do
 			l_f := app_dir.twin
 			l_f.set_file_name ("config.ini")
-			Result := l_f.string
+			Result := l_f.string + " -d 10"
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -96,6 +96,7 @@ feature -- Agents
 	run_process_exited
 			-- Sets is_running := False
 		do
+			config_outputter
 			is_running := False
 		end
 

@@ -4,7 +4,7 @@
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="settable_types" location="\home\fabioz\local\eiffel_src\64dev\framework\settable_types\settable_types.ecf" readonly="false"/>
+		<library name="settable_types" location="$ISE_LIBRARY\framework\settable_types\settable_types.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>

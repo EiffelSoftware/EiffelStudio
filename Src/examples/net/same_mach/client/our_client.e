@@ -20,41 +20,44 @@ create
 
 feature
 
-	soc1: UNIX_STREAM_SOCKET
-
 	make
 			-- Establish communication with server, and exchange messages.
+		local
+			soc1: detachable UNIX_STREAM_SOCKET
 		do
 			create soc1.make_client ("/tmp/here")
 			soc1.connect
-			process -- See below
+			process (soc1)
 			soc1.cleanup
 		rescue
-			soc1.cleanup
+			if soc1 /= Void then
+				soc1.cleanup
+			end
 		end
 
-	process
+	process (soc1: UNIX_STREAM_SOCKET)
 			-- Build a message to server, receive answer, build
 			-- modified message from that answer, and print it.
 		local
-			our_list, our_new_list: OUR_MESSAGE
+			our_list: OUR_MESSAGE
 		do
 			create our_list.make
 			our_list.extend ("This ")
 			our_list.extend ("is ")
 			our_list.extend ("our ")
 			our_list.extend ("test.")
-			our_list.general_store (soc1)
-			our_new_list ?= our_list.retrieved (soc1)
-			from
-				our_new_list.start
-			until
-				our_new_list.after
-			loop
-				io.putstring (our_new_list.item)
-				our_new_list.forth
+			our_list.independent_store (soc1)
+			if attached {OUR_MESSAGE} our_list.retrieved (soc1) as our_new_list then
+				from
+					our_new_list.start
+				until
+					our_new_list.after
+				loop
+					io.putstring (our_new_list.item)
+					our_new_list.forth
+				end
+				io.new_line
 			end
-			io.new_line
 		end
 
 note

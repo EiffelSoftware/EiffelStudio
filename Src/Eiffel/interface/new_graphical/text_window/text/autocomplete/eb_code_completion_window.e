@@ -791,6 +791,12 @@ feature {NONE} -- Action handlers
 				else
 					comment_preview.set_text ("")
 				end
+
+				if not {PLATFORM}.is_windows then
+						-- Process the graphical events to ensure the row will be made visible for GTK deferred
+						-- events processing.
+					ev_application.process_events
+				end
 				a_row.ensure_visible
 			end
 		end

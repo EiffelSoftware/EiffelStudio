@@ -289,7 +289,11 @@ rt_public EIF_REFERENCE dir_current(void)
 	char *cwd;
 	EIF_REFERENCE  cwd_string;
 
+#ifdef EIF_VMS
+	cwd = getcwd (NULL, PATH_MAX, 0);   // force Unix format filespec
+#else
 	cwd = getcwd (NULL, PATH_MAX);
+#endif
 	cwd_string = RTMS(cwd);
 	free (cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
 	return cwd_string;
@@ -778,8 +782,8 @@ rt_public long eif_vms_telldir (DIR* notadirp)
     return DECC_TELLDIR (notadirp);
 #endif
 }
-
 #endif /* MY_VMS_WRAPPERS */
+
 
 #ifdef EIF_VMS_V6_ONLY
 char * dir_dot_dir (char * duplicate)

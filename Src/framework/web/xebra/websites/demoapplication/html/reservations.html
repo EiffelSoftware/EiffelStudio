@@ -1,127 +1,66 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<page:controller class="RESERVATION_CONTROLLER" /><!-- InstanceBegin template="/Templates/templatexebrademoapp.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>Xebra Demo Application</title>
-<!-- InstanceEndEditable -->
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
-<link href="style.css" rel="stylesheet" type="text/css" />
-<!-- InstanceParam name="region2" type="boolean" value="true" -->
-</head>
-<body bgcolor="#FFFFFF">
-<!-- ImageReady Slices (template.psd) -->
-<table width="1100" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
-  <tr>
-    <td><img src="images/template_01.gif" width="20" height="46" alt="" /></td>
-    <td><img src="images/template_02.gif" width="168" height="46" alt="" /></td>
-    <td><img src="images/template_03.gif" width="30" height="46" alt="" /></td>
-    <td><img src="images/template_04.gif" width="862" height="46" alt="" /></td>
-    <td><img src="images/template_05.gif" width="20" height="46" alt="" /></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_06.gif" width="20" height="28" alt="" /></td>
-    <td><img src="images/template_07.gif" width="168" height="28" alt="" /></td>
-    <td><img src="images/template_08.gif" width="30" height="28" alt="" /></td>
-    <td class="loginback"><div align="right">
-        <xeb:if condition="authenticated"> Welcome
-          <xeb:display feature="username"/>
-          , <a href="logout.xeb">Logout</a> </xeb:if>
-        <xeb:if condition="not_authenticated"> <a href="login.xeb">Login</a> </xeb:if>
-      </div></td>
-    <td><img src="images/template_10.gif" width="20" height="28" alt="" /></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_11.gif" width="20" height="244" alt="" /></td>
-    <td><img src="images/template_12.gif" width="168" height="244" alt="" /></td>
-    <td><img src="images/template_13.gif" width="30" height="244" alt="" /></td>
-    <td><img src="images/template_14.gif" width="862" height="244" alt="" /></td>
-    <td><img src="images/template_15.gif" width="20" height="244" alt="" /></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td align="left" valign="top"><h2 class="style1">Navigation</h2>
-      <ul>
-        <li><a href="home.xeb">Home</a></li>
-        <li><a href="reservations.xeb">Reservations</a></li>
-        <li><a href="contact.xeb">Contact</a></li>
-      </ul></td>
-    <td class="template_18_back"><img src="images/template_18.gif" width="30" height="113" alt="" /></td>
-    <td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
-      <h2 class="style1">Reservations</h2>
-      <xeb:if condition="not_authenticated">
-        <p>Please log in to see reservations.</p>
-      </xeb:if>
-      <xeb:if condition="authenticated">
-        <table width="100%" border="0" cellpadding="0">
-          <tr class="tableheader">
-            <td>Name</td>
-            <td>Date</td>
-            <td>Persons</td>
-            <xeb:if condition="authenticated_admin">
-              <td>Edit</td>
-            </xeb:if>
-            <xeb:if condition="not_authenticated_admin">
-              <td>Details</td>
-            </xeb:if>
-          </tr>
-          <xeb:iterate list="global_state.db.reservations" variable="reservation"
+<page:include template="master_template">
+  <page:controller class="reservation_controller" />
+  <page:define_region id="content">
+    <h2 class="style1">Reservations</h2>
+    <xeb:container render="not_authenticated">
+      <p>Please log in to see reservations.</p>
+    </xeb:container>
+    <xeb:container render="authenticated">
+      <table width="100%" border="0" cellpadding="0">
+        <tr class="tableheader">
+          <td>Name</td>
+          <td>Date</td>
+          <td>Persons</td>
+          <xeb:container render="authenticated_admin">
+            <td>Edit</td>
+          </xeb:container>
+          <xeb:container render="not_authenticated_admin">
+            <td>Details</td>
+          </xeb:container>
+        </tr>
+        <xeb:iterate list="global_state.db.reservations" variable="reservation"
                 type="RESERVATION">
-            <tr>
-              <td><xeb:variable id="reservation" feature="name" /></td>
-              <td><xeb:variable id="reservation" feature="date" /></td>
-              <td><xeb:variable id="reservation" feature="persons.out" /></td>
-              <xeb:if condition="authenticated_admin">
-                <td class="style2"><a href="">Edit </a></td>
-              </xeb:if>
-              <xeb:if condition="not_authenticated_admin">
-                <td class="style2"><a href="">Details</a></td>
-              </xeb:if>
-            </tr>
-          </xeb:iterate>
-        </table>
-      </xeb:if>
-      <xeb:if condition="authenticated_admin">
-      	<h2 class="style1">New Reservation</h2>
-        <form id="form1" name="form1" method="post" action="insert.xeb">
-          <table width="400" border="0" cellpadding="2" cellspacing="2">
-            <tr>
-              <td>Name</td>
-              <td><input type="text" name="name" id="name" /></td>
-            </tr>
-            <tr>
-              <td>Date</td>
-              <td><input type="text" name="date" id="date" /></td>
-            </tr>
-            <tr>
-              <td>Persons</td>
-              <td><input type="text" name="persons" id="persons" /></td>
-            </tr>
-            <tr>
-              <td>Description</td>
-              <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
-            </tr>
-            <tr>
-              <td colspan="2"><div align="center">
+          <tr>
+            <td><xeb:variable id="reservation" feature="name" /></td>
+            <td><xeb:variable id="reservation" feature="date" /></td>
+            <td><xeb:variable id="reservation" feature="persons.out" /></td>
+            <xeb:container render="authenticated_admin">
+              <td class="style2"><a href="">Edit </a></td>
+            </xeb:container>
+            <xeb:container render="not_authenticated_admin">
+              <td class="style2"><a href="">Details</a></td>
+            </xeb:container>
+          </tr>
+        </xeb:iterate>
+      </table>
+    </xeb:container>
+    <xeb:container render="authenticated_admin">
+      <h2 class="style1">New Reservation</h2>
+      <form id="form1" name="form1" method="post" action="insert.xeb">
+        <table width="400" border="0" cellpadding="2" cellspacing="2">
+          <tr>
+            <td>Name</td>
+            <td><input type="text" name="name" id="name" /></td>
+          </tr>
+          <tr>
+            <td>Date</td>
+            <td><input type="text" name="date" id="date" /></td>
+          </tr>
+          <tr>
+            <td>Persons</td>
+            <td><input type="text" name="persons" id="persons" /></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td><textarea name="description" id="description" cols="45" rows="5"></textarea></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div align="center">
                 <input type="submit" name="submit" id="submit" value="Submit" />
               </div></td>
-            </tr>
-          </table>
-          
-        </form>
-      </xeb:if>
-      <!-- InstanceEndEditable --></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_21.gif" width="20" height="68" alt="" /></td>
-    <td><img src="images/template_22.gif" width="168" height="68" alt="" /></td>
-    <td><img src="images/template_23.gif" width="30" height="68" alt="" /></td>
-    <td><img src="images/template_24.gif" width="862" height="68" alt="" /></td>
-    <td><img src="images/template_25.gif" width="20" height="68" alt="" /></td>
-  </tr>
-</table>
-<!-- End ImageReady Slices -->
-</body>
-<!-- InstanceEnd --></html>
+          </tr>
+        </table>
+      </form>
+    </xeb:container>
+  </page:define_region>
+</page:include>

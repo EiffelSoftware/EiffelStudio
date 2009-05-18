@@ -1,16 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><page:controller class="DELETE_CONTROLLER" /><!-- InstanceBegin template="/Templates/templatexebrademoapp.dwt" codeOutsideHTMLIsLocked="false" -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<page:controller class="login_controller" />
 <head>
-<!-- InstanceBeginEditable name="doctitle" -->
 <title>Xebra Demo Application</title>
-<!-- InstanceEndEditable -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 <link href="style.css" rel="stylesheet" type="text/css" />
-<!-- InstanceParam name="region2" type="boolean" value="true" -->
 </head>
 <body bgcolor="#FFFFFF">
-<!-- ImageReady Slices (template.psd) -->
 <table width="1100" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
   <tr>
     <td><img src="images/template_01.gif" width="20" height="46" alt="" /></td>
@@ -47,14 +43,8 @@
         <li><a href="contact.xeb">Contact</a></li>
       </ul></td>
     <td class="template_18_back"><img src="images/template_18.gif" width="30" height="113" alt="" /></td>
-    <td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
-     <xeb:if condition="not_authenticated_admin">
-      	<xeb:redirect url="login.xeb"/>
-     </xeb:if>   
-     <xeb:if condition="authenticated_admin">
-     <p><xeb:display feature="delete"/></p>
-      </xeb:if> 
-      <!-- InstanceEndEditable --></td>
+    <td align="left" valign="top"><page:region id="content" />
+    </td>
     <td></td>
   </tr>
   <tr>
@@ -65,6 +55,5 @@
     <td><img src="images/template_25.gif" width="20" height="68" alt="" /></td>
   </tr>
 </table>
-<!-- End ImageReady Slices -->
 </body>
-<!-- InstanceEnd --></html>
+</html>

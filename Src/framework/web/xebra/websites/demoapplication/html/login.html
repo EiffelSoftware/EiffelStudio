@@ -1,94 +1,30 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><page:controller class="LOGIN_CONTROLLER" /><!-- InstanceBegin template="/Templates/templatexebrademoapp.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>Xebra Demo Application</title>
-<!-- InstanceEndEditable -->
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!-- InstanceBeginEditable name="head" -->
-<style type="text/css">
-<!--
-.style3 {color: #FF0000}
--->
-</style>
-<!-- InstanceEndEditable -->
-<link href="style.css" rel="stylesheet" type="text/css" />
-<!-- InstanceParam name="region2" type="boolean" value="true" -->
-</head>
-<body bgcolor="#FFFFFF">
-<!-- ImageReady Slices (template.psd) -->
-<table width="1100" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
-  <tr>
-    <td><img src="images/template_01.gif" width="20" height="46" alt="" /></td>
-    <td><img src="images/template_02.gif" width="168" height="46" alt="" /></td>
-    <td><img src="images/template_03.gif" width="30" height="46" alt="" /></td>
-    <td><img src="images/template_04.gif" width="862" height="46" alt="" /></td>
-    <td><img src="images/template_05.gif" width="20" height="46" alt="" /></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_06.gif" width="20" height="28" alt="" /></td>
-    <td><img src="images/template_07.gif" width="168" height="28" alt="" /></td>
-    <td><img src="images/template_08.gif" width="30" height="28" alt="" /></td>
-    <td class="loginback"><div align="right">
-        <xeb:if condition="authenticated"> Welcome
-          <xeb:display feature="username"/>
-          , <a href="logout.xeb">Logout</a> </xeb:if>
-        <xeb:if condition="not_authenticated"> <a href="login.xeb">Login</a> </xeb:if>
-      </div></td>
-    <td><img src="images/template_10.gif" width="20" height="28" alt="" /></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_11.gif" width="20" height="244" alt="" /></td>
-    <td><img src="images/template_12.gif" width="168" height="244" alt="" /></td>
-    <td><img src="images/template_13.gif" width="30" height="244" alt="" /></td>
-    <td><img src="images/template_14.gif" width="862" height="244" alt="" /></td>
-    <td><img src="images/template_15.gif" width="20" height="244" alt="" /></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td align="left" valign="top"><h2 class="style1">Navigation</h2>
-      <ul>
-        <li><a href="home.xeb">Home</a></li>
-        <li><a href="reservations.xeb">Reservations</a></li>
-        <li><a href="contact.xeb">Contact</a></li>
-      </ul></td>
-    <td class="template_18_back"><img src="images/template_18.gif" width="30" height="113" alt="" /></td>
-    <td align="left" valign="top"><!-- InstanceBeginEditable name="ContentRegion" -->
-        <h2><span class="style1">Login</span>        </h2>
-        <p><span class="error"><xeb:display feature="login"/></span></p>  
-        <xeb:if condition="not_authenticated">
-        <form id="1" name="login_form" method="post" action="login.xeb">
-     
+<page:include template="master_template">
+  <page:define_region id="content">
+    <page:controller class="login_controller" />
+    <h2><span class="style1">Login</span> </h2>
+    <p><span class="error">
+      <xeb:display feature="login"/>
+      </span></p>
+    <xeb:if condition="not_authenticated">
+      <form id="1" name="login_form" method="post" action="login.xeb">
         <table width="400" border="0" cellpadding="2" cellspacing="2" bgcolor="#FFFFFF">
           <tr>
             <td>Name</td>
             <td><label>
               <input type="text" name="name" id="name" />
-            </label></td>
+              </label></td>
           </tr>
           <tr>
             <td>Password</td>
-            <td><input type="password" name="password" id="password" />            </td>
-          </tr>        
-          <tr><td></td>
-              <td><input type="submit" name="submit" id="submit" value="Login" /></td>
+            <td><input type="password" name="password" id="password" />
+            </td>
           </tr>
-           </table>
-     
-   
-        </form> 
-    </xeb:if>  
-	<!-- InstanceEndEditable --></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td><img src="images/template_21.gif" width="20" height="68" alt="" /></td>
-    <td><img src="images/template_22.gif" width="168" height="68" alt="" /></td>
-    <td><img src="images/template_23.gif" width="30" height="68" alt="" /></td>
-    <td><img src="images/template_24.gif" width="862" height="68" alt="" /></td>
-    <td><img src="images/template_25.gif" width="20" height="68" alt="" /></td>
-  </tr>
-</table>
-<!-- End ImageReady Slices -->
-</body>
-<!-- InstanceEnd --></html>
+          <tr>
+            <td></td>
+            <td><input type="submit" name="submit" id="submit" value="Login" /></td>
+          </tr>
+        </table>
+      </form>
+    </xeb:if>
+  </page:define_region>
+</page:include>

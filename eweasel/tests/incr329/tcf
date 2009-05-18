@@ -1,0 +1,32 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 add-class-then-make-expanded
+test_description After initial compilation, a class that is the type of an anchor for an open target of an agent has a descendant added and the anchor is changed to reference the new class.  Changing this new class to be expanded then causes the compiler to crash in degree 2
+
+
+define		CLASS_NAME "TEST2"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define		EXPANDED ""
+define		CLASS_NAME "TEST3"
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define		EXPANDED "expanded"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+test_end

@@ -1,0 +1,11 @@
+
+test_name 	binary-op-fail-to-check-second-operand
+test_description The compiler fails to check the second operand of a binary operator for further validity errors if the first operand has an error and similarly for routine calls.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VDPR(3) VDPR(3) VDPR(3)
+
+test_end

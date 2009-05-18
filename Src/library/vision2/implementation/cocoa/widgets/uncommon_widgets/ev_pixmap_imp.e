@@ -66,6 +66,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_DRAWABLE_IMP}
+			disable_tabable_from
+			disable_tabable_to
 		end
 
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
@@ -165,6 +167,8 @@ feature -- Element change
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
+			internal_width := a_width
+			internal_height := a_height
 		end
 
 	reset_for_buffering (a_width, a_height: INTEGER)

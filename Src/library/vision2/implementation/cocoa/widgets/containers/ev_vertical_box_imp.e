@@ -47,7 +47,7 @@ feature {NONE} -- Basic operation
 			-- current height.
 		local
 			litem: EV_WIDGET_IMP
-			rate, total_rest, y, y_inv: INTEGER
+			rate, total_rest, y: INTEGER
 			children_size, item_height: INTEGER
 			item_width: INTEGER
 			cur: CURSOR
@@ -74,11 +74,11 @@ feature {NONE} -- Basic operation
 							item_height := rate + rest (total_rest)
 							total_rest := (total_rest - 1).max (0)
 							if originator then
-								litem.ev_move_and_resize (border_width, a_height - y - item_height, item_width, item_height, True)
+								litem.ev_move_and_resize (border_width, y, item_width, item_height, True)
 							else
-								litem.ev_apply_new_size (border_width, a_height - y - item_height, item_width, item_height, True)
+								litem.ev_apply_new_size (border_width, y, item_width, item_height, True)
 							end
-							y := y - (padding + item_height)
+							y := y + padding + item_height
 						end
 						ev_children.forth
 					end
@@ -120,17 +120,16 @@ feature {NONE} -- Basic operation
 							else
 								item_height := litem.minimum_height
 							end
-							y_inv := a_height - y - item_height
 							check
 							--	y_inv >= 0
 							end
-							if y_inv = -323 then
+							if y = -323 then
 								io.put_boolean (True)
 							end
 							if originator then
-								litem.ev_move_and_resize (border_width, y_inv, item_width, item_height, True)
+								litem.ev_move_and_resize (border_width, y, item_width, item_height, True)
 							else
-								litem.ev_apply_new_size	(border_width, y_inv, item_width, item_height, True)
+								litem.ev_apply_new_size	(border_width, y, item_width, item_height, True)
 							end
 							y := y + padding + item_height
 						end

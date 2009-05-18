@@ -26,6 +26,11 @@ inherit
 			notify_change
 		end
 
+	EV_NS_VIEW
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -56,7 +61,7 @@ feature -- Status setting
 			check
 				w_imp_not_void : w_imp /= Void
 			end
-			w_imp.cocoa_set_size (a_x, a_y, width, height)
+			w_imp.ev_move (a_x, a_y)
 			notify_change (Nc_minsize, w_imp)
 		end
 

@@ -109,12 +109,9 @@ feature -- Layout
 
 	client_height: INTEGER
 			-- Height of the client area of `Current'
-		local
-			cv: NS_VIEW
 		do
 			if box /= void then
-				create cv.new_shared (box.content_view)
-				Result := cv.frame.size.height.max (0)
+				Result := box.content_view.frame.size.height.max (0)
 			else
 				Result := height
 			end
@@ -122,12 +119,9 @@ feature -- Layout
 
 	client_width: INTEGER
 			-- Height of the client area of `Current'.
-		local
-			cv: NS_VIEW
 		do
 			if box /= void then
-				create cv.new_shared (box.content_view)
-				Result := cv.frame.size.width.max (0)
+				Result := box.content_view.frame.size.width.max (0)
 			else
 				Result := width
 			end

@@ -113,6 +113,36 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	width: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.width: Not implemented%N")
+		end
+
+	height: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.height: Not implemented%N")
+		end
+
+	screen_x: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.screen_x: Not implemented%N")
+		end
+
+	screen_y: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.screen_y: Not implemented%N")
+		end
+
+	x_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+		end
+
+	y_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
+		end
+
 	internal_text: STRING_32
 		-- Text displayed in `Current'
 

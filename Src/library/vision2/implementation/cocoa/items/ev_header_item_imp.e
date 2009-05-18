@@ -33,7 +33,8 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			width
+			width,
+			height
 		end
 
 create
@@ -47,12 +48,17 @@ feature -- Initialization
 			base_make (an_interface)
 			create table_column.new
 			cocoa_item := table_column
+			align_text_left
 		end
 
 	initialize
 			-- Initialize the header item.
 		do
-
+			set_width (80)
+			set_text ("")
+			set_is_initialized (True)
+			user_can_resize := True
+			maximum_width := 32000
 		end
 
 	handle_resize
@@ -94,6 +100,7 @@ feature -- Status setting
 
 	set_text (a_text: STRING_GENERAL)
 		do
+			Precursor {EV_TEXTABLE_IMP} (a_text)
 			table_column.header_cell.set_string_value (create {NS_STRING}.make_with_string (a_text))
 		end
 
@@ -126,6 +133,31 @@ feature -- Status setting
 	width: INTEGER
 		do
 			Result := table_column.width.floor
+		end
+
+	height: INTEGER
+		do
+			Result := 10
+		end
+
+	screen_x: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.screen_x: Not implemented%N")
+		end
+
+	screen_y: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.screen_y: Not implemented%N")
+		end
+
+	x_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+		end
+
+	y_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
 		end
 
 	resize_to_content

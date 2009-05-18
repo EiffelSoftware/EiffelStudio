@@ -71,15 +71,15 @@ feature {NONE} -- Implementation
 	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp : EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 		do
+			v.implementation.on_parented
+
 			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
-
+			new_item_actions.call ([v])
 			v_imp ?= v.implementation
-			v_imp.on_parented
-			on_new_item (v_imp)
-
 			cocoa_view.add_subview (v_imp.cocoa_view)
+			on_new_item (v_imp)
 		end
 
 	remove_i_th (i: INTEGER)

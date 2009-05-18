@@ -44,6 +44,8 @@ feature -- Status Setting
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
+			width := a_width
+			height := a_height
 		end
 
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -55,13 +57,9 @@ feature -- Access
 
 	width: INTEGER
 		-- Width in pixels of mask bitmap.
-		do
-		end
 
 	height: INTEGER
 		-- Width in pixels of mask bitmap.
-		do
-		end
 
 feature {NONE} -- Implementation
 

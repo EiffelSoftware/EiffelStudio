@@ -51,8 +51,6 @@ inherit
 			initialize,
 			make,
 			interface,
-			insert_i_th,
-			remove_i_th,
 			cocoa_set_size
 		end
 
@@ -89,16 +87,18 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_FIELD_IMP}
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
-			-- Insert `v' at position `i'.
+	insert_item (item_imp: EV_LIST_ITEM_IMP; pos: INTEGER)
+			-- Insert `item_imp' at the one-based index `an_index'.
 		do
-			Precursor {EV_LIST_ITEM_LIST_IMP} (v, i)
-			combo_box.insert_item_with_object_value_at_index (create {NS_STRING}.make_with_string (v.text), i-1)
+			combo_box.insert_item_with_object_value_at_index (create {NS_STRING}.make_with_string (item_imp.text), pos - 1)
 		end
 
-	remove_i_th (an_index: INTEGER)
+	remove_item (item_imp: EV_LIST_ITEM_IMP)
+			-- Remove `item_imp' from `Current'.
+		local
+			an_index: INTEGER
 		do
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+			an_index := ev_children.index_of (item_imp, 1)
 			combo_box.remove_item_at_index (an_index - 1)
 		end
 

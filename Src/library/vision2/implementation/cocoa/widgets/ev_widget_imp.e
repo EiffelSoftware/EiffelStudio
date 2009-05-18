@@ -61,6 +61,11 @@ inherit
 			interface
 		end
 
+	EV_NS_VIEW
+		redefine
+			interface
+		end
+
 feature {NONE} -- Initialization
 
 	initialize
@@ -187,14 +192,20 @@ feature -- Status setting
 	hide
 			-- Request that `Current' not be displayed even when its parent is.
 		do
-			is_show_requested := false
+			is_show_requested := False
+			if attached {NS_VIEW} cocoa_item as view then
+				view.set_hidden (True)
+			end
 		end
 
 	show
 		local
 			p_imp: like parent_imp
 		do
-			is_show_requested := true
+			is_show_requested := True
+			if attached {NS_VIEW} cocoa_item as view then
+				view.set_hidden (False)
+			end
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -205,6 +216,12 @@ feature -- Status setting
 	is_show_requested: BOOLEAN --is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'
+
+	is_displayed: BOOLEAN
+			-- Precursor
+		do
+			Result := is_show_requested
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -257,18 +274,6 @@ feature -- Widget relationships
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		deferred
-		end
-
-feature -- Measurement
-
-	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
-		local
-			l_view: NS_VIEW
-		do
-			l_view ?= cocoa_item
-			if l_view /= void then
-				l_view.set_frame (create {NS_RECT}.make_rect (a_x_position, a_y_position, a_width, a_height))
-			end
 		end
 
 feature {NONE} -- Minimum size

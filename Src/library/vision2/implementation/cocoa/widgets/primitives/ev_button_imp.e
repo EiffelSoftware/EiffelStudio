@@ -77,6 +77,8 @@ feature {NONE} -- Initialization
 		do
 			pixmapable_imp_initialize
 			Precursor {EV_PRIMITIVE_IMP}
+			enable_tabable_to
+			enable_tabable_from
 			initialize_events
 		end
 
@@ -160,13 +162,15 @@ feature -- Sensitivity
 	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		do
-			button.set_enabled (true)
+			button.set_enabled (True)
+			button.set_needs_display (True)
 		end
 
 	disable_sensitive
 			-- Set the object to ignore all user input.
 		do
-			button.set_enabled (false)
+			button.set_enabled (False)
+			button.set_needs_display (True)
 		end
 
 feature {NONE} -- implementation

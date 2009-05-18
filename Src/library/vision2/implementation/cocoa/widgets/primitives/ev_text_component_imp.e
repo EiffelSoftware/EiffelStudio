@@ -38,6 +38,8 @@ feature -- Initialization
 			set_minimum_width_in_characters (4)
 				-- Set default width to 4 characters, as on Windows.
 			Precursor {EV_PRIMITIVE_IMP}
+			enable_tabable_to
+			enable_tabable_from
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

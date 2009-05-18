@@ -28,6 +28,11 @@ inherit
 			ev_apply_new_size
 		end
 
+	OBJECTIVE_C
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -37,12 +42,50 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		do
 			base_make (an_interface)
-			create {NS_SCROLL_VIEW}cocoa_item.new
-			create document_view.new
+			create scroll_view.new
+			replace_content_view
 			scroll_view.set_has_horizontal_scroller (False)
 			scroll_view.set_has_vertical_scroller (False)
 			scroll_view.set_draws_background (False)
-			scroll_view.set_document_view (document_view)
+
+			cocoa_item := scroll_view
+		end
+
+	replace_content_view
+		local
+			l_superclass: POINTER
+			l_name: POINTER
+			l_class: POINTER
+			l_types: POINTER
+			l_sel: POINTER
+			l_imp: POINTER
+			f: FUNCTION [like Current, TUPLE[], BOOLEAN]
+			l_new_clip_view: NS_CLIP_VIEW
+		do
+			l_class := objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
+			if l_class = {NS_OBJECT}.nil then
+				-- If MyClipView doesn't exist yet create it as a new child class of NSClipView and override isFlipped
+				l_superclass := objc_get_class ((create {C_STRING}.make ("NSClipView")).item)
+				l_name := (create {C_STRING}.make ("MyClipView")).item
+				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
+
+				l_types := (create {C_STRING}.make ("b@:")).item
+				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
+				f := (agent is_flipped)
+				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
+				class_add_method (l_class, l_sel, l_imp, l_types)
+
+				objc_register_class_pair (l_class)
+			end
+			create l_new_clip_view.make_shared (class_create_instance (l_class, 0))
+			l_new_clip_view.init
+			scroll_view.set_content_view (l_new_clip_view)
+		end
+
+	is_flipped (a_target: POINTER; a_sel: POINTER): BOOLEAN
+		do
+			io.put_string ("123")
+			Result := True
 		end
 
 feature -- Access
@@ -71,7 +114,9 @@ feature -- Element change
 			end
 			if v /= Void then
 				v_imp ?= v.implementation
-				document_view.add_subview (v_imp.cocoa_view)
+				v_imp.set_parent_imp (current)
+				scroll_view.set_document_view (v_imp.cocoa_view)
+				v_imp.ev_apply_new_size (0, 0, v_imp.width, v_imp.height, True)
 				on_new_item (v_imp)
 			end
 			item := v
@@ -110,35 +155,21 @@ feature -- Layout
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
-		local
-			l_x_position, l_y_position: INTEGER
-			l_width, l_height: INTEGER
-			l_dv_width, l_dv_height: INTEGER
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			if item /= Void then
-				l_width := item_imp.minimum_width
-				l_height := item_imp.minimum_height
-				if l_width < a_width then
-					l_x_position := (a_width - l_width) // 2
-				end
-				if l_height < a_height then
-					l_y_position := (a_height - l_height) // 2
-				end
-				-- The document view is needed to position the item widget properly because NSScrollView ignores the offset, so it would always be at the bottom (instead of centered)
-				-- TODO has_vertical/horizontal scroller actually returns the old value... better to calculate manually
-				if scroll_view.has_vertical_scroller then
-					l_dv_width := l_width.max (a_width - {NS_SCROLLER}.scroller_width)
-				else
-					l_dv_width := l_width.max (a_width)
-				end
-				if scroll_view.has_horizontal_scroller then
-					l_dv_height := l_height.max (a_height - {NS_SCROLLER}.scroller_width)
-				else
-					l_dv_height := l_height.max (a_height)
-				end
-				document_view.set_frame (create {NS_RECT}.make_rect(0, 0, l_dv_width, l_dv_height))
-				item_imp.ev_apply_new_size (l_x_position, l_y_position, l_width, l_height, True)
+			if attached item_imp then
+				scroll_view.set_document_view (item_imp.cocoa_view)
+				item_imp.ev_apply_new_size (0, 0, item_imp.width, item_imp.height, True)
+			end
+--			if a_width > 0 then -- Hack because I want to get EV_GAUGE working. TODO How/where/when should the resize actions be called?
+--				on_size (a_width, a_height)
+--			end
+		end
+
+	on_size (a_width, a_height: INTEGER)
+		do
+			if resize_actions_internal /= Void then
+				resize_actions_internal.call ([screen_x, screen_y, a_width, a_height])
 			end
 		end
 
@@ -146,12 +177,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VIEWPORT;
 
-	document_view: NS_VIEW
-
-	scroll_view: NS_SCROLL_VIEW
-		do
-			Result ?= cocoa_item
-		end
+	scroll_view: NS_SCROLL_VIEW;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

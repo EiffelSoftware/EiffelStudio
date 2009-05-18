@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_WIDGET_IMP}
 			set_default_minimum_size
-			-- initialize_tabable
+			enable_tabable_from
 		end
 
 	interface: EV_PRIMITIVE;
@@ -150,9 +150,6 @@ feature -- Status report
 
 	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
-		do
-			Result := true
-		end
 
 	is_tabable_from: BOOLEAN
 			-- Is Current able to be tabbed from?
@@ -160,11 +157,13 @@ feature -- Status report
 	enable_tabable_to
 			-- Make `is_tabable_to' `True'.
 		do
+			is_tabable_to := True
 		end
 
 	disable_tabable_to
 			-- Make `is_tabable_to' `False'.
 		do
+			is_tabable_to := False
 		end
 
 	enable_tabable_from

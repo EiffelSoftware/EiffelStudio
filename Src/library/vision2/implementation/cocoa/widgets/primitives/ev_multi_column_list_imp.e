@@ -133,9 +133,6 @@ feature {NONE} -- Implementation
 
 		end
 
-
-
-
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 		local
 			a_row_number: INTEGER
@@ -304,6 +301,18 @@ feature -- Minimum size
 		end
 
 feature -- Implementation
+
+	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER)
+			-- Insert `item_imp' at `an_index'.
+		do
+			io.put_string ("EV_MULTI_COLUMN_LIST_IMP.insert_item: Not implemented")
+		end
+
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
+			-- Remove `item' from the list
+		do
+			io.put_string ("EV_MULTI_COLUMN_LIST_IMP.remove_item: Not implemented")
+		end
 
 	set_to_drag_and_drop: BOOLEAN
 			-- Set transport mode to drag and drop.

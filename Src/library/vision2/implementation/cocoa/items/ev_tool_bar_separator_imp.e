@@ -27,6 +27,11 @@ inherit
 			interface
 		end
 
+	EV_NS_VIEW
+		redefine
+			interface
+		end
+
 create
 	make
 

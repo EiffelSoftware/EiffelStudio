@@ -18,8 +18,7 @@ inherit
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
 			interface,
-			initialize,
-			insert_i_th
+			initialize
 		end
 
 	EV_PRIMITIVE_IMP
@@ -62,6 +61,8 @@ feature -- Initialization
 			container.set_document_view (outline_view)
 			outline_view.set_data_source (current)
 			cocoa_item := container
+
+			initialize_pixmaps
 		end
 
 	initialize
@@ -69,20 +70,28 @@ feature -- Initialization
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-
+			disable_tabable_from
+			disable_tabable_to
 			set_is_initialized (True)
 		end
 
-feature {EV_HEADER_ITEM_IMP} -- Implemnentation
+feature -- Access
 
-	insert_i_th (v: like item; i: INTEGER_32)
-		local
-			v_imp: EV_HEADER_ITEM_IMP
+	insert_item (item_imp: EV_HEADER_ITEM_IMP; an_index: INTEGER)
+			-- Insert `item_imp' at `an_index'.
 		do
-			Precursor {EV_ITEM_LIST_IMP} (v, i)
-			v_imp ?= v.implementation
-			outline_view.add_table_column (v_imp.table_column)
+			outline_view.add_table_column (item_imp.table_column)
 		end
+
+	remove_item (item_imp: EV_HEADER_ITEM_IMP)
+			-- Remove `item' from the list
+		local
+			an_index: INTEGER
+		do
+			an_index := ev_children.index_of (item_imp, 1) - 1
+		end
+
+feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
 	number_of_children_of_item (an_item: ANY): INTEGER
 		do
@@ -111,13 +120,11 @@ feature {NONE} -- Implementation
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		do
-
 		end
 
 	call_item_resize_actions
 			-- Call the item resize end actions.
 		do
-
 		end
 
 	pixmaps_size_changed

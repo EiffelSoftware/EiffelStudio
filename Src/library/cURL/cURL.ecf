@@ -64,14 +64,25 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/gtk$</exclude>
+				<exclude>/mac$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>
+				<exclude>/gtk$</exclude>
+				<condition>
+					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<exclude>/mac$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
 		</cluster>

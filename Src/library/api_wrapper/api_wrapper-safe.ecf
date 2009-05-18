@@ -8,14 +8,25 @@
 		</file_rule>
 		<file_rule>
 			<exclude>/windows$</exclude>
+			<exclude>/mac$</exclude>
 			<condition>
 				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</file_rule>
 		<file_rule>
 			<exclude>/unix$</exclude>
+			<exclude>/mac$</exclude>
 			<condition>
 				<platform value="windows"/>
+			</condition>
+		</file_rule>
+		<file_rule>
+			<exclude>/unix$</exclude>
+			<exclude>/windows$</exclude>
+			<condition>
+				<platform value="macintosh"/>
+				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</file_rule>
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
@@ -25,6 +36,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</library>
 		<cluster name="api_wrapper" location=".\" recursive="true">

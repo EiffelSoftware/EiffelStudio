@@ -21,7 +21,7 @@ feature -- Command
 		local
 			l_ptr: POINTER
 		do
-			l_ptr := api_loader.safe_load_api (module_name, "curl_global_init")
+			l_ptr := api_loader.api_pointer ("curl_global_init")
 			if l_ptr /= default_pointer then
 				c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
 			end
@@ -32,7 +32,7 @@ feature -- Command
 		local
 			l_ptr: POINTER
 		do
-			l_ptr := api_loader.safe_load_api (module_name, "curl_global_cleanup")
+			l_ptr := api_loader.api_pointer ("curl_global_cleanup")
 			if l_ptr /= default_pointer then
 				c_curl_global_cleanup (l_ptr);
 			end
@@ -74,7 +74,7 @@ feature -- Command
 			l_c_string: C_STRING
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_slist_append")
+			l_api := api_loader.api_pointer ("curl_slist_append")
 			if l_api /= default_pointer then
 				create l_c_string.make (a_string)
 				Result := c_slist_append (l_api, a_list, l_c_string.item)
@@ -86,7 +86,7 @@ feature -- Query
 	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
 		do
-			Result := (api_loader.module_pointer (module_name) /= default_pointer)
+			Result := api_loader.is_interface_usable
 		end
 
 feature {CURL_FORM} -- Internal command
@@ -101,7 +101,7 @@ feature {CURL_FORM} -- Internal command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_formfree")
+			l_api := api_loader.api_pointer ("curl_formfree")
 			if l_api /= default_pointer then
 				c_formfree (l_api, a_curl_form)
 			end
@@ -109,21 +109,13 @@ feature {CURL_FORM} -- Internal command
 
 feature {NONE} -- Implementation
 
-	api_loader: API_LOADER
-			-- API dynamic loader
-		once
-			create Result
-		ensure
-			not_void: Result /= Void
-		end
-
-	module_name: STRING
+	api_loader: DYNAMIC_MODULE
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
 		once
 			create l_utility
-			Result := l_utility.module_name
+			Result := l_utility.api_loader
 		end
 
 	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER)
@@ -132,7 +124,7 @@ feature {NONE} -- Implementation
 			l_c_string_1, l_c_string_2: C_STRING
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_formadd");
+			l_api := api_loader.api_pointer ("curl_formadd");
 			if l_api /= default_pointer then
 				create l_c_string_1.make (a_arg_1_value)
 				create l_c_string_2.make (a_arg_2_value)

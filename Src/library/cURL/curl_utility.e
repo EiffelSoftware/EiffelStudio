@@ -12,16 +12,26 @@ class
 
 feature -- Query
 
+	api_loader: DYNAMIC_MODULE
+			-- API dynamic loader
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_unix or l_platform.is_mac then
+				create Result.make_with_version (module_name, "3")
+			else
+				check is_window: l_platform.is_windows end
+				create Result.make (module_name)
+			end
+		ensure
+			not_void: Result /= Void
+		end
+		
 	module_name: STRING
 			-- Module name.
 		once
-			if {PLATFORM}.is_windows then
-				Result := "libcurl.dll"
-			elseif {PLATFORM}.is_mac then
-				Result := "libcurl.3.dylib"
-			else
-				Result := "libcurl.so.3"
-			end
+				Result := "libcurl"
 		ensure
 			not_void: Result /= Void
 		end

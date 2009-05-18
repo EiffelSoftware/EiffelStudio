@@ -26,6 +26,7 @@
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`">
 			<condition>
 				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\vision2.lib">
@@ -62,28 +63,38 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="true"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</external_object>
 		<external_object location="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="false"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</external_object>
 		<external_library location="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --threads --library`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="true"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</external_library>
 		<external_library location="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --library`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<multithreaded value="false"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf" readonly="false">
+			<condition>
+				<platform value="macintosh"/>
+				<custom name="vision_implementation" value="cocoa"/>
+			</condition>
+		</library>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
 				<platform value="windows"/>
@@ -107,9 +118,16 @@
 				</condition>
 			</file_rule>
 		</cluster>
+		<cluster name="implementation_cocoa" location="implementation\cocoa\" recursive="true">
+			<condition>
+				<platform value="macintosh"/>
+				<custom name="vision_implementation" value="cocoa"/>
+			</condition>
+		</cluster>
 		<cluster name="implementation_gtk" location="implementation\gtk\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">

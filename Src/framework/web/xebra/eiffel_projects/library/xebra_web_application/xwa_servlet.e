@@ -50,8 +50,13 @@ feature -- Basic Operations
 				l_internal_controllers.forth
 			end
 			a_request.call_pre_handler (Current, a_response)
-			handle_request (a_request, a_response)
-			afterhandle_request (a_request, a_response)
+			if a_response.goto_request.is_empty then
+				handle_request (a_request, a_response)
+				if a_response.goto_request.is_empty then
+					afterhandle_request (a_request, a_response)
+				end
+			end
+
 		end
 
 	handle_request (a_request: XH_REQUEST; a_response: XH_RESPONSE)

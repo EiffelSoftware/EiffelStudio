@@ -9,6 +9,7 @@ deferred class
 
 inherit
 	XU_SHARED_OUTPUTTER
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 feature -- Initialization
 
@@ -89,7 +90,7 @@ feature {NONE} -- Implementation
 feature -- Basic Functionality
 
 	generate
-			--
+			-- Generates a servlet
 		local
 			l_buf: XU_INDENDATION_STREAM
 			l_servlet_class: XEL_SERVLET_CLASS_ELEMENT
@@ -101,34 +102,37 @@ feature -- Basic Functionality
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)
 			create l_file.make (l_filename)
-			if (not l_file.exists) or (l_current_file.date > l_file.date) then
+			if (not l_file.exists) or else (l_current_file.date > l_file.date) then
 				o.iprint ("The servlet '" + l_filename + "' is being generated...")
 
 				if not l_file.is_creatable then
-					print ("ERROR file is not writable '" + l_filename + "'") --FIXME: proper error handling
+					error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
+				else
+					l_file.open_write
+					if not l_file.is_open_write then
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
+					else
+						create l_buf.make (l_file)
+						create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
+						l_servlet_class.set_inherit (Servlet_class_name + " redefine make end")
+						l_servlet_class.set_constructor_name ("make")
+						build_make_for_servlet_generator (l_servlet_class)
+						from
+							controller_id_table.start
+						until
+							controller_id_table.after
+						loop
+							l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
+							controller_id_table.forth
+						end
+						l_servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
+						build_handle_request_feature_for_servlet (l_servlet_class, internal_root_tag)
+						l_servlet_class.serialize (l_buf)
+						l_file.close
+						o.iprint ("done.")
+					end
 				end
-				l_file.open_write
-				if not l_file.is_open_write then
-					print ("ERROR cannot open file '" + l_filename + "'") --FIXME: proper error handling
-				end
-				create l_buf.make (l_file)
-				create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
-				l_servlet_class.set_inherit (Servlet_class_name + " redefine make end")
-				l_servlet_class.set_constructor_name ("make")
-				build_make_for_servlet_generator (l_servlet_class)
-				from
-					controller_id_table.start
-				until
-					controller_id_table.after
-				loop
-					l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
-					controller_id_table.forth
-				end
-				l_servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")
-				build_handle_request_feature_for_servlet (l_servlet_class, internal_root_tag)
-				l_servlet_class.serialize (l_buf)
-				l_file.close
-				o.iprint ("done.")
+
 			else
 				o.iprint ("Already up to date : " + l_filename)
 			end

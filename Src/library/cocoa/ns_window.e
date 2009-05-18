@@ -16,13 +16,15 @@ create
 	make_shared,
 	init_with_control_rect_style_mask_backing_defer
 
-feature -- Creation
+feature -- Creating Windows
 
 	init_with_control_rect_style_mask_backing_defer (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
 			-- Create a new window
 		do
 			cocoa_object := window_init_with_control_rect_style_mask_backing_defer (a_rect.item, a_style_mask, a_defer)
 		end
+
+feature -- Configuring Windows
 
 feature -- ...
 
@@ -218,6 +220,33 @@ feature -- ...
 	order_front_regardless
 		do
 			window_order_front_regardless (cocoa_object)
+		end
+
+feature -- Managing Attached Windows
+
+	add_child_window_ordered (a_child_win: NS_WINDOW; a_place: INTEGER)
+		do
+			window_add_child_window_ordered (cocoa_object, a_child_win.cocoa_object, a_place)
+		end
+
+	remove_child_window (a_child_win: NS_WINDOW)
+		do
+			window_remove_child_window (cocoa_object, a_child_win.cocoa_object)
+		end
+
+	child_windows: NS_ARRAY [NS_WINDOW]
+		do
+			create Result.make_shared (window_child_windows (cocoa_object))
+		end
+
+	parent_window: NS_WINDOW
+		do
+			create Result.make_shared (window_parent_window (cocoa_object))
+		end
+
+	set_parent_window (a_window: NS_WINDOW)
+		do
+			window_set_parent_window (cocoa_object, a_window.cocoa_object)
 		end
 
 feature -- Animation
@@ -511,6 +540,41 @@ feature {NONE} -- Objective-C implementation
 			"[(NSWindow*)$a_window orderFrontRegardless];"
 		end
 
+	frozen window_add_child_window_ordered (a_window: POINTER; a_child_win: POINTER; a_place: INTEGER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window addChildWindow: $a_child_win ordered: $a_place];"
+		end
+
+	frozen window_remove_child_window (a_window: POINTER; a_child_win: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window removeChildWindow: $a_child_win];"
+		end
+
+	frozen window_child_windows (a_window: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_window childWindows];"
+		end
+
+	frozen window_parent_window (a_window: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_window parentWindow];"
+		end
+
+	frozen window_set_parent_window (a_target: POINTER; a_window: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_target setParentWindow: $a_window];"
+		end
+
 feature -- Style Mask Constants
 
 	frozen borderless_window_mask: INTEGER
@@ -552,9 +616,31 @@ feature -- Window Levels
 
 	frozen floating_window_level: INTEGER
 		external
-			"C inline use <Cocoa/Cocoa.h>"
+			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"return NSFloatingWindowLevel;"
+			"NSFloatingWindowLevel"
 		end
 
+feature -- Window Ordering Mode
+
+	frozen window_above: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowAbove"
+		end
+
+	frozen window_below: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowBelow"
+		end
+
+	frozen window_out: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowOut"
+		end
 end

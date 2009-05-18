@@ -39,11 +39,11 @@ feature
 			scroll_view_set_document_view (cocoa_object, a_view.cocoa_object)
 		end
 
---	document_view: NS_VIEW
---			-- TODO: Create correct concrete subclass!
---		do
---			create Result.make_shared (scroll_view_document_view (cocoa_object))
---		end
+	document_view: NS_VIEW
+			-- TODO: Create correct concrete subclass!
+		do
+			create Result.make_shared (scroll_view_document_view (cocoa_object))
+		end
 
 	set_content_view (a_content_view: NS_CLIP_VIEW)
 		do

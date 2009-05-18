@@ -24,9 +24,9 @@ feature -- Box
 			cocoa_object := box_new
 		end
 
-	content_view: POINTER
+	content_view: NS_VIEW
 		do
-			Result := box_content_view (cocoa_object)
+			create Result.make_shared (box_content_view (cocoa_object))
 		end
 
 	set_border_type (a_border_type: INTEGER)

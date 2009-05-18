@@ -45,7 +45,7 @@ feature -- Setting the Document View
 	document_view: NS_VIEW
 			-- FIXME according to the header this may return type NS_OBJECT
 		do
-			create Result.new_shared (clip_view_document_view (cocoa_object))
+			create Result.make_shared (clip_view_document_view (cocoa_object))
 		end
 
 feature -- Getting the Visible Portion

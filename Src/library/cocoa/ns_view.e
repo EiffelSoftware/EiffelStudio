@@ -1,4 +1,4 @@
-note
+indexing
 	description: "An Eiffel abstraction for a Cocoa widget"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,17 +13,11 @@ inherit
 	NS_OBJECT
 
 create
-	new_shared,
+	make_shared,
 	new,
 	new_custom
 
-feature -- Creation
-
-	new_shared (ptr: POINTER)
-			--
-		do
-			cocoa_object := ptr
-		end
+feature -- Creation and Initialization
 
 	new
 		do
@@ -37,7 +31,44 @@ feature -- Creation
 			cocoa_object := custom_view_new ($current, $draw)
 		end
 
-feature -- Properties
+	init
+		do
+			view_init (cocoa_object)
+		end
+
+feature -- Managing the View Hierarchy
+
+	window: NS_WINDOW
+		do
+			create Result.make_shared (view_window (cocoa_object))
+		end
+
+	superview: NS_VIEW
+		do
+			create Result.make_shared (view_superview (cocoa_object))
+		end
+
+	subviews: NS_ARRAY [NS_VIEW]
+		do
+			create Result.make_shared (view_subviews (cocoa_object))
+		end
+
+	is_descendant_of (a_view: NS_VIEW): BOOLEAN
+		do
+			Result := view_is_descendant_of (cocoa_object, a_view.cocoa_object)
+		end
+
+	ancestor_shared_with_view (a_view: NS_VIEW): NS_VIEW
+		do
+			create Result.make_shared (view_ancestor_shared_with_view (cocoa_object, a_view.cocoa_object))
+		end
+
+	add_subview (a_subview: NS_VIEW)
+		do
+			view_add_subview (cocoa_object, a_subview.cocoa_object)
+		end
+
+feature -- Modifying the Frame Rectangle
 
 	set_frame (a_rect: NS_RECT)
 		do
@@ -50,16 +81,40 @@ feature -- Properties
 			view_frame (cocoa_object, Result.item)
 		end
 
+feature -- Modifying the Bounds Rectangle
+
+	set_bounds (a_rect: NS_RECT)
+		do
+			view_set_bounds (cocoa_object, a_rect.item)
+		end
+
 	bounds: NS_RECT
 		do
 			create Result.make
 			view_bounds (cocoa_object, Result.item)
 		end
 
-	add_subview (a_subview: NS_VIEW)
+	set_bounds_origin (a_new_origin: NS_POINT)
 		do
-			view_add_subview (cocoa_object, a_subview.cocoa_object)
+			view_set_bounds_origin (cocoa_object, a_new_origin.item)
 		end
+
+	set_bounds_size (a_new_size: NS_SIZE)
+		do
+			view_set_bounds_size (cocoa_object, a_new_size.item)
+		end
+
+	set_bounds_rotation (a_angle: REAL)
+		do
+			view_set_bounds_rotation (cocoa_object, a_angle)
+		end
+
+	bounds_rotation: REAL
+		do
+			Result := view_bounds_rotation (cocoa_object)
+		end
+
+feature -- Modifying the Coordinate System
 
 	display
 		do
@@ -135,6 +190,20 @@ feature {NONE} -- Objective-C interface
 			"return [[CustomView new] initWithCallbackObject: $a_object andMethod: $a_method];"
 		end
 
+	frozen view_init (a_view: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view init];"
+		end
+
+	frozen view_superview (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view superview];"
+		end
+
 	frozen view_set_frame (a_view: POINTER; a_res: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -153,13 +222,6 @@ feature {NONE} -- Objective-C interface
 					memcpy($a_res, &frame, sizeof(NSRect));
 				}
 			]"
-		end
-
-	frozen view_bounds (a_view: POINTER; a_res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
 		end
 
 	frozen view_add_subview (a_view: POINTER; a_subview: POINTER)
@@ -232,6 +294,82 @@ feature {NONE} -- Objective-C interface
 			"NSPoint point = [(NSView*)$a_view convertPoint: *(NSPoint*)$a_point toView: $a_to_view]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
-note
+	frozen view_set_bounds_origin (a_view: POINTER; a_new_origin: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view setBoundsOrigin: *(NSPoint*)$a_new_origin];"
+		end
+
+	frozen view_set_bounds_size (a_view: POINTER; a_new_size: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view setBoundsSize: *(NSSize*)$a_new_size];"
+		end
+
+	frozen view_set_bounds_rotation (a_view: POINTER; a_angle: REAL)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view setBoundsRotation: $a_angle];"
+		end
+
+	frozen view_bounds_rotation (a_view: POINTER): REAL
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view boundsRotation];"
+		end
+
+	frozen view_set_bounds (a_view: POINTER; a_rect: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view setBounds: *(NSRect*)$a_rect];"
+		end
+
+	frozen view_bounds (a_view: POINTER; a_res: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
+		end
+
+	frozen view_window (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view window];"
+		end
+
+	frozen view_subviews (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view subviews];"
+		end
+
+	frozen view_is_descendant_of (a_target: POINTER; a_view: POINTER): BOOLEAN
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_target isDescendantOf: $a_view];"
+		end
+
+	frozen view_ancestor_shared_with_view (a_target: POINTER; a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_target ancestorSharedWithView: $a_view];"
+		end
+
+	frozen view_opaque_ancestor (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view opaqueAncestor];"
+		end
+indexing
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

@@ -26,12 +26,12 @@ feature -- Creation
 
 feature -- Measurement
 
-	x: INTEGER
+	x: INTEGER assign set_x
 		do
 			Result := internal_x (item)
 		end
 
-	y: INTEGER
+	y: INTEGER assign set_y
 		do
 			Result := internal_y (item)
 		end
@@ -42,6 +42,7 @@ feature -- Measurement
 		end
 
 	set_y (a_y: INTEGER)
+			-- TODO: Add := accessor
 		do
 			internal_set_y (item, a_y)
 		end

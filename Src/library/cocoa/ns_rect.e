@@ -15,7 +15,8 @@ inherit
 
 create
 	make,
-	make_rect
+	make_rect,
+	zero_rect
 
 feature -- Creation
 
@@ -30,6 +31,14 @@ feature -- Creation
 		do
 			allocate
 			rect_make_rect (item, a_x, a_y, a_width, a_height)
+			create origin.make_by_pointer (origin_address (item))
+			create size.make_by_pointer (size_address (item))
+		end
+
+	zero_rect
+		do
+			allocate
+			rect_zero_rect (item)
 			create origin.make_by_pointer (origin_address (item))
 			create size.make_by_pointer (size_address (item))
 		end
@@ -70,4 +79,10 @@ feature {NONE} -- Implementation
 			"NSRect rect = NSMakeRect($a_x, $a_y, $a_w, $a_h); memcpy($res, &rect, sizeof(NSRect));"
 		end
 
+	frozen rect_zero_rect (res: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect rect = NSZeroRect; memcpy($res, &rect, sizeof(NSRect));"
+		end
 end

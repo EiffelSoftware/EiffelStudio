@@ -32,7 +32,7 @@ feature
 
 	view : NS_VIEW
 		do
-			Result := (create {NS_VIEW}.new_shared (tab_view_item_view(cocoa_object)))
+			Result := (create {NS_VIEW}.make_shared (tab_view_item_view(cocoa_object)))
 		end
 
 	initial_first_responder : NS_OBJECT

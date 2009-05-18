@@ -73,10 +73,17 @@ feature -- Generation
 			l_string_low := l_string.as_lower
 			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
+				eiffel_parser.set_syntax_version (eiffel_parser.transitional_64_syntax)
 				eiffel_parser.parse_from_string (l_string, Void)
 				if eiffel_parser.error_count > 0 then
-					has_error := true
-				else
+					eiffel_parser.reset
+					eiffel_parser.set_syntax_version (eiffel_parser.Ecma_syntax)
+					eiffel_parser.parse_from_string (l_string, Void)
+					if eiffel_parser.error_count > 0 then
+						has_error := True
+					end
+				end
+				if not has_error then
 					create l_iterator
 					l_iterator.set_parsed_class (eiffel_parser.root_node)
 					l_iterator.set_match_list (eiffel_parser.match_list)

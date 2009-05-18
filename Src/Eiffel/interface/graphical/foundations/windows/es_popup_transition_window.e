@@ -102,12 +102,8 @@ feature {NONE} -- Initialization
 			l_hbox.extend (message_label)
 
 			a_container.extend (l_hbox)
-
-				-- Set white background color
-			propagate_colors (a_container, Void, colors.stock_colors.white, Void)
-				-- Set white background color for icon pixmap because the propgation ignores pixmaps by default.
-			icon_pixmap.set_background_color (colors.stock_colors.white)
-			icon_pixmap.set_foreground_color (colors.stock_colors.white)
+			a_container.set_background_color (colors.stock_colors.white)
+			a_container.propagate_background_color
 		end
 
 	on_after_initialized
@@ -206,7 +202,6 @@ feature -- Element change
 			l_pixmap.set_minimum_size (l_width, l_height)
 			l_pixmap.set_size (l_width, l_height)
 			l_pixmap.clear_rectangle (0, 0, l_width, l_height)
-			l_pixmap.fill_rectangle (0, 0, l_width, l_height)
 			l_pixmap.draw_sub_pixel_buffer (0, 0, a_icon, create {EV_RECTANGLE}.make (0, 0, l_width, l_height))
 			l_pixmap.show
 
@@ -340,11 +335,11 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1,5 +1,5 @@
 test_name 	finalize-attribute-access-crash
-test_description Finalizing a routine in a deferred class which calls a deferred routine which has only one implementation as an attribute causes the compiler to fail at degree -3.
+test_description Finalizing a routine in a deferred class which calls a deferred routine which has only one implementation as an attribute with some added assertions causes the compiler to fail at degree -3.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

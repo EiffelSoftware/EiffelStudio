@@ -13,5 +13,9 @@ feature
 		end
 
 	x, y: STRING
+		attribute
+		ensure then
+			Result /= Void
+		end
 
 end

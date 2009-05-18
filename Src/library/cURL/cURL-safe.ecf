@@ -55,13 +55,8 @@
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="curl" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/spec$</exclude>

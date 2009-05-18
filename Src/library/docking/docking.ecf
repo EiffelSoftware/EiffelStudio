@@ -39,14 +39,27 @@
 				</option>
 				<file_rule>
 					<exclude>/gtk$</exclude>
+					<exclude>/cocoa$</exclude>
+				</file_rule>
+			</cluster>
+			<cluster name="implementation_mac" location="implementation\" recursive="true">
+				<condition>
+					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
+				</condition>
+				<file_rule>
+					<exclude>/mswin$</exclude>
+					<exclude>/gtk$</exclude>
 				</file_rule>
 			</cluster>
 			<cluster name="implementation_gtk" location="implementation\" recursive="true">
 				<condition>
 					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 				<file_rule>
 					<exclude>/mswin$</exclude>
+					<exclude>/cocoa$</exclude>
 				</file_rule>
 			</cluster>
 		</cluster>

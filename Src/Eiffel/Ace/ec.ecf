@@ -198,14 +198,25 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>
+				<exclude>/gtk$</exclude>
 				<condition>
-					<platform excluded_value="windows"/>
+					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
 				</condition>
 			</file_rule>
 			<file_rule>
 				<exclude>/gtk$</exclude>
+				<exclude>/cocoa$</exclude>
 				<condition>
 					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+				<exclude>/cocoa$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
 		</cluster>
@@ -248,6 +259,10 @@
 	<target name="bench_unix" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>
 		<setting name="platform" value="unix"/>
+	</target>
+	<target name="bench_cocoa" extends="bench">
+		<description>Compile on Mac OS X using the Cocoa framework instead of GTK+</description>
+		<variable name="vision_implementation" value="cocoa"/>
 	</target>
 	<target name="compile_all_bench" extends="bench">
 		<root all_classes="true"/>

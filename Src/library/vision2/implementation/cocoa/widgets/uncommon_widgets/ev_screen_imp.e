@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			
+
 		end
 
 	initialize
@@ -132,11 +132,13 @@ feature -- Measurement
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
+			Result := 768
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
+			Result := 1024
 		end
 
 feature {NONE} -- Implementation

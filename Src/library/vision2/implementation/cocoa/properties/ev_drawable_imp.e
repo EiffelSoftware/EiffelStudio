@@ -91,8 +91,6 @@ feature -- Access
 	clip_area: EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
-		do
-		end
 
 	tile: EV_PIXMAP
 			-- Pixmap that is used to fill instead of background_color.
@@ -148,22 +146,26 @@ feature -- Element change
 	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set an area to clip to.
 		do
+			clip_area := an_area
 		end
 
 	set_clip_region (a_region: EV_REGION)
 			-- Set a region to clip to.
 		do
+
 		end
 
 	remove_clipping
 			-- Do not apply any clipping.
 		do
+			clip_area := void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		do
+			
 		end
 
 	remove_tile

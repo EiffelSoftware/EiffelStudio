@@ -30,8 +30,7 @@ inherit
 			item_by_data
 		redefine
 			interface,
-			initialize,
-			insert_i_th
+			initialize
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -102,19 +101,25 @@ feature -- Status setting
 			is_vertical := False
 		end
 
-feature -- Implementation
+feature -- Access
 
-	insert_i_th (v: like item; i: INTEGER_32)
+	insert_item (v: EV_ITEM_IMP; i: INTEGER_32)
 		local
-			v_imp: EV_ANY_IMP
 			l_view: NS_VIEW
 		do
-			Precursor {EV_ITEM_LIST_IMP} (v, i)
-			v_imp ?= v.implementation
-			l_view ?= v_imp.cocoa_item
+			l_view ?= v.cocoa_item
 			box.add_subview (l_view)
 			notify_change (nc_minsize, Current)
 		end
+
+	remove_item (button: EV_ITEM_IMP)
+			-- Remove `button' from `current'.
+		do
+			-- TODO remove
+			notify_change (nc_minsize, Current)
+		end
+
+feature -- Implementation
 
 	compute_minimum_width
 			-- Update the minimum-size of `Current'.

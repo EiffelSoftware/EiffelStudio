@@ -68,13 +68,13 @@ feature -- Measurement
 
 	frozen NULL: POINTER
 		external
-			"C [macro <stdio.h>]"
+			"C macro use <stdio.h>"
 		alias
 			"NULL"
 		end
 
 invariant
-	cocoa_view_set: cocoa_item /= void
+--	cocoa_view_set: cocoa_item /= void
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ANY_IMP

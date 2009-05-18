@@ -162,6 +162,19 @@ feature {EV_ANY_I} -- deferred feature
 		end
 
 
+	frozen ev_move (a_x_position, a_y_position: INTEGER)
+			-- Move the window to `a_x_position', `a_y_position'.
+			-- Use move for a basic wel moving.
+			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+--			child_cell.move (a_x_position, a_y_position)
+--			if is_show_requested then
+				cocoa_move (a_x_position, a_y_position)
+--			end
+		end
+
 	ev_apply_new_size, frozen ev_move_and_resize (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the widget to `a_x_position', `a_y_position' position and resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its children too.
@@ -174,7 +187,18 @@ feature {EV_ANY_I} -- deferred feature
 --			end
 		end
 
+	cocoa_move (a_x_position, a_y_position: INTEGER)
+			-- Move the window to `a_x_position', `a_y_position'.
+			-- Use move for a basic wel moving.
+			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
+		deferred
+		end
+
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
+			-- Move the window to `a_x_position', `a_y_position' position and
+			-- resize it with `a_width', `a_height'.
 		deferred
 		end
 

@@ -19,10 +19,20 @@ inherit
 			set_default_minimum_size,
 			set_value
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
-feature
+feature {NONE} -- Implementation
+
+	initialize
+		do
+			Precursor {EV_GAUGE_IMP}
+			disable_tabable_from
+			disable_tabable_to
+		end
+
+feature {EV_ANY_I} -- Setter
 
 	set_value (a_value: INTEGER)
 		-- Set `value' to `a_value'.

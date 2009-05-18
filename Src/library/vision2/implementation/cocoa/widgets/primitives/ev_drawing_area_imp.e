@@ -48,10 +48,7 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create view.new_custom (agent
-				do
-					image.draw_at_point_from_rect_operation_fraction (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1)
-				end)
+			create view.new_custom (agent cocoa_draw_rect)
 			cocoa_item := view
 		end
 
@@ -61,6 +58,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_DRAWABLE_IMP}
 			initialize_events
+			disable_tabable_from
 		end
 
 
@@ -74,6 +72,7 @@ feature -- Status setting
 	redraw
 			-- Redraw the entire area.
 		do
+
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -112,6 +111,24 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_focus
 			-- Grab keyboard focus.
 		do
+		end
+
+	cocoa_draw_rect
+		local
+			invalid_rect: NS_RECT
+		do
+			create invalid_rect.make_rect (0, 0, width, height)
+
+
+			image.draw_at_point_from_rect_operation_fraction (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1)
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([
+					invalid_rect.origin.x,
+					invalid_rect.origin.y,
+					invalid_rect.size.width,
+					invalid_rect.size.height
+					])
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

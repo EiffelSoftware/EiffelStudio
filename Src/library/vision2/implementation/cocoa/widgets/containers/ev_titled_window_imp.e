@@ -99,7 +99,7 @@ feature -- Element change
 	set_icon_name (a_icon_name: STRING_GENERAL)
 			-- Assign `a_icon_name' to `icon_name'.
 		do
-			icon_name := a_icon_name
+			icon_name := a_icon_name.twin
 		end
 
 	set_icon_pixmap (a_icon: EV_PIXMAP)

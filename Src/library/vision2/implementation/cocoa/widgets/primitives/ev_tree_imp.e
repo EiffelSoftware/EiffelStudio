@@ -14,8 +14,7 @@ inherit
 		redefine
 			interface,
 			initialize,
-			call_pebble_function,
-			append
+			call_pebble_function
 		end
 
 	EV_PRIMITIVE_IMP
@@ -28,17 +27,12 @@ inherit
 			disable_transport,
 			pre_pick_steps,
 			post_drop_steps,
-			call_pebble_function,
-			minimum_height,
-			minimum_width
+			call_pebble_function
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		redefine
 			interface,
-			insert_i_th,
-			remove_i_th,
-			append,
 			initialize
 		end
 
@@ -68,7 +62,8 @@ feature {NONE} -- Initialization
 			table_column: NS_TABLE_COLUMN
 		do
 			base_make (an_interface)
-			create {NS_SCROLL_VIEW}cocoa_item.new
+			create scroll_view.new
+			cocoa_item := scroll_view
 			create outline_view.new
 			scroll_view.set_document_view (outline_view)
 			scroll_view.set_has_horizontal_scroller (True)
@@ -94,6 +89,9 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
+			enable_tabable_from
+			enable_tabable_to
+			set_is_initialized (True)
 		end
 
 feature -- Events
@@ -217,25 +215,6 @@ feature -- Implementation
 		do
 		end
 
-feature -- Minimum size
-
-	minimum_height: INTEGER
-			-- Minimum height that the widget may occupy.
-		do
-			Result := 74
-		end
-
-	minimum_width: INTEGER
-			-- Minimum width that the widget may occupy.
-		do
-			if internal_minimum_width >= 0 then
-				Result := internal_minimum_width
-			else
-				Result := 200
-			end
-			--io.output.put_string(Result.out +"%N")
-		end
-
 feature {EV_TREE_NODE_IMP}
 
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP
@@ -248,24 +227,16 @@ feature {NONE} -- Implementation
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
 
-	append (s: SEQUENCE [EV_TREE_ITEM])
-			-- Add 's' to 'Current'
+	insert_item (item_imp: EV_TREE_NODE_IMP; an_index: INTEGER)
+			-- Insert `item_imp' at the `an_index' position.
 		do
-			Precursor (s)
-		end
-
-	insert_i_th (v: like item; i: INTEGER)
-			-- Insert `v' at position `i'.
-		do
-			Precursor {EV_ITEM_LIST_IMP} (v, i)
 			-- TODO: optimization potential?
 			outline_view.reload_item_reload_children (NULL, True)
 		end
 
-	remove_i_th (i: INTEGER)
-			-- Remove item at `a_position'
+	remove_item (item_imp: EV_TREE_NODE_IMP)
+			-- Remove `item_imp' from `Current'.
 		do
-			Precursor {EV_ITEM_LIST_IMP} (i)
 			-- TODO: optimization potential?
 			outline_view.reload_item_reload_children (NULL, True)
 		end
@@ -312,10 +283,6 @@ feature {EV_ANY_I} -- Implementation
 feature {EV_ANY_I, EV_TREE_NODE_IMP} -- Implementation
 
 	scroll_view: NS_SCROLL_VIEW
-			--
-		do
-			Result ?= cocoa_item
-		end
 
 	outline_view: NS_OUTLINE_VIEW;
 

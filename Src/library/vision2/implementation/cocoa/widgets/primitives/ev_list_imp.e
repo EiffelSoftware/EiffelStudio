@@ -169,6 +169,17 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER)
+			-- Insert `item_imp' at `an_index'.
+		do
+			io.put_string ("EV_LIST_IMP.insert_item: Not implemented")
+		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP)
+			-- Remove `item' from the list
+		do
+			io.put_string ("EV_LIST_IMP.remove_item: Not implemented")
+		end
 
 	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.

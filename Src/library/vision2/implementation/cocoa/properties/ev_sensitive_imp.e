@@ -27,7 +27,7 @@ feature -- Status report
 	is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		do
-			Result := True
+			Result := not is_not_sensitive
 		end
 
 feature -- Status setting
@@ -35,11 +35,13 @@ feature -- Status setting
 	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		do
+			is_not_sensitive := False
 		end
 
 	disable_sensitive
 			-- Set the object to ignore all user input.
 		do
+			is_not_sensitive := True
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -64,6 +66,8 @@ feature {EV_ANY_I} -- Implementation
 				Result := sensitive_parent.is_sensitive
 			end
 		end
+
+	is_not_sensitive: BOOLEAN
 
 	interface: EV_SENSITIVE;
 			-- Interface object for implementation

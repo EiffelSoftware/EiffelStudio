@@ -99,9 +99,9 @@ feature {NONE} -- Graphical view
 			create vertical_box
 			create refresh_button.make_with_text_and_action ("refresh", agent update_tree)
 			create hide_button.make_with_text_and_action ("hide", agent hide_widget)
-			hide_button.disable_sensitive
+			--hide_button.disable_sensitive
 			create show_button.make_with_text_and_action ("show", agent show_widget)
-			show_button.disable_sensitive
+			--show_button.disable_sensitive
 			create debug_button.make_with_text_and_action ("debug", agent debug_widget)
 			debug_button.disable_sensitive
 			create info_label.default_create
@@ -127,6 +127,7 @@ feature {NONE} -- Graphical view
 			set_x_position (700)
 			update_tree
 			show
+			set_y_position (100)
 		end
 
 	update_tree
@@ -331,33 +332,54 @@ feature {NONE} -- Graphical view
 				str.append ("%N" +
 				"Text: " + textable.text.out + "%N")
 			end
+			if attached {EV_VIEWPORT} a_widget as viewport then
+				str.append ("%N" + "offsets: x: " + viewport.x_offset.out + "  y: " + viewport.x_offset.out + "%N")
+			end
+			if attached {EV_WIDGET_IMP} a_widget.implementation as a_widget_imp then
+				if attached {NS_VIEW} a_widget_imp.cocoa_item as a_view then
+					str.append ("%N" + "isFlipped: " + a_view.is_flipped.out + "%N")
+				end
+			end
 			info_label.set_text (str)
 			show_overlay (a_widget)
 
 			-- Update buttons
-			if a_widget.is_show_requested then
-				show_button.disable_sensitive
-			else
-				show_button.enable_sensitive
-			end
+--			if a_widget.is_show_requested then
+--				show_button.disable_sensitive
+--				hide_button.enable_sensitive
+--			else
+--				show_button.enable_sensitive
+--				hide_button.disable_sensitive
+--			end
+			debug_button.enable_sensitive
 		end
 
 	show_overlay (a_widget: EV_WIDGET)
 		local
 			w_imp: EV_WIDGET_IMP
 			l_screen: NS_SCREEN
+			x1, y1, x2, y2: INTEGER
 		do
---			win.order_out ({NS_OBJECT}.nil)
---			overlay.make_key_and_order_front ({NS_OBJECT}.nil)
 			w_imp ?= a_widget.implementation
+			if attached w_imp.top_level_window_imp then
+				l_screen := w_imp.top_level_window_imp.window.screen
+				x1 := selected_widget.screen_x - 1
+				y1 := (l_screen.frame.size.height - selected_widget.screen_y - selected_widget.height) - 1
+				x2 := selected_widget.screen_x + selected_widget.width + 1
+				y2 := (l_screen.frame.size.height - selected_widget.screen_y) + 1
 
-			l_screen := w_imp.top_level_window_imp.window.screen
-			overlay.animator.set_frame (
-				create {NS_RECT}.make_rect (
-					selected_widget.screen_x - 1,
-					(l_screen.frame.size.height - selected_widget.screen_y - selected_widget.height) - 1,
-					(selected_widget.width + 2).min(l_screen.frame.size.width),
-					(selected_widget.height + 2).min(l_screen.frame.size.height)))
+				x1 := x1.min(l_screen.frame.size.width).max(0)
+				y1 := y1.min(l_screen.frame.size.height).max(0)
+				x2 := x2.min(l_screen.frame.size.width).max(0)
+				y2 := y2.min(l_screen.frame.size.height).max(0)
+				overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs))
+				if attached {EV_WINDOW_IMP} implementation as win_imp then
+					overlay.set_parent_window (win_imp.window)
+					-- Not working as expected :(
+				else
+					check False end
+				end
+			end
 		end
 
 	overlay: NS_WINDOW
@@ -392,11 +414,11 @@ feature {NONE} -- Graphical view
 
 	debug_widget
 		local
-			i: INTEGER
 			rescued: BOOLEAN
+			fail: INTEGER
 		do
 			if selected_widget /= Void and not rescued then
-				i := 1 // 0
+				fail := 1 // 0
 			end
 		rescue
 			rescued := True

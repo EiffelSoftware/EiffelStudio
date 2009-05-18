@@ -170,8 +170,7 @@ feature -- Measurement
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if item /= Void then
-				item_imp.ev_apply_new_size (0, 0,
-											client_width, client_height, True)
+				item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
 			end
 			if not interface.upper_bar.is_empty then
 				bar_imp ?= interface.upper_bar.implementation
@@ -185,9 +184,7 @@ feature -- Measurement
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
-				bar_imp.ev_move_and_resize (0,
-					client_height + 1,
-					client_width, bar_imp.minimum_height, True)
+				bar_imp.ev_move_and_resize (0, client_height + 1, client_width, bar_imp.minimum_height, True)
 			end
 		end
 
@@ -263,8 +260,13 @@ feature -- Measurement
 	set_position (a_x, a_y: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
+		local
+			l_frame: NS_RECT
 		do
-			window.set_frame (create {NS_RECT}.make_rect(a_x, window.screen.frame.size.height - a_y, width, height))
+			l_frame := window.frame
+			l_frame.origin.x := a_x
+			l_frame.origin.y := window.screen.frame.size.height - height - a_y
+			window.set_frame (l_frame)
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)

@@ -69,6 +69,7 @@ feature {NONE} -- Initialization
 		local
 			a_font: EV_FONT
 		do
+			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			create a_font.default_create
 			create text.make_empty
@@ -148,7 +149,7 @@ feature -- Status Report
 	caret_position: INTEGER
 			-- Current position of the caret.
 		do
-
+			Result := 1
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -164,6 +165,7 @@ feature -- Status report
 	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
+			Result := text_field.is_editable
 		end
 
 	has_selection: BOOLEAN
@@ -196,6 +198,7 @@ feature -- status settings
 	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.
 		do
+			text_field.set_editable (a_editable)
 		end
 
 	set_caret_position (pos: INTEGER)

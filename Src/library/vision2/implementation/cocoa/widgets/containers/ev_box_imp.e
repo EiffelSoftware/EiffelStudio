@@ -56,20 +56,14 @@ feature -- Access
 
 	client_width: INTEGER
 			-- Width of the client area of `Current'.
-		local
-			cv: NS_VIEW
 		do
-			create cv.new_shared (box.content_view)
-			Result := (cv.frame.size.width - 2 * border_width).max (0)
+			Result := (box.content_view.frame.size.width - 2 * border_width).max (0)
 		end
 
 	client_height: INTEGER
 			-- Height of the client area of `Current'.
-		local
-			cv: NS_VIEW
 		do
-			create cv.new_shared (box.content_view)
-			Result := (cv.frame.size.height  - 2 * border_width).max (0)
+			Result := (box.content_view.frame.size.height  - 2 * border_width).max (0)
 		end
 
 	total_spacing: INTEGER
@@ -188,7 +182,7 @@ feature -- Color
 			box.set_fill_color (color);
 		end
 
-feature {NONE}
+feature {EV_ANY_I}
 
 	box: NS_BOX
 			-- Convenience function

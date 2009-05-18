@@ -16,9 +16,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		redefine
-			interface,
-			insert_i_th,
-			remove_i_th
+			interface
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -216,20 +214,18 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	pix_width, pix_height: INTEGER
 			-- Height and width of pixmap in Tree.
 
-	insert_i_th (v: like item; i: INTEGER)
-			-- Insert `v' at position `i'.
+	insert_item (item_imp: EV_TREE_NODE_IMP; pos: INTEGER)
+			-- Insert `item_imp' at the `index' position.
 		do
-			Precursor {EV_ITEM_LIST_IMP} (v, i)
 			-- TODO: optimization potential, only reload under the current item
 			if parent_tree_imp /= void then
 				parent_tree_imp.outline_view.reload_item_reload_children ({EV_ANY_IMP}.NULL, True)
 			end
 		end
 
-	remove_i_th (i: INTEGER)
-			-- Remove item at `a_position'
+	remove_item (item_imp: EV_TREE_NODE_IMP)
+			-- Remove `item_imp' from `Current'.
 		do
-			Precursor {EV_ITEM_LIST_IMP} (i)
 			-- TODO: optimization potential, only reload under the current item
 			if parent_tree_imp /= void then
 				parent_tree_imp.outline_view.reload_item_reload_children ({EV_ANY_IMP}.NULL, True)
@@ -239,6 +235,36 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	expanded_on_last_item_removal: BOOLEAN
 		-- Was `Current' expanded upon removal of last item
 
+
+	width: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.width: Not implemented%N")
+		end
+
+	height: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.height: Not implemented%N")
+		end
+
+	screen_x: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.screen_x: Not implemented%N")
+		end
+
+	screen_y: INTEGER
+		do
+			io.put_string ("EV_TREE_NODE_IMP.screen_y: Not implemented%N")
+		end
+
+	x_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+		end
+
+	y_position: INTEGER
+		do
+			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -46,6 +46,11 @@ inherit
 			set_text
 		end
 
+	EV_NS_VIEW
+		redefine
+			interface
+		end
+
 create
 	make
 

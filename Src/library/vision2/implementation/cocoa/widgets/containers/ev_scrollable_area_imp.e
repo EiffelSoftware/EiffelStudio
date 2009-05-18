@@ -35,13 +35,13 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			create {NS_SCROLL_VIEW}cocoa_item.new
-			create document_view.new
+			create scroll_view.new
+			replace_content_view
 			scroll_view.set_has_horizontal_scroller (True)
 			scroll_view.set_has_vertical_scroller (True)
-			scroll_view.set_autohides_scrollers (True)
+--			scroll_view.set_autohides_scrollers (True)
 			scroll_view.set_draws_background (False)
-			scroll_view.set_document_view (document_view)
+			cocoa_item := scroll_view
 
 			set_horizontal_step (20)
 			set_vertical_step (20)

@@ -12,9 +12,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM, EV_MENU_ITEM_IMP]
 		redefine
-			interface,
-			insert_i_th,
-			remove_i_th
+			interface
 		end
 
 	EV_ANY_IMP
@@ -26,24 +24,19 @@ inherit
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
-			-- Insert the item v in the current menu
-		local
-			v_imp: EV_MENU_ITEM_IMP
+	insert_item (item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
+			-- Insert `item_imp' on `pos' in `ev_children'.
 		do
-			Precursor {EV_ITEM_LIST_IMP} (v, i)
-			v_imp ?= v.implementation
-			menu.insert_item_at_index (v_imp.menu_item, i - 1)
+			menu.insert_item_at_index (item_imp.menu_item, pos - 1)
 		end
 
-	remove_i_th (i: INTEGER)
-			-- Insert the item v in the current menu
+	remove_item (item_imp: EV_MENU_ITEM_IMP)
+			-- Remove `item_imp' from `ev_children'.
 		local
-			v_imp: EV_MENU_ITEM_IMP
+			pos: INTEGER
 		do
-			v_imp ?= i_th(i).implementation
-			Precursor {EV_ITEM_LIST_IMP} (i)
-			menu.remove_item_at_index (i - 1)
+			pos := ev_children.index_of (item_imp, 1)
+			menu.remove_item_at_index (pos - 1)
 		end
 
 feature {EV_ANY_I} -- Implementation

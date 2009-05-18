@@ -62,6 +62,7 @@ feature
 		do
 			create l_factory
 			dest_directory := l_factory.replace_environments (test.environment, dest_directory)
+			source_file := l_factory.replace_environments (test.environment, source_file)
 
 			execute_ok := False;
 			if use_source_environment_variable then

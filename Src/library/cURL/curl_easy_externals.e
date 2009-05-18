@@ -21,7 +21,7 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_init")
+			l_api := api_loader.api_pointer ("curl_easy_init")
 			if l_api /= default_pointer then
 				Result := c_init (l_api)
 			end
@@ -39,7 +39,7 @@ feature -- Command
 			l_api: POINTER
 			l_c_str: C_STRING
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				create l_c_str.make (a_string)
 				c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
@@ -75,7 +75,7 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
 			end
@@ -89,7 +89,7 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
 			end
@@ -113,7 +113,7 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_perform")
+			l_api := api_loader.api_pointer ("curl_easy_perform")
 			if l_api /= default_pointer then
 				Result := c_perform (l_api, a_curl_handle)
 			end
@@ -128,7 +128,7 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_cleanup")
+			l_api := api_loader.api_pointer ("curl_easy_cleanup")
 			if l_api /= default_pointer then
 				c_cleanup (l_api, a_curl_handle)
 			end
@@ -156,7 +156,7 @@ feature -- Query
 			d: REAL_64
 		do
 			a_data.replace (Void)
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_getinfo")
+			l_api := api_loader.api_pointer ("curl_easy_getinfo")
 			if l_api /= default_pointer then
 				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
 					create mp.make ({PLATFORM}.integer_32_bytes)
@@ -186,7 +186,7 @@ feature -- Query
 	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
 		do
-			Result := (api_loader.module_pointer (module_name) /= default_pointer)
+			Result := api_loader.is_interface_usable
 		end
 
 feature -- Special setting
@@ -221,7 +221,7 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				curl_function.c_set_write_function (l_api, a_curl_handle)
 			end
@@ -236,7 +236,7 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				curl_function.c_set_read_function (l_api, a_curl_handle)
 			end
@@ -249,7 +249,7 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				curl_function.c_set_progress_function (l_api, a_curl_handle)
 			end
@@ -262,7 +262,7 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				curl_function.c_set_debug_function (l_api, a_curl_handle)
 			end
@@ -273,21 +273,13 @@ feature {NONE} -- Implementation
 	internal_curl_function: detachable CURL_FUNCTION
 			-- cURL functions.
 
-	api_loader: API_LOADER
-			-- API dynamic loader
-		once
-			create Result
-		ensure
-			not_void: Result /= Void
-		end
-
-	module_name: STRING
+	api_loader: DYNAMIC_MODULE
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
 		once
 			create l_utility
-			Result := l_utility.module_name
+			Result := l_utility.api_loader
 		end
 
 	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER)
@@ -298,7 +290,7 @@ feature {NONE} -- Implementation
 		local
 			l_api: POINTER
 		do
-			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
 			if l_api /= default_pointer then
 				c_setopt (l_api, a_curl_handle, a_opt, a_data)
 			end

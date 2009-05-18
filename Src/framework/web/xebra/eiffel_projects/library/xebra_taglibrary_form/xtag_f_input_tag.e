@@ -35,27 +35,27 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: STRING)
 			-- <Precusor>
 		do
-			if id.is_equal ("value") then
+			if a_id.is_equal ("value") then
 				value := a_attribute
 			end
-			if id.is_equal ("name") then
+			if a_id.is_equal ("name") then
 				name := a_attribute
 			end
 		end
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
-			input_id, variable: STRING
+			l_input_id, l_variable: STRING
 		do
-			variable := variable_table [{XTAG_F_FORM_TAG}.form_var_key]
-			input_id := variable + "_" + a_servlet_class.get_unique_identifier
-			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"input%%%" name=%%%"" + input_id + "%%%" value=%%%"%" +" + variable + "." + value + " + %"%%%" />%")")
-			a_servlet_class.prerender_post_feature.append_expression ("if attached " + request_variable + ".arguments [%"" + input_id + "%"] as argument then")
-			a_servlet_class.prerender_post_feature.append_expression (variable + "." + value + " := argument")
+			l_variable := a_variable_table [{XTAG_F_FORM_TAG}.form_var_key]
+			l_input_id := l_variable + "_" + a_servlet_class.get_unique_identifier
+			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"input%%%" name=%%%"" + l_input_id + "%%%" value=%%%"%" +" + l_variable + "." + value + " + %"%%%" />%")")
+			a_servlet_class.prerender_post_feature.append_expression ("if attached " + request_variable + ".arguments [%"" + l_input_id + "%"] as argument then")
+			a_servlet_class.prerender_post_feature.append_expression (l_variable + "." + value + " := argument")
 			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
 

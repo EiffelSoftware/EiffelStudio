@@ -11,7 +11,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render
+			generates_render,
 			generates_postrender
 		end
 
@@ -31,55 +31,55 @@ feature -- Access
 	action: STRING
 			-- Action that should be executed on this link
 
-	argument: STRING
-			-- The argument for the action
-			-- For instance an ID
-
 	label: STRING
 			-- The text of the link
 
+	redirect: STRING
+			-- Where should the page redirect after the link has been clicked
+
 feature -- Implementation
 
-	generate (a_render_feature, a_prerender_post_feature, a_prerender_get_feature, a_afterrender_feature: XEL_FEATURE_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
-			unique_id, unique_var, unique_form_id: STRING
+			l_unique_id,
+			l_unique_var,
+			l_unique_form_id,
+			l_redirect_var: STRING
 		do
-			append_debug_info (a_servlet_class.render_feature)
 				-- Figure out, if the post request comes from this link, if yes execute the function with the appropriate argument
-			unique_id :=  a_prerender_post_feature.get_temp_variable
-			unique_var :=  a_prerender_post_feature.get_temp_variable
-			unique_form_id :=  a_prerender_post_feature.get_temp_variable
-			a_prerender_post_feature.append_expression ("if attached request.arguments[" + unique_id + "] as " + unique_var + " then")
-			a_render_feature.append_expression (Response_variable + ".append (" +
-				a1 + unique_form_id +
-				a2 + "%" + request.target_uri + %"" +
-				a3
+			l_unique_id :=  a_servlet_class.prerender_post_feature.new_local ("STRING")
+			l_unique_var :=  a_servlet_class.prerender_post_feature.new_uid
+			l_unique_form_id := a_variable_table [{XTAG_F_FORM_TAG}.form_id]
+
+			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"" +
+				forms1 + l_unique_form_id +
+				forms2 + l_unique_var +
+				value +
+				submit + l_unique_form_id +
+				stopsubmit + label +
+				stopahref +
+				inputname + l_unique_var +
+				stopinput +
+				"%")"
 			)
-
-			a_render_feature.append_expression (Response_variable + ".append (" +
-				a4 + unique_form_id +
-				a5 + unique_var_id +
-				a6
-			)
-
-			a_prerender_post_feature.append_expression (Controller_variable + "." + action + " (" + unique_var + ")")
-
-			a_render_feature.append_expression (Response_variable + ".append (%"</form>%")")
-			a_prerender_post_feature.append_expression ("end")
+			l_redirect_var := a_variable_table [{XTAG_F_FORM_TAG}.form_var_redirect]
+			a_servlet_class.prerender_post_feature.append_expression ("if attached request.arguments[%"" + l_unique_var + "%"] as argument then")
+			a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + current_controller_id + "." + action + " (argument)")
+			a_servlet_class.prerender_post_feature.append_expression ("end")
 		end
 
-	put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
-			if id.is_equal ("label") then
+			if a_id.is_equal ("label") then
 				label := a_attribute
 			end
-			if id.is_equal ("action") then
+			if a_id.is_equal ("action") then
 				action := a_attribute
 			end
-			if id.is_equal ("argument") then
-				argument := a_attribute
+			if a_id.is_equal ("redirect") then
+				redirect := a_attribute
 			end
 		end
 
@@ -88,16 +88,13 @@ feature -- Implementation
 
 feature -- Constants
 
-	a1: STRING = "<form id=%""
-	a2: STRING = "%" method=%"post%" action=%""
-	a3: STRING = "%">"
-	a4: STRING = "<a href=%"#%" onclick=%"document.forms['"
-	a5: STRING = "']['"
-	a6: STRING = "'].value='"
-	a7: STRING = "'; docuemnt.forms['"
-	a8: STRING = "'].submit(); return false;%>"
-	a9: STRING = "</a>"
-	a10: STRING = "input type=%"hidden%" name =%""
-	a11: STRING = "%" />"
+	forms1: STRING = "<a href=%%%"#%%%" onclick=%%%"document.forms['"
+	forms2: STRING = "']['"
+	value: STRING = "'].value='"
+	submit: STRING = "'; document.forms['"
+	stopsubmit: STRING = "'].submit(); return false;%%%">"
+	stopahref: STRING = "</a>"
+	inputname: STRING = "<input type=%%%"hidden%%%" name =%%%""
+	stopinput: STRING = "%%%" />"
 
 end

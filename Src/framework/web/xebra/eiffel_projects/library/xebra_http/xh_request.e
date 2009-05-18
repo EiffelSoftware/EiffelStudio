@@ -132,7 +132,7 @@ feature -- Access
 	the_request: STRING
 			-- The actual request
 
-	target_uri: STRING
+	target_uri: STRING assign set_target_uri
 			-- The target uri
 
 	arguments: HASH_TABLE [STRING, STRING]
@@ -157,6 +157,14 @@ feature -- Access
 			-- P for POST, G for GET
 		do
 			Result := 'X'
+		end
+
+feature -- Status setting
+
+	set_target_uri (a_target_uri: STRING)
+			-- Sets the target uri.
+		do
+			target_uri := a_target_uri
 		end
 
 feature -- Basic Operations

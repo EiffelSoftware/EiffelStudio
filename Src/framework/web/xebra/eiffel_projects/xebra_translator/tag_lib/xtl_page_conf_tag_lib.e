@@ -58,7 +58,6 @@ feature -- Access
 				parser_callback.is_template := True
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("include") then
-					-- TODO Build the "inheritance tree" current template inherits from "template" attribute of INCLUDE_TAG.				
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			else
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)

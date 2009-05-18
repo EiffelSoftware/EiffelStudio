@@ -34,35 +34,47 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		local
-			data_var: STRING
+			l_data_var: STRING
+			l_redirect_var: STRING
+			l_form_id: STRING
 		do
-			a_servlet_class.add_variable_by_name_type (variable, data_class)
+			if attached variable then
+				a_servlet_class.add_variable_by_name_type (variable, data_class)
+				a_servlet_class.make_feature.append_expression ("create " + variable + ".make")
+			end
+			l_form_id := a_servlet_class.prerender_post_feature.new_uid
+			l_data_var := a_servlet_class.render_feature.new_uid
+			l_redirect_var := a_servlet_class.prerender_post_feature.new_local ("STRING")
 
-			a_servlet_class.make_feature.append_expression ("create " + variable + ".make" )
-			data_var := a_servlet_class.render_feature.new_uid
+			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + l_data_var + "%") then")
 
-			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + data_var + "%") then")
-
-			variable_table.put (variable, Form_var_key)
-			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"<form action=%"+"
-				+ Request_variable + ".target_uri + %" method=%%%"post%%%"%")")
-			generate_children (a_servlet_class, variable_table)
-			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + data_var + "%%%" />%")")
+			a_variable_table.put (variable, Form_var_key)
+			a_variable_table.put (l_redirect_var, Form_var_redirect)
+			a_variable_table.put (l_form_id, Form_id)
+			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"<form id=%%%"" + l_form_id + "%%%" action=%%%"%" +"
+				+ Request_variable + ".target_uri + %"%%%" method=%%%"post%%%">%")")
+			generate_children (a_servlet_class, a_variable_table)
+			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + l_data_var + "%%%" />%")")
 			write_string_to_result ("</form>", a_servlet_class.render_feature)
+			a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_redirect_var + " and then not " + l_redirect_var + ".is_empty then")
+			a_servlet_class.prerender_post_feature.append_expression (response_variable + ".set_goto_request (" + l_redirect_var + ")")
 			a_servlet_class.prerender_post_feature.append_expression ("end")
-			variable_table.remove (Form_var_key)
+			a_servlet_class.prerender_post_feature.append_expression ("end")
+			a_variable_table.remove (Form_var_key)
+			a_variable_table.remove (Form_var_redirect)
+			a_variable_table.remove (Form_id)
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
-			-- <Precusor>
+	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+			-- <Precursor>
 		do
-			if id.is_equal ("class") then
+			if a_id.is_equal ("class") then
 				data_class := a_attribute
 			end
-			if id.is_equal ("variable") then
+			if a_id.is_equal ("variable") then
 				variable := a_attribute
 			end
 		end
@@ -73,6 +85,8 @@ feature -- Implementation
 feature -- Constants
 
 	Form_var_key: STRING = "Form_var_key"
+	Form_var_redirect: STRING = "Form_var_redirect"
+	Form_id: STRING = "Form_id"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -17,7 +17,8 @@
 		<attribute id="name"/>
 	</tag>
 	<tag id="command_link" class="XTAG_F_COMMAND_LINK">
+		<attribute id="label" />
 		<attribute id="action" />
-		<attribute id="argument" />		
+		<attribute id="redirect" />		
 	</tag>
 </taglib>

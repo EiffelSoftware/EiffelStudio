@@ -35,7 +35,6 @@ feature {NONE} -- Constants
 
 feature -- Access
 
-
 	html: XU_INDENDATION_STREAM
 			-- Reponse html (xhtml)
 
@@ -47,7 +46,7 @@ feature -- Access
 			-- once the response has been processed
 
 	goto_request: STRING assign set_goto_request
-			-- Can be used to order the REQUEST_HANLDER to generate a new request
+			-- Can be used to order the {REQUEST_HANDLER} to generate a new request
 
 feature -- Element change
 
@@ -60,7 +59,6 @@ feature -- Element change
 		ensure
 			goto_request_set: goto_request = a_goto_request
 		end
-
 
 	set_html (a_html: XU_INDENDATION_STREAM)
 			-- Sets the text

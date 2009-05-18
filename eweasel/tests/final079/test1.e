@@ -14,6 +14,8 @@ feature
 
 	y: STRING
 		deferred
+		ensure
+			y_attached: Result /= Void
 		end
 
 end

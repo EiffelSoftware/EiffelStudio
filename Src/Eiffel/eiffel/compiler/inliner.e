@@ -116,27 +116,28 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure we can find the BYTE_CODE
 			byte_code := Byte_server.disk_item (body_index)
-
-				-- A feature call can be inlined only if it is not a call
-				-- to a deferred feature or a once. Previously this computation
-				-- was done in FEATURE_I and its descendants. This computation was
-				-- not done in the case of the following descendants and was returning
-				-- always false:
-				--  * EXTERNAL_I
-				--  * INVARIANT_FEAT_I
-				--  * ONCE_PROC_I
-				--  * DEF_PROC_I
-				--  * CONSTANT_I
-				-- For INVARIANT_FEAT_I, EXTERNAL_I and CONSTANT_I, the current feature
-				-- won't be called because their version of `inlined_byte_code' does
-				-- not call this computation. Only for ONCE_PROC_I and DEF_PROC_I, we
-				-- have to do a special check, and since the information is in BYTE_CODE
-				-- we can do it easily in order to avoid the inlining.
-			if
-				byte_code /= Void and then
+			if byte_code = Void then
+					-- If we do not have byte code then it is obviously inlineable
+				Result := True
+			elseif
 				not byte_code.is_deferred and then
 				not byte_code.is_once and then byte_code.rescue_clause = Void
 			then
+					-- A feature call can be inlined only if it is not a call
+					-- to a deferred feature or a once. Previously this computation
+					-- was done in FEATURE_I and its descendants. This computation was
+					-- not done in the case of the following descendants and was returning
+					-- always false:
+					--  * EXTERNAL_I
+					--  * INVARIANT_FEAT_I
+					--  * ONCE_PROC_I
+					--  * DEF_PROC_I
+					--  * CONSTANT_I
+					-- For INVARIANT_FEAT_I, EXTERNAL_I and CONSTANT_I, the current feature
+					-- won't be called because their version of `inlined_byte_code' does
+					-- not call this computation. Only for ONCE_PROC_I and DEF_PROC_I, we
+					-- have to do a special check, and since the information is in BYTE_CODE
+					-- we can do it easily in order to avoid the inlining.
 				result_type := byte_code.result_type
 				Result := (not a_return_type.is_bit and then not result_type.has_like)
 

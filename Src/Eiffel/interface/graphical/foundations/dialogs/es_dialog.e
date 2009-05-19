@@ -37,7 +37,11 @@ convert
 feature {NONE} -- Initialization
 
 	make_with_window (a_window: like development_window)
-			-- Initialize dialog using a specific development window
+			-- Initialize dialog using a specific development window.
+			-- Note: There is typically no need to use use this routine unless access to the window is
+			--       required during `build_dialog_interface'/`on_after_initialize'.
+			--
+			-- `a_window': A window to show use to show the dialog relative to.
 		require
 			a_window_attached: a_window /= Void
 			a_window_is_interface_usable: a_window.is_interface_usable

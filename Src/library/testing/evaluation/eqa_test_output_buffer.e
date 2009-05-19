@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			create buffer.make (buffer_size)
 			mode := write_file
 			name := "test_output_buffer"
+			create last_string.make_empty
 		end
 
 feature -- Access

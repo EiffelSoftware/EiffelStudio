@@ -82,7 +82,7 @@ feature -- C code generation
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 						Result.call.set_precursor_type (l_type)
 					elseif call.routine_id = system.special_make_rout_id then
-							-- We cannot optimized the empty routine `{SPECIAL}.make' as otherwise
+							-- We cannot optimize the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 					end

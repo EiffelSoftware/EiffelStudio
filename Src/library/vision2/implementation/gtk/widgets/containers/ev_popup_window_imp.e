@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	override_redirect: BOOLEAN = True
+	override_redirect: BOOLEAN = False
 
 	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Called from focus intermediary agents when focus for `Current' has changed.

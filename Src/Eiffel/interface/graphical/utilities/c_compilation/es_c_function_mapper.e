@@ -79,14 +79,23 @@ feature -- Query
 			-- Retrieves the name of the Eiffel generated C file name.
 			-- Note: The result may not exist.
 		local
-			l_name: STRING
 			l_file_name: STRING
 		do
 			if project_location.is_compiled then
-				l_name := packet_name (c_prefix, class_type.packet_number)
-				l_file_name := full_file_name (is_for_finalized, l_name, class_type.base_file_name, dot_c)
-				if file_system.file_exists (l_file_name) then
-					create Result.make_from_string (l_file_name)
+				create l_file_name.make (class_type.base_file_name.count + dot_c.count)
+				l_file_name.append (class_type.base_file_name)
+				l_file_name.append (dot_c)
+
+				if is_for_finalized then
+					create Result.make_from_string (project_location.final_path)
+				else
+					create Result.make_from_string (project_location.workbench_path)
+				end
+				Result.extend (packet_name (c_prefix, class_type.packet_number))
+				Result.set_file_name (l_file_name)
+
+				if not file_system.file_exists (Result.string) then
+					Result := Void
 				end
 			end
 		ensure

@@ -840,6 +840,7 @@ test	override-checkin-crash		incr326	tcf pass termination
 test	bogus-vfav			incr327	tcf pass incrementality
 test	vfav-sneak			incr328	tcf pass incrementality
 test	add-class-then-make-expanded	incr329	tcf pass incrementality
+test	dead-code-removal-crash		incr330	tcf pass incrementality
 
 
 -- Melting

@@ -6,6 +6,8 @@ feature
 		do
 			print (x)
 			print (y)
+			print (z)
+			print (w)
 		end
 
 	x: STRING
@@ -16,6 +18,16 @@ feature
 		deferred
 		ensure
 			y_attached: Result /= Void
+		end
+
+	z: STRING
+		deferred
+		end
+
+	w: INTEGER
+		deferred
+		ensure
+			w > 0
 		end
 
 end

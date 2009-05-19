@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create debug_level.make_empty
+		ensure
+			debug_level_attached: debug_level /= Void
 		end
 
 feature -- Access
@@ -41,5 +43,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+invariant
+	debug_level_attached: debug_level /= Void
 end
 

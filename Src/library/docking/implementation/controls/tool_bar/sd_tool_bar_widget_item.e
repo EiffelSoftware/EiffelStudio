@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_widget: EV_WIDGET)
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_widget /= Void
 			parent_void: a_widget.parent = Void
@@ -43,6 +43,29 @@ feature -- Query
 			-- <Precursor>
 		do
 			Result := a_rect.intersects (rectangle)
+		end
+
+	has_position (a_relative_x, a_relative_y: INTEGER): BOOLEAN
+			-- If `a_relative_x' and `a_relative_y' in Current?
+			-- FIXME: same as {SD_TOOL_BAR_BUTTON}.has_position, merge?
+		require
+			setted: tool_bar /= Void
+		local
+			l_rect: EV_RECTANGLE
+		do
+			l_rect := rectangle
+			l_rect.grow_right (-1)
+			l_rect.grow_bottom (-1)
+			Result := l_rect.has_x_y (a_relative_x, a_relative_y)
+		end
+
+	tooltip: STRING_32
+			-- Tooltip of inner widget
+			-- Maybe void
+		do
+			if attached {EV_TOOLTIPABLE} widget as l_tooltipable then
+				Result := l_tooltipable.tooltip
+			end
 		end
 
 	width: INTEGER
@@ -97,39 +120,51 @@ feature -- Command
 feature -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
-			-- Do nothing.
+			-- <Precursor>
+			-- FIXME: same as {SD_TOOL_BAR_BUTTON}, merge ?
 		do
+			-- Tool bar maybe void when CPU is busy on GTK.
+			-- See bug#13102.
+			if tool_bar /= Void then
+				if has_position (a_relative_x, a_relative_y) then
+					if tooltip /= Void and not (tooltip.as_string_32 ~ (tool_bar.tooltip.as_string_32)) then
+						tool_bar.set_tooltip (tooltip)
+					elseif tooltip = Void then
+						tool_bar.remove_tooltip
+					end
+				end
+			end
 		end
 
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	on_pointer_leave
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 
 feature {NONE} -- Implementation
 
 	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
-			-- Do nothing.
+			-- Do nothing
 		do
 		end
 

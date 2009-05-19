@@ -18,4 +18,8 @@ feature
 			Result /= Void
 		end
 
+	z: STRING = "test"
+
+	w: INTEGER = 10
+
 end

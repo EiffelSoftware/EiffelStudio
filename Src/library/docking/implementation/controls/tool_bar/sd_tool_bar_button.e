@@ -255,7 +255,7 @@ feature {SD_TOOL_BAR} -- Agents
 			-- See bug#13102.
 			if tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) then
-					if tooltip /= Void and not tooltip.as_string_32.is_equal (tool_bar.tooltip.as_string_32) then
+					if tooltip /= Void and not (tooltip.as_string_32 ~ (tool_bar.tooltip.as_string_32)) then
 						tool_bar.set_tooltip (tooltip)
 					elseif tooltip = Void then
 						tool_bar.remove_tooltip

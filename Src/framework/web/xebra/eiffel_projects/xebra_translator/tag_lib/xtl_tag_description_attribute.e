@@ -19,6 +19,8 @@ feature {NONE}-- Initialization
 	make
 		do
 			id := ""
+		ensure
+			id_attached: attached id
 		end
 
 feature -- Access
@@ -46,6 +48,9 @@ feature -- Access
 feature -- Constants
 
 	id_id: STRING = "id"
+
+invariant
+	id_attached: attached id
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

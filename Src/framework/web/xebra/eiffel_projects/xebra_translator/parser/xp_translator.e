@@ -19,12 +19,19 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING)
 			-- Initialization for {XP_TRANSLATOR}.
+		require
+			a_name_valid: attached a_name and then not a_name.is_empty
 		do
 			create output_path.make_from_string ("./generated/")
 			output_path.extend (a_name)
 			name := a_name
 			create servlet_gen_path.make
 			create registry.make (output_path)
+		ensure
+			output_path_attached: attached output_path
+			name_attached: attached name
+			servlet_gen_path_attached: attached servlet_gen_path
+			registry_attached: attached registry
 		end
 
 feature {NONE} -- Access
@@ -190,9 +197,11 @@ feature -- Processing
 		end
 
 invariant
-	servlet_gen_path_attached: servlet_gen_path /= Void
-	registry_attached: registry /= Void
-	output_path_attached: output_path /= Void
+	output_path_attached: attached output_path
+	name_attached: attached name
+	servlet_gen_path_attached: attached servlet_gen_path
+	registry_attached: attached registry
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

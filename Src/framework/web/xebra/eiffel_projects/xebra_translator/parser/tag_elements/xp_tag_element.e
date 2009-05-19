@@ -10,11 +10,14 @@ class
 	XP_TAG_ELEMENT
 
 create
-	make
+	make, make_empty
 
 feature -- Initialization
 
 	make (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
+			-- `a_namespace': The namespace of the the tag
+			-- `a_id': The id of the the tag
+			-- `a_debug_information': Debug information for the backtrack to the original file
 			-- `a_class_name': The name of the corresponding TAG-class
 		require
 			a_namespace_attached: a_namespace /= Void
@@ -31,6 +34,11 @@ feature -- Initialization
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
 			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
 			debug_information := a_debug_information
+		end
+
+	make_empty
+		do
+			make ("namespace", "id", "class_name", "debug_info")
 		end
 
 feature -- Access
@@ -122,7 +130,6 @@ feature --Basic Implementation
 		require
 			a_local_part_attached: a_local_part /= Void
 			local_part_is_not_empty: not a_local_part.is_empty
-			value_is_not_empty: not a_value.is_empty
 		do
 			parameters.extend (a_value, a_local_part)
 		ensure

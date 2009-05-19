@@ -20,6 +20,10 @@ feature -- Initialization
 	make
 		do
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]} tags.make (10)
+			id := ""
+		ensure
+			tags_attached: tags /= Void
+			id_attached: id /= Void
 		end
 
 feature {XTL_TAG_LIBRARY} -- Access
@@ -106,6 +110,9 @@ feature -- Query
 		ensure
 			result_attached: attached Result
 		end
+
+invariant
+	id_attached: attached id
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

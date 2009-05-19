@@ -33,6 +33,8 @@ feature -- Access
 	buf: STRING
 			-- Buffer for the html part
 
+feature -- Basic functionality
+
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
 			-- <Precursor>
 		local

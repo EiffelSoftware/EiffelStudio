@@ -23,6 +23,7 @@ feature -- Initialization
 		do
 			regions := a_regions
 		ensure
+			regions_attached: attached regions
 			regions_set: regions = a_regions
 		end
 

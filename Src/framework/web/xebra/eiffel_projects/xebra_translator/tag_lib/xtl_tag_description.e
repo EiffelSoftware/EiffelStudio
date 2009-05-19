@@ -21,6 +21,10 @@ feature {NONE} -- Initialization
 			class_name := ""
 			name := ""
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]} attributes.make (2)
+		ensure
+			class_name_attached: attached class_name
+			name_attached: attached name
+			attributes_attached: attached attributes
 		end
 
 feature {NONE} -- Access
@@ -67,6 +71,11 @@ feature -- Access
 		do
 			Result := attached attributes [a_name]
 		end
+
+invariant
+		class_name_attached: attached class_name
+		name_attached: attached name
+		attributes_attached: attached attributes
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

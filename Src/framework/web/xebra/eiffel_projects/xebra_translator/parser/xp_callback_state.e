@@ -17,6 +17,7 @@ feature -- Initialization
 		do
 			parser_callback := a_parser_callback
 		ensure
+			parser_attached: attached parser_callback
 			parser_has_been_set: parser_callback = a_parser_callback
 		end
 
@@ -28,8 +29,9 @@ feature -- Access
 	on_start_tag (a_namespace, a_prefix, a_local_part : STRING)
 			-- Handle strings on start tag
 		require
-			a_prefix_valid: a_prefix /= Void
-			a_local_part_valid: a_local_part /= Void
+			a_prefix_attached: attached a_prefix
+			a_local_part_attached: attached a_local_part
+			a_namespace_attached: attached a_namespace
 		deferred
 		end
 

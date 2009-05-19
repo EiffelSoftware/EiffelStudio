@@ -248,7 +248,9 @@ feature {NONE} -- Basic operations
 								l_witness := l_task.minimized_witness
 								session.used_witnesses.force_last (l_witness)
 								create current_results.make_from_linear (l_witness.classifications)
-								l_last_class := test_suite.eiffel_project_helper.last_added_class
+								if test_suite.eiffel_project_helper.is_class_added then
+									l_last_class := test_suite.eiffel_project_helper.last_added_class
+								end
 								create_new_class
 								if attached test_suite.eiffel_project_helper.last_added_class as l_new_class and then l_last_class /= l_new_class then
 									session.error_handler.report_test_synthesis (l_new_class)

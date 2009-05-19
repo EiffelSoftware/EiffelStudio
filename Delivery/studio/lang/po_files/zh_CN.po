@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2009-05-18 19:23+0800\n"
+"PO-Revision-Date: 2009-05-19 11:58+0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software and others\n"
 "MIME-Version: 1.0\n"
@@ -9778,7 +9778,7 @@ msgstr "剪切(Ctrl+X)"
 #. Source code: b_test_count: STRING = "Cutoff (invocations)"
 #: es_test_wizard_auto_test_window.e:504
 msgid "Cutoff (invocations)"
-msgstr "运行时间(测试版本)"
+msgstr "运行时间(调用次数)"
 
 #. Source code: b_timeout: STRING = "Cutoff (minutes)"
 #: es_test_wizard_auto_test_window.e:503

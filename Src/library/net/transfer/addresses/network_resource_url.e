@@ -151,16 +151,26 @@ feature {NONE} -- Basic operations
 				pos := l_address.count
 			end
 			l_sep_pos := l_address.substring_index ("//", 1)
-			if pos > 1 and l_sep_pos = 0 and
-				l_address.substring_index (Service + ":", 1) = 0 then
+			if
+				pos > 1 and
+			 	l_sep_pos = 0 and then
+				l_address.substring_index (Service + ":", 1) = 0
+			then
 				host := l_address.substring (1, pos - 1)
 				l_address.remove_head (pos)
 				path := l_address.string
-			elseif l_sep_pos > 0 and
-				l_address.substring_index (Service + ":", 1) > 0 then
+			elseif
+				l_sep_pos > 0 and then
+				l_address.substring_index (Service + ":", 1) > 0
+			then
 				pos2 := l_address.index_of ('/', pos + 2)
-				host := l_address.substring (pos + 2, pos2 - 1)
-				l_address.remove_head (pos2)
+				if pos2 > 0 then
+					host := l_address.substring (pos + 2, pos2 - 1)
+					l_address.remove_head (pos2)
+				else
+					host := l_address.substring (pos + 2, l_address.count)
+					l_address.wipe_out
+				end
 				path := l_address.string
 			end
 

@@ -32,7 +32,7 @@ feature
 					-- `object_baskets' may be empty when
 					-- merging several precompilations.
 				System.set_has_precompiled_preobj (True);
-				Make_file.put_string ("%%T$(AR) cr preobj.o ");
+				Make_file.put_string ("%T$(AR) cr preobj.o ");
 				generate_objects_macros;
 				Make_file.put_new_line
 			else

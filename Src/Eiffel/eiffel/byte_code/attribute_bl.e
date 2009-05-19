@@ -155,7 +155,6 @@ end
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			l_attr: ATTR_TABLE [ATTR_ENTRY]
-			offset_class_type: CLASS_TYPE
 		do
 			buf := buffer
 			type_i := real_type (type)

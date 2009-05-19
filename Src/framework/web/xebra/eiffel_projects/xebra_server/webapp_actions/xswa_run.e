@@ -21,23 +21,8 @@ feature -- Access
 	run_process: detachable PROCESS
 		-- Used to run the webapp
 
-	webapp_exe: FILE_NAME
-			-- The executable of the webapp
-		do
-			Result := app_dir.twin
-			Result.extend ("EIFGENs")
-			Result.extend (webapp.config.name.out)
-			Result.extend ("W_code")
-
-
-			if {PLATFORM}.is_windows then
-				Result.set_file_name (webapp.config.name.out + ".exe")
-			else
-				Result.set_file_name (webapp.config.name.out)
-			end
-		ensure
-			Result_attached: Result /= Void
-		end
+	webapp_debug_level: INTEGER = 10
+			-- Sets the debug level when launching the webapp
 
 	run_args: STRING
 			-- The arguments for running the webapp
@@ -46,7 +31,7 @@ feature -- Access
 		do
 			l_f := app_dir.twin
 			l_f.set_file_name ("config.ini")
-			Result := l_f.string + " -d 10"
+			Result := l_f.string + " -d " + webapp_debug_level.out
 		ensure
 			Result_attached: Result /= Void
 		end

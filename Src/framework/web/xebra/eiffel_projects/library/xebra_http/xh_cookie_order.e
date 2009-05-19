@@ -89,19 +89,7 @@ feature -- Access
 
 
 
-feature {NONE} -- Constants
 
-	Cookie_start: STRING = "#C#"
-	Cookie_end: STRING = "#CE#"
-
-	Key_eq: STRING = "="
-	Key_sq: STRING = ";"
-	Key_max_age: STRING = "Max-Age="
-	Key_path: STRING = "Path="
-	Key_version: STRING = "Version="
-	Key_domain: STRING = "Domain="
-	Key_secure: STRING = "Secure"
-	Key_comment: STRING = "comment="
 
 feature -- Measurement
 
@@ -168,6 +156,19 @@ feature -- Status setting
 		do
 			is_secure := a_secure
 		end
+
+feature {NONE} -- Constants
+
+	Cookie_start: STRING = "#C#"
+	Cookie_end: STRING = "#CE#"
+	Key_eq: STRING = "="
+	Key_sq: STRING = ";"
+	Key_max_age: STRING = "Max-Age="
+	Key_path: STRING = "Path="
+	Key_version: STRING = "Version="
+	Key_domain: STRING = "Domain="
+	Key_secure: STRING = "Secure"
+	Key_comment: STRING = "Comment="
 
 feature -- Basic operations
 

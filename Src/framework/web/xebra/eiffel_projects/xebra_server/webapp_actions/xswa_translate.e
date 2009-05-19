@@ -31,7 +31,7 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t . -d 10"
+			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t " + config.taglib.out + " -d 10"
 		ensure
 			Result_attached: Result /= void
 		end
@@ -96,15 +96,17 @@ feature -- Status report
 			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
 			-- Returns True iff there is a *.xeb file in app_dir which is newer than app_dir/g_name_application.e
 		local
-			l_file: FILE_NAME
+			l_application_file: FILE_NAME
 		do
-			l_file := app_dir.twin
-			l_file.set_file_name ("g_" + webapp.config.name.out + "_application.e")
+			l_application_file := app_dir.twin
+			l_application_file.set_file_name ("g_" + webapp.config.name.out + "_application.e")
 
-			Result := file_is_newer (l_file ,
+			Result := file_is_newer (l_application_file,
 									app_dir,
 									".xeb",
 									".xeb")
+						or not file_exists (servlet_gen_exe)
+						or not file_exists (servlet_gen_ecf)
 
 			if Result then
 				o.dprint ("Translating is necessary", 5)

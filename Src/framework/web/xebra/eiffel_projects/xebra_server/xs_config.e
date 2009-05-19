@@ -33,7 +33,9 @@ feature {NONE} -- Initialization
 			create finalize_webapps.make_empty
 			create assume_webapps_are_running.make_empty
 			create arg_config.make_empty
+			create taglib.make_empty
 		ensure then
+			taglib_attached: taglib /= Void
 			arg_config_attached: arg_config /= Void
 			webapps_attached: webapps /= Void
 			webapps_root_attached: webapps_root /= Void
@@ -60,6 +62,9 @@ feature -- Access
 
 	translator:  SETTABLE_STRING assign set_translator
 			-- The compiler (xebra_translator) filename. Read from config.ini
+
+	taglib:  SETTABLE_STRING assign set_taglib
+			-- The folder that contains the taglibs. Read from config.ini
 
 	finalize_webapps:  SETTABLE_BOOLEAN assign set_finalize_webapps
 			-- Specifies whether webapps should be finalized. Read from config.ini
@@ -174,6 +179,16 @@ feature -- Setters
 			translator_set: translator  = a_translator
 		end
 
+	set_taglib (a_taglib: like taglib)
+			-- Sets taglib.
+		require
+			a_taglib_attached: a_taglib /= Void
+		do
+			taglib  := a_taglib
+		ensure
+			taglib_set: taglib  = a_taglib
+		end
+
 	set_finalize_webapps (a_finalize_webapps: like finalize_webapps)
 			-- Sets finalize_webapps.
 		require
@@ -195,6 +210,7 @@ feature -- Setters
 		end
 
 invariant
+	taglib_attached: taglib /= Void
 	arg_config_attached: arg_config /= Void
 	webapps_root_attached: webapps_root /= Void
 	webapps_attached: webapps /= Void

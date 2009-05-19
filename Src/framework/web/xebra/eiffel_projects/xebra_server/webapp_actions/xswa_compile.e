@@ -21,12 +21,7 @@ feature -- Access
 	compile_process: detachable PROCESS
 			-- Used to compile the webapp
 
-	melted_file_path: FILE_NAME
-			-- Returns the path to the melted file
-		do
-			Result := run_workdir.twin
-			Result.set_file_name (webapp.config.name.out + ".melted")
-		end
+
 
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
@@ -35,6 +30,8 @@ feature -- Access
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
 --			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 feature -- Status report
@@ -46,6 +43,7 @@ feature -- Status report
 											app_dir,
 											"*.e",
 											"*.ecf")
+					or not file_exists (webapp_exe)
 			if Result then
 				o.dprint ("Compiling is necessary", 5)
 			else

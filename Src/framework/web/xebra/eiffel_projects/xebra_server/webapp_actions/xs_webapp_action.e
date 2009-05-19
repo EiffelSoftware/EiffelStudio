@@ -74,6 +74,28 @@ feature -- Paths
 			Result.extend ("W_code")
 		end
 
+	melted_file_path: FILE_NAME
+			-- Returns the path to the melted file
+		do
+			Result := run_workdir.twin
+			Result.set_file_name (webapp.config.name.out + ".melted")
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	webapp_exe: FILE_NAME
+			-- Returns the path to the exe of the webapp
+		do
+			Result := run_workdir.twin
+			if {PLATFORM}.is_windows then
+				Result.set_file_name (webapp.config.name.out + ".exe")
+			else
+				Result.set_file_name (webapp.config.name.out)
+			end
+		ensure
+			Result_attached: Result /= Void
+		end
+
 feature -- Operations
 
 	config_outputter

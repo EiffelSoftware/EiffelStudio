@@ -24,6 +24,7 @@ feature {NONE} -- Internal Access
 	finalize_webapps_name: STRING = "finalize_webapps"
 	compiler_name: STRING = "compiler"
 	translator_name: STRING = "translator"
+	taglib_name: STRING = "taglib"
 	webapps_root_name: STRING = "webapps_root"
 
 feature -- Status report
@@ -61,6 +62,11 @@ feature -- Status report
 				l_ok := False
 			end
 
+			if not a_config.taglib.is_set then
+				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (taglib_name), false)
+				l_ok := False
+			end
+
 			if l_ok then
 				Result := a_config
 			end
@@ -94,6 +100,8 @@ feature -- Status setting
 					a_config.translator := l_value
 			elseif l_name.is_equal (webapps_root_name) then
 					a_config.webapps_root := l_value
+			elseif l_name.is_equal (taglib_name) then
+					a_config.taglib := l_value
 			else
 				error_manager.add_error (create {XERROR_UNKNOWN_CONFIG_PROPERTY}.make (l_name), false)
 			end

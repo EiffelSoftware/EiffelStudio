@@ -2,6 +2,8 @@ remtrace Retrieve libraries
 cdd %STUDIO_DIR
 md library
 cd library
+remtrace api_wrapper
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/api_wrapper api_wrapper
 remtrace argument_parser
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/argument_parser argument_parser
 remtrace base
@@ -14,6 +16,8 @@ remtrace docking
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/docking docking
 remtrace Eiffel2Java
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
+remtrace encoding
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/encoding encoding
 remtrace gobo
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo gobo
 fullrd gobo\svn\work
@@ -21,6 +25,8 @@ remtrace gobo_extension
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension
 remtrace graph
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/graph graph
+remtrace i18n
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/i18n i18n
 remtrace lex
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/lex lex
 remtrace memory_analyzer

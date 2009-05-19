@@ -114,6 +114,7 @@ feature {NONE} -- Query
 			a_stone_attached: a_stone /= Void
 			a_stone_is_filed_or_cluster: attached {FILED_STONE} a_stone or attached {CLUSTER_STONE} a_stone
 		local
+			l_class_type: detachable CLASS_TYPE
 			l_mapper: ES_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_shift: BOOLEAN
@@ -134,23 +135,29 @@ feature {NONE} -- Query
 						-- The feature may not be in the current class.
 					l_class_c := l_feature.e_feature.written_class
 					if l_shift or l_ctrl then
-							-- Request to view the external C code.
-						create l_mapper.make (l_class_c, l_class_c.types.first)
-						l_mapper.is_for_finalized := l_ctrl
-						Result := l_mapper.c_class_path
+						l_class_type := class_type_from_class (l_class_c)
+						if attached l_class_type then
+								-- Request to view the external C code.
+							create l_mapper.make (l_class_c, l_class_type)
+							l_mapper.is_for_finalized := l_ctrl
+							Result := l_mapper.c_class_path
+						end
+
 					else
 							-- Use the Eiffel feature source
 						Result := l_class_c.group.location.evaluated_directory
 					end
 				else
-					l_class_c := l_class.e_class
 						-- Not a feature
+					l_class_c := l_class.e_class
 					if l_shift or l_ctrl then
 							-- Request to view the external C code.
-
-						create l_mapper.make (l_class_c, l_class_c.types.first)
-						l_mapper.is_for_finalized := l_ctrl
-						Result := l_mapper.c_class_path
+						l_class_type := class_type_from_class (l_class_c)
+						if attached l_class_type then
+							create l_mapper.make (l_class_c, l_class_type)
+							l_mapper.is_for_finalized := l_ctrl
+							Result := l_mapper.c_class_path
+						end
 					else
 							-- Use the Eiffel class source
 						Result := l_class.group.location.evaluated_directory
@@ -172,6 +179,121 @@ feature {NONE} -- Query
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
+	file_name_from_stone (a_stone: STONE): detachable TUPLE [file_name: STRING; line: INTEGER]
+			-- Open a stone in the specified external editor.
+			--
+			-- `a_stone': The stone to open in the external editor.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_stone_attached: a_stone /= Void
+			a_stone_is_filed: attached {FILED_STONE}
+		local
+			l_class_type: detachable CLASS_TYPE
+			l_mapper: ES_C_FUNCTION_MAPPER
+			l_class_c: CLASS_C
+			l_file_name: detachable STRING
+			l_line: INTEGER
+			l_shift: BOOLEAN
+			l_ctrl: BOOLEAN
+		do
+				-- Should the generated W_code information be shown?
+			l_shift := ev_application.shift_pressed
+
+				-- Should the generated F_code information be shown?
+			l_ctrl := ev_application.ctrl_pressed
+
+			if attached {CLASSC_STONE} a_stone as l_class then
+				if attached {FEATURE_STONE} a_stone as l_feature then
+						-- Retrieve the feature specific information.
+
+						-- The feature may not be in the current class.
+					l_class_c := l_feature.e_feature.written_class
+					if l_shift or l_ctrl then
+							-- Request to view the external C code.
+						l_class_type := class_type_from_class (l_class_c)
+						if l_class_type /= Void then
+							create l_mapper.make (l_class_c, l_class_type)
+							l_mapper.is_for_finalized := l_ctrl
+							l_file_name := l_mapper.c_class_file_name
+							if attached l_file_name then
+								Result := [l_file_name, l_mapper.c_feature_line (l_feature.e_feature).as_integer_32]
+							end
+						end
+					else
+							-- Use the Eiffel feature source
+						Result := [l_class_c.group.location.evaluated_directory, l_feature.line_number]
+					end
+				else
+						-- Not a feature
+					l_class_c := l_class.e_class
+					if l_shift or l_ctrl then
+							-- Request to view the external C code.
+						l_class_type := class_type_from_class (l_class_c)
+						if l_class_type /= Void then
+							create l_mapper.make (l_class_c, l_class_type)
+							l_mapper.is_for_finalized := l_ctrl
+							l_file_name := l_mapper.c_class_file_name
+						end
+					else
+							-- Use the Eiffel class source
+						l_file_name := l_class_c.file_name
+					end
+					if attached l_file_name then
+						if (attached {LINE_STONE} a_stone as l_lined) then
+							l_line := l_lined.line_number
+						end
+						Result := [l_file_name, l_line]
+					end
+				end
+			elseif attached {CLASSI_STONE} a_stone as l_class then
+				if not l_shift and not l_ctrl then
+						-- The class is not compiled so there will be no externally generated code.
+					l_file_name := l_class.file_name
+					if attached {LINE_STONE} a_stone as l_lined then
+						l_line := l_lined.line_number
+					end
+					Result := [l_file_name, l_line]
+				end
+			elseif attached {FILED_STONE} a_stone as l_filed then
+					-- Unknown stone type but it has a file associated with it.
+				if not l_shift and not l_ctrl then
+					l_file_name := l_filed.file_name
+					if attached {LINE_STONE} a_stone as l_lined then
+						l_line := l_lined.line_number
+					end
+					Result := [l_file_name, l_line]
+				end
+			end
+		ensure
+			result_file_name_attached: (attached Result) implies attached Result.file_name
+			not_result_file_name_is_empty: (attached Result) implies attached not Result.file_name.is_empty
+		end
+
+	class_type_from_class (a_class: CLASS_C): detachable CLASS_TYPE
+			-- Attempt to retrieve a class type from a compiled class.
+			--
+			-- `a_class': The class to retrieve a class type for.
+			-- `Result': A class type or a selected class type when the supplied class is generic.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_class_attached: attached a_class
+		local
+			l_dialog: ES_CLASS_TYPES_DIALOG
+		do
+			if a_class.is_generic and then a_class.types.count > 1 then
+					-- Need to find generic variant.
+				create l_dialog.make (a_class)
+				l_dialog.show_on_active_window
+				if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
+					Result := l_dialog.selected_class_type
+				end
+			else
+				Result := a_class.types.first
+			end
 		end
 
 feature {NONE} -- Basic operations
@@ -262,18 +384,9 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_dialog: EB_C_FUNCTION_LIST_DIALOG
-			l_mapper: EB_EIFFEL_C_FUNCTION_MAPPER
 		do
-			create l_mapper.create_with_class (workbench.system.array_class.compiled_class, True)
-
-			create l_dialog
-			l_dialog.set_mapper (l_mapper)
-			l_dialog.show_modal_to_window (develop_window.window)
-
 			if attached path (path_type_project) as l_path then
-			--	open_folder (l_path)
+				open_folder (l_path)
 			end
 		end
 
@@ -455,75 +568,9 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			a_stone_attached: a_stone /= Void
 			a_stone_is_filed: attached {FILED_STONE}
-		local
-			l_mapper: ES_C_FUNCTION_MAPPER
-			l_class_c: CLASS_C
-			l_file_name: detachable STRING
-			l_line: INTEGER
-			l_shift: BOOLEAN
-			l_ctrl: BOOLEAN
 		do
-				-- Should the generated W_code information be shown?
-			l_shift := ev_application.shift_pressed
-
-				-- Should the generated F_code information be shown?
-			l_ctrl := ev_application.ctrl_pressed
-
-			if attached {CLASSC_STONE} a_stone as l_class then
-				if attached {FEATURE_STONE} a_stone as l_feature then
-						-- Retrieve the feature specific information.
-
-						-- The feature may not be in the current class.
-					l_class_c := l_feature.e_feature.written_class
-					if l_shift or l_ctrl then
-							-- Request to view the external C code.
-						create l_mapper.make (l_class_c, l_class_c.types.first)
-						l_mapper.is_for_finalized := l_ctrl
-						l_file_name := l_mapper.c_class_file_name
-						if l_file_name /= Void then
-							l_line := l_mapper.c_feature_line (l_feature.e_feature).as_integer_32
-						end
-					else
-							-- Use the Eiffel feature source
-						l_file_name := l_class_c.group.location.evaluated_directory
-						l_line := l_feature.line_number
-					end
-				else
-						-- Not a feature
-					l_class_c := l_class.e_class
-					if l_shift or l_ctrl then
-							-- Request to view the external C code.
-						create l_mapper.make (l_class_c, l_class_c.types.first)
-						l_mapper.is_for_finalized := l_ctrl
-						l_file_name := l_mapper.c_class_file_name
-					else
-							-- Use the Eiffel class source
-						l_file_name := l_class_c.file_name
-					end
-					if attached l_file_name and then (attached {LINE_STONE} a_stone as l_lined) then
-						l_line := l_lined.line_number
-					end
-				end
-			elseif attached {CLASSI_STONE} a_stone as l_class then
-				if not l_shift and not l_ctrl then
-						-- The class is not compiled so there will be no externally generated code.
-					l_file_name := l_class.file_name
-					if attached {LINE_STONE} a_stone as l_lined then
-						l_line := l_lined.line_number
-					end
-				end
-			elseif attached {FILED_STONE} a_stone as l_filed then
-					-- Unknown stone type but it has a file associated with it.
-				if not l_shift and not l_ctrl then
-					l_file_name := l_filed.file_name
-					if attached {LINE_STONE} a_stone as l_lined then
-						l_line := l_lined.line_number
-					end
-				end
-			end
-
-			if attached l_file_name then
-				open_external (l_file_name.string, l_line.max (1).as_natural_32)
+			if attached file_name_from_stone (a_stone) as l_file_name then
+				open_external (l_file_name.file_name.string, l_file_name.line.max (1).as_natural_32)
 			end
 		end
 

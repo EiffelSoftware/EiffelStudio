@@ -15,6 +15,7 @@
 		<echo message="                                       library, framework." /> 
 		<echo message=" geant compile             Compile 'ec' finalized" />
 		<echo message=" geant compile_workbench   Compile 'ec' workbench" />
+		<echo message=" geant estudio_workbench   Compile 'ec' workbench in GUI" />
 		<echo message=" ---- "/>
 		<echo message=" geant make_delivery       Build a complete delivery " />
 		<echo message=" geant make_delivery_menu  Build a complete delivery (interactive) " />
@@ -56,6 +57,13 @@
 		<echo message="workbench `ec' in [$L_comp_dir]" />
 
 		<geant target="freeze" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+			dir="$L_comp_dir"
+			reuse_variables="true" fork="false" />
+	</target>
+	<target name="estudio_workbench" depend="init_compilation" >
+		<echo message="workbench `ec' in [$L_comp_dir]" />
+
+		<geant target="estudio" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>

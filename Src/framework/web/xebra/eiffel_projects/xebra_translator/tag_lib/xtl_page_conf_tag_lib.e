@@ -32,6 +32,9 @@ feature -- Initialization
 			make
 			id := a_id
 			parser_callback := a_parser_callback
+		ensure
+			id_attached: attached id
+			parser_callback_attached: attached parser_callback
 		end
 
 feature {NONE} -- Access
@@ -92,5 +95,10 @@ feature -- Access
 				parser_callback.put_class_name (a_value)
 			end
 		end
+
+
+invariant
+	id_attached: attached id
+	parser_callback_attached: attached parser_callback
 
 end

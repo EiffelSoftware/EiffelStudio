@@ -23,6 +23,7 @@ feature -- Initialization
 		do
 			uid := a_uid
 		ensure
+			uid_attached: attached uid
 			uid_set: uid = a_uid
 		end
 
@@ -59,5 +60,8 @@ feature -- Access
 				a_tag.set_controller_id (a_uid)
 			end
 		end
+
+invariant
+	uid_attached: attached uid
 
 end

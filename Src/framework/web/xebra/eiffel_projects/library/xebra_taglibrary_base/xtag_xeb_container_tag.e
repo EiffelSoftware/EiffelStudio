@@ -11,7 +11,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_something
+			generates_render
 		end
 
 create
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
 			-- <Precursor>
 		do
 			generate_children (a_servlet_class, variable_table)
@@ -37,5 +37,5 @@ feature -- Access
 		do
 		end
 
-	generates_something: BOOLEAN = False
+	generates_render: BOOLEAN = True
 end

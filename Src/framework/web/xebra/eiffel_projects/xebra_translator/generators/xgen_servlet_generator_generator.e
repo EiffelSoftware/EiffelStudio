@@ -21,12 +21,12 @@ feature {NONE} -- Initialization
 			-- `a_servlet_name': The name of the servlet
 			-- `a_path': The path where the generator should be generated to
 		require
+			a_servlet_name_attached: attached a_servlet_name
+			a_path_attached: attached a_path
 			not_a_servlet_name_is_empty: not a_servlet_name.is_empty
 			not_a_path_is_empty: not a_path.is_empty
-			a_servlet_name_attached: a_servlet_name /= Void
-			a_path_attached: a_path /= Void
 		do
-			make (a_servlet_name, False, Void, a_path, False)
+			make (a_servlet_name, False, create {XP_TAG_ELEMENT}.make_empty, a_path, False)
 		end
 
 	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: FILE_NAME; a_is_template: BOOLEAN)
@@ -43,12 +43,20 @@ feature {NONE} -- Initialization
 			create path.make_from_string (a_path)
 			uid_counter := 0
 			create controller_table.make (1)
+		ensure
+			servlet_name_attached: attached servlet_name
+			root_tag_attached: attached root_tag
+			controller_table_attached: attached controller_table
+			path_attached: attached path
+			uid_counter_initialized: uid_counter = 0
 		end
 
 	make_empty
 			-- Creates an empty {xgen_servlet_generator_generator}
 		do
 			create controller_table.make (1)
+		ensure
+			controller_table_attached: attached controller_table
 		end
 
 feature {NONE} -- Access
@@ -165,7 +173,7 @@ feature {NONE} -- Implementation
 	build_generate_for_servlet_generator (a_class: XEL_CLASS_ELEMENT)
 			-- Builds the feature which generates a servlet_generator
 		require
-			a_class_attached: a_class /= Void
+			a_class_attached: attached a_class
 		local
 			generate_feature: XEL_FEATURE_ELEMENT
 		do
@@ -186,9 +194,11 @@ feature -- Constants
 	Generator_Prefix: STRING = "g_"
 
 invariant
-	controller_table_attached: controller_table /= Void
-	servlet_name_attached: servlet_name /= Void
-	path_attached: path /= Void
+	controller_table_attached: attached controller_table
+	servlet_name_attached: attached servlet_name
+	path_attached: attached path
+	root_tag_attached: attached root_tag
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

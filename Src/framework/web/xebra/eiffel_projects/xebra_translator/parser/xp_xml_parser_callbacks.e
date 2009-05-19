@@ -33,6 +33,14 @@ feature {NONE} -- Initialization
 			state := state_html
 			controller_class := ""
 		ensure
+			parser_attached: attached parser
+			path_attached: attached path
+			controller_class_attached: attached controller_class
+			state_attached: attached state
+			state_tag_attached: attached state_tag
+			state_html_attached: attached state_html
+			root_tag_attached: attached root_tag
+			tag_stack_attached: attached tag_stack
 			tag_stack_is_empty: tag_stack.is_empty
 		end
 
@@ -46,14 +54,6 @@ feature -- Access
 
 	is_template: BOOLEAN assign set_is_template
 			-- Defines if a xeb file is a template (i.e. has unimplemented regions)
-
-	set_is_template (a_is_template: BOOLEAN)
-			-- Sets whether Current is a temlate or not
-		do
-			is_template := a_is_template
-		ensure
-			is_template_set: is_template = a_is_template
-		end
 
 	controller_class: STRING
 			-- The class of the handling controller
@@ -93,6 +93,16 @@ feature -- Access
 			controller_class := a_class_name
 		end
 
+feature -- Status setting
+
+	set_is_template (a_is_template: BOOLEAN)
+			-- Sets whether Current is a temlate or not
+		do
+			is_template := a_is_template
+		ensure
+			is_template_set: is_template = a_is_template
+		end
+
 feature -- Document
 
 	on_start
@@ -109,8 +119,13 @@ feature -- Document
 			-- Called when parsing finished.
 		do
 			state.on_finish
-		ensure then
-			only_root_on_stack: tag_stack.count = 1
+			if tag_stack.count > 1 then
+				error_manager.add_error (create {XERROR_PARSE}.make
+				(["Unmatched tag in " + path + ": " + tag_stack.item.id]), False)
+			elseif tag_stack.count < 1 then
+				error_manager.add_error (create {XERROR_PARSE}.make
+				(["Missing end tagin " + path ]), False)
+			end
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
@@ -152,6 +167,7 @@ feature -- Tag
 		local
 			l_prefix: STRING
 			l_local_part: STRING
+			l_namespace: STRING
 		do
 			if attached a_prefix then
 				l_prefix := a_prefix
@@ -165,7 +181,13 @@ feature -- Tag
 				l_local_part := ""
 			end
 
-			state.on_start_tag (a_namespace, l_prefix, l_local_part)
+		    if attached a_namespace then
+				l_namespace := a_namespace
+			else
+				l_namespace := ""
+			end
+
+			state.on_start_tag (l_namespace, l_prefix, l_local_part)
 		ensure then
 			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count)
 											implies state = state_html
@@ -305,6 +327,16 @@ feature {XP_CALLBACK_STATE} -- Implementation
 feature -- Constants
 
 	Configuration_tag: STRING = "page"
+
+invariant
+		parser_attached: attached parser
+		path_attached: attached path
+		controller_class_attached: attached controller_class
+		state_attached: attached state
+		state_tag_attached: attached state_tag
+		state_html_attached: attached state_html
+		root_tag_attached: attached root_tag
+		tag_stack_attached: attached tag_stack
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

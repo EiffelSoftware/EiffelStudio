@@ -135,7 +135,7 @@ feature -- Implementation
 			end
 
 			if not render.is_empty then
-				a_servlet_class.render_feature.append_expression ("if " + render + " then")
+				a_servlet_class.render_feature.append_expression ("if " + current_controller_id + "." + render + " then")
 				internal_generate (a_servlet_class, a_variable_table)
 				a_servlet_class.render_feature.append_expression ("end")
 			else

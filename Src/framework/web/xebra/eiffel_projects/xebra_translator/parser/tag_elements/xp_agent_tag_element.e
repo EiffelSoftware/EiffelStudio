@@ -24,10 +24,13 @@ feature -- Initialization
 			-- <Precursor>
 			-- `a_attribute_handler': Handles attributes passed to this tag
 		require
-			a_attribute_handler_attached: a_attribute_handler /= Void
+			a_attribute_handler_attached: attached a_attribute_handler
 		do
 			make (a_namespace, a_id, a_class_name, a_debug_information)
 			attribute_handler := a_attribute_handler
+		ensure
+			attribute_handler_attached: attached attribute_handler
+			attribute_handler_set: attribute_handler = a_attribute_handler
 		end
 
 feature {XP_TAG_ELEMENT}  -- Access
@@ -53,4 +56,6 @@ feature -- Access
 				attribute_handler.call ([a_local_part, a_value])
 			end
 
+invariant
+	attribute_handler_attached: attached attribute_handler
 end

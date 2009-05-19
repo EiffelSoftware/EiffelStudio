@@ -17,13 +17,19 @@ feature -- Initialization
 			-- `a_is_template': Should the template be rendered
 			-- `a_controller_class': The used controller class
 		require
-			a_controller_class_valid: a_controller_class /= Void
+			a_controller_class_valid: attached a_controller_class
+			a_root_tag_attached: attached a_root_tag
+			a_servlet_name_attached: attached a_servlet_name
 			a_servlet_name_is_valid: not a_servlet_name.is_empty
 		do
 			controller_class := a_controller_class
 			root_tag := a_root_tag
 			is_template := a_is_template
 			servlet_name := a_servlet_name
+		ensure
+			controller_class_attached: attached controller_class
+			root_tag_attached: attached root_tag
+			servlet_name_attached: attached servlet_name
 		end
 
 	make_empty
@@ -55,14 +61,20 @@ feature -- Status setting
 
 	set_date (a_date: INTEGER)
 			-- Sets the date.
+		require
+			a_date_attached: attached a_date
 		do
 			date := a_date
+		ensure
+			date_set: date = a_date
 		end
 
 feature -- Basic functionality
 
 	absorb (a_other: XP_TEMPLATE)
 			-- Takes all the instvars of `a_other'
+		require
+			a_other_attached: attached a_other
 		do
 			servlet_name := a_other.servlet_name
 			controller_class := a_other.controller_class
@@ -110,8 +122,13 @@ feature -- Basic functionality
 			Result := l_root_tag
 		end
 
-	set_uids (a_tag: XP_TAG_ELEMENT; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR;  a_uid: STRING; a_controller_class: STRING)
+	set_uids (a_tag: XP_TAG_ELEMENT; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR; a_uid: STRING; a_controller_class: STRING)
 			-- Sets the `a_uid' recursively over the tag tree defined by `a_tag'
+		require
+			a_tag_attached: attached a_tag
+			a_servlet_attached: attached a_servlet_gen
+			a_uid_attached: attached a_uid
+			a_controller_class_attached: attached a_controller_class
 		local
 			l_uid_visitor: XP_UID_TAG_VISITOR
 		do
@@ -121,6 +138,7 @@ feature -- Basic functionality
 		end
 
 invariant
-	servlet_name_attached: servlet_name /= Void
-	root_tag_attached: root_tag /= Void
+	controller_class_attached: attached controller_class
+	root_tag_attached: attached root_tag
+	servlet_name_attached: attached servlet_name
 end

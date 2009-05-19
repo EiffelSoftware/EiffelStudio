@@ -23,7 +23,11 @@ feature -- Initialization
 			create taglib_registry.make (10)
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_g_generators.make (10)
 		ensure
+			path_attached: attached path
 			path_set: path = a_path
+			template_registry_attached: attached template_registry
+			taglib_registry_attached: attached taglib_registry
+			servletg_g_generators_attached: attached servlet_g_generators
 		end
 
 feature {NONE} -- Access
@@ -136,7 +140,8 @@ feature -- Access
 		end
 
 invariant
-	template_registry_attached: template_registry /= Void
-	servlet_g_generators_attached: servlet_g_generators /= Void
-	path_attached: path /= Void
+	path_attached: attached path
+	template_registry_attached: attached template_registry
+	taglib_registry_attached: attached taglib_registry
+	servletg_g_generators_attached: attached servlet_g_generators
 end

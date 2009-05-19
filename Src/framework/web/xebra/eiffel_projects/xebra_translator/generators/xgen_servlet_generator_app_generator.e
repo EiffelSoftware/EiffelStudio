@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 			--
 		do
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
+		ensure
+			servlet_generator_generators_attached: attached servlet_generator_generators
 		end
 
 feature {NONE} -- Access
@@ -144,6 +146,8 @@ feature {NONE} -- Implementation
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
+		ensure
+			result_attached: attached Result
 		end
 
 	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)

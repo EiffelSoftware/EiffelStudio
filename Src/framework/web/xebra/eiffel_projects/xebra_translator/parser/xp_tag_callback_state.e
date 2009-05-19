@@ -10,15 +10,23 @@ class
 
 inherit
 	XP_CALLBACK_STATE
+		redefine
+			make
+		end
 
 create
 	make
 
 feature -- Initialization
 
+	make (a_parser_callback: XP_XML_PARSER_CALLBACKS)
+		do
+			Precursor (a_parser_callback)
+		end
+
 feature -- Access
 
-	on_start_tag (a_namespace, a_prefix, l_local_part : STRING)
+	on_start_tag (a_namespace, a_prefix, a_local_part : STRING)
 			-- <Precursor>
 		local
 			l_taglib: XTL_TAG_LIBRARY
@@ -27,18 +35,18 @@ feature -- Access
 		do
 			if not parser_callback.registry.contains_tag_lib (a_prefix) then
 				parser_callback.set_state_html
-				parser_callback.state.on_start_tag (a_namespace, a_prefix, l_local_part)
+				parser_callback.state.on_start_tag (a_namespace, a_prefix, a_local_part)
 			else
 				l_taglib := parser_callback.get_tag_lib (a_prefix)
-				l_class_name := l_taglib.get_class_for_name (l_local_part)
+				l_class_name := l_taglib.get_class_for_name (a_local_part)
 				if l_class_name.is_empty then
 					l_class_name := {XP_HTML_CALLBACK_STATE}.Html_tag_name
 				end
-				l_tmp_tag := l_taglib.create_tag (a_prefix, l_local_part, l_class_name, parser_callback.current_debug_information)
+				l_tmp_tag := l_taglib.create_tag (a_prefix, a_local_part, l_class_name, parser_callback.current_debug_information)
 				parser_callback.tag_stack.item.put_subtag (l_tmp_tag)
 				parser_callback.tag_stack.put (l_tmp_tag)
-				if not l_taglib.contains (l_local_part) then
-						parser_callback.error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([l_local_part]))
+				if not l_taglib.contains (a_local_part) then
+						parser_callback.error_manager.add_warning (create {XERROR_UNDEFINED_TAG}.make ([a_local_part]))
 				end
 			end
 		end
@@ -53,8 +61,12 @@ feature -- Access
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- <Precursor>
 		do
-			parser_callback.tag_stack.remove
-			parser_callback.set_state_html
+			if a_local_part.is_equal (parser_callback.tag_stack.item.id) and a_prefix.is_equal (parser_callback.tag_stack.item.namespace) then
+				parser_callback.tag_stack.remove
+				parser_callback.set_state_html
+			else
+				parser_callback.error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched: " + a_prefix + ":" + a_local_part]), False)
+			end
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)

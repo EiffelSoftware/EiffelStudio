@@ -68,6 +68,15 @@ ln -s /etc/apache2/mods-available/xebra.load /etc/apache2/mods-enabled/xebra.loa
 exit
 sudo apache2ctl start
 
+#Copy files for demoapp
+mkdir $XEBRA_DEV/httpd/htdocs/demoapplication
+cp -r $XEBRA_DEV/websites/demoapplication/html/images $XEBRA_DEV/httpd/htdocs/demoapplication
+cp $XEBRA_DEV/websites/demoapplication/html/style.css $XEBRA_DEV/httpd/htdocs/demoapplication
+
+#Copy files for xebrawebapp
+mkdir $XEBRA_DEV/httpd/htdocs/xebrawebapp
+
+
 # Compile xebra translator
 cd $XEBRA_DEV/eiffel_projects/xebra_translator/
 ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile

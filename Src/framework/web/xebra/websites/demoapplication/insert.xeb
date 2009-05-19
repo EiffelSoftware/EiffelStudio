@@ -1,0 +1,7 @@
+<page:include template="master_template">
+  <page:define_region id="content">
+    <p>
+      <xeb:display feature="insert"/>
+    </p>
+  </page:define_region>
+</page:include>

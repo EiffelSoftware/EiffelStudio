@@ -1,0 +1,13 @@
+<page:include template="master_template">
+<page:controller class="delete_controller" />
+  <page:define_region id="content">
+    <xeb:if condition="not_authenticated_admin">
+      <xeb:redirect url="login.xeb"/>
+    </xeb:if>
+    <xeb:if condition="authenticated_admin">
+      <p>
+        <xeb:display feature="delete"/>
+      </p>
+    </xeb:if>
+  </page:define_region>
+</page:include>

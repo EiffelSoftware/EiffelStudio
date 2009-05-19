@@ -17,37 +17,37 @@ feature -- Initialization
 
 feature -- Conversion
 
-	encode_natural(i: NATURAL; fragmented: BOOLEAN): NATURAL
+	encode_natural(a_i: NATURAL; a_is_fragmented: BOOLEAN): NATURAL
 			-- Leftshift of the natural (don't use numbers >= 2^31) and subsequent append of the flag bit.
 			-- Use decode_natural and decode_flag for decoding.
 		require
-			no_too_big: i < 2147483648
+			no_too_big: a_i < 2147483648
 		do
-			result := (i |<< 1) + fragmented.to_integer.as_natural_32
+			Result := (a_i |<< 1) + a_is_fragmented.to_integer.as_natural_32
 		end
 
-	change_flag(i: NATURAL; new_flag: BOOLEAN): NATURAL
-			--changes the flag to "new_flag" and doesn't change the encoded natural
+	change_flag(a_i: NATURAL; a_new_flag: BOOLEAN): NATURAL
+			-- Changes the flag to "new_flag" and doesn't change the encoded natural.
 		do
-			result := (i & 0xFFFFFFFE) + new_flag.to_integer.as_natural_32
+			Result := (a_i & 0xFFFFFFFE) + a_new_flag.to_integer.as_natural_32
 		end
 
-	decode_natural_and_flag (i: NATURAL): TUPLE[NATURAL, BOOLEAN]
-			--convenience feature which combines both decodings (natural and flag)
+	decode_natural_and_flag (a_i: NATURAL): TUPLE [NATURAL, BOOLEAN]
+			-- Convenience feature which combines both decodings (natural and flag)
 		do
-			result := [decode_natural(i), decode_flag(i)]
+			Result := [decode_natural (a_i), decode_flag (a_i)]
 		end
 
-	decode_natural  (i: NATURAL): NATURAL
-			-- The natural that was encoded in {ENCODING_FACILITIES}.encode_natural
+	decode_natural  (a_i: NATURAL): NATURAL
+			-- The natural that was encoded in {ENCODING_FACILITIES}.encode_natural.
 		do
-			result := (i |>> 1)
+			Result := (a_i |>> 1)
 		end
 
-	decode_flag (i: NATURAL): BOOLEAN
+	decode_flag (a_i: NATURAL): BOOLEAN
 			--`Result': the flag that was encoded in encode_natural
 		do
-			result := (i.bit_and (1) = 1)
+			Result := (a_i.bit_and (1) = 1)
 		end
 
 --		test_encoding_facility

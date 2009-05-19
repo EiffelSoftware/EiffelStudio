@@ -163,8 +163,12 @@ feature -- Status setting
 
 	set_target_uri (a_target_uri: STRING)
 			-- Sets the target uri.
+		require
+			not_a_target_uri_is_detached_or_empty: a_target_uri /= Void and then not a_target_uri.is_empty
 		do
 			target_uri := a_target_uri
+		ensure
+			target_uri_set: equal (target_uri, a_target_uri)
 		end
 
 feature -- Basic Operations

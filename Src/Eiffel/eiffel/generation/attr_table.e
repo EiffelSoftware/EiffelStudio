@@ -67,7 +67,8 @@ feature
 				if i <= nb then
 					from
 						create l_buffer.make (50)
-						system_i.class_type_of_id (type_id).skeleton.generate_offset (l_buffer, array_item (i).feature_id, False, False)
+						entry := array_item (i)
+						system_i.class_type_of_id (entry.type_id).skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
 						l_offset := l_buffer.as_string
 							-- We have computed the first element, we go directly to the next one.
 						i := i + 1
@@ -86,7 +87,25 @@ feature
 				end
 				position := old_position
 			end
-		end;
+		end
+
+	generate_attribute_offset (buf: GENERATION_BUFFER; a_type: TYPE_A; a_context_type: CLASS_TYPE)
+			-- Generate offset for a static attribute access.
+		require
+			not_is_polymorphic: not is_polymorphic (a_type, a_context_type)
+		local
+			type_id: INTEGER
+			l_entry: G
+		do
+			type_id := a_type.type_id (a_context_type.type)
+			goto_used (type_id)
+				--| In this instruction, we put `False' as third
+				--| arguments. This means we won't generate anything if there is nothing
+				--| to generate. Remember that `True' is used in the generation of attributes
+				--| table in Final mode.
+			l_entry := array_item (position)
+			system.class_type_of_id (l_entry.type_id).skeleton.generate_offset (buf, l_entry.feature_id, False, True)
+		end
 
 feature -- Code generation
 
@@ -270,22 +289,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

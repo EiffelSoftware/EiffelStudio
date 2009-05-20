@@ -25,9 +25,6 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	id: STRING
-			-- The id of the tag attribute
-
 	put (child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>			
 		do
@@ -44,6 +41,13 @@ feature -- Access
 				id := value
 			end
 		end
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "XTL_TAG_DESCRIPTION_ATTRIBUTE with id: " + id
+		end
+
 
 feature -- Constants
 

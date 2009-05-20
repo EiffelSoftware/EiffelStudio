@@ -97,12 +97,29 @@ feature -- Basic Functionality
 			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
 			l_current_file: PLAIN_TEXT_FILE
+			l_generate: BOOLEAN
 		do
 			l_filename := path.twin
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)
 			create l_file.make (l_filename)
-			if (not l_file.exists) or else (l_current_file.date > l_file.date) then
+
+			if not l_current_file.exists then
+				o.iprint ("File does not exist: " + l_current_file.name + ". Regenerating file.")
+				l_generate := True
+			else
+				if not l_file.exists then
+					o.iprint ("File does not exist: " + l_file.name + ". Regenerating file.")
+					l_generate := True
+				else
+					if (l_current_file.date > l_file.date) then
+						o.iprint ("File outdated: " + l_file.name + ". Regenerating file.")
+						l_generate := True
+					end
+				end
+			end
+
+			if l_generate  then
 				o.iprint ("The servlet '" + l_filename + "' is being generated...")
 
 				if not l_file.is_creatable then

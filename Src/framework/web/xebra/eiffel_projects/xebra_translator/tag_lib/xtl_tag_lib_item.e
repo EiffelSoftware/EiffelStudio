@@ -11,6 +11,9 @@ deferred class
 
 feature -- Access
 
+	id: STRING
+			-- The id of the tag item
+
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- Adds a child to the list of children
 		require
@@ -25,6 +28,13 @@ feature -- Access
 			id_is_not_empty: not a_id.is_empty
 			value_is_not_empty: not a_value.is_empty
 		deferred
+		end
+
+	description: STRING
+			-- Returns a description of itself
+		deferred
+		ensure
+			result_attached: attached Result
 		end
 
 note

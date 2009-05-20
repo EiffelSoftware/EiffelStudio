@@ -20,9 +20,11 @@ feature {NONE} -- Initialization
 	make
 			--
 		do
+			create taglib.make
 			create tag_stack.make (10)
 		ensure
 			tag_stack_attached: attached tag_stack
+			taglib_attacheda: attached taglib
 		end
 
 feature -- Access
@@ -40,13 +42,16 @@ feature -- Document
 	on_start
 			-- <Precursor>
 		do
+		ensure then
+			tag_stack_is_empty: tag_stack.is_empty
 		end
 
 	on_finish
 			-- <Precursor>
 		do
-		ensure then
-			tag_stack_is_empty: tag_stack.is_empty
+			if not tag_stack.is_empty then
+				error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched tags in taglib!: " + tag_stack.item.description]), False)
+			end
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
@@ -84,15 +89,16 @@ feature -- Tag
 			l_attr: XTL_TAG_DESCRIPTION_ATTRIBUTE
 		do
 			if a_local_part.is_equal (Tag_lib_tag_name) then
+				if not tag_stack.is_empty then
+					error_manager.add_error (create {XERROR_PARSE}.make (["There can only be one tag lib definition per file!"]), False)
+				end
 				create taglib.make
 				tag_stack.put (taglib)
 			elseif a_local_part.is_equal (Tag_tag_name)	then
 				create l_tag.make
-				--tag_stack.item.put (l_tag)
 				tag_stack.put (l_tag)
 			elseif a_local_part.is_equal (Tag_attribute_name) then
 				create l_attr.make
-				--tag_stack.item.put (l_attr)
 				tag_stack.put (l_attr)
 			end
 		end
@@ -113,6 +119,9 @@ feature -- Tag
 		local
 			top_item: XTL_TAG_LIB_ITEM
 		do
+			if not a_prefix.is_equal (tag_stack.item.id) then
+				error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched tag: " + a_prefix]), False)
+			end
 			top_item := tag_stack.item
 			tag_stack.remove
 			if tag_stack.count > 0 then
@@ -132,6 +141,10 @@ feature -- Constants
 	Tag_lib_tag_name: STRING = "taglib"
 	Tag_tag_name: STRING = "tag"
 	Tag_attribute_name: STRING = "attribute"
+
+invariant
+	tag_stack_attached: attached tag_stack
+	taglib_attached: attached taglib
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

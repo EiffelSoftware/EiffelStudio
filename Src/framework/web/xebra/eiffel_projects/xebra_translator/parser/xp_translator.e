@@ -193,7 +193,12 @@ feature -- Processing
 			create l_p_callback.make
 			l_parser.set_callbacks (l_p_callback)
 			l_parser.parse_from_stream (a_stream)
-			a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
+			if l_p_callback.taglib.id.is_empty then
+				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing: " + a_stream.name]), False)
+			else
+				o.iprint ("Successfully parsed taglib: " + l_p_callback.taglib.id)
+				a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
+			end
 		end
 
 invariant

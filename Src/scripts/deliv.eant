@@ -784,15 +784,22 @@
 
 		<mkdir directory="library" dir="${a_target_dir}" />
 		<geant target="_log" arguments=" - Copy library.. to ${a_target_dir}${path_separator}library" />
+		<geant target="copy_library_to" arguments="api_wrapper,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base_original,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="testing,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
+		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>
+		<geant target="copy_library_to" arguments="docking,${a_target_dir}"/>
 		<geant target="copy_library_to" arguments="Eiffel2Java,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="encoding,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="event,${a_target_dir}"/>
 		<geant target="copy_library_to" arguments="gobo,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="gobo_extension,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="graph,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="i18n,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="lex,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="mel,${a_target_dir}" if="${is_unix}" />
 		<geant target="copy_library_to" arguments="memory_analyzer,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="net,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="obsolete,${a_target_dir}" />
@@ -800,6 +807,7 @@
 		<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="process,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="store,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="testing,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="thread,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="time,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="uuid,${a_target_dir}" />
@@ -808,15 +816,9 @@
 		<geant target="clean_folder" arguments="gtk" dir="$a_target_dir/library/vision2/implementation" unless="${is_unix}" />
 		<geant target="clean_folder" arguments="mswin" dir="$a_target_dir/library/vision2/implementation" unless="${is_windows}" />
 		<geant target="clean_folder" arguments="carbon" dir="$a_target_dir/library/vision2/implementation" />
-
 		<geant target="copy_library_to" arguments="vision2_extension,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="web,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="wel,${a_target_dir}" if="${is_windows}" />
-		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
-
-		<!-- extra libraries -->
-		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>
-		<geant target="copy_library_to" arguments="event,${a_target_dir}"/>
 
 		<!-- C_library -->
 		<mkdir directory="C_library" dir="${a_target_dir}" />

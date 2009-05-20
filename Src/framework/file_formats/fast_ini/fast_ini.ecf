@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="fast_ini" uuid="9CFF8051-C3AB-4213-B0DF-38C280615E7F" library_target="fast_ini">
+	<description>Library used to read INI files.</description>
+	<target name="fast_ini">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option syntax="transitional">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="fast_ini" location="." recursive="true"/>
+	</target>
+</system>

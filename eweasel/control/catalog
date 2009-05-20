@@ -2200,6 +2200,7 @@ test	void-assigned-to-stable-attribute				attach063 tcf pass void_safe stable at
 test	void-assigned-to-object-test-with-create		attach064 tcf pass void_safe object_test
 test	object-test-code-generation				attach065 tcf pass object_test
 test	detachable-for-attached-constraint			attach066 tcf pass void_safe attached_types generic conformance validity
+test	call-on-detachable-generic				attach067 tcf pass void_safe attached_types generic validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

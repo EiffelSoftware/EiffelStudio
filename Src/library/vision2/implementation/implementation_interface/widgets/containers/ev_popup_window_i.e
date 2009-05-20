@@ -32,7 +32,7 @@ feature -- Status Setting
 			-- and be setup so that clicking on an area outside the window
 			-- or pressing the Escape key will hide it.
 		do
-			is_disconnected_from_window_manager := False
+			is_disconnected_from_window_manager := True
 		end
 
 note

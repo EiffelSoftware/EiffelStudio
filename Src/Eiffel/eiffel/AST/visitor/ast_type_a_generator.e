@@ -174,7 +174,10 @@ feature {NONE} -- Visitor implementation
 						i <= 0
 					loop
 						t := l [i].type
-						if t.has_attached_mark then
+						if t.has_detachable_mark then
+								-- Skip the detachable constraint because it does not allow to see
+								-- if the formal is always attached or not.
+						elseif t.has_attached_mark then
 							f.set_is_attached
 							types_todo.wipe_out
 							l.finish
@@ -191,7 +194,8 @@ feature {NONE} -- Visitor implementation
 								end
 							end
 						elseif current_class.lace_class.is_attached_by_default then
-								-- The type must be a class type, let's use the `current_class' default attachment settings.
+								-- The type must be a class type without any attachment marks.
+								-- Let's use the `current_class' default attachment settings.
 							f.set_is_attached
 							types_todo.wipe_out
 							l.finish
@@ -375,22 +379,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

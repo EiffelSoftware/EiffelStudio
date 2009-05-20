@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	CLI_CELL [G -> SYSTEM_OBJECT]
+	CLI_CELL [G -> detachable SYSTEM_OBJECT]
 
 inherit
 	HASHABLE

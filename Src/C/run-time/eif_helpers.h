@@ -45,25 +45,25 @@ extern "C" {
 
 /* Special conversion from EIF_NATURAL_64 to EIF_REAL_32 and EIF_REAL_64 as it is not
  * supported by all C compilers. */
-rt_private EIF_REAL_32 eif_uint64_to_real32 (EIF_NATURAL_64 v) {
 #ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
-	return (EIF_REAL_32) v;
+#define eif_uint64_to_real32(v) ((EIF_REAL_32) v)
 #else
+rt_private EIF_REAL_32 eif_uint64_to_real32 (EIF_NATURAL_64 v) {
 	return
 	(EIF_REAL_32) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) RTI64C (0x7FFFFFFFFFFFFFFF)) -
 	(EIF_REAL_32) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) RTI64C (0x8000000000000000));
-#endif
 }
+#endif
 
-rt_private EIF_REAL_64 eif_uint64_to_real64 (EIF_NATURAL_64 v) {
 #ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
-	return (EIF_REAL_64) v;
+#define eif_uint64_to_real64(v) ((EIF_REAL_64) v)
 #else
+rt_private EIF_REAL_64 eif_uint64_to_real64 (EIF_NATURAL_64 v) {
 	return
 	(EIF_REAL_64) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) RTI64C(0x7FFFFFFFFFFFFFFF)) -
 	(EIF_REAL_64) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) RTI64C(0x8000000000000000));
-#endif
 }
+#endif
 
 /* Absolute value computation */
 rt_private EIF_INTEGER_8 eif_abs_int8 (EIF_INTEGER_8 i) {

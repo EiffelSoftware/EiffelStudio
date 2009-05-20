@@ -62,8 +62,6 @@ feature
 				-- get the rout_ids of the special/unsafe features
 			put_rout_id := ftable.item_id ({PREDEFINED_NAMES}.put_name_id).rout_id_set.first
 			item_rout_id := ftable.item_id ({PREDEFINED_NAMES}.item_name_id).rout_id_set.first
-			make_area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.make_area_name_id).rout_id_set.first
-			set_area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.set_area_name_id).rout_id_set.first
 			lower_rout_id := ftable.item_id ({PREDEFINED_NAMES}.lower_name_id).rout_id_set.first
 			area_rout_id := ftable.item_id ({PREDEFINED_NAMES}.area_name_id).rout_id_set.first
 			l_feat := ftable.item_id ({PREDEFINED_NAMES}.at_name_id)
@@ -78,9 +76,6 @@ feature
 
 			create special_features.make
 			special_features.compare_objects
-
-			create unsafe_features.make
-			unsafe_features.compare_objects
 
 			create lower_and_area_features.make
 			lower_and_area_features.compare_objects
@@ -104,7 +99,7 @@ feature {NONE} -- Array optimization
 	array_optimization_on: BOOLEAN
 
 	put_rout_id, item_rout_id, infix_at_rout_id: INTEGER
-	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: INTEGER
+	lower_rout_id, area_rout_id: INTEGER
 			-- rout_ids of the special/unsafe features
 
 	array_descendants: ARRAYED_LIST [CLASS_C]
@@ -199,7 +194,6 @@ debug ("OPTIMIZATION")
 	io.error.put_new_line
 end
 						create dep.make (a_class.class_id, a_feature)
-						unsafe_features.extend (dep)
 						mark_alive (a_feature.body_index)
 					end
 					ftable.forth
@@ -212,7 +206,6 @@ end
 			a_class := System.any_class.compiled_class
 			a_feature := a_class.feature_table.item_id (Names_heap.clone_name_id)
 			create dep.make (a_class.class_id, a_feature)
-			unsafe_features.extend (dep)
 			unsafe_body_indexes.put (True, a_feature.body_index)
 			mark_alive (a_feature.body_index)
 		end
@@ -250,10 +243,6 @@ end
 				lower_and_area_features.extend (dep)
 
 					-- Record unsafe features
-				create dep.make (an_id, ftable.feature_of_rout_id (make_area_rout_id))
-				unsafe_features.extend (dep)
-				create dep.make (an_id, ftable.feature_of_rout_id (set_area_rout_id))
-				unsafe_features.extend (dep)
 				from
 					d := a_class.direct_descendants
 					d.start
@@ -423,10 +412,6 @@ feature {NONE} -- Contexts
 
 feature -- Detection of safe/unsafe features
 
-	unsafe_features: TWO_WAY_SORTED_SET [DEPEND_UNIT]
-			-- Set of all the features that cannot be called
-			-- within a loop
-
 	unsafe_body_indexes: ARRAY [BOOLEAN]
 
 	test_safety (a_feature: FEATURE_I; a_class: CLASS_C)
@@ -520,7 +505,7 @@ feature {NONE} -- Detection of safe/unsafe features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -533,22 +518,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -16,6 +16,10 @@ feature
 		do
 		end
 
+	frozen make_empty (n: INTEGER)
+		do
+		end
+
 	frozen put (v: T; i: INTEGER)
 		do
 		end

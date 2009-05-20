@@ -1,23 +1,15 @@
 test_name 	 detachable-for-attached-constraint
-test_description Object test should be generated correctly.
+test_description Attachment status mismatch should be detected for the actual generic if the contraint is attached.
 
 copy_sub Ace $TEST Ace
 copy_raw a.e $CLUSTER a.e
-copy_raw b.e $CLUSTER b.e
 
 copy_raw test1.e $CLUSTER test.e
-
 compile_melted
 compile_result	validity_error TEST VTCG
 
 copy_raw test2.e $CLUSTER test.e
-
 resume_compile
 compile_result	validity_error TEST VTCG
-
-copy_raw test3.e $CLUSTER test.e
-
-resume_compile
-compile_result	validity_error B VUTA(2)
 
 test_end

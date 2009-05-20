@@ -1,0 +1,11 @@
+test_name 	 call-on-detachable-generic
+test_description Call on an entity of a formal generic type which may be detachable is not valid.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error A VUTA(2) VUTA(2)
+
+test_end

@@ -343,7 +343,6 @@ feature {NONE} -- Basic operations
 								end
 							end
 						end
-						is_finished := True
 					else
 						check bad: False end
 					end
@@ -381,7 +380,7 @@ feature {NONE} -- Basic operations
 				if l_task.has_next_step then
 					l_task.cancel
 				end
-				minimize_task := Void
+				statistics_task := Void
 			end
 			last_witness := Void
 			internal_session := Void

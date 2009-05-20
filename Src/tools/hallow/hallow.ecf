@@ -15,12 +15,8 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false">
-			<option namespace="EiffelSoftware.Framework">
-			</option>
 		</library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
-			<option namespace="EiffelSoftware.Library">
-			</option>
 		</library>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>

@@ -22,8 +22,8 @@ feature -- Initialization
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION, STRING]} tags.make (10)
 			id := ""
 		ensure
-			tags_attached: tags /= Void
-			id_attached: id /= Void
+			tags_attached: attached tags
+			id_attached: attached id
 		end
 
 feature {XTL_TAG_LIBRARY} -- Access
@@ -33,8 +33,6 @@ feature {XTL_TAG_LIBRARY} -- Access
 
 feature -- Access
 
-	id: STRING
-			-- Namespace of this tag library
 
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
@@ -42,7 +40,7 @@ feature -- Access
 			a_child_attached: attached a_child
 		do
 			if attached {XTL_TAG_DESCRIPTION} a_child as child then
-				tags.put (child, child.name)
+				tags.put (child, child.id)
 			end
 		ensure then
 			child_has_been_added: tags.count = old tags.count + 1
@@ -58,6 +56,12 @@ feature -- Access
 			if a_id.is_equal ("id") then
 				id := a_value
 			end
+		end
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "XTL_TAG_LIBRARY with id: " + id
 		end
 
 feature -- Query

@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 				Result.append_expression ("(create {"
 					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
 					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
-				    + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%")).generate;")
+				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%")).generate;")
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")

@@ -19,11 +19,11 @@ feature {NONE} -- Initialization
 	make
 		do
 			class_name := ""
-			name := ""
+			id := ""
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]} attributes.make (2)
 		ensure
 			class_name_attached: attached class_name
-			name_attached: attached name
+			id_attached: attached id
 			attributes_attached: attached attributes
 		end
 
@@ -33,9 +33,6 @@ feature {NONE} -- Access
 			-- A list of all the possible attributes
 
 feature -- Access
-
-	name: STRING
-			-- The name of the tag
 
 	class_name: STRING
 			-- The name of the associated class
@@ -50,18 +47,24 @@ feature -- Access
 			child_has_been_added: attributes.count = old attributes.count + 1
 		end
 
-	set_attribute (id: STRING; value: STRING)
+	set_attribute (a_id: STRING; a_value: STRING)
 			-- <Precursor>
 		do
-			if id.is_equal ("class") then
-				class_name := value
+			if a_id.is_equal ("class") then
+				class_name := a_value
 			end
-			if id.is_equal ("id") then
-				name := value
+			if a_id.is_equal ("id") then
+				id := a_value
 			end
 		ensure then
-			class_or_id_has_been_set: (id.is_empty implies not class_name.is_empty) and
-										(class_name.is_empty implies not id.is_empty)
+			class_or_id_has_been_set: (a_id.is_empty implies not class_name.is_empty) and
+										(class_name.is_empty implies not a_id.is_empty)
+		end
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "XTL_TAG_DESCRIPTION_ATTRIBUTE with name: " + id
 		end
 
 	has_argument (a_name: STRING): BOOLEAN
@@ -74,7 +77,7 @@ feature -- Access
 
 invariant
 		class_name_attached: attached class_name
-		name_attached: attached name
+		id_attached: attached id
 		attributes_attached: attached attributes
 
 note

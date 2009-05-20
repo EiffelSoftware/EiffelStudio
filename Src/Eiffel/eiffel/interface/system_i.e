@@ -1442,21 +1442,26 @@ feature -- ANY.is_equal_rout_id routine id
 feature -- SPECIAL.make routine id
 
 	special_make_rout_id: INTEGER
-			-- Routine id of `make' from SPECIAL.
-			-- Return 0 if SPECIAL has not been compiled or
-			-- does not have a feature named `make'.
+			-- Routine id of `make_empty' or `make' from SPECIAL. It actually depends on which SPECIAL class
+			-- we are compiling. By default 6.4 and newer are using `make_empty' whereas 6.3 and older are using
+			-- `make'.
+			-- Return 0 if SPECIAL has not been compiled or does not have a feature named `make_empty' or `make'.
 		local
 			feature_i: FEATURE_I
 		do
 			Result := internal_special_make_rout_id
 			if Result < 0 then
 				Result := 0
-				if special_class /= Void and then
-						special_class.compiled_class /= Void then
-					feature_i := special_class.compiled_class.
-						feature_table.item_id (names.make_name_id)
+				if special_class /= Void and then special_class.compiled_class /= Void then
+					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
 					if feature_i /= Void then
 						Result := feature_i.rout_id_set.first
+					else
+							-- For backward compatibility.
+						feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+						if feature_i /= Void then
+							Result := feature_i.rout_id_set.first
+						end
 					end
 				end
 				internal_special_make_rout_id := Result
@@ -6119,22 +6124,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SYSTEM_I

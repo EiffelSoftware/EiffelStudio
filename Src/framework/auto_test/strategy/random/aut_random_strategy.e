@@ -136,6 +136,9 @@ feature -- Element change
 							if not interpreter_related_classes.has (l_class_type.name) then
 								types_under_test.force_last (l_class_type)
 								queue.set_static_priority_of_type (l_class_type, 10)
+								if l_class_type.has_associated_class then
+									classes_under_test.force_last (l_class_type.associated_class)
+								end
 							end
 						end
 					else

@@ -152,7 +152,6 @@ feature -- Status setting
 						state := other_state
 					end
 					l_cursor := repository.classes.new_cursor
-					l_cursor.start
 					cursor := l_cursor
 					counter := 1
 					is_first := True
@@ -195,7 +194,7 @@ feature -- Status setting
 				end
 				counter := counter + 1
 			end
-			if has_fatal_error or l_cursor.off then
+			if has_fatal_error or (l_cursor = Void or else l_cursor.after) then
 				cancel
 			else
 				l_cursor.forth
@@ -747,7 +746,9 @@ feature {NONE} -- HTML Generation
 			tree_content_file_not_void: tree_content_file /= Void
 			tree_content_file_open_write: tree_content_file.is_open_write
 		do
-			tree_content_file.put_line ("foldersTree.addChildren([ClassesInScope, ManualTests, Others])")
+				-- Disabling the menu entry for manual tests since they are currently not taken into account (Arno 05/20/2009)
+			--tree_content_file.put_line ("foldersTree.addChildren([ClassesInScope, ManualTests, Others])")
+			tree_content_file.put_line ("foldersTree.addChildren([ClassesInScope, Others])")
 		end
 
 feature {NONE} -- File handles

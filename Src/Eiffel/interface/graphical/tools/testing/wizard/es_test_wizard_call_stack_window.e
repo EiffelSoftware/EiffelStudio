@@ -249,8 +249,9 @@ feature {NONE} -- Query
 			a_row.set_item (Feature_column_index, gclab)
 			if l_sensitive then
 				gclab.enable_sensitive
-				if conf.call_stack_elements_cache.has (a_cse.level_in_stack) then
-					selection_count := selection_count + 1
+					-- Note: we only select the first 20 stack frames, which should limit the size of the test
+					--       case if the user directly hits the create button.
+				if conf.call_stack_elements_cache.has (a_cse.level_in_stack) and selection_count < 20 then
 					gclab.toggle_is_checked
 				end
 			else

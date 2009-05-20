@@ -36,13 +36,23 @@ feature -- Action
 		do
 			if not is_destroyed and then is_parented then
 				Precursor {EB_GRID_EDITOR_TOKEN_ITEM}
-				if editor /= Void then
-					editor.recycle
-					editor := Void
-				end
-				if viewport /= Void then
-					viewport.destroy
-					viewport := Void
+						--| FIXME: On Unix, we postpone the editor recycling until next deactivation to avoid crash.
+						--| This is an issue of Vision2, that context menus triggers focus out actions.
+						--| See bug#15261 and bug#15841.
+				if {PLATFORM}.is_windows then
+					if editor /= Void then
+						editor.recycle
+						editor := Void
+					end
+					if viewport /= Void then
+						viewport.destroy
+						viewport := Void
+					end
+				else
+					if attached unrecycled_editor.item as l_editor then
+						l_editor.recycle
+					end
+					unrecycled_editor.replace (editor)
 				end
 			end
 		end
@@ -146,6 +156,13 @@ feature {NONE} -- Implementation
 			editor.editor_drawing_area.set_focus
 		end
 
+feature {NONE} -- Work around
+
+	unrecycled_editor: CELL [detachable EB_GRID_EDITOR]
+		once
+			create Result.put (Void)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -171,11 +188,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

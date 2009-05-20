@@ -700,25 +700,27 @@ $inttypes_include
 #define EIF_OS_OPENBSD 	9
 #define EIF_OS_UNICOS 	10
 #define EIF_OS_VXWORKS	11
-#define EIF_OS_VMS	12
+#define EIF_OS_VMS		12
 #define EIF_OS_HAIKU	13
+#define EIF_OS_IPHONE	14
 
 /* Define EIF_OS value */
 #define EIF_OS $eif_os
 
 /* Define EIF_ARCH Constants */
 
-#define EIF_ARCH_X86 	1
+#define EIF_ARCH_X86 		1
 #define EIF_ARCH_X86_64 	2
-#define EIF_ARCH_SPARC 	3
+#define EIF_ARCH_SPARC 		3
 #define EIF_ARCH_SPARC_64 	4
 #define EIF_ARCH_PPC		5
-#define EIF_ARCH_PPC_64	6
+#define EIF_ARCH_PPC_64		6
 #define EIF_ARCH_C90		7
 #define EIF_ARCH_T3D		8
-#define EIF_ARCH_HPPA	9
-#define EIF_ARCH_MIPS	10
+#define EIF_ARCH_HPPA		9
+#define EIF_ARCH_MIPS		10
 #define EIF_ARCH_MIPS_64	11
+#define EIF_ARCH_ARM6		12
 
 /* Define EIF_ARCH value */
 #define EIF_ARCH $eif_arch

@@ -7152,13 +7152,19 @@ feature {NONE} -- Implementation
 				set_is_inherited (True)
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if not process_preconditions then
-						-- Mark that result is initialized and attached if required.
 					t := a_feature.type
-					if t.is_initialization_required and then not context.local_initialization.is_result_set then
-						context.set_result
-					end
-					if t.is_attached then
-						context.add_result_instruction_scope
+					if not t.is_void then
+						if context.local_scope = Void then
+								-- Initialize structures to record and access result scope.
+							context.init_local_scopes
+						end
+							-- Mark that result is initialized and attached if required.
+						if t.is_initialization_required and then not context.local_initialization.is_result_set then
+							context.set_result
+						end
+						if t.is_attached then
+							context.add_result_instruction_scope
+						end
 					end
 				end
 				from

@@ -1,0 +1,47 @@
+#!/bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: api_wrapper-gtk-config [OPTIONS]
+Options
+	[--include_path]
+	[--library]
+	[--threads]
+EOF
+	exit $1
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+aw_package_string='gmodule-2.0'
+
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--library)
+		if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+			echo `pkg-config $aw_package_string $thread_string --libs`
+		else
+			echo `pkg-config $aw_package_string $thread_string --libs`
+ 		fi
+		;;
+		--threads)
+		thread_string=gthread-2.0
+		;;
+		--include_path)
+		echo `pkg-config $aw_package_string $thread_string --cflags`
+		;;
+		*)
+		usage 1 1>&2
+		;;
+ 	esac
+	shift
+done
+

@@ -28,15 +28,17 @@ feature -- Miscellaneous
 		do
 			text.process_keyword_text ("System", Void)
 			text.add_new_line
-			text.add_indent
-			text.process_indexing_tag_text ("name:        ")
-			text.process_basic_text (Eiffel_system.name)
-			text.add_new_line
+			if eiffel_project.system_defined then
+				text.add_indent
+				text.process_indexing_tag_text ("name:        ")
+				text.process_basic_text (Eiffel_system.name)
+				text.add_new_line
 
-			text.add_indent
-			text.process_indexing_tag_text ("target:      ")
-			text.process_basic_text (Eiffel_system.lace.target_name)
-			text.add_new_line
+				text.add_indent
+				text.process_indexing_tag_text ("target:      ")
+				text.process_basic_text (Eiffel_system.lace.target_name)
+				text.add_new_line
+			end
 
 			text.add_indent
 			text.process_indexing_tag_text ("configuration: ")
@@ -48,22 +50,24 @@ feature -- Miscellaneous
 			text.process_basic_text (Eiffel_project.name)
 			text.add_new_line
 
-			text.add_indent
-			text.process_indexing_tag_text ("compilation: ")
-			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
-			text.add_new_line
+			if eiffel_project.system_defined then
+				text.add_indent
+				text.process_indexing_tag_text ("compilation: ")
+				text.process_basic_text (Eiffel_system.project_location.target_path)
+				text.add_new_line
 
-			text.add_indent
-			text.process_indexing_tag_text ("multithread: ")
-			if Eiffel_ace.system.has_multithreaded then
-				text.process_basic_text ("enabled")
-			else
-				text.process_basic_text ("disabled")
+				text.add_indent
+				text.process_indexing_tag_text ("multithread: ")
+				if Eiffel_ace.system.has_multithreaded then
+					text.process_basic_text ("enabled")
+				else
+					text.process_basic_text ("disabled")
+				end
+				text.add_new_line
 			end
-			text.add_new_line
 
 			text.add_new_line
-			if Eiffel_system.workbench.is_already_compiled then
+			if Eiffel_project.system_defined and then Eiffel_system.workbench.is_already_compiled then
 				if not eiffel_system.system.root_creators.is_empty then
 					l_root := eiffel_system.system.root_creators.first
 
@@ -213,7 +217,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -226,22 +230,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class OUTPUT_ROUTINES

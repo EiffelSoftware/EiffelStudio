@@ -1100,7 +1100,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	rt_uint_ptr elem_size;	/* Element size */
 	char *o_ref;
 	char *reference;
-	int32 count;					/* Element count */
+	int32 count,capacity;					/* Element count */
 	uint32 nb_attr, sk_type;
 	long sp_start = 0, sp_end;		/* Bounds for inspection */
 	uint32 dtype;
@@ -1111,12 +1111,16 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 
 	zone = HEADER(object);
 	count = RT_SPECIAL_COUNT(object);
+	capacity = RT_SPECIAL_CAPACITY(object);
 	elem_size = RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 	dtype = Dtype(object);
 
-		/* Send the capacity of the special object */
+		/* Send the count of the special object */
 	app_twrite (&count, sizeof(int32));
+
+		/* Send the capacity of the special object */
+	app_twrite (&capacity, sizeof(int32));
 
 	if (skip_items == EIF_FALSE) {
 		/* Compute the number of items within the bounds */
@@ -1723,5 +1727,4 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 
 	exec_recording_enabled = b; /* Restore execution recording status */
 }
-
 

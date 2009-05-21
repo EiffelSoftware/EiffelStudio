@@ -131,7 +131,8 @@ feature -- Update
 						-- the address and the count of the special to be consistent
 						-- with the way we retrieve a special object in recv_attributes.
 					address := to_pointer (c_tread)
-					capacity := to_integer_32 (c_tread)
+					capacity := to_integer_32 (c_tread) --| Count
+					max_capacity := to_integer_32 (c_tread) --| Capacity
 					recv_attributes (attributes, Void, True)
 					debug ("DEBUG_RECV")
 						io.error.put_string ("And being back again in `send'.%N")
@@ -174,6 +175,7 @@ feature {NONE} -- Implementation
 			spec_attr: SPECIAL_VALUE
 			type_id: INTEGER
 			p: POINTER
+			i1,i2: INTEGER
 		do
 			s := c_tread
 			if is_valid_integer_32_string (s) then
@@ -271,17 +273,21 @@ feature {NONE} -- Implementation
 									type_id, create {DBG_ADDRESS}.make_from_pointer (to_pointer (c_tread)))
 							else
 								debug("DEBUG_RECV")
-									io.error.put_string ("Creating special object.%N")
+									io.error.put_string ("Creating SPECIAL object.%N")
 								end
 								p := to_pointer (c_tread)
-								create spec_attr.make_attribute (attr_name, e_class, create {DBG_ADDRESS}.make_from_pointer (p), to_integer_32 (c_tread))
+								i1 := to_integer_32 (c_tread)
+								i2 := to_integer_32 (c_tread)
+								create spec_attr.make_attribute (attr_name, e_class, create {DBG_ADDRESS}.make_from_pointer (p), i1, i2)
 								debug("DEBUG_RECV")
 									io.error.put_string ("Attribute name: ");
 									io.error.put_string (attr_name);
 									io.error.put_new_line;
-									io.error.put_string ("The eiffel class: ");
-									io.error.put_string (e_class.name_in_upper);
-									io.error.put_new_line
+									if e_class /= Void then
+										io.error.put_string ("The eiffel class: ");
+										io.error.put_string (e_class.name_in_upper);
+										io.error.put_new_line
+									end
 								end;
 								if sp_upper = -1 then
 									spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);

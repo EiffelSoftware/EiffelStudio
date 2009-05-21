@@ -41,26 +41,33 @@ feature {NONE} -- Initialization
 			make_with_grid (g)
 			set_expression_evaluation (evl)
 			if evl.evaluated then
-				if not evl.error_occurred then
-					last_dump_value := evl.value
-					if last_dump_value /= Void then
-						object_address := last_dump_value.address
-						object_dynamic_class := last_dump_value.dynamic_class
-					else
-						object_address := Void
-						object_dynamic_class := evl.dynamic_class
-					end
-					if object_dynamic_class = Void then
-						object_dynamic_class := evl.static_class
-					end
-					if object_dynamic_class /= Void then
-						object_is_special_value := object_dynamic_class.is_special
-								or object_dynamic_class.is_native_array
-					end
-				end
+				apply_evaluation_results (evl)
 			end
 		ensure
 			evaluation_set: expression_evaluation = evl
+		end
+
+	apply_evaluation_results (evl: DBG_EXPRESSION_EVALUATION)
+		require
+			evl_evaluated: evl.evaluated
+		do
+			if not evl.error_occurred then
+				last_dump_value := evl.value
+				if last_dump_value /= Void then
+					object_address := last_dump_value.address
+					object_dynamic_class := last_dump_value.dynamic_class
+				else
+					object_address := Void
+					object_dynamic_class := evl.dynamic_class
+				end
+				if object_dynamic_class = Void then
+					object_dynamic_class := evl.static_class
+				end
+				if object_dynamic_class /= Void then
+					object_is_special_value := object_dynamic_class.is_special
+							or object_dynamic_class.is_native_array
+				end
+			end
 		end
 
 feature -- Recycling
@@ -105,7 +112,7 @@ feature -- Refresh management
 			has_expression: expression_evaluation /= Void
 		do
 			last_dump_value := Void
-			object_address := Void
+			object_address  := Void
 			object_dynamic_class := Void
 			internal_associated_dump_value := Void
 			clear_items_stone_properties
@@ -115,15 +122,7 @@ feature -- Refresh management
 				and then attached expression_evaluation as evl
 				and then evl.evaluated
 			then
-				if not evl.error_occurred then
-					last_dump_value := evl.value
-					if last_dump_value /= Void then
-						object_address := last_dump_value.address
-					else
-						object_address := Void
-					end
-					object_dynamic_class := evl.dynamic_class
-				end
+				apply_evaluation_results (evl)
 			end
 			Precursor
 		end
@@ -243,16 +242,16 @@ feature -- Properties
 	object_dynamic_class: CLASS_C
 			-- Dynamic class associated to expression's value
 
-	object_spec_capacity: INTEGER
+	object_spec_count_and_capacity: TUPLE [spec_count, spec_capacity: INTEGER]
 		do
-			Result := debugger_manager.object_manager.special_object_capacity_at_address (object_address)
+			Result := debugger_manager.object_manager.special_object_count_and_capacity_at_address (object_address)
 		end
 
 feature -- Query
 
 	has_attributes_values: BOOLEAN
 		do
-fixme ("find a smarter way to get a valid value")
+			fixme ("find a smarter way to get a valid value")
 			Result := True
 		end
 

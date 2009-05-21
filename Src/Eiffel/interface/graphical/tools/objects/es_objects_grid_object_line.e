@@ -148,8 +148,12 @@ feature -- Properties
 
 	object_spec_upper: INTEGER
 
-	object_spec_capacity: INTEGER
+	object_spec_count_and_capacity: TUPLE [spec_count, spec_capacity: INTEGER]
+		require
+			object_is_special_value: object_is_special_value
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Bridge to parent ES_OBJECTS_GRID
@@ -821,7 +825,7 @@ feature {NONE} -- Filling
 				if object_is_special_value then
 					if object_spec_lower > 0 then
 						es_glab := slice_label_item (Interface_names.l_More_items)
-						if object_spec_lower > object_spec_capacity then
+						if object_spec_lower > object_spec_count_and_capacity.spec_capacity then
 							es_glab.set_text (es_glab.text + " (" + object_spec_lower.out + ")")
 						end
 						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
@@ -831,7 +835,7 @@ feature {NONE} -- Filling
 					end
 					if
 						0 <= object_spec_upper and then
-						object_spec_upper < object_spec_capacity - 1
+						object_spec_upper < object_spec_count_and_capacity.spec_capacity - 1
 					then
 						es_glab := slice_label_item (Interface_names.l_More_items)
 						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
@@ -847,7 +851,9 @@ feature {NONE} -- Filling
 				end
 				dcl := object_dynamic_class
 				if dcl /= Void then
-					if dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
+					if dcl.conform_to (debugger_manager.compiler_data.special_class_c) then
+						fill_extra_attributes_for_special (a_row, list_cursor)
+					elseif dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
 						fill_extra_attributes_for_tuple (a_row, list_cursor)
 					elseif
 						Eb_debugger_manager.display_agent_details
@@ -1015,6 +1021,40 @@ feature {NONE} -- Agent filling
 			Result.disable_use_overload_name
 		ensure
 			result_attached: Result /= Void
+		end
+
+	fill_extra_attributes_for_special (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE])
+		require
+			a_row /= Void
+			list_cursor /= Void
+		local
+			lrow: EV_GRID_ROW
+			grid: EV_GRID
+			r: INTEGER
+			glab: EV_GRID_LABEL_ITEM
+		do
+			grid := a_row.parent
+			list_cursor.start
+
+			a_row.insert_subrow (1)
+			lrow := a_row.subrow (1)
+
+			create glab.make_with_text ("count")
+			glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+			lrow.set_item (col_name_index, glab)
+
+			create glab.make_with_text (object_spec_count_and_capacity.spec_count.out)
+			lrow.set_item (Col_value_index, glab)
+
+			a_row.insert_subrow (2)
+			lrow := a_row.subrow (2)
+
+			create glab.make_with_text ("capacity")
+			glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+			lrow.set_item (col_name_index, glab)
+
+			create glab.make_with_text (object_spec_count_and_capacity.spec_capacity.out)
+			lrow.set_item (Col_value_index, glab)
 		end
 
 	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE])

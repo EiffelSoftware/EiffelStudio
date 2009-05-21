@@ -51,10 +51,9 @@ feature -- Acces
 
 feature -- Report
 
-	local_table (a_class_type: CLASS_TYPE; a_feat: E_FEATURE): detachable HASH_TABLE [LOCAL_INFO, INTEGER]
+	local_table (a_feat: E_FEATURE): detachable HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Object test locals from `a_feat' in the context of class `a_class_type'
 		require
-			a_class_type /= Void
 			a_feat /= Void
 		local
 			l_breakable_feature_info: detachable DBG_BREAKABLE_FEATURE_INFO
@@ -68,10 +67,9 @@ feature -- Report
 			end
 		end
 
-	object_test_locals (a_class_type: CLASS_TYPE; a_feat: E_FEATURE; a_bp, a_bp_nested: INTEGER): ARRAYED_LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
-			-- Object test locals from `a_feat' in the context of class `a_class_type'
+	object_test_locals (a_feat: E_FEATURE; a_bp, a_bp_nested: INTEGER): ARRAYED_LIST [TUPLE [id: ID_AS; li: LOCAL_INFO]]
+			-- Object test locals from `a_feat'
 		require
-			a_class_type /= Void
 			a_feat /= Void
 		local
 			l_breakable_feature_info: detachable DBG_BREAKABLE_FEATURE_INFO

@@ -144,7 +144,7 @@ feature -- Properties
 			l_result := private_local_table
 			if l_result = Void then
 				if routine /= Void and dynamic_type /= Void then
-					l_result := debugger_manager.debugger_ast_server.local_table (dynamic_type, routine)
+					l_result := debugger_manager.debugger_ast_server.local_table (routine)
 				end
 				if l_result = Void then
 					l_result := empty_local_table
@@ -163,8 +163,8 @@ feature -- Properties
 		do
 			l_result := private_object_test_locals_info
 			if l_result = Void then
-				if routine /= Void and dynamic_type /= Void then
-					l_result := debugger_manager.debugger_ast_server.object_test_locals (dynamic_type, routine, break_index, break_nested_index)
+				if routine /= Void then -- and dynamic_type /= Void then
+					l_result := debugger_manager.debugger_ast_server.object_test_locals (routine, break_index, break_nested_index)
 				end
 				if l_result = Void then
 					create {ARRAYED_LIST [TUPLE [ID_AS, LOCAL_INFO]]} l_result.make (0)

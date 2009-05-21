@@ -31,6 +31,8 @@ feature -- Access
 		do
 		end
 
+	count: INTEGER do end
+
 feature -- Output	
 
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE]

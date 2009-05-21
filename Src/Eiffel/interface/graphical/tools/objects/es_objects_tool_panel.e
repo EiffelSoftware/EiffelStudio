@@ -783,9 +783,6 @@ feature {NONE} -- event handlers
 	on_stone_changed (a_old_stone: detachable like stone)
 			-- Assign `a_stone' as new stone.
 		do
-			debug ("debug_recv")
-				print ("ES_OBJECTS_TOOL.set_stone%N")
-			end
 			if can_refresh then
 				if attached {CALL_STACK_STONE} stone as conv_stack then
 					update

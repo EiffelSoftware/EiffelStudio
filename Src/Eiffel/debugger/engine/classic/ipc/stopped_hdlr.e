@@ -243,7 +243,8 @@ feature -- Execution
 					a_pause_reason
 				when
 					{APPLICATION_STATUS_CONSTANTS}.Pg_raise,
-					{APPLICATION_STATUS_CONSTANTS}.Pg_viol then
+					{APPLICATION_STATUS_CONSTANTS}.Pg_viol
+				then
 					need_to.stop := execution_stopped_on_exception_event (a_app)
 					need_to.update_bp := False
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_break then

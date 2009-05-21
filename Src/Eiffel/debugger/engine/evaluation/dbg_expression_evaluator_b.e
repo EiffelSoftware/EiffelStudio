@@ -2179,6 +2179,9 @@ feature -- Access
 			fi: FEATURE_I
 			bak_byte_code: BYTE_CODE
 			old_int_expression_byte_note: like internal_byte_node
+
+			l_dbg_ast_server: DEBUGGER_AST_SERVER
+			l_feat: E_FEATURE
 		do
 				--| Backup current context and values
 			context.backup
@@ -2191,6 +2194,10 @@ feature -- Access
 				--| this may reset the `expression_byte_node' value
 			ctx := context
 			ctx.set_data (f, f.written_class, Void, Void, Void, 0, 0) -- FIXME: we are missing locals and object test locals here
+			l_dbg_ast_server := debugger_manager.debugger_ast_server
+			l_feat := f.api_feature (f.written_in)
+			ctx.set_data (f, f.written_class, Void, l_dbg_ast_server.local_table (l_feat), l_dbg_ast_server.object_test_locals (l_feat, 0, 0), 0, 0) -- FIXME: we are missing locals and object test locals here
+
 			apply_context
 
 				--| Get expression_byte_node

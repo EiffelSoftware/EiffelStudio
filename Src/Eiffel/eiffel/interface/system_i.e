@@ -1468,6 +1468,33 @@ feature -- SPECIAL.make routine id
 			end
 		end
 
+	special_make_filled_rout_id: INTEGER
+			-- Routine id of `make_filled' from SPECIAL.
+			-- Return 0 if SPECIAL has not been compiled or
+			-- does not have a feature named `make_filled'.
+		local
+			feature_i: FEATURE_I
+		do
+			Result := internal_special_make_filled_rout_id
+			if Result < 0 then
+				Result := 0
+				if special_class /= Void and then special_class.compiled_class /= Void then
+					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_filled_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					else
+							-- For backward compatibility.
+						feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+						if feature_i /= Void then
+							Result := feature_i.rout_id_set.first
+						end
+					end
+				end
+				internal_special_make_filled_rout_id := Result
+			end
+		end
+
+
 feature -- Routine IDS update
 
 	reset_routine_ids
@@ -1481,6 +1508,7 @@ feature -- Routine IDS update
 			internal_default_create_rout_id := -1
 			internal_is_equal_rout_id := -1
 			internal_special_make_rout_id := - 1
+			internal_special_make_filled_rout_id := - 1
 		end
 
 feature {NONE} -- Implementation: predefined routine IDs
@@ -1496,6 +1524,9 @@ feature {NONE} -- Implementation: predefined routine IDs
 
 	internal_special_make_rout_id: INTEGER
 			-- Once per compilation value of routine id of `make' from SPECIAL.
+
+	internal_special_make_filled_rout_id: INTEGER
+			-- Once per compilation value of routine id of `make_filled' from SPECIAL.
 
 feature -- Feature declaration
 

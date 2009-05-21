@@ -2083,12 +2083,13 @@ rt_private void interpret(int flag, int where)
 	case BC_SPCREATE:
 		{
 			EIF_REFERENCE new_obj;						/* New object */
-			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit;
+			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit, is_make_filled;
 			uint32 elem_size = 0, bit_size = 0, i = 0, spec_type;
 			uint16 flags = 0;
-			EIF_TYPED_VALUE *nb_item;
+			EIF_TYPED_VALUE nb_item, default_item;
 			uint32 nb = 0;
 
+			is_make_filled = EIF_TEST(*IC++);
 			type = get_creation_type (1);
 
 			is_ref = EIF_TEST(*IC++);
@@ -2121,9 +2122,14 @@ rt_private void interpret(int flag, int where)
 				}
 			}
 
-			nb_item = opop();
-			CHECK("valid_type", (nb_item->type & SK_HEAD) == SK_INT32);
-			nb = (uint32) nb_item->it_int32;
+			memcpy(&nb_item, opop(), ITEM_SZ);
+			if (is_make_filled) {
+				memcpy(&default_item, opop(), ITEM_SZ);
+			} else {
+				memset(&default_item, 0, ITEM_SZ);
+			}
+			CHECK("valid_type", (nb_item.type & SK_HEAD) == SK_INT32);
+			nb = (uint32) nb_item.it_int32;
 
 			if (is_expanded) {
 				flags = EO_COMP;
@@ -2136,11 +2142,19 @@ rt_private void interpret(int flag, int where)
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 			opush (last);				/* We need to push object on stack to check invariants */
 
-			if (is_bit) {
-				bit_size = get_uint32(&IC);
-				for (i = 0; i < nb; i++) {
-					*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
-					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
+			if (is_make_filled) {
+					/* Prepare the call to `make_filled'. By pushing the computed arguments starting
+					 * with the created object. */
+				opush(last);
+				opush(&default_item);
+				opush(&nb_item);
+			} else {
+				if (is_bit) {
+					bit_size = get_uint32(&IC);
+					for (i = 0; i < nb; i++) {
+						*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
+						RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
+					}
 				}
 			}
 		}

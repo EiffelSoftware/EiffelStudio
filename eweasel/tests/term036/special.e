@@ -13,7 +13,8 @@ frozen class
 	SPECIAL [T]
 
 create
-	make
+	make,
+	make_filled
 
 feature {NONE} -- Initialization
 
@@ -26,6 +27,17 @@ feature {NONE} -- Initialization
 		ensure
 			area_allocated: count = n
 		end
+
+	frozen make_filled (v: T; n: INTEGER) is
+			-- Creates a special object for `n' entries.
+		require
+			non_negative_argument: n >= 0
+		do
+			-- Built-in
+		ensure
+			area_allocated: count = n
+		end
+
 
 feature -- Access
 

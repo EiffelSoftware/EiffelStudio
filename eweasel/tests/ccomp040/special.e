@@ -13,11 +13,16 @@ frozen class
 	SPECIAL [T]
 
 create
-	make
+	make,
+	make_filled
 
 feature
 
 	make (i: INTEGER) is
+		do
+		end
+
+	make_filled (v: T; i: INTEGER) is
 		do
 		end
 

@@ -1,0 +1,29 @@
+
+test_name 	 static-access-on-like-current
+test_description A static access of a feature on {like Current} should be dynamically bound but is currently staticly bound
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+test_end

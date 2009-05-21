@@ -44,6 +44,11 @@ feature {NONE} -- Initialization
 				array_class_c := cl_i.compiled_class
 			end
 
+			cl_i := sys.special_class
+			if cl_i /= Void then
+				special_class_c := cl_i.compiled_class
+			end
+
 			cl_i := sys.tuple_class
 			if cl_i /= Void then
 				tuple_class_c := cl_i.compiled_class
@@ -170,6 +175,7 @@ feature -- Access
 	any_class_c: CLASS_C
 	routine_class_c: CLASS_C
 	array_class_c: CLASS_C
+	special_class_c: CLASS_C
 	tuple_class_c: CLASS_C
 	type_class_c: CLASS_C
 	string_8_class_c: CLASS_C

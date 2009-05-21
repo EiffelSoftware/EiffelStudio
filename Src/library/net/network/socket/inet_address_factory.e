@@ -314,6 +314,8 @@ feature {NONE} -- Implementation
 		    			end
 		    			i := i + 1
 			    	end
+				else
+					Result := Void
 				end
 			end
     	end

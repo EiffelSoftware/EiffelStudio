@@ -573,6 +573,7 @@ feature {NONE} -- Visitors
 			l_class_type: SPECIAL_CLASS_TYPE
 			l_call: CALL_ACCESS_B
 			l_nested: NESTED_B
+			l_is_make_filled: BOOLEAN
 		do
 			l_basic_type ?= context.real_type_fixed (a_node.type)
 			if l_basic_type /= Void then
@@ -582,10 +583,14 @@ feature {NONE} -- Visitors
 				l_basic_type.c_type.make_default_byte_code (ba)
 			else
 				l_call := a_node.call
-				if l_call /= Void and then l_call.routine_id = system.special_make_rout_id then
+				if
+					l_call /= Void and then
+				 	(l_call.routine_id = system.special_make_rout_id or l_call.routine_id = system.special_make_filled_rout_id)
+				 then
+				 	l_is_make_filled := l_call.routine_id = system.special_make_filled_rout_id
 					l_special_type := context.real_type (a_node.type)
 					check
-						is_special_call_valid: a_node.is_special_call_valid
+						is_special_call_valid: a_node.is_special_call_valid (l_is_make_filled)
 						is_special_type: l_special_type /= Void and then
 							l_special_type.associated_class.lace_class = system.special_class
 					end
@@ -594,9 +599,23 @@ feature {NONE} -- Visitors
 						l_class_type_not_void: l_class_type /= Void
 					end
 					l_call.parameters.first.process (Current)
+					if l_is_make_filled then
+						l_call.parameters.i_th (2).process (Current)
+					end
 					ba.append (Bc_spcreate)
+						-- Say whether or not we should fill the SPECIAL.
+					ba.append_boolean (l_is_make_filled)
 					a_node.info.make_byte_code (ba)
 					l_class_type.make_creation_byte_code (ba)
+					if l_is_make_filled then
+						create l_nested
+						l_nested.set_target (a_node)
+						l_nested.set_message (l_call)
+						l_call.set_parent (l_nested)
+						make_call_access_b (
+							l_call, bc_feature, bc_feature_inv, bc_pfeature, bc_pfeature_inv, True)
+						l_call.set_parent (Void)
+					end
 				else
 					ba.append (Bc_create)
 						-- If there is a call, we need to duplicate newly created object
@@ -2142,22 +2161,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

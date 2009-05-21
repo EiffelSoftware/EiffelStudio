@@ -94,7 +94,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL)
+	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL; a_make_filled: BOOLEAN)
 			-- Generate creation of a special instance using `info' to get the exact type
 			-- to create.
 		require
@@ -122,13 +122,12 @@ feature -- C code generation
 				buffer.put_string ("if (")
 				nb_register.print_immediate_register
 				buffer.put_string ("< 0) {")
-				buffer.put_new_line
 				buffer.indent
+				buffer.put_new_line
 				buffer.put_string ("eraise (%"non_negative_argument%", EN_RT_CHECK);")
-				buffer.put_new_line
 				buffer.exdent
-				buffer.put_character ('}')
 				buffer.put_new_line
+				buffer.put_character ('}')
 			end
 
 			if l_param_is_expanded then
@@ -184,7 +183,7 @@ feature -- C code generation
 				buffer.put_string ("EIF_FALSE);")
 			end
 
-			if gen_param.is_bit then
+			if gen_param.is_bit and not a_make_filled then
 					-- Initialize array of bits with default values
 				shared_include_queue.put (Names_heap.eif_plug_header_name_id)
 				l_bit ?= gen_param

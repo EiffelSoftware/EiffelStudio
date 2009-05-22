@@ -399,7 +399,7 @@ feature -- Execution
 					check
 						normal_response_not_void: normal_response /= Void
 					end
-					if normal_response.exception = Void then
+					if not normal_response.has_exception then
 						variable_table.define_variable (a_receiver, a_type)
 					end
 				end

@@ -133,6 +133,8 @@ feature -- Execution
 		end
 
 	step
+		local
+			l_type: detachable TYPE_A
 		do
 			if type.is_expanded then
 				choose_expanded_receiver
@@ -152,7 +154,9 @@ feature -- Execution
 				receiver := interpreter.variable_table.new_variable
 				interpreter.create_object (receiver, type, creation_procedure, input_creator.receivers)
 				if queue /= Void then
-					queue.mark (create {AUT_FEATURE_OF_TYPE}.make_as_creator (creation_procedure, interpreter.variable_table.variable_type (receiver)))
+					if attached {TYPE_A} interpreter.variable_table.variable_type (receiver) as l_receiver then
+						queue.mark (create {AUT_FEATURE_OF_TYPE}.make_as_creator (creation_procedure, l_receiver))
+					end
 				end
 				if not interpreter.variable_table.is_variable_defined (receiver) then
 					-- There was an error creating the object.

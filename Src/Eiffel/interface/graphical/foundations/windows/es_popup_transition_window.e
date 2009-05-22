@@ -295,14 +295,22 @@ feature {NONE} -- Basic operations
 			is_initialized: is_initialized
 			is_shown: is_shown
 			action_attached: action /= Void
+		local
+			retried: BOOLEAN
 		do
-			action.call (Void)
-			hide
+			if not retried then
+				action.call (Void)
+				({ANY} #? void).do_nothing
+				hide
+			elseif is_interface_usable and then is_recycled_on_close then
+				recycle
+			end
 		ensure
 			not_is_shown: not is_shown
 		rescue
-			if is_shown then
-				popup_window.hide
+			if not retried then
+				retried := True
+				retry
 			end
 		end
 

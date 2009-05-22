@@ -409,9 +409,6 @@ feature -- Basic operations
 
 			on_before_show
 			popup_window.show_relative_to_window (a_window)
-			if not {PLATFORM}.is_windows then
-				ev_application.process_events
-			end
 		ensure
 			popup_window_is_displayed: popup_window.is_displayed
 			not_is_committed_on_closed: not is_committed_on_closed

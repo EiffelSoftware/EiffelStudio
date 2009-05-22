@@ -4112,8 +4112,8 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 				/* This code is commented because not necessary. I'm leaving it there
 				 * to show that there is indeed no need to clean the extra memory because
 				 * in theory it should never be accessed. */
-				memset (new + size - RT_SPECIAL_DATA_SIZE, 0xFFFFFFFF , (zone->ov_size & B_SIZE) - size);
-				memcpy (new + (zone->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE, root + size - RT_SPECIAL_DATA_SIZE, RT_SPECIAL_DATA_SIZE);
+				memset (new + size - RT_SPECIAL_PADDED_DATA_SIZE, 0xFFFFFFFF , (zone->ov_size & B_SIZE) - size);
+				memcpy (new + (zone->ov_size & B_SIZE) - RT_SPECIAL_PADDED_DATA_SIZE, root + size - RT_SPECIAL_PADDED_DATA_SIZE, RT_SPECIAL_PADDED_DATA_SIZE);
 			}
 
 #ifdef DEBUG

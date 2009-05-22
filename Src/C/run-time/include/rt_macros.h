@@ -97,7 +97,7 @@ extern "C" {
  */
 #define RT_SPECIAL_AREA(spec) (spec)
 #define RT_SPECIAL_DATA(spec) \
-	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_DATA_SIZE)
+	(char *) ((spec) + (HEADER(spec)->ov_size & B_SIZE) - RT_SPECIAL_PADDED_DATA_SIZE)
 
 
 /* Macro used to protect concurrent running of GC. */

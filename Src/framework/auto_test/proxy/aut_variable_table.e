@@ -164,6 +164,7 @@ feature -- Access
 			a_type_not_void: a_type /= Void
 		local
 			cs: DS_HASH_TABLE_CURSOR [TYPE_A, ITP_VARIABLE]
+			l_type: TYPE_A
 		do
 			create {DS_ARRAYED_LIST [ITP_VARIABLE]} Result.make (variable_type_table.count)
 			from
@@ -172,7 +173,9 @@ feature -- Access
 			until
 				cs.off
 			loop
-				if cs.item = Void or else cs.item.actual_type.is_conformant_to (a_context_class, a_type) then
+				l_type := cs.item.actual_type
+					-- We only allow Void conforms to a non expanded type.
+				if l_type.is_conformant_to (a_context_class, a_type) and then not (a_type.is_expanded and then l_type.is_none) then
 					Result.force_last (cs.key)
 				end
 				cs.forth
@@ -234,7 +237,7 @@ invariant
 	all_variables_have_type: not variable_type_table.has (Void)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -258,10 +261,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -33,28 +33,9 @@
 		<option>
 			<assertions/>
 		</option>
-		<external_include location="`$ISE_LIBRARY/library/api_wrapper/implementation/unix/api_wrapper-config --threads --include_path`">
+		<external_library location="-ldl">
 			<condition>
 				<platform excluded_value="windows"/>
-				<multithreaded value="true"/>
-			</condition>
-		</external_include>
-		<external_include location="`$ISE_LIBRARY/library/api_wrapper/implementation/unix/api_wrapper-config --include_path`">
-			<condition>
-				<platform excluded_value="windows"/>
-				<multithreaded value="false"/>
-			</condition>
-		</external_include>
-		<external_library location="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/api_wrapper-config --threads --library`">
-			<condition>
-				<platform excluded_value="windows"/>
-				<multithreaded value="true"/>
-			</condition>
-		</external_library>
-		<external_library location="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/api_wrapper-config --library`">
-			<condition>
-				<platform excluded_value="windows"/>
-				<multithreaded value="false"/>
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

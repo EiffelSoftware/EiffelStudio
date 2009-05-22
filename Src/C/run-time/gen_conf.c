@@ -2123,7 +2123,7 @@ rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE_INDEX dftype)
 {
 	EIF_GEN_DER *gdp = eif_derivations [dftype];
 
-	return EIF_TEST(gdp && (!RT_IS_ATTACHED_TYPE(gdp->annotation) || gdp->is_expanded)); 
+	return EIF_TEST(!gdp || !RT_IS_ATTACHED_TYPE(gdp->annotation) || gdp->is_expanded); 
 }
 
 

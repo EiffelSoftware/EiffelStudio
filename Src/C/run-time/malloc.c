@@ -1070,6 +1070,12 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 		RT_SPECIAL_COUNT(object) = count;
 		RT_SPECIAL_ELEM_SIZE(object) = sizeof(EIF_TYPED_VALUE);
 		RT_SPECIAL_CAPACITY(object) = count;
+		if (!egc_has_old_special_semantic) {
+				/* If by default allocation does not clear the data of a TUPLE,
+				 * we actually need to do it otherwise we end up with TUPLE objects
+				 * with invalid data. */
+			memset(object, 0, RT_SPECIAL_VISIBLE_SIZE(object));
+		}
 			/* Mark it is a tuple object */
 		zone->ov_flags |= EO_TUPLE;
 		zone->ov_dftype = ftype;
@@ -1232,7 +1238,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	capacity = RT_SPECIAL_CAPACITY(ptr);
 	old_real_size = (rt_uint_ptr) capacity * (rt_uint_ptr) elem_size;	/* Size occupied by items in old special */
 	new_real_size = nbitems * (rt_uint_ptr) elem_size;	/* Size occupied by items in new special */
-	new_size = new_real_size + RT_SPECIAL_DATA_SIZE;		/* New required size */
+	new_size = new_real_size + RT_SPECIAL_PADDED_DATA_SIZE;		/* New required size */
 
 	if (nbitems == capacity) {		/* OPTIMIZATION: Does resized object have same size? */
 		return ptr;				/* If so, we return unchanged `ptr'. */

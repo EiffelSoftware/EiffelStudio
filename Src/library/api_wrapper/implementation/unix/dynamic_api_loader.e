@@ -18,7 +18,9 @@ feature -- Status report
 	is_dynamic_library_supported: BOOLEAN
 			-- <Precursor>
 		do
-			Result := True
+			Result := {EV_GTK_EXTERNALS}.g_module_supported
+		ensure then
+			g_module_supported: Result implies {EV_GTK_EXTERNALS}.g_module_supported
 		end
 
 feature -- Query
@@ -27,9 +29,10 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_name: C_STRING
+			l_result: BOOLEAN
 		do
 			create l_name.make (a_api_name)
-			Result := c_dlsym (a_hnd, l_name.item)
+			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
 		end
 
 feature -- Basic operations
@@ -66,10 +69,10 @@ feature -- Basic operations
 		do
 			create l_path.make (a_path)
 				-- Second parameter specifies to bind symbols only when necessary, instead of doing it all on load.
-				-- Note: Using flag RTLD_GLOBAL, instead of RTLD_LOCAL may resolve potential issues with symbol name
-				--       conflicts but it is not used because it may cause problems for multi-threaded applications,
-				--       but if it creates a issue with conflicts then this may have to be used.
-			Result := c_dlopen (l_path.item, RTLD_LAZY | RTLD_GLOBAL)
+				-- Note: Using flag 0x2 (G_MODULE_BIND_LOCAL) may resolve potential issues with symbol name conflicts
+				--       but it is not used because it may cause problems for multi-threaded applications, but if it
+				--       creates a issue with conflicts then this may have to be used.
+			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0x1)
 		end
 
 	unload_library (a_hnd: POINTER)
@@ -77,69 +80,8 @@ feature -- Basic operations
 		local
 			l_result: BOOLEAN
 		do
-			l_result := (c_dlclose (a_hnd) = 0)
+			l_result := {EV_GTK_EXTERNALS}.g_module_close (a_hnd)
 			check library_freed: l_result end
-		end
-
-feature {NONE} -- Externals
-
-	c_dlopen (a_file_name: POINTER; a_flags: INTEGER): POINTER
-			-- The function dlopen() loads the dynamic library file named by the null-terminated string
-			-- filename and returns an opaque "handle" for the dynamic library. If filename is NULL, then
-			-- the returned handle is for the main program. If filename contains a slash ("/"), then it is
-			-- interpreted as a (relative or absolute) pathname. Otherwise, the dynamic linker searches for
-			-- the library as follows (see ld.so(8) for further details):
-		require
-			not_a_file_name_is_null: a_file_name /= default_pointer
-		external
-			"C inline use <dlfcn.h>"
-		alias
-			"return (EIF_POINTER)dlopen((const char*)$a_file_name, (int)$a_flags);"
-		end
-
-	c_dlclose (a_handle: POINTER): INTEGER
-			-- The function dlsym() takes a "handle" of a dynamic library returned by dlopen() and the
-			-- null-terminated symbol name, returning the address where that symbol is loaded into memory.
-			-- If the symbol is not found, in the specified library or any of the libraries that were
-			-- automatically loaded by dlopen() when that library was loaded, dlsym() returns NULL.
-		require
-			not_a_handle_is_null: a_handle /= default_pointer
-		external
-			"C inline use <dlfcn.h>"
-		alias
-			"return (EIF_INTEGER)dlclose((void *)$a_handle);"
-		end
-
-	c_dlsym (a_handle: POINTER; a_symbol: POINTER): POINTER
-			-- The function dlsym() takes a "handle" of a dynamic library returned by dlopen() and the null-
-			-- terminated symbol name, returning the address where that symbol is loaded into memory.
-		require
-			not_a_handle_is_null: a_handle /= default_pointer
-			not_a_symbol_is_null: a_symbol /= default_pointer
-		external
-			"C inline use <dlfcn.h>"
-		alias
-			"return dlsym((void *)$a_handle, (const char *)$a_symbol);"
-		end
-
-feature {NONE} -- External: Flags
-
-	RTLD_LAZY: INTEGER
-			-- Perform lazy binding. Only resolve symbols as the code that references them is executed. If
-			-- the symbol is never referenced, then it is never resolved.
-		external
-			"C macro use <dlfcn.h>"
-		alias
-			"RTLD_LAZY"
-		end
-
-	RTLD_GLOBAL: INTEGER
-			-- The symbols defined by this library will be made available for symbol resolution of
-			-- subsequently loaded libraries.
-		external
-			"C macro use <dlfcn.h>"
-		alias
-			"RTLD_GLOBAL"
 		end
 
 ;note

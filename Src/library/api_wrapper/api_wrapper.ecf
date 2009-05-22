@@ -33,12 +33,13 @@
 		<option>
 			<assertions/>
 		</option>
-		<external_library location="-ldl">
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
-		</external_library>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		</library>
 		<cluster name="api_wrapper" location=".\" recursive="true">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>

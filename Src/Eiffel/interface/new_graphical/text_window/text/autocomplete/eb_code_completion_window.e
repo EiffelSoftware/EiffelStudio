@@ -34,7 +34,8 @@ inherit
 			set_expanded_row_icon,
 			show,
 			is_applicable_item,
-			exit
+			exit,
+			build_displayed_list
 		end
 
 	EB_CONSTANTS
@@ -792,16 +793,34 @@ feature {NONE} -- Action handlers
 					comment_preview.set_text ("")
 				end
 
-				if not {PLATFORM}.is_windows then
-						-- Process the graphical events to ensure the row will be made visible for GTK deferred
-						-- events processing.
-					ev_application.process_events
+				if {PLATFORM}.is_windows then
+					a_row.ensure_visible
+				else
+					ev_application.add_idle_action_kamikaze (agent
+						local
+							l_selected: ARRAYED_LIST [EV_GRID_ROW]
+						do
+								-- Ensure the row is visible on GTK platforms.
+							if is_interface_usable then
+								l_selected := choice_list.selected_rows
+								if not l_selected.is_empty then
+									l_selected.first.ensure_visible
+								end
+							end
+						end)
 				end
-				a_row.ensure_visible
+
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	build_displayed_list (name: STRING_8)
+			-- <Precursor>
+		do
+			comment_preview.set_text ("")
+			Precursor (name)
+		end
 
 	on_char (character_string: STRING_32)
 			-- Process displayable character key press event.

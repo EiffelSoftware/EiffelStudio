@@ -249,7 +249,7 @@ feature {NONE} -- Steps
 				create {DS_LINKED_LIST [ITP_EXPRESSION]} list.make
 			end
 
-			if target /= Void then
+			if target /= Void and then not interpreter.variable_table.variable_type (target).is_none then
 				if feature_to_call.type /= void_type then
 					receiver := interpreter.variable_table.new_variable
 					interpreter.invoke_and_assign_feature (receiver, type, feature_to_call, target, list)

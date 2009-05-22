@@ -956,6 +956,8 @@ end;
 				-- Add all unaliased features to `Current'.
 			from
 				i := 1
+					-- Set `l_feature_id' to zero so that it gets correctly set to 1 when it enters the loop
+				l_feature_id := 0
 				l_count := l_uninitialized_features.count
 			until
 				i > l_count
@@ -963,7 +965,8 @@ end;
 				if l_compilation_straight then
 						-- Retrieve next available feature id.
 					from
-						l_feature_id := i
+							-- Use previous `l_feature_id' to prevent reiterating `l_used_feature_ids'
+						l_feature_id := l_feature_id + 1 
 					until
 						not l_used_feature_ids.has (l_feature_id)
 					loop

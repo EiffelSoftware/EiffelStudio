@@ -1,1 +1,11 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartAction>URL</StartAction>
+    <StartURL>http://localhost/asd.xeb</StartURL>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <StartAction>URL</StartAction>
+    <StartURL>http://localhost/asd.xeb</StartURL>
+  </PropertyGroup>
+</Project>

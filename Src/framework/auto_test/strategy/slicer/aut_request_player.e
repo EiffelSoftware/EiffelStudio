@@ -95,6 +95,7 @@ feature -- Execution
 		do
 			l_itp := interpreter
 			l_itp.set_is_in_replay_mode (True)
+			l_itp.set_is_logging_enabled (False)
 			if is_interpreter_started_by_default then
 				Precursor
 				has_error := not interpreter.is_ready

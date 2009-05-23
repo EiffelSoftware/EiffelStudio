@@ -104,7 +104,7 @@ feature {NONE} -- Basic operations
 				an_event.publish (Current, l_item)
 
 					-- Making sure we only move cursor if `l_item' has not been removed in the mean while.
-				if not observers.off and l_item = observers.item_for_iteration then
+				if not observers.off and then l_item = observers.item_for_iteration then
 					observers.forth
 				end
 			end

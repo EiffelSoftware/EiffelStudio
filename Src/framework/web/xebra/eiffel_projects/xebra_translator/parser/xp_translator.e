@@ -94,7 +94,9 @@ feature -- Processing
 			create registry.make (servlet_gen_path)
 			parse_taglibs (a_taglib_folder, registry)
 
-			o.iprint ("Processing start...")
+			o.iprint ("******************************************************************")
+			o.iprint ("*                     .Xeb processing start...                   *")
+			o.iprint ("******************************************************************")
 			from
 				a_files.start
 			until

@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
 			temp_list: STRING

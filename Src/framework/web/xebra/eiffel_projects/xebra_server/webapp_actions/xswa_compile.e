@@ -57,7 +57,7 @@ feature -- Status setting
 	stop
 			-- <Precursor>
 		do
-			if attached {PROCESS} compile_process as p then
+			if attached {PROCESS} compile_process as p and then p.is_running  then
 				o.dprint ("Terminating compile_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
 			end

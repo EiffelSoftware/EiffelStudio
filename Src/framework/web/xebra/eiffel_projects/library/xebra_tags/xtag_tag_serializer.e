@@ -112,7 +112,7 @@ feature -- Access
 
 feature -- Implementation
 
-	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
+	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- Wrapps around the internal_generate feature to add debug information and handle the "render" option
 		require
 			a_servlet_class_attached: attached a_servlet_class
@@ -143,7 +143,7 @@ feature -- Implementation
 			end
 		end
 
-	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
+	generate_children (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- Generates all the children
 		require
 			a_servlet_class_attached: attached a_servlet_class
@@ -159,7 +159,7 @@ feature -- Implementation
 			end
 		end
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			--
 		require
 			a_servlet_class_attached: attached a_servlet_class
@@ -213,6 +213,47 @@ feature -- Implementation
 			a_feature_attached: attached a_feature
 		do
 			a_feature.append_comment (debug_information)
+		end
+
+	concatenate_with (a_separator: STRING; a_list: LIST [STRING]): STRING
+			-- `a_list': List with elements to be concatenated
+		require
+			a_separator: attached a_separator
+			a_separator_not_empty: not a_separator.is_empty
+			a_list_attached: attached a_list
+			a_list_not_empty: not a_list.is_empty
+		local
+			l_separator: STRING
+		do
+			l_separator := " " + a_separator + " "
+			from
+				a_list.start
+				Result := a_list.first
+				a_list.forth
+			until
+				a_list.after
+			loop
+				Result := Result + l_separator + a_list.item
+				a_list.forth
+			end
+		ensure
+			result_attached: attached Result
+		end
+
+	get_name (a_validation_table: HASH_TABLE [STRING , STRING]; a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING): STRING
+			-- Retrieves the name
+		local
+			l_local_name: STRING
+		do
+			if attached {STRING} a_validation_table [a_name] as var_name then
+				Result := var_name
+			else
+				l_local_name := a_servlet_class.get_unique_identifier
+				a_servlet_class.add_variable_by_name_type (l_local_name, "ARRAYED_LIST [STRING]")
+				a_servlet_class.make_feature.append_expression ("create " + l_local_name + ".make (10)")
+				a_validation_table [a_name] := l_local_name
+				Result := l_local_name
+			end
 		end
 
 feature {XTAG_TAG_SERIALIZER} -- Constants

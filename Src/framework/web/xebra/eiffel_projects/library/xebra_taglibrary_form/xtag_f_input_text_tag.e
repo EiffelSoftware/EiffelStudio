@@ -23,5 +23,10 @@ feature -- Initialization
 
 feature -- Implementation
 
+	input_type: STRING
+			-- <Precursor>
+		do
+			Result := "input"
+		end
 
 end

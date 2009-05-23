@@ -1,0 +1,9 @@
+<xebra_server_config>
+	<Assume_webapps_are_running value="True"/>
+	<finalize_webapps value="False"/>
+	<webapps_root path="/home/sandrod/workspace/xebra/websites/"/>	
+	<webapps>
+		<webapp name="demoapplication" port="55005"/>
+		<webapp name="xebrawebapp" port="55006"/>
+	</webapps>
+</xebra_server_config>

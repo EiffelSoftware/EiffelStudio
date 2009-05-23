@@ -163,15 +163,15 @@ feature -- Status setting
 	stop
 			-- <Precursor>
 		do
-			if attached {PROCESS} translate_process as p then
+			if attached {PROCESS} translate_process as p and then p.is_running  then
 				o.dprint ("Terminating translate_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
 			end
-			if attached {PROCESS} generate_process as p then
+			if attached {PROCESS} generate_process as p and then p.is_running  then
 				o.dprint ("Terminating generate_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
 			end
-			if attached {PROCESS} gen_compile_process as p then
+			if attached {PROCESS} gen_compile_process as p and then p.is_running  then
 				o.dprint ("Terminating gen_compile_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
 			end

@@ -22,15 +22,17 @@ feature {NONE} -- Initialization
 			config := a_config
 			create session_manager.make
 	--		create request_pool.make  (10, agent servlet_handler_spawner)
+
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create xserver_socket.make_server_by_port (config.port.value)
+			xserver_socket.set_accept_timeout (500)
 			stop := False
 			add_servlets
 		ensure
-				config_attached: config /= Void
-				xserver_socket_attached: xserver_socket /= Void
-				session_manager_attached: session_manager /= Void
-				stateless_servlets_attached: stateless_servlets /= Void
+			config_attached: config /= Void
+			xserver_socket_attached: xserver_socket /= Void
+			session_manager_attached: session_manager /= Void
+			stateless_servlets_attached: stateless_servlets /= Void
 		end
 
 feature -- Constants

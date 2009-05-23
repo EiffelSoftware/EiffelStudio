@@ -50,7 +50,7 @@ feature -- Status setting
 	stop
 			-- <Precursor>
 		do
-			if attached {PROCESS} run_process as p then
+			if attached {PROCESS} run_process as p  and then p.is_running then
 				o.dprint ("Terminating run_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
 			end

@@ -32,6 +32,11 @@ feature -- Initialization
 			make
 			id := a_id
 			parser_callback := a_parser_callback
+			create {ARRAYED_LIST [STRING]} allowed_tags.make (5)
+			allowed_tags.extend ("controller")
+			allowed_tags.extend ("region")
+			allowed_tags.extend ("define_region")
+			allowed_tags.extend ("include")
 		ensure
 			id_attached: attached id
 			parser_callback_attached: attached parser_callback
@@ -41,6 +46,9 @@ feature {NONE} -- Access
 
 	parser_callback: XP_XML_PARSER_CALLBACKS
 			-- The parser_callback using Current
+
+	allowed_tags: LIST [STRING]
+			-- All the tag names which are allowed
 
 feature -- Access
 
@@ -52,6 +60,7 @@ feature -- Access
 			a_class_name_attached: a_class_name /= Void
 			a_debug_information_attached: a_debug_information /= Void
 		do
+				-- If you add a tag, please update the 'make' feature
 			if a_local_part.is_equal ("controller") then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
 			elseif a_local_part.is_equal ("template") then
@@ -82,10 +91,18 @@ feature -- Access
 			Result := True
 		end
 
-	contains (tag_id: STRING): BOOLEAN
+	contains (a_tag_id: STRING): BOOLEAN
 			-- Checks, if the tag is available in the tag library
 		do
-			Result := True
+			from
+				allowed_tags.start
+				Result := False
+			until
+				allowed_tags.after
+			loop
+				Result := Result or else allowed_tags.item.is_equal (a_tag_id)
+				allowed_tags.forth
+			end
 		end
 
 	handle_controller_attribute (a_id, a_value: STRING)

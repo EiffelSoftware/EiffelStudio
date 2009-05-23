@@ -29,7 +29,7 @@ feature
 	feature_name: STRING
 	id: STRING
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
 			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + id + "." + feature_name + ")")

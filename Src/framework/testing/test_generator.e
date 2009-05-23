@@ -346,6 +346,8 @@ feature {NONE} -- Basic operations
 								end
 								if session.options.is_html_statistics_format_enabled then
 									generate_html_statistics (session.result_repository_builder.result_repository, l_task.classes_under_test)
+								else
+									is_finished := True
 								end
 							end
 						end

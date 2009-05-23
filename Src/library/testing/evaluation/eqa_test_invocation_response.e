@@ -8,6 +8,12 @@ note
 class
 	EQA_TEST_INVOCATION_RESPONSE
 
+inherit
+	MISMATCH_CORRECTOR
+		redefine
+			correct_mismatch
+		end
+
 create
 	make_normal, make_exceptional
 
@@ -62,6 +68,25 @@ feature {NONE} -- Access
 
 	internal_exception: detachable like exception
 			-- Internal storage for `exception'
+
+	output_name: STRING = "output"
+	internal_exception_name: STRING = "internal_exception"
+			-- Name of attributes in `Current'
+
+feature -- Mismatch Correnction
+
+	correct_mismatch
+			-- <Precursor>
+		do
+			if attached {like output} mismatch_information.item (output_name) as l_output then
+				output := l_output
+				if attached {like exception} mismatch_information.item (internal_exception_name) as l_exception then
+					internal_exception := l_exception
+				end
+			else
+				Precursor
+			end
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

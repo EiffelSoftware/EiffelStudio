@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	MISMATCH_CORRECTOR
+		redefine
+			correct_mismatch
+		end
+
 create
 	make
 
@@ -301,6 +306,32 @@ feature {NONE} -- Implementation
 feature {NONE} -- Constants
 
 	dash_line: STRING = "-------------------------------------------------------------------------------%N"
+
+	class_attribute_name: STRING = "class_name"
+	recipient_attribute_name: STRING = "internal_exception"
+	tag_attribute_name: STRING = "tag_name"
+	trace_attribute_name: STRING = "trace"
+			-- Name of attributes in `Current'
+
+feature -- Mismatch Correnction
+
+	correct_mismatch
+			-- <Precursor>
+		do
+			if
+				attached {like class_name} mismatch_information.item (class_attribute_name) as l_class and
+				attached {like recipient_name} mismatch_information.item (recipient_attribute_name) as l_recipient and
+				attached {like tag_name} mismatch_information.item (tag_attribute_name) as l_tag and
+				attached {like trace} mismatch_information.item (trace_attribute_name) as l_trace
+			then
+				class_name := l_class
+				recipient_name := l_recipient
+				tag_name := l_tag
+				trace := l_trace
+			else
+				Precursor
+			end
+		end
 
 invariant
 	code_valid: valid_code (code)

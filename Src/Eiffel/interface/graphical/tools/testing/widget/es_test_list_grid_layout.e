@@ -128,6 +128,9 @@ feature {NONE} -- Query
 						else
 							if l_outcome.is_user_abort then
 								Result := locale_formatter.translation (l_user_aborted)
+							elseif l_outcome.is_communication_error then
+									-- TODO: use `locale_formatter' for this in 6.5
+								Result := ("communication error").to_string_32
 							else
 								Result := locale_formatter.translation (l_aborted)
 							end
@@ -185,6 +188,9 @@ feature {NONE} -- Query
 						else
 							if l_outcome.is_user_abort then
 								Result.append (locale_formatter.translation (tt_user_aborted))
+							elseif l_outcome.is_communication_error then
+									-- TODO: use `locale_formatter' for this in 6.5
+								Result.append_string_general ("communication error")
 							else
 								Result.append (locale_formatter.translation (tt_aborted))
 							end

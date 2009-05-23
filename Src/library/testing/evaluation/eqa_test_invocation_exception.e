@@ -324,10 +324,10 @@ feature -- Mismatch Correnction
 				attached {like tag_name} mismatch_information.item (tag_attribute_name) as l_tag and
 				attached {like trace} mismatch_information.item (trace_attribute_name) as l_trace
 			then
-				class_name := l_class
-				recipient_name := l_recipient
-				tag_name := l_tag
-				trace := l_trace
+				class_name := create {STRING}.make_from_string (l_class)
+				recipient_name := create {STRING}.make_from_string (l_recipient)
+				tag_name := create {STRING}.make_from_string (l_tag)
+				trace := create {STRING}.make_from_string (l_trace)
 			else
 				Precursor
 			end

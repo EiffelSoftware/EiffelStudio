@@ -496,7 +496,7 @@ feature {NONE} -- Basic functionality
 				test_map.after
 			loop
 				if test_map.item_for_iteration.is_running then
-					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, True))
+					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_user_abort (create {DATE_TIME}.make_now))
 				elseif test_map.item_for_iteration.is_queued then
 					test_suite.set_test_aborted (test_map.item_for_iteration)
 				end
@@ -522,7 +522,7 @@ feature {NONE} -- Basic functionality
 							if a_test.executor = Current and not a_remove then
 								completed_tests_count := completed_tests_count + 1
 								if a_test.is_running then
-									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, True))
+									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_user_abort (create {DATE_TIME}.make_now))
 								else
 									test_suite.set_test_aborted (a_test)
 								end

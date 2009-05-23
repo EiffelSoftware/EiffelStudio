@@ -79,7 +79,7 @@ feature -- Mismatch Correnction
 			-- <Precursor>
 		do
 			if attached {like output} mismatch_information.item (output_name) as l_output then
-				output := l_output
+				output := create {STRING}.make_from_string (l_output)
 				if attached {like exception} mismatch_information.item (internal_exception_name) as l_exception then
 					internal_exception := l_exception
 				end

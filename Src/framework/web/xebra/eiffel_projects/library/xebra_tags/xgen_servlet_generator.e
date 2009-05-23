@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			a_class_attached: attached a_class
 			a_root_tag_attached: attached a_root_tag
 		do
-			a_root_tag.generate (a_class, create {HASH_TABLE [STRING, STRING]}.make (5))
+			a_root_tag.generate (a_class, create {HASH_TABLE [ANY, STRING]}.make (5))
 		end
 
 feature -- Basic Functionality

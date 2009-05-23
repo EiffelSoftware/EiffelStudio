@@ -175,7 +175,7 @@ feature -- Access
 	new_uid: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do
-			Result := "temp_" + variable_count.out
+			Result := "l_temp_" + variable_count.out
 			variable_count := variable_count + 1
 		end
 

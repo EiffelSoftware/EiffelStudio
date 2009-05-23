@@ -119,9 +119,6 @@ feature -- Tag
 		local
 			top_item: XTL_TAG_LIB_ITEM
 		do
-			if not a_prefix.is_equal (tag_stack.item.id) then
-				error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched tag: " + a_prefix]), False)
-			end
 			top_item := tag_stack.item
 			tag_stack.remove
 			if tag_stack.count > 0 then

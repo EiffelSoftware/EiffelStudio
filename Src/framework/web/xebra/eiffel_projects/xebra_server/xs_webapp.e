@@ -119,7 +119,7 @@ feature -- Status Setting
 		do
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
-				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
+				(create {EXECUTION_ENVIRONMENT}).sleep (fourbillionnanoseconds)
 			end
 			run_action.stop
 		end
@@ -129,7 +129,7 @@ feature -- Status Setting
 		do
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
-				(create {EXECUTION_ENVIRONMENT}).sleep (onebillionnanoseconds)
+				(create {EXECUTION_ENVIRONMENT}).sleep (fourbillionnanoseconds)
 
 			end
 			run_action.stop

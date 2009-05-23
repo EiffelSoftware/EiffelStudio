@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create name.make_empty
 			create port.make_empty
 			create host.make_empty
-		ensure
+		ensure then
 			name_attached: name /= Void
 			port_attached: port /= Void
 			host_attached: host /= Void

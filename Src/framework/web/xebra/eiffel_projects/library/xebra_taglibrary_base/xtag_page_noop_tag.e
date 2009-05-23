@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [STRING, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
 			generate_children (a_servlet_class, variable_table)

@@ -23,4 +23,9 @@ feature -- Initialization
 
 feature -- Implementation
 
+	input_type: STRING
+			-- <Precursor>
+		do
+			Result := "secret"
+		end
 end

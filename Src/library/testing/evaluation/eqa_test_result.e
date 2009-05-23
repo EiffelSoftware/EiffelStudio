@@ -27,7 +27,8 @@ feature {NONE} -- Initialization
 		require
 			a_date_attached: a_date /= Void
 		do
-			date := a_date
+			date_cache := a_date
+			time_since_epoche := date.relative_duration (create {DATE_TIME}.make (1970, 1, 1, 0, 0, 0)).seconds_count.as_integer_32
 			is_user_abort := a_is_user_abort
 		ensure
 			date_set: a_date = date
@@ -42,9 +43,10 @@ feature {NONE} -- Initialization
 			a_setup_response_exceptional: a_setup_response.is_exceptional
 			a_date_attached: a_date /= Void
 		do
-			date := a_date
+			make_without_response (a_date, False)
 			setup_response := a_setup_response
 		ensure
+			date_set: a_date = date
 			has_response: has_response
 			setup_exceptional: not is_setup_clean
 		end
@@ -56,11 +58,11 @@ feature {NONE} -- Initialization
 			a_setup_response_clean: not a_setup_response.is_exceptional
 			a_date_attached: a_date /= Void
 		do
-			date := a_date
-			setup_response := a_setup_response
+			make_with_setup (a_setup_response, a_date)
 			test_response := a_test_response
 			teardown_response := a_teardown_response
 		ensure
+			date_set: a_date = date
 			has_response: has_response
 			setup_clean: is_setup_clean
 		end
@@ -69,6 +71,21 @@ feature -- Access
 
 	date: DATE_TIME
 			-- Date and time `Current' was retrieved
+			--
+			-- Note: the date can not be stored as attached, since it is currently not possible to pass
+			--       objects of type {DATE_TIME} between void-safe systems and ones which are not.
+		local
+			l_cache: like date_cache
+		do
+			l_cache := date_cache
+			if l_cache = Void then
+				create l_cache.make_from_epoch (time_since_epoche)
+				date_cache := l_cache
+			end
+			Result := l_cache
+		ensure
+			result_attached: Result /= Void
+		end
 
 	setup_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
@@ -78,6 +95,14 @@ feature -- Access
 
 	teardown_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
+
+feature {NONE} -- Access
+
+	time_since_epoche: INTEGER_32
+			-- Number of seconds since epoche for `date'
+
+	date_cache: detachable like date
+			-- Cache for `date'
 
 feature -- Status report
 

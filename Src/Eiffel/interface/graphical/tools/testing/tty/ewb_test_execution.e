@@ -98,6 +98,8 @@ feature {NONE} -- Implementation
 				print_string ("%T")
 				if a_outcome.is_user_abort then
 					print_string (t_user_aborted)
+				elseif a_outcome.is_communication_error then
+					print_string (t_communication_error)
 				else
 					print_string (t_aborted)
 				end
@@ -196,6 +198,7 @@ feature {NONE} -- Internationalization
 
 	t_aborted: STRING = "no response"
 	t_user_aborted: STRING = "user abort"
+	t_communication_error: STRING = "communication error"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

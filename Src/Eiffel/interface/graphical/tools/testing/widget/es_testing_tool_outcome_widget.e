@@ -177,6 +177,8 @@ feature {NONE} -- Implementation
 			else
 				if a_outcome.is_user_abort then
 					l_label.set_text ("user abort")
+				elseif a_outcome.is_communication_error then
+					l_label.set_text ("communication error")
 				else
 					l_label.set_text ("no response")
 				end

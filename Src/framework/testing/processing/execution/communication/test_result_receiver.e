@@ -125,8 +125,10 @@ feature {NONE} -- Implementation
 						if l_flag = l_next then
 							if attached {EQA_TEST_RESULT} a_socket.retrieved as l_outcome then
 								a_status.put_outcome (l_outcome)
-								l_stop := False
+							else
+								a_status.put_outcome (create {EQA_TEST_RESULT}.make_communication_error (create {DATE_TIME}.make_now))
 							end
+							l_stop := False
 						end
 					end
 				end

@@ -129,7 +129,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 						end
 					else
 						if l_first.attempts >= max_attempts then
-							l_first.outcome := create {EQA_TEST_RESULT}.make_without_response (create {DATE_TIME}.make_now, False)
+							l_first.outcome := create {EQA_TEST_RESULT}.make_evaluator_died (create {DATE_TIME}.make_now)
 							assign_next
 						else
 							l_first.attempts := l_first.attempts + 1

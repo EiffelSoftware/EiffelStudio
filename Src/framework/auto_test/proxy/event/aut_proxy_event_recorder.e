@@ -70,6 +70,7 @@ feature -- Basic operations
 			last_response := a_response
 			if attached last_request as l_request then
 				process_request (l_request)
+				last_request := Void
 			else
 				check response_without_request: False end
 			end

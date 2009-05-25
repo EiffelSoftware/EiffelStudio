@@ -140,7 +140,9 @@ feature {NONE} -- Implementation
 	on_text_reset
 			-- make the command insensitive
 		do
-			disable_sensitive
+			if attached target as l_target then
+				l_target.update_save_symbol
+			end
 		end
 
 	on_text_back_to_its_last_saved_state

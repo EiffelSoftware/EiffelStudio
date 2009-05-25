@@ -70,6 +70,7 @@ feature {NONE} -- Initialization
 			parent_window := a_window
 			create {EV_CELL} widget
 			create last_state
+			create post_project_selected_actions
 			build_interface
 		ensure
 			parent_window_set: parent_window = a_window
@@ -83,10 +84,10 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Top level window containing `widget'.
 
-	select_actions: EV_GRID_ROW_ACTION_SEQUENCE
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions being triggered when an item is selected.
 		do
-			Result := projects_list.row_select_actions
+			Result := post_project_selected_actions
 		ensure
 			select_actions_not_void: Result /= Void
 		end
@@ -488,7 +489,15 @@ feature {NONE} -- Initialization
 				end
 			end
 			if project_exist then
-				projects_list.row (1).enable_select
+				ev_application.do_once_on_idle (agent
+												do
+													if
+														not projects_list.is_destroyed and then
+														projects_list.row_count > 0
+													then
+														projects_list.row (1).enable_select
+													end
+												end)
 			else
 				projects_list.insert_new_column (name_column_index)
 				projects_list.insert_new_column (target_column_index)
@@ -883,6 +892,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Actions
 
+	post_project_selected_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions called post project selected.
+
 	open_existing_project_not_listed
 			-- Open a non listed existing project
 		local
@@ -1068,6 +1080,7 @@ feature {NONE} -- Actions
 					fill_locations
 				end
 			end
+			post_project_selected_actions.call (Void)
 		end
 
 	on_location_changed
@@ -1254,9 +1267,10 @@ invariant
 	add_project_button_not_void: add_project_button /= Void
 	edit_project_button_not_void: edit_project_button /= Void
 	remove_project_button_not_void: remove_project_button /= Void
+	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1269,22 +1283,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

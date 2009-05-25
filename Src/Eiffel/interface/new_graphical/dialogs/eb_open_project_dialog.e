@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			create ok_button.make_with_text (interface_names.b_open)
 
 			create open_project.make (dialog)
-			open_project.select_actions.force_extend (agent ok_button.enable_sensitive)
+			open_project.select_actions.force_extend (agent on_item_selected)
 			open_project.deselect_actions.force_extend (agent on_item_deselected)
 
 			create l_frame.make_with_text (Interface_names.l_open_project)
@@ -111,6 +111,16 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Actions
 
+	on_item_selected
+			-- Item has been selected in the `open_project' widget.
+		do
+			if not open_project.has_error then
+				ok_button.enable_sensitive
+			else
+				ok_button.disable_sensitive
+			end
+		end
+
 	on_item_deselected
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
@@ -174,4 +184,35 @@ invariant
 	ok_button_not_void: ok_button /= Void
 	cancel_button_not_void: cancel_button /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

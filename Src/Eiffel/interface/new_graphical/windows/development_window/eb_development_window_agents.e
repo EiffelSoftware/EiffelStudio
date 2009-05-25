@@ -60,8 +60,6 @@ feature -- Text observer Agents
 	on_text_reset
 			-- The main editor has just been wiped out
 			-- before loading a new file.
-		local
-			str: STRING_32
 		do
 			if not is_recycled then
 				-- We close a UN-FOCUSED editor by pointer, we should not disable formatters if there is/are still editor(s) opened.

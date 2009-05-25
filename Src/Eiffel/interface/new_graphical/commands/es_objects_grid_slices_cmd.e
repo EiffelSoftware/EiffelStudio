@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 						io.put_string ("Capacity: " + obj.object_spec_count_and_capacity.spec_capacity.out + "%N")
 					end
 					slice_min := obj.object_spec_lower
-					slice_max := obj.object_spec_count_and_capacity.spec_capacity - 1 --| FIXME jfiat:  why not object_spec_upper ?
+					slice_max := obj.object_spec_count_and_capacity.spec_count - 1 --| FIXME jfiat:  why not object_spec_upper ?
 				else
 					check
 						shoud_not_occurred: False
@@ -450,7 +450,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 			st_not_void: st /= Void
 		local
 			obj_grid_item: like object_grid_line_for
-			spec_cap: INTEGER
+			spec_count: INTEGER
 		do
 			debug ("debugger_interface")
 				io.put_string ("dropped stone%N")
@@ -465,9 +465,9 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 
 				get_slice_limits_on_target (obj_grid_item)
 				if get_effective then
-					spec_cap := obj_grid_item.object_spec_count_and_capacity.spec_capacity
-					slice_min := slice_min.min (spec_cap)
-					slice_max := slice_max.min (spec_cap)
+					spec_count := obj_grid_item.object_spec_count_and_capacity.spec_count
+					slice_min := slice_min.min (spec_count)
+					slice_max := slice_max.min (spec_count)
 
 					obj_grid_item.refresh_spec_items (slice_min, slice_max)
 				end

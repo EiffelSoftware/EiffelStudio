@@ -1030,7 +1030,6 @@ feature {NONE} -- Agent filling
 		local
 			lrow: EV_GRID_ROW
 			grid: EV_GRID
-			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
 		do
 			grid := a_row.parent

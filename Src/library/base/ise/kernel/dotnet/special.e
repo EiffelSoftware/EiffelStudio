@@ -20,6 +20,7 @@ inherit
 
 create
 	make,
+	make_filled,
 	make_from_native_array
 
 feature {INTERNAL} -- Initialization
@@ -35,6 +36,19 @@ feature {INTERNAL} -- Initialization
 		end
 
 feature {NONE} -- Initialization
+
+	make_filled (v: T; n: INTEGER)
+			-- Create a special object for `n' entries initialized with `v'.
+		require
+			non_negative_argument: n >= 0
+		do
+			make (n)
+			fill_with (v, 0, n - 1)
+		ensure
+			capacity_set: capacity = n
+			count_set: count = n
+			filled: -- For every `i' in `0' .. `n - 1', `item' (`i') = `v'
+		end
 
 	make_from_native_array (an_array: like native_array)
 			-- Create a special object from `an_array'.

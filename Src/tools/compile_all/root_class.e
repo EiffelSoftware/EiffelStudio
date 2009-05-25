@@ -314,6 +314,8 @@ feature {NONE} -- Implementation
 					print ("Ok")
 				else
 					print ("Failed")
+					io.new_line
+					print (" - config file: " + a_target.system.file_name + "%N")
 				end
 				io.new_line
 			end

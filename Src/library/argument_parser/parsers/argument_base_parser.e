@@ -1130,7 +1130,7 @@ feature {NONE} -- Validation
 					loop
 						l_switch := l_switches [i]
 						if not l_switch.optional then
-							if not l_switch.is_special and then option_of_name (l_switch.id) = Void then
+							if not l_switch.is_special and then not has_option (l_switch.id) then
 								add_template_error (e_missing_switch_dependency_error, [l_option.name, l_switch.name])
 							end
 						end
@@ -1251,13 +1251,10 @@ feature {NONE} -- Validation
 			l_group_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_switch_dependencies: like switch_dependencies
 			l_switch: ARGUMENT_SWITCH
-			l_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_upper, i: INTEGER
 		do
 			l_group_switches := a_group.switches.twin
 			l_switch_dependencies := switch_dependencies
-
-			create l_switches.make_from_array (l_group_switches)
 			if not l_switch_dependencies.is_empty then
 				from l_group_switches.start until l_group_switches.after loop
 					l_switch := l_group_switches.item
@@ -1269,12 +1266,9 @@ feature {NONE} -- Validation
 							i > l_upper
 						loop
 							l_switch := l_appurtenances[i]
-							if not l_switches.has (l_switch) then
-								l_switches.extend (l_switch)
-								if not l_group_switches.has (l_switch) then
-									l_group_switches.extend (l_switch)
-									check not_l_group_switches_after: not l_group_switches.after end
-								end
+							if not l_group_switches.has (l_switch) then
+								l_group_switches.extend (l_switch)
+								check not_l_group_switches_after: not l_group_switches.after end
 							end
 							i := i + 1
 						end
@@ -1284,9 +1278,9 @@ feature {NONE} -- Validation
 			end
 
 			if a_group.is_hidden then
-				create Result.make (l_switches, a_group.is_allowing_non_switched_arguments)
+				create Result.make (l_group_switches, a_group.is_allowing_non_switched_arguments)
 			else
-				create Result.make_hidden (l_switches, a_group.is_allowing_non_switched_arguments)
+				create Result.make_hidden (l_group_switches, a_group.is_allowing_non_switched_arguments)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -1662,7 +1656,7 @@ feature {NONE} -- Usage
 				from l_groups.start until l_groups.after loop
 					l_group := l_groups.item
 					if not l_group.is_hidden then
-						create l_switches.make_from_array (l_group.switches)
+						l_switches := l_group.switches
 							-- Add nologo switch, if not already added
 
 						if has_switch (nologo_switch) then
@@ -1702,6 +1696,7 @@ feature {NONE} -- Usage
 		local
 			l_dependencies: like switch_dependencies
 			l_dependent_switches: detachable ARRAY [ARGUMENT_SWITCH]
+			l_dependent_list: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_use_separated: like is_using_separated_switch_values
 			l_cursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
@@ -1710,6 +1705,7 @@ feature {NONE} -- Usage
 			l_opt: BOOLEAN
 			l_opt_val: BOOLEAN
 			l_add_switch: BOOLEAN
+			i, l_upper: INTEGER
 		do
 			if not a_group.is_empty then
 				l_dependencies := switch_dependencies
@@ -1750,10 +1746,25 @@ feature {NONE} -- Usage
 							if l_dependencies /= Void and then l_dependencies.has (l_switch) then
 								l_dependent_switches := l_dependencies [l_switch]
 								check l_dependent_switches_attached: l_dependent_switches /= Void end
-								l_cfg := command_option_group_configuration (create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_dependent_switches), False, False, False, a_src_group)
-								if not l_cfg.is_empty then
-									Result.append_character (' ')
-									Result.append (l_cfg)
+								if not l_dependent_switches.is_empty then
+									create l_dependent_list.make (l_dependent_switches.count)
+									from
+										i := 1
+										l_upper := l_dependent_switches.upper
+									until
+										i > l_upper
+									loop
+										if attached l_dependent_switches.item (i) as l_dependency then
+											l_dependent_list.extend (l_dependency)
+										end
+										i := i + 1
+									end
+
+									l_cfg := command_option_group_configuration (l_dependent_list, False, False, False, a_src_group)
+									if not l_cfg.is_empty then
+										Result.append_character (' ')
+										Result.append (l_cfg)
+									end
 								end
 							end
 							if l_switch.allow_multiple then

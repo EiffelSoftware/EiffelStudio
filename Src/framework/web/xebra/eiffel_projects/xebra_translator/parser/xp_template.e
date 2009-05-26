@@ -12,24 +12,25 @@ create
 
 feature -- Initialization
 
-	make (a_root_tag: XP_TAG_ELEMENT; a_is_template: BOOLEAN; a_controller_class: STRING; a_servlet_name: STRING)
+	make (a_root_tag: XP_TAG_ELEMENT; a_is_template: BOOLEAN; a_controller_class: STRING; a_template_name: STRING)
 			-- `a_root_tag': The root tag
 			-- `a_is_template': Should the template be rendered
 			-- `a_controller_class': The used controller class
+			-- `a_template_name': The name of the template
 		require
 			a_controller_class_valid: attached a_controller_class
 			a_root_tag_attached: attached a_root_tag
-			a_servlet_name_attached: attached a_servlet_name
-			a_servlet_name_is_valid: not a_servlet_name.is_empty
+			a_template_name_attached: attached a_template_name
+			a_servlet_name_is_valid: not a_template_name.is_empty
 		do
 			controller_class := a_controller_class
 			root_tag := a_root_tag
 			is_template := a_is_template
-			servlet_name := a_servlet_name
+			template_name := a_template_name
 		ensure
 			controller_class_attached: attached controller_class
 			root_tag_attached: attached root_tag
-			servlet_name_attached: attached servlet_name
+			template_name_attached: attached template_name
 		end
 
 	make_empty
@@ -45,7 +46,7 @@ feature {XP_TEMPLATE} -- Access
 
 feature -- Access
 
-	servlet_name: STRING
+	template_name: STRING
 			-- The name of the servlet
 
 	controller_class: STRING
@@ -76,7 +77,7 @@ feature -- Basic functionality
 		require
 			a_other_attached: attached a_other
 		do
-			servlet_name := a_other.servlet_name
+			template_name := a_other.template_name
 			controller_class := a_other.controller_class
 			is_template := a_other.is_template
 			root_tag := a_other.root_tag.copy_tag_tree
@@ -140,5 +141,5 @@ feature -- Basic functionality
 invariant
 	controller_class_attached: attached controller_class
 	root_tag_attached: attached root_tag
-	servlet_name_attached: attached servlet_name
+	template_name_attached: attached template_name
 end

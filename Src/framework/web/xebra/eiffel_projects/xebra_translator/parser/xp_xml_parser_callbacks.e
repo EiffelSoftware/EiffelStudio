@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 	make (a_parser: XM_PARSER; a_path: FILE_NAME)
 			-- {Create XB_XML_PARSER_CALLBACKS}.
 		require
+			a_parser_attached: attached a_parser
+			a_path_attached: attached a_path
 			a_path_is_valid: not a_path.is_empty
 		do
 			parser := a_parser
@@ -83,6 +85,8 @@ feature -- Access
 		do
 			registry := a_registry
 			registry.put_tag_lib (Configuration_tag, generate_configuration_taglib)
+		ensure
+			registry_set: a_registry = registry
 		end
 
 	put_class_name (a_class_name: STRING)
@@ -91,6 +95,8 @@ feature -- Access
 			a_class_name_attached: a_class_name /= Void
 		do
 			controller_class := a_class_name
+		ensure
+			controller_class_set: a_class_name = controller_class
 		end
 
 feature -- Status setting
@@ -284,17 +290,17 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			id_is_valid: not id.is_empty
 		do
 			Result := registry.retrieve_taglib (id)
+		ensure
+			result_attached: attached Result
 		end
 
 	current_debug_information: STRING
 			-- Queries the parser for row and column
+		require
+			parser_position_attached: attached parser.position
 		do
-			if parser.position /= Void then
-				Result := "line: " + parser.position.row.out
+			Result := "line: " + parser.position.row.out
 					+ " column: " + parser.position.column.out + " path: " + path
-			else
-				Result := "Could not determine position!"
-			end
 		ensure
 			result_attached: attached Result
 			result_not_empty: not result.is_empty

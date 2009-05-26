@@ -58,6 +58,8 @@ feature -- Status setting
 			a_path_is_valid: attached a_path not a_path.is_empty
 		do
 			output_path := a_path
+		ensure
+			output_path_set: output_path = a_path
 		end
 
 	set_servlet_gen_path (a_path: like servlet_gen_path)
@@ -66,6 +68,8 @@ feature -- Status setting
 			a_path_is_valid: attached a_path and not a_path.is_empty
 		do
 			servlet_gen_path := a_path
+		ensure
+			path_set: servlet_gen_path = a_path
 		end
 
 	set_name (a_name: like name)
@@ -74,6 +78,8 @@ feature -- Status setting
 			a_name_is_valid: attached a_name and not a_name.is_empty
 		do
 			name := a_name
+		ensure
+			name_set: a_name = name
 		end
 
 feature -- Processing
@@ -92,11 +98,14 @@ feature -- Processing
 		do
 			l_path := output_path.twin
 			create registry.make (servlet_gen_path)
+			o.iprint ("************************************************************")
+			o.iprint ("*                  .taglib processing start...             *")
+			o.iprint ("************************************************************")
 			parse_taglibs (a_taglib_folder, registry)
 
-			o.iprint ("******************************************************************")
-			o.iprint ("*                     .Xeb processing start...                   *")
-			o.iprint ("******************************************************************")
+			o.iprint ("*************************************************************")
+			o.iprint ("*                    .xeb processing start...               *")
+			o.iprint ("*************************************************************")
 			from
 				a_files.start
 			until
@@ -164,6 +173,7 @@ feature -- Processing
 			-- Generates tag libraries from all the the *.taglib files in the directory
 		require
 			taglib_folder_valid: attached taglib_folder and not taglib_folder.is_empty
+			a_registry_attached: attached a_registry
 		local
 			dir: DIRECTORY
 			files: LIST [STRING]

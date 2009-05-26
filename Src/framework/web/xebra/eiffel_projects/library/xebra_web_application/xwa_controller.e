@@ -1,6 +1,7 @@
 note
 	description: "[
-		no comment yet
+		All controllers used in xeb files have to inherit from this class.
+		It's constructor has to be the make feature.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -28,29 +29,28 @@ feature -- Access
 	current_session: detachable XH_SESSION
 		-- Represents the session that belongs to the user that has send the current request
 
-
 feature -- Status Change
 
 	set_current_request (a_request: XH_REQUEST)
 			-- Setts current_request.
 		require
-			a_request_attached: a_request /= Void
+			a_request_attached: attached a_request
 		do
 			current_request := a_request
 		ensure
-			current_request_attached: current_request /= Void
+			current_request_attached: attached current_request
 		end
 
 	set_current_session (a_session: XH_SESSION)
 			-- Sets current_session.
 		require
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 		do
 			current_session := a_session
 		ensure
-			current_session_attached: current_session /= Void
+			current_session_attached: attached current_session
 		end
 
 invariant
-	current_request_attached: current_request /= Void
+	current_request_attached: attached current_request
 end

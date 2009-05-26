@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_MENU}."
-	author: ""
+	description: "Wrapper for NSMenu."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,28 +11,30 @@ inherit
 	NS_OBJECT
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := menu_new
+			make_shared (menu_new)
 		end
+
+feature -- Access
 
 	insert_item_at_index (a_menu_item: NS_MENU_ITEM; a_index: INTEGER)
 		do
-			menu_insert_item_at_index (cocoa_object, a_menu_item.cocoa_object, a_index)
+			menu_insert_item_at_index (item, a_menu_item.item, a_index)
 		end
 
 	remove_item_at_index (a_index: INTEGER)
 		do
-			menu_remove_item_at_index (cocoa_object, a_index)
+			menu_remove_item_at_index (item, a_index)
 		end
 
 	set_title (a_title: STRING_GENERAL)
 		do
-			menu_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
+			menu_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
 feature {NONE} -- Objective-C implementation

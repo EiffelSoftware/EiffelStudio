@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SECURE_TEXT_FIELD}."
-	author: ""
+	description: "Wrapper for NSSecureTextField."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,19 +10,18 @@ class
 inherit
 	NS_TEXT_FIELD
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := secure_text_field_new
+			item := secure_text_field_new
 		end
-
 
 feature {NONE} -- Objective-C implementation
 

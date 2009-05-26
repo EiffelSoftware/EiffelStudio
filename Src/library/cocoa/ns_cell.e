@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_CELL}."
-	author: ""
+	description: "Wrapper for NSCell."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,19 +10,19 @@ class
 inherit
 	NS_OBJECT
 
-create
+create {NS_OBJECT}
 	make_shared
 
 feature -- Initialization
 
 	init_text_cell (a_string: NS_STRING)
 		do
-			cell_init_text_cell (cocoa_object, a_string.cocoa_object)
+			cell_init_text_cell (item, a_string.item)
 		end
 
 	init_image_cell (a_image: NS_IMAGE)
 		do
-			cell_init_image_cell (cocoa_object, a_image.cocoa_object)
+			cell_init_image_cell (item, a_image.item)
 		end
 
 --	object_value: NS_OBJECT
@@ -37,17 +37,17 @@ feature -- Initialization
 
 	has_valid_object_value: BOOLEAN
 		do
-			Result := cell_has_valid_object_value (cocoa_object)
+			Result := cell_has_valid_object_value (item)
 		end
 
 	string_value: NS_STRING
 		do
-			create Result.make_shared (cell_string_value (cocoa_object))
+			create Result.make_shared (cell_string_value (item))
 		end
 
 	set_string_value (a_string: NS_STRING)
 		do
-			cell_set_string_value (cocoa_object, a_string.cocoa_object)
+			cell_set_string_value (item, a_string.item)
 		end
 
 --	compare (a_other_cell: NS_OBJECT): NS_COMPARISON_RESULT
@@ -57,42 +57,42 @@ feature -- Initialization
 
 	int_value: INTEGER
 		do
-			Result := cell_int_value (cocoa_object)
+			Result := cell_int_value (item)
 		end
 
 	set_int_value (a_an_int: INTEGER)
 		do
-			cell_set_int_value (cocoa_object, a_an_int)
+			cell_set_int_value (item, a_an_int)
 		end
 
 	float_value: REAL
 		do
-			Result := cell_float_value (cocoa_object)
+			Result := cell_float_value (item)
 		end
 
 	set_float_value (a_float: REAL)
 		do
-			cell_set_float_value (cocoa_object, a_float)
+			cell_set_float_value (item, a_float)
 		end
 
 	double_value: REAL_64
 		do
-			Result := cell_double_value (cocoa_object)
+			Result := cell_double_value (item)
 		end
 
 	set_double_value (a_double: REAL_64)
 		do
-			cell_set_double_value (cocoa_object, a_double)
+			cell_set_double_value (item, a_double)
 		end
 
 	title: NS_STRING
 		do
-			create Result.make_shared (cell_title (cocoa_object))
+			create Result.make_shared (cell_title (item))
 		end
 
 	set_title (a_string: NS_STRING)
 		do
-			cell_set_title (cocoa_object, a_string.cocoa_object)
+			cell_set_title (item, a_string.item)
 		end
 
 feature {NONE} -- Objective-C implementation
@@ -208,4 +208,28 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"[(NSCell*)$a_cell setTitle: $a_string];"
 		end
+
+feature -- Cell States
+
+	frozen mixed_state: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSMixedState"
+		end
+
+	frozen off_state: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSOffState"
+		end
+
+	frozen on_state: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSOnState"
+		end
+
 end

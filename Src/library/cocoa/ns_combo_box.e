@@ -10,189 +10,191 @@ class
 inherit
 	NS_TEXT_FIELD
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
+
+feature {NONE} -- Creation
+
+	make
+		do
+			make_shared (combo_box_new)
+		end
 
 feature
 
-	new
-		do
-			cocoa_object := combo_box_new
-		end
-
 	has_vertical_scroller: BOOLEAN
 		do
-			Result := combo_box_has_vertical_scroller (cocoa_object)
+			Result := combo_box_has_vertical_scroller (item)
 		end
 
 	set_has_vertical_scroller (a_flag: BOOLEAN)
 		do
-			combo_box_set_has_vertical_scroller (cocoa_object, a_flag)
+			combo_box_set_has_vertical_scroller (item, a_flag)
 		end
 
 	intercell_spacing: NS_SIZE
 		do
 			create Result.make
-			combo_box_intercell_spacing (cocoa_object, Result.item)
+			combo_box_intercell_spacing (item, Result.item)
 		end
 
 	set_intercell_spacing (a_size: NS_SIZE)
 		do
-			combo_box_set_intercell_spacing (cocoa_object, a_size.item)
+			combo_box_set_intercell_spacing (item, a_size.item)
 		end
 
 	item_height: REAL
 		do
-			Result := combo_box_item_height (cocoa_object)
+			Result := combo_box_item_height (item)
 		end
 
 	set_item_height (a_item_height: REAL)
 		do
-			combo_box_set_item_height (cocoa_object, a_item_height)
+			combo_box_set_item_height (item, a_item_height)
 		end
 
 	number_of_visible_items: INTEGER
 		do
-			Result := combo_box_number_of_visible_items (cocoa_object)
+			Result := combo_box_number_of_visible_items (item)
 		end
 
 	set_number_of_visible_items (a_visible_items: INTEGER)
 		do
-			combo_box_set_number_of_visible_items (cocoa_object, a_visible_items)
+			combo_box_set_number_of_visible_items (item, a_visible_items)
 		end
 
 	set_button_bordered (a_flag: BOOLEAN)
 		do
-			combo_box_set_button_bordered (cocoa_object, a_flag)
+			combo_box_set_button_bordered (item, a_flag)
 		end
 
 	is_button_bordered: BOOLEAN
 		do
-			Result := combo_box_is_button_bordered (cocoa_object)
+			Result := combo_box_is_button_bordered (item)
 		end
 
 	reload_data
 		do
-			combo_box_reload_data (cocoa_object)
+			combo_box_reload_data (item)
 		end
 
 	note_number_of_items_changed
 		do
-			combo_box_note_number_of_items_changed (cocoa_object)
+			combo_box_note_number_of_items_changed (item)
 		end
 
 	set_uses_data_source (a_flag: BOOLEAN)
 		do
-			combo_box_set_uses_data_source (cocoa_object, a_flag)
+			combo_box_set_uses_data_source (item, a_flag)
 		end
 
 	uses_data_source: BOOLEAN
 		do
-			Result := combo_box_uses_data_source (cocoa_object)
+			Result := combo_box_uses_data_source (item)
 		end
 
 	scroll_item_at_index_to_top (a_index: INTEGER)
 		do
-			combo_box_scroll_item_at_index_to_top (cocoa_object, a_index)
+			combo_box_scroll_item_at_index_to_top (item, a_index)
 		end
 
 	scroll_item_at_index_to_visible (a_index: INTEGER)
 		do
-			combo_box_scroll_item_at_index_to_visible (cocoa_object, a_index)
+			combo_box_scroll_item_at_index_to_visible (item, a_index)
 		end
 
 	select_item_at_index (a_index: INTEGER)
 		do
-			combo_box_select_item_at_index (cocoa_object, a_index)
+			combo_box_select_item_at_index (item, a_index)
 		end
 
 	deselect_item_at_index (a_index: INTEGER)
 		do
-			combo_box_deselect_item_at_index (cocoa_object, a_index)
+			combo_box_deselect_item_at_index (item, a_index)
 		end
 
 	index_of_selected_item: INTEGER
 		do
-			Result := combo_box_index_of_selected_item (cocoa_object)
+			Result := combo_box_index_of_selected_item (item)
 		end
 
 	number_of_items: INTEGER
 		do
-			Result := combo_box_number_of_items (cocoa_object)
+			Result := combo_box_number_of_items (item)
 		end
 
 	completes: BOOLEAN
 		do
-			Result := combo_box_completes (cocoa_object)
+			Result := combo_box_completes (item)
 		end
 
 	set_completes (a_completes: BOOLEAN)
 		do
-			combo_box_set_completes (cocoa_object, a_completes)
+			combo_box_set_completes (item, a_completes)
 		end
 
 	data_source: NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_data_source (cocoa_object))
+			Result := create {NS_OBJECT}.make_shared (combo_box_data_source (item))
 		end
 
 	set_data_source (a_a_source: NS_OBJECT)
 		do
-			combo_box_set_data_source (cocoa_object, a_a_source.cocoa_object)
+			combo_box_set_data_source (item, a_a_source.item)
 		end
 
 	add_item_with_object_value (a_object: NS_OBJECT)
 		do
-			combo_box_add_item_with_object_value (cocoa_object, a_object.cocoa_object)
+			combo_box_add_item_with_object_value (item, a_object.item)
 		end
 
 	add_items_with_object_values (a_objects: NS_ARRAY[NS_OBJECT])
 		do
-			combo_box_add_items_with_object_values (cocoa_object, a_objects.cocoa_object)
+			combo_box_add_items_with_object_values (item, a_objects.item)
 		end
 
 	insert_item_with_object_value_at_index (a_object: NS_OBJECT; a_index: INTEGER)
 			-- Cocoa accepts an (id) type, but what does it actually display?
 		do
-			combo_box_insert_item_with_object_value_at_index (cocoa_object, a_object.cocoa_object, a_index)
+			combo_box_insert_item_with_object_value_at_index (item, a_object.item, a_index)
 		end
 
 	remove_item_with_object_value (a_object: NS_OBJECT)
 		do
-			combo_box_remove_item_with_object_value (cocoa_object, a_object.cocoa_object)
+			combo_box_remove_item_with_object_value (item, a_object.item)
 		end
 
 	remove_item_at_index (a_index: INTEGER)
 		do
-			combo_box_remove_item_at_index (cocoa_object, a_index)
+			combo_box_remove_item_at_index (item, a_index)
 		end
 
 	remove_all_items
 		do
-			combo_box_remove_all_items (cocoa_object)
+			combo_box_remove_all_items (item)
 		end
 
 	select_item_with_object_value (a_object: NS_OBJECT)
 		do
-			combo_box_select_item_with_object_value (cocoa_object, a_object.cocoa_object)
+			combo_box_select_item_with_object_value (item, a_object.item)
 		end
 
 	item_object_value_at_index (a_index: INTEGER): NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_item_object_value_at_index (cocoa_object, a_index))
+			Result := create {NS_OBJECT}.make_shared (combo_box_item_object_value_at_index (item, a_index))
 		end
 
 	object_value_of_selected_item: NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_object_value_of_selected_item (cocoa_object))
+			Result := create {NS_OBJECT}.make_shared (combo_box_object_value_of_selected_item (item))
 		end
 
 	index_of_item_with_object_value (a_object: NS_OBJECT): INTEGER
 		do
-			Result := combo_box_index_of_item_with_object_value (cocoa_object, a_object.cocoa_object)
+			Result := combo_box_index_of_item_with_object_value (item, a_object.item)
 		end
 
 --	object_values: NS_ARRAY[NS_OBJECT]

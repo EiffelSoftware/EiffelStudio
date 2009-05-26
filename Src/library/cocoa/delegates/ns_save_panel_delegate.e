@@ -1,11 +1,14 @@
 note
-	description: "Summary description for {NS_SAVE_PANEL_DELEGATE}."
-	author: ""
+	description: "Wrapper for delegate methods of NSSavePanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	NS_SAVE_PANEL_DELEGATE
+
+inherit
+	NS_OBJECT
 
 feature
 

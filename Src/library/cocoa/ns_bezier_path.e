@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_BEZIER_PATH}."
-	author: ""
+	description: "Wrapper for NSBezierPath."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,29 +11,31 @@ inherit
 	NS_OBJECT
 
 create
-	bezier_path,
-	bezier_path_with_rect,
-	bezier_path_with_oval_in_rect
+	make,
+	make_with_rect,
+	make_with_oval_in_rect
+
+feature {NONE} -- Creation
+
+	make
+			-- [NSBezierPath bezierPath]
+		do
+			make_shared (bezier_path_bezier_path)
+		end
+
+	make_with_rect (a_rect: NS_RECT)
+			-- [NSBezierPath bezierPathWithRect:(NSRect)rect]
+		do
+			make_shared (bezier_path_bezier_path_with_rect (a_rect.item))
+		end
+
+	make_with_oval_in_rect (a_rect: NS_RECT)
+			-- [NSBezierPath bezierPathWithOvalInRect:(NSRect)rect]
+		do
+			make_shared (bezier_path_bezier_path_with_oval_in_rect (a_rect.item))
+		end
 
 feature
-
-	bezier_path
-			--(NSBezierPath *)bezierPath
-		do
-			cocoa_object := bezier_path_bezier_path
-		end
-
-	bezier_path_with_rect (a_rect: NS_RECT)
-			--(NSBezierPath *)bezierPathWithRect:(NSRect)rect
-		do
-			cocoa_object := bezier_path_bezier_path_with_rect (a_rect.item)
-		end
-
-	bezier_path_with_oval_in_rect (a_rect: NS_RECT)
-			--(NSBezierPath *)bezierPathWithOvalInRect:(NSRect)rect
-		do
-			cocoa_object := bezier_path_bezier_path_with_oval_in_rect (a_rect.item)
-		end
 
 --(NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect xRadius:(CGFloat)xRadius yRadius:(CGFloat)yRadius
 --(void)fillRect:(NSRect)rect
@@ -56,22 +58,22 @@ feature
 
 	move_to_point (a_point: NS_POINT)
 		do
-			bezier_path_move_to_point (cocoa_object, a_point.item)
+			bezier_path_move_to_point (item, a_point.item)
 		end
 
 	line_to_point (a_point: NS_POINT)
 		do
-			bezier_path_line_to_point (cocoa_object, a_point.item)
+			bezier_path_line_to_point (item, a_point.item)
 		end
 
 	close_path
 		do
-			bezier_path_close_path (cocoa_object)
+			bezier_path_close_path (item)
 		end
 
 	remove_all_points
 		do
-			bezier_path_remove_all_points (cocoa_object)
+			bezier_path_remove_all_points (item)
 		end
 
 --	relative_move_to_point (a_point: NS_POINT)
@@ -86,62 +88,62 @@ feature
 
 	line_width: REAL
 		do
-			Result := bezier_path_line_width (cocoa_object)
+			Result := bezier_path_line_width (item)
 		end
 
 	set_line_width (a_line_width: REAL)
 		do
-			bezier_path_set_line_width (cocoa_object, a_line_width)
+			bezier_path_set_line_width (item, a_line_width)
 		end
 
 	line_cap_style: INTEGER
 		do
-			Result := bezier_path_line_cap_style (cocoa_object)
+			Result := bezier_path_line_cap_style (item)
 		end
 
 	set_line_cap_style (a_line_cap_style: INTEGER)
 		do
-			bezier_path_set_line_cap_style (cocoa_object, a_line_cap_style)
+			bezier_path_set_line_cap_style (item, a_line_cap_style)
 		end
 
 	line_join_style : INTEGER
 		do
-			Result := bezier_path_line_join_style (cocoa_object)
+			Result := bezier_path_line_join_style (item)
 		end
 
 	set_line_join_style (a_line_join_style: INTEGER)
 		do
-			bezier_path_set_line_join_style (cocoa_object, a_line_join_style)
+			bezier_path_set_line_join_style (item, a_line_join_style)
 		end
 
 	winding_rule: INTEGER
 		do
-			Result := bezier_path_winding_rule (cocoa_object)
+			Result := bezier_path_winding_rule (item)
 		end
 
 	set_winding_rule (a_winding_rule: INTEGER)
 		do
-			bezier_path_set_winding_rule (cocoa_object, a_winding_rule)
+			bezier_path_set_winding_rule (item, a_winding_rule)
 		end
 
 	miter_limit : REAL
 		do
-			Result := bezier_path_miter_limit (cocoa_object)
+			Result := bezier_path_miter_limit (item)
 		end
 
 	set_miter_limit( a_miter_limit: REAL)
 		do
-			bezier_path_set_miter_limit (cocoa_object, a_miter_limit)
+			bezier_path_set_miter_limit (item, a_miter_limit)
 		end
 
 	flatness : REAL
 		do
-			Result := bezier_path_flatness (cocoa_object)
+			Result := bezier_path_flatness (item)
 		end
 
 	set_flatness( a_flatness: REAL)
 		do
-			bezier_path_set_flatness (cocoa_object, a_flatness)
+			bezier_path_set_flatness (item, a_flatness)
 		end
 
 --	get_line_dash_count_phase( a_pattern: POINTER[FLOAT]; a_count: NS_INTEGER; a_phase: POINTER[FLOAT])
@@ -165,27 +167,27 @@ feature
 				i := i + 4
 				a_pattern.forth
 			end
-			bezier_path_set_line_dash_count_phase (cocoa_object, l_pattern.item, a_pattern.count, a_phase)
+			bezier_path_set_line_dash_count_phase (item, l_pattern.item, a_pattern.count, a_phase)
 		end
 
 	stroke
 		do
-			bezier_path_stroke (cocoa_object)
+			bezier_path_stroke (item)
 		end
 
 	fill
 		do
-			bezier_path_fill (cocoa_object)
+			bezier_path_fill (item)
 		end
 
 	add_clip
 		do
-			bezier_path_add_clip (cocoa_object)
+			bezier_path_add_clip (item)
 		end
 
 	set_clip
 		do
-			bezier_path_set_clip (cocoa_object)
+			bezier_path_set_clip (item)
 		end
 
 --	bezier_path_by_flattening_path : NS_BEZIER_PATH
@@ -205,7 +207,7 @@ feature
 
 	is_empty : BOOLEAN
 		do
-			Result := bezier_path_is_empty (cocoa_object)
+			Result := bezier_path_is_empty (item)
 		end
 
 --	current_point : NS_POINT
@@ -240,12 +242,12 @@ feature
 
 	append_bezier_path (a_path: NS_BEZIER_PATH)
 		do
-			bezier_path_append_bezier_path (cocoa_object, a_path.cocoa_object)
+			bezier_path_append_bezier_path (item, a_path.item)
 		end
 
 	append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (a_center: NS_POINT; a_radius: REAL; a_start_angle, a_end_angle: REAL)
 		do
-			bezier_path_append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (cocoa_object, a_center.item, a_radius, a_start_angle, a_end_angle)
+			bezier_path_append_bezier_path_with_arc_with_center_radius_start_angle_end_angle (item, a_center.item, a_radius, a_start_angle, a_end_angle)
 		end
 
 --	append_bezier_path_with_rect( a_rect: NS_RECT)

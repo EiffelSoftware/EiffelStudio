@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_OPEN_PANEL}."
-	author: ""
+	description: "Wrapper for NSOpenPanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,14 +11,16 @@ inherit
 	NS_SAVE_PANEL
 
 create
-	open_panel
+	make
 
-feature
+feature {NONE} -- Creation
 
-	open_panel
+	make
 		do
-			cocoa_object := open_panel_open_panel
+			make_shared (open_panel_open_panel)
 		end
+
+feature -- Access
 
 	filenames : NS_ARRAY [NS_STRING]
 		do

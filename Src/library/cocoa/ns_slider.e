@@ -10,27 +10,29 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := slider_new
+			item := slider_new
 		end
+
+feature -- Access
 
 	set_min_value (a_value: DOUBLE)
 		do
-			slider_set_min_value (cocoa_object, a_value)
+			slider_set_min_value (item, a_value)
 		end
 
 	set_max_value (a_value: DOUBLE)
 		do
-			slider_set_max_value (cocoa_object, a_value)
+			slider_set_max_value (item, a_value)
 		end
 
 feature {NONE} -- Objective-C implementation

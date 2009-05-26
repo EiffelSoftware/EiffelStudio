@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SIZE}."
-	author: ""
+	description: "Wrapper for NSSize. This usually has call-by-value sementics in Objective-C. The wrapper takes care of that."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,10 +12,11 @@ inherit
 
 create
 	make,
-	make_size,
+	make_size
+create {NS_RECT}
 	make_by_pointer
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make_size (a_width, a_height: INTEGER)
 		do

@@ -10,42 +10,42 @@ class
 inherit
 	NS_VIEW
 
-create
+create {NS_OBJECT}
 	make_shared
 
 feature -- Working with Background Color
 
 	set_background_color (a_color: NS_COLOR)
 		do
-			clip_view_set_background_color (cocoa_object, a_color.cocoa_object)
+			clip_view_set_background_color (item, a_color.item)
 		end
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (clip_view_background_color (cocoa_object))
+			create Result.make_shared (clip_view_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
 		do
-			clip_view_set_draws_background (cocoa_object, a_flag)
+			clip_view_set_draws_background (item, a_flag)
 		end
 
 	draws_background: BOOLEAN
 		do
-			Result := clip_view_draws_background (cocoa_object)
+			Result := clip_view_draws_background (item)
 		end
 
 feature -- Setting the Document View
 
 	set_document_view (a_view: NS_VIEW)
 		do
-			clip_view_set_document_view (cocoa_object, a_view.cocoa_object)
+			clip_view_set_document_view (item, a_view.item)
 		end
 
 	document_view: NS_VIEW
 			-- FIXME according to the header this may return type NS_OBJECT
 		do
-			create Result.make_shared (clip_view_document_view (cocoa_object))
+			create Result.make_shared (clip_view_document_view (item))
 		end
 
 feature -- Getting the Visible Portion
@@ -53,13 +53,13 @@ feature -- Getting the Visible Portion
 	document_rect: NS_RECT
 		do
 			create Result.make
-			clip_view_document_rect (cocoa_object, Result.item)
+			clip_view_document_rect (item, Result.item)
 		end
 
 	document_visible_rect: NS_RECT
 		do
 			create Result.make
-			clip_view_document_visible_rect (cocoa_object, Result.item)
+			clip_view_document_visible_rect (item, Result.item)
 		end
 
 feature -- Setting the Document Cursor
@@ -90,12 +90,12 @@ feature -- Determining Scrolling Efficiency
 
 	set_copies_on_scroll (a_flag: BOOLEAN)
 		do
-			clip_view_set_copies_on_scroll (cocoa_object, a_flag)
+			clip_view_set_copies_on_scroll (item, a_flag)
 		end
 
 	copies_on_scroll: BOOLEAN
 		do
-			Result := clip_view_copies_on_scroll (cocoa_object)
+			Result := clip_view_copies_on_scroll (item)
 		end
 
 feature -- Scrolling
@@ -108,12 +108,12 @@ feature -- Scrolling
 	constrain_scroll_point (a_new_origin: NS_POINT): NS_POINT
 		do
 			create Result.make
-			clip_view_constrain_scroll_point (cocoa_object, a_new_origin.item, Result.item)
+			clip_view_constrain_scroll_point (item, a_new_origin.item, Result.item)
 		end
 
 	scroll_to_point (a_new_origin: NS_POINT)
 		do
-			clip_view_scroll_to_point (cocoa_object, a_new_origin.item)
+			clip_view_scroll_to_point (item, a_new_origin.item)
 		end
 
 feature {NONE} -- Objective-C implementation

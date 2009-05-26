@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_COLOR_PANEL}."
-	author: ""
+	description: "Wrapper for NSColorPanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +13,7 @@ inherit
 create
 	shared_color_panel
 
-feature
+feature {NONE} -- Creation
 
 	shared_color_panel
 		do

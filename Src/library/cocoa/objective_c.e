@@ -53,13 +53,20 @@ feature -- Adding Classes
 			"return class_createInstance((Class)$a_class, $a_extra_bytes);"
 		end
 
-feature -- Working with Selectors
+feature -- Working with Instances
 
-	frozen sel_register_name (a_name: POINTER): POINTER
+	frozen object_get_class (a_object: POINTER): POINTER
 		external
 			"C inline use <objc/objc-class.h>"
 		alias
-			"return sel_registerName($a_name);"
+			"return object_getClass((id)$a_object);"
+		end
+
+	frozen object_get_class_name (a_object: POINTER): POINTER
+		external
+			"C inline use <objc/objc-class.h>"
+		alias
+			"return object_getClassName((id)$a_object);"
 		end
 
 feature -- Sending Messages
@@ -68,7 +75,16 @@ feature -- Sending Messages
 		external
 			"C inline use <objc/objc-class.h>"
 		alias
-			"return objc_msgSend((id)$a_receiver, $a_selector); } BOOL myMethodIMP(id self, SEL _cmd){ return YES"
+			"return objc_msgSend((id)$a_receiver, $a_selector);"
+		end
+
+feature -- Working with Selectors
+
+	frozen sel_register_name (a_name: POINTER): POINTER
+		external
+			"C inline use <objc/objc-class.h>"
+		alias
+			"return sel_registerName($a_name);"
 		end
 
 end

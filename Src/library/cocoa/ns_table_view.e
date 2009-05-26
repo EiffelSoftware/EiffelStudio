@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_TABLE_VIEW}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,36 +10,39 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
 
 create
-	new,
+	make
+create {NS_OBJECT}
 	make_shared
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
 			check
 				not_implemented: False
 			end
 		end
 
+feature -- Access
+
 	add_table_column (a_table_column: NS_TABLE_COLUMN)
 		do
-			table_view_add_table_column (cocoa_object, a_table_column.cocoa_object)
+			table_view_add_table_column (item, a_table_column.item)
 		end
 
 	selected_row: INTEGER
 		do
-			Result := table_view_selected_row (cocoa_object)
+			Result := table_view_selected_row (item)
 		end
 
 	set_header_view (a_view: POINTER)
 			--
 		do
-			table_view_set_header_view (cocoa_object, a_view)
+			table_view_set_header_view (item, a_view)
 		end
 
 feature {NONE} -- Objective-C Implementation

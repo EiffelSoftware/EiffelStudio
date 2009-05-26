@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_RECT}."
-	author: ""
+	description: "Wrapper for NSRect. This usually has call-by-value sementics in Objective-C. The wrapper takes care of that."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,10 +15,9 @@ inherit
 
 create
 	make,
-	make_rect,
-	zero_rect
+	make_rect
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
 		do

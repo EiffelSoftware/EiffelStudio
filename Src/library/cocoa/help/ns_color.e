@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_COLOR}."
-	author: ""
+	description: "Wrapper for NSColor."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,96 +19,111 @@ create
 	shadow_color,
 	highlight_color,
 	color_with_calibrated_red_green_blue_alpha,
-	color_with_pattern_image,
+	color_with_pattern_image
+create {NS_OBJECT}
 	make_shared
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	blue_color
 		do
-			cocoa_object := color_blue_color
+			item := color_blue_color
 		end
 
 	white_color
 		do
-			cocoa_object := color_white_color
+			item := color_white_color
 		end
 
 	control_color
 		do
-			cocoa_object := color_control_color
+			item := color_control_color
 		end
 
 	control_background_color
 		do
-			cocoa_object := color_control_background_color
+			item := color_control_background_color
 		end
 
 	control_text_color
 		do
-			cocoa_object := color_control_text_color
+			item := color_control_text_color
 		end
 
 	shadow_color
 		do
-			cocoa_object := color_shadow_color
+			item := color_shadow_color
 		end
 
 	highlight_color
 		do
-			cocoa_object := color_highlight_color
+			item := color_highlight_color
 		end
 
 	color_with_calibrated_red_green_blue_alpha (r, g, b, a: REAL)
 		do
-			cocoa_object := color_color_with_calibrated_red_green_blue_alpha (r, g, b, a)
+			item := color_color_with_calibrated_red_green_blue_alpha (r, g, b, a)
 		end
 
 	color_with_pattern_image (a_image: NS_IMAGE)
 		do
-			cocoa_object := color_color_with_pattern_image (a_image.cocoa_object)
+			item := color_color_with_pattern_image (a_image.item)
 		end
+
+feature
 
 	set
 		do
-			color_set (cocoa_object)
+			color_set (item)
 		end
 
 	set_fill
 		do
-			color_set_fill (cocoa_object)
+			color_set_fill (item)
 		end
 
 	set_stroke
 		do
-			color_set_stroke (cocoa_object)
+			color_set_stroke (item)
 		end
 
 feature -- Components
 
 	red_component: REAL
+		require
+			-- Color is of the right type
 		do
-			Result := color_red_component (cocoa_object)
+			Result := color_red_component (item)
+		ensure
+			0.0 <= Result and Result <= 1.0
 		end
 
 	green_component: REAL
+		require
+			-- Color is of the right type
 		do
-			Result := color_green_component (cocoa_object)
+			Result := color_green_component (item)
+		ensure
+			0.0 <= Result and Result <= 1.0
 		end
 
 	blue_component: REAL
+		require
+			-- Color is of the right type
 		do
-			Result := color_blue_component (cocoa_object)
+			Result := color_blue_component (item)
+		ensure
+			0.0 <= Result and Result <= 1.0
 		end
 
 	color_using_color_space (a_color_space: NS_COLOR_SPACE): NS_COLOR
 		do
-			Result := create {NS_COLOR}.make_shared (color_color_using_color_space (cocoa_object, a_color_space.cocoa_object))
+			Result := create {NS_COLOR}.make_shared (color_color_using_color_space (item, a_color_space.item))
 		end
 
 	color_using_color_space_name (a_color_space: NS_STRING): NS_COLOR
 		do
-			Result := create {NS_COLOR}.make_shared (color_color_using_color_space_name (cocoa_object, a_color_space.cocoa_object))
+			Result := create {NS_COLOR}.make_shared (color_color_using_color_space_name (item, a_color_space.item))
 		end
 
 feature {NONE} -- Objective-C implementation

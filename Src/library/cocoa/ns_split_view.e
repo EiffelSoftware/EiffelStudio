@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SPLIT_VIEW}."
-	author: ""
+	description: "Wrapper for NSSplitView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,108 +10,111 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
+
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := split_view_new
+			make_shared (split_view_new)
 		end
+
+feature -- Access
 
 	set_vertical (a_flag: BOOLEAN)
 		do
-			split_view_set_vertical(cocoa_object, a_flag)
+			split_view_set_vertical (item, a_flag)
 		end
 
 	is_vertical : BOOLEAN
 		do
-			Result := split_view_is_vertical(cocoa_object)
+			Result := split_view_is_vertical (item)
 		end
 
 	set_divider_style (a_divider_style: INTEGER)
 		do
-			split_view_set_divider_style(cocoa_object, a_divider_style)
+			split_view_set_divider_style (item, a_divider_style)
 		end
 
 	divider_style : INTEGER
 		do
-			Result := split_view_divider_style(cocoa_object)
+			Result := split_view_divider_style (item)
 		end
 
 	set_autosave_name (a_autosave_name: NS_STRING)
 		do
-			split_view_set_autosave_name(cocoa_object, a_autosave_name.cocoa_object)
+			split_view_set_autosave_name (item, a_autosave_name.item)
 		end
 
 --	autosave_name : NS_STRING
 --		do
---			Result := split_view_autosave_name(cocoa_object)
+--			Result := split_view_autosave_name (cocoa_object)
 --		end
 
 	set_delegate (a_delegate: NS_SPLIT_VIEW_DELEGATE)
 		do
-			split_view_set_delegate(cocoa_object, a_delegate.cocoa_object)
+			split_view_set_delegate (item, a_delegate.item)
 		end
 
 	delegate: NS_SPLIT_VIEW_DELEGATE
 		do
---			Result := split_view_delegate(cocoa_object)
+--			Result := split_view_delegate (cocoa_object)
 			check implement: FALSE end
 		end
 
 --	draw_divider_in_rect (a_rect: NS_RECT)
 --		do
---			split_view_draw_divider_in_rect(cocoa_object, a_rect)
+--			split_view_draw_divider_in_rect (cocoa_object, a_rect)
 --		end
 
-	divider_color : NS_COLOR
+	divider_color: NS_COLOR
 		do
---			Result := split_view_divider_color(cocoa_object)
+--			Result := split_view_divider_color (cocoa_object)
 			check implement: FALSE end
 		end
 
-	divider_thickness : REAL
+	divider_thickness: REAL
 		do
-			Result := split_view_divider_thickness(cocoa_object)
+			Result := split_view_divider_thickness (item)
 		end
 
 	adjust_subviews
 		do
-			split_view_adjust_subviews(cocoa_object)
+			split_view_adjust_subviews (item)
 		end
 
 	is_subview_collapsed (a_subview: NS_VIEW): BOOLEAN
 		do
-			Result := split_view_is_subview_collapsed(cocoa_object, a_subview.cocoa_object)
+			Result := split_view_is_subview_collapsed (item, a_subview.item)
 		end
 
 	min_possible_position_of_divider_at_index (a_divider_index: INTEGER): REAL
 		do
-			Result := split_view_min_possible_position_of_divider_at_index(cocoa_object, a_divider_index)
+			Result := split_view_min_possible_position_of_divider_at_index (item, a_divider_index)
 		end
 
 	max_possible_position_of_divider_at_index (a_divider_index: INTEGER): REAL
 		do
-			Result := split_view_max_possible_position_of_divider_at_index(cocoa_object, a_divider_index)
+			Result := split_view_max_possible_position_of_divider_at_index(item, a_divider_index)
 		end
 
 	set_position_of_divider_at_index (a_position: REAL; a_divider_index: INTEGER)
 		do
-			split_view_set_position_of_divider_at_index(cocoa_object, a_position, a_divider_index)
+			split_view_set_position_of_divider_at_index(item, a_position, a_divider_index)
 		end
 
 	set_is_pane_splitter (a_flag: BOOLEAN)
 		do
-			split_view_set_is_pane_splitter(cocoa_object, a_flag)
+			split_view_set_is_pane_splitter(item, a_flag)
 		end
 
-	is_pane_splitter : BOOLEAN
+	is_pane_splitter: BOOLEAN
 		do
-			Result := split_view_is_pane_splitter(cocoa_object)
+			Result := split_view_is_pane_splitter(item)
 		end
 
 feature -- Objective-C implementation

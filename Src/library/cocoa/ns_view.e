@@ -1,8 +1,6 @@
 indexing
-	description: "An Eiffel abstraction for a Cocoa widget"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
+	description: "Wrapper for NSView. An Eiffel abstraction for a Cocoa widget"
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,146 +8,175 @@ class
 	NS_VIEW
 
 inherit
-	NS_OBJECT
+	NS_RESPONDER
 
-create
-	make_shared,
-	new,
-	new_custom
-
-feature -- Creation and Initialization
-
-	new
-		do
-			cocoa_object := view_new
+	OBJECTIVE_C
+		export
+			{NONE} all
 		end
 
-	new_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
+create
+	make,
+	make_custom,
+	make_flipped
+create {NS_OBJECT}
+	make_shared
+
+feature {NONE} -- Creation and Initialization
+
+	make
+		do
+			make_shared (view_new)
+		end
+
+	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
-			cocoa_object := custom_view_new ($current, $draw)
+			make_shared (custom_view_new ($current, $draw))
 		end
 
-	init
+	make_flipped
+		local
+			l_superclass: POINTER
+			l_name: POINTER
+			l_class: POINTER
+			l_types: POINTER
+			l_sel: POINTER
+			l_imp: POINTER
 		do
-			view_init (cocoa_object)
+			l_class := objc_get_class ((create {C_STRING}.make ("FlippedView")).item)
+			if l_class = {NS_OBJECT}.nil then
+				-- If FlippedView doesn't exist yet create it as a new child class of NSView and override isFlipped
+				l_superclass := objc_get_class ((create {C_STRING}.make ("NSView")).item)
+				l_name := (create {C_STRING}.make ("FlippedView")).item
+				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
+
+				l_types := (create {C_STRING}.make ("b@:")).item
+				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
+				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
+				class_add_method (l_class, l_sel, l_imp, l_types)
+
+				objc_register_class_pair (l_class)
+			end
+			make_shared (class_create_instance (l_class, 0))
+			view_init (item)
 		end
 
 feature -- Managing the View Hierarchy
 
 	window: NS_WINDOW
 		do
-			create Result.make_shared (view_window (cocoa_object))
+			create Result.make_shared (view_window (item))
 		end
 
 	superview: NS_VIEW
 		do
-			create Result.make_shared (view_superview (cocoa_object))
+			create Result.make_shared (view_superview (item))
 		end
 
 	subviews: NS_ARRAY [NS_VIEW]
 		do
-			create Result.make_shared (view_subviews (cocoa_object))
+			create Result.make_shared (view_subviews (item))
 		end
 
 	is_descendant_of (a_view: NS_VIEW): BOOLEAN
 		do
-			Result := view_is_descendant_of (cocoa_object, a_view.cocoa_object)
+			Result := view_is_descendant_of (item, a_view.item)
 		end
 
 	ancestor_shared_with_view (a_view: NS_VIEW): NS_VIEW
 		do
-			create Result.make_shared (view_ancestor_shared_with_view (cocoa_object, a_view.cocoa_object))
+			create Result.make_shared (view_ancestor_shared_with_view (item, a_view.item))
 		end
 
 	add_subview (a_subview: NS_VIEW)
 		do
-			view_add_subview (cocoa_object, a_subview.cocoa_object)
+			view_add_subview (item, a_subview.item)
 		end
 
 feature -- Modifying the Frame Rectangle
 
 	set_frame (a_rect: NS_RECT)
 		do
-			view_set_frame (cocoa_object, a_rect.item)
+			view_set_frame (item, a_rect.item)
 		end
 
 	frame: NS_RECT
 		do
 			create Result.make
-			view_frame (cocoa_object, Result.item)
+			view_frame (item, Result.item)
 		end
 
 feature -- Modifying the Bounds Rectangle
 
 	set_bounds (a_rect: NS_RECT)
 		do
-			view_set_bounds (cocoa_object, a_rect.item)
+			view_set_bounds (item, a_rect.item)
 		end
 
 	bounds: NS_RECT
 		do
 			create Result.make
-			view_bounds (cocoa_object, Result.item)
+			view_bounds (item, Result.item)
 		end
 
 	set_bounds_origin (a_new_origin: NS_POINT)
 		do
-			view_set_bounds_origin (cocoa_object, a_new_origin.item)
+			view_set_bounds_origin (item, a_new_origin.item)
 		end
 
 	set_bounds_size (a_new_size: NS_SIZE)
 		do
-			view_set_bounds_size (cocoa_object, a_new_size.item)
+			view_set_bounds_size (item, a_new_size.item)
 		end
 
 	set_bounds_rotation (a_angle: REAL)
 		do
-			view_set_bounds_rotation (cocoa_object, a_angle)
+			view_set_bounds_rotation (item, a_angle)
 		end
 
 	bounds_rotation: REAL
 		do
-			Result := view_bounds_rotation (cocoa_object)
+			Result := view_bounds_rotation (item)
 		end
 
 feature -- Modifying the Coordinate System
 
 	display
 		do
-			view_display (cocoa_object)
+			view_display (item)
 		end
 
 	set_needs_display (a_flag: BOOLEAN)
 		do
-			view_set_needs_display (cocoa_object, a_flag)
+			view_set_needs_display (item, a_flag)
 		end
 
 	set_hidden (a_flag: BOOLEAN)
 		do
-			view_set_hidden (cocoa_object, a_flag)
+			view_set_hidden (item, a_flag)
 		end
 
 	is_hidden : BOOLEAN
 		do
-			Result := view_is_hidden (cocoa_object)
+			Result := view_is_hidden (item)
 		end
 
 	is_flipped : BOOLEAN
 		do
-			Result := view_is_flipped (cocoa_object)
+			Result := view_is_flipped (item)
 		end
 
 	remove_from_superview
 		do
-			view_remove_from_superview (cocoa_object)
+			view_remove_from_superview (item)
 		end
 
 	convert_point_to_base (a_point: NS_POINT): NS_POINT
 		do
 			create Result.make
-			view_convert_point_to_base (cocoa_object, a_point.item, Result.item)
+			view_convert_point_to_base (item, a_point.item, Result.item)
 		end
 
 	convert_point_to_view (a_point: NS_POINT; a_view: NS_VIEW): NS_POINT
@@ -158,11 +185,11 @@ feature -- Modifying the Coordinate System
 		do
 			create Result.make
 			if a_view /= void then
-				l_view := a_view.cocoa_object
+				l_view := a_view.item
 			else
 				l_view := nil
 			end
-			view_convert_point_to_view (cocoa_object, a_point.item, l_view, Result.item)
+			view_convert_point_to_view (item, a_point.item, l_view, Result.item)
 		end
 
 feature {NONE} -- callback
@@ -370,6 +397,4 @@ feature {NONE} -- Objective-C interface
 		alias
 			"return [(NSView*)$a_view opaqueAncestor];"
 		end
-indexing
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

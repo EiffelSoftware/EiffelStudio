@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_NOTIFICATION}."
-	author: ""
+	description: "Wrapper for NSNotification."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 

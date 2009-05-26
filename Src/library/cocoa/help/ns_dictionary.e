@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_DICTIONARY}."
-	author: ""
+	description: "Wrapper for NSDictionary."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,20 +11,29 @@ inherit
 	NS_OBJECT
 
 create
-	make_shared,
-	dictionary,
-	dictionary_with_object_for_key
+	make,
+	make_with_object_for_key
+create {NS_OBJECT}
+	make_shared
 
 feature -- Creation
 
-	dictionary
+	make
 		do
-			cocoa_object := dictionary_dictionary
+			make_shared (dictionary_dictionary)
 		end
 
-	dictionary_with_object_for_key (a_object, a_key: NS_OBJECT)
+	make_with_object_for_key (a_object, a_key: NS_OBJECT)
 		do
-			cocoa_object := dictionary_dictionary_with_object_for_key (a_object.cocoa_object, ns_font_attribute_name)--a_key.cocoa_object)
+			-- FIXME: herdcoded key value ATM!
+			make_shared (dictionary_dictionary_with_object_for_key (a_object.item, ns_font_attribute_name))--a_key.cocoa_object)
+		end
+
+feature -- Accessing Keys and Values
+
+	object_for_key (a_key: POINTER): POINTER
+		do
+			Result := dictionary_object_for_key (item, a_key)
 		end
 
 feature {NONE} -- Objective-C implementation
@@ -32,7 +41,13 @@ feature {NONE} -- Objective-C implementation
 --@interface NSDictionary : NSObject <NSCopying, NSMutableCopying, NSCoding, NSFastEnumeration>
 
 --- (NSUInteger)count;
---- (id)objectForKey:(id)aKey;
+	frozen dictionary_object_for_key (a_dictionary, a_key: POINTER): POINTER
+			--- (id)objectForKey:(id)aKey;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSDictionary*)$a_dictionary objectForKey: $a_key];"
+		end
 --- (NSEnumerator *)keyEnumerator;
 
 --@end

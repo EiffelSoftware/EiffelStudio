@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_IMAGE_REP}."
-	author: ""
+	description: "Wrapper for NSImageRep."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,19 +10,19 @@ class
 inherit
 	NS_OBJECT
 
-create
+create {NS_OBJECT} -- Creation
 	make_shared
 
-feature
+feature -- Access
 
 	pixels_wide: INTEGER
 		do
-			Result := image_rep_pixels_wide (cocoa_object)
+			Result := image_rep_pixels_wide (item)
 		end
 
 	pixels_high: INTEGER
 		do
-			Result := image_rep_pixels_high (cocoa_object)
+			Result := image_rep_pixels_high (item)
 		end
 
 feature {NONE} -- Implementation

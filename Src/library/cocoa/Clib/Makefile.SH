@@ -43,7 +43,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 OBJECTS = cocoa_eiffel.o 
 
-VISION_OBJECTS = ns_window_delegate.o ns_split_view_delegate.o ns_outline_view_delegate.o ns_outline_view_data_source.o actions.o custom_view.o
+VISION_OBJECTS = ns_window_delegate.o ns_split_view_delegate.o ns_outline_view_delegate.o ns_outline_view_data_source.o actions.o custom_view.o ns_responder_category.o
 ALL_OBJECTS = $(OBJECTS)
 
 all: $(ALL_OBJECTS)

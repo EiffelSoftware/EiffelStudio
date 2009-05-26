@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_CONTROL}."
-	author: ""
+	description: "Wrapper for NSControl."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,61 +10,61 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := control_new
+			make_shared (control_new)
 		end
 
 feature -- ...
 
 	double_value: DOUBLE
 		do
-			Result := control_double_value (cocoa_object)
+			Result := control_double_value (item)
 		end
 
 	is_enabled : BOOLEAN
 		do
-			Result := control_is_enabled (cocoa_object)
+			Result := control_is_enabled (item)
 		end
 
 	set_action (an_action: PROCEDURE [ANY, TUPLE])
 		do
 			action := an_action
-			control_set_target (cocoa_object, target_new ($current, $target))
-			control_set_action (cocoa_object)
+			control_set_target (item, target_new ($current, $target))
+			control_set_action (item)
 		end
 
 	set_double_value (a_double: DOUBLE)
 		do
-			control_set_double_value (cocoa_object, a_double)
+			control_set_double_value (item, a_double)
 		end
 
 	set_enabled (a_flag: BOOLEAN)
 		do
-			control_set_enabled (cocoa_object, a_flag)
+			control_set_enabled (item, a_flag)
 		end
 
 	set_string_value (a_string: STRING_GENERAL)
 		do
-			control_set_string_value (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+			control_set_string_value (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 	font: NS_FONT
 		do
-			create Result.make_shared (control_font (cocoa_object))
+			create Result.make_shared (control_font (item))
 		end
 
 	set_cell (a_cell: NS_CELL)
 		do
-			control_set_cell (cocoa_object, a_cell.cocoa_object)
+			control_set_cell (item, a_cell.item)
 		end
 
 feature {NONE} -- callback

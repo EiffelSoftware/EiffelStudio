@@ -1,17 +1,20 @@
 note
-	description: "Summary description for {NS_OUTLINE_VIEW_DELEGATE}."
-	author: ""
+	description: "Wrapper for delegate methods of NSOutlineView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	NS_OUTLINE_VIEW_DELEGATE
 
+inherit
+	NS_OBJECT
+
 feature
 
-	new
+	make
 		do
-			cocoa_object := outline_view_delegate_new ($current, $selection_did_change)
+			make_shared (outline_view_delegate_new ($current, $selection_did_change))
 		end
 
 	selection_did_change
@@ -27,9 +30,4 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [[OutlineViewDelegate new] initWithCallbackObject: $an_object andMethod: $a_selection_did_change];"
 		end
-
-feature {NS_OUTLINE_VIEW}
-
-	cocoa_object: POINTER
-
 end

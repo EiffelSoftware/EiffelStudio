@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_FONT}."
-	author: ""
+	description: "Wrapper for NSFont."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,10 +11,11 @@ inherit
 	NS_OBJECT
 
 create
-	make_shared,
 	system_font_of_size,
 	bold_system_font_of_size,
 	label_font_of_size
+create {NS_OBJECT}
+	make_shared
 
 feature -- Factory
 
@@ -27,24 +28,26 @@ feature -- Factory
 
 	system_font_of_size (a_font_size: REAL)
 		do
-			cocoa_object := font_system_font_of_size (a_font_size)
+			item := font_system_font_of_size (a_font_size)
 		end
 
 	bold_system_font_of_size (a_font_size: REAL)
 		do
-			cocoa_object := font_bold_system_font_of_size (a_font_size)
+			item := font_bold_system_font_of_size (a_font_size)
 		end
 
 	label_font_of_size (a_font_size: REAL)
 		do
-			cocoa_object := font_label_font_of_size (a_font_size)
+			item := font_label_font_of_size (a_font_size)
 		end
 
 feature -- Access
 
 	font_name: STRING
 		do
-			Result := (create {NS_STRING}.make_shared (font_font_name (cocoa_object))).to_string
+			Result := (create {NS_STRING}.make_shared (font_font_name (item))).to_string
+		ensure
+			result_not_void: Result /= void
 		end
 
 feature {NONE} -- Objective-C implementation

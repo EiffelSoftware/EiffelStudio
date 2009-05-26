@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TEXT_FIELD}."
-	author: ""
+	description: "Wrapper for NSTextField."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,92 +10,94 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
+
+feature {NONE} -- Creation
+
+	make
+		do
+			make_shared (text_field_new)
+		end
 
 feature
 
-	new
-		do
-			cocoa_object := text_field_new
-		end
-
 	set_background_color (a_color: NS_COLOR)
 		do
-			text_field_set_background_color (cocoa_object, a_color.cocoa_object)
+			text_field_set_background_color (item, a_color.item)
 		end
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (text_field_background_color (cocoa_object))
+			create Result.make_shared (text_field_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
 		do
-			text_field_set_draws_background (cocoa_object, a_flag)
+			text_field_set_draws_background (item, a_flag)
 		end
 
 	draws_background: BOOLEAN
 		do
-			Result := text_field_draws_background (cocoa_object)
+			Result := text_field_draws_background (item)
 		end
 
 	set_text_color (a_color: NS_COLOR)
 		do
-			text_field_set_text_color (cocoa_object, a_color.cocoa_object)
+			text_field_set_text_color (item, a_color.item)
 		end
 
 	text_color: NS_COLOR
 		do
-			create Result.make_shared (text_field_text_color (cocoa_object))
+			create Result.make_shared (text_field_text_color (item))
 		end
 
 	is_bordered: BOOLEAN
 		do
-			Result := text_field_is_bordered (cocoa_object)
+			Result := text_field_is_bordered (item)
 		end
 
 	set_bordered (a_flag: BOOLEAN)
 		do
-			text_field_set_bordered (cocoa_object, a_flag)
+			text_field_set_bordered (item, a_flag)
 		end
 
 	is_bezeled: BOOLEAN
 		do
-			Result := text_field_is_bezeled (cocoa_object)
+			Result := text_field_is_bezeled (item)
 		end
 
 	set_bezeled (a_flag: BOOLEAN)
 		do
-			text_field_set_bezeled (cocoa_object, a_flag)
+			text_field_set_bezeled (item, a_flag)
 		end
 
 	is_editable: BOOLEAN
 		do
-			Result := text_field_is_editable (cocoa_object)
+			Result := text_field_is_editable (item)
 		end
 
 	set_editable (a_flag: BOOLEAN)
 		do
-			text_field_set_editable (cocoa_object, a_flag)
+			text_field_set_editable (item, a_flag)
 		end
 
 	is_selectable: BOOLEAN
 		do
-			Result := text_field_is_selectable (cocoa_object)
+			Result := text_field_is_selectable (item)
 		end
 
 	set_selectable (a_flag: BOOLEAN)
 		do
-			text_field_set_selectable (cocoa_object, a_flag)
+			text_field_set_selectable (item, a_flag)
 		end
 
 	select_text (a_sender: NS_OBJECT)
 		do
-			text_field_select_text (cocoa_object, a_sender.cocoa_object)
+			text_field_select_text (item, a_sender.item)
 		end
 
 --	delegate: NS_OBJECT
@@ -111,42 +113,42 @@ feature
 
 	accepts_first_responder: BOOLEAN
 		do
-			Result := text_field_accepts_first_responder (cocoa_object)
+			Result := text_field_accepts_first_responder (item)
 		end
 
 	set_bezel_style (a_style: INTEGER)
 		do
-			text_field_set_bezel_style (cocoa_object, a_style)
+			text_field_set_bezel_style (item, a_style)
 		end
 
 	bezel_style: INTEGER
 		do
-			Result := text_field_bezel_style (cocoa_object)
+			Result := text_field_bezel_style (item)
 		end
 
 	set_title_with_mnemonic (a_string_with_ampersand: NS_STRING)
 		do
-			text_field_set_title_with_mnemonic (cocoa_object, a_string_with_ampersand.cocoa_object)
+			text_field_set_title_with_mnemonic (item, a_string_with_ampersand.item)
 		end
 
 	allows_editing_text_attributes: BOOLEAN
 		do
-			Result := text_field_allows_editing_text_attributes (cocoa_object)
+			Result := text_field_allows_editing_text_attributes (item)
 		end
 
 	set_allows_editing_text_attributes (a_flag: BOOLEAN)
 		do
-			text_field_set_allows_editing_text_attributes (cocoa_object, a_flag)
+			text_field_set_allows_editing_text_attributes (item, a_flag)
 		end
 
 	imports_graphics: BOOLEAN
 		do
-			Result := text_field_imports_graphics (cocoa_object)
+			Result := text_field_imports_graphics (item)
 		end
 
 	set_imports_graphics (a_flag: BOOLEAN)
 		do
-			text_field_set_imports_graphics (cocoa_object, a_flag)
+			text_field_set_imports_graphics (item, a_flag)
 		end
 
 feature {NONE} -- Objective-C implementation

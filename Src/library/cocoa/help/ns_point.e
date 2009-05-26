@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_POINT}."
-	author: ""
+	description: "Wrapper for NSPoint. This usually has call-by-value sementics in Objective-C. The wrapper takes care of that."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,10 +12,11 @@ inherit
 
 create
 	make,
-	make_point,
+	make_point
+create {NS_RECT}
 	make_by_pointer
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make_point (a_x, a_y: INTEGER)
 		do

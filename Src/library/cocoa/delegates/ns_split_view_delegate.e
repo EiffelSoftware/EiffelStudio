@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SPLIT_VIEW_DELEGATE}."
-	author: ""
+	description: "Wrapper for delegate methods of NSSplitView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +12,9 @@ inherit
 
 feature
 
-	new
+	make
 		do
-			cocoa_object := split_view_delegate_new ($current, $split_view_did_resize_subviews)
+			make_shared (split_view_delegate_new ($current, $split_view_did_resize_subviews))
 		end
 
 	split_view_can_collapse_subview (a_split_view: NS_SPLIT_VIEW; a_subview: NS_VIEW): BOOLEAN

@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_IMAGE_CONSTANTS}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TAB_VIEW_ITEM}."
-	author: ""
+	description: "Wrapper for NSTabViewItem."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,19 +11,21 @@ inherit
 	NS_OBJECT
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := tab_view_item_new
+			make_shared (tab_view_item_new)
 		end
 
 	init_with_identifier (a_identifier: NS_OBJECT): NS_OBJECT
 		do
 --			Result := tab_view_item_init_with_identifier(cocoa_object, a_identifier.cocoa_object)
 		end
+
+feature
 
 	identifier : NS_OBJECT
 		do
@@ -32,7 +34,7 @@ feature
 
 	view : NS_VIEW
 		do
-			Result := (create {NS_VIEW}.make_shared (tab_view_item_view(cocoa_object)))
+			Result := (create {NS_VIEW}.make_shared (tab_view_item_view(item)))
 		end
 
 	initial_first_responder : NS_OBJECT
@@ -52,7 +54,7 @@ feature
 
 	tab_state : INTEGER
 		do
-			Result := tab_view_item_tab_state(cocoa_object)
+			Result := tab_view_item_tab_state(item)
 		end
 
 	tab_view : NS_TAB_VIEW
@@ -62,27 +64,27 @@ feature
 
 	set_identifier (a_identifier: NS_OBJECT)
 		do
-			tab_view_item_set_identifier(cocoa_object, a_identifier.cocoa_object)
+			tab_view_item_set_identifier(item, a_identifier.item)
 		end
 
 	set_label (a_label: STRING_GENERAL)
 		do
-			tab_view_item_set_label (cocoa_object, (create {NS_STRING}.make_with_string (a_label)).cocoa_object)
+			tab_view_item_set_label (item, (create {NS_STRING}.make_with_string (a_label)).item)
 		end
 
 	set_color (a_color: NS_COLOR)
 		do
-			tab_view_item_set_color(cocoa_object, a_color.cocoa_object)
+			tab_view_item_set_color(item, a_color.item)
 		end
 
 	set_view (a_view: NS_VIEW)
 		do
-			tab_view_item_set_view(cocoa_object, a_view.cocoa_object)
+			tab_view_item_set_view(item, a_view.item)
 		end
 
 	set_initial_first_responder (a_view: NS_VIEW)
 		do
-			tab_view_item_set_initial_first_responder(cocoa_object, a_view.cocoa_object)
+			tab_view_item_set_initial_first_responder(item, a_view.item)
 		end
 
 --	draw_label_in_rect (a_should_truncate_label: BOOLEAN; a_label_rect: NS_RECT)

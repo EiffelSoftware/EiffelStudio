@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_TEXT_FIELD_CELL}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 

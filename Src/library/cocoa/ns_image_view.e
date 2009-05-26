@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_IMAGE_VIEW}."
-	author: ""
+	description: "Wrapper for NSImageView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,27 +10,29 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := image_view_new
+			make_shared (image_view_new)
 		end
+
+feature -- Access
 
 	set_image (a_image: NS_IMAGE)
 		do
-			image_view_set_image (cocoa_object, a_image.cocoa_object)
+			image_view_set_image (item, a_image.item)
 		end
 
 	set_image_scaling (a_image_scaling: INTEGER)
 		do
-			image_view_set_image_scaling (cocoa_object, a_image_scaling)
+			image_view_set_image_scaling (item, a_image_scaling)
 		end
 
 feature {NONE} -- Objective-C implementation

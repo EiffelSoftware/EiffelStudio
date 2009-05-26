@@ -9,13 +9,13 @@
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/cocoa/Clib"/>
 		<external_object location="-framework Cocoa"/>
 		<external_object location="-ObjC -fobjc-gc"/>
 		<external_object location="$(ISE_LIBRARY)/library/cocoa/spec/$(ISE_PLATFORM)/lib/cocoa_eiffel.o"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<cluster name="cocoa" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>

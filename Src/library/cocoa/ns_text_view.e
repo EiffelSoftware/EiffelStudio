@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_TEXT_VIEW}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,16 +10,16 @@ class
 inherit
 	NS_TEXT
 		redefine
-			new
+			make
 		end
 create
-	new
+	make
 
 feature
 
-	new
+	make
 		do
-			cocoa_object := text_view_new
+			make_shared (text_view_new)
 		end
 
 feature {NONE} -- Objective-C Implementation

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_PANEL}."
-	author: ""
+	description: "Wrapper for NSPanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,8 +10,9 @@ class
 inherit
 	NS_WINDOW
 
-feature
-	is_floating_panel : BOOLEAN
+feature -- Access
+
+	is_floating_panel: BOOLEAN
 		do
 			Result := panel_is_floating_panel(cocoa_object)
 		end
@@ -21,7 +22,7 @@ feature
 			panel_set_floating_panel(cocoa_object, a_flag)
 		end
 
-	becomes_key_only_if_needed : BOOLEAN
+	becomes_key_only_if_needed: BOOLEAN
 		do
 			Result := panel_becomes_key_only_if_needed(cocoa_object)
 		end
@@ -31,7 +32,7 @@ feature
 			panel_set_becomes_key_only_if_needed(cocoa_object, a_flag)
 		end
 
-	works_when_modal : BOOLEAN
+	works_when_modal: BOOLEAN
 		do
 			Result := panel_works_when_modal(cocoa_object)
 		end

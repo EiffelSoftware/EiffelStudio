@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SCROLL_VIEW}."
-	author: ""
+	description: "Wrapper for NSScrollView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,49 +10,88 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
+
+	OBJECTIVE_C
+		export
+			{NONE} all
+		end
+
 create
-	new
+	make,
+	make_with_flipped_content_view
+
+feature {NONE} -- Creation
+
+	make
+		do
+			make_shared (scroll_view_new)
+		end
+
+	make_with_flipped_content_view
+		local
+			l_superclass: POINTER
+			l_name: POINTER
+			l_class: POINTER
+			l_types: POINTER
+			l_sel: POINTER
+			l_imp: POINTER
+			l_new_clip_view: NS_CLIP_VIEW
+		do
+			make
+			l_class := objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
+			if l_class = {NS_OBJECT}.nil then
+				-- If MyClipView doesn't exist yet create it as a new child class of NSClipView and override isFlipped
+				l_superclass := objc_get_class ((create {C_STRING}.make ("NSClipView")).item)
+				l_name := (create {C_STRING}.make ("MyClipView")).item
+				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
+
+				l_types := (create {C_STRING}.make ("b@:")).item
+				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
+				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
+				class_add_method (l_class, l_sel, l_imp, l_types)
+
+				objc_register_class_pair (l_class)
+			end
+			create l_new_clip_view.make_shared (class_create_instance (l_class, 0))
+			view_init (l_new_clip_view.item)
+			set_content_view (l_new_clip_view)
+		end
 
 feature
-
-	new
-		do
-			cocoa_object := scroll_view_new
-		end
 
 	document_visible_rect: NS_RECT
 		do
 			create Result.make
-			scroll_view_document_visible_rect (cocoa_object, Result.item)
+			scroll_view_document_visible_rect (item, Result.item)
 		end
 
 	content_size: NS_SIZE
 		do
 			create Result.make
-			scroll_view_content_size (cocoa_object, Result.item)
+			scroll_view_content_size (item, Result.item)
 		end
 
 	set_document_view (a_view: NS_VIEW)
 		do
-			scroll_view_set_document_view (cocoa_object, a_view.cocoa_object)
+			scroll_view_set_document_view (item, a_view.item)
 		end
 
 	document_view: NS_VIEW
 			-- TODO: Create correct concrete subclass!
 		do
-			create Result.make_shared (scroll_view_document_view (cocoa_object))
+			create Result.make_shared (scroll_view_document_view (item))
 		end
 
 	set_content_view (a_content_view: NS_CLIP_VIEW)
 		do
-			scroll_view_set_content_view (cocoa_object, a_content_view.cocoa_object)
+			scroll_view_set_content_view (item, a_content_view.item)
 		end
 
 	content_view: NS_CLIP_VIEW
 		do
-			create Result.make_shared (scroll_view_content_view (cocoa_object))
+			create Result.make_shared (scroll_view_content_view (item))
 		end
 
 --	set_document_cursor (a_an_obj: NS_CURSOR)
@@ -67,162 +106,162 @@ feature
 
 	set_border_type (a_type: INTEGER)
 		do
-			scroll_view_set_border_type (cocoa_object, a_type)
+			scroll_view_set_border_type (item, a_type)
 		end
 
 	border_type: INTEGER
 		do
-			Result := scroll_view_border_type (cocoa_object)
+			Result := scroll_view_border_type (item)
 		end
 
 	set_background_color (a_color: NS_COLOR)
 		do
-			scroll_view_set_background_color (cocoa_object, a_color.cocoa_object)
+			scroll_view_set_background_color (item, a_color.item)
 		end
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (scroll_view_background_color (cocoa_object))
+			create Result.make_shared (scroll_view_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
 		do
-			scroll_view_set_draws_background (cocoa_object, a_flag)
+			scroll_view_set_draws_background (item, a_flag)
 		end
 
 	draws_background: BOOLEAN
 		do
-			Result := scroll_view_draws_background (cocoa_object)
+			Result := scroll_view_draws_background (item)
 		end
 
 	set_has_vertical_scroller (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_vertical_scroller (cocoa_object, a_flag)
+			scroll_view_set_has_vertical_scroller (item, a_flag)
 		end
 
 	has_vertical_scroller: BOOLEAN
 		do
-			Result := scroll_view_has_vertical_scroller (cocoa_object)
+			Result := scroll_view_has_vertical_scroller (item)
 		end
 
 	set_has_horizontal_scroller (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_horizontal_scroller (cocoa_object, a_flag)
+			scroll_view_set_has_horizontal_scroller (item, a_flag)
 		end
 
 	has_horizontal_scroller: BOOLEAN
 		do
-			Result := scroll_view_has_horizontal_scroller (cocoa_object)
+			Result := scroll_view_has_horizontal_scroller (item)
 		end
 
 	set_vertical_scroller (a_an_object: NS_SCROLLER)
 		do
-			scroll_view_set_vertical_scroller (cocoa_object, a_an_object.cocoa_object)
+			scroll_view_set_vertical_scroller (item, a_an_object.item)
 		end
 
 	vertical_scroller: NS_SCROLLER
 		do
-			create Result.make_shared (scroll_view_vertical_scroller (cocoa_object))
+			create Result.make_shared (scroll_view_vertical_scroller (item))
 		end
 
 	set_horizontal_scroller (a_an_object: NS_SCROLLER)
 		do
-			scroll_view_set_horizontal_scroller (cocoa_object, a_an_object.cocoa_object)
+			scroll_view_set_horizontal_scroller (item, a_an_object.item)
 		end
 
 	horizontal_scroller: NS_SCROLLER
 		do
-			create Result.make_shared (scroll_view_horizontal_scroller (cocoa_object))
+			create Result.make_shared (scroll_view_horizontal_scroller (item))
 		end
 
 	autohides_scrollers: BOOLEAN
 		do
-			Result := scroll_view_autohides_scrollers (cocoa_object)
+			Result := scroll_view_autohides_scrollers (item)
 		end
 
 	set_autohides_scrollers (a_flag: BOOLEAN)
 		do
-			scroll_view_set_autohides_scrollers (cocoa_object, a_flag)
+			scroll_view_set_autohides_scrollers (item, a_flag)
 		end
 
 	set_horizontal_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_horizontal_line_scroll (cocoa_object, a_value)
+			scroll_view_set_horizontal_line_scroll (item, a_value)
 		end
 
 	set_vertical_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_vertical_line_scroll (cocoa_object, a_value)
+			scroll_view_set_vertical_line_scroll (item, a_value)
 		end
 
 	set_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_line_scroll (cocoa_object, a_value)
+			scroll_view_set_line_scroll (item, a_value)
 		end
 
 	horizontal_line_scroll: REAL
 		do
-			Result := scroll_view_horizontal_line_scroll (cocoa_object)
+			Result := scroll_view_horizontal_line_scroll (item)
 		end
 
 	vertical_line_scroll: REAL
 		do
-			Result := scroll_view_vertical_line_scroll (cocoa_object)
+			Result := scroll_view_vertical_line_scroll (item)
 		end
 
 	line_scroll: REAL
 		do
-			Result := scroll_view_line_scroll (cocoa_object)
+			Result := scroll_view_line_scroll (item)
 		end
 
 	set_horizontal_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_horizontal_page_scroll (cocoa_object, a_value)
+			scroll_view_set_horizontal_page_scroll (item, a_value)
 		end
 
 	set_vertical_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_vertical_page_scroll (cocoa_object, a_value)
+			scroll_view_set_vertical_page_scroll (item, a_value)
 		end
 
 	set_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_page_scroll (cocoa_object, a_value)
+			scroll_view_set_page_scroll (item, a_value)
 		end
 
 	horizontal_page_scroll: REAL
 		do
-			Result := scroll_view_horizontal_page_scroll (cocoa_object)
+			Result := scroll_view_horizontal_page_scroll (item)
 		end
 
 	vertical_page_scroll: REAL
 		do
-			Result := scroll_view_vertical_page_scroll (cocoa_object)
+			Result := scroll_view_vertical_page_scroll (item)
 		end
 
 	page_scroll: REAL
 		do
-			Result := scroll_view_page_scroll (cocoa_object)
+			Result := scroll_view_page_scroll (item)
 		end
 
 	set_scrolls_dynamically (a_flag: BOOLEAN)
 		do
-			scroll_view_set_scrolls_dynamically (cocoa_object, a_flag)
+			scroll_view_set_scrolls_dynamically (item, a_flag)
 		end
 
 	scrolls_dynamically: BOOLEAN
 		do
-			Result := scroll_view_scrolls_dynamically (cocoa_object)
+			Result := scroll_view_scrolls_dynamically (item)
 		end
 
 	tile
 		do
-			scroll_view_tile (cocoa_object)
+			scroll_view_tile (item)
 		end
 
 	reflect_scrolled_clip_view (a_c_view: NS_CLIP_VIEW)
 		do
-			scroll_view_reflect_scrolled_clip_view (cocoa_object, a_c_view.cocoa_object)
+			scroll_view_reflect_scrolled_clip_view (item, a_c_view.item)
 		end
 
 --	scroll_wheel (a_the_event: NS_EVENT)
@@ -232,32 +271,32 @@ feature
 
 	set_rulers_visible (a_flag: BOOLEAN)
 		do
-			scroll_view_set_rulers_visible (cocoa_object, a_flag)
+			scroll_view_set_rulers_visible (item, a_flag)
 		end
 
 	rulers_visible: BOOLEAN
 		do
-			Result := scroll_view_rulers_visible (cocoa_object)
+			Result := scroll_view_rulers_visible (item)
 		end
 
 	set_has_horizontal_ruler (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_horizontal_ruler (cocoa_object, a_flag)
+			scroll_view_set_has_horizontal_ruler (item, a_flag)
 		end
 
 	has_horizontal_ruler: BOOLEAN
 		do
-			Result := scroll_view_has_horizontal_ruler (cocoa_object)
+			Result := scroll_view_has_horizontal_ruler (item)
 		end
 
 	set_has_vertical_ruler (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_vertical_ruler (cocoa_object, a_flag)
+			scroll_view_set_has_vertical_ruler (item, a_flag)
 		end
 
 	has_vertical_ruler: BOOLEAN
 		do
-			Result := scroll_view_has_vertical_ruler (cocoa_object)
+			Result := scroll_view_has_vertical_ruler (item)
 		end
 
 --	set_horizontal_ruler_view (a_ruler: NS_RULER_VIEW)

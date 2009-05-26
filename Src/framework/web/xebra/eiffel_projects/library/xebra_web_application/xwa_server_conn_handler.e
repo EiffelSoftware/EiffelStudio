@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create xserver_socket.make_server_by_port (config.port.value)
-			xserver_socket.set_accept_timeout (500)
+	--		xserver_socket.set_accept_timeout (500)
 			stop := False
 			add_servlets
 		ensure

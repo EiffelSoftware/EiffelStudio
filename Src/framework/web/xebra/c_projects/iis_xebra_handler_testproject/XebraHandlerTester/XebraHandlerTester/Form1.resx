@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>GET /xebrawebapp/hello.xeb?name=test&amp;pass=123 HTTP/1.1#HI##$#Host#%#localhost#$#User-Agent#%#Mozilla/5.0 (X11; U; Linux x86_64; en; rv:1.9.0.10) Gecko/20080528 Epiphany/2.22 Firefox/3.0#$#Accept#%#text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8#$#Accept-Language#%#en-us,en;q=0.5#$#Accept-Encoding#%#gzip,deflate#$#Accept-Charset#%#ISO-8859-1,utf-8;q=0.7,*;q=0.7#$#Keep-Alive#%#300#$#Connection#%#keep-alive#E##HO##E##SE##E##A#&amp;name=test&amp;pass=123#E#</value>
+  </data>
 </root>

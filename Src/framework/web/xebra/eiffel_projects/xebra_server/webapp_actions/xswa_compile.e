@@ -41,8 +41,8 @@ feature -- Status report
 		do
 			Result := file_is_newer (melted_file_path,
 											app_dir,
-											"*.e",
-											"*.ecf")
+											".e",
+											".ecf")
 					or not file_exists (webapp_exe)
 			if Result then
 				o.dprint ("Compiling is necessary", 5)

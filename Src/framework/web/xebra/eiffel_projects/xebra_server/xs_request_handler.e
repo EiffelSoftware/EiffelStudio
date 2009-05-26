@@ -18,16 +18,10 @@ create
 
 feature --Initialization
 
-	make (message_default_bound, message_upper_bound: NATURAL)
-			-- Must be pooled in `thread_pool'
-			-- Upper and lower `message_upperbound', `message_default_bound') bound for the buffer.
-			-- If messages are bigger than lower, upper is allocated
-		require
-			default_smaller_than_max: message_default_bound < message_upper_bound
+	make
+			-- Must be pooled in `thread_pool' (or not)
 		do
-			internal_max_size := message_upper_bound
-			internal_default_size := message_default_bound
-			create data.make (message_default_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
+			create data.make ({XS_MESSAGE}.message_upper_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			create encoder.make
 		end
 
@@ -36,54 +30,65 @@ feature {NONE} -- Access
 	data: MANAGED_POINTER
 			-- Buffer for sending and receiving messages
 
-	internal_max_size: NATURAL
-			-- Maximal size of a data packet
-
-	internal_default_size: NATURAL
-			-- Initial size of data packet. Will be expanded to `internal_default_size' if needed.
-
 	encoder: XS_ENCODING_FACILITIES
 			-- Encodes and decodes incoming and outgoing messages
 
+feature {NONE} -- Constans
+
+	Max_fragments: INTEGER = 1000
 
 feature --Execution
 
-	do_execute (a_http_socket: NETWORK_STREAM_SOCKET; a_server_config: XS_CONFIG)
+	receive_message (a_http_socket: NETWORK_STREAM_SOCKET; a_server_config: XS_CONFIG)
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
 			a_http_socket: not a_http_socket.is_closed
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
-			l_request_message: STRING
 			l_response: XH_RESPONSE
-			l_header: TUPLE [size: NATURAL; fragment: BOOLEAN]
-			l_i: INTEGER
+			l_msg: XS_MESSAGE
+			l_frag_counter: INTEGER
 			l_request_factory: XH_REQUEST_FACTORY
+			l_buf: STRING
+			l_error: BOOLEAN
 		do
 			create l_webapp_handler.make (a_server_config)
+			create l_msg.make
 			create l_request_factory.make
 			from
-				l_request_message := ""
-          		l_header := [{NATURAL}0, true]
-           		l_i := 1
+           		l_frag_counter := 0
+           		l_msg.flag := True
+           		l_error := False
            	until
-				not l_header.fragment
+				not l_msg.flag or l_error
            	loop
            		a_http_socket.read_natural_32
-           		l_header := encoder.decode_natural_and_flag (a_http_socket.last_natural_32)
-           		if l_header.size > internal_max_size then
-           			l_header.fragment := false
+           		l_msg.length := encoder.decode_natural (a_http_socket.last_natural_32)
+          		l_msg.flag := encoder.decode_flag (a_http_socket.last_natural_32)
+           		if not l_msg.is_length_valid then
+          			l_error := True
+           			o.eprint ("Could not decode msg length", generating_type)
            		else
-           			l_request_message.append_string(read_string (a_http_socket, l_header.size))
-           			l_i := l_i + 1
+           			l_buf := read_string (a_http_socket, l_msg.length)
+           			l_msg.append_string(l_buf)
+	           		if (l_frag_counter >= Max_fragments) then
+	           			l_error := True
+	           			o.eprint ("Maximumg fragments reached", generating_type)
+	           		end
+	           		l_frag_counter := l_frag_counter + 1
            		end
            	end
+--			
+--			if (l_error) then
+--				l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
+--			else
+--				l_response := l_webapp_handler.forward_request_to_app (l_msg.string)
+--			end
 
-			l_response := l_webapp_handler.forward_request_to_app (l_request_message)
-
-			o.dprint ("Sending response to http",2)
-			send_message_to_http (l_response.render_to_string, a_http_socket)
+--			o.dprint ("Sending response to http",2)
+--			send_message_to_http (l_response.render_to_string, a_http_socket)
+			send_message_to_http (l_msg.string, a_http_socket)
 
          	a_http_socket.cleanup
             check
@@ -103,16 +108,16 @@ feature {NONE} -- Implementation
 		do
 			l_fragment := false
 			l_message_size := a_message.count.as_natural_32
-			if l_message_size > internal_default_size then
-				create data.make (internal_max_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
+			if l_message_size > {XS_MESSAGE}.message_upper_bound then
+				create data.make ({XS_MESSAGE}.message_upper_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			end
 			from
 				l_index := 1
 			until
 				l_index > a_message.count.as_natural_32
 			loop
-				l_fragment := (a_message.count.as_natural_32 - l_index) > internal_max_size
-				l_fragment_size := internal_max_size.min (a_message.count.as_natural_32-l_index+1)
+				l_fragment := (a_message.count.as_natural_32 - l_index) > {XS_MESSAGE}.message_upper_bound
+				l_fragment_size := {XS_MESSAGE}.message_upper_bound.min (a_message.count.as_natural_32-l_index+1)
 
 				write_message_to_data (data, a_message, l_index, l_index + l_fragment_size, l_fragment)
 				a_http_socket.put_managed_pointer (data, 0, l_fragment_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
@@ -154,7 +159,7 @@ feature {NONE} -- Implementation
 			-- Reads `n' characters from the socket and concatenates them to a string
 		require
 			socket_is_open: not socket.is_closed
-			n_small_enough: n <= internal_max_size
+			n_small_enough: n <= {XS_MESSAGE}.message_upper_bound
 		local
 			read_size: INTEGER
 			buf: detachable STRING
@@ -180,7 +185,5 @@ feature {NONE} -- Implementation
 
 invariant
 	data_attached: data /= Void
-	internal_max_size_attached: internal_max_size /= Void
-	internal_default_size_attached: internal_default_size /= Void
 	encoder_attached: encoder /= Void
 end

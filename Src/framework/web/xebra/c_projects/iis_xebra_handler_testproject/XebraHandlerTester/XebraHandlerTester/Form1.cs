@@ -25,6 +25,8 @@ namespace XebraHandlerTester
         {
       
             srv.sendMessage(textBox1.Text);
+
+            textBox1.AppendText("\r\nRESPONSE:'" + srv.receiveMessage() + "'");
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

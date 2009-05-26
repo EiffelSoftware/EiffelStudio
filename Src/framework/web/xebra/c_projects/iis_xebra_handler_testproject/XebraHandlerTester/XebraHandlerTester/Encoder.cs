@@ -41,9 +41,14 @@ namespace XebraHandlerTester
             return (i >> 1);
         }
 
-        public static uint decode_flag(uint i)
+        public static bool decode_flag(uint i)
         {
-            return (i & (uint)1);
+            return ((i & (uint)1) == 1);
+        }
+
+        internal static int decode_natural(object p)
+        {
+            throw new NotImplementedException();
         }
     }
 }

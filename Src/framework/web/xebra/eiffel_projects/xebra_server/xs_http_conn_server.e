@@ -38,7 +38,7 @@ feature -- Inherited Features
 		local
 			l_r_handler: XS_REQUEST_HANDLER
 		do
-			create l_r_handler.make (message_default_bound, message_upper_bound)
+			create l_r_handler.make
 			o.set_name ({XS_MAIN_SERVER}.Name)
 			o.set_debug_level (server_config.arg_config.debug_level)
 			from
@@ -54,7 +54,7 @@ feature -- Inherited Features
 		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
 	--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
 		            		--singleusermode
-		            	l_r_handler.do_execute (thread_http_socket, server_config)
+		            	l_r_handler.receive_message (thread_http_socket, server_config)
 					end
 				end
             end
@@ -96,11 +96,7 @@ feature -- Constants
 	max_thread_number: NATURAL = 10
 			-- Maximal number of simultaneous threads
 
-	message_upper_bound: NATURAL = 65536
-			-- Upper bound for a message fragment
 
-	message_default_bound: NATURAL = 32768
-			-- Default bound for a message fragment
 
 feature -- Status setting
 
@@ -118,7 +114,7 @@ feature {POOLED_THREAD} -- Implementation
 			-- Instantiates a new {XS_REQUEST_HANDLER}.
 			-- Used for the thread_manager.
 		do
-			create Result.make (message_default_bound, message_upper_bound)
+			create Result.make
 		ensure
 			Result_attached: Result /= Void
 		end

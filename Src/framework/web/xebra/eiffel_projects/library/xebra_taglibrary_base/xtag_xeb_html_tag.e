@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XEB_HTML_TAG}."
+	description: "[
+		This tag outputs plain html and plain text. Whitespaces are wrapped to newlines.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

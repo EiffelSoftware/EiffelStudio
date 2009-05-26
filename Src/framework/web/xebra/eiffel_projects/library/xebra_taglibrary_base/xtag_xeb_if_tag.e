@@ -1,6 +1,9 @@
 note
 	description: "[
-		{XTAG_XEB_IF_TAG}.
+		This is an obsolete class/tag.
+		Acts like a xeb:container ({XTAG_XEB_CONTAINER_TAG}) but needs an
+		additional attribute 'condition'. This tag is obsolete since 
+		it can be simulated with a <xeb:container render="..." ..
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

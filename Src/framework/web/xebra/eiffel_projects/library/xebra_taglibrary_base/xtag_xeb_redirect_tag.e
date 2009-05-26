@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {XEB_REDIRECT_TAG}."
+	description: "[
+		Induces a redirect at the specific point. The redirect is internal
+		to the server and not a html redirect. Expects an internal `url' to redirect to.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

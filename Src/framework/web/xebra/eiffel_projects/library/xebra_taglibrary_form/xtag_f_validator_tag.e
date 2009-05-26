@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XTAG_F_VALIDATOR_TAG}.
+		Defines validator classes for an input field.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,6 +1,7 @@
 note
 	description: "[
-		{XTAG_F_VALIDATION_RESULT_TAG}.
+		Displays the errors from a validation of an input field. Only works within the context
+		of a form and a matching input-name to its own.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +47,7 @@ feature -- Implementation
 			l_messages_var: STRING
 		do
 			if attached {HASH_TABLE [STRING, STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_lazy_validation_table] as l_lazy_table then
-				l_messages_var := get_name (l_lazy_table, a_servlet_class, name)
+				l_messages_var := get_validation_local (l_lazy_table, a_servlet_class, name)
 				a_servlet_class.render_feature.append_expression ("from")
 				a_servlet_class.render_feature.append_expression (l_messages_var + ".start")
 				a_servlet_class.render_feature.append_expression ("until")

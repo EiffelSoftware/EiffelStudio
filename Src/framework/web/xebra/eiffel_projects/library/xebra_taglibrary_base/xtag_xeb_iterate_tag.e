@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {XEB_ITERATE_TAG}."
+	description: "[
+		With this tag one can iterate over a {LIST [A]}. One has to provide the type A and
+		the name of the used variable as well as a controller feature which returns the
+		list. The tag will then iterate over every element in the list and render its
+		children.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

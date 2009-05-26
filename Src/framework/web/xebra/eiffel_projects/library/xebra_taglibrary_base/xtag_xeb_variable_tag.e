@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {XEB_VARIABLE_TAG}."
+	description: "[
+		This works only if a variable has been declared for instance in a {XTAG_XEB_ITERATE_TAG}.
+		It works as a {XTAG_XEB_DISPLAY_TAG} but performs a message call on the specified variable
+		to retrieve the value to be displayed.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,25 +25,31 @@ feature {NONE} -- Initialization
 		do
 			make_base
 			feature_name := ""
-			id := ""
+			variable_name := ""
+		ensure
+			feature_name_attached: attached feature_name
+			variable_name_attached: attached variable_name
 		end
 
 feature
 
 	feature_name: STRING
-	id: STRING
+			-- The name of the feature to be called on the variable
+
+	variable_name: STRING
+			-- The name of the variable
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + id + "." + feature_name + ")")
+			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + variable_name + "." + feature_name + ")")
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: STRING)
 			-- <Precursor>
 		do
 			if a_id.is_equal ("id") then
-				id := a_attribute
+				variable_name := a_attribute
 			end
 			if a_id.is_equal ("feature") then
 				feature_name := a_attribute

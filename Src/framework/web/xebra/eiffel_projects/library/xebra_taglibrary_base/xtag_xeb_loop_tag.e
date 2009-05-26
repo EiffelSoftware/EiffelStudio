@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XEB_LOOP_TAG}."
+	description: "[
+		Repeats its children `times' times.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,11 @@
 note
 	description: "[
-		{XTAG_F_BUTTON_TAG}.
+		A button tag to display a html button. It has to be placed into a
+		{XTAG_F_FORM_TAG}.
+		Everytime the button is pushed (and the validation was successfull) a (defined)
+		action is performed. The action is a function with one argument. It expects
+		the filled out object of the form and returns the page to which the server
+		should redirect.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

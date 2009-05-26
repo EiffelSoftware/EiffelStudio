@@ -31,18 +31,18 @@ feature {NONE} -- Initialization
 
 feature -- Factory
 
-	new_icon_animations: ARRAYED_LIST [EV_PIXEL_BUFFER]
+	new_icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- <Precursor>
 		do
 			create Result.make_from_array (stock_pixmaps.compile_animation_buffer_anim)
-			Result.extend (Result.last)
+			Result.force (Result[Result.upper], Result.upper + 1)
 		end
 
-	new_icon_pixmap_animations: ARRAYED_LIST [EV_PIXMAP]
+	new_icon_pixmap_animations: ARRAY [EV_PIXMAP]
 			-- <Precursor>
 		do
 			create Result.make_from_array (stock_pixmaps.compile_animation_anim)
-			Result.extend (Result.last)
+			Result.force (Result[Result.upper], Result.upper + 1)
 		end
 
 ;note

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XWA_NOT_EMPTY_VALIDATOR}.
+		Requires the input to be not empty
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

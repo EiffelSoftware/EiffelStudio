@@ -1,6 +1,8 @@
 note
 	description: "[
-		The {SERVLET} handles a page request.
+		The {SERVLET} handles a page request. Every concrete servlet inherits from this class and implements
+		the concrete render functions as well as the post and get handling with the final handling after rendering.
+		This class handles premature redirects as well.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

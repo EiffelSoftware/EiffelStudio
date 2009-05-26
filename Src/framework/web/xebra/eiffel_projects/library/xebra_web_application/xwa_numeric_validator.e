@@ -1,12 +1,12 @@
 note
 	description: "[
-		Requires the input to be alpha numeric: ^\w+$
+		Requires an inputer matching: ^-?\d+$
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XWA_ALPHA_NUMERIC_VALIDATOR
+	XWA_NUMERIC_VALIDATOR
 
 inherit
 	XWA_REGEXP_VALIDATOR
@@ -16,17 +16,16 @@ create
 
 feature -- Implementation
 
-	message: STRING
-			-- <Precursor>
-		do
-			Result := "Value is not alphanumeric!"
-		end
-
 	regular_expression: STRING
 			-- <Precursor>
 		do
-			Result := "^\w+$"
+			Result := "^-?\d+$"
 		end
 
+	message: STRING
+			-- <Precursor>
+		do
+			Result := "Not a valid number!"
+		end
 
 end

@@ -112,7 +112,8 @@ feature -- Access
 	process_dynamic_tag_attribute (local_part, value: STRING)
 			-- Adds an attribute
 		require
-			local_part_is_valid: not local_part.is_empty
+			local_part_is_valid: attached local_part and not local_part.is_empty
+			value_attached: attached value
 		local
 			feature_name: STRING
 		do

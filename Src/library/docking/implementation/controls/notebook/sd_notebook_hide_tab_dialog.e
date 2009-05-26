@@ -195,6 +195,11 @@ feature {NONE} -- Implementation agents
 			l_label: SD_TOOL_BAR_FONT_BUTTON
 		do
 			internal_tool_bar.wipe_out
+
+			-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
+			-- For GTK platforms, it works fine without following clearing codes. Vision2 EV_DRAWING_AREA Windows implementation bug ?
+			internal_tool_bar.clear_rectangle (0, 0, internal_tool_bar.width, internal_tool_bar.height)
+
 			if internal_text_box.text.is_equal ("") then
 				from
 					items_and_tabs.start

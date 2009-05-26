@@ -65,30 +65,39 @@ feature {NONE} -- Implementation
 	yy_clear_value_stacks is
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
+		local
+			l_yyvs1_default_item: ANY
+			l_yyvs2_default_item: STRING
+			l_yyvs3_default_item: INTEGER
+			l_yyvs4_default_item: PR_TOKEN
+			l_yyvs5_default_item: PR_TYPE
+			l_yyvs6_default_item: DS_ARRAYED_LIST [PR_TYPE]
+			l_yyvs7_default_item: PR_LABELED_TYPE
+			l_yyvs8_default_item: DS_ARRAYED_LIST [PR_LABELED_TYPE]
 		do
 			if yyvs1 /= Void then
-				yyvs1.clear_all
+				yyvs1.fill_with (l_yyvs1_default_item, 0, yyvs1.upper)
 			end
 			if yyvs2 /= Void then
-				yyvs2.clear_all
+				yyvs2.fill_with (l_yyvs2_default_item, 0, yyvs2.upper)
 			end
 			if yyvs3 /= Void then
-				yyvs3.clear_all
+				yyvs3.fill_with (l_yyvs3_default_item, 0, yyvs3.upper)
 			end
 			if yyvs4 /= Void then
-				yyvs4.clear_all
+				yyvs4.fill_with (l_yyvs4_default_item, 0, yyvs4.upper)
 			end
 			if yyvs5 /= Void then
-				yyvs5.clear_all
+				yyvs5.fill_with (l_yyvs5_default_item, 0, yyvs5.upper)
 			end
 			if yyvs6 /= Void then
-				yyvs6.clear_all
+				yyvs6.fill_with (l_yyvs6_default_item, 0, yyvs6.upper)
 			end
 			if yyvs7 /= Void then
-				yyvs7.clear_all
+				yyvs7.fill_with (l_yyvs7_default_item, 0, yyvs7.upper)
 			end
 			if yyvs8 /= Void then
-				yyvs8.clear_all
+				yyvs8.fill_with (l_yyvs8_default_item, 0, yyvs8.upper)
 			end
 		end
 

@@ -16,44 +16,57 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_switches: ARRAY [ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+	make (a_switches: INDEXABLE [ARGUMENT_SWITCH, INTEGER]; a_allow_non_switched: like is_allowing_non_switched_arguments)
 			-- Initializes an argument group with a collection of switches.
 			--
 			-- `a_switches': The switches allowed in the group.
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			a_switches_contains_attached_items: a_switches.for_all (
-				agent (ia_item: ARGUMENT_SWITCH): BOOLEAN
-					local
-						l_item: detachable ARGUMENT_SWITCH
+			a_switches_contained_unique_items: (attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq) implies l_seq.for_all (
+				agent (ia_seq: SEQUENCE [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
 					do
-						l_item := ia_item
-						Result := l_item /= Void
-					end)
-			a_switches_contained_unique_items: a_switches.for_all (
+						Result := ia_seq.occurrences (ia_item) = 1
+					end  (l_seq, ?))
+			a_switches_contained_unique_items: (attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr) implies l_arr.for_all (
 				agent (ia_arr: ARRAY [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
 					do
 						Result := ia_arr.occurrences (ia_item) = 1
-					end  (a_switches, ?))
+					end  (l_arr, ?))
 		local
 			i: INTEGER
 			l_upper: INTEGER
 			l_switch: detachable ARGUMENT_SWITCH
+			l_switches: like switches
+			l_cursor: CURSOR
 		do
-			create switches.make (0)
-			from
-				i := a_switches.lower
-				l_upper := a_switches.upper
-			until
-				i > l_upper
-			loop
-				l_switch := a_switches[i]
-				if l_switch /= Void then
-					switches.extend (l_switch)
+			if attached {LIST [ARGUMENT_SWITCH]} a_switches as l_list then
+				create l_switches.make (0)
+				l_cursor := l_list.cursor
+				from l_list.start until l_list.after loop
+					l_switch := l_list.item_for_iteration
+					if l_switch /= Void then
+						l_switches.extend (l_switch)
+					end
+					l_list.forth
 				end
-				i := i + 1
+				l_list.go_to (l_cursor)
+			elseif attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_array then
+				create l_switches.make (l_array.count)
+				from
+					i := l_array.lower
+					l_upper := l_array.upper
+				until
+					i > l_upper
+				loop
+					l_switch := l_array[i]
+					if l_switch /= Void then
+						l_switches.extend (l_switch)
+					end
+					i := i + 1
+				end
 			end
+			switches := l_switches
 			is_allowing_non_switched_arguments := a_allow_non_switched
 			is_hidden := False
 		ensure
@@ -61,26 +74,23 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	frozen make_hidden (a_switches: ARRAY [ARGUMENT_SWITCH]; a_allow_non_switched: like is_allowing_non_switched_arguments)
+	frozen make_hidden (a_switches: INDEXABLE [ARGUMENT_SWITCH, INTEGER]; a_allow_non_switched: like is_allowing_non_switched_arguments)
 			-- Initializes an argument group, not to be shown in the usage, with a collection of switches.
 			--
 			-- `a_switches': The switches allowed in the group.
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			a_switches_contains_attached_items: a_switches.for_all (
-				agent (ia_item: ARGUMENT_SWITCH): BOOLEAN
-					local
-						l_item: detachable ARGUMENT_SWITCH
+			a_switches_contained_unique_items: (attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq) implies l_seq.for_all (
+				agent (ia_seq: SEQUENCE [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
 					do
-						l_item := ia_item
-						Result := l_item /= Void
-					end)
-			a_switches_contained_unique_items: a_switches.for_all (
+						Result := ia_seq.occurrences (ia_item) = 1
+					end  (l_seq, ?))
+			a_switches_contained_unique_items: (attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr) implies l_arr.for_all (
 				agent (ia_arr: ARRAY [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
 					do
 						Result := ia_arr.occurrences (ia_item) = 1
-					end  (a_switches, ?))
+					end  (l_arr, ?))
 		do
 			make (a_switches, a_allow_non_switched)
 			is_hidden := True
@@ -106,7 +116,7 @@ invariant
 	switches_attached: switches /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -130,11 +140,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

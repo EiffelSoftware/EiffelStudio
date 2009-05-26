@@ -79,17 +79,16 @@ feature --Execution
 	           		l_frag_counter := l_frag_counter + 1
            		end
            	end
---			
---			if (l_error) then
---				l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
---			else
---				l_response := l_webapp_handler.forward_request_to_app (l_msg.string)
---			end
 
---			o.dprint ("Sending response to http",2)
---			send_message_to_http (l_response.render_to_string, a_http_socket)
-			send_message_to_http (l_msg.string, a_http_socket)
+			if (l_error) then
+				l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
+			else
+				l_response := l_webapp_handler.forward_request_to_app (l_msg.string)
+			end
 
+			o.dprint ("Sending response to http",2)
+			send_message_to_http (l_response.render_to_string, a_http_socket)
+		
          	a_http_socket.cleanup
             check
             	a_http_socket.is_closed

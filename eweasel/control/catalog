@@ -1057,6 +1057,7 @@ test	finalize-creation-expression-corruption	final077 tcf pass finalizing
 test	finalize-inline-precursor-2	final078 tcf fail finalizing
 test	finalize-attribute-access-crash	final079 tcf pass finalizing
 test	finalize-inline-attribute-body-2	final080 tcf pass finalizing
+test	finalize-inline-external-redef-constant	final081 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

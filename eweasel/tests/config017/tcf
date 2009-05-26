@@ -1,0 +1,11 @@
+test_name 	 config-nonstandard-source-extension
+test_description Source files with nonstandard extension should either be processed as normal source files or be reported as incorrectly specified ones.
+
+copy_sub Ace $TEST Ace
+copy_raw a $CLUSTER a
+copy_raw a.a $CLUSTER a.a
+
+compile_melted
+compile_result	ok
+
+test_end

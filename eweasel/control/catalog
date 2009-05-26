@@ -1591,6 +1591,7 @@ test	config-class-file-name-mismatch-2		config013 tcf pass config
 test	config-class-file-name-update	config014 tcf pass config
 test	config-library-options-redefinition	config015 tcf pass config
 test	config-library-options-setting	config016 tcf pass config
+test	config-nonstandard-source-extension	config017 tcf pass config
 
 -- Lace
 

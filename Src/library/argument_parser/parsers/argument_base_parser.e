@@ -197,7 +197,12 @@ feature {NONE} -- Access
 					end
 					i := i + 1
 				end
-				Result := l_result
+
+				create Result.make (1, l_result.count)
+				from l_result.start until l_result.after loop
+					Result.put (l_result.item_for_iteration, l_result.index)
+					l_result.forth
+				end
 			else
 				Result := argument_source.arguments
 			end
@@ -1158,8 +1163,7 @@ feature {NONE} -- Validation
 			l_switch: ARGUMENT_SWITCH
 			l_cursor: CURSOR
 			l_valid: BOOLEAN
-			l_switches: ARRAY [ARGUMENT_SWITCH]
-			i, nb: INTEGER
+			l_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 		do
 			l_extend_groups := expanded_switch_groups.twin
 
@@ -1184,17 +1188,17 @@ feature {NONE} -- Validation
 				from l_extend_groups.start until l_extend_groups.after loop
 					from
 						l_switches := l_extend_groups.item.switches
-						i := l_switches.lower
-						nb := l_switches.upper
+						l_cursor := l_switches.cursor
+						l_switches.start
 						l_valid := True
 					until
-						i > nb or not l_valid
+						l_switches.after or not l_valid
 					loop
-						l_switch := l_switches.item (i)
-						if l_switch /= Void then
+						l_switch := l_switches.item_for_iteration
+						if attached l_switch then
 							l_valid := l_switch.optional or else has_option (l_switch.id)
 						end
-						i := i + 1
+						l_switches.forth
 					end
 					if not l_valid then
 						l_extend_groups.remove

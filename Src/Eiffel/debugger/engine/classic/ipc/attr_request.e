@@ -131,8 +131,12 @@ feature -- Update
 						-- the address and the count of the special to be consistent
 						-- with the way we retrieve a special object in recv_attributes.
 					address := to_pointer (c_tread)
-					capacity := to_integer_32 (c_tread) --| Count
-					max_capacity := to_integer_32 (c_tread) --| Capacity
+					if is_tuple then
+						capacity := to_integer_32 (c_tread)
+					else
+						capacity := to_integer_32 (c_tread) --| Count
+						max_capacity := to_integer_32 (c_tread) --| Capacity
+					end
 					recv_attributes (attributes, Void, True)
 					debug ("DEBUG_RECV")
 						io.error.put_string ("And being back again in `send'.%N")

@@ -28,10 +28,10 @@
 		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="getest_override" location="$ISE_LIBRARY\library\gobo\override\generated\library\test\generation\"/>
 		<cluster name="test" location="svn\library\test\" recursive="true">
 			<option namespace="Test">
 			</option>
 		</cluster>
+		<cluster name="getest_override" location="$ISE_LIBRARY\library\gobo\override\generated\library\test\" recursive="true"/>
 	</target>
 </system>

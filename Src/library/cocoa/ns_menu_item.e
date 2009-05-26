@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {NS_MENU_ITEM}."
+	description: "Wrapper for NSMenuItem."
 	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,31 +11,31 @@ inherit
 	NS_OBJECT
 
 create
-	new,
+	make,
 	separator_item
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := menu_item_new
+			make_shared (menu_item_new)
 		end
 
 	separator_item
 		do
-			cocoa_object := menu_item_separator_item
+			make_shared (menu_item_separator_item)
 		end
 
 feature -- Access
 
 	set_submenu (a_menu: NS_MENU)
 		do
-			menu_item_set_submenu (cocoa_object, a_menu.cocoa_object)
+			menu_item_set_submenu (item, a_menu.item)
 		end
 
 	set_title (a_title: STRING_GENERAL)
 		do
-			menu_item_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
+			menu_item_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
 	set_action (an_action: PROCEDURE [ANY, TUPLE])
@@ -43,18 +43,32 @@ feature -- Access
 			an_action /= void
 		do
 			action := an_action
-			menu_item_set_target (cocoa_object, target_new ($current, $target))
-			menu_item_set_action (cocoa_object)
+			menu_item_set_target (item, target_new ($current, $target))
+			menu_item_set_action (item)
 		end
 
 	set_key_equivalent (a_string: STRING_GENERAL)
 		do
-			menu_item_set_key_equivalent (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+			menu_item_set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 	set_key_equivalent_modifier_mask (a_mask: INTEGER)
 		do
-			menu_item_set_key_equivalent_modifier_mask (cocoa_object, a_mask)
+			menu_item_set_key_equivalent_modifier_mask (item, a_mask)
+		end
+
+feature -- Managing the Image
+
+	set_image (a_image: NS_IMAGE)
+		do
+			menu_item_set_image (item, a_image.item)
+		end
+
+feature -- Managing the State
+
+	set_state (a_state: INTEGER)
+		do
+			menu_item_set_state (item, a_state)
 		end
 
 feature {NONE} -- callback
@@ -143,10 +157,23 @@ feature {NONE} -- Implementation
 --- (NSString *)mnemonic;
 --- (void)setTitleWithMnemonic:(NSString *)stringWithAmpersand;
 
---- (void)setImage:(NSImage *)menuImage;
+	frozen menu_item_set_image (a_menu_item: POINTER; a_image: POINTER)
+			--- (void)setImage:(NSImage *)menuImage;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSMenuItem*)$a_menu_item setImage: $a_image];"
+		end
 --- (NSImage *)image;
 
---- (void)setState:(NSInteger)state;
+	frozen menu_item_set_state (a_menu_item: POINTER; a_state: INTEGER)
+			--- (void)setState:(NSInteger)state;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSMenuItem*)$a_menu_item setState: $a_state];"
+		end
+
 --- (NSInteger)state;
 --- (void)setOnStateImage:(NSImage *)image;  // checkmark by default
 --- (NSImage *)onStateImage;
@@ -164,12 +191,12 @@ feature {NONE} -- Implementation
 --- (void) setIndentationLevel:(NSInteger)indentationLevel;
 --- (NSInteger) indentationLevel;
 
-	frozen menu_item_set_target (a_button: POINTER; a_target: POINTER)
+	frozen menu_item_set_target (a_menu_item: POINTER; a_target: POINTER)
 			-- - (void)setTarget:(id)anObject;
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSButton*)$a_button setTarget: $a_target];"
+			"[(NSMenuItem*)$a_menu_item setTarget: $a_target];"
 		end
 
 --- (id)target;

@@ -14,23 +14,27 @@ feature -- Getting the Animator Proxy
 
 	animator: like Current
 		deferred
+		ensure
+			Result /= Void
 		end
 
 feature -- Managing Animations for Properties
 
 	animations: NS_DICTIONARY
 		do
-			create Result.make_shared (animation_animations (cocoa_object))
+			create Result.make_shared (animation_animations (item))
+		ensure
+			Result /= void
 		end
 
 	set_animations (a_dict: NS_DICTIONARY)
 		do
-			animation_set_animations (cocoa_object, a_dict.cocoa_object)
+			animation_set_animations (item, a_dict.item)
 		end
 
 	animation_for_key (a_key: NS_STRING): NS_OBJECT
 		do
-			create Result.make_shared (animation_animation_for_key (cocoa_object, a_key.cocoa_object))
+			create Result.make_shared (animation_animation_for_key (item, a_key.item))
 		end
 
 feature {NONE} -- Implementation

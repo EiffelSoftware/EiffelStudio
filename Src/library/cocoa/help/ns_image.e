@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_IMAGE}."
-	author: ""
+	description: "Wrapper for NSImage."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,59 +11,69 @@ inherit
 	NS_OBJECT
 
 create
-	init_by_referencing_file,
-	init_with_size,
-	image_named
+	make_with_referencing_file,
+	make_with_size,
+	make_named
 
-feature --
+feature {NONE} -- Creation
 
-	init_by_referencing_file (a_path: STRING_GENERAL)
+	make_with_referencing_file (a_path: STRING_GENERAL)
 		do
-			cocoa_object := image_init_by_referencing_file ((create {NS_STRING}.make_with_string(a_path)).cocoa_object)
+			make_shared (image_init_by_referencing_file ((create {NS_STRING}.make_with_string(a_path)).item))
 		end
 
-	init_with_size (a_size: NS_SIZE)
+	make_with_size (a_size: NS_SIZE)
 		do
-			cocoa_object := image_init_with_size (a_size.item)
+			make_shared (image_init_with_size (a_size.item))
 		end
 
-	image_named (a_name: STRING_GENERAL)
+	make_named (a_name: STRING_GENERAL)
 		do
-			cocoa_object := image_image_named ((create {NS_STRING}.make_with_string (a_name)).cocoa_object)
+			make_shared (image_image_named ((create {NS_STRING}.make_with_string (a_name)).item))
 		end
 
-	size : TUPLE [width, height: INTEGER]
+feature
+
+	size: TUPLE [width, height: INTEGER]
 			-- TODO Looks like it will make more sense to create a class NS_SIZE. Still, the problem of how to nicely extract this from C remains to be solved.
 		local
 			w, h: INTEGER
 		do
-			image_size (cocoa_object, $w, $h)
+			image_size (item, $w, $h)
 			create Result
 			Result.width := w
 			Result.height := h
 		ensure
+			result_not_void: Result /= void
 			Result.width >= 0
 			Result.height >= 0
 		end
 
-	representations : NS_ARRAY [NS_IMAGE_REP]
+	representations: NS_ARRAY [NS_IMAGE_REP]
 		do
-			create Result.make_shared (image_representations (cocoa_object))
+			create Result.make_shared (image_representations (item))
+		ensure
+			result_not_void: Result /= void
+			count_at_least_1: Result.count >= 1
 		end
 
 	draw_at_point_from_rect_operation_fraction (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+		require
+			a_point /= void
+			a_from_rect /= void
+			valid_operation: a_op = composite_source_over or a_op = composite_xor
 		do
-			image_draw_at_point_from_rect_operation_fraction (cocoa_object, a_point.item, a_from_rect.item, a_op, a_delta)
+			image_draw_at_point_from_rect_operation_fraction (item, a_point.item, a_from_rect.item, a_op, a_delta)
 		end
 
 	lock_focus
 		do
-			image_lock_focus (cocoa_object)
+			image_lock_focus (item)
 		end
 
 	unlock_focus
 		do
-			image_unlock_focus (cocoa_object)
+			image_unlock_focus (item)
 		end
 
 feature {NONE} -- Objective-C implementation

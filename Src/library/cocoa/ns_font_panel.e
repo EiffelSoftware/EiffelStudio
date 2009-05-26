@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_FONT_PANEL}."
-	author: ""
+	description: "Wrapper for NSFontPanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +13,7 @@ inherit
 create
 	shared_font_panel
 
-feature
+feature {NONE} -- Creation
 
 	shared_font_panel
 		do

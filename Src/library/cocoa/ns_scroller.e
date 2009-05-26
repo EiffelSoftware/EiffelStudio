@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SCROLLER}."
-	author: ""
+	description: "Wrapper for NSScroller."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,25 +10,26 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	make_shared,
-	new,
-	init_with_frame
+	make,
+	make_with_frame
+create {NS_OBJECT}
+	make_shared
 
-feature -- Box
+feature {NONE} -- Creation
 
-	new
-			-- Create the window.
+	make
 		do
-			cocoa_object := scroller_new
+			make_shared (scroller_new)
 		end
 
-	init_with_frame (x, y, w, h: INTEGER)
+	make_with_frame (x, y, w, h: INTEGER)
+			-- Note the dimensions with which the NSScroller gets initialized define its orientation (vertical/horizontal)
 		do
-			cocoa_object := scroller_init_with_frame (x, y, w, h)
+			make_shared (scroller_init_with_frame (x, y, w, h))
 		end
 
 feature {NONE} -- Objective-C implementation

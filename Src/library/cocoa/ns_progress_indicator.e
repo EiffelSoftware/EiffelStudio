@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_PROGRESS_INDICATOR}."
-	author: ""
+	description: "Wrapper for NSProgressIndicator."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,41 +10,44 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
+
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := progress_indicator_new
+			make_shared (progress_indicator_new)
 		end
+
+feature -- Access
 
 	set_indeterminate (a_flag: BOOLEAN)
 		do
-			progress_indicator_set_indeterminate (cocoa_object, a_flag)
+			progress_indicator_set_indeterminate (item, a_flag)
 		end
 
 	set_min_value (a_value: DOUBLE)
 		do
-			progress_indicator_set_min_value (cocoa_object, a_value)
+			progress_indicator_set_min_value (item, a_value)
 		end
 
 	set_max_value (a_value: DOUBLE)
 		do
-			progress_indicator_set_max_value (cocoa_object, a_value)
+			progress_indicator_set_max_value (item, a_value)
 		end
 
 	set_double_value (a_double: DOUBLE)
 		do
-			progress_indicator_set_double_value (cocoa_object, a_double)
+			progress_indicator_set_double_value (item, a_double)
 		end
 
 	start_animation
 		do
-			progress_indicator_start_animation (cocoa_object)
+			progress_indicator_start_animation (item)
 		end
 
 feature {NONE} -- Objective-C implementation

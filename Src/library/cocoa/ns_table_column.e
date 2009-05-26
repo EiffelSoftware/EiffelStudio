@@ -11,91 +11,91 @@ inherit
 	NS_OBJECT
 
 create
-	new
+	make
 
-feature -- Creation and Initialization
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := table_column_new
+			make_shared (table_column_new)
 		end
 
-	init_with_identifier (a_identifier: NS_OBJECT)
+	make_with_identifier (a_identifier: NS_OBJECT)
 		do
-			table_column_init_with_identifier (cocoa_object, a_identifier.cocoa_object)
+			-- table_column_init_with_identifier (item, a_identifier.item)
 		end
 
 feature -- ...
 
 	set_identifier (a_identifier: NS_OBJECT)
 		do
-			table_column_set_identifier (cocoa_object, a_identifier.cocoa_object)
+			table_column_set_identifier (item, a_identifier.item)
 		end
 
 	identifier: NS_OBJECT
 		do
-			create Result.make_shared (table_column_identifier (cocoa_object))
+			create Result.make_shared (table_column_identifier (item))
 		end
 
 	set_table_view (a_table_view: NS_TABLE_VIEW)
 		do
-			table_column_set_table_view (cocoa_object, a_table_view.cocoa_object)
+			table_column_set_table_view (item, a_table_view.item)
 		end
 
 	table_view: NS_TABLE_VIEW
 		do
-			create Result.make_shared (table_column_table_view (cocoa_object))
+			create Result.make_shared (table_column_table_view (item))
 		end
 
 	set_width (a_width: REAL)
 		do
-			table_column_set_width (cocoa_object, a_width)
+			table_column_set_width (item, a_width)
 		end
 
 	width: REAL
 		do
-			Result := table_column_width (cocoa_object)
+			Result := table_column_width (item)
 		end
 
 	set_min_width (a_min_width: REAL)
 		do
-			table_column_set_min_width (cocoa_object, a_min_width)
+			table_column_set_min_width (item, a_min_width)
 		end
 
 	min_width: REAL
 		do
-			Result := table_column_min_width (cocoa_object)
+			Result := table_column_min_width (item)
 		end
 
 	set_max_width (a_max_width: REAL)
 		do
-			table_column_set_max_width (cocoa_object, a_max_width)
+			table_column_set_max_width (item, a_max_width)
 		end
 
 	max_width: REAL
 		do
-			Result := table_column_max_width (cocoa_object)
+			Result := table_column_max_width (item)
 		end
 
 	set_header_cell (a_cell: NS_CELL)
 		do
-			table_column_set_header_cell (cocoa_object, a_cell.cocoa_object)
+			table_column_set_header_cell (item, a_cell.item)
 		end
 
 	header_cell: NS_CELL
 		do
-			create Result.make_shared (table_column_header_cell (cocoa_object))
+			create Result.make_shared (table_column_header_cell (item))
 		end
 
 	set_data_cell (a_cell: NS_CELL)
 		do
-			table_column_set_data_cell (cocoa_object, a_cell.cocoa_object)
+			table_column_set_data_cell (item, a_cell.item)
 		end
 
 	data_cell: NS_CELL
 			-- Note: Original signature returns NS_OBJECT
 		do
-			create Result.make_shared (table_column_data_cell (cocoa_object))
+			create Result.make_shared (table_column_data_cell (item))
 		end
 
 --	data_cell_for_row (a_row: INTEGER): NS_OBJECT
@@ -105,17 +105,17 @@ feature -- ...
 
 	set_editable (a_flag: BOOLEAN)
 		do
-			table_column_set_editable (cocoa_object, a_flag)
+			table_column_set_editable (item, a_flag)
 		end
 
 	is_editable: BOOLEAN
 		do
-			Result := table_column_is_editable (cocoa_object)
+			Result := table_column_is_editable (item)
 		end
 
 	size_to_fit
 		do
-			table_column_size_to_fit (cocoa_object)
+			table_column_size_to_fit (item)
 		end
 
 --	set_sort_descriptor_prototype (a_sort_descriptor: NS_SORT_DESCRIPTOR)
@@ -130,42 +130,42 @@ feature -- ...
 
 	set_resizing_mask (a_resizing_mask: INTEGER)
 		do
-			table_column_set_resizing_mask (cocoa_object, a_resizing_mask)
+			table_column_set_resizing_mask (item, a_resizing_mask)
 		end
 
 	resizing_mask: INTEGER
 		do
-			Result := table_column_resizing_mask (cocoa_object)
+			Result := table_column_resizing_mask (item)
 		end
 
 	set_header_tool_tip (a_string: NS_STRING)
 		do
-			table_column_set_header_tool_tip (cocoa_object, a_string.cocoa_object)
+			table_column_set_header_tool_tip (item, a_string.item)
 		end
 
 	header_tool_tip: NS_STRING
 		do
-			create Result.make_shared (table_column_header_tool_tip (cocoa_object))
+			create Result.make_shared (table_column_header_tool_tip (item))
 		end
 
 	is_hidden: BOOLEAN
 		do
-			Result := table_column_is_hidden (cocoa_object)
+			Result := table_column_is_hidden (item)
 		end
 
 	set_hidden (a_hidden: BOOLEAN)
 		do
-			table_column_set_hidden (cocoa_object, a_hidden)
+			table_column_set_hidden (item, a_hidden)
 		end
 
 	set_resizable (a_flag: BOOLEAN)
 		do
-			table_column_set_resizable (cocoa_object, a_flag)
+			table_column_set_resizable (item, a_flag)
 		end
 
 	is_resizable: BOOLEAN
 		do
-			Result := table_column_is_resizable (cocoa_object)
+			Result := table_column_is_resizable (item)
 		end
 
 feature {NONE} -- Objective-C implementation

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_COLOR_SPACE}."
-	author: ""
+	description: "Wrapper for NSColorSpace."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,17 +14,16 @@ create
 	device_rgb_color_space,
 	generic_rgb_color_space
 
-
-feature -- Creation
+feature {NONE} -- Creation
 
 	device_rgb_color_space
 		do
-			cocoa_object := color_space_device_rgb_color_space
+			item := color_space_device_rgb_color_space
 		end
 
 	generic_rgb_color_space
 		do
-			cocoa_object := color_space_generic_rgb_color_space
+			item := color_space_generic_rgb_color_space
 		end
 
 feature {NONE} -- Implementation

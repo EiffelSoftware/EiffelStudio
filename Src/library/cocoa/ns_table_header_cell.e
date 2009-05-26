@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TABLE_HEADER_CELL}."
-	author: ""
+	description: "Wrapper for NSTableHeaderCell."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,19 +11,18 @@ inherit
 	NS_TEXT_FIELD_CELL
 
 create
-	alloc,
-	new
+	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	alloc
+--	alloc
+--		do
+--			cocoa_object := table_header_cell_alloc
+--		end
+
+	make
 		do
-			cocoa_object := table_header_cell_alloc
-		end
-
-	new
-		do
-			cocoa_object := table_header_cell_new
+			make_shared (table_header_cell_new)
 		end
 
 feature {NONE} -- Objective-C interface

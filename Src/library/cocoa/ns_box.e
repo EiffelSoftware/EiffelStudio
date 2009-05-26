@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_BOX}."
-	author: ""
+	description: "Wrapper for NSBox"
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,23 +10,25 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
+
+feature {NONE} -- Creation
+
+	make
+			-- Create a new NSBox.
+		do
+			make_shared (box_new)
+		end
 
 feature -- Box
 
-	new
-			-- Create the window.
-		do
-			cocoa_object := box_new
-		end
-
 	content_view: NS_VIEW
 		do
-			create Result.make_shared (box_content_view (cocoa_object))
+			create Result.make_shared (box_content_view (item))
 		end
 
 	set_border_type (a_border_type: INTEGER)
@@ -36,37 +38,37 @@ feature -- Box
 			a_border_type = bezel_border or
 			a_border_type = groove_border
 		do
-			box_set_border_type (cocoa_object, a_border_type)
+			box_set_border_type (item, a_border_type)
 		end
 
 	set_border_width (a_border_width: REAL)
 		do
-			box_set_border_width (cocoa_object, a_border_width)
+			box_set_border_width (item, a_border_width)
 		end
 
 	set_box_type (a_box_type: INTEGER)
 		do
-			box_set_box_type (cocoa_object, a_box_type)
+			box_set_box_type (item, a_box_type)
 		end
 
 	set_content_view_margins (a_width, a_height: REAL)
 		do
-			box_set_content_view_margins (cocoa_object, a_width, a_height)
+			box_set_content_view_margins (item, a_width, a_height)
 		end
 
 	set_fill_color (a_color: NS_COLOR)
 		do
-			box_set_fill_color (cocoa_object, a_color.cocoa_object)
+			box_set_fill_color (item, a_color.item)
 		end
 
 	set_title (a_string: STRING_GENERAL)
 		do
-			box_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+			box_set_title (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 	set_title_position (a_position: INTEGER)
 		do
-			box_set_title_position (cocoa_object, a_position)
+			box_set_title_position (item, a_position)
 		end
 
 feature {NONE} -- Objective-C implementation

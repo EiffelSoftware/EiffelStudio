@@ -13,15 +13,16 @@ inherit
 	NS_ANIMATION
 
 create
-	make_shared,
-	init_with_control_rect_style_mask_backing_defer
+	make
+create {NS_OBJECT}
+	make_shared
 
 feature -- Creating Windows
 
-	init_with_control_rect_style_mask_backing_defer (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
+	make (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
 			-- Create a new window
 		do
-			cocoa_object := window_init_with_control_rect_style_mask_backing_defer (a_rect.item, a_style_mask, a_defer)
+			item := window_init_with_control_rect_style_mask_backing_defer (a_rect.item, a_style_mask, a_defer)
 		end
 
 feature -- Configuring Windows
@@ -30,47 +31,52 @@ feature -- ...
 
 	display
 		do
-			window_display (cocoa_object)
+			window_display (item)
 		end
 
 	is_visible: BOOLEAN
 			-- Indicates whether the window is visible onscreen (even when it's obscured by other windows)
 		do
-			Result := window_is_visible (cocoa_object)
+			Result := window_is_visible (item)
 		end
 
 	frame: NS_RECT
 		do
 			create Result.make
-			window_frame (cocoa_object, Result.item)
+			window_frame (item, Result.item)
 		end
 
 	set_content_view (a_view: NS_VIEW)
 		do
-			window_set_content_view (cocoa_object, a_view.cocoa_object)
+			window_set_content_view (item, a_view.item)
 		end
 
 	set_content_min_size (a_width, a_height: INTEGER)
 		do
-			window_set_content_min_size (cocoa_object, a_width, a_height)
+			window_set_content_min_size (item, a_width, a_height)
 		end
 
-	set_default_button_cell (a_button_cell: POINTER)
+	set_default_button_cell (a_button_cell: NS_CELL)
+			-- void => no default button
 		do
-			window_set_default_button_cell (cocoa_object, a_button_cell)
+			if a_button_cell = void then
+				window_set_default_button_cell (item, nil)
+			else
+				window_set_default_button_cell (item, a_button_cell.item)
+			end
 		end
 
 	set_frame (a_rect: NS_RECT)
 		do
-			window_set_frame (cocoa_object, a_rect.item)
+			window_set_frame (item, a_rect.item)
 		end
 
 	title: STRING
 		local
 			c_title: POINTER
 		do
-			c_title := window_title (cocoa_object)
-			if c_title /= {NS_OBJECT}.nil then
+			c_title := window_title (item)
+			if c_title /= nil then
 				Result := (create {NS_STRING}.make_shared (c_title)).to_string
 			else
 				create Result.make_empty
@@ -80,180 +86,184 @@ feature -- ...
 	set_title (a_title: STRING_GENERAL)
 			--
 		do
-			window_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
+			window_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
 	set_min_size (a_width, a_height: INTEGER)
 		do
-			window_set_min_size (cocoa_object, a_width, a_height)
+			window_set_min_size (item, a_width, a_height)
 		end
 
 	set_shows_resize_indicator (a_flag: BOOLEAN)
 		do
-			window_set_shows_resize_indicator (cocoa_object, a_flag)
+			window_set_shows_resize_indicator (item, a_flag)
 		end
 
 	content_rect_for_frame_rect (a_rect: NS_RECT): NS_RECT
 		do
 			create Result.make
-			window_content_rect_for_frame_rect (cocoa_object, a_rect.item, Result.item)
+			window_content_rect_for_frame_rect (item, a_rect.item, Result.item)
 		end
 
 	frame_rect_for_content_rect (a_rect: NS_RECT): NS_RECT
 		do
 			create Result.make
-			window_frame_rect_for_content_rect (cocoa_object, a_rect.item, Result.item)
+			window_frame_rect_for_content_rect (item, a_rect.item, Result.item)
 		end
 
 	set_delegate (a_delegate: NS_WINDOW_DELEGATE)
-			--
 		do
-			window_set_delegate (cocoa_object, a_delegate.cocoa_object)
+			window_set_delegate (item, a_delegate.item)
 		end
 
 	convert_base_to_screen (a_point: NS_POINT): NS_POINT
 		do
 			create Result.make
-			window_convert_base_to_screen (cocoa_object, a_point.item, Result.item)
+			window_convert_base_to_screen (item, a_point.item, Result.item)
 		end
 
 	set_alpha_value (a_window_alpha: REAL)
 		do
-			window_set_alpha_value (cocoa_object, a_window_alpha)
+			window_set_alpha_value (item, a_window_alpha)
 		end
 
 	alpha_value: REAL
 		do
-			Result := window_alpha_value (cocoa_object)
+			Result := window_alpha_value (item)
 		end
 
 	set_background_color (a_color: NS_COLOR)
 		do
-			window_set_background_color (cocoa_object, a_color.cocoa_object)
+			window_set_background_color (item, a_color.item)
 		end
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (window_background_color (cocoa_object))
+			create Result.make_shared (window_background_color (item))
 		end
 
 	set_ignores_mouse_events (a_flag: BOOLEAN)
 		do
-			window_set_ignores_mouse_events (cocoa_object, a_flag)
+			window_set_ignores_mouse_events (item, a_flag)
 		end
 
 	ignores_mouse_events: BOOLEAN
 		do
-			Result := window_ignores_mouse_events (cocoa_object)
+			Result := window_ignores_mouse_events (item)
 		end
 
 	set_level (a_new_level: INTEGER)
 		do
-			window_set_level (cocoa_object, a_new_level)
+			window_set_level (item, a_new_level)
 		end
 
 	level: INTEGER
 		do
-			Result := window_level (cocoa_object)
+			Result := window_level (item)
 		end
 
 	screen: NS_SCREEN
+		local
+			res: POINTER
 		do
-			create Result.make_shared (window_screen (cocoa_object))
+			res := window_screen (item)
+			if res /= nil then
+				create Result.make_shared (res)
+			end
 		end
 
 	deepest_screen: NS_SCREEN
 		do
-			create Result.make_shared (window_deepest_screen (cocoa_object))
+			create Result.make_shared (window_deepest_screen (item))
 		end
 
 	miniaturize
 		do
-			window_miniaturize (cocoa_object, nil)
+			window_miniaturize (item, nil)
 		end
 
 	deminiaturize
 		do
-			window_deminiaturize (cocoa_object, nil)
+			window_deminiaturize (item, nil)
 		end
 
 	is_zoomed: BOOLEAN
 		do
-			Result := window_is_zoomed (cocoa_object)
+			Result := window_is_zoomed (item)
 		end
 
 	zoom
 		do
-			window_zoom (cocoa_object, nil)
+			window_zoom (item, nil)
 		end
 
 	is_miniaturized: BOOLEAN
 		do
-			Result := window_is_miniaturized (cocoa_object)
+			Result := window_is_miniaturized (item)
 		end
 
 	make_key_and_order_front
 		do
-			window_make_key_and_order_front (cocoa_object, nil)
+			window_make_key_and_order_front (item, nil)
 		end
 
 	order_front
 		do
-			window_order_front (cocoa_object, nil)
+			window_order_front (item, nil)
 		end
 
 	order_back
 		do
-			window_order_back (cocoa_object, nil)
+			window_order_back (item, nil)
 		end
 
 	order_out
 		do
-			window_order_out (cocoa_object, nil)
+			window_order_out (item, nil)
 		end
 
 	order_window_relative_to (a_place: INTEGER; a_other_win: INTEGER)
 		do
-			window_order_window_relative_to (cocoa_object, a_place, a_other_win)
+			window_order_window_relative_to (item, a_place, a_other_win)
 		end
 
 	order_front_regardless
 		do
-			window_order_front_regardless (cocoa_object)
+			window_order_front_regardless (item)
 		end
 
 feature -- Managing Attached Windows
 
 	add_child_window_ordered (a_child_win: NS_WINDOW; a_place: INTEGER)
 		do
-			window_add_child_window_ordered (cocoa_object, a_child_win.cocoa_object, a_place)
+			window_add_child_window_ordered (item, a_child_win.item, a_place)
 		end
 
 	remove_child_window (a_child_win: NS_WINDOW)
 		do
-			window_remove_child_window (cocoa_object, a_child_win.cocoa_object)
+			window_remove_child_window (item, a_child_win.item)
 		end
 
 	child_windows: NS_ARRAY [NS_WINDOW]
 		do
-			create Result.make_shared (window_child_windows (cocoa_object))
+			create Result.make_shared (window_child_windows (item))
 		end
 
 	parent_window: NS_WINDOW
 		do
-			create Result.make_shared (window_parent_window (cocoa_object))
+			create Result.make_shared (window_parent_window (item))
 		end
 
 	set_parent_window (a_window: NS_WINDOW)
 		do
-			window_set_parent_window (cocoa_object, a_window.cocoa_object)
+			window_set_parent_window (item, a_window.item)
 		end
 
 feature -- Animation
 
 	animator: NS_WINDOW
 		do
-			create Result.make_shared (animation_animator (cocoa_object))
+			create Result.make_shared (animation_animator (item))
 		end
 
 feature {NONE} -- Objective-C implementation
@@ -643,4 +653,14 @@ feature -- Window Ordering Mode
 		alias
 			"NSWindowOut"
 		end
+
+feature -- Display Device Descriptions
+
+	frozen device_resolution: POINTER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSDeviceResolution"
+		end
+
 end

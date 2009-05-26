@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_PRINT_PANEL}."
-	author: ""
+	description: "Wrapper for NSPrintPanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,15 +11,14 @@ inherit
 	NS_PANEL
 
 create
-	print_panel
+	make
 
-feature  -- Creating a NS_PRINT_PANEL
+feature {NONE} -- Creation
 
-	print_panel
+	make
 		do
-			cocoa_object := print_panel_print_panel
+			make_shared (print_panel_print_panel)
 		end
-
 
 feature -- Customizing the Panel
 

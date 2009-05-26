@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_STEPPER}."
-	author: ""
+	description: "Wrapper for NSStepper."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,32 +10,34 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := stepper_new
+			make_shared (stepper_new)
 		end
+
+feature -- Access
 
 	set_min_value (a_value: DOUBLE)
 		do
-			stepper_set_min_value (cocoa_object, a_value)
+			stepper_set_min_value (item, a_value)
 		end
 
 	set_max_value (a_value: DOUBLE)
 		do
-			stepper_set_max_value (cocoa_object, a_value)
+			stepper_set_max_value (item, a_value)
 		end
 
 	set_value_wraps (a_flag: BOOLEAN)
 		do
-			stepper_set_value_wraps (cocoa_object, a_flag)
+			stepper_set_value_wraps (item, a_flag)
 		end
 
 feature {NONE} -- Objective-C implementation

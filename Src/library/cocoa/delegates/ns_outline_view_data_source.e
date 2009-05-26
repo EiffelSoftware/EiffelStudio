@@ -1,18 +1,21 @@
 note
 	description: "Summary description for {NS_OUTLINE_VIEW_DATA_SOURCE}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	NS_OUTLINE_VIEW_DATA_SOURCE [ITEM_TYPE]
 
+inherit
+	NS_OBJECT
+
 feature
 
-	new
+	make
 			-- Must be called for initialization
 		do
-			cocoa_data_source := outline_view_data_source_new ($Current, $number_of_children_of_item, $is_item_expandable, $child_of_item, $object_value_for_table_column_by_item)
+			make_shared (outline_view_data_source_new ($Current, $number_of_children_of_item, $is_item_expandable, $child_of_item, $object_value_for_table_column_by_item))
 		end
 
 feature -- Objective-C callbacks
@@ -43,8 +46,6 @@ feature {NONE} -- Objective-C implementation
 		end
 
 feature {NS_OUTLINE_VIEW}
-
-	cocoa_data_source: POINTER
 
 	frozen outline_view_date_source_item_to_any (an_item: POINTER): ANY
 		external

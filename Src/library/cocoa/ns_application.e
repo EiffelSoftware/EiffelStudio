@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_APPLICATION}."
-	author: ""
+	description: "Wrapper for NSApplication."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,60 +11,54 @@ inherit
 	NS_OBJECT
 
 create
-	new_shared,
-	init
+	make
+create {NS_OBJECT}
+	make_shared
 
-feature {NONE} -- internal use of the native layer only
+feature {NONE} -- Creation
 
-	new_shared (a_pointer: POINTER)
-		do
-			cocoa_object := a_pointer
-		end
-
-feature -- Creation
-
-	init
+	make
 		do
 			application_init
-			new_shared (application_get)
-			application_finish_launching (cocoa_object)
+			make_shared (application_get)
+			application_finish_launching (item)
 		end
 
 feature -- Access
 
 	next_event (a_matching_mask: INTEGER; a_until_date: POINTER; a_in_mode: INTEGER; a_dequeue: BOOLEAN): POINTER
 		do
-			Result := application_next_event (cocoa_object, a_matching_mask, a_until_date, a_in_mode, a_dequeue)
+			Result := application_next_event (item, a_matching_mask, a_until_date, a_in_mode, a_dequeue)
 		end
 
 	update_windows
 		do
-			application_update_windows (cocoa_object)
+			application_update_windows (item)
 		end
 
 	send_event (a_event: POINTER)
 		do
-			application_send_event (cocoa_object, a_event)
+			application_send_event (item, a_event)
 		end
 
 	set_main_menu (a_menu: NS_MENU)
 		do
-			application_set_main_menu (cocoa_object, a_menu.cocoa_object)
+			application_set_main_menu (item, a_menu.item)
 		end
 
 	set_application_icon_image (a_image: NS_IMAGE)
 		do
-			application_set_application_icon_image (cocoa_object, a_image.cocoa_object)
+			application_set_application_icon_image (item, a_image.item)
 		end
 
 	terminate
 		do
-			application_terminate (cocoa_object, cocoa_object)
+			application_terminate (item, item)
 		end
 
 	run_modal_for_window (a_window: NS_WINDOW): INTEGER
 		do
-			Result := application_run_modal_for_window (cocoa_object, a_window.cocoa_object)
+			Result := application_run_modal_for_window (item, a_window.item)
 		end
 
 	fix_apple_menu

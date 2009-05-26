@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_ARRAY}."
-	author: ""
+	description: "Wrapper for NSArray. Typed with Eiffel Generics."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,12 +13,13 @@ inherit
 	NS_OBJECT
 
 create
-	make_shared,
-	array_with_objects_count
+	make_with_objects
+create {NS_OBJECT}
+	make_shared
 
-feature
+feature {NONE} -- Creation
 
-	array_with_objects_count (a_objects: LIST[T])
+	make_with_objects (a_objects: LIST[T])
 		local
 			l_objects: MANAGED_POINTER
 			i: INTEGER
@@ -30,24 +31,29 @@ feature
 			until
 				a_objects.after
 			loop
-				l_objects.put_pointer (a_objects.item.cocoa_object, i*4)
+				l_objects.put_pointer (a_objects.item.item, i*4)
 				i := i + 1
 				a_objects.forth
 			end
-			cocoa_object := array_array_with_objects_count (l_objects.item, a_objects.count)
+			item := array_array_with_objects_count (l_objects.item, a_objects.count)
 		end
 
 feature
+
 	count: INTEGER
 		do
-			Result := array_count (cocoa_object)
+			Result := array_count (item)
+		ensure
+			count_positive: Result >= 0
 		end
 
 	object_at_index (a_index: INTEGER): T
 		require
-			a_index >= 0
+			index_in_range: 0 <= a_index and a_index < count
 		do
-			create Result.make_shared (array_object_at_index (cocoa_object, a_index))
+			create Result.make_shared (array_object_at_index (item, a_index))
+		ensure
+			result_not_void: Result /= void
 		end
 
 --	array_by_adding_object (a_an_object: T): NS_ARRAY [T]
@@ -205,7 +211,7 @@ feature
 ----			Result := array_init_with_contents_of_u_r_l(cocoa_object, a_url.cocoa_object)
 ----		end
 
-feature -- Objective-C implementation
+feature {NONE} -- Objective-C implementation
 
 	frozen array_array_with_objects_count (a_objects: POINTER; a_count: INTEGER): POINTER
 		external

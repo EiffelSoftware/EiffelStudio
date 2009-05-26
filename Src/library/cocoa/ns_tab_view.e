@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TAB_VIEW}."
-	author: ""
+	description: "Wrapper for NSTabView."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,31 +10,33 @@ class
 inherit
 	NS_VIEW
 		redefine
-			new
+			make
 		end
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 		do
-			cocoa_object := tab_view_new
+			make_shared (tab_view_new)
 		end
+
+feature -- Access
 
 	add_tab_view_item (a_item: NS_TAB_VIEW_ITEM)
 		do
-			tab_view_add_tab_view_item (cocoa_object, a_item.cocoa_object)
+			tab_view_add_tab_view_item (item, a_item.item)
 		end
 
 	insert_tab_view_item (a_item: NS_TAB_VIEW_ITEM; a_index: INTEGER)
 		do
-			tab_view_insert_tab_view_item (cocoa_object, a_item.cocoa_object, a_index)
+			tab_view_insert_tab_view_item (item, a_item.item, a_index)
 		end
 
 	remove_tab_view_item (a_item: NS_TAB_VIEW_ITEM)
 		do
-			tab_view_remove_tab_view_item (cocoa_object, a_item.cocoa_object)
+			tab_view_remove_tab_view_item (item, a_item.item)
 		end
 
 feature {NONE} -- Objective-C implementation

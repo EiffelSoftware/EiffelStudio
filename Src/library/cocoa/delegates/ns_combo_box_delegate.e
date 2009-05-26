@@ -1,11 +1,14 @@
 note
 	description: "Summary description for {NS_COMBO_BOX_DELEGATE}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	NS_COMBO_BOX_DELEGATE
+
+inherit
+	NS_OBJECT
 
 feature -- Access
 

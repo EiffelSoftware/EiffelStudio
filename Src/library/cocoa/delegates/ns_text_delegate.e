@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TEXT_DELEGATE}."
-	author: ""
+	description: "Wrapper for delegate methods of NSText."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_SAVE_PANEL}."
-	author: ""
+	description: "Wrapper for NSSavePanel."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,19 +9,15 @@ class
 
 inherit
 	NS_PANEL
-		redefine
-			set_title,
-			title
-		end
 
 create
-	save_panel
+	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	save_panel
+	make
 		do
-			cocoa_object := save_panel_save_panel
+			make_shared (save_panel_save_panel)
 		end
 
 feature -- Access
@@ -32,12 +28,12 @@ feature -- Access
 
 	filename : NS_STRING
 		do
---			Result := save_panel_filename(cocoa_object)
+			create Result.make_shared (save_panel_filename (cocoa_object))
 		end
 
 	directory : NS_STRING
 		do
---			Result := save_panel_directory(cocoa_object)
+			create Result.make_shared (save_panel_directory (cocoa_object))
 		end
 
 	set_directory (a_path: NS_STRING)
@@ -52,7 +48,7 @@ feature -- Access
 
 	set_required_file_type (a_type: NS_STRING)
 		do
-			save_panel_set_required_file_type(cocoa_object, a_type.cocoa_object)
+			save_panel_set_required_file_type (cocoa_object, a_type.cocoa_object)
 		end
 
 	allowed_file_types : NS_ARRAY [NS_STRING]
@@ -62,7 +58,7 @@ feature -- Access
 
 	set_allowed_file_types (a_types: NS_ARRAY [NS_STRING])
 		do
-			save_panel_set_allowed_file_types(cocoa_object, a_types.cocoa_object)
+			save_panel_set_allowed_file_types (cocoa_object, a_types.cocoa_object)
 		end
 
 	allows_other_file_types : BOOLEAN
@@ -150,15 +146,15 @@ feature -- Access
 			save_panel_set_prompt(cocoa_object, a_prompt.cocoa_object)
 		end
 
-	title : STRING
-		do
+--	title : STRING
+--		do
 --			Result := save_panel_title(cocoa_object)
-		end
+--		end
 
-	set_title (a_title: STRING_GENERAL)
-		do
-			save_panel_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
-		end
+--	set_title (a_title: STRING_GENERAL)
+--		do
+--			save_panel_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
+--		end
 
 	name_field_label : NS_STRING
 		do

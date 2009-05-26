@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_BUTTON}."
-	author: ""
+	description: "Wrapper for NSButton"
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,40 +10,42 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			new
+			make
 		end
 
 create
-	new
+	make
 
-feature
+feature {NONE} -- Creation
 
-	new
+	make
 			-- Create the window.
 		do
-			cocoa_object := button_new
-			button_set_bezel_style (cocoa_object, rounded_bezel_style)
-			-- FIXME: move to caller
+			make_shared (button_new)
+			-- FIXME
+			button_set_bezel_style (item, rounded_bezel_style)
 		end
 
-	cell : POINTER
+feature -- Access
+
+	cell: NS_CELL
 		do
-			Result := button_cell (cocoa_object)
+			create Result.make_shared (button_cell (item))
 		end
 
 	set_button_type (a_button_type: INTEGER)
 		do
-			button_set_button_type (cocoa_object, a_button_type)
+			button_set_button_type (item, a_button_type)
 		end
 
 	set_key_equivalent (a_string: STRING_GENERAL)
 		do
-			button_set_key_equivalent (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+			button_set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 	set_title (a_title: STRING_GENERAL)
 		do
-			button_set_title (cocoa_object, (create {NS_STRING}.make_with_string (a_title)).cocoa_object)
+			button_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
 feature {NONE} -- Objective-C interface

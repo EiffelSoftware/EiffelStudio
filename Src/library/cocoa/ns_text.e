@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_TEXT}."
-	author: ""
+	description: "Wrapper for NSText."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,11 +10,11 @@ deferred class
 inherit
 	NS_VIEW
 
-feature
+feature -- Access
 
 	set_string (a_string: STRING)
 		do
-			text_set_string (cocoa_object, (create {NS_STRING}.make_with_string (a_string)).cocoa_object)
+			text_set_string (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 feature {NONE} -- Objective-C Implementation

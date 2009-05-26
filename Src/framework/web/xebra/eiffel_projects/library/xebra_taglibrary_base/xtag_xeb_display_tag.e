@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {XEB_DISPLAY_TAG}."
+	description: "[
+		Displays the out-string of the return value the specified feature. 
+		Expects a function with no arguments.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

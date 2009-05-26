@@ -1,5 +1,10 @@
 note
-	description: "Summary description for {XEB_DISPLAY_TAG}."
+	description: "[
+		Renders a html form. It defines the variable that should be wrapped and manages
+		its creation and definition in the servlet. It passes along a couple of variables
+		which is used by buttons, inputs and validators. The latter cannot be used out
+		of a form context. Forms cannot be nested.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

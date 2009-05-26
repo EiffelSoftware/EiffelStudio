@@ -1,9 +1,10 @@
 note
-	description: "Summary description for {XEB_CALL_TAG}."
+	description: "[
+		Generates a call to the current controller in the render feature.
+		Expects a procedure without arguments.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
-	xeb_tag: "call"
-	xeb_argument: "feature: BOOLEAN"
 
 class
 	XTAG_XEB_CALL_TAG
@@ -23,6 +24,8 @@ feature {NONE} -- Initialization
 		do
 			make_base
 			feature_name := "####wrong_feature####"
+		ensure
+			feature_name_attached: attached feature_name
 		end
 
 feature {NONE} -- Access
@@ -30,7 +33,7 @@ feature {NONE} -- Access
 	feature_name: STRING
 			-- The name of the feature to call
 
-feature -- Implementation
+feature -- Basic implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
@@ -45,6 +48,8 @@ feature -- Implementation
 				feature_name := a_attribute
 			end
 		end
+
+feature -- Render configuration
 
 	generates_render: BOOLEAN = True
 

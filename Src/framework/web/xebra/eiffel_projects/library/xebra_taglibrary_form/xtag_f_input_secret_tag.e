@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XTAG_F_INPUT_SECRET_TAG}.
+		Renders an html input with hidden input (secret).
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XTAG_PAGE_NOOP_TAG}."
+	description: "[
+		This tag is just a placeholder and does not generate any output.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 	xeb_tag: "call"

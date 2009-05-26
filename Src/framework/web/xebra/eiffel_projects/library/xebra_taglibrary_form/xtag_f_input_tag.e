@@ -1,6 +1,8 @@
 note
 	description: "[
-		{XTAG_F_INPUT_TAG}.
+		Generic class for input fields. Handles automatic setting of values to the
+		warapped object depending on the validation (if any).
+		Can only be used in the context of a {XTAG_F_FORM_TAG}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +77,7 @@ feature -- Implementation
 						l_validation_vars.extend (l_is_valid)
 						a_servlet_class.prerender_post_feature.append_expression (l_is_valid + " := True")
 						l_validator_temp := a_servlet_class.prerender_post_feature.new_local ("XWA_VALIDATOR")
-						l_message_var := get_name (l_validation_table, a_servlet_class, name)
+						l_message_var := get_validation_local (l_validation_table, a_servlet_class, name)
 						if not a_variable_table.is_empty then
 							from
 								l_validator_list.start

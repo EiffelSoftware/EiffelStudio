@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XTAG_XEB_CONTAINER_TAG}.
+		A simple tag which does nothing apart from rendering its children
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,9 +10,6 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
-		redefine
-			generates_render
-		end
 
 create
 	make
@@ -24,7 +21,7 @@ feature -- Initialization
 			make_base
 		end
 
-feature -- Access
+feature -- Basic implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
@@ -36,6 +33,4 @@ feature -- Access
 			-- <Precursor>
 		do
 		end
-
-	generates_render: BOOLEAN = True
 end

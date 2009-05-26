@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XTAG_XEB_OUTPUT_CALL_TAG}."
+	description: "[
+		As {XTAG_XEB_DISPLAY_TAG} (?)
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

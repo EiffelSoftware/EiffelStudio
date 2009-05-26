@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XTAG_F_INPUT_TEXT_TAG}.
+		Renders an html input field.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"

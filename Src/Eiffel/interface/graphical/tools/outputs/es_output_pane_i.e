@@ -47,7 +47,7 @@ feature -- Access: User interface
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	icon_animations: LIST [EV_PIXEL_BUFFER]
+	icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- An list of animation icons representing the output pane is active.
 		require
 			is_interface_usable: is_interface_usable
@@ -59,7 +59,7 @@ feature -- Access: User interface
 			result_consistent: Result = icon_animations
 		end
 
-	icon_pixmap_animations: LIST [EV_PIXMAP]
+	icon_pixmap_animations: ARRAY [EV_PIXMAP]
 			-- An list of animation pixmap icons representing the output pane is active.
 		require
 			is_interface_usable: is_interface_usable

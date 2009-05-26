@@ -109,7 +109,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	icon_animations: LIST [EV_PIXEL_BUFFER]
+	icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- <Precursor>
 		do
 			if attached internal_icon_animations as l_result then
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end
 
-	icon_pixmap_animations: LIST [EV_PIXMAP]
+	icon_pixmap_animations: ARRAY [EV_PIXMAP]
 			-- <Precursor>
 		do
 			if attached internal_icon_pixmap_animations as l_result then
@@ -301,7 +301,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-	new_icon_animations: ARRAYED_LIST [EV_PIXEL_BUFFER]
+	new_icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- Creates a new series of animation icons when the output is currently processing output.
 		local
 			l_coords: like icon_animation_overlay_coords
@@ -309,17 +309,19 @@ feature {NONE} -- Factory
 			l_icon: EV_PIXEL_BUFFER
 			l_pixmaps: like stock_pixmaps
 			l_mini_pixmaps: like mini_stock_pixmaps
+			i: INTEGER
 		do
 			l_coords := icon_animation_overlay_coords
 			l_base_icon := icon
 			l_pixmaps := stock_pixmaps
 			l_mini_pixmaps := mini_stock_pixmaps
-			create Result.make (5)
+			create Result.make (1, 5)
 			from l_coords.start until l_coords.after loop
+				i := i + 1
 				if attached l_coords.item as l_coord then
 					l_icon := l_pixmaps.icon_buffer_with_overlay (l_base_icon, l_mini_pixmaps.general_edit_icon_buffer, l_coord.x, l_coord.y)
 					--l_icon.set_size (l_base_icon.width, l_base_icon.height)
-					Result.extend (l_icon)
+					Result[i] := l_icon
 				end
 				l_coords.forth
 			end
@@ -329,7 +331,7 @@ feature {NONE} -- Factory
 			not_result_is_destroyed: not Result.there_exists (agent {EV_PIXEL_BUFFER}.is_destroyed)
 		end
 
-	new_icon_pixmap_animations: ARRAYED_LIST [EV_PIXMAP]
+	new_icon_pixmap_animations: ARRAY [EV_PIXMAP]
 			-- Creates a new series of animation icon pixmaps when the output is currently processing output.
 		local
 			l_coords: like icon_animation_overlay_coords
@@ -337,17 +339,18 @@ feature {NONE} -- Factory
 			l_icon: EV_PIXMAP
 			l_pixmaps: like stock_pixmaps
 			l_mini_pixmaps: like mini_stock_pixmaps
+			i: INTEGER
 		do
 			l_coords := icon_animation_overlay_coords
 			l_base_icon := icon
 			l_pixmaps := stock_pixmaps
 			l_mini_pixmaps := mini_stock_pixmaps
-			create Result.make (5)
+			create Result.make (1, 5)
 			from l_coords.start until l_coords.after loop
 				if attached l_coords.item as l_coord then
 					l_icon := l_pixmaps.icon_with_overlay (l_base_icon, l_mini_pixmaps.general_edit_icon_buffer, l_coord.x, l_coord.y)
 					l_icon.set_size (l_base_icon.width, l_base_icon.height)
-					Result.extend (l_icon)
+					Result[i] := l_icon
 				end
 				l_coords.forth
 			end

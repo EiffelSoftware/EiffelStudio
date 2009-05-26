@@ -503,15 +503,37 @@ feature {NONE} -- Basic operations
 			is_initialized: is_initialized
 		local
 			l_icons: like icon_animations
+			l_output_icons: ARRAY [EV_PIXEL_BUFFER]
 			l_icon_pixmaps: like icon_pixmap_animations
+			l_output_icon_pixmaps: ARRAY [EV_PIXMAP]
 			l_timer: like icon_animation_timer
+			i, l_upper: INTEGER
 		do
 				-- Set the new animation icon list
 			if attached output as l_output then
-				create l_icons.make (0)
-				l_icons.append (l_output.icon_animations)
-				create l_icon_pixmaps.make (0)
-				l_icon_pixmaps.append (l_output.icon_pixmap_animations)
+				l_output_icons := l_output.icon_animations
+				create l_icons.make (l_output_icons.upper)
+				from
+					i := 1
+					l_upper := l_output_icons.upper
+				until
+					i > l_upper
+				loop
+					l_icons.extend (l_output_icons[i])
+					i := i + 1
+				end
+
+				l_output_icon_pixmaps := l_output.icon_pixmap_animations
+				create l_icon_pixmaps.make (l_output_icon_pixmaps.upper)
+				from
+					i := 1
+					l_upper := l_output_icon_pixmaps.upper
+				until
+					i > l_upper
+				loop
+					l_icon_pixmaps.extend (l_output_icon_pixmaps[i])
+					i := i + 1
+				end
 			else
 				create l_icons.make (1)
 				l_icons.extend (tool_descriptor.icon)

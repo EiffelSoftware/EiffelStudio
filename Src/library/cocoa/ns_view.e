@@ -30,6 +30,7 @@ feature {NONE} -- Creation and Initialization
 		end
 
 	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
+			-- Create an NSView which calls the passed draw_action when drawRect: is invoked
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
@@ -37,6 +38,7 @@ feature {NONE} -- Creation and Initialization
 		end
 
 	make_flipped
+			-- Create an NSView with flipped coordinates (i.e. redefine the isFlipped method to return True)
 		local
 			l_superclass: POINTER
 			l_name: POINTER
@@ -66,31 +68,44 @@ feature {NONE} -- Creation and Initialization
 feature -- Managing the View Hierarchy
 
 	window: NS_WINDOW
+			-- Returns the receiver's window object, or void if it has none.
+		local
+			l_window: POINTER
 		do
-			create Result.make_shared (view_window (item))
+			l_window := view_window (item)
+			if l_window /= nil then
+				create Result.make_shared (l_window)
+			end
 		end
 
 	superview: NS_VIEW
+			-- Returns the receiver's superview, or nil if it has none.
+			-- When applying this method iteratively or recursively, be sure to compare the returned view object to the content view of the window to avoid proceeding out of the view hierarchy.
 		do
 			create Result.make_shared (view_superview (item))
 		end
 
 	subviews: NS_ARRAY [NS_VIEW]
+			-- Return the receiver's immediate subviews.
 		do
 			create Result.make_shared (view_subviews (item))
 		end
 
 	is_descendant_of (a_view: NS_VIEW): BOOLEAN
+			-- Returns True if the receiver is a subview of a given view or if it's identical to that view; otherwise, it returns False.
 		do
 			Result := view_is_descendant_of (item, a_view.item)
 		end
 
 	ancestor_shared_with_view (a_view: NS_VIEW): NS_VIEW
+			-- Returns the closest ancestor shared by the receiver and a given view.
+			-- The closest ancestor or nil if there's no such object. Returns self if `a_view' is identical to the receiver.
 		do
 			create Result.make_shared (view_ancestor_shared_with_view (item, a_view.item))
 		end
 
 	add_subview (a_subview: NS_VIEW)
+			-- Adds a view to the receiver's subviews so it's displayed above its siblings.
 		do
 			view_add_subview (item, a_subview.item)
 		end
@@ -98,11 +113,14 @@ feature -- Managing the View Hierarchy
 feature -- Modifying the Frame Rectangle
 
 	set_frame (a_rect: NS_RECT)
+			-- Sets the receiver's frame rectangle to the specified rectangle.
 		do
 			view_set_frame (item, a_rect.item)
 		end
 
 	frame: NS_RECT
+			-- Returns the receiver's frame rectangle, which defines its position in its superview.
+			-- The frame rectangle may be rotated; use the frame_rotation method to check this.
 		do
 			create Result.make
 			view_frame (item, Result.item)
@@ -111,11 +129,13 @@ feature -- Modifying the Frame Rectangle
 feature -- Modifying the Bounds Rectangle
 
 	set_bounds (a_rect: NS_RECT)
+			-- Sets the receiver's bounds rectangle.
 		do
 			view_set_bounds (item, a_rect.item)
 		end
 
 	bounds: NS_RECT
+			-- Returns the receiver's bounds rectangle, which expresses its location and size in its own coordinate system.
 		do
 			create Result.make
 			view_bounds (item, Result.item)
@@ -239,7 +259,6 @@ feature {NONE} -- Objective-C interface
 		end
 
 	frozen view_frame (a_view: POINTER; a_res: POINTER)
-			-- Get the frame.
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

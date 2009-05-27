@@ -18,7 +18,7 @@ mouseDownTYPE responderCallbackMethod;
 	{
 		NSPoint event_location = [theEvent locationInWindow];
 		NSLog(@"Mouse Up at (%f, %f)!\n", event_location.x, event_location.y);
-		responderCallbackMethod ( eif_access (responderCallbackObject), self, theEvent );
+		//responderCallbackMethod ( eif_access (responderCallbackObject), self, theEvent );
 	}
 @end
 
@@ -31,21 +31,12 @@ EIF_REFERENCE setResponderCallback(EIF_REFERENCE callbackObject, mouseDownTYPE c
 
 void bridge_void_void (id self, SEL name)
 {
-	callbackMethod ( eif_access (callbackObject) );
+	//callbackMethod ( eif_access (callbackObject) );
 }
 
 void bridge_void_ptr (id self, SEL name, void* arg1)
 {
-	callbackMethod ( eif_access (callbackObject), arg1 );
+	//callbackMethod ( eif_access (callbackObject), arg1 );
 }
 
 //[dict setObject:... forKey:...];
-
-@implementation WindowDelegate
-	- (EIF_REFERENCE)addCallback:(EIF_REFERENCE)a_callbackObject andMethod:(windowDidResizeTYPE)a_callbackMethod {
-		//NSDictionary
-		callbackObject = eif_protect(a_callbackObject);
-		callbackMethod = a_callbackMethod;
-		return (EIF_REFERENCE)self;
-	}
-@end

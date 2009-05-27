@@ -7,14 +7,11 @@ note
 deferred class
 	NS_OUTLINE_VIEW_DELEGATE
 
-inherit
-	NS_OBJECT
-
 feature
 
 	make
 		do
-			make_shared (outline_view_delegate_new ($current, $selection_did_change))
+			item := outline_view_delegate_new ($current, $selection_did_change)
 		end
 
 	selection_did_change
@@ -30,4 +27,9 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [[OutlineViewDelegate new] initWithCallbackObject: $an_object andMethod: $a_selection_did_change];"
 		end
+
+feature {NS_OBJECT} -- Should be used by classes in native only
+
+	item: POINTER
+	 	-- The C-pointer to the Cocoa object
 end

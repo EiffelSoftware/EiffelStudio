@@ -43,7 +43,6 @@ feature -- Measurement
 		end
 
 	set_y (a_y: INTEGER)
-			-- TODO: Add := accessor
 		do
 			internal_set_y (item, a_y)
 		end

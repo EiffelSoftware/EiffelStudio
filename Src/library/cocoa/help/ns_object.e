@@ -15,7 +15,7 @@ feature {NS_OBJECT} -- Creation
 	make_shared (a_pointer: POINTER)
  			-- For internal use by the framework only
  		require
-			a_pointer_not_void: a_pointer /= void
+			a_pointer_not_nil: a_pointer /= nil
 			-- FIXME: check if the pointer is valid and points to an NS_OBJECT object!
 			-- descendants should also check if the type of the cocoa object is what they need
 			objective_c_class_matches_eiffel_class: -- class_ = current.wrapped_class
@@ -77,5 +77,5 @@ feature {NS_OBJECT} -- Should be used by classes in native only
 	 	-- The C-pointer to the Cocoa object
 
 invariant
-	cocoa_object_allocated: item /= void
+	cocoa_object_allocated: item /= nil
 end

@@ -7,15 +7,12 @@ note
 deferred class
 	NS_OUTLINE_VIEW_DATA_SOURCE [ITEM_TYPE]
 
-inherit
-	NS_OBJECT
-
-feature
+feature {NONE}
 
 	make
 			-- Must be called for initialization
 		do
-			make_shared (outline_view_data_source_new ($Current, $number_of_children_of_item, $is_item_expandable, $child_of_item, $object_value_for_table_column_by_item))
+			item := outline_view_data_source_new ($Current, $number_of_children_of_item, $is_item_expandable, $child_of_item, $object_value_for_table_column_by_item)
 		end
 
 feature -- Objective-C callbacks
@@ -53,4 +50,9 @@ feature {NS_OUTLINE_VIEW}
 		alias
 			"return [(DSItem*)$an_item eiffelObject];"
 		end
+
+feature {NS_OBJECT} -- Should be used by classes in native only
+
+	item: POINTER
+	 	-- The C-pointer to the Cocoa object
 end

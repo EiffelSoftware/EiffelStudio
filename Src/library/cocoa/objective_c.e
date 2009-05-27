@@ -7,6 +7,34 @@ note
 class
 	OBJECTIVE_C
 
+feature -- Eiffel interaction
+
+	redefine_method (a_class_name: STRING; a_method_selector: STRING; a_agent: PROCEDURE [ANY, TUPLE])
+			-- Replace a method in an objective-c class by a_agent
+			-- This can be dangerous as the method is replaced for all objects which are instances of that class
+			-- even those that were created before this call.
+		require
+			-- class exists
+			-- opt: class has selector
+			-- Signature of a_method  <=>  Signature of eiffel agent
+		local
+			l_class: POINTER
+			l_types: POINTER
+			l_sel: POINTER
+			l_imp: POINTER
+		do
+			l_class := objc_get_class ((create {C_STRING}.make (a_class_name)).item)
+
+			l_types := (create {C_STRING}.make ("b@:")).item
+			l_sel := sel_register_name ((create {C_STRING}.make (a_method_selector)).item)
+			l_imp := {NS_OBJECT}.nil -- get the implementation that handles l_types
+			class_add_method (l_class, l_sel, l_imp, l_types)
+
+			objc_register_class_pair (l_class)
+--			make_shared (class_create_instance (l_class, 0))
+--			view_init (item)
+		end
+
 feature -- Working with Classes
 
 	frozen class_get_method_implementation (a_class, a_sel: POINTER): POINTER
@@ -19,6 +47,7 @@ feature -- Working with Classes
 feature -- Adding Classes
 
 	frozen objc_get_class (a_name: POINTER): POINTER
+			-- Returns the class definition of a specified class.
 		external
 			"C inline use <objc/objc-class.h>"
 		alias

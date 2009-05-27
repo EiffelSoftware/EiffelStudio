@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
-			create open_panel.open_panel
+			create open_panel.make
+			save_panel := open_panel
 		end
 
 	initialize
@@ -56,10 +57,13 @@ feature {NONE} -- Initialization
 				l_filters.extend (create {NS_STRING}.make_with_string (filters.item.filter.substring (3, filters.item.filter.count))) -- cut off the beginning "*." part
 				filters.forth
 			end
-			create l_file_types.array_with_objects_count (l_filters)
+			create l_file_types.make_with_objects (l_filters)
 			open_panel.set_allowed_file_types (l_file_types)
 
 			button := open_panel.run_modal
+			set_file_name (open_panel.filename.to_string)
+
+
 			if button =  {NS_PANEL}.ok_button then
 				selected_button := internal_accept
 				interface.open_actions.call (Void)
@@ -81,9 +85,18 @@ feature {NONE} -- Access
 			-- List of filenames selected by user
 		local
 			l_filenames: NS_ARRAY [NS_STRING]
+			i: INTEGER
 		do
 			l_filenames := open_panel.filenames
 			create Result.make (l_filenames.count)
+			from
+				i := 0
+			until
+				i > l_filenames.count
+			loop
+				Result.extend (l_filenames.object_at_index (i).to_string)
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Setting

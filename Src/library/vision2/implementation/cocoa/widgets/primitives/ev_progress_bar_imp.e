@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			-- Create the progress bar.
 		do
 			base_make (an_interface)
-			create progress_indicator.new
+			create progress_indicator.make
 			--progress_indicator.start_animation
 			progress_indicator.set_indeterminate (False)
 			cocoa_item := progress_indicator

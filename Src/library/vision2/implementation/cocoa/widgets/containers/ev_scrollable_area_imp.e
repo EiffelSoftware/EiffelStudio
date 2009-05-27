@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			create scroll_view.new
-			replace_content_view
+			create scroll_view.make_with_flipped_content_view
 			scroll_view.set_has_horizontal_scroller (True)
 			scroll_view.set_has_vertical_scroller (True)
 --			scroll_view.set_autohides_scrollers (True)
@@ -46,7 +45,6 @@ feature {NONE} -- Initialization
 			set_horizontal_step (20)
 			set_vertical_step (20)
 		end
-
 
 feature -- Access
 

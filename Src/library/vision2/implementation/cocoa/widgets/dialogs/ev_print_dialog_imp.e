@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
-			create print_panel.print_panel
+			create print_panel.make
 		end
 
 	initialize

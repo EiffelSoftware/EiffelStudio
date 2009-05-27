@@ -34,7 +34,7 @@ feature -- Initialization
 			-- Create a vertical box.
 		do
 			base_make( an_interface )
-			create {NS_BOX}cocoa_item.new
+			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_border_type ({NS_BOX}.no_border)

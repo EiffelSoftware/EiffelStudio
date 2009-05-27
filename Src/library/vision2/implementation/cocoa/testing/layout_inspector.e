@@ -384,7 +384,7 @@ feature {NONE} -- Graphical view
 
 	overlay: NS_WINDOW
 		once
-			create Result.init_with_control_rect_style_mask_backing_defer (
+			create Result.make (
 			create {NS_RECT}.make,
 				{NS_WINDOW}.borderless_window_mask, False)
 			Result.set_background_color (create {NS_COLOR}.blue_color)
@@ -416,8 +416,12 @@ feature {NONE} -- Graphical view
 		local
 			rescued: BOOLEAN
 			fail: INTEGER
+			widget: EV_WIDGET
+			widget_imp: EV_WIDGET_IMP
 		do
 			if selected_widget /= Void and not rescued then
+				widget := selected_widget
+				widget_imp ?= widget.implementation
 				fail := 1 // 0
 			end
 		rescue

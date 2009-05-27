@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			-- Create Cocoa textfield
 		do
 			base_make (an_interface)
-			create {NS_TEXT_FIELD}cocoa_item.new
+			create {NS_TEXT_FIELD}cocoa_item.make
 			text_field ?= cocoa_item
 
 			align_text_left

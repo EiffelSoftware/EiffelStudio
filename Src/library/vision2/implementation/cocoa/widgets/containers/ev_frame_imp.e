@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- Create frame.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create {NS_BOX}cocoa_item.make
 			box.set_title_position ({NS_BOX}.no_title)
 		end
 
@@ -133,13 +133,20 @@ feature -- Layout
 			end
 			mh := mh + client_y
 			mw := mw + client_x --+ border_width
-			--mw := mw.max (text_width + 2 * Text_padding)			
+			--mw := mw.max (text_width + 2 * Text_padding)
 			internal_set_minimum_size (mw, mh)
 		end
 
 	client_x: INTEGER = 14;
 
-	client_y: INTEGER = 14;
+	client_y: INTEGER
+		do
+			if box.title_position = {NS_BOX}.no_title then
+				Result := 14
+			else
+				Result := 18
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa combo-box.
 		do
 			base_make (an_interface)
-			create combo_box.new
+			create combo_box.make
 			text_field := combo_box
 			cocoa_item := combo_box
 		end
@@ -113,8 +113,13 @@ feature -- Status report
 	selected_item: EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
+		local
+			l_index: INTEGER
 		do
-			Result := i_th (combo_box.index_of_selected_item + 1)
+			l_index := combo_box.index_of_selected_item
+			if l_index > 0 then
+				Result := i_th (l_index + 1)
+			end -- otherwise no item is selected, return void
 		end
 
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM]

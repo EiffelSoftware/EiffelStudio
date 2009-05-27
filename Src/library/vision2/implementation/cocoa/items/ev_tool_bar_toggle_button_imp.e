@@ -30,7 +30,7 @@ feature -- Initialization
 			-- Create a Cocoa toggle button.
 		do
 			base_make (an_interface)
-			create button.new
+			create button.make
 			button.set_button_type ({NS_BUTTON}.push_on_push_off_button)
 			cocoa_item := button
 		end

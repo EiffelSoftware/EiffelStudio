@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
-			create {NS_TAB_VIEW_ITEM}cocoa_item.new
+			create {NS_TAB_VIEW_ITEM}cocoa_item.make
 		end
 
 	initialize

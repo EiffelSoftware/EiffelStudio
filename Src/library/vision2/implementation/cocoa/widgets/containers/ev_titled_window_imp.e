@@ -54,6 +54,9 @@ feature -- Status report
 
 	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
+		do
+			Result := window.is_miniaturized
+		end
 
 	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
@@ -76,6 +79,7 @@ feature -- Status setting
 			-- Display iconified/minimised.
 		do
 			window.miniaturize
+			is_maximized := False
 		end
 
 	maximize
@@ -84,6 +88,7 @@ feature -- Status setting
 			if not window.is_zoomed then
 				window.zoom
 			end
+			is_maximized := True
 		end
 
 	restore
@@ -92,6 +97,7 @@ feature -- Status setting
 			if window.is_zoomed then
 				window.zoom
 			end
+			is_maximized := False
 		end
 
 feature -- Element change

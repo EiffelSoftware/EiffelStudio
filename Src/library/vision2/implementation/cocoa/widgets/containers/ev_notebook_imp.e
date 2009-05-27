@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			tab_position := interface.tab_top
 			create tabs.make (5)
-			create {NS_TAB_VIEW}cocoa_item.new
+			create {NS_TAB_VIEW}cocoa_item.make
 		end
 
 	initialize

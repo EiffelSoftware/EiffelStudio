@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {EV_NS_VIEW}."
-	author: ""
+	description: "Common abstraction for adding NSView functionality to Eiffel Vision."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,10 +32,15 @@ feature -- Positions
 
 	screen_x: INTEGER
 			-- Horizontal position of the client area on screen,
+		local
+			l_window: NS_WINDOW
 		do
-			Result := cocoa_view.window.convert_base_to_screen (
-				cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
-			).x
+			l_window := cocoa_view.window
+			if l_window /= void then
+				Result := cocoa_view.window.convert_base_to_screen (
+					cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
+				).x
+			end
 		end
 
 	screen_y: INTEGER
@@ -47,14 +52,16 @@ feature -- Positions
 		do
 			-- Translate the coordinate to a top-left coordinate system
 			l_window := cocoa_view.window
-			screen_height := l_window.screen.frame.size.height
-			if cocoa_view.is_flipped then
-				position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
-			else
-				position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, cocoa_view.frame.size.height), void)
+			if l_window /= void then
+				screen_height := l_window.screen.frame.size.height
+				if cocoa_view.is_flipped then
+					position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
+				else
+					position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, cocoa_view.frame.size.height), void)
+				end
+				position_on_screen := l_window.convert_base_to_screen (position_in_window)
+				Result :=  screen_height - position_on_screen.y
 			end
-			position_on_screen := l_window.convert_base_to_screen (position_in_window)
-			Result :=  screen_height - position_on_screen.y
 		end
 
 	width: INTEGER
@@ -86,7 +93,7 @@ feature -- Measurement
 				if attached {EV_BOX_IMP} l_parent.implementation as l_box then
 					Result := l_box.box.content_view.bounds.size.height
 				else
-					io.put_string ("f: " + cocoa_view.superview.frame.size.height.out + " b; " + cocoa_view.superview.bounds.size.height.out + " c: " + l_parent.client_height.out + "%N")
+					--io.put_string ("f: " + cocoa_view.superview.frame.size.height.out + " b; " + cocoa_view.superview.bounds.size.height.out + " c: " + l_parent.client_height.out + "%N")
 					Result := l_parent.client_height
 				end
 			else
@@ -107,13 +114,9 @@ feature -- Measurement
 				y_cocoa := a_y_position
 			else
 				if parent /= void then
---					if attached {EV_VIEWPORT} parent then
---						y_cocoa := a_y_position
---					else
-						y_cocoa := parent_inner_height - a_height - a_y_position
---					end
+					y_cocoa := parent_inner_height - a_height - a_y_position
 				else
-					io.put_string ("Warning: converting coordinates failed%N")
+					io.put_string ("Warning: converting coordinates failed " + current.generating_type.out + "%N")
 				end
 			end
 			cocoa_view.set_frame (create {NS_RECT}.make_rect (a_x_position, y_cocoa, a_width, a_height))
@@ -133,7 +136,6 @@ feature -- Measurement
 				else
 					io.put_string ("Warning: converting coordinates failed%N")
 				end
-				cocoa_view.set_frame (l_frame)
 			end
 			cocoa_view.set_frame (l_frame)
 		end

@@ -32,7 +32,7 @@ feature
 		-- Connect interface and initialize `c_object'.
 	do
 		base_make (an_interface)
-		create {NS_SPLIT_VIEW}cocoa_item.new
+		create {NS_SPLIT_VIEW}cocoa_item.make
 		split_view.set_vertical (True)
 	end
 

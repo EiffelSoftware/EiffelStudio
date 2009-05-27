@@ -29,30 +29,29 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			create {NS_MENU_ITEM}cocoa_item.new
+			create {NS_MENU_ITEM}cocoa_item.make
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN
 			-- Is this menu item checked?
-		do
-		end
 
 feature -- Status setting
 
 	enable_select
 			-- Select this menu item.
 		do
+			is_selected := True
+			menu_item.set_state ({NS_CELL}.on_state)
 		end
 
 	disable_select
 			-- Deselect this menu item.
 		do
+			is_selected := False
+			menu_item.set_state ({NS_CELL}.off_state)
 		end
-
-	ignore_select_actions: BOOLEAN
-			-- Should select actions be ignore, ues if enable_select is called.
 
 feature {NONE} -- Implementation
 

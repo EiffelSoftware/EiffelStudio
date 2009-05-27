@@ -29,7 +29,7 @@ feature -- Initialization
 			-- Create the separator control.
 		do
 			base_make (an_interface)
-			create scroller.init_with_frame (0, 0, 5, 10)
+			create scroller.make_with_frame (0, 0, 5, 10)
 			cocoa_item := scroller
 			scroller.set_enabled (True)
 

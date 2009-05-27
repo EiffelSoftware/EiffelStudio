@@ -34,7 +34,8 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa check button.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.new
+			create {NS_BUTTON}cocoa_item.make
+			button.set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			button.set_button_type ({NS_BUTTON}.switch_button)
 
 			align_text_left

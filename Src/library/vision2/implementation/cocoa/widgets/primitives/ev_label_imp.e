@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create {NS_TEXT_FIELD}cocoa_item.new
+			create {NS_TEXT_FIELD}cocoa_item.make
 			text_field.set_editable (false)
 			--text_field.set_draws_background (false)
 			text_field.set_bordered (false)

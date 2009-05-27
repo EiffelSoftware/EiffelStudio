@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Set default values. Call during initialization.
 		do
-			create image.init_with_size (create {NS_SIZE}.make_size (1000, 1000))
+			create image.make_with_size (create {NS_SIZE}.make_size (1000, 1000))
         	create internal_background_color.make_with_rgb (1, 1, 1)
         	create internal_foreground_color.make_with_rgb (0, 0, 0)
 		end
@@ -165,7 +165,7 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		do
-			
+
 		end
 
 	remove_tile
@@ -202,7 +202,7 @@ feature -- Clearing operations
 			image.lock_focus
 			color ?= background_color.implementation
 			color.color.set
-			create path.bezier_path_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
+			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.fill
 			image.unlock_focus
 			update_if_needed
@@ -258,7 +258,7 @@ feature -- Drawing operations
 		do
 			create l_string.make_with_string (a_text)
 			l_font ?= font.implementation
-			create l_attributes.dictionary_with_object_for_key (l_font.font, l_font.font.font_attribute_name)
+			create l_attributes.make_with_object_for_key (l_font.font, l_font.font.font_attribute_name)
 			image.lock_focus
 			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
 			image.unlock_focus
@@ -271,7 +271,7 @@ feature -- Drawing operations
 			path: NS_BEZIER_PATH
 		do
 			prepare_drawing
-			create path.bezier_path
+			create path.make
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
 				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
@@ -340,7 +340,7 @@ feature -- Drawing operations
 			path: NS_BEZIER_PATH
 		do
 			prepare_drawing
-			create path.bezier_path_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
+			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
 				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
@@ -357,7 +357,7 @@ feature -- Drawing operations
 			path: NS_BEZIER_PATH
 		do
 			prepare_drawing
-			create path.bezier_path_with_oval_in_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
+			create path.make_with_oval_in_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
 				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
@@ -377,7 +377,7 @@ feature -- Drawing operations
 			l_point: EV_COORDINATE
 		do
 			prepare_drawing
-			create path.bezier_path
+			create path.make
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
 				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
@@ -423,7 +423,7 @@ feature -- filling operations
 			path: NS_BEZIER_PATH
 		do
 			prepare_drawing
-			create path.bezier_path_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
+			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.fill
 			image.unlock_focus
 			update_if_needed
@@ -437,7 +437,7 @@ feature -- filling operations
 			path: NS_BEZIER_PATH
 		do
 			prepare_drawing
-			create path.bezier_path_with_oval_in_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
+			create path.make_with_oval_in_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.fill
 			image.unlock_focus
 			update_if_needed
@@ -452,7 +452,7 @@ feature -- filling operations
 			l_point: EV_COORDINATE
 		do
 			prepare_drawing
-			create path.bezier_path
+			create path.make
 			if not points.is_empty then
 				l_point := 	points.item (points.lower)
 				path.move_to_point (create {NS_POINT}.make_point (l_point.x, l_point.y))
@@ -482,7 +482,7 @@ feature -- filling operations
 		do
 		end
 
-feature {EV_DRAWABLE_IMP, EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	image: NS_IMAGE
 

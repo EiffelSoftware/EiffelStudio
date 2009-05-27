@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create the range control.
 		do
 			base_make (an_interface)
-			create {NS_SLIDER}cocoa_item.new
+			create {NS_SLIDER}cocoa_item.make
 			change_actions_internal := create_change_actions
 			slider.set_action (agent
 				local

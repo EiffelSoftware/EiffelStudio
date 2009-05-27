@@ -46,7 +46,7 @@ feature -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			create table_column.new
+			create table_column.make
 			cocoa_item := table_column
 			align_text_left
 		end

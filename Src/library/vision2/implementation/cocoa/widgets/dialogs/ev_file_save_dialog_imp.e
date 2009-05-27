@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
-			create save_panel.save_panel
+			create save_panel.make
 		end
 
 	initialize

@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create {NS_BOX}cocoa_item.make
 			box.set_title ("TOOLBAR")
 		end
 

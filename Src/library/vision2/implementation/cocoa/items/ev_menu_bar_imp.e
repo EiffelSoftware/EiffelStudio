@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface)
 		do
 			base_make (an_interface)
-			create {NS_MENU}cocoa_item.new
+			create {NS_MENU}cocoa_item.make
 		end
 
 feature -- Measurement

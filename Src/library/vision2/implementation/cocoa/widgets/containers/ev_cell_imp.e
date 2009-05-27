@@ -42,7 +42,7 @@ feature -- initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
 		end

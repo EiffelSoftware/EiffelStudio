@@ -1,5 +1,8 @@
 note
 	description: "Eiffel Vision window. Cocoa implementation."
+	author: "Daniel Furrer"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_WINDOW_IMP
@@ -52,8 +55,8 @@ inherit
 
 	NS_WINDOW_DELEGATE
 		rename
-			new as new_delegate,
-			cocoa_object as delegate
+			make as create_delegate,
+			item as delegate
 		redefine
 			window_did_resize
 		end
@@ -66,12 +69,12 @@ feature {NONE} -- Initialization
 			-- Create the window.
 		do
 			base_make (an_interface)
-			create {NS_WINDOW}cocoa_item.init_with_control_rect_style_mask_backing_defer (create {NS_RECT}.make_rect (100, 100, 100, 100),
-				{NS_WINDOW}.closable_window_mask.bit_or ({NS_WINDOW}.miniaturizable_window_mask).bit_or ({NS_WINDOW}.resizable_window_mask), True)
+			create {NS_WINDOW}cocoa_item.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
+				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
 			window.make_key_and_order_front
 			window.order_out
 			allow_resize
-			new_delegate
+			create_delegate
 			window.set_delegate (current)
 		end
 
@@ -198,7 +201,6 @@ feature -- Measurement
 			Result := window.content_rect_for_frame_rect (window.frame).size.width
 		end
 
-
 	width: INTEGER
 			-- Horizontal size measured in pixels.
 		do
@@ -242,7 +244,7 @@ feature -- Measurement
 			l_frame: NS_RECT
 		do
 			l_frame := window.frame
-			Result := window.screen.frame.size.height - l_frame.origin.y - l_frame.size.height
+			Result := screen.frame.size.height - l_frame.origin.y - l_frame.size.height
 		end
 
 	set_x_position (a_x: INTEGER)
@@ -265,8 +267,14 @@ feature -- Measurement
 		do
 			l_frame := window.frame
 			l_frame.origin.x := a_x
-			l_frame.origin.y := window.screen.frame.size.height - height - a_y
+			l_frame.origin.y := screen.frame.size.height - l_frame.size.height - a_y
 			window.set_frame (l_frame)
+		end
+
+	screen: NS_SCREEN
+			-- Window coordinates are relative to the main screen
+		once
+			create Result.main_screen
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
@@ -628,7 +636,4 @@ feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 			Result ?= cocoa_item
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_WINDOW_IMP
-

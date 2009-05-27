@@ -15,6 +15,8 @@ inherit
 			generate_parameters
 		end
 
+	SHARED_INCLUDE
+
 feature -- Generation
 
 	generate_parameters (gen_reg: REGISTRABLE)
@@ -370,7 +372,6 @@ feature {NONE} -- Implementation
 
 			if l_param_is_expanded then
 				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
-
 				buf.put_string ("((char *)")
 				gen_reg.print_register
 				buf.put_string (" + (rt_uint_ptr)")
@@ -406,6 +407,19 @@ feature {NONE} -- Implementation
 			end
 			buf.put_character (')')
 			buf.put_character (';')
+
+				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			buf.put_new_line
+			buf.put_string("RT_SPECIAL_COUNT(");
+			gen_reg.print_register
+			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
+			gen_reg.print_register
+			buf.put_three_character (')', ',', ' ')
+			parameters.i_th (2).print_register
+			buf.put_three_character (' ', '+', ' ')
+			parameters.i_th (3).print_register
+			buf.put_two_character (')', ';')
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
@@ -488,6 +502,18 @@ feature {NONE} -- Implementation
 				buf.put_character (';')
 			end
 
+				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			buf.put_new_line
+			buf.put_string("RT_SPECIAL_COUNT(");
+			gen_reg.print_register
+			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
+			gen_reg.print_register
+			buf.put_three_character (')', ',', ' ')
+			parameters.i_th (3).print_register
+			buf.put_three_character (' ', '+', ' ')
+			parameters.i_th (4).print_register
+			buf.put_two_character (')', ';')
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end

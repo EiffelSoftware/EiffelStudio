@@ -247,7 +247,7 @@ feature {NONE} -- Basic operations
 							l_task.step
 							if not l_task.has_next_step then
 								l_witness := l_task.minimized_witness
-								if l_witness /= Void then
+								if l_witness = Void then
 										-- Note: if we were not able to minimize witness, we use it directly to generate a test
 									l_witness := l_task.witness
 								end

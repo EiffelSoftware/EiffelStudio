@@ -1,0 +1,9 @@
+test_name 	 config-keyword-root-class
+test_description Root class named as keyword should be correctly reported.
+
+copy_sub Ace $TEST Ace
+
+compile_melted
+compile_result	syntax_error NONE 4
+
+test_end

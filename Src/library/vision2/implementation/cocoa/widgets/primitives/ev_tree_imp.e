@@ -42,13 +42,14 @@ inherit
 
 	NS_OUTLINE_VIEW_DATA_SOURCE [EV_TREE_NODE]
 		rename
-			new as new_data_source
+			make as create_data_source,
+			item as data_source
 		end
 
 	NS_OUTLINE_VIEW_DELEGATE
 		rename
-			new as new_delegate,
-			cocoa_object as delegate
+			make as create_delegate,
+			item as delegate
 		end
 
 create
@@ -62,24 +63,24 @@ feature {NONE} -- Initialization
 			table_column: NS_TABLE_COLUMN
 		do
 			base_make (an_interface)
-			create scroll_view.new
+			create scroll_view.make
 			cocoa_item := scroll_view
-			create outline_view.new
+			create outline_view.make
 			scroll_view.set_document_view (outline_view)
 			scroll_view.set_has_horizontal_scroller (True)
 			scroll_view.set_has_vertical_scroller (True)
 			scroll_view.set_autohides_scrollers (True)
-			create table_column.new
+			create table_column.make
 			table_column.set_editable (False)
 			outline_view.add_table_column (table_column)
 			outline_view.set_outline_table_column (table_column)
 			outline_view.set_header_view (NULL)
 			table_column.set_width (1000.0)
 
-			new_data_source
+			create_data_source
 			outline_view.set_data_source (current)
 
-			new_delegate
+			create_delegate
 			outline_view.set_delegate (current)
 		end
 
@@ -144,7 +145,7 @@ feature -- DataSource
 
 	object_value_for_table_column_by_item (a_table_column: POINTER; a_node: EV_TREE_NODE): POINTER
 		do
-			Result :=(create {NS_STRING}.make_with_string (a_node.text)).cocoa_object
+			Result := (create {NS_STRING}.make_with_string (a_node.text)).item
 		end
 
 feature -- Status report

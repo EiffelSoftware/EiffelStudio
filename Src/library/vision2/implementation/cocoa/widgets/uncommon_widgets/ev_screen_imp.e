@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-
+			create screen.main_screen
 		end
 
 	initialize
@@ -120,6 +120,7 @@ feature -- Measurement
 	horizontal_resolution: INTEGER
 			-- Number of pixels per inch along horizontal axis
 		do
+			--create {NS_VALUE}.make_shared (screen.device_description.object_for_key ({NS_WINDOW}.device_resolution))
 			Result := 72 -- FIXME: implement
 		end
 
@@ -132,21 +133,16 @@ feature -- Measurement
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			Result := 768
+			Result := screen.frame.size.height
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			Result := 1024
+			Result := screen.frame.size.width
 		end
 
 feature {NONE} -- Implementation
-
-	app_implementation: EV_APPLICATION_IMP
-			-- Return the instance of EV_APPLICATION_IMP.
-		do
-		end
 
 	flush
 			-- Force all queued draw to be called.
@@ -169,31 +165,11 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	drawable: POINTER
-			-- Pointer to the screen (root window)
-		do
-		end
-
-	mask: POINTER
-			-- Mask of `Current', which is always NULL
-		do
-		end
+	screen: NS_SCREEN
 
 	interface: EV_SCREEN;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
-
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SCREEN_IMP
 

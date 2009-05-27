@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa toggle button.
 		do
 			base_make (an_interface)
-			create button.new
+			create button.make
 			cocoa_item := button
 		end
 

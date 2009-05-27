@@ -106,6 +106,7 @@ feature -- Element change
 	set_file_name (a_name: STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		do
+			internal_filename := a_name.twin.as_string_32
 		end
 
 	set_start_directory (a_path: STRING_GENERAL)

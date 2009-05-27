@@ -37,6 +37,10 @@ inherit
 	EV_HEADER_ACTION_SEQUENCES_IMP
 
 	NS_OUTLINE_VIEW_DATA_SOURCE[ANY]
+		rename
+			make as create_data_source,
+			item as data_source
+		end
 
 create
 	make
@@ -52,12 +56,12 @@ feature -- Initialization
 --			create h.new
 --			w.set_cell (h)
 
-			create container.new
+			create container.make
 			container.set_frame (create {NS_RECT}.make_rect (0, 0, 0, 18))
 			container.set_has_horizontal_scroller (False)
 			container.set_has_vertical_scroller (False)
 
-			create outline_view.new
+			create outline_view.make
 			container.set_document_view (outline_view)
 			outline_view.set_data_source (current)
 			cocoa_item := container

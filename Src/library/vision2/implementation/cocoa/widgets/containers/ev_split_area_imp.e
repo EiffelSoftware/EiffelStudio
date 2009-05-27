@@ -27,7 +27,8 @@ inherit
 
 	NS_SPLIT_VIEW_DELEGATE
 		rename
-			new as new_split_view_delegate
+			make as create_split_view_delegate,
+			item as delegate_item
 		redefine
 			split_view_did_resize_subviews
 		end
@@ -37,13 +38,14 @@ feature -- Access
 	initialize
 		do
 			Precursor
-			new_split_view_delegate
+			create_split_view_delegate
 			split_view.set_delegate (current)
+			first_expandable := True
+			second_expandable := True
 		end
 
 	split_view_did_resize_subviews
 		do
-			--split_view.
 			split_view.adjust_subviews
 		end
 
@@ -238,6 +240,8 @@ feature {EV_ANY_I} -- Implementation
 	split_view: NS_SPLIT_VIEW
 		do
 			Result ?= cocoa_item
+		ensure
+			split_view_not_void: Result /= Void
 		end
 
 note

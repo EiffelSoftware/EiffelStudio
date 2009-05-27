@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface)
 			-- Create the fixed container.
 		do
-			base_make( an_interface )
-			create {NS_VIEW}cocoa_item.new
+			base_make (an_interface)
+			cocoa_item := create {NS_VIEW}.make_flipped
 		end
 
 	initialize
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
-			-- Set `a_widget.x_position' to `an_x'.
+			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
 			w_imp : EV_WIDGET_IMP
@@ -165,6 +165,9 @@ feature {EV_ANY_I} -- Implementation
 --				set_item_size (v, v.minimum_width, v.minimum_height)
 --			end
 			set_item_size ( v, v.minimum_width, v.minimum_height )
+			if attached {EV_WIDGET_IMP}v.implementation as l_item_imp then -- TODO: Need to call this so children get resized properly. Should not need to call this if on_size is implemented properly.
+				l_item_imp.ev_apply_new_size (0, 0, v.minimum_width, v.minimum_height, True)
+			end
 		end
 
 	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)

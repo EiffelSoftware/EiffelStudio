@@ -12,9 +12,7 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
-			interface,
-			flush,
-			save_to_named_file
+			interface
 		end
 
 	EV_DRAWABLE_IMP
@@ -57,7 +55,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			internal_height := 10
 			internal_width := 10
-			create {NS_IMAGE_VIEW}cocoa_item.new
+			create {NS_IMAGE_VIEW}cocoa_item.make
 			image_view.set_image_scaling ({NS_IMAGE_VIEW}.image_scaling_none)
 		end
 
@@ -84,13 +82,6 @@ feature -- Drawing operations
 
 	redraw
 			-- Force `Current' to redraw itself.
-		do
-		end
-
-	flush
-			-- Ensure that the appearance of `Current' is updated on screen
-			-- immediately. Any changes that have not yet been reflected will
-			-- become visible.
 		do
 		end
 
@@ -130,7 +121,7 @@ feature -- Element change
 			l_image: NS_IMAGE
 			l_image_rep: NS_IMAGE_REP
 		do
-			create l_image.init_by_referencing_file (a_path)
+			create l_image.make_with_referencing_file (a_path)
 			image_view.set_image (l_image)
 			l_image_rep := l_image.representations.object_at_index (0)
 			internal_width := l_image_rep.pixels_wide
@@ -144,7 +135,7 @@ feature -- Element change
 			l_image: NS_IMAGE
 			l_image_rep: NS_IMAGE_REP
 		do
-			create l_image.image_named (a_name)
+			create l_image.make_named (a_name)
 			image_view.set_image (l_image)
 			l_image_rep := l_image.representations.object_at_index (0)
 			internal_width := l_image_rep.pixels_wide
@@ -173,8 +164,6 @@ feature -- Element change
 
 	reset_for_buffering (a_width, a_height: INTEGER)
 			-- Resets the size of the pixmap without keeping original image or clearing background.
-		local
-
 		do
 			if a_width /= width or else a_height /= height then
 				-- so what?
@@ -193,6 +182,9 @@ feature -- Access
 
 	raw_image_data: EV_RAW_IMAGE_DATA
 		do
+			create Result.make_with_alpha_zero (width, height)
+			Result.set_originating_pixmap (interface)
+			-- TODO: image -> bitmap, read bitmap values and write in Result
 		end
 
 feature -- Duplication
@@ -204,17 +196,38 @@ feature -- Duplication
 			other_imp: EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
+
+--			if other_imp.pixmap_filename /= Void then
+--				pixmap_filename := other_imp.pixmap_filename.twin
+--			end
+			internal_width := other_imp.internal_width
+			internal_height := other_imp.internal_height
+			image := other_imp.image
+
+--			private_mask_bitmap := other_simple_imp.private_mask_bitmap
+--			private_palette := other_simple_imp.private_palette
+
+--			 copy_events_from_other (other_imp)
+--			 update_needed := False
+
+			-- Update navigation attribute
+			if other.is_tabable_from then
+				enable_tabable_from
+			else
+				disable_tabable_from
+			end
+			if other.is_tabable_to then
+				enable_tabable_to
+			else
+				disable_tabable_to
+			end
 		end
 
-feature {NONE} -- Implementation
+
+feature {EV_PIXMAP_IMP} -- Implementation
 
 	internal_height: INTEGER
 	internal_width: INTEGER
-
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
-			-- Save `Current' in `a_format' to `a_filename'
-		do
-		end
 
 feature {NONE} -- Constants
 

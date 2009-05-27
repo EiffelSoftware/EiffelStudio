@@ -41,6 +41,7 @@ feature -- Element change
 	remove_pixmap
 			-- Assign Void to `pixmap'.
 		do
+			
 		end
 
 feature {EV_ANY_I} -- Implementation

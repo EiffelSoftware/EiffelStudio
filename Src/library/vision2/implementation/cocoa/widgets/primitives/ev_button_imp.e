@@ -62,12 +62,8 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.new
-			button.set_action (
-				agent
-					do
-						select_actions.call ([])
-					end )
+			create {NS_BUTTON}cocoa_item.make
+			button.set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			align_text_center
 		end
 
@@ -80,6 +76,12 @@ feature {NONE} -- Initialization
 			enable_tabable_to
 			enable_tabable_from
 			initialize_events
+
+			button.set_action (
+				agent
+					do
+						select_actions.call ([])
+					end )
 		end
 
 feature -- Access
@@ -104,7 +106,7 @@ feature -- Status Setting
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		do
-			top_level_window_imp.window.set_default_button_cell (NULL)
+			top_level_window_imp.window.set_default_button_cell (void)
 		end
 
 	enable_can_default

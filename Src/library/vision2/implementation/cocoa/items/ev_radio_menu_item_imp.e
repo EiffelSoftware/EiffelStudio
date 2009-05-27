@@ -31,14 +31,13 @@ feature -- Status report
 
 	is_selected: BOOLEAN
 			-- Is this menu item checked?
-		do
-		end
 
 feature -- Status setting
 
 	enable_select
 			-- Select this menu item.
 		do
+			is_selected := True
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -46,6 +45,7 @@ feature {EV_ANY_I} -- Implementation
 	disable_select
 			-- Used to deselect is without firing actions.
 		do
+			is_selected := False
 		end
 
 	ignore_select_actions: BOOLEAN
@@ -56,16 +56,14 @@ feature {EV_ANY_I} -- Implementation
 		do
 		end
 
-		radio_group: LINKED_LIST [like current]
+	radio_group: LINKED_LIST [like current]
 			-- List of all radio item implementations
 		do
 		end
 
-
 	interface: EV_RADIO_MENU_ITEM;
 
 note
-	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
-
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_RADIO_MENU_ITEM_IMP
 

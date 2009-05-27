@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			-- Create a separator .
 		do
 			base_make (an_interface)
-			create box.new
+			create box.make
 			box.set_box_type ({NS_BOX}.box_separator)
 			cocoa_item := box
 		end

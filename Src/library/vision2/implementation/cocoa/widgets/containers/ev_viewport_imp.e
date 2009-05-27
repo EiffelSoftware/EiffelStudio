@@ -28,11 +28,6 @@ inherit
 			ev_apply_new_size
 		end
 
-	OBJECTIVE_C
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -42,50 +37,12 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		do
 			base_make (an_interface)
-			create scroll_view.new
-			replace_content_view
+			create scroll_view.make
 			scroll_view.set_has_horizontal_scroller (False)
 			scroll_view.set_has_vertical_scroller (False)
 			scroll_view.set_draws_background (False)
 
 			cocoa_item := scroll_view
-		end
-
-	replace_content_view
-		local
-			l_superclass: POINTER
-			l_name: POINTER
-			l_class: POINTER
-			l_types: POINTER
-			l_sel: POINTER
-			l_imp: POINTER
-			f: FUNCTION [like Current, TUPLE[], BOOLEAN]
-			l_new_clip_view: NS_CLIP_VIEW
-		do
-			l_class := objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
-			if l_class = {NS_OBJECT}.nil then
-				-- If MyClipView doesn't exist yet create it as a new child class of NSClipView and override isFlipped
-				l_superclass := objc_get_class ((create {C_STRING}.make ("NSClipView")).item)
-				l_name := (create {C_STRING}.make ("MyClipView")).item
-				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
-
-				l_types := (create {C_STRING}.make ("b@:")).item
-				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
-				f := (agent is_flipped)
-				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
-				class_add_method (l_class, l_sel, l_imp, l_types)
-
-				objc_register_class_pair (l_class)
-			end
-			create l_new_clip_view.make_shared (class_create_instance (l_class, 0))
-			l_new_clip_view.init
-			scroll_view.set_content_view (l_new_clip_view)
-		end
-
-	is_flipped (a_target: POINTER; a_sel: POINTER): BOOLEAN
-		do
-			io.put_string ("123")
-			Result := True
 		end
 
 feature -- Access

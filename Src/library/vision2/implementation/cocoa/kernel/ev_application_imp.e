@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create windows.make
-			create application.init
+			create application.make
 		end
 
 feature -- Access
@@ -76,13 +76,13 @@ feature -- Basic operation
 			event: POINTER
 		do
 			from
-				event := application.next_event(0, {EV_ANY_IMP}.NULL, 0, true)
+				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)
 			until
 				event = {EV_ANY_IMP}.NULL
 			loop
 				application.send_event (event)
 				application.update_windows
-				event := application.next_event(0, {EV_ANY_IMP}.NULL, 0, true)
+				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)
 			end
 		end
 

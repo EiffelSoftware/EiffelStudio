@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_vertical_button_style
-			create button.new
+			create button.make
 			cocoa_item := button
 		end
 

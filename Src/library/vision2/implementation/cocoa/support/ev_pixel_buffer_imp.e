@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
 		do
+			width := a_width
+			height := a_height
 		end
 
 	make (an_interface: EV_PIXEL_BUFFER)
@@ -91,21 +93,17 @@ feature -- Query
 
 	width: INTEGER
 			-- Width of buffer in pixels.
-		do
-		end
 
 	height: INTEGER
 			-- Height of buffer in pixels.
-		do
-		end
 
 	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		do
 		end
 
-	data_ptr: POINTER
-		-- needed by SD_CENTER... classes
+	data_ptr: POINTER;
+		-- Accessed by subclasses
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation
 

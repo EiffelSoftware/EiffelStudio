@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			-- Create a table widget with `par' as parent.
 		do
 			base_make (an_interface)
-			create {NS_BOX}cocoa_item.new
+			create {NS_BOX}cocoa_item.make
 
 			-- Initialize internal values
 			rows := 1
@@ -205,7 +205,7 @@ feature {NONE} -- Layout
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32; repaint: BOOLEAN)
 		do
-			
+
 		end
 
 feature {EV_ANY_I} -- Implementation

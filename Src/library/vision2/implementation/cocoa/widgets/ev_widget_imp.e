@@ -23,7 +23,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			call_button_event_actions,
 			destroy
 		end
 
@@ -147,19 +146,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 		do
 		end
 
-feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	call_button_event_actions (
-			a_type: INTEGER;
-			a_x, a_y, a_button: INTEGER;
-			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER)
-
-			-- Call pointer_button_press_actions or pointer_double_press_actions
-			-- depending on event type in first position of `event_data'.
-		do
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
@@ -254,6 +240,10 @@ feature {EV_ANY_IMP} -- Implementation
 
 	destroy
 		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune (interface)
+			end
+			set_is_destroyed (True)
 		end
 
 	parent_imp: EV_CONTAINER_IMP

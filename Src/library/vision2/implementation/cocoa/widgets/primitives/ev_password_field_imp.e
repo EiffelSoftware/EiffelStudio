@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create Textfield on a user_pane
 		do
 			base_make (an_interface)
-			create {NS_SECURE_TEXT_FIELD}text_field.new
+			create {NS_SECURE_TEXT_FIELD}text_field.make
 			cocoa_item := text_field
 		end
 

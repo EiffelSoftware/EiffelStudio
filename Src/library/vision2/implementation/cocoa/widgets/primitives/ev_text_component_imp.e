@@ -1,9 +1,5 @@
 note
-
-	description:
-		"EiffelVision text component, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision text component, Cocoa implementation."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,9 +96,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end -- class EV_TEXT_COMPONENT_IMP
-

@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			--
 		do
 			base_make (an_interface)
-			create menu_item.new
-			create menu.new
+			create menu_item.make
+			create menu.make
 			menu_item.set_submenu (menu)
 		end
 

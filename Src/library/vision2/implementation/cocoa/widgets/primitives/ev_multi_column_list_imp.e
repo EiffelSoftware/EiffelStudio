@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			create ev_children.make (0)
-			create {NS_OUTLINE_VIEW}cocoa_item.new
+			create {NS_OUTLINE_VIEW}cocoa_item.make
 		end
 
 	initialize

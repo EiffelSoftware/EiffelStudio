@@ -1,10 +1,6 @@
 note
-
-	description:
-		"EiffelVision text area, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	id: "$Id$"
+	description: "EiffelVision text area, Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,11 +38,11 @@ feature {NONE} -- Initialization
 			-- Create a cocoa text view.
 		do
 			base_make (an_interface)
-			create {NS_SCROLL_VIEW}cocoa_item.new
-			create text_view.new
+			create {NS_SCROLL_VIEW}cocoa_item.make
+			create text_view.make
+			text_view.set_horizontally_resizable (True)
 			scroll_view.set_document_view (text_view)
 			scroll_view.set_border_type ({NS_SCROLL_VIEW}.ns_line_border)
-			create text.make_empty
 		end
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -82,6 +78,9 @@ feature -- Access
 
 	text: STRING_32
 			-- Text displayed in label.
+		do
+			Result := text_view.string.to_string.to_string_32
+		end
 
 	line (a_line: INTEGER): STRING_32
 			-- Returns the content of line `a_line'.
@@ -115,6 +114,7 @@ feature -- Status report
 	caret_position: INTEGER
 			-- Current position of the caret.
 		do
+			Result := text_view.selected_range.location + 1
 		end
 
 	line_count: INTEGER
@@ -150,38 +150,54 @@ feature -- Status setting
 feature -- Status setting
 
 	insert_text (a_text: STRING_GENERAL)
+		local
+			l_text: STRING_32
 		do
-			text.insert_string (a_text, caret_position)
-			text_view.set_string (text)
+			l_text := text
+			l_text.insert_string (a_text, caret_position)
+			text_view.set_string (l_text)
+			text_view.size_to_fit
 		end
 
 	set_text (a_text: STRING_GENERAL)
 			-- Set `text' to `a_text'
 		do
-			text := a_text.as_string_32
-			text_view.set_string (text)
+			text_view.set_string (a_text)
+			text_view.size_to_fit
 		end
 
 	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to `text'.	
+		local
+			l_text: STRING_32
 		do
-			text.append (a_text)
-			text_view.set_string (text)
+			l_text := text
+			l_text.append (a_text)
+			text_view.set_string (l_text)
+			text_view.size_to_fit
 		end
 
 	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend 'txt' to `text'.
+		local
+			l_text: STRING_32
 		do
-			text.prepend (a_text)
-			text_view.set_string (text)
+			l_text := text
+			l_text.prepend (a_text)
+			text_view.set_string (l_text)
+			text_view.size_to_fit
 		end
 
 	delete_text (start, finish: INTEGER)
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
+		local
+			l_text: STRING_32
 		do
-			text.remove_substring (start, finish)
-			text_view.set_string (text)
+			l_text := text
+			l_text.remove_substring (start, finish)
+			text_view.set_string (l_text)
+			text_view.size_to_fit
 		end
 
 feature -- Basic operation
@@ -282,7 +298,4 @@ feature {EV_ANY_I} -- Implementation
 
 	text_view: NS_TEXT_VIEW;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXT_IMP
-

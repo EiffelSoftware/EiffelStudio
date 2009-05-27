@@ -40,7 +40,7 @@ feature -- Initialize
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-			create {NS_OUTLINE_VIEW}cocoa_item.new
+			create {NS_OUTLINE_VIEW}cocoa_item.make
 			-- FIXME: Change to TableView
 		end
 

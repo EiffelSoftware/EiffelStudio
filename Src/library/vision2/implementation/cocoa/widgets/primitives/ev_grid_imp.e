@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			-- Create grid
 		do
 			base_make (an_interface)
-			create {NS_VIEW}cocoa_item.new
+			create {NS_VIEW}cocoa_item.make
 		end
 
 	initialize
@@ -125,7 +125,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			else
 				l_font_imp ?= a_font.implementation
 				create l_string.make_with_string (a_string)
-				create l_attributes.dictionary_with_object_for_key (l_font_imp.cocoa_item, l_font_imp.cocoa_item.font_attribute_name)
+				create l_attributes.make_with_object_for_key (l_font_imp.cocoa_item, l_font_imp.cocoa_item.font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)
 
 				tuple.put_integer (l_size.width, 1)

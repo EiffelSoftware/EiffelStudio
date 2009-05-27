@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create view.new_custom (agent cocoa_draw_rect)
+			create view.make_custom (agent cocoa_draw_rect)
 			cocoa_item := view
 		end
 
@@ -72,7 +72,6 @@ feature -- Status setting
 	redraw
 			-- Redraw the entire area.
 		do
-
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)

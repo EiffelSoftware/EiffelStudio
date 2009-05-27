@@ -182,7 +182,7 @@ feature -- Status report
 			l_size: NS_SIZE
 		do
 			create l_string.make_with_string (a_string)
-			create l_attributes.dictionary_with_object_for_key (cocoa_item, cocoa_item.font_attribute_name)
+			create l_attributes.make_with_object_for_key (cocoa_item, cocoa_item.font_attribute_name)
 			l_size := l_string.size_with_attributes (l_attributes)
 
 			create Result.default_create

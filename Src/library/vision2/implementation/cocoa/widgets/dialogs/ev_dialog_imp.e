@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			create {NS_WINDOW}cocoa_item.init_with_control_rect_style_mask_backing_defer (create {NS_RECT}.make_rect (100, 100, 100, 100),
+			create {NS_WINDOW}cocoa_item.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask, True)
 			window.make_key_and_order_front
 			allow_resize
-			new_delegate
+			create_delegate
 			window.set_delegate (current)
 --			Precursor {EV_TITLED_WINDOW_IMP} (an_interface)
 		end

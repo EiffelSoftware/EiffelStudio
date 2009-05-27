@@ -15,7 +15,8 @@ inherit
 			interface,
 			initialize,
 			width,
-			height
+			height,
+			set_pixmap
 		end
 
 	EV_SENSITIVE_IMP
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			pixmapable_imp_initialize
-			create {NS_MENU_ITEM}cocoa_item.new
+			create {NS_MENU_ITEM}cocoa_item.make
 		end
 
 	initialize
@@ -72,6 +73,7 @@ feature -- Status setting
 			if a_menu /= Void then
 				pos := a_menu.index_of (interface, 1)
 			end
+			Precursor {EV_SENSITIVE_IMP}
 		end
 
 	disable_sensitive
@@ -85,6 +87,7 @@ feature -- Status setting
 			if a_menu /= Void then
 				pos := a_menu.index_of (interface, 1)
 			end
+			Precursor {EV_SENSITIVE_IMP}
 		end
 
 feature -- Element change
@@ -97,15 +100,14 @@ feature -- Element change
 			i: INTEGER
 			a_menu_imp: EV_MENU_ITEM_LIST_IMP
 		do
+			Precursor {EV_TEXTABLE_IMP} (a_text)
+
+			-- Map the key equivalent
 			l_text := a_text.as_string_32
 			l_split_list :=  l_text.split ('%T')
 			if l_split_list.count = 2 then
-				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 				l_text := (l_split_list @ 1).as_string_32
 				set_key_equivalent (l_split_list @ 2)
-			else
-				Precursor {EV_TEXTABLE_IMP} (a_text)
-				l_text := a_text.as_string_32
 			end
 
 			-- Get rid of the & sign which denotes a shortcut key
@@ -177,6 +179,14 @@ feature -- Measurement
 	minimum_height: INTEGER = 10
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	set_pixmap (a_pixmap: EV_PIXMAP)
+		local
+			l_pixmap_imp: EV_PIXMAP_IMP
+		do
+		--	l_pixmap_imp ?= a_pixmap.implementation
+		--	menu_item.set_image (l_pixmap_imp.image)
+		end
 
 	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
 			--

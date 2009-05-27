@@ -57,9 +57,9 @@ feature {NONE} -- Implementation
 			-- Create the spin button.
 		do
 			base_make (an_interface)
-			create {NS_VIEW}cocoa_item.new
-			create text_field.new
-			create stepper.new
+			create {NS_VIEW}cocoa_item.make
+			create text_field.make
+			create stepper.make
 			view.add_subview (text_field)
 			view.add_subview (stepper)
 			stepper.set_value_wraps (False)

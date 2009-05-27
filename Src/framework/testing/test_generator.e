@@ -226,7 +226,7 @@ feature {NONE} -- Basic operations
 			l_progress: REAL
 			l_cancel: BOOLEAN
 			l_witnesses: DS_LIST [AUT_WITNESS]
-			l_witness: AUT_WITNESS
+			l_witness: detachable AUT_WITNESS
 			l_minimize_task: like minimize_task
 			l_error_handler: AUT_ERROR_HANDLER
 			l_itp: AUT_INTERPRETER_PROXY
@@ -247,21 +247,27 @@ feature {NONE} -- Basic operations
 							l_task.step
 							if not l_task.has_next_step then
 								l_witness := l_task.minimized_witness
-								session.used_witnesses.force_last (l_witness)
-								create current_results.make_from_linear (l_witness.classifications)
-								l_project_helper := test_suite.eiffel_project_helper
-								if l_project_helper.is_class_added then
-									l_last_class := l_project_helper.last_added_class
+								if l_witness /= Void then
+										-- Note: if we were not able to minimize witness, we use it directly to generate a test
+									l_witness := l_task.witness
 								end
-								create_new_class
-								if
-									l_project_helper.is_class_added and then
-									attached l_project_helper.last_added_class as l_new_class and then
-									l_last_class /= l_new_class
-								then
-									session.error_handler.report_test_synthesis (l_new_class)
+								if l_witness /= Void then
+									session.used_witnesses.force_last (l_witness)
+									create current_results.make_from_linear (l_witness.classifications)
+									l_project_helper := test_suite.eiffel_project_helper
+									if l_project_helper.is_class_added then
+										l_last_class := l_project_helper.last_added_class
+									end
+									create_new_class
+									if
+										l_project_helper.is_class_added and then
+										attached l_project_helper.last_added_class as l_new_class and then
+										l_last_class /= l_new_class
+									then
+										session.error_handler.report_test_synthesis (l_new_class)
+									end
+									current_results := Void
 								end
-								current_results := Void
 							end
 						elseif attached test_task as l_task then
 							l_total := session.options.time_out.second_count

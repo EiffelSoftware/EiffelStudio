@@ -22,7 +22,7 @@ feature -- Externals
 					return csbInfo.dwSize.X;
 				} else {
 					return 0;
-				}	
+				}
 			]"
 		end
 

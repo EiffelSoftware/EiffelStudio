@@ -23,4 +23,5 @@
 	<tag id="if" class="XTAG_XEB_IF_TAG">
 		<attribute id="condition" />
 	</tag>
+	<tag id="container" class="XTAG_XEB_CONTAINER_TAG" />
 </taglib>

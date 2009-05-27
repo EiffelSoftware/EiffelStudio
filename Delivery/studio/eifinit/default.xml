@@ -344,6 +344,13 @@
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.autocomplete_attribute" DESCRIPTION="Autocomplete attribute?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.use_default_attribute" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.custom_attribute_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.custom_attribute_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.custom_attribute_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.attribute.custom_attribute_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
+
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.use_default_do" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.custom_do_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>

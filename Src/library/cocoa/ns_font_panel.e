@@ -17,7 +17,7 @@ feature {NONE} -- Creation
 
 	shared_font_panel
 		do
-			cocoa_object := font_panel_shared_font_panel
+			make_shared (font_panel_shared_font_panel)
 		end
 
 feature -- Objective-C implementation

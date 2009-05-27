@@ -17,7 +17,7 @@ feature {NONE} -- Creation
 
 	shared_color_panel
 		do
-			cocoa_object := color_panel_shared_color_panel
+			make_shared (color_panel_shared_color_panel)
 		end
 
 feature {NONE} -- Objective-C implementation

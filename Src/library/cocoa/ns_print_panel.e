@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_PANEL
+		rename
+			make as make_window
+		end
 
 create
 	make
@@ -51,12 +54,12 @@ feature -- Customizing the Panel
 
 	set_options (a_options: INTEGER)
 		do
-			print_panel_set_options (cocoa_object, a_options)
+			print_panel_set_options (item, a_options)
 		end
 
 	options: INTEGER
 		do
-			Result := print_panel_options (cocoa_object)
+			Result := print_panel_options (item)
 		end
 
 --	set_default_button_title (a_default_button_title: NS_STRING)
@@ -101,12 +104,12 @@ feature -- Customizing the Panel
 
 	run_modal: INTEGER
 		do
-			Result := print_panel_run_modal(cocoa_object)
+			Result := print_panel_run_modal (item)
 		end
 
 --	print_info : NS_PRINT_INFO
 --		do
---			Result := print_panel_print_info(cocoa_object)
+--			Result := print_panel_print_info (item)
 --		end
 
 feature {NONE} -- Objective-C implementation

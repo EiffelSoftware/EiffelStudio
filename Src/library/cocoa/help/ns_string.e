@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_OBJECT
+		export
+			{NS_OBJECT, NS_OUTLINE_VIEW_DATA_SOURCE} item
+		end
 
 create
 	make_with_string,

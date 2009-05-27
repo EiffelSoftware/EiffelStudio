@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_SAVE_PANEL
+		redefine
+			make
+		end
 
 create
 	make
@@ -24,47 +27,47 @@ feature -- Access
 
 	filenames : NS_ARRAY [NS_STRING]
 		do
-			Result := create {NS_ARRAY[NS_STRING]}.make_shared (open_panel_filenames(cocoa_object))
+			Result := create {NS_ARRAY[NS_STRING]}.make_shared (open_panel_filenames(item))
 		end
 
 	resolves_aliases : BOOLEAN
 		do
-			Result := open_panel_resolves_aliases(cocoa_object)
+			Result := open_panel_resolves_aliases (item)
 		end
 
 	set_resolves_aliases (a_flag: BOOLEAN)
 		do
-			open_panel_set_resolves_aliases(cocoa_object, a_flag)
+			open_panel_set_resolves_aliases (item, a_flag)
 		end
 
 	can_choose_directories : BOOLEAN
 		do
-			Result := open_panel_can_choose_directories(cocoa_object)
+			Result := open_panel_can_choose_directories (item)
 		end
 
 	set_can_choose_directories (a_flag: BOOLEAN)
 		do
-			open_panel_set_can_choose_directories(cocoa_object, a_flag)
+			open_panel_set_can_choose_directories (item, a_flag)
 		end
 
 	allows_multiple_selection : BOOLEAN
 		do
-			Result := open_panel_allows_multiple_selection(cocoa_object)
+			Result := open_panel_allows_multiple_selection (item)
 		end
 
 	set_allows_multiple_selection (a_flag: BOOLEAN)
 		do
-			open_panel_set_allows_multiple_selection(cocoa_object, a_flag)
+			open_panel_set_allows_multiple_selection (item, a_flag)
 		end
 
 	can_choose_files : BOOLEAN
 		do
-			Result := open_panel_can_choose_files(cocoa_object)
+			Result := open_panel_can_choose_files (item)
 		end
 
 	set_can_choose_files (a_flag: BOOLEAN)
 		do
-			open_panel_set_can_choose_files(cocoa_object, a_flag)
+			open_panel_set_can_choose_files (item, a_flag)
 		end
 
 --	begin_sheet_for_directory_file_types_modal_for_window_modal_delegate_did_end_selector_context_info (a_path: NS_STRING; a_name: NS_STRING; a_file_types: NS_ARRAY; a_doc_window: NS_WINDOW; a_delegate: NS_OBJECT; a_did_end_selector: SELECTOR; a_context_info: ANY)
@@ -82,16 +85,16 @@ feature -- Access
 			l_name: POINTER
 		do
 			if a_name /= void then
-				l_name := a_name.cocoa_object
+				l_name := a_name.item
 			else
 				l_name := nil
 			end
-			Result := open_panel_run_modal_for_directory_file_types(cocoa_object, a_path.cocoa_object, l_name, a_file_types.cocoa_object)
+			Result := open_panel_run_modal_for_directory_file_types (item, a_path.item, l_name, a_file_types.item)
 		end
 
 	run_modal_for_types (a_file_types: NS_ARRAY[NS_STRING]): INTEGER
 		do
-			Result := open_panel_run_modal_for_types(cocoa_object, a_file_types.cocoa_object)
+			Result := open_panel_run_modal_for_types (item, a_file_types.item)
 		end
 
 feature -- Objective-C implementation

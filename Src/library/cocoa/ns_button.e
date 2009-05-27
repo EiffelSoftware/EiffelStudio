@@ -19,11 +19,9 @@ create
 feature {NONE} -- Creation
 
 	make
-			-- Create the window.
+			-- Create a new NSButton
 		do
 			make_shared (button_new)
-			-- FIXME
-			button_set_bezel_style (item, rounded_bezel_style)
 		end
 
 feature -- Access
@@ -34,6 +32,8 @@ feature -- Access
 		end
 
 	set_button_type (a_button_type: INTEGER)
+		require
+			valid_button_type: a_button_type = push_on_push_off_button or a_button_type = toggle_button or a_button_type = switch_button or a_button_type = radio_button
 		do
 			button_set_button_type (item, a_button_type)
 		end
@@ -48,10 +48,16 @@ feature -- Access
 			button_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
+	set_bezel_style (a_style: INTEGER)
+		require
+			valid_style: a_style = rounded_bezel_style
+		do
+			button_set_bezel_style (item, a_style)
+		end
+
 feature {NONE} -- Objective-C interface
 
 	frozen button_new: POINTER
-			-- Create a new NSButton
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

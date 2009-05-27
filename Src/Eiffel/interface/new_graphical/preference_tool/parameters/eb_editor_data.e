@@ -774,8 +774,8 @@ feature {NONE} -- Initialization
 			a_list: ARRAYED_LIST [STRING]
 		do
 			from
-				create complete_keywords.make (1, 39)
-				create insert_after_keyword.make (1, 39)
+				create complete_keywords.make (1, 40)
+				create insert_after_keyword.make (1, 40)
 				cnt := complete_keywords.count
 				complete_keywords_names_keys.start
 			until
@@ -870,6 +870,8 @@ feature {NONE} -- Build preferences for autocomplete
 					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
 						-- local
 					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+						-- attribute
+					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
 						-- do
 					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
 						-- once
@@ -991,7 +993,7 @@ feature -- Syntax Completion Customization
 	feature_completed_keywords: ARRAYED_LIST [STRING]
 			-- list of completed keywords
 		once
-			create Result.make_from_array (<<"is", "require", "require else", "local", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias">>)
+			create Result.make_from_array (<<"is", "require", "require else", "local", "attribute", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias">>)
 			Result.compare_objects
 		end
 

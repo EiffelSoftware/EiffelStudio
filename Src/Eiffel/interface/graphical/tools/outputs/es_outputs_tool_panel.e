@@ -628,7 +628,7 @@ feature {NONE} -- Action handlers
 
 				-- Create output file name.
 			create l_file_name.make_from_string (output.name.as_string_8)
-			l_file_name.add_extension (".out")
+			l_file_name.add_extension ("txt")
 
 				-- Show save dialog.
 			create l_dialog.make_with_sticky_path (locale_formatter.formatted_translation (t_save_1, [output.name]), {ES_STANDARD_DIALOG_STICKY_IDS}.global_sticky_id)

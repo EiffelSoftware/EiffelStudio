@@ -2,6 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="arg_parser" uuid="F2CC3814-B342-4E64-9830-A39F6C1448D7" library_target="arg_parser">
 	<description>An argument parser library for parsing and validating command line arguments.</description>
 	<target name="arg_parser">
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/tests$</exclude>

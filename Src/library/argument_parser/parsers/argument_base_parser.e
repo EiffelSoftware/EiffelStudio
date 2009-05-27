@@ -729,7 +729,7 @@ feature {NONE} -- Basic Operations
 			a_action_attached: a_action /= Void
 			option_values_is_empty: option_values.is_empty and values.is_empty
 		do
-			if is_allowing_non_switched_arguments then
+			if is_allowing_non_switched_arguments and is_non_switch_argument_required then
 				display_usage
 			else
 				a_action.call (Void)

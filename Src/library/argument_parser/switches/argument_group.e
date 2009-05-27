@@ -65,6 +65,9 @@ feature {NONE} -- Initialization
 					end
 					i := i + 1
 				end
+			else
+				create l_switches.make (0)
+				check should_not_occur: False end
 			end
 			switches := l_switches
 			is_allowing_non_switched_arguments := a_allow_non_switched

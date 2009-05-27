@@ -86,20 +86,20 @@ feature -- Access
 			Result := notifier_formatter.string
 		end
 
-	formatter: ES_MULTI_OUTPUT_WINDOW
+	formatter: ES_MULTI_TEXT_FORMATTER
 			-- <Precursor>
 		do
 			if attached internal_formatter as l_result then
 				Result := l_result
 			else
-				create {ES_MULTI_OUTPUT_WINDOW} Result.make
+				create {ES_MULTI_TEXT_FORMATTER} Result.make
 					-- Add the notifier window to ensure clients have access to the cached
 					-- string contents and actions.
 				Result.extend (notifier_formatter)
 				internal_formatter := Result
 			end
 		ensure then
-			result_has_notifier_formatter: Result.had_formatter (notifier_formatter)
+			result_has_notifier_formatter: Result.has_formatter (notifier_formatter)
 		end
 
 feature {NONE} -- Access
@@ -133,31 +133,28 @@ feature -- Access
 
 feature {NONE} -- Access: User interface
 
-	icon_animation_overlay_coords: LINEAR [TUPLE [x, y: NATURAL_8]]
+	icon_animation_overlay_coords: ARRAYED_LIST [TUPLE [x, y: NATURAL_8]]
 			-- Animation icons coordinates for drawing an overlay icon.
-		local
-			l_result: ARRAYED_LIST [TUPLE [NATURAL_8, NATURAL_8]]
 		once
-			create l_result.make (7)
---			l_result.extend ([{NATURAL_8} 1, {NATURAL_8} 1])
---			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
---			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 1])
---			l_result.extend ([{NATURAL_8} 4, {NATURAL_8} 1])
---			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 1])
---			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 1])
+			create Result.make (7)
+--			Result.extend ([{NATURAL_8} 1, {NATURAL_8} 1])
+--			Result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
+--			Result.extend ([{NATURAL_8} 3, {NATURAL_8} 1])
+--			Result.extend ([{NATURAL_8} 4, {NATURAL_8} 1])
+--			Result.extend ([{NATURAL_8} 5, {NATURAL_8} 1])
+--			Result.extend ([{NATURAL_8} 6, {NATURAL_8} 1])
 
-			l_result.extend ([{NATURAL_8} 1, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 4, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
-			l_result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 1, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 2, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 3, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 4, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 5, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
+			Result.extend ([{NATURAL_8} 6, {NATURAL_8} 3])
 
---			l_result.extend ([{NATURAL_8} 5, {NATURAL_8} 2])
---			l_result.extend ([{NATURAL_8} 3, {NATURAL_8} 2])
---			l_result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
-			Result := l_result
+--			Result.extend ([{NATURAL_8} 5, {NATURAL_8} 2])
+--			Result.extend ([{NATURAL_8} 3, {NATURAL_8} 2])
+--			Result.extend ([{NATURAL_8} 2, {NATURAL_8} 1])
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -233,6 +230,7 @@ feature -- Basic operations
 	clear
 			-- <Precursor>
 		do
+			formatter.reset
 			notifier_formatter.reset
 		ensure then
 			notifier_formatter_string_is_empty: notifier_formatter.string.is_empty
@@ -305,6 +303,7 @@ feature {NONE} -- Factory
 			-- Creates a new series of animation icons when the output is currently processing output.
 		local
 			l_coords: like icon_animation_overlay_coords
+			l_cursor: CURSOR
 			l_base_icon: like icon
 			l_icon: EV_PIXEL_BUFFER
 			l_pixmaps: like stock_pixmaps
@@ -315,7 +314,9 @@ feature {NONE} -- Factory
 			l_base_icon := icon
 			l_pixmaps := stock_pixmaps
 			l_mini_pixmaps := mini_stock_pixmaps
-			create Result.make (1, 5)
+
+			l_cursor := l_coords.cursor
+			create Result.make (1, l_coords.count)
 			from l_coords.start until l_coords.after loop
 				i := i + 1
 				if attached l_coords.item as l_coord then
@@ -325,6 +326,7 @@ feature {NONE} -- Factory
 				end
 				l_coords.forth
 			end
+			l_coords.go_to (l_cursor)
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -335,6 +337,7 @@ feature {NONE} -- Factory
 			-- Creates a new series of animation icon pixmaps when the output is currently processing output.
 		local
 			l_coords: like icon_animation_overlay_coords
+			l_cursor: CURSOR
 			l_base_icon: like icon
 			l_icon: EV_PIXMAP
 			l_pixmaps: like stock_pixmaps
@@ -345,8 +348,11 @@ feature {NONE} -- Factory
 			l_base_icon := icon
 			l_pixmaps := stock_pixmaps
 			l_mini_pixmaps := mini_stock_pixmaps
-			create Result.make (1, 5)
+
+			l_cursor := l_coords.cursor
+			create Result.make (1, l_coords.count)
 			from l_coords.start until l_coords.after loop
+				i := i + 1
 				if attached l_coords.item as l_coord then
 					l_icon := l_pixmaps.icon_with_overlay (l_base_icon, l_mini_pixmaps.general_edit_icon_buffer, l_coord.x, l_coord.y)
 					l_icon.set_size (l_base_icon.width, l_base_icon.height)
@@ -354,6 +360,7 @@ feature {NONE} -- Factory
 				end
 				l_coords.forth
 			end
+			l_coords.go_to (l_cursor)
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

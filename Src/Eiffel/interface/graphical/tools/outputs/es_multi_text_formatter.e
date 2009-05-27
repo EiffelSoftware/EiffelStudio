@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_MULTI_OUTPUT_WINDOW
+	ES_MULTI_TEXT_FORMATTER
 
 inherit
 	TEXT_FORMATTER
@@ -77,9 +77,14 @@ feature {NONE} -- Access
 			--|Note: When `start_processing' moves the managed windows from `new_managed_formatters' to the
 			--|     active and usable `managed_formatters'.
 
+feature {NONE} -- Meansurement
+
+	new_line_count: NATURAL_8
+			-- Number of cached new lines awaiting output.
+
 feature -- Status report
 
-	had_formatter (a_formatter: TEXT_FORMATTER): BOOLEAN
+	has_formatter (a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Determines if a text formatter is managed by Current.
 			--
 			-- `a_formatter': A text formatter to check.
@@ -103,11 +108,11 @@ feature {OUTPUT_I} -- Extension
 		require
 			a_formatter_attached: a_formatter /= Void
 			not_a_formatter_is_current: a_formatter /= Current
-			not_had_formatter_a_formatter: not had_formatter (a_formatter)
+			not_has_formatter_a_formatter: not has_formatter (a_formatter)
 		do
 			new_managed_formatters.extend (a_formatter)
 		ensure
-			had_formatter_a_formatter: had_formatter (a_formatter)
+			has_formatter_a_formatter: has_formatter (a_formatter)
 		end
 
 feature {OUTPUT_I} -- Removal
@@ -119,12 +124,12 @@ feature {OUTPUT_I} -- Removal
 		require
 			a_formatter_attached: a_formatter /= Void
 			not_a_formatter_is_current: a_formatter /= Current
-			had_formatter_a_formatter: had_formatter (a_formatter)
+			has_formatter_a_formatter: has_formatter (a_formatter)
 		do
 			new_managed_formatters.prune (a_formatter)
 			managed_formatters.prune (a_formatter)
 		ensure
-			not_had_formatter_a_formatter: not had_formatter (a_formatter)
+			not_has_formatter_a_formatter: not has_formatter (a_formatter)
 		end
 
 feature -- Element change
@@ -148,7 +153,15 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operation
+feature -- Basic operations
+
+	reset
+			-- Resets any cached data.
+		do
+			new_line_count := 0
+		ensure
+			new_line_count_reset: new_line_count = 0
+		end
 
 	start_processing (a_append: BOOLEAN)
 			 -- <Precursor>
@@ -157,6 +170,11 @@ feature -- Basic operation
 			l_formatters: like managed_formatters
 			l_new_windows: like new_managed_formatters
 		do
+			if not a_append then
+					-- Reset new line cache count
+				new_line_count := 0
+			end
+
 			l_formatters := managed_formatters
 
 				 -- A new process is starting to add the new output windows to the active list.
@@ -193,36 +211,6 @@ feature -- Basic operation
 			end
 		end
 
---feature {NONE} -- Output
-
---	put_new_line
---			-- <Precursor>
---		local
---			l_formatters: like managed_formatters
---		do
---			l_formatters := managed_formatters
---			from l_formatters.start until l_formatters.after loop
---				if attached l_formatters.item as l_formatter then
---					l_formatter.process_new_line
---				end
---				l_formatters.forth
---			end
---		end
-
---	put_string (a_string: STRING_GENERAL)
---			 -- <Precursor>
---		local
---			l_formatters: like managed_formatters
---		do
---			l_formatters := managed_formatters
---			from l_formatters.start until l_formatters.after loop
---				if attached l_formatters.item as l_formatter then
---					l_formatter.process_basic_text (a_string)
---				end
---				l_formatters.forth
---			end
---		end
-
 feature -- Process
 
 	process_basic_text (a_text: STRING_GENERAL)
@@ -231,6 +219,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -247,6 +236,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -263,6 +253,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -279,6 +270,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -295,6 +287,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -311,6 +304,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -327,6 +321,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -343,6 +338,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -359,6 +355,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -375,6 +372,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -391,6 +389,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -407,6 +406,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -423,6 +423,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -439,6 +440,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -455,6 +457,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -471,6 +474,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -487,6 +491,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -503,6 +508,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -519,6 +525,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -535,6 +542,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -551,6 +559,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -564,16 +573,11 @@ feature -- Process
 	process_new_line
 			-- <Precursor>
 		local
-			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
+			l_count: like new_line_count
 		do
-			l_formatters := managed_formatters
-			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
-					l_formatter.process_new_line
-				end
-				l_formatters.forth
+			l_count := new_line_count
+			if l_count < {NATURAL_8}.max_value then
+				new_line_count := new_line_count + 1
 			end
 		end
 
@@ -583,6 +587,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -599,6 +604,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -615,6 +621,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -631,6 +638,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -647,6 +655,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -663,6 +672,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -679,6 +689,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -695,6 +706,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -711,6 +723,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -727,6 +740,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -743,6 +757,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -759,6 +774,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -775,6 +791,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -791,6 +808,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -807,6 +825,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -823,6 +842,7 @@ feature -- Process
 			l_formatters: like managed_formatters
 			l_formatter: TEXT_FORMATTER
 		do
+			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				l_formatter := l_formatters.item
@@ -831,6 +851,34 @@ feature -- Process
 				end
 				l_formatters.forth
 			end
+		end
+
+feature {NONE} -- Basic operations
+
+	process_new_lines_cache
+			-- Processes any number of cached new line characters, cached to prevent unnecessary output of new lines.
+		local
+			l_formatters: like managed_formatters
+			l_formatter: TEXT_FORMATTER
+			i, l_new_lines: like new_line_count
+		do
+			l_new_lines := new_line_count
+			if l_new_lines > 0 then
+				l_formatters := managed_formatters
+				from l_formatters.start until l_formatters.after loop
+					l_formatter := l_formatters.item
+					if l_formatter /= Void then
+						from i := 1 until i > l_new_lines loop
+							l_formatter.process_new_line
+							i := i + 1
+						end
+					end
+					l_formatters.forth
+				end
+				new_line_count := 0
+			end
+		ensure
+			new_line_count_reset: new_line_count = 0
 		end
 
 invariant

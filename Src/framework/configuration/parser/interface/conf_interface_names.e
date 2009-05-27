@@ -526,7 +526,12 @@ feature -- Validation warnings
 	root_invalid_feature: STRING = "Root procedure name is invalid."
 	cluster_dependency_group_not_exist: STRING = "Cannot add dependency. There is no group with this name."
 	override_group_not_exist: STRING = "Cannot add override. There is no group with this name."
-	invalid_group_name: STRING = "The name of the group is invalid."
+	invalid_assembly_name: STRING = "The name of the assembly is invalid."
+	invalid_cluster_name: STRING = "The name of the cluster is invalid."
+	invalid_library_name: STRING = "The name of the library is invalid."
+	invalid_override_name: STRING = "The name of the override is invalid."
+	invalid_precompile_name: STRING = "The name of the precompile is invalid."
+	
 	group_already_exists (a_group: STRING): STRING
 		require
 			a_group_not_void: a_group /= Void

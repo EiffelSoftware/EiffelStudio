@@ -396,7 +396,7 @@ feature {NONE} -- Action handlers
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
 				if not is_valid_group_name (name.text) then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.invalid_group_name, Current, Void)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.invalid_library_name, Current, Void)
 				elseif group_exists (name.text, target) then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
 				else

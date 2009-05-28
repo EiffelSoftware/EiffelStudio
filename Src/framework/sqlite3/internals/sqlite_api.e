@@ -17,6 +17,11 @@ inherit
 	DYNAMIC_API
 
 inherit {NONE}
+	SQLITE_API_EXTERNALS
+		export
+			{NONE} all
+		end
+
 	SQLITE_HELPERS
 		export
 			{NONE} all
@@ -175,79 +180,6 @@ feature -- Status report
 				c_sqlite3_threadsafe (api_pointer (once "sqlite3_threadsafe")) /= 0
 		ensure then
 			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
-		end
-
-feature {NONE} -- Externals
-
-	c_sqlite3_initialize (a_fptr: POINTER): INTEGER
-			-- The sqlite3_initialize() routine initializes the SQLite library.
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_INTEGER)(FUNCTION_CAST(int, (void)) $a_fptr) ();"
-		end
-
-	c_sqlite3_shutdown (a_fptr: POINTER): INTEGER
-			-- A call to sqlite3_shutdown() is an "effective" call if it is the first call to
-			-- sqlite3_shutdown() since the last sqlite3_initialize().
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_INTEGER)(FUNCTION_CAST(int, (void)) $a_fptr) ();"
-		end
-
-	c_sqlite3_threadsafe (a_fptr: POINTER): INTEGER
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_INTEGER)(FUNCTION_CAST(int, (void)) $a_fptr) ();"
-		end
-
-	c_sqlite3_libversion (a_fptr: POINTER): POINTER
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_POINTER)(FUNCTION_CAST(const char *, (void)) $a_fptr) ();"
-		end
-
-	c_sqlite3_libversion_number (a_fptr: POINTER): INTEGER
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_INTEGER)(FUNCTION_CAST(int, (void)) $a_fptr) ();"
-		end
-
-feature {NONE} -- External: Experimental
-
-	c_sqlite3_config (a_fptr: POINTER; a_config: INTEGER): INTEGER
-			-- Experimental
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"return (EIF_INTEGER)(FUNCTION_CAST(int, (int, ...)) $a_fptr) ($a_config);"
-		end
-
-feature {NONE} -- Externals: Constants
-
-	SQLITE_CONFIG_SINGLETHREAD: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_SINGLETHREAD"
-		end
-
-	SQLITE_CONFIG_MULTITHREAD: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_MULTITHREAD"
-		end
-
-	SQLITE_CONFIG_SERIALIZED: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_SERIALIZED"
 		end
 
 invariant

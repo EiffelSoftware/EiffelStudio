@@ -68,8 +68,8 @@ feature {NONE} -- Implementation
 					run_process := launch_process (webapp_exe,
 												run_args,
 												run_workdir,
-												agent run_process_exited)
-											--	Void)
+												agent run_process_exited,
+												Void)
 					is_running := True
 				end
 			end

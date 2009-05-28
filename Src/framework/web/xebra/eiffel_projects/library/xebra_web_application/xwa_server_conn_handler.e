@@ -22,10 +22,9 @@ feature {NONE} -- Initialization
 			config := a_config
 			create session_manager.make
 	--		create request_pool.make  (10, agent servlet_handler_spawner)
-
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create xserver_socket.make_server_by_port (config.port.value)
-	--		xserver_socket.set_accept_timeout (500)
+			xserver_socket.set_accept_timeout (500)
 			stop := False
 			add_servlets
 		ensure
@@ -78,7 +77,7 @@ feature -- Implementation
             until
             	stop
             loop
-            	o.dprint ("Waiting for request from http server...", 2)
+--            	o.dprint ("Waiting for request from http server...", 2)
                 xserver_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then

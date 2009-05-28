@@ -13,11 +13,34 @@ class
 
 inherit
 	XS_WEBAPP_ACTION
+		redefine
+			make
+		end
 
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_webapp: XS_WEBAPP)
+			-- Initialization for `Current'.	
+		do
+			Precursor (a_webapp)
+			create output_handler_compile.make
+			create output_handler_translate.make
+			create output_handler_gen.make
+		ensure then
+			output_handler_compile_attached: output_handler_compile /= Void
+			output_handler_translate_attached: output_handler_translate /= Void
+			output_handler_gen_attached: output_handler_gen /= Void
+		end
+
 feature -- Access
+
+	output_handler_compile: XSOH_COMPILE
+	output_handler_translate: XSOH_TRANSLATE
+	output_handler_gen: XSOH_GEN
+
 
 	translate_process: detachable PROCESS
 			-- Used to translate the xeb files
@@ -190,8 +213,8 @@ feature {NONE} -- Implementation
 					translate_process := launch_process (config.translator_filename,
 															translator_args,
 															app_dir,
-															agent translate_process_exited)
-														--	agent translator_output_handler)
+															agent translate_process_exited,
+															agent output_handler_translate.handle_output)
 					is_running := True
 				end
 			end
@@ -206,8 +229,8 @@ feature {NONE} -- Implementation
 				gen_compile_process := launch_process (config.compiler_filename,
 														gen_compiler_args,
 														app_dir,
-														agent gen_compile_process_exited)
-													--	agent compiler_output_handler)
+														agent gen_compile_process_exited,
+														agent output_handler_compile.handle_output)
 			end
 		end
 
@@ -219,49 +242,34 @@ feature {NONE} -- Implementation
 				generate_process := launch_process (servlet_gen_exe,
 													generate_args,
 													app_dir,
-													agent generate_process_exited)
-												--	agent generator_output_handler)
+													agent generate_process_exited,
+													agent output_handler_gen.handle_output)
 			end
 		end
 
 feature -- Agents
 
---	translator_output_handler (a_ouput: STRING)
---			-- Forwards output to console
---		do
---			o.set_name ("TRANSLATOR")
---			o.dprintn (a_ouput, 3)
---			o.set_name ({XS_MAIN_SERVER}.name)
---		end
-
---	generator_output_handler (a_ouput: STRING)
---			-- Forwards output to console
---		do
---			o.set_name ("SERVLET_GEN")
---			o.dprintn (a_ouput, 3)
---			o.set_name ({XS_MAIN_SERVER}.name)
---		end
-
---	compiler_output_handler (a_ouput: STRING)
---			-- Forwards output to console
---		do
---		--	o.set_name ("COMPILER")
---			o.dprintn (a_ouput, 3)
---	--		o.set_name ({XS_MAIN_SERVER}.name)
---		end
-
 	translate_process_exited
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
 			config_outputter
-			compile_servlet_gen
+			if output_handler_translate.has_successfully_terminated then
+				compile_servlet_gen
+			else
+				o.eprint ("TRANSLATION WAS NOT SUCCESSFUL", generating_type)
+			end
+
 		end
 
 	gen_compile_process_exited
 			-- Launch executing of servlet_gen in genrate_process
 		do
 			config_outputter
-			generate
+			if output_handler_compile.has_successfully_terminated then
+				generate
+			else
+				o.eprint ("COMPILATION WAS NOT SUCCESSFUL", generating_type)
+			end
 		end
 
 	generate_process_exited
@@ -269,7 +277,17 @@ feature -- Agents
 		do
 			config_outputter
 			is_running := False
-			next_action.execute.do_nothing
+			if output_handler_compile.has_successfully_terminated then
+				next_action.execute.do_nothing
+			else
+				o.eprint ("GENERATION WAS NOT SUCCESSFUL", generating_type)
+			end
 		end
+
+invariant
+	output_handler_compile_attached: output_handler_compile /= Void
+	output_handler_translate_attached: output_handler_translate /= Void
+	output_handler_gen_attached: output_handler_gen /= Void
+
 end
 

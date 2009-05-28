@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Provides logging features.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

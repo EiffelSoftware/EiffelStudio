@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 				o.dprint ("Sending shutdown signal", 2)
 	            l_webapp_socket.independent_store (Shutdown_message)
 	            l_webapp_socket.cleanup
-	         else
+	        else
 	         	o.eprint ("Cannot shutdown connect to '" + webapp.config.name.out + "'", generating_type)
 			end
 			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_response

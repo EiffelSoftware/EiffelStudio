@@ -225,6 +225,14 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	RT_SPECIAL_ELEM_SIZE(result) = RT_SPECIAL_ELEM_SIZE(source);
 	RT_SPECIAL_CAPACITY(result) = RT_SPECIAL_CAPACITY(source);
 
+	if (!egc_has_old_special_semantic) {
+			/* If by default allocation does not clear the data of a SPECIAL,
+			 * we actually need to do clear it otherwise we end up with a SPECIAL
+			 * object that is susceptible to be manipulated by the GC while waiting to
+			 * be filled. */
+		memset(result, 0, RT_SPECIAL_VISIBLE_SIZE(result));
+	}
+
 	RT_GC_WEAN(source);				/* Remove GC protection */
 
 	return result;

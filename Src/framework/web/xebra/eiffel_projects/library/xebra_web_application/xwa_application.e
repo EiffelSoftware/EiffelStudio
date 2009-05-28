@@ -127,6 +127,4 @@ feature -- Setter
 			stop_set: stop = a_stop
 		end
 
-invariant
-	config_attached: config /= Void
 end

@@ -74,6 +74,7 @@ feature -- Access
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_text: STRING_32
+			l_nls: INTEGER
 		do
 			create Result.make_empty
 
@@ -84,10 +85,17 @@ feature -- Access
 						l_text := l_comment_line.content
 						l_text.left_adjust
 						l_text.right_adjust
-						Result.append_string_general (l_text)
-						if not l_comments.islast then
-							Result.append_character ('%N')
+
+						if not l_text.is_empty then
+							Result.append_string_general (l_text)
+							Result.append_character (' ')
+							l_nls := 0
+						else
+							if l_nls >= 2 and then not l_comments.islast then
+								Result.append ("%N%N")
+							end
 						end
+						l_nls := l_nls + 1
 					end
 					l_comments.forth
 				end

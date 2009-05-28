@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="XCookieBakery.cs" />
     <Compile Include="XEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XFileLogger.cs" />

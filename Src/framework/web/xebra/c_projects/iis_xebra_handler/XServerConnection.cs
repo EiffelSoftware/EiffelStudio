@@ -6,25 +6,51 @@ using System.Net.Sockets;
 
 namespace Xebra
 {
+    /// <summary>
+    /// Provides methods to connect to a xebra server, to send and receive string messages.
+    /// </summary>
     class XServerConnection
     {
 
         #region Fields
-
+        /// <summary>
+        /// The Socket
+        /// </summary>
         TcpClient socket;
-        int FRAG_SIZE = 65536;
-        int MAX_FRAGS = 1000;
 
+        /// <summary>
+        /// The logger to store debug and error messages
+        /// </summary>
         XLogger log;
   
         #endregion
+        
+        #region Constants
+        /// <summary>
+        /// The maximal size of a message fragment
+        /// </summary>
+        int FRAG_SIZE = 65536;
 
+        /// <summary>
+        /// The maximal number of fragments of a message
+        /// </summary>
+        int MAX_FRAGS = 1000;
 
+        #endregion
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="log">A logger to write debug and error messages</param>
         public XServerConnection(XLogger log)
         {
             this.log = log;
         }
 
+        /// <summary>
+        /// Connects to the server
+        /// </summary>
+        /// <returns>Returns true if a connection could be established</returns>
         public bool connect()
         {
             try
@@ -41,6 +67,11 @@ namespace Xebra
             }
         }
 
+        /// <summary>
+        /// Sends a string to the server
+        /// </summary>
+        /// <param name="message">The message</param>
+        /// <returns>Returns true if there was no error</returns>
         public bool sendMessage(String message)
         {
             if (socket == null)
@@ -103,6 +134,10 @@ namespace Xebra
             return true;
         }
 
+        /// <summary>
+        /// Waits to receive a string from the server
+        /// </summary>
+        /// <returns>Returns the message that was received from the server. Returns "" if there was an error.</returns>
         public String receiveMessage()
         {
             bool flag = false;

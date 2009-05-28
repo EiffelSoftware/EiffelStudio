@@ -51,7 +51,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Access
 	frozen stone: STONE
 			-- <Precursor>
 		do
-			if attached {attached ES_STONABLE_I} tool_descriptor as l_stonable then
+			if attached {ES_STONABLE_I} tool_descriptor as l_stonable then
 				Result := l_stonable.stone
 			end
 		end
@@ -70,7 +70,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}
 					-- This is normal because of the transistion of tool development to ESF.
 					-- See notes for `stone_change_notified'.
-				if attached {attached ES_STONABLE_I} tool_descriptor as l_stonable then
+				if attached {ES_STONABLE_I} tool_descriptor as l_stonable then
 					l_stonable.set_stone (a_stone)
 				end
 			else
@@ -130,7 +130,7 @@ feature {NONE} -- Basic opertations
         			-- Propagate the stone drop actions	
         		do
         			if is_interface_usable and is_initialized and then tool_descriptor.is_interface_usable then
-        				if attached {attached STONE} ia_pebble as l_stone and then tool_descriptor.is_stone_usable (l_stone) then
+        				if attached {STONE} ia_pebble as l_stone and then tool_descriptor.is_stone_usable (l_stone) then
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.

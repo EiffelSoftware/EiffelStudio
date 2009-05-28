@@ -526,7 +526,7 @@ feature {NONE} -- Basic operation
 			is_initialized: is_initialized or is_initializing
 			has_border: has_border
 		do
-			if attached {attached EV_COLORIZABLE} border_widget as l_colorizable then
+			if attached {EV_COLORIZABLE} border_widget as l_colorizable then
 				if has_mouse_pointer then
 					l_colorizable.set_background_color (active_border_color)
 				else
@@ -546,7 +546,7 @@ feature {NONE} -- Basic operation
 			l_window: EB_WINDOW
 			l_position: like window_on_screen_position
 		do
-			if attached {attached EV_WIDGET} relative_widget as l_widget then
+			if attached relative_widget as l_widget then
 				l_position := window_on_screen_position (l_widget, False)
 			else
 				create l_manager

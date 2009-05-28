@@ -227,7 +227,7 @@ feature -- Actions
 	token_select_actions: attached EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]
 			-- Actions called when the token part of the popup window was selected
 		do
-			if attached {attached EV_LITE_ACTION_SEQUENCE [TUPLE [x, y, screen_x, screen_y: INTEGER]]} internal_token_select_actions as l_actions then
+			if attached {like token_select_actions} internal_token_select_actions as l_actions then
 				Result := l_actions
 			else
 				create Result

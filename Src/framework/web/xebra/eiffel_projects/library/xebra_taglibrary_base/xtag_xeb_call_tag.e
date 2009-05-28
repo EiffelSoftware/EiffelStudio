@@ -23,14 +23,14 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			feature_name := "####wrong_feature####"
+			create feature_name.make ("####wrong_feature####")
 		ensure
 			feature_name_attached: attached feature_name
 		end
 
 feature {NONE} -- Access
 
-	feature_name: STRING
+	feature_name: XTAG_TAG_ARGUMENT
 			-- The name of the feature to call
 
 feature -- Basic implementation
@@ -38,13 +38,13 @@ feature -- Basic implementation
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			add_controller_call (feature_name, a_servlet_class.render_feature)
+			add_controller_call (feature_name.value (current_controller_id), a_servlet_class.render_feature)
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
-			if id.is_equal ("feature") then
+			if a_id.is_equal ("feature") then
 				feature_name := a_attribute
 			end
 		end

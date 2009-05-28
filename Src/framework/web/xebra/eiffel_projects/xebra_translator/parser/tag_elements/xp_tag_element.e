@@ -9,6 +9,9 @@ note
 class
 	XP_TAG_ELEMENT
 
+inherit
+	XU_STRING_MANIPULATION
+
 create
 	make, make_empty
 
@@ -32,7 +35,7 @@ feature -- Initialization
 			id := a_id
 			controller_id := ""
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
-			create {HASH_TABLE [STRING, STRING]} parameters.make (3)
+			create {HASH_TABLE [XP_TAG_ARGUMENT, STRING]} parameters.make (3)
 			debug_information := a_debug_information
 		end
 
@@ -43,7 +46,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parameters: HASH_TABLE [STRING, STRING]
+	parameters: HASH_TABLE [XP_TAG_ARGUMENT, STRING]
 			-- The parameters of the tag [value, parameter id]
 
 	class_name: STRING
@@ -62,7 +65,7 @@ feature -- Access
 			controller_id := a_id
 		end
 
-	retrieve_value (a_id: STRING): STRING
+	retrieve_value (a_id: STRING): XP_TAG_ARGUMENT
 			-- Retrieves the value of the parameter with the the id `a_id'
 		require
 			a_id_attached: a_id /= Void
@@ -90,15 +93,6 @@ feature -- Access
 	namespace: STRING
 			-- The namespace (tag library) of the tag
 
-	multiline_argument: BOOLEAN assign set_multiline_argument
-			-- Are the arguments of the tag multiline and have to be escaped?
-
-	set_multiline_argument (is_multiline: BOOLEAN)
-			-- Are the arguments of the tag multiline and have to be escaped?
-		do
-			multiline_argument := is_multiline
-		end
-
 	has_children: BOOLEAN
 			-- Are there any children?
 		do
@@ -125,7 +119,7 @@ feature --Basic Implementation
 			child_has_been_added: old children.count + 1 = children.count
 		end
 
-	put_attribute (a_local_part: STRING; a_value: STRING)
+	put_attribute (a_local_part: STRING; a_value: XP_TAG_ARGUMENT)
 			-- Sets the attribute of this tag.
 		require
 			a_local_part_attached: a_local_part /= Void
@@ -147,7 +141,7 @@ feature --Basic Implementation
 			internal_build_tag_tree (a_feature, root_template, True)
 		end
 
-	set_parameters (a_parameters: HASH_TABLE [STRING, STRING])
+	set_parameters (a_parameters: HASH_TABLE [XP_TAG_ARGUMENT, STRING])
 			-- Sets the parameters
 		require
 			a_parameters_valid: a_parameters /= Void
@@ -198,7 +192,6 @@ feature --Basic Implementation
 	copy_self: XP_TAG_ELEMENT
 		do
 			create Result.make (namespace, id, class_name, debug_information)
-			Result.set_multiline_argument (multiline_argument)
 		ensure
 			attached_result: attached Result
 		end
@@ -272,8 +265,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			if attached controller_id then
 				a_feature.append_expression ("temp.current_controller_id := %"" + controller_id + "%"")
 			end
-
-			--build_attributes (a_feature, dynamic_parameters)
+			a_feature.append_expression ("temp.tag_id := %"" + id + "%"")
 
 			if has_children then
 				a_feature.append_expression ("stack.put (temp)")
@@ -289,7 +281,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			end
 		end
 
-	build_attributes (a_feature: XEL_FEATURE_ELEMENT; a_attributes: HASH_TABLE [STRING, STRING])
+	build_attributes (a_feature: XEL_FEATURE_ELEMENT; a_attributes: HASH_TABLE [XP_TAG_ARGUMENT, STRING])
 			-- Adds expressions which put the right attributes to the tags
 		require
 			a_feature_attached: a_feature /= Void
@@ -300,17 +292,10 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			until
 				a_attributes.after
 			loop
-				if multiline_argument then
-					a_feature.append_expression ("temp.put_attribute(%""
+				a_feature.append_expression ("temp.put_attribute(%""
 						+ a_attributes.key_for_iteration + "%", "
-						+ "%N%"[%N" + a_attributes.item_for_iteration + "%N]%")"
+						+ "%"" + escape_string(a_attributes.item_for_iteration.value (controller_id)) + "%")"
 					)
-				else
-					a_feature.append_expression ("temp.put_attribute(%""
-						+ a_attributes.key_for_iteration + "%", "
-						+ "%"" + a_attributes.item_for_iteration + "%")"
-					)
-				end
 				a_attributes.forth
 			end
 		end

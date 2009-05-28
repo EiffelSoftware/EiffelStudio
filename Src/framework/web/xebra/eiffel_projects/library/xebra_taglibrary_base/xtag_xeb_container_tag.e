@@ -29,7 +29,7 @@ feature -- Basic implementation
 			generate_children (a_servlet_class, variable_table)
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 		end

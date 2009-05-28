@@ -56,7 +56,7 @@ feature -- Operation
 			end
 
 			if not error_manager.is_successful then
-				error_manager.trace_last_error (l_printer)
+				error_manager.trace_errors (l_printer)
 			else
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("Servlets generated to '" + l_translator.servlet_gen_path + "'")

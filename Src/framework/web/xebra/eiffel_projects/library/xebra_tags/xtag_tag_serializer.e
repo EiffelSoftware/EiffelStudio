@@ -1,10 +1,21 @@
 note
-	description: "Summary description for {TAG_GENERATOR}."
+	description: "[
+		This class provides basic functionality for all xebra tags.
+		Its serialization is deferred and must me implemented from the
+		Descendants.
+		The 'render'-attribute is a hard-coded attribute. It expects
+		a controller feature which returns a {BOOLEAN}. If it returns 
+		True the children are rendered, otherwise it will skip that
+		part.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	XTAG_TAG_SERIALIZER
+
+inherit
+	XU_STRING_MANIPULATION
 
 feature -- Initialization
 
@@ -15,9 +26,15 @@ feature -- Initialization
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
 			render := ""
 			current_controller_id := ""
+			tag_id := ""
+		ensure
+			children_attached: attached children
+			render_attached: attached render
+			current_controller_id_attached: attached current_controller_id
+			tag_id_attached: attached tag_id
 		end
 
-feature {NONE} -- Access
+feature {XTAG_TAG_SERIALIZER} -- Access
 
 	children: LIST [XTAG_TAG_SERIALIZER]
 			-- All the children tags of the tag
@@ -28,18 +45,20 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	tag_id: STRING assign set_tag_id
+			-- The tag id
+
+	set_tag_id (a_tag_id: STRING)
+			-- Sets the tag id.
+		do
+			tag_id := a_tag_id
+		end
+
 	current_controller_id: STRING assign set_controller_id
 			-- The uid of the controller which should be used by this tag
 
-	set_controller_id (a_id: STRING)
-		require
-			a_id_valid: attached a_id and not a_id.is_empty
-		do
-			current_controller_id := a_id
-		end
-
 	debug_information: STRING assign set_debug_information
-			-- Row and column of original xeb file
+		-- Row and column of original xeb file
 
 	add_to_body (a_child: XTAG_TAG_SERIALIZER)
 			-- Adds a TAG to the body.
@@ -51,6 +70,29 @@ feature -- Access
 			child_has_been_added: children.count = old children.count + 1
 		end
 
+feature -- Status setting
+
+	set_controller_id (a_id: STRING)
+		require
+			a_id_valid: attached a_id and not a_id.is_empty
+		do
+			current_controller_id := a_id
+		ensure
+			current_controller_id_set: current_controller_id = a_id
+		end
+
+	set_debug_information (a_debug_information: STRING)
+			-- Sets the debug information
+		require
+			a_debug_information_valid: attached a_debug_information and not a_debug_information.is_empty
+		do
+			debug_information := a_debug_information
+		ensure
+			debug_info_set: debug_information = a_debug_information
+		end
+
+feature -- Basic implementation
+
 	put_attribute (id: STRING; a_attribute: STRING)
 			-- Adds an attribute to the tag
 		require
@@ -61,56 +103,16 @@ feature -- Access
 			if id.is_equal ("render") then
 				render := a_attribute
 			else
-				internal_put_attribute (id, a_attribute)
+				internal_put_attribute (id, create {XTAG_TAG_ARGUMENT}.make (a_attribute))
 			end
 		end
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- Adds an attribute to the tag
 		require
 			a_id_valid: attached a_id and not a_id.is_empty
 		deferred
 		end
-
-	set_debug_information (a_debug_information: STRING)
-			-- Sets the debug information
-		require
-			a_debug_information_valid: attached a_debug_information and not a_debug_information.is_empty
-		do
-			debug_information := a_debug_information
-		end
-
-	generates_render: BOOLEAN
-			-- Does the tag write statements in the render feature?
-		do
-			Result := False
-		end
-
-	generates_prerender: BOOLEAN
-			-- Does the tag write statements in the prerender feature?
-		do
-			Result := False
-		end
-
-	generates_postrender: BOOLEAN
-			-- Does the tag write statements in the POST render feature?
-		do
-			Result := False
-		end
-
-	generates_getrender: BOOLEAN
-			-- Does the tag write statements in the GET render feature?
-	do
-		Result := False
-	end
-
-	generates_afterrender: BOOLEAN
-			-- Does the tag write statements in the afterrender feature?
-		do
-			Result := False
-		end
-
-feature -- Implementation
 
 	generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- Wrapps around the internal_generate feature to add debug information and handle the "render" option
@@ -118,6 +120,7 @@ feature -- Implementation
 			a_servlet_class_attached: attached a_servlet_class
 			a_variable_table_attached: attached a_variable_table
 		do
+				-- Generate debug information for a feature respectively
 			if generates_render then
 				append_debug_info (a_servlet_class.render_feature)
 			end
@@ -134,7 +137,9 @@ feature -- Implementation
 				append_debug_info (a_servlet_class.afterrender_feature)
 			end
 
+				-- If the render option is set, overwrite definition of tag
 			if not render.is_empty then
+				append_debug_info (a_servlet_class.render_feature)
 				a_servlet_class.render_feature.append_expression ("if " + current_controller_id + "." + render + " then")
 				internal_generate (a_servlet_class, a_variable_table)
 				a_servlet_class.render_feature.append_expression ("end")
@@ -168,6 +173,40 @@ feature -- Implementation
 		deferred
 		end
 
+feature -- Debug configuration
+
+	generates_render: BOOLEAN
+			-- Does the tag write statements in the render feature?
+		do
+			Result := False
+		end
+
+	generates_prerender: BOOLEAN
+			-- Does the tag write statements in the prerender feature?
+		do
+			Result := False
+		end
+
+	generates_postrender: BOOLEAN
+			-- Does the tag write statements in the POST render feature?
+		do
+			Result := False
+		end
+
+	generates_getrender: BOOLEAN
+			-- Does the tag write statements in the GET render feature?
+		do
+			Result := False
+		end
+
+	generates_afterrender: BOOLEAN
+			-- Does the tag write statements in the afterrender feature?
+		do
+			Result := False
+		end
+
+feature -- Utilities
+
 	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
 			-- Writes an append instruction
 		require
@@ -183,19 +222,14 @@ feature -- Implementation
 			if l_text.ends_with ("%N") then
 				l_text := l_text.substring (1, a_text.count-1)
 			end
-			if must_be_escaped (l_text) then
-				a_feature.append_expression (Response_variable_append + "(%"[%N" + l_text + "%N]%")")
-			else
-				a_feature.append_expression (Response_variable_append + "(%"" + l_text + "%")")
-			end
-		end
+			if not l_text.is_empty then
+				if l_text.is_equal ("%%N") then
+					a_feature.append_expression (Response_variable + ".append_newline")
+				else
+					a_feature.append_expression (Response_variable_append + "(%"" + l_text + "%")")
+				end
 
-	must_be_escaped (a_text: STRING): BOOLEAN
-			-- Checks, if there are characters which have to be escaped
-		require
-			a_text_attached: attached a_text
-		do
-			Result := a_text.has_substring ("%"") or a_text.has_substring ("%%") or a_text.has_substring ("%N")
+			end
 		end
 
 	add_controller_call (a_feature_name: STRING; a_feature: XEL_FEATURE_ELEMENT)
@@ -217,6 +251,7 @@ feature -- Implementation
 
 	concatenate_with (a_separator: STRING; a_list: LIST [STRING]): STRING
 			-- `a_list': List with elements to be concatenated
+			-- Concatenates the elements of the list with a separator inbetween ("join")
 		require
 			a_separator: attached a_separator
 			a_separator_not_empty: not a_separator.is_empty
@@ -240,8 +275,15 @@ feature -- Implementation
 			result_attached: attached Result
 		end
 
-	get_name (a_validation_table: HASH_TABLE [STRING , STRING]; a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING): STRING
-			-- Retrieves the name
+	get_validation_local (a_validation_table: HASH_TABLE [STRING , STRING]; a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING): STRING
+			-- `a_validation_table': Holds a mapping between xeb-file names and class locals
+			-- `a_servlet_class': The enclosing class
+			-- `a_name': The name from the xeb file
+			-- Caches a local variable relying on `a_validation_table'
+		require
+			a_validation_table_attached: attached a_validation_table
+			a_servlet_class_attached: attached a_servlet_class
+			a_name_valid: attached a_name and not a_name.is_empty
 		local
 			l_local_name: STRING
 		do
@@ -254,6 +296,8 @@ feature -- Implementation
 				a_validation_table [a_name] := l_local_name
 				Result := l_local_name
 			end
+		ensure
+			result_attached: attached Result
 		end
 
 feature {XTAG_TAG_SERIALIZER} -- Constants
@@ -262,6 +306,9 @@ feature {XTAG_TAG_SERIALIZER} -- Constants
 		Request_variable: STRING = "request"
 		Response_variable_append: STRING = "response.append"
 		Response_variable_append_newline: STRING = "response.append_newline"
+
+invariant
+	tag_id_attached: attached tag_id
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

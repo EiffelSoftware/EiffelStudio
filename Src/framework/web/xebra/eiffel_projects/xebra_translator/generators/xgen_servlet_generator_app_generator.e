@@ -146,6 +146,7 @@ feature {NONE} -- Implementation
 				servlet_generator_generators.forth
 			end
 			Result.append_expression ("end")
+			Result.append_expression ("o.iprint (%"System generated.%")")
 		ensure
 			result_attached: attached Result
 		end
@@ -182,6 +183,7 @@ feature -- Constants
 		<option warning="true" syntax="transitional">
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>

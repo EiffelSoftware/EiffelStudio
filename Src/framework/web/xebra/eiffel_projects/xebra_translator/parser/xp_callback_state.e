@@ -71,15 +71,7 @@ feature -- Access
 		deferred
 		end
 
-	strip_off_dynamic_tags (a_string: STRING): STRING
-			-- Strips off the "%=" and ending "%"		
-		require
-			a_string_attached: attached a_string
-			a_string_is_valid: a_string.starts_with ("%%=") and a_string.ends_with ("%%")
-		do
-			Result := a_string.substring (3, a_string.count - 1)
-		end
-
 invariant
-	parser_callback_attached: parser_callback /= Void
+	parser_callback_attached: attached parser_callback
+
 end

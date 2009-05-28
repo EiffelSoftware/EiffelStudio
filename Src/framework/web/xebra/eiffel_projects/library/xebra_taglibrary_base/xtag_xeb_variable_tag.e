@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			feature_name := ""
-			variable_name := ""
+			create feature_name.make ("")
+			create variable_name.make ("")
 		ensure
 			feature_name_attached: attached feature_name
 			variable_name_attached: attached variable_name
@@ -33,19 +33,19 @@ feature {NONE} -- Initialization
 
 feature
 
-	feature_name: STRING
+	feature_name: XTAG_TAG_ARGUMENT
 			-- The name of the feature to be called on the variable
 
-	variable_name: STRING
+	variable_name: XTAG_TAG_ARGUMENT
 			-- The name of the variable
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + variable_name + "." + feature_name + ")")
+			a_servlet_class.render_feature.append_expression (Response_variable_append + " (" + variable_name.value (current_controller_id) + "." + feature_name.value (current_controller_id) + ")")
 		end
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if a_id.is_equal ("id") then

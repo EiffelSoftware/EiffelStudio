@@ -28,11 +28,12 @@ feature {NONE} -- Initialization
 		do
 			parser := a_parser
 			path := a_path.twin
-			create root_tag.make ("xeb", "html", {XP_HTML_CALLBACK_STATE}.Html_tag_name, current_debug_information)
+			create root_tag.make ("xeb", "container", "XTAG_XEB_CONTAINER_TAG", current_debug_information)
 			create tag_stack.make (10)
 			create state_html.make (Current)
 			create state_tag.make (Current)
-			state := state_html
+			create state_general.make (Current)
+			state := state_general
 			controller_class := ""
 		ensure
 			parser_attached: attached parser
@@ -68,6 +69,9 @@ feature -- Access
 
 	state_html: XP_HTML_CALLBACK_STATE
 			-- The instance for the state = html
+
+	state_general: XP_GENERAL_CALLBACK_STATE
+			-- The instance for the state= html and tags
 
 	root_tag: XP_TAG_ELEMENT
 			-- Represents the root of the XB_TAG tree
@@ -116,7 +120,7 @@ feature -- Document
 		do
 			tag_stack.wipe_out
 			tag_stack.put (root_tag)
-			state := state_html
+			state := state_general
 		ensure then
 			only_root_on_stack: tag_stack.count = 1
 		end

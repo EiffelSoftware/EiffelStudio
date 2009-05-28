@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: detachable PROCEDURE [ANY, detachable TUPLE [detachable STRING]]): detachable PROCESS
+	launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];  a_output_handler: PROCEDURE [ANY, detachable TUPLE [detachable STRING]]): detachable PROCESS
 	--launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
 			-- Launches a process
 		local
@@ -250,9 +250,7 @@ feature {NONE} -- Implementation
 				create l_process_factory
 				Result  := l_process_factory.process_launcher_with_command_line (a_exe + " " + a_args, a_dir)
 				Result.set_on_exit_handler (a_exit_handler)
-					if a_output_handler /= Void then
-						Result.redirect_output_to_agent (a_output_handler)
-					end
+				Result.redirect_output_to_agent (a_output_handler)
 				o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", 3)
 				Result.launch
 			end

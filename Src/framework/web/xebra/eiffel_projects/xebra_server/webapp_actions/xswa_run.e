@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 												run_args,
 												run_workdir,
 												agent run_process_exited,
-												Void)
+												agent run_output_handler)
 					is_running := True
 				end
 			end
@@ -77,6 +77,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Agents
+
 
 	run_process_exited
 			-- Sets is_running := False

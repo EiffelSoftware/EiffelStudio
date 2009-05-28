@@ -256,7 +256,7 @@ feature -- Agents
 			if output_handler_translate.has_successfully_terminated then
 				compile_servlet_gen
 			else
-				o.eprint ("TRANSLATION WAS NOT SUCCESSFUL", generating_type)
+				o.eprint ("TRANSLATION FAILED", generating_type)
 			end
 
 		end
@@ -268,7 +268,7 @@ feature -- Agents
 			if output_handler_compile.has_successfully_terminated then
 				generate
 			else
-				o.eprint ("COMPILATION WAS NOT SUCCESSFUL", generating_type)
+				o.eprint ("COMPILATION OF SERVLET_GEN FAILED", generating_type)
 			end
 		end
 
@@ -277,10 +277,10 @@ feature -- Agents
 		do
 			config_outputter
 			is_running := False
-			if output_handler_compile.has_successfully_terminated then
+			if output_handler_gen.has_successfully_terminated then
 				next_action.execute.do_nothing
 			else
-				o.eprint ("GENERATION WAS NOT SUCCESSFUL", generating_type)
+				o.eprint ("GENERATION FAILED", generating_type)
 			end
 		end
 

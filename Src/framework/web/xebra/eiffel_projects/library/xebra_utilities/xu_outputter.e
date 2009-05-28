@@ -21,9 +21,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create print_mutex.make
+--			create print_mutex.make
 		ensure
-			print_mutex_attached: print_mutex /= Void
+--			print_mutex_attached: print_mutex /= Void
 		end
 
 
@@ -35,7 +35,7 @@ feature -- Access
 	debug_level: SETTABLE_INTEGER
 		-- The current debug level
 
-	print_mutex: MUTEX
+--	print_mutex: MUTEX
 
 feature -- Status Change
 
@@ -107,11 +107,11 @@ feature {NONE}  -- Impl
 		require
 			a_msg_attached: a_msg /= Void
 		do
-			print_mutex.lock
+--			print_mutex.lock
 			any_print (a_msg)
-			print_mutex.unlock
+--			print_mutex.unlock
 		end
 
 invariant
-	print_mutex_attached: print_mutex /= Void
+--	print_mutex_attached: print_mutex /= Void
 end

@@ -35,7 +35,7 @@ feature {NONE} -- Basic operations
         			-- Propagate the stone drop actions	
         		do
         			if is_interface_usable and is_initialized then
-        				if attached {attached STONE} ia_pebble as l_stone and then is_stone_usable (l_stone) then
+        				if attached {STONE} ia_pebble as l_stone and then is_stone_usable (l_stone) then
         					set_stone_with_query (l_stone)
         				end
 					end

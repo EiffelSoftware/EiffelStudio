@@ -373,7 +373,7 @@ feature -- Access: User interface
 		        			-- Propagate the stone drop actions	
 		        		do
 		        			if is_interface_usable then
-		        				if attached {attached STONE} ia_pebble as l_stone and then ia_stonable.is_stone_usable (l_stone) then
+		        				if attached {STONE} ia_pebble as l_stone and then ia_stonable.is_stone_usable (l_stone) then
 										-- Force tool to be shown. This way any query set stone prompt can be displayed in the correct context.
 									show (True)
 

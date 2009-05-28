@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
         		do
-		        	if attached {attached EV_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
+		        	if attached {EV_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
 		        			-- Set up help shortcut binding
 		        		bind_help_shortcut (l_window)
 		        	end
@@ -494,10 +494,10 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				a_action.call ([a_start_widget])
 			end
 
-			if attached {attached EV_WIDGET_LIST} a_start_widget as l_list then
+			if attached {EV_WIDGET_LIST} a_start_widget as l_list then
 				l_cursor := l_list.cursor
 				from l_list.start until l_list.after loop
-					if attached {attached EV_WIDGET} l_list.item as l_widget and then not l_widget.is_destroyed then
+					if attached l_list.item as l_widget and then not l_widget.is_destroyed then
 							-- Perform action on all child widgets
 						propagate_action (l_widget, a_action, a_excluded)
 					end
@@ -505,10 +505,10 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				end
 				l_list.go_to (l_cursor)
 			elseif attached {EV_SPLIT_AREA} a_start_widget as l_split then
-				if attached {attached EV_WIDGET} l_split.first as l_first and then not l_first.is_destroyed then
+				if attached l_split.first as l_first and then not l_first.is_destroyed then
 					propagate_action (l_first, a_action, a_excluded)
 				end
-				if attached {attached EV_WIDGET} l_split.second as l_second and then not l_second.is_destroyed then
+				if attached l_split.second as l_second and then not l_second.is_destroyed then
 					propagate_action (l_second, a_action, a_excluded)
 				end
 			end
@@ -537,7 +537,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				end
 			end
 
-			if attached {attached EV_WINDOW} a_start_widget as l_window then
+			if attached {EV_WINDOW} a_start_widget as l_window then
 				if not l_window.is_empty then
 					l_start_widget := l_window.item
 				end
@@ -545,10 +545,10 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				l_start_widget := a_start_widget
 			end
 
-			if attached {attached EV_WIDGET_LIST} l_start_widget as l_list then
+			if attached {EV_WIDGET_LIST} l_start_widget as l_list then
 				l_cursor := l_list.cursor
 				from l_list.start until l_list.after loop
-					if attached {attached EV_WIDGET} l_list.item as l_widget and then not l_widget.is_destroyed then
+					if attached l_list.item as l_widget and then not l_widget.is_destroyed then
 							-- Apply addition to all child widgets
 						propagate_register_action (l_widget, a_sequence, a_action, a_excluded)
 					end
@@ -556,10 +556,10 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				end
 				l_list.go_to (l_cursor)
 			elseif attached {EV_SPLIT_AREA} l_start_widget as l_split then
-				if attached {attached EV_WIDGET} l_split.first as l_first and then not l_first.is_destroyed then
+				if attached l_split.first as l_first and then not l_first.is_destroyed then
 					propagate_register_action (l_first, a_sequence, a_action, a_excluded)
 				end
-				if attached {attached EV_WIDGET} l_split.second as l_second and then not l_second.is_destroyed then
+				if attached l_split.second as l_second and then not l_second.is_destroyed then
 					propagate_register_action (l_second, a_sequence, a_action, a_excluded)
 				end
 			end

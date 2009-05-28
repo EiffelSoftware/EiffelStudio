@@ -18,6 +18,7 @@ feature {NONE} -- Creation
 			report_list_state (f, 3)
 			f.extend (0)
 			report_list_state (f, 4)
+			f.finish
 			f.remove
 			report_list_state (f, 5)
 			f.finish

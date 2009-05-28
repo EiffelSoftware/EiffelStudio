@@ -119,6 +119,13 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 
 	typres = eif_typeof_array_of (eif_attached_type (egc_str_dtype));
 	array = emalloc(typres);		/* If we return, it succeeded */
+		/* We perform a hack here by letting the Eiffel code believe
+		 * we are using an ARRAY [detachable STRING_8]. We will restore
+		 * the real dynamic type after initializing the ARRAY. This
+		 * is to prevent the precondition violation inf {ARRAY}.make
+		 * which expects the actual generic type to be detachable
+		 * for calling `make' as otherwise a default value is requested. */
+	Dftype(array) = eif_typeof_array_of (egc_str_dtype);
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 #ifdef WORKBENCH
@@ -146,6 +153,8 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 		RTAR(sp, ((EIF_REFERENCE *)sp)[i]);
 	}
 
+		/* End of hack. We restore the true dynamic type of the ARRAY. */
+	Dftype(array) = typres;
 #ifdef WORKBENCH
 	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif

@@ -46,7 +46,7 @@ feature -- Status Change
 		do
 			name := a_name
 		ensure
-			name_set: equal (name, a_name)
+			name_set: equal (name.value, a_name)
 		end
 
 	set_debug_level (a_debug_level: INTEGER)
@@ -54,7 +54,7 @@ feature -- Status Change
 		do
 			debug_level := a_debug_level
 		ensure
-			debug_level_set: equal (debug_level, a_debug_level)
+			debug_level_set: equal (debug_level.value, a_debug_level)
 		end
 
 feature -- Print

@@ -209,6 +209,7 @@ feature -- Constants
 	extend_name_id: INTEGER = 196
 	make_filled_name_id: INTEGER = 197
 	make_empty_name_id: INTEGER = 198
+	has_default_name_id: INTEGER = 199
 
 feature -- Classification
 

@@ -15,10 +15,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			max_size := 1000
 			output := ""
 		ensure
-			max_size_is_positive: max_size > 0
+			max_size_is_positive: max_size >= 0
 			output_attached: output /= Void
 		end
 

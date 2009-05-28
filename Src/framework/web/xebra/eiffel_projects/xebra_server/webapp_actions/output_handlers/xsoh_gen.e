@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Implements a output handler for generation
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,9 +12,21 @@ class
 
 inherit
 	XS_OUTPUT_HANDLER
+		redefine
+			make
+		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialization for `Current'.
+		do
+			Precursor
+			max_size := 19
+		end
 
 feature -- Status setting
 
@@ -30,7 +42,7 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := False
-			if output.ends_with ("System generated.") then
+			if output.ends_with ("System generated.%N") then
 				Result := True
 			end
 		end

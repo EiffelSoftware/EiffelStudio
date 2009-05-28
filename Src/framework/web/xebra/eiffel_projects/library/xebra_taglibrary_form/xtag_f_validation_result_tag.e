@@ -23,17 +23,17 @@ feature -- Initialization
 	make
 		do
 			make_base
-			name := ""
+			create name.make ("")
 		end
 
 feature -- Access
 
-	name: STRING
+	name: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the validation mapping
 
 feature -- Implementation
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precusor>
 		do
 			if a_id.is_equal ("name") then
@@ -47,7 +47,7 @@ feature -- Implementation
 			l_messages_var: STRING
 		do
 			if attached {HASH_TABLE [STRING, STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_lazy_validation_table] as l_lazy_table then
-				l_messages_var := get_validation_local (l_lazy_table, a_servlet_class, name)
+				l_messages_var := get_validation_local (l_lazy_table, a_servlet_class, name.value (current_controller_id))
 				a_servlet_class.render_feature.append_expression ("from")
 				a_servlet_class.render_feature.append_expression (l_messages_var + ".start")
 				a_servlet_class.render_feature.append_expression ("until")

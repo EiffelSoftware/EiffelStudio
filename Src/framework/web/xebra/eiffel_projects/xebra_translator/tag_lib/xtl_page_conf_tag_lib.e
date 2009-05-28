@@ -105,11 +105,11 @@ feature -- Access
 			end
 		end
 
-	handle_controller_attribute (a_id, a_value: STRING)
+	handle_controller_attribute (a_id: STRING; a_value: XP_TAG_ARGUMENT)
 			-- Handles attribute reading while parsing
 		do
 			if a_id.is_equal ("class") then
-				parser_callback.put_class_name (a_value)
+				parser_callback.put_class_name (a_value.value (""))
 			end
 		end
 

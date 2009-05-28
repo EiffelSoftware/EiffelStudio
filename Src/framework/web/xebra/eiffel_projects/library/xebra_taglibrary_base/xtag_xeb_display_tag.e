@@ -23,12 +23,12 @@ feature -- Initialization
 	make
 		do
 			make_base
-			feature_name := ""
+			create feature_name.make ("")
 		end
 
 feature -- Access
 
-	feature_name: STRING
+	feature_name: XTAG_TAG_ARGUMENT
 			-- The name of the feature to call
 
 feature -- Implementation
@@ -36,10 +36,10 @@ feature -- Implementation
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			a_servlet_class.render_feature.append_expression (Response_variable_append + "(" + current_controller_id + "." + feature_name + ".out)")
+			a_servlet_class.render_feature.append_expression (Response_variable_append + "(" + current_controller_id + "." + feature_name.value (current_controller_id) + ".out)")
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if id.is_equal ("feature") then

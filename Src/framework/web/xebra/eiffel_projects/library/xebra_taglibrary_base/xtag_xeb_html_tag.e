@@ -22,36 +22,47 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			text := ""
+			create attributes.make (2)
+		ensure
+			attributes_attached: attached attributes
 		end
 
 feature {NONE} -- Access
 
-	text: STRING
+	attributes: HASH_TABLE [XTAG_TAG_ARGUMENT, STRING]
 			-- The XHTML content
 
 feature {NONE}
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
+		local
+			l_tag: STRING
 		do
-			if not text.is_empty then
-				if is_just_whitespace (text) then
-					a_servlet_class.render_feature.append_expression (Response_variable_append_newline)
-				else
-					write_string_to_result (text, a_servlet_class.render_feature)
-				end
+			l_tag := "<" + tag_id
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				l_tag := l_tag + " " + attributes.key_for_iteration + "=%%%"" + attributes.item_for_iteration.value (current_controller_id) + "%%%""
+				attributes.forth
 			end
 
-			generate_children (a_servlet_class, variable_table)
+
+			if children.count > 0 then
+				write_string_to_result (l_tag + ">", a_servlet_class.render_feature)
+				generate_children (a_servlet_class, a_variable_table)
+				write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_feature)
+			else
+				write_string_to_result (l_tag +"/>" , a_servlet_class.render_feature)
+			end
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
-			if id.is_equal("text") then
-				text := a_attribute
-			end
+			attributes.put (a_attribute, a_id)
 		end
 
 	is_just_whitespace (a_string: STRING): BOOLEAN
@@ -71,6 +82,9 @@ feature {NONE}
 		end
 
 	generates_render: BOOLEAN = True
+
+invariant
+	attributes_attached: attached attributes
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

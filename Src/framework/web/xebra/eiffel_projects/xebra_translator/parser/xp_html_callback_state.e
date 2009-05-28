@@ -20,7 +20,7 @@ feature -- Initialization
 
 	make (a_parser_callback: XP_XML_PARSER_CALLBACKS)
 		require else
-			a_parser_callback_attached: a_parser_callback /= Void
+			a_parser_callback_attached: attached a_parser_callback
 		do
 			Precursor (a_parser_callback)
 			buf := ""
@@ -80,19 +80,16 @@ feature -- Basic functionality
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- <Precursor>
 		local
-			l_prefix, l_value, l_local_part: STRING
+			l_prefix, l_local_part: STRING
+			l_value: XP_TAG_ARGUMENT
 		do
 			l_prefix := a_prefix
-			l_value := a_value
+			create l_value.make (a_value)
 			l_local_part := a_local_part
 			if not l_prefix.is_empty then
 				l_prefix := l_prefix + ":"
 			end
-			if l_value.starts_with ("%%=") and l_value.ends_with ("%%") then
-				process_dynamic_html_attribute (l_local_part, l_value)
-			else
-				buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value + "%"")
-			end
+			buf.append ( " " + l_prefix  + l_local_part + "=%"" +  l_value.value ("") + "%"")
 		end
 
 	on_start_tag_finish
@@ -111,26 +108,26 @@ feature -- Basic functionality
 			buffer_is_empty: buf.is_empty
 		end
 
-	process_dynamic_html_attribute (local_part, value: STRING)
-			-- Extracts the name of the feature from the value
-			-- Generates an html tag element and an output call
-		require
-			local_part_is_valid: not local_part.is_empty
-		local
-			l_tag: XP_TAG_ELEMENT
-			feature_name: STRING
-		do
-			buf.append (" " + local_part + "=%"")
-			create_html_tag_put
-			create l_tag.make ("xeb", "output", Output_tag_name, parser_callback.current_debug_information)
-			feature_name := strip_off_dynamic_tags (value)
-			l_tag.put_attribute ("value", feature_name)
-			parser_callback.tag_stack.item.put_subtag (l_tag)
-				-- Don't put it on the stack
-			buf.append ("%"")
-		ensure
-			tag_stack_didnt_change: parser_callback.tag_stack.count = old parser_callback.tag_stack.count
-		end
+--	process_dynamic_html_attribute (local_part, value: STRING)
+--			-- Extracts the name of the feature from the value
+--			-- Generates an html tag element and an output call
+--		require
+--			local_part_is_valid: not local_part.is_empty
+--		local
+--			l_tag: XP_TAG_ELEMENT
+--			l_feature_name: STRING
+--		do
+--			buf.append (" " + local_part + "=%"")
+--			create_html_tag_put
+--			create l_tag.make ("xeb", "output", Output_tag_name, parser_callback.current_debug_information)
+--			l_feature_name := strip_off_dynamic_tags (value)
+--			l_tag.put_attribute ("value", l_feature_name)
+--			parser_callback.tag_stack.item.put_subtag (l_tag)
+--				-- Don't put it on the stack
+--			buf.append ("%"")
+--		ensure
+--			tag_stack_didnt_change: parser_callback.tag_stack.count = old parser_callback.tag_stack.count
+--		end
 
 	create_html_tag_put
 			-- Creates a XB_TAG from html_buf and adds it to top element on stack then pushes it onto the stack.
@@ -151,7 +148,7 @@ feature -- Basic functionality
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("xeb", "html", Html_tag_name, parser_callback.current_debug_information)
+				create l_tag.make ({XP_XML_PARSER_CALLBACKS}.Configuration_tag, "html", Html_tag_name, parser_callback.current_debug_information)
 				parser_callback.tag_stack.item.put_subtag (l_tag)
 			end
 		end
@@ -162,9 +159,8 @@ feature -- Basic functionality
 			l_tag: XP_TAG_ELEMENT
 		do
 			if not s.is_empty then
-				create l_tag.make ("xeb", "html", Html_tag_name, parser_callback.current_debug_information)
-				l_tag.put_attribute ("text", s)
-				l_tag.multiline_argument := True
+				create l_tag.make ({XP_XML_PARSER_CALLBACKS}.Configuration_tag, "html", Html_tag_name, parser_callback.current_debug_information)
+				l_tag.put_attribute ("text", create {XP_TAG_ARGUMENT}.make (s))
 				parser_callback.tag_stack.item.put_subtag (l_tag)
 			end
 		end

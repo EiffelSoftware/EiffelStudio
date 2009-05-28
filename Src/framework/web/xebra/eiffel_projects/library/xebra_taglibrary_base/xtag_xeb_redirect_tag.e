@@ -23,12 +23,12 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			url := ""
+			create url.make ("")
 		end
 
 feature {NONE} -- Access
 
-	url: STRING
+	url: XTAG_TAG_ARGUMENT
 			-- The XHTML content
 
 feature {NONE}
@@ -36,10 +36,10 @@ feature {NONE}
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			a_servlet_class.render_feature.append_expression(Response_variable + ".set_goto_request (%"" + url + "%")")
+			a_servlet_class.render_feature.append_expression(Response_variable + ".set_goto_request (%"" + url.value (current_controller_id) + "%")")
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if id.is_equal("url") then

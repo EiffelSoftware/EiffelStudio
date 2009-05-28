@@ -44,11 +44,11 @@ feature -- Access
 				l_child := children.item
 				if l_child.id.is_equal ("define_region") then
 						-- We have found a region
-					l_region [l_child.retrieve_value ("id")] := l_child.children
+					l_region [l_child.retrieve_value ("id").value (controller_id)] := l_child.children
 				end
 				children.forth
 			end
-			set_child (a_templates [retrieve_value ("template")].resolve (a_templates, l_region, a_pending, a_servlet_gen))
+			set_child (a_templates [retrieve_value ("template").value (controller_id)].resolve (a_templates, l_region, a_pending, a_servlet_gen))
 			if date < children [1].date then
 				date := children [1].date
 			end

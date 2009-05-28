@@ -28,21 +28,25 @@ feature -- Initialization
 	make
 		do
 			make_base
-			value := ""
-			action := ""
-			type := "submit"
+			create value.make ("")
+			create action.make ("")
+			create type.make ("")
+		ensure
+			value_attached: attached value
+			action_attached: attached action
+			type_attached: attached type
 		end
 
 feature -- Access
 
-	value: STRING
+	value: XTAG_TAG_ARGUMENT
 			-- Caption of the button
 
-	action: STRING
+	action: XTAG_TAG_ARGUMENT
 			-- Name of the feature which will be executed
 			-- when the button is pressed
 
-	type: STRING
+	type: XTAG_TAG_ARGUMENT
 			-- Type of the button (submit, push, etc.)
 
 feature -- Implementation
@@ -57,18 +61,18 @@ feature -- Implementation
 					if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.form_validation_booleans] as l_validation_vars then
 						l_button_id := l_variable + "_" + a_servlet_class.get_unique_identifier
 
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button type=%%%"" + type + "%%%" name=%%%"" + l_button_id + "%%%" type=%%%"button%%%">" + value + "</button>%")")
+						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button type=%%%"" + type.value (current_controller_id) + "%%%" name=%%%"" + l_button_id + "%%%" type=%%%"button%%%">" + value.value (current_controller_id) + "</button>%")")
 						a_servlet_class.prerender_post_feature.append_expression ("if " + concatenate_with ("and", l_validation_vars) + " and " + request_variable + ".arguments.has_key (%"" + l_button_id + "%") then")
-						a_servlet_class.prerender_post_feature.append_expression (l_agent_var + " := agent " + current_controller_id + "." + action)
+						a_servlet_class.prerender_post_feature.append_expression (l_agent_var + " := agent " + current_controller_id + "." + action.value (current_controller_id))
 						a_servlet_class.prerender_post_feature.append_expression ("end")
 					end
 				end
 			else
-				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
+				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATING XTAG_F_BUTTON_TAG")
 			end
 		end
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precusor>
 		do
 			if a_id.is_equal ("value") then

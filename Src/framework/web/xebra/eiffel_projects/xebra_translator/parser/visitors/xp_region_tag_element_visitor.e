@@ -49,9 +49,9 @@ feature -- Access
 	visit_region_tag_element (a_tag: XP_REGION_TAG_ELEMENT)
 			-- Precursor
 		do
-			if attached regions [a_tag.retrieve_value ("id")] as region then
+			if attached regions [a_tag.retrieve_value ("id").value ("")] as region then
 				a_tag.set_region (region)
-				regions [a_tag.retrieve_value ("id")] := Void
+				regions [a_tag.retrieve_value ("id").value("")] := Void
 			end
 		end
 

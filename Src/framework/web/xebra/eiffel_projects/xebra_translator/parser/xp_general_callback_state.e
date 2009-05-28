@@ -1,12 +1,12 @@
 note
 	description: "[
-		Callback state for in the state of a xebra tag. @see {XP_HTML_CALLBACK_STATE}
+		{XP_GENERAL_CALLBACK_STATE}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XP_TAG_CALLBACK_STATE
+	XP_GENERAL_CALLBACK_STATE
 
 inherit
 	XP_CALLBACK_STATE
@@ -34,8 +34,9 @@ feature -- Implementation
 			l_tmp_tag: XP_TAG_ELEMENT
 		do
 			if not parser_callback.registry.contains_tag_lib (a_prefix) then
-				parser_callback.set_state_html
-				parser_callback.state.on_start_tag (a_namespace, a_prefix, a_local_part)
+				create l_tmp_tag.make (a_prefix, a_local_part, "XTAG_XEB_HTML_TAG", parser_callback.current_debug_information)
+				parser_callback.tag_stack.item.put_subtag (l_tmp_tag)
+				parser_callback.tag_stack.put (l_tmp_tag)
 			else
 				l_taglib := parser_callback.get_tag_lib (a_prefix)
 				l_class_name := l_taglib.get_class_for_name (a_local_part)
@@ -53,9 +54,12 @@ feature -- Implementation
 
 	on_content (a_content: STRING)
 			-- <Precursor>
+		local
+			l_tmp_tag: XP_TAG_ELEMENT
 		do
-			parser_callback.set_state_html
-			parser_callback.state.on_content (a_content)
+				create l_tmp_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", parser_callback.current_debug_information)
+				l_tmp_tag.put_attribute ("text", create {XP_TAG_ARGUMENT}.make (a_content))
+				parser_callback.tag_stack.item.put_subtag (l_tmp_tag)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
@@ -63,7 +67,6 @@ feature -- Implementation
 		do
 			if a_local_part.is_equal (parser_callback.tag_stack.item.id) and a_prefix.is_equal (parser_callback.tag_stack.item.namespace) then
 				parser_callback.tag_stack.remove
-				parser_callback.set_state_html
 			else
 				parser_callback.error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched: " + a_prefix + ":" + a_local_part]), False)
 			end
@@ -78,19 +81,23 @@ feature -- Implementation
 		do
 			create l_value.make (a_value)
 			l_local_part := a_local_part
-			taglib := parser_callback.get_tag_lib (parser_callback.tag_stack.item.namespace)
-			if not taglib.contains (parser_callback.tag_stack.item.id) then
-				create l_value.make ("undefined tag: '" + parser_callback.tag_stack.item.id + "'")
-				l_local_part := "text"
-			elseif  taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
-				if parser_callback.tag_stack.item.has_attribute (l_local_part) then
-					parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"]))
-				else
+			if not parser_callback.tag_stack.item.namespace.is_empty then
+				taglib := parser_callback.get_tag_lib (parser_callback.tag_stack.item.namespace)
+				if not taglib.contains (parser_callback.tag_stack.item.id) then
 					parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
+				elseif taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
+					if parser_callback.tag_stack.item.has_attribute (l_local_part) then
+						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"]))
+					else
+						parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
+					end
+				else
+					parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"  ]))
 				end
 			else
-				parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"  ]))
+				parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
 			end
+
 		end
 
 	on_start_tag_finish
@@ -101,8 +108,6 @@ feature -- Implementation
 	on_finish
 			-- <Precursor>
 		do
-			parser_callback.set_state_html
-			parser_callback.state.on_finish
 		end
 
 end

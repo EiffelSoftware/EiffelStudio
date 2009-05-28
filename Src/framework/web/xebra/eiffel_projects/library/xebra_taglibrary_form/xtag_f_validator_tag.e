@@ -19,17 +19,17 @@ feature -- Initialization
 	make
 		do
 			make_base
-			validator_class := ""
+			create validator_class.make ("")
 		end
 
 feature -- Access
 
-	validator_class: STRING
+	validator_class: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the validation mapping
 
 feature -- Implementation
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precusor>
 		do
 			if a_id.is_equal ("class") then
@@ -41,7 +41,7 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			if attached {LIST [STRING]} a_variable_table [Validator_tag_list_key] as l_validator_list then
-				l_validator_list.extend (validator_class)
+				l_validator_list.extend (validator_class.value (current_controller_id))
 			else
 				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURRED IN GENERATION OF XTAG_F_VALIDATION_RESULT")
 			end

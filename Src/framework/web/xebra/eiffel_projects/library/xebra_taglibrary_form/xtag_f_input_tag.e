@@ -23,21 +23,24 @@ feature -- Initialization
 	make_base
 		do
 			Precursor
-			value := ""
-			name := ""
+			create value.make ("")
+			create name.make ("")
+		ensure then
+			value_attached: attached value
+			name_attached: attached name
 		end
 
 feature -- Access
 
-	value: STRING
+	value: XTAG_TAG_ARGUMENT
 			-- Text of the input field
 
-	name: STRING
+	name: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the data object mapping
 
 feature -- Implementation
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precusor>
 		do
 			if a_id.is_equal ("value") then
@@ -63,7 +66,7 @@ feature -- Implementation
 						l_input_id := l_variable + "_" + a_servlet_class.get_unique_identifier
 
 							-- render feature
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type +"%%%" name=%%%"" + l_input_id + "%%%" value=%%%"%" +" + l_variable + "." + value + " + %"%%%" />%")")
+						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type +"%%%" name=%%%"" + l_input_id + "%%%" value=%%%"%" +" + l_variable + "." + value.value (current_controller_id) + " + %"%%%" />%")")
 
 						create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
 						a_variable_table.put (l_validator_list, {XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
@@ -77,7 +80,7 @@ feature -- Implementation
 						l_validation_vars.extend (l_is_valid)
 						a_servlet_class.prerender_post_feature.append_expression (l_is_valid + " := True")
 						l_validator_temp := a_servlet_class.prerender_post_feature.new_local ("XWA_VALIDATOR")
-						l_message_var := get_validation_local (l_validation_table, a_servlet_class, name)
+						l_message_var := get_validation_local (l_validation_table, a_servlet_class, name.value (current_controller_id))
 						if not a_variable_table.is_empty then
 							from
 								l_validator_list.start
@@ -95,7 +98,7 @@ feature -- Implementation
 							end
 							a_servlet_class.prerender_post_feature.append_expression ("if " + l_is_valid + " then")
 						end
-						a_servlet_class.prerender_post_feature.append_expression (l_variable + "." + value + " := argument")
+						a_servlet_class.prerender_post_feature.append_expression (l_variable + "." + value.value (current_controller_id) + " := argument")
 						if not a_variable_table.is_empty then
 							a_servlet_class.prerender_post_feature.append_expression ("end")
 						end

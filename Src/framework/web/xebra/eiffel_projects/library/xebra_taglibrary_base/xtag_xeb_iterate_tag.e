@@ -25,44 +25,48 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			list := ""
-			variable := ""
-			type := ""
+			create list.make ("")
+			create variable.make ("")
+			create type.make ("")
+		ensure
+			list_attached: attached list
+			variable_attached: attached variable
+			type_attached: attached type
 		end
 
 feature {NONE} -- Access
 
-	list: STRING
+	list: XTAG_TAG_ARGUMENT
 			-- The items over which we want to iterate
 
-	variable: STRING
+	variable: XTAG_TAG_ARGUMENT
 			-- Name of the variable
 
-	type: STRING
+	type: XTAG_TAG_ARGUMENT
 			-- Type of the variable
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
 			temp_list: STRING
 		do
-			a_servlet_class.render_feature.append_local (variable, type)
-			temp_list := a_servlet_class.render_feature.new_local ("LIST [" + type + "]")
-			a_servlet_class.render_feature.append_expression (temp_list + " := " + current_controller_id + "." + list)
+			a_servlet_class.render_feature.append_local (variable.value (current_controller_id), type.value (current_controller_id))
+			temp_list := a_servlet_class.render_feature.new_local ("LIST [" + type.value (current_controller_id) + "]")
+			a_servlet_class.render_feature.append_expression (temp_list + " := " + current_controller_id + "." + list.value (current_controller_id))
 			a_servlet_class.render_feature.append_expression ("from --" + temp_list)
 			a_servlet_class.render_feature.append_expression (temp_list + ".start")
 			a_servlet_class.render_feature.append_expression ("until")
 			a_servlet_class.render_feature.append_expression (temp_list + ".after")
 			a_servlet_class.render_feature.append_expression ("loop")
-			a_servlet_class.render_feature.append_expression (variable + " := " + temp_list + ".item")
-			generate_children (a_servlet_class, variable_table)
+			a_servlet_class.render_feature.append_expression (variable.value (current_controller_id) + " := " + temp_list + ".item")
+			generate_children (a_servlet_class, a_variable_table)
 			a_servlet_class.render_feature.append_expression (temp_list + ".forth")
 			a_servlet_class.render_feature.append_expression ("end --from " + temp_list)
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if id.is_equal ("list") then

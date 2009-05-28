@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: PROCEDURE [ANY, TUPLE [STRING, STRING]])
+	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]])
 			-- <Precursor>
 			-- `a_attribute_handler': Handles attributes passed to this tag
 		require
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature {XP_TAG_ELEMENT}  -- Access
 
-		attribute_handler: PROCEDURE [ANY, TUPLE [STRING, STRING]]
+		attribute_handler: PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]]
 				-- Handles the incoming attributes
 
 feature -- Access
@@ -46,7 +46,7 @@ feature -- Access
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (namespace, id, class_name, debug_information, attribute_handler)
 			end
 
-		put_attribute (a_local_part: STRING; a_value: STRING)
+		put_attribute (a_local_part: STRING; a_value: XP_TAG_ARGUMENT)
 				-- <Precursor>
 			require else
 				a_value_attached: a_value /= Void

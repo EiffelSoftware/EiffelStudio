@@ -365,6 +365,7 @@ feature {NONE} -- Implementation: access
 			put ("extend") check found_item = extend_name_id end
 			put ("make_filled") check found_item = make_filled_name_id end
 			put ("make_empty") check found_item = make_empty_name_id end
+			put ("has_default") check found_item = has_default_name_id end
 		end
 
 invariant

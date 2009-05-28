@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="sqlite" uuid="91623409-9E15-41C8-A462-68BF45255761">
+	<target name="sqlite">
+		<description>Eiffel wrapper for the SQLite library</description>
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>EIFGENs</exclude>
+			<exclude>\.svn</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="sqlite" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="sqlite_dotnet" extends="sqlite">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

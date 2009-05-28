@@ -9,12 +9,12 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="error_manager" location="$ISE_LIBRARY\framework\base\application\error_manager\error_manager.ecf"/>
-		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities.ecf"/>
+		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
+		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="ini" location="$ISE_LIBRARY\framework\file_formats\ini.ecf"/>
-		<library name="initializable" location="$ISE_LIBRARY\framework\settable_types\settable_types.ecf" readonly="false"/>
+		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
+		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

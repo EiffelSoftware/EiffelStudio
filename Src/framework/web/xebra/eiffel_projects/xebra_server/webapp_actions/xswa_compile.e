@@ -112,7 +112,7 @@ feature -- Agent
 			if output_handler.has_successfully_terminated then
 				next_action.execute.do_nothing
 			else
-				o.eprint ("COMPILATION WAS NOT SUCCESSFUL", generating_type)
+				o.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)
 			end
 		end
 

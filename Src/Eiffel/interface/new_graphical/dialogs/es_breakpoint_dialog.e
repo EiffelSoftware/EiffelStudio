@@ -651,6 +651,7 @@ feature {NONE} -- When hits
 			mi: EV_LIST_ITEM
 			l_scroll: EV_SCROLLABLE_AREA
 			l_fixed: EV_FIXED
+			l_array: ARRAY [TUPLE [s:STRING_GENERAL; type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]]]
 		do
 				--| Internal Data
 			create when_hits_actions_entries.make
@@ -667,13 +668,14 @@ feature {NONE} -- When hits
 			mi.set_pixmap (stock_pixmaps.general_add_icon)
 			l_combo.extend (mi)
 			register_action (l_combo.select_actions, agent mi.enable_select)
-			(<<
+			l_array := <<
 				[interface_names.b_bp_print_message, {BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}],
 				[interface_names.b_bp_change_assertion_checking, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING}],
 				[interface_names.b_bp_activate_execution_recording, {BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING}],
 				[interface_names.b_bp_enable_disable_breakpoints, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS}],
 				[interface_names.b_bp_reset_hits_count, {BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT}]
-			>>).do_all (agent (t: TUPLE [s:STRING_GENERAL; type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]]; b: EV_VERTICAL_BOX; comb: EV_COMBO_BOX)
+			>>
+			l_array.do_all (agent (t: TUPLE [s:STRING_GENERAL; type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]]; b: EV_VERTICAL_BOX; comb: EV_COMBO_BOX)
 					local
 						lmi: EV_LIST_ITEM
 					do

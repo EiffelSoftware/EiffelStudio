@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_INITALIZATION_CONFIG
+	SQLITE_INITIALIZATION_CONFIG
 
 feature -- Access
 

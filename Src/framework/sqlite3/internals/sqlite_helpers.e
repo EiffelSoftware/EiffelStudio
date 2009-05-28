@@ -36,19 +36,19 @@ feature -- Query
 			not_a_code_sqlite_success: not sqlite_success (a_code)
 			not_a_message_is_empty: attached a_message implies not a_message.is_empty
 		do
---			if (a_code & {SQLITE_RESULT_CODES}.sqlite_ioerr) = {SQLITE_RESULT_CODES}.sqlite_ioerr then
---				if attached a_message then
---					create {SQLITE_IO_EXCEPTION}Result.make_with_message (a_code, a_message)
---				else
---					create {SQLITE_IO_EXCEPTION}Result.make (a_code)
---				end
---			else
---				if attached a_message then
---					create Result.make_with_message (a_code, a_message)
---				else
---					create Result.make (a_code)
---				end
---			end
+			if (a_code & {SQLITE_RESULT_CODES}.sqlite_ioerr) = {SQLITE_RESULT_CODES}.sqlite_ioerr then
+				if attached a_message then
+					create {SQLITE_IO_EXCEPTION}Result.make_with_message (a_code, a_message)
+				else
+					create {SQLITE_IO_EXCEPTION}Result.make (a_code)
+				end
+			else
+				if attached a_message then
+					create Result.make_with_message (a_code, a_message)
+				else
+					create Result.make (a_code)
+				end
+			end
 		end
 
 feature -- Basic operations

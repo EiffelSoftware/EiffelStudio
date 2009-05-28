@@ -47,7 +47,7 @@ feature {NONE} -- Basic operations
 		require
 			is_part_of_session: is_part_of_session
 		do
-			if attached {attached SESSION_DATA_I} Current as l_data then
+			if attached {SESSION_DATA_I} Current as l_data then
 				session.notify_value_changed (l_data)
 			end
 		ensure

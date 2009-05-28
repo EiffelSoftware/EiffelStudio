@@ -60,7 +60,7 @@ feature -- Element change
 			l_key: attached STRING_8
 			l_value: detachable STRING_GENERAL
 		do
-			if attached {attached DS_BILINEAR_CURSOR [attached STRING_8]} a_metadata.metakeys as l_cursor then
+			if attached {DS_BILINEAR_CURSOR [attached STRING_8]} a_metadata.metakeys as l_cursor then
 				from l_cursor.start until l_cursor.after loop
 					l_key := l_cursor.item
 					if is_valid_metadata_id (l_key) then

@@ -81,7 +81,7 @@ feature -- Element change
 		ensure
 			value_set: equal (a_value, value (a_id))
 			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
-			session_set_on_session_data: attached {attached SESSION_DATA_I} a_value as l_session_data implies (({SESSION_DATA_I}) #? a_value).session = Current
+			session_set_on_session_data: attached {SESSION_DATA_I} a_value as l_session_data implies (({SESSION_DATA_I}) #? a_value).session = Current
 		end
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Element change

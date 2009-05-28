@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 				dialog.set_default_push_button (dialog_window_buttons.item (default_button))
 			end
 
-			if help_providers.is_service_available and then attached {attached HELP_CONTEXT_I} Current as l_context then
+			if help_providers.is_service_available and then attached {HELP_CONTEXT_I} Current as l_context then
 				bind_help_shortcut (dialog)
 			end
 
@@ -940,7 +940,7 @@ feature {NONE} -- Action handlers
 					else
 					end
 				elseif not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-					if a_ctrl or else (attached {attached EV_WIDGET} ev_application.focused_widget as l_widget and then not attached {attached EV_BUTTON} l_widget as l_button) then
+					if a_ctrl or else (attached ev_application.focused_widget as l_widget and then not attached {EV_BUTTON} l_widget as l_button) then
 							-- We check if the focus widget is Void, because if it is then, technically the dialog does not have focus.
 							-- The key processing will stil be effective if there is no focused widget, which could be a bug.
 						on_confirm_dialog
@@ -984,7 +984,7 @@ feature {NONE} -- Factory
 
 			if help_providers.is_service_available then
 					-- Add a help button, if help is available
-				if attached {attached HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
+				if attached {HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
 					l_button := create_help_button
 					l_container.extend (l_button)
 					l_container.disable_item_expand (l_button)
@@ -1072,7 +1072,7 @@ feature {NONE} -- Factory
 			Result.set_pixmap (stock_pixmaps.command_system_info_icon)
 
 			l_enable_help := True
-			if attached {attached HELP_CONTEXT_I} Current as l_context then
+			if attached {HELP_CONTEXT_I} Current as l_context then
 				l_enable_help := l_context.is_interface_usable and then help_providers.service.is_provider_available (l_context.help_provider)
 			end
 

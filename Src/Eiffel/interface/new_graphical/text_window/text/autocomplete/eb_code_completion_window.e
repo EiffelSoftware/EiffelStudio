@@ -126,8 +126,9 @@ feature {NONE} -- Initialization
 			l_vbox.disable_item_expand (l_padding)
 
 				-- Tool tip
-			create comment_preview
+			create comment_preview.make
 			comment_preview.align_text_left
+			comment_preview.is_text_wrapped := True
 			comment_preview.set_background_color (colors.tooltip_color)
 			l_vbox.extend (comment_preview)
 
@@ -376,7 +377,7 @@ feature -- Access
 	choice_list: EB_COMPLETION_LIST_GRID
 			-- Choice list
 
-	comment_preview: EV_LABEL
+	comment_preview: EVS_LABEL
 			-- Comment preview tooltip information
 
 	comment_preview_box: EV_VERTICAL_BOX
@@ -788,6 +789,10 @@ feature {NONE} -- Action handlers
 				end
 				if l_tt_text /= Void then
 					l_tt_text.prune_all_trailing ('%N')
+					if l_tt_text.count > 150 then
+						l_tt_text.keep_head (147)
+						l_tt_text.append ("...")
+					end
 					comment_preview.set_text (l_tt_text)
 				else
 					comment_preview.set_text ("")

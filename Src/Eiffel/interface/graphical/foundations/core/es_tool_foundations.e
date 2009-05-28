@@ -354,7 +354,7 @@ feature {NONE} -- Action Handlers
 				l_application := ev_application
 				l_widget := l_application.focused_widget
 				if l_widget /= Void and then l_widget.default_key_processing_handler /= Void then
-					l_handled := l_widget.default_key_processing_handler.item ([a_key])
+					l_handled := not l_widget.default_key_processing_handler.item ([a_key])
 				end
 				if not l_handled and then is_interface_usable then
 						-- We have to check is the interface is usable because the window may have been closed/destroyed

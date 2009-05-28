@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 		end
 
 	register_pressed_item (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64;
-						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; action: PROCEDURE [ANY, TUPLE])
+						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Register current into the tree.
 		do
 			if a_button = 1 then

@@ -60,6 +60,7 @@ feature -- Operation
 			else
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("Servlets generated to '" + l_translator.servlet_gen_path + "'")
+				o.iprint ("System translated.")
 			end
 		end
 

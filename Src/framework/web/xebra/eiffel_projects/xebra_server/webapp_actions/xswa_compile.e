@@ -12,14 +12,32 @@ class
 
 inherit
 	XS_WEBAPP_ACTION
+		redefine
+			make
+		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_webapp: XS_WEBAPP)
+			-- Initialization for `Current'.	
+		do
+			Precursor (a_webapp)
+			create output_handler.make
+		ensure then
+			output_handler_attached: output_handler /= Void
+		end
+
 
 feature -- Access
 
 	compile_process: detachable PROCESS
 			-- Used to compile the webapp
+
+	output_handler: XSOH_COMPILE
+			-- Handles output from process	
 
 
 
@@ -76,8 +94,8 @@ feature {NONE} -- Implementation
 					compile_process := launch_process (config.compiler_filename,
 													compiler_args,
 													app_dir,
-													agent compile_process_exited)
-												--	agent compiler_output_handler)
+													agent compile_process_exited,
+													agent output_handler.handle_output)
 					is_running := True
 				end
 			end
@@ -91,7 +109,11 @@ feature -- Agent
 		do
 			config_outputter
 			is_running := False
-			next_action.execute.do_nothing
+			if output_handler.has_successfully_terminated then
+				next_action.execute.do_nothing
+			else
+				o.eprint ("COMPILATION WAS NOT SUCCESSFUL", generating_type)
+			end
 		end
 
 	compiler_output_handler (a_ouput: STRING)
@@ -101,6 +123,9 @@ feature -- Agent
 			o.dprintn (a_ouput, 3)
 			o.set_name ({XS_MAIN_SERVER}.name)
 		end
+
+invariant
+	output_handler_attached: output_handler /= Void
 end
 
 

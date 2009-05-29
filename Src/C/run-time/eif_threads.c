@@ -788,7 +788,7 @@ rt_public void eif_thr_exit(void)
 			 * following a call to `eif_terminate_all_other_threads'. */
 		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
 #endif
-		int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
+		int destroy_mutex; /* If non null, we'll destroy the 'join' mutex */
 		int l_has_parent_thread = (eif_thr_context != NULL) && (eif_thr_context->current) && (eif_thr_context->parent_context);
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
@@ -856,6 +856,8 @@ rt_public void eif_thr_exit(void)
 				/* Find out if there are still some children running. */
 			destroy_mutex = eif_thr_context->n_children == 0;
 			EIF_ASYNC_SAFE_MUTEX_UNLOCK (l_children_mutex, "Unlocking problem in eif_thr_exit()");
+		} else {
+			destroy_mutex = 0;
 		}
 		if (destroy_mutex) {
 			EIF_MUTEX_DESTROY(l_children_mutex, "Couldn't destroy join mutex.");

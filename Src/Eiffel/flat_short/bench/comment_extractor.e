@@ -105,7 +105,7 @@ feature -- Query
 		do
 			create Result.make
 
-			if attached {attached MATCH_LIST_SERVER} a_feature.system.match_list_server as l_mls then
+			if attached a_feature.system.match_list_server as l_mls then
 				l_leaf := l_mls.item (a_feature.written_class.class_id)
 				if l_leaf /= Void then
 					l_comments := a_feature.ast.comment (l_leaf)
@@ -208,7 +208,7 @@ feature {NONE} -- Query
 		require
 			not_a_parent_name_is_empty: a_parent_name /= Void implies not a_parent_name.is_empty
 		do
-			if attached {CLASS_C} a_feature.associated_class as l_class then
+			if attached a_feature.associated_class as l_class then
 				Result := find_ancestors_feature_internal (a_feature, l_class, a_parent_name, create {ARRAYED_LIST [attached CLASS_C]}.make (20))
 			end
 		end
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation: Query
 			l_parents := a_class.parents
 			if not l_parents.is_empty then
 				from l_parents.start until l_parents.after or Result /= Void or l_matched_parent loop
-					if attached {CLASS_C} l_parents.item.associated_class as l_parent and then not a_processed.has (l_parent) then
+					if attached l_parents.item.associated_class as l_parent and then not a_processed.has (l_parent) then
 							-- The parent class has not get been processed.
 						l_matched_parent := a_parent_name /= Void and then l_parent.name_in_upper.is_equal (a_parent_name)
 						if a_parent_name = Void or l_matched_parent then

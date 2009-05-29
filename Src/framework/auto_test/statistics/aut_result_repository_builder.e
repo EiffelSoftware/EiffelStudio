@@ -73,8 +73,10 @@ feature {NONE} -- Implementation
 			last_request_has_response: request_history.item (request_history.count).response /= Void
 		local
 			witness: AUT_WITNESS
+			l_list: DS_ARRAYED_LIST [AUT_REQUEST]
 		do
-			create witness.make (request_history, last_start_index, request_history.count)
+			create l_list.make_from_linear (request_history)
+			create witness.make (l_list, last_start_index, request_history.count)
 			result_repository.add_witness (witness)
 		end
 

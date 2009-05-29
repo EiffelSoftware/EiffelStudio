@@ -51,7 +51,7 @@ feature {NONE} -- Query
 			l_lib_list := l_universe.library_of_uuid (l_uuid, False)
 			if not l_lib_list.is_empty then
 				l_lib := l_lib_list.first
-				if attached {attached EIFFEL_CLASS_I} l_universe.safe_class_named ({TEST_CONSTANTS}.common_test_class_ancestor_name, l_lib) as l_ec then
+				if attached {EIFFEL_CLASS_I} l_universe.safe_class_named ({TEST_CONSTANTS}.common_test_class_ancestor_name, l_lib) as l_ec then
 					Result := l_ec
 				end
 			end

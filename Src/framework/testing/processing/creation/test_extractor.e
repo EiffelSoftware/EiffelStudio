@@ -74,7 +74,7 @@ feature {NONE} -- Status setting
 						l_cs.after
 					loop
 						if
-							attached {attached EIFFEL_CALL_STACK_ELEMENT} l_cs.item as l_cse and then
+							attached {EIFFEL_CALL_STACK_ELEMENT} l_cs.item as l_cse and then
 							configuration.call_stack_elements.has (l_cse.level_in_stack)
 						then
 							capturer.capture_call_stack_element (l_cse)

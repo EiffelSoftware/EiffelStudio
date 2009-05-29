@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 				until
 					l_cursor.after
 				loop
-					if attached {attached G} l_cursor.item as l_item then
+					if attached {G} l_cursor.item as l_item then
 						if l_item.tags.has (tag) then
 							add_item (l_item)
 						end

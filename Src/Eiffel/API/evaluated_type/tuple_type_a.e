@@ -70,7 +70,7 @@ feature -- Comparison
 		do
 				-- For TUPLE, it is just enough that they are
 				-- either both reference or both expanded.
-			if attached {attached TUPLE_TYPE_A} other as t then
+			if attached {TUPLE_TYPE_A} other as t then
 				Result := is_expanded = t.is_expanded
 			end
 		end

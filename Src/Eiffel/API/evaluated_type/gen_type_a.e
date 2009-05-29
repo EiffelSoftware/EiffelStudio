@@ -771,7 +771,7 @@ feature {TYPE_A} -- Helpers
 			l_formal: FORMAL_A
 		do
 			if
-				same_type (other) and then attached {attached like Current} other as l_gen_type_i and then
+				same_type (other) and then attached {like Current} other as l_gen_type_i and then
 				l_gen_type_i.class_id = class_id and then
 						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
 						-- If 'declaration_mark' is not the same for both then we have to make sure

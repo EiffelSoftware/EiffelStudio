@@ -87,7 +87,7 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if attached {like sessions} internal_sessions as l_sessions then
+			if attached internal_sessions as l_sessions then
 				Result := l_sessions
 			else
 				create Result.make_default
@@ -123,7 +123,7 @@ feature {NONE} -- Query
 			create l_formatter
 			create l_kinds
 
-			if attached {attached CUSTOM_SESSION_I} a_session as l_session then
+			if attached {CUSTOM_SESSION_I} a_session as l_session then
 				Result := l_session.file_name
 			else
 					-- Determine session type		
@@ -147,7 +147,7 @@ feature {NONE} -- Query
 					l_workbench := (create {SHARED_WORKBENCH}).workbench
 					if l_workbench.system_defined then
 						l_conf_target := l_workbench.lace.target
-						if attached {attached UUID} (create {USER_OPTIONS_FACTORY}).mapped_uuid (l_workbench.lace.file_name) as l_uuid then
+						if attached (create {USER_OPTIONS_FACTORY}).mapped_uuid (l_workbench.lace.file_name) as l_uuid then
 							l_ver := l_uuid.out
 						else
 							l_ver := l_conf_target.system.uuid.out
@@ -192,7 +192,7 @@ feature {NONE} -- Helpers
 	logger_service: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to logger service
 		do
-			if attached {attached SERVICE_CONSUMER [LOGGER_S]} internal_logger_service as l_service then
+			if attached internal_logger_service as l_service then
 				Result := l_service
 			else
 				check sited: site /= Void end
@@ -607,7 +607,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -631,11 +631,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

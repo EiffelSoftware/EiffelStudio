@@ -44,7 +44,7 @@ feature -- Command
 						l_last_test_cases_folder := l_catalog_content.item.a_test_cases_folder
 
 						-- Convert to short name, otherwise eweasel will not recognize the long names.
-						if attached {STRING_32} l_last_test_cases_folder.as_string_32 as lt_string then
+						if attached l_last_test_cases_folder.as_string_32 as lt_string then
 							l_short_name := short_name_of (lt_string)
 							check not_void: l_short_name /= Void end
 							if l_short_name.last_index_of ('\', l_short_name.count) = l_short_name.count then
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation routines
 			l_helper: ES_FILE_NAME_HELPER
 		do
 			create l_helper
-			if attached {attached STRING_32} l_helper.short_name_of (a_long_file_name) as l_result then
+			if attached l_helper.short_name_of (a_long_file_name) as l_result then
 				Result := l_result
 			end
 		end
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation routines
 
 			l_tmp_name := Result.twin
 			create l_file_name_helper
-			if attached {STRING_GENERAL} l_tmp_name as lt_string then
+			if attached l_tmp_name as lt_string then
 				-- File must exists before convert to short name
 				create l_file.make (l_tmp_name.as_string_8)
 				if not l_file.exists then
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation attributes
 			-- Used by `file' ONLY.
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -339,11 +339,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

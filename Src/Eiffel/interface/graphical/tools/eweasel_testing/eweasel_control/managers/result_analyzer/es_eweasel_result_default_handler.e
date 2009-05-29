@@ -55,11 +55,11 @@ feature {NONE} -- Redefine
 				else
 					Result.set_title (eweasel_unknow_result)
 				end
-				if attached {attached LIST [STRING]} a_lines as l_lines then
-					Result.set_original_eweasel_ouput (to_one_string (l_lines))
+				if a_lines then
+					Result.set_original_eweasel_ouput (to_one_string (a_lines))
 				end
-				if attached {ES_EWEASEL_TEST_RESULT_ITEM} Result as l_test then
-					set_with_current_item (l_test)
+				if Result /= Void then
+					set_with_current_item (Result)
 				end
 				Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.error)
 				result_analyzer.reset_cache

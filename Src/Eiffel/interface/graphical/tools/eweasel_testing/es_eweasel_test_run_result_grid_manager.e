@@ -126,10 +126,9 @@ feature -- Command
 					check not_possible: False end
 				end
 
-				if attached {attached EV_GRID_ITEM} l_grid_item as lt_grid_item then
-					a_row.set_item (l_all_columns.index, lt_grid_item)
-
-					set_forground_color_of_item (a_item, lt_grid_item)
+				if l_grid_item /= Void then
+					a_row.set_item (l_all_columns.index, l_grid_item)
+					set_forground_color_of_item (a_item, l_grid_item)
 				end
 
 				l_all_columns.forth
@@ -237,11 +236,15 @@ feature -- Query
 
 	session_data: attached ES_EWEASEL_TEST_RUN_SESSION_DATA
 			-- Session data
+		local
+			l_session_data: detachable like session_data
 		do
-			if not attached {attached ES_EWEASEL_TEST_RUN_SESSION_DATA} internal_session_data as l_test then
-				create internal_session_data.make
+			l_session_data := internal_session_data
+			if l_session_data = Void then
+				create l_session_data.make
+				internal_session_data := l_session_data
 			end
-			Result := internal_session_data
+			Result := l_session_data
 		end
 
 feature {NONE} -- Implementation commands
@@ -285,7 +288,7 @@ feature {NONE} -- Implementation commands
 				create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_item.execution_error_in)
 			elseif a_item.root_class_name /= Void then
 				create l_helper.make (grid)
-				if attached {STRING} a_item.root_class_name.as_string_8 as lt_class_name then
+				if attached a_item.root_class_name.as_string_8 as lt_class_name then
 					l_token_item := l_helper.new_editor_token_item (lt_class_name)
 					Result := l_token_item
 				end
@@ -300,12 +303,11 @@ feature {NONE} -- Implementation commands
 		do
 			if grid.grid_selected_top_rows (grid).has (a_row) then
 				l_item := result_item_of (a_row)
-				check not_void: l_item /= Void end
-
-			 	if attached {ES_EWEASEL_TEST_RESULT_ITEM} l_item as lt_item then
-			 		add_sub_row_items (lt_item, a_row)
+			 	if l_item /= Void then
+			 		add_sub_row_items (l_item, a_row)
+				else
+					check not_void: False end
 			 	end
-
 			end
 		end
 
@@ -435,7 +437,7 @@ feature {NONE} -- Implementation queries
 			until
 				l_index > l_count
 			loop
-				if attached {EV_GRID_ROW} l_grid.row (l_index) as l_row then
+				if attached l_grid.row (l_index) as l_row then
 					l_item := result_item_of (l_row)
 					if l_item /= Void then
 						Result.extend (l_item)

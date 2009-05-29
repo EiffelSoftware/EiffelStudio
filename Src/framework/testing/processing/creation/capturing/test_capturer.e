@@ -140,7 +140,7 @@ feature {NONE} -- Query
 			reference_value: is_reference_value (an_adv)
 		do
 			if not an_adv.address.is_void then
-				Result := attached {attached EIFFEL_CLASS_C} an_adv.dynamic_class as l_class
+				Result := attached {EIFFEL_CLASS_C} an_adv.dynamic_class as l_class
 			end
 		end
 
@@ -382,7 +382,7 @@ feature {NONE} -- Basic operations
 				l_dbg_value := a_list.item_for_iteration
 				if l_dbg_value /= Void then
 					if
-						attached {attached STRING} l_dbg_value.dump_value.generating_type_representation (True) as l_type and then
+						attached l_dbg_value.dump_value.generating_type_representation (True) as l_type and then
 						not a_object.type.is_equal (l_type)
 					then
 							-- If the content referes to the same type, we do not increase the depth. That prevents

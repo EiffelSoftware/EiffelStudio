@@ -192,7 +192,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				until
 					l_cursor.after
 				loop
-					if attached {attached EIFFEL_CLASS_I} l_universe.safe_class_named (l_cursor.item, l_group) as l_class then
+					if attached {EIFFEL_CLASS_I} l_universe.safe_class_named (l_cursor.item, l_group) as l_class then
 						l_list.force_last (l_class)
 					end
 					l_cursor.forth
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 					until
 						l_ht.after
 					loop
-						if attached {attached EIFFEL_CLASS_I} l_ht.item_for_iteration as l_class then
+						if attached {EIFFEL_CLASS_I} l_ht.item_for_iteration as l_class then
 							if not l_class.is_compiled then
 								report_potential_test_class (l_class)
 							end

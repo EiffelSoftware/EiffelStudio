@@ -31,7 +31,7 @@ feature {NONE} -- Query
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if a_class.is_compiled and then attached {attached EIFFEL_CLASS_C} a_class.compiled_class as l_class then
+				if a_class.is_compiled and then attached {EIFFEL_CLASS_C} a_class.compiled_class as l_class then
 					l_ancestor := common_ancestor
 					if l_ancestor /= Void and then l_ancestor.is_compiled then
 						Result := l_class.conform_to (l_ancestor.compiled_class)

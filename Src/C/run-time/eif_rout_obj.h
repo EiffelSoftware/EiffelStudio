@@ -2,7 +2,7 @@
 	description: "Externals for agents and TUPLEs."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -213,6 +213,7 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define eif_pointer_item(tuple,pos)			((EIF_TYPED_VALUE *) (tuple) + pos)->it_p
 #define eif_real_32_item(tuple,pos)			((EIF_TYPED_VALUE *) (tuple) + pos)->it_r4
 #define eif_reference_item(tuple,pos)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_r
+#define eif_boxed_item(tuple,pos)		(eif_item_sk_type(RTCV(tuple),pos) == SK_REF? eif_reference_item(tuple,pos): RTBU(*((EIF_TYPED_VALUE *) (tuple) + (pos))))
 
 /* Conveniences */
 #define EIF_BOOLEAN_ITEM eif_boolean_item

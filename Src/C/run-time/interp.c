@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -3084,7 +3084,7 @@ rt_private void interpret(int flag, int where)
 				case SK_REAL64: last->it_real64 = eif_real_64_item (last->it_ref, pos); break;
 				case SK_POINTER: last->it_ptr = eif_pointer_item (last->it_ref, pos); break;
 				default:
-					last->it_ref = eif_reference_item (last->it_ref, pos);
+					last->it_ref = eif_boxed_item (last->it_ref, pos);
 			}
 		}
 		break;

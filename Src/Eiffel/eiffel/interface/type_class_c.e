@@ -11,7 +11,7 @@ class
 inherit
 	EIFFEL_CLASS_C
 		redefine
-			check_validity, new_type
+			check_validity, new_type, is_type
 		end
 
 	SPECIAL_CONST
@@ -21,6 +21,11 @@ inherit
 
 create
 	make
+
+feature -- Status report
+
+	is_type: BOOLEAN = True
+			-- Is class TYPE?
 
 feature -- Typing
 

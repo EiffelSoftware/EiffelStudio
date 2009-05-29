@@ -239,6 +239,12 @@ feature -- Access
 			-- Do nothing
 		end
 
+	is_type: BOOLEAN
+			-- Is class SPECIAL?
+		do
+			-- Do nothing
+		end
+
 	is_tuple: BOOLEAN
 			-- Is class TUPLE?
 		do

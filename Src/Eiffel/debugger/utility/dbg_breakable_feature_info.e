@@ -28,6 +28,11 @@ feature {NONE} -- Initialization
 			create object_test_locals.make (5)
 		end
 
+feature -- Status report
+
+	error_occurred: BOOLEAN
+			-- Error occurred while computing feature info
+
 feature -- Access
 
 	breakable_count: INTEGER
@@ -118,7 +123,13 @@ feature -- Breakable data
 			breakable_nested_count := a_data.bp_nested
 		end
 
-feature -- Change
+feature -- Element change
+
+	set_error_occurred (b: BOOLEAN)
+			-- Set `error_occurred' to `b'
+		do
+			error_occurred := b
+		end
 
 	set_resolved (b: BOOLEAN)
 			-- Set current as resolved for local variables

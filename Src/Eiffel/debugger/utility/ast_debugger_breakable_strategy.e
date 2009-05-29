@@ -58,18 +58,27 @@ feature -- Reset
 feature -- Basic operations	
 
 	get_breakable_info (a_feat: FEATURE_I; a_class: CLASS_C; a_info: like breakable_feature_info)
+		local
+			retried: BOOLEAN
 		do
-			breakable_feature_info := a_info
-			initialize_current_context (a_feat, a_class)
-			if attached a_feat.real_body as l_as then
-				l_as.process (Current)
-			end
-			debug ("debugger_trace_breakable")
-				display_breakable_feature_info
+			if not retried then
+				breakable_feature_info := a_info
+				initialize_current_context (a_feat, a_class)
+				if attached a_feat.real_body as l_as then
+					l_as.process (Current)
+				end
+				debug ("debugger_trace_breakable")
+					display_breakable_feature_info
+				end
+			else
+				a_info.set_error_occurred (True)
 			end
 			breakable_feature_info := Void
 		ensure
 			breakable_feature_info_void: breakable_feature_info = Void
+		rescue
+			retried := True
+			retry
 		end
 
 	display_breakable_feature_info
@@ -557,11 +566,13 @@ feature {NONE} -- Implementation: Iteration
 			l_as: detachable REQUIRE_AS
 			l_old_data: like context_data
 			l_old_leaf_as_list: like leaf_as_list
+			l_old_current_feature_i: like current_feature_i
 			l_written_in: INTEGER
 		do
 			if a_lst_assert /= Void then
 				l_old_data := context_data
 				l_old_leaf_as_list := leaf_as_list
+				l_old_current_feature_i := current_feature_i
 				from
 					a_lst_assert.start
 				until
@@ -572,8 +583,10 @@ feature {NONE} -- Implementation: Iteration
 					if l_as /= Void then
 						l_written_in := a_lst_assert.item.written_in
 						current_source_class := Eiffel_system.class_of_id (l_written_in)
+						check class_exists: current_source_class /= Void end
 						leaf_as_list := match_list_server.item (l_written_in)
-						current_feature_i := current_source_class.feature_of_rout_id_set (current_feature_i.rout_id_set)
+						current_feature_i := current_source_class.feature_of_rout_id_set (l_old_current_feature_i.rout_id_set)
+						check feature_found: current_feature_i /= Void end
 						l_as.process (Current)
 					end
 					a_lst_assert.forth
@@ -591,11 +604,13 @@ feature {NONE} -- Implementation: Iteration
 			l_as: detachable ENSURE_AS
 			l_old_data: like context_data
 			l_old_leaf_as_list: like leaf_as_list
+			l_old_current_feature_i: like current_feature_i
 			l_written_in: INTEGER
 		do
 			if a_lst_assert /= Void then
 				l_old_data := context_data
 				l_old_leaf_as_list := leaf_as_list
+				l_old_current_feature_i := current_feature_i
 				from
 					a_lst_assert.start
 				until
@@ -606,8 +621,10 @@ feature {NONE} -- Implementation: Iteration
 					if l_as /= Void then
 						l_written_in := a_lst_assert.item.written_in
 						current_source_class := Eiffel_system.class_of_id (l_written_in)
+						check class_exists: current_source_class /= Void end
 						leaf_as_list := match_list_server.item (l_written_in)
-						current_feature_i := current_source_class.feature_of_rout_id_set (current_feature_i.rout_id_set)
+						current_feature_i := current_source_class.feature_of_rout_id_set (l_old_current_feature_i.rout_id_set)
+						check feature_found: current_feature_i /= Void end
 						l_as.process (Current)
 					end
 					a_lst_assert.forth

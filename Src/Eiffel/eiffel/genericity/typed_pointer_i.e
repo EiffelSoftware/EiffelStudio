@@ -57,7 +57,7 @@ feature -- Comparison
 	same_as (other: TYPE_C): BOOLEAN
 			-- Is Current same as other?
 		do
-			if attached {attached like Current} other as l_other then
+			if attached {like Current} other as l_other then
 				Result := type.level = l_other.type.level
 			end
 		end

@@ -92,7 +92,7 @@ feature -- Basic Functionality
 	generate
 			-- Generates a servlet
 		local
-			l_buf: XU_INDENDATION_STREAM
+			l_buf: XU_INDENDATION_FORMATTER
 			l_servlet_class: XEL_SERVLET_CLASS_ELEMENT
 			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME

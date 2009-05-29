@@ -76,7 +76,7 @@ feature -- Basic Functionality
 			path_is_not_empty: not path.is_empty
 			webapp_name_is_not_empty: not webapp_name.is_empty
 		local
-			l_buf:XU_INDENDATION_STREAM
+			l_buf:XU_INDENDATION_FORMATTER
 			l_request_class: XEL_CLASS_ELEMENT
 			l_application_class: XEL_CLASS_ELEMENT
 			l_file: PLAIN_TEXT_FILE

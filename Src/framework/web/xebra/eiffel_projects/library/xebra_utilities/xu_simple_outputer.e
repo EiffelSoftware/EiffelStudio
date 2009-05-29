@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	XU_SIMPLE_OUTPUTER
+	XU_SIMPLE_STREAM
 
 inherit
 	STREAM

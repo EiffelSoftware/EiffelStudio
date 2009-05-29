@@ -194,7 +194,7 @@ feature -- Access
 
 feature -- Implementation
 
-	serialize (buf:XU_INDENDATION_STREAM)
+	serialize (buf:XU_INDENDATION_FORMATTER)
 			-- <Precursor>			
 		do
 			buf.put_string (signature)

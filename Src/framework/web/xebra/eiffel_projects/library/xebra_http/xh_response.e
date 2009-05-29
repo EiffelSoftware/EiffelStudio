@@ -17,13 +17,13 @@ feature {NONE} -- Initialization
 			-- Creates current
 		do
 			create cookie_orders.make
-			create file.make
-			create html.make (file)
+			create html_stream.make
+			create formatter.make (html_stream)
 			goto_request := ""
 		ensure
 			cookie_orders_attached: cookie_orders /= Void
-			file_attached: file /= Void
-			html_attached: html /= Void
+			html_stream_attached: html_stream /= Void
+			formatter_attached: formatter /= Void
 			goto_request_attached: goto_request /= Void
 		end
 
@@ -35,11 +35,11 @@ feature {NONE} -- Constants
 
 feature -- Access
 
-	html: XU_INDENDATION_STREAM
-			-- Reponse html (xhtml)
+	formatter: XU_INDENDATION_FORMATTER
+			-- Formats the html code
 
-	file: XU_SIMPLE_OUTPUTER
-			-- use another stream!
+	html_stream: XU_SIMPLE_STREAM
+			-- Contains the html code
 
 	cookie_orders: LINKED_LIST [XH_COOKIE_ORDER]
 			-- A cookie order will generate a cookie in the browser
@@ -51,7 +51,7 @@ feature -- Access
 feature -- Element change
 
 	set_goto_request (a_goto_request: STRING)
-			-- Setter. A_string can be empty!
+			-- Setter. A_string can be empty! ?
 		require
 			not_a_goto_request_is_detached_or_empty: a_goto_request /= Void and then not a_goto_request.is_empty
 		do
@@ -60,14 +60,14 @@ feature -- Element change
 			goto_request_set: goto_request = a_goto_request
 		end
 
-	set_html (a_html: XU_INDENDATION_STREAM)
+	set_formatter (a_formatter: XU_INDENDATION_FORMATTER)
 			-- Sets the text
 		require
-			a_html_attached: a_html /= Void
+			a_formatter_attached: a_formatter /= Void
 		do
-			html := a_html
+			formatter := a_formatter
 		ensure
-			html_set: html = a_html
+			formatter_set: formatter = a_formatter
 		end
 
 	append (a_string: STRING)
@@ -75,13 +75,13 @@ feature -- Element change
 		require
 			string_not_detached: a_string /= Void
 		do
-			html.append_string (a_string)
+			formatter.append_string (a_string)
 		end
 
 	append_newline
 			-- Appends a new line to the html result
 		do
-			html.append_string ("%N")
+			formatter.append_string ("%N")
 		end
 
 	put_cookie_order (a_cookie: XH_COOKIE_ORDER)
@@ -107,16 +107,16 @@ feature -- Element change
 				cookie_orders.forth
 			end
 
-			Result := Result + Html_start + file.get_text
+			Result := Result + Html_start + html_stream.get_text
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 invariant
-		cookie_orders_attached: cookie_orders /= Void
-		file_attached: file /= Void
-		html_attached: html /= Void
-		goto_request_attached: goto_request /= Void
+	cookie_orders_attached: cookie_orders /= Void
+	html_stream_attached: html_stream /= Void
+	formatter_attached: formatter /= Void
+	goto_request_attached: goto_request /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

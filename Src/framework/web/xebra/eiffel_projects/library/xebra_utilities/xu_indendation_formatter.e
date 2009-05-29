@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	XU_INDENDATION_STREAM
+	XU_INDENDATION_FORMATTER
 
 create
 	make
@@ -88,7 +88,7 @@ feature
 			indendation >= 0
 		end
 
-feature {XU_INDENDATION_STREAM} -- Implementation
+feature {XU_INDENDATION_FORMATTER} -- Implementation
 
 	indendate
 			-- Appends the indendantion to the stream

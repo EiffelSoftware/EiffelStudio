@@ -135,17 +135,17 @@ feature -- Extension
 		local
 			l_item: like create_event_list_log_item
 			l_service: like event_list_service
+			l_string: STRING_32
 		do
-			if attached {attached STRING_32} a_msg.as_string_32 as l_string then
-				l_service := event_list_service
-				if l_service.is_service_available then
-					l_item := create_event_list_log_item (l_string, a_cat, a_level)
-					l_service.service.put_event_item (context_cookie, l_item)
-				end
-
-					-- Publish events
-				message_logged_events.publish ([l_string, a_cat, a_level])
+			l_string := a_msg.as_string_32
+			l_service := event_list_service
+			if l_service.is_service_available then
+				l_item := create_event_list_log_item (l_string, a_cat, a_level)
+				l_service.service.put_event_item (context_cookie, l_item)
 			end
+
+				-- Publish events
+			message_logged_events.publish ([l_string, a_cat, a_level])
 		end
 
 	put_message_format_with_severity (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
@@ -180,7 +180,7 @@ feature {EVENT_LIST_S} -- Event handlers
 			l_service: like event_list_service
 			l_cache: like log_cache
 		do
-			if attached {attached EVENT_LIST_LOG_ITEM_I} a_event_item as l_log_item then
+			if attached {EVENT_LIST_LOG_ITEM_I} a_event_item as l_log_item then
 				l_cache := log_cache
 				if l_cache.count = log_cache_length then
 						-- Too many items, remove the first.
@@ -241,7 +241,7 @@ invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -265,11 +265,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

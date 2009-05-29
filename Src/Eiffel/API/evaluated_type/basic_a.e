@@ -177,7 +177,7 @@ feature {TYPE_A} -- Helpers
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
 		do
 			if a_level = 0 and not system.il_generation then
-				if attached {attached CL_TYPE_A} other as l_type then
+				if attached {CL_TYPE_A} other as l_type then
 					Result := class_id = l_type.class_id and then
 						(l_type.declaration_mark /= declaration_mark implies
 							(l_type.is_expanded = is_expanded and then

@@ -74,8 +74,8 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
-			if attached {attached CLASS_C} class_c as l_class and then attached {attached TEXT_FORMATTER} a_text_formatter as l_formatter then
-				print_context_class (l_formatter, l_class)
+			if attached class_c as l_class and then a_text_formatter /= Void then
+				print_context_class (a_text_formatter, l_class)
 			else
 				Precursor (a_text_formatter)
 			end

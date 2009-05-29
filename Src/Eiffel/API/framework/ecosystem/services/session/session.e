@@ -307,8 +307,8 @@ feature -- Query
 					attached {STRING_GENERAL} a_value as l_string or else
 					attached {SESSION_DATA_I} a_value as l_session_data or else
 					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
-					attached {attached CELL [ANY]} a_value as l_cell or else
-					attached {attached ARRAY [ANY]} a_value as l_array
+					attached {CELL [ANY]} a_value as l_cell or else
+					attached {ARRAY [ANY]} a_value as l_array
 			end
 		end
 
@@ -376,7 +376,7 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 			data.do_all (agent (a_value: ANY)
 					-- Iterate the values and notify any session data of commencing storage.
 				do
-					if attached {attached SESSION_DATA_I} a_value as l_data and attached {attached SESSION_I} Current as l_session then
+					if attached {SESSION_DATA_I} a_value as l_data and attached {SESSION_I} Current as l_session then
 						l_data.set_session (Void)
 						l_data.on_begin_store (l_session)
 					end
@@ -391,7 +391,7 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 				require
 					a_value_attached: a_value /= Void
 				do
-					if attached {attached SESSION_DATA_I} a_value as l_data then
+					if attached {SESSION_DATA_I} a_value as l_data then
 						l_data.set_session (Current)
 						l_data.on_end_store
 					end

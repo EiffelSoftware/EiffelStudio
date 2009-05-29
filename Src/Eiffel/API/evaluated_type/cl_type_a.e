@@ -577,7 +577,7 @@ feature {TYPE_A} -- Helpers
 
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
 		do
-			Result := same_type (other) and then attached {attached like Current} other as l_cl_type and then
+			Result := same_type (other) and then attached {like Current} other as l_cl_type and then
 				l_cl_type.class_id = class_id and then
 						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
 						-- If 'declaration_mark' is not the same for both then we have to make sure

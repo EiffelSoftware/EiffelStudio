@@ -1,6 +1,6 @@
 <page:include template="master_template">
 	<page:define_region id="content">
-		<page:controller class="reservation_contoller" />
+		<page:controller class="reservation_controller" />
 		<xeb:if condition="not_authenticated">
 			<xeb:redirect url="reservations.xeb" />
 		</xeb:if>

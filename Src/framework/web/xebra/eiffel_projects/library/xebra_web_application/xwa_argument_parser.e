@@ -14,9 +14,6 @@ inherit
 	ARGUMENT_SINGLE_PARSER
 		rename
 			make as make_single_parser
-		export
-			{NONE} all
-			{ANY} execute, has_executed, is_successful
 		end
 
 create

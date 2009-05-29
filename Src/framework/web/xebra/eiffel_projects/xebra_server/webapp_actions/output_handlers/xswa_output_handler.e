@@ -36,7 +36,18 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Status setting
+feature -- Operations
+
+	handle_output (a_output: STRING)
+			-- Handles the output
+		require
+			a_output_attached: a_output /= Void
+		do
+			add_output (a_output)
+			internal_handle_output (a_output)
+		end
+
+feature {NONE} -- Implementation
 
 	add_output (a_output: READABLE_STRING_8)
 			-- Adds output and rezises if necessary.
@@ -47,15 +58,6 @@ feature -- Status setting
 			if output.count > max_size then
 				output.remove_head (output.count - max_size)
 			end
-		end
-
-	handle_output (a_output: STRING)
-			-- Handles the output
-		require
-			a_output_attached: a_output /= Void
-		do
-			add_output (a_output)
-			internal_handle_output (a_output)
 		end
 
 	internal_handle_output (a_output: STRING)

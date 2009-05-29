@@ -38,9 +38,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	output_handler_compile: XSOH_COMPILE
-	output_handler_translate: XSOH_TRANSLATE
-	output_handler_gen: XSOH_GEN
+			-- Output handler for compilation process
 
+	output_handler_translate: XSOH_TRANSLATE
+		-- Output handler for translate process
+
+	output_handler_gen: XSOH_GEN
+		-- Output handler for compilation of servletget process
 
 	translate_process: detachable PROCESS
 			-- Used to translate the xeb files
@@ -71,6 +75,9 @@ feature -- Access
 			-- The arguments that are passed to compile the servlet_gen	
 		do
 			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
+			if not webapp.cleaned then
+				Result.append (" -clean")
+			end
 		ensure
 			Result_attached: Result /= void
 		end
@@ -130,7 +137,7 @@ feature -- Status report
 									".xeb")
 						or not file_exists (servlet_gen_exe)
 						or not file_exists (servlet_gen_ecf)
-
+						or not webapp.cleaned
 			if Result then
 				o.dprint ("Translating is necessary", 5)
 			else
@@ -189,14 +196,17 @@ feature -- Status setting
 			if attached {PROCESS} translate_process as p and then p.is_running  then
 				o.dprint ("Terminating translate_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
+				p.wait_for_exit
 			end
 			if attached {PROCESS} generate_process as p and then p.is_running  then
 				o.dprint ("Terminating generate_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
+				p.wait_for_exit
 			end
 			if attached {PROCESS} gen_compile_process as p and then p.is_running  then
 				o.dprint ("Terminating gen_compile_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
+				p.wait_for_exit
 			end
 			is_running := False
 		end
@@ -209,11 +219,20 @@ feature {NONE} -- Implementation
 			if not is_running then
 				webapp.shutdown
 				if can_launch_process (config.translator_filename, app_dir) then
+
+					if attached translate_process as p then
+						if p.is_running then
+							o.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
+							p.terminate
+						end
+					end
+
 					o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 10)
 					translate_process := launch_process (config.translator_filename,
 															translator_args,
 															app_dir,
 															agent translate_process_exited,
+															agent output_handler_translate.handle_output,
 															agent output_handler_translate.handle_output)
 					is_running := True
 				end
@@ -225,11 +244,18 @@ feature {NONE} -- Implementation
 			-- Launches the process to compile the servlet_gen
 		do
 			if can_launch_process (config.compiler_filename, app_dir) and then file_exists (servlet_gen_ecf) then
+				if attached gen_compile_process as p then
+					if p.is_running then
+						o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
+						p.terminate
+					end
+				end
 				o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 10)
 				gen_compile_process := launch_process (config.compiler_filename,
 														gen_compiler_args,
 														app_dir,
 														agent gen_compile_process_exited,
+														agent output_handler_compile.handle_output,
 														agent output_handler_compile.handle_output)
 			end
 		end
@@ -238,11 +264,18 @@ feature {NONE} -- Implementation
 			-- Launches the process to execute servlet_gen
 		do
 			if can_launch_process (servlet_gen_exe, app_dir) then
+				if attached generate_process as p then
+					if p.is_running then
+						o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+						p.terminate
+					end
+				end
 				o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR (3) -=-=-=-=-=-=", 10)
 				generate_process := launch_process (servlet_gen_exe,
 													generate_args,
 													app_dir,
 													agent generate_process_exited,
+													agent output_handler_gen.handle_output,
 													agent output_handler_gen.handle_output)
 			end
 		end
@@ -257,6 +290,7 @@ feature -- Agents
 				compile_servlet_gen
 			else
 				o.eprint ("TRANSLATION FAILED", generating_type)
+				is_running := False
 			end
 
 		end
@@ -269,6 +303,7 @@ feature -- Agents
 				generate
 			else
 				o.eprint ("COMPILATION OF SERVLET_GEN FAILED", generating_type)
+				is_running := False
 			end
 		end
 
@@ -278,6 +313,7 @@ feature -- Agents
 			config_outputter
 			is_running := False
 			if output_handler_gen.has_successfully_terminated then
+				webapp.cleaned := true
 				next_action.execute.do_nothing
 			else
 				o.eprint ("GENERATION FAILED", generating_type)
@@ -288,6 +324,5 @@ invariant
 	output_handler_compile_attached: output_handler_compile /= Void
 	output_handler_translate_attached: output_handler_translate /= Void
 	output_handler_gen_attached: output_handler_gen /= Void
-
 end
 

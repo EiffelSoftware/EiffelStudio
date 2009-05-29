@@ -48,6 +48,7 @@ feature -- Operations
 			if attached l_config_reader.process_file (a_arg_parser.config_filename) as config then
 				server_config := config
 				server_config.arg_config.set_debug_level (a_arg_parser.debug_level)
+				server_config.arg_config.set_clean (a_arg_parser.clean)
 				create l_webapp_finder.make
 				server_config.set_webapps (l_webapp_finder.search_webapps (server_config.webapps_root))
 

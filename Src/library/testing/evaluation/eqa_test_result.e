@@ -85,21 +85,13 @@ feature {NONE} -- Initialization
 	initialize (a_date: like date)
 			-- Initialize `Current'.
 		do
-			time_since_epoche := (a_date.relative_duration (create {DATE_TIME}.make (1970, 1, 1, 0, 0, 0))).seconds_count.as_integer_32
+			date := a_date
 		end
 
 feature -- Access
 
 	date: DATE_TIME
 			-- Date and time `Current' was retrieved
-			--
-			-- Note: the date can not be stored as attached, since it is currently not possible to pass
-			--       objects of type {DATE_TIME} between void-safe systems and ones which are not.
-		do
-			create Result.make_from_epoch (time_since_epoche)
-		ensure
-			result_attached: Result /= Void
-		end
 
 	setup_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
@@ -109,11 +101,6 @@ feature -- Access
 
 	teardown_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
-
-feature {NONE} -- Access
-
-	time_since_epoche: INTEGER_32
-			-- Number of seconds since epoche for `date'
 
 feature -- Status report
 

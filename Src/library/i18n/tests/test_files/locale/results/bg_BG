@@ -3,13 +3,13 @@
 Test of locale: bg_BG
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  понеделник
-  вторник
-  сряда
-  четвъртък
-  петък
-  събота
-  неделя
+  Пн
+  Вт
+  Ср
+  Чт
+  Пт
+  Сб
+  Нд
     Full day names:
   понеделник
   вторник

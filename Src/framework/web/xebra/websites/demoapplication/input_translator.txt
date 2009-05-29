@@ -1,6 +1,0 @@
-i
-a
-demoapplication ./ ./ ./servlet_gen/ ./
-r
-q
-

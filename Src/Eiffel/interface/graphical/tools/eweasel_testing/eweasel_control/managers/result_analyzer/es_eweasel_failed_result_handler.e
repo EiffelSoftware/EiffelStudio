@@ -23,12 +23,12 @@ feature {NONE} -- Implementation
 		do
 			if a_lines.first.has_substring (signature) then
 				create Result
-				if attached {attached LIST [STRING]} a_lines as l_lines then
-					Result.set_original_eweasel_ouput (to_one_string (l_lines))
+				if a_lines /= Void then
+					Result.set_original_eweasel_ouput (to_one_string (a_lines))
 				end
 				Result.set_title (a_lines.first)
-				if attached {ES_EWEASEL_TEST_RESULT_ITEM} Result as l_test then
-					set_with_current_item (l_test)
+				if Result /= Void then
+					set_with_current_item (Result)
 				end
 
 				l_class_name := class_name_in_string (a_lines.first)

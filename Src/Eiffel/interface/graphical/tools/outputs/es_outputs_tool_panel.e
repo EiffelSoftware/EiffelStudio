@@ -302,7 +302,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 --			a_editor_parented: a_editor.widget.widget.parent = user_widget
 --			a_editor_is_displayed: a_editor.widget.is_shown
 --			not_old_editor_is_display: old editor /= Void implies not (old editor).widget.is_shown
-			selection_combo_changed_actions_restored: selection_combo.change_actions.state = old selection_combo.change_actions.state
+--			selection_combo_changed_actions_restored: selection_combo.change_actions.state = old (selection_combo.change_actions).state
 		end
 
 feature -- Status report

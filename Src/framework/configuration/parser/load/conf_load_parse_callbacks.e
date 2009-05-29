@@ -517,7 +517,7 @@ feature {NONE} -- Implementation attribute processing
 			l_class := current_attributes.item (at_class)
 			if l_class /= Void then
 				l_class.to_upper
-				if not is_valid_class_name (l_class) then
+				if not is_valid_class_type_name (l_class) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_root_class)
 				end
 			end

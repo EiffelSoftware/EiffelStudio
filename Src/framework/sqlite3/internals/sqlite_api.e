@@ -126,7 +126,7 @@ feature {NONE} -- Access: API
 	minimum_version: detachable READABLE_STRING_8
 			-- <Precursor>
 
-	initialization_config: SQLITE_INITALIZATION_CONFIG
+	initialization_config: SQLITE_INITIALIZATION_CONFIG
 			-- Configuration used to initialize the API.
 		once
 			create Result

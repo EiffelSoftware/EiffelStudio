@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="sqlite" uuid="91623409-9E15-41C8-A462-68BF45255761">
 	<target name="sqlite">
 		<description>Eiffel wrapper for the SQLite library</description>
-		<root class="APPLICATION" feature="make"/>
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>EIFGENs</exclude>
 			<exclude>\.svn</exclude>

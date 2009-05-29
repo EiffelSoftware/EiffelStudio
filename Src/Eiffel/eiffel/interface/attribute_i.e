@@ -13,7 +13,8 @@ inherit
 			assigner_name_id, transfer_to, unselected, extension,
 			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
 			set_type, type, is_attribute, is_stable,
-			undefinable, check_expanded, transfer_from
+			undefinable, check_expanded, transfer_from,
+			assert_id_set, set_assert_id_set
 		end
 
 	SHARED_DECLARATIONS
@@ -85,6 +86,9 @@ feature
 			-- Do nothing
 		end
 
+	assert_id_set: ASSERT_ID_SET
+			-- Assertions
+
 feature -- Status report
 
 	is_attribute: BOOLEAN = True
@@ -140,6 +144,23 @@ feature -- Status setting
 		end
 
 feature -- Element Change
+
+	init_assertion_flags (content: ROUTINE_AS)
+			-- Initialize assertion flags with `content'.
+		require
+			content_not_void: content /= Void
+		do
+			set_is_require_else (content.is_require_else)
+			set_is_ensure_then (content.is_ensure_then)
+			set_has_precondition (content.has_precondition)
+			set_has_postcondition (content.has_postcondition)
+		end
+
+	set_assert_id_set (set: like assert_id_set)
+			-- Assign `set' to `assert_id_set'.
+		do
+			assert_id_set := set
+		end
 
 	set_extension (an_extension: like extension)
 			-- Set `extension' with `an_extension'.
@@ -466,6 +487,7 @@ feature -- Element Change
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			extension := other.extension
+			other.set_assert_id_set (assert_id_set)
 			if is_stable then
 				other.set_is_stable
 			end
@@ -479,6 +501,7 @@ feature -- Element Change
 			assigner_name_id := other.assigner_name_id
 				-- `has_function_origin' is set in FEATURE_I
 --			has_function_origin := other.has_function_origin
+			assert_id_set := other.assert_id_set
 			extension := other.extension
 			if other.is_stable then
 				set_is_stable

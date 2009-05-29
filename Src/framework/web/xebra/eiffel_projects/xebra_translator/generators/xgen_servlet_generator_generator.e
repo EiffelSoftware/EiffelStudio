@@ -137,7 +137,7 @@ feature -- Basic functionality
 			path_is_attached: attached path
 			path_is_not_empty: not a_path.is_empty
 		local
-			buf:XU_INDENDATION_STREAM
+			buf:XU_INDENDATION_FORMATTER
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME

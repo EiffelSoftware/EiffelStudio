@@ -14,7 +14,7 @@ feature
 			make_thread (0)
 			launch
 			join_all
-			execution_environment.sleep (50_000_000_000)
+			execution_environment.sleep (15_000_000_000)
 			print ("Hello from the GC%N")
 		end
 

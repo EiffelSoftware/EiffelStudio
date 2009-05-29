@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			Precursor
-			max_size := 30
+			max_size := 500
 		end
 
 feature -- Status setting
@@ -42,7 +42,7 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := False
-			if output.ends_with ("C compilation completed%N") or output.ends_with ("System Recompiled.%N") then
+			if output.has_substring ("C compilation completed%N") or output.ends_with ("System Recompiled.%N") then
 				Result := True
 			end
 		end

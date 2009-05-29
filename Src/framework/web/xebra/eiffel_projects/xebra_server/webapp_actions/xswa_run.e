@@ -53,6 +53,7 @@ feature -- Status setting
 			if attached {PROCESS} run_process as p  and then p.is_running then
 				o.dprint ("Terminating run_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
+				p.wait_for_exit
 			end
 			is_running := False
 		end
@@ -69,6 +70,7 @@ feature {NONE} -- Implementation
 												run_args,
 												run_workdir,
 												agent run_process_exited,
+												agent run_output_handler,
 												agent run_output_handler)
 					is_running := True
 				end

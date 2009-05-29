@@ -14,9 +14,6 @@ inherit
 	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_option_parser
-		export
-			{NONE} all
-			{ANY} execute, has_executed, is_successful
 		end
 
 create

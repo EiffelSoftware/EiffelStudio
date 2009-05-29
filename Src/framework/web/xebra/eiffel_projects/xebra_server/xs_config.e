@@ -72,6 +72,7 @@ feature -- Access
 	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
 			-- Specifies whether webapps should be finalized. Read from config.ini
 
+
 	compiler_filename: FILE_NAME
 			-- Returns 'compiler' converted to a FILE_NAME
 		require
@@ -102,27 +103,31 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
+
+
 feature -- Stauts Report
 
 	print_configuration: STRING
 			-- Renders the configuration to a string
 		do
-			Result := "%NServer Configuration:" +
-			"%T" + webapps.count.out + " webapps at '" + webapps_root.out + "'"
+			Result := "%N---------------- Server Configuration ----------------"
+			Result.append("%N-Webapps: " + webapps.count.out + " webapps at '" + webapps_root.out + "'")
 
 			from
 				webapps.start
 			until
 				webapps.after
 			loop
-				Result := Result + "%N%T%T" + webapps.item_for_iteration.config.host.out + "/" + webapps.item_for_iteration.config.name.out + "@" + webapps.item_for_iteration.config.port.out
+				Result.append ("%N--'" + webapps.item_for_iteration.config.name.out + "' on "+ webapps.item_for_iteration.config.host.out + "@" + webapps.item_for_iteration.config.port.out)
 				webapps.forth
 			end
 
-			Result := Result + "%N%TCompiler in '" + compiler.out +
-								"%N%TTranslator in '" + translator.out +
-								"%N%TFinalize webapps '" + finalize_webapps.out +  "'" +
-								"%N%TAssume webapps are running  '" + assume_webapps_are_running.out + "'"
+			Result.append ( "%N-Compiler in '" + compiler.out +
+							"%N-Translator in '" + translator.out +
+							"%N-Finalize webapps '" + finalize_webapps.out +  "'" +
+							"%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
+			Result.append (arg_config.print_configuration)
+			Result.append ("%N------------------------------------------------------")
 
 		ensure
 			Result_attached: Result /= Void

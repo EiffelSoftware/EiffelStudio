@@ -19,15 +19,29 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create debug_level.make_empty
+						create clean.make_empty
 		ensure
 			debug_level_attached: debug_level /= Void
+			clean_attached: clean /= Void
 		end
 
 feature -- Access
 
 	debug_level: SETTABLE_INTEGER
 
+	clean: SETTABLE_BOOLEAN assign set_clean
+			-- Can be used to clean all webapps		
+
 feature -- Status report
+
+	print_configuration: STRING
+			-- Renders the configuration to a string
+		do
+			Result := "%N-Debug Level '" + debug_level.out + "'" +
+					  "%N-Clean '" + clean.out + "'"
+		ensure
+			Result_attached: Result /= Void
+		end
 
 feature -- Status setting
 
@@ -41,9 +55,18 @@ feature -- Status setting
 			debug_level_set: debug_level  = a_debug_level
 		end
 
-feature {NONE} -- Implementation
+	set_clean (a_clean: like clean)
+			-- Sets clean.
+		require
+			a_clean_attached: a_clean /= Void
+		do
+			clean  := a_clean
+		ensure
+			clean_set: clean  = a_clean
+		end
 
 invariant
 	debug_level_attached: debug_level /= Void
+	clean_attached: clean /= Void
 end
 

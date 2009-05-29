@@ -73,7 +73,7 @@ feature -- Element change
 	append (a_string: STRING)
 			-- Appends a string to the html result
 		require
-			not_a_string_is_detached_or_empty: a_string /= Void and then not a_string.is_empty
+			string_not_detached: a_string /= Void
 		do
 			html.append_string (a_string)
 		end

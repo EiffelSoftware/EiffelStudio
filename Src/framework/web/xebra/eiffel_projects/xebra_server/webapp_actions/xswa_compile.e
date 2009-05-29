@@ -39,8 +39,6 @@ feature -- Access
 	output_handler: XSOH_COMPILE
 			-- Handles output from process	
 
-
-
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
 		do
@@ -48,6 +46,9 @@ feature -- Access
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
 --			end
+			if not webapp.cleaned then
+				Result.append (" -clean")
+			end
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -62,6 +63,7 @@ feature -- Status report
 											".e",
 											".ecf")
 					or not file_exists (webapp_exe)
+					or not webapp.cleaned
 			if Result then
 				o.dprint ("Compiling is necessary", 5)
 			else
@@ -78,6 +80,7 @@ feature -- Status setting
 			if attached {PROCESS} compile_process as p and then p.is_running  then
 				o.dprint ("Terminating compile_process for " + webapp.config.name.out  + "", 2)
 				p.terminate
+				p.wait_for_exit
 			end
 			is_running := False
 		end
@@ -90,11 +93,18 @@ feature {NONE} -- Implementation
 			if not is_running then
 				webapp.shutdown
 				if can_launch_process (config.compiler_filename, app_dir) then
+					if attached compile_process as p then
+						if p.is_running then
+							o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+							p.terminate
+						end
+					end
 					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
 					compile_process := launch_process (config.compiler_filename,
 													compiler_args,
 													app_dir,
 													agent compile_process_exited,
+													agent output_handler.handle_output,
 													agent output_handler.handle_output)
 					is_running := True
 				end

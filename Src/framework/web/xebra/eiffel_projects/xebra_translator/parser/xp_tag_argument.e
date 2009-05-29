@@ -39,15 +39,15 @@ feature {NONE} -- Access
 	internal_value: STRING
 			-- The actual value
 
-	dynamic_attribute_regexp: RX_PCRE_MATCHER
-			-- Dynamic attribute regular expression
-		once
-			create Result.make
-			Result.compile ("^%%=.+%%$")
-		ensure
-			result_attached: attached Result
-			result_compiled: Result.is_compiled
-		end
+--	dynamic_attribute_regexp: RX_PCRE_MATCHER
+--			-- Dynamic attribute regular expression
+--		once
+--			create Result.make
+--			Result.compile ("^%%=.+%%$")
+--		ensure
+--			result_attached: attached Result
+--			result_compiled: Result.is_compiled
+--		end
 
 feature -- Access
 

@@ -477,10 +477,6 @@ feature {NONE} -- Implementation (`type_from')
 			l_current_class_c: CLASS_C
 			l_precursor_from: TYPE_A
 			l_current_class_c_parents: FIXED_LIST [CL_TYPE_A]
-			l_end_match: like scan_for_type
-			l_type_text: STRING_32
-			l_wrapper: EIFFEL_PARSER_WRAPPER
-			l_generator: AST_TYPE_A_GENERATOR
 		do
 			from
 				last_constraints := Void
@@ -1511,7 +1507,6 @@ feature {NONE}-- Implementation
 			l_end_match: like scan_for_type
 			l_type_text: STRING_32
 			l_wrapper: EIFFEL_PARSER_WRAPPER
-			l_generator: AST_TYPE_A_GENERATOR
 		do
 			found_class := Void
 			if attached {CLASSC_STONE} stone_in_click_ast (current_token.pos_in_text) as l_stone then

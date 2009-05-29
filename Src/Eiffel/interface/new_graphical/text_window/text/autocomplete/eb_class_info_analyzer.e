@@ -55,12 +55,29 @@ inherit
 			{NONE} all
 		end
 
+	ES_EDITOR_ANALYZER_UTILITIES
+		rename
+			feature_body_keywords as editor_feature_body_keywords
+		export
+			{NONE} all
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		end
 
 	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
+	SHARED_EIFFEL_PARSER
 		export
 			{NONE} all
 		end
@@ -460,6 +477,10 @@ feature {NONE} -- Implementation (`type_from')
 			l_current_class_c: CLASS_C
 			l_precursor_from: TYPE_A
 			l_current_class_c_parents: FIXED_LIST [CL_TYPE_A]
+			l_end_match: like scan_for_type
+			l_type_text: STRING_32
+			l_wrapper: EIFFEL_PARSER_WRAPPER
+			l_generator: AST_TYPE_A_GENERATOR
 		do
 			from
 				last_constraints := Void
@@ -1484,58 +1505,54 @@ feature {NONE}-- Implementation
 			group_not_void: group /= Void
 			group_is_valid: group.is_valid
 		local
-			cc_stone: CLASSC_STONE
 			image: STRING
-			class_i: CLASS_I
 			l_token: EDITOR_TOKEN
 			l_feat: E_FEATURE
+			l_end_match: like scan_for_type
+			l_type_text: STRING_32
+			l_wrapper: EIFFEL_PARSER_WRAPPER
+			l_generator: AST_TYPE_A_GENERATOR
 		do
 			found_class := Void
-			cc_stone ?= stone_in_click_ast (current_token.pos_in_text)
-			if cc_stone /= Void and then cc_stone.e_class /= Void then
-				found_class := cc_stone.e_class
-				Result := found_class.actual_type
+			if attached {CLASSC_STONE} stone_in_click_ast (current_token.pos_in_text) as l_stone then
+				found_class := l_stone.e_class
 			end
-			if Result = Void then
-					-- Class name can only be STRING_8.
-				image := string_32_to_upper (current_token.wide_image).as_string_8
-				class_i := Universe.safe_class_named (image, group)
-				if class_i /= Void and then class_i.is_compiled then
-					found_class := class_i.compiled_class
-					Result := found_class.actual_type
-				end
-			end
-			if Result = Void then
-					-- "like" is safe to compare to STRING_8.
-				image := string_32_to_lower (current_token.wide_image).as_string_8
-				if image.is_equal ("like") then
-					if current_token.next /= Void and then current_token.next.next /= Void then
-						l_token := current_token.next.next
-						if l_token.is_text then
-								-- A feature name is safe to compare to STRING_8.
-							image := string_32_to_lower (l_token.wide_image).as_string_8
-							if current_class_c /= Void then
-								l_feat := current_class_c.feature_with_name (image)
-								if l_feat /= Void then
-									Result := l_feat.type
-								end
-								if Result = Void then
-									Result := type_of_local_entity_named (image)
-								end
-								if Result = Void then
-									Result := type_of_constants_or_reserved_word (l_token)
+
+			l_end_match := scan_for_type (current_token, current_line, Void)
+			if l_end_match /= Void then
+				l_type_text := token_range_text (current_token, current_line, l_end_match.token)
+				if not l_type_text.is_empty then
+						-- Prepend "type" for the type parser.
+					l_type_text.prepend ("type ")
+					create l_wrapper
+					l_wrapper.parse (type_parser, l_type_text, True, current_class_c)
+					if not l_wrapper.has_error and attached {TYPE_AS} l_wrapper.ast_node as l_node then
+						Result := type_a_generator.evaluate_type_if_possible (l_node, current_class_c)
+						if attached {UNEVALUATED_LIKE_TYPE} Result and not Result.is_valid then
+								-- The type is not valid, recheck.
+							Result := Void
+							if token_text_8 (current_token) ~ {EIFFEL_KEYWORD_CONSTANTS}.like_keyword then
+								if current_token.next /= Void and then current_token.next.next /= Void then
+									l_token := current_token.next.next
+									if l_token.is_text then
+											-- A feature name is safe to compare to STRING_8.
+										image := string_32_to_lower (l_token.wide_image).as_string_8
+										if current_class_c /= Void then
+											l_feat := current_class_c.feature_with_name (image)
+											if l_feat /= Void then
+												Result := l_feat.type
+											end
+											if Result = Void then
+												Result := type_of_local_entity_named (image)
+											end
+											if Result = Void then
+												Result := type_of_constants_or_reserved_word (l_token)
+											end
+										end
+									end
 								end
 							end
 						end
-					end
-				end
-				if Result = Void then
-						-- Safe get type of generic by STING_8.
-					Result := type_of_generic (current_token.wide_image.as_string_8)
-				end
-				if Result /= Void then
-					if not Result.is_loose then
-						found_class := Result.associated_class
 					end
 				end
 			end

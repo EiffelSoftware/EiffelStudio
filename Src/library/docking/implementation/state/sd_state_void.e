@@ -130,7 +130,7 @@ feature -- Redefine
 			if not l_platform.is_windows then
 				-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
 				-- See bug#14105
-				if attached {attached SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone then
+				if attached {SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone then
 					create l_env
 					l_env.application.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
 				end

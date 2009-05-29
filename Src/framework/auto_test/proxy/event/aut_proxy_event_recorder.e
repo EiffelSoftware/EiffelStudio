@@ -121,6 +121,7 @@ feature {NONE} -- Implementation
 			check last_response = Void end
 			a_request.set_response (create {AUT_NORMAL_RESPONSE}.make (""))
 			variable_table.wipe_out
+			request_history.wipe_out
 		end
 
 	process_stop_request (a_request: AUT_STOP_REQUEST)

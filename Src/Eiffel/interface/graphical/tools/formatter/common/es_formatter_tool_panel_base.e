@@ -71,7 +71,7 @@ feature{NONE} -- Initialization
 			register_action (content.drop_actions, agent on_item_dropped)
 			content.drop_actions.set_veto_pebble_function (agent (a_stone: ANY): BOOLEAN
 						do
-							Result := attached {attached STONE} a_stone as st and then st.is_storable
+							Result := attached {STONE} a_stone as st and then st.is_storable
 						end
 					)
 

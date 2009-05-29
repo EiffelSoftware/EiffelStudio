@@ -375,7 +375,7 @@ feature {NONE} -- Status report
 			is_initialized: is_initialized or is_initializing
 		do
 			if session_manager.is_service_available then
-				if attached {attached BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) as l_ref then
+				if attached {BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) as l_ref then
 					Result := l_ref.item
 				end
 			end

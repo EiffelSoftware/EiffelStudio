@@ -143,7 +143,7 @@ feature {NONE} -- Initialization: User interface
 				-- Hook up events for session data
 			if session_manager.is_service_available then
 				session_data.session_connection.connect_events (Current)
-				if attached {attached BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
+				if attached {BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
 					is_expanding_errors := l_expand.item
 					if is_expanding_errors then
 						expand_errors_button.enable_select
@@ -239,7 +239,7 @@ feature {NONE} -- Status report
 	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' is an error event
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {attached EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
 				Result := not l_error.is_warning
 			end
 		ensure
@@ -251,7 +251,7 @@ feature {NONE} -- Status report
 		require
 			a_event_item_attached: a_event_item /= Void
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {attached EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
 				Result := l_error.is_warning
 			end
 		ensure
@@ -579,9 +579,9 @@ feature {NONE} -- Basic operations
 							-- Set context pebble by iterating through the context content to find a feature
 							-- or class token.
 						from l_content.finish until l_content.before or l_context_stone /= Void loop
-							if attached {attached EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
+							if attached {EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
 								l_context_stone ?= l_ft.pebble
-							elseif attached {attached EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
+							elseif attached {EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
 								l_context_stone ?= l_ct.pebble
 							end
 							l_content.back
@@ -880,7 +880,7 @@ feature {NONE} -- Event handlers
 		do
 			if a_id.is_equal (expand_errors_session_id) then
 					-- Retrieve global session
-				if attached {attached BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand then
+				if attached {BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand then
 					if is_expanding_errors /= l_expand.item then
 						is_expanding_errors := l_expand.item
 						if is_expanding_errors then

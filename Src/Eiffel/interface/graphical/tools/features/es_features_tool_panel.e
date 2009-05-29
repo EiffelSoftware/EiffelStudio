@@ -69,21 +69,21 @@ feature {NONE} -- User interface initialization
 				l_session := session_data
 
 					-- Retrieve session data and set button states
-				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) as l_toggle1 then
+				if attached {BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) as l_toggle1 then
 					if l_toggle1.item then
 						show_alias_button.enable_select
 					else
 						show_alias_button.disable_select
 					end
 				end
-				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_assigners_session_id, False) as l_toggle2 then
+				if attached {BOOLEAN_REF} l_session.value_or_default (show_assigners_session_id, False) as l_toggle2 then
 					if l_toggle2.item then
 						show_assigners_button.enable_select
 					else
 						show_assigners_button.disable_select
 					end
 				end
-				if attached {attached BOOLEAN_REF} l_session.value_or_default (show_signatures_session_id, False) as l_toggle3 then
+				if attached {BOOLEAN_REF} l_session.value_or_default (show_signatures_session_id, False) as l_toggle3 then
 					if l_toggle3.item then
 						show_signatures_button.enable_select
 					else
@@ -205,12 +205,12 @@ feature {NONE} -- Basic operations
 			l_tree: like features_tree
 		do
 			l_tree := features_tree
-			if a_data /= Void and then attached {attached EV_GRID_ROW} l_tree.retrieve_row_recursively_by_data (a_data, a_compare_object) as l_row then
+			if a_data /= Void and then attached l_tree.retrieve_row_recursively_by_data (a_data, a_compare_object) as l_row then
 				l_row.enable_select
 				if l_row.is_displayed then
 					l_row.ensure_visible
 				end
-			elseif attached {attached EV_GRID_ROW} l_tree.selected_row as l_selected_row then
+			elseif attached l_tree.selected_row as l_selected_row then
 					-- No node located so deselect any selected node.
 				l_selected_row.disable_select
 			end
@@ -232,7 +232,7 @@ feature {NONE} -- Event handlers
 			end
 
 			if l_button /= Void then
-				if attached {attached BOOLEAN_REF} a_session.value_or_default (a_id, False) as l_toggle then
+				if attached {BOOLEAN_REF} a_session.value_or_default (a_id, False) as l_toggle then
 					if l_toggle.item then
 						l_button.enable_select
 					else
@@ -297,7 +297,7 @@ feature {NONE} -- Action handlers
 		do
 			l_tree := features_tree
 
-			if attached {attached CLASSC_STONE} stone as l_class_stone then
+			if attached {CLASSC_STONE} stone as l_class_stone then
 				l_class := l_class_stone.e_class
 
 				if l_class /= current_compiled_class or is_in_stone_synchronization then
@@ -318,11 +318,11 @@ feature {NONE} -- Action handlers
 						end
 
 						if l_class_ast /= Void then
-							if attached {attached EV_GRID_ROW} l_tree.selected_row as l_row then
+							if attached l_tree.selected_row as l_row then
 								l_row.disable_select
 							end
 
-							if attached {attached EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features as l_clauses then
+							if attached l_class_ast.features as l_clauses then
 									-- Build tree from AST nodes
 								l_tree.build_tree (l_clauses, l_class)
 							else
@@ -330,12 +330,12 @@ feature {NONE} -- Action handlers
 								l_tree.extend_item (create {EV_GRID_LABEL_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 							end
 						end
-					elseif attached {attached EXTERNAL_CLASS_C} l_class as l_external_classc then
+					elseif attached {EXTERNAL_CLASS_C} l_class as l_external_classc then
 							-- Special processing for a .NET type since has no 'ast' in the normal
 							-- sense.
 						current_compiled_class := l_class
 
-						if attached {attached EV_GRID_ROW} l_tree.selected_row as l_row2 then
+						if attached l_tree.selected_row as l_row2 then
 							l_row2.disable_select
 						end
 						l_tree.wipe_out

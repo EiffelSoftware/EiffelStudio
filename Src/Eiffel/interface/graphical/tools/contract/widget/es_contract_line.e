@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			l_data: like split_contract_data
 		do
 			l_data := split_contract_data (format_contract (a_string))
-			if attached {attached STRING_32} l_data.tag as l_tag then
+			if attached l_data.tag as l_tag then
 				make (l_tag, l_data.contract, a_source)
 			else
 				make_without_tag (l_data.contract, a_source)

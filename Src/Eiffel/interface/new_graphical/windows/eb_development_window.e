@@ -596,7 +596,7 @@ feature -- Update
 				-- Synchronizes all stonable tools
 			shell_tools.all_requested_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL])
 				do
-					if a_tool.is_interface_usable and then attached {attached ES_STONABLE_I} a_tool as l_stonable then
+					if a_tool.is_interface_usable and then attached {ES_STONABLE_I} a_tool as l_stonable then
 							-- Synchronize stonable tool
 						l_stonable.synchronize
 					end
@@ -650,7 +650,7 @@ feature -- Update
 	update_eis_system
 			-- Update EIS storage and the tool if needed.
 		do
-			if attached {attached ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander then
+			if attached {ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander then
 					-- Update Information tool.
 				l_info_tool_commander.refresh_list
 				l_info_tool_commander.request_eis_visit
@@ -1079,7 +1079,7 @@ feature -- Resource Update
 			end
 			update_formatters
 			lock_update
-			if attached {attached ES_FEATURES_TOOL} shell_tools.tool ({ES_FEATURES_TOOL}) as l_features_tool then
+			if attached {ES_FEATURES_TOOL} shell_tools.tool ({ES_FEATURES_TOOL}) as l_features_tool then
 					-- Update features tool.
 				l_features_tool.synchronize
 			end
@@ -1472,7 +1472,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 				old_set_stone (Void)
 				if shell_tools.is_interface_usable then
 						-- Remove stone from tool.
-					if attached {attached ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable then
+					if attached {ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable then
 						l_stonable.set_stone_with_query (Void)
 					end
 				end
@@ -1970,7 +1970,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				else
 					l_commander ?= shell_tools.tool ({ES_FEATURES_TOOL})
 					check l_commander_attached: l_commander /= Void end
-					if l_commander /= Void and attached {attached STRING_GENERAL} a_feature_name.internal_name.name as l_name then
+					if l_commander /= Void and attached a_feature_name.internal_name.name as l_name then
 						l_commander.select_feature_item_by_name (l_name)
 					end
 				end
@@ -1984,7 +1984,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
 		do
-			if attached {attached ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_commander then
+			if attached {ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_commander then
 				l_commander.select_feature_item (a_feature)
 			else
 				check False end

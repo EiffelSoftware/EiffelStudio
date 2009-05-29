@@ -32,7 +32,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			is_editing_eiffel_class: is_editing_eiffel_class
 		do
-			if attached {attached CLASSI_STONE} editor.stone as l_class_stone and then attached {attached EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
+			if attached {CLASSI_STONE} editor.stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
 				Result := l_class
 			end
 		end
@@ -63,7 +63,7 @@ feature -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := attached {attached CLASSI_STONE} editor.stone as l_class_stone and then attached {attached EIFFEL_CLASS_I} l_class_stone.class_i as l_class
+			Result := attached {CLASSI_STONE} editor.stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class
 		ensure
 			editor_has_class_i_stone: Result implies (({CLASSI_STONE}) #? editor.stone /= Void and then ({EIFFEL_CLASS_I}) #? (({CLASSI_STONE}) #? editor.stone).class_i /= Void)
 		end
@@ -85,10 +85,10 @@ feature -- Query
 				if
 					l_editor.has_focus and then
 					l_editor.dev_window /= Void and then
-					attached {attached EB_BASIC_TEXT_FORMATTER} l_editor.dev_window.selected_formatter as l_formatter
+					attached {EB_BASIC_TEXT_FORMATTER} l_editor.dev_window.selected_formatter as l_formatter
 				then
-					if attached {attached CLASSI_STONE} l_editor.stone as l_class_stone then -- Nested if because of a code generation bug.
-						Result := attached {attached EDITOR_TOKEN_FEATURE_START} a_token as l_ky_token
+					if attached {CLASSI_STONE} l_editor.stone as l_class_stone then -- Nested if because of a code generation bug.
+						Result := attached {EDITOR_TOKEN_FEATURE_START} a_token as l_ky_token
 					end
 				end
 			end
@@ -126,12 +126,12 @@ feature {NONE} -- Query
 			l_viewer: attached ES_CONTRACT_VIEWER_WIDGET
 			l_feature: E_FEATURE
 		do
-			if editor_class /= Void and then editor_class.is_compiled and then attached {attached CLASS_C} editor_class.compiled_class as l_class then
+			if editor_class /= Void and then editor_class.is_compiled and then attached editor_class.compiled_class as l_class then
 				if l_class.has_feature_table then
-					if attached {attached EDITOR_TOKEN_FEATURE_START} a_token as l_fstart then
+					if attached {EDITOR_TOKEN_FEATURE_START} a_token as l_fstart then
 							-- Create contract viewer widget
 						l_feature := l_class.feature_with_name (l_fstart.wide_image)
-						if attached {attached E_FEATURE} l_feature as l_feat then
+						if attached l_feature as l_feat then
 							create l_viewer.make
 								-- Register the close action for the widget
 							l_viewer.register_action (l_viewer.edit_contract_label.select_actions, agent
@@ -193,7 +193,7 @@ feature -- Basic operations
 						-- Offset y position by 1 because of padding.
 					l_y_offset := 1
 
-					if attached {attached CLICKABLE_TEXT} editor.text_displayed as l_text then
+					if attached {CLICKABLE_TEXT} editor.text_displayed as l_text then
 							-- Determine if a pop window can be shown.
 						l_can_show := not editor.is_empty and then editor.text_displayed /= Void
 						if l_can_show then
@@ -235,7 +235,7 @@ feature -- Basic operations
 
 					if l_can_show and then (l_window = Void or else not l_window.is_interface_usable) then
 							-- Create new window
-						if attached {attached EV_WIDGET} l_token_widget as l_widget then
+						if attached l_token_widget as l_widget then
 							create l_window.make_with_widget (editor, a_token, l_widget)
 						else
 							create l_window.make (editor, a_token)
@@ -249,7 +249,7 @@ feature -- Basic operations
 							l_window.show_popup_widget
 						end
 
-						if attached {attached PROCEDURE [ANY, TUPLE]} l_token_action as l_action then
+						if attached {PROCEDURE [ANY, TUPLE]} l_token_action as l_action then
 							l_window.register_action (l_window.token_select_actions, l_action)
 						end
 
@@ -267,7 +267,7 @@ feature -- Basic operations
 						end
 
 							-- Show window
-						if attached {attached EV_WIDGET} editor.editor_drawing_area as l_editor_widget then
+						if attached editor.editor_drawing_area as l_editor_widget then
 							l_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
 
 								-- The precusor will not be called because the handler is to be considered "active".
@@ -374,7 +374,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -387,22 +387,22 @@ feature {NONE} -- Action handlers
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

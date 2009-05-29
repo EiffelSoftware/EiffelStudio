@@ -314,7 +314,7 @@ feature {NONE} -- Events
 		do
 			l_name := a_name.to_string_8
 			check l_name /= Void end
-			if not conf.is_new_class and then attached {attached CLASS_I} conf.test_class_cache as l_class then
+			if not conf.is_new_class and then attached conf.test_class_cache as l_class then
 				feature_name_validator.validate_new_feature_name (l_name, l_class)
 			else
 				feature_name_validator.validate_feature_name (l_name)

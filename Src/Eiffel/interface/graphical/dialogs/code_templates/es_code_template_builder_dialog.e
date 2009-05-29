@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 				l_declaration_fields := declaration_text_fields
 
 				from l_cursor.start until l_cursor.after loop
-					if not l_cursor.item.is_built_in and then attached {attached CODE_LITERAL_DECLARATION} l_cursor.item as l_literal and then l_literal.is_editable then
+					if not l_cursor.item.is_built_in and then attached {CODE_LITERAL_DECLARATION} l_cursor.item as l_literal and then l_literal.is_editable then
 						if not l_declaration_fields.has (l_literal.id) then
 							build_declaration_line_interface (l_literal, a_container)
 						end
@@ -411,7 +411,7 @@ feature {NONE} -- Action handlers
 			check has_id: l_table.has_id (a_id) end
 			if l_table.has_id (a_id) then
 				l_code_value := l_table.item (a_id)
-				if attached {attached STRING_32} a_sender.text.as_string_32 as l_value then
+				if attached {STRING_32} a_sender.text.as_string_32 as l_value then
 					l_code_value.set_value (l_value)
 				end
 			end

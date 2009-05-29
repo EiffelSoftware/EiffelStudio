@@ -38,7 +38,7 @@ feature {NONE} -- Clean up
 				create l_notifier
 				if l_notifier.is_service_available then
 						-- Unregister existing file check modification
-					if attached {attached FILED_STONE} last_monitored_stone as l_stone2 and then attached {attached STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
+					if attached {FILED_STONE} last_monitored_stone as l_stone2 and then attached {STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
 						l_notifier.service.uncheck_modifications_with_callback (l_fn2, agent on_file_changed)
 						last_monitored_stone := Void
 					end
@@ -129,8 +129,8 @@ feature {NONE} -- Implementation
 			create l_notifier
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
-				if attached {attached FILED_STONE} last_monitored_stone as l_stone then
-					if l_stone.file_name /= Void and then attached {attached STRING_32} l_stone.file_name.out.as_string_32 as l_fn then
+				if attached {FILED_STONE} last_monitored_stone as l_stone then
+					if l_stone.file_name /= Void and then attached {STRING_32} l_stone.file_name.out.as_string_32 as l_fn then
 						if l_notifier.service.is_monitoring (l_fn) then
 							l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
 						end
@@ -144,8 +144,8 @@ feature {NONE} -- Implementation
 
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
-				if attached {attached FILED_STONE} a_stone as l_stone2 then
-					if l_stone2.file_name /= Void and then attached {attached STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
+				if attached {FILED_STONE} a_stone as l_stone2 then
+					if l_stone2.file_name /= Void and then attached {STRING_32} l_stone2.file_name.out.as_string_32 as l_fn2 then
 						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
 						last_monitored_stone := l_stone2
 					end

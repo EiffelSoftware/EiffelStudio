@@ -396,7 +396,7 @@ feature {NONE} -- Action handlers
 			window.hide
 
 			if l_window /= Void and l_window.is_interface_usable then
-				if attached {attached ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) as l_tool and then l_tool.is_interface_usable then
+				if attached {ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) as l_tool and then l_tool.is_interface_usable then
 						-- Show and activate focus on the tool.
 					create l_feature_stone.make (context_feature)
 					check l_feature_stone_is_stone_usable: l_tool.is_stone_usable (l_feature_stone) end

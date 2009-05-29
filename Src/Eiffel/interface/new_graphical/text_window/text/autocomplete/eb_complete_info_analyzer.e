@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 
 				-- Add local declarations
 			l_feature := current_feature_i
-			if l_feature /= Void and then attached {CLASS_C} current_class_c as l_class then
+			if l_feature /= Void and then attached current_class_c as l_class then
 				create l_analyzer.make_with_feature (l_class, l_feature)
 				l_result := l_analyzer.scan (a_start_token, a_start_line)
 				if l_result /= Void and then l_result.has_current_frame then
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation
 			l_name: attached STRING_32
 			l_type: detachable TYPE_A
 		do
-			if attached {attached HASH_TABLE [detachable TYPE_A, attached STRING_32]} locals_from_local_entities_finder as l_locals then
+			if attached locals_from_local_entities_finder as l_locals then
 				from
 					l_locals.start
 				until
@@ -709,11 +709,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			l_feature := current_feature_i
-			if l_feature /= Void and then attached {CLASS_C} current_class_c as l_class then
+			if l_feature /= Void and then attached current_class_c as l_class then
 				if current_feature_as /= Void then
 					l_feature_as := current_feature_as.feat_as
 					if l_feature_as /= Void then
-						if attached {BODY_AS} l_feature_as.body as l_body then
+						if attached l_feature_as.body as l_body then
 							l_names_heap := names_heap
 							l_arguments := l_body.arguments
 							if attached {ROUTINE_AS} l_body.content as r_as then
@@ -751,7 +751,7 @@ feature {NONE} -- Implementation
 												until
 													id_list.after
 												loop
-													if attached {STRING} l_names_heap.item (id_list.item) as s then
+													if attached l_names_heap.item (id_list.item) as s then
 														l_name := s.as_string_32.as_attached
 														l_type := type_a_generator.evaluate_type_if_possible (tda.type, l_class)
 														Result.force (l_type, l_name)
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 								until
 									l_obj_test_locals.after
 								loop
-									if attached {STRING} l_names_heap.item (l_obj_test_locals.item.name.name_id) as s2 then
+									if attached l_names_heap.item (l_obj_test_locals.item.name.name_id) as s2 then
 										l_name := s2.as_string_32.as_attached
 										l_type := type_a_generator.evaluate_type_if_possible (l_obj_test_locals.item.type, l_class)
 										Result.force (l_type, l_name)
@@ -1557,7 +1557,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1581,11 +1581,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

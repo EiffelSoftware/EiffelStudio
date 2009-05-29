@@ -96,7 +96,7 @@ feature -- Access
 			l_sub_row: EV_GRID_ROW
 			l_count, i: INTEGER
 		do
-			if attached {like context_contracts} internal_context_contracts as l_contract then
+			if attached internal_context_contracts as l_contract then
 				Result := l_contract
 			else
 				create Result.make_default
@@ -106,7 +106,7 @@ feature -- Access
 					l_count := l_row.subrow_count_recursive
 					from i := 1 until i > l_count loop
 						l_sub_row := l_row.subrow (i)
-						if attached {attached ES_CONTRACT_LINE} l_sub_row.data as l_line then
+						if attached {ES_CONTRACT_LINE} l_sub_row.data as l_line then
 							Result.force_last (l_line)
 						end
 						i := i + l_sub_row.subrow_count_recursive + 1
@@ -412,7 +412,7 @@ feature -- Modification
 			l_selected: BOOLEAN
 			i: INTEGER
 		do
-			if attached {EV_GRID_ROW} find_row (a_source) as l_row then
+			if attached find_row (a_source) as l_row then
 				l_selected := l_row.is_selected
 				if l_selected then
 					l_row.disable_select
@@ -748,7 +748,7 @@ feature {NONE} -- Population
 						else
 								-- Perform formatting with decorator, enabling clickable text.
 							l_class_c := l_mod_contract.modifier.context_class.compiled_class
-							if attached {attached ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} l_mod_contract.modifier as l_fmodifier then
+							if attached {ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} l_mod_contract.modifier as l_fmodifier then
 								l_feature_i := l_class_c.feature_of_feature_id (l_fmodifier.context_feature.feature_id)
 								create l_feat_decorator.make (l_class_c, l_token_generator)
 								l_feat_decorator.init_feature_context (l_feature_i, l_feature_i, l_fmodifier.context_feature.ast)
@@ -857,7 +857,7 @@ feature {NONE} -- Population
 			create l_generator.make
 			l_generator.disable_multiline
 
-			if attached {attached ES_FEATURE_CONTRACT_EDITOR_CONTEXT} a_context as l_context then
+			if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} a_context as l_context then
 					-- Keywords
 				create l_item
 
@@ -1128,7 +1128,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1152,11 +1152,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

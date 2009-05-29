@@ -46,7 +46,7 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := (attached {attached CLASSI_STONE} a_stone as l_stone or attached {attached CLUSTER_STONE} a_stone as l_cluster)
+			Result := (attached {CLASSI_STONE} a_stone as l_stone or attached {CLUSTER_STONE} a_stone as l_cluster)
 		end
 
 feature -- Basic operations

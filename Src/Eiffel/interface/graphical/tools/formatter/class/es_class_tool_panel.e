@@ -50,7 +50,7 @@ feature {ES_CLASS_TOOL} -- Access
 			l_formatters := predefined_formatters
 			l_cursor := l_formatters.cursor
 			from l_formatters.start until l_formatters.after or l_stop loop
-				if attached {attached EB_CLASS_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.selected then
+				if attached {EB_CLASS_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.selected then
 					Result := l_formatter.mode
 					l_stop := True
 				else
@@ -75,7 +75,7 @@ feature {ES_CLASS_TOOL} -- Element change
 				l_formatters := predefined_formatters
 				l_cursor := l_formatters.cursor
 				from l_formatters.start until l_formatters.after or l_stop loop
-					if attached {attached EB_CLASS_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.mode = a_mode then
+					if attached {EB_CLASS_INFO_FORMATTER} l_formatters.item as l_formatter and then l_formatter.mode = a_mode then
 							-- Execute formatter
 						l_formatter.execute
 						l_stop := True

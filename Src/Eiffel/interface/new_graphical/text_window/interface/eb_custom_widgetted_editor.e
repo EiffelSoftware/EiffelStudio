@@ -555,11 +555,11 @@ feature {NONE} -- Action hanlders
 			if text_is_fully_loaded then
 				l_handler := token_handler
 				if l_handler /= Void then
-					if attached {attached CLICKABLE_TEXT} text_displayed as l_clickable_text then
+					if attached {CLICKABLE_TEXT} text_displayed as l_clickable_text then
 							-- Fetch token at current mouse position
 						create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
 						position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
-						if attached {attached EDITOR_TOKEN} l_cursor.token as l_token then
+						if attached l_cursor.token as l_token then
 								-- An instant key (CTRL) allows direct processing of the token.
 							l_instant := (ev_application.ctrl_pressed and then not ev_application.alt_pressed and then not ev_application.shift_pressed)
 							if l_instant or else not l_handler.is_active then

@@ -13,8 +13,8 @@ deferred class
 inherit
 	DYNAMIC_SHARED_API
 
-create
-	make
+--create
+--	make
 
 feature {NONE} -- Initialize
 

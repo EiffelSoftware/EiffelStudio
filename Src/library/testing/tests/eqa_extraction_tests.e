@@ -116,25 +116,25 @@ feature -- Status report
 	is_object_available: BOOLEAN
 			-- Has {EQA_TEST_OBJECT} object in `context' been instanciated?
 		do
-			Result := is_valid_id ("#1") and then attached {attached EQA_TEST_OBJECT} object_for_id ("#1") as l_obj
+			Result := is_valid_id ("#1") and then attached {EQA_TEST_OBJECT} object_for_id ("#1") as l_obj
 		end
 
 	is_string_available: BOOLEAN
 			-- Has {STRING_8} object in `context' been instanciated?
 		do
-			Result := is_valid_id ("#2") and then attached {attached STRING} object_for_id ("#2") as l_string
+			Result := is_valid_id ("#2") and then attached {STRING} object_for_id ("#2") as l_string
 		end
 
 	is_tuple_available: BOOLEAN
 			-- Has {TUPLE} object in `context' been instanciated?
 		do
-			Result := is_valid_id ("#3") and then attached {attached TUPLE [REAL_64, EQA_TEST_OBJECT, STRING_8]} object_for_id ("#3") as l_special
+			Result := is_valid_id ("#3") and then attached {TUPLE [REAL_64, EQA_TEST_OBJECT, STRING_8]} object_for_id ("#3") as l_special
 		end
 
 	is_special_available: BOOLEAN
 			-- Has {SPECIAL [NATURAL_8]} object in `context' been instanciated?
 		do
-			Result := is_valid_id ("#4") and then attached {attached SPECIAL [NATURAL_8]} object_for_id ("#4") as l_special
+			Result := is_valid_id ("#4") and then attached {SPECIAL [NATURAL_8]} object_for_id ("#4") as l_special
 		end
 
 feature {NONE} -- Access

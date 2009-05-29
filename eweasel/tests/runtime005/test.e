@@ -115,11 +115,11 @@ feature
 			s: STRING
 			i: INTEGER
 			a: ANY
-			l_storage: SPECIAL [STRING]
+			l_storage: SPECIAL [detachable STRING]
 		do
 			from
 				i := 1
-				create l_storage.make (n + 1)
+				create l_storage.make_filled (Void, n + 1)
 			until
 				i > n
 			loop

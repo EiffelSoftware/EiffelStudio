@@ -10,7 +10,7 @@ feature -- Initialization
 			-- Run application.
 		local
 			l_string: STRING
-			l_spec: SPECIAL [STRING]
+			l_spec: SPECIAL [detachable STRING]
 			l_list: ARRAYED_LIST [SPECIAL [STRING]]
 			l_mem: MEMORY
 			i, j: INTEGER
@@ -25,7 +25,7 @@ feature -- Initialization
 			loop
 				create l_string.make (10)
 				l_string.append_integer (j)
-				create l_spec.make (10)
+				create l_spec.make_filled (Void, 10)
 				l_spec.put (l_string, 2)
 				l_list.extend (l_spec)
 				if i /= 0 or else is_done (l_spec) then

@@ -216,6 +216,7 @@ feature {NONE} -- Initialization
 					create time.make_now
 					random.set_seed (time.milli_second)
 				end
+				random.start
 
 				if statistics_format_op.was_found then
 					if statistics_format_op.parameter.is_equal ("text") then
@@ -287,6 +288,8 @@ feature {NONE} -- Initialization
 			else
 				random.set_seed ((create {TIME}.make_now).milli_second)
 			end
+			random.start
+
 			is_text_statistics_format_enabled := True
 			is_html_statistics_format_enabled := a_conf.is_html_output
 

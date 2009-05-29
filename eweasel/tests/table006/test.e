@@ -35,6 +35,19 @@ feature {NONE} -- Initialization
 			l_trans.force (Void, 10)
 			l_trans.force (Void, 11)
 			l_trans.force (Void, 12)
+
+			create l_trans.make (3)
+			l_trans.force (Void, 1)
+			l_trans.force (Void, 2)
+			l_trans.force (Void, 3)
+			l_trans.remove (1)
+			l_trans.remove (2)
+			l_trans.force (Void, 7)
+			l_trans.force (Void, 8)
+			l_trans.force (Void, 9)
+			l_trans.force (Void, 10)
+			l_trans.force (Void, 11)
+			l_trans.force (Void, 12)
 		end
 
 end -- class TEST

@@ -38,6 +38,9 @@ inherit
 		end
 
 	PREFIX_INFIX_NAMES
+		rename
+			binary_operators as binary_operators_syntax,
+			unary_operators as unary_operators_syntax
 		export
 			{NONE} all
 		end

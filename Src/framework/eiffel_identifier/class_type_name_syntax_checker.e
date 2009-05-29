@@ -8,7 +8,7 @@ class
 	CLASS_TYPE_NAME_SYNTAX_CHECKER
 
 inherit
-	ANY
+	SYNTAX_STRINGS
 		redefine
 			default_create
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 	consume_current_token
 			-- Consume the current token.
 		local
-
+			l_consumed_token: STRING
 		do
 			if current_token /= tkn_error then
 
@@ -180,10 +180,16 @@ feature {NONE} -- Implementation of is_valid_class_type
 							current_token := tkn_id
 							-- consume as much character as you can	
 							from
+								create l_consumed_token.make (20)
 							until
 								is_eof or not (current_character.is_alpha_numeric or (current_character = '_'))
 							loop
+								l_consumed_token.append_character (current_character)
 								consume_current_character
+							end
+								-- Error when get a keyword tokan.
+							if keywords.has (l_consumed_token.as_lower) then
+								current_token := tkn_error
 							end
 						else
 							current_token := tkn_error
@@ -195,4 +201,35 @@ feature {NONE} -- Implementation of is_valid_class_type
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class TEST

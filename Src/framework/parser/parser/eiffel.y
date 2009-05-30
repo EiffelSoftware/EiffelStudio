@@ -2649,8 +2649,6 @@ Expression:
 			{ $$ := $1; has_type := True }
 	|	Factor
 			{ $$ := $1 }
-	|	Typed_expression
-			{ $$ := $1; has_type := True }
 	|	Expression TE_TILDE Expression
 			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
 	|	Expression TE_NOT_TILDE Expression
@@ -2916,6 +2914,8 @@ Feature_access: Feature_name_for_call Parameters
 
 Bracket_target:
 		Expression_constant
+			{ $$ := $1; has_type := True }
+	|	Typed_expression
 			{ $$ := $1; has_type := True }
 	|	Manifest_tuple
 			{ $$ := $1; has_type := True }

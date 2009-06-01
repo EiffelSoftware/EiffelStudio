@@ -846,6 +846,7 @@ test	return-value-type-mismatch	incr331	tcf pass incrementality
 test	generate-wrapper-crash		incr332	tcf pass incrementality
 test	ececil-undefined-symbol-2	incr333	tcf fail incrementality
 test	efrozen-undefined-symbol	incr334	tcf fail incrementality
+test	ececil-undefined-symbol-3	incr335	tcf fail incrementality
 
 
 -- Melting

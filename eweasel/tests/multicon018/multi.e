@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	MULTI [G -> {ARRAY [H] rename at as at alias "|*|" end, LIST [H] rename item as item_of_list  end}, H -> NUMERIC]
+	MULTI [G -> {INDEXABLE [H, INTEGER] rename at as at alias "|*|" end, LIST [H] rename item as item_of_list  end}, H -> NUMERIC]
 
 create
 	make

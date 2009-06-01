@@ -15,10 +15,11 @@ feature
 			s: SPECIAL [TEST1]
 			si: SPECIAL [INTEGER]
 			ss: SPECIAL [STRING]
+			exp1: TEST1
 		do
-			create s.make (10)
-			create si.make (10)
-			create ss.make (10)
+			create s.make_filled (exp1, 10)
+			create si.make_filled (0, 10)
+			create ss.make_filled (Void, 10)
 		end
 
 end

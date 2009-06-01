@@ -9,7 +9,7 @@ class
 
 inherit
 	DEMOAPPLICATION_CONTROLLER
-
+	
 create
 	make
 

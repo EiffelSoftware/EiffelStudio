@@ -55,15 +55,17 @@ feature -- Access
 		end
 
 
+	is_interactive: BOOLEAN
+		--
+		require
+			is_successful: is_successful
+		do
+			Result := has_option (interactive_switch)
+		end
+
 feature -- Status report
 
---	is_interactive: BOOLEAN
---		--
---		require
---			is_successful: is_successful
---		do
---			Result := has_option (interactive_option_switch)
---		end
+
 
 feature {NONE} -- Access: Usage
 
@@ -94,13 +96,14 @@ feature {NONE} -- Access: Usage
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (interactive_switch, "When run in interactive mode, the user can exit the application by entering 'x'.", True, False))
 		end
 
 feature {NONE} -- Switches
 
 
 	debug_level_switch: STRING = "d|debug_level"
---	interactive_option_switch: STRING = "i|interactive"
+	interactive_switch: STRING = "i|interactive"
 
 end
 

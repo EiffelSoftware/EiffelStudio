@@ -28,12 +28,7 @@ feature {NONE} -- Initialization
 			Precursor
 		end
 
-
-feature -- Access
-
-feature -- Basic Operations
-
-
+feature -- Status Repost
 
 	authenticated: BOOLEAN
 			-- Tests if session contains authenticated flag.
@@ -61,8 +56,6 @@ feature -- Basic Operations
 			end
 		end
 
-
-
 	not_authenticated: BOOLEAN
 			-- Helper
 		do
@@ -75,23 +68,10 @@ feature -- Basic Operations
 			Result := not authenticated_admin
 		end
 
-
-
-
-
---	detail_url: STRING
---			-- Generates a url for viewing details of a reservation
---		do
---			Result := "details.xeb?id=" + reservations.item_for_iteration.id.out
---		end
-
-
-
 	username: STRING
 			-- Gets username of logged in user
 		do
 			Result := ""
-
 			if attached current_session as session then
 				if attached {USER} session.get ("auth") as user then
 					Result := user.name

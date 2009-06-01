@@ -763,7 +763,7 @@ feature -- Query
 
 					-- Iterate the features clauses and feature all features
 				from until l_fclauses.after or Result /= Void loop
-					if attached {attached FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {attached EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
+					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
 						l_fcursor := l_features.index
 						if a_reverse_lookup then
 							l_features.finish
@@ -773,7 +773,7 @@ feature -- Query
 
 							-- Iterate all features and extend the result list
 						from until l_features.after or Result /= Void loop
-							if attached {attached FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
+							if attached {FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
 								if l_feature2.is_named (a_name) then
 										-- Feature located
 									Result := l_feature2
@@ -815,18 +815,18 @@ feature -- Query
 				create l_helper
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_stop or else l_fclauses.after loop
-					if attached {attached FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause then
+					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause then
 						if
 							l_helper.is_valid_positional_node (l_fclause) and then
 							l_helper.is_line_in (l_fclause, a_line)
 						then
-							if attached {attached EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
+							if attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
 									-- Found a feature clauses
 									-- Iterate all features and extend the result list
 								l_fcursor := l_features.index
 								from l_features.start until l_stop or l_features.after loop
 									if
-										attached {attached FEATURE_AS} l_features.item as l_feature and then
+										attached {FEATURE_AS} l_features.item as l_feature and then
 										l_helper.is_valid_positional_node (l_feature) and then
 										l_helper.is_line_in (l_feature, a_line)
 									then

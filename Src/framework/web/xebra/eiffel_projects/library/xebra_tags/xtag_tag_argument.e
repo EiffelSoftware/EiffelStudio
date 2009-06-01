@@ -62,6 +62,22 @@ feature -- Access
 			end
 		end
 
+	value_without_escape (a_controller_id: STRING): STRING
+			-- Like #value but without escaping the value
+		do
+			if is_dynamic then
+				Result := "%"+" + a_controller_id + "." + internal_value + "+%""
+			else
+				Result := internal_value
+			end
+		end
+
+	is_plain_text: BOOLEAN
+			-- Is the argument plain (not dynamic)?
+		do
+			Result := not is_dynamic
+		end
+
 feature {NONE} -- Implementation
 
 	strip_off_dynamic_tags (a_string: STRING): STRING

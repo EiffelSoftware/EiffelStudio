@@ -9,7 +9,7 @@ class
 	XTAG_XEB_HTML_TAG
 
 inherit
-	XTAG_TAG_SERIALIZER
+	XTAG_PLAINTEXT_TAG
 		redefine
 			generates_render
 		end
@@ -31,32 +31,44 @@ feature {NONE} -- Access
 
 	attributes: HASH_TABLE [XTAG_TAG_ARGUMENT, STRING]
 			-- The XHTML content
-
 feature {NONE}
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
 			l_tag: STRING
+			l_cashable: BOOLEAN
 		do
 			l_tag := "<" + tag_id
+			l_cashable := True
 			from
 				attributes.start
 			until
 				attributes.after
 			loop
+				l_cashable := l_cashable and attributes.item_for_iteration.is_plain_text
 				l_tag := l_tag + " " + attributes.key_for_iteration + "=%%%"" + attributes.item_for_iteration.value (current_controller_id) + "%%%""
 				attributes.forth
 			end
 
+			--if children.count > 0 then
+				if l_cashable then
+					write_string_to_result (l_tag + ">", a_servlet_class.render_feature)
+				else
+					write_string_to_result_uncashed (l_tag + ">", a_servlet_class.render_feature)
+				end
 
-			if children.count > 0 then
-				write_string_to_result (l_tag + ">", a_servlet_class.render_feature)
 				generate_children (a_servlet_class, a_variable_table)
-				write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_feature)
-			else
-				write_string_to_result (l_tag +"/>" , a_servlet_class.render_feature)
-			end
+
+				if l_cashable then
+					write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_feature)
+				else
+					write_string_to_result_uncashed ("</" + tag_id + ">", a_servlet_class.render_feature)
+				end
+
+			--else
+			--	write_string_to_result (l_tag +"/>", a_servlet_class.render_feature)
+			--end
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

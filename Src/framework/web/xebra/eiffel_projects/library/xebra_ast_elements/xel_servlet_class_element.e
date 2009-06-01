@@ -10,26 +10,23 @@ class
 
 inherit
 	XEL_CLASS_ELEMENT
-		redefine
-			make
-		end
 
 create
-	make
+	make_with_constants
 
 feature -- Initialization
 
-	make (a_name: STRING)
+	make_with_constants (a_name: STRING; a_const_class: XEL_CONSTANTS_CLASS_ELEMENT)
 			--
 		do
-			Precursor (a_name)
+			make (a_name)
 			create make_feature.make ("make")
 			add_feature (make_feature)
 			create prerender_post_feature.make (Prerender_post_feature_name)
 			add_feature (prerender_post_feature)
 			create prerender_get_feature.make (Prerender_get_feature_name)
 			add_feature (prerender_get_feature)
-			create render_feature.make (Render_feature_name)
+			create render_feature.make_with_const_class (Render_feature_name, a_const_class)
 			add_feature (render_feature)
 			create afterrender_feature.make (Afterrender_feature_name)
 			add_feature (afterrender_feature)
@@ -40,7 +37,7 @@ feature -- Access
 	make_feature: XEL_FEATURE_ELEMENT
 
 
-	render_feature: XEL_FEATURE_ELEMENT
+	render_feature: XEL_RENDER_FEATURE_ELEMENT
 
 
 	prerender_post_feature: XEL_FEATURE_ELEMENT
@@ -58,6 +55,10 @@ feature {NONE} -- Constants
 	Prerender_post_feature_name: STRING = "prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)"
 	Prerender_get_feature_name: STRING = "prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)"
 	Afterrender_feature_name: STRING = "afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+
+feature -- Constants
+
+	Constants_class_name: STRING = "SERVLET_CONSTANTS"
 
 
 feature -- If you delete this line you'll get a syntax error

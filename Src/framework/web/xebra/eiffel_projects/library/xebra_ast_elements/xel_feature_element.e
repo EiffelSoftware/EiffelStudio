@@ -20,10 +20,10 @@ feature -- Initialization
 	make (a_signature: STRING)
 			-- `a_signature': The signature of the feature
 		do
-			make_with_expressions (a_signature, create {ARRAYED_LIST [XEL_SERVLET_ELEMENT]}.make (5))
+			make_with_expressions (a_signature, create {ARRAYED_LIST [XEL_EXPRESSION]}.make (5))
 		end
 
-	make_with_expressions (a_signature: STRING; a_content: LIST [XEL_SERVLET_ELEMENT])
+	make_with_expressions (a_signature: STRING; a_content: LIST [XEL_EXPRESSION])
 			-- `a_signature': The signature of the feature
 			-- `a_content': The feature body
 		require
@@ -32,7 +32,7 @@ feature -- Initialization
 			make_with_locals (a_signature, a_content, create {HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING]}.make (1))
 		end
 
-	make_with_locals (a_signature: STRING; a_content: LIST [XEL_SERVLET_ELEMENT]; some_locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING])
+	make_with_locals (a_signature: STRING; a_content: LIST [XEL_EXPRESSION]; some_locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING])
 			-- `a_signature': The signature of the feature
 			-- `a_content': The feature body
 			-- `some_locals': The local variables of the feature
@@ -89,7 +89,7 @@ feature -- Access
 	locals: HASH_TABLE [XEL_VARIABLE_ELEMENT, STRING]
 			-- The local variables of the feature
 
-	content: LIST [XEL_SERVLET_ELEMENT]
+	content: LIST [XEL_EXPRESSION]
 			-- The body expressions of the feature
 
 	precontent: LIST [XEL_SERVLET_ELEMENT]
@@ -122,7 +122,7 @@ feature -- Access
 		require
 			expression_is_valid: not expression.is_empty
 		do
-			content.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
+			content.extend (create {XEL_PLAIN_EXPRESSION}.make (expression))
 		ensure
 			expression_has_been_added: old content.count + 1 = content.count
 		end
@@ -147,9 +147,9 @@ feature -- Access
 			expression_has_been_added: old postcontent.count + 1 = postcontent.count
 	 	end
 
-	append_comment (comment: STRING)
+	append_comment (a_comment: STRING)
 		do
-			append_expression ("%T-- " + comment)
+			content.extend (create {XEL_COMMENT}.make (a_comment))
 		end
 
 	append_require (expression: STRING)

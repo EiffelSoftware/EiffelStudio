@@ -1,5 +1,5 @@
 class
-		MULTI [G -> {ARRAY [H] rename item as twice end, LIST [H] rename item as twice  end}, H -> NUMERIC]
+		MULTI [G -> {INDEXABLE [H, INTEGER] rename item as twice end, LIST [H] rename item as twice  end}, H -> NUMERIC]
 
 feature
 	test

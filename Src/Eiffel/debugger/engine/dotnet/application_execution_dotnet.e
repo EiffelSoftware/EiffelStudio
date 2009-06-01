@@ -594,7 +594,9 @@ feature -- Catcall detection change
 	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
 			-- <Precursor>
 		do
-			fixme ("Eiffel runtime catcall detection not available for dotnet")
+			debug ("refactor_fixme")
+				fixme ("Eiffel runtime catcall detection not available for dotnet")
+			end
 		end
 
 feature {NONE} -- Assertion change Implementation

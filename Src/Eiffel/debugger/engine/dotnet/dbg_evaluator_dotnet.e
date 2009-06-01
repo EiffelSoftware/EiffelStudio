@@ -790,7 +790,9 @@ feature {NONE} -- Implementation
 							l_adv := debug_value_from_icdv (l_result, Void)
 							Result := l_adv.dump_value
 						else
-							fixme("How come l_result is Void with no Error message ?")
+							debug ("refactor_fixme")
+								fixme("How come l_result is Void with no Error message ?")
+							end
 						end
 					else
 						--| This might be a procedure return
@@ -863,7 +865,9 @@ feature {NONE} -- Implementation
 				when {DUMP_VALUE_CONSTANTS}.type_character_8 then
 					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmvb.value_character_8)
 				when {DUMP_VALUE_CONSTANTS}.type_character_32 then
-					fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+					debug ("refactor_fixme")
+						fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+					end
 					Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_character_32.natural_32_code)
 
 				when {DUMP_VALUE_CONSTANTS}.type_real_32 then
@@ -1056,35 +1060,35 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

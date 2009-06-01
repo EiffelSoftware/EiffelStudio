@@ -385,7 +385,9 @@ feature -- Change
 							editor.format_region (l_endpos - 4, l_endpos, Limits_format)
 						else
 --							editor.format_region (l_endpos, l_endpos, Limits_format)
-							fixme ("this violate assertion, but this is due to a vision2 issue of trailing %%U")
+							debug ("refactor_fixme")
+								fixme ("this violate assertion, but this is due to a vision2 issue of trailing %%U")
+							end
 						end
 						l_trunc_str := editor.text
 
@@ -570,11 +572,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

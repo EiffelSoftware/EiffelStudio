@@ -315,7 +315,9 @@ feature {NONE} -- Stone handlers
 			if can_refresh then
 				cst ?= stone
 				if cst /= Void and then debugger_manager.safe_application_is_stopped then
-					fixme ("Check if we should not call `update' to benefit real_update optimisation")
+					debug ("refactor_fixme")
+						fixme ("Check if we should not call `update' to benefit real_update optimisation")
+					end
 					if debugger_manager.is_dotnet_project then
 						app_impl ?= debugger_manager.application
 						check app_impl /= Void end

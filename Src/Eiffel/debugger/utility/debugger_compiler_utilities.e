@@ -220,7 +220,9 @@ feature -- Type adaptation
 				if l_type.is_formal then
 					l_formal ?= l_type
 					if l_formal.is_multi_constrained (a_ctx_class) then
-						fixme("Handle multi constrained type...")
+						debug ("refactor_fixme")
+							fixme("Handle multi constrained type...")
+						end
 --						l_last_type_set := l_type.to_type_set.constraining_types (a_ctx_class)
 --						l_type := l_last_type_set.instantiated_in (a_ctx_class.actual_type)
 --						if l_type.is_formal then

@@ -251,7 +251,9 @@ feature -- Query
 
 	has_attributes_values: BOOLEAN
 		do
-			fixme ("find a smarter way to get a valid value")
+			debug ("refactor_fixme")
+				fixme ("find a smarter way to get a valid value")
+			end
 			Result := True
 		end
 

@@ -303,7 +303,9 @@ feature -- Debugging session Termination ...
 				eif_debug_display ("[EIFDBG] pProcess->Terminate (..)")
 				l_controller.stop (infinite_time) --| to get the hand on and to be synchronized
 				l_controller.terminate (0)
-fixme ("[jfiat] : check if we shoudln't Continue .. to get the ExitProcess ...")
+debug ("refactor_fixme")
+	fixme ("[jfiat] : check if we shoudln't Continue .. to get the ExitProcess ...")
+end
 				if not l_controller.last_call_succeed then
 					--| the end of the killing process will be done on callback ExitProcess
 					--| Maybe try with no Stop (..)
@@ -317,7 +319,9 @@ fixme ("[jfiat] : check if we shoudln't Continue .. to get the ExitProcess ...")
 				end
 					-- FIXME jfiat [2004/07/30] : check if this is not too violent ?
 					-- maybe we could find a smarter way to terminate debugging synchronisation
-fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
+debug ("refactor_fixme")
+	fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
+end
 				terminate_debugger_session
 				notify_exit_process_occurred
 			else
@@ -597,7 +601,9 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_process_by_pointer (p)
 				p := dbg_cb_info_pointer_item (2) -- p_app_domain
 				set_last_controller_by_pointer (icor_debug_controller_interface (p))
-				fixme ("jfiat: Maybe we should use p_process to set the controller ...")
+				debug ("refactor_fixme")
+					fixme ("jfiat: Maybe we should use p_process to set the controller ...")
+				end
 
 			when Cst_managed_cb_exit_process then
 					--|	p_process
@@ -2270,12 +2276,14 @@ feature -- Specific function evaluation
 							l_icd_debug_value.clean_on_dispose
 						end
 					elseif l_data_icd_class.last_error_code = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
-						fixme ("[
-									JFIAT: in this case, the once data about exception is not initialized yet.
-									So there is no exception and no result yet.
-									What is the status of the once ... not yet called, or called ?
-									There should be a status .... is being called
-									]")
+						debug ("refactor_fixme")
+							fixme ("[
+										JFIAT: in this case, the once data about exception is not initialized yet.
+										So there is no exception and no result yet.
+										What is the status of the once ... not yet called, or called ?
+										There should be a status .... is being called
+										]")
+						end
 					else
 						last_once_failed := True
 					end
@@ -2422,7 +2430,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2435,22 +2443,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFNET_DEBUGGER

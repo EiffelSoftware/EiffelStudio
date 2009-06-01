@@ -821,7 +821,9 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 						s := addr.output
 						if is_recording_layout then
 							keep_object_in_debugger_for_gui_need (addr)
-							fixme ("We should 'adopt' the object in order to be sure the address value will stay the same")
+							debug ("refactor_fixme")
+								fixme ("We should 'adopt' the object in order to be sure the address value will stay the same")
+							end
 						end
 					end
 				end

@@ -126,11 +126,13 @@ feature	{} -- Initialization of the C/Eiffel interface
 			add: attached DBG_ADDRESS
 			l_type_id: INTEGER
 		do
-			fixme ("[
-				Maybe we should modified the runtime, to add the 'SPECIAL' case
-				and send at the same time the capacity.
-				For now, this looks like a hack, but this is working.
-				]")
+			debug ("refactor_fixme")
+				fixme ("[
+					Maybe we should modified the runtime, to add the 'SPECIAL' case
+					and send at the same time the capacity.
+					For now, this looks like a hack, but this is working.
+					]")
+			end
 			create add.make_from_pointer (ref)
 			l_type_id := type + 1
 			if Eiffel_system.valid_dynamic_id (l_type_id) then

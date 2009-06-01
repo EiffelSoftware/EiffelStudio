@@ -874,8 +874,8 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
 	REQUIRE ("Special object", HEADER (obj)->ov_flags & EO_SPEC);
 	REQUIRE ("Special object of expanded", HEADER (obj)->ov_flags & EO_COMP);
-	REQUIRE ("Valid lower", ((lower >= 0) && (lower <= RT_SPECIAL_COUNT(obj))));
-	REQUIRE ("Valid upper", ((upper >= lower - 1) && (upper <= RT_SPECIAL_COUNT(obj))));
+	REQUIRE ("Valid lower", ((lower >= 0) && (lower <= RT_SPECIAL_CAPACITY(obj))));
+	REQUIRE ("Valid upper", ((upper >= lower - 1) && (upper <= RT_SPECIAL_CAPACITY(obj))));
 
 	if (upper >= lower) {
 #ifdef WORKBENCH

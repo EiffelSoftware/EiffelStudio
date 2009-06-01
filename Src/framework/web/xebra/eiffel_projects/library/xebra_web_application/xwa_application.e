@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 			print ("%N%N%N")
 			create l_arg_parser.make
 			l_arg_parser.execute (agent setup (l_arg_parser))
-		ensure
-			config_attached: config /= Void
 		end
 
 
@@ -44,6 +42,9 @@ feature {NONE} -- Operations Internal
 			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
 				config := l_config
 				config.arg_config.set_debug_level (a_arg_parser.debug_level)
+				if a_arg_parser.is_interactive then
+					config.is_interactive := True
+				end
 			end
 
 			create l_printer.default_create

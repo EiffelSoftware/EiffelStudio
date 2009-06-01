@@ -708,7 +708,9 @@ feature {BYTE_NODE} -- Visitor
 						evaluate_creation_expr_b_with_type (a_node, l_type_to_create)
 						l_has_error := error_occurred
 					else
-						fixme ("2004/03/18 for now we just process basic type ..., to improve ...")
+						debug ("refactor_fixme")
+							fixme ("2004/03/18 for now we just process basic type ..., to improve ...")
+						end
 						l_has_error := True
 					end
 				end
@@ -1383,21 +1385,26 @@ feature {BYTE_NODE} -- Visitor
 			l_def_create_feat_i: FEATURE_I
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DBG_EVALUATED_VALUE
+			l_value: DUMP_VALUE
 			l_type_i: CL_TYPE_A
 		do
-			fixme ("Later when we have a way to ensure the unicity of TYPE instances, we'll need to update this part")
+			debug ("refactor_fixme")
+				fixme ("Later when we have a way to ensure the unicity of TYPE instances, we'll need to update this part")
+			end
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_node.type)
 			create_empty_instance_of (l_type_i)
-			if not error_occurred then
-				l_call_value := tmp_result
-				tmp_target := l_call_value
-					--| Call default_create
-				l_class := debugger_manager.compiler_data.type_class_c
-				l_def_create_feat_i := l_class.default_create_feature
-				evaluate_routine (tmp_target_dump_value.address, tmp_target_dump_value, l_class, l_def_create_feat_i, Void)
-				tmp_result := l_call_value
-			end
+-- FIXME: the following commented code seems to be useless, and it fixes bug#15888  (2009-06-01)
+--			if not error_occurred then
+--				l_call_value := tmp_result
+--				tmp_target := l_call_value
+--					--| Call default_create
+--				l_class := debugger_manager.compiler_data.type_class_c
+--				l_def_create_feat_i := l_class.default_create_feature
+--				l_value := l_call_value.value
+--				evaluate_routine (l_value.address, l_value, l_class, l_def_create_feat_i, Void)
+--				tmp_result := l_call_value
+--			end
 			tmp_target := l_tmp_target_backup
 		end
 

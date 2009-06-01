@@ -484,7 +484,9 @@ feature {NONE} -- Implementation
 
 			if l_type = Void then
 				context_hack_applied := True
-				fixme ("2006-09-14: Is it correct to try to find the correct context ? Need more testing with class renaming. (Asked by Manu)")
+				debug ("refactor_fixme")
+					fixme ("2006-09-14: Is it correct to try to find the correct context ? Need more testing with class renaming. (Asked by Manu)")
+				end
 					-- Check about dependencies
 				l_class_type ?= a_type
 				if l_class_type /= Void then

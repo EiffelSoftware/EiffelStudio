@@ -721,7 +721,9 @@ feature -- Action
 		do
 			inspect (type)
 			when Type_manifest_string then
-				fixme("We should handle STRING_32 on the runtime side of the debuger")
+				debug ("refactor_fixme")
+					fixme("We should handle STRING_32 on the runtime side of the debuger")
+				end
 				value_string_c := value_string.as_string_8.to_c
 				send_string_value ($value_string_c)
 			when Type_object, Type_expanded_object then
@@ -965,7 +967,9 @@ feature {DBG_EVALUATOR} -- Convertor
 		local
 			s: STRING_8
 		do
-			fixme ("This is a temporary safe solution for 6.1, later we'll need to redesign part of debugger's data+evaluator")
+			debug ("refactor_fixme")
+				fixme ("This is a temporary safe solution for 6.1, later we'll need to redesign part of debugger's data+evaluator")
+			end
 			s := value_string
 			if s /= Void then
 				Result := debugger_manager.expression_evaluation ("(%"" + s + "%").twin")

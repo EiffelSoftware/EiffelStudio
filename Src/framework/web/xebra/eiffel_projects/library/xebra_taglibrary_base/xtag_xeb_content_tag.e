@@ -9,10 +9,10 @@ class
 	XTAG_XEB_CONTENT_TAG
 
 inherit
-	XTAG_TAG_SERIALIZER
-		redefine
-			generates_render
-		end
+	XTAG_PLAINTEXT_TAG
+--		redefine
+--			generates_render
+--		end
 
 create
 	make
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			create text.make ("no content")
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
 	text: XTAG_TAG_ARGUMENT
 
@@ -46,6 +46,14 @@ feature -- Implementation
 			end
 		end
 
-	generates_render: BOOLEAN = True
+	render_text: STRING
+			-- <Precursor>
+		do
+			Result := text.value_without_escape (current_controller_id)
+		end
+
+feature -- Debug Configuration
+
+	--generates_render: BOOLEAN = True
 
 end

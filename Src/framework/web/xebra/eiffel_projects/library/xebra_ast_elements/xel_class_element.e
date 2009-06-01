@@ -88,6 +88,11 @@ feature -- Access
 			add_variable (create {XEL_VARIABLE_ELEMENT}.make (a_name, a_type))
 		end
 
+	add_const_variable_by_name_type (a_name, a_type, a_value: STRING)
+		do
+			add_variable (create {XEL_VARIABLE_ELEMENT}.make_const (a_name, a_type, a_value))
+		end
+
 	get_unique_identifier: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do

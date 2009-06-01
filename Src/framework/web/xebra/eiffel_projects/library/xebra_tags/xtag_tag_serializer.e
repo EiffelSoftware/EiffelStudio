@@ -100,7 +100,7 @@ feature -- Basic implementation
 			a_attribute_attached: attached a_attribute
 			id_is_not_empty: not id.is_empty
 		do
-			if id.is_equal ("render") then
+			if id.is_equal (Render_attribute_name) then
 				render := a_attribute
 			else
 				internal_put_attribute (id, create {XTAG_TAG_ARGUMENT}.make (a_attribute))
@@ -207,7 +207,7 @@ feature -- Debug configuration
 
 feature -- Utilities
 
-	write_string_to_result (a_text: STRING; a_feature: XEL_FEATURE_ELEMENT)
+	write_string_to_result (a_text: STRING; a_feature: XEL_RENDER_FEATURE_ELEMENT)
 			-- Writes an append instruction
 		require
 			a_text_valid: attached a_text and not a_text.is_empty
@@ -224,9 +224,34 @@ feature -- Utilities
 			end
 			if not l_text.is_empty then
 				if l_text.is_equal ("%%N") then
-					a_feature.append_expression (Response_variable + ".append_newline")
+					a_feature.append_output_text ("%%N")
 				else
-					a_feature.append_expression (Response_variable_append + "(%"" + l_text + "%")")
+					a_feature.append_output_text (l_text)
+				end
+
+			end
+		end
+
+	write_string_to_result_uncashed (a_text: STRING; a_feature: XEL_RENDER_FEATURE_ELEMENT)
+			-- Writes an append instruction
+		require
+			a_text_valid: attached a_text and not a_text.is_empty
+			a_feature_attached: attached a_feature
+		local
+			l_text: STRING
+		do
+			l_text := a_text.twin
+			if l_text.starts_with ("%N") then
+				l_text := l_text.substring (2, a_text.count)
+			end
+			if l_text.ends_with ("%N") then
+				l_text := l_text.substring (1, a_text.count-1)
+			end
+			if not l_text.is_empty then
+				if l_text.is_equal ("%%N") then
+					a_feature.append_output_text ("%%N")
+				else
+					a_feature.append_output_expression ("%"" + l_text + "%"")
 				end
 
 			end
@@ -306,6 +331,7 @@ feature {XTAG_TAG_SERIALIZER} -- Constants
 		Request_variable: STRING = "request"
 		Response_variable_append: STRING = "response.append"
 		Response_variable_append_newline: STRING = "response.append_newline"
+		Render_attribute_name: STRING = "render"
 
 invariant
 	tag_id_attached: attached tag_id

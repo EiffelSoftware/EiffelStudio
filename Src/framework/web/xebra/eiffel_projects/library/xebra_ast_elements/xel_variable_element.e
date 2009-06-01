@@ -12,7 +12,7 @@ inherit
 	XEL_SERVLET_ELEMENT
 
 create
-	make
+	make, make_const
 
 feature -- Initialization
 
@@ -20,11 +20,19 @@ feature -- Initialization
 			-- `a_name': The name of the variable
 			-- `a_type': The type of the variable
 		require
+			a_name_attached: attached a_name
+			a_type_attached: attached a_type
 			name_is_valid: not a_name.is_empty
 			type_is_valid: not a_type.is_empty
 		do
 			name := a_name
 			type := a_type
+		end
+
+	make_const (a_name: STRING; a_type: STRING; a_value: STRING)
+		do
+			make (a_name, a_type)
+			value := a_value
 		end
 
 feature -- Access
@@ -35,12 +43,20 @@ feature -- Access
 	type: STRING
 			-- The type of the variable
 
+	value: STRING
+			-- The constant value
+
 feature -- Implementation
 
 	serialize (buf:XU_INDENDATION_FORMATTER)
 			-- <Precursor>
 		do
-			buf.put_string (name + ": " + type.as_upper)
+			if attached value then
+				buf.put_string (name + ": " + type.as_upper + " = " + value)
+			else
+				buf.put_string (name + ": " + type.as_upper)
+			end
+
 		end
 
 note

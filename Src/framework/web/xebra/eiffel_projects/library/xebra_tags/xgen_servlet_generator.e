@@ -13,7 +13,8 @@ inherit
 
 feature -- Initialization
 
-	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING]; a_current_file_path: STRING)
+	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING]; a_current_file_path: STRING;
+			a_constants_class: XEL_CONSTANTS_CLASS_ELEMENT)
 		require
 			a_path_is_not_valid: attached a_path and not a_path.is_empty
 			a_servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
@@ -25,6 +26,14 @@ feature -- Initialization
 			internal_root_tag := get_root_tag
 			controller_id_table := a_controller_id_table
 			create current_file_path.make_from_string (a_current_file_path)
+			constants_class := a_constants_class
+		ensure
+			path_attached: attached path
+			servlet_name_set: attached servlet_name and servlet_name = a_servlet_name
+			internal_root_tag_set: attached internal_root_tag
+			controller_id_table_set: attached controller_id_table and controller_id_table = a_controller_id_table
+			current_file_path_attached: attached current_file_path
+			constants_class_set: attached constants_class and constants_class = a_constants_class
 		end
 
 feature {NONE} -- Access
@@ -46,6 +55,9 @@ feature {NONE} -- Access
 
 	current_file_path: FILE_NAME
 		-- The path of Current file
+
+	constants_class: XEL_CONSTANTS_CLASS_ELEMENT
+		-- Holder for all the reused strings
 
 feature -- Access
 
@@ -130,7 +142,7 @@ feature -- Basic Functionality
 						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
 					else
 						create l_buf.make (l_file)
-						create l_servlet_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET")
+						create l_servlet_class.make_with_constants (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET", constants_class)
 						l_servlet_class.set_inherit (Servlet_class_name + " redefine make end")
 						l_servlet_class.set_constructor_name ("make")
 						build_make_for_servlet_generator (l_servlet_class)

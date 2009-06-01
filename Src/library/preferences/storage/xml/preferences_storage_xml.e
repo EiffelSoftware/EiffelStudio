@@ -144,7 +144,9 @@ feature {PREFERENCES} -- Resource Management
 				l_file.put_string ("%N</EIFFEL_DOCUMENT>")
 				l_file.close
 			else
-				fixme ("Add code to let callers that `preferences' could not be saved")
+				debug ("refactor_fixme")
+					fixme ("Add code to let callers that `preferences' could not be saved")
+				end
 			end
 		end
 
@@ -220,10 +222,14 @@ feature {NONE} -- Implementation
 						l_root_element.forth
 					end
 				else
-					fixme ("Add code to let callers know that XML file was invalid")
+					debug ("refactor_fixme")
+						fixme ("Add code to let callers know that XML file was invalid")
+					end
 	    		end
 			else
-				fixme ("Add code to let callers that we could not open preference file")
+				debug ("refactor_fixme")
+					fixme ("Add code to let callers that we could not open preference file")
+				end
 			end
 		end
 

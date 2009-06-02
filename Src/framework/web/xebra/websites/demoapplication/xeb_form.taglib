@@ -16,8 +16,16 @@
 		<attribute id="value"/>
 		<attribute id="name"/>
 	</tag>
-	<tag id="command_link" class="XTAG_F_COMMAND_LINK">
+	<tag id="command_link" class="XTAG_F_COMMAND_LINK_TAG">
+		<attribute id="label" />
 		<attribute id="action" />
-		<attribute id="argument" />		
+		<attribute id="redirect" />		
+	</tag>
+	<tag id="validator" class="XTAG_F_VALIDATOR_TAG">
+		<attribute id="class" />
+	</tag>
+	<tag id="validation_result" class="XTAG_F_VALIDATION_RESULT_TAG">
+		<attribute id="name" />
+		<attribute id="decorator" />
 	</tag>
 </taglib>

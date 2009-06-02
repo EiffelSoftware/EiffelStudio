@@ -26,7 +26,7 @@ feature {NONE} -- Creation and Initialization
 
 	make
 		do
-			make_shared (view_new)
+			make_shared ({NS_VIEW_API}.new)
 		end
 
 	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
@@ -34,7 +34,7 @@ feature {NONE} -- Creation and Initialization
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
-			make_shared (custom_view_new ($current, $draw))
+			make_shared ({NS_VIEW_API}.custom_new ($current, $draw))
 		end
 
 	make_flipped
@@ -46,6 +46,7 @@ feature {NONE} -- Creation and Initialization
 			l_types: POINTER
 			l_sel: POINTER
 			l_imp: POINTER
+			l_ret: BOOLEAN
 		do
 			l_class := objc_get_class ((create {C_STRING}.make ("FlippedView")).item)
 			if l_class = {NS_OBJECT}.nil then
@@ -57,12 +58,14 @@ feature {NONE} -- Creation and Initialization
 				l_types := (create {C_STRING}.make ("b@:")).item
 				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
 				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
-				class_add_method (l_class, l_sel, l_imp, l_types)
+				l_ret := class_add_method (l_class, l_sel, l_imp, l_types)
 
 				objc_register_class_pair (l_class)
 			end
 			make_shared (class_create_instance (l_class, 0))
-			view_init (item)
+			{NS_VIEW_API}.init (item)
+
+--			redefine_method ("NSClipView", "isFlipped", agent: BOOLEAN do Result := True end)
 		end
 
 feature -- Managing the View Hierarchy
@@ -72,7 +75,7 @@ feature -- Managing the View Hierarchy
 		local
 			l_window: POINTER
 		do
-			l_window := view_window (item)
+			l_window := {NS_VIEW_API}.window (item)
 			if l_window /= nil then
 				create Result.make_shared (l_window)
 			end
@@ -82,32 +85,32 @@ feature -- Managing the View Hierarchy
 			-- Returns the receiver's superview, or nil if it has none.
 			-- When applying this method iteratively or recursively, be sure to compare the returned view object to the content view of the window to avoid proceeding out of the view hierarchy.
 		do
-			create Result.make_shared (view_superview (item))
+			create Result.make_shared ({NS_VIEW_API}.superview (item))
 		end
 
 	subviews: NS_ARRAY [NS_VIEW]
 			-- Return the receiver's immediate subviews.
 		do
-			create Result.make_shared (view_subviews (item))
+			create Result.make_shared ({NS_VIEW_API}.subviews (item))
 		end
 
 	is_descendant_of (a_view: NS_VIEW): BOOLEAN
 			-- Returns True if the receiver is a subview of a given view or if it's identical to that view; otherwise, it returns False.
 		do
-			Result := view_is_descendant_of (item, a_view.item)
+			Result := {NS_VIEW_API}.is_descendant_of (item, a_view.item)
 		end
 
 	ancestor_shared_with_view (a_view: NS_VIEW): NS_VIEW
 			-- Returns the closest ancestor shared by the receiver and a given view.
 			-- The closest ancestor or nil if there's no such object. Returns self if `a_view' is identical to the receiver.
 		do
-			create Result.make_shared (view_ancestor_shared_with_view (item, a_view.item))
+			create Result.make_shared ({NS_VIEW_API}.ancestor_shared_with_view (item, a_view.item))
 		end
 
 	add_subview (a_subview: NS_VIEW)
 			-- Adds a view to the receiver's subviews so it's displayed above its siblings.
 		do
-			view_add_subview (item, a_subview.item)
+			{NS_VIEW_API}.add_subview (item, a_subview.item)
 		end
 
 feature -- Modifying the Frame Rectangle
@@ -115,7 +118,7 @@ feature -- Modifying the Frame Rectangle
 	set_frame (a_rect: NS_RECT)
 			-- Sets the receiver's frame rectangle to the specified rectangle.
 		do
-			view_set_frame (item, a_rect.item)
+			{NS_VIEW_API}.set_frame (item, a_rect.item)
 		end
 
 	frame: NS_RECT
@@ -123,7 +126,7 @@ feature -- Modifying the Frame Rectangle
 			-- The frame rectangle may be rotated; use the frame_rotation method to check this.
 		do
 			create Result.make
-			view_frame (item, Result.item)
+			{NS_VIEW_API}.frame (item, Result.item)
 		end
 
 feature -- Modifying the Bounds Rectangle
@@ -131,72 +134,72 @@ feature -- Modifying the Bounds Rectangle
 	set_bounds (a_rect: NS_RECT)
 			-- Sets the receiver's bounds rectangle.
 		do
-			view_set_bounds (item, a_rect.item)
+			{NS_VIEW_API}.set_bounds (item, a_rect.item)
 		end
 
 	bounds: NS_RECT
 			-- Returns the receiver's bounds rectangle, which expresses its location and size in its own coordinate system.
 		do
 			create Result.make
-			view_bounds (item, Result.item)
+			{NS_VIEW_API}.bounds (item, Result.item)
 		end
 
 	set_bounds_origin (a_new_origin: NS_POINT)
 		do
-			view_set_bounds_origin (item, a_new_origin.item)
+			{NS_VIEW_API}.set_bounds_origin (item, a_new_origin.item)
 		end
 
 	set_bounds_size (a_new_size: NS_SIZE)
 		do
-			view_set_bounds_size (item, a_new_size.item)
+			{NS_VIEW_API}.set_bounds_size (item, a_new_size.item)
 		end
 
 	set_bounds_rotation (a_angle: REAL)
 		do
-			view_set_bounds_rotation (item, a_angle)
+			{NS_VIEW_API}.set_bounds_rotation (item, a_angle)
 		end
 
 	bounds_rotation: REAL
 		do
-			Result := view_bounds_rotation (item)
+			Result := {NS_VIEW_API}.bounds_rotation (item)
 		end
 
 feature -- Modifying the Coordinate System
 
 	display
 		do
-			view_display (item)
+			{NS_VIEW_API}.display (item)
 		end
 
 	set_needs_display (a_flag: BOOLEAN)
 		do
-			view_set_needs_display (item, a_flag)
+			{NS_VIEW_API}.set_needs_display (item, a_flag)
 		end
 
 	set_hidden (a_flag: BOOLEAN)
 		do
-			view_set_hidden (item, a_flag)
+			{NS_VIEW_API}.set_hidden (item, a_flag)
 		end
 
 	is_hidden : BOOLEAN
 		do
-			Result := view_is_hidden (item)
+			Result := {NS_VIEW_API}.is_hidden (item)
 		end
 
-	is_flipped : BOOLEAN
+	is_flipped: BOOLEAN
 		do
-			Result := view_is_flipped (item)
+			Result := {NS_VIEW_API}.is_flipped (item)
 		end
 
 	remove_from_superview
 		do
-			view_remove_from_superview (item)
+			{NS_VIEW_API}.remove_from_superview (item)
 		end
 
 	convert_point_to_base (a_point: NS_POINT): NS_POINT
 		do
 			create Result.make
-			view_convert_point_to_base (item, a_point.item, Result.item)
+			{NS_VIEW_API}.convert_point_to_base (item, a_point.item, Result.item)
 		end
 
 	convert_point_to_view (a_point: NS_POINT; a_view: NS_VIEW): NS_POINT
@@ -209,7 +212,7 @@ feature -- Modifying the Coordinate System
 			else
 				l_view := nil
 			end
-			view_convert_point_to_view (item, a_point.item, l_view, Result.item)
+			{NS_VIEW_API}.convert_point_to_view (item, a_point.item, l_view, Result.item)
 		end
 
 feature {NONE} -- callback
@@ -221,199 +224,4 @@ feature {NONE} -- callback
 
 	draw_action: PROCEDURE [ANY, TUPLE]
 
-feature {NONE} -- Objective-C interface
-
-	frozen view_new: POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSView new];"
-		end
-
-	frozen custom_view_new (a_object, a_method: POINTER): POINTER
-		external
-			"C inline use %"custom_view.h%""
-		alias
-			"return [[CustomView new] initWithCallbackObject: $a_object andMethod: $a_method];"
-		end
-
-	frozen view_init (a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view init];"
-		end
-
-	frozen view_superview (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view superview];"
-		end
-
-	frozen view_set_frame (a_view: POINTER; a_res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setFrame: *(NSRect*)$a_res];"
-		end
-
-	frozen view_frame (a_view: POINTER; a_res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[
-				{
-					NSRect frame = [(NSView*)$a_view frame];
-					memcpy($a_res, &frame, sizeof(NSRect));
-				}
-			]"
-		end
-
-	frozen view_add_subview (a_view: POINTER; a_subview: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view addSubview: $a_subview];"
-		end
-
-	frozen view_set_autoresize (a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];"
-		end
-
-	frozen view_set_hidden (a_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setHidden: $a_flag];"
-		end
-
-	frozen view_is_hidden (a_view: POINTER) : BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view isHidden];"
-		end
-
-	frozen view_is_flipped (a_view: POINTER) : BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view isFlipped];"
-		end
-
-	frozen view_remove_from_superview (a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view removeFromSuperview];"
-		end
-
-	frozen view_display (a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view display];"
-		end
-
-	frozen view_set_needs_display (a_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setNeedsDisplay: $a_flag];"
-		end
-
-	frozen view_convert_point_to_base (a_view: POINTER; a_point: POINTER; res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSPoint point = [(NSView*)$a_view convertPointToBase: *(NSPoint*)$a_point]; memcpy($res, &point, sizeof(NSPoint));"
-		end
-
-	frozen view_convert_point_to_view (a_view: POINTER; a_point: POINTER; a_to_view: POINTER; res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSPoint point = [(NSView*)$a_view convertPoint: *(NSPoint*)$a_point toView: $a_to_view]; memcpy($res, &point, sizeof(NSPoint));"
-		end
-
-	frozen view_set_bounds_origin (a_view: POINTER; a_new_origin: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setBoundsOrigin: *(NSPoint*)$a_new_origin];"
-		end
-
-	frozen view_set_bounds_size (a_view: POINTER; a_new_size: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setBoundsSize: *(NSSize*)$a_new_size];"
-		end
-
-	frozen view_set_bounds_rotation (a_view: POINTER; a_angle: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setBoundsRotation: $a_angle];"
-		end
-
-	frozen view_bounds_rotation (a_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view boundsRotation];"
-		end
-
-	frozen view_set_bounds (a_view: POINTER; a_rect: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view setBounds: *(NSRect*)$a_rect];"
-		end
-
-	frozen view_bounds (a_view: POINTER; a_res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
-		end
-
-	frozen view_window (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view window];"
-		end
-
-	frozen view_subviews (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view subviews];"
-		end
-
-	frozen view_is_descendant_of (a_target: POINTER; a_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_target isDescendantOf: $a_view];"
-		end
-
-	frozen view_ancestor_shared_with_view (a_target: POINTER; a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_target ancestorSharedWithView: $a_view];"
-		end
-
-	frozen view_opaque_ancestor (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view opaqueAncestor];"
-		end
 end

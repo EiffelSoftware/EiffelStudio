@@ -24,19 +24,31 @@ mouseDownTYPE responderCallbackMethod;
 
 EIF_REFERENCE setResponderCallback(EIF_REFERENCE callbackObject, mouseDownTYPE callbackMethod)
 {
-	responderCallbackObject = eif_protect(callbackObject);
+	responderCallbackObject = eif_protect (callbackObject);
 	responderCallbackMethod = callbackMethod;
 }
 
+EIF_OBJECT callback_object;
+boolCallbackTYPE callback_bool;
+voidPtrCallbackTYPE callback_void_ptr;
 
-void bridge_void_void (id self, SEL name)
+void bridge_void (id self, SEL name)
 {
-	//callbackMethod ( eif_access (callbackObject) );
+	//callback_void ( eif_access (callback_object) );
 }
 
 void bridge_void_ptr (id self, SEL name, void* arg1)
 {
-	//callbackMethod ( eif_access (callbackObject), arg1 );
+	return callback_void_ptr ( eif_access (callback_object), self, name, arg1 );
 }
 
-//[dict setObject:... forKey:...];
+BOOL bridge_bool (id self, SEL name)
+{
+	return callback_bool ( eif_access (callback_object), self, name );
+}
+
+void connect_callbacks (EIF_OBJECT a_callback_object, boolCallbackTYPE a_callback_bool, voidPtrCallbackTYPE a_callback_void_ptr) {
+	callback_object = eif_adopt (a_callback_object);
+	callback_bool   = a_callback_bool;
+	callback_void_ptr = a_callback_void_ptr;
+}

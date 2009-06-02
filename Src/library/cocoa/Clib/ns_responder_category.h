@@ -20,4 +20,12 @@ typedef (*mouseDownTYPE) (EIF_REFERENCE, void *, void *);
 
 EIF_REFERENCE setResponderCallback( EIF_REFERENCE callbackObject, mouseDownTYPE callbackMethod);
 
+BOOL bridge_bool (id self, SEL name);
+void bridge_void_ptr (id self, SEL name, void* arg1);
+
+typedef EIF_BOOLEAN (*boolCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
+typedef void (*voidPtrCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
+
+void connect_callbacks (EIF_OBJECT a_callback_object, boolCallbackTYPE a_callback_bool, voidPtrCallbackTYPE a_callback_void_ptr);
+
 #endif

@@ -7,14 +7,11 @@ note
 deferred class
 	NS_WINDOW_DELEGATE
 
-inherit
-	NS_OBJECT
-
 feature
 
 	make
 		do
-			make_shared (window_delegate_new ($current, $window_did_resize))
+			item := window_delegate_new ($current, $window_did_resize)
 		end
 
 	window_did_resize
@@ -29,4 +26,9 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [[WindowDelegate new] initWithCallbackObject: $an_object andMethod: $a_method];"
 		end
+
+feature {NS_OBJECT} -- Should be used by classes in native only
+
+	item: POINTER
+	 	-- The C-pointer to the Cocoa object
 end

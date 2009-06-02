@@ -14,6 +14,8 @@ create
 	make_with_referencing_file,
 	make_with_size,
 	make_named
+create {NS_OBJECT}
+	make_shared
 
 feature {NONE} -- Creation
 
@@ -32,7 +34,7 @@ feature {NONE} -- Creation
 			make_shared (image_image_named ((create {NS_STRING}.make_with_string (a_name)).item))
 		end
 
-feature
+feature -- Access
 
 	size: TUPLE [width, height: INTEGER]
 			-- TODO Looks like it will make more sense to create a class NS_SIZE. Still, the problem of how to nicely extract this from C remains to be solved.

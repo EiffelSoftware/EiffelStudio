@@ -9,6 +9,9 @@ class
 
 inherit
 	MEMORY_STRUCTURE
+		redefine
+			out
+		end
 
 create
 	make,
@@ -45,6 +48,13 @@ feature -- Measurement
 	set_y (a_y: INTEGER)
 		do
 			internal_set_y (item, a_y)
+		end
+
+feature -- Output
+
+	out: STRING
+		do
+			Result := "(" + x.out + ", " + y.out + ")"
 		end
 
 feature {NONE} -- Implementation

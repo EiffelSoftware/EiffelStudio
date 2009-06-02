@@ -52,47 +52,55 @@ feature --Execution
 			l_request_factory: XH_REQUEST_FACTORY
 			l_buf: STRING
 			l_error: BOOLEAN
+			l_retried: BOOLEAN
 		do
-			create l_webapp_handler.make (a_server_config)
-			create l_msg.make
-			create l_request_factory.make
-			from
-           		l_frag_counter := 0
-           		l_msg.flag := True
-           		l_error := False
-           	until
-				not l_msg.flag or l_error
-           	loop
-           		a_http_socket.read_natural_32
-           		l_msg.length := encoder.decode_natural (a_http_socket.last_natural_32)
-          		l_msg.flag := encoder.decode_flag (a_http_socket.last_natural_32)
-           		if not l_msg.is_length_valid then
-          			l_error := True
-           			o.eprint ("Could not decode msg length", generating_type)
-           		else
-           			l_buf := read_string (a_http_socket, l_msg.length)
-           			l_msg.append_string(l_buf)
-	           		if (l_frag_counter >= Max_fragments) then
-	           			l_error := True
-	           			o.eprint ("Maximumg fragments reached", generating_type)
-	           		end
-	           		l_frag_counter := l_frag_counter + 1
-           		end
-           	end
+			if not l_retried then
+				create l_webapp_handler.make (a_server_config)
+				create l_msg.make
+				create l_request_factory.make
+				from
+		           		l_frag_counter := 0
+		           		l_msg.flag := True
+		           		l_error := False
+		           	until
+					not l_msg.flag or l_error
+		           	loop
+		           		a_http_socket.read_natural_32
+		           		l_msg.length := encoder.decode_natural (a_http_socket.last_natural_32)
+		          		l_msg.flag := encoder.decode_flag (a_http_socket.last_natural_32)
+		           		if not l_msg.is_length_valid then
+		          			l_error := True
+		           			o.eprint ("Could not decode msg length", generating_type)
+		           		else
+		           			l_buf := read_string (a_http_socket, l_msg.length)
+		           			l_msg.append_string(l_buf)
+		           		if (l_frag_counter >= Max_fragments) then
+		           			l_error := True
+		           			o.eprint ("Maximumg fragments reached", generating_type)
+		           		end
+		           		l_frag_counter := l_frag_counter + 1
+		           		end
+		           	end
 
-			if (l_error) then
-				l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
-			else
-				l_response := l_webapp_handler.forward_request_to_app (l_msg.string)
-			end
+				if (l_error) then
+					l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
+				else
+					l_response := l_webapp_handler.forward_request_to_app (l_msg.string)
+				end
 
-			o.dprint ("Sending response to http",2)
-			send_message_to_http (l_response.render_to_string, a_http_socket)
-		
-         	a_http_socket.cleanup
-            check
-            	a_http_socket.is_closed
+				o.dprint ("Sending response to http",2)
+				send_message_to_http (l_response.render_to_string, a_http_socket)
+
+		         	a_http_socket.cleanup
+		            check
+		            	a_http_socket.is_closed
+		            end
+            else
+            	o.eprint ("Exception while receiving message", generating_type)
             end
+            rescue
+            	l_retried := True
+            	retry
 		end
 
 feature {NONE} -- Implementation

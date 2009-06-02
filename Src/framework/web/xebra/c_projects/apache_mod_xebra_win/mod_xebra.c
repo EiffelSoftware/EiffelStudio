@@ -1,5 +1,5 @@
 /*
-* description: "Apache module that sends request data to xebra server and receives page to be displayed."
+* description: "Apache module (windows) that sends request data to xebra server and receives page to be displayed."
 * date:		"$Date$"
 * revision:	"$Revision$"
 * copyright:	"Copyright (c) 1985-2007, Eiffel Software."

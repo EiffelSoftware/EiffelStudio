@@ -68,8 +68,13 @@ mkdir $XEBRA_DEV/httpd/htdocs/xebrawebapp
 
 # Compile xebra translator
 cd $XEBRA_DEV/eiffel_projects/xebra_translator/
-ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile
-echo "Installation complete. Please edit $XEBRA_DEV/eiffel_projects/xebra_server/config.ini to match your configuration."
+ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile -clean
+
+# Compile xebra server
+cd $XEBRA_DEV/eiffel_projects/xebra_server
+ec -config xebra_server-voidunsafe.ecf -target xebra_server -c_compile -clean
+
+echo "Installation complete. Please edit $XEBRA_DEV/eiffel_projects/xebra_server/config.ini to match your configuration and run xebra server."
 
 
 

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			Precursor
-			max_size := 19
+			max_size := 30
 		end
 
 feature -- Status setting
@@ -42,7 +42,7 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := False
-			if output.ends_with ("System generated.%N") then
+			if output.has_substring ("System generated.") then
 				Result := True
 			end
 		end

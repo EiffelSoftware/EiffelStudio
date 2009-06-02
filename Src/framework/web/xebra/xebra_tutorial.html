@@ -33,15 +33,16 @@ h3 {
 	font-weight: italique;
 	color: #3333FF;
 }
+.style1 {font-size: 16px; font-style: normal; color: #3333FF; font-family: "Courier New", Courier, monospace;}
 -->
 </style>
 </head>
 
 <body>
-<h1>Xebra Tutorial (under construction)</h1>
+<h1>Xebra Tutorial</h1>
 <h3>Notes</h3>
-<p>Use Xebra revision ??? for this tutorial.</p>
-<p>This tutorial was tested with EiffelStudio 6.4.7.8600 (<span class="path">$ISE_EIFFEL</span>) and eiffel_src (<span class="path">$EIFFEL_SRC</span>) revision ???.</p>
+<p>Use Xebra revision 78995 for this tutorial.</p>
+<p>This tutorial was tested with EiffelStudio 6.4.7.8600 (<span class="path">$ISE_EIFFEL</span>) and eiffel_src (<span class="path">$EIFFEL_SRC</span>) revision 78995.</p>
 <p>The env vars <span class="path">$EIFFEL_SRC</span>, <span class="path">$ISE_EIFFEL</span>, <span class="path">$ISE_PLATFORM</span> and <span class="path">$ISE_LIBRARY</span> are expected to be set.</p>
 <h2>Windows</h2>
 <h3>Checkout Xebra</h3>
@@ -74,9 +75,7 @@ h3 {
 <li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
       <br />
       </li>
-  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory <span class="path">Apache2.2\htdocs\xebrawebapp</span> and <span class="path">Apache2.2\htdocs\demoapplication </span>respectively<span class="path">.</span></li>
-  <li><br />
-  </li>
+  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory <span class="path">Apache2.2\htdocs\xebrawebapp</span> and <span class="path">Apache2.2\htdocs\demoapplication </span>respectively<span class="path">.</span>For the demoapp to display correctly copy the folder<span class="path"> xebra\websites\demoapplication\html\images</span> to  <span class="path">Apache2.2\htdocs\demoapplication\images</span>. Copy also the file <span class="path">xebra\websites\demoapplication\html\style.css </span>to <span class="path">Apache2.2\htdocs\demoapplication\</span>.</li>
 </ul>
 <h3>Compile the Xebra Translator</h3>
 <ul>
@@ -90,10 +89,16 @@ h3 {
   <li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini </span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>, and <span class="path">webapps_root</span> to your configuration.<br />
       <br />
   </li>
-  <li>Launch estudio  and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf</span><br />
+  <li>Launch estudio  and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf<br />
+    <br />
+  </span></li>
+  <li>Go to the Exceptions Handling dialog and disable DEVELOPER_EXCEPTION.<br />
       <br />
   </li>
-  <li>Compile and run with the path to the <span class="path">config.ini </span>as argument.<br />
+  <li>Open the Execution Parameters dialog and set <span class="path">config.ini -d 10</span> as argument.<br />
+    <br />
+  </li>
+  <li>Compile and run<br />
       <br />
   </li>
   <li>Browse  to <a href="http://localhost/test.xeb">http://localhost/xebrawebapp/hello.xeb</a>. The server now translates, generates, compiles and finally runns the xebrawebpp application. </li>
@@ -151,7 +156,12 @@ h3 {
   <li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You should see the Fail Whale and a message saying &quot;Cannot connect to XebraServer. See apache error log.&quot;<br />
       <br />
   </li>
-  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory  <span class="path">$APACHE2/htdocs/xebrawebapp</span> and <span class="path">$APACHE2/htdocs/demoapplication </span>respectively<span class="path">.</span><br />
+  <li>In order to be able to browse to the xebrawebapp or the demoapplication later you need to create the directory  <span class="path">$APACHE2/htdocs/xebrawebapp</span> and <span class="path">$APACHE2/htdocs/demoapplication </span>respectively<span class="path">.</span>For the demoapp to display correctly copy the folder <span class="style1">$XEBRA_DEV/websites/demoapplic</span><span class="path">ation/html/images</span> to <span class="path">$APACHE2/</span><span class="path">htdocs/demoapplication/images</span>. Copy also the file <span class="style1">$XEBRA_DEV/websites/demoapplication/html/</span><span class="path">style.css </span>to <span class="path">$APACHE2/htdocs/demoapplication/</span>.<br />
+    <span class="code">mkdir $APACHE2/htdocs/xebrawebapp<br />
+    mkdir $APACHE2/htdocs/demoapplication</span><br />  
+  <span class="code">cp -R $XEBRA_DEV/websites/demoapplication/html/images  $APACHE2/htdocs/demoapplication<br />
+  cp $XEBRA_DEV/websites/demoapplication/html/style.css $APACHE2/htdocs/demoapplication</span><br />
+    <br />
     <br />
   </li>
   <li> Hint: keep an eye on the apache error log<br />
@@ -168,10 +178,16 @@ h3 {
 <ul><li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini </span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>, and <span class="path">webapps_root</span> to your configuration.<br />
     <br />
     </li>
-  <li>Open estudio in a terminal and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf</span><br />
+  <li>Open estudio in a terminal and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf<br />
+    <br />
+  </span></li>
+  <li>Go to the Exceptions Handling dialog and disable DEVELOPER_EXCEPTION.<br />
+      <br />
+  </li>
+  <li>Open the Execution Parameters dialog and set <span class="path">config.ini -d 10</span> as argument.<br />
     <br />
   </li>
-  <li>Compile and Run with the path to the <span class="path">config.ini </span>as argument.<br />
+  <li>Compile and Run<br />
     <br />
   </li>
   <li>Browse  to <a href="http://localhost/test.xeb">http://localhost/xebrawebapp/hello.xeb</a>. The server now translates, generates, compiles and finally runns the application. </li>

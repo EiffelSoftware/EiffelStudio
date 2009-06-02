@@ -44,7 +44,7 @@ feature -- Status report
 			Result := False
 			--print ("TESSSSSTING output!!! output is '" + output + "'")
 
-			if output.has_substring ("C compilation completed") or output.ends_with ("System Recompiled.%N") then
+			if output.has_substring ("C compilation completed") or output.has_substring ("System Recompiled.") then
 				Result := True
 			end
 		end

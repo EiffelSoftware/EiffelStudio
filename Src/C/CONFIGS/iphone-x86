@@ -161,18 +161,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-gcc-4.0.1'
+	cc='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-march=armv6 -mcpu=arm1176jzf-s -pipe -std=c99 -miphoneos-version-min=2.0 -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.2.1.sdk'
+	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -miphoneos-version-min=2.0 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.2.1.sdk'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin9-g++-4.0.1'
+	cpp='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -187,7 +187,7 @@ eif_solaris='undef'
 eif_windows='undef'
 eif_64_bits='undef'
 eif_os='EIF_OS_IPHONE'
-eif_arch='EIF_ARCH_ARM6'
+eif_arch='EIF_ARCH_X86'
 Mcc='Mcc'
 d_tls='undef'
 #Check value for next 2
@@ -200,13 +200,13 @@ warning_level='-Wall'
 wkoptimize="-O0"
 
 #Makefiles
-ar='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar'
+ar='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ar'
 boehmgclib='gc'
 command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ld'
+ld='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ld'
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
 libs='-lm'
@@ -224,7 +224,7 @@ mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
-ranlib='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar ts'
+ranlib='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ar ts'
 shared_prefix='lib'
 shared_suffix='.dylib'
 shared_rt_suffix='.dylib'

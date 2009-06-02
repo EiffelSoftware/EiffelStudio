@@ -98,16 +98,6 @@ feature {NONE} -- Initialization
 			create class_name.make (create {EV_TEXT_FIELD}, agent validate_class_name)
 			class_name.set_entry_formatter (agent {attached STRING_32}.as_upper)
 			class_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
-			class_name.set_entry_validation (
-				agent (a_entry: attached STRING_32): BOOLEAN
-					do
-						if a_entry.is_empty then
-							Result := True
-						else
-							class_name_validator.validate_class_name (a_entry.to_string_8.as_attached)
-							Result := class_name_validator.is_valid
-						end
-					end)
 			l_hb.extend (class_name)
 
 			if l_prefix then

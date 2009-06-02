@@ -9,7 +9,7 @@ feature
 		local
 			t1, t2: TUPLE [a:STRING_8; b: ANY; c:HASH_TABLE [STRING, STRING]]
 			l_table: HASH_TABLE [STRING, STRING]
-			l_obj: SPECIAL [ANY]
+			l_obj: SPECIAL [detachable ANY]
 			i, j: INTEGER
 		do
 			create l_table.make (10)
@@ -17,11 +17,11 @@ feature
 
 			from
 				i := 1
-				create l_obj.make (1000)
+				create l_obj.make_filled (Void, 1000)
 			until
 				i = 1000
 			loop
-				l_obj.put (create {SPECIAL [INTEGER]}.make (128), i)
+				l_obj.put (create {SPECIAL [INTEGER]}.make_filled (0, 128), i)
 				i := i + 1
 			end
 

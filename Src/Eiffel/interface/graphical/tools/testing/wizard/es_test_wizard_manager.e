@@ -179,7 +179,11 @@ feature {NONE} -- Implementation
 		do
 			l_target := a_project.universe.target
 			create l_factory
-			l_location := l_factory.new_location_from_full_path (testing_library_path, l_target)
+			if l_target.options.void_safety.item = {CONF_OPTION}.void_safety_index_all then
+				l_location := l_factory.new_location_from_full_path (testing_library_path_safe, l_target)
+			else
+				l_location := l_factory.new_location_from_full_path (testing_library_path, l_target)
+			end
 			if a_project.universe.group_of_name (testing_library_name) /= Void then
 				l_name := testing_library_name + "_library"
 			else

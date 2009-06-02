@@ -45,54 +45,55 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 30 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 30")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				set_start_condition (IN_CLASS)
 				set_partial_class (True)
-
+			
 when 2 then
---|#line 34 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 34")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				set_start_condition (IN_CLASS)
 				set_partial_class (False)
-
+			
 when 3 then
---|#line 39 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 39")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				classname := text
+					-- Class name has been found so we terminate parser
 				terminate
-
+			
 when 4 then
---|#line 44 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 44")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 5 then
---|#line 45 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 45")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 6 then
---|#line 49 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 49")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 7 then
---|#line 51 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 51")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				verbatim_marker.clear_all
@@ -104,46 +105,46 @@ end
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
 				last_start_condition := start_condition
 				set_start_condition (VERBATIM_STR3)
-
+			
 when 8 then
---|#line 63 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 63")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 9 then
---|#line 64 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 64")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 10 then
---|#line 65 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 65")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 -- Ignore
 when 11 then
---|#line 70 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 70")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				set_start_condition (VERBATIM_STR1)
-
+			
 when 12 then
---|#line 73 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 73")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 when 13 then
---|#line 85 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 85")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				if is_verbatim_string_closer then
@@ -151,53 +152,53 @@ end
 				else
 					set_start_condition (VERBATIM_STR2)
 				end
-
+			
 when 14 then
---|#line 92 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 92")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				set_start_condition (VERBATIM_STR2)
-
+			
 when 15 then
---|#line 95 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 95")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				-- Ignore.
-
+			
 when 16 then
---|#line 98 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 98")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 when 17 then
---|#line 110 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 110")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 				set_start_condition (VERBATIM_STR1)
-
+			
 when 18 then
---|#line 113 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 113")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 when 19 then
---|#line 0 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -212,32 +213,32 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 2 then
---|#line 0 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 when 3 then
---|#line 0 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 when 4 then
---|#line 0 "classname_finder.l"
+--|#line <not available> "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-
+			
 			else
 				terminate
 			end

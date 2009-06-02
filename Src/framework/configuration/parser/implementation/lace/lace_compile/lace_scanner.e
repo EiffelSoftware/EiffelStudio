@@ -46,9 +46,9 @@ feature {NONE} -- Implementation
 when 1 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 33 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 33")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				if {PLATFORM}.is_windows then
@@ -60,25 +60,25 @@ end
 when 2 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 43 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 43")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 when 3 then
 yy_set_line (0)
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 44 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 44")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 when 4 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 49 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 49")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_SEMICOLON
@@ -86,9 +86,9 @@ end
 when 5 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 52 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 52")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_COLON
@@ -96,9 +96,9 @@ end
 when 6 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 55 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 55")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_COMMA
@@ -106,9 +106,9 @@ end
 when 7 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 58 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 58")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_LEFT_PARAM
@@ -116,9 +116,9 @@ end
 when 8 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 61 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 61")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_RIGHT_PARAM
@@ -126,9 +126,9 @@ end
 when 9 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 68 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 68")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ADAPT
@@ -136,9 +136,9 @@ end
 when 10 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 71 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 71")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ALL
@@ -146,9 +146,9 @@ end
 when 11 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 74 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_AS
@@ -156,9 +156,9 @@ end
 when 12 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 77 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 77")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ASSEMBLY
@@ -166,9 +166,9 @@ end
 when 13 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 80 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 80")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ASSERTION
@@ -176,9 +176,9 @@ end
 when 14 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 83 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 83")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_CHECK
@@ -186,9 +186,9 @@ end
 when 15 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 86 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 86")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_CLUSTER
@@ -196,9 +196,9 @@ end
 when 16 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 89 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 89")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_CREATION
@@ -206,9 +206,9 @@ end
 when 17 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 92 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 92")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_CREATION
@@ -216,9 +216,9 @@ end
 when 18 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 95 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 95")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_DEBUG
@@ -226,9 +226,9 @@ end
 when 19 then
 	yy_column := yy_column + 14
 	yy_position := yy_position + 14
---|#line 98 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 98")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_DISABLED_DEBUG
@@ -236,9 +236,9 @@ end
 when 20 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 101 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 101")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_DEFAULT
@@ -246,9 +246,9 @@ end
 when 21 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 104 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 104")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_END
@@ -256,9 +256,9 @@ end
 when 22 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 107 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 107")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ENSURE
@@ -266,9 +266,9 @@ end
 when 23 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 110 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 110")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_EXCLUDE
@@ -276,9 +276,9 @@ end
 when 24 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 113 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 113")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_DEPEND
@@ -286,9 +286,9 @@ end
 when 25 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 116 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 116")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_EXPORT
@@ -296,9 +296,9 @@ end
 when 26 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 119 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 119")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_EXTERNAL
@@ -306,9 +306,9 @@ end
 when 27 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 122 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_GENERATE
@@ -316,9 +316,9 @@ end
 when 28 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 126 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_IGNORE
@@ -326,9 +326,9 @@ end
 when 29 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 129 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 129")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_INCLUDE
@@ -336,9 +336,9 @@ end
 when 30 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 132 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 132")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_INVARIANT
@@ -346,9 +346,9 @@ end
 when 31 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 135 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_LIBRARY
@@ -356,9 +356,9 @@ end
 when 32 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 138 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 138")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_LOOP
@@ -366,9 +366,9 @@ end
 when 33 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 141 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 141")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_NO
@@ -376,9 +376,9 @@ end
 when 34 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 144 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 144")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_OPTIMIZE
@@ -386,9 +386,9 @@ end
 when 35 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 147 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 147")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_OPTION
@@ -396,9 +396,9 @@ end
 when 36 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
---|#line 150 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 150")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_PRECOMPILED
@@ -406,9 +406,9 @@ end
 when 37 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 153 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 153")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_PREFIX
@@ -416,9 +416,9 @@ end
 when 38 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 156 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 156")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_RENAME
@@ -426,9 +426,9 @@ end
 when 39 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 159 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 159")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_REQUIRE
@@ -436,9 +436,9 @@ end
 when 40 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 162 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 162")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_ROOT
@@ -446,9 +446,9 @@ end
 when 41 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 165 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 165")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_SYSTEM
@@ -456,9 +456,9 @@ end
 when 42 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 168 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 168")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_TRACE
@@ -466,9 +466,9 @@ end
 when 43 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 171 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 171")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_USE
@@ -476,9 +476,9 @@ end
 when 44 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 174 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 174")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_VISIBLE
@@ -486,9 +486,9 @@ end
 when 45 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 177 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 177")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				last_token := LAC_YES
@@ -496,9 +496,9 @@ end
 when 46 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 184 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 184")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- Note: Identifiers are converted to lower-case.
@@ -510,9 +510,9 @@ end
 when 47 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 195 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 195")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- Empty string.
@@ -522,9 +522,9 @@ end
 when 48 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 200 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 200")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -534,9 +534,9 @@ end
 when 49 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 205 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 205")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -548,9 +548,9 @@ end
 when 50 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 213 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 213")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				append_text_to_string (token_buffer)
@@ -558,9 +558,9 @@ end
 when 51 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 216 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 216")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%A')
@@ -568,9 +568,9 @@ end
 when 52 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 219 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 219")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%B')
@@ -578,9 +578,9 @@ end
 when 53 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 222 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 222")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%C')
@@ -588,9 +588,9 @@ end
 when 54 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 225 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 225")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%D')
@@ -598,9 +598,9 @@ end
 when 55 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 228 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 228")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%F')
@@ -608,9 +608,9 @@ end
 when 56 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 231 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 231")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%H')
@@ -618,9 +618,9 @@ end
 when 57 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 234 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 234")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%L')
@@ -628,9 +628,9 @@ end
 when 58 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 237 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 237")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%N')
@@ -638,9 +638,9 @@ end
 when 59 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 240 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 240")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%Q')
@@ -648,9 +648,9 @@ end
 when 60 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 243 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 243")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%R')
@@ -658,9 +658,9 @@ end
 when 61 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 246 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 246")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%S')
@@ -668,9 +668,9 @@ end
 when 62 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 249 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 249")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%T')
@@ -678,9 +678,9 @@ end
 when 63 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 252 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 252")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%U')
@@ -688,9 +688,9 @@ end
 when 64 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 255 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 255")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%V')
@@ -698,9 +698,9 @@ end
 when 65 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 258 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 258")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%%')
@@ -708,9 +708,9 @@ end
 when 66 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 261 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 261")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%'')
@@ -718,9 +718,9 @@ end
 when 67 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 264 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 264")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%"')
@@ -728,9 +728,9 @@ end
 when 68 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 267 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 267")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%(')
@@ -738,9 +738,9 @@ end
 when 69 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 270 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 270")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%)')
@@ -748,9 +748,9 @@ end
 when 70 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 273 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 273")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%<')
@@ -758,9 +758,9 @@ end
 when 71 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 276 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 276")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				token_buffer.append_character ('%>')
@@ -768,9 +768,9 @@ end
 when 72 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 279 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 279")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
@@ -778,9 +778,9 @@ end
 when 73 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 282 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 282")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
@@ -789,9 +789,9 @@ end
 when 74 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 286 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 286")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				if text_count > 1 then
@@ -806,9 +806,9 @@ end
 when 75 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 296 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 296")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- Bad special character.
@@ -819,9 +819,9 @@ when 76 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 1
---|#line 301 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 301")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- No final double-quote.
@@ -831,9 +831,9 @@ end
 when 77 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 319 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 319")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				report_unknown_token_error (text_item (1))
@@ -841,9 +841,9 @@ end
 when 78 then
 yy_set_line_column
 	yy_position := yy_position + 1
---|#line 0 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -858,17 +858,17 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 0 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 				terminate
 			
 when 1 then
---|#line 0 "lace.l"
+--|#line <not available> "lace.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
 					-- No final double-quote.

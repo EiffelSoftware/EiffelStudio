@@ -28,13 +28,13 @@ feature -- Initialization
 
 feature -- Access
 
-	action: STRING
+	action: XTAG_TAG_ARGUMENT
 			-- Action that should be executed on this link
 
-	label: STRING
+	label: XTAG_TAG_ARGUMENT
 			-- The text of the link
 
-	redirect: STRING
+	redirect: XTAG_TAG_ARGUMENT
 			-- Where should the page redirect after the link has been clicked
 
 feature -- Implementation
@@ -56,14 +56,14 @@ feature -- Implementation
 						forms2 + l_unique_var +
 						value +
 						submit + l_unique_form_id +
-						stopsubmit + label +
+						stopsubmit + label.value (current_controller_id) +
 						stopahref +
 						inputname + l_unique_var +
 						stopinput +
 						"%")"
 					)
 					a_servlet_class.prerender_post_feature.append_expression ("if attached request.arguments[%"" + l_unique_var + "%"] as argument then")
-					a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + current_controller_id + "." + action + " (argument)")
+					a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + current_controller_id + "." + action.value (current_controller_id) + " (argument)")
 					a_servlet_class.prerender_post_feature.append_expression ("end")
 				else
 					a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
@@ -73,7 +73,7 @@ feature -- Implementation
 			end
 		end
 
-	internal_put_attribute (a_id: STRING; a_attribute: STRING)
+	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if a_id.is_equal ("label") then

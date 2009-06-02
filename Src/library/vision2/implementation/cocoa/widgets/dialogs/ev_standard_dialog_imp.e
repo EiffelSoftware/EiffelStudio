@@ -54,7 +54,7 @@ feature -- Status setting
 		local
 			button: INTEGER
 		do
-			button := app_implementation.application.run_modal_for_window (window)
+			button := app_implementation.application.run_modal_for_window (current)
 
 			if button =  {NS_PANEL}.ok_button then
 				selected_button := internal_accept

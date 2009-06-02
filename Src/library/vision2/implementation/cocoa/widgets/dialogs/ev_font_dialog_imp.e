@@ -19,8 +19,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			window,
-			show_modal_to_window
+			show_modal_to_window,
+			window
 		end
 
 create

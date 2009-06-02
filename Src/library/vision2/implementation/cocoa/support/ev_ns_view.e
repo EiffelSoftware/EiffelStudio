@@ -92,11 +92,14 @@ feature -- Measurement
 			if attached {EV_CONTAINER} parent as l_parent then
 				if attached {EV_BOX_IMP} l_parent.implementation as l_box then
 					Result := l_box.box.content_view.bounds.size.height
+				elseif attached {EV_WINDOW_IMP} l_parent.implementation as l_window then
+					Result := l_window.window.content_view.bounds.size.height
 				else
 					--io.put_string ("f: " + cocoa_view.superview.frame.size.height.out + " b; " + cocoa_view.superview.bounds.size.height.out + " c: " + l_parent.client_height.out + "%N")
 					Result := l_parent.client_height
 				end
 			else
+				Result := cocoa_view.superview.bounds.size.height
 				io.error.put_string ("Failed to calculate parent's inner height%N")
 			end
 		end

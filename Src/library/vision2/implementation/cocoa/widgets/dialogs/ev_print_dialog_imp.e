@@ -22,8 +22,19 @@ inherit
 		redefine
 			interface,
 			initialize,
-			window,
 			show_modal_to_window
+		end
+
+	NS_PRINT_PANEL
+		rename
+			make as cocoa_panel_make,
+			item as cocoa_panel,
+			screen as cocoa_screen,
+			set_background_color as cocoa_set_background_color,
+			background_color as cocoa_background_color
+		select
+			make_window,
+			cocoa_panel
 		end
 
 create
@@ -332,11 +343,6 @@ feature {NONE} -- Implementation
 	C5: STRING = "C5"
 
 	print_panel: NS_PRINT_PANEL
-
-	window: NS_WINDOW
-		do
-			Result ?= print_panel
-		end
 
 	interface: EV_PRINT_DIALOG;
 

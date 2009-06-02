@@ -39,7 +39,6 @@ inherit
 			hide,
 			destroy,
 			has_focus,
-			on_focus_changed,
 			set_minimum_size,
 			set_minimum_width,
 			set_minimum_height,
@@ -51,6 +50,15 @@ inherit
 	EV_WINDOW_ACTION_SEQUENCES_IMP
 		redefine
 			interface
+		end
+
+	NS_WINDOW
+		rename
+			set_background_color as cocoa_set_background_color,
+			background_color as cocoa_background_color,
+			make as cocoa_make,
+			screen as cocoa_screen,
+			item as window_item
 		end
 
 	NS_WINDOW_DELEGATE
@@ -69,13 +77,14 @@ feature {NONE} -- Initialization
 			-- Create the window.
 		do
 			base_make (an_interface)
-			create {NS_WINDOW}cocoa_item.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
+			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
-			window.make_key_and_order_front
-			window.order_out
+			cocoa_item := current
+			make_key_and_order_front
+			order_out
 			allow_resize
 			create_delegate
-			window.set_delegate (current)
+			set_delegate (current)
 		end
 
 	initialize
@@ -85,8 +94,7 @@ feature {NONE} -- Initialization
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
 		do
-			create upper_bar
-			create lower_bar
+			init_bars
 
 			maximum_width := interface.maximum_dimension
 			maximum_height := interface.maximum_dimension
@@ -100,6 +108,28 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+ 	init_bars
+ 			-- Initialize `lower_bar' and `upper_bar'.
+ 		local
+ 			ub_imp, lb_imp: EV_VERTICAL_BOX_IMP
+ 		do
+ 			create upper_bar
+ 			create lower_bar
+ 			ub_imp ?= upper_bar.implementation
+  			lb_imp ?= lower_bar.implementation
+  			check
+  				ub_imp_not_void: ub_imp /= Void
+  				lb_imp_not_void: lb_imp /= Void
+  			end
+  			ub_imp.on_parented
+  			lb_imp.on_parented
+  			ub_imp.set_parent_imp (Current)
+  			content_view.add_subview (ub_imp.cocoa_view)
+  			lb_imp.set_parent_imp (Current)
+  			ub_imp.set_top_level_window_imp (Current)
+  			lb_imp.set_top_level_window_imp (Current)
+  		end
+
 feature -- Delegate
 
 	window_did_resize
@@ -111,13 +141,13 @@ feature -- Delegate
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
-				bar_imp.set_move_and_size (0, 0, client_width, 0)
+				bar_imp.ev_apply_new_size (0, 0, client_width, client_y, True)
 			end
 
 			if item /= Void then
 --				item_imp.set_move_and_size (0, 0,
 --					client_width, client_height)
-				item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
+				item_imp.ev_apply_new_size (0, client_y, client_width, client_height, True)
 			end
 
 			if not interface.lower_bar.is_empty then
@@ -125,14 +155,13 @@ feature -- Delegate
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
-				bar_imp.set_move_and_size (0,
-					client_height + 1,
+				bar_imp.set_move_and_size (0, client_y + client_height + 1,
 					client_width, bar_imp.minimum_height)
 			end
 
 				-- Calls user actions if any
 			execute_resize_actions (width, height)
-			window.display
+			display
 		end
 
 	execute_resize_actions (a_width, a_height: INTEGER)
@@ -173,50 +202,67 @@ feature -- Measurement
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if item /= Void then
-				item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
+				item_imp.ev_apply_new_size (0, client_y, client_width, client_height, True)
 			end
 			if not interface.upper_bar.is_empty then
 				bar_imp ?= interface.upper_bar.implementation
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
-				bar_imp.ev_move_and_resize (0, 0, client_width, 0, True)
+				bar_imp.ev_move_and_resize (0, 0, client_width, client_y, True)
 			end
 			if not interface.lower_bar.is_empty then
 				bar_imp ?= interface.lower_bar.implementation
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
-				bar_imp.ev_move_and_resize (0, client_height + 1, client_width, bar_imp.minimum_height, True)
+				bar_imp.ev_move_and_resize (0, client_y + client_height + 1, client_width, bar_imp.minimum_height, True)
 			end
 		end
 
 	client_height: INTEGER
 		do
-			Result := window.content_rect_for_frame_rect (window.frame).size.height
+			Result := content_rect_for_frame_rect (frame).size.height - client_y
+--			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} - client_y
+			if not interface.lower_bar.is_empty then
+				-- Add 1 pixel to separate client area and lower bar.
+				Result := Result - interface.lower_bar.minimum_height - 1
+			end
+			Result := Result.max (0)
 		end
 
 	client_width: INTEGER
 		do
-			Result := window.content_rect_for_frame_rect (window.frame).size.width
+			Result := content_rect_for_frame_rect (frame).size.width
 		end
+
+ 	client_y: INTEGER
+ 			-- Top of the client area of `Current'.
+ 		do
+ 			-- Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+ 			if not interface.upper_bar.is_empty then
+ 				-- Add 1 pixel to separate client area and upper bar.
+ 				Result := Result + interface.upper_bar.minimum_height + 1
+ 			end
+ 	 		Result := Result.min (height)
+ 	 	end
 
 	width: INTEGER
 			-- Horizontal size measured in pixels.
 		do
-			Result := window.frame.size.width
+			Result := frame.size.width
 		end
 
 	height: INTEGER
 			-- Vertical size measured in pixels.
 		do
-			Result := window.frame.size.height
+			Result := frame.size.height
 		end
 
 	set_width (a_width: INTEGER)
 			-- Set the horizontal size to `a_width'.
 		do
-			set_size(a_width, height)
+			set_size (a_width, height)
 		end
 
 	set_height (a_height: INTEGER)
@@ -235,7 +281,7 @@ feature -- Measurement
 	x_position, screen_x: INTEGER
 			-- X coordinate of `Current'
 		do
-			Result := window.frame.origin.x
+			Result := frame.origin.x
 		end
 
 	y_position, screen_y: INTEGER
@@ -243,7 +289,7 @@ feature -- Measurement
 		local
 			l_frame: NS_RECT
 		do
-			l_frame := window.frame
+			l_frame := frame
 			Result := screen.frame.size.height - l_frame.origin.y - l_frame.size.height
 		end
 
@@ -265,10 +311,10 @@ feature -- Measurement
 		local
 			l_frame: NS_RECT
 		do
-			l_frame := window.frame
+			l_frame := frame
 			l_frame.origin.x := a_x
 			l_frame.origin.y := screen.frame.size.height - l_frame.size.height - a_y
-			window.set_frame (l_frame)
+			set_frame (l_frame)
 		end
 
 	screen: NS_SCREEN
@@ -288,7 +334,7 @@ feature -- Measurement
 			if a_minimum_height > height then
 				set_height (a_minimum_height)
 			end
-			window.set_min_size(a_minimum_width, a_minimum_height)
+			set_min_size (a_minimum_width, a_minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER)
@@ -298,7 +344,7 @@ feature -- Measurement
 			if minimum_height > height then
 				set_height (minimum_height)
 			end
-			window.set_min_size(minimum_width, a_minimum_height)
+			set_min_size (minimum_width, a_minimum_height)
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER)
@@ -308,7 +354,7 @@ feature -- Measurement
 			if minimum_width > width then
 				set_width (minimum_width)
 			end
-			window.set_min_size(a_minimum_width, minimum_height)
+			set_min_size (a_minimum_width, minimum_height)
 		end
 
  	maximum_width: INTEGER
@@ -334,7 +380,7 @@ feature -- Measurement
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 		do
 
-			window.set_frame (create {NS_RECT}.make_rect(a_x_position, a_y_position, a_width, a_height))
+			set_frame (create {NS_RECT}.make_rect(a_x_position, a_y_position, a_width, a_height))
 		end
 
 feature -- Layout implementation
@@ -352,7 +398,7 @@ feature -- Layout implementation
 			mw := mw.max (interface.upper_bar.minimum_width).max
 				(interface.lower_bar.minimum_width)
 			internal_set_minimum_width (mw)
-			window.set_min_size(mw, minimum_height)
+			set_min_size (mw, minimum_height)
 		end
 
 	compute_minimum_height
@@ -371,7 +417,7 @@ feature -- Layout implementation
 				mh := mh + interface.lower_bar.minimum_height + 1
 			end
 			internal_set_minimum_height (mh)
-			window.set_min_size(minimum_width, mh)
+			set_min_size (minimum_width, mh)
 		end
 
 	compute_minimum_size
@@ -397,9 +443,9 @@ feature -- Layout implementation
 			if not interface.lower_bar.is_empty then
 				mh := mh + interface.lower_bar.minimum_height + 1
 			end
-			l_size := window.frame_rect_for_content_rect (create {NS_RECT}.make_rect (0, 0, mw, mh)).size
+			l_size := frame_rect_for_content_rect (create {NS_RECT}.make_rect (0, 0, mw, mh)).size
 			internal_set_minimum_size (l_size.width, l_size.height)
-			window.set_content_min_size(mw, mh)
+			set_content_min_size(mw, mh)
 		end
 
 feature -- Widget relations
@@ -436,12 +482,6 @@ feature  -- Access
 
 	item: EV_WIDGET
 			-- Current item.
-
-	title: STRING_32
-			-- Application name to be displayed by the window manager.
-		do
-			Result := window.title.as_string_32
-		end
 
 	menu_bar: EV_MENU_BAR
 			-- FIXME Mac Issue: Menu-Bars are Application-wide
@@ -500,29 +540,31 @@ feature -- Status setting
 	forbid_resize
 			-- Forbid the resize of `Current'.
 		do
-			window.set_shows_resize_indicator (False)
+			set_shows_resize_indicator (False)
 		end
 
 	allow_resize
 			-- Allow the resize of `Current'.
 		do
-			window.set_shows_resize_indicator (True)
+			set_shows_resize_indicator (True)
 		end
 
 	show
 		do
 			-- FIXME: only do this stuff when the window was not displayed before
+			is_show_requested := True
 			if show_actions_internal /= Void then
 				show_actions_internal.call (Void)
 			end
-			window.make_key_and_order_front
+			make_key_and_order_front
 			notify_change (nc_minsize, item_imp)
 		end
 
 	hide
 			-- Unmap the Window from the screen.
 		do
-			window.order_out
+			order_out
+			--is_show_requested := False
 		end
 
 feature -- Element change
@@ -548,17 +590,11 @@ feature -- Element change
 				check
 					v_has_implementation: w_imp /= Void
 				end
-				window.set_content_view (w_imp.cocoa_view)
+				content_view.add_subview (w_imp.cocoa_view)
 				on_new_item ( w_imp )
 				notify_change (nc_minsize, Current)
 			end
 			item := v
-		end
-
-	set_title (new_title: STRING_GENERAL)
-			-- Set `title' to `new_title'.
-		do
-			window.set_title (new_title)
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR)
@@ -603,13 +639,6 @@ feature {NONE} -- Implementation
 	set_focused_widget (a_widget: EV_WIDGET_IMP)
 			-- Set currently focused widget to `a_widget'.
 		do
-		end
-
-	on_focus_changed (a_has_focus: BOOLEAN)
-			-- Called from focus intermediary agents when focus for `Current' has changed.
-			-- if `a_has_focus' then `Current' has just received focus.
-		do
-			Precursor {EV_CONTAINER_IMP} (a_has_focus)
 		end
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)

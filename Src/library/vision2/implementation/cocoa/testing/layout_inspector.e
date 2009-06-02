@@ -264,6 +264,16 @@ feature {NONE} -- Graphical view
 		do
 			if a_widget = Void then
 				-- Do nothing. no children to add to a_node
+			elseif attached {EV_WINDOW} a_widget as l_window then
+				node := add_element (l_window.upper_bar, a_node)
+				add_recursive (node, l_window.upper_bar)
+				node := add_element (l_window.item, a_node)
+				add_recursive (node, l_window.item)
+--			elseif attached {EV_ITEM_LIST} a_widget as l_list then
+--				node := add_element (l_window.upper_bar, a_node)
+--				add_recursive (node, l_window.upper_bar)
+--				node := add_element (l_window.item, a_node)
+--				add_recursive (node, l_window.item)
 			elseif attached {EV_GRID} a_widget as l_grid then
 				node := add_element (l_grid.implementation.cell_item, a_node)
 				add_recursive (node, l_grid.implementation.cell_item)
@@ -362,7 +372,7 @@ feature {NONE} -- Graphical view
 		do
 			w_imp ?= a_widget.implementation
 			if attached w_imp.top_level_window_imp then
-				l_screen := w_imp.top_level_window_imp.window.screen
+				l_screen := w_imp.top_level_window_imp.screen
 				x1 := selected_widget.screen_x - 1
 				y1 := (l_screen.frame.size.height - selected_widget.screen_y - selected_widget.height) - 1
 				x2 := selected_widget.screen_x + selected_widget.width + 1

@@ -53,6 +53,15 @@ inherit
 			interface
 		end
 
+	NS_BUTTON
+		rename
+			make as cocoa_make,
+			initialize as cocoa_initialize,
+			font as cocoa_font
+		redefine
+			mouse_down
+		end
+
 create
 	make
 
@@ -62,8 +71,9 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.make
-			button.set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
+			cocoa_make
+			cocoa_item := current
+			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			align_text_center
 		end
 
@@ -77,11 +87,7 @@ feature {NONE} -- Initialization
 			enable_tabable_from
 			initialize_events
 
-			button.set_action (
-				agent
-					do
-						select_actions.call ([])
-					end )
+			set_action (agent select_actions.call ([]))
 		end
 
 feature -- Access
@@ -99,7 +105,7 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			top_level_window_imp.window.set_default_button_cell (button.cell)
+			top_level_window_imp.window.set_default_button_cell (cell)
 		end
 
 	disable_default_push_button
@@ -124,7 +130,7 @@ feature -- Status Setting
 					accomodate_text (a_text)
 				end
 				Precursor {EV_TEXTABLE_IMP} (a_text)
-				button.set_title (a_text)
+				set_title (a_text)
 			end
 		end
 
@@ -158,21 +164,21 @@ feature -- Sensitivity
 	is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		do
-			Result := button.is_enabled
+			Result := is_enabled
 		end
 
 	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		do
-			button.set_enabled (True)
-			button.set_needs_display (True)
+			set_enabled (True)
+			set_needs_display (True)
 		end
 
 	disable_sensitive
 			-- Set the object to ignore all user input.
 		do
-			button.set_enabled (False)
-			button.set_needs_display (True)
+			set_enabled (False)
+			set_needs_display (True)
 		end
 
 feature {NONE} -- implementation
@@ -187,21 +193,21 @@ feature {NONE} -- implementation
 		do
 		end
 
+	mouse_down (a_event: NS_EVENT)
+		local
+			x, y: INTEGER
+			l_screen_x, l_screen_y: INTEGER
+		do
+			x := a_event.location_in_window.x
+			y := a_event.location_in_window.y
+			pointer_button_press_actions.call ([x, y, 0, 0.0, 0.0, 0.0, l_screen_x, l_screen_y])
+		end
+
 feature {EV_ANY_I} -- implementation
 
 	interface: EV_BUTTON;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
-	button: NS_BUTTON
-			--
-		do
-			Result ?= cocoa_item
-			check
-				cocoa_control_initialized: Result /= Void
-			end
-		end
-
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

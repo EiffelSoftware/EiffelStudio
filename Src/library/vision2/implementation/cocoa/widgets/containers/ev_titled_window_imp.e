@@ -66,7 +66,8 @@ feature -- Status setting
 	raise
 			-- Request that window be displayed above all other windows.
 		do
-			window.make_key_and_order_front
+			--show
+			 window.make_key_and_order_front
 		end
 
 	lower

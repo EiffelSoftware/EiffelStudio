@@ -32,7 +32,7 @@ feature -- Access
 	children_height: INTEGER
 			-- Sum of the width of all the children.
 
-feature {NONE} -- Basic operation
+feature -- Basic operation
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do

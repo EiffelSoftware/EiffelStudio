@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create {NS_BOX}cocoa_item.make
-			box.set_title ("TOOLBAR")
+			box.set_title_position ({NS_BOX}.no_title)
 		end
 
 	initialize
@@ -142,9 +142,26 @@ feature -- Implementation
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32; repaint: BOOLEAN)
+			-- Precursor		
+		local
+			litem: EV_NS_VIEW
+			x: INTEGER
+			item_width, item_height: INTEGER
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			--ev_children
+			item_height := box.content_view.bounds.size.height
+			from
+				ev_children.start
+				x := 0
+			until
+				ev_children.after
+			loop
+				litem ?= ev_children.item
+				item_width := litem.minimum_width
+				litem.cocoa_set_size (x, 0, item_width, item_height)
+				x := x + item_width
+				ev_children.forth
+			end
 		end
 
 feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Radio button handling

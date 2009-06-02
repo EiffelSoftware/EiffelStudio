@@ -40,8 +40,9 @@ feature {NONE} -- Initialization
 			-- Create radio button.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.make
-			button.set_button_type ({NS_BUTTON}.radio_button)
+			cocoa_make
+			cocoa_item := current
+			set_button_type ({NS_BUTTON}.radio_button)
 		end
 
 	initialize

@@ -135,24 +135,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_focus_changed (a_has_focus: BOOLEAN)
-			-- Called from focus intermediary agents when focus for `Current' has changed.
-			-- if `a_has_focus' then `Current' has just received focus.
-		do
-		end
-
-	on_pointer_enter_leave (a_pointer_enter: BOOLEAN)
-			-- Called from pointer enter leave intermediary agents when the mouse pointer either enters or leaves `Current'.
-		do
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
-			-- Handle motion event for `Current'.
-		do
-		end
-
 feature -- Access
 
 	parent: EV_CONTAINER
@@ -198,8 +180,7 @@ feature -- Status setting
 			end
 		end
 
-
-	is_show_requested: BOOLEAN --is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'
 

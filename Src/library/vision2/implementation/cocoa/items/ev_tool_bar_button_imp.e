@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			set_vertical_button_style
 			create button.make
 			cocoa_item := button
+			button.set_action (agent select_actions.call ([]))
 		end
 
 	initialize
@@ -139,17 +140,15 @@ feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
-
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-
 			-- First load the pixmap into the button
 			pixmap_imp ?= a_pixmap.implementation
 
-			if
-				pixmap_imp /= Void
-			then
+			if pixmap_imp /= Void then
+				button.set_image (pixmap_imp.image)
+				-- TODO update minimum width
 			end
 		end
 

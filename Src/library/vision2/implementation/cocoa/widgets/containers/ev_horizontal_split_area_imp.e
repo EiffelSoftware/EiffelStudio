@@ -26,7 +26,7 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Creation
 
 	make (an_interface: like interface)
 		-- Connect interface and initialize `c_object'.

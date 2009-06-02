@@ -20,7 +20,6 @@ inherit
 		undefine
 			on_key_event,
 			default_key_processing_blocked,
-			on_focus_changed,
 			set_value,
 			set_range
 		redefine

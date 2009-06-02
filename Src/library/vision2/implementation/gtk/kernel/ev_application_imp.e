@@ -33,6 +33,8 @@ inherit
 
 	EV_GTK_EVENT_STRINGS
 
+	RT_DEBUGGER
+
 create
 	make
 
@@ -62,7 +64,7 @@ feature {NONE} -- Initialization
 			then
 				initialize_threading
 					-- Store the value of the debug mode.
-				saved_debug_mode := debug_mode
+				saved_debug_state := debug_state
 				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
@@ -1090,7 +1092,7 @@ feature -- Implementation
 		do
 			if debugger_is_disabled then
 				debugger_is_disabled := False
-				internal_set_debug_mode (saved_debug_mode)
+				restore_debug_state (saved_debug_state)
 			end
 		end
 
@@ -1099,8 +1101,8 @@ feature -- Implementation
 		do
 			if not debugger_is_disabled then
 				debugger_is_disabled := True
-				saved_debug_mode := debug_mode
-				internal_set_debug_mode (0)
+				saved_debug_state := debug_state
+				disable_debugger
 			end
 		end
 
@@ -1290,34 +1292,8 @@ feature {NONE} -- External implementation
 	default_c_string_size: INTEGER = 1000
 		-- Default size to set the reusable gtk C string.
 
-	internal_set_debug_mode (a_debug_mode: INTEGER)
-			-- Set `debug_mode' to `a_debug_mode'.
-		external
-			"C inline use %"eif_main.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				set_debug_mode ($a_debug_mode);
-			#endif
-			]"
-		end
-
-	saved_debug_mode: INTEGER
+	saved_debug_state: like debug_state
 		-- Debug mode before debugger was disabled
-
-	debug_mode: INTEGER
-			-- State of debugger.
-		external
-			"C inline use %"eif_main.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return is_debug_mode();
-			#else
-				return 0;
-			#endif
-			]"
-		end
 
 	enable_ev_gtk_log (a_mode: INTEGER)
 			-- Connect GTK+ logging to Eiffel exception handler.

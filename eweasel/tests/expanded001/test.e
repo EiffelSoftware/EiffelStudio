@@ -34,5 +34,5 @@ feature
 		end
 
 feature -- Access
-	array: ARRAY[ANY]
+	array: INDEXABLE [ANY, INTEGER]
 end

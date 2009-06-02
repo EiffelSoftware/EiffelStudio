@@ -43,6 +43,8 @@ inherit
 			{NONE} all
 		end
 
+	RT_DEBUGGER
+
 create
 	make
 
@@ -275,7 +277,7 @@ feature {PROCESS_IMP} -- Process management
             ee: EXECUTION_ENVIRONMENT
             cur_dir: detachable STRING
             exceptions: EXCEPTIONS
-            d: like internal_debug_mode
+            l_debug_state: like debug_state
             l_working_directory: like working_directory
             l_arguments: like arguments_for_exec
         do
@@ -287,12 +289,13 @@ feature {PROCESS_IMP} -- Process management
                 create cur_dir.make_from_string (ee.current_working_directory)
                 ee.change_working_directory (l_working_directory)
             end
-            d := internal_debug_mode
-            internal_set_debug_mode (0)
+            l_debug_state := debug_state
+            discard_debug
+
             process_id := fork_process
             inspect process_id
             when -1 then --| Error
-                internal_set_debug_mode (d)
+                restore_debug_state (l_debug_state)
                 -- Error ... no fork allowed
                 if l_working_directory /= Void then
                 	check cur_dir /= Void end
@@ -311,7 +314,7 @@ feature {PROCESS_IMP} -- Process management
                 check l_arguments /= Void end
                 exec_process (program_file_name, l_arguments, close_nonstandard_files, evnptr)
             else --| Parent process
-                internal_set_debug_mode (d)
+				restore_debug_state (l_debug_state)
                 setup_parent_process_files
                 arguments_for_exec := Void
                 set_is_executing (True)
@@ -325,7 +328,7 @@ feature {PROCESS_IMP} -- Process management
                 create exceptions
                 exceptions.die (1)
             end
-            internal_set_debug_mode (d)
+			restore_debug_state (l_debug_state)
         end
 
 	terminate_hard (is_tree: BOOLEAN)
@@ -744,34 +747,6 @@ feature {NONE} -- Implementation
 			is_executing_set: is_executing = b
 		end
 
-feature {NONE} -- Debugger access
-
-    internal_set_debug_mode (a_debug_mode: INTEGER)
-            --
-        external
-            "C inline use%"eif_main.h%""
-        alias
-            "[
-			#ifdef WORKBENCH
-				set_debug_mode ($a_debug_mode);
-			#endif
-			]"
-        end
-
-    internal_debug_mode: INTEGER
-            -- State of debugger.
-        external
-            "C inline use %"eif_main.h%""
-        alias
-			"[
-			#ifdef WORKBENCH
-				return is_debug_mode();
-			#else
-				return 0;
-			#endif
-			]"
-        end
-
 invariant
 	input_piped_no_file: input_piped implies input_file_name = Void
 	output_piped_no_file: output_piped implies output_file_name = Void
@@ -789,11 +764,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

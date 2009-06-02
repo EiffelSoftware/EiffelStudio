@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 			create text_view.make
 			text_view.set_horizontally_resizable (True)
 			scroll_view.set_document_view (text_view)
+			scroll_view.set_has_horizontal_scroller (True)
+			scroll_view.set_has_vertical_scroller (True)
+			scroll_view.set_autohides_scrollers (True)
 			scroll_view.set_border_type ({NS_SCROLL_VIEW}.ns_line_border)
 		end
 

@@ -32,9 +32,10 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa toggle button.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.make
-			button.set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
-			button.set_button_type ({NS_BUTTON}.push_on_push_off_button)
+			cocoa_make
+			cocoa_item := current
+			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
+			set_button_type ({NS_BUTTON}.push_on_push_off_button)
 		end
 
 feature -- Status setting

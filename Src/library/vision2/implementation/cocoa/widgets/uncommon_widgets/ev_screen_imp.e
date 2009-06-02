@@ -19,8 +19,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface,
-			initialize
+			interface
 		end
 
 create
@@ -33,11 +32,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create screen.main_screen
-		end
-
-	initialize
-			-- Set up action sequence connections and create graphics context.
-		do
 		end
 
 feature -- Status report
@@ -61,7 +55,12 @@ feature -- Status setting
 
 	set_default_colors
 			-- Set foreground and background color to their default values.
+		local
+			a_default_colors: EV_STOCK_COLORS
 		do
+			create a_default_colors
+			set_background_color (a_default_colors.default_background_color)
+			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
 feature -- Basic operation

@@ -74,12 +74,17 @@ feature -- Basic operation
 			-- Process Cocoa events
 		local
 			event: POINTER
+			l_event: NS_EVENT
 		do
 			from
 				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)
 			until
 				event = {EV_ANY_IMP}.NULL
 			loop
+				create l_event.make_shared (event)
+				if l_event.type = {NS_EVENT}.left_mouse_down then
+					io.output.put_string ("Event: " + l_event.location_in_window.out + "%N")
+				end
 				application.send_event (event)
 				application.update_windows
 				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)

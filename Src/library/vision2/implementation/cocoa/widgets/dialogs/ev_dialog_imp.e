@@ -77,8 +77,11 @@ feature -- Status Report
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until window is closed.
 			-- `Current' is show modal with respect to `a_window'.
+		local
+			ret: INTEGER
 		do
 			show
+			ret := app_implementation.application.run_modal_for_window (window)
 		end
 
 feature -- Status Setting

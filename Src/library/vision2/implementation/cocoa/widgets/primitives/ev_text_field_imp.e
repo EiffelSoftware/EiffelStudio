@@ -58,10 +58,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create {NS_TEXT_FIELD}cocoa_item.make
 			text_field ?= cocoa_item
-
-			align_text_left
 		end
-
 
 	initialize
 			-- `Precursor' initialization,
@@ -71,6 +68,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
+			align_text_left
 			create a_font.default_create
 			create text.make_empty
 			a_font.set_height (12)

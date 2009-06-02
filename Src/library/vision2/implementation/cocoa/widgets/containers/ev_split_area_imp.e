@@ -57,16 +57,18 @@ feature -- Access
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
 			first := v
-			on_new_item (l_imp)
+--			on_new_item (l_imp)
+			l_imp.set_parent_imp (current)
 			disable_item_expand (first)
 			cocoa_view.add_subview (l_imp.cocoa_view)
-
+			--notify_change (nc_minsize, Current)
 			if second_visible then
 				set_split_position (minimum_split_position)
 			else
 				set_split_position (maximum_split_position)
 			end
 			notify_change (Nc_minsize, Current)
+			new_item_actions.call ([v])
 		end
 
 	set_second (v: like item)
@@ -95,6 +97,7 @@ feature -- Access
 				--| again after the split position has been set,
 				--| to reflect these changes.
 			notify_change (Nc_minsize, Current)
+			new_item_actions.call ([v])
 		end
 
 	prune (an_item: like item)
@@ -140,7 +143,8 @@ feature -- Access
 	split_position: INTEGER
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := internal_split_position
+			--Result := internal_split_position
+			Result := internal_split_position.max (minimum_split_position)
 		end
 
 	set_split_position (a_split_position: INTEGER)
@@ -148,6 +152,8 @@ feature -- Access
 		do
 			internal_split_position := a_split_position
 			layout_widgets (True)
+		ensure then
+			split_position_set: split_position = a_split_position
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)

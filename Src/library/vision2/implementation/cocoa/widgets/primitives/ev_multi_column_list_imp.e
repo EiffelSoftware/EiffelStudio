@@ -34,7 +34,6 @@ inherit
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
 			create_pointer_motion_actions,
-			on_pointer_motion,
 			minimum_height,
 			minimum_width
 		end
@@ -138,7 +137,7 @@ feature {NONE} -- Implementation
 			a_row_number: INTEGER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			Precursor (a_motion_tuple)
+			--Precursor (a_motion_tuple)
 			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
 				a_row_number := row_index_from_y_coord (a_motion_tuple.integer_item (2))
 				if a_row_number > 0 and then a_row_number <= count then

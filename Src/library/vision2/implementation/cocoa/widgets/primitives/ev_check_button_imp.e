@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision check button, Cocoa implementation."
-	legal: "See notice at end of class.";
-	status: "See notice at end of class.";
+	author:	"Daniel Furrer"
 	id: "$Id$";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -34,9 +33,10 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa check button.
 		do
 			base_make (an_interface)
-			create {NS_BUTTON}cocoa_item.make
-			button.set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
-			button.set_button_type ({NS_BUTTON}.switch_button)
+			cocoa_make
+			cocoa_item := current
+			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
+			set_button_type ({NS_BUTTON}.switch_button)
 
 			align_text_left
 		end
@@ -63,7 +63,4 @@ feature {EV_ANY_I}
 
 	interface: EV_CHECK_BUTTON;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_CHECK_BUTTON_IMP
-

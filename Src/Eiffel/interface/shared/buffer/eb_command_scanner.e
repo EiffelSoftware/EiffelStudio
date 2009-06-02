@@ -42,179 +42,157 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
-if yy_act <= 10 then
-if yy_act <= 5 then
-if yy_act <= 3 then
-if yy_act <= 2 then
-if yy_act = 1 then
+			inspect yy_act
+when 1 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 31 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 31")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_class_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_BUFFER
 				
-else
+when 2 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 37 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 37")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_class_buffer_selected (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_BUFFER_SELECTED
 				
-end
-else
+when 3 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 43 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 43")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_feature_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FEATURE_BUFFER
 						
-end
-else
-if yy_act = 4 then
+when 4 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 49 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 49")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_tool_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TOOL_BUFFER
 						
-else
+when 5 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 55 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 55")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_tool_buffer_selected (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TOOL_BUFFER_SELECTED
 						
-end
-end
-else
-if yy_act <= 8 then
-if yy_act <= 7 then
-if yy_act = 6 then
+when 6 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
---|#line 61 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 61")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_file_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FILE_NAME
 						
-else
+when 7 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
---|#line 67 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 67")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_class_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_NAME
 						
-end
-else
+when 8 then
 	yy_column := yy_column + 15
 	yy_position := yy_position + 15
---|#line 73 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 73")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_directory_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_DIRECTORY_NAME
 						
-end
-else
-if yy_act = 9 then
+when 9 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 79 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 79")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_w_code (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_W_CODE
 						
-else
+when 10 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 85 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 85")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_f_code (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_F_CODE
 						
-end
-end
-end
-else
-if yy_act <= 15 then
-if yy_act <= 13 then
-if yy_act <= 12 then
-if yy_act = 11 then
+when 11 then
 	yy_column := yy_column + 16
 	yy_position := yy_position + 16
---|#line 91 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 91")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_group_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_GROUP_DIRECTORY
 						
-else
+when 12 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
---|#line 97 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 97")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_group_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_GROUP_NAME
 						
-end
-else
+when 13 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 102 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 
@@ -222,98 +200,88 @@ end
 								register_text_fragment (last_text_fragment)
 								last_token := T_LINE
 						
-end
-else
-if yy_act = 14 then
+when 14 then
 	yy_column := yy_column + 18
 	yy_position := yy_position + 18
---|#line 109 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 109")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_project_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_PROJECT_DIRECTORY
 						
-else
+when 15 then
 	yy_column := yy_column + 17
 	yy_position := yy_position + 17
---|#line 115 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 115")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_target_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TARGET_DIRECTORY
 						
-end
-end
-else
-if yy_act <= 18 then
-if yy_act <= 17 then
-if yy_act = 16 then
+when 16 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 121 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 121")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_file (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FILE
 						
-else
+when 17 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 127 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 127")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_path (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_PATH
 							
-end
-else
+when 18 then
 	yy_column := yy_column + 12
 	yy_position := yy_position + 12
---|#line 132 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 132")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								set_last_text_fragment (factory.new_target_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TARGET_NAME
 							
-end
-else
-if yy_act = 19 then
+when 19 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 138 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 138")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 
 								last_token := T_UNRECOGNIZED
 			
-else
+when 20 then
 yy_set_line_column
 	yy_position := yy_position + 1
---|#line 0 "command_scanner.l"
+--|#line <not available> "command_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'command_scanner.l' at line <not available>")
 end
 default_action
-end
-end
-end
-end
+			else
+				last_token := yyError_token
+				fatal_error ("fatal scanner internal error: no action found")
+			end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER)

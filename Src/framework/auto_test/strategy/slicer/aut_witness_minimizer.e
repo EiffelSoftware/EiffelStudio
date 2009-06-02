@@ -244,6 +244,11 @@ feature {NONE} -- Implementation
 				end
 				minimized_witness := l_sliced_witness
 			end
+			if minimized_witness = Void and l_witness.used_vars = Void then
+					-- If we were not able to generate a minimized version, we retrieve the used variables for the
+					-- original witness
+				l_witness.set_used_vars (all_used_vars (l_witness.request_list))
+			end
 			error_handler.report_benchmark_message ("slice execution time: " + timer_execution.last_duration.second_count.out + "s, " + timer_execution.last_duration.millisecond_count.out + "ms.")
 			error_handler.report_benchmark_message ("slice minimization time total: " + timer_total.last_duration.second_count.out + "s, " + timer_total.last_duration.millisecond_count.out + "ms.")
 			error_handler.report_benchmark_message ("slice fn: " + file.name)

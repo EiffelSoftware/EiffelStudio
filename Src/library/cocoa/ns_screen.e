@@ -18,88 +18,35 @@ create {NS_OBJECT}
 feature {NONE} -- Getting NSScreen Objects
 
 	main_screen
+			-- Returns the NS_SCREEN object containing the window with the keyboard focus.
+			-- The main screen is not necessarily the same screen that contains the menu bar or has its origin at (0, 0).
+			-- The main screen refers to the screen containing the window that is currently receiving keyboard events.
+			-- It is the main screen because it is the one with which the user is most likely interacting.
+			-- The screen containing the menu bar is always the first object (index 0) in the array returned by the screens method.
+			-- FIXME: This should probably be a once method, maybe in an ...ENVIRONEMENT class
 		do
-			make_shared (screen_main_screen)
+			make_shared ({NS_SCREEN_API}.main_screen)
 		end
 
 feature -- Getting Screen Information
 
 	frame: NS_RECT
+			-- Returns the dimensions and location of the receiver.
+			-- The full screen rectangle at the current resolution. This rectangle includes any space currently occupied by the menu bar and dock.
 		do
 			create Result.make
-			screen_frame (item, Result.item)
+			{NS_SCREEN_API}.frame (item, Result.item)
 		end
 
 	device_description: NS_DICTIONARY
+			-- Returns the device dictionary for the screen.
+			-- In addition to the display device constants described in NSWindow Class Reference, you can also retrieve the CGDirectDisplayID value
+			-- associated with the screen from this dictionary. To access this value, specify the Objective-C string @"NSScreenNumber" as the key
+			-- when requesting the item from the dictionary. The value associated with this key is an NSNumber object containing the display ID value.
+			-- This string is only valid when used as a key for the dictionary returned by this method.
 		do
-			create Result.make_shared (screen_device_description (item))
+			create Result.make_shared ({NS_SCREEN_API}.device_description (item))
 		end
 
-feature {NONE} -- Objective-C implementation
-
-	frozen screen_screens: POINTER
-			--+ (NSArray *)screens;		/* All screens; first one is "zero" screen */
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSScreen mainScreen];"
-		end
-
-	frozen screen_main_screen: POINTER
-			--+ (NSScreen *)mainScreen;	/* Screen with key window */
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSScreen mainScreen];"
-		end
-
-	frozen screen_deepest_screen: POINTER
-			--+ (NSScreen *)deepestScreen;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSScreen deepestScreen];"
-		end
-
---- (NSWindowDepth)depth;
-	frozen screen_frame (a_screen: POINTER; a_res: POINTER)
-			--- (NSRect)frame;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[
-				{
-					NSRect frame = [(NSScreen*)$a_screen frame];
-					memcpy ($a_res, &frame, sizeof(NSRect));
-				}
-			]"
-		end
-
-	frozen screen_visible_frame (a_screen: POINTER; a_res: POINTER)
-			--- (NSRect)visibleFrame;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[
-				{
-					NSRect frame = [(NSScreen*)$a_screen visibleFrame];
-					memcpy ($a_res, &frame, sizeof(NSRect));
-				}
-			]"
-		end
-
-	frozen screen_device_description (a_screen: POINTER): POINTER
-			--- (NSDictionary *)deviceDescription;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScreen*)$a_screen deviceDescription];"
-		end
-
---- (const NSWindowDepth *)supportedWindowDepths; /* 0 terminated */
-
---/* Returns scale factor applied by default to windows created on this screen
---*/
---- (CGFloat)userSpaceScaleFactor;
 
 end

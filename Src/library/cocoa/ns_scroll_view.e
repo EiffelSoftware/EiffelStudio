@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (scroll_view_new)
+			make_shared ({NS_SCROLL_VIEW_API}.new)
 		end
 
 	make_with_flipped_content_view
@@ -38,6 +38,7 @@ feature {NONE} -- Creation
 			l_sel: POINTER
 			l_imp: POINTER
 			l_new_clip_view: NS_CLIP_VIEW
+			l_ret: BOOLEAN
 		do
 			make
 			l_class := objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
@@ -50,12 +51,12 @@ feature {NONE} -- Creation
 				l_types := (create {C_STRING}.make ("b@:")).item
 				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
 				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
-				class_add_method (l_class, l_sel, l_imp, l_types)
+				l_ret := class_add_method (l_class, l_sel, l_imp, l_types)
 
 				objc_register_class_pair (l_class)
 			end
 			create l_new_clip_view.make_shared (class_create_instance (l_class, 0))
-			view_init (l_new_clip_view.item)
+			{NS_VIEW_API}.init (l_new_clip_view.item)
 			set_content_view (l_new_clip_view)
 		end
 
@@ -64,626 +65,260 @@ feature
 	document_visible_rect: NS_RECT
 		do
 			create Result.make
-			scroll_view_document_visible_rect (item, Result.item)
+			{NS_SCROLL_VIEW_API}.document_visible_rect (item, Result.item)
 		end
 
 	content_size: NS_SIZE
 		do
 			create Result.make
-			scroll_view_content_size (item, Result.item)
+			{NS_SCROLL_VIEW_API}.content_size (item, Result.item)
 		end
 
 	set_document_view (a_view: NS_VIEW)
 		do
-			scroll_view_set_document_view (item, a_view.item)
+			{NS_SCROLL_VIEW_API}.set_document_view (item, a_view.item)
 		end
 
 	document_view: NS_VIEW
 			-- TODO: Create correct concrete subclass!
 		do
-			create Result.make_shared (scroll_view_document_view (item))
+			create Result.make_shared ({NS_SCROLL_VIEW_API}.document_view (item))
 		end
 
 	set_content_view (a_content_view: NS_CLIP_VIEW)
 		do
-			scroll_view_set_content_view (item, a_content_view.item)
+			{NS_SCROLL_VIEW_API}.set_content_view (item, a_content_view.item)
 		end
 
 	content_view: NS_CLIP_VIEW
 		do
-			create Result.make_shared (scroll_view_content_view (item))
+			create Result.make_shared ({NS_SCROLL_VIEW_API}.content_view (item))
 		end
 
 --	set_document_cursor (a_an_obj: NS_CURSOR)
 --		do
---			scroll_view_set_document_cursor (cocoa_object, a_an_obj.cocoa_object)
+--			{NS_SCROLL_VIEW_API}.set_document_cursor (cocoa_object, a_an_obj.cocoa_object)
 --		end
 
 --	document_cursor: NS_CURSOR
 --		do
---			create Result.make_shared (scroll_view_document_cursor (cocoa_object))
+--			create Result.make_shared ({NS_SCROLL_VIEW_API}.document_cursor (cocoa_object))
 --		end
 
 	set_border_type (a_type: INTEGER)
 		do
-			scroll_view_set_border_type (item, a_type)
+			{NS_SCROLL_VIEW_API}.set_border_type (item, a_type)
 		end
 
 	border_type: INTEGER
 		do
-			Result := scroll_view_border_type (item)
+			Result := {NS_SCROLL_VIEW_API}.border_type (item)
 		end
 
 	set_background_color (a_color: NS_COLOR)
 		do
-			scroll_view_set_background_color (item, a_color.item)
+			{NS_SCROLL_VIEW_API}.set_background_color (item, a_color.item)
 		end
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (scroll_view_background_color (item))
+			create Result.make_shared ({NS_SCROLL_VIEW_API}.background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
 		do
-			scroll_view_set_draws_background (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_draws_background (item, a_flag)
 		end
 
 	draws_background: BOOLEAN
 		do
-			Result := scroll_view_draws_background (item)
+			Result := {NS_SCROLL_VIEW_API}.draws_background (item)
 		end
 
 	set_has_vertical_scroller (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_vertical_scroller (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_has_vertical_scroller (item, a_flag)
 		end
 
 	has_vertical_scroller: BOOLEAN
 		do
-			Result := scroll_view_has_vertical_scroller (item)
+			Result := {NS_SCROLL_VIEW_API}.has_vertical_scroller (item)
 		end
 
 	set_has_horizontal_scroller (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_horizontal_scroller (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_has_horizontal_scroller (item, a_flag)
 		end
 
 	has_horizontal_scroller: BOOLEAN
 		do
-			Result := scroll_view_has_horizontal_scroller (item)
+			Result := {NS_SCROLL_VIEW_API}.has_horizontal_scroller (item)
 		end
 
 	set_vertical_scroller (a_an_object: NS_SCROLLER)
 		do
-			scroll_view_set_vertical_scroller (item, a_an_object.item)
+			{NS_SCROLL_VIEW_API}.set_vertical_scroller (item, a_an_object.item)
 		end
 
 	vertical_scroller: NS_SCROLLER
 		do
-			create Result.make_shared (scroll_view_vertical_scroller (item))
+			create Result.make_shared ({NS_SCROLL_VIEW_API}.vertical_scroller (item))
 		end
 
 	set_horizontal_scroller (a_an_object: NS_SCROLLER)
 		do
-			scroll_view_set_horizontal_scroller (item, a_an_object.item)
+			{NS_SCROLL_VIEW_API}.set_horizontal_scroller (item, a_an_object.item)
 		end
 
 	horizontal_scroller: NS_SCROLLER
 		do
-			create Result.make_shared (scroll_view_horizontal_scroller (item))
+			create Result.make_shared ({NS_SCROLL_VIEW_API}.horizontal_scroller (item))
 		end
 
 	autohides_scrollers: BOOLEAN
 		do
-			Result := scroll_view_autohides_scrollers (item)
+			Result := {NS_SCROLL_VIEW_API}.autohides_scrollers (item)
 		end
 
 	set_autohides_scrollers (a_flag: BOOLEAN)
 		do
-			scroll_view_set_autohides_scrollers (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_autohides_scrollers (item, a_flag)
 		end
 
 	set_horizontal_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_horizontal_line_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_horizontal_line_scroll (item, a_value)
 		end
 
 	set_vertical_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_vertical_line_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_vertical_line_scroll (item, a_value)
 		end
 
 	set_line_scroll (a_value: REAL)
 		do
-			scroll_view_set_line_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_line_scroll (item, a_value)
 		end
 
 	horizontal_line_scroll: REAL
 		do
-			Result := scroll_view_horizontal_line_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.horizontal_line_scroll (item)
 		end
 
 	vertical_line_scroll: REAL
 		do
-			Result := scroll_view_vertical_line_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.vertical_line_scroll (item)
 		end
 
 	line_scroll: REAL
 		do
-			Result := scroll_view_line_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.line_scroll (item)
 		end
 
 	set_horizontal_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_horizontal_page_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_horizontal_page_scroll (item, a_value)
 		end
 
 	set_vertical_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_vertical_page_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_vertical_page_scroll (item, a_value)
 		end
 
 	set_page_scroll (a_value: REAL)
 		do
-			scroll_view_set_page_scroll (item, a_value)
+			{NS_SCROLL_VIEW_API}.set_page_scroll (item, a_value)
 		end
 
 	horizontal_page_scroll: REAL
 		do
-			Result := scroll_view_horizontal_page_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.horizontal_page_scroll (item)
 		end
 
 	vertical_page_scroll: REAL
 		do
-			Result := scroll_view_vertical_page_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.vertical_page_scroll (item)
 		end
 
 	page_scroll: REAL
 		do
-			Result := scroll_view_page_scroll (item)
+			Result := {NS_SCROLL_VIEW_API}.page_scroll (item)
 		end
 
 	set_scrolls_dynamically (a_flag: BOOLEAN)
 		do
-			scroll_view_set_scrolls_dynamically (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_scrolls_dynamically (item, a_flag)
 		end
 
 	scrolls_dynamically: BOOLEAN
 		do
-			Result := scroll_view_scrolls_dynamically (item)
+			Result := {NS_SCROLL_VIEW_API}.scrolls_dynamically (item)
 		end
 
 	tile
 		do
-			scroll_view_tile (item)
+			{NS_SCROLL_VIEW_API}.tile (item)
 		end
 
 	reflect_scrolled_clip_view (a_c_view: NS_CLIP_VIEW)
 		do
-			scroll_view_reflect_scrolled_clip_view (item, a_c_view.item)
+			{NS_SCROLL_VIEW_API}.reflect_scrolled_clip_view (item, a_c_view.item)
 		end
 
---	scroll_wheel (a_the_event: NS_EVENT)
---		do
---			scroll_view_scroll_wheel (cocoa_object, a_the_event.cocoa_object)
---		end
+	scroll_wheel (a_the_event: NS_EVENT)
+		do
+			{NS_SCROLL_VIEW_API}.scroll_wheel (item, a_the_event.item)
+		end
 
 	set_rulers_visible (a_flag: BOOLEAN)
 		do
-			scroll_view_set_rulers_visible (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_rulers_visible (item, a_flag)
 		end
 
 	rulers_visible: BOOLEAN
 		do
-			Result := scroll_view_rulers_visible (item)
+			Result := {NS_SCROLL_VIEW_API}.rulers_visible (item)
 		end
 
 	set_has_horizontal_ruler (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_horizontal_ruler (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_has_horizontal_ruler (item, a_flag)
 		end
 
 	has_horizontal_ruler: BOOLEAN
 		do
-			Result := scroll_view_has_horizontal_ruler (item)
+			Result := {NS_SCROLL_VIEW_API}.has_horizontal_ruler (item)
 		end
 
 	set_has_vertical_ruler (a_flag: BOOLEAN)
 		do
-			scroll_view_set_has_vertical_ruler (item, a_flag)
+			{NS_SCROLL_VIEW_API}.set_has_vertical_ruler (item, a_flag)
 		end
 
 	has_vertical_ruler: BOOLEAN
 		do
-			Result := scroll_view_has_vertical_ruler (item)
+			Result := {NS_SCROLL_VIEW_API}.has_vertical_ruler (item)
 		end
 
 --	set_horizontal_ruler_view (a_ruler: NS_RULER_VIEW)
 --		do
---			scroll_view_set_horizontal_ruler_view (cocoa_object, a_ruler.cocoa_object)
+--			{NS_SCROLL_VIEW_API}.set_horizontal_ruler_view (cocoa_object, a_ruler.cocoa_object)
 --		end
 
 --	horizontal_ruler_view: NS_RULER_VIEW
 --		do
---			create Result.make_shared (scroll_view_horizontal_ruler_view (cocoa_object))
+--			create Result.make_shared ({NS_SCROLL_VIEW_API}.horizontal_ruler_view (cocoa_object))
 --		end
 
 --	set_vertical_ruler_view (a_ruler: NS_RULER_VIEW)
 --		do
---			scroll_view_set_vertical_ruler_view (cocoa_object, a_ruler.cocoa_object)
+--			{NS_SCROLL_VIEW_API}.set_vertical_ruler_view (cocoa_object, a_ruler.cocoa_object)
 --		end
 
 --	vertical_ruler_view: NS_RULER_VIEW
 --		do
---			create Result.make_shared (scroll_view_vertical_ruler_view (cocoa_object))
+--			create Result.make_shared ({NS_SCROLL_VIEW_API}.vertical_ruler_view (cocoa_object))
 --		end
-
-feature {NONE} -- Objective-C implementation
-
-	frozen scroll_view_new: POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSScrollView new];"
-		end
-
-	frozen scroll_view_document_visible_rect (a_scroll_view: POINTER; res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSRect frame = [(NSScrollView*)$a_scroll_view documentVisibleRect]; memcpy($res, &frame, sizeof(NSRect));"
-		end
-
-	frozen scroll_view_content_size (a_scroll_view: POINTER; res: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"NSSize size = [(NSScrollView*)$a_scroll_view contentSize]; memcpy($res, &size, sizeof(NSSize));"
-		end
-
-	frozen scroll_view_set_document_view (a_scroll_view: POINTER; a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setDocumentView: $a_view];"
-		end
-
-	frozen scroll_view_document_view (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view documentView];"
-		end
-
-	frozen scroll_view_set_content_view (a_scroll_view: POINTER; a_content_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setContentView: $a_content_view];"
-		end
-
-	frozen scroll_view_content_view (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view contentView];"
-		end
-
-	frozen scroll_view_set_document_cursor (a_scroll_view: POINTER; a_an_obj: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setDocumentCursor: $a_an_obj];"
-		end
-
-	frozen scroll_view_document_cursor (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view documentCursor];"
-		end
-
-	frozen scroll_view_set_border_type (a_scroll_view: POINTER; a_type: INTEGER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setBorderType: $a_type];"
-		end
-
-	frozen scroll_view_border_type (a_scroll_view: POINTER): INTEGER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view borderType];"
-		end
-
-	frozen scroll_view_set_background_color (a_scroll_view: POINTER; a_color: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setBackgroundColor: $a_color];"
-		end
-
-	frozen scroll_view_background_color (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view backgroundColor];"
-		end
-
-	frozen scroll_view_set_draws_background (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setDrawsBackground: $a_flag];"
-		end
-
-	frozen scroll_view_draws_background (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view drawsBackground];"
-		end
-
-	frozen scroll_view_set_has_vertical_scroller (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHasVerticalScroller: $a_flag];"
-		end
-
-	frozen scroll_view_has_vertical_scroller (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view hasVerticalScroller];"
-		end
-
-	frozen scroll_view_set_has_horizontal_scroller (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHasHorizontalScroller: $a_flag];"
-		end
-
-	frozen scroll_view_has_horizontal_scroller (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view hasHorizontalScroller];"
-		end
-
-	frozen scroll_view_set_vertical_scroller (a_scroll_view: POINTER; a_an_object: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setVerticalScroller: $a_an_object];"
-		end
-
-	frozen scroll_view_vertical_scroller (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view verticalScroller];"
-		end
-
-	frozen scroll_view_set_horizontal_scroller (a_scroll_view: POINTER; a_an_object: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHorizontalScroller: $a_an_object];"
-		end
-
-	frozen scroll_view_horizontal_scroller (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view horizontalScroller];"
-		end
-
-	frozen scroll_view_autohides_scrollers (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view autohidesScrollers];"
-		end
-
-	frozen scroll_view_set_autohides_scrollers (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setAutohidesScrollers: $a_flag];"
-		end
-
-	frozen scroll_view_set_horizontal_line_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHorizontalLineScroll: $a_value];"
-		end
-
-	frozen scroll_view_set_vertical_line_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setVerticalLineScroll: $a_value];"
-		end
-
-	frozen scroll_view_set_line_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setLineScroll: $a_value];"
-		end
-
-	frozen scroll_view_horizontal_line_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view horizontalLineScroll];"
-		end
-
-	frozen scroll_view_vertical_line_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view verticalLineScroll];"
-		end
-
-	frozen scroll_view_line_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view lineScroll];"
-		end
-
-	frozen scroll_view_set_horizontal_page_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHorizontalPageScroll: $a_value];"
-		end
-
-	frozen scroll_view_set_vertical_page_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setVerticalPageScroll: $a_value];"
-		end
-
-	frozen scroll_view_set_page_scroll (a_scroll_view: POINTER; a_value: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setPageScroll: $a_value];"
-		end
-
-	frozen scroll_view_horizontal_page_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view horizontalPageScroll];"
-		end
-
-	frozen scroll_view_vertical_page_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view verticalPageScroll];"
-		end
-
-	frozen scroll_view_page_scroll (a_scroll_view: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view pageScroll];"
-		end
-
-	frozen scroll_view_set_scrolls_dynamically (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setScrollsDynamically: $a_flag];"
-		end
-
-	frozen scroll_view_scrolls_dynamically (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view scrollsDynamically];"
-		end
-
-	frozen scroll_view_tile (a_scroll_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view tile];"
-		end
-
-	frozen scroll_view_reflect_scrolled_clip_view (a_scroll_view: POINTER; a_c_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view reflectScrolledClipView: $a_c_view];"
-		end
-
-	frozen scroll_view_scroll_wheel (a_scroll_view: POINTER; a_the_event: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view scrollWheel: $a_the_event];"
-		end
-
-	frozen scroll_view_set_rulers_visible (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setRulersVisible: $a_flag];"
-		end
-
-	frozen scroll_view_rulers_visible (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view rulersVisible];"
-		end
-
-	frozen scroll_view_set_has_horizontal_ruler (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHasHorizontalRuler: $a_flag];"
-		end
-
-	frozen scroll_view_has_horizontal_ruler (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view hasHorizontalRuler];"
-		end
-
-	frozen scroll_view_set_has_vertical_ruler (a_scroll_view: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHasVerticalRuler: $a_flag];"
-		end
-
-	frozen scroll_view_has_vertical_ruler (a_scroll_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view hasVerticalRuler];"
-		end
-
-	frozen scroll_view_set_horizontal_ruler_view (a_scroll_view: POINTER; a_ruler: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setHorizontalRulerView: $a_ruler];"
-		end
-
-	frozen scroll_view_horizontal_ruler_view (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view horizontalRulerView];"
-		end
-
-	frozen scroll_view_set_vertical_ruler_view (a_scroll_view: POINTER; a_ruler: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSScrollView*)$a_scroll_view setVerticalRulerView: $a_ruler];"
-		end
-
-	frozen scroll_view_vertical_ruler_view (a_scroll_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSScrollView*)$a_scroll_view verticalRulerView];"
-		end
 
 feature -- Constants
 

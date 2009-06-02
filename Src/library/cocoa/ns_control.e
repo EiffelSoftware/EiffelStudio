@@ -20,54 +20,97 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (control_new)
+			make_shared ({NS_CONTROL_API}.new)
 		end
 
-feature -- ...
-
-	double_value: DOUBLE
-		do
-			Result := control_double_value (item)
-		end
-
-	is_enabled : BOOLEAN
-		do
-			Result := control_is_enabled (item)
-		end
+feature -- Access
 
 	set_action (an_action: PROCEDURE [ANY, TUPLE])
+			-- Sets the receiver's action method to call the given eiffel agent.
 		do
 			action := an_action
-			control_set_target (item, target_new ($current, $target))
-			control_set_action (item)
+			{NS_CONTROL_API}.set_target (item, target_new ($current, $target))
+			{NS_CONTROL_API}.set_action (item)
 		end
 
 	set_double_value (a_double: DOUBLE)
+			-- Sets the value of the receiver's cell using a double-precision floating-point number.
+    		-- The value of the cell interpreted as a double-precision floating-point number.
+			-- If the cell is being edited, this method aborts all editing before setting the value.
+			-- If the cell does not inherit from NSActionCell, the method marks the cell's interior as needing to be redisplayed;
+			-- NSActionCell performs its own updating of cells.
 		do
-			control_set_double_value (item, a_double)
+			{NS_CONTROL_API}.set_double_value (item, a_double)
+		ensure
+			value_set: a_double = double_value
+		end
+
+	double_value: DOUBLE
+			-- Returns the value of the receiver's cell as a double-precision floating-point number.
+			-- The value of the cell interpreted as a double-precision floating-point number.
+			-- If the control contains many cells (for example, NSMatrix), then the value of the currently
+			-- selected cell is returned. If the control is in the process of editing the affected cell, then
+			-- it invokes the validateEditing method before extracting and returning the value.
+		do
+			Result := {NS_CONTROL_API}.double_value (item)
 		end
 
 	set_enabled (a_flag: BOOLEAN)
+			-- Sets whether the receiver (and its cell) reacts to mouse events.
+			-- True if you want the receiver to react to mouse events; otherwise, False.
+			-- If flag is False, any editing is aborted. This method redraws the entire control if it is marked
+			-- as needing redisplay. Subclasses may want to override this method to redraw only a portion of
+			-- the control when the enabled state changes; NS_BUTTON and NS_SLIDER do this.
 		do
-			control_set_enabled (item, a_flag)
+			{NS_CONTROL_API}.set_enabled (item, a_flag)
+		ensure
+			enabled_set: a_flag = is_enabled
+		end
+
+	is_enabled: BOOLEAN
+			-- Returns whether the receiver reacts to mouse events.
+			-- True if the receiver responds to mouse events; otherwise False.
+		do
+			Result := {NS_CONTROL_API}.is_enabled (item)
 		end
 
 	set_string_value (a_string: STRING_GENERAL)
+			-- Sets the value of the receiver's cell
+			-- If the cell is being edited, this method aborts all editing before setting the value.
+			-- If the cell does not inherit from NSActionCell, the method marks the cell's interior as needing to be redisplayed; NSActionCell performs its own updating of cells.
 		do
-			control_set_string_value (item, (create {NS_STRING}.make_with_string (a_string)).item)
+			{NS_CONTROL_API}.set_string_value (item, (create {NS_STRING}.make_with_string (a_string)).item)
 		end
 
 	font: NS_FONT
+			-- Returns the font used to draw text in the receiver's cell.
 		do
-			create Result.make_shared (control_font (item))
+			create Result.make_shared ({NS_CONTROL_API}.font (item))
+		ensure
+			result_not_void: Result /= void
 		end
 
 	set_cell (a_cell: NS_CELL)
+			-- Sets the receiver's cell
+			-- Use this method with great care as it can irrevocably damage the affected control;
+			-- specifically, you should only use this method in initializers for subclasses of NS_CONTROL.
+		require
+			cell_not_void: a_cell /= void
 		do
-			control_set_cell (item, a_cell.item)
+			{NS_CONTROL_API}.set_cell (item, a_cell.item)
+		ensure
+			cell_set: a_cell = cell
 		end
 
-feature {NONE} -- callback
+	cell: NS_CELL
+			-- Returns the receiver's cell object.
+		do
+			create Result.make_shared ({NS_CONTROL_API}.cell (item))
+		ensure
+			result_not_void: Result /= void
+		end
+
+feature {NONE} -- Callback Handling
 
 	target
 		do
@@ -75,140 +118,4 @@ feature {NONE} -- callback
 		end
 
 	action: PROCEDURE [ANY, TUPLE]
-
-feature {NONE} -- Objective-C implementation
-
-	frozen control_new: POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSControl new];"
-		end
-
---+ (void)setCellClass:(Class)factoryId;
---+ (Class)cellClass;
-
---- (id)initWithFrame:(NSRect)frameRect;
---- (void)sizeToFit;
---- (void)calcSize;
---- (id)cell;
-	frozen control_set_cell (a_control: POINTER; a_cell: POINTER)
-			--- (void)setCell:(NSCell *)aCell;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSButton*)$a_control setCell: $a_cell];"
-		end
---- (id)selectedCell;
---- (id)target;
-	frozen control_set_target (a_control: POINTER; a_target: POINTER)
-			-- - (void)setTarget:(id)anObject;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSButton*)$a_control setTarget: $a_target];"
-		end
---- (SEL)action;
-	frozen control_set_action (a_control: POINTER)
-			-- - (void)setAction:(SEL)aSelector;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSButton*)$a_control setAction:@selector(handle_action_event:)];"
-		end
---- (NSInteger)tag;
---- (void)setTag:(NSInteger)anInt;
---- (NSInteger)selectedTag;
---- (void)setIgnoresMultiClick:(BOOL)flag;
---- (BOOL)ignoresMultiClick;
---- (NSInteger)sendActionOn:(NSInteger)mask;
---- (BOOL)isContinuous;
---- (void)setContinuous:(BOOL)flag;
---- (BOOL)isEnabled;
---- (void)setEnabled:(BOOL)flag;
---- (void)setFloatingPointFormat:(BOOL)autoRange left:(NSUInteger)leftDigits right:(NSUInteger)rightDigits;
---- (NSTextAlignment)alignment;
---- (void)setAlignment:(NSTextAlignment)mode;
---- (NSFont *)font;
-
-	frozen control_is_enabled (a_control: POINTER) : BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSControl*)$a_control isEnabled];"
-		end
-
-	frozen control_set_enabled (a_control: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSControl*)$a_control setEnabled: $a_flag];"
-		end
-
-	frozen control_font (a_control: POINTER) : POINTER
-			--- (void)setStringValue:(NSString *)aString;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSControl*)$a_control font];"
-		end
-
---- (void)setFont:(NSFont *)fontObj;
---- (void)setFormatter:(NSFormatter *)newFormatter;
---- (id)formatter;
---- (void)setObjectValue:(id<NSCopying>)obj;
-
-	frozen control_set_string_value (a_control: POINTER; a_string: POINTER)
-			--- (void)setStringValue:(NSString *)aString;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSControl*)$a_control setStringValue: $a_string];"
-		end
-
---- (void)setIntValue:(int)anInt;
---- (void)setFloatValue:(float)aFloat;
-	frozen control_set_double_value (a_control: POINTER; a_double: DOUBLE)
-			--- (void)setDoubleValue:(double)aDouble;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSControl*)$a_control setDoubleValue: $a_double];"
-		end
-
---- (id)objectValue;
---- (NSString *)stringValue;
---- (int)intValue;
---- (float)floatValue;
-	frozen control_double_value (a_control: POINTER): DOUBLE
-			-- - (double)doubleValue;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSControl*)$a_control doubleValue];"
-		end
---- (void)setNeedsDisplay;
---- (void)updateCell:(NSCell *)aCell;
---- (void)updateCellInside:(NSCell *)aCell;
---- (void)drawCellInside:(NSCell *)aCell;
---- (void)drawCell:(NSCell *)aCell;
---- (void)selectCell:(NSCell *)aCell;
-
---- (BOOL)sendAction:(SEL)theAction to:(id)theTarget;
---- (void)takeIntValueFrom:(id)sender;
---- (void)takeFloatValueFrom:(id)sender;
---- (void)takeDoubleValueFrom:(id)sender;
---- (void)takeStringValueFrom:(id)sender;
---- (void)takeObjectValueFrom:(id)sender;
---- (NSText *)currentEditor;
---- (BOOL)abortEditing;
---- (void)validateEditing;
---- (void)mouseDown:(NSEvent *)theEvent;
-
---- (NSWritingDirection)baseWritingDirection;
---- (void)setBaseWritingDirection:(NSWritingDirection)writingDirection;
-
---- (NSInteger)integerValue;
---- (void)setIntegerValue:(NSInteger)anInteger;
---- (void)takeIntegerValueFrom:(id)sender;
 end

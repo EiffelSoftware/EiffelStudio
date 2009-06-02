@@ -1,5 +1,6 @@
 # General tools
 RM=del
+SYNTAX_UPDATER="$(ISE_EIFFEL)/tools/spec/$(ISE_PLATFORM)/bin/syntax_updater"
 
 # Gobo flag for gelex
 GOBO_LEX_FLAGS=-z --pragma=noline
@@ -14,6 +15,8 @@ all: external_scanner.e external_parser.e
 
 external_scanner.e: external.l
 	$(GOBO_LEX) -o $@ $?
+	$(SYNTAX_UPDATER) .
 
 external_parser.e: external.y
 	$(GOBO_YACC) -t EXTERNAL_TOKENS -o $@ $?
+	$(SYNTAX_UPDATER) .

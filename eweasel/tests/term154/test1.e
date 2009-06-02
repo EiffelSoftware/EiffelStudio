@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list_creator: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], ARRAY [H]]
+	list_creator: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], INDEXABLE [H, INTEGER]]
 
 feature -- Status setting
 

@@ -4077,7 +4077,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_NATURAL_8 *) attr_address = value.vuint8;
 				if (mismatched) {
-					old_value = RTLN (egc_uint8_ref_dtype);
+					old_value = RTLN (egc_uint8_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4089,7 +4089,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_NATURAL_16 *) attr_address = value.vuint16;
 				if (mismatched) {
-					old_value = RTLN (egc_uint16_ref_dtype);
+					old_value = RTLN (egc_uint16_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4101,7 +4101,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_NATURAL_32 *) attr_address = value.vuint32;
 				if (mismatched) {
-					old_value = RTLN (egc_uint32_ref_dtype);
+					old_value = RTLN (egc_uint32_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4113,7 +4113,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_NATURAL_64 *) attr_address = value.vuint64;
 				if (mismatched) {
-					old_value = RTLN (egc_uint64_ref_dtype);
+					old_value = RTLN (egc_uint64_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4125,7 +4125,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_INTEGER_8 *) attr_address = value.vint8;
 				if (mismatched) {
-					old_value = RTLN (egc_int8_ref_dtype);
+					old_value = RTLN (egc_int8_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4137,7 +4137,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_INTEGER_16 *) attr_address = value.vint16;
 				if (mismatched) {
-					old_value = RTLN (egc_int16_ref_dtype);
+					old_value = RTLN (egc_int16_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4149,7 +4149,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_INTEGER_32 *) attr_address = value.vint32;
 				if (mismatched) {
-					old_value = RTLN (egc_int32_ref_dtype);
+					old_value = RTLN (egc_int32_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4161,7 +4161,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_INTEGER_64 *) attr_address = value.vint64;
 				if (mismatched) {
-					old_value = RTLN (egc_int64_ref_dtype);
+					old_value = RTLN (egc_int64_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4173,7 +4173,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_BOOLEAN *) attr_address = value.vbool;
 				if (mismatched) {
-					old_value = RTLN (egc_bool_ref_dtype);
+					old_value = RTLN (egc_bool_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4185,7 +4185,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_CHARACTER *) attr_address = value.vchar;
 				if (mismatched) {
-					old_value = RTLN (egc_char_ref_dtype);
+					old_value = RTLN (egc_char_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4197,7 +4197,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_WIDE_CHAR *) attr_address = value.vwchar;
 				if (mismatched) {
-					old_value = RTLN (egc_wchar_ref_dtype);
+					old_value = RTLN (egc_wchar_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4209,7 +4209,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_REAL_32 *) attr_address = value.vreal;
 				if (mismatched) {
-					old_value = RTLN (egc_real32_ref_dtype);
+					old_value = RTLN (egc_real32_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4221,7 +4221,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL)
 					*(EIF_REAL_64 *) attr_address = value.vdbl;
 				if (mismatched) {
-					old_value = RTLN (egc_real64_ref_dtype);
+					old_value = RTLN (egc_real64_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
@@ -4235,7 +4235,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 						*(EIF_POINTER *) attr_address = value.vptr;
 				}
 				if (mismatched) {
-					old_value = RTLN (egc_point_ref_dtype);
+					old_value = RTLN (egc_point_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scanners for external parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (sc = INITIAL)
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -557,7 +557,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
@@ -576,7 +576,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -586,7 +586,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    4,    5,    6,    5,    7,    8,    9,   10,   11,
@@ -701,7 +701,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			   42,  154,   42,   40,   40,  236,   42,  153,   42,   42,
@@ -808,7 +808,7 @@ feature {NONE} -- Table templates
 			1, 920, 1000)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -818,7 +818,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -933,7 +933,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  134,  132,  134,  135,  137,    0,  136,  130,  136,  132,
@@ -1040,7 +1040,7 @@ feature {NONE} -- Table templates
 			1, 920, 1000)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,  138, 1846,   72,  131, 1846,  119,   69,
@@ -1071,7 +1071,7 @@ feature {NONE} -- Table templates
 			 1755, 1761, 1780, 1772, 1776, 1786, 1846,   78,   91,   74, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  236,    1,  236,  236,  236,  236,  236,  236,  237,
@@ -1102,7 +1102,7 @@ feature {NONE} -- Table templates
 			  237,  237,  237,  237,  237,  237,    0,  236,  236,  236, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -1135,7 +1135,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    2,    3,    1,    1,
@@ -1148,7 +1148,7 @@ feature {NONE} -- Table templates
 			    3,    3,    3,    3, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   50,   48,    1,    2,   11,   48,    8,
@@ -1181,45 +1181,45 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 1846
+	yyJam_base: INTEGER = 1846
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 236
+	yyJam_state: INTEGER = 236
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 237
+	yyTemplate_mark: INTEGER = 237
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN = false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN = false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 49
+	yyNb_rules: INTEGER = 49
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 50
+	yyEnd_of_buffer: INTEGER = 50
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is true
+	yyLine_used: BOOLEAN = true
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is true
+	yyPosition_used: BOOLEAN = true
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
+	INITIAL: INTEGER = 0
 			-- Start condition codes
 
 feature -- User-defined features
@@ -1228,7 +1228,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -1237,7 +1237,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -1306,13 +1306,13 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER is 1024 
+	Initial_buffer_size: INTEGER = 1024 
 				-- Initial size for `token_buffer'
 
 invariant
 	token_buffer_not_void: token_buffer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -165,363 +165,483 @@ feature {NONE} -- Implementation
 	yy_clear_value_stacks is
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
+		local
+			l_yyvs1_default_item: ANY
+			l_yyvs2_default_item: ID_AS
+			l_yyvs3_default_item: CHAR_AS
+			l_yyvs4_default_item: SYMBOL_AS
+			l_yyvs5_default_item: BOOL_AS
+			l_yyvs6_default_item: RESULT_AS
+			l_yyvs7_default_item: RETRY_AS
+			l_yyvs8_default_item: UNIQUE_AS
+			l_yyvs9_default_item: CURRENT_AS
+			l_yyvs10_default_item: DEFERRED_AS
+			l_yyvs11_default_item: VOID_AS
+			l_yyvs12_default_item: KEYWORD_AS
+			l_yyvs13_default_item: STRING
+			l_yyvs14_default_item: INTEGER
+			l_yyvs15_default_item: TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING]
+			l_yyvs16_default_item: STRING_AS
+			l_yyvs17_default_item: ALIAS_TRIPLE
+			l_yyvs18_default_item: INSTRUCTION_AS
+			l_yyvs19_default_item: EIFFEL_LIST [INSTRUCTION_AS]
+			l_yyvs20_default_item: PAIR [KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]
+			l_yyvs21_default_item: PAIR [KEYWORD_AS, ID_AS]
+			l_yyvs22_default_item: PAIR [KEYWORD_AS, STRING_AS]
+			l_yyvs23_default_item: IDENTIFIER_LIST
+			l_yyvs24_default_item: TAGGED_AS
+			l_yyvs25_default_item: EIFFEL_LIST [TAGGED_AS]
+			l_yyvs26_default_item: PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
+			l_yyvs27_default_item: AGENT_TARGET_TRIPLE
+			l_yyvs28_default_item: ACCESS_AS
+			l_yyvs29_default_item: ACCESS_FEAT_AS
+			l_yyvs30_default_item: ACCESS_INV_AS
+			l_yyvs31_default_item: ARRAY_AS
+			l_yyvs32_default_item: ASSIGN_AS
+			l_yyvs33_default_item: ASSIGNER_CALL_AS
+			l_yyvs34_default_item: ATOMIC_AS
+			l_yyvs35_default_item: BINARY_AS
+			l_yyvs36_default_item: BIT_CONST_AS
+			l_yyvs37_default_item: BODY_AS
+			l_yyvs38_default_item: CALL_AS
+			l_yyvs39_default_item: CASE_AS
+			l_yyvs40_default_item: CHECK_AS
+			l_yyvs41_default_item: CLIENT_AS
+			l_yyvs42_default_item: CONSTANT_AS
+			l_yyvs43_default_item: CONVERT_FEAT_AS
+			l_yyvs44_default_item: CREATE_AS
+			l_yyvs45_default_item: CREATION_AS
+			l_yyvs46_default_item: CREATION_EXPR_AS
+			l_yyvs47_default_item: DEBUG_AS
+			l_yyvs48_default_item: ELSIF_AS
+			l_yyvs49_default_item: ENSURE_AS
+			l_yyvs50_default_item: EXPORT_ITEM_AS
+			l_yyvs51_default_item: EXPR_AS
+			l_yyvs52_default_item: EXTERNAL_AS
+			l_yyvs53_default_item: EXTERNAL_LANG_AS
+			l_yyvs54_default_item: FEATURE_AS
+			l_yyvs55_default_item: FEATURE_CLAUSE_AS
+			l_yyvs56_default_item: FEATURE_SET_AS
+			l_yyvs57_default_item: FORMAL_AS
+			l_yyvs58_default_item: FORMAL_DEC_AS
+			l_yyvs59_default_item: IF_AS
+			l_yyvs60_default_item: INDEX_AS
+			l_yyvs61_default_item: INSPECT_AS
+			l_yyvs62_default_item: INTEGER_AS
+			l_yyvs63_default_item: INTERNAL_AS
+			l_yyvs64_default_item: INTERVAL_AS
+			l_yyvs65_default_item: INVARIANT_AS
+			l_yyvs66_default_item: LOOP_AS
+			l_yyvs67_default_item: NESTED_AS
+			l_yyvs68_default_item: OPERAND_AS
+			l_yyvs69_default_item: PARENT_AS
+			l_yyvs70_default_item: PRECURSOR_AS
+			l_yyvs71_default_item: STATIC_ACCESS_AS
+			l_yyvs72_default_item: REAL_AS
+			l_yyvs73_default_item: RENAME_AS
+			l_yyvs74_default_item: REQUIRE_AS
+			l_yyvs75_default_item: REVERSE_AS
+			l_yyvs76_default_item: ROUT_BODY_AS
+			l_yyvs77_default_item: ROUTINE_AS
+			l_yyvs78_default_item: ROUTINE_CREATION_AS
+			l_yyvs79_default_item: TUPLE_AS
+			l_yyvs80_default_item: TYPE_AS
+			l_yyvs81_default_item: PAIR [SYMBOL_AS, TYPE_AS]
+			l_yyvs82_default_item: CLASS_TYPE_AS
+			l_yyvs83_default_item: TYPE_DEC_AS
+			l_yyvs84_default_item: VARIANT_AS
+			l_yyvs85_default_item: FEATURE_NAME
+			l_yyvs86_default_item: EIFFEL_LIST [ATOMIC_AS]
+			l_yyvs87_default_item: EIFFEL_LIST [CASE_AS]
+			l_yyvs88_default_item: CONVERT_FEAT_LIST_AS
+			l_yyvs89_default_item: EIFFEL_LIST [CREATE_AS]
+			l_yyvs90_default_item: EIFFEL_LIST [ELSIF_AS]
+			l_yyvs91_default_item: EIFFEL_LIST [EXPORT_ITEM_AS]
+			l_yyvs92_default_item: EXPORT_CLAUSE_AS
+			l_yyvs93_default_item: EIFFEL_LIST [EXPR_AS]
+			l_yyvs94_default_item: PARAMETER_LIST_AS
+			l_yyvs95_default_item: EIFFEL_LIST [FEATURE_AS]
+			l_yyvs96_default_item: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			l_yyvs97_default_item: EIFFEL_LIST [FEATURE_NAME]
+			l_yyvs98_default_item: CREATION_CONSTRAIN_TRIPLE
+			l_yyvs99_default_item: UNDEFINE_CLAUSE_AS
+			l_yyvs100_default_item: REDEFINE_CLAUSE_AS
+			l_yyvs101_default_item: SELECT_CLAUSE_AS
+			l_yyvs102_default_item: FORMAL_GENERIC_LIST_AS
+			l_yyvs103_default_item: CLASS_LIST_AS
+			l_yyvs104_default_item: INDEXING_CLAUSE_AS
+			l_yyvs105_default_item: EIFFEL_LIST [INTERVAL_AS]
+			l_yyvs106_default_item: EIFFEL_LIST [OPERAND_AS]
+			l_yyvs107_default_item: DELAYED_ACTUAL_LIST_AS
+			l_yyvs108_default_item: PARENT_LIST_AS
+			l_yyvs109_default_item: EIFFEL_LIST [RENAME_AS]
+			l_yyvs110_default_item: RENAME_CLAUSE_AS
+			l_yyvs111_default_item: EIFFEL_LIST [STRING_AS]
+			l_yyvs112_default_item: DEBUG_KEY_LIST_AS
+			l_yyvs113_default_item: TYPE_LIST_AS
+			l_yyvs114_default_item: TYPE_DEC_LIST_AS
+			l_yyvs115_default_item: LOCAL_DEC_LIST_AS
+			l_yyvs116_default_item: FORMAL_ARGU_DEC_LIST_AS
+			l_yyvs117_default_item: CONSTRAINT_TRIPLE
+			l_yyvs118_default_item: CONSTRAINT_LIST_AS
+			l_yyvs119_default_item: CONSTRAINING_TYPE_AS
 		do
 			if yyvs1 /= Void then
-				yyvs1.clear_all
+				yyvs1.fill_with (l_yyvs1_default_item, 0, yyvs1.upper)
 			end
 			if yyvs2 /= Void then
-				yyvs2.clear_all
+				yyvs2.fill_with (l_yyvs2_default_item, 0, yyvs2.upper)
 			end
 			if yyvs3 /= Void then
-				yyvs3.clear_all
+				yyvs3.fill_with (l_yyvs3_default_item, 0, yyvs3.upper)
 			end
 			if yyvs4 /= Void then
-				yyvs4.clear_all
+				yyvs4.fill_with (l_yyvs4_default_item, 0, yyvs4.upper)
 			end
 			if yyvs5 /= Void then
-				yyvs5.clear_all
+				yyvs5.fill_with (l_yyvs5_default_item, 0, yyvs5.upper)
 			end
 			if yyvs6 /= Void then
-				yyvs6.clear_all
+				yyvs6.fill_with (l_yyvs6_default_item, 0, yyvs6.upper)
 			end
 			if yyvs7 /= Void then
-				yyvs7.clear_all
+				yyvs7.fill_with (l_yyvs7_default_item, 0, yyvs7.upper)
 			end
 			if yyvs8 /= Void then
-				yyvs8.clear_all
+				yyvs8.fill_with (l_yyvs8_default_item, 0, yyvs8.upper)
 			end
 			if yyvs9 /= Void then
-				yyvs9.clear_all
+				yyvs9.fill_with (l_yyvs9_default_item, 0, yyvs9.upper)
 			end
 			if yyvs10 /= Void then
-				yyvs10.clear_all
+				yyvs10.fill_with (l_yyvs10_default_item, 0, yyvs10.upper)
 			end
 			if yyvs11 /= Void then
-				yyvs11.clear_all
+				yyvs11.fill_with (l_yyvs11_default_item, 0, yyvs11.upper)
 			end
 			if yyvs12 /= Void then
-				yyvs12.clear_all
+				yyvs12.fill_with (l_yyvs12_default_item, 0, yyvs12.upper)
 			end
 			if yyvs13 /= Void then
-				yyvs13.clear_all
+				yyvs13.fill_with (l_yyvs13_default_item, 0, yyvs13.upper)
 			end
 			if yyvs14 /= Void then
-				yyvs14.clear_all
+				yyvs14.fill_with (l_yyvs14_default_item, 0, yyvs14.upper)
 			end
 			if yyvs15 /= Void then
-				yyvs15.clear_all
+				yyvs15.fill_with (l_yyvs15_default_item, 0, yyvs15.upper)
 			end
 			if yyvs16 /= Void then
-				yyvs16.clear_all
+				yyvs16.fill_with (l_yyvs16_default_item, 0, yyvs16.upper)
 			end
 			if yyvs17 /= Void then
-				yyvs17.clear_all
+				yyvs17.fill_with (l_yyvs17_default_item, 0, yyvs17.upper)
 			end
 			if yyvs18 /= Void then
-				yyvs18.clear_all
+				yyvs18.fill_with (l_yyvs18_default_item, 0, yyvs18.upper)
 			end
 			if yyvs19 /= Void then
-				yyvs19.clear_all
+				yyvs19.fill_with (l_yyvs19_default_item, 0, yyvs19.upper)
 			end
 			if yyvs20 /= Void then
-				yyvs20.clear_all
+				yyvs20.fill_with (l_yyvs20_default_item, 0, yyvs20.upper)
 			end
 			if yyvs21 /= Void then
-				yyvs21.clear_all
+				yyvs21.fill_with (l_yyvs21_default_item, 0, yyvs21.upper)
 			end
 			if yyvs22 /= Void then
-				yyvs22.clear_all
+				yyvs22.fill_with (l_yyvs22_default_item, 0, yyvs22.upper)
 			end
 			if yyvs23 /= Void then
-				yyvs23.clear_all
+				yyvs23.fill_with (l_yyvs23_default_item, 0, yyvs23.upper)
 			end
 			if yyvs24 /= Void then
-				yyvs24.clear_all
+				yyvs24.fill_with (l_yyvs24_default_item, 0, yyvs24.upper)
 			end
 			if yyvs25 /= Void then
-				yyvs25.clear_all
+				yyvs25.fill_with (l_yyvs25_default_item, 0, yyvs25.upper)
 			end
 			if yyvs26 /= Void then
-				yyvs26.clear_all
+				yyvs26.fill_with (l_yyvs26_default_item, 0, yyvs26.upper)
 			end
 			if yyvs27 /= Void then
-				yyvs27.clear_all
+				yyvs27.fill_with (l_yyvs27_default_item, 0, yyvs27.upper)
 			end
 			if yyvs28 /= Void then
-				yyvs28.clear_all
+				yyvs28.fill_with (l_yyvs28_default_item, 0, yyvs28.upper)
 			end
 			if yyvs29 /= Void then
-				yyvs29.clear_all
+				yyvs29.fill_with (l_yyvs29_default_item, 0, yyvs29.upper)
 			end
 			if yyvs30 /= Void then
-				yyvs30.clear_all
+				yyvs30.fill_with (l_yyvs30_default_item, 0, yyvs30.upper)
 			end
 			if yyvs31 /= Void then
-				yyvs31.clear_all
+				yyvs31.fill_with (l_yyvs31_default_item, 0, yyvs31.upper)
 			end
 			if yyvs32 /= Void then
-				yyvs32.clear_all
+				yyvs32.fill_with (l_yyvs32_default_item, 0, yyvs32.upper)
 			end
 			if yyvs33 /= Void then
-				yyvs33.clear_all
+				yyvs33.fill_with (l_yyvs33_default_item, 0, yyvs33.upper)
 			end
 			if yyvs34 /= Void then
-				yyvs34.clear_all
+				yyvs34.fill_with (l_yyvs34_default_item, 0, yyvs34.upper)
 			end
 			if yyvs35 /= Void then
-				yyvs35.clear_all
+				yyvs35.fill_with (l_yyvs35_default_item, 0, yyvs35.upper)
 			end
 			if yyvs36 /= Void then
-				yyvs36.clear_all
+				yyvs36.fill_with (l_yyvs36_default_item, 0, yyvs36.upper)
 			end
 			if yyvs37 /= Void then
-				yyvs37.clear_all
+				yyvs37.fill_with (l_yyvs37_default_item, 0, yyvs37.upper)
 			end
 			if yyvs38 /= Void then
-				yyvs38.clear_all
+				yyvs38.fill_with (l_yyvs38_default_item, 0, yyvs38.upper)
 			end
 			if yyvs39 /= Void then
-				yyvs39.clear_all
+				yyvs39.fill_with (l_yyvs39_default_item, 0, yyvs39.upper)
 			end
 			if yyvs40 /= Void then
-				yyvs40.clear_all
+				yyvs40.fill_with (l_yyvs40_default_item, 0, yyvs40.upper)
 			end
 			if yyvs41 /= Void then
-				yyvs41.clear_all
+				yyvs41.fill_with (l_yyvs41_default_item, 0, yyvs41.upper)
 			end
 			if yyvs42 /= Void then
-				yyvs42.clear_all
+				yyvs42.fill_with (l_yyvs42_default_item, 0, yyvs42.upper)
 			end
 			if yyvs43 /= Void then
-				yyvs43.clear_all
+				yyvs43.fill_with (l_yyvs43_default_item, 0, yyvs43.upper)
 			end
 			if yyvs44 /= Void then
-				yyvs44.clear_all
+				yyvs44.fill_with (l_yyvs44_default_item, 0, yyvs44.upper)
 			end
 			if yyvs45 /= Void then
-				yyvs45.clear_all
+				yyvs45.fill_with (l_yyvs45_default_item, 0, yyvs45.upper)
 			end
 			if yyvs46 /= Void then
-				yyvs46.clear_all
+				yyvs46.fill_with (l_yyvs46_default_item, 0, yyvs46.upper)
 			end
 			if yyvs47 /= Void then
-				yyvs47.clear_all
+				yyvs47.fill_with (l_yyvs47_default_item, 0, yyvs47.upper)
 			end
 			if yyvs48 /= Void then
-				yyvs48.clear_all
+				yyvs48.fill_with (l_yyvs48_default_item, 0, yyvs48.upper)
 			end
 			if yyvs49 /= Void then
-				yyvs49.clear_all
+				yyvs49.fill_with (l_yyvs49_default_item, 0, yyvs49.upper)
 			end
 			if yyvs50 /= Void then
-				yyvs50.clear_all
+				yyvs50.fill_with (l_yyvs50_default_item, 0, yyvs50.upper)
 			end
 			if yyvs51 /= Void then
-				yyvs51.clear_all
+				yyvs51.fill_with (l_yyvs51_default_item, 0, yyvs51.upper)
 			end
 			if yyvs52 /= Void then
-				yyvs52.clear_all
+				yyvs52.fill_with (l_yyvs52_default_item, 0, yyvs52.upper)
 			end
 			if yyvs53 /= Void then
-				yyvs53.clear_all
+				yyvs53.fill_with (l_yyvs53_default_item, 0, yyvs53.upper)
 			end
 			if yyvs54 /= Void then
-				yyvs54.clear_all
+				yyvs54.fill_with (l_yyvs54_default_item, 0, yyvs54.upper)
 			end
 			if yyvs55 /= Void then
-				yyvs55.clear_all
+				yyvs55.fill_with (l_yyvs55_default_item, 0, yyvs55.upper)
 			end
 			if yyvs56 /= Void then
-				yyvs56.clear_all
+				yyvs56.fill_with (l_yyvs56_default_item, 0, yyvs56.upper)
 			end
 			if yyvs57 /= Void then
-				yyvs57.clear_all
+				yyvs57.fill_with (l_yyvs57_default_item, 0, yyvs57.upper)
 			end
 			if yyvs58 /= Void then
-				yyvs58.clear_all
+				yyvs58.fill_with (l_yyvs58_default_item, 0, yyvs58.upper)
 			end
 			if yyvs59 /= Void then
-				yyvs59.clear_all
+				yyvs59.fill_with (l_yyvs59_default_item, 0, yyvs59.upper)
 			end
 			if yyvs60 /= Void then
-				yyvs60.clear_all
+				yyvs60.fill_with (l_yyvs60_default_item, 0, yyvs60.upper)
 			end
 			if yyvs61 /= Void then
-				yyvs61.clear_all
+				yyvs61.fill_with (l_yyvs61_default_item, 0, yyvs61.upper)
 			end
 			if yyvs62 /= Void then
-				yyvs62.clear_all
+				yyvs62.fill_with (l_yyvs62_default_item, 0, yyvs62.upper)
 			end
 			if yyvs63 /= Void then
-				yyvs63.clear_all
+				yyvs63.fill_with (l_yyvs63_default_item, 0, yyvs63.upper)
 			end
 			if yyvs64 /= Void then
-				yyvs64.clear_all
+				yyvs64.fill_with (l_yyvs64_default_item, 0, yyvs64.upper)
 			end
 			if yyvs65 /= Void then
-				yyvs65.clear_all
+				yyvs65.fill_with (l_yyvs65_default_item, 0, yyvs65.upper)
 			end
 			if yyvs66 /= Void then
-				yyvs66.clear_all
+				yyvs66.fill_with (l_yyvs66_default_item, 0, yyvs66.upper)
 			end
 			if yyvs67 /= Void then
-				yyvs67.clear_all
+				yyvs67.fill_with (l_yyvs67_default_item, 0, yyvs67.upper)
 			end
 			if yyvs68 /= Void then
-				yyvs68.clear_all
+				yyvs68.fill_with (l_yyvs68_default_item, 0, yyvs68.upper)
 			end
 			if yyvs69 /= Void then
-				yyvs69.clear_all
+				yyvs69.fill_with (l_yyvs69_default_item, 0, yyvs69.upper)
 			end
 			if yyvs70 /= Void then
-				yyvs70.clear_all
+				yyvs70.fill_with (l_yyvs70_default_item, 0, yyvs70.upper)
 			end
 			if yyvs71 /= Void then
-				yyvs71.clear_all
+				yyvs71.fill_with (l_yyvs71_default_item, 0, yyvs71.upper)
 			end
 			if yyvs72 /= Void then
-				yyvs72.clear_all
+				yyvs72.fill_with (l_yyvs72_default_item, 0, yyvs72.upper)
 			end
 			if yyvs73 /= Void then
-				yyvs73.clear_all
+				yyvs73.fill_with (l_yyvs73_default_item, 0, yyvs73.upper)
 			end
 			if yyvs74 /= Void then
-				yyvs74.clear_all
+				yyvs74.fill_with (l_yyvs74_default_item, 0, yyvs74.upper)
 			end
 			if yyvs75 /= Void then
-				yyvs75.clear_all
+				yyvs75.fill_with (l_yyvs75_default_item, 0, yyvs75.upper)
 			end
 			if yyvs76 /= Void then
-				yyvs76.clear_all
+				yyvs76.fill_with (l_yyvs76_default_item, 0, yyvs76.upper)
 			end
 			if yyvs77 /= Void then
-				yyvs77.clear_all
+				yyvs77.fill_with (l_yyvs77_default_item, 0, yyvs77.upper)
 			end
 			if yyvs78 /= Void then
-				yyvs78.clear_all
+				yyvs78.fill_with (l_yyvs78_default_item, 0, yyvs78.upper)
 			end
 			if yyvs79 /= Void then
-				yyvs79.clear_all
+				yyvs79.fill_with (l_yyvs79_default_item, 0, yyvs79.upper)
 			end
 			if yyvs80 /= Void then
-				yyvs80.clear_all
+				yyvs80.fill_with (l_yyvs80_default_item, 0, yyvs80.upper)
 			end
 			if yyvs81 /= Void then
-				yyvs81.clear_all
+				yyvs81.fill_with (l_yyvs81_default_item, 0, yyvs81.upper)
 			end
 			if yyvs82 /= Void then
-				yyvs82.clear_all
+				yyvs82.fill_with (l_yyvs82_default_item, 0, yyvs82.upper)
 			end
 			if yyvs83 /= Void then
-				yyvs83.clear_all
+				yyvs83.fill_with (l_yyvs83_default_item, 0, yyvs83.upper)
 			end
 			if yyvs84 /= Void then
-				yyvs84.clear_all
+				yyvs84.fill_with (l_yyvs84_default_item, 0, yyvs84.upper)
 			end
 			if yyvs85 /= Void then
-				yyvs85.clear_all
+				yyvs85.fill_with (l_yyvs85_default_item, 0, yyvs85.upper)
 			end
 			if yyvs86 /= Void then
-				yyvs86.clear_all
+				yyvs86.fill_with (l_yyvs86_default_item, 0, yyvs86.upper)
 			end
 			if yyvs87 /= Void then
-				yyvs87.clear_all
+				yyvs87.fill_with (l_yyvs87_default_item, 0, yyvs87.upper)
 			end
 			if yyvs88 /= Void then
-				yyvs88.clear_all
+				yyvs88.fill_with (l_yyvs88_default_item, 0, yyvs88.upper)
 			end
 			if yyvs89 /= Void then
-				yyvs89.clear_all
+				yyvs89.fill_with (l_yyvs89_default_item, 0, yyvs89.upper)
 			end
 			if yyvs90 /= Void then
-				yyvs90.clear_all
+				yyvs90.fill_with (l_yyvs90_default_item, 0, yyvs90.upper)
 			end
 			if yyvs91 /= Void then
-				yyvs91.clear_all
+				yyvs91.fill_with (l_yyvs91_default_item, 0, yyvs91.upper)
 			end
 			if yyvs92 /= Void then
-				yyvs92.clear_all
+				yyvs92.fill_with (l_yyvs92_default_item, 0, yyvs92.upper)
 			end
 			if yyvs93 /= Void then
-				yyvs93.clear_all
+				yyvs93.fill_with (l_yyvs93_default_item, 0, yyvs93.upper)
 			end
 			if yyvs94 /= Void then
-				yyvs94.clear_all
+				yyvs94.fill_with (l_yyvs94_default_item, 0, yyvs94.upper)
 			end
 			if yyvs95 /= Void then
-				yyvs95.clear_all
+				yyvs95.fill_with (l_yyvs95_default_item, 0, yyvs95.upper)
 			end
 			if yyvs96 /= Void then
-				yyvs96.clear_all
+				yyvs96.fill_with (l_yyvs96_default_item, 0, yyvs96.upper)
 			end
 			if yyvs97 /= Void then
-				yyvs97.clear_all
+				yyvs97.fill_with (l_yyvs97_default_item, 0, yyvs97.upper)
 			end
 			if yyvs98 /= Void then
-				yyvs98.clear_all
+				yyvs98.fill_with (l_yyvs98_default_item, 0, yyvs98.upper)
 			end
 			if yyvs99 /= Void then
-				yyvs99.clear_all
+				yyvs99.fill_with (l_yyvs99_default_item, 0, yyvs99.upper)
 			end
 			if yyvs100 /= Void then
-				yyvs100.clear_all
+				yyvs100.fill_with (l_yyvs100_default_item, 0, yyvs100.upper)
 			end
 			if yyvs101 /= Void then
-				yyvs101.clear_all
+				yyvs101.fill_with (l_yyvs101_default_item, 0, yyvs101.upper)
 			end
 			if yyvs102 /= Void then
-				yyvs102.clear_all
+				yyvs102.fill_with (l_yyvs102_default_item, 0, yyvs102.upper)
 			end
 			if yyvs103 /= Void then
-				yyvs103.clear_all
+				yyvs103.fill_with (l_yyvs103_default_item, 0, yyvs103.upper)
 			end
 			if yyvs104 /= Void then
-				yyvs104.clear_all
+				yyvs104.fill_with (l_yyvs104_default_item, 0, yyvs104.upper)
 			end
 			if yyvs105 /= Void then
-				yyvs105.clear_all
+				yyvs105.fill_with (l_yyvs105_default_item, 0, yyvs105.upper)
 			end
 			if yyvs106 /= Void then
-				yyvs106.clear_all
+				yyvs106.fill_with (l_yyvs106_default_item, 0, yyvs106.upper)
 			end
 			if yyvs107 /= Void then
-				yyvs107.clear_all
+				yyvs107.fill_with (l_yyvs107_default_item, 0, yyvs107.upper)
 			end
 			if yyvs108 /= Void then
-				yyvs108.clear_all
+				yyvs108.fill_with (l_yyvs108_default_item, 0, yyvs108.upper)
 			end
 			if yyvs109 /= Void then
-				yyvs109.clear_all
+				yyvs109.fill_with (l_yyvs109_default_item, 0, yyvs109.upper)
 			end
 			if yyvs110 /= Void then
-				yyvs110.clear_all
+				yyvs110.fill_with (l_yyvs110_default_item, 0, yyvs110.upper)
 			end
 			if yyvs111 /= Void then
-				yyvs111.clear_all
+				yyvs111.fill_with (l_yyvs111_default_item, 0, yyvs111.upper)
 			end
 			if yyvs112 /= Void then
-				yyvs112.clear_all
+				yyvs112.fill_with (l_yyvs112_default_item, 0, yyvs112.upper)
 			end
 			if yyvs113 /= Void then
-				yyvs113.clear_all
+				yyvs113.fill_with (l_yyvs113_default_item, 0, yyvs113.upper)
 			end
 			if yyvs114 /= Void then
-				yyvs114.clear_all
+				yyvs114.fill_with (l_yyvs114_default_item, 0, yyvs114.upper)
 			end
 			if yyvs115 /= Void then
-				yyvs115.clear_all
+				yyvs115.fill_with (l_yyvs115_default_item, 0, yyvs115.upper)
 			end
 			if yyvs116 /= Void then
-				yyvs116.clear_all
+				yyvs116.fill_with (l_yyvs116_default_item, 0, yyvs116.upper)
 			end
 			if yyvs117 /= Void then
-				yyvs117.clear_all
+				yyvs117.fill_with (l_yyvs117_default_item, 0, yyvs117.upper)
 			end
 			if yyvs118 /= Void then
-				yyvs118.clear_all
+				yyvs118.fill_with (l_yyvs118_default_item, 0, yyvs118.upper)
 			end
 			if yyvs119 /= Void then
-				yyvs119.clear_all
+				yyvs119.fill_with (l_yyvs119_default_item, 0, yyvs119.upper)
 			end
 		end
 

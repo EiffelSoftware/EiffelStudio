@@ -218,7 +218,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "New Eiffel test"
+	t_title: STRING = "New Eiffel Test"
 
 	q_add_library: STRING =
 		"The testing library which is needed to compile and execute tests has not been added yet.%N%N%

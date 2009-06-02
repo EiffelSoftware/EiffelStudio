@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.8"
+	generator: "geyacc version 3.9"
 
 class EXTERNAL_TOKENS
 

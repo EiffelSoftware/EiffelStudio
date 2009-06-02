@@ -139,7 +139,10 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				*/
 		
 				/* First condition: same count */
-			if (memcmp(RT_SPECIAL_DATA(source), RT_SPECIAL_DATA(target), RT_SPECIAL_DATA_SIZE)) {
+			if
+				((RT_SPECIAL_COUNT(source) != RT_SPECIAL_COUNT(target)) ||
+				(RT_SPECIAL_ELEM_SIZE(source) != RT_SPECIAL_ELEM_SIZE(target)))
+			{
 				return EIF_FALSE;
 			} else {
 					/* Second condition: block equality */

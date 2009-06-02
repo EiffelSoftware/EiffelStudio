@@ -197,14 +197,19 @@ feature {NONE} -- Implementation
 			l_target.add_library (l_library)
 			l_target.system.store
 
-			create l_manager.make (development_window)
-			l_manager.refresh
+			if l_target.system.store_successful then
+				create l_manager.make (development_window)
+				l_manager.refresh
 
-			if a_recompile and discover_melt_cmd.executable then
-				discover_melt_cmd.execute
+				if a_recompile and discover_melt_cmd.executable then
+					discover_melt_cmd.execute
+				end
+
+				launch_wizard
+			else
+				prompts.show_error_prompt (warning_messages.w_not_writable (l_target.system.file_name), development_window.window, Void)
 			end
 
-			launch_wizard
 		end
 
 feature {NONE} -- Constants

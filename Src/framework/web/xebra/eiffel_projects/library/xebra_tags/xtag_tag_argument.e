@@ -1,6 +1,10 @@
 note
 	description: "[
-		{XTAG_TAG_ARGUMENT}.
+		Stands for attributes in tags (xhtml and xebra).
+		There are three types it can stand for:
+			-- Plain xhtml text attribute
+			-- Call to a function of the controller
+			-- Call to a function of a variable
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,19 +27,23 @@ feature -- Initialization
 			a_value_attached: attached a_value
 		do
 			is_dynamic := dynamic_attribute_regexp.matches (a_value)
+			is_variable := variable_attribute_regexp.matches (a_value)
 			if is_dynamic then
-				internal_value := strip_off_dynamic_tags (a_value)
+				internal_value := dynamic_attribute_regexp.captured_substring (1)
+			elseif is_variable then
+				internal_value := variable_attribute_regexp.captured_substring (1)
 			else
 				internal_value := a_value
 			end
-		ensure
-			internal_value_attached: attached internal_value
 		end
 
 feature {NONE} -- Access
 
 	is_dynamic: BOOLEAN
 			-- Is the argument dynamic?
+
+	is_variable: BOOLEAN
+			-- Is the argument a variable call?
 
 	internal_value: STRING
 			-- The actual value
@@ -44,7 +52,17 @@ feature {NONE} -- Access
 			-- Dynamic attribute regular expression
 		once
 			create Result.make
-			Result.compile ("^%%=.+%%$")
+			Result.compile ("^%%=(.+)%%$")
+		ensure
+			result_attached: attached Result
+			result_compiled: Result.is_compiled
+		end
+
+	variable_attribute_regexp: RX_PCRE_MATCHER
+			-- Dynamic attribute regular expression
+		once
+			create Result.make
+			Result.compile ("^#{(.+)}$")
 		ensure
 			result_attached: attached Result
 			result_compiled: Result.is_compiled
@@ -57,6 +75,8 @@ feature -- Access
 		do
 			if is_dynamic then
 				Result := "%"+" + a_controller_id + "." + internal_value + "+%""
+			elseif is_variable then
+				Result := "%"+" + internal_value + "+%""
 			else
 				Result := escape_string (internal_value)
 			end
@@ -67,6 +87,8 @@ feature -- Access
 		do
 			if is_dynamic then
 				Result := "%"+" + a_controller_id + "." + internal_value + "+%""
+			elseif is_variable then
+				Result := "%"+" + internal_value + "+%""
 			else
 				Result := internal_value
 			end
@@ -77,19 +99,5 @@ feature -- Access
 		do
 			Result := not is_dynamic
 		end
-
-feature {NONE} -- Implementation
-
-	strip_off_dynamic_tags (a_string: STRING): STRING
-			-- Strips off the "%=" and ending "%"  Probably better using the regexp		
-		require
-			a_string_attached: attached a_string
-		do
-			Result := a_string.substring (3, a_string.count - 1)
-		end
-
-invariant
-
-	internal_value_attached: attached internal_value
 
 end

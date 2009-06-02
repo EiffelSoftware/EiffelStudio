@@ -1,6 +1,6 @@
 /*
- * description: "Apache module that sends request data to xebra server and receives page to be displayed."
- * date:		"$Date$"
+ * description: "Apache module (linux) that sends request data to xebra server and receives page to be displayed."
+ * date:	"$Date$"
  * revision:	"$Revision$"
  * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
  * license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
@@ -230,7 +230,6 @@ static int xebra_handler (request_rec* r)
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
 				gai_strerror (rv));
 
-		//ap_rputs ("Cannot resolve XEbraServer address. See error log.", r);
 		return OK;
 	}
 
@@ -239,13 +238,11 @@ static int xebra_handler (request_rec* r)
 		if ((sockfd = socket (p->ai_family, p->ai_socktype, p->ai_protocol))
 				== -1) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error socket");
-			//ap_rputs ("Cannot get socket to XEbraServer. See error log.", r);
 			continue;
 		}
 
 		if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error connect");
-			//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 			continue;
 		}
 		break;
@@ -253,7 +250,6 @@ static int xebra_handler (request_rec* r)
 
 	if (p == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
-		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
 		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
 		return OK;
 	}
@@ -268,7 +264,6 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("Sending message.");
 
 	if (!send_message_fraged (message, sockfd, r)) {
-		//ap_rputs ("Error sending message. See error log.", r);
 		PRINT_ERROR ("Error sending message. See apache error log.");
 		return OK;
 	}
@@ -279,8 +274,7 @@ static int xebra_handler (request_rec* r)
 
 	if (numbytes < 1) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
-				"error in receive_message_fraged");
-		//ap_rputs ("Error receiving message. See error log.", r);
+				"error in receive_message_fraged");		
 		PRINT_ERROR("Error receiving message. See apache error log.");
 		return OK;
 	}
@@ -290,18 +284,9 @@ static int xebra_handler (request_rec* r)
 	rv = handle_response_message (r, rmsg_buf);
 	if (rv != APR_SUCCESS)
 	{
-		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
-	/* display module revision */
-	//ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
-	//ap_rputs (REVISION, r);
-	//ap_rputs ("</small></i>", r);
-
-	//ap_rputs ("whole message:('", r);
-	//ap_rputs (rmsg_buf, r);
-	//ap_rputs ("')", r);
-
+	
 
 	/* Close sockets and quit */
 	shutdown (sockfd, 2);
@@ -340,9 +325,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
 	}
 
-	//apr_table_add (r->headers_out, "Set-Cookie", "pingu1=pangu1;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
-	//apr_table_add (r->headers_out, "Set-Cookie", "pingu2=pangu2;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
-
+	
 	DEBUG2 ("Extracting html...");
 	/* Extract html code */
 	html = ap_strstr_c (message, HTML_START);
@@ -420,10 +403,8 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 	DEBUG ("About to send message. Length is %i bytes", (int) strlen (message));
 
 	/* Create fragment */
-	DEBUG2 ("   ---trying malloc...frag_msg     ");
 	frag_msg = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
-	DEBUG2 ("ok");
-
+	
 	if (frag_msg == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error mallocating!");
 		return 0;
@@ -477,8 +458,6 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 			return 0;
 		}
 
-		//free (encoded_msg_length_byte); ap does it
-
 		/* send message */
 		numbytes = send (sockfd, frag_msg, strlen (frag_msg) * sizeof(char), 0);
 
@@ -514,27 +493,17 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 
 	DEBUG ("Receiving message...");
 
-	//DEBUG2 ("   ---trying apr_palloc...*msg_buf        ");
-	//(*msg_buf) = (char*) malloc (1);
 	(*msg_buf) = apr_palloc (r->pool, 1);
-	//DEBUG2 ("ok");
 
 	/* resetting *msg_buf */
 	*msg_buf[0] = '\0';
 	msg_buf_strlength = 0;
 
 	/* create buffer to receive message fragment */
-	//DEBUG2 ("   ---trying malloc...*frag_buf          ");
-	//frag_buf = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
+
 	frag_buf = apr_palloc (r->pool, 1);
 	frag_buf[0] = '\0';
-	//DEBUG2 ("ok");
-
-	//if ((frag_buf) == NULL) {
-	//	ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error pallocating frag_buf!");
-	//	return 0;
-	//}
-
+	
 	/* loop until we recieve a fragment with flag=0 */
 	do {
 		/* receive first 4 bytes determining length of message */
@@ -557,7 +526,6 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 
 		DEBUG ("Incoming frag, %i bytes, flag is %i", frag_length, flag);
 
-		//strcpy (frag_buf, "");
 		bytes_recv = 0;
 
 		/* loop to recieve whole fragement */
@@ -592,16 +560,10 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 		DEBUG2 ("'%s'", frag_buf);
 
 		/* extend *msg_buf and copy frag to end of it */
-		//*msg_buf
-		//		= (char *) realloc (*msg_buf, msg_buf_strlength + numbytes + 1);
-		//memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
-
 		(*msg_buf) = apr_pstrcat (r->pool, (*msg_buf), frag_buf, NULL);
 
 		msg_buf_strlength += numbytes;
 	} while (flag == 1);
-
-	//free (frag_buf);
 
 	DEBUG ("Completed recieving message.");
 
@@ -648,7 +610,6 @@ apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
 	va_end (vp);
 
 	return APR_SUCCESS;
-
 }
 
 /**
@@ -677,7 +638,6 @@ apr_status_t cookie_remove (request_rec * r, const char *name,
 	va_end (vp);
 
 	return APR_SUCCESS;
-
 }
 
 static void register_hooks (apr_pool_t* pool)

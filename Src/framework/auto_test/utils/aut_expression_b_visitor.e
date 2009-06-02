@@ -80,8 +80,10 @@ feature {ITP_EXPRESSION} -- Processing
 						-- For real/double
 					create {REAL_CONST_B} last_expression.make (a_value.value.out, l_type)
 				elseif l_type.is_pointer then
-						-- FIXME: currently pointer values are not supported by AutoTest
-					create {VOID_B} last_expression
+						-- Note: we assume every pointer exception is `default_pointer'
+					last_expression := new_access_b (
+						interpreter_root_class.feature_with_name ("default_pointer").associated_feature_i,
+						l_type, Void)
 				else
 					check Should_not_be_here: False end
 				end

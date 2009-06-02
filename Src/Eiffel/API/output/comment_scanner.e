@@ -14,6 +14,7 @@ inherit
 create
 	make_with_text_formatter
 
+
 feature -- Status report
 
 	valid_start_condition (sc: INTEGER): BOOLEAN
@@ -41,9 +42,9 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 38 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 38")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				if seperate_comment then
@@ -54,36 +55,36 @@ end
 				less (0)
 			
 when 2 then
---|#line 53 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 53")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
 				add_email_tokens
 			
 when 3 then
---|#line 59 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 59")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 	
 				append_buffer
 				add_url_tokens				
 			
 when 4 then
---|#line 65 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 65")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
 				add_quote_feature
 			
 when 5 then
---|#line 71 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 71")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
@@ -93,68 +94,68 @@ end
 				less (text_count - 2)
 			
 when 6 then
---|#line 79 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 79")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
 				add_class (False)
 			
 when 7 then
---|#line 85 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 85")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
 				add_cluster
 			
 when 8 then
---|#line 90 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
 				text_formatter.process_new_line
 			
 when 9 then
---|#line 95 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 95")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				buffer_token
 			
 when 10 then
---|#line 102 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_email_tokens
 			
 when 11 then
---|#line 107 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 107")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 				
 				add_url_tokens				
 			
 when 12 then
---|#line 112 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 112")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_quote_feature
 			
 when 13 then
---|#line 117 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 117")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_class (True)
@@ -163,71 +164,72 @@ end
 				less (text_count - 2)
 			
 when 14 then
---|#line 125 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 125")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_class (False)
 			
 when 15 then
---|#line 130 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 130")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_cluster
 			
 when 16 then
---|#line 134 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 134")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				text_formatter.process_new_line
 			
 when 17 then
---|#line 139 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 139")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_normal_text
 			
 when 18 then
---|#line 143 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 143")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
+
 			
 when 19 then
---|#line 146 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 146")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_normal_text
 			
 when 20 then
---|#line 151 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 151")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_normal_text	
 			
 when 21 then
---|#line 157 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 157")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				add_dot_feature
 			
 when 22 then
---|#line 160 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 160")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				less (0)
@@ -235,9 +237,9 @@ end
 				reset_last_type
 			
 when 23 then
---|#line 0 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -252,9 +254,9 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0, 1, 2, 3 then
---|#line 0 "comment_scanner.l"
+--|#line <not available> "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
 				append_buffer
@@ -632,6 +634,8 @@ feature {NONE} -- Constants
 			-- Start condition codes
 
 feature -- User-defined features
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

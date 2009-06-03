@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_argument" uuid="C08A9B81-A419-406F-A640-ACA3F16FF2C1" library_target="gobo_argument">
+	<target name="gobo_argument">
+		<description>gobo argument library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option namespace="Gobo.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
+		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
+		<library name="gobo_string" location="gobo_string.ecf"/>
+		<library name="gobo_structure" location="gobo_structure.ecf"/>
+		<library name="gobo_utility" location="gobo_utility.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="argument" location="svn\library\argument\" recursive="true">
+			<option namespace="Argument">
+			</option>
+		</cluster>
+	</target>
+</system>

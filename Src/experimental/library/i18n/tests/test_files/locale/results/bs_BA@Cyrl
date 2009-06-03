@@ -1,0 +1,78 @@
+
+
+Test of locale: bs_BA@Cyrl
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  пон
+  уто
+  сре
+  чет
+  пет
+  суб
+  нед
+    Full day names:
+  понедјељак
+  уторак
+  сриједа
+  четвртак
+  петак
+  субота
+  недјеља
+    Abbreviated month names:
+  јан
+  феб
+  мар
+  апр
+  мај
+  јун
+  јул
+  авг
+  сеп
+  окт
+  нов
+  дец
+    Full month names:
+  јануар
+  фебруар
+  март
+  април
+  мај
+  јун
+  јул
+  август
+  септембар
+  октобар
+  новембар
+  децембар
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19. фебруар 2009 11:45:30, day: петак
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'КМ'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'BAM'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 КМ
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

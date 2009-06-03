@@ -1,0 +1,78 @@
+
+
+Test of locale: el_GR
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Δευ
+  Τρι
+  Τετ
+  Πεμ
+  Παρ
+  Σαβ
+  Κυρ
+    Full day names:
+  Δευτέρα
+  Τρίτη
+  Τετάρτη
+  Πέμπτη
+  Παρασκευή
+  Σάββατο
+  Κυριακή
+    Abbreviated month names:
+  Ιαν
+  Φεβ
+  Μαρ
+  Απρ
+  Μαϊ
+  Ιουν
+  Ιουλ
+  Αυγ
+  Σεπ
+  Οκτ
+  Νοε
+  Δεκ
+    Full month names:
+  Ιανουάριος
+  Φεβρουάριος
+  Μάρτιος
+  Απρίλιος
+  Μάιος
+  Ιούνιος
+  Ιούλιος
+  Αύγουστος
+  Σεπτέμβριος
+  Οκτώβριος
+  Νοέμβριος
+  Δεκέμβριος
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Παρασκευή, 19 Φεβρουάριος 2009 11:45:30 πμ, day: Παρασκευή
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'€'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'EUR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 €
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

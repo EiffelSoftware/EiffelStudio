@@ -1,0 +1,78 @@
+
+
+Test of locale: nl_NL
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ma
+  di
+  wo
+  do
+  vr
+  za
+  zo
+    Full day names:
+  maandag
+  dinsdag
+  woensdag
+  donderdag
+  vrijdag
+  zaterdag
+  zondag
+    Abbreviated month names:
+  jan
+  feb
+  mrt
+  apr
+  mei
+  jun
+  jul
+  aug
+  sep
+  okt
+  nov
+  dec
+    Full month names:
+  januari
+  februari
+  maart
+  april
+  mei
+  juni
+  juli
+  augustus
+  september
+  oktober
+  november
+  december
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: vrijdag 19 februari 2009 11:45:30, day: vrijdag
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'€'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'EUR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: € 1324539,23
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

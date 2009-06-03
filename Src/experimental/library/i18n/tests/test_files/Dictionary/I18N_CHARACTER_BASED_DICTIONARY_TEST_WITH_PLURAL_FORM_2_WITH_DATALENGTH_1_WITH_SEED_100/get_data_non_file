@@ -1,0 +1,13 @@
+get_data_iteration 1: 
+ not has_singular(1697507) 
+  not has_plural (1697507,678900201,0)
+ not has_plural (1697507,678900201,1)
+ not has_plural (1697507,678900201,2)
+ not has_plural (1697507,678900201,3)
+ not has_plural (1697507,678900201,4)
+ not has_plural (1697507,678900201,5)
+ not has_plural (1697507,678900201,6)
+ not has_plural (1697507,678900201,7)
+ not has_plural (1697507,678900201,8)
+ not has_plural (1697507,678900201,9)
+ not has_plural (1697507,678900201,10)

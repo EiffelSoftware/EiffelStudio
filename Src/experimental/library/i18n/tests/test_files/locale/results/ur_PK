@@ -1,0 +1,78 @@
+
+
+Test of locale: ur_PK
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  پير
+  منگل
+  بدھ
+  جمعرات
+  جمعه
+  هفته
+  اتوار
+    Full day names:
+  پير
+  منگل
+  بدھ
+  جمعرات
+  جمعه
+  هفته
+  اتوار
+    Abbreviated month names:
+  جنورى
+  فرورى
+  مارچ
+  اپريل
+  مئ
+  جون
+  جولاٸ
+  اگست
+  ستمبر
+  اکتوبر
+  نومبر
+  دسمبر
+    Full month names:
+  جنورى
+  فرورى
+  مارچ
+  اپريل
+  مئ
+  جون
+  جولاٸ
+  اگست
+  ستمبر
+  اکتوبر
+  نومبر
+  دسمبر
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 فرورى, 2009 11:45:30 am, day: جمعه
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'Rs'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'PKR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: Rs 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

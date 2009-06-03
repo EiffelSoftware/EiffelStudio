@@ -1,0 +1,27 @@
+==========================================================================
+CLASS:  [CLASS_NAME]
+DATE:   [YYYYMMDD]
+WHO:    [LOGINNAME]
+[NOTES HERE]
+==========================================================================
+CLASS:  EV_MULTI_COLUMN_LIST_IMP
+DATE:   19990914      
+WHO:    Julian Rogers    
+I have implemented a fix for the columns, which would previously not re-size correctly.
+This currently is called with by Wm_onpaint. Unfortunately, when making the window
+thinner while the right most column is stretched, shows the horizontal scroll bar
+briefly before removing it. This needs fixong. Maybe finding a better call than
+Wm_onpaint would help as well.
+==========================================================================
+CLASS:  [EV_CURSOR]
+DATE:   [20000505]
+WHO:    Arnaud PICHERY [ aranud@mail.dotcom.fr ]
+If you put an EV_CURSOR directly into a container, the cursor may not be
+properly displayed. It happens when the cursor is a "XOR" cursor on Windows
+This is the case for EV_DEFAULT_PIXMAPS.Ibeam_cursor and 
+EV_DEFAULT_PIXMAPS.Crosshair_cursor.
+
+For example, The following code will not work properly:
+EV_CELL.extend (EV_DEFAULT_PIXMAPS.Crosshair_cursor)
+==========================================================================
+

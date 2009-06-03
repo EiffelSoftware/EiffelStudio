@@ -1,0 +1,78 @@
+
+
+Test of locale: ml_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  തിങ്കള്.
+  ചൊവ്വ.
+  ബുധന്.
+  വ്യാഴം.
+  വെളോളി.
+  ശനി.
+  ഞായറ്.
+    Full day names:
+  തിങ്കളാഴ്ച
+  ചൊവ്വാഴ്ച
+  ബുധനാഴ്ച
+  വ്യാഴാഴ്ച
+  വെള്ളിയാഴ്ച
+  ശനിയാഴ്ച
+  ഞായറാഴ്ച
+    Abbreviated month names:
+  ജനുവരി
+  ഫെബ്റുവരി
+  മാറ്ച്ച്
+  ഏപ്റില്
+  മെയ്
+  ജൂണ്
+  ജൂലൈ
+  ഓഗസ്ററ്
+  സെപ്ററംബറ്
+  ഒക്ടോബറ്
+  നവംബറ്
+  ഡിസംബറ്
+    Full month names:
+  ജനുവരി
+  ഫെബ്റുവരി
+  മാറ്ച്ച്
+  ഏപ്റില്
+  മെയ്
+  ജൂണ്
+  ജൂലൈ
+  ഓഗസ്ററ്
+  സെപ്ററംബറ്
+  ഒക്ടോബറ്
+  നവംബറ്
+  ഡിസംബറ്
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ഫെബ്റുവരി 2009 11.45.30, day: വെള്ളിയാഴ്ച
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'ക'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ക 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

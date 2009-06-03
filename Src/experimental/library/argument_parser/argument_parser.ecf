@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="arg_parser" uuid="F2CC3814-B342-4E64-9830-A39F6C1448D7" library_target="arg_parser">
+	<description>An argument parser library for parsing and validating command line arguments.</description>
+	<target name="arg_parser">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/tests$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<file_rule>
+			<exclude>/windows$</exclude>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</file_rule>
+		<file_rule>
+			<exclude>/unix$</exclude>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="false" void_safety="none" namespace="EiffelSoftware.Framework">
+			<assertions supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<cluster name="arg_parser" location=".\" recursive="true">
+			<option namespace="ArgumentParser">
+			</option>
+			<file_rule>
+				<exclude>\/support$</exclude>
+			</file_rule>
+			<cluster name="support" location=".\support\" hidden="true"/>
+		</cluster>
+	</target>
+</system>

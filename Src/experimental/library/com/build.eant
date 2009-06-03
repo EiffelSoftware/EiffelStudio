@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="build_com" default="help">
+
+	<description>
+		description: "EiffelCom library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile">
+		<echo message="- Compile [EiffelCom]" />
+		<geant target="compile" file="build.eant" dir="Clib" 
+			reuse_variables="true" />
+		<geant target="compile" file="build.eant" dir="Clib_runtime" 
+			reuse_variables="true" />
+	</target>
+	
+	<target name="clean">
+		<echo message="- Clean [EiffelCom]" />
+		<geant target="clean" file="build.eant" dir="Clib" reuse_variables="true" />
+		<geant target="clean" file="build.eant" dir="Clib_runtime" reuse_variables="true" />
+		<delete directory="spec/${ISE_PLATFORM}" unless="${is_windows}"/>
+		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" if="${is_windows}" />
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="diff" uuid="A381323D-72A5-4FD0-BA15-AF4E5B844A75" library_target="diff">
+	<target name="diff">
+		<description>diff library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
+		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="diff" location=".\" recursive="true">
+			<option namespace="Diff">
+			</option>
+		</cluster>
+	</target>
+</system>

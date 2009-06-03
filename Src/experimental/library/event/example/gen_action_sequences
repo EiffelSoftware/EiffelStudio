@@ -1,0 +1,239 @@
+#!/usr/bin/perl -w
+#===============================================================================
+# gen_action_sequences
+#-------------------------------------------------------------------------------
+# This program translates an action sequence definition file into a collection
+# of eiffel classes. 
+# The deffinition file has one like per difinition like this:
+# name: description; arg_name: ARG_TYPE; arg_name: ARG_TYPE etc
+#-------------------------------------------------------------------------------
+# Date: $Date$
+# Revision: $Revision$
+#===============================================================================
+
+%descs = ();
+%argss = ();
+%arg_namess = ();
+%arg_typess = ();
+%wrapper_argss = ();
+
+while (<>) {
+	# Initiailize some arrays.
+	@args = ();
+	@arg_names = ();
+	@arg_types = ();
+	@filter_args = ();
+	@filter = ();
+	$source = "";
+	$filter_code = "";
+	$filter_init = "";
+	$create_args = "";
+	$init_code = "";
+	$filter_comment = "";
+	$redefine = "";
+	# Ignore empty lines, those starting with whitespace and comments.
+	if (!/^[\n 	#].*/) {
+		chomp;
+		@fields = split (/;[ 	]*/,$_);
+		# Grab the name and the description.
+		$name = shift (@fields);
+		@parts = split (/:[ 	]*/,$name);
+		$name = $parts[0];
+		$desc = $parts[1];
+
+		# Check for a filter expression.
+		if ($name =~ /([a-z_]+)[ 	]*=[ 	]*([a-z_]+)[ 	]*\(([^)]+)\)/) {
+			$name = $1;
+			$source = $2;
+			@filter_args = split (/,/,$3);
+		}
+
+		# Grab the arguments.
+		if ($source eq "") {
+			foreach $field (@fields) {
+				push (@args, $field);
+				@parts = split (/:[	 ]*/,$field);
+				push (@arg_names, $parts[0]);
+				push (@arg_types, $parts[1]);
+			}
+		} else {
+			$i = 0;
+			foreach $field (@filter_args) {
+				if ($field eq "?") {
+					push (@arg_names, $arg_namess{$source}[$i]);
+					push (@arg_types, $arg_typess{$source}[$i]);
+					push (@args, "$arg_namess{$source}[$i]: $arg_typess{$source}[$i]");
+				} elsif ($field ne "-") {
+					push (@filter, "$arg_namess{$source}[$i]$field"); 
+				}
+				$i = $i + 1;
+			}
+		}
+		# Save everything for later.
+		$descs{$name} = [ @desc ];
+		$argss{$name} = [ @args ];
+		$arg_namess{$name} = [ @arg_names ];
+		$arg_typess{$name} = [ @arg_types ];
+
+		# Prepare the parent class name.
+		$parent = "ACTION_SEQUENCE";
+		$_ = $parent;
+		tr/[A-Z]/[a-z]/;
+		$parent_lower = $_;
+
+		# Prepare the class name.
+		$_ = $name;
+		tr/[a-z]/[A-Z]/;
+		$classname = "$_\_$parent";
+		$_ = $classname;
+		tr/[A-Z]/[a-z]/;
+		$lower_classname = $_;
+
+		# Status message.
+		print "$classname\n";
+
+		# Prepare the event data type, and some handy argument list strings.
+		$data_type = "TUPLE [";
+		$wrapper_args = "";
+		$arg_name_array = "";
+		$arg_name_list = "";
+		if ($#args >= 0) {
+			@ats = @arg_types;
+			$t = shift (@ats);
+			$data_type = "$data_type$t";
+			foreach $type (@ats) {
+				$data_type = "$data_type, $type";
+			}
+
+			@ans = @arg_names;
+			$n = shift (@ans);
+			$arg_name_array = "\"$n\"";
+			$arg_name_list = "a_$n";
+			foreach $name (@ans) {
+				$arg_name_array = "$arg_name_array, \"$name\"";
+				$arg_name_list = "$arg_name_list, a_$name";
+			}
+
+			foreach $field (@args) {
+				$wrapper_args = "${wrapper_args}a_$field; "
+			}
+			$wrapper_argss{$name} = $wrapper_args;
+		}
+		$data_type = "$data_type]";
+
+		# Build the filter
+		if ($#filter >= 0 ) {
+			@fs = @filter;
+			$f = shift (@fs);
+			$fargs = $wrapper_argss{$source};
+			chop ($fargs);
+			chop ($fargs);
+			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tfilter ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
+			foreach $f (@fs) {
+				$filter_code = "$filter_code and $f ";
+			}
+			$filter_code = "$filter_code then\n\t\t\t\tcall ([$arg_name_list";
+			$source_class = "$source\_ACTION_SEQUENCE";
+			$_ = $source_class;
+			tr/[a-z]/[A-Z]/;
+			$source_class = $_;
+			
+			$filter_code = "$filter_code])\n\t\t\tend\n\t\tend\n\n\tsource: $source_class\n";
+			$create_args = "(a_source: $source_class) ";
+			$filter_init = "\n\t\t\tsource := a_source";
+			$init_code = "\n\tinitialize is\n\t\t\t-- Connect to the event source we filter.\n\t\t\t-- (Not called until an action is added.)\n\t\trequire else\n\t\t\tnot_already_called: not is_initialized\n\t\tdo\n\t\t\tsource.extend (~filter)\n\t\t\tPrecursor\n\t\tend\n";
+			$filter_comment = "\n\t\t\t-- This sequence will be one action in `a_source'.";
+		}
+
+		if ($create_args eq "") {
+			$make_name = "default_create";
+			$redefine = "default_create";
+		} else {
+			$make_name = "make";
+			$redefine = "initialize";
+		}
+
+		# Open our output file.
+		open (OH, ">" . "$lower_classname.e");
+
+#===============================================================================
+# Dump the classtext.
+#===============================================================================
+print OH <<EOT;
+indexing
+	description: "Action sequence $desc."
+	status: "Generated!"
+	keywords: "$name"
+	date: "Generated!"
+	revision: "Generated!"
+
+class $classname
+
+inherit $parent [$data_type]
+		rename
+			make as $parent_lower\_make
+		redefine
+			$redefine
+		end
+
+creation
+	$make_name
+
+feature {NONE} -- Initialization
+	
+	$make_name ${create_args}is
+			-- Create a ready to use action sequence.$filter_comment
+		do
+			$parent_lower\_make ("$name", <<$arg_name_array>>)$filter_init
+		end
+$init_code
+feature -- Access
+
+	wrapper (${wrapper_args}action: PROCEDURE [ANY, TUPLE]) is
+			-- Use this to circumvent tuple type checking. (at your own risk!)
+			-- Calls `action' passing all other arguments.
+		do
+			action.call ([$arg_name_list])
+		end
+$filter_code
+end
+EOT
+#===============================================================================
+# End of classtext
+#===============================================================================
+
+		close(OH)
+
+	}
+}
+
+#===============================================================================
+# CVS log
+#===============================================================================
+#
+# $Log$
+# Revision 1.10  1999/10/29 16:37:04  oconnor
+# fixed broken filter code
+#
+# Revision 1.9  1999/10/28 23:01:16  oconnor
+# rearanged filter generation/init a little
+#
+# Revision 1.8  1999/10/28 22:09:43  oconnor
+# added filter stuff
+#
+# Revision 1.7  1999/10/28 00:28:52  oconnor
+# added warning comment to generated code
+#
+# Revision 1.6  1999/10/27 20:48:43  oconnor
+# added some more comments
+#
+# Revision 1.5  1999/10/27 20:43:30  oconnor
+# added cvs date revision keywords
+#
+# Revision 1.4  1999/10/27 20:42:30  oconnor
+# added cvs log keyword
+#
+#
+#===============================================================================
+# End of CVS log
+#===============================================================================

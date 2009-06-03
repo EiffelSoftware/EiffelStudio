@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="encoding" uuid="1557CB9B-9C9F-11DB-B606-0800200C9A66" library_target="encoding">
+	<target name="encoding">
+		<note ise_support="EIS" tag="Code Review" src="http://docs.google.com/Doc?id=dckspcv8_50djrx95c2" name="Library Code Review"/>
+		<description>Encoding library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/documents$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/include$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+			<assertions precondition="true"/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+			<warning name="vweq" enabled="false"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location=". `$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_library location="`$(ISE_LIBRARY)/library/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_library>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+		<cluster name="encoding" location=".\">
+			<option namespace="Encoding">
+			</option>
+			<cluster name="implementation" location=".\implementation\">
+				<option namespace="Implementation">
+				</option>
+				<cluster name="windows" location=".\implementation\windows\">
+					<condition>
+						<platform value="windows"/>
+					</condition>
+					<option namespace="Windows">
+					</option>
+				</cluster>
+				<cluster name="unix" location=".\implementation\unix\">
+					<condition>
+						<platform excluded_value="windows"/>
+					</condition>
+				</cluster>
+			</cluster>
+			<cluster name="encoding_detector" location=".\encoding_detector\"/>
+		</cluster>
+	</target>
+</system>

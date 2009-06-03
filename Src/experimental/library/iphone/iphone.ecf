@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
+	<target name="iphone">
+		<description>Eiffel Library for iPhone development.Copyright (c), Eiffel Software.</description>
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		</option>
+		<external_include location="$(ISE_LIBRARY)/library/iphone/Clib -ObjC">
+			<description>iPhone Includes</description>
+		</external_include>
+		<external_object location="-framework CoreFoundation -framework Foundation -framework UIKit -framework CoreGraphics -framework AddressBookUI -framework AddressBook">
+			<description>Frameworks</description>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/iphone/spec/$(ISE_PLATFORM)/lib/eiffel_iphone.o">
+			<description>iPhone Helper</description>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<cluster name="iphone" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/\.svn$</exclude>
+				<exclude>/spec$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

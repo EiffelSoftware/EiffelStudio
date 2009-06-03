@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2009-02-18 14:20+0800\n"
+"Last-Translator: Eiffel Software\n"
+"Language-Team: Eiffel Software and others\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Poedit-Language: Chinese\n"
+
+#. Source code: t_testing: STRING_32 is							do Result := locale.translation("Testing")	end
+#: interface_names.e:2146
+msgid "Testing"
+msgstr "测试"
+
+#. Source code: Result := locale.formatted_string (locale.plural_translation ("$1 feature", "$1 features", a_count), [a_count])
+#: interface_names.e:1242
+msgid "$1 feature"
+msgid_plural "$1 features"
+msgstr[0] "$1个方法"
+msgstr[1] "$1个方法(复)"
+

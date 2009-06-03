@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="carbon_api" uuid="D8DA2332-0232-4B5D-A6D3-6605880F7D99" library_target="carbon_api">
+	<target name="carbon_api">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/temp$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/obsolete$</exclude>
+		</file_rule>
+		<option warning="true">
+		</option>
+		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include"/>
+		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include/spec/ise -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
+		<external_object location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/carbon_c_eiffel_glue_library_ise_gcc.a -framework Carbon"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
+		<cluster name="additional_wrappers" location="manual_wrapper\" recursive="true"/>
+		<cluster name="carbon" location="generated_wrapper\eiffel\">
+			<cluster name="abstraction" location="$|abstraction\">
+				<cluster name="abstraction_callback" location="$|callback\"/>
+				<cluster name="abstraction_function" location="$|function\"/>
+				<cluster name="abstraction_struct" location="$|struct\"/>
+				<cluster name="abstraction_union" location="$|union\"/>
+				<cluster name="abstraction_enum" location="$|enum\"/>
+			</cluster>
+			<cluster name="external" location="$|external\">
+				<cluster name="external_enum" location="$|enum\">
+					<cluster name="external_enum_spec" location="$|spec\">
+						<cluster name="external_enum_spec_ise" location="$|ise\"/>
+					</cluster>
+				</cluster>
+				<cluster name="external_function" location="$|function\">
+					<cluster name="external_function_spec" location="$|spec\">
+						<cluster name="external_function_spec_ise" location="$|ise\"/>
+					</cluster>
+				</cluster>
+				<cluster name="external_struct" location="$|struct\">
+					<cluster name="external_struct_spec" location="$|spec\">
+						<cluster name="external_struct_spec_ise" location="$|ise\"/>
+					</cluster>
+				</cluster>
+				<cluster name="external_union" location="$|union\">
+					<cluster name="external_union_spec" location="$|spec\">
+						<cluster name="external_union_spec_ise" location="$|ise\"/>
+					</cluster>
+				</cluster>
+			</cluster>
+		</cluster>
+	</target>
+</system>

@@ -1,0 +1,78 @@
+
+
+Test of locale: ga_IE
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Luan
+  Máir
+  Céad
+  Déar
+  Aoi
+  Sath
+  Domh
+    Full day names:
+  Dé Luain
+  Dé Máirt
+  Dé Céadaoin
+  Déardaoin
+  Dé hAoine
+  Dé Sathairn
+  Dé Domhnaigh
+    Abbreviated month names:
+  Ean
+  Feabh
+  Már
+  Aib
+  Bealt
+  Meith
+  Iúil
+  Lún
+  M.Fómh
+  D.Fómh
+  Samh
+  Noll
+    Full month names:
+  Eanáir
+  Feabhra
+  Márta
+  Aibreán
+  Bealtaine
+  Meitheamh
+  Iúil
+  Lúnasa
+  Meán Fómhair
+  Deireadh Fómhair
+  Samhain
+  Nollaig
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 Feabhra 2009 11:45:30, day: Dé hAoine
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'€'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'EUR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: € 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

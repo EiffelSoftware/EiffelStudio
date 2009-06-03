@@ -1,0 +1,41 @@
+INCLUDE_PATH = -I gdfontl.h 
+SHELL = \bin\sh
+CC = cl
+CPP = cl
+CFLAGS = -Ox -YX -nologo $(INCLUDE_PATH)
+LDFLAGS =  -SUBSYSTEM:WINDOWS 
+EIFLIB =
+LIBS = 
+MAKE = nmake
+AR = 
+LD = 
+MKDEP =   --
+MV = copy
+RANLIB = echo
+RM = del
+RMDIR = rd
+SHAREDLINK = link
+COMMAND_MAKEFILE = 
+
+.SUFFIXES:.cpp
+
+.c.obj::
+	$(CC) $(CFLAGS) -c $<
+
+EOBJ1: gdfontl.obj ...
+
+all::  Eobj1.lib
+
+Eobj1.lib: $(EOBJ1) Makefile
+	$(RM) $@
+	lib -OUT:$@ $(EOBJ1)
+
+clean: local_clean
+clobber: local_clobber
+
+local_clean::
+	$(RM) core *.o
+
+local_clobber:: local_clean
+	$(RM) Makefile
+

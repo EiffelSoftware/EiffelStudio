@@ -1,0 +1,51 @@
+==========================================================================
+CLASS:  [CLASS_NAME]
+DATE:   [YYYYMMDD]
+WHO:    [LOGINNAME]
+[NOTES HERE]
+==========================================================================
+lCLASS:  ev_textable_imp
+DATE:   19990827
+WHO:    king
+set_centre_alignment
+set_right_alignment
+set_left_alignment
+==========================================================================
+CLASS:  ev_directory_dialog_imp
+DATE:   19990827
+WHO:    king
+set_base_directory
+==========================================================================
+CLASS: ev_untitled_window_imp   
+DATE:   19990827
+WHO:    king
+widget_group
+set_widget_group
+==========================================================================
+CLASS: ev_window_imp    
+DATE:   19990827
+WHO:    king
+icon_mask
+icon_pixmap
+set_icon_mask
+set_icon_pixmap
+==========================================================================
+CLASS: ev_option_window_imp
+DATE:   19990827
+WHO:    king
+clear_selection
+==========================================================================
+CLASS: ev_pixmap_imp
+DATE:   19990827
+WHO:    king
+set_transparent_color
+
+
+
+
+
+
+
+
+
+

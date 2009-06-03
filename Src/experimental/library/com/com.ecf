@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="com" uuid="A74DD1D0-3090-490F-99DC-E791CC31CF30" library_target="com">
+	<target name="com">
+		<description>Com library: Reusing/Creating COM components in Eiffel.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com_runtime.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom_runtime.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<visible class="INTEGER_32_REF"/>
+			<visible class="REAL_32_REF"/>
+			<visible class="BOOLEAN_REF"/>
+			<visible class="ARRAY"/>
+			<visible class="CELL"/>
+			<visible class="CHARACTER_8_REF"/>
+			<visible class="REAL_64_REF"/>
+			<visible class="STRING_8"/>
+		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf">
+			<visible class="DATE_TIME"/>
+		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="constants" location="Constants\" recursive="true"/>
+		<cluster name="interfaces" location="Interfaces\" recursive="true">
+			<visible class="ECOM_ENUM_STATSTG"/>
+			<visible class="ECOM_STORAGE"/>
+			<visible class="ECOM_QUERIABLE"/>
+			<visible class="ECOM_AUTOMATION_INTERFACE"/>
+			<visible class="ECOM_UNKNOWN_INTERFACE"/>
+			<visible class="ECOM_STREAM"/>
+			<visible class="ECOM_STUB"/>
+			<visible class="ECOM_INTERFACE"/>
+		</cluster>
+		<cluster name="structures" location="Structures\" recursive="true">
+			<visible class="ECOM_LARGE_INTEGER"/>
+			<visible class="ECOM_CURRENCY"/>
+			<visible class="ECOM_HRESULT"/>
+			<visible class="ECOM_EXCEP_INFO"/>
+			<visible class="ECOM_VARIANT"/>
+			<visible class="ECOM_ULARGE_INTEGER"/>
+			<visible class="ECOM_DISP_PARAMS"/>
+			<visible class="ECOM_DECIMAL"/>
+			<visible class="ECOM_ARRAY"/>
+			<visible class="ECOM_STATSTG"/>
+			<visible class="ECOM_GUID"/>
+		</cluster>
+		<cluster name="support" location="Support\" recursive="true"/>
+	</target>
+</system>

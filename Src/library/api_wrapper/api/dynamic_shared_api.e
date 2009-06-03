@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	DYNAMIC_SHARED_API
+	DYNAMIC_SHARED_API [G -> DYNAMIC_API]
 
 inherit
 	DISPOSABLE
@@ -56,7 +56,7 @@ feature -- Clean up
 
 feature -- Access
 
-	api: DYNAMIC_API
+	api: G
 			-- Shared dynamic API.
 
 feature -- Status report

@@ -4,18 +4,21 @@ if [ -x "$XEBRA_DEV" ]; then
 	:
 else
  	echo "XEBRA_DEV is not defined. Please define before running script.";
+ 	exit;
 fi;
 
 if [ -x "$EIFFEL_SRC" ]; then
 	:
 else
  	echo "EIFFEL_SRC is not defined. Please define before running script.";
+ 	exit;
 fi;
 
 if [ -x "$ISE_EIFFEL" ]; then
 	:
 else
  	echo "ISE_EIFFEL is not defined. Please define before running script.";
+ 	exit;
 fi;
 
 
@@ -23,6 +26,7 @@ if [ -x "$ISE_LIBRARY" ]; then
 	:
 else
  	echo "ISE_LIBRARYis not defined. Please define before running script.";
+ 	exit;
 fi;
 
 

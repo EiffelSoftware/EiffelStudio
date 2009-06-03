@@ -3,7 +3,6 @@ note
 		Provides features for the servlets
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,16 +22,4 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 		end
-
-
-feature -- Services
-
-	world: STRING
-			-- Returns "World"
-		do
-			Result := "Wo2asda                                       ="
-		end
-
-	
-
 end

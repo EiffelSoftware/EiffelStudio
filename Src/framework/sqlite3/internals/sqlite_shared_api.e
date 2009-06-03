@@ -1,6 +1,6 @@
 note
 	description: "[
-		Shared, thread-independent access to the SQLite dynamic raw API.
+		Shared, thread-dependent access to the SQLite dynamic raw API.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,9 @@ note
 class
 	SQLITE_SHARED_API
 
-inherit {NONE}
+inherit -- {NONE}
+	ANY
+
 	SQLITE_HELPERS
 		export
 			{NONE} all
@@ -25,6 +27,14 @@ feature {NONE} -- Access
 		end
 
 feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- Indicates if the dynamic API interface can be used (i.e. not unloaded)
+		do
+			Result := sqlite_api.is_interface_usable
+		ensure
+			sqlite_api_is_interface_usable: Result implies sqlite_api.is_interface_usable
+		end
 
 	is_sqlite_available: BOOLEAN
 			-- Indicates if the sqlite API is available for use.

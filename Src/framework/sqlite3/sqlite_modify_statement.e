@@ -1,30 +1,51 @@
 note
 	description: "[
-		Shared helper class for allowing access to an SQLite API {SQLIITE_API} but means of a creation routine parameter.
+		A SQLite statement used to perform modification to the database.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SQLITE_DYNAMIC_SHARED_API
+class
+	SQLITE_MODIFY_STATEMENT
 
 inherit
-	DYNAMIC_SHARED_API [SQLITE_API]
+	SQLITE_STATEMENT
 
-feature {NONE} -- Initialize
+create
+	make
 
-	initialize
-			-- <Precursor>
+feature -- Basic operations
+
+	execute
+			-- Executes the SQLite modification statement.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			not_is_executing: not is_executing
+			db_is_accessible: db.is_accessible
 		do
+			execute_internal (Void, Void)
+		ensure
+			not_is_executing: not is_executing
 		end
 
-feature -- Clean up
-
-	clean_up
-			-- <Precursor>
+	execute_with_arguments (a_bindings: ANY)
+			-- Executes the SQLite modification statement with bound set of arguments.
+			--
+			-- `a_bindings': The bound arguments to call the SQLite query statement with.
+		require
+			is_compiled: is_compiled
+			is_connected: is_connected
+			not_is_executing: not is_executing
+			a_bindings_attached: attached a_bindings
+			db_is_accessible: db.is_accessible
+			not_implemented: False
 		do
+			execute_internal (Void, a_bindings)
+		ensure
+			not_is_executing: not is_executing
 		end
 
 ;note

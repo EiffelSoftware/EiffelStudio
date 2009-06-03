@@ -1,31 +1,54 @@
 note
 	description: "[
-		Shared helper class for allowing access to an SQLite API {SQLIITE_API} but means of a creation routine parameter.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SQLITE_DYNAMIC_SHARED_API
+class
+	SQLITE_BACKUP_OBSERVER
 
-inherit
-	DYNAMIC_SHARED_API [SQLITE_API]
+feature {NONE} -- Handlers
 
-feature {NONE} -- Initialize
-
-	initialize
-			-- <Precursor>
+	on_backup_started (a_backup: SQLITE_BACKUP; a_pages: NATURAL)
+			-- Called when a backup is started.
+			--
+			-- `a_backup': A database backup processor issuing the event.
+			-- `a_pages': The number of pages in the source database to back up (in total)
 		do
+
 		end
 
-feature -- Clean up
-
-	clean_up
-			-- <Precursor>
+	on_backup_step (a_backup: SQLITE_BACKUP; a_remaining_pages: NATURAL)
+			-- Called when progress has been made on the back up and there is still more remaining to
+			-- process.
+			--
+			-- `a_backup': A database backup processor issuing the event.
+			-- `a_remaining_pages': The number of pages remaining to process.
+		require
+			a_remaining_pages_positive: a_remaining_pages > 0
 		do
+
 		end
+
+	on_backup_finished (a_backup: SQLITE_BACKUP)
+			-- Called when a backup has finished, regardless of any error.
+			--
+			-- `a_backup': A database backup processor issuing the event.
+		do
+
+		end
+
+	on_backup_aborted (a_backup: SQLITE_BACKUP)
+			-- Called when a backup has finished, due to abortion or another error.
+			--
+			-- `a_backup': A database backup processor issuing the event.
+		do
+
+		end
+
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

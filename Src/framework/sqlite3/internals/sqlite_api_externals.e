@@ -10,10 +10,68 @@ note
 class
 	SQLITE_API_EXTERNALS
 
+feature -- Initialization
+
+	sqlite3_initialize (a_api: SQLITE_API): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_initialize (a_api.api_pointer (once "sqlite3_initialize"))
+		end
+
+feature -- Clean up
+
+	sqlite3_shutdown (a_api: SQLITE_API): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_shutdown (a_api.api_pointer (once "sqlite3_shutdown"))
+		end
+
+feature -- Access
+
+	sqlite3_threadsafe (a_api: SQLITE_API): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_threadsafe (a_api.api_pointer (once "sqlite3_threadsafe"))
+		end
+
+	sqlite3_libversion (a_api: SQLITE_API): POINTER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_libversion (a_api.api_pointer (once "sqlite3_libversion"))
+		end
+
+	sqlite3_libversion_number (a_api: SQLITE_API): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_libversion_number (a_api.api_pointer (once "sqlite3_libversion_number"))
+		end
+
+feature {NONE} -- External: Experimental
+
+	sqlite3_config (a_api: SQLITE_API; a_config: INTEGER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+		do
+			Result := c_sqlite3_config (a_api.api_pointer (once "sqlite3_config"), a_config)
+		end
+
 feature {NONE} -- Externals
 
 	c_sqlite3_initialize (a_fptr: POINTER): INTEGER
 			-- The sqlite3_initialize() routine initializes the SQLite library.
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
@@ -23,6 +81,8 @@ feature {NONE} -- Externals
 	c_sqlite3_shutdown (a_fptr: POINTER): INTEGER
 			-- A call to sqlite3_shutdown() is an "effective" call if it is the first call to
 			-- sqlite3_shutdown() since the last sqlite3_initialize().
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
@@ -30,6 +90,8 @@ feature {NONE} -- Externals
 		end
 
 	c_sqlite3_threadsafe (a_fptr: POINTER): INTEGER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
@@ -37,6 +99,8 @@ feature {NONE} -- Externals
 		end
 
 	c_sqlite3_libversion (a_fptr: POINTER): POINTER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
@@ -44,6 +108,8 @@ feature {NONE} -- Externals
 		end
 
 	c_sqlite3_libversion_number (a_fptr: POINTER): INTEGER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
@@ -54,6 +120,8 @@ feature {NONE} -- External: Experimental
 
 	c_sqlite3_config (a_fptr: POINTER; a_config: INTEGER): INTEGER
 			-- Experimental
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias

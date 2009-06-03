@@ -116,6 +116,19 @@ feature -- Basic operations: Threading
 			c_sqlite3_mutex_leave (a_api.api_pointer (once "sqlite3_mutex_leave"), a_mutex)
 		end
 
+feature -- Callbacks
+
+--	sqlite3_unlock_notify (a_api: SQLITE_API; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
+--			-- Experimental interface!
+--		require
+--			a_api_attached: attached a_api
+--			a_api_is_interface_usable: a_api.is_interface_usable
+--			not_a_db_is_null: a_db /= default_pointer
+--			not_a_callback_is_null a_callback /= default_pointer
+--		do
+--			Result := c_sqlite3_unlock_notify (a_api.api_pointer (once "sqlite3_unlock_notify"), a_db, a_callback, a_arg)
+--		end
+
 feature {NONE} -- Externals
 
 	c_sqlite3_changes (a_fptr: POINTER; a_db: POINTER): INTEGER
@@ -266,6 +279,20 @@ feature {NONE} -- Externals: Threading
 			]"
 		end
 
+--	c_sqlite3_unlock_notify (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
+--			-- Experimental interface!
+--		require
+--			not_a_fptr_is_null: a_fptr /= default_pointer
+--			not_a_db_is_null: a_db /= default_pointer
+--			not_a_callback_is_null a_callback /= default_pointer
+--		external
+--			"C inline use <sqlite3.h>"
+--		alias
+--			"[
+--				(FUNCTION_CAST(void, (sqlite3_mutex *)) $a_fptr) (
+--					(sqlite3_mutex *)$a_mutex);
+--			]"
+--		end
 feature -- Externals: Macros
 
 	SQLITE_OPEN_READONLY: INTEGER

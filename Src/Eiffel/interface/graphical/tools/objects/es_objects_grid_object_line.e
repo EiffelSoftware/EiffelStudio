@@ -851,7 +851,11 @@ feature {NONE} -- Filling
 				end
 				dcl := object_dynamic_class
 				if dcl /= Void then
-					if dcl.conform_to (debugger_manager.compiler_data.special_class_c) then
+					if
+						--| FIXME jfiat [2009-06-03]: check the implementation for dotnet, related to count and capacity
+						debugger_manager.is_classic_project and then
+						dcl.conform_to (debugger_manager.compiler_data.special_class_c)
+					then
 						fill_extra_attributes_for_special (a_row, list_cursor)
 					elseif dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
 						fill_extra_attributes_for_tuple (a_row, list_cursor)

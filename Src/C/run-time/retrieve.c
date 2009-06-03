@@ -1032,7 +1032,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		rread_header(MTC_NOARG);			/* Make correspondance table */
 		retrieved = rrt_make();
 		retrieved_i = eif_protect (retrieved);
-	} else if (rt_type == GENERAL_STORE_4_0) {
+	} else if (rt_kind == GENERAL_STORE) {
 		read_header(rt_type);					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
@@ -1058,18 +1058,12 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
 	nb_recorded = 0;
-	switch (rt_type) {
-		case GENERAL_STORE_4_0: 
+	switch (rt_kind) {
+		case GENERAL_STORE: 
 			free_sorted_attributes();
 			break;
-		case INDEPENDENT_STORE_4_3:
-		case INDEPENDENT_STORE_4_4:
-		case INDEPENDENT_STORE_5_0:
-		case RECOVERABLE_STORE_5_3:
-		case INDEPENDENT_STORE_5_5:
-		case INDEPENDENT_STORE_6_0:
-		case INDEPENDENT_STORE_6_3:
-		case INDEPENDENT_STORE_6_4:
+		case INDEPENDENT_STORE:
+		case RECOVERABLE_STORE:
 			independent_retrieve_reset ();
 			break;
 	}
@@ -2375,7 +2369,7 @@ rt_private void read_header(char rt_type)
 		xraise(EN_MEM);
 	}
 
-	if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_6_4)) {
+	if (rt_kind == GENERAL_STORE) {
 		sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
@@ -2486,7 +2480,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		}
 		dtypes[dtype] = new_dtype;
 
-		if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_6_4)) {
+		if (rt_kind == GENERAL_STORE) {
 			sort_attributes(new_dtype);
 		}
 	}
@@ -4597,12 +4591,12 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 	RT_GET_CONTEXT
 	struct cecil_info * result;
 
-	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (conv != NULL));
+	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (rt_kind_version == GENERAL_STORE_6_4) || (conv != NULL));
 
 		/* Get updated name */
 	name = eif_pre_ecma_mapped_type (name);
 
-	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+	if ((rt_kind_version >= INDEPENDENT_STORE_5_5) && (rt_kind_version != GENERAL_STORE_6_4)) {
 		if (conv->flags & EIF_IS_EXPANDED_FLAG) {
 			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
 		} else {

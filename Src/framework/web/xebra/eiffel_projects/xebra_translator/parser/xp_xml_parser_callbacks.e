@@ -292,6 +292,7 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			-- Returns tag library with the name `id'
 		require
 			id_is_valid: not id.is_empty
+			tag_lib_available: registry.contains_tag_lib (id)
 		do
 			Result := registry.retrieve_taglib (id)
 		ensure

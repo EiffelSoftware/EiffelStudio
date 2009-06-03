@@ -82,18 +82,23 @@ feature -- Implementation
 			create l_value.make (a_value)
 			l_local_part := a_local_part
 			if not parser_callback.tag_stack.item.namespace.is_empty then
-				taglib := parser_callback.get_tag_lib (parser_callback.tag_stack.item.namespace)
-				if not taglib.contains (parser_callback.tag_stack.item.id) then
-					parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
-				elseif taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
-					if parser_callback.tag_stack.item.has_attribute (l_local_part) then
-						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"]))
-					else
+				if parser_callback.registry.contains_tag_lib (parser_callback.tag_stack.item.namespace) then
+					taglib := parser_callback.get_tag_lib (parser_callback.tag_stack.item.namespace)
+					if not taglib.contains (parser_callback.tag_stack.item.id) then
 						parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
+					elseif taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
+						if parser_callback.tag_stack.item.has_attribute (l_local_part) then
+							parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"]))
+						else
+							parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
+						end
+					else
+						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"  ]))
 					end
 				else
-					parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"  ]))
+					parser_callback.error_manager.add_warning (create {XERROR_UNDEFINED_NAMESPACE}.make (parser_callback.tag_stack.item.namespace))
 				end
+
 			else
 				parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
 			end

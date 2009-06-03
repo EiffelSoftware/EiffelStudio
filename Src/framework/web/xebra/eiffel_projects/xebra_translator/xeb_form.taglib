@@ -22,10 +22,12 @@
 		<attribute id="value"/>
 		<attribute id="name"/>
 		<attribute id="text" />
+		<attribute id="rows" />
+		<attribute id="cols" />
 	</tag>
 	<tag id="command_link" class="XTAG_F_COMMAND_LINK_TAG">
 		<attribute id="label" />
-		<attribute id="action" />		
+		<attribute id="action" />
 	</tag>
 	<tag id="validator" class="XTAG_F_VALIDATOR_TAG">
 		<attribute id="class" />

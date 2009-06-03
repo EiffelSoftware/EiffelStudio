@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {UI_RECT}."
-	author: ""
+	description: "Wrapper around CGRect structure."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,10 +8,26 @@ class
 
 inherit
 	MEMORY_STRUCTURE
+		rename
+			make as make_empty
+		end
 
 create
 	make,
+	make_empty,
 	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make (a_x, a_y, a_width, a_height: REAL)
+			-- New rectangle at coordinates (`a_x', `a_y') with dimension (`a_width', `a_height').
+		do
+			make_empty
+			set_x (a_x)
+			set_y (a_y)
+			set_width (a_width)
+			set_height (a_height)
+		end
 
 feature -- Access
 
@@ -41,7 +56,7 @@ feature -- Access
 		end
 
 	height: REAL
-			-- Hieight of Current
+			-- Height of Current
 		require
 			exists: exists
 		do
@@ -49,15 +64,18 @@ feature -- Access
 		end
 
 	null: like Current
+			-- Predefined null rectangle which is the rectangle returned when, for example,
+			-- you intersect two disjoint rectangles.
+			-- Note that the null rectangle is not the same as the zero rectangle.
 		do
-			create Result.make
+			create Result.make_empty
 			Result.item.memory_copy (c_rect_null, structure_size)
 		end
 
 feature -- Settings
 
-	set_x (a_x: like x): REAL
-			-- Set X coordinates of Current.
+	set_x (a_x: like x)
+			-- Set `x' coordinates of Current with `a_x'.
 		require
 			exists: exists
 		do
@@ -66,8 +84,8 @@ feature -- Settings
 			set: x = a_x
 		end
 
-	set_y (a_y: like y): REAL
-			-- Set Y coordinates of Current.
+	set_y (a_y: like y)
+			-- Set `y' coordinates of Current with `a_y'.
 		require
 			exists: exists
 		do
@@ -76,7 +94,8 @@ feature -- Settings
 			set: y = a_y
 		end
 
-	set_width (a_width: like width): REAL
+	set_width (a_width: like width)
+			-- Set `width' of Current with `a_width'.
 		require
 			exists: exists
 		do
@@ -85,7 +104,8 @@ feature -- Settings
 			set: width = a_width
 		end
 
-	set_height (a_height: like height): REAL
+	set_height (a_height: like height)
+			-- Set `height' of Current with `a_height'.
 		require
 			exists: exists
 		do
@@ -183,7 +203,6 @@ feature {NONE} -- Externals
 		alias
 			"((CGRect *) $a_ptr)->size.height = $a_height;"
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

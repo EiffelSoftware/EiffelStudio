@@ -1,19 +1,13 @@
 note
-	description: "[
-		Represent the current application object responsible of event handling. To get an instance, you need
-		to use {SHARED_UI_APPLICATION}.application.
-		]"
+	description: "Ancestor to all UI elements"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	UI_APPLICATION
+	UI_VIEW
 
 inherit
 	NS_OBJECT
-
-create {SHARED_UI_APPLICATION}
-	share_from_pointer
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

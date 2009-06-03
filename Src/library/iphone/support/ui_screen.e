@@ -7,7 +7,7 @@ class
 	UI_SCREEN
 
 inherit
-	UI_OBJECT
+	NS_OBJECT
 
 create
 	make
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			l_ptr := c_screen
 			if l_ptr /= default_pointer then
-				make_from_pointer (l_ptr)
+				share_from_pointer (l_ptr)
 			end
 		end
 
@@ -30,7 +30,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			create Result.make
+			create Result.make_empty
 			c_bounds (item, Result.item)
 		end
 

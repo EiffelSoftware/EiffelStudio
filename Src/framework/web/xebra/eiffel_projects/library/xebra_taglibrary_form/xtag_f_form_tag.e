@@ -57,6 +57,7 @@ feature -- Implementation
 			if attached variable then
 				a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), data_class.value (current_controller_id))
 				a_servlet_class.make_feature.append_expression ("create " + variable.value (current_controller_id) + ".make")
+				a_variable_table.put (variable.value (current_controller_id), Form_var_key)
 			end
 			l_form_id := a_servlet_class.prerender_post_feature.new_uid
 			l_data_var := a_servlet_class.render_feature.new_uid
@@ -69,7 +70,6 @@ feature -- Implementation
 
 			create l_validation_table.make (2)
 
-			a_variable_table.put (variable.value (current_controller_id), Form_var_key)
 			a_variable_table.put (l_redirect_var, Form_var_redirect)
 			a_variable_table.put (l_form_id, Form_id)
 			a_variable_table.put (l_agent_var, Form_agent_var)
@@ -91,9 +91,12 @@ feature -- Implementation
 				a_servlet_class.prerender_post_feature.append_expression ("end")
 			end
 
-			a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_agent_var + " then")
-			a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + l_agent_var + ".item ([" + variable.value (current_controller_id) + "])")
-			a_servlet_class.prerender_post_feature.append_expression ("end")
+			if attached variable then
+				a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_agent_var + " then")
+				a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + l_agent_var + ".item ([" + variable.value (current_controller_id) + "])")
+				a_servlet_class.prerender_post_feature.append_expression ("end")
+			end
+
 
 			a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_redirect_var + " and then not " + l_redirect_var + ".is_empty then")
 			a_servlet_class.prerender_post_feature.append_expression (response_variable + ".set_goto_request (" + l_redirect_var + ")")

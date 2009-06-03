@@ -36,4 +36,16 @@ feature -- Status Change
 		ensure
 			Result_attached: Result /= Void
 		end
+
+	save (a_reservation: RESERVATION): STRING
+		do
+			print (a_reservation.description + " " + a_reservation.name)
+			Result := "login.xeb"
+		end
+
+	print_something (a_arg: STRING): STRING
+		do
+			print ("IT WORKS " + a_arg)
+			Result := "bluh.html"
+		end
 end

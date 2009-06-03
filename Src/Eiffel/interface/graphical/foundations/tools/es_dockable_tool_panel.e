@@ -1045,7 +1045,7 @@ feature {NONE} -- Factory
 			create Result.make
 			Result.set_pixel_buffer (stock_mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
 			Result.set_pixmap (stock_mini_pixmaps.callstack_send_to_external_editor_icon)
-			Result.set_tooltip (locale_formatter.formatted_translation (tt_show_help, [tool_descriptor.title.as_lower]))
+			Result.set_tooltip (locale_formatter.formatted_translation (tt_show_help, [tool_descriptor.title]))
 			register_action (Result.select_actions, agent show_help)
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed

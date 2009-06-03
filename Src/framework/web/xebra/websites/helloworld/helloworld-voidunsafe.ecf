@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebrawebapp" uuid="ADBC6109-4D45-4BFD-A06C-B845A761DD8F">
-	<target name="xebrawebapp">
-		<root class="G_XEBRAWEBAPP_APPLICATION" feature="make"/>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="helloworld" uuid="ADBC6109-4D45-4BFD-A06C-B845A761DD8F">
+	<target name="helloworld">
+		<root class="G_HELLOWORLD_APPLICATION" feature="make"/>
 		<option full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>

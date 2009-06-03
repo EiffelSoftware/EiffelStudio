@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2009-05-19 11:58+0800\n"
+"PO-Revision-Date: 2009-06-03 16:18+0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software and others\n"
 "MIME-Version: 1.0\n"
@@ -27076,7 +27076,9 @@ msgstr "启用词法完成"
 msgid ""
 "Synthesized tests using AutoTest\n"
 "(experimental)"
-msgstr "使用AutoTest综合测试(实验版)"
+msgstr ""
+"使用AutoTest综合测试\n"
+"(实验版)"
 
 #. Source code: Result.force (locale.translation ("Syriac"), "syr")
 #: locale_names.e:118

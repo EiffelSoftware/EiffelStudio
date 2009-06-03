@@ -6,11 +6,30 @@ note
 class
 	UI_STARTUP
 
-feature
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			create dispatcher.make
+		end
+
+feature -- Event loop
 
 	run
+		local
+			l_res: INTEGER
+		do
+			l_res := c_run
+		end
+
+feature {NONE} -- Externals
+
+	c_run: INTEGER
 		external
-			"C inline use <UIKit/UIKit.h>"
+			"C inline use <UIKit/UIKit.h>, %"eif_argv.h%""
 		alias
 			"[
 				int retVal;
@@ -19,8 +38,17 @@ feature
 			    pool = [[NSAutoreleasePool alloc] init];
     			retVal = UIApplicationMain(eif_argc, eif_argv, @"UIApplication", @"EiffeliPhoneAppDelegate");
     			[pool release];
+    			
+    			return retVal;
 			]"
 		end
+
+feature {NONE} -- Implementation
+
+	dispatcher: UI_DISPATCHER
+			-- Handling of events.
+
+invariant
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

@@ -13,7 +13,7 @@ feature -- Access
 		require
 			has_application: has_application
 		once
-			create Result.make_from_pointer (c_application)
+			create Result.share_from_pointer (c_application)
 		end
 
 feature -- Status report

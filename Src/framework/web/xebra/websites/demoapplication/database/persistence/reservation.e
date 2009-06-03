@@ -11,11 +11,11 @@ class
 	RESERVATION
 
 create
-	make
+	make, make_with_arguments
 
 feature {NONE} -- Initialization
 
-	make (a_id: INTEGER; a_name: STRING;	a_date:  STRING; a_persons: INTEGER; a_description: STRING)
+	make_with_arguments (a_id: INTEGER; a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING)
 			-- Initialization for `Current'.
 		require
 			not_a_name_is_detached_or_not_empty: a_name /= Void implies not a_name.is_empty
@@ -35,13 +35,29 @@ feature {NONE} -- Initialization
 			description_set: equal (description, a_description)
 		end
 
+	make
+		do
+			id := 0
+			name := ""
+			persons := 0
+			description := ""
+		end
+
 feature -- Access
 
 	id: INTEGER
-	name: STRING
+	name: STRING assign set_name
+	set_name (a_name: STRING)
+		do
+			name := a_name
+		end
 	date:  STRING
 	persons: INTEGER
-	description: STRING
+	description: STRING assign set_description
+	set_description (a_desc: STRING)
+		do
+			description := a_desc
+		end
 
 
 invariant

@@ -26,6 +26,6 @@ feature -- Implementation
 	input_type: STRING
 			-- <Precursor>
 		do
-			Result := "secret"
+			Result := "password"
 		end
 end

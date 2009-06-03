@@ -130,6 +130,8 @@ feature -- Basic Functionality
 					end
 				end
 			end
+			l_generate := True
+				-- Optimization can not be used as is, since the constants class always gets new strings
 
 			if l_generate  then
 				o.iprint ("The servlet '" + l_filename + "' is being generated...")

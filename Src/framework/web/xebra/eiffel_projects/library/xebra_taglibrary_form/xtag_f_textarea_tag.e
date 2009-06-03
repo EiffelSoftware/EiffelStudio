@@ -1,14 +1,12 @@
 note
 	description: "[
-		Generic class for input fields. Handles automatic setting of values to the
-		warapped object depending on the validation (if any).
-		Can only be used in the context of a {XTAG_F_FORM_TAG}.
+		{XTAG_F_TEXTAREA_TAG}.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XTAG_F_INPUT_TAG
+class
+	XTAG_F_TEXTAREA_TAG
 
 inherit
 	XTAG_TAG_SERIALIZER
@@ -74,7 +72,7 @@ feature -- Implementation
 						l_input_id := l_variable + "_" + a_servlet_class.get_unique_identifier
 
 							-- render feature
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type +"%%%" name=%%%"" + l_input_id + "%%%" value=%%%"" + text.value (current_controller_id) + "%%%" />%")")
+						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"" + l_input_id +"%%%" name=%%%"" + l_input_id + "%%%" value=%%%"" + text.value (current_controller_id) + "%%%" />%")")
 
 						create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
 						a_variable_table.put (l_validator_list, {XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
@@ -122,12 +120,6 @@ feature -- Implementation
 			end
 		end
 
-	input_type: STRING
-			-- Returns the type of input it represents (input, secret, etc.)
-		deferred
-		ensure
-			result_attached: attached Result
-		end
 
 	generates_render: BOOLEAN = True
 	generates_postrender: BOOLEAN = True

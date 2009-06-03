@@ -28,7 +28,7 @@
 						
 						<td><xeb:variable id="reservation" feature="persons.out" /></td>
 						<xeb:container render="authenticated_admin">
-							<td class="style2"><a href="#{reservation.id}">Delete </a></td>
+							<td class="style2"><a href="http://www.google.com/">bah </a></td>
 						</xeb:container>
 						<xeb:container render="not_authenticated_admin">
 							<td class="style2"><a href="">Details</a></td>

@@ -1,7 +1,7 @@
 <page:include template="master_template">
   <page:define_region id="content">
     <page:controller class="login_controller" />
-    <xeb:call feature="logout"/>
+    <!--xeb:call feature="logout"/-->
     <p> You have successfully been logged out. </p>
   </page:define_region>
 </page:include>

@@ -11,15 +11,21 @@
 	<tag id="input_text" class="XTAG_F_INPUT_TEXT_TAG">
 		<attribute id="value"/>
 		<attribute id="name"/>
+		<attribute id="text" />
 	</tag>
 	<tag id="input_secret" class="XTAG_F_INPUT_SECRET_TAG">
 		<attribute id="value"/>
 		<attribute id="name"/>
+		<attribute id="text" />
+	</tag>
+	<tag id="text_area" class="XTAG_F_TEXTAREA_TAG">
+		<attribute id="value"/>
+		<attribute id="name"/>
+		<attribute id="text" />
 	</tag>
 	<tag id="command_link" class="XTAG_F_COMMAND_LINK_TAG">
 		<attribute id="label" />
-		<attribute id="action" />
-		<attribute id="redirect" />		
+		<attribute id="action" />		
 	</tag>
 	<tag id="validator" class="XTAG_F_VALIDATOR_TAG">
 		<attribute id="class" />

@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<page:controller class="demoapplication_controller" />
+<page:controller class="login_controller" />
 <head>
 <title>Xebra Demo Application</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -20,10 +20,13 @@
     <td><img src="images/template_07.gif" width="168" height="28" alt="" /></td>
     <td><img src="images/template_08.gif" width="30" height="28" alt="" /></td>
     <td class="loginback"><div align="right">
-        <xeb:if condition="authenticated"> Welcome
-          <xeb:display feature="username"/>
-          , <a href="logout.xeb">Logout</a> </xeb:if>
-        <xeb:if condition="not_authenticated"> <a href="login.xeb">Login</a> </xeb:if>
+        <xeb:container render="authenticated"> Welcome
+          <xeb:display feature="%=username%"/>
+          ,<f:form variable="b" class="login_bean"><f:command_link label="Logout" action="logout" /></f:form>
+         </xeb:container>
+        <xeb:container render="not_authenticated">
+        	<a href="login.xeb">Login</a>
+        </xeb:container>
       </div></td>
     <td><img src="images/template_10.gif" width="20" height="28" alt="" /></td>
   </tr>

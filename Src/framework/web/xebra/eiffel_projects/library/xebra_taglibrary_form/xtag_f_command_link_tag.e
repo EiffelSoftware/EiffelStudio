@@ -34,9 +34,6 @@ feature -- Access
 	label: XTAG_TAG_ARGUMENT
 			-- The text of the link
 
-	redirect: XTAG_TAG_ARGUMENT
-			-- Where should the page redirect after the link has been clicked
-
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
@@ -81,9 +78,6 @@ feature -- Implementation
 			end
 			if a_id.is_equal ("action") then
 				action := a_attribute
-			end
-			if a_id.is_equal ("redirect") then
-				redirect := a_attribute
 			end
 		end
 

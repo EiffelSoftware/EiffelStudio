@@ -178,7 +178,8 @@ feature -- Processing
 			dir: DIRECTORY
 			files: LIST [STRING]
 		do
-			create dir.make (taglib_folder)
+			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 10)
+			create dir.make (create {FILE_NAME}.make_from_string (taglib_folder))
 			files := dir.linear_representation
 			from
 				files.start

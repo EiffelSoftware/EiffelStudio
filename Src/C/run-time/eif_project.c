@@ -300,7 +300,7 @@ doc:		<thread_safety>Safe set once in initialization.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_public int egc_has_old_special_semantic = 0;
+rt_public int egc_has_old_special_semantic = 1;
 
 rt_public EIF_TYPE_INDEX egc_str_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;

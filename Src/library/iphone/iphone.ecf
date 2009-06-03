@@ -5,8 +5,12 @@
 		<root all_classes="true"/>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
-		<external_include location="$(ISE_LIBRARY)/library/iphone/Clib -ObjC -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.2.1.sdk"/>
-		<external_object location="-framework CoreFoundation  -framework Foundation  -framework UIKit  -framework CoreGraphics -framework AddressBookUI -framework AddressBook"/>
+		<external_include location="$(ISE_LIBRARY)/library/iphone/Clib -ObjC">
+			<description>iPhone Includes</description>
+		</external_include>
+		<external_object location="-framework CoreFoundation -framework Foundation -framework UIKit -framework CoreGraphics -framework AddressBookUI -framework AddressBook">
+			<description>Frameworks</description>
+		</external_object>
 		<external_object location="$(ISE_LIBRARY)/library/iphone/spec/$(ISE_PLATFORM)/lib/eiffel_iphone.o">
 			<description>iPhone Helper</description>
 		</external_object>
@@ -14,6 +18,7 @@
 		<cluster name="iphone" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>
+				<exclude>/spec$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

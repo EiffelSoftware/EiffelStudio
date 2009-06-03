@@ -177,9 +177,12 @@ feature {NONE} -- Implementation
 			if gen_param.is_true_expanded then
 					-- Create expanded type based on the actual generic parameter, and not
 					-- on the recorded derivation (as it would not work if `gen_param' is
-					-- generic.
+					-- generic).
 				l_exp_class_type.generate_expanded_creation (buffer, "Result",
 					create {FORMAL_A}.make (False, False, 1), Current)
+					-- Initializes expanded attribute if needed and then call creation procedure
+					-- if needed.
+				l_exp_class_type.generate_expanded_initialization (buffer, "Result", "Result", True)
 				buffer.put_new_line
 				buffer.put_string ("return ")
 				if not final_mode then
@@ -214,6 +217,9 @@ feature {NONE} -- Implementation
 
 			if final_mode then
 					-- Generate generic wrapper.
+					-- We have to get again `encoded_name' because it might be overridden since
+					-- it is a shared buffer.
+				encoded_name := Encoder.feature_name (type_id, feat.body_index)
 				buffer.generate_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
 					Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
 				buffer.generate_block_open

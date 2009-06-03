@@ -20,10 +20,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create new store
 		do
-			create storage.make_with_capacity (default_capacity)
-			create storage_flag.make_with_capacity (default_capacity)
-			storage.force_last (Void)
-			storage_flag.force_last (False)
+			create storage.make (1, default_capacity)
+			create storage_flag.make (1, default_capacity)
 		end
 
 feature -- Status report
@@ -89,8 +87,8 @@ feature -- Basic routines
 		require
 			a_index_large_enough: a_index > 0
 		do
-			storage.force_put (a_value, a_index)
-			storage_flag.force_put (True, a_index)
+			storage.force (a_value, a_index)
+			storage_flag.force (True, a_index)
 		ensure
 			a_value_assigned: storage.item (a_index) = a_value
 			variable_defined: is_variable_defined (a_index)
@@ -108,7 +106,7 @@ feature -- Basic routines
 			variable_defined: is_variable_defined (a_index)
 		end
 
-	arguments (an_expression_list: ERL_LIST [ITP_EXPRESSION]): detachable ARRAY [detachable ANY]
+	arguments (an_expression_list: ARRAY [ITP_EXPRESSION]): detachable ARRAY [detachable ANY]
 			-- Arguments with the values from `an_expression_list'
 			-- using `variables' to lookup variable values or `Void'
 			-- in case of an error
@@ -138,10 +136,10 @@ feature -- Basic routines
 
 feature {NONE} -- Implementation
 
-	storage: ERL_LIST [ANY]
+	storage: ARRAY [detachable ANY]
 			-- Variables and their attached values
 
-	storage_flag: ERL_LIST [BOOLEAN]
+	storage_flag: ARRAY [BOOLEAN]
 			-- Flag to decide if an object at index is defined.
 
 	default_capacity: INTEGER = 1000

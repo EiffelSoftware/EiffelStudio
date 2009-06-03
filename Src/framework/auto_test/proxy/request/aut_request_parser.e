@@ -102,7 +102,7 @@ feature {NONE} -- Handlers
 	report_create_request (a_type_name: STRING;
 							a_target_variable_name: STRING;
 							a_creation_procedure_name: STRING;
-							an_argument_list: ERL_LIST [ITP_EXPRESSION])
+							an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 		local
 			receiver: ITP_VARIABLE
 			type: TYPE_A
@@ -116,7 +116,7 @@ feature {NONE} -- Handlers
 			elseif type.is_none then
 				report_error ("Cannot create object of NONE type.")
 			else
-				argument_list := arrayed_list_from_erl_list (an_argument_list)
+				argument_list := an_argument_list
 				if a_creation_procedure_name = Void then
 					create {AUT_CREATE_OBJECT_REQUEST} last_request.make (system, receiver, type, type.associated_class.default_create_feature, create {DS_LINKED_LIST [ITP_EXPRESSION]}.make)
 				else
@@ -134,20 +134,20 @@ feature {NONE} -- Handlers
 
 	report_invoke_request (a_target_variable_name: STRING;
 							a_feature_name: STRING;
-							an_argument_list: ERL_LIST [ITP_EXPRESSION])
+							an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 		local
 			target: ITP_VARIABLE
 			argument_list: DS_LINEAR [ITP_EXPRESSION]
 		do
 			create target.make (variable_index (a_target_variable_name, variable_name_prefix))
-			argument_list := arrayed_list_from_erl_list (an_argument_list)
+			argument_list := an_argument_list
 			create {AUT_INVOKE_FEATURE_REQUEST} last_request.make (system, a_feature_name, target, argument_list)
 		end
 
 	report_invoke_and_assign_request (a_left_hand_variable_name: STRING;
 										a_target_variable_name: STRING;
 										a_feature_name: STRING;
-										an_argument_list: ERL_LIST [ITP_EXPRESSION])
+										an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 		local
 			receiver: ITP_VARIABLE
 			target: ITP_VARIABLE
@@ -155,7 +155,7 @@ feature {NONE} -- Handlers
 		do
 			create receiver.make (variable_index (a_left_hand_variable_name, variable_name_prefix))
 			create target.make (variable_index (a_target_variable_name, variable_name_prefix))
-			argument_list := arrayed_list_from_erl_list (an_argument_list)
+			argument_list := an_argument_list
 			create {AUT_INVOKE_FEATURE_REQUEST} last_request.make_assign (system, receiver,
 																			a_feature_name, target,
 																			argument_list)
@@ -225,24 +225,24 @@ feature {NONE} -- Error Reporting
 
 feature {NONE} -- Implementation
 
-	arrayed_list_from_erl_list (an_erl_list: ERL_LIST [ITP_EXPRESSION]): DS_ARRAYED_LIST [ITP_EXPRESSION]
-		require
-			an_erl_list_not_void: an_erl_list /= Void
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-				create Result.make (an_erl_list.count)
-			until
-				i > an_erl_list.count
-			loop
-				Result.force_last (an_erl_list.item (i))
-				i := i + 1
-			end
-		ensure
-			arrayed_list_not_void: Result /= Void
-		end
+--	arrayed_list_from_erl_list (an_erl_list: ERL_LIST [ITP_EXPRESSION]): DS_ARRAYED_LIST [ITP_EXPRESSION]
+--		require
+--			an_erl_list_not_void: an_erl_list /= Void
+--		local
+--			i: INTEGER
+--		do
+--			from
+--				i := 1
+--				create Result.make (an_erl_list.count)
+--			until
+--				i > an_erl_list.count
+--			loop
+--				Result.force_last (an_erl_list.item (i))
+--				i := i + 1
+--			end
+--		ensure
+--			arrayed_list_not_void: Result /= Void
+--		end
 
 invariant
 
@@ -251,4 +251,35 @@ invariant
 	line_number_positive: line_number > 0
 	filename_not_void: filename /= Void
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

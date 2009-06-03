@@ -18,11 +18,12 @@ inherit
 	AUT_SHARED_INTERPRETER_INFO
 
 feature{NONE} -- Initialization
+
 	make
 			-- Create new parser.
 		do
 			create last_string.make (200)
-			create last_argument_list.make_with_capacity (100)
+			create last_argument_list.make (100)
 		end
 
 feature -- Access
@@ -171,7 +172,7 @@ feature -- Parsing
 
 feature {NONE} -- Handlers
 
-	report_create_request (a_type_name: STRING; a_target_variable_name: STRING; a_creation_procedure_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
+	report_create_request (a_type_name: STRING; a_target_variable_name: STRING; a_creation_procedure_name: STRING; an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 			-- Report "create" request. Note that a void `a_creation_procedure_name'
 			-- represents the default creation procedure.
 		require
@@ -184,7 +185,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_invoke_request (a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
+	report_invoke_request (a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 			-- Report an "invoke" request.
 		require
 			a_target_variable_name_not_void: a_target_variable_name /= Void
@@ -194,7 +195,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_invoke_and_assign_request (a_left_hand_variable_name: STRING; a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
+	report_invoke_and_assign_request (a_left_hand_variable_name: STRING; a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION])
 			-- Report an "invoke_and_assign" request.
 		require
 			a_left_hand_variable_name_not_void: a_left_hand_variable_name /= Void
@@ -290,7 +291,7 @@ feature {NONE} -- Parsing
 							report_create_request (a_type_name,
 													a_target_variable_name,
 													Void,
-													create {ERL_LIST [ITP_EXPRESSION]}.make)
+													create {DS_ARRAYED_LIST [ITP_EXPRESSION]}.make (0))
 						else
 							if item /= '.' then
 								report_and_set_error_at_position ("Expected '.', but got '" + item.out + "'.", position)
@@ -1104,7 +1105,7 @@ feature {NONE} -- Implementation
 
 	last_expression: ITP_EXPRESSION
 
-	last_argument_list: ERL_LIST [ITP_EXPRESSION]
+	last_argument_list: DS_ARRAYED_LIST [ITP_EXPRESSION]
 
 	forth
 			-- Move position one character forth
@@ -1232,4 +1233,35 @@ invariant
 	last_argument_list_not_void: last_argument_list /= Void
 
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

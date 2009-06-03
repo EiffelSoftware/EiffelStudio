@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	SQLITE_INTEGER
+	SQLITE_INTEGER: INTEGER
 			-- Integer column type.
 		external
 			"C macro use <sqlite3.h>"
@@ -20,7 +20,7 @@ feature -- Access
 			"SQLITE_INTEGER"
 		end
 
-	SQLITE_FLOAT
+	SQLITE_FLOAT: INTEGER
 			-- Float column type.
 		external
 			"C macro use <sqlite3.h>"
@@ -28,7 +28,7 @@ feature -- Access
 			"SQLITE_FLOAT"
 		end
 
-	SQLITE_TEXT
+	SQLITE_TEXT: INTEGER
 			-- Text column type.
 		external
 			"C macro use <sqlite3.h>"
@@ -36,7 +36,7 @@ feature -- Access
 			"SQLITE_TEXT"
 		end
 
-	SQLITE_BLOB
+	SQLITE_BLOB: INTEGER
 			-- Blob column type.
 		external
 			"C macro use <sqlite3.h>"
@@ -44,7 +44,7 @@ feature -- Access
 			"SQLITE_BLOB"
 		end
 
-	SQLITE_NULL
+	SQLITE_NULL: INTEGER
 			-- Null columm type.
 		external
 			"C macro use <sqlite3.h>"

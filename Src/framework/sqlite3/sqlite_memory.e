@@ -80,7 +80,7 @@ feature {NONE} -- External
 	c_sqlite3_soft_heap_limit (a_fptr: POINTER; a_limit: INTEGER)
 		require
 			not_a_fptr_is_null: a_fptr /= default_pointer
-			a_size_non_negative: a_size >= 0
+			a_limit_non_negative: a_limit >= 0
 		external
 			"C inline use <sqlite3.h>"
 		alias

@@ -18,7 +18,7 @@ inherit
 			{NONE} dispose
 		end
 
-inherit {NONE}
+--inherit {NONE}
 	SQLITE_INTERNALS
 		export
 			{NONE} all
@@ -98,6 +98,9 @@ feature {NONE} -- Initialization
 			a_file_name_is_string_8: a_file_name.is_string_8
 		do
 			create file_name.make_from_string (a_file_name.as_string_8)
+			if {PLATFORM}.is_thread_capable then
+				internal_thread_id := get_current_thread_id.to_integer_32
+			end
 		ensure
 			file_name_set: file_name.same_string (a_file_name.as_string_8)
 		end
@@ -126,7 +129,8 @@ feature -- Access: Error reporting
 			-- Note: This is not the last raised exception, for that use {EXCEPTION_MANAGER}
 			--       This is an exception object generated from the internals of SQLite.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_readable: is_readable
 		local
 			l_api: like sqlite_api
@@ -150,7 +154,6 @@ feature -- Access: Error reporting
 					l_message.append_character (')')
 				else
 					create l_message.make_from_c (l_msg)
-					sqlite3_free (l_api, l_msg)
 				end
 				Result := sqlite_exception (l_code, l_message)
 			end
@@ -165,7 +168,8 @@ feature -- Measurements
 	changes_count: NATURAL
 			-- Number of database rows affects during the last insertion/update/deletion.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_readable: is_readable
 		do
 			Result := sqlite3_changes (sqlite_api, internal_db).as_natural_32
@@ -173,8 +177,23 @@ feature -- Measurements
 
 feature -- Status report
 
+	is_accessible: BOOLEAN
+			-- Indicates if the database is accessible on the current thread
+		do
+			if {PLATFORM}.is_thread_capable then
+				Result := internal_thread_id = get_current_thread_id.to_integer_32
+			else
+				Result := True
+			end
+		ensure
+			true_result: not {PLATFORM}.is_thread_capable implies Result
+			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
+		end
+
 	is_readable: BOOLEAN
 			-- Indicates if the database can be read from.
+		require
+			is_accessible: is_accessible
 		do
 			Result := not is_closed
 		ensure
@@ -183,6 +202,8 @@ feature -- Status report
 
 	is_writable: BOOLEAN
 			-- Indicates if the database can be written to.
+		require
+			is_accessible: is_accessible
 		do
 			Result := not is_closed and then (internal_flags & SQLITE_OPEN_READWRITE) = SQLITE_OPEN_READWRITE
 		ensure
@@ -192,20 +213,53 @@ feature -- Status report
 
 	is_closed: BOOLEAN
 			-- Indicates if the database is closed.
+		require
+			is_accessible: is_accessible
 		do
 			Result := internal_db = default_pointer
 		ensure
 			db_handle_is_null: Result implies internal_db = default_pointer
 		end
 
+feature -- Status report: Comparison
+
+	is_same_connection (a_other: SQLITE_DATABASE): BOOLEAN
+			-- Determines if another database connection is the same connection as Current.
+			--
+			-- `a_other': The other database to compare to Current.
+			-- `Result': True if the databases share a common connection; False otherwise.
+		do
+			Result := internal_db = a_other.internal_db
+			if not Result then
+					-- May enter here because one of the databases may be closed.
+				if {PLATFORM}.is_windows then
+					Result := file_name.same_string (a_other.file_name)
+				else
+					Result := file_name.same_string (a_other.file_name)
+				end
+			end
+		end
+
 feature -- Status report: Threading
 
 	is_locked: BOOLEAN
-			-- Indicates if there is an active lock on the database
+			-- Indicates if there is an active lock on the database.
+			-- Note: Use `is_accessible' or `is_locked_exclusivley' when accessing the connection from
+			--       another thread to determine if access to database is permissable on the same thread.
 		do
 			Result := internal_lock_count > 0
 		ensure
 			internal_lock_count_positive: Result implies internal_lock_count > 0
+		end
+
+	is_locked_exclusivley: BOOLEAN
+			-- Indicates if there is an active lock on the database by another thread.
+		do
+			Result := not is_accessible and then is_locked
+		ensure
+			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
+			is_locked: Result implies is_locked
+			not_is_accessible: Result implies not is_accessible
 		end
 
 feature -- Basic operations
@@ -213,7 +267,8 @@ feature -- Basic operations
 	open
 			-- Opens the database connection.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_closed: is_closed
 			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
 		local
@@ -231,7 +286,8 @@ feature -- Basic operations
 	open_read
 			-- Opens the database connection in a read-only mode.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_closed: is_closed
 			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
 		do
@@ -241,7 +297,8 @@ feature -- Basic operations
 	open_read_write
 			-- Opens the database connection in a read/write mode.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_closed: is_closed
 			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
 		do
@@ -254,7 +311,8 @@ feature -- Basic operations
 			-- Opens the database connection in a read/write mode and creates the database if if does
 			-- not already exist.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_closed: is_closed
 		do
 			open_internal (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
@@ -267,7 +325,9 @@ feature -- Basic operations
 			-- for convenience.
 			-- Note: Closed connections can be reopened using one of the `open_*' routines.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			not_is_locked: not is_locked
 		local
 			l_db: like internal_db
 			l_api: like sqlite_api
@@ -325,7 +385,8 @@ feature -- Basic operations: Threading
 	lock
 			-- Locks access to the database for all threads except the current thread.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			is_readable: is_readable
 		local
 			l_count: INTEGER
@@ -348,6 +409,7 @@ feature -- Basic operations: Threading
 	unlock
 			-- Unlocks access to the database for all threads.
 		require
+			is_accessible: is_accessible
 			is_locked: is_locked
 		local
 			l_count: INTEGER
@@ -358,10 +420,12 @@ feature -- Basic operations: Threading
 			l_count := l_count - 1
 			internal_lock_count := l_count
 
-			l_api := sqlite_api
-			l_mutex := sqlite3_db_mutex (l_api, internal_db)
-			if l_mutex /= default_pointer then
-				sqlite3_mutex_leave (l_api, l_mutex)
+			if is_interface_usable then
+				l_api := sqlite_api
+				l_mutex := sqlite3_db_mutex (l_api, internal_db)
+				if l_mutex /= default_pointer then
+					sqlite3_mutex_leave (l_api, l_mutex)
+				end
 			end
 		end
 
@@ -373,7 +437,7 @@ feature {NONE} -- Basic operations
 			--
 			-- `a_flags': The flags to open the database connection with.
 		require
-			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
 			is_closed: is_closed
 		local
 			l_file_name: C_STRING
@@ -442,10 +506,28 @@ feature {NONE} -- Implementation
 	internal_lock_count: INTEGER
 			-- Internal lock count for thread protection.
 
+	internal_thread_id: INTEGER
+			-- The thread the database was connected using.
+			--|In non multi-threaded systems this will always be 0.
+
+feature {NONE} -- Externals
+
+	get_current_thread_id: POINTER
+			-- Returns a pointer to the thread-id of the thread.
+		require
+			is_thread_capable: {PLATFORM}.is_thread_capable
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_thread_id"
+		end
+
 invariant
 	file_name_attached: attached file_name
 	not_file_name_is_empty: not file_name.is_empty
 	is_readable: not is_closed implies is_readable
+	locked_thread_id_unset: not {PLATFORM}.is_thread_capable implies internal_thread_id = 0
+	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id > 0
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

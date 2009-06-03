@@ -15,7 +15,10 @@ feature -- Access
 	mask: INTEGER = 0xFF
 			-- Mask for extracting the result code.
 
-feature -- Constants
+	failure_mask: INTEGER = 0x1F
+			-- Mask for extracting the failure result code.
+
+feature -- Constants: Success
 
 	SQLITE_OK: INTEGER
 			-- Successful result.
@@ -24,6 +27,8 @@ feature -- Constants
 		alias
 			"SQLITE_OK"
 		end
+
+feature -- Constants: Failure
 
 	SQLITE_ERROR: INTEGER
 			-- SQL error or missing database.
@@ -232,6 +237,8 @@ feature -- Constants
 		alias
 			"SQLITE_NOTADB"
 		end
+
+feature -- Constants: Success
 
 	SQLITE_ROW: INTEGER
 			-- sqlite3_step() has another row ready.

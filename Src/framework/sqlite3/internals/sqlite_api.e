@@ -16,7 +16,9 @@ class
 inherit
 	DYNAMIC_API
 
-inherit {NONE}
+--inherit {NONE}
+	SQLITE_INTERNALS
+	
 	SQLITE_API_EXTERNALS
 		export
 			{NONE} all
@@ -28,7 +30,8 @@ inherit {NONE}
 		end
 
 create
-	make
+	make,
+	make_static
 
 feature {NONE} -- Initialize
 
@@ -50,7 +53,7 @@ feature {NONE} -- Initialize
 					set_threading_mode (SQLITE_CONFIG_SINGLETHREAD)
 				end
 
-				l_result := c_sqlite3_initialize (api_pointer (once "sqlite3_initialize"))
+				l_result := sqlite3_initialize (Current)
 				if sqlite_success (l_result) then
 						-- Increment the reference counter.
 					l_count.put (1)
@@ -72,7 +75,7 @@ feature {NONE} -- Clean up
 		do
 			l_count := initialization_count
 			if l_count.item = 1 then
-				l_result := c_sqlite3_shutdown (api_pointer (once "sqlite3_shutdown"))
+				l_result := sqlite3_shutdown (Current)
 				if sqlite_success (l_result) then
 					l_count.put (0)
 				end
@@ -90,7 +93,7 @@ feature -- Access
 		local
 			l_p: like c_sqlite3_libversion
 		once
-			l_p := c_sqlite3_libversion (api_pointer (once "sqlite3_libversion"))
+			l_p := sqlite3_libversion (Current)
 			if l_p /= default_pointer then
 				create Result.make_from_c (l_p)
 			else
@@ -106,7 +109,7 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		once
-			Result := c_sqlite3_libversion_number (api_pointer (once "sqlite3_libversion_number")).as_natural_32
+			Result := sqlite3_libversion_number (Current).as_natural_32
 		end
 
 feature -- Access: API
@@ -157,7 +160,7 @@ feature -- Element change
 		local
 			l_result: INTEGER
 		do
-			l_result := c_sqlite3_config (api_pointer (once "sqlite3_config"), SQLITE_CONFIG_SERIALIZED)
+			l_result := sqlite3_config (Current, SQLITE_CONFIG_SERIALIZED)
 			check success: sqlite_success (l_result) end
 		end
 
@@ -177,7 +180,7 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := {PLATFORM}.is_thread_capable and then
-				c_sqlite3_threadsafe (api_pointer (once "sqlite3_threadsafe")) /= 0
+				sqlite3_threadsafe (Current) /= 0
 		ensure then
 			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
 		end

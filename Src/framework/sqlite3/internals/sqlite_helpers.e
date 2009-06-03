@@ -1,6 +1,9 @@
 note
 	description: "[
 		Helper function for interacting the the raw SQLite API.
+		
+		Currently the helpers are limited to checking results and raising exceptions on non-successful
+		result codes are checked.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,11 +21,13 @@ feature -- Query
 			-- `a_code': A result code.
 			-- `Result': True if the result code was a successful code; False for all errors codes.
 		do
-			Result := a_code = {SQLITE_RESULT_CODES}.sqlite_ok or
+			Result := ({SQLITE_RESULT_CODES}.failure_mask & a_code) = 0 or
+				a_code = {SQLITE_RESULT_CODES}.sqlite_row or
 				a_code = {SQLITE_RESULT_CODES}.sqlite_done
 		ensure
 			result_is_ok: Result implies (
-				a_code = {SQLITE_RESULT_CODES}.sqlite_ok or
+				({SQLITE_RESULT_CODES}.failure_mask & a_code) = 0 or
+				a_code = {SQLITE_RESULT_CODES}.sqlite_row or
 				a_code = {SQLITE_RESULT_CODES}.sqlite_done)
 		end
 
@@ -58,11 +63,13 @@ feature -- Basic operations
 			--
 			-- `a_code': A result code.
 		local
-			l_exception: like sqlite_raise_on_failure_with_message
+			l_exception: like sqlite_exception
 		do
 			if not sqlite_success (a_code) then
-				l_exception := sqlite_raise_on_failure_with_message (a_code, Void)
-				l_exception.raise
+				l_exception := sqlite_exception (a_code, Void)
+				if attached l_exception then
+					l_exception.raise
+				end
 			end
 		end
 

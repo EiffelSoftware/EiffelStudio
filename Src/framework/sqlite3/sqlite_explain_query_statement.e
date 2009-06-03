@@ -1,30 +1,38 @@
 note
 	description: "[
-		Shared helper class for allowing access to an SQLite API {SQLIITE_API} but means of a creation routine parameter.
+		Extracts the virtual machine instructions generated for a compiled statement. This is not
+		intended for use within an application
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SQLITE_DYNAMIC_SHARED_API
+class
+	SQLITE_EXPLAIN_QUERY_STATEMENT
 
 inherit
-	DYNAMIC_SHARED_API [SQLITE_API]
-
-feature {NONE} -- Initialize
-
-	initialize
-			-- <Precursor>
-		do
+	SQLITE_QUERY_STATEMENT
+		redefine
+			compile_statement
 		end
 
-feature -- Clean up
+create
+	make
 
-	clean_up
+feature {NONE} -- Access
+
+	compile_statement: STRING
 			-- <Precursor>
+		local
+			l_stmt: like statement
 		do
+			l_stmt := statement
+			create Result.make (l_stmt.count + 8)
+				-- Prepend the EXPLAIN statment to the query to fetch the virtual machine instructions.
+				-- See http://www.sqlite.org/opcode.html
+			Result.append (once "EXPLAIN ")
+			Result.append (l_stmt)
 		end
 
 ;note

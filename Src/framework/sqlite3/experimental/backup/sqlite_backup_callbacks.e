@@ -1,33 +1,16 @@
 note
 	description: "[
-		Shared helper class for allowing access to an SQLite API {SQLIITE_API} but means of a creation routine parameter.
+		Callbacks interface for
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SQLITE_DYNAMIC_SHARED_API
+class
+	SQLITE_BACKUP_CALLBACKS
 
-inherit
-	DYNAMIC_SHARED_API [SQLITE_API]
-
-feature {NONE} -- Initialize
-
-	initialize
-			-- <Precursor>
-		do
-		end
-
-feature -- Clean up
-
-	clean_up
-			-- <Precursor>
-		do
-		end
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

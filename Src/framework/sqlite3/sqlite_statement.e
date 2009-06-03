@@ -16,11 +16,11 @@ class
 	SQLITE_STATEMENT
 
 inherit
-	SQLITE_SHARED_API
-
 	DISPOSABLE
 
-inherit {NONE}
+	SQLITE_SHARED_API
+
+--inherit {NONE}
 	SQLITE_INTERNALS
 		export
 			{NONE} all
@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			a_statement_attached: attached a_statement
 			not_a_statement_is_empty: not a_statement.is_empty
 			a_db_attached: attached a_db
+			a_db_is_accessible: a_db.is_accessible
 			a_db_is_readable: a_db.is_readable
 		do
 			create statement.make_from_string (a_statement)
@@ -117,6 +118,23 @@ feature -- Access
 	last_exception: detachable SQLITE_EXCEPTION
 			-- Last occuring error, set during compilation.
 
+feature {NONE} -- Access
+
+	compile_statement: STRING
+			-- The statement used to compile with, which may be a modified version of `statement'.
+		do
+			Result := statement
+		ensure
+			result_attached: attached Result
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature {SQLITE_RESULT_ROW} -- Measurement
+
+	mark: NATURAL
+			-- The edition mark of the statement.
+			-- A new mark is generated for each execution of recompilation.
+
 feature -- Status report
 
 	is_compiled: BOOLEAN
@@ -144,7 +162,25 @@ feature -- Status report
 	is_executing: BOOLEAN
 			-- Indicates if the statement is currently be executed.
 
+feature {NONE} -- Status report
+
+	is_abort_requested: BOOLEAN
+			-- Indicates if an abort is requested for the currently executed statement.
+
 feature -- Basic operations
+
+	abort
+			-- Aborts an executing statement.
+			-- Note: Unlike most of the routines, this can be called from another thread.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_executing: db.is_accessible implies is_executing -- Calls on the same thread can guarentee `is_executing'.
+		do
+			is_abort_requested := True
+		ensure
+			is_abort_requested: is_abort_requested
+		end
 
 	ensure_connected
 			-- Attempts to ensure a statement is connected to the associated database.
@@ -157,116 +193,45 @@ feature -- Basic operations
 			--       Reconnection is not guarenteed!
 		require
 			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			db_is_accessible: db.is_accessible
 			db_is_readable: db.is_readable
 		do
 			if not is_connected then
 					-- Reset internals
-				internal_db := default_pointer
-				internal_stmt := default_pointer
+				reset
 
 					-- Attempt to recompile
 				compile
 			end
-		end
-
-	perform: ARRAYED_LIST [ANY]
-			--
-		require
-			is_compiled: is_compiled
-			is_connected: is_connected
-			not_is_executing: not is_executing
-		do
-			create Result.make (0)
-			perform_with_callback (agent (ia_list: ARRAYED_LIST [ANY]; ia_row: ANY)
-				do
-					ia_list.extend (ia_row)
-				end (Result, ?))
 		ensure
-			not_is_executing: not is_executing
-		end
-
-	perform_with_callback (a_callback: PROCEDURE [ANY, TUPLE [row: ANY]])
-			-- Performs execution of the SQLite statement with a callback routine for each returned result row.
-			--
-			-- `a_callback': A callback routine accepting a result row as its argument.
-		require
-			is_compiled: is_compiled
-			is_connected: is_connected
-			a_callback_attached: attached a_callback
-			not_is_executing: not is_executing
-		local
-			l_api: like sqlite_api
-			l_stmt: like internal_stmt
-			l_db: like db
-			l_exception: detachable SQLITE_EXCEPTION
-			l_result: INTEGER
-			l_locked: BOOLEAN
-		do
-			l_api := sqlite_api
-			l_stmt := internal_stmt
-			l_db := db
-			is_executing := True
-
-				-- Note the locking sequencing, to ensure access to the error messages
-				-- are not affected by other threads.
-			l_db.lock -- (+1) 1
-			l_locked := True
-			from
-				l_result := sqlite3_step (l_api, l_stmt)
-			until
-				not sqlite_success (l_result) or
-				l_result = {SQLITE_RESULT_CODES}.sqlite_done
-			loop
-					-- Unlock before any callback because it may need access to the DB using another thread.
-				l_db.unlock -- (-1) 0
-				l_locked := False
-
-				a_callback.call (Void)
-
-				if is_connected then
-						-- The callback could have closed the DB connection
-					l_db.lock -- (+1) 1
-					l_locked := True
-					l_result := sqlite3_step (l_api, l_stmt)
-				end
-			end
-
-				-- Fetch any error information, if any, and report it.
-			if l_locked then
-				if not sqlite_success (l_result) then
-					l_exception := l_db.last_exception
-					l_db.unlock -- (-1) 0
-					if attached l_exception then
-						l_exception.raise
-					end
-				else
-					l_db.unlock -- (-1) 0	
-				end
-			else
-					-- The connection was lost so no error information can be retrieved from the DB.
-				check not_is_connected: not is_connected end
-				sqlite_raise_on_failure (l_result)
-			end
-
-				-- Reset the statement for repeated use.
-			is_executing := False
-			l_result := sqlite3_reset (l_api, l_stmt)
-			check success: sqlite_success (l_result) end
-		ensure
-			not_is_executing: not is_executing
-		rescue
-			if is_executing then
-				is_executing := False
-				sqlite3_reset (sqlite_api, internal_stmt).do_nothing
-			end
+			mark_increased: (not old is_connected) implies (mark > old mark)
 		end
 
 feature {NONE} -- Basic operations
+
+	reset
+			-- Resets any cached compiled information
+		do
+			internal_stmt := default_pointer
+			internal_db := default_pointer
+			is_abort_requested := False
+
+				-- The statement is no longer compiled so invalidate any retained linked
+				-- references.
+			mark := mark + 1
+		ensure
+			not_is_compiled: not is_compiled
+			not_is_connected: not is_connected
+			not_is_abort_requested: not is_abort_requested
+			mark_increased: mark > old mark
+		end
 
 	compile
 			-- Compiles the current statement.
 		require
 			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
 			not_is_connected: not is_connected
 			db_is_readable: db.is_readable
 		local
@@ -278,7 +243,7 @@ feature {NONE} -- Basic operations
 			l_locked: BOOLEAN
 			l_result: INTEGER
 		do
-			create l_string.make (statement)
+			create l_string.make (compile_statement)
 				-- Note: Preparation does support mulitple statments in one string, but for now this is not supported.
 
 			l_db := db
@@ -302,13 +267,106 @@ feature {NONE} -- Basic operations
 			l_db.unlock
 		ensure
 			not_internal_db_is_null: is_compiled implies internal_db /= default_pointer
-			internal_db_is_null: is_compiled implies internal_db = default_pointer
+			internal_db_is_null: not is_compiled implies internal_db = default_pointer
 			last_exception_attached: not is_compiled implies attached last_exception
 			last_exception_attached: is_compiled implies not attached last_exception
 		rescue
 			if l_locked then
 				l_locked := False
 				db.unlock
+			end
+		end
+
+	execute_internal (a_callback: detachable PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: detachable ANY)
+			-- Performs execution of the SQLite statement with a callback routine for each returned result row.
+			--
+			-- `a_callback': A callback routine accepting a result row as its argument.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_compiled: is_compiled
+			is_connected: is_connected
+			not_is_executing: not is_executing
+			db_is_accessible: db.is_accessible
+		local
+			l_api: like sqlite_api
+			l_stmt: like internal_stmt
+			l_db: like db
+			l_exception: detachable SQLITE_EXCEPTION
+			l_result: INTEGER
+			l_done: BOOLEAN
+			l_locked: BOOLEAN
+			l_row: SQLITE_RESULT_ROW
+		do
+				-- Change the mark number
+			mark := mark + 1
+
+			l_api := sqlite_api
+			l_stmt := internal_stmt
+			l_db := db
+
+			is_abort_requested := False
+			is_executing := True
+
+				-- Note the locking sequencing, to ensure access to the error messages
+				-- are not affected by other threads.
+			l_db.lock -- (+1) 1
+			l_locked := True
+			from
+				create l_row.make (Current)
+				l_result := sqlite3_step (l_api, l_stmt)
+			until
+				not sqlite_success (l_result) or l_done
+			loop
+					-- Unlock before any callback because it may need access to the DB using another thread.
+				l_db.unlock -- (-1) 0
+				l_locked := False
+
+				if attached a_callback then
+						-- Call back with the result row.
+					a_callback.call ([l_row])
+				end
+
+					-- Check abort status
+				l_done := is_abort_requested
+
+				if not l_done and is_connected then
+						-- The callback could have closed the DB connection so the check is needed.
+					l_db.lock -- (+1) 1
+					l_locked := True
+					l_result := sqlite3_step (l_api, l_stmt)
+				end
+				l_done := l_done or l_result = {SQLITE_RESULT_CODES}.sqlite_done
+			end
+
+				-- Fetch any error information, if any, and report it.
+			if l_locked then
+				if not sqlite_success (l_result) then
+					l_exception := l_db.last_exception
+					l_db.unlock -- (-1) 0
+					if attached l_exception then
+						l_exception.raise
+					end
+				else
+					l_db.unlock -- (-1) 0	
+				end
+			else
+					-- The connection was lost so no error information can be retrieved from the DB.
+				check not_is_connected: not is_abort_requested implies not is_connected end
+				sqlite_raise_on_failure (l_result)
+			end
+
+				-- Reset the statement for repeated use.
+			is_executing := False
+			l_result := sqlite3_reset (l_api, l_stmt)
+			check success: sqlite_success (l_result) end
+		ensure
+			not_is_executing: not is_executing
+			mark_increased: mark > old mark
+		rescue
+			if is_executing then
+				is_executing := False
+				sqlite3_reset (sqlite_api, internal_stmt).do_nothing
 			end
 		end
 

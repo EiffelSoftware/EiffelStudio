@@ -177,6 +177,7 @@ feature -- Processing
 		local
 			dir: DIRECTORY
 			files: LIST [STRING]
+			file: FILE_NAME
 		do
 			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 10)
 			create dir.make (create {FILE_NAME}.make_from_string (taglib_folder))
@@ -187,7 +188,10 @@ feature -- Processing
 				files.after
 			loop
 				if files.item.ends_with (".taglib") then
-					process_file (files.item, agent process_taglib_with_stream (a_registry, ?))
+					o.dprint ("Processing file: " + files.item, 10)
+					create file.make_from_string (taglib_folder)
+					file.set_file_name (files.item)
+					process_file (file, agent process_taglib_with_stream (a_registry, ?))
 				end
 				files.forth
 			end

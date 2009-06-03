@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="net" uuid="A806012E-91F3-4D4C-AAAA-E05F6F2BACAA" library_target="net">
+	<target name="net">
+		<description>Net library: Networking library with serialization facilities.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Net">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtnet.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\net.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilnet.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="abstract" location="abstract\" recursive="true"/>
+		<cluster name="local" location="local\" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</cluster>
+		<cluster name="mail" location="mail\" recursive="true"/>
+		<cluster name="network" location="network\" recursive="true"/>
+		<cluster name="polling" location="polling\" recursive="true">
+			<file_rule>
+				<exclude>/wel_socket_poller\.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="transfer" location="transfer\" recursive="true"/>
+	</target>
+</system>

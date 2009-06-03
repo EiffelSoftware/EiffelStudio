@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="i18n" uuid="1428822B-CDC0-4B9E-B519-63FEFC7CE3C6" library_target="i18n">
+	<target name="i18n">
+		<description>i18n: internationalise applications</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/documents$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/include$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library">
+			<assertions precondition="true"/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+			<warning name="vweq" enabled="false"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location="$(ISE_LIBRARY)/library/i18n/spec/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</assembly>
+		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</assembly>
+		<cluster name="i18n" location=".\">
+			<option namespace="I18n">
+			</option>
+			<cluster name="utility" location=".\utility\">
+				<option namespace="Utility">
+				</option>
+			</cluster>
+			<cluster name="datasource" location=".\datasource\" recursive="true">
+				<option namespace="DataSource">
+				</option>
+			</cluster>
+			<cluster name="dictionary" location=".\dictionary\" recursive="true">
+				<option namespace="Dictionary">
+				</option>
+			</cluster>
+			<cluster name="locale" location=".\locale\">
+				<option namespace="Locale">
+				</option>
+				<cluster name="nls_imp" location=".\locale\nls\">
+					<condition>
+						<platform value="windows"/>
+						<dotnet value="false"/>
+					</condition>
+				</cluster>
+				<cluster name="posix_imp" location=".\locale\posix\">
+					<condition>
+						<platform excluded_value="windows"/>
+					</condition>
+				</cluster>
+				<cluster name="dotnet_imp" location=".\locale\dotnet\">
+					<condition>
+						<platform value="windows"/>
+						<dotnet value="true"/>
+					</condition>
+					<option namespace="Implementation">
+					</option>
+				</cluster>
+			</cluster>
+			<cluster name="formatter" location=".\formatter\" recursive="true">
+				<option namespace="Formatter">
+				</option>
+			</cluster>
+			<cluster name="locale_info" location=".\locale_info\">
+				<option namespace="Locale.Info">
+				</option>
+			</cluster>
+		</cluster>
+	</target>
+</system>

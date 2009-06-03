@@ -1,0 +1,321 @@
+﻿
+  Eiffel internationalization library - User guide
+
+
+
+    Contents
+
+
+    * 1 Overview 
+    * 2 Interface 
+          o 2.1 Choosing a locale 
+          o 2.2 Using your locale 
+                + 2.2.1 String translation 
+                      # 2.2.1.1 Interface <
+                      # 2.2.1.2 Usage 
+                      # 2.2.1.3 Misuse 
+                + 2.2.2 Formatting 
+                      # 2.2.2.1 Interface 
+                      # 2.2.2.2 Usage 
+                            * 2.2.2.2.1 Date formatting 
+                            * 2.2.2.2.2 Value and currency formatting                       
+    * 3 String extraction 
+    * 4 Datasources 
+          o 4.1 Mo files 
+
+
+
+    1. Overview
+
+The i18n library is
+intended to enable localisation of Eiffel programs.
+
+/localisation/ is the process of adapting a piece of software to a
+specific place - the /locale/, often expressed as a combination of
+language and country codes.
+
+This normally means not only displaying strings in the appropriate
+language, but also adapting number formatting, date and time formatting
+etc. to use local conventions. The i18n library provides formatting
+facilities for numbers, currency values and dates, and the ability to
+identify and load translated strings at run-time.
+
+
+
+    2. Interface
+
+The library provides most of it's services through one class: LOCALE.
+This presents all formatting and translation facilities for a given
+locale. LOCALE objects can't be created directly: one must go though the
+LOCALE_MANAGER class. A LOCALE_MANAGER finds out what information for
+which locales is available, and offers a list to chose from. It will
+then load the information for the chosen locale into a LOCALE object and
+give it to you. With this LOCALE object you can do the really
+interesting things, like formatting dates and translating strings.
+
+
+
+      2.1 Choosing a locale
+
+First you must have a LOCALE_MANAGER. For details on creating them,
+please see the *Datasources* section. If you just want to use whatever
+locale is the default on the user's machine, as in most cases, then it's
+easy to get a LOCALE object: just call default_locale.
+
+my_locale := locale_mananger.default_locale
+
+If you want a specific locale, it's going to be a bit more complicated.
+A LOCALE_MANAGER knows what locales are available and exactly what
+information is available for a specific locale. You can get a list of
+all locales that are available to some degree by calling the
+available_locales feature. A locale is identified by a LOCALE_ID object,
+and normally this has two components: language code and country code.
+For example, the US english locale has language code "en" and country
+code "US". If you've found a locale id that you like in the list
+returned by available_locales, you can check exactly what is available
+for it by using
+
+has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&btnI=I%27m+Feeling+Lucky>
+has_localised_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&btnI=I%27m+Feeling+Lucky>
+has_formatting_info (a_locale_id: I18N_LOCALE_ID): BOOLEAN <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+BOOLEAN&btnI=I%27m+Feeling+Lucky>
+
+(The difference between a translation and a localised translation is
+that a localised translation is specific to a region: fr_CA or de_CH,
+for example. A translation is specific only to a language: fr or de, for
+example)
+
+You can then retrieve the corresponding LOCALE object by calling
+locale_with_id, providing the desired LOCALE_ID.
+
+
+      2.2 Using your locale
+
+Now you've got a LOCALE. After the initial burst of euphoria has faded
+away, what can you do with it?
+
+
+        2.2.1 String translation
+
+
+          2.2.1.1 Interface
+
+translation (original: STRING_GENERAL): STRING_32
+plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+INTEGER&btnI=I%27m+Feeling+Lucky>): STRING_32
+formatted_string (original: STRING_GENERAL; token_values: TUPLE <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+TUPLE&btnI=I%27m+Feeling+Lucky>[STRING_GENERAL]): STRING_32
+
+
+          2.2.1.2 Usage
+
+In naïvely written software, you can often spot things like
+
+io.put_string("My hovercraft is full of eels")
+
+We'll use this example to illustrate the use of the string translation
+features of the i18n library.
+
+If, as above, there is just one constant string to translate, the
+solution is very easy: simply use the translation function. The resulting
+code would look like this
+
+io.put_string(my_locale.translation("My hovercraft is full of eels"))
+
+If the translation function can't find a translation for this string it
+will simply return the original string - better then nothing!
+
+But life is, of course, not always that simple. What if we have to deal
+with plurals? The "traditional" way of doing this is something like:
+
+n := number_of_hovercraft
+if n = 1 then
+	io.put_string("My hovercraft is full of eels")
+else
+	io.put_string("My hovercraft are full of eels")
+end
+
+This is not so easy to translate as the above. Why can't we just
+translate both strings?
+
+Depending on the language, there may be up to 4 different types of
+plural forms, used in strange and exotic ways. Clearly, it is important
+to know exactly _how_ many hovercraft there are so that we can choose
+the right plural form. This can be done by the plural_translation
+function, which we can use in this way:
+
+n := number_of_hovercraft
+io.put_string(my_locale.plural_translation("My hovercraft is full of eels","My hovercraft are full of eels",n))
+
+This function will choose and return a translation in the correct plural
+form. If it can't find one, it will behave like translate and return
+either the original singular string or the original plural string,
+following English grammatical rules.
+
+Often even the above is not enough. What if you want to tell the world
+exactly how many hovercraft you have? You might write something like this:
+
+n := number_of_hovercraft
+if n = 1 then
+	io.put_string("My hovercraft is full of eels")
+else
+	io.put_string("My "+n.out+" hovercraft are full of eels")
+end
+
+How can plural_translation handle this? It needs some reinforcements: the
+solution is to also use /string templates/. This means that we can embed
+codes like "$1" in a string and replace them in the translation by the
+actual values. Let's see how this works:
+
+n := number_of_hovercraft
+plural_string := my_locale.plural_translation("My hovercraft is full of eels","My $1 hovercraft are full of eels",n)
+io.put_string(my_locale.formatted_string(plural_string, [n]))
+
+To replace the /escape codes/, such as $1, $2, we use the function
+formatted_string. This replaces all the escape codes it finds by the values
+in a tuple that you give to it a an argument.
+
+
+          2.2.1.3 Misuse
+
+It is not a good idea, generally speaking, to do something like the
+following:
+
+n := number_of_eels
+io.put_string(my_locale.translation("My hovercraft has "+n.out+"eels"))
+
+There are two reasons for this:
+
+    * What the translation function will see as an argument is
+      runtime-dependant. It may correspond to an actual entry in the
+      datasource, if you are careful, but in the example above it
+      probably won't unless you have entries for every possible value of
+      n. This is the reason for which we have the formatted_string feature
+      in LOCALE - please use it! 
+
+    * When you want to generate a .po file to give to translators, this
+      sort of thing is not going to make the command that extracts it
+      very happy. What will happen is that it will extract the first
+      constant STRING argument and ignore the rest, so your .po file
+      will have an "My hovercraft has " entry and unless you correct
+      this by hand very probably at runtime the i18n library will not be
+      able to find a translation. 
+
+
+        2.2.2 Formatting
+
+          2.2.2.1 Interface
+
+DATE_FORMATTER provides:
+
+formatted_date(date:DATE):STRING_32 
+formatted_time(time: TIME): STRING_32 
+formatted_date_time(date_time:DATE_TIME):STRING_32
+
+CURRENCY_FORMATTER provides:
+
+formatted_currency (a_value: REAL_64): STRING_32
+
+VALUE_FORMATTER provides:
+
+formatted_integer_8 (a_integer_8: INTEGER_8): STRING_32 
+formatted_integer_16 (a_integer_16: INTEGER_16): STRING_32 
+formatted_integer_32 (a_integer_32: INTEGER_32): STRING_32
+formatted_integer_64 (a_integer_64: INTEGER_64): STRING_32 
+formatted_real_32 (a_real_32: REAL_32): STRING_32 
+formatted_real_64 (a_real_64: REAL_64): STRING_32
+
+          2.2.2.2 Usage
+
+The LOCALE class makes 3 formatters accessible to clients: a
+VALUE_FORMATTER, a DATE_FORMATTER and a CURRENCY_FORMATTER, exposed as
+features under the names value_formatter, date_formatter and
+currency_formatter respectively. Using these formatters is fairly
+straightforward: you simply call the appropriate function for the type
+of object that you want to format.
+
+            2.2.2.2.1 Date formatting
+
+The DATE_FORMATTER class can format EiffelTime DATE, TIME and DATE_TIME
+classes in a way appropriate to the locale. For example, to get a string
+representation of today's date in a given locale, you might write:
+
+io.put_string(my_locale.formatted_date(create {DATE}.make_now))
+
+Currently eras of non-gregorian calendars are not well supported.
+
+
+            2.2.2.2.2 Value and currency formatting
+
+The VALUE_FORMATTER and CURRENCY_FORMATTER classes can format integers
+and reals according to the conventions of a given locale - number of
+digits after the decimal separator, the decimal separator itself,
+grouping of digits and so on.
+
+Using them is just as easy as DATE_FORMATTER: just call the function
+appropriate to the type of object who's value you want to format.
+
+
+
+    3. String extraction
+
+Somebody has to translate all these strings. Mostly, this isn't a
+programmer, so somehow you have to be able to give this translator a
+list of strings that you want translated.
+
+We can extract these strings from your application fairly easily by
+simply looking at the arguments for each call to translation or
+plural_translation. By clicking on a handy button in EiffelStudio, these
+strings will be extracted and placed in a .po file
+
+If you are using the es-i18n branch, this command is in the "Tools" menu
+("Generate .po"). One click and it will prompt you for a location to
+write the .po file to. This is basically all there is to it. It is
+helpful to understand how it works (see the 'Misuse' section): it
+extracts the arguments of calls to the translate and plural_translation
+functions. Largely it will not behave satisfactorily if the string is
+made up of several parts glued together at run-time.
+
+A .po file is a reasonably widespread format for storing strings to be
+translated. There are several tools to aid translation of these files,
+such as poEdit <http://www.poedit.org/> for Windows and KBabel
+<http://kbabel.kde.org/> or gtranslator
+<http://gtranslator.sourceforge.net/> for KDE and Gnome. There are also
+many tools to convert .po files to other formats, such as the xml xliff
+format.
+
+
+    4. Datasources
+
+The library has to load the translated strings from somewhere - sadly we
+can't do on the fly translation but if you can, please tell us! Instead
+we load the strings from a datasource. This is appropriately generic: it
+could be anything, from a database to a system that queries a server via
+RPC or SOAP, but currently we only have one implementation: files. And
+in fact, we only support one type of file: the .mo file format. The
+library can't guess the type of datasource you want to use, so you have
+to tell it when you create a LOCALE_MANAGER. This is done via an /uri/.
+Currently all uris are interpreted as directories where string catalog
+files may be found, and any .mo files in this directory will be used by
+the i18n library. This means that creating a LOCALE_MANAGER looks
+somewhat like this:
+
+create my_locale_manager.make("/path/to/my/files")
+
+
+      4.1 Mo files
+
+The mo file format is defined by the GNU gettext
+<http://www.gnu.org/software/gettext/> library, a widely-used C library
+that allows localisation of text strings. We support UTF-8 encoded mo
+files.
+
+How do you get these .mo files? Once your translator has finished
+translating a .po file, you can convert it into a .mo file by using the
+/msgfmt/ tool, which is obtainable as part of the gettext package under
+unix and distributed with poEdit under Windows. The resulting mo file
+should be named with the locale identifier of the locale it is intended
+for (zh_CN.mo or de_CH.mo, for example) or the language identifier of
+the target language (zh or de, for example) and placed in the
+appropriate directory - this is to say, the one that you give to
+LOCALE_MANAGER as an uri.
+
+The .mo file should then be seen and used by the i18n library.
+

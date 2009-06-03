@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_regexp" uuid="17374E5C-7D05-4A7F-A2DE-BD328044EC84" library_target="gobo_regexp">
+	<target name="gobo_regexp">
+		<description>gobo regexp library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/Documentation$</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="Gobo.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="gobo_kernel" location="gobo_kernel-safe.ecf"/>
+		<library name="gobo_pattern" location="gobo_pattern-safe.ecf"/>
+		<library name="gobo_structure" location="gobo_structure-safe.ecf"/>
+		<library name="gobo_utility" location="gobo_utility-safe.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="regexp" location="svn\library\regexp\" recursive="true">
+			<option namespace="RegExp">
+			</option>
+		</cluster>
+	</target>
+</system>

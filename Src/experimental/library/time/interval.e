@@ -1,0 +1,369 @@
+note
+	description: "Intervals between absolute values"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class INTERVAL [G -> ABSOLUTE] inherit
+
+	PART_COMPARABLE
+		redefine
+			is_equal,
+			is_less_equal,
+			is_greater_equal,
+			is_less,
+			is_greater,
+			out
+		select
+			is_less_equal,
+			is_greater_equal,
+			is_less,
+			is_greater
+		end
+
+	PART_COMPARABLE
+		rename
+			is_less as is_strict_included_by,
+			is_greater as strict_includes,
+			is_less_equal as is_included_by,
+			is_greater_equal as includes
+		redefine
+			strict_includes,
+			is_included_by,
+			includes,
+			is_equal,
+			out
+		end
+
+create
+	make
+
+feature -- Initialization
+
+	make (s, e: G)
+			-- Sets `start_bound' and `end_bound' to `s' and `e' respectively.
+		require
+			start_exists: s /= Void
+			end_exists: e /= Void
+			start_before_end: s <= e
+		do
+			start_bound := s
+			start_bound := start_bound.deep_twin
+			end_bound := e
+			end_bound := end_bound.deep_twin
+		ensure
+			start_bound_set: start_bound /= Void and then
+				deep_equal (start_bound, s)
+			end_bound_set: end_bound /= Void and then
+				deep_equal (end_bound, e)
+		end
+
+feature -- Access
+
+	start_bound: attached G
+			-- Start bound of the current interval
+
+	end_bound: attached G
+			-- End bound of the current interval
+
+feature -- Measurement
+
+	duration: DURATION
+			-- Length of the interval
+		do
+			Result := end_bound.duration - start_bound.duration
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is current interval equal to `other'?
+		do
+			Result := start_bound.is_equal (other.start_bound) and then
+				end_bound.is_equal (other.end_bound)
+		end
+
+	intersects (other: like Current): BOOLEAN
+			-- Does current interval intersect `other'?
+		require
+			other_exists: other /= Void
+		do
+			Result := (start_bound.max (other.start_bound)) <=
+				(end_bound.min (other.end_bound))
+		end
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current interval strictly before `other'?
+		do
+			Result := (start_bound < other.start_bound) and then
+				(end_bound < other.end_bound)
+		end
+
+	is_less_equal alias "<=" (other: like Current): BOOLEAN
+			-- Is current interval before `other'?
+		do
+			Result := (Current < other) or else (is_equal (other))
+		end
+
+	is_greater alias ">" (other: like Current): BOOLEAN
+			-- Is current interval after `other'?
+		do
+			Result := (other < Current)
+		end
+
+
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN
+			-- Is current interval after `other'?
+		do
+			Result := (other <= Current)
+		end
+
+	is_strict_included_by (other: like Current): BOOLEAN
+			-- Is current interval strictly included by `other'?
+		do
+			Result := (start_bound > other.start_bound) and then
+				(end_bound < other.end_bound)
+		end
+
+	strict_includes (other: like Current): BOOLEAN
+			-- Does current interval strictly include `other'?
+		do
+			Result := other.is_strict_included_by (Current)
+		end
+
+	is_included_by (other: like Current): BOOLEAN
+			-- Is current interval included by `other'?
+		do
+			Result := (start_bound >= other.start_bound) and then
+				(end_bound <= other.end_bound)
+		end
+
+	includes (other: like Current): BOOLEAN
+			-- Does current interval include `other'?
+		do
+			Result := other.is_included_by (Current)
+		end
+
+	overlaps (other: like Current): BOOLEAN
+			-- Does current interval overlap `other'?
+		require
+			other_exists: other /= Void
+		do
+			Result := (end_bound >= other.start_bound)
+				and then (start_bound <= other.start_bound)
+				and then (end_bound < other.end_bound)
+		ensure
+			result_defition: Result = (strict_before (other.end_bound) and
+				has (other.start_bound))
+			symmetry: Result = other.is_overlapped_by (Current)
+		end
+
+	is_overlapped_by (other: like Current): BOOLEAN
+			-- Is current interval overlapped by `other'?
+		require
+			other_exists: other /= Void
+		do
+			Result := other.overlaps (Current)
+		ensure
+			symmetry: Result = other.overlaps (Current)
+		end
+
+	meets (other: like Current): BOOLEAN
+			-- Does current interval meet `other'?
+		require
+			other_exists: other /= Void
+		do
+			Result := end_bound.is_equal (other.start_bound)
+		ensure
+			symmetry: Result = other.is_met_by (Current)
+			result_definition: Result = (Current <= other and
+					intersects (other))
+		end
+
+	is_met_by (other: like Current): BOOLEAN
+			-- Is current interval met by `other'?
+		require
+			other_exists: other /= Void
+		do
+			Result := other.meets (Current)
+		ensure
+			symmetry: Result = other.meets (Current)
+		end
+
+feature -- Status report
+
+	empty: BOOLEAN
+			-- Is current interval empty?
+		do
+			Result := start_bound.is_equal (end_bound)
+		ensure
+			result_definition: Result = duration.is_equal (duration.zero)
+		end
+
+	has (v: G): BOOLEAN
+			-- Does current interval have `v' between its bounds?
+		require
+			exists: v /= Void
+		do
+			Result := (start_bound <= v) and then (end_bound >= v)
+		ensure
+			result_definition: Result xor not ((start_bound <= v) and then
+				(end_bound >= v))
+		end
+
+	strict_before (v: G): BOOLEAN
+			-- Is the current interval strictly before `v'?
+		require
+			exists: v /= Void
+		do
+			Result := (end_bound < v)
+		ensure
+			result_definition: Result xor (not (end_bound < v))
+		end
+
+	strict_after (v: G): BOOLEAN
+			-- Is the current interval strictly after `v'?
+		require
+			exists: v /= Void
+		do
+			Result := (start_bound > v)
+		ensure
+			result_definition: Result = (start_bound > v)
+		end
+
+	before (v: G): BOOLEAN
+			-- Is the current interval before `v'?
+		require
+			exists: v /= Void
+		do
+			Result := (end_bound <= v)
+		ensure
+			result_definition: Result = (end_bound <= v)
+		end
+
+	after (v: G): BOOLEAN
+			-- Is the current interval after `v'?
+		require
+			exists: v /= Void
+		do
+			Result := (start_bound >= v)
+		ensure
+			result_definition: Result = (start_bound >= v)
+		end
+
+feature -- Element change
+
+	set_start_bound (s: G)
+				-- Set `start_bound' to `s'.
+		require
+			start_bound_exists: s /= Void
+			start_before_end_bound: s <= end_bound
+		do
+			start_bound := s
+			start_bound := start_bound.deep_twin
+		ensure
+			start_bound_set: equal (start_bound, s)
+		end
+
+	set_end_bound (e: G)
+				-- Set `end_bound' to `e'.
+		require
+			end_bound_exists: e /= Void
+			end_after_start_bound: e >= start_bound
+		do
+			end_bound := e
+			end_bound := end_bound.deep_twin
+		ensure
+			end_bound_set: equal (end_bound, e)
+		end
+
+feature -- Basic operations
+
+	union (other: like Current): like Current
+			-- Union with `other'
+		require
+			other_exists: other /= Void
+			intersects: intersects (other)
+		do
+			create Result.make (start_bound.min (other.start_bound),
+				end_bound.max (other.end_bound))
+		ensure
+			result_exists: Result /= Void
+			result_includes_current: Result.includes (Current)
+			result_includes_other: Result.includes (other)
+		end
+
+	intersection (other: like Current): detachable like Current
+			-- Intersection with `other'
+		require
+			other_exists: other /= Void
+		local
+			s: G
+			e: G
+		do
+			s := start_bound.max (other.start_bound)
+			e := end_bound.min (other.end_bound)
+			if s <= e then
+				create Result.make (s, e)
+			end
+		ensure
+			intersects_validity: intersects (other) implies Result /= Void
+			result_is_included_by_current: intersects (other) implies
+				includes (Result)
+			result_is_included_by_other: intersects (other) implies
+				other.includes (Result)
+		end
+
+	gather (other: like Current): like Current
+			-- Union of `other' and current interval if `other' meets
+			-- current interval
+		require
+			other_exist: other /= Void
+			meeting_interval: meets (other)
+		do
+			create Result.make (start_bound, other.end_bound)
+		ensure
+			result_exist: Result /= Void
+			result_same_as_union: Result.is_equal (union (other))
+		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable representation of the current interval
+		do
+			Result := ("[");
+			Result.append (start_bound.out);
+			Result.append (" - ");
+			Result.append (end_bound.out);
+			Result.extend (']');
+		end
+
+invariant
+
+	start_bound_exists: start_bound /= Void
+	end_bound_exists: end_bound /= Void
+	start_bound_before_end_bound: start_bound <= end_bound
+	current_intersection: intersection (Current) ~ Current
+	current_union: union (Current).is_equal (Current)
+	has_bounds: has (start_bound) and has (end_bound)
+	between_bound: after (start_bound) and before (end_bound)
+
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+end -- class INTERVAL
+
+

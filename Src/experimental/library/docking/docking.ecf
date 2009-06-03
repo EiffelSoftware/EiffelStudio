@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="docking" uuid="7CD5D682-0880-46FA-85C3-7AADFF14DA11" library_target="docking">
+	<target name="docking">
+		<description>Docking: Multiplatform docking library of reusable components for Eiffel.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/temp$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/obsolete$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library.Vision2">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" readonly="true"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="true"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf" readonly="true"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="docking" location=".\">
+			<option namespace="Docking">
+			</option>
+			<cluster name="implementation_mswin" location="implementation\" recursive="true">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+				<option namespace="Implementation">
+				</option>
+				<file_rule>
+					<exclude>/gtk$</exclude>
+					<exclude>/cocoa$</exclude>
+				</file_rule>
+			</cluster>
+			<cluster name="implementation_mac" location="implementation\" recursive="true">
+				<condition>
+					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
+				</condition>
+				<file_rule>
+					<exclude>/mswin$</exclude>
+					<exclude>/gtk$</exclude>
+				</file_rule>
+			</cluster>
+			<cluster name="implementation_gtk" location="implementation\" recursive="true">
+				<condition>
+					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
+				</condition>
+				<file_rule>
+					<exclude>/mswin$</exclude>
+					<exclude>/cocoa$</exclude>
+				</file_rule>
+			</cluster>
+		</cluster>
+	</target>
+</system>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="vision2_extension" uuid="72EB29A8-4A3D-4B17-B2F6-365F388D2282" library_target="vision2_extension">
+	<target name="vision2_extension">
+		<description>Extensions to the EiffelVision2 library.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
+		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
+		<cluster name="independent_gtk" location="independent\" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="independent_mswin" location="independent\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<option namespace="Vision2Extension">
+			</option>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="windows_dotnet" location="windows\dotnet\" recursive="true">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<option namespace="Vision2Extension">
+			</option>
+		</cluster>
+		<cluster name="windows_neutral" location="windows\neutral\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<option namespace="Vision2Extension">
+			</option>
+		</cluster>
+	</target>
+</system>

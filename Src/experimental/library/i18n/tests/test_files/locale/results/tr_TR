@@ -1,0 +1,78 @@
+
+
+Test of locale: tr_TR
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Pzt
+  Sal
+  Çar
+  Per
+  Cum
+  Cmt
+  Paz
+    Full day names:
+  Pazartesi
+  Salı
+  Çarşamba
+  Perşembe
+  Cuma
+  Cumartesi
+  Pazar
+    Abbreviated month names:
+  Oca
+  Şub
+  Mar
+  Nis
+  May
+  Haz
+  Tem
+  Ağu
+  Eyl
+  Eki
+  Kas
+  Ara
+    Full month names:
+  Ocak
+  Şubat
+  Mart
+  Nisan
+  Mayıs
+  Haziran
+  Temmuz
+  Ağustos
+  Eylül
+  Ekim
+  Kasım
+  Aralık
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 Şubat 2009 Cuma 11:45:30, day: Cuma
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'TL'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'TRL'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 TL
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: '.'
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123.559,23

@@ -1,0 +1,78 @@
+
+
+Test of locale: ne_NP
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  सोम
+  मङ्गल
+  बुध
+  बिही
+  शुक्र
+  शनि
+  आइत
+    Full day names:
+  सोमवार
+  मङ्गलवार
+  बुधवार
+  बिहीवार
+  शुक्रवार
+  शनिवार
+  आइतवार
+    Abbreviated month names:
+  जन
+  फेब
+  मार्च
+  अप्रिल
+  मे
+  जून
+  जुलाई
+  अग
+  सेप्ट
+  अक्ट
+  नोभ
+  डिस
+    Full month names:
+  जनवरी
+  फेब्रुअरी
+  मार्च
+  अप्रिल
+  मे
+  जून
+  जुलाई
+  अगस्त
+  सेप्टेम्बर
+  अक्टोबर
+  नोभेम्बर
+  डिसेम्बर
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: शुक्रवार, फेब्रुअरी 19, 2009 11:45:30 पूर्वाह्न, day: शुक्रवार
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'रु'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'NPR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: रु 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

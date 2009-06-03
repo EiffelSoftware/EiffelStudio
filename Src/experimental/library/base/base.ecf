@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+	<target name="base">
+		<description>FreeELKS: Library of reusable components for Eiffel.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="STRING" new_name="STRING_8"/>
+		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
+		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>
+		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
+		<mapping old_name="WIDE_CHARACTER" new_name="CHARACTER_32"/>
+		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF"/>
+		<mapping old_name="NATURAL" new_name="NATURAL_32"/>
+		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF"/>
+		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
+		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
+		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<cluster name="elks" location="elks\" recursive="true">
+			<option namespace="Base">
+			</option>
+			<file_rule>
+				<exclude>/support/class_name_translations.e$</exclude>
+				<exclude>/support/double_math.e$</exclude>
+				<exclude>/support/execution_environment.e$</exclude>
+				<exclude>/support/identified_routines.e$</exclude>
+				<exclude>/support/internal.e$</exclude>
+				<exclude>/support/managed_pointer.e$</exclude>
+				<exclude>/support/mismatch_information.e$</exclude>
+				<exclude>/support/operating_environment.e$</exclude>
+				<exclude>/support/single_math.e$</exclude>
+				<exclude>/kernel/bit_ref.e$</exclude>
+				<exclude>/kernel/console.e$</exclude>
+				<exclude>/kernel/directory.e$</exclude>
+				<exclude>/kernel/directory_name.e$</exclude>
+				<exclude>/kernel/disposable.e$</exclude>
+				<exclude>/kernel/exceptions.e$</exclude>
+				<exclude>/kernel/file.e$</exclude>
+				<exclude>/kernel/file_name.e$</exclude>
+				<exclude>/kernel/function.e$</exclude>
+				<exclude>/kernel/gc_info.e$</exclude>
+				<exclude>/kernel/ise_runtime.e$</exclude>
+				<exclude>/kernel/memory.e$</exclude>
+				<exclude>/kernel/mem_info.e$</exclude>
+				<exclude>/kernel/native_array.e$</exclude>
+				<exclude>/kernel/path_name.e$</exclude>
+				<exclude>/kernel/plain_text_file.e$</exclude>
+				<exclude>/kernel/pointer.e$</exclude>
+				<exclude>/kernel/pointer_ref.e$</exclude>
+				<exclude>/kernel/procedure.e$</exclude>
+				<exclude>/kernel/raw_file.e$</exclude>
+				<exclude>/kernel/real_32_ref.e$</exclude>
+				<exclude>/kernel/real_64_ref.e$</exclude>
+				<exclude>/kernel/routine.e$</exclude>
+				<exclude>/kernel/special.e$</exclude>
+				<exclude>/kernel/storable.e$</exclude>
+				<exclude>/kernel/stream.e$</exclude>
+				<exclude>/kernel/system_string.e$</exclude>
+				<exclude>/kernel/system_string_factory.e$</exclude>
+				<exclude>/kernel/tuple.e$</exclude>
+				<exclude>/kernel/type.e$</exclude>
+				<exclude>/kernel/unix_file_info.e$</exclude>
+				<exclude>/kernel/unix_signals.e$</exclude>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
+				<exclude>/kernel/exceptions/void_target.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_failure.e$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+		</cluster>
+		<cluster name="ise" location="ise\" recursive="true">
+			<option namespace="Base">
+			</option>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
+				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/runtime$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="ise_runtime" location="ise\runtime\" recursive="true">
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/classic$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/debug$</exclude>
+				<condition>
+					<build value="finalize"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

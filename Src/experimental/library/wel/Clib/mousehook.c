@@ -1,0 +1,163 @@
+/*
+indexing
+	description: "Functions used to implement heavy capture."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*****************************************************************************/
+/* mousehook.c                                                               */
+/*****************************************************************************/
+/* Used to monitor mouse messages for the pick and drop mechanism under      */
+/* Windows                                                                   */
+/*****************************************************************************/
+#include "eif_eiffel.h"
+#include <windows.h>
+#include "wel_mousehook.h"
+#include <stdio.h>
+
+extern int debug_mode;			/* Status of debugger */
+static int saved_debug_mode;	/* Saved status of debugger when enabling
+								   heavy_capture */
+static HINSTANCE hLibrary;		/* HINSTANCE of loaded DLL */
+static int is_library_loaded;	/* Is `hLibrary' loaded */
+
+static void load_library ();
+static void free_library ();
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: cwel_get_hook_window                                                */
+/*---------------------------------------------------------------------------*/
+/* Returns the handle of the window that has started the hook, NULL if no    */
+/* hook is currently under process                                           */
+/*---------------------------------------------------------------------------*/
+HWND cwel_get_hook_window() {
+	FARPROC get_hook_window_func;
+	
+	load_library();
+
+	// The library is not loaded, so no hook is defined..
+	if (hLibrary == NULL)
+		return NULL;
+	
+	get_hook_window_func = GetProcAddress(hLibrary, "get_hook_window");
+	if (get_hook_window_func == NULL) {
+		return NULL; // Unable to locate the function inside the DLL
+	}
+
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	return ((FUNCTION_CAST_TYPE(HWND, __stdcall, ()) get_hook_window_func)());
+}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: cwel_hook_mouse                                                     */
+/* ARGS: hHookWindow: Handle of the window registering the hook.             */
+/*---------------------------------------------------------------------------*/
+/* Capture all mouse messages and redirect them to `hWnd'.                   */
+/* Return TRUE if everything went fine, FALSE otherwise. If `wel_hook.dll'   */
+/* cannot be loaded an error box is displayed                                */
+/*---------------------------------------------------------------------------*/
+EIF_BOOLEAN cwel_hook_mouse(HWND hWnd) {
+	FARPROC hook_mouse_func;
+	
+		/* Disable debugger otherwise everything is blocked */
+	saved_debug_mode = debug_mode;
+	
+	load_library();
+
+	if (hLibrary == NULL) {
+		return FALSE;
+	}
+
+	hook_mouse_func = GetProcAddress(hLibrary, "hook_mouse");
+	if (hook_mouse_func == NULL)
+		return FALSE;		// Unable to locate the function inside the DLL
+	
+	debug_mode = 0;
+
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	return (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
+}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: cwel_unhook_mouse                                                   */
+/* ARGS:                                                                     */
+/*---------------------------------------------------------------------------*/
+/* Stop capturing all mouse messages                                         */
+/* Return TRUE if everything went fine, FALSE otherwise.                     */
+/*---------------------------------------------------------------------------*/
+EIF_BOOLEAN cwel_unhook_mouse() {
+	FARPROC unhook_mouse_func;
+	EIF_BOOLEAN bRes;
+	
+		/* Restore status of debugger */
+	debug_mode = saved_debug_mode;
+
+	load_library();
+
+	// The library is not loaded, so no hook is defined.. do nothing
+	// and return an error
+	if (hLibrary == NULL)
+		return FALSE;
+	
+	unhook_mouse_func = GetProcAddress(hLibrary, "unhook_mouse");
+	if (unhook_mouse_func == NULL)
+		return FALSE;		// Unable to locate the function inside the DLL
+
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, ()) unhook_mouse_func)());
+
+	free_library();
+	return bRes;
+}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: load_library                                                        */
+/* ARGS:                                                                     */
+/*---------------------------------------------------------------------------*/
+/* Load "wel_hook.dll"                                                       */
+/*---------------------------------------------------------------------------*/
+
+static void load_library () {
+	if (!is_library_loaded) {
+			// Get the module of the library WITHOUT loading it.
+		hLibrary = LoadLibrary (L"wel_hook.dll");
+		if (hLibrary != NULL)
+				// We only set the 'is_library_loaded' if it is actually loaded.
+			is_library_loaded = 1;
+	}
+}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: free_library                                                        */
+/* ARGS:                                                                     */
+/*---------------------------------------------------------------------------*/
+/* UnLoad "wel_hook.dll" on Windows NT/2000/XP OS. Do not unload when        */
+/* Win9x/Me because this does not work since once it is loaded it cannot     */
+/* be freed.                                                                 */
+/*---------------------------------------------------------------------------*/
+
+static void free_library () {
+	OSVERSIONINFO os_version;
+	BOOL res;
+	  
+	os_version.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	res = GetVersionEx (&os_version);
+
+	if (os_version.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+		FreeLibrary (hLibrary);
+		hLibrary = NULL;
+		is_library_loaded = 0;
+	}
+}
+

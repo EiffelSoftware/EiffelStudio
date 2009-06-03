@@ -1,0 +1,51 @@
+#!/bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: vision2-gtk-config [OPTIONS]
+Options
+	[--include_path]
+	[--object]
+	[--library]
+	[--threads]
+EOF
+	exit $1
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+gtk_package_string='gtk+-2.0 gmodule-2.0'
+
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--object)
+		echo $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o
+		;;
+		--library)
+		if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+			echo `pkg-config $gtk_package_string $thread_string --libs` -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11
+		else
+			echo -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lXtst -lX11 `pkg-config $gtk_package_string $thread_string --libs`
+ 		fi
+		;;
+		--threads)
+		thread_string=gthread-2.0
+		;;
+		--include_path)
+		echo `pkg-config $gtk_package_string $thread_string --cflags`
+		;;
+		*)
+		usage 1 1>&2
+		;;
+ 	esac
+	shift
+done
+

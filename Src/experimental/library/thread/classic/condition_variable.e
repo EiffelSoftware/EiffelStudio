@@ -1,0 +1,147 @@
+note
+	description: "Class describing a condition variable."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	CONDITION_VARIABLE
+
+inherit
+	DISPOSABLE
+
+create
+	make
+
+feature -- Initialization
+
+	make
+			-- Create and initialize condition variable.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
+		do
+			cond_pointer := eif_thr_cond_create
+		end
+
+feature -- Access
+
+	is_set: BOOLEAN
+			-- Is condition variable initialized?
+		do
+			Result := (cond_pointer /= default_pointer)
+		end
+
+feature -- Status setting
+
+	signal
+			-- Unblock one thread blocked on the current condition variable.
+		require
+			is_set: is_set
+		do
+			eif_thr_cond_signal (cond_pointer)
+		end
+
+	broadcast
+			-- Unblock all threads blocked on the current condition variable.
+		require
+			is_set: is_set
+		do
+			eif_thr_cond_broadcast (cond_pointer)
+		end
+
+	wait (a_mutex: MUTEX)
+			-- Block calling thread on current condition variable.
+		require
+			is_set: is_set
+			a_mutex_not_void: a_mutex /= Void
+		do
+			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
+		end
+
+	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN
+			-- Block calling thread on current condition variable for at most `a_timeout' milliseconds.
+			--| Return `True' is we got the condition variable on time
+			--| Otherwise return `False'
+		require
+			is_set: is_set
+			a_mutex_not_void: a_mutex /= Void
+			timeout_positive: a_timeout >= 0
+		do
+			Result := (eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout) = 1)
+		end
+
+	destroy
+			-- Destroy condition variable.
+		require
+			is_set: is_set
+		do
+			eif_thr_cond_destroy (cond_pointer)
+			cond_pointer := default_pointer
+		end
+
+feature {NONE} -- Implementation
+
+	cond_pointer: POINTER
+			-- C reference to the condition variable.
+
+feature {NONE} -- Removal
+
+	dispose
+			-- Called by the garbage collector when the condition
+			-- variable is collected.
+		do
+			if is_set then
+				destroy
+			end
+		end
+
+feature {NONE} -- Externals
+
+	eif_thr_cond_create: POINTER
+		external
+			"C use %"eif_threads.h%""
+		end
+
+	eif_thr_cond_broadcast (a_cond_ptr: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		end
+
+	eif_thr_cond_signal (a_cond_ptr: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		end
+
+	eif_thr_cond_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
+		external
+			"C blocking  use %"eif_threads.h%""
+		end
+
+	eif_thr_cond_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
+		external
+			"[
+				C blocking
+				signature (EIF_POINTER, EIF_POINTER, EIF_INTEGER): EIF_INTEGER
+				use "eif_threads.h"
+			]"
+		end
+
+	eif_thr_cond_destroy (a_mutex_ptr: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		end
+
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
+end
+

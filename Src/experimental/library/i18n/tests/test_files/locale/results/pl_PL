@@ -1,0 +1,78 @@
+
+
+Test of locale: pl_PL
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Pn
+  Wt
+  Śr
+  Cz
+  Pt
+  So
+  N
+    Full day names:
+  poniedziałek
+  wtorek
+  środa
+  czwartek
+  piątek
+  sobota
+  niedziela
+    Abbreviated month names:
+  sty
+  lut
+  mar
+  kwi
+  maj
+  cze
+  lip
+  sie
+  wrz
+  paź
+  lis
+  gru
+    Full month names:
+  styczeń
+  luty
+  marzec
+  kwiecień
+  maj
+  czerwiec
+  lipiec
+  sierpień
+  wrzesień
+  październik
+  listopad
+  grudzień
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 luty 2009 11:45:30, day: piątek
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 30
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'zł'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'PLN'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 zł
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

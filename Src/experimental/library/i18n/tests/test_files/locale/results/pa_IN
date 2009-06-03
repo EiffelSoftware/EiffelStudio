@@ -1,0 +1,78 @@
+
+
+Test of locale: pa_IN
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ਸੋਮ.
+  ਮੰਗਲ.
+  ਬੁਧ.
+  ਵੀਰ.
+  ਸ਼ੁਕਰ.
+  ਸ਼ਨੀ.
+  ਐਤ.
+    Full day names:
+  ਸੋਮਵਾਰ
+  ਮੰਗਲਵਾਰ
+  ਬੁਧਵਾਰ
+  ਵੀਰਵਾਰ
+  ਸ਼ੁੱਕਰਵਾਰ
+  ਸ਼ਨੀਚਰਵਾਰ
+  ਐਤਵਾਰ
+    Abbreviated month names:
+  ਜਨਵਰੀ
+  ਫ਼ਰਵਰੀ
+  ਮਾਰਚ
+  ਅਪ੍ਰੈਲ
+  ਮਈ
+  ਜੂਨ
+  ਜੁਲਾਈ
+  ਅਗਸਤ
+  ਸਤੰਬਰ
+  ਅਕਤੂਬਰ
+  ਨਵੰਬਰ
+  ਦਸੰਬਰ
+    Full month names:
+  ਜਨਵਰੀ
+  ਫ਼ਰਵਰੀ
+  ਮਾਰਚ
+  ਅਪ੍ਰੈਲ
+  ਮਈ
+  ਜੂਨ
+  ਜੁਲਾਈ
+  ਅਗਸਤ
+  ਸਤੰਬਰ
+  ਅਕਤੂਬਰ
+  ਨਵੰਬਰ
+  ਦਸੰਬਰ
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 ਫ਼ਰਵਰੀ 2009 ਸ਼ੁੱਕਰਵਾਰ ਸਵੇਰੇ 11:45:30, day: ਸ਼ੁੱਕਰਵਾਰ
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 320
+    cur nr list sep: ','
+    cur num after dec: '2'
+    currency symbol:'ਰੁ'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'INR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ਰੁ 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: ','
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

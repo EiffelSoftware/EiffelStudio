@@ -18,7 +18,7 @@ inherit
 
 --inherit {NONE}
 	SQLITE_INTERNALS
-	
+
 	SQLITE_API_EXTERNALS
 		export
 			{NONE} all
@@ -30,8 +30,7 @@ inherit
 		end
 
 create
-	make,
-	make_static
+	make
 
 feature {NONE} -- Initialize
 
@@ -118,7 +117,7 @@ feature -- Access: API
 			-- <Precursor>
 		once
 			if {PLATFORM}.is_windows then
-				Result := "sqlite"
+				Result := "sqlite3"
 			else
 				Result := "libsqlite3"
 			end

@@ -18,10 +18,10 @@ feature {NONE} -- Initialization
 		require
 			a_count_non_negative: a_count >= 0
 		do
-			create eiffel_names.make (a_count + 1)
-			create dotnet_names.make (a_count + 1)
-			create flags.make (a_count + 1)
-			create positions.make (a_count + 1)
+			create eiffel_names.make_filled (Void, a_count + 1)
+			create dotnet_names.make_filled (Void, a_count + 1)
+			create flags.make_filled (0, a_count + 1)
+			create positions.make_filled (0, a_count + 1)
 			count := a_count
 		ensure
 			count_set: count = a_count

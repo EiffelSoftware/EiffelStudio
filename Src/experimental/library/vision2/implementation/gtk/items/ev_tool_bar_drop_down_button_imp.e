@@ -23,7 +23,7 @@ create
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_DROP_DOWN_BUTTON;
+	interface: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -6,8 +6,8 @@ note
 	keywords: "position, width, height"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_POSITIONABLE
 
 inherit
@@ -15,7 +15,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 feature -- Status setting
 
 	set_x_position (a_x: INTEGER)
@@ -45,8 +45,8 @@ feature -- Status setting
 		do
 			implementation.set_position (a_x, a_y)
 		ensure
-			x_position_assigned: x_position = a_x
-			y_position_assigned: y_position = a_y
+--			x_position_assigned: x_position = a_x
+--			y_position_assigned: y_position = a_y
 		end
 
 	set_width (a_width: INTEGER)
@@ -83,9 +83,9 @@ feature -- Status setting
 			width_assigned: width = minimum_width or else width = a_width
 			height_assigned: height = minimum_height or else height = a_height
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_POSITIONABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
@@ -104,4 +104,14 @@ note
 
 
 end -- class EV_POSITIONABLE
+
+
+
+
+
+
+
+
+
+
 

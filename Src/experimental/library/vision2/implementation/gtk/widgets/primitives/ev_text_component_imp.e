@@ -20,7 +20,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			foreground_color_pointer
 		end
 
@@ -31,7 +31,7 @@ inherit
 
 feature -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_minimum_width_in_characters (4)
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation		
 
-	interface: EV_TEXT_COMPONENT;
+	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -95,4 +95,8 @@ note
 
 
 end -- class EV_TEXT_COMPONENT_IMP
+
+
+
+
 

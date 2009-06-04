@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize actions.
 		do
-			Precursor
 			initialize
+			Precursor
 		end
 
 	initialize
@@ -66,7 +66,7 @@ feature -- Access
 	maximum_y: INTEGER
 			-- Bottom boundary.
 
-	real_position_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [INTEGER, INTEGER]]
+	real_position_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [INTEGER, INTEGER]]
 			-- User defined function that translates actual coordinates to
 			-- the coordinates `Current' will be displayed on.
 
@@ -209,34 +209,44 @@ feature {NONE} -- Events
 			-- Nearest point on horizontal grid to `ax'.
 		local
 			px, wx: INTEGER
+			l_world: like world
 		do
-			wx := world.point.x
-			if point.origin /= Void and then point.origin /= world.point then
-				px := (point.origin.x_abs / point.origin.scale_x_abs).rounded
+			l_world := world
+			check l_world /= Void end
+			wx := l_world.point.x
+			if attached point.origin as l_point_origin and then l_point_origin /= l_world.point then
+				px := (l_point_origin.x_abs / l_point_origin.scale_x_abs).rounded
 			end
-			Result := world.x_to_grid (wx + px + ax) - px - wx
+			Result := l_world.x_to_grid (wx + px + ax) - px - wx
 		end
 
 	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		local
 			py, wy: INTEGER
+			l_world: like world
 		do
-			wy := world.point.y
-			if point.origin /= Void and then point.origin /= world.point then
-				py := (point.origin.y_abs / point.origin.scale_y_abs).rounded
+			l_world := world
+			check l_world /= Void end
+			wy := l_world.point.y
+			if attached point.origin as l_point_origin and then l_point_origin /= l_world.point then
+				py := (l_point_origin.y_abs / l_point_origin.scale_y_abs).rounded
 			end
-			Result := world.y_to_grid (wy + py + ay) - py - wy
+			Result := l_world.y_to_grid (wy + py + ay) - py - wy
 		end
 
 	on_start_resizing (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User pressed pointer button on `Current'.
+		local
+			l_origin: detachable EV_RELATIVE_POINT
 		do
 			if b = 1 then
 				start_actions.call (Void)
 				enable_capture
-				rel_x := (x / point.origin.scale_x_abs).rounded - point.x
-				rel_y := (y / point.origin.scale_y_abs).rounded - point.y
+				l_origin := point.origin
+				check l_origin /= Void end
+				rel_x := (x / l_origin.scale_x_abs).rounded - point.x
+				rel_y := (y / l_origin.scale_y_abs).rounded - point.y
 			end
 		end
 
@@ -246,28 +256,35 @@ feature {NONE} -- Events
 			tx, ty: INTEGER
 			scx, scy: DOUBLE
 			new_x, new_y: INTEGER
-			t: TUPLE [INTEGER, INTEGER]
+			t: detachable TUPLE [INTEGER, INTEGER]
+			l_world: like world
+			l_point_origin: detachable EV_RELATIVE_POINT
 		do
 			if has_capture then
-				scx := point.origin.scale_x_abs
-				scy := point.origin.scale_y_abs
+				l_world := world
+				check l_world /= Void end
+				l_point_origin := point.origin
+				check l_point_origin /= Void end
+				scx := l_point_origin.scale_x_abs
+				scy := l_point_origin.scale_y_abs
 				tx := (x / scx).rounded - rel_x
 				ty := (y / scy).rounded - rel_y
 				tx := tx.min (maximum_x).max (minimum_x)
 				ty := ty.min (maximum_y).max (minimum_y)
-				if real_position_agent /= Void then
-					real_position_agent.call ([tx, ty])
-					t := real_position_agent.last_result
+				if attached real_position_agent as l_real_position_agent then
+					l_real_position_agent.call ([tx, ty])
+					t := l_real_position_agent.last_result
+					check t /= Void end
 					new_x := t.integer_item (1)
 					new_y := t.integer_item (2)
 				else
-					if world.grid_enabled and is_snapping then
-						world.set_grid_x (world.Default_grid_x)
-						world.set_grid_y (world.Default_grid_y)
+					if l_world.grid_enabled and is_snapping then
+						l_world.set_grid_x (l_world.Default_grid_x)
+						l_world.set_grid_y (l_world.Default_grid_y)
 						new_x := snapped_x (tx)
 						new_y := snapped_y (ty)
-						world.set_grid_x ((world.Default_grid_x * scx).rounded)
-						world.set_grid_y ((world.Default_grid_y * scy).rounded)
+						l_world.set_grid_x ((l_world.Default_grid_x * scx).rounded)
+						l_world.set_grid_y ((l_world.Default_grid_y * scy).rounded)
 					else
 						new_x := tx
 						new_y := ty
@@ -304,4 +321,8 @@ note
 
 
 end -- class EV_MOVE_HANDLE
+
+
+
+
 

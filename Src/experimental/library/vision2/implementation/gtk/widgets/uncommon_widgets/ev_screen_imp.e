@@ -21,7 +21,7 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -31,13 +31,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set up action sequence connections and create graphics context.
 		do
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
@@ -57,11 +57,11 @@ feature -- Status report
 			create Result.set (l_display_data.a_x, l_display_data.a_y)
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET
+	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position ('x', 'y') if any.
 		local
 			l_pointer_position: like pointer_position
-			l_widget_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 			l_change: BOOLEAN
 		do
 			l_pointer_position := pointer_position
@@ -79,10 +79,10 @@ feature -- Status report
 			end
 		end
 
-	widget_at_mouse_pointer: EV_WIDGET
+	widget_at_mouse_pointer: detachable EV_WIDGET
 			-- Widget at mouse pointer if any.
 		local
-			l_widget_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 			l_widget_imp := widget_imp_at_pointer_position
 			if l_widget_imp /= Void then
@@ -90,7 +90,7 @@ feature -- Status report
 			end
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
@@ -400,8 +400,12 @@ feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
-			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	flush
@@ -443,7 +447,7 @@ feature {NONE} -- Implementation
 			-- Not applicable to screen
 		end
 
-	interface: EV_SCREEN;
+	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -460,4 +464,14 @@ note
 
 
 end -- class EV_SCREEN_IMP
+
+
+
+
+
+
+
+
+
+
 

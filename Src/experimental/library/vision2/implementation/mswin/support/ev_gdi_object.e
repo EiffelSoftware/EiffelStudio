@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"EiffelVision implentation for retrieving a WEL_GDI_OBJECT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,11 +27,11 @@ feature -- Access
 
 	weight: INTEGER
 			-- Number of times this pen has been used.
-	
+
 	age: INTEGER
 			-- Date of last access to `Current'.
 
-	item: WEL_GDI_ANY
+	item: detachable WEL_GDI_ANY
 			-- WEL GDI object.
 
 	value: INTEGER
@@ -57,11 +57,11 @@ feature -- Element change
 			age := new_age
 		end
 
-	set_item (an_item: like item)
+	set_item (an_item: attached like item)
 			-- Set the item value to `an_item'
 		do
 			item := an_item
-			item.increment_reference
+			an_item.increment_reference
 		end
 
 feature -- Removal
@@ -69,7 +69,9 @@ feature -- Removal
 	delete
 			-- Delete `Current'.
 		do
-			item.decrement_reference
+			if attached item as l_item then
+				l_item.decrement_reference
+			end
 			item := Void
 		end
 
@@ -88,4 +90,14 @@ note
 
 
 end -- class EV_GDI_PEN
+
+
+
+
+
+
+
+
+
+
 

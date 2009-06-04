@@ -37,7 +37,11 @@ feature {NONE} -- Initialization
 			assign_draw_id
 			is_show_requested := True
 			internal_is_sensitive := True
-			create points.make_filled (point_count)
+			create points.make (0)
+			points.resize (point_count)
+			create internal_invalid_rectangle
+			set_deny_cursor (Default_deny_cursor)
+			set_accept_cursor (Default_accept_cursor)
 			from
 				n := 1
 			until
@@ -45,44 +49,41 @@ feature {NONE} -- Initialization
 			loop
 				create p
 				points.put_i_th (p, n)
-				p.notify_list_ids.extend (object_id)
+				p.notify_list_ids.extend (eif_current_object_id)
 				n := n + 1
 			end
-			create internal_invalid_rectangle
-			set_deny_cursor (Default_deny_cursor)
-			set_accept_cursor (Default_accept_cursor)
 		end
 
 feature -- Access
 
-	pebble: ANY
+	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 
-	group: EV_FIGURE_GROUP
+	group: detachable EV_FIGURE_GROUP
 			-- Parent of `Current'.
 
-	world: EV_FIGURE_WORLD
+	world: detachable EV_FIGURE_WORLD
 			-- Top-level parent of `Current'.
 		do
 			if group /= Void then
 				Result ?= group
-				if Result = Void then
-					Result := group.world
+				if Result = Void and then attached group as l_group then
+					Result := l_group.world
 				end
 			end
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this figure.
 		do
 			if internal_pointer_style /= Void then
 				Result := internal_pointer_style
-			elseif group /= Void then
-				Result := group.pointer_style
+			elseif attached group as l_group then
+				Result := l_group.pointer_style
 			end
 		end
 
@@ -228,8 +229,8 @@ feature -- Status report
 	has_capture: BOOLEAN
 			-- Are all events sent to `Current'?
 		do
-			if world /= Void then
-				Result := world.capture_figure = Current
+			if attached world as l_world then
+				Result := l_world.capture_figure = Current
 			end
 		end
 
@@ -239,11 +240,11 @@ feature -- Status report
 	is_sensitive: BOOLEAN
 			-- Is object sensitive to user input?
 		do
-			if group = Void or else group.is_sensitive then
+			if group = Void or else attached group as l_group and then l_group.is_sensitive then
 				Result := internal_is_sensitive
 			end
 		end
-		
+
 	accept_cursor: EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
@@ -274,7 +275,7 @@ feature -- Element change
 		do
 			pebble_function := a_function
 		end
-	
+
 	set_pointer_style (a_cursor: like pointer_style)
 			-- Assign `a_cursor' to `pointer_style'.
 		require
@@ -318,8 +319,12 @@ feature -- Status setting
 			-- Grab all mouse events for `world'.
 		require
 			in_world: world /= Void
+		local
+			l_world: like world
 		do
-			world.set_capture_figure (Current)
+			l_world := world
+			check l_world /= Void end
+			l_world.set_capture_figure (Current)
 		ensure
 			capture_set: has_capture
 		end
@@ -328,8 +333,12 @@ feature -- Status setting
 			-- Disable grab of all events on `world'.
 		require
 			in_world: world /= Void
+		local
+			l_world: like world
 		do
-			world.remove_capture_figure
+			l_world := world
+			check l_world /= Void end
+			l_world.remove_capture_figure
 		ensure
 			capture_released: not has_capture
 		end
@@ -411,7 +420,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_RELATIVE_POINT} -- Implementation
 	valid: BOOLEAN
 			-- Is there no change to `Current'?
 
-	invalid_rectangle: EV_RECTANGLE
+	invalid_rectangle: detachable EV_RECTANGLE
 			-- Area that needs erasing.
 		do
 			if not valid then
@@ -419,7 +428,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_RELATIVE_POINT} -- Implementation
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE
+	update_rectangle: detachable EV_RECTANGLE
 			-- Area that needs redrawing.
 		do
 			if not valid then
@@ -427,7 +436,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_RELATIVE_POINT} -- Implementation
 			end
 		end
 
-	internal_invalid_rectangle: EV_RECTANGLE
+	internal_invalid_rectangle: detachable EV_RECTANGLE
 			-- Area that needs updating.
 
 feature -- Events
@@ -498,9 +507,12 @@ feature {EV_FIGURE_GROUP} -- Implementation
 			-- Set the figure-group of this figure to `new_group'.
 		require
 			new_group_exists: new_group /= Void
+		local
+			l_group: like group
 		do
-			if group /= Void then
-				group.prune_all (Current)
+			l_group := group
+			if l_group /= Void then
+				l_group.prune_all (Current)
 			end
 			group := new_group
 			from
@@ -533,11 +545,11 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_PROJECTION_ROUTINES} -- Access
 	draw_id: INTEGER
 			-- Used to look up drawing routine.
 
-	real_pebble: ANY
+	real_pebble: detachable ANY
 			-- Calculated `pebble'.
 		do
-			if pebble_function /= Void then
-				Result := pebble_function.item (Void)
+			if attached pebble_function as l_pebble_function then
+				Result := l_pebble_function.item (Void)
 			else
 				Result := pebble
 			end
@@ -545,7 +557,7 @@ feature {EV_FIGURE, EV_PROJECTOR, EV_PROJECTION_ROUTINES} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_pointer_style: EV_POINTER_STYLE
+	internal_pointer_style: detachable EV_POINTER_STYLE
 			-- `pointer_style'.
 
 	internal_is_sensitive: BOOLEAN
@@ -598,38 +610,38 @@ feature {EV_WIDGET_PROJECTOR} -- Implementation
 
 feature {EV_WIDGET_PROJECTOR, EV_FIGURE} -- Implementation
 
-	internal_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
+	internal_pointer_motion_actions: detachable EV_POINTER_MOTION_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_motion_actions'.
 
-	internal_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_button_press_actions'.
 
-	internal_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_double_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_double_press_actions'.
 
-	internal_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_button_release_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object
 			-- `pointer_button_release_actions'.
 
-	internal_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_pointer_enter_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_enter_actions'.
 
-	internal_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_pointer_leave_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_leave_actions'.
 
-	internal_proximity_in_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_proximity_in_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `proximity_in_actions'.
 
-	internal_proximity_out_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_proximity_out_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `proximity_out_actions'.
 
-	internal_pick_actions: EV_PND_START_ACTION_SEQUENCE
+	internal_pick_actions: detachable EV_PND_START_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pick_actions'.
 
-	internal_conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_conforming_pick_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `conforming_pick_actions'.
 
-	internal_drop_actions: EV_PND_ACTION_SEQUENCE
+	internal_drop_actions: detachable EV_PND_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `drop_actions'.
 
 invariant
@@ -652,4 +664,8 @@ note
 
 
 end -- class EV_FIGURE
+
+
+
+
 

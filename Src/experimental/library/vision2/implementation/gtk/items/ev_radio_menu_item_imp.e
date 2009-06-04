@@ -18,7 +18,8 @@ inherit
 		redefine
 			on_activate,
 			interface,
-			make
+			make,
+			initialize_menu_item
 		end
 
 	EV_RADIO_PEER_IMP
@@ -31,13 +32,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a menu item.
+	make
+			-- <Precursor>
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_menu_item_new (NULL))
+			Precursor {EV_MENU_ITEM_IMP}
 			{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_show_toggle (menu_item, True)
 			enable_select
+		end
+
+	initialize_menu_item
+			-- <Precursor>
+		do
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_menu_item_new (NULL))
 		end
 
 feature -- Status report
@@ -94,7 +100,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_radio_menu_item_group (menu_item)
 		end
 
-	interface: EV_RADIO_MENU_ITEM;
+	interface: detachable EV_RADIO_MENU_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -111,4 +117,8 @@ note
 
 
 end -- class EV_RADIO_MENU_ITEM_IMP
+
+
+
+
 

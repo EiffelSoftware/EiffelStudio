@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Contains `Current'.
 		do
 			Result := implementation.parent
@@ -84,7 +84,7 @@ feature -- Access
 			-- post condition on this feature.
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this widget.
 		require
 			not_destroyed: not is_destroyed
@@ -92,7 +92,7 @@ feature -- Access
 			Result := implementation.internal_pointer_style
 		end
 
-	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
+	actual_drop_target_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', `Current' will use the default drop target.
 		require
@@ -103,7 +103,7 @@ feature -- Access
 			bridge_ok: Result = implementation.actual_drop_target_agent
 		end
 
-	real_target: EV_DOCKABLE_TARGET
+	real_target: detachable EV_DOCKABLE_TARGET
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
 		require
@@ -114,7 +114,7 @@ feature -- Access
 			bridge_ok: Result = implementation.real_target
 		end
 
-	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]]
+	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]]
 			-- Agent used to determine whether the default key processing should occur for Current.
 			-- If agent returns True then default key processing continues as normal, False prevents
 			-- default key processing from occurring.
@@ -295,7 +295,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pointer_style (a_cursor: like pointer_style)
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'.
 		require
 			not_destroyed: not is_destroyed
@@ -303,7 +303,7 @@ feature -- Element change
 		do
 			implementation.set_pointer_style (a_cursor)
 		ensure
-			pointer_style_assigned: pointer_style.is_equal (a_cursor)
+			pointer_style_assigned: attached pointer_style as l_pointer_style and then l_pointer_style.is_equal (a_cursor)
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER)
@@ -402,7 +402,7 @@ invariant
 	is_displayed_implies_show_requested:
 		is_usable and then is_displayed implies is_show_requested
 	parent_contains_current:
-		is_usable and then parent /= Void implies parent.has (Current)
+		is_usable and then attached parent as l_parent implies l_parent.has (Current)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -419,4 +419,14 @@ note
 
 
 end -- class EV_WIDGET
+
+
+
+
+
+
+
+
+
+
 

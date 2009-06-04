@@ -134,7 +134,7 @@ feature -- Access
 			cloned: Result /= implementation.title
 		end
 
-	menu_bar: EV_MENU_BAR
+	menu_bar: detachable EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 		require
 			not_destroyed: not is_destroyed
@@ -344,12 +344,12 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			no_locked_window:
-				((create {EV_ENVIRONMENT}).application.locked_window = Void)
+				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 		do
 			implementation.lock_update
 		ensure
 			locked_window_is_current:
-				(create {EV_ENVIRONMENT}).application.locked_window = Current
+				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
 		end
 
 	unlock_update
@@ -357,12 +357,12 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			locked_window_is_current:
-				(create {EV_ENVIRONMENT}).application.locked_window = Current
+				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
 		do
 			implementation.unlock_update
 		ensure
 			no_locked_window:
-				((create {EV_ENVIRONMENT}).application.locked_window = Void)
+				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 		end
 
 	show_relative_to_window (a_parent: EV_WINDOW)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_WINDOW_IMP} implementation.make (Current)
+			create {EV_WINDOW_IMP} implementation.make
 		end
 
 feature {EV_IDENTIFIABLE} -- Implementation
@@ -443,4 +443,13 @@ note
 
 
 end -- class EV_WINDOW
+
+
+
+
+
+
+
+
+
 

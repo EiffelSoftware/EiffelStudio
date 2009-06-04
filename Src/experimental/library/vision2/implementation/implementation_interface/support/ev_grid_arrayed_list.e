@@ -48,7 +48,6 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			n_valid: n > 0 and then n <= count - i + 1
 		local
 			a_duplicate: like Current
-			l_default: G
 			a_count: INTEGER
 			l_original_index: INTEGER
 		do
@@ -63,7 +62,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 
 				-- Remove duplicated entries resulting from move and reset count.
 			a_count := a_count - n
-			area.fill_with (l_default, a_count, upper - 1)
+			area.fill_with_default (a_count, upper - 1)
 
 			index := j - 1
 			if index < a_count then
@@ -83,7 +82,6 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			n_valid: n > 0 and then n <= count - i + 1
 		local
 			a_duplicate: like Current
-			l_default: G
 			a_count: INTEGER
 			l_original_index: INTEGER
 		do
@@ -98,7 +96,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 
 				-- Remove duplicated entries resulting from move and reset count.
 			a_count := a_count - n
-			area.fill_with (l_default, a_count, upper - 1)
+			area.fill_with_default (a_count, upper - 1)
 
 				-- Calculate insertion index to insert before index `j'
 			if j > (i + n - 1) then
@@ -122,7 +120,6 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 		require
 			new_capacity_not_negative: new_capacity >= 0
 		local
-			l_default: G
 			l_upper: INTEGER
 		do
 			l_upper := upper
@@ -136,7 +133,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 					-- memory usage.
 
 					-- Remove all items so that they can be garbage collected.
-				area.fill_with (l_default, new_capacity, l_upper - 1)
+				area.fill_with_default (new_capacity, l_upper - 1)
 			end
 				-- Now always set the `count' to `new_capacity' although
 				-- the actual area allocated may not equal `new_capacity'.

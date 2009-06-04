@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_HORIZONTAL_SCROLL_BAR_IMP} implementation.make (Current)
+			create {EV_HORIZONTAL_SCROLL_BAR_IMP} implementation.make
 		end
 
 note
@@ -56,4 +56,10 @@ note
 
 
 end -- class EV_HORIZONTAL_SCROLL_BAR
+
+
+
+
+
+
 

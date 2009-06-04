@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"[
 			Button that toggles between states each time it is pressed.
 		]"
@@ -14,8 +14,8 @@ note
 	keywords: "toggle, button"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	EV_TOGGLE_BUTTON
 
 inherit
@@ -49,15 +49,15 @@ feature {EV_ANY, EV_ANY_I}
 
 	implementation: EV_TOGGLE_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			Create {EV_TOGGLE_BUTTON_IMP} implementation.make (Current)
+			Create {EV_TOGGLE_BUTTON_IMP} implementation.make
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -73,4 +73,11 @@ note
 
 
 end -- class EV_TOGGLE_BUTTON
+
+
+
+
+
+
+
 

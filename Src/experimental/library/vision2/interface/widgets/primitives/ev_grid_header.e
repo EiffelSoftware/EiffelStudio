@@ -12,27 +12,25 @@ inherit
 	EV_HEADER
 
 create {EV_GRID_I}
-	make_with_grid
+	default_create
 
-feature {NONE} -- Initialization
+feature {EV_GRID_I} -- Initialization
 
-	make_with_grid (a_grid: EV_GRID_I)
+	set_grid (a_grid: EV_GRID_I)
 			-- Create and associate `Current' with `a_grid'.
 		require
 			a_grid_not_void: a_grid /= Void
 		do
-			default_create
 			grid := a_grid
 		end
 
 feature {NONE} -- Implementation
 
-	grid: EV_GRID_I
+	grid: detachable EV_GRID_I note option: stable attribute end
 		-- Grid to which `Current' is associated with.
 
 invariant
-	grid_not_void: grid /= Void
-	grid_parented_implies_header_parented: grid.parent /= Void implies parent /= Void
+	grid_parented_implies_header_parented: attached grid as l_grid and then l_grid.parent /= Void implies parent /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -49,4 +47,10 @@ note
 
 
 end
+
+
+
+
+
+
 

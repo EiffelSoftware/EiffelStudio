@@ -30,7 +30,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_set_text (a_text: STRING_GENERAL)
+	wel_set_text (a_text: detachable STRING_GENERAL)
 			-- Set `a_text' in WEL object.
 		deferred
 		end
@@ -84,4 +84,15 @@ note
 
 
 end -- class EV_TEXTABLE_IMP
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision color selection dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature -- Element change
 		do
 			implementation.set_color (a_color)
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_COLOR_DIALOG_I
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_COLOR_DIALOG_IMP} implementation.make (Current)
+			create {EV_COLOR_DIALOG_IMP} implementation.make
 		end
 
 note
@@ -70,4 +70,11 @@ note
 
 
 end -- class EV_COLOR_DIALOG
+
+
+
+
+
+
+
 

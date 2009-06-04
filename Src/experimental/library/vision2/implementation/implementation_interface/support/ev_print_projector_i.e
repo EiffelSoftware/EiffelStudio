@@ -31,7 +31,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	interface: EV_PRINT_PROJECTOR;
+	interface: detachable EV_PRINT_PROJECTOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -48,4 +48,8 @@ note
 
 
 end -- class EV_PRINT_PROJECTOR_I
+
+
+
+
 

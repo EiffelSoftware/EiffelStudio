@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 			grid_not_void: a_grid /= Void
 			a_column_not_void: a_column /= Void
 		do
-			initialize (a_grid, an_offset)
 			column_i := a_column
+			initialize (a_grid, an_offset)
 		ensure
 			grid_set: grid = a_grid
 			offset_set: offset = an_offset

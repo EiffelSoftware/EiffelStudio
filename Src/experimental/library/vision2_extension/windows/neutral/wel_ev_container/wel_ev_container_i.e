@@ -9,7 +9,7 @@ note
 
 deferred class
 	WEL_EV_CONTAINER_I
-	
+
 inherit
 	EV_CELL_I
 		redefine
@@ -23,7 +23,7 @@ feature {WEL_EV_CONTAINER} -- Initialization
 			-- y_position to `y_pos', width to `a_width' and height to `a_height'.
 		deferred
 		end
-		
+
 
 feature -- Access
 
@@ -34,7 +34,7 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: WEL_EV_CONTAINER;
+	interface: detachable WEL_EV_CONTAINER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -51,4 +51,6 @@ note
 
 
 end -- class WEL_EV_CONTAINER_I
+
+
 

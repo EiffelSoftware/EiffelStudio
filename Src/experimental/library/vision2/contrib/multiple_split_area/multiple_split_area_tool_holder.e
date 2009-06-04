@@ -34,20 +34,34 @@ feature {NONE} -- Initialization
 			parent_not_void: a_parent /= Void
 		local
 			vertical_box: EV_VERTICAL_BOX
-			frame: EV_FRAME
+			frame: detachable EV_FRAME
 			temp_cell: EV_CELL
 			l_platform: PLATFORM
 		do
-			default_create
+			create main_box
+			create label_box
+			create minimum_size_cell
 			parent_area := a_parent
 			tool := a_tool
+			create vertical_box
+			create label.make_with_text (a_display_name)
+			create tool_bar
+			create minimize_button
+			create maximize_button
+			create close_button
+			create customizeable_area
+			display_name := a_display_name
 
-			create main_box
+			default_create
+
+
+
+
 			extend (main_box)
-			create minimum_size_cell
+
 			extend (minimum_size_cell)
 			disable_item_expand (minimum_size_cell)
-			create label_box
+
 
 			create l_platform
 			if l_platform.is_windows then
@@ -56,9 +70,10 @@ feature {NONE} -- Initialization
 				main_box.extend (frame)
 			end
 
-			create vertical_box
+
 
 			if l_platform.is_windows then
+				check frame /= Void end
 				frame.extend (vertical_box)
 			else
 				main_box.extend (vertical_box)
@@ -67,8 +82,7 @@ feature {NONE} -- Initialization
 			frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_raised)
 			vertical_box.extend (frame)
 			frame.extend (label_box)
-			create label.make_with_text (a_display_name)
-			display_name := a_display_name
+
 			label.align_text_left
 			label_box.extend (label)
 			label_box.disable_item_expand (label)
@@ -76,22 +90,26 @@ feature {NONE} -- Initialization
 			temp_cell.set_minimum_width (8)
 			label_box.extend (temp_cell)
 			label_box.disable_item_expand (temp_cell)
-			create customizeable_area
+
 			label_box.extend (customizeable_area)
 			label_box.set_data (display_name)
-			create tool_bar
-			create minimize_button
-			minimize_button.set_pixmap (parent_area.minimize_pixmap.twin)
+
+			if attached parent_area.minimize_pixmap as l_minimize_pixmap then
+				minimize_button.set_pixmap (l_minimize_pixmap.twin)
+			end
 			minimize_button.select_actions.extend (agent change_minimized_state)
 			minimize_button.set_tooltip (minimize_tooltip)
 			tool_bar.extend (minimize_button)
-			create maximize_button
-			maximize_button.set_pixmap (parent_area.maximize_pixmap.twin)
+			if attached parent_area.maximize_pixmap as l_maximize_pixmap then
+				maximize_button.set_pixmap (l_maximize_pixmap.twin)
+			end
+
 			maximize_button.select_actions.extend (agent change_maximized_state)
 			maximize_button.set_tooltip (maximize_tooltip)
 			tool_bar.extend (maximize_button)
-			create close_button
-			close_button.set_pixmap (parent_area.close_pixmap.twin)
+			if attached parent_area.close_pixmap as l_close_pixmap then
+				close_button.set_pixmap (l_close_pixmap.twin)
+			end
 			close_button.select_actions.extend (agent close)
 			close_button.set_tooltip (close_tooltip)
 			label_box.extend (tool_bar)
@@ -118,13 +136,15 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 			parent_area_not_void: parent_area /= Void
 			not_external: not is_external
 		local
-			l_parent: EV_VERTICAL_BOX
+			l_parent, l_result: detachable EV_VERTICAL_BOX
 		do
 			l_parent ?= parent
 			check
 				l_parent_not_void: l_parent /= Void
 			end
-			Result ?= l_parent.i_th (3)
+			l_result ?= l_parent.i_th (3)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -136,13 +156,15 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 			parent_area_not_void: parent_area /= Void
 			not_external: not is_external
 		local
-			l_parent: EV_VERTICAL_BOX
+			l_parent, l_result: detachable EV_VERTICAL_BOX
 		do
 			l_parent ?= parent
 			check
 				l_parent_not_void: l_parent /= Void
 			end
-			Result ?= l_parent.i_th (1)
+			l_result ?= l_parent.i_th (1)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -173,7 +195,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 
-	command_tool_bar: EV_TOOL_BAR
+	command_tool_bar: detachable EV_TOOL_BAR
 		-- A toolbar with specific commands related to `tool',
 		-- or Void if not set.
 
@@ -251,15 +273,17 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	disable_close_button
 			-- Ensure no close button is displayed for `Current'.
 		do
-			if close_button.parent /= Void then
-				close_button.parent.prune (close_button)
+			if attached close_button.parent as l_parent then
+				l_parent.prune (close_button)
 			end
 		end
 
 	remove_maximized_restore
 			-- Ensure that `maximize_button' displays the maximize pixmap.
 		do
-			maximize_button.set_pixmap (parent_area.maximize_pixmap)
+			if attached parent_area.maximize_pixmap as l_maximize_pixmap then
+				maximize_button.set_pixmap (l_maximize_pixmap)
+			end
 		end
 
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
@@ -322,14 +346,16 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		local
 			tool_height: INTEGER
 			locked_in_here, is_expanded: BOOLEAN
-			original_parent_window: EV_WINDOW
+			original_parent_window: detachable EV_WINDOW
 			widget: EV_WIDGET
 		do
 			tool_height := main_box.height
-			tool.parent.prune_all (tool)
+			if attached tool.parent as l_parent then
+				l_parent.prune_all (tool)
+			end
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -365,18 +391,18 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
-	parent_dockable_dialog (widget: EV_WIDGET): EV_DOCKABLE_DIALOG
+	parent_dockable_dialog (widget: EV_WIDGET): detachable EV_DOCKABLE_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
 		require
 			widget_not_void: widget /= Void
 		local
-			dialog: EV_DOCKABLE_DIALOG
+			dialog: detachable EV_DOCKABLE_DIALOG
 		do
 			dialog ?= widget.parent
 			if dialog = Void then
-				if widget.parent /= Void then
-					Result := parent_dockable_dialog (widget.parent)
+				if attached widget.parent as l_parent then
+					Result := parent_dockable_dialog (l_parent)
 				end
 			else
 				Result := dialog
@@ -406,9 +432,9 @@ feature {NONE} -- Implementation
 	docking_ended
 			-- A dock has ended, so close dialog, and restore `Current'
 		local
-			dialog: EV_DOCKABLE_DIALOG
+			dialog: detachable EV_DOCKABLE_DIALOG
 			original_position, new_position: INTEGER
-			original_parent_window: EV_WINDOW
+			original_parent_window: detachable EV_WINDOW
 			locked_in_here: BOOLEAN
 			minimized_count: INTEGER
 			tool_holder: like Current
@@ -416,9 +442,10 @@ feature {NONE} -- Implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 			widget: EV_WIDGET
 			temp_value: INTEGER
+			l_data: detachable ANY
 		do
 			original_position := parent_area.linear_representation.index_of (tool, 1)
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -437,7 +464,9 @@ feature {NONE} -- Implementation
 						-- Remove minimized state from `Current' as it has
 						-- been docked out of the multiple split area.
 					disable_minimized
-					minimize_button.set_pixmap (parent_area.minimize_pixmap)
+					if attached parent_area.minimize_pixmap as l_minimize_pixmap then
+						minimize_button.set_pixmap (l_minimize_pixmap)
+					end
 					tool.show
 					dialog.set_height (default_external_docked_height)
 				end
@@ -468,7 +497,9 @@ feature {NONE} -- Implementation
 						-- Ensure that we select the first item
 					tool_holder := parent_area.holder_of_widget (parent_rep.item)
 					tool_holder.disable_minimized
-					tool_holder.minimize_button.set_pixmap (parent_area.minimize_pixmap)
+					if attached parent_area.minimize_pixmap as l_minimize_pixmap then
+						tool_holder.minimize_button.set_pixmap (l_minimize_pixmap)
+					end
 					tool_holder.tool.show
 				end
 
@@ -487,21 +518,23 @@ feature {NONE} -- Implementation
 					parent_area.docked_out_actions.call ([tool])
 				end
 			end
-			if parent /= Void then
-				parent.prune (Current)
+			if attached parent as l_parent then
+				l_parent.prune (Current)
 			end
 				-- `main_box' is moved during a transport, so we must re-insert it
 				-- in `Current'
 			if dialog = Void then
-				if main_box.parent /= Void then
+				if attached main_box.parent as l_main_box_parent then
+					l_data := l_main_box_parent.data
+					check l_data /= Void end
 					check
-						data_is_integer: main_box.parent.data.out.is_integer
+						data_is_integer: l_data.out.is_integer
 					end
-					new_position := main_box.parent.data.out.to_integer
+					new_position := l_data.out.to_integer
 					check
 						position_retrieved: new_position > 0
 					end
-					main_box.parent.prune_all (main_box)
+					l_main_box_parent.prune_all (main_box)
 					extend (main_box)
 				end
 					-- If `original_position' = 0, the tool is being docked back from
@@ -510,7 +543,10 @@ feature {NONE} -- Implementation
 				if original_position = 0 then
 					parent_area.all_holders.prune_all (Current)
 						-- Must now remove the tool from its parent, part of `Current'.
-					tool.parent.prune_all (tool)
+
+					if attached tool.parent as l_parent then
+						l_parent.prune_all (tool)
+					end
 
 						-- Remove `tool' from the external representation.
 					parent_area.external_representation.prune_all (tool)
@@ -700,4 +736,7 @@ note
 
 
 end -- class MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+
+
+
 

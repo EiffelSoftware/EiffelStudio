@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_UNTITLED_DIALOG_IMP} implementation.make (Current)
+			create {EV_UNTITLED_DIALOG_IMP} implementation.make
 		end
 
 note
@@ -42,4 +42,8 @@ note
 
 
 end -- class EV_UNTITLED_DIALOG
+
+
+
+
 

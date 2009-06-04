@@ -22,7 +22,7 @@ inherit
 			update_current_push_button,
 			on_bn_clicked,
 			has_pushed_appearence,
-			initialize,
+			make,
 			internal_background_brush,
 			fire_select_actions_on_enter
 		end
@@ -30,15 +30,14 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	initialize
+	make
 			--
 		do
 			Precursor {EV_BUTTON_IMP}
 			is_selected := False
 		end
-
 
 feature -- Access
 
@@ -123,7 +122,7 @@ feature {NONE} -- Implementation, focus event
 			-- Current is NOT a push button so we set the current push button
 			-- to be the default push button.
 		local
-			top_level_dialog_imp: EV_DIALOG_I
+			top_level_dialog_imp: detachable EV_DIALOG_I
 		do
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
@@ -161,7 +160,7 @@ feature {NONE} -- Implementation, focus event
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOGGLE_BUTTON;
+	interface: detachable EV_TOGGLE_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -178,4 +177,14 @@ note
 
 
 end -- class EV_TOGGLE_BUTTON_IMP
+
+
+
+
+
+
+
+
+
+
 

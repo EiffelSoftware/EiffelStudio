@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			bit_op: WEL_BIT_OPERATIONS
 		do
 			Precursor {EV_DIALOG_IMP_COMMON}
-				
+
 				-- Change the style of the window.
 			create bit_op
 			new_style := style
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 feature {EV_DIALOG_I} -- Implementation
 
-	other_imp: EV_UNTITLED_DIALOG_IMP
+	other_imp: detachable EV_UNTITLED_DIALOG_IMP note option: stable attribute end
 			-- Previous Implementation if any, Void otherwise.
 
 feature {NONE} -- Implementation
@@ -64,14 +64,14 @@ feature {NONE} -- Implementation
 			dialog_window_imp: EV_UNTITLED_DIALOG_IMP
 		do
 			create dialog_window_imp.make_with_real_dialog (Current)
-			interface.replace_implementation (dialog_window_imp)
+			attached_interface.replace_implementation (dialog_window_imp)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-		
-	interface: EV_UNTITLED_DIALOG;
+
+	interface: detachable EV_UNTITLED_DIALOG note option: stable attribute end;
 			-- Interface for `Current'.
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -87,4 +87,8 @@ note
 
 
 end -- class EV_DIALOG_IMP_COMMON
+
+
+
+
 

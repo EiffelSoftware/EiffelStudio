@@ -5,10 +5,10 @@ note
 	keywords: "list, item"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_LIST_ITEM_I
-	
+
 inherit
 	EV_ITEM_I
 		redefine
@@ -44,25 +44,25 @@ feature -- Status report
 				--| implementation issues. If we find a way to
 				--| implement this correctly on both platforms then
 				--| this limitation can be removed.
-			Result := parent /= Void and then parent.is_sensitive
+			Result := attached parent as l_parent and then l_parent.is_sensitive
 		end
 
 feature -- Access
 
-	parent: EV_LIST_ITEM_LIST
+	parent: detachable EV_LIST_ITEM_LIST
 			-- List containing `interface'.
 		do
 			Result ?= Precursor
 		end
-		
+
 feature -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		local
-			scaled_pixmap: EV_PIXMAP
-			list_parent: EV_LIST
-			combo_parent: EV_COMBO_BOX
+			scaled_pixmap: detachable EV_PIXMAP
+			list_parent: detachable EV_LIST
+			combo_parent: detachable EV_COMBO_BOX
 		do
 			if parent /= Void then
 				scaled_pixmap := a_pixmap.twin
@@ -76,19 +76,21 @@ feature -- Contract support
 					end
 					scaled_pixmap.stretch (combo_parent.pixmaps_width, combo_parent.pixmaps_height)
 				end
-				
+
 			else
-				scaled_pixmap := a_pixmap	
+				scaled_pixmap := a_pixmap
 			end
-			Result := scaled_pixmap.is_equal (pixmap)
+			if attached pixmap as l_pixmap then
+				Result := scaled_pixmap.is_equal (l_pixmap)
+			end
 		end
 
 feature {EV_LIST_ITEM_I} -- Implementation
 
-	interface: EV_LIST_ITEM;
+	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -104,4 +106,13 @@ note
 
 
 end -- class EV_LIST_ITEM_I
+
+
+
+
+
+
+
+
+
 

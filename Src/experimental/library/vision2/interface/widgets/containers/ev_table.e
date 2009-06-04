@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"[
 			EiffelVision table. Invisible container that allows
 			unlimited number of other widgets to be packed inside it.
@@ -25,7 +25,7 @@ inherit
 		select
 			put, extend
 		end
-		
+
 	CHAIN [EV_WIDGET]
 		export
 			{EV_ANY_HANDLER} default_create
@@ -59,7 +59,7 @@ feature -- Access
 			Result := implementation.columns
 		end
 
-	item_at_position (a_column, a_row: INTEGER): EV_WIDGET
+	item_at_position (a_column, a_row: INTEGER): detachable EV_WIDGET
 			-- Widget at coordinates (`row', `column').
 		require
 			not_destroyed: not is_destroyed
@@ -79,7 +79,7 @@ feature -- Access
 		ensure
 			Result_valid: Result > 0 and Result <= columns - item_column_span (widget) + 1
 		end
-		
+
 	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		require
@@ -90,7 +90,7 @@ feature -- Access
 		ensure
 			Result_valid: Result > 0 and Result <= rows - item_row_span (widget) + 1
 		end
-		
+
 	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		require
@@ -101,7 +101,7 @@ feature -- Access
 		ensure
 			Result_valid: Result > 0 and Result <= columns - item_column_position (widget) + 1
 		end
-	
+
 	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		require
@@ -124,8 +124,8 @@ feature -- Access
 			Result_not_void: Result /= Void
 			count_matches_widget_count: Result.count = count
 		end
-		
-	to_array: ARRAY [EV_WIDGET]
+
+	to_array: ARRAY [detachable EV_WIDGET]
 			-- A representation of `Current' as ARRAY. Included to
 			-- ease transition from inheritance of ARRAY to
 			-- inheritance of CHAIN. Contains contents of all cells
@@ -228,7 +228,7 @@ feature -- Status report
 		ensure
 			Result_non_negative: Result >= 0
 		end
-		
+
 	is_homogeneous: BOOLEAN
 			-- Are all items forced to have same dimensions.
 		require
@@ -265,7 +265,7 @@ feature -- Status report
 				a_row_ctr := a_row_ctr + 1
 			end
 		end
-		
+
 	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN
 			-- Are the cells represented by parameters free of widgets? Excludes cells
 			-- filled by `v'.
@@ -276,22 +276,22 @@ feature -- Status report
 		do
 			Result := implementation.area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
 		end
-		
+
 	Prunable: BOOLEAN = True
 		-- `Current' is always prunable.
-		
+
 	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := not full
 		end
-		
-	duplicate (n: INTEGER): like Current
+
+	duplicate (n: INTEGER): detachable like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
 			-- at or to the right of current position.
-			
+
 			-- This is not implementable in Vision2 as a widget may
 			-- only be parented in one container at once. Hence, the
 			-- `Void' `Result'.
@@ -320,7 +320,7 @@ feature -- Status settings
 		ensure
 			is_not_homogeneous: not is_homogeneous
 		end
-	
+
 	set_row_spacing (a_value: INTEGER)
 			-- Assign `a_value' to the spacing in-between rows, in pixels.
 		require
@@ -369,7 +369,7 @@ feature -- Status settings
 			rows_set: rows = a_row
 			items_untouched: linear_representation.is_equal (old linear_representation)
 		end
-		
+
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		require
@@ -388,7 +388,7 @@ feature -- Status settings
 			span_unchanged: item_column_span (v) = old item_column_span (v) and
 				item_row_span (v) = old item_row_span (v)
 		end
-		
+
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		require
@@ -407,7 +407,7 @@ feature -- Status settings
 				position_unchanged: item_column_position (v) = old item_column_position (v) and
 					item_row_position (v) = old item_row_position (v)
 			end
-		
+
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 		require
@@ -433,7 +433,7 @@ feature -- Status settings
 feature -- Element change
 
 	put_at_position, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
-			-- Set the position of the widgets in one-based coordinates. 
+			-- Set the position of the widgets in one-based coordinates.
 			--
 			--           1         2
 			--     +----------+---------+
@@ -468,13 +468,13 @@ feature -- Element change
 			position_assigned: item_column_position (v) = a_column and item_row_position (v) = a_row
 			span_assigned: item_column_span (v) = column_span and item_row_span (v) = row_span
 		end
-		
+
 	remove
 			-- Remove current item.
 		do
 			prune (item)
 		end
-		
+
 	prune (v: EV_WIDGET)
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
@@ -487,7 +487,7 @@ feature -- Element change
 			had_item_implies_count_decreased:
 				old has (v) implies count = old count - 1
 		end
-		
+
 feature -- Iteration.
 
 	has (v: EV_WIDGET): BOOLEAN
@@ -495,56 +495,56 @@ feature -- Iteration.
 		do
 			Result := implementation.has (v)
 		end
-		
+
 	count: INTEGER
 			-- Number of widgets contained in `Current'.
 		do
 			Result := implementation.count
 		end
-		
+
 	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := implementation.full
 		end
-		
+
 	wipe_out
 			-- Remove all items.
 		do
 			implementation.wipe_out
 		end
-		
+
 	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			Result := implementation.before
 		end
-		
+
 	index: INTEGER
 			-- Current position.
 		do
 			Result := implementation.index
 		end
-	
+
 	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			Result := implementation.after
 		end
-	
+
 	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		do
 			implementation.forth
 		end
-		
+
 	back
 			-- Move to previous position.
 		do
 			implementation.back
 		end
-		
+
 	cursor: CURSOR
 			-- Current cursor position.
 		do
@@ -552,7 +552,7 @@ feature -- Iteration.
 		ensure then
 			bridge_ok: Result.is_equal (implementation.cursor)
 		end
-		
+
 	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
@@ -560,7 +560,7 @@ feature -- Iteration.
 		do
 			Result := implementation.valid_cursor (p)
 		end
-		
+
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
@@ -576,7 +576,7 @@ feature -- Iteration.
 		end
 
 feature -- Contract support
-		
+
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
@@ -588,24 +588,24 @@ feature -- Contract support
 				rows = 1 and
 				columns = 1)
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_TABLE_I
 		-- Responsible for interaction with native graphics toolkit.
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TABLE_IMP} implementation.make (Current)
+			create {EV_TABLE_IMP} implementation.make
 		end
-		
+
 invariant
 	columns_positive: columns >= 1
 	rows_positive: rows >= 1
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -621,4 +621,13 @@ note
 
 
 end -- class EV_TABLE
+
+
+
+
+
+
+
+
+
 

@@ -12,6 +12,8 @@ deferred class
 
 inherit
 	EV_CONTAINER_I
+		undefine
+			interface_item
 		redefine
 			interface,
 			propagate_foreground_color,
@@ -21,7 +23,7 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy,
 			set_parent_imp
 		end
@@ -32,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Create `shared_pointer' for radio groups.
 		do
 			Precursor {EV_WIDGET_IMP}
@@ -60,7 +62,7 @@ feature -- Access
 			Result := height
 		end
 
-	background_pixmap: EV_PIXMAP
+	background_pixmap: detachable EV_PIXMAP
 			-- the background pixmap
 
 feature -- Element change
@@ -68,15 +70,17 @@ feature -- Element change
 	replace (v: like item)
 			-- Replace `item' with `v'.
 		local
-			w: EV_WIDGET_IMP
+			w: detachable EV_WIDGET_IMP
 		do
-			if not interface.is_empty then
-				w ?= interface.item.implementation
+			if attached item as l_item then
+				w ?= l_item.implementation
+				check w /= Void end
 				on_removed_item (w)
 				gtk_container_remove (container_widget, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
+				check w /= Void end
 				gtk_insert_i_th (container_widget, w.c_object, 1)
 				on_new_item (w)
 			end
@@ -114,7 +118,7 @@ feature -- Status setting
 			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: ARRAYED_LIST [POINTER]
-			peer: EV_CONTAINER_IMP
+			peer: detachable EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
 			if peer = Void then
@@ -122,7 +126,7 @@ feature -- Status setting
 				-- but has implementation renamed.
 				-- If this is the case, on `a_container' this feature
 				-- had to be redefined.
-				a_container.merge_radio_button_groups (interface)
+				a_container.merge_radio_button_groups (attached_interface)
 			else
 				if shared_pointer /= peer.shared_pointer then
 					l := gslist_to_eiffel (peer.radio_group)
@@ -145,10 +149,10 @@ feature -- Status setting
 			-- Remove Join of `a_container' to radio grouping of `Current'.
 		local
 			l: ARRAYED_LIST [POINTER]
-			peer: EV_CONTAINER_IMP
+			peer: detachable EV_CONTAINER_IMP
 			a_child_list: POINTER
-			rad_but_imp: EV_RADIO_BUTTON_IMP
-			selected_rad_but: EV_RADIO_BUTTON_IMP
+			rad_but_imp: detachable EV_RADIO_BUTTON_IMP
+			selected_rad_but: detachable EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
 			if peer = Void then
@@ -156,7 +160,7 @@ feature -- Status setting
 				-- but has implementation renamed.
 				-- If this is the case, on `a_container' this feature
 				-- had to be redefined.
-				a_container.unmerge_radio_button_groups (interface)
+				a_container.unmerge_radio_button_groups (attached_interface)
 			else
 				if shared_pointer = peer.shared_pointer then
 						-- They share the same radio grouping.
@@ -226,7 +230,7 @@ feature -- Status setting
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
 		local
-			r: EV_RADIO_BUTTON_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
 		do
 			r ?= a_widget_imp
 			if r /= Void then
@@ -244,11 +248,11 @@ feature -- Status setting
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
 		local
-			r: EV_RADIO_BUTTON_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
 			a_max_index: INTEGER
 			a_item_index: INTEGER
 			a_item_pointer: POINTER
-			an_item_imp: EV_RADIO_BUTTON_IMP
+			an_item_imp: detachable EV_RADIO_BUTTON_IMP
 		do
 			r ?= a_widget_imp
 			if r /= Void then
@@ -296,12 +300,15 @@ feature -- Status setting
 			-- Set the container background pixmap to `pixmap'.
 		local
 			a_style: POINTER
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 			mem_ptr, pix_ptr: POINTER
 			i: INTEGER
 		do
 			real_set_background_color (c_object, (create {EV_STOCK_COLORS}).gray)
-			pix_imp ?= background_pixmap.implementation
+			if attached background_pixmap as l_background_pixmap then
+				pix_imp ?= l_background_pixmap.implementation
+			end
+			check pix_imp /= Void end
 
 			a_style := {EV_GTK_EXTERNALS}.gtk_style_copy ({EV_GTK_EXTERNALS}.gtk_widget_struct_style (c_object))
 			pix_ptr := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
@@ -387,8 +394,8 @@ feature -- Command
 	destroy
 			-- Render `Current' unusable.
 		do
-			if interface.prunable then
-				interface.wipe_out
+			if attached_interface.prunable then
+				attached_interface.wipe_out
 			end
 			Precursor {EV_WIDGET_IMP}
 		end
@@ -424,10 +431,10 @@ feature {EV_WIDGET_IMP} -- Implementation
 			--
 		do
 			Precursor {EV_WIDGET_IMP} (a_parent_imp)
-			if background_pixmap /= Void and parent_imp = Void then
+			if attached background_pixmap as l_background_pixmap and parent_imp = Void then
 				-- We need to reref the background pixmap as gtk doesn't handle it properly
 				-- on removal from parent of Current.
-				internal_set_background_pixmap (background_pixmap)
+				internal_set_background_pixmap (l_background_pixmap)
 			end
 		end
 
@@ -485,7 +492,7 @@ feature {NONE} -- Externals
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CONTAINER;
+	interface: detachable EV_CONTAINER note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -504,4 +511,8 @@ note
 
 
 end -- class EV_CONTAINER_IMP
+
+
+
+
 

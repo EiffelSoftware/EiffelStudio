@@ -11,7 +11,7 @@ class
 	EV_PND_FINISHED_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [pick_and_dropable :EV_ABSTRACT_PICK_AND_DROPABLE]]
+	EV_ACTION_SEQUENCE [TUPLE [pick_and_dropable: detachable EV_ABSTRACT_PICK_AND_DROPABLE]]
 
 create
 	default_create
@@ -33,7 +33,6 @@ feature -- Access
 		do
 			action.call ([a_pick_and_dropable])
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -58,4 +57,13 @@ note
 
 
 end -- class EV_PND_FINISHED_ACTION_SEQUENCE
+
+
+
+
+
+
+
+
+
 

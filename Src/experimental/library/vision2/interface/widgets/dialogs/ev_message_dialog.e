@@ -15,6 +15,7 @@ inherit
 	EV_DIALOG
 		redefine
 			initialize,
+			create_interface_objects,
 			set_background_color,
 			set_foreground_color,
 			foreground_color,
@@ -59,7 +60,7 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 			c: CURSOR
-			b: EV_BUTTON
+			b: detachable EV_BUTTON
 		do
 			default_create
 			set_text (a_text)
@@ -85,6 +86,20 @@ feature {NONE} -- Initialization
 			button_box.go_to (c)
 		end
 
+	create_interface_objects
+			-- <Precursor>
+		local
+			l_stock_colors: EV_STOCK_COLORS
+		do
+			create buttons.make (5)
+			create button_box
+			create pixmap_box
+			create label
+			create l_stock_colors
+			foreground_color := l_stock_colors.default_foreground_color
+			background_color := l_stock_colors.default_background_color
+		end
+
 	initialize
 			-- Initialize `Current' to default state.
 		local
@@ -93,18 +108,14 @@ feature {NONE} -- Initialization
 			hb2: EV_HORIZONTAL_BOX
 			vb2: EV_VERTICAL_BOX
 		do
-			Precursor
 			foreground_color := implementation.foreground_color
 			background_color := implementation.background_color
-
-			create buttons.make (5)
-			create vb
-			create button_box
 			create hb
-			create pixmap_box
+			create vb
 			create hb2
 			create vb2
-			create label
+
+			Precursor
 
 			vb2.extend (pixmap_box)
 			vb2.disable_item_expand (pixmap_box)
@@ -137,7 +148,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Icon displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -182,7 +193,7 @@ feature -- Status setting
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
-			dialog_box: EV_CONTAINER
+			dialog_box: detachable EV_CONTAINER
 		do
 			item.set_background_color (a_color)
 			dialog_box ?= item
@@ -195,7 +206,7 @@ feature -- Status setting
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'.
 		local
-			dialog_box: EV_CONTAINER
+			dialog_box: detachable EV_CONTAINER
 		do
 			item.set_foreground_color (a_color)
 			dialog_box ?= item
@@ -222,7 +233,7 @@ feature -- Status setting
 			pixmap_box.set_minimum_size
 				(pixmap_clone.width, pixmap_clone.height)
 		ensure
-			pixmap_assigned: pixmap.is_equal (a_pixmap)
+			pixmap_assigned: attached pixmap as l_pixmap and then l_pixmap.is_equal (a_pixmap)
 		end
 
 	remove_pixmap
@@ -262,8 +273,6 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			button_labels_not_void: button_labels /= Void
-			all_button_labels_items_not_void:
-				button_labels.occurrences (Void) = 0
 		local
 			i: INTEGER
 		do
@@ -284,8 +293,6 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			button_labels_not_void: button_labels /= Void
 			actions_not_void: actions /= Void
-			all_button_labels_items_not_void:
-				button_labels.occurrences (Void) = 0
 			enough_actions_for_labels: actions.count >= button_labels.count
 		local
 			i: INTEGER
@@ -321,13 +328,17 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 			has_button_with_a_text: has_button (a_text)
+		local
+			l_result: detachable EV_BUTTON
 		do
-			Result := buttons.item (a_text)
+			l_result := buttons.item (a_text)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of last clicked button.
 
 feature {NONE} -- Implementation
@@ -426,7 +437,7 @@ feature {NONE} -- Implementation
 		local
 			l_buttons: like button_box
 			l_cursor: CURSOR
-			l_focused_widget: EV_WIDGET
+			l_focused_widget: detachable EV_WIDGET
 			l_focused: BOOLEAN
 		do
 			l_buttons := button_box
@@ -479,4 +490,14 @@ note
 
 
 end -- class EV_MESSAGE_DIALOG
+
+
+
+
+
+
+
+
+
+
 

@@ -36,7 +36,7 @@ feature -- Status setting
 		do
 			if a_button = 1 then
 				start_docking
-					(a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y, interface)
+					(a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y, attached_interface)
 			end
 		end
 
@@ -92,16 +92,16 @@ feature {EV_ANY_I} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Terminate the pick and drop mechanism.
 		local
-			text_component: EV_TEXT_COMPONENT_IMP
+			text_component: detachable EV_TEXT_COMPONENT_IMP
 		do
 			awaiting_movement := False
 				-- As this may be called when cancelling awaiting the movement of
 				-- the mouse before really starting the transport, we must
 				-- only complete the transport if we are really dragging.
 			if is_dock_executing then
-				if orig_cursor /= Void then
+				if attached orig_cursor as l_orig_cursor then
 						-- Restore the cursor style of `Current' if necessary.
-					internal_set_pointer_style (orig_cursor)
+					internal_set_pointer_style (l_orig_cursor)
 				else
 						-- Restore standard cursor style.
 					if text_component /= Void then
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE)
 			-- Initialize the docking mechanism.
 		local
-			source_imp: EV_DOCKABLE_SOURCE_IMP
+			source_imp: detachable EV_DOCKABLE_SOURCE_IMP
 		do
 			if not awaiting_movement then
 					-- Store arguments so they can be passed to
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 				awaiting_movement := True
 				application_imp.start_awaiting_movement
 				actual_source := source
-				source_imp ?= actual_source.implementation
+				source_imp ?= source.implementation
 				check
 					source_valid: source_imp /= Void
 				end
@@ -160,18 +160,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actual_source: EV_DOCKABLE_SOURCE
+	actual_source: detachable EV_DOCKABLE_SOURCE
 		-- The actual source which started the transport. We need
 		-- this, as the current source may not be
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Actually start the pick/drag and drop mechanism.
+		local
+			l_actual_source: detachable like actual_source
 		do
 			if not is_dock_executing then
 				--interface.pointer_motion_actions.block
 						-- Block `pointer_motion_actions'.
-				initialize_transport (a_screen_x, a_screen_y, actual_source)
+				l_actual_source := actual_source
+				check l_actual_source /= Void end
+				initialize_transport (a_screen_x, a_screen_y, l_actual_source)
 
 				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
 
@@ -189,8 +193,8 @@ feature {NONE} -- Implementation
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
 		local
-			tool_bar: EV_TOOL_BAR_IMP
-			button: EV_TOOL_BAR_ITEM_IMP
+			tool_bar: detachable EV_TOOL_BAR_IMP
+			button: detachable EV_TOOL_BAR_ITEM_IMP
 			counter: INTEGER
 		do
 			from
@@ -203,12 +207,13 @@ feature {NONE} -- Implementation
 					tool_bar_not_void: tool_bar /= Void
 				end
 				button ?= a_parent.i_th (counter).implementation
+				check button /= Void end
 				tool_bar.internal_reset_button (button)
 				counter := counter + 1
 			end
 		end
 
-	orig_cursor: EV_POINTER_STYLE
+	orig_cursor: detachable EV_POINTER_STYLE
 		-- Cursor originally used on `Current'.
 
 	application_imp: EV_APPLICATION_IMP
@@ -221,7 +226,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor used on `Current'.
 		deferred
 		end
@@ -251,4 +256,14 @@ note
 
 
 end -- class EV_DOCKABLE_SOURCE_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Interface
 
-	interface: EV_TOOL_BAR_ITEM;
+	interface: detachable EV_TOOL_BAR_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -96,4 +96,12 @@ note
 
 
 end -- class EV_TOOL_BAR_ITEM_IMP
+
+
+
+
+
+
+
+
 

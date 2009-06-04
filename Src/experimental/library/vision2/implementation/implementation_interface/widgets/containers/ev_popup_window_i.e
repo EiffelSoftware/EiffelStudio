@@ -16,13 +16,16 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_POPUP_WINDOW;
+	interface: detachable EV_POPUP_WINDOW note option: stable attribute end;
 
 feature -- Access
 
 	is_disconnected_from_window_manager: BOOLEAN
 		-- Has `Current' been disconnected from the Window Manager meaning that
 		-- its focus may only be controlled programatically.
+
+	has_shadow: BOOLEAN
+		-- Is `Current' created with a shadow?
 
 feature -- Status Setting
 
@@ -33,6 +36,13 @@ feature -- Status Setting
 			-- or pressing the Escape key will hide it.
 		do
 			is_disconnected_from_window_manager := True
+		end
+
+	initialize_with_shadow
+			-- Initialize `Current' with a shadow.
+		do
+			has_shadow := True
+			make
 		end
 
 note
@@ -50,4 +60,12 @@ note
 
 
 end
+
+
+
+
+
+
+
+
 

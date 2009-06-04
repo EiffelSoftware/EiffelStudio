@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST [reference G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST [G -> EV_CONTAINABLE]
 
 inherit
 	EV_CONTAINABLE
@@ -72,10 +72,10 @@ feature -- Access
 	item: G
 			-- Item at current position.
 		do
-			Result := implementation.item
+			Result := implementation.interface_item
 		ensure then
 			not_void: Result /= Void
-			bridge_ok: Result.is_equal (implementation.item)
+			bridge_ok: Result.is_equal (implementation.interface_item)
 		end
 
 	index: INTEGER
@@ -86,7 +86,7 @@ feature -- Access
 			bridge_ok: Result = implementation.index
 		end
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [G]
+	cursor: EV_DYNAMIC_LIST_CURSOR [detachable G]
 			-- Current cursor position.
 		do
 			Result := implementation.cursor
@@ -98,9 +98,9 @@ feature -- Access
 			-- Item at `i'-th position.
 			--| Redefined for performance reasons.
 		do
-			Result := implementation.i_th (i)
+			Result := implementation.interface_i_th (i)
 		ensure then
-			bridge_ok: Result.is_equal (implementation.i_th (i))
+			bridge_ok: Result.is_equal (implementation.interface_i_th (i))
 		end
 
 	index_of (v: like item; i: INTEGER): INTEGER
@@ -111,7 +111,7 @@ feature -- Access
 			bridge_ok: Result = implementation.index_of (v, i)
 		end
 
-	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): G
+	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): detachable G
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -489,7 +489,7 @@ feature {NONE} -- Inapplicable
 			put_left (v)
 		end
 
-	new_chain: like Current
+	new_chain: detachable like Current
 		do
 			check
 				inapplicable: False
@@ -505,7 +505,7 @@ feature {EV_DYNAMIC_LIST} -- Inapplicable
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	implementation: EV_DYNAMIC_LIST_I [G];
+	implementation: EV_DYNAMIC_LIST_I [detachable G];
 			-- Responsible for interaction with native graphics
 			-- toolkit.
 
@@ -524,4 +524,14 @@ note
 
 
 end -- class EV_DYNAMIC_LIST
+
+
+
+
+
+
+
+
+
+
 

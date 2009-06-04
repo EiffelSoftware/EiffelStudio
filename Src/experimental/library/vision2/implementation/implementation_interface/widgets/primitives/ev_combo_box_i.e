@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision Combo-box. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,9 +18,9 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_COMBO_BOX_ACTION_SEQUENCES_I
-	
+
 feature -- Status report
 
 	is_list_shown: BOOLEAN
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature {EV_COMBO_BOX_I} -- Implementation
 
-	interface: EV_COMBO_BOX;
+	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -47,4 +47,12 @@ note
 
 
 end -- class EV_COMBO_BOX_I
+
+
+
+
+
+
+
+
 

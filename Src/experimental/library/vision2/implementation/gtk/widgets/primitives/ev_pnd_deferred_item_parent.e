@@ -11,7 +11,7 @@ deferred class
 
 feature {EV_ANY_I} -- Implementation
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	item_from_coords (a_x, a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Retrieve the Current row from (`a_x', `a_y') coordinate
 		deferred
 		end
@@ -23,7 +23,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Initialize a pick and drop transport.
 		deferred
 		end
@@ -51,4 +51,8 @@ note
 
 
 end -- class EV_PND_DEFERRED_ITEM_PARENT
+
+
+
+
 

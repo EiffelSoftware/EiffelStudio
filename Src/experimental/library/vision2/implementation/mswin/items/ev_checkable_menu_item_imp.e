@@ -34,7 +34,7 @@ inherit
 
 feature -- Access
 
-	pixmap_imp: EV_PIXMAP_IMP_STATE
+	pixmap_imp: detachable EV_PIXMAP_IMP_STATE
 			-- Implementation of pixmap in `Current'.
 		deferred
 		end
@@ -131,8 +131,11 @@ feature {NONE} -- WEL Implementation
 			text_height: INTEGER
 			foreground_color: WEL_COLOR_REF
 			background_color: WEL_COLOR_REF
+			l_real_text: like real_text
 		do
-			text_height := menu_font.string_height (real_text)
+			l_real_text := real_text
+			check l_real_text /= Void end
+			text_height := menu_font.string_height (l_real_text)
 			create memory_rect.make (0, 0, rect.width, text_height)
 
 			create check_dc.make
@@ -189,6 +192,7 @@ feature {NONE} -- WEL Implementation
 			edge_rect: WEL_RECT
 			hlc: WEL_COLOR_REF
 			l_bitmap: WEL_BITMAP
+			l_pixmap_imp: like pixmap_imp
 		do
 				-- Draw an edge around the pixmap when it is selected
 			create edge_rect.make (rect.left, rect.top, rect.left + plain_text_position - 2, rect.bottom)
@@ -200,8 +204,11 @@ feature {NONE} -- WEL Implementation
 			end
 			edge_rect.dispose
 
+			l_pixmap_imp := pixmap_imp
+			check l_pixmap_imp /= Void end
+
 				-- Draw the pixmap
-			icon_top_position := (rect.top + rect.bottom - pixmap_imp.height - 2) // 2
+			icon_top_position := (rect.top + rect.bottom - l_pixmap_imp.height - 2) // 2
 			icon_left_position := 1 + rect.left
 			if checked then
 				icon_top_position := icon_top_position + 1
@@ -212,15 +219,15 @@ feature {NONE} -- WEL Implementation
 			else
 				draw_flags := Wel_drawing_constants.Dss_normal
 			end
-			wel_icon := extract_icon (pixmap_imp)
-			if disabled and disabled_image /= Void then
+			wel_icon := extract_icon (l_pixmap_imp)
+			if disabled and then attached disabled_image as l_disabled_image then
 				if selected then
 					create hlc.make_by_color (contrast_color (system_color_highlight).item)
 				else
 					create hlc.make_by_color (contrast_color (system_color_menu).item)
 				end
-				l_bitmap := pixmap_imp.get_bitmap
-				disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, icon_left_position, icon_top_position, hlc, pixmap_imp.has_mask)
+				l_bitmap := l_pixmap_imp.get_bitmap
+				l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, icon_left_position, icon_top_position, hlc, l_pixmap_imp.has_mask)
 				l_bitmap.decrement_reference
 			else
 				draw_dc.draw_state_icon (Void, wel_icon, icon_left_position, icon_top_position, draw_flags)
@@ -233,7 +240,7 @@ feature {NONE} -- WEL Implementation
 					rect.bottom = old rect.bottom
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
+	disabled_image: detachable WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -288,12 +295,12 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Implementation
 
-	real_text: STRING_32
-			-- (from EV_MENU_ITEM_IMP)
+	real_text: detachable STRING_32
+			-- Text of `Current' as is.
 		deferred
 		end
 
-	parent_imp: EV_MENU_ITEM_LIST_IMP
+	parent_imp: detachable EV_MENU_ITEM_LIST_IMP
 			-- The menu or menu-bar this item is in.
 		deferred
 		end
@@ -318,4 +325,14 @@ note
 
 
 end -- class EV_CHECKABLE_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
 

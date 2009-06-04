@@ -62,7 +62,7 @@ feature -- Access
 			bridge_ok: Result = implementation.drawing_mode
 		end
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 			-- Rectangular area to apply clipping on.
 		require
 			not_destroyed: not is_destroyed
@@ -72,7 +72,7 @@ feature -- Access
 			bridge_ok: (Result = Void) = (implementation.clip_area = Void)
 		end
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used to draw filled primitives with
 			-- instead of `foreground_color'.
 		require
@@ -156,7 +156,7 @@ feature -- Element change
 		do
 			implementation.set_clip_area (an_area)
 		ensure
-			clip_area_assigned: clip_area.is_equal (an_area)
+			clip_area_assigned: attached clip_area as l_clip_area and then l_clip_area.is_equal (an_area)
 		end
 
 	set_clip_region (a_region: EV_REGION)
@@ -399,7 +399,7 @@ feature -- Drawing operations
 		require
 			not_destroyed: not is_destroyed
 			points_not_void: points /= Void
-			points_contains_no_void_items: not points.has (Void)
+--			points_contains_no_void_items: not points.has (Void)
 			points_contains_first_and_last: points.count >= 2
 		do
 			implementation.draw_polyline (points, is_closed)
@@ -454,7 +454,7 @@ feature -- Drawing operations (filled)
 		require
 			not_destroyed: not is_destroyed
 			points_not_void: points /= Void
-			points_contains_no_void_items: not points.has (Void)
+--			points_contains_no_void_items: not points.has (Void)
 			points_contains_first_and_last: points.count >= 2
 		do
 			implementation.fill_polygon (points)
@@ -563,4 +563,14 @@ note
 		]"
 
 end -- class EV_DRAWABLE
+
+
+
+
+
+
+
+
+
+
 

@@ -37,10 +37,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	interface: EV_FONTABLE;
+	interface: detachable EV_FONTABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-			
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -56,4 +56,12 @@ note
 
 
 end -- class EV_FONTABLE_I
+
+
+
+
+
+
+
+
 

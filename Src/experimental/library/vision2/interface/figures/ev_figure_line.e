@@ -79,16 +79,16 @@ feature {NONE} -- Implementation
 			p: EV_RELATIVE_POINT
 		do
 			Result := Precursor {EV_ATOMIC_FIGURE}
-			if is_end_arrow then
-				p := end_arrow.i_th_point (1)
+			if is_end_arrow and then attached end_arrow as l_end_arrow then
+				p := l_end_arrow.i_th_point (1)
 				Result.include (p.x_abs, p.y_abs)
-				p := end_arrow.i_th_point (3)
+				p := l_end_arrow.i_th_point (3)
 				Result.include (p.x_abs, p.y_abs)
 			end
-			if is_start_arrow then
-				p := start_arrow.i_th_point (1)
+			if is_start_arrow and then attached start_arrow as l_start_arrow then
+				p := l_start_arrow.i_th_point (1)
 				Result.include (p.x_abs, p.y_abs)
-				p := start_arrow.i_th_point (3)
+				p := l_start_arrow.i_th_point (3)
 				Result.include (p.x_abs, p.y_abs)
 			end
 		end
@@ -108,4 +108,8 @@ note
 
 
 end -- class EV_FIGURE_LINE
+
+
+
+
 

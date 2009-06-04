@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- Window this dialog is a transient for.
 
 feature -- Status setting
@@ -25,7 +25,7 @@ feature -- Status setting
 			-- Show the window and wait until the user closed it.
 			--| A window is required for the gtk implementation.
 		local
-			modal_to: WEL_COMPOSITE_WINDOW
+			modal_to: detachable WEL_COMPOSITE_WINDOW
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
@@ -35,7 +35,8 @@ feature -- Status setting
 			l_dir := l_env.current_working_directory
 
 			set_blocking_window (a_window)
-			modal_to ?= blocking_window.implementation
+			modal_to ?= a_window.implementation
+			check modal_to /= Void end
 			activate (modal_to)
 			set_blocking_window (Void)
 
@@ -55,7 +56,7 @@ feature -- Status setting
 			end
 		end
 
-	set_blocking_window (a_window: EV_WINDOW)
+	set_blocking_window (a_window: detachable EV_WINDOW)
 			-- Set as transient for `a_window'.
 		do
 			blocking_window := a_window
@@ -63,7 +64,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of last clicked button.
 
 feature -- Deferred
@@ -94,4 +95,11 @@ note
 
 
 end -- class EV_STANDARD_DIALOG_IMP
+
+
+
+
+
+
+
 

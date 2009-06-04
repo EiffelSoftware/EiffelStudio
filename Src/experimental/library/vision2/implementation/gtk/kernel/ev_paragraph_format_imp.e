@@ -7,27 +7,27 @@ note
 
 class
 	EV_PARAGRAPH_FORMAT_IMP
-	
+
 inherit
 	EV_PARAGRAPH_FORMAT_I
-	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create paragraph format
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Do nothing
 		do
 			set_is_initialized (True)
 		end
-		
+
 feature -- Status report
 
 	alignment: INTEGER
@@ -39,34 +39,34 @@ feature -- Status report
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
-		
+
 	is_center_aligned: BOOLEAN
 			-- Is `Current' center aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
-	
+
 	is_right_aligned: BOOLEAN
 			-- Is `Current' right aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
-	
+
 	is_justified: BOOLEAN
 			-- Is `Current' justified?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
-		
+
 	left_margin: INTEGER
 		-- Left margin between border and text in pixels
-		
+
 	right_margin: INTEGER
 		-- Right margin between line end and border in pixels
-		
+
 	top_spacing: INTEGER
 		-- Spacing between top of paragraph and previous line in pixels.
-		
+
 	bottom_spacing: INTEGER
 		-- Spacing between bottom of paragraph and next line in pixels.
 
@@ -77,19 +77,19 @@ feature -- Status setting
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 		end
-		
+
 	enable_center_alignment
 			-- Ensure `is_center_aligned' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 		end
-		
+
 	enable_right_alignment
 			-- Ensure `is_right_aligned' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 		end
-		
+
 	enable_justification
 			-- Ensure `is_justified' is `True'.
 		do
@@ -113,28 +113,28 @@ feature -- Status setting
 		do
 			right_margin := a_margin
 		end
-		
+
 	set_top_spacing (a_margin: INTEGER)
 			-- Set `top_spacing' to `a_margin'.
 		do
 			top_spacing := a_margin
 		end
-		
+
 	set_bottom_spacing (a_margin: INTEGER)
 			-- Set `bottom_spacing' to `a_margin'.
 		do
 			bottom_spacing := a_margin
 		end
-		
+
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
 	new_paragraph_tag_from_applicable_attributes (applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION): POINTER
-			-- 
+			--
 		local
 			propname: EV_GTK_C_STRING
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
-			
+
 			if applicable_attributes.alignment then
 				propname := "justification"
 				inspect
@@ -149,30 +149,30 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_fill_enum)
 				end
 			end
-			
+
 			if applicable_attributes.left_margin then
 				propname := "left-margin"
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)
 			end
-			
+
 			if applicable_attributes.right_margin then
 				propname := "right-margin"
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)
 			end
 
 			if applicable_attributes.top_spacing then
 				propname := "pixels-above-lines"
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)
 			end
-			
+
 			if applicable_attributes.bottom_spacing then
 				propname := "pixels-below-lines"
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)
 			end
 		end
 
 	dummy_paragraph_format_range_information: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
-			-- 
+			--
 		do
 			create Result.make_with_flags (
 				{EV_PARAGRAPH_CONSTANTS}.alignment
@@ -206,4 +206,8 @@ note
 
 
 end -- class EV_PARAGRAPH_FORMAT
+
+
+
+
 

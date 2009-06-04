@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision range. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,12 +17,12 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
 			Precursor {EV_GAUGE_IMP}
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RANGE;
+	interface: detachable EV_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -49,4 +49,8 @@ note
 
 
 end -- class EV_RANGE_IMP
+
+
+
+
 

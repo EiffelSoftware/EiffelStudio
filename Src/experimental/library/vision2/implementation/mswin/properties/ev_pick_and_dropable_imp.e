@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			-- Create a drop action sequence.
 		do
 			Result := Precursor
-			interface.init_drop_actions (Result)
 		end
 
 feature -- Access
@@ -103,8 +102,8 @@ feature -- Status setting
 					-- If Current has drag and drop, but we are waiting for the
 					-- mouse movement then we raise the window containing `Current'
 					-- to the foreground.
-				elseif awaiting_movement then
-						top_level_window_imp.move_to_foreground
+				elseif awaiting_movement and then attached top_level_window_imp as l_top_level_window_imp then
+						l_top_level_window_imp.move_to_foreground
 				end
 				original_x := -1
 				original_y := -1
@@ -118,9 +117,9 @@ feature -- Status setting
 			--| `Current' while pick/drag and drop is in process.
 		do
 			if awaiting_movement then
-				if (original_x - a_x).abs > drag_and_drop_starting_movement or
-					(original_y - a_y).abs > drag_and_drop_starting_movement
-					then real_start_transport (pebble, original_x, original_y, 1,
+				if attached pebble as l_pebble and then ((original_x - a_x).abs > drag_and_drop_starting_movement or
+					 (original_y - a_y).abs > drag_and_drop_starting_movement)
+					then real_start_transport (l_pebble, original_x, original_y, 1,
 						original_x_tilt, original_y_tilt, original_pressure,
 						a_screen_x + (original_x - a_x), a_screen_y +
 						(original_y - a_y))
@@ -146,9 +145,9 @@ feature -- Status setting
 		do
 			application_imp.clear_transport_just_ended
 				-- If we are executing a pick and drop
-			if application_imp.pick_and_drop_source /= Void then
+			if attached application_imp.pick_and_drop_source as l_pnd_source then
 					-- We use default values which cause pick and drop to end.
-				application_imp.pick_and_drop_source.end_transport (0, 0, 2, 0, 0, 0,
+				l_pnd_source.end_transport (0, 0, 2, 0, 0, 0,
 					0, 0)
 			end
 		ensure
@@ -162,7 +161,7 @@ feature {EV_ANY_I} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
 			-- Initialize the pick/drag and drop mechanism.
 		local
-			l_configure_agent: PROCEDURE [ANY, TUPLE]
+			l_configure_agent: detachable PROCEDURE [ANY, TUPLE]
 			l_pebble: like pebble
 		do
 			application_imp.clear_transport_just_ended
@@ -181,8 +180,8 @@ feature {EV_ANY_I} -- Implementation
 					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
 						if l_pebble /= Void and then mode_is_configurable_target_menu then
 							l_configure_agent := agent real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+							application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, attached_interface, l_pebble, l_configure_agent, a_menu_only)
 						end
-						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, interface, l_pebble, l_configure_agent, a_menu_only)
 					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
 							real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt,
 								a_y_tilt, a_pressure, a_screen_x, a_screen_y)
@@ -204,7 +203,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	real_start_transport (a_pebble: like pebble; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+	real_start_transport (a_pebble: ANY; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Actually start the pick/drag and drop mechanism.
 		require
@@ -215,7 +214,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			pt, win_pt: WEL_POINT
 			env: EV_ENVIRONMENT
-			l_win: WEL_WINDOW
+			l_win: detachable WEL_WINDOW
 		do
 			if
 				(mode_is_drag_and_drop and a_button = 1) or
@@ -235,7 +234,7 @@ feature {EV_ANY_I} -- Implementation
 					-- We now create the screen at the start of every pick.
 					-- See `pnd_screen' comment for explanation.
 
-				interface.pointer_motion_actions.block
+				attached_interface.pointer_motion_actions.block
 					-- Block `pointer_motion_actions'.
 
 					-- Update `application_imp' with pick_and_drop info.
@@ -246,7 +245,7 @@ feature {EV_ANY_I} -- Implementation
 				create env
 
 					-- Execute pick_actions for the application.
-				env.application.pick_actions.call ([pebble])
+				env.implementation.application_i.pick_actions.call ([a_pebble])
 
 					-- Execute pick_actions for `Current'.
 				if pick_actions_internal /= Void then
@@ -300,16 +299,14 @@ feature {EV_ANY_I} -- Implementation
 			-- Terminate the pick and drop mechanism.
 		local
 			env: EV_ENVIRONMENT
-			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			abstract_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE
-			text_component: EV_TEXT_COMPONENT_IMP
+			target: detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			abstract_pick_and_dropable: detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			text_component: detachable EV_TEXT_COMPONENT_IMP
 			l_pebble: like pebble
-			l_original: like original_top_level_window_imp
+			l_original: detachable like original_top_level_window_imp
 		do
-			check
-				original_top_level_window_imp_not_void: original_top_level_window_imp /= Void
-			end
 			l_original := original_top_level_window_imp
+			check l_original /= Void end
 			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
 				-- debug when the capture is enabled)
@@ -326,9 +323,9 @@ feature {EV_ANY_I} -- Implementation
 
 			text_component ?= Current
 				-- Restore the cursor.
-			if pnd_stored_cursor /= Void then
+			if attached pnd_stored_cursor as l_cursor then
 					-- Restore the cursor style of `Current' if necessary.
-				internal_set_pointer_style (pnd_stored_cursor)
+				internal_set_pointer_style (l_cursor)
 			else
 					-- Restore standard cursor style.
 				if text_component /= Void then
@@ -338,8 +335,8 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 				-- We must now stop the context menu from appearing, as a result of this click.
-			if text_component /= Void then
-				text_component.disable_context_menu
+			if attached text_component as l_text_component then
+				l_text_component.disable_context_menu
 			end
 
 			application_imp.transport_ended
@@ -347,6 +344,7 @@ feature {EV_ANY_I} -- Implementation
 
 			create env
 			l_pebble := pebble
+			check l_pebble /= Void end
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -365,7 +363,7 @@ feature {EV_ANY_I} -- Implementation
 							-- If there is a target then execute the drop
 							-- actions for `target'.
 
-						env.application.drop_actions.call ([l_pebble])
+						env.implementation.application_i.drop_actions.call ([l_pebble])
 							-- Execute drop_actions for the application.
 						application_imp.disable_drop_actions_executing
 					else
@@ -386,7 +384,7 @@ feature {EV_ANY_I} -- Implementation
 			enable_transport
 				-- Return state ready for next drag/pick and drop.
 
-			interface.pointer_motion_actions.resume
+			attached_interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
 
 			l_original.allow_movement
@@ -397,8 +395,8 @@ feature {EV_ANY_I} -- Implementation
 			is_pnd_in_transport := False
 				-- Assign `Void' to `last_pointed_target'.
 			press_action := Ev_pnd_start_transport
-			if pebble_function /= Void then
-				pebble_function.clear_last_result
+			if attached pebble_function as l_pebble_function then
+				l_pebble_function.clear_last_result
 				pebble := Void
 			end
 		ensure then
@@ -414,28 +412,28 @@ feature {EV_ANY_I} -- Implementation
 			pebble_not_void: a_pebble /= Void
 		do
 			if application_imp.cancel_actions_internal /= Void then
-				application_imp.cancel_actions_internal.call ([a_pebble])
+				application_imp.cancel_actions.call ([a_pebble])
 			end
 		end
 
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 			-- Hole at mouse position
 		local
 			wel_point: WEL_POINT
 			current_target: EV_ABSTRACT_PICK_AND_DROPABLE
-			widget_imp_at_cursor_position: EV_WIDGET_IMP
-			wel_window_at_cursor_position: WEL_WINDOW
+			widget_imp_at_cursor_position: detachable EV_WIDGET_IMP
+			wel_window_at_cursor_position: detachable WEL_WINDOW
 			current_target_object_id: INTEGER
-			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
-			item_imp: EV_ITEM_IMP
-			sensitive: EV_SENSITIVE
-			combo_box: EV_INTERNAL_COMBO_BOX_IMP
-			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
-			composite_window: WEL_COMPOSITE_WINDOW
+			item_list_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
+			item_imp: detachable EV_ITEM_IMP
+			sensitive: detachable EV_SENSITIVE
+			combo_box: detachable EV_INTERNAL_COMBO_BOX_IMP
+			combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
+			composite_window: detachable WEL_COMPOSITE_WINDOW
 			ptr, null: POINTER
 			client_coordinate_point: WEL_POINT
-			win: WEL_WINDOW
+			win: detachable WEL_WINDOW
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -493,7 +491,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 
 				if widget_imp_at_cursor_position /= Void then
-					current_target := widget_imp_at_cursor_position.interface
+					current_target := widget_imp_at_cursor_position.attached_interface
 						-- Current pick and drop target is the interface of
 
 					current_target_object_id := current_target.object_id
@@ -509,16 +507,16 @@ feature {EV_ANY_I} -- Implementation
 						item_imp ?= item_list_imp.find_item_at_position (wel_point.x
 							- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
 						if item_imp /= Void then
-						if not item_imp.interface.drop_actions.is_empty then
+						if not item_imp.attached_interface.drop_actions.is_empty then
 								-- If the cursor is over an item and the item is a
 								-- pick and drop target then we set the target id to that of the
 								-- item, as the items are conceptually 'above' the list and so
 								-- if a list and one of its items are pnd targets then the
 								-- item should recieve.
-							sensitive ?= item_imp.interface
+							sensitive ?= item_imp.attached_interface
 								-- If an item is not `sensitive' then it cannot be dropped on.
 							if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
-								Current_target_object_id := item_imp.interface.object_id
+								Current_target_object_id := item_imp.attached_interface.object_id
 							end
 						end
 						end
@@ -526,7 +524,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 
 				if current_target_object_id /= 0 and then global_pnd_targets.has (current_target_object_id) then
-					Result ?= interface.id_object (current_target_object_id)
+					Result ?= attached_interface.id_object (current_target_object_id)
 				end
 			end
 		end
@@ -556,7 +554,7 @@ feature {EV_ANY_I} -- Implementation
 		-- Allowable states for use with `press_action', release_action' and
 		-- `motion_action'.
 
-	pnd_stored_cursor: EV_POINTER_STYLE
+	pnd_stored_cursor: detachable EV_POINTER_STYLE
 			-- Cursor used on the widget before PND started.
 
 	set_pointer_style (new_cursor: EV_POINTER_STYLE)
@@ -573,7 +571,7 @@ feature {EV_ANY_I} -- Implementation
 			pnd_stored_cursor := new_cursor
 		end
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP]
+	cursor_on_widget: detachable CELL [detachable EV_WIDGET_IMP]
 			-- Cursor of `Current'.
 		deferred
 		end
@@ -637,12 +635,12 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 		deferred
 		end
 
-	original_top_level_window_imp: EV_WINDOW_IMP
+	original_top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window of `Current' at start of transport.
 			-- We need this, as `Current' may be removed from its parent
 			-- during the transport, therefore making it impossible for us
@@ -683,8 +681,12 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 
 	application_imp: EV_APPLICATION_IMP
 			-- `Result' is implementation of application from environment.
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
-			Result ?= environment.application.implementation
+			l_result ?= environment.implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -701,4 +703,14 @@ note
 		]"
 
 end -- class EV_PICK_AND_DROPABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

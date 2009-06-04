@@ -11,17 +11,17 @@ note
 
 deferred class
 	EV_CHECKABLE_TREE_I
-	
+
 inherit
 	EV_TREE_I
 		redefine
 			interface
 		end
-		
+
 	EV_TREE_ACTION_SEQUENCES_I
-	
+
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES_I
-	
+
 feature -- Access
 
 	checked_items: ARRAYED_LIST [EV_TREE_NODE]
@@ -77,10 +77,10 @@ feature {NONE} -- Implementation
 		ensure
 			checked_item_increases_count: is_item_checked (node) implies list.count = old list.count + 1
 		end
-	
+
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_TREE;
+	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

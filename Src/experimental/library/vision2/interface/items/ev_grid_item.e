@@ -47,10 +47,18 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	parent: EV_GRID
+	parent: detachable EV_GRID
 			-- Grid in which `Current' is contained if any.
 		do
 			Result := implementation.parent
+		end
+
+	attached_parent: EV_GRID
+			-- Attached grid in which `Current' is contained.
+		require
+			parent /= Void
+		do
+			Result := implementation.attached_parent
 		end
 
 	row: EV_GRID_ROW
@@ -73,7 +81,7 @@ feature -- Access
 		do
 			Result := implementation.virtual_x_position
 		ensure
-			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
+			valid_result: attached parent as l_parent implies Result >= 0 and Result <= l_parent.virtual_width - column.width + horizontal_indent
 		end
 
 	virtual_y_position: INTEGER
@@ -85,8 +93,8 @@ feature -- Access
 		do
 			Result := implementation.virtual_y_position
 		ensure
-			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
-			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
+			valid_result_when_parent_row_height_fixed: attached parent as l_parent and then l_parent.is_row_height_fixed implies Result >= 0 and Result <= l_parent.virtual_height - l_parent.row_height
+			valid_result_when_parent_row_height_not_fixed: attached parent as l_parent and then not l_parent.is_row_height_fixed implies Result >= 0 and Result <= l_parent.virtual_height - row.height
 		end
 
 	horizontal_indent: INTEGER
@@ -99,8 +107,8 @@ feature -- Access
 		do
 			Result := implementation.horizontal_indent
 		ensure
-			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
-			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
+			not_parent_tree_enabled_implies_result_zero: attached parent and then ((attached parent as l_parent and then not l_parent.is_tree_enabled) implies Result = 0)
+			parent_tree_enabled_implies_result_greater_or_equal_to_zero: attached parent and then ((attached parent as l_parent and then l_parent.is_tree_enabled) implies Result >= 0)
 		end
 
 	width: INTEGER
@@ -125,7 +133,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color: detachable EV_COLOR
 			-- Color of foreground features like text.
 		require
 			not_destroyed: not is_destroyed
@@ -133,7 +141,7 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color displayed behind foreground features.
 		require
 			not_destroyed: not is_destroyed
@@ -141,7 +149,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	tooltip: STRING_32
+	tooltip: detachable STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 		require
@@ -186,11 +194,11 @@ feature -- Status setting
 			implementation.ensure_visible
 		ensure
 			virtual_x_position_not_changed_if_indent_greater_or_equal_to_column_width: old (horizontal_indent > column.width) implies old virtual_x_position = virtual_x_position
-			virtual_x_position_not_changed_if_item_already_visible: old (virtual_x_position >= parent.virtual_x_position) and old (virtual_x_position + width <= parent.virtual_x_position + parent.viewable_width) implies old (virtual_x_position = virtual_x_position)
-			virtual_y_position_not_changed_if_item_already_visible: old (virtual_y_position >= parent.virtual_y_position) and old (virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height) implies old (virtual_y_position = virtual_y_position)
-			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
-			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
-			virtual_x_position_visible_if_indent_less_than_column_width: horizontal_indent < column.width implies virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+			virtual_x_position_not_changed_if_item_already_visible: old (virtual_x_position >= attached_parent.virtual_x_position) and old (virtual_x_position + width <= attached_parent.virtual_x_position + attached_parent.viewable_width) implies old (virtual_x_position = virtual_x_position)
+			virtual_y_position_not_changed_if_item_already_visible: old (virtual_y_position >= attached_parent.virtual_y_position) and old (virtual_y_position + height <= attached_parent.virtual_y_position + attached_parent.viewable_height) implies old (virtual_y_position = virtual_y_position)
+			row_visible_when_heights_fixed_in_parent: attached_parent.is_row_height_fixed implies row.virtual_y_position >= attached_parent.virtual_y_position and virtual_y_position + attached_parent.row_height <= attached_parent.virtual_y_position + (attached_parent.viewable_height).max (attached_parent.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not attached_parent.is_row_height_fixed implies row.virtual_y_position >= attached_parent.virtual_y_position and virtual_y_position + row.height <= attached_parent.virtual_y_position + (attached_parent.viewable_height).max (row.height)
+			virtual_x_position_visible_if_indent_less_than_column_width: horizontal_indent < column.width implies virtual_x_position >= attached_parent.virtual_x_position and virtual_x_position + width <= attached_parent.virtual_x_position + (attached_parent.viewable_width).max (width)
 		end
 
 	set_foreground_color (a_color: like foreground_color)
@@ -213,7 +221,7 @@ feature -- Status setting
 			background_color_assigned: background_color = a_color
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: detachable STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		require
@@ -222,9 +230,7 @@ feature -- Status setting
 			implementation.set_tooltip (a_tooltip)
 		ensure
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
-			tooltip_set: a_tooltip /= Void implies (
-				(tooltip.same_type (a_tooltip) implies tooltip = a_tooltip) or
-				not tooltip.same_type (a_tooltip) implies tooltip.is_equal (a_tooltip))
+			tooltip_set: a_tooltip /= Void implies (attached tooltip as l_tooltip and then a_tooltip.as_string_32 ~ l_tooltip)
 		end
 
 feature -- Actions
@@ -307,20 +313,26 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_ITEM_I} implementation.make (Current)
+			create {EV_GRID_ITEM_I} implementation.make
 		end
 
 invariant
 	parented_implies_height_equals_row_height_or_parent_row_height:
-		(parent /= Void and then not parent.is_row_height_fixed implies height = row.height) or
-		(parent /= Void and then parent.is_row_height_fixed implies height = parent.row_height)
+		(attached parent as l_parent and then not l_parent.is_row_height_fixed implies height = row.height) or
+		(attached parent as l_parent and then l_parent.is_row_height_fixed implies height = l_parent.row_height)
 	parented_and_parent_has_no_tree_implies_width_equals_column_width:
-		parent /= Void and then not parent.is_tree_enabled implies width = column.width
+		attached parent as l_parent and then not l_parent.is_tree_enabled implies width = column.width
 	parented_and_row_is_subrow_implies_width_equals_column_width_less_indent:
-		parent /= Void and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
+		attached parent as l_parent and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -337,4 +349,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

@@ -20,7 +20,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed after a dock completes from `Current'.
 			-- Either to a dockable target or a dockable dialog.
@@ -35,11 +35,19 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	dock_started_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	dock_started_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `dock_started_actions'.
-			
-	dock_ended_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+		note
+			option: stable
+		attribute
+		end;
+
+	dock_ended_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `dock_ended_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -56,4 +64,15 @@ note
 
 
 end -- class EV_DOCKABLE_SOURCE_ACTION_SEQUENCES_I
+
+
+
+
+
+
+
+
+
+
+
 

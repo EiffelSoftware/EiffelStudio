@@ -6,8 +6,8 @@ note
 	keywords: "help"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_HELP_CONTEXTABLE
 
 inherit
@@ -15,10 +15,10 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 feature -- Access
 
-	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		require
 			not_destroyed: not is_destroyed
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_help_context (an_help_context: like help_context)
+	set_help_context (an_help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT])
 			-- Assign `an_help_context' to `help_context'.
 		require
 			not_destroyed: not is_destroyed
@@ -38,7 +38,7 @@ feature -- Element change
 		do
 			implementation.set_help_context (an_help_context)
 		ensure
-			help_context_assigned: help_context.is_equal (an_help_context)
+			help_context_assigned: attached help_context as l_help_context and then l_help_context.is_equal (an_help_context)
 		end
 
 	remove_help_context
@@ -53,7 +53,7 @@ feature -- Element change
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_HELP_CONTEXTABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
@@ -72,4 +72,14 @@ note
 
 
 end -- class EV_HELP_CONTEXTABLE
+
+
+
+
+
+
+
+
+
+
 

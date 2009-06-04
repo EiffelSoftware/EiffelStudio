@@ -41,7 +41,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CLIPBOARD
+	interface: detachable EV_CLIPBOARD note option: stable attribute end;
 		-- Provides a common user interface to possibly dependent
 		-- functionality implemented by `Current'.
 
@@ -63,4 +63,12 @@ note
 
 
 end -- class EV_CLIPBOARD_I
+
+
+
+
+
+
+
+
 

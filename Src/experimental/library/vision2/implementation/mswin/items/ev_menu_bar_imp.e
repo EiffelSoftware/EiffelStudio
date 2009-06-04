@@ -16,8 +16,8 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
-			make,
-			interface
+			interface,
+			make
 		end
 
 create
@@ -25,11 +25,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create `Current' with interface `an_interface'.
 		do
-			Precursor {EV_MENU_ITEM_LIST_IMP} (an_interface)
 			wel_make
+			Precursor {EV_MENU_ITEM_LIST_IMP}
 		end
 
 feature -- Measurement
@@ -37,24 +37,24 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			if parent /= Void then
-				Result := screen_x - parent.screen_x
+			if attached parent as l_parent then
+				Result := screen_x - l_parent.screen_x
 			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			if parent /= Void then
-				Result := screen_y - parent.screen_y
+			if attached parent as l_parent then
+				Result := screen_y - l_parent.screen_y
 			end
 		end
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
-			if parent_imp /= Void then
-				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+			if attached parent_imp as l_parent_imp then
+				if {WEL_API}.get_menu_bar_info (l_parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
 					Result := info.rc_bar.left
 				end
 			end
@@ -63,8 +63,8 @@ feature -- Measurement
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
-			if parent_imp /= Void then
-				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+			if attached parent_imp as l_parent_imp then
+				if {WEL_API}.get_menu_bar_info (l_parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
 					Result := info.rc_bar.top
 				end
 			end
@@ -73,8 +73,8 @@ feature -- Measurement
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			if parent_imp /= Void then
-				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+			if attached parent_imp as l_parent_imp then
+				if {WEL_API}.get_menu_bar_info (l_parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
 					Result := info.rc_bar.width
 				end
 			end
@@ -83,8 +83,8 @@ feature -- Measurement
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			if parent_imp /= Void then
-				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.Objid_menu, 0, info.item) /= 0 then
+			if attached parent_imp as l_parent_imp then
+				if {WEL_API}.get_menu_bar_info (l_parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.Objid_menu, 0, info.item) /= 0 then
 					Result := info.rc_bar.height
 				end
 			end
@@ -104,11 +104,11 @@ feature -- Measurement
 
 feature {EV_ANY_I} -- Status report
 
-	parent: EV_WINDOW
+	parent: detachable EV_WINDOW
 			-- Parent of `Current'.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.interface
 			end
 		end
 
@@ -121,8 +121,8 @@ feature {NONE} -- Implementation
 	destroy
 			-- destroy `Current'.
 		do
-			if parent_imp /= Void then
-				parent_imp.remove_menu_bar
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.remove_menu_bar
 			end
 			set_is_destroyed (True)
 		end
@@ -130,8 +130,8 @@ feature {NONE} -- Implementation
 	update_parent_size
 			-- Update size of `Parent_imp'.
 		do
-			if parent_imp /= Void then
-				parent_imp.compute_minimum_size
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.compute_minimum_size
 			end
 		end
 
@@ -171,7 +171,7 @@ feature {NONE} -- Pick and drop support
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_MENU_IMP
 			-- `Result' is menu at pixel position `x_pos', `y_pos'.
 		do
 		end
@@ -184,7 +184,7 @@ feature {NONE} -- Pick and drop support
 			end
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
+	client_to_screen (a_x, a_y: INTEGER): detachable WEL_POINT
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
@@ -193,7 +193,7 @@ feature {NONE} -- Pick and drop support
 			end
 		end
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP]
+	cursor_on_widget: detachable CELL [EV_WIDGET_IMP]
 			-- This cell contains the widget_imp that currently
 			-- has the pointer of the mouse. As it is a once
 			-- feature, it is a shared data.
@@ -260,13 +260,13 @@ feature {NONE} -- Pick and drop support
 
 feature {EV_ANY_I} -- Status Report
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window implementation containing `Current'.
 		do
 			Result := parent_imp
 		end
 
-	set_parent_imp (window: EV_WINDOW_IMP)
+	set_parent_imp (window: detachable EV_WINDOW_IMP)
 			-- Assign `window' to `parent_imp'.
 		do
 			if window /= Void then
@@ -286,12 +286,12 @@ feature {EV_ANY_I} -- Status Report
 			Result := wel_count = 0
 		end
 
-	parent_imp: EV_WINDOW_IMP
+	parent_imp: detachable EV_WINDOW_IMP
 		-- Parent of `Current'.
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU_BAR;
+	interface: detachable EV_MENU_BAR note option: stable attribute end;
 
 feature {NONE} -- Implementation
 
@@ -317,4 +317,13 @@ note
 
 
 end -- class EV_MENU_BAR_IMP
+
+
+
+
+
+
+
+
+
 

@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize actions.
 		do
-			Precursor {EV_MODEL_GROUP}
-
 			create start_actions
 			create end_actions
 			create move_actions
@@ -53,6 +51,7 @@ feature {NONE} -- Initialization
 			move_button := 1
 			scale_button := 3
 			rotate_button := 2
+			Precursor {EV_MODEL_GROUP}
 		end
 
 feature -- Access
@@ -69,7 +68,7 @@ feature -- Access
 	maximum_y: INTEGER
 			-- Bottom boundary.
 
-	real_position_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [x: INTEGER; y: INTEGER]]
+	real_position_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [x: INTEGER; y: INTEGER]]
 			-- User defined function that translates actual coordinates to
 			-- the coordinates `Current' will be displayed on.
 
@@ -329,30 +328,38 @@ feature {NONE} -- Events
 
 	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
+		local
+			l_world: like world
 		do
-			if ax \\ world.grid_x < world.grid_x // 2 then
-				Result := ax - ax \\ world.grid_x
+			l_world := world
+			check l_world /= Void end
+			if ax \\ l_world.grid_x < l_world.grid_x // 2 then
+				Result := ax - ax \\ l_world.grid_x
 			else
-				Result := ax - ax \\ world.grid_x + world.grid_x
+				Result := ax - ax \\ l_world.grid_x + l_world.grid_x
 			end
 		end
 
 	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
+		local
+			l_world: like world
 		do
-			if ay \\ world.grid_y < world.grid_y // 2 then
-				Result := ay - ay \\ world.grid_y
+			l_world := world
+			check l_world /= Void end
+			if ay \\ l_world.grid_y < l_world.grid_y // 2 then
+				Result := ay - ay \\ l_world.grid_y
 			else
-				Result := ay - ay \\ world.grid_y + world.grid_y
+				Result := ay - ay \\ l_world.grid_y + l_world.grid_y
 			end
 		end
 
 	on_start_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User pressed pointer button on `Current'.
 		do
-			if world /= Void and then world.capture_figure = Void then
+			if attached world as l_world and then l_world.capture_figure = Void then
 
-				if (ev_application /= Void and then not ev_application.ctrl_pressed) or else ev_application = Void then
+				if (attached ev_application as l_ev_app and then not l_ev_app.ctrl_pressed) or else ev_application = Void then
 
 					if b = move_button and is_moving then
 						-- move
@@ -405,12 +412,12 @@ feature {NONE} -- Events
 					new_x := new_x.min (maximum_x).max (minimum_x)
 					new_y := new_y.min (maximum_y).max (minimum_y)
 
-					if real_position_agent /= Void then
-						t := real_position_agent.item ([new_x, new_y])
+					if attached real_position_agent as l_real_position_agent then
+						t := l_real_position_agent.item ([new_x, new_y])
 						new_x := t.x
 						new_y := t.y
 					else
-						if world.grid_enabled and is_snapping then
+						if attached world as l_world and then l_world.grid_enabled and is_snapping then
 							new_x := snapped_x (new_x)
 							new_y := snapped_y (new_y)
 						end
@@ -456,7 +463,7 @@ feature {NONE} -- Events
 				elseif is_rotate then
 					new_x := ax
 					new_y := ay
-					if world.grid_enabled and is_snapping then
+					if attached world as l_world and then l_world.grid_enabled and is_snapping then
 						new_x := snapped_x (ax)
 						new_y := snapped_y (ay)
 					end
@@ -485,11 +492,20 @@ feature {NONE} -- Events
 			is_move := False
 		end
 
-	ev_application: EV_APPLICATION
+	ev_application: detachable EV_APPLICATION
+			-- The application `Current' is part of.
+		do
+			Result := ev_environment.application
+		end
+
+feature {NONE} -- Implementation
+
+	ev_environment: EV_ENVIRONMENT
 			-- The application `Current' is part of.
 		once
-			Result := (create {EV_ENVIRONMENT}).application
+			create Result
 		end
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -506,4 +522,8 @@ note
 
 
 end -- class EV_MODEL_MOVE_HANDLE
+
+
+
+
 

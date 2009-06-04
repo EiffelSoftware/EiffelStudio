@@ -17,7 +17,7 @@ inherit
 
 feature -- Status report
 
-	parent: EV_CONTAINABLE
+	parent: detachable EV_CONTAINABLE
 			-- The parent that `Current' is contained within, if any.
 		deferred
 		end
@@ -37,4 +37,14 @@ note
 
 
 end -- class EV_CONTAINABLE
+
+
+
+
+
+
+
+
+
+
 

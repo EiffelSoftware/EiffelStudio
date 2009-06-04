@@ -1,13 +1,13 @@
 note
-	description: 
+	description:
 		"Eiffel Vision selectable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "select, selectable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_SELECTABLE_I
 
 inherit
@@ -15,7 +15,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Status report
 
 	is_selectable: BOOLEAN
@@ -42,7 +42,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SELECTABLE;
+	interface: detachable EV_SELECTABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -61,4 +61,12 @@ note
 
 
 end -- class EV_SELECTABLE_I
+
+
+
+
+
+
+
+
 

@@ -85,7 +85,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.Gdk_join_bevel_enum
 		end
 
-	gc_clip_area: EV_RECTANGLE
+	gc_clip_area: detachable EV_RECTANGLE
 			-- Clip area currently used by `gc'.
 
 	height: INTEGER
@@ -103,38 +103,38 @@ feature -- Access
 	font: EV_FONT
 			-- Font used for drawing text.
 		do
-			if internal_font_imp /= Void then
-				Result := internal_font_imp.interface.twin
+			if attached internal_font_imp as l_internal_font_imp then
+				Result := l_internal_font_imp.attached_interface.twin
 			else
 				create Result
 			end
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: EV_COLOR
 			-- Color used to draw primitives.
 		local
 			l_red, l_green, l_blue: INTEGER
 		do
-			if internal_foreground_color /= Void then
-				l_red := internal_foreground_color.red_8_bit
-				l_green := internal_foreground_color.green_8_bit
-				l_blue := internal_foreground_color.blue_8_bit
+			if attached internal_foreground_color as l_internal_foreground_color then
+				l_red := l_internal_foreground_color.red_8_bit
+				l_green := l_internal_foreground_color.green_8_bit
+				l_blue := l_internal_foreground_color.blue_8_bit
 			else
 					-- We default to black
 			end
 			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 		local
 			l_red, l_green, l_blue: INTEGER
 		do
-			if internal_background_color /= Void then
-				l_red := internal_background_color.red_8_bit
-				l_green := internal_background_color.green_8_bit
-				l_blue := internal_background_color.blue_8_bit
+			if attached internal_background_color as l_internal_background_color then
+				l_red := l_internal_background_color.red_8_bit
+				l_green := l_internal_background_color.green_8_bit
+				l_blue := l_internal_background_color.blue_8_bit
 			else
 					-- We default to white
 				l_red := 255
@@ -180,16 +180,16 @@ feature -- Access
 			end
 		end
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 		do
-			if gc_clip_area /= Void then
-				Result := gc_clip_area.twin
+			if attached gc_clip_area as l_gc_clip_area then
+				Result := l_gc_clip_area.twin
 			end
 		end
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used to fill instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 
@@ -210,8 +210,10 @@ feature -- Element change
 	set_font (a_font: EV_FONT)
 			-- Set `font' to `a_font'.
 		do
-			if internal_font_imp /= a_font.implementation then
-				internal_font_imp ?= a_font.implementation
+			if attached {EV_FONT_IMP} a_font.implementation as l_font_imp then
+				internal_font_imp := l_font_imp
+			else
+				check False end
 			end
 		end
 
@@ -219,14 +221,17 @@ feature -- Element change
 			-- Assign `a_color' to `background_color'.
 		local
 			color_struct: POINTER
+			l_internal_background_color: detachable like internal_background_color
 		do
-			if internal_background_color = Void then
-				create internal_background_color.make_with_8_bit_rgb (255, 255, 255)
+			l_internal_background_color := internal_background_color
+			if l_internal_background_color = Void then
+				create l_internal_background_color.make_with_8_bit_rgb (255, 255, 255)
+				internal_background_color := l_internal_background_color
 			end
-			if not internal_background_color.is_equal (a_color) then
-				internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
-				internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
-				internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
+			if not l_internal_background_color.is_equal (a_color) then
+				l_internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
+				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
+				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
@@ -239,14 +244,17 @@ feature -- Element change
 			-- Assign `a_color' to `foreground_color'
 		local
 			color_struct: POINTER
+			l_internal_foreground_color: detachable like internal_foreground_color
 		do
-			if internal_foreground_color = Void then
-				create internal_foreground_color
+			l_internal_foreground_color := internal_foreground_color
+			if l_internal_foreground_color = Void then
+				create l_internal_foreground_color
+				internal_foreground_color := l_internal_foreground_color
 			end
-			if not internal_foreground_color.is_equal (a_color) then
-				internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
-				internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
-				internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
+			if not l_internal_foreground_color.is_equal (a_color) then
+				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
+				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
+				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
@@ -306,11 +314,12 @@ feature -- Element change
 	set_clip_region (a_region: EV_REGION)
 			-- Set a region to clip to.
 		local
-			a_region_imp: EV_REGION_IMP
+			a_region_imp: detachable EV_REGION_IMP
 			rectangle_struct: POINTER
 		do
 			rectangle_struct := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
 			a_region_imp ?= a_region.implementation
+			check a_region_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
 				-- Set the gc clip area.
 			create gc_clip_area.make (
@@ -336,11 +345,14 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		local
-			tile_imp: EV_PIXMAP_IMP
+			tile_imp: detachable EV_PIXMAP_IMP
+			l_tile: like tile
 		do
-			create tile
-			tile.copy (a_pixmap)
-			tile_imp ?= tile.implementation
+			create l_tile
+			tile := l_tile
+			l_tile.copy (a_pixmap)
+			tile_imp ?= l_tile.implementation
+			check tile_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
@@ -484,7 +496,7 @@ feature -- Drawing operations
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
 			a_x, a_y: INTEGER
-			a_clip_area: EV_RECTANGLE
+			a_clip_area: detachable EV_RECTANGLE
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
 			l_pango_renderer: POINTER
@@ -642,12 +654,13 @@ feature -- Drawing operations
 	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
 		local
-			a_pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			a_pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pixels: POINTER
 			l_rowstride: NATURAL
 			l_back_buffer: POINTER
 		do
 			a_pixbuf_imp ?= a_pixel_buffer.implementation
+			check a_pixbuf_imp /= Void end
 			if supports_pixbuf_alpha then
 				{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x, a_y, area.width, area.height, 0, 0, 0)
 			else
@@ -678,7 +691,7 @@ feature -- Drawing operations
 		local
 			l_source_full, l_source_clip, l_source_intersection: EV_RECTANGLE
 			l_dest_full, l_dest_clip, l_dest_intersection: EV_RECTANGLE
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 --			l_visible_region, l_visible_rectangle: POINTER
 		do
 			if drawable /= default_pointer then
@@ -734,6 +747,7 @@ feature -- Drawing operations
 						l_dest_clip.resize (l_dest_intersection.width, l_dest_intersection.y)
 
 						pixmap_imp ?= a_pixmap.implementation
+						check pixmap_imp /= Void end
 
 						if pixmap_imp.mask /= default_pointer then
 							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
@@ -763,11 +777,12 @@ feature -- Drawing operations
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 			a_pix: POINTER
 		do
 			create Result
 			pix_imp ?= Result.implementation
+			check pix_imp /= Void end
 			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 			pix_imp.set_pixmap_from_pixbuf (a_pix)
 			{EV_GTK_EXTERNALS}.object_unref (a_pix)
@@ -1128,10 +1143,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	internal_foreground_color: EV_COLOR
+	internal_foreground_color: detachable EV_COLOR
 			-- Color used to draw primitives.
 
-	internal_background_color: EV_COLOR
+	internal_background_color: detachable EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 
@@ -1158,9 +1173,13 @@ feature {NONE} -- Implementation
 	radians_to_gdk_angle: INTEGER = 3667 --
 			-- Multiply radian by this to get no of (1/64) degree segments.
 
-	internal_font_imp: EV_FONT_IMP
+	internal_font_imp: detachable EV_FONT_IMP
+		note
+			option: stable
+		attribute
+		end
 
-	interface: EV_DRAWABLE
+	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 	gdk_gc_unref (a_gc: POINTER)
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
@@ -1194,4 +1213,14 @@ note
 
 
 end -- class EV_DRAWABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

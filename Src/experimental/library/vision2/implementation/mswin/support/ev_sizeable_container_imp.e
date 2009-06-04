@@ -123,7 +123,7 @@ feature -- Basic operations
 				internal_set_minimum_width (value)
 				p_imp := parent_imp
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
-					p_imp.notify_change (Nc_minwidth, Current)
+					p_imp.notify_change (Nc_minwidth, attached_interface.implementation)
 					do_change := True
 				end
 			end
@@ -160,7 +160,7 @@ feature -- Basic operations
 				internal_set_minimum_height (value)
 				p_imp := parent_imp
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
-					p_imp.notify_change (Nc_minheight, Current)
+					p_imp.notify_change (Nc_minheight, attached_interface.implementation)
 					do_change := True
 				end
 			end
@@ -206,12 +206,12 @@ feature -- Basic operations
 				if p_imp /= Void and then (not is_in_notify.item or else is_notify_originator) then
 					if w_cd then
 						if h_cd then
-							p_imp.notify_change (Nc_minsize, Current)
+							p_imp.notify_change (Nc_minsize, attached_interface.implementation)
 						else
-							p_imp.notify_change (Nc_minwidth, Current)
+							p_imp.notify_change (Nc_minwidth, attached_interface.implementation)
 						end
 					else
-						p_imp.notify_change (Nc_minheight, Current)
+						p_imp.notify_change (Nc_minheight, attached_interface.implementation)
 					end
 					do_change := True
 				end
@@ -235,7 +235,7 @@ feature -- Basic operations
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
+	notify_change (type: INTEGER; child: detachable EV_ANY_I)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -244,8 +244,8 @@ feature -- Basic operations
 			-- Use the constants defined in EV_SIZEABLE_IMP
 		local
 			p_imp: like parent_imp
-			top_imp: like top_level_window_imp
-			t: EV_SIZEABLE_CONTAINER_IMP
+			top_imp: detachable like top_level_window_imp
+			t: detachable EV_SIZEABLE_CONTAINER_IMP
 		do
 			if not is_in_min_height and not is_in_min_width then
 			if is_in_notify.item then
@@ -285,7 +285,7 @@ feature -- Basic operations
 					end
 					p_imp := parent_imp
 					if p_imp /= Void then
-						p_imp.notify_change (type, Current)
+						p_imp.notify_change (type, attached_interface.implementation)
 					end
 				end
 				is_notify_originator := False
@@ -294,7 +294,7 @@ feature -- Basic operations
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top window of Current.
 		require
 			not_is_destroyed: not is_destroyed
@@ -324,4 +324,14 @@ note
 
 
 end -- class EV_CONTAINER_SIZEABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

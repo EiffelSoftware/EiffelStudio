@@ -17,21 +17,20 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_GAUGE_ACTION_SEQUENCES_IMP
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the horizontal scroll bar.
 		do
-			base_make (an_interface)
-			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0.0, 0.0, 100.0, 1.0, 10.0, 0.0)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
@@ -174,10 +173,22 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	interface: EV_GAUGE
+	interface: detachable EV_GAUGE note option: stable attribute end
 
 	adjustment: POINTER
 			-- Pointer to GtkAdjustment of gauge.
+		do
+				-- If adjustment hasn't already been preset then we create a default one.
+			if adjustment_internal = default_pointer then
+				adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0.0, 0.0, 100.0, 1.0, 10.0, 0.0)
+			end
+			Result := adjustment_internal
+		ensure
+			adjustment_set: Result /= default_pointer
+		end
+
+	adjustment_internal: POINTER
+			-- Once per object store for `adjustment'.
 
 	old_value: INTEGER
 			-- Value of `value' when last "value-changed" signal occurred.
@@ -200,9 +211,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-invariant
-	adjustment_not_void: adjustment /= NULL
-
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -218,4 +226,8 @@ note
 
 
 end -- class EV_GAUGE_I
+
+
+
+
 

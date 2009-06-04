@@ -12,7 +12,7 @@ note
 
 class
 	EV_NOTEBOOK_TAB
-	
+
 inherit
 	EV_ANY
 		redefine
@@ -20,32 +20,32 @@ inherit
 			is_in_default_state,
 			is_destroyed
 		end
-		
+
 	EV_TEXTABLE
 		redefine
 			implementation,
 			is_in_default_state,
 			is_destroyed
 		end
-		
+
 	EV_PIXMAPABLE
 		redefine
 			implementation,
 			is_in_default_state,
 			is_destroyed
 		end
-		
+
 	EV_SELECTABLE
 		redefine
 			implementation,
 			is_in_default_state,
 			is_destroyed
 		end
-		
+
 create {EV_NOTEBOOK_I}
 
 	make_with_widgets
-	
+
 feature {EV_NOTEBOOK_I, EV_NOTEBOOK_TAB} -- Initialization
 
 	make_with_widgets (a_notebook: EV_NOTEBOOK; a_widget: EV_WIDGET)
@@ -66,7 +66,7 @@ feature {EV_NOTEBOOK_I, EV_NOTEBOOK_TAB} -- Initialization
 
 feature -- Access
 
-	notebook: EV_NOTEBOOK
+	notebook: detachable EV_NOTEBOOK
 			-- Notebook in which `Current' is displayed.
 		require
 			not_destroyed: not is_destroyed
@@ -75,8 +75,8 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-	widget: EV_WIDGET
+
+	widget: detachable EV_WIDGET
 			-- Widget to which `Current' is associated.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Status report
 	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
 		do
-			Result := implementation.is_destroyed or else not notebook.has (widget)	
+			Result := implementation.is_destroyed or else not (attached notebook as l_notebook and then attached widget as l_widget and then l_notebook.has (l_widget))
 		end
 
 feature {NONE} -- Contract Support
@@ -106,13 +106,19 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_NOTEBOOK_TAB_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
+
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_NOTEBOOK_TAB_IMP} implementation.make (Current)
+			create {EV_NOTEBOOK_TAB_IMP} implementation.make
 		end
 
 invariant
@@ -134,4 +140,14 @@ note
 
 
 end -- class EV_NOTEBOOK_TAB
+
+
+
+
+
+
+
+
+
+
 

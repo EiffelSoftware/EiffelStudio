@@ -48,7 +48,7 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-	
+
 	points: ARRAYED_LIST [EV_RELATIVE_POINT]
 			-- Relative points `Current' consists of.
 		deferred
@@ -69,4 +69,8 @@ note
 
 
 end -- class EV_SINGLE_POINTED_FIGURE
+
+
+
+
 

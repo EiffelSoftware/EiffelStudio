@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface,
 			on_activate,
-			initialize
+			make
 		end
 
 	EV_RADIO_PEER_IMP
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize with state `is_selected'.
 		do
 			Precursor
@@ -61,28 +61,28 @@ feature {EV_ANY_I} -- Status setting
 		local
 			cur: CURSOR
 		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
+			if attached radio_group as l_radio_group and then attached parent_imp as l_parent_imp then
+				cur := l_radio_group.cursor
 				from
-					radio_group.start
+					l_radio_group.start
 				until
-					radio_group.off
+					l_radio_group.off
 				loop
-					parent_imp.uncheck_item (radio_group.item.id)
-					radio_group.item.disable_select
-					radio_group.forth
+					l_parent_imp.uncheck_item (l_radio_group.item.id)
+					l_radio_group.item.disable_select
+					l_radio_group.forth
 				end
-				radio_group.go_to (cur)
+				l_radio_group.go_to (cur)
 			end
 			is_selected := True
-			if has_parent then
-				parent_imp.check_item (id)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.check_item (id)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RADIO_MENU_ITEM
+	interface: detachable EV_RADIO_MENU_ITEM note option: stable attribute end
 
 feature {NONE} -- Implementation
 
@@ -114,4 +114,14 @@ note
 
 
 end -- class EV_RADIO_MENU_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
 

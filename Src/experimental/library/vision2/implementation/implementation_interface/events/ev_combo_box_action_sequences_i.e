@@ -32,10 +32,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	drop_down_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	drop_down_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_down_actions'.
-			
-			
+		note
+			option: stable
+		attribute
+		end
+
 feature -- Event handling
 
 	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -57,8 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	list_hidden_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	list_hidden_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `list_hidden_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -75,4 +82,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

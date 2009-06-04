@@ -22,7 +22,7 @@ inherit
 	EV_TEXT_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			on_key_event,
 			initialize_buffer_events
 		end
@@ -32,19 +32,20 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Set up `Current'
 		do
+			create temp_start_iter.make
+			create temp_end_iter.make
 			create tab_positions
+			Precursor {EV_TEXT_IMP}
+
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 
 			pango_tab_array := {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_new (1, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 			set_tab_width (96 // 2)
-			create temp_start_iter.make
-			create temp_end_iter.make
-			Precursor {EV_TEXT_IMP}
 		end
 
 	initialize_buffer_events
@@ -125,9 +126,10 @@ feature -- Status Report
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			--  Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		local
-			format_imp: EV_PARAGRAPH_FORMAT_IMP
+			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
+			check format_imp /= Void end
 			modify_paragraph_internal (start_line, end_line, format_imp, format_imp.dummy_paragraph_format_range_information)
 		end
 
@@ -141,7 +143,7 @@ feature -- Status Report
 			Result := internal_character_format_range_information (start_index, end_index, False, Void)
 		end
 
-	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION
+	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: detachable INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consistent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -363,9 +365,10 @@ feature -- Status Report
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
-			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			a_format_imp ?= format.implementation
+			check a_format_imp /= Void end
 			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
 		end
 
@@ -373,9 +376,10 @@ feature -- Status Report
 			-- Modify paragraph formatting from caret positions `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
-			format_imp: EV_PARAGRAPH_FORMAT_IMP
+			format_imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
+			check format_imp /= Void end
 			modify_paragraph_internal (start_position, end_position, format_imp, applicable_attributes)
 		end
 
@@ -476,7 +480,7 @@ feature -- Status report
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
 		do
-			Result := internal_character_format (pos).interface
+			Result := internal_character_format (pos).attached_interface
 		end
 
 	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP
@@ -489,8 +493,10 @@ feature -- Status report
 			font_size, font_weight, font_style: INTEGER
 			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
+			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
-			Result ?= (create {EV_CHARACTER_FORMAT}).implementation
+			l_result ?= (create {EV_CHARACTER_FORMAT}).implementation
+			check l_result /= Void end
 			create a_text_iter.make
 			{EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 2)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
@@ -520,25 +526,26 @@ feature -- Status report
 				font_style := {EV_FONT_CONSTANTS}.shape_regular
 			end
 
-			Result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
+			l_result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 
 			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
-			Result.set_fcolor (
+			l_result.set_fcolor (
 				{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
 			)
 
 			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
-			Result.set_bcolor (
+			l_result.set_bcolor (
 				{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
 			)
 
-			Result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
+			l_result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
 
 			gtk_text_attributes_free (a_text_attributes)
+			Result := l_result
 		end
 
 feature -- Status setting
@@ -550,17 +557,18 @@ feature -- Status setting
 			current_format := format
 		end
 
-	current_format: EV_CHARACTER_FORMAT
+	current_format: detachable EV_CHARACTER_FORMAT
 		-- Format to be applied to next typed characters
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		local
-			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			if not is_destroyed then
 				a_format_imp ?= format.implementation
+				check a_format_imp /= Void end
 				modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 			end
 		end
@@ -569,7 +577,7 @@ feature -- Status setting
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
 		local
-			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
@@ -579,6 +587,7 @@ feature -- Status setting
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (default_pointer))
 			end
 			a_format_imp ?= format.implementation
+			check a_format_imp /= Void end
 			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 
@@ -589,7 +598,7 @@ feature -- Status setting
 		local
 			text_tag_table: POINTER
 			buffer_length: INTEGER
-			a_format_imp: EV_CHARACTER_FORMAT_IMP
+			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 			l_count: INTEGER
 			l_char_code: NATURAL_32
 		do
@@ -607,6 +616,7 @@ feature -- Status setting
 					buffer_length := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1
 					append_text_internal (append_buffer, a_text)
 					a_format_imp ?= format.implementation
+					check a_format_imp /= Void end
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer))
 					a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
@@ -681,13 +691,16 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
+		local
+			l_current_format: like current_format
 		do
 			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
-			if current_format /= Void and a_key_press and then a_key /= Void then
+			l_current_format := current_format
+			if l_current_format /= Void and then a_key_press and then a_key /= Void then
 				if (a_key.code = {EV_KEY_CONSTANTS}.key_delete or a_key.is_arrow or a_key.code = {EV_KEY_CONSTANTS}.key_back_space) then
 					current_format := Void
 				else
-					App_implementation.do_once_on_idle (agent format_region (caret_position, caret_position + 1, current_format))
+					App_implementation.do_once_on_idle (agent format_region (caret_position, caret_position + 1, l_current_format))
 				end
 			end
 		end
@@ -939,7 +952,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RICH_TEXT;
+	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -956,4 +969,8 @@ note
 
 
 end -- class EV_RICH_TEXT_IMP
+
+
+
+
 

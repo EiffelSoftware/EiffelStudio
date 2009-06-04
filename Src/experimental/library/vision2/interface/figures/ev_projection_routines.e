@@ -56,8 +56,8 @@ feature {NONE} -- Implementation
 			rect_not_void: rect /= Void
 			f_not_void: f /= Void
 		local
-			g: EV_FIGURE_GROUP
-			r: PROCEDURE [ANY, TUPLE [EV_FIGURE]]
+			g: detachable EV_FIGURE_GROUP
+			r: detachable PROCEDURE [ANY, TUPLE [EV_FIGURE]]
 		do
 			if f.is_show_requested then
 				if draw_routines.valid_index (f.draw_id) then
@@ -135,4 +135,8 @@ note
 
 
 end -- class EV_PROJECTION_ROUTINES
+
+
+
+
 

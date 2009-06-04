@@ -15,18 +15,18 @@ note
 
 deferred class
 	EV_DOCKABLE_TARGET
-	
+
 inherit
 	EV_ANY
 		redefine
 			implementation
 		end
-		
+
 	EV_DOCKABLE_TARGET_ACTION_SEQUENCES
 		redefine
 			implementation
 		end
-		
+
 	IDENTIFIED
 		export
 			{EV_ANY_HANDLER} default_create
@@ -35,8 +35,8 @@ inherit
 		end
 
 feature -- Access
-		
-	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
+
+	veto_dock_function: detachable FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
 			-- Function to determine whether current dock is allowed.
 			-- If `Result' is `True', dock will be disallowed.
 		require
@@ -46,7 +46,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.veto_dock_function
 		end
-		
+
 	is_docking_enabled: BOOLEAN
 			-- May `Current' be docked to?
 			-- If True, `Current' will accept docking
@@ -58,10 +58,10 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.is_docking_enabled
 		end
-		
+
 feature -- Status setting
 
-	enable_docking 
+	enable_docking
 			-- Ensure `is_docking_enabled' is True.
 		require
 			not_destroyed: not is_destroyed
@@ -70,7 +70,7 @@ feature -- Status setting
 		ensure
 			is_dockable: is_docking_enabled
 		end
-		
+
 	disable_docking
 			-- Ensure `is_docking_enabled' is False.
 			-- `Current' will not accept docking.
@@ -79,9 +79,9 @@ feature -- Status setting
 		do
 			implementation.disable_docking
 		ensure
-			not_dockable: not is_docking_enabled	
+			not_dockable: not is_docking_enabled
 		end
-		
+
 	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
 			-- Assign `a_function' to `veto_dock_function'.
 		require
@@ -112,4 +112,12 @@ note
 
 
 end -- class EV_DOCKABLE_TARGET
+
+
+
+
+
+
+
+
 

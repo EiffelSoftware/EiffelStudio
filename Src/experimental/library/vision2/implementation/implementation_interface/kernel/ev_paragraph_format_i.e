@@ -7,7 +7,7 @@ note
 
 deferred class
 	EV_PARAGRAPH_FORMAT_I
-	
+
 inherit
 	EV_ANY_I
 		redefine
@@ -26,17 +26,17 @@ feature -- Status report
 			-- Left margin between border and text in pixels.
 		deferred
 		end
-		
+
 	right_margin: INTEGER
 			-- Right margin between line end and border in pixels.
 		deferred
 		end
-		
+
 	top_spacing: INTEGER
 			-- Spacing between top of paragraph and previous line in pixels.
 		deferred
 		end
-		
+
 	bottom_spacing: INTEGER
 			-- Spacing between bottom of paragraph and next line in pixels.
 		deferred
@@ -68,7 +68,7 @@ feature -- Status setting
 		ensure
 			margin_set: right_margin = a_margin
 		end
-		
+
 	set_top_spacing (a_spacing: INTEGER)
 			-- Set `top_spacing' to `a_spacing'.
 		require
@@ -77,7 +77,7 @@ feature -- Status setting
 		ensure
 			spacing_set: top_spacing = a_spacing
 		end
-		
+
 	set_bottom_spacing (a_spacing: INTEGER)
 			-- Set `bottom_spacing' to `a_spacing'.
 		require
@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PARAGRAPH_FORMAT;
+	interface: detachable EV_PARAGRAPH_FORMAT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -106,4 +106,12 @@ note
 
 
 end -- class EV_PARAGRAPH_FORMAT_I
+
+
+
+
+
+
+
+
 

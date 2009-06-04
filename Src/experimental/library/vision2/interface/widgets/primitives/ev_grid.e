@@ -454,7 +454,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM
+	item (a_column: INTEGER; a_row: INTEGER): detachable EV_GRID_ITEM
 			-- Cell at `a_row' and `a_column' position, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -466,7 +466,7 @@ feature -- Access
 			Result := implementation.item (a_column, a_row)
 		end
 
-	activated_item: EV_GRID_ITEM
+	activated_item: detachable EV_GRID_ITEM
 			-- Item that has currently been activated, if any.
 		require
 			not_destroyed: not is_destroyed
@@ -474,7 +474,7 @@ feature -- Access
 			Result := implementation.currently_active_item
 		end
 
-	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM
+	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): detachable EV_GRID_ITEM
 			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
 			-- `Void' if none.
 		require
@@ -483,7 +483,7 @@ feature -- Access
 			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
 		end
 
-	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW
+	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): detachable EV_GRID_ROW
 			-- Row at virtual y position `a_virtual_y'.
 		require
 			not_destroyed: not is_destroyed
@@ -491,7 +491,7 @@ feature -- Access
 			Result := implementation.row_at_virtual_position (a_virtual_y, ignore_locked_rows)
 		end
 
-	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN
+	column_at_virtual_position (a_virtual_x: INTEGER): detachable EV_GRID_COLUMN
 			-- Column at virtual x position `a_virtual_x'.
 		require
 			not_destroyed: not is_destroyed
@@ -649,7 +649,7 @@ feature -- Access
 			Result := implementation.is_horizontal_overscroll_enabled
 		end
 
-	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+	dynamic_content_function: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require
@@ -856,7 +856,7 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
+	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -868,7 +868,7 @@ feature -- Access
 			Result := implementation.item_pebble_function
 		end
 
-	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
+	item_veto_pebble_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
 			-- Function used to determine whether dropping is allowed on a particular item.
 			-- When called during PND transport, the grid item currently under the pebble
 			-- and the pebble itself are passed to the function.  A return value of True means
@@ -880,7 +880,7 @@ feature -- Access
 			Result := implementation.item_veto_pebble_function
 		end
 
-	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_accept_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -889,7 +889,7 @@ feature -- Access
 			Result := implementation.item_accept_cursor_function
 		end
 
-	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_deny_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -1905,7 +1905,7 @@ feature -- Status report
 			Result := implementation.is_selection_keyboard_handling_enabled
 		end
 
-	first_visible_row: EV_GRID_ROW
+	first_visible_row: detachable EV_GRID_ROW
 			-- First row visible in `Current' or Void if `row_count' = 0
 			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
 		require
@@ -1918,7 +1918,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	first_visible_column: EV_GRID_COLUMN
+	first_visible_column: detachable EV_GRID_COLUMN
 			-- First column visible in `Current' or Void if `column_count' = 0
 			-- If `is_horizontal_scrolling_per_item', the first visible column may be only partially visible.
 		require
@@ -1931,7 +1931,7 @@ feature -- Status report
 			no_columns_implies_result_void: column_count = 0 implies result = Void
 		end
 
-	last_visible_row: EV_GRID_ROW
+	last_visible_row: detachable EV_GRID_ROW
 			-- Last row visible in `Current' or Void if `row_count' = 0
 			-- The last visible row may be only partially visible.
 		require
@@ -1944,7 +1944,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	last_visible_column: EV_GRID_COLUMN
+	last_visible_column: detachable EV_GRID_COLUMN
 			-- Index of last column visible in `Current' or 0 if `column_count' = 0.
 			-- The last visible column may be only partially visible.
 		require
@@ -2242,7 +2242,7 @@ feature -- Element change
 			column_count_unchanged: column_count = old column_count
 		end
 
-	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM)
+	set_item (a_column, a_row: INTEGER; a_item: detachable EV_GRID_ITEM)
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -2444,17 +2444,22 @@ feature -- Contract support
 			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
 		local
 			l_row: EV_GRID_ROW
+			l_result: detachable EV_GRID_ROW
 		do
 			l_row := row (upper_index)
 			from
 			until
 				l_row.parent_row = Void or l_row.index < lower_index
 			loop
-				l_row := l_row.parent_row
-				if l_row.index >= lower_index then
-					Result := l_row
+				if attached l_row.parent_row as l_parent_row then
+					l_row := l_parent_row
+					if l_row.index > lower_index then
+						l_result := l_row
+					end
 				end
 			end
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -2469,7 +2474,8 @@ feature -- Contract support
 			first_row_index_valid: a_first_row_index >= 1 and a_first_row_index + a_row_count - 1 <= row_count
 		local
 			counter: INTEGER
-			current_row, parent_of_first_row: EV_GRID_ROW
+			current_row: EV_GRID_ROW
+			parent_of_first_row: detachable  EV_GRID_ROW
 		do
 			Result := True
 			parent_of_first_row := row (a_first_row_index).parent_row
@@ -2508,13 +2514,13 @@ feature {NONE} -- Contract support
 
 feature {EV_GRID_I} -- Implementation
 
-	frozen new_row: like row_type
+	frozen new_row: attached like row_type
 			-- Create a new row.
 		do
 			create Result
 		end
 
-	frozen new_column: like column_type
+	frozen new_column: attached like column_type
 			-- Create a new column.
 		do
 			create Result
@@ -2530,7 +2536,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_IMP} implementation.make (Current)
+			create {EV_GRID_IMP} implementation.make
 		end
 
 note

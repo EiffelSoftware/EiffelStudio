@@ -77,8 +77,12 @@ feature -- Access
 
 	parent: EV_COMBO_BOX_IMP
 			-- Parent of `Current'.
+		local
+			l_result: detachable EV_COMBO_BOX_IMP
 		do
-			Result ?= wel_parent
+			l_result ?= wel_parent
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			parent_not_void: parent /= Void
 		end
@@ -361,7 +365,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: WEL_COLOR_CONTROL
+			control: detachable WEL_COLOR_CONTROL
 			hwnd_control: POINTER
 			paint_dc: WEL_PAINT_DC
 		do
@@ -385,13 +389,14 @@ feature {NONE} -- Implementation
 			-- 2. a backgound brush to be returned to the system.
 		local
 			brush: WEL_BRUSH
-			int: EV_INTERNAL_COMBO_FIELD_IMP
-			w: EV_COMBO_BOX_IMP
-			background_color: EV_COLOR_IMP
-			foreground_color: EV_COLOR_IMP
+			int: detachable EV_INTERNAL_COMBO_FIELD_IMP
+			w: detachable EV_COMBO_BOX_IMP
+			background_color: detachable EV_COLOR_IMP
+			foreground_color: detachable EV_COLOR_IMP
 
 		do
 			int ?= control
+			check int /= Void end
 			w ?= int.parent
 			check
 				is_a_combo_box: w /= Void
@@ -403,6 +408,8 @@ feature {NONE} -- Implementation
 					-- to apply `background_color' to `control'.
 				background_color ?= w.background_color.implementation
 				foreground_color ?= w.foreground_color.implementation
+				check background_color /= Void end
+				check foreground_color /= Void end
 				paint_dc.set_text_color (foreground_color)
 				paint_dc.set_background_color (background_color)
 				brush := allocated_brushes.get (Void, background_color)
@@ -459,4 +466,14 @@ note
 		]"
 
 end
+
+
+
+
+
+
+
+
+
+
 

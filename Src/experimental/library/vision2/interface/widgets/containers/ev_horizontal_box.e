@@ -16,32 +16,32 @@ note
 	keywords: "container, horizontal, box"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	EV_HORIZONTAL_BOX
 
 inherit
 	EV_BOX
-		redefine			
+		redefine
 			implementation
 		end
-	
+
 create
 	default_create
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
- 	
+
 	implementation: EV_HORIZONTAL_BOX_I
 			-- Responsible for interaction with native graphics toolkit.
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_HORIZONTAL_BOX_IMP} implementation.make (Current)
+			create {EV_HORIZONTAL_BOX_IMP} implementation.make
 		end
- 			
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -57,4 +57,12 @@ note
 
 
 end -- class EV_HORIZONTAL_BOX
+
+
+
+
+
+
+
+
 

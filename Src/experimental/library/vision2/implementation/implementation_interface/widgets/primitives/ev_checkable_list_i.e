@@ -7,18 +7,18 @@ note
 
 deferred class
 	EV_CHECKABLE_LIST_I
-	
+
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
 			interface
 		end
-		
+
 	EV_LIST_I
 		redefine
 			interface
 		end
-		
+
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_I
 
 feature -- Access
@@ -28,19 +28,19 @@ feature -- Access
 		local
 			original_position: INTEGER
 		do
-			original_position := interface.index
+			original_position := index
 			create Result.make (0)
 			from
-				interface.start
+				start
 			until
-				interface.off
+				off
 			loop
-				if interface.is_item_checked (interface.item) then
-					Result.extend (interface.item)
+				if is_item_checked (interface_item) then
+					Result.extend (interface_item)
 				end
-				interface.forth
+				forth
 			end
-			interface.go_i_th (original_position)
+			go_i_th (original_position)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -67,7 +67,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_LIST;
+	interface: detachable EV_CHECKABLE_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -84,4 +84,11 @@ note
 
 
 end -- class EV_CHECKABLE_LIST_I
+
+
+
+
+
+
+
 

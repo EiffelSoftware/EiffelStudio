@@ -27,14 +27,11 @@ feature -- Contract support
 	is_parent_recursive (a_list: like item): BOOLEAN
 			-- Is `Current' present in `a_list' hierarchy?
 		local
-			menu_item_list_parent: EV_MENU_ITEM_LIST
-			l_list: EV_ANY
+			menu_item_list_parent: detachable EV_MENU_ITEM_LIST
 		do
 			menu_item_list_parent ?= parent
 			if menu_item_list_parent /= Void then
-				l_list := a_list
-				Result := l_list = parent or else
-					(parent /= Void and then menu_item_list_parent.is_parent_recursive (a_list))
+				Result := parent ~ a_list or else menu_item_list_parent.is_parent_recursive (a_list)
 			end
 		end
 
@@ -62,4 +59,14 @@ note
 
 
 end -- class EV_MENU_ITEM_LIST
+
+
+
+
+
+
+
+
+
+
 

@@ -78,8 +78,8 @@ feature -- Status report
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		local
-			pixmap_imp: EV_PIXMAP_IMP
-			pixmap_filename: STRING
+			pixmap_imp: detachable EV_PIXMAP_IMP
+			pixmap_filename: detachable STRING
 		do
 				-- Initialize `last_position' to "not found".
 			last_position := -1
@@ -113,8 +113,9 @@ feature -- Element change
 			--
 			-- `last_position' is updated.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
-			pixmap_filename: STRING
+			pixmap_imp: detachable EV_PIXMAP_IMP
+			pixmap_filename: detachable STRING
+			private_bitmap: detachable WEL_BITMAP
 			l_id: INTEGER
 		do
 			pixmap_imp ?= a_pixmap.implementation
@@ -123,19 +124,22 @@ feature -- Element change
 				if pixmap_filename /= Void then
 					if filenames_index.has (pixmap_filename) then
 						last_position := filenames_index.item (pixmap_filename)
-					elseif pixmap_imp.private_bitmap /= Void then
-						l_id := pixmap_imp.private_bitmap.object_id
-						if bitmap_ids_index.has (l_id) then
-							last_position := bitmap_ids_index.item (l_id)
+					else
+						private_bitmap := pixmap_imp.private_bitmap
+						if private_bitmap /= Void then
+							l_id := private_bitmap.object_id
+							if bitmap_ids_index.has (l_id) then
+								last_position := bitmap_ids_index.item (l_id)
+							else
+								internal_add_pixmap (a_pixmap)
+								bitmap_ids_index.put (last_position, l_id)
+								image_id_to_bitmap_id_index.put (l_id, last_position)
+								filenames_index.put (last_position, pixmap_filename)
+							end
 						else
 							internal_add_pixmap (a_pixmap)
-							bitmap_ids_index.put (last_position, l_id)
-							image_id_to_bitmap_id_index.put (l_id, last_position)
 							filenames_index.put (last_position, pixmap_filename)
 						end
-					else
-						internal_add_pixmap (a_pixmap)
-						filenames_index.put (last_position, pixmap_filename)
 					end
 				elseif pixmap_imp.private_bitmap_id >= 0 then
 					l_id := pixmap_imp.private_bitmap_id
@@ -160,8 +164,9 @@ feature -- Element change
 			--
 			-- `last_position' is updated.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
-			pixmap_filename: STRING
+			pixmap_imp: detachable EV_PIXMAP_IMP
+			pixmap_filename: detachable STRING
+			private_bitmap: detachable WEL_BITMAP
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			if pixmap_imp /= Void then
@@ -172,9 +177,12 @@ feature -- Element change
 
 			if pixmap_filename /= Void then
 				filenames_index.put (last_position, pixmap_filename)
-			elseif pixmap_imp /= Void and then pixmap_imp.private_bitmap /= Void then
-				bitmap_ids_index.put (last_position, pixmap_imp.private_bitmap.object_id)
-				image_id_to_bitmap_id_index.put (pixmap_imp.private_bitmap.object_id, last_position)
+			elseif pixmap_imp /= Void then
+				private_bitmap := pixmap_imp.private_bitmap
+				if private_bitmap /= Void then
+					bitmap_ids_index.put (last_position, private_bitmap.object_id)
+					image_id_to_bitmap_id_index.put (private_bitmap.object_id, last_position)
+				end
 			end
 		end
 
@@ -191,12 +199,13 @@ feature {NONE} -- Implementation (Private features)
 			a_pixmap_not_void: a_pixmap /= Void
 		local
 			item_value		: INTEGER
-			graphres		: WEL_GRAPHICAL_RESOURCE
-			loc_tuple		: TUPLE [position: INTEGER; number: INTEGER]
+			graphres		: detachable WEL_GRAPHICAL_RESOURCE
+			loc_tuple		: detachable TUPLE [position: INTEGER; number: INTEGER]
 			info			: like image_list_info
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -225,6 +234,7 @@ feature {NONE} -- Implementation (Private features)
 					-- `icon' already in image list so set
 					-- `image_index' to this.
 				loc_tuple := info.item (item_value)
+				check loc_tuple /= Void end
 				last_position := loc_tuple.position
 			end
 
@@ -239,12 +249,13 @@ feature {NONE} -- Implementation (Private features)
 			a_pixmap_not_void: a_pixmap /= Void
 		local
 			item_value		: INTEGER
-			graphres		: WEL_GRAPHICAL_RESOURCE
-			loc_tuple		: TUPLE [position: INTEGER; number: INTEGER]
+			graphres		: detachable WEL_GRAPHICAL_RESOURCE
+			loc_tuple		: detachable TUPLE [position: INTEGER; number: INTEGER]
 			info			: like image_list_info
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -262,6 +273,7 @@ feature {NONE} -- Implementation (Private features)
 				if item_value /= 0 and then info.has (item_value) then
 						-- `icon' already in image list so set `image_index' to this.
 					loc_tuple := info.item (item_value)
+					check loc_tuple /= Void end
 					last_position := loc_tuple.position
 				end
 			end
@@ -276,11 +288,12 @@ feature {NONE} -- Implementation (Private features)
 			a_pixmap_not_void: a_pixmap /= Void
 		local
 			item_value		: INTEGER
-			graphres		: WEL_GRAPHICAL_RESOURCE
+			graphres		: detachable WEL_GRAPHICAL_RESOURCE
 			info			: like image_list_info
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			info := image_list_info
 
 				-- Try to get the icon
@@ -288,7 +301,7 @@ feature {NONE} -- Implementation (Private features)
 
 				-- If there is no icon, try a cursor
 			if graphres = Void then
-				graphres := pixmap_imp.cursor
+				graphres ?= pixmap_imp.cursor
 			end
 
 			if graphres /= Void then
@@ -310,15 +323,16 @@ feature {NONE} -- Implementation (Private features)
 			--
 			-- `last_position' is updated.
 		local
-			resized_pixmap	: EV_PIXMAP
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
+			resized_pixmap	: detachable EV_PIXMAP
+			pixmap_imp		: detachable EV_PIXMAP_IMP_STATE
 			bitmap			: WEL_BITMAP
-			mask_bitmap		: WEL_BITMAP
+			mask_bitmap		: detachable WEL_BITMAP
 			l_mask_bitmap_dc: WEL_MEMORY_DC
 			l_converted_bitmap: WEL_BITMAP
 			l_converted_bitmap_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			if (pixmap_imp.height /= bitmaps_height) or
 			   (pixmap_imp.width /= bitmaps_width)
 			then
@@ -329,11 +343,13 @@ feature {NONE} -- Implementation (Private features)
 					bitmaps_height
 					)
 				pixmap_imp ?= resized_pixmap.implementation
+				check pixmap_imp /= Void end
 			end
 
 			bitmap := pixmap_imp.get_bitmap
 			if pixmap_imp.has_mask then
 				mask_bitmap := pixmap_imp.get_mask_bitmap
+				check mask_bitmap /= Void end
 				create l_mask_bitmap_dc.make
 				l_mask_bitmap_dc.select_bitmap (mask_bitmap)
 				create l_converted_bitmap_dc.make_by_dc (l_mask_bitmap_dc)
@@ -354,7 +370,6 @@ feature {NONE} -- Implementation (Private features)
 				add_bitmap (bitmap)
 			end
 			bitmap.decrement_reference
-			bitmap := Void
 
 			if resized_pixmap /= Void then
 				resized_pixmap.destroy
@@ -401,4 +416,15 @@ note
 
 
 end -- class EV_IMAGE_LIST_IMP
+
+
+
+
+
+
+
+
+
+
+
 

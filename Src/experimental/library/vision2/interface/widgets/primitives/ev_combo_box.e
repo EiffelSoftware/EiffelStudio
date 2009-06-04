@@ -77,7 +77,7 @@ feature -- Element change
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 			combo_box_is_editable: is_editable
 		local
-			l_cursor: EV_DYNAMIC_LIST_CURSOR [EV_LIST_ITEM]
+			l_cursor: like cursor
 			l_str: STRING_32
 			l_found: BOOLEAN
 		do
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_COMBO_BOX_IMP} implementation.make (Current)
+			create {EV_COMBO_BOX_IMP} implementation.make
 		end
 
 note
@@ -141,4 +141,13 @@ note
 
 
 end -- class EV_COMBO_BOX
+
+
+
+
+
+
+
+
+
 

@@ -60,10 +60,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_PRINT_PROJECTOR_IMP} implementation.make (Current)
+			create {EV_PRINT_PROJECTOR_IMP} implementation.make_with_context (world, context)
 		end
 
 note
@@ -81,4 +87,8 @@ note
 
 
 end -- class EV_PRINT_PROJECTOR
+
+
+
+
 

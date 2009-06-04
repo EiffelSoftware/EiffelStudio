@@ -21,7 +21,8 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			replace
+			replace,
+			make
 		end
 
 	EV_DOCKABLE_TARGET_IMP
@@ -34,17 +35,39 @@ create
 
 feature -- initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
+			if c_object = default_pointer then
+					-- Only set c_object if not already set by a descendent.
+				set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+			end
+			Precursor
 		end
 
 feature -- Access
 
-	item: EV_WIDGET
+	has (v: like item): BOOLEAN
+			-- Does `Current' include `v'?
+		do
+			Result := not is_destroyed and (v /= Void and then item = v)
+		end
+
+	item: detachable EV_WIDGET
 			-- Current item.
+
+	count: INTEGER_32
+			-- Number of elements in `Current'.
+		do
+			if item /= Void then
+				Result := 1
+			end
+		end
 
 feature -- Element change
 
@@ -57,7 +80,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CELL;
+	interface: detachable EV_CELL note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -76,4 +99,8 @@ note
 
 
 end -- class EV_CELL_IMP
+
+
+
+
 

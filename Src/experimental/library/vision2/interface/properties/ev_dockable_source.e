@@ -14,14 +14,14 @@ note
 
 deferred class
 	EV_DOCKABLE_SOURCE
-	
+
 inherit
 	EV_ANY
 		redefine
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_DOCKABLE_SOURCE_ACTION_SEQUENCES
 		redefine
 			implementation
@@ -29,10 +29,10 @@ inherit
 
 feature -- Status report
 
-	is_dockable: BOOLEAN		
+	is_dockable: BOOLEAN
 			-- Is `Current' dockable?
 			-- If `True', then `Current' may be dragged
-			-- from its current parent. 
+			-- from its current parent.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -40,8 +40,8 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.is_dockable
 		end
-		
-	real_source: EV_DOCKABLE_SOURCE
+
+	real_source: detachable EV_DOCKABLE_SOURCE
 			-- `Result' is source to be dragged
 			--  when a docking drag occurs on `Current'.
 			-- If `Void', `Current' is dragged.
@@ -52,7 +52,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.real_source
 		end
-		
+
 	is_external_docking_enabled: BOOLEAN
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -64,7 +64,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.is_external_docking_enabled
 		end
-		
+
 	is_external_docking_relative: BOOLEAN
 			-- Will dockable dialog displayed when `Current' is docked externally
 			-- be displayed relative to parent window of `Current'?
@@ -88,7 +88,7 @@ feature -- Status setting
 		ensure
 			is_dockable: is_dockable
 		end
-		
+
 	disable_dockable
 			-- Ensure `Current' is not dockable.
 		require
@@ -111,7 +111,7 @@ feature -- Status setting
 		ensure
 			real_source_assigned: real_source = dockable_source
 		end
-		
+
 	remove_real_source
 			-- Ensure `real_source' is `Void'.
 		require
@@ -121,7 +121,7 @@ feature -- Status setting
 		ensure
 			real_source_void: real_source = Void
 		end
-		
+
 	enable_external_docking
 			-- Assign `True' to `is_external_docking_enabled'.
 			-- Allows `Current' to be docked into an EV_DOCKABLE_DIALOG
@@ -135,7 +135,7 @@ feature -- Status setting
 		ensure
 			is_externally_dockable: is_external_docking_enabled
 		end
-		
+
 	disable_external_docking
 			-- Assign `False' to `is_external_docking_enabled'.
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
@@ -149,7 +149,7 @@ feature -- Status setting
 		ensure
 			not_externally_dockable: not is_external_docking_enabled
 		end
-		
+
 	enable_external_docking_relative
 			-- Assign `True' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
@@ -162,7 +162,7 @@ feature -- Status setting
 		ensure
 			external_docking_not_relative: is_external_docking_relative
 		end
-		
+
 	disable_external_docking_relative
 			-- Assign `False' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
@@ -174,7 +174,7 @@ feature -- Status setting
 			implementation.disable_external_docking_relative
 		ensure
 			external_docking_not_relative: not is_external_docking_relative
-		end	
+		end
 
 feature -- Contract support
 
@@ -191,15 +191,17 @@ feature -- Contract support
 			not_destroyed: not is_destroyed
 			source_not_void: source /= Void
 		local
-			widget: EV_WIDGET
-			tool_bar_button: EV_TOOL_BAR_BUTTON
-			container: EV_CONTAINER
-			tool_bar : EV_TOOL_BAR
+			widget: detachable EV_WIDGET
+			tool_bar_button: detachable EV_TOOL_BAR_BUTTON
+			container: detachable EV_CONTAINER
+			tool_bar : detachable EV_TOOL_BAR
 		do
 			widget ?= Current
 			if widget = Void then
 				tool_bar_button ?= Current
+				check tool_bar_button /= Void end
 				tool_bar ?= tool_bar_button.parent
+				check tool_bar /= Void end
 				Result := tool_bar.has (tool_bar_button)
 				if not Result then
 					widget := tool_bar_button.parent
@@ -213,7 +215,7 @@ feature -- Contract support
 				Result := container.has_recursive (widget)
 			end
 		end
-		
+
 	parent_of_source_allows_docking: BOOLEAN
 			-- Does parent of source to be transported
 			-- allow current to be dragged out? (See `real_source')
@@ -221,8 +223,8 @@ feature -- Contract support
 			-- mechanism, only descendents of EV_DOCKABLE_TARGET
 			-- are supported.
 		local
-			widget: EV_WIDGET
-			dockable_target: EV_DOCKABLE_TARGET
+			widget: detachable EV_WIDGET
+			dockable_target: detachable EV_DOCKABLE_TARGET
 		do
 			if real_source /= Void then
 				widget ?= real_source
@@ -242,7 +244,7 @@ feature -- Contract support
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_SOURCE_I
-	
+
 invariant
 	parent_permits_docking: is_dockable implies parent_of_source_allows_docking
 
@@ -261,4 +263,14 @@ note
 
 
 end -- class EV_DOCKABLE_SOURCE
+
+
+
+
+
+
+
+
+
+
 

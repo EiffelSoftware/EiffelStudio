@@ -49,7 +49,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		deferred
@@ -62,7 +62,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over current widget.
 			-- Void if none has been set using `set_pointer_position'.
 		deferred
@@ -72,29 +72,32 @@ feature -- Access
 			-- Cursor displayed when screen pointer is over current widget,
 			-- as seen from interface.
 		local
-			text_component: EV_TEXT_COMPONENT
+			text_component: detachable EV_TEXT_COMPONENT
+			l_result: detachable EV_POINTER_STYLE
 		do
-			Result := pointer_style
-			if Result = Void then
+			l_result := pointer_style
+			if l_result = Void then
 				text_component ?= Current
 				if text_component /= Void then
 					Result := Default_pixmaps.Ibeam_cursor
 				else
 					Result := Default_pixmaps.Standard_cursor
 				end
+			else
+				Result := l_result
 			end
 		end
 
-	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
+	actual_drop_target_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', will use the default drop target.
 			-- Always void if `Current' is not a widget.
 
-	real_target: EV_DOCKABLE_TARGET
+	real_target: detachable EV_DOCKABLE_TARGET
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
 
-	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]]
+	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]]
 			-- Agent used to determine whether the default key processing should occur for `Current'.
 			-- If agent returns `True' then default key processing continues as normal, False prevents
 			-- default key processing from occuring.
@@ -159,8 +162,8 @@ feature -- Status setting
 			l_object_id: INTEGER
 		do
 			actual_drop_target_agent := an_agent;
-			l_object_id := interface.object_id;
-			(create {EV_ENVIRONMENT}).application.implementation.pnd_targets.put (l_object_id, l_object_id)
+			l_object_id := attached_interface.object_id;
+			(create {EV_ENVIRONMENT}).implementation.application_i.pnd_targets.put (l_object_id, l_object_id)
 		ensure
 			assigned: actual_drop_target_agent = an_agent
 		end
@@ -206,7 +209,7 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies
-				((a_minimum_width > 0 implies interface.minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (interface.minimum_width <= 1)))
+				((a_minimum_width > 0 implies attached_interface.minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (attached_interface.minimum_width <= 1)))
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER)
@@ -216,7 +219,7 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_height_assigned: is_usable implies
-				((a_minimum_height > 0 implies interface.minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (interface.minimum_height <= 1)))
+				((a_minimum_height > 0 implies attached_interface.minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (attached_interface.minimum_height <= 1)))
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
@@ -228,9 +231,9 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies
-				((a_minimum_width > 0 implies interface.minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (interface.minimum_width <= 1)))
+				((a_minimum_width > 0 implies attached_interface.minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (attached_interface.minimum_width <= 1)))
 			minimum_height_assigned: is_usable implies
-				((a_minimum_height > 0 implies interface.minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (interface.minimum_height <= 1)))
+				((a_minimum_height > 0 implies attached_interface.minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (attached_interface.minimum_height <= 1)))
 		end
 
 feature -- Measurement
@@ -250,10 +253,10 @@ feature {EV_ANY_I} -- Implementation
 	disable_default_processing_on_key (a_key: EV_KEY): BOOLEAN
 			-- Should default processing of `Current' be disabled when `a_key' is press/released?
 		do
-			Result := default_key_processing_handler /= Void and then not default_key_processing_handler.item ([a_key])
+			Result := attached default_key_processing_handler as l_default_key_processing_handler and then not l_default_key_processing_handler.item ([a_key])
 		end
 
-	interface: EV_WIDGET
+	interface: detachable EV_WIDGET note option: stable attribute end;
 		-- Provides a common user interface to platform dependent functionality
 		-- implemented by `Current'.
 		-- (See bridge pattern notes in ev_any.e)
@@ -287,8 +290,8 @@ feature {NONE} -- Implementation
 	on_help_context_changed
 			-- Connect help accelerators if not done already
 		local
-			top_window: EV_TITLED_WINDOW_I
-			a_parent: EV_CONTAINER
+			top_window: detachable EV_TITLED_WINDOW_I
+			a_parent: detachable EV_CONTAINER
 		do
 			from
 				a_parent := parent
@@ -328,4 +331,15 @@ note
 
 
 end -- class EV_WIDGET_I
+
+
+
+
+
+
+
+
+
+
+
 

@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create with a white background.
 		do
-			Precursor {EV_MODEL_GROUP}
 			background_color := default_colors.White
+			Precursor {EV_MODEL_GROUP}
 			grid_x := default_grid_x
 			grid_y := default_grid_x
 			grid_visible := False
@@ -49,7 +49,7 @@ feature -- Access
 			-- Used for debugging purposes.
 			-- Default: False.
 
-	capture_figure: EV_MODEL
+	capture_figure: detachable EV_MODEL
 			-- Figure that has mouse capture.
 
 	grid_enabled: BOOLEAN
@@ -242,4 +242,8 @@ note
 
 
 end -- class EV_MODEL_WORLD
+
+
+
+
 

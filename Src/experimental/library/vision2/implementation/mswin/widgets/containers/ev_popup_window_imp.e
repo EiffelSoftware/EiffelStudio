@@ -16,9 +16,10 @@ inherit
 			default_ex_style,
 			class_name,
 			class_style,
+			old_make,
 			make,
-			initialize,
-			show_flags
+			show_flags,
+			is_top_level
 		end
 
 	EV_POPUP_WINDOW_I
@@ -33,16 +34,29 @@ inherit
 		end
 
 create
-	make
+	make, initialize_with_shadow
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			create accel_list.make (10)
-			make_child (application_imp.silly_main_window, "")
+			Precursor
+			user_can_resize := False
+			internal_is_border_enabled := False
+		end
+
+	is_top_level: BOOLEAN
+			-- Does `Current' need to be made as a top-level window?
+		do
+			Result := False
 		end
 
 feature -- Status Setting
@@ -57,22 +71,12 @@ feature -- Status Setting
 			set_ex_style (ex_style | ws_ex_topmost)
 		end
 
-feature {NONE} -- Initialization
-
-	initialize
-			-- Initialize `Current'.
-		do
-			Precursor {EV_WINDOW_IMP}
-			user_can_resize := False
-			internal_is_border_enabled := False
-		end
-
 feature {NONE} -- Implementation
 
 	class_name: STRING_32
 			-- Class name for current type of window.
 		do
-			if interface.has_shadow then
+			if has_shadow then
 				Result := "EV_POPUP_WINDOW_IMP_with_shadow"
 			else
 				Result := "EV_POPUP_WINDOW_IMP"
@@ -85,7 +89,7 @@ feature {NONE} -- Implementation
 			l_win: WEL_WINDOWS_VERSION
 		do
 			Result := Precursor {EV_WINDOW_IMP}
-			if interface.has_shadow then
+			if has_shadow then
 				create l_win
 				if l_win.is_windows_xp_compatible then
 					Result := Result | cs_dropshadow
@@ -121,7 +125,7 @@ feature {NONE} -- Implementation
 
 feature  -- Implementation
 
-	interface: EV_POPUP_WINDOW;
+	interface: detachable EV_POPUP_WINDOW note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -138,4 +142,12 @@ note
 
 
 end -- class EV_WINDOW_IMP
+
+
+
+
+
+
+
+
 

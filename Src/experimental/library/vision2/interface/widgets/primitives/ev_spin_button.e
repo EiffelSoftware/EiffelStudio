@@ -34,7 +34,7 @@ create
 	default_create,
 	make_with_value_range,
 	make_with_text
-	
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_SPIN_BUTTON_IMP} implementation.make (Current)
+			create {EV_SPIN_BUTTON_IMP} implementation.make
 		end
 
 note
@@ -72,4 +72,12 @@ note
 
 
 end -- class EV_SPIN_BUTTON
+
+
+
+
+
+
+
+
 

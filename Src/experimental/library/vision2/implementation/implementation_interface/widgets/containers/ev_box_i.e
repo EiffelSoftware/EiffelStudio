@@ -1,29 +1,29 @@
 note
-	description: 
+	description:
 		"EiffelVision box, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "container, box"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_BOX_I
-	
+
 inherit
 	EV_WIDGET_LIST_I
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_TARGET_I
 		redefine
 			interface
 		end
 
-	
+
 feature -- Constants
-	
+
 	Default_homogeneous: BOOLEAN = False
 	Default_spacing: INTEGER = 0
 	Default_border_width: INTEGER = 0
@@ -54,12 +54,12 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is `child' expanded to occupy available spare space.
 		require
-			has_child: interface.has (child)
+			has_child: has (child)
 		deferred
 		end
-	
+
 feature {EV_ANY, EV_ANY_I} -- Status settings
-	
+
 	set_homogeneous (flag: BOOLEAN)
 			-- Set whether every child is the same size.
 		deferred
@@ -74,19 +74,19 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 		deferred
 		ensure
 			border_assigned: border_width = value
-		end	
-	
+		end
+
 	set_padding (value: INTEGER)
 			-- Assign `value' to `padding'.
 		require
 			positive_value: value >= 0
 		deferred
-		end	
+		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill avalible spare space.
 		require
-			has_child: interface.has (child)
+			has_child: has (child)
 		deferred
 		ensure
 			flag_assigned: is_item_expanded (child) = flag
@@ -98,12 +98,12 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		deferred
 		end
-		
+
 	docking_dimension_of_current_item: INTEGER
 			-- Dimension of `interface.item' matching orientation of `Current'.
 		deferred
 		end
-		
+
 	docking_dimension_of_current: INTEGER
 			-- Dimension of `Current' matching orientation of `Current'
 		deferred
@@ -126,48 +126,48 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 				-- motion event was received, we only perform the
 				-- following if this is not the case
 			if offset >= 0 and offset <= docking_dimension_of_current then
-				if offset >= docking_dimension_of_current - border_width or interface.is_empty or (interface.count = 1 and interface.i_th (1) = Insert_label) then
+				if offset >= docking_dimension_of_current - border_width or count = 0 or (count = 1 and then interface_i_th (1) = Insert_label) then
 						-- Three cases are handled specially here
 						-- If the pointed position is within the far border after all item, of `Current'.
 						-- If `Current' is empty.
 						-- If `Current' is only containing `Insert_label', meaning when the transport
 						-- began, it was empty.
-					Result := interface.count + 1
+					Result := count + 1
 				elseif offset < border_width then
 					Result := 1
 				else
 					from
-						interface.start
+						start
 						last_position := border_width
 					until
 						Result /= -1
 					loop
 						current_position := current_position + docking_dimension_of_current_item
-						if interface.index = 1 then
+						if index = 1 then
 							current_position := current_position + border_width
 						else
-							current_position := current_position + interface.padding_width
+							current_position := current_position + padding
 						end
 						if offset >= last_position and then offset <= current_position then
 						temp1 := (current_position - last_position) // 2
-						temp2 := last_position + temp1 + (interface.padding_width // 2)
+						temp2 := last_position + temp1 + (padding // 2)
 						if offset > temp2 then
-							Result := interface.index + 1
+							Result := index + 1
 						else
-							Result := interface.index
+							Result := index
 						end
-					end				
+					end
 					last_position := current_position
-					interface.forth
-				end 
+					forth
+				end
 				go_to (curs)
 				end
 			end
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_BOX;
+	interface: detachable EV_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -184,4 +184,12 @@ note
 
 
 end -- class EV_BOX_I
+
+
+
+
+
+
+
+
 

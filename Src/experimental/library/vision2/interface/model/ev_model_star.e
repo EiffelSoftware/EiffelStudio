@@ -14,7 +14,7 @@ note
 						
 							center == point_array.item (0)
 							corner == point_array.item (1)
-								
+
 						]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -76,31 +76,31 @@ feature -- Access
 
 	line_count: INTEGER
 			-- Number of lines.
-		
+
 	corner_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (1).x
 		end
-		
+
 	corner_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (1).y
 		end
-		
+
 	center_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	center_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (0).y
 		end
-		
+
 	angle: DOUBLE
 			-- Upright position.
 		local
@@ -115,13 +115,13 @@ feature -- Status
 
 	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
-			
+
 	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
-			
+
 	is_transformable: BOOLEAN = True
 			-- Is transformable? (Yes)
-			
+
 feature -- Element change
 
 	set_line_count (n: INTEGER)
@@ -162,13 +162,13 @@ feature -- Element change
 				invalidate
 			end
 		end
-		
+
 	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `center_point' to position of `a_point_a'
 		do
 			set_x_y (ax, ay)
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `corner_point' to postion of `a_point_b'
 		do
@@ -193,8 +193,8 @@ feature -- Events
 			l_point_array: like point_array
 			l_point: EV_COORDINATE
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				from
 					l_point_array := point_array
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			center.set_precise (ce.x_precise, ce.y_precise)
 			is_center_valid := True
 		end
-		
+
 	set_corner_points
 			-- Set position of corner points
 		local
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 				n := n + 1
 			end
 		end
-		
+
 	corner_points: like point_array
 			-- Corner points.
 		local
@@ -287,8 +287,8 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
-		
+
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -304,4 +304,8 @@ note
 
 
 end -- class EV_MODEL_STAR
+
+
+
+
 

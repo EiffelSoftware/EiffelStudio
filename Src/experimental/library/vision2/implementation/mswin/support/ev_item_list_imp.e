@@ -11,12 +11,12 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST_IMP [reference G -> EV_ITEM, reference H -> EV_ITEM_IMP]
+	EV_ITEM_LIST_IMP [G -> detachable EV_ITEM, H -> detachable EV_ITEM_IMP]
 
 inherit
 	EV_ITEM_LIST_I [G]
 		redefine
-			initialize,
+			make,
 			interface
 		end
 
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			create new_item_actions
@@ -39,33 +39,33 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp: H
+			v_imp: detachable H
 		do
+			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
 			v_imp ?= v.implementation
 			check
-				v_imp_not_void: v /= Void
+				v_imp_not_void: v_imp /= Void
 			end
-			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
 			v_imp.set_parent_imp (Current)
 			insert_item (v_imp, i)
 			v_imp.on_parented
-			new_item_actions.call ([v_imp.interface])
+			new_item_actions.call ([v_imp.attached_interface])
 		end
 
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			v_imp: H
+			v_imp: detachable H
 		do
-			v_imp ?= i_th (i).implementation
+			v_imp ?= interface_i_th (i).implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
 			v_imp.on_orphaned
-			remove_item_actions.call ([v_imp.interface])
+			remove_item_actions.call ([v_imp.attached_interface])
 			remove_item (v_imp)
 			v_imp.set_parent_imp (Void)
 			Precursor {EV_DYNAMIC_LIST_IMP} (i)
@@ -93,16 +93,17 @@ feature -- Event handling
 	new_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed after an item is added.
 
+
 	remove_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed before an item is removed.
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_ITEM_LIST [G]
+	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		deferred
 		end
@@ -136,4 +137,15 @@ note
 
 
 end -- class EV_ITEM_LIST_IMP
+
+
+
+
+
+
+
+
+
+
+
 

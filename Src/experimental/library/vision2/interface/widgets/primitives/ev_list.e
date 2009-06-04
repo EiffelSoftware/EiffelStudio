@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"[
 			Displays a list of items from which the user can select.
 		]"
@@ -56,7 +56,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_item' is visible in `Current'.
 		require
@@ -72,7 +72,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_multiple_selection	
+			implementation.enable_multiple_selection
 		ensure
 			multiple_selection_enabled: multiple_selection_enabled
 		end
@@ -86,7 +86,7 @@ feature -- Status setting
 		ensure
 			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_LIST_I
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_LIST_IMP} implementation.make (Current)
+			create {EV_LIST_IMP} implementation.make
 		end
 
 invariant
@@ -128,4 +128,12 @@ note
 
 
 end -- class EV_LIST
+
+
+
+
+
+
+
+
 

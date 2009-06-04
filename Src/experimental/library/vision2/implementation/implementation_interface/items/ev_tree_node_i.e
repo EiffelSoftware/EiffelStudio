@@ -44,23 +44,33 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_NODE_LIST
+	parent: detachable EV_TREE_NODE_LIST
 			-- Parent of `Current'.
 		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result ?= l_parent_imp.interface
 			end
 		end
 
-	parent_tree: EV_TREE
+	parent_tree: detachable EV_TREE
 			-- Root tree that holds `Current'.
 		local
-			parent_item: EV_TREE_NODE_I
+			parent_item: detachable EV_TREE_NODE_I
 		do
 			Result ?= parent
-			if Result = Void and then parent /= Void then
-				parent_item ?= parent.implementation
+			if Result = Void and then attached parent as l_parent then
+				parent_item ?= l_parent.implementation
+				check parent_item /= Void end
 				Result := parent_item.parent_tree
+			end
+		end
+
+	parent_tree_i: detachable EV_TREE_I
+			-- Root tree that holds `Current'.
+		do
+			Result ?= parent_imp
+			if Result = Void and then attached {EV_TREE_NODE_I} parent_imp as l_parent_imp then
+				Result := l_parent_imp.parent_tree_i
 			end
 		end
 
@@ -69,13 +79,13 @@ feature -- Status report
 	is_selectable: BOOLEAN
 			-- May the `Current' be selected?
 		do
-			Result := parent_tree /= Void
+			Result := parent_tree_i /= Void
 		end
 
 	is_expanded: BOOLEAN
 			-- is `Current' expanded ?
 		require
-			in_tree: parent_tree /= Void
+			in_tree: parent_tree_i /= Void
 		deferred
 		end
 
@@ -83,8 +93,6 @@ feature {EV_TREE_NODE} -- Status setting
 
 	set_expand (flag: BOOLEAN)
 			-- Expand `Current' if `flag', otherwise collapse it.
-		require
-			is_expandable: interface.is_expandable
 		deferred
 		ensure
 			state_set: is_expanded = flag
@@ -97,13 +105,15 @@ feature -- Contract support
 		local
 			scaled_pixmap: EV_PIXMAP
 		do
-			if parent_tree /= Void then
-				scaled_pixmap := a_pixmap.TWIN
-				scaled_pixmap.stretch (parent_tree.pixmaps_width, parent_tree.pixmaps_height)
+			if attached parent_tree_i as l_parent_tree then
+				scaled_pixmap := a_pixmap.twin
+				scaled_pixmap.stretch (l_parent_tree.pixmaps_width, l_parent_tree.pixmaps_height)
 			else
 				scaled_pixmap := a_pixmap
 			end
-			Result := scaled_pixmap.is_equal (pixmap)
+			if attached pixmap as l_pixmap then
+				Result := scaled_pixmap.is_equal (l_pixmap)
+			end
 		end
 
 feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
@@ -111,10 +121,10 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		require
-			is_empty: interface.is_empty
+			is_empty: attached_interface.is_empty
 		deferred
 		ensure
-			is_empty: interface.is_empty
+			is_empty: attached_interface.is_empty
 		end
 
 	remove_expandable
@@ -124,7 +134,7 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 
 feature {EV_ANY_I, EV_TREE_NODE} -- Implementation
 
-	interface: EV_TREE_NODE;
+	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -141,4 +151,13 @@ note
 
 
 end -- class EV_TREE_NODE_I
+
+
+
+
+
+
+
+
+
 

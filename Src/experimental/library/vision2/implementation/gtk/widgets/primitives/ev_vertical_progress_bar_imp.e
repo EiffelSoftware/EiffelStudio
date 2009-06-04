@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision vertical progress bar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 	EV_PROGRESS_BAR_IMP
 		redefine
-			initialize,
+			make,
 			interface
 		end
 
@@ -25,13 +25,13 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
 			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_bottom_to_top_enum)
 		end
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_bottom_to_top_enum: INTEGER
@@ -41,7 +41,7 @@ feature {EV_ANY_I} -- Implementation
 			"GTK_PROGRESS_BOTTOM_TO_TOP"
 		end
 
-	interface: EV_VERTICAL_PROGRESS_BAR;
+	interface: detachable EV_VERTICAL_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -58,4 +58,8 @@ note
 
 
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP
+
+
+
+
 

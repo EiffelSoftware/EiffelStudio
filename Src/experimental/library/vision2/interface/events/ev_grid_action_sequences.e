@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_GRID_ACTION_SEQUENCES
 
 feature -- Access
@@ -103,7 +103,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -116,7 +116,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -130,7 +130,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -144,7 +144,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -158,7 +158,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -174,7 +174,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -214,7 +214,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed before the features of an item cell in `Current' have been drawn but after the background of
 			-- the cell has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn background.
@@ -235,7 +235,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed after an item cell in `Current'  has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn item.
 			-- grid_item: EV_GRID_ITEM The item which has just been drawn, may be Void in the case that an
@@ -282,7 +282,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	implementation: EV_GRID_ACTION_SEQUENCES_I;
+	implementation: EV_GRID_ACTION_SEQUENCES_I
+		deferred
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -299,4 +301,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

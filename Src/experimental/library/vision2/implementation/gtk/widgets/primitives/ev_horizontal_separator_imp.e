@@ -17,7 +17,7 @@ inherit
 
 	EV_SEPARATOR_IMP
 		redefine
-			interface
+			interface, make
 		end
 
 create
@@ -25,22 +25,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 				-- Create a horizontal gtk separator.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
 		local
 			p: POINTER
 		do
-			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			p := {EV_GTK_EXTERNALS}.gtk_hseparator_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (p)
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, p)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 1)
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_SEPARATOR;
+	interface: detachable EV_HORIZONTAL_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -57,4 +63,8 @@ note
 
 
 end -- class EV_HORIZONTAL_SEPARATOR_IMP
+
+
+
+
 

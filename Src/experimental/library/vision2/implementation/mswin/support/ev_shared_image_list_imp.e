@@ -61,30 +61,32 @@ feature {NONE} -- Implementation
 			-- Retrieve a imagelist with size equal to `a_width'x`a_height' from `imagelists'.
 		local
 			imagelists_item: EV_IMAGE_LIST_IMP
+			l_result: detachable EV_IMAGE_LIST_IMP
 		do
 			from
 				imagelists.start
 			until
-				Result /= Void or imagelists.after
+				l_result /= Void or imagelists.after
 			loop
 				imagelists_item := imagelists.item
-				if (imagelists_item.bitmaps_width = a_width) and 
+				if (imagelists_item.bitmaps_width = a_width) and
 				   (imagelists_item.bitmaps_width = a_width)
 				then
-					Result := imagelists_item
+					l_result := imagelists_item
 
 						-- Increment the number of reference for the client.
-					Result.increment_reference
+					l_result.increment_reference
 				end
 				imagelists.forth
 			end
 
 				-- Not found
-			if Result = Void then
-				create Result.make_with_size (a_width, a_height)
-				Result.enable_reference_tracking
-				imagelists.extend (Result)
+			if l_result = Void then
+				create l_result.make_with_size (a_width, a_height)
+				l_result.enable_reference_tracking
+				imagelists.extend (l_result)
 			end
+			Result := l_result
 		end
 
 	destroy_specific_imagelist (imagelists: like toolbar_default_imagelists; an_imagelist: EV_IMAGE_LIST_IMP)
@@ -95,11 +97,11 @@ feature {NONE} -- Implementation
 				referenced_imagelist:
 					imagelists.has (an_imagelist)
 			end
-		
-				-- Decrement the number of references.
-			an_imagelist.decrement_reference			
 
-			if an_imagelist.references_count = 1 then 
+				-- Decrement the number of references.
+			an_imagelist.decrement_reference
+
+			if an_imagelist.references_count = 1 then
 				-- means that only the array is referencing the imagelist, so we can
 				-- destroy it.
 				imagelists.prune_all (an_imagelist)
@@ -143,4 +145,13 @@ note
 
 
 end -- class EV_SHARED_IMAGE_LIST_IMP
+
+
+
+
+
+
+
+
+
 

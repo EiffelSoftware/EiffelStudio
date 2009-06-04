@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	timeouts: HASH_TABLE [INTEGER, INTEGER]
+	timeouts: detachable HASH_TABLE [INTEGER, INTEGER]
 		-- The timeouts to call classed by id.
 
 feature -- Element change
@@ -30,17 +30,21 @@ feature -- Element change
 	add_timeout (timeout: EV_TIMEOUT_IMP)
 			-- Add `timeout' to the list of timeout to
 			-- be executed.
+		local
+			l_timeouts: like timeouts
 		do
-			if timeouts = Void then
-				create timeouts.make (5)
+			l_timeouts := timeouts
+			if l_timeouts = Void then
+				create l_timeouts.make (5)
+				timeouts := l_timeouts
 			end
-			timeouts.force (timeout.id, timeout.id)
+			l_timeouts.force (timeout.id, timeout.id)
 		end
 
 	change_interval (a_timer_id, an_interval: INTEGER)
 			-- Set timer with `an_id' to `an_interval'.
 		require
-			a_timer_id_exists: a_timer_id > 0 and then timeouts.has (a_timer_id)
+			a_timer_id_exists: a_timer_id > 0 and then attached timeouts as l_timeouts and then l_timeouts.has (a_timer_id)
 			an_interval_non_negative: an_interval >= 0
 		do
 			if an_interval = 0 then
@@ -57,9 +61,9 @@ feature -- Removal
 			-- be executed.
 		do
 			kill_timer (id)
-			if timeouts /= Void then
-				timeouts.remove (id)
-				if timeouts.is_empty then
+			if attached timeouts as l_timeouts then
+				l_timeouts.remove (id)
+				if l_timeouts.is_empty then
 					timeouts := Void
 				end
 			end
@@ -70,7 +74,7 @@ feature {NONE} -- Implementation
 	on_timer (id: INTEGER)
 			-- Wm_timer message.
 		local
-			timeout: EV_TIMEOUT_IMP
+			timeout: detachable EV_TIMEOUT_IMP
 		do
 			timeout ?= eif_id_any_object (id)
 			if timeout /= Void and then not timeout.is_destroyed then
@@ -103,4 +107,13 @@ note
 
 
 end -- class EV_INTERNAL_TIMEOUT_IMP
+
+
+
+
+
+
+
+
+
 

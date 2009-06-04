@@ -13,7 +13,7 @@ inherit
 		redefine
 			on_key_down,
 			interface,
-			initialize
+			make
 		end
 
 	EV_GAUGE_I
@@ -29,12 +29,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Default initialization of `Current'.
 		do
-			Precursor {EV_PRIMITIVE_IMP}
 			create value_range.make (0, 100)
 			value_range.change_actions.extend (agent set_range)
+			initialize_gauge_control
+			Precursor {EV_PRIMITIVE_IMP}
+		end
+
+	initialize_gauge_control
+			-- Initialize gauge control.
+		do
 			wel_set_range (0, 100)
 			wel_set_step (1)
 			wel_set_leap (10)
@@ -182,7 +188,7 @@ feature -- Deferred
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GAUGE;
+	interface: detachable EV_GAUGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -199,4 +205,14 @@ note
 
 
 end -- class EV_GAUGE_IMP
+
+
+
+
+
+
+
+
+
+
 

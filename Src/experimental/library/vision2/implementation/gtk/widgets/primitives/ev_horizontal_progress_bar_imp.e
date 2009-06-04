@@ -16,7 +16,7 @@ inherit
 
 	EV_PROGRESS_BAR_IMP
 		redefine
-			initialize,
+			make,
 			interface
 		end
 
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Implementation
 			"GTK_PROGRESS_LEFT_TO_RIGHT"
 		end
 
-	interface: EV_HORIZONTAL_PROGRESS_BAR;
+	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -59,4 +59,8 @@ note
 
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
+
+
+
+
 

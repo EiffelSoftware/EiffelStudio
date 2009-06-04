@@ -24,7 +24,7 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			initialize,
+			make,
 			item_from_coords,
 			on_mouse_button_event,
 			row_height,
@@ -37,29 +37,29 @@ create
 
 feature -- Initialize
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
-			base_make (an_interface)
-			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
-			set_c_object (scrollable_area)
-
-			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
-			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
+			assign_interface (an_interface)
 		end
 
 	scrollable_area: POINTER
 		-- Scrollable area used for `Current'
 
-	initialize
+	make
 			-- Initialize the list.
 		local
 			a_column, a_cell_renderer: POINTER
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_selection: POINTER
 		do
+			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			set_c_object (scrollable_area)
+
+			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
@@ -101,7 +101,7 @@ feature -- Initialize
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		local
@@ -175,11 +175,15 @@ feature -- Status setting
 	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_index' is visible in `Current'.
 		local
-			list_item_imp: EV_LIST_ITEM_IMP
+			list_item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_path: POINTER
 		do
 			list_item_imp ?= an_item.implementation
-			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			check list_item_imp /= Void end
+			l_list_iter := list_item_imp.list_iter
+			check l_list_iter /= Void end
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, l_list_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
@@ -208,22 +212,30 @@ feature -- Status setting
 			-- Select an item at the one-based `index' of the list.
 		local
 			a_selection: POINTER
-			a_item_imp: EV_LIST_ITEM_IMP
+			a_item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, a_item_imp.list_iter.item)
+			check a_item_imp /= Void end
+			l_list_iter := a_item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 		end
 
 	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		local
 			a_selection: POINTER
-			a_item_imp: EV_LIST_ITEM_IMP
+			a_item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			a_item_imp ?= (child_array @ an_index).implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, a_item_imp.list_iter.item)
+			check a_item_imp /= Void end
+			l_list_iter := a_item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 		end
 
 	clear_selection
@@ -254,14 +266,14 @@ feature -- PND
 			end
 		end
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	item_from_coords (a_x, a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER
 		do
 			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
-				Result ?= i_th (a_row_index).implementation
+				Result ?= interface_i_th (a_row_index).implementation
 			end
 		end
 
@@ -272,8 +284,8 @@ feature -- PND
 		do
 			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
-				pnd_row_imp ?= i_th (a_row_index).implementation
-				if pnd_row_imp /= Void and then not (pnd_row_imp.able_to_transport (a_button) or pnd_row_imp.mode_is_configurable_target_menu) then
+				pnd_row_imp ?= interface_i_th (a_row_index).implementation
+				if attached pnd_row_imp as l_pnd_row_imp and then not (l_pnd_row_imp.able_to_transport (a_button) or l_pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
 			else
@@ -306,7 +318,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := tree_view
 		end
 
-	interface: EV_LIST
+	interface: detachable EV_LIST note option: stable attribute end;
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
@@ -318,7 +330,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			new_selection: ARRAYED_LIST [EV_LIST_ITEM]
 			newly_selected_items: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-			an_item: EV_LIST_ITEM_IMP
+			an_item: detachable EV_LIST_ITEM_IMP
 		do
 			new_selection := selected_items
 			create newly_selected_items.make (0)
@@ -329,6 +341,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			loop
 				if not previous_selection.has (new_selection.item) then
 					an_item ?= new_selection.item.implementation
+					check an_item /= Void end
 					newly_selected_items.extend (an_item)
 				end
 				previous_selection.prune_all (new_selection.item)
@@ -340,11 +353,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				previous_selection.off
 			loop
 				an_item ?= previous_selection.item.implementation
+				check an_item /= Void end
 				if an_item.deselect_actions_internal /= Void then
-					an_item.deselect_actions_internal.call (Void)
+					an_item.deselect_actions.call (Void)
 				end
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([an_item.interface])
+					deselect_actions_internal.call ([an_item.attached_interface])
 				end
 				previous_selection.forth
 			end
@@ -354,10 +368,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				newly_selected_items.off
 			loop
 				if newly_selected_items.item.select_actions_internal /= Void then
-					newly_selected_items.item.select_actions_internal.call (Void)
+					newly_selected_items.item.select_actions.call (Void)
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call ([newly_selected_items.item.interface])
+					select_actions_internal.call ([newly_selected_items.item.attached_interface])
 				end
 				newly_selected_items.forth
 			end
@@ -405,4 +419,8 @@ note
 
 
 end -- class EV_LIST_IMP
+
+
+
+
 

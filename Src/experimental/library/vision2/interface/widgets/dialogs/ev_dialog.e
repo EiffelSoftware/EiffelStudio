@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_push_button: EV_BUTTON
+	default_push_button: detachable EV_BUTTON
 			-- Default pushed button. This is the button that
 			-- is pushed if the user press the enter key unless
 			-- a push button is currently focused.
@@ -53,7 +53,7 @@ feature -- Access
 			Result := implementation.default_push_button
 		end
 
-	default_cancel_button: EV_BUTTON
+	default_cancel_button: detachable EV_BUTTON
 			-- Default cancel button. This is the button that
 			-- is pushed if the user press the escape key or
 			-- close the window using the close icon.
@@ -85,7 +85,7 @@ feature -- Access
 			Result := implementation.is_relative
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 		require
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_DIALOG_IMP} implementation.make (Current)
+			create {EV_DIALOG_IMP} implementation.make
 		end
 
 invariant
@@ -232,4 +232,14 @@ note
 
 
 end -- class EV_DIALOG
+
+
+
+
+
+
+
+
+
+
 

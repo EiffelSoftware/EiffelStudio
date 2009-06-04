@@ -32,31 +32,38 @@ inherit
 	EXECUTION_ENVIRONMENT
 
 create
-	make
+	make_with_context
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 		do
-			base_make (an_interface)
-			--| Hack to prevent invariant violation
+			assign_interface (an_interface)
+		end
+
+	make_with_context (a_world: EV_FIGURE_WORLD; a_context: EV_PRINT_CONTEXT)
+		local
+			l_filename: like filename
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
 
-			if interface.context.output_to_file then
-				create filename.make_from_string (interface.context.file_name.as_string_8)
+			if a_context.output_to_file then
+				create l_filename.make_from_string (a_context.file_name.as_string_8)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
-				create filename.make_from_string (tmp_print_job_name)
+				create l_filename.make_from_string (tmp_print_job_name)
 			end
-			make_with_filename (an_interface.world, filename)
+			filename := l_filename
+			make_with_filename (a_world, l_filename)
 				-- World needs resetting on project
 
 					-- Set up our page size based on context size resolution.
-			point_width := interface.context.horizontal_resolution
-			point_height := interface.context.vertical_resolution
+			point_width := a_context.horizontal_resolution
+			point_height := a_context.vertical_resolution
 		end
 
-	initialize
+	make
+			-- <Precursor>
 		do
 			set_is_initialized (True)
 		end
@@ -67,24 +74,33 @@ feature {EV_ANY_I} -- Access
 		local
 			i: INTEGER
 			a_cs: C_STRING
+			l_file: like file
+			l_filename: like filename
 		do
-			if not interface.context.output_to_file then
+			l_filename := filename
+			check l_filename /= Void end
+			if not attached_interface.context.output_to_file then
 				-- Create the named pipe
-				create a_cs.make (filename)
+				create a_cs.make (l_filename)
 				i := mkfifo (a_cs.item, S_IRWXU)
-				system ("lpr < " + filename + " &")
+				system ("lpr < " + l_filename + " &")
 			end
 
-			create file.make_open_write (filename)
+			create l_file.make_open_write (l_filename)
+			file := l_file
 			output_to_postscript
-			file.close
+			l_file.close
 		end
 
 	add_ps_line (ps_code: STRING_GENERAL)
 			-- Append `ps_code' postscript to output.
+		local
+			l_file: like file
 		do
-			file.put_string (ps_code.to_string_8)
-			file.put_new_line
+			l_file := file
+			check l_file /= Void end
+			l_file.put_string (ps_code.to_string_8)
+			l_file.put_new_line
 		end
 
 feature {NONE} -- Implementation
@@ -92,7 +108,7 @@ feature {NONE} -- Implementation
 	add_footer
 			-- Add showpage if printing to printer.
 		do
-			if not interface.context.output_to_file then
+			if not attached_interface.context.output_to_file then
 				add_ps_line ("showpage")
 			end
 			Precursor {EV_POSTSCRIPT_PROJECTOR}
@@ -128,7 +144,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PRINT_PROJECTOR;
+	interface: detachable EV_PRINT_PROJECTOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -145,4 +161,8 @@ note
 
 
 end -- class EV_PRINT_PROJECTOR_IMP
+
+
+
+
 

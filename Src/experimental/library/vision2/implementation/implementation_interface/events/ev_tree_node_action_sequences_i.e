@@ -32,7 +32,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `select_actions'.
 
 
@@ -57,7 +57,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	deselect_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `deselect_actions'.
 
 
@@ -82,7 +82,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	expand_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	expand_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `expand_actions'.
 
 
@@ -107,7 +107,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	collapse_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	collapse_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end;
 			-- Implementation of once per object `collapse_actions'.
 
 note
@@ -125,4 +125,12 @@ note
 
 
 end
+
+
+
+
+
+
+
+
 

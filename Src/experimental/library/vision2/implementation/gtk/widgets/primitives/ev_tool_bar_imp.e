@@ -19,7 +19,7 @@ inherit
 			update_for_pick_and_drop
 		redefine
 			interface,
-			initialize,
+			make,
 			needs_event_box,
 			set_parent_imp
 		end
@@ -30,7 +30,7 @@ inherit
 		redefine
 			interface,
 			insert_i_th,
-			initialize
+			make
 		end
 
 	EV_PND_DEFERRED_ITEM_PARENT
@@ -46,18 +46,18 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tool-bar.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 
@@ -133,12 +133,12 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 feature -- Implementation
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	item_from_coords (a_x, a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Return toolbar item corresponding to coordinates (`a_x', `a_y').
 		local
 			i: INTEGER
 			l_width: INTEGER
-			l_item_imp: EV_ITEM_IMP
+			l_item_imp: detachable EV_ITEM_IMP
 		do
 			from
 				i := 1
@@ -146,6 +146,7 @@ feature -- Implementation
 				i > count or else Result /= Void
 			loop
 				l_item_imp ?= (child_array @ i).implementation
+				check l_item_imp /= Void end
 				l_width := l_width + l_item_imp.width
 				if a_x < l_width then
 					Result ?= l_item_imp
@@ -157,7 +158,7 @@ feature -- Implementation
 	update_toolbar_style
 			-- Set the style of `Current' relative to items
 		local
-			tbb_imp: EV_TOOL_BAR_BUTTON_IMP
+			tbb_imp: detachable EV_TOOL_BAR_BUTTON_IMP
 			has_text, has_pixmap: BOOLEAN
 			i, a_style: INTEGER
 		do
@@ -165,9 +166,9 @@ feature -- Implementation
 				from
 					i := 1
 				until
-					i > interface.count
+					i > count
 				loop
-					tbb_imp ?= interface.i_th (i).implementation
+					tbb_imp ?= interface_i_th (i).implementation
 					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
 						has_text := True
 					end
@@ -197,8 +198,8 @@ feature -- Implementation
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
 		local
-			wid_imp: EV_GTK_WIDGET_IMP
-			tbi: EV_TOOL_BAR_ITEM
+			wid_imp: detachable EV_GTK_WIDGET_IMP
+			tbi: detachable EV_TOOL_BAR_ITEM
 		do
 			Result := count + 1
 			wid_imp := app_implementation.gtk_widget_imp_at_pointer_position
@@ -210,13 +211,14 @@ feature -- Implementation
 			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_ITEM_IMP
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			v_imp: detachable EV_ITEM_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			v_imp ?= v.implementation
+			check v_imp /= Void end
 			v_imp.set_item_parent_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 
@@ -236,13 +238,14 @@ feature -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			imp: EV_ITEM_IMP
+			imp: detachable EV_ITEM_IMP
 			item_ptr: POINTER
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 			l_radio_group: POINTER
 		do
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
+			check imp /= Void end
 
 			r ?= imp
 			if r /= Void then
@@ -270,7 +273,7 @@ feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR;
+	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -287,4 +290,8 @@ note
 
 
 end -- class EV_TOOL_BAR_IMP
+
+
+
+
 

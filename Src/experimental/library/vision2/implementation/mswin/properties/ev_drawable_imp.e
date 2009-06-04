@@ -49,16 +49,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Set some default values.
 		do
 			set_default_font
 
-			if background_color = Void then
-				background_color := create {EV_COLOR}.make_with_rgb (1, 1, 1)
+			if not attached background_color_internal then
+				background_color_internal := create {EV_COLOR}.make_with_rgb (1, 1, 1)
 			end
-			if foreground_color = Void then
-				foreground_color := create {EV_COLOR}.make_with_rgb (0, 0, 0)
+			if not attached foreground_color_internal then
+				foreground_color_internal := create {EV_COLOR}.make_with_rgb (0, 0, 0)
 			end
 
 				-- Initialise the device for painting.
@@ -101,12 +101,13 @@ feature -- Access
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Return the subpixmap of `Current' described by rectangle `area'.
 		local
-			a_pixmap_imp: EV_PIXMAP_IMP
+			a_pixmap_imp: detachable EV_PIXMAP_IMP
 			a_private_bitmap: WEL_BITMAP
 			reusable_dc: WEL_MEMORY_DC
 		do
 			create Result
 			a_pixmap_imp ?= Result.implementation
+			check a_pixmap_imp /= Void end
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
@@ -122,10 +123,10 @@ feature -- Access
 
 feature -- Access
 
-	background_color: EV_COLOR
+	background_color_internal: detachable EV_COLOR
 			-- Color used to fill figures.
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: detachable EV_COLOR
 			-- Color used for lines and text.
 
 	line_width: INTEGER
@@ -147,11 +148,11 @@ feature -- Access
 			end
 		end
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used to instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 
@@ -177,11 +178,13 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
-			a_color_imp: EV_COLOR_IMP
-			background_color_imp: EV_COLOR_IMP
+			a_color_imp: detachable EV_COLOR_IMP
+			background_color_imp: detachable EV_COLOR_IMP
 		do
 			a_color_imp ?= a_color.implementation
+			check a_color_imp /= Void end
 			background_color_imp ?= background_color.implementation
+			check background_color_imp /= Void end
 			if a_color_imp.item /= background_color_imp.item then
 				background_color_imp.set_color (a_color_imp.item)
 					-- update current background brush (lazzy evaluation)
@@ -192,11 +195,13 @@ feature -- Element change
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		local
-			a_color_imp: EV_COLOR_IMP
-			foreground_color_imp: EV_COLOR_IMP
+			a_color_imp: detachable EV_COLOR_IMP
+			foreground_color_imp: detachable EV_COLOR_IMP
 		do
 			a_color_imp ?= a_color.implementation
+			check a_color_imp /= Void end
 			foreground_color_imp ?= foreground_color.implementation
+			check foreground_color_imp /= Void end
 			if a_color_imp.item /= foreground_color_imp.item then
 				foreground_color_imp.set_color (a_color_imp.item)
 					-- update current pen & brush (lazzy evaluation)
@@ -244,9 +249,9 @@ feature -- Element change
 			region: WEL_REGION
 		do
 			clip_area := an_area.twin
-			create region.make_rect (clip_area.x, clip_area.y,
-				clip_area.width + clip_area.x,
-				clip_area.height + clip_area.y)
+			create region.make_rect (an_area.x, an_area.y,
+				an_area.width + an_area.x,
+				an_area.height + an_area.y)
 			get_dc
 			dc.select_clip_region (region)
 			release_dc
@@ -257,10 +262,11 @@ feature -- Element change
 			-- Set an area to clip to.
 			-- Set to Void when no clipping should be applied.
 		local
-			region: WEL_REGION
+			region: detachable WEL_REGION
 			l_region_box: WEL_RECT
 		do
 			region ?= a_region.implementation
+			check region /= Void end
 				-- Set the clip area to the bounding area of the region.
 			l_region_box := region.get_region_box
 			create clip_area.make (l_region_box.x, l_region_box.y, l_region_box.width, l_region_box.height)
@@ -310,10 +316,11 @@ feature -- Element change
 	set_font (a_font: EV_FONT)
 			-- Set `font' to `a_font'.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 		do
 			private_font := a_font
 			font_imp ?= private_font.implementation
+			check font_imp /= Void end
 			private_wel_font := Void
 			internal_initialized_font := False
 		end
@@ -552,10 +559,11 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
-			pixmap_imp : EV_PIXMAP_IMP_STATE
+			pixmap_imp : detachable EV_PIXMAP_IMP_STATE
 			l_bounding_area: like bounding_area
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			l_bounding_area := bounding_area
 			l_bounding_area.move_and_resize (0, 0, pixmap_imp.width, pixmap_imp.height)
 			draw_sub_pixmap (x, y, a_pixmap, l_bounding_area)
@@ -570,13 +578,14 @@ feature -- Drawing operations
 	draw_sub_pixel_buffer (x, y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw area of `a_pixel_buffer' with upper-left corner on (`x', `y').
 		local
-			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_src_rect, l_dest_rect: WEL_RECT
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check l_pixel_buffer_imp /= Void end
 			create l_src_rect.make (area.left, area.top, area.right, area.bottom)
 			create l_dest_rect.make (x, y, x + area.width, y + area.height)
-			l_pixel_buffer_imp.draw_to_drawable_with_dest_rect_src_rect (interface, l_dest_rect, l_src_rect)
+			l_pixel_buffer_imp.draw_to_drawable_with_dest_rect_src_rect (attached_interface, l_dest_rect, l_src_rect)
 			l_src_rect.dispose
 			l_dest_rect.dispose
 		end
@@ -590,19 +599,21 @@ feature -- Drawing operations
 			source_y			: INTEGER
 			source_width		: INTEGER
 			source_height		: INTEGER
-			source_mask_bitmap	: WEL_BITMAP
-			source_bitmap		: WEL_BITMAP
+			source_mask_bitmap	: detachable WEL_BITMAP
+			source_bitmap		: detachable WEL_BITMAP
 			s_dc				: WEL_SCREEN_DC
 			source_bitmap_dc	: WEL_MEMORY_DC
-			pixmap_imp			: EV_PIXMAP_IMP_STATE
-			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
+			pixmap_imp			: detachable EV_PIXMAP_IMP_STATE
+			source_drawable	: detachable EV_PIXMAP_IMP_DRAWABLE
 			dest_dc				: WEL_DC
 			l_blend_function	: WEL_BLEND_FUNCTION
 			l_src_drawing_mode	: INTEGER
 			l_result			: BOOLEAN
 			l_is_src_bitmap_32bits : BOOLEAN
+			l_mask_dc: detachable WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			pixmap_height := pixmap_imp.height
 			pixmap_width := pixmap_imp.width
 			source_x := area.x
@@ -611,13 +622,13 @@ feature -- Drawing operations
 			source_height := area.height
 			get_dc
 			if
-				pixmap_imp.icon /= Void and then
+				attached pixmap_imp.icon as l_icon and then
 				source_x = 0 and then source_y = 0 and then
 				source_width = pixmap_width and then
 				source_height = pixmap_height
 			then
 				dc.draw_icon_ex (
-					pixmap_imp.icon,
+					l_icon,
 					x, y,
 					pixmap_width, pixmap_height,
 					0, Void, Drawing_constants.Di_normal
@@ -632,7 +643,9 @@ feature -- Drawing operations
 					if source_drawable /= Void then
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
-						source_mask_bitmap := source_drawable.mask_dc.bitmap
+						l_mask_dc := source_drawable.mask_dc
+						check l_mask_dc /= Void end
+						source_mask_bitmap := l_mask_dc.bitmap
 					else
 							-- Retrieve Source bitmap
 						source_bitmap := pixmap_imp.get_bitmap
@@ -644,6 +657,8 @@ feature -- Drawing operations
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
 					end
+					check source_bitmap /= Void end
+					check source_mask_bitmap /= Void end
 
 					dest_dc.mask_blt (x, y, source_width, source_height, source_bitmap_dc, 0, 0, source_mask_bitmap, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
 
@@ -651,6 +666,7 @@ feature -- Drawing operations
 					if source_drawable = Void then
 						source_bitmap_dc.unselect_bitmap
 						source_bitmap_dc.delete
+						check source_bitmap /= Void end
 						source_bitmap.decrement_reference
 						source_mask_bitmap.decrement_reference
 					end
@@ -1021,26 +1037,38 @@ feature {NONE} -- Implementation
 
 	wel_font: WEL_FONT
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
+			l_private_wel_font: like private_wel_font
 		do
 			if private_font /= Void then
 				font_imp ?= private_font.implementation
+				check font_imp /= Void end
 				Result := font_imp.wel_font
 			else
-				Result := private_wel_font
+				l_private_wel_font := private_wel_font
+				check l_private_wel_font /= Void end
+				Result := l_private_wel_font
 			end
 		end
 
 	wel_bg_color: WEL_COLOR_REF
+		local
+			l_result: detachable WEL_COLOR_REF
 		do
-			Result ?= background_color.implementation
+			l_result ?= background_color.implementation
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
 	wel_fg_color: WEL_COLOR_REF
+		local
+			l_result: detachable WEL_COLOR_REF
 		do
-			Result ?= foreground_color.implementation
+			l_result ?= foreground_color.implementation
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -1053,10 +1081,10 @@ feature {NONE} -- Implementation
 			if not internal_initialized_background_brush then
 				internal_initialized_background_brush := True
 				internal_background_brush := Result
-			elseif Result /= internal_background_brush then
+			elseif attached internal_background_brush as l_brush and then Result /= l_brush then
 					-- If it is different, it means that `wel_bg_color' changed
 					-- since last time and we need to update it
-				internal_background_brush.decrement_reference
+				l_brush.decrement_reference
 				internal_background_brush := Result
 			end
 		end
@@ -1070,37 +1098,44 @@ feature {NONE} -- Implementation
 	reset_brush
 			-- Restore brush to tile or color.
 		local
-			pix_imp: EV_PIXMAP_IMP_STATE
+			pix_imp: detachable EV_PIXMAP_IMP_STATE
 			a_wel_bitmap: WEL_BITMAP
+			l_internal_brush: like internal_brush
 		do
 			get_dc
 			if not internal_initialized_brush then
 
 					-- Reset `internal_brush'.
-				if internal_brush /= Void then
-					internal_brush.decrement_reference
+				l_internal_brush := internal_brush
+				if l_internal_brush /= Void then
+					l_internal_brush.decrement_reference
+					l_internal_brush := Void
 					internal_brush := Void
 				end
 
-				if tile /= Void then
-					pix_imp ?= tile.implementation
+				if attached tile as l_tile then
+					pix_imp ?= l_tile.implementation
+					check pix_imp /= Void end
 					a_wel_bitmap := pix_imp.get_bitmap
-					internal_brush := allocated_brushes.get(
+					l_internal_brush := allocated_brushes.get(
 						a_wel_bitmap, Void)
 					a_wel_bitmap.decrement_reference
 				else
-					internal_brush := allocated_brushes.get(
+					l_internal_brush := allocated_brushes.get(
 						Void, wel_fg_color)
+
 				end
 				internal_initialized_brush := True
 			end
+			check l_internal_brush /= Void end
+			internal_brush := l_internal_brush
 
 				-- Unselect previously selected brush.
 			if dc.brush_selected then
 				dc.unselect_brush
 			end
 				-- Select new brush.
-			dc.select_brush (internal_brush)
+			dc.select_brush (l_internal_brush)
 			release_dc
 		end
 
@@ -1108,6 +1143,7 @@ feature {NONE} -- Implementation
 			-- Restore pen to correct line width and color
 		local
 			dmode: INTEGER
+			l_internal_pen: like internal_pen
 		do
 			get_dc
 			if line_width = 0 then
@@ -1117,12 +1153,14 @@ feature {NONE} -- Implementation
 				if dc.pen_selected then
 					dc.unselect_pen
 				end
-
+				l_internal_pen := internal_pen
 				if not internal_initialized_pen then
 
 						-- Reset `internal_pen'.
-					if internal_pen /= Void then
-						internal_pen.decrement_reference
+
+					l_internal_pen := internal_pen
+					if l_internal_pen /= Void then
+						l_internal_pen.decrement_reference
 						internal_pen := Void
 					end
 
@@ -1131,12 +1169,14 @@ feature {NONE} -- Implementation
 					else
 						dmode := Ps_solid
 					end
-					internal_pen := allocated_pens.get (
+					l_internal_pen := allocated_pens.get (
 						dmode, line_width, wel_fg_color)
+					internal_pen := l_internal_pen
 					internal_initialized_pen := True
 				end
+				check l_internal_pen /= Void end
 
-				dc.select_pen (internal_pen)
+				dc.select_pen (l_internal_pen)
 			end
 			release_dc
 		end
@@ -1150,9 +1190,9 @@ feature {NONE} -- Implementation
 			end
 			dc.select_pen (empty_pen)
 
-			if internal_pen /= Void then
+			if attached internal_pen as l_internal_pen then
 				internal_initialized_pen := False
-				internal_pen.decrement_reference
+				l_internal_pen.decrement_reference
 				internal_pen := Void
 			end
 			release_dc
@@ -1167,9 +1207,9 @@ feature {NONE} -- Implementation
 			end
 			dc.select_brush (empty_brush)
 
-			if internal_brush /= Void then
+			if attached internal_brush as l_internal_brush then
 				internal_initialized_brush := False
-				internal_brush.decrement_reference
+				l_internal_brush.decrement_reference
 				internal_brush := Void
 			end
 			release_dc
@@ -1202,16 +1242,16 @@ feature {EV_ANY, EV_ANY_I} -- Command
 	destroy
 			-- Destroy actual object.
 		do
-			if internal_brush /= Void then
-				internal_brush.decrement_reference
+			if attached internal_brush as l_brush then
+				l_brush.decrement_reference
 				internal_brush := Void
 			end
-			if internal_pen /= Void then
-				internal_pen.decrement_reference
+			if attached internal_pen as l_pen then
+				l_pen.decrement_reference
 				internal_pen := Void
 			end
-			if internal_background_brush /= Void then
-				internal_background_brush.decrement_reference
+			if attached internal_background_brush as l_background_brush then
+				l_background_brush.decrement_reference
 				internal_background_brush := Void
 			end
 
@@ -1220,19 +1260,19 @@ feature {EV_ANY, EV_ANY_I} -- Command
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_DRAWABLE
+	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 feature {EV_DRAWABLE_IMP} -- Internal datas.
 
-	internal_background_brush: WEL_BRUSH
+	internal_background_brush: detachable WEL_BRUSH
 			-- Buffered background brush. Created in order to
 			-- avoid multiple WEL_BRUSHes creation.
 
-	internal_brush: WEL_BRUSH
+	internal_brush: detachable WEL_BRUSH
 			-- Buffered current brush. Created in order to
 			-- avoid multiple WEL_BRUSHes creation.
 
-	internal_pen: WEL_PEN
+	internal_pen: detachable WEL_PEN
 			-- Buffered current pen. Created in order to
 			-- avoid multiple WEL_PENs creation.
 
@@ -1288,13 +1328,13 @@ feature {NONE} -- Constants
 
 invariant
 	reference_tracked_on_brush:
-		internal_brush /= Void implies internal_brush.reference_tracked
+		attached internal_brush as l_brush implies l_brush.reference_tracked
 
 	brush_exists:
-		internal_brush /= Void implies internal_brush.exists
+		attached internal_brush as l_internal_brush implies l_internal_brush.exists
 
 	reference_tracked_on_pen:
-		internal_pen /= Void implies internal_pen.reference_tracked
+		attached internal_pen as l_pen implies l_pen.reference_tracked
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1311,4 +1351,14 @@ note
 
 
 end -- class EV_DRAWABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

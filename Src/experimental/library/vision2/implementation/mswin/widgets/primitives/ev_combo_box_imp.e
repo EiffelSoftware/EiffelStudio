@@ -12,13 +12,13 @@ inherit
 	EV_COMBO_BOX_I
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_LIST_ITEM_LIST_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -62,7 +62,7 @@ inherit
 			set_editable,
 			on_key_down,
 			interface,
-			initialize,
+			make,
 			on_set_focus,
 			on_kill_focus,
 			set_foreground_color,
@@ -164,28 +164,32 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			internal_window_make (default_parent, Void, default_style +
-				Cbs_dropdown, 0, 0, 0, 50, -1, default_pointer)
-			create ev_children.make (2)
- 			id := 0
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			create ev_children.make (2)
+ 			id := 0
+  			internal_window_make (default_parent, Void, default_style +
+				Cbs_dropdown, 0, 0, 0, 50, -1, default_pointer)
 			set_default_font
-			create text_field.make_with_combo (Current)
-			create combo.make_with_combo (Current)
-			Precursor {EV_TEXT_COMPONENT_IMP}
+
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			set_is_initialized (False)
 			initialize_pixmaps
  			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+
+			create child_cell
+			create combo.make_with_combo (Current)
+			create text_field.make_with_combo (Current)
+			Precursor {EV_TEXT_COMPONENT_IMP}
  		end
 
 feature -- Alignment
@@ -200,8 +204,8 @@ feature -- Alignment
 			-- Display text centered.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
-			if is_editable then
-				text_field.align_text_center
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.align_text_center
 			end
 		end
 
@@ -209,8 +213,8 @@ feature -- Alignment
 			-- Display text right aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
-			if is_editable then
-				text_field.align_text_right
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.align_text_right
 			end
 		end
 
@@ -218,17 +222,17 @@ feature -- Alignment
 			-- Display text left aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
-			if is_editable then
-				text_field.align_text_left
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.align_text_left
 			end
 		end
 
 feature -- Access
 
-	text_field: EV_INTERNAL_COMBO_FIELD_IMP
+	text_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
 			-- An internal text field that forwards the events to `Current'.
 
-	combo: EV_INTERNAL_COMBO_BOX_IMP
+	combo: detachable EV_INTERNAL_COMBO_BOX_IMP
 			-- The combo_box inside the combo-box-ex. It forwards the
 			-- events.
 			--| Windows sends messages to combo box's parent.
@@ -270,8 +274,8 @@ feature -- Status report
 		do
 			if private_font /= Void then
 				Result := private_font.implementation.height
-			else
-				Result := private_wel_font.height
+			elseif attached private_wel_font as l_private_wel_font then
+				Result := l_private_wel_font.height
 			end
 		end
 
@@ -283,7 +287,7 @@ feature -- Status report
 			end
 		end
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- Currently selected item.
 		local
 			new_selected_item: EV_LIST_ITEM_IMP
@@ -326,9 +330,11 @@ feature -- Status report
 	has_focus: BOOLEAN
 			-- Does `Current' have focus?
 		do
-			Result := combo.has_focus
+			Result := attached combo as l_combo and then l_combo.has_focus
 			if not Result and then is_editable then
-				Result := text_field.has_focus
+				if attached text_field as l_text_field then
+					Result := l_text_field.has_focus
+				end
 			end
 		end
 
@@ -340,8 +346,8 @@ feature -- Status setting
 			if not has_focus then
 				if is_editable then
 					Precursor {WEL_DROP_DOWN_COMBO_BOX_EX}
-				else
-					combo.set_focus
+				elseif attached combo as l_combo then
+					l_combo.set_focus
 				end
 			end
 		end
@@ -399,10 +405,12 @@ feature -- Status setting
 		do
 				-- We need to set the tooltip on all the components of the combobox.
 			Precursor {EV_TEXT_COMPONENT_IMP} (a_tooltip)
-			if is_editable then
-				text_field.set_tooltip (a_tooltip)
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.set_tooltip (a_tooltip)
 			end
-			combo.set_tooltip (a_tooltip)
+			if attached combo as l_combo then
+				l_combo.set_tooltip (a_tooltip)
+			end
 		end
 
 feature -- Basic operation
@@ -472,14 +480,15 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 			-- Destroy the image list and remove it
 			-- from `Current'.
 		do
-			check
-				image_list_not_void: image_list /= Void
+			if attached image_list as l_image_list then
+					-- Destroy the image list.
+				l_image_list.destroy
+				image_list := Void
+					-- Remove the image_list_from `Current'
+				set_image_list (Void)
+			else
+				check False end
 			end
-				-- Destroy the image list.
-			image_list.destroy
-			image_list := Void
-				-- Remove the image_list_from `Current'
-			set_image_list (Void)
 		ensure then
 			image_list_is_void: image_list = Void
 		end
@@ -567,23 +576,23 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	on_set_focus
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
-			l_top_level_window: EV_WINDOW_IMP
-			l_last_focus_on_widget: EV_WIDGET_IMP
+			l_top_level_window: detachable EV_WINDOW_IMP
+			l_last_focus_on_widget: detachable EV_WIDGET_IMP
 		do
 			l_top_level_window := top_level_window_imp
 			if l_top_level_window /= Void then
 				l_last_focus_on_widget := focus_on_widget.item
 				focus_on_widget.put (Current)
 				if application_imp.focus_in_actions_internal /= Void then
-					application_imp.focus_in_actions_internal.call ([interface])
+					application_imp.focus_in_actions.call ([attached_interface])
 				end
 
-				if is_editable then
-					l_top_level_window.set_last_focused_widget (text_field.item)
-				else
-					l_top_level_window.set_last_focused_widget (combo.item)
+				if is_editable and then attached text_field as l_text_field then
+					l_top_level_window.set_last_focused_widget (l_text_field.item)
+				elseif attached combo as l_combo then
+					l_top_level_window.set_last_focused_widget (l_combo.item)
 				end
-				application_imp.set_window_with_focus (l_top_level_window.interface)
+				application_imp.set_window_with_focus (l_top_level_window)
 					--| `Current' is made up of
 					--| multiple widgets which propagate events accordingly.
 					--| We need to check that we do not call the `focus_in_actions'
@@ -634,7 +643,9 @@ feature {NONE} -- Implementation
 			if button /= 3 then
 				-- If left button pressed the bring `Current'
 				-- to foreground.
-				top_level_window_imp.move_to_foreground
+				if attached top_level_window_imp as l_top_level_window_imp then
+					l_top_level_window_imp.move_to_foreground
+				end
 			end
 		end
 
@@ -647,7 +658,7 @@ feature {NONE} -- Implementation
 			--| combo box will not recieve double click events.
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_LIST_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		do
 			--| FIXME to be implemented for pick-and-dropable.	
@@ -657,7 +668,7 @@ feature {NONE} -- Implementation
 			-- Destroy the existing combo box and recreate
 			-- a new one with `creation_flag' in the style
 		local
-			par_imp		: WEL_WINDOW
+			par_imp		: detachable WEL_WINDOW
 			cur_x		: INTEGER
 			cur_y		: INTEGER
 			cur_width	: INTEGER
@@ -699,7 +710,7 @@ feature {NONE} -- Implementation
 			-- Make `Current' read only.
 		local
 			sensitive: BOOLEAN
-			s_item: EV_LIST_ITEM
+			s_item: detachable EV_LIST_ITEM
 			l_tooltip: like tooltip
 		do
 			if is_editable then
@@ -743,7 +754,7 @@ feature {NONE} -- Implementation
 			-- Make `Current' read-writeable.
 		local
 			sensitive: BOOLEAN
-			s_item: EV_LIST_ITEM
+			s_item: detachable EV_LIST_ITEM
 			l_tooltip: like tooltip
 		do
 			if not is_editable then
@@ -856,10 +867,12 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (color)
 			if is_displayed then
-				if is_editable then
-					text_field.invalidate
+				if is_editable and then attached text_field as l_text_field then
+					l_text_field.invalidate
 				end
-				combo.invalidate
+				if attached combo as l_combo then
+					l_combo.invalidate
+				end
 			end
 		end
 
@@ -868,10 +881,12 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (color)
 			if is_displayed then
-				if is_editable then
-					text_field.invalidate
+				if is_editable and then attached text_field as l_text_field then
+					l_text_field.invalidate
 				end
-				combo.invalidate
+				if attached combo as l_combo then
+					l_combo.invalidate
+				end
 			end
 		end
 
@@ -950,16 +965,16 @@ feature {NONE} -- WEL Implementation
 						| Ws_clipsiblings
 		end
 
-	old_selected_item: EV_LIST_ITEM_IMP
+	old_selected_item: detachable EV_LIST_ITEM_IMP
 			-- The previously selected item.
 
-	last_edit_change: STRING_32
+	last_edit_change: detachable STRING_32
 			-- The string resulting from the last edit change.
 
 	on_cbn_selchange
 			-- The selection is about to change.
 		local
-			new_selected_item: EV_LIST_ITEM_IMP
+			new_selected_item: detachable EV_LIST_ITEM_IMP
 		do
 					-- Retrieve the new selected item.
 			if selected then
@@ -971,13 +986,13 @@ feature {NONE} -- WEL Implementation
 			if not equal (old_selected_item, new_selected_item) then
 					-- Send a "Deselect Action" to the old item, and
 					-- to the combo box.
-				if old_selected_item /= Void then
-					if old_selected_item.deselect_actions_internal /= Void then
-						old_selected_item.deselect_actions_internal.call (Void)
+				if attached old_selected_item as l_old_selected_item then
+					if l_old_selected_item.deselect_actions_internal /= Void then
+						l_old_selected_item.deselect_actions.call (Void)
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call
-							([old_selected_item.interface])
+							([l_old_selected_item.interface])
 					end
 				end
 
@@ -988,7 +1003,7 @@ feature {NONE} -- WEL Implementation
 					-- to the combo box.
 				if new_selected_item /= Void then
 					if new_selected_item.select_actions_internal /= Void then
-						new_selected_item.select_actions_internal.call (Void)
+						new_selected_item.select_actions.call (Void)
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call
@@ -1014,15 +1029,18 @@ feature {NONE} -- WEL Implementation
 			-- List box is about to be made visible.
 		local
 			pt: WEL_POINT
+			l_combo: detachable like combo
 		do
 			if drop_down_actions_internal /= Void then
 				drop_down_actions_internal.call (Void)
 			end
+			l_combo := combo
+			check l_combo /= Void end
 			if not ev_children.is_empty then
 				pt := client_to_screen (0,0)
-				combo.resize (combo.width, screen_height - pt.y)
+				l_combo.resize (l_combo.width, screen_height - pt.y)
 			else
-				combo.resize (combo.width, 50)
+				l_combo.resize (l_combo.width, 50)
 			end
 		end
 
@@ -1038,8 +1056,8 @@ feature {NONE} -- WEL Implementation
 			-- Hilight the text between `start_pos' and `end_pos'.
 			-- Both `start_pos' and `end_pos' are selected.
 		do
-			if is_editable then
-				text_field.set_selection (start_pos, end_pos)
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.set_selection (start_pos, end_pos)
 			end
 		end
 
@@ -1066,7 +1084,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_COMBO_BOX
+	interface: detachable EV_COMBO_BOX note option: stable attribute end
 
 invariant
 	combo_not_void: is_initialized implies combo /= Void

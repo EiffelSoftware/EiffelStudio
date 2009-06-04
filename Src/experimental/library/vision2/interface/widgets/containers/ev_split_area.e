@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	first: EV_WIDGET
+	first: detachable EV_WIDGET
 			-- First item.
 		require
 			not_destroyed: not is_destroyed
@@ -31,7 +31,7 @@ feature -- Access
 			Result := implementation.first
 		end
 
-	second: EV_WIDGET
+	second: detachable EV_WIDGET
 			-- Second item.
 		require
 			not_destroyed: not is_destroyed
@@ -256,8 +256,8 @@ feature -- Status setting
 			an_item_not_void: an_item /= Void
 			has_an_item: has (an_item)
 			split_area_full: full
-			other_item_is_expandable: (an_item = first and is_item_expanded
-				(second)) or (an_item = second and is_item_expanded (first))
+			other_item_is_expandable: (an_item = first and then attached second as l_second and then is_item_expanded
+				(l_second)) or (an_item = second and then attached first as l_first and then is_item_expanded (l_first))
 		do
 			implementation.disable_item_expand (an_item)
 		ensure
@@ -335,8 +335,8 @@ feature -- Removal
 		ensure then
 			count_is_one_implies_child_expandable:
 				(count = 1 implies
-					(first /= Void and is_item_expanded (first) or
-					second /= Void and is_item_expanded (second)))
+					(attached first as l_first and then is_item_expanded (l_first) or
+					attached second as l_second and then is_item_expanded (l_second)))
 		end
 
 	wipe_out

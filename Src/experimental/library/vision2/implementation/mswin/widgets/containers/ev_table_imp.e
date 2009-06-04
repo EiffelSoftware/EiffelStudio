@@ -41,7 +41,7 @@ inherit
 			compute_minimum_height,
 			compute_minimum_size,
 			interface,
-			initialize,
+			make,
 			on_size,
 			destroy,
 			next_tabstop_widget
@@ -61,10 +61,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'. Precusor and create new_item_actions.
+		do
 			ev_wel_control_container_make
 			columns := 1
 			rows := 1
@@ -73,11 +78,7 @@ feature {NONE} -- Initialization
 				-- Ensure that `internal_item_list' is
 				-- not `Void'.
 			rebuild_internal_item_list
-		end
 
-	initialize
-			-- Initialize `Current'. Precusor and create new_item_actions.
-		do
 			create_columns
 			create_rows
 			Precursor {EV_CONTAINER_IMP}
@@ -118,34 +119,40 @@ feature {EV_ANY_I} -- Access
 	item_column_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is column coordinate of `widget'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			l_widget_child: detachable EV_TABLE_CHILD_IMP
 		do
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			Result := find_widget_child (widget_imp).left_attachment + 1
+			l_widget_child := find_widget_child (widget_imp)
+			check l_widget_child /= Void end
+			Result := l_widget_child.left_attachment + 1
 		end
 
 	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			l_widget_child: detachable EV_TABLE_CHILD_IMP
 		do
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			Result := find_widget_child (widget_imp).top_attachment + 1
+			l_widget_child := find_widget_child (widget_imp)
+			check l_widget_child /= Void end
+			Result := l_widget_child.top_attachment + 1
 		end
 
 	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		local
-			widget_child: EV_TABLE_CHILD_IMP
-			widget_imp: EV_WIDGET_IMP
+			widget_child: detachable EV_TABLE_CHILD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
@@ -153,14 +160,15 @@ feature {EV_ANY_I} -- Access
 				implementation_not_void: widget_imp /= Void
 			end
 			widget_child := find_widget_child (widget_imp)
+			check widget_child /= Void end
 			Result := widget_child.right_attachment - widget_child.left_attachment
 		end
 
 	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		local
-			widget_child: EV_TABLE_CHILD_IMP
-			widget_imp: EV_WIDGET_IMP
+			widget_child: detachable EV_TABLE_CHILD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 				-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
@@ -168,12 +176,13 @@ feature {EV_ANY_I} -- Access
 				implementation_not_void: widget_imp /= Void
 			end
 			widget_child := find_widget_child (widget_imp)
+			check widget_child /= Void end
 			Result := widget_child.bottom_attachment - widget_child.top_attachment
 		end
 
 feature {EV_TABLE_I} -- Status report
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN
@@ -298,7 +307,7 @@ feature {EV_ANY_I} -- Status settings
 			-- with size `a_width', `a_height' in cells.
 		local
 			table_child: EV_TABLE_CHILD_IMP
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (child, a_x, a_y, a_width, a_height)
 			child.implementation.on_parented
@@ -307,7 +316,7 @@ feature {EV_ANY_I} -- Status settings
 				valid_child: child_imp /= Void
 			end
 				-- Set the parent of `child_imp'.
-			child_imp.set_parent (interface)
+			child_imp.set_parent_imp (Current)
 				-- Create `table_child' to hold `child_imp'.
 			create table_child.make (child_imp, Current)
 				-- Add the table child to `ev_children'.
@@ -335,8 +344,8 @@ feature {EV_ANY_I} -- Status settings
 	remove (v: EV_WIDGET)
 			-- Remove `v' from `Current' if present.
 		local
-			widget_imp: EV_WIDGET_IMP
-			tchild: EV_TABLE_CHILD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			tchild: detachable EV_TABLE_CHILD_IMP
 		do
 			Precursor {EV_TABLE_I} (v)
 				-- Retrieve implementation of `v'.
@@ -345,16 +354,17 @@ feature {EV_ANY_I} -- Status settings
 				implementation_not_void: widget_imp /= Void
 			end
 				-- Call `remove_item_actions' for `Current'.
-			remove_item_actions.call ([widget_imp.interface])
+			remove_item_actions.call ([widget_imp.attached_interface])
 				-- Retrieve the table child for `tchild'.
 			tchild := find_widget_child (widget_imp)
+			check tchild /= Void end
 				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
 
 				-- Update changes.
 			notify_change (Nc_minsize, Current)
 				-- Update the parent of `child_imp'.
-			widget_imp.set_parent (Void)
+			widget_imp.set_parent_imp (Void)
 				-- Call on_orphaned.
 			widget_imp.on_orphaned
 		end
@@ -362,8 +372,8 @@ feature {EV_ANY_I} -- Status settings
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		local
-			table_child: EV_TABLE_CHILD_IMP
-			child_imp: EV_WIDGET_IMP
+			table_child: detachable EV_TABLE_CHILD_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (v, a_column, a_row)
 			child_imp ?= v.implementation
@@ -371,6 +381,7 @@ feature {EV_ANY_I} -- Status settings
 				valid_child: child_imp /= Void
 			end
 			table_child := find_widget_child (child_imp)
+			check table_child /= Void end
 			table_child.set_attachment
 				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1, table_child.right_attachment - table_child.left_attachment + a_column - 1)
 			notify_change (Nc_minsize, Current)
@@ -379,8 +390,8 @@ feature {EV_ANY_I} -- Status settings
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		local
-			table_child: EV_TABLE_CHILD_IMP
-			child_imp: EV_WIDGET_IMP
+			table_child: detachable EV_TABLE_CHILD_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (v, column_span, row_span)
 			child_imp ?= v.implementation
@@ -388,6 +399,7 @@ feature {EV_ANY_I} -- Status settings
 				valid_child: child_imp /= Void
 			end
 			table_child := find_widget_child (child_imp)
+			check table_child /= Void end
 			table_child.set_attachment
 				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
 			notify_change (Nc_minsize, Current)
@@ -396,8 +408,8 @@ feature {EV_ANY_I} -- Status settings
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 			local
-				table_child: EV_TABLE_CHILD_IMP
-				child_imp: EV_WIDGET_IMP
+				table_child: detachable EV_TABLE_CHILD_IMP
+				child_imp: detachable EV_WIDGET_IMP
 			do
 					-- Although `set_item_position' and `set_item_span' will handle everything, they rely
 					-- on the current table child information. For example, in `set_item_position', the item
@@ -411,6 +423,7 @@ feature {EV_ANY_I} -- Status settings
 					valid_child: child_imp /= Void
 				end
 				table_child := find_widget_child (child_imp)
+				check table_child /= Void end
 				table_child.set_attachment
 				(a_row - 1, a_column - 1, a_row + row_span - 1, a_column + column_span - 1)
 
@@ -421,7 +434,7 @@ feature {EV_ANY_I} -- Status settings
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -772,8 +785,8 @@ feature {NONE} -- Implementation
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.attached_interface.prune (attached_interface)
 			end
 			internal_array.discard_items
 			wel_destroy
@@ -858,7 +871,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP
+	find_widget_child (a_child: EV_WIDGET_IMP): detachable EV_TABLE_CHILD_IMP
 				-- `Result' is the table child containing `a_child'.
 		require
 			valid_child: a_child /= Void
@@ -1082,7 +1095,7 @@ feature {NONE} -- Implementation
 	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
-			Result := interface.index_of (child.interface, 1)
+			Result := attached_interface.index_of (child.attached_interface, 1)
 		end
 
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
@@ -1091,23 +1104,24 @@ feature {NONE} -- Implementation
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
 			-- container must be searched next.
 		local
-			w: EV_WIDGET_IMP
-			container: EV_CONTAINER
+			w: detachable EV_WIDGET_IMP
+			container: detachable EV_CONTAINER
 			l_item_list: ARRAYED_LIST [EV_WIDGET]
+			l_result: detachable EV_WIDGET_IMP
 		do
-			if interface /= start_widget then
+			if attached_interface /= start_widget then
 				if has_tabstop then
 					Result := Current
 				end
 			else
 				if start_widget_searched_cell.item = search_pos then
 					w ?= start_widget.implementation
-					Result := w
+					l_result := w
 				elseif start_widget_searched_cell.item = -1 then
 					start_widget_searched_cell.put (search_pos)
 				end
 			end
-			if Result = Void and is_sensitive then
+			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
 					-- children should recieve the tab stop.
@@ -1115,20 +1129,21 @@ feature {NONE} -- Implementation
 				from
 					l_item_list.go_i_th (search_pos)
 				until
-					l_item_list.off or Result /= Void
+					l_item_list.off or l_result /= Void
 				loop
 					w ?= l_item_list.item.implementation
+					check w /= Void end
 					if forwards then
-						Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 					else
 						container ?= w.interface
 						if container /= Void then
-							Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+							l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
 						else
-							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 						end
 					end
-					if Result = Void then
+					if l_result = Void then
 						if forwards then
 							l_item_list.forth
 						else
@@ -1137,14 +1152,16 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if Result = Void then
-				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if l_result = Void then
+				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Implementation
 
-	interface: EV_TABLE
+	interface: detachable EV_TABLE note option: stable attribute end;
 
 invariant
 
@@ -1165,4 +1182,13 @@ note
 
 
 end -- class EV_TABLE_IMP
+
+
+
+
+
+
+
+
+
 

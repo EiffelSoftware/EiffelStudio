@@ -32,8 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	item_select_actions_internal: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE;
+	item_select_actions_internal: detachable EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `item_select_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +54,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

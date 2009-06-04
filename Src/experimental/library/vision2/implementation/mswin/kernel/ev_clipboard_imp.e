@@ -22,17 +22,18 @@ inherit
 create
 	make
 
-feature {NONE}-- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			last_string := ""
 			set_is_initialized (True)
 		end
 
@@ -46,18 +47,22 @@ feature -- Access
 
 	text: STRING_32
 			-- Text content of clipboard.
+		local
+			l_result: detachable STRING_32
 		do
 			open_clipboard (Void)
 			if clipboard_open then
 				if is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext) then
 					retrieve_clipboard_text
-					Result := last_string
-					Result.prune_all ('%R')
+					l_result := last_string
 				end
 				close_clipboard
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := ""
+			else
+				l_result.prune_all ('%R')
+				Result := l_result
 			end
 		end
 
@@ -77,11 +82,12 @@ feature -- Status Setting
 			-- Assign `a_text' to clipboard.
 		local
 			window: EV_WINDOW
-			wel_window: WEL_WINDOW
+			wel_window: detachable WEL_WINDOW
 			local_text: STRING_32
 		do
 			create window
 			wel_window ?= window.implementation
+			check wel_window /= Void end
 			open_clipboard (wel_window)
 			if clipboard_open then
 				empty_clipboard
@@ -99,7 +105,7 @@ feature -- Status Setting
 
 feature {EV_ANY_I}
 
-	interface: EV_CLIPBOARD;
+	interface: detachable EV_CLIPBOARD note option: stable attribute end;
 		-- Interface of `Current'
 
 note
@@ -114,4 +120,14 @@ note
 		]"
 
 end -- class EV_CLIPBOARD_IMP
+
+
+
+
+
+
+
+
+
+
 

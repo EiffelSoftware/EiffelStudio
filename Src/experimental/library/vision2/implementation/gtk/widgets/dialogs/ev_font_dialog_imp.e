@@ -18,30 +18,29 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
 	make
 
-
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect `interface' and initialize `c_object'.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize the dialog.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			base_make (an_interface)
 			a_cs := "Font Selection Dialog"
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
 						a_cs.item
 					))
-		end
-
-	initialize
-			-- Initialize the dialog.
-		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			real_signal_connect (
 				gtk_font_selection_dialog_struct_ok_button (c_object),
@@ -64,19 +63,20 @@ feature -- Access
 	font: EV_FONT
 			-- Current selected font.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			a_cs: EV_GTK_C_STRING
 			a_utf8_ptr: POINTER
 			font_desc: STRING_32
 			font_names: ARRAYED_LIST [STRING_32]
 			exit_loop: BOOLEAN
 			split_values: LIST [STRING_32]
-			selected_font_name: STRING_32
+			selected_font_name: detachable STRING_32
 			l_font_item: STRING_32
 		do
 			--| FIXME IEK Refactor this with default font code in EV_APPLICATION_IMP
 			create Result
 			font_imp ?= Result.implementation
+			check font_imp /= Void end
 
 			a_utf8_ptr := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
 			create a_cs.share_from_pointer (a_utf8_ptr)
@@ -99,6 +99,7 @@ feature -- Access
 				font_names.forth
 			end
 
+			check selected_font_name /= Void end
 			font_imp.set_face_name (selected_font_name.twin)
 			font_imp.preferred_families.extend (selected_font_name.twin)
 
@@ -129,11 +130,12 @@ feature -- Element change
 			-- Select `a_font'.
 		local
 			a_success_flag: BOOLEAN
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			a_cs: EV_GTK_C_STRING
 			a_font_des_str: POINTER
 		do
 			font_imp ?= a_font.implementation
+			check font_imp /= Void end
 			a_font_des_str := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
 			if a_font_des_str /= default_pointer then
 				create a_cs.make_from_pointer (a_font_des_str)
@@ -165,7 +167,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FONT_DIALOG;
+	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -182,4 +184,8 @@ note
 
 
 end -- class EV_FONT_DIALOG_IMP
+
+
+
+
 

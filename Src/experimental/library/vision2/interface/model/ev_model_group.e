@@ -55,7 +55,8 @@ inherit
 			make_from_array,
 			default_create,
 			swap,
-			has
+			has,
+			make_filled
 		end
 
 	EV_MODEL_SINGLE_POINTED
@@ -76,17 +77,23 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty EV_MODEL_GROUP.
 		do
-			Precursor {EV_MODEL}
+			create lookup_table.make (initiale_size)
 			create point_array.make (1)
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-
+			Precursor {EV_MODEL}
 			list_make (initiale_size)
-			create lookup_table.make (initiale_size)
 
 			is_grouped := True
 		ensure then
 			is_grouped: is_grouped
 			not_is_in_group: not is_in_group
+		end
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (n)
 		end
 
 feature -- Access
@@ -115,7 +122,7 @@ feature -- Access
 	deep_elements: LIST [EV_MODEL]
 			-- All elements in `Current' and in its subgroups.
 		local
-			l_group: EV_MODEL_GROUP
+			l_group: detachable EV_MODEL_GROUP
 			l_list: ARRAYED_LIST [EV_MODEL]
 		do
 			create l_list.make (0)
@@ -131,6 +138,7 @@ feature -- Access
 				l_list.extend (item)
 				forth
 			end
+			Result := l_list
 		ensure
 			Result_not_Void: Result /= Void
 		end
@@ -221,7 +229,7 @@ feature -- Status report
 	has_deep (figure: EV_MODEL): BOOLEAN
 			-- Does any item contains `figure'?
 		local
-			grp: EV_MODEL_GROUP
+			grp: detachable EV_MODEL_GROUP
 		do
 			Result := False
 			from
@@ -241,12 +249,12 @@ feature -- Status report
 			end
 		end
 
-	invalid_rectangle: EV_RECTANGLE
+	invalid_rectangle: detachable EV_RECTANGLE
 			-- Rectangle that needs erasing.
 			-- `Void' if no change is made.
 		local
 			f: EV_MODEL
-			r: EV_RECTANGLE
+			r: detachable EV_RECTANGLE
 			l_area: like area
 			i, nb: INTEGER
 		do
@@ -270,12 +278,12 @@ feature -- Status report
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE
+	update_rectangle: detachable EV_RECTANGLE
 			-- Rectangle that needs redrawing.
 			-- `Void' if no change is made.
 		local
 			f: EV_MODEL
-			r: EV_RECTANGLE
+			r: detachable EV_RECTANGLE
 			l_area: like area
 			i, nb: INTEGER
 		do
@@ -314,8 +322,8 @@ feature -- Element change
 			if a_delta_x /= 0 then
 				projection_matrix.translate (a_delta_x, 0)
 				recursive_transform (projection_matrix)
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 			end
 			center.set_x (a_x)
@@ -331,8 +339,8 @@ feature -- Element change
 			if a_delta_y /= 0 then
 				projection_matrix.translate (0, a_delta_y)
 				recursive_transform (projection_matrix)
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 			end
 			center.set_y (a_y)
@@ -349,8 +357,8 @@ feature -- Element change
 			if a_delta_x /= 0 or a_delta_y /= 0 then
 				projection_matrix.translate (a_delta_x, a_delta_y)
 				recursive_transform (projection_matrix)
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 			end
 			center.set (a_x, a_y)
@@ -760,9 +768,10 @@ feature -- Events
 			l_area: like area
 			i, nb: INTEGER
 			l_bbox: like bounding_box
+			l_result: detachable EV_RECTANGLE
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				if is_grouped then
 					from
@@ -782,24 +791,26 @@ feature -- Events
 							if l_area.item (i).is_show_requested then
 								l_bbox := l_area.item (i).bounding_box
 								if l_bbox.height > 0 or else l_bbox.width > 0 then
-									if Result = Void then
-										Result := l_bbox
+									if l_result = Void then
+										l_result := l_bbox
 									else
-										Result.merge (l_bbox)
+										l_result.merge (l_bbox)
 									end
 								end
 							end
 							i := i + 1
 						end
-						if Result = Void then
-							create Result
+						if l_result = Void then
+							create l_result
 						end
 					else
-						create Result
+						create l_result
 					end
 				else
-					create Result
+					create l_result
 				end
+				check l_result /= Void end
+				Result := l_result
 				internal_bounding_box := Result.twin
 			end
 		end
@@ -873,7 +884,7 @@ feature {NONE} -- Implementation
 	full_redraw
 			-- Request `invalid_rectangle' to be ignored.
 		local
-			w: EV_MODEL_WORLD
+			w: detachable EV_MODEL_WORLD
 		do
 			w := world
 			if w /= Void then
@@ -918,4 +929,8 @@ note
 
 
 end -- class EV_MODEL_GROUP
+
+
+
+
 

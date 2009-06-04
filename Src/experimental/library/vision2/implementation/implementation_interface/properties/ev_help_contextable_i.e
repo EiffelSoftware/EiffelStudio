@@ -6,8 +6,8 @@ note
 	keywords: "help"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_HELP_CONTEXTABLE_I
 
 inherit
@@ -15,24 +15,28 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Access
 
-	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		local
-			w: EV_WIDGET_I
+			w: detachable EV_WIDGET_I
+			l_exit_loop: BOOLEAN
 		do
-			from
-				w ?= current
-			until
-				w = Void or Result /= Void
-			loop
-				Result := w.internal_help_context
-				if w.has_parent then
-					w := w.parent.implementation
-				else
-					w := Void
+			w ?= Current
+			if w /= Void then
+				from
+
+				until
+					l_exit_loop
+				loop
+					Result := w.internal_help_context
+					if attached w.parent as l_parent and then attached l_parent.implementation as l_parent_imp then
+						w := l_parent_imp
+					else
+						l_exit_loop := True
+					end
 				end
 			end
 		ensure
@@ -50,7 +54,7 @@ feature -- Element change
 			internal_help_context := an_help_context
 			on_help_context_changed
 		ensure
-			help_context_assigned: help_context.is_equal (an_help_context)
+			help_context_assigned: attached help_context as l_help_context and then l_help_context.is_equal (an_help_context)
 		end
 
 	remove_help_context
@@ -65,12 +69,12 @@ feature -- Element change
 		end
 
 feature {EV_ANY_I} -- Implementation
-	
-	interface: EV_HELP_CONTEXTABLE
+
+	interface: detachable EV_HELP_CONTEXTABLE note option: stable attribute end
 
 feature {EV_HELP_CONTEXTABLE_I} -- Implementation
 
-	internal_help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	internal_help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 			-- Help context
 
 feature {NONE} -- Implementation
@@ -100,4 +104,14 @@ note
 
 
 end -- class EV_HELP_CONTEXTABLE_I
+
+
+
+
+
+
+
+
+
+
 

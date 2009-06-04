@@ -25,6 +25,6 @@ feature -- Status Setting
 
 feature
 
-	interface: EV_BITMAP
+	interface: detachable EV_BITMAP note option: stable attribute end;
 
 end

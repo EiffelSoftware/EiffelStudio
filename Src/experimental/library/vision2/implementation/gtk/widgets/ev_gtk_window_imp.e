@@ -25,22 +25,27 @@ inherit
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_CONTAINER_IMP
+	parent_imp: detachable EV_CONTAINER_IMP
 			-- Parent of `Current', always Void as windows cannot be parented
 		do
 			-- Return Void
 		end
 
-	set_blocking_window (a_window: EV_WINDOW)
+	set_blocking_window (a_window: detachable EV_WINDOW)
 			-- Set as transient for `a_window'.
+		local
+			l_internal_blocking_window: detachable EV_WINDOW_IMP
 		do
 			if not is_destroyed then
 				if a_window /= Void then
-					internal_blocking_window ?= a_window.implementation
-					internal_blocking_window.add_transient_child (Current)
+					l_internal_blocking_window ?= a_window.implementation
+					check l_internal_blocking_window /= Void end
+					internal_blocking_window := l_internal_blocking_window
+					l_internal_blocking_window.add_transient_child (Current)
 				else
-					if internal_blocking_window /= Void then
-						internal_blocking_window.remove_transient_child (Current)
+					l_internal_blocking_window := internal_blocking_window
+					if l_internal_blocking_window /= Void then
+						l_internal_blocking_window.remove_transient_child (Current)
 						internal_blocking_window := Void
 					end
 				end
@@ -49,11 +54,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- Window this dialog is a transient for.
 		do
-			if internal_blocking_window /= Void and then not internal_blocking_window.is_destroyed then
-				Result := internal_blocking_window.interface
+			if attached internal_blocking_window as l_internal_blocking_window and then not l_internal_blocking_window.is_destroyed then
+				Result := l_internal_blocking_window.interface
 			end
 		end
 
@@ -68,7 +73,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_blocking_window: EV_WINDOW_IMP
+	internal_blocking_window: detachable EV_WINDOW_IMP
 			-- Window that `Current' is relative to.
 			-- Implementation
 
@@ -188,11 +193,11 @@ feature {NONE} -- Implementation
 			if is_show_requested then
 				if
 					is_modal and then
-					internal_blocking_window /= Void and then
-					not internal_blocking_window.is_destroyed and then
-					internal_blocking_window.is_show_requested
+					attached internal_blocking_window as l_internal_blocking_window and then
+					not l_internal_blocking_window.is_destroyed and then
+					l_internal_blocking_window.is_show_requested
 				then
-					internal_blocking_window.decrease_modal_window_count
+					l_internal_blocking_window.decrease_modal_window_count
 				end
 
 				l_x_pos := x_position
@@ -219,9 +224,10 @@ feature {NONE} -- Implementation
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		local
-			l_window_imp: EV_WINDOW_IMP
+			l_window_imp: detachable EV_WINDOW_IMP
 		do
 			l_window_imp ?= a_window.implementation
+			check l_window_imp /= Void end
 			is_modal := True
 			l_window_imp.increase_modal_window_count
 			show_relative_to_window (a_window)
@@ -280,7 +286,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 		deferred
 		end
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
+	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		deferred
 		end
@@ -289,21 +295,21 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			-- Translation routine used for key events
 		local
 			keyval: NATURAL_32
-			a_key_string: STRING_32
-			a_key: EV_KEY
+			a_key_string: detachable STRING_32
+			a_key: detachable EV_KEY
 			a_key_press: BOOLEAN
 			l_app_imp: like app_implementation
-			l_accel_list: EV_ACCELERATOR_LIST
+			l_accel_list: detachable EV_ACCELERATOR_LIST
 			l_accel_called: BOOLEAN
-			l_window_imp: EV_WINDOW_IMP
-			a_focus_widget: EV_WIDGET_IMP
-			l_standard_dialog: EV_STANDARD_DIALOG_IMP
-			l_tab_controlable: EV_TAB_CONTROLABLE_I
+			l_window_imp: detachable EV_WINDOW_IMP
+			a_focus_widget: detachable EV_WIDGET_IMP
+			l_standard_dialog: detachable EV_STANDARD_DIALOG_IMP
+			l_tab_controlable: detachable EV_TAB_CONTROLABLE_I
 			l_disable_default_processing: BOOLEAN
 			l_char: CHARACTER_32
 			l_any: ANY
-			l_accel: EV_ACCELERATOR
-			l_accel_imp: EV_ACCELERATOR_IMP
+			l_accel: detachable EV_ACCELERATOR
+			l_accel_imp: detachable EV_ACCELERATOR_IMP
 			l_unicode_value: NATURAL_32
 		do
 			l_app_imp := app_implementation
@@ -337,6 +343,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						l_accel := l_accel_list @ 1
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
+							check l_accel_imp /= Void end
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
 							l_accel := l_window_imp.accel_list.item (l_accel_imp.hash_code_function (a_key.code, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
@@ -402,19 +409,19 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
 					end
 				end
-				if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
-					l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+				if attached l_app_imp.pick_and_drop_source as l_pick_and_drop_source and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
+					l_pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
 				else
 					if a_key_press then
 						if a_key /= Void and then l_app_imp.key_press_actions_internal /= Void then
-							l_app_imp.key_press_actions_internal.call ([a_focus_widget.interface, a_key])
+							l_app_imp.key_press_actions.call ([a_focus_widget.attached_interface, a_key])
 						end
 						if a_key_string /= Void and then l_app_imp.key_press_string_actions_internal /= Void then
-							l_app_imp.key_press_string_actions_internal.call ([a_focus_widget.interface, a_key_string])
+							l_app_imp.key_press_string_actions.call ([a_focus_widget.attached_interface, a_key_string])
 						end
 					else
 						if a_key /= Void and then l_app_imp.key_release_actions_internal /= Void then
-							l_app_imp.key_release_actions_internal.call ([a_focus_widget.interface, a_key])
+							l_app_imp.key_release_actions.call ([a_focus_widget.attached_interface, a_key])
 						end
 					end
 					if not l_disable_default_processing then

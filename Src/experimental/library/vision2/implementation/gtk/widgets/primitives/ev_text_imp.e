@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface,
 			insert_text,
-			initialize,
+			make,
 			create_change_actions,
 			dispose,
 			text_length,
@@ -41,10 +41,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk text view.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
@@ -57,22 +62,17 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
 
+			enable_word_wrapping
+			set_editable (True)
+			set_background_color ((create {EV_STOCK_COLORS}).white)
+			initialize_buffer_events
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Hook up the change actions for the text widget
 		do
 			Result := Precursor {EV_TEXT_COMPONENT_IMP}
-		end
-
-	initialize
-			-- Initialize `Current'
-		do
-			enable_word_wrapping
-			set_editable (True)
-			set_background_color ((create {EV_STOCK_COLORS}).white)
-			initialize_buffer_events
-			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	initialize_buffer_events
@@ -143,8 +143,10 @@ feature -- Status report
 				if l_char /= default_pointer then
 					create Result.make_from_c (l_char)
 				else
-					create Result.make_empty
+					Result := ""
 				end
+			else
+				Result := ""
 			end
 		end
 
@@ -218,10 +220,11 @@ feature -- Basic operation
 			-- the text and putting it in the Clipboard to paste it later.
 			-- If `selectd_region' is empty, it does nothing.
 		local
-			clip_imp: EV_CLIPBOARD_IMP
+			clip_imp: detachable EV_CLIPBOARD_IMP
 		do
 			if has_selection then
 				clip_imp ?= App_implementation.clipboard.implementation
+				check clip_imp /= Void end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_cut_clipboard (text_buffer, clip_imp.clipboard, True)
 			end
 		end
@@ -230,10 +233,11 @@ feature -- Basic operation
 			-- Copy `selected_region' into the Clipboard.
 			-- If the `selected_region' is empty, it does nothing.
 		local
-			clip_imp: EV_CLIPBOARD_IMP
+			clip_imp: detachable EV_CLIPBOARD_IMP
 		do
 			if has_selection then
 				clip_imp ?= App_implementation.clipboard.implementation
+				check clip_imp /= Void end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)
 			end
 		end
@@ -243,11 +247,12 @@ feature -- Basic operation
 			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing.
 		local
-			clip_imp: EV_CLIPBOARD_IMP
+			clip_imp: detachable EV_CLIPBOARD_IMP
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text: EV_GTK_C_STRING
 		do
 			clip_imp ?= App_implementation.clipboard.implementation
+			check clip_imp /= Void end
 			create a_iter.make
 			a_text := clip_imp.text
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
@@ -628,7 +633,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TEXT;
+	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -645,4 +650,8 @@ note
 
 
 end -- class EV_TEXT_IMP
+
+
+
+
 

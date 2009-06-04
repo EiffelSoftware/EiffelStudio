@@ -32,9 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	ok_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	ok_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `ok_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -57,8 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	cancel_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	cancel_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `cancel_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -75,4 +82,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

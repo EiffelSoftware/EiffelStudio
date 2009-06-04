@@ -55,17 +55,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Make `Current' with `interface' `an_interface'.
 		do
-			wel_make
-			base_make (an_interface)
-			align_text_left
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			wel_make
+			align_text_left
 			set_width (80)
 			set_text ("")
 			set_is_initialized (True)
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	parent_imp: EV_HEADER_IMP
+	parent_imp: detachable EV_HEADER_IMP
 		-- Parent of `Current'
 
 	user_can_resize: BOOLEAN
@@ -139,15 +139,16 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		do
-			parent_imp.resize_item_to_content (Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.resize_item_to_content (Current)
+			end
 		end
 
 	set_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed pixmap.
 		do
-			if private_pixmap /= Void then
-				private_pixmap.destroy
-				private_pixmap := Void
+			if attached private_pixmap as l_private_pixmap then
+				l_private_pixmap.destroy
 			end
 			private_pixmap := p.twin
 			if parent_imp /= Void then
@@ -158,15 +159,19 @@ feature -- Status setting
 	set_pixmap_in_parent
 			-- Make `pix' the new pixmap of `Current'.
 		local
-			image_list: EV_IMAGE_LIST_IMP
+			image_list: detachable EV_IMAGE_LIST_IMP
+			l_parent_imp: like parent_imp
 		do
-			image_list := parent_imp.image_list
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
+			image_list := l_parent_imp.image_list
 			if image_list = Void then
-				parent_imp.setup_image_list
-				image_list := parent_imp.image_list
+				l_parent_imp.setup_image_list
+				image_list := l_parent_imp.image_list
 			end
-			if private_pixmap /= Void then
-				image_list.add_pixmap (private_pixmap)
+			check image_list /= Void end
+			if attached private_pixmap as l_private_pixmap then
+				image_list.add_pixmap (l_private_pixmap)
 					-- Set the `iimage' to the index of the image to be used
 					-- from the image list.
 				set_iimage (image_list.last_position)
@@ -174,7 +179,7 @@ feature -- Status setting
 				set_mask (clear_flag (mask, {WEL_HDI_CONSTANTS}.hdi_image))
 				set_format (clear_flag (format, {WEL_HDF_CONSTANTS}.hdf_image))
 			end
-			parent_imp.refresh_item (Current)
+			l_parent_imp.refresh_item (Current)
 		end
 
 	remove_pixmap
@@ -281,14 +286,14 @@ feature {NONE} -- implementation
 	refresh
 			-- Refresh attributes of `Current' in `parent'.
 		do
-			if parent_imp /= Void then
-				parent_imp.refresh_item (Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.refresh_item (Current)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HEADER_ITEM;
+	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -305,4 +310,14 @@ note
 
 
 end -- class EV_HEADER_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -11,7 +11,7 @@ deferred class
 	EV_VERTICAL_SPLIT_AREA_I
 
 inherit
-	
+
 	EV_SPLIT_AREA_I
 		redefine
 			interface
@@ -22,8 +22,8 @@ feature
 	minimum_split_position: INTEGER
 			-- Minimum position the splitter can have.
 		do
-			if first_visible then
-				Result := first.minimum_height
+			if first_visible and then attached first as l_first then
+				Result := l_first.minimum_height
 			end
 		end
 
@@ -32,8 +32,8 @@ feature
 		local
 			a_sec_height: INTEGER
 		do
-			if second_visible then
-				a_sec_height := second.minimum_height
+			if second_visible and then attached second as l_second then
+				a_sec_height := l_second.minimum_height
 			end
 			Result := height - a_sec_height - splitter_width
 			if Result < minimum_split_position then
@@ -43,7 +43,7 @@ feature
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SPLIT_AREA;
+	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -60,4 +60,11 @@ note
 
 
 end -- class EV_HORIZONTAL_SPLIT_AREA_I
+
+
+
+
+
+
+
 

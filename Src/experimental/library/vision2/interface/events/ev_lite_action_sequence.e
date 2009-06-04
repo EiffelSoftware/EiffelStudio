@@ -24,9 +24,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EV_ANY_HANDLER
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
-	default_create,
-	make
+	default_create
 
 create {EV_LITE_ACTION_SEQUENCE}
 	make_filled
@@ -40,7 +44,7 @@ feature -- Basic operations
 		do
 			if count > 0 then
 					-- We need to update the global event counter.
-				ev_application.increase_action_sequence_call_counter
+				shared_environment.implementation.application_i.increase_action_sequence_call_counter
 				Precursor (event_data)
 			end
 		end

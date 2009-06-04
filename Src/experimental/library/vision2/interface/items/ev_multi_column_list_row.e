@@ -28,7 +28,8 @@ inherit
 			default_create as interactive_list_make
 		redefine
 			on_item_added_at,
-			on_item_removed_at
+			on_item_removed_at,
+			make_filled, array_make
 		end
 
 	EV_DESELECTABLE
@@ -51,6 +52,22 @@ create
 
 create {EV_MULTI_COLUMN_LIST_ROW}
 	make_filled
+
+feature {NONE} -- Initialization
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (n)
+		end
+
+	array_make (min_index, max_index: INTEGER_32)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (min_index, max_index)
+		end
 
 feature {NONE} -- Contract support
 
@@ -91,13 +108,6 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			interactive_list_make
-			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
-		end
-
 	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' is about to be added.
 		do
@@ -111,6 +121,13 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	create_implementation
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make
+			interactive_list_make
+		end
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
@@ -133,4 +150,11 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
+
+
+
+
+
+
+
 

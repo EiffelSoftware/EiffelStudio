@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of the last clicked button.
 
 feature -- Status setting
@@ -56,11 +56,11 @@ feature -- Status setting
 
 			Precursor (a_window)
 
-			if selected_button /= Void then
-				if selected_button.is_equal (internal_accept) then
-					interface.ok_actions.call (Void)
-				elseif selected_button.is_equal (ev_cancel) then
-					interface.cancel_actions.call (Void)
+			if attached selected_button as l_selected_button then
+				if l_selected_button.is_equal (internal_accept) then
+					ok_actions.call (Void)
+				elseif ev_cancel.is_equal (l_selected_button) then
+					cancel_actions.call (Void)
 				end
 			end
 		end
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature {EV_GTK_WIDGET_IMP} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
+	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		do
 			if a_key /= Void then
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 	user_clicked_ok: BOOLEAN
 		-- Has the user explicitly cancelled the dialog.
 
-	interface: EV_STANDARD_DIALOG
+	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end
 
 	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
@@ -164,4 +164,8 @@ note
 
 
 end -- class EV_STANDARD_DIALOG_IMP
+
+
+
+
 

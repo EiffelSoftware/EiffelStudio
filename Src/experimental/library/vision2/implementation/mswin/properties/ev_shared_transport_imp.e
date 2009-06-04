@@ -18,13 +18,13 @@ inherit
 
 feature -- Access
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- `Result' is implementation of widget at current
 			-- pointer position or Void if none.
 		local
 			wel_point: WEL_POINT
-			wel_window_at_cursor_position: WEL_WINDOW
-			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
+			wel_window_at_cursor_position: detachable WEL_WINDOW
+			combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
 		do
 				--|FIXME make sure pick and drop uses this code.
 			create wel_point.make (0, 0)
@@ -64,8 +64,8 @@ feature {NONE} -- Implementation
 			-- Set pointer style implementation.
 		local
 			l_wel_cursor: WEL_CURSOR
-			l_pointer_style_imp: EV_POINTER_STYLE_IMP
-			l_widget: EV_WIDGET_IMP
+			l_pointer_style_imp: detachable EV_POINTER_STYLE_IMP
+			l_widget: detachable EV_WIDGET_IMP
 		do
 				-- We do a global setting. This means that if the widget
 				-- where the cursor is has a different cursor than
@@ -79,8 +79,8 @@ feature {NONE} -- Implementation
 			l_wel_cursor := l_pointer_style_imp.wel_cursor
 			l_wel_cursor.increment_reference
 
-			if current_wel_cursor /= Void then
-				current_wel_cursor.decrement_reference
+			if attached current_wel_cursor as l_current_wel_cursor then
+				l_current_wel_cursor.decrement_reference
 				current_wel_cursor := Void
 			end
 			current_wel_cursor := l_wel_cursor
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	current_wel_cursor: WEL_CURSOR
+	current_wel_cursor: detachable WEL_CURSOR
 			-- Current cursor set, Void if none.
 
 	Default_pixmaps: EV_STOCK_PIXMAPS
@@ -111,13 +111,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	pnd_screen: EV_SCREEN
+	pnd_screen: detachable EV_SCREEN
 		-- Screen used for retrieving current pointer position,
 		-- and drawing if transport type necessitates this.
 
 feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
-	cursor_pixmap: EV_POINTER_STYLE;
+	cursor_pixmap: detachable EV_POINTER_STYLE;
 			-- Cursor used on the widget.
 
 note
@@ -135,4 +135,14 @@ note
 
 
 end -- class EV_SHARED_TRANSPORT_IMP
+
+
+
+
+
+
+
+
+
+
 

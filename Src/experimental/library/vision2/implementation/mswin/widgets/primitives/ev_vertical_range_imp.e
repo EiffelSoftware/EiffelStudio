@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision vertical range. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -18,19 +18,26 @@ inherit
 	EV_RANGE_IMP
 		redefine
 			set_default_minimum_size,
-			interface
+			interface,
+			make
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create as vertical range.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'
+		do
 			make_vertical (default_parent, 0, 0, 0, 0, 0)
+			Precursor
 		end
 
 feature -- Status setting
@@ -44,7 +51,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_RANGE;
+	interface: detachable EV_VERTICAL_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -61,4 +68,10 @@ note
 
 
 end -- class EV_VERTICAL_RANGE_IMP
+
+
+
+
+
+
 

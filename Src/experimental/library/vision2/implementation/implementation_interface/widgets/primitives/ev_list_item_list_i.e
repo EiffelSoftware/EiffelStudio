@@ -4,10 +4,10 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_LIST_ITEM_LIST_I
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
@@ -18,7 +18,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER_I
 		redefine
 			interface
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- `Result' is currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		deferred
@@ -57,7 +57,7 @@ feature -- Status setting
 
 feature {EV_LIST_ITEM_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
-	interface: EV_LIST_ITEM_LIST;
+	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -74,4 +74,14 @@ note
 
 
 end -- class EV_LIST_ITEM_LIST_I
+
+
+
+
+
+
+
+
+
+
 

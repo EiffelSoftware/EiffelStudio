@@ -28,7 +28,7 @@ inherit
 			redraw_current_push_button
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy,
 			default_process_message
 		end
@@ -51,7 +51,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
@@ -101,34 +101,30 @@ feature -- Access
 			end
 		end
 
-	background_pixmap_imp: EV_PIXMAP_IMP
+	background_pixmap_imp: detachable EV_PIXMAP_IMP
 			-- Pixmap used for the background of the widget
 
-	background_pixmap: EV_PIXMAP
+	background_pixmap: detachable EV_PIXMAP
 			-- `Result' is pixmap used for background.
 		do
-			if background_pixmap_imp /= Void then
+			if attached background_pixmap_imp as l_background_pixmap_imp then
 				create Result
-				Result.copy (background_pixmap_imp.interface)
+				Result.copy (l_background_pixmap_imp.attached_interface)
 			end
 		end
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER)
-			-- Make `par' the new parent of `Current'.
-			-- `par' can be Void then the parent is the screen.
+	set_parent_imp (par_imp: detachable EV_CONTAINER_IMP)
+			-- Make `par_imp' the new parent of `Current'.
+			-- `par_imp' can be Void then the parent is the screen.
 		local
-			par_imp: EV_CONTAINER_IMP
-			ww: WEL_WINDOW
+			ww: detachable WEL_WINDOW
 		do
-			if par /= Void then
-				par_imp ?= par.implementation
-				check
-					valid_cast: par_imp /= Void
-				end
+			if par_imp /= Void then
 				set_top_level_window_imp (par_imp.top_level_window_imp)
-				ww ?= par.implementation
+				ww ?= par_imp
+				check ww /= Void end
 				wel_set_parent (ww)
 			else
 				set_top_level_window_imp (Void)
@@ -176,11 +172,11 @@ feature -- Status setting
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.attached_interface.prune (attached_interface)
 			end
-			if interface.prunable then
-				interface.wipe_out
+			if attached_interface.prunable then
+				attached_interface.wipe_out
 			end
 			wel_destroy
 			set_is_destroyed (True)
@@ -191,9 +187,9 @@ feature {NONE} -- WEL Implementation
 	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU)
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		local
-			menu_list: EV_MENU_ITEM_LIST
-			menu_list_imp: EV_MENU_ITEM_LIST_IMP
-			win_imp: EV_WINDOW_IMP
+			menu_list: detachable EV_MENU_ITEM_LIST
+			menu_list_imp: detachable EV_MENU_ITEM_LIST_IMP
+			win_imp: detachable EV_WINDOW_IMP
 		do
 			win_imp := top_level_window_imp
 			if win_imp /= Void then
@@ -215,9 +211,9 @@ feature {NONE} -- WEL Implementation
 			-- information about the item to be drawn and the type
 			-- of drawing required.
 		local
-			label_imp: EV_LABEL_IMP
+			label_imp: detachable EV_LABEL_IMP
 			item_type: INTEGER
-			button_imp: EV_BUTTON_IMP
+			button_imp: detachable EV_BUTTON_IMP
 		do
 			item_type := draw_item.ctl_type
 			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
@@ -244,10 +240,10 @@ feature {NONE} -- WEL Implementation
 			--    in the `paint_dc',
 			-- 2. a backgound brush to be returned to the system.
 		local
-			brush: WEL_BRUSH
-			w: EV_WIDGET_IMP
+			brush: detachable WEL_BRUSH
+			w: detachable EV_WIDGET_IMP
 			theme_drawer: EV_THEME_DRAWER_IMP
-			label: EV_LABEL_IMP
+			label: detachable EV_LABEL_IMP
 		do
 			theme_drawer := application_imp.theme_drawer
 
@@ -260,6 +256,7 @@ feature {NONE} -- WEL Implementation
 			if label /= Void and then application_imp.themes_active then
 				disable_default_processing
 				brush := background_brush
+				check brush /= Void end
 				theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)
 					-- Set background of `paint_dc' to transparant so that Windows does not draw
 					-- over the background we have just drawn.
@@ -281,7 +278,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-   	background_brush: WEL_BRUSH
+   	background_brush: detachable WEL_BRUSH
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background
@@ -289,8 +286,8 @@ feature {NONE} -- WEL Implementation
    			tmp_bitmap: WEL_BITMAP
 		do
  			if exists then
-				if background_pixmap_imp /= Void then
-					tmp_bitmap := background_pixmap_imp.get_bitmap
+				if attached background_pixmap_imp as l_background_pixmap_imp then
+					tmp_bitmap := l_background_pixmap_imp.get_bitmap
 					create Result.make_by_pattern (tmp_bitmap)
 					tmp_bitmap.decrement_reference
 				else
@@ -302,7 +299,7 @@ feature {NONE} -- WEL Implementation
 	on_wm_vscroll (wparam, lparam: POINTER)
  			-- Wm_vscroll message.
  		local
- 			gauge: EV_GAUGE_IMP
+ 			gauge: detachable EV_GAUGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -319,8 +316,8 @@ feature {NONE} -- WEL Implementation
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
 							get_wm_vscroll_pos (wparam, lparam))
 						if gauge.change_actions_internal /= Void then
-	 						gauge.change_actions_internal.call
-								([gauge.interface.value])
+	 						gauge.change_actions.call
+								([gauge.attached_interface.value])
 						end
  					end
  				else
@@ -334,7 +331,7 @@ feature {NONE} -- WEL Implementation
  	on_wm_hscroll (wparam, lparam: POINTER)
  			-- Wm_hscroll message.
  		local
- 			gauge: EV_GAUGE_IMP
+ 			gauge: detachable EV_GAUGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -351,8 +348,8 @@ feature {NONE} -- WEL Implementation
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
 							get_wm_vscroll_pos (wparam, lparam))
 						if gauge.change_actions_internal /= Void then
-		 					gauge.change_actions_internal.call
-								([gauge.interface.value])
+		 					gauge.change_actions.call
+								([gauge.attached_interface.value])
 						end
 	 				end
 				else
@@ -374,21 +371,23 @@ feature {NONE} -- WEL Implementation
 		local
 			tooltip_text: WEL_TOOLTIP_TEXT
 			tvinfotip: WEL_NM_TREE_VIEW_GETINFOTIP
-			temp_node: EV_TREE_NODE_IMP
-			tree: EV_TREE_IMP
-			tooltip: WEL_TOOLTIP
-			rich_text: EV_RICH_TEXT_IMP
+			temp_node: detachable EV_TREE_NODE_IMP
+			tree: detachable EV_TREE_IMP
+			tooltip: detachable WEL_TOOLTIP
+			rich_text: detachable EV_RICH_TEXT_IMP
 			selchange: WEL_RICH_EDIT_SELCHANGE
-			list: EV_LIST_IMP
-			radio_button: EV_RADIO_BUTTON_IMP
-			check_button: EV_CHECK_BUTTON_IMP
-			button: EV_BUTTON_IMP
+			list: detachable EV_LIST_IMP
+			list_item: detachable EV_LIST_ITEM
+			radio_button: detachable EV_RADIO_BUTTON_IMP
+			check_button: detachable EV_CHECK_BUTTON_IMP
+			button: detachable EV_BUTTON_IMP
 			lvninfotip: WEL_NM_LIST_VIEW_GETINFOTIP
 			string: WEL_STRING
-			multi_column_list: EV_MULTI_COLUMN_LIST_IMP
-			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW_I
+			multi_column_list: detachable EV_MULTI_COLUMN_LIST_IMP
+			multi_column_list_row: detachable EV_MULTI_COLUMN_LIST_ROW
+			multi_column_list_row_imp: EV_MULTI_COLUMN_LIST_ROW_I
 			l_zero: INTEGER
-			checkable_tree: EV_CHECKABLE_TREE_IMP
+			checkable_tree: detachable EV_CHECKABLE_TREE_IMP
 			custom: WEL_NM_CUSTOM_DRAW
 			theme_drawer: EV_THEME_DRAWER_IMP
 			bk_brush: WEL_BRUSH
@@ -401,7 +400,9 @@ feature {NONE} -- WEL Implementation
 				create tvinfotip.make_by_pointer (info.item)
 
 				tree ?= info.window_from
+				check tree /= Void end
 				tooltip := tree.get_tooltip
+				check tooltip /= Void end
 					-- Bring the tooltip to the front.
 					-- For some reason without this, it is shown behind
 					-- the window.
@@ -410,6 +411,7 @@ feature {NONE} -- WEL Implementation
 				tree.all_ev_children.search (tvinfotip.hitem)
 				if tree.all_ev_children.found then
 					temp_node := tree.all_ev_children.found_item
+					check temp_node /= Void end
 					if temp_node.tooltip /= Void and
 						not temp_node.tooltip.is_empty
 					then
@@ -427,17 +429,19 @@ feature {NONE} -- WEL Implementation
 				list ?= info.window_from
 				if list = Void then
 					multi_column_list ?= info.window_from
+					check multi_column_list /= Void end
 					tooltip := multi_column_list.get_tooltip
-					multi_column_list_row ?= multi_column_list.i_th (lvninfotip.iitem + 1).implementation
-					check
-						row_not_void: multi_column_list_row /= Void
-					end
-					create string.make (multi_column_list_row.tooltip)
+					multi_column_list_row := multi_column_list.i_th (lvninfotip.iitem + 1)
+					check multi_column_list_row /= Void end
+					multi_column_list_row_imp := multi_column_list_row.implementation
+					create string.make (multi_column_list_row_imp.tooltip)
 				else
 					tooltip := list.get_tooltip
-					create string.make (list.i_th (lvninfotip.iitem + 1).tooltip)
+					list_item := list.i_th (lvninfotip.iitem + 1)
+					check list_item /= Void end
+					create string.make (list_item.implementation.tooltip)
 				end
-
+				check tooltip /= Void end
 				tooltip.set_z_order (Hwnd_top)
 
 					-- Copy tooltip to allocated memory location.
@@ -451,6 +455,7 @@ feature {NONE} -- WEL Implementation
 				set_message_return_value (to_lresult (1))
 			elseif info.code = ({WEL_RICH_EDIT_MESSAGE_CONSTANTS}.en_selchange) then
 				rich_text ?= info.window_from
+				check rich_text /= Void end
 				create selchange.make_by_nmhdr (info)
 				rich_text.on_en_selchange (selchange.selection_type, selchange.character_range)
 			elseif info.code = {WEL_NM_CONSTANTS}.nm_click then
@@ -493,11 +498,11 @@ feature {NONE} -- Implementation, focus event
 			-- Used when `Current' is a child of an EV_DIALOG_IMP.
 		local
 			l: LINEAR [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
-			widget_imp: EV_WIDGET_IMP
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			cur: detachable CURSOR
+			widget_imp: detachable EV_WIDGET_IMP
 		do
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				cur := cs.cursor
@@ -515,6 +520,7 @@ feature {NONE} -- Implementation, focus event
 				l.forth
 			end
 			if cs /= Void then
+				check cur /= Void end
 				cs.go_to (cur)
 			end
 		end
@@ -543,7 +549,7 @@ feature {NONE} -- Implementation : deferred features
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CONTAINER
+	interface: detachable EV_CONTAINER note option: stable attribute end
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -588,12 +594,11 @@ feature {EV_ANY_I} -- Implementation
 			-- `Result' is 1 based index of `child' within `Current'.
 		require
 			child_not_void: child /= Void
-			child_contained: interface.has (child.interface)
+			child_contained: has (child.attached_interface)
 		deferred
 		ensure
-			valid_result: Result >= 1 and Result <= interface.count
+			valid_result: Result >= 1 and Result <= count
 		end
-
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
@@ -606,9 +611,10 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		require
 			other_not_void: other /= Void
 		local
-			c_imp: EV_CONTAINER_IMP
+			c_imp: detachable EV_CONTAINER_IMP
 		do
 			c_imp ?= other.implementation
+			check c_imp /= Void end
 			Result := c_imp.radio_group = radio_group
 		end
 
@@ -621,7 +627,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			radio_group_exists: radio_group /= Void
 			radio_group_empty: radio_group.is_empty
 		end
-
 
 	set_radio_group (rg: like radio_group)
 			-- Set `radio_group' by reference. (Merge)
@@ -638,7 +643,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		require
 			w_not_void: w /= Void
 		local
-			r: EV_RADIO_BUTTON_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -656,7 +661,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		require
 			w_not_void: w /= Void
 		local
-			r: EV_RADIO_BUTTON_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -674,13 +679,15 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			--| return the widget to it's original state when it is removed.
 			--| Hence this function.
 		local
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
+			l_interface: like interface
 		do
 			w_imp ?= w.implementation
 			check
 				widget_imp_not_void: w_imp /= Void
 			end
-			if not interface.implementation.is_sensitive then
+			l_interface := interface
+			if attached l_interface and then not l_interface.implementation.is_sensitive then
 				if not w_imp.internal_non_sensitive then
 					w_imp.enable_sensitive
 				end
@@ -691,13 +698,15 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Called every time a widget is added to `Current'.
 			--| If `Current' is disabled then we must disable `w'.
 		local
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
+			l_interface: like interface
 		do
 			w_imp ?= w.implementation
 			check
 				widget_imp_not_void: w_imp /= Void
 			end
-			if not interface.implementation.is_sensitive then
+			l_interface := interface
+			if attached l_interface and then not l_interface.implementation.is_sensitive then
 				w_imp.disable_sensitive
 			end
 		end
@@ -708,74 +717,66 @@ feature -- Status setting
 			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: like radio_group
-			peer: EV_CONTAINER_IMP
+			peer: detachable EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			if peer = Void then
-				check
-					False
+			check peer /= Void end
+			l := peer.radio_group
+			if l /= radio_group then
+				from
+					l.start
+				until
+					l.is_empty
+				loop
+					add_radio_button (l.item.attached_interface)
 				end
-			else
-				l := peer.radio_group
-				if l /= radio_group then
-					from
-						l.start
-					until
-						l.is_empty
-					loop
-						add_radio_button (l.item.interface)
-					end
-					peer.set_radio_group (radio_group)
-				end
+				peer.set_radio_group (radio_group)
 			end
 		end
 
 	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Removed radio grouping of `a_container' from `Current'.
 		local
-			l: like radio_group
-			peer: EV_CONTAINER_IMP
-			r: EV_RADIO_BUTTON_IMP
-			original_selected_button: EV_RADIO_BUTTON_IMP
+			l: detachable like radio_group
+			peer: detachable EV_CONTAINER_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
+			original_selected_button: detachable EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
-			if peer = Void then
-				check
-					False
+			check peer /= Void end
+			l := radio_group
+			from
+				l.start
+			until
+				l.off
+			loop
+				r ?= l.item
+				check r /= Void end
+				if r.is_selected then
+						-- Store originally selected button,
+						-- for selection of necessary button at
+						-- end of unmerge, as a button has to
+						-- be selected in all groups.
+					original_selected_button := r
 				end
-			else
-				l := radio_group
-				from
-					l.start
-				until
-					l.off
-				loop
-					r ?= l.item
-					if r.is_selected then
-							-- Store originally selected button,
-							-- for selection of necessary button at
-							-- end of unmerge, as a button has to
-							-- be selected in all groups.
-						original_selected_button := r
+				if r.parent = a_container then
+					if peer.radio_group = radio_group then
+							-- Reset radio group, back to
+							-- empty.
+						peer.reset_radio_group
 					end
-					if r.parent = a_container then
-						if peer.radio_group = radio_group then
-								-- Reset radio group, back to
-								-- empty.
-							peer.reset_radio_group
-						end
-							-- Remove radio button from radio group
-							-- of `Current'.
-						l.remove
-							-- Link radio group of `r' to match that of `a_container'.
-						r.internal_set_radio_group (peer.radio_group)
-							-- Add `r' to radio group of `container'.
-						peer.radio_group.extend (r)
-					else
-						l.forth
-					end
+						-- Remove radio button from radio group
+						-- of `Current'.
+					l.remove
+						-- Link radio group of `r' to match that of `a_container'.
+					r.internal_set_radio_group (peer.radio_group)
+						-- Add `r' to radio group of `container'.
+					peer.radio_group.extend (r)
+				else
+					l.forth
 				end
 			end
+
 			if not l.is_empty then
 				check
 					had_original_selection: original_selected_button /= Void
@@ -831,4 +832,14 @@ note
 
 
 end -- class EV_CONTAINER_IMP
+
+
+
+
+
+
+
+
+
+
 

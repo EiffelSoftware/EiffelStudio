@@ -27,11 +27,12 @@ inherit
 			minimum_height,
 			width,
 			height,
-			show
+			show,
+			has
 		redefine
 			interface,
-			initialize,
 			make,
+			old_make,
 			on_size_allocate,
 			hide,
 			on_widget_mapped,
@@ -44,7 +45,7 @@ inherit
 
 	EV_GTK_WINDOW_IMP
 		undefine
-			initialize,
+			make,
 			destroy,
 			parent_imp
 		redefine
@@ -62,14 +63,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the window.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum))
+			assign_interface (an_interface)
 		end
 
-	initialize
+	new_gtk_window: POINTER
+			-- Return a new gtk window object for `Current'
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum)
+		end
+
+	make
 			-- Create the vertical box `vbox' and horizontal box `container_widget'
 			-- to put in the window.
 			-- The `vbox' will be able to contain the menu bar, the `container_widget'
@@ -81,6 +87,7 @@ feature {NONE} -- Initialization
 			l_c_object: POINTER
 		do
 			set_is_initialized (False)
+			set_c_object (new_gtk_window)
 			l_c_object := c_object
 
 			create accel_list.make (10)
@@ -88,8 +95,8 @@ feature {NONE} -- Initialization
 			create upper_bar
 			create lower_bar
 
-			maximum_width := interface.maximum_dimension
-			maximum_height := interface.maximum_dimension
+			maximum_width := 32000
+			maximum_height := 32000
 			app_imp := app_implementation
 			l_gtk_marshal := app_imp.gtk_marshal
 
@@ -143,7 +150,7 @@ feature  -- Access
 			end
 		end
 
-	menu_bar: EV_MENU_BAR
+	menu_bar: detachable EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
 feature -- Status setting
@@ -298,10 +305,11 @@ feature -- Element change
 	set_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Set `menu_bar' to `a_menu_bar'.
 		local
-			mb_imp: EV_MENU_BAR_IMP
+			mb_imp: detachable EV_MENU_BAR_IMP
 		do
 			menu_bar := a_menu_bar
-			mb_imp ?= menu_bar.implementation
+			mb_imp ?= a_menu_bar.implementation
+			check mb_imp /= Void end
 			mb_imp.set_parent_window_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
@@ -310,10 +318,11 @@ feature -- Element change
 	remove_menu_bar
 			-- Set `menu_bar' to `Void'.
 		local
-			mb_imp: EV_MENU_BAR_IMP
+			mb_imp: detachable EV_MENU_BAR_IMP
 		do
-			if menu_bar /= Void then
-				mb_imp ?= menu_bar.implementation
+			if attached menu_bar as l_menu_bar then
+				mb_imp ?= l_menu_bar.implementation
+				check mb_imp /= Void end
 				mb_imp.remove_parent_window
 				{EV_GTK_EXTERNALS}.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
@@ -325,40 +334,38 @@ feature {NONE} -- Accelerators
 	connect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Connect key combination `an_accel' to this window.
 		local
-			acc_imp: EV_ACCELERATOR_IMP
+			acc_imp: detachable EV_ACCELERATOR_IMP
 			a_property, a_origin, a_value: EV_GTK_C_STRING
-			l_override_key: STRING
+			l_override_key: detachable STRING
 		do
-			if an_accel /= Void then
-				acc_imp ?= an_accel.implementation
-				accel_list.put (an_accel, acc_imp.hash_code)
-				if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
-					l_override_key := once "F10"
-				elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f11 then
-					l_override_key := once "F11"
-				elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f12 then
-					l_override_key := once "F12"
-				end
-				if l_override_key /= Void then
-						-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
-					a_property := once "gtk-menu-bar-accel"
-					a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
-						-- This is a value that is highly unlikely to be used
-					a_origin := once "Vision2"
-					{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
-				end
+			acc_imp ?= an_accel.implementation
+			check acc_imp /= Void end
+			accel_list.put (an_accel, acc_imp.hash_code)
+			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
+				l_override_key := once "F10"
+			elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f11 then
+				l_override_key := once "F11"
+			elseif acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f12 then
+				l_override_key := once "F12"
+			end
+			if l_override_key /= Void then
+					-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
+				a_property := once "gtk-menu-bar-accel"
+				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
+					-- This is a value that is highly unlikely to be used
+				a_origin := once "Vision2"
+				{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
 			end
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Disconnect key combination `an_accel' from this window.
 		local
-			acc_imp: EV_ACCELERATOR_IMP
+			acc_imp: detachable EV_ACCELERATOR_IMP
 		do
-			if an_accel /= Void then
-				acc_imp ?= an_accel.implementation
-				accel_list.remove (acc_imp.hash_code)
-			end
+			acc_imp ?= an_accel.implementation
+			check acc_imp /= Void end
+			accel_list.remove (acc_imp.hash_code)
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -414,7 +421,7 @@ feature {NONE} -- Implementation
 	previously_focused_widget: POINTER
 		-- Widget that was previously focused within `Current'.
 
-	set_focused_widget (a_widget: EV_WIDGET_IMP)
+	set_focused_widget (a_widget: detachable EV_WIDGET_IMP)
 			-- Set currently focused widget to `a_widget'.
 		do
 			if a_widget /= Void then
@@ -436,7 +443,7 @@ feature {NONE} -- Implementation
 	initialize_client_area
 			-- Initialize the client area of 'Current'.
 		local
-			bar_imp: EV_VERTICAL_BOX_IMP
+			bar_imp: detachable EV_VERTICAL_BOX_IMP
 		do
 			vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 
@@ -446,11 +453,13 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 
 			bar_imp ?= upper_bar.implementation
+			check bar_imp /= Void end
 
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, container_widget, True, True, 0)
 
 			bar_imp ?= lower_bar.implementation
+			check bar_imp /= Void end
 
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
@@ -485,8 +494,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_set_focus_event (a_widget_ptr: POINTER)
 			-- The focus of a widget has changed within `Current'.
 		local
-			l_previously_focused_widget: EV_WIDGET_IMP
-			a_widget: EV_WIDGET_IMP
+			l_previously_focused_widget: detachable EV_WIDGET_IMP
+			a_widget: detachable EV_WIDGET_IMP
 		do
 			a_widget ?= app_implementation.eif_object_from_gtk_object (a_widget_ptr)
 			l_previously_focused_widget ?= app_implementation.eif_object_from_gtk_object (previously_focused_widget)
@@ -622,7 +631,7 @@ feature {EV_CLIPBOARD_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_WINDOW;
+	interface: detachable EV_WINDOW note option: stable attribute end;
 		-- Interface object of `Current'
 
 note
@@ -640,6 +649,10 @@ note
 
 
 end -- class EV_WINDOW_IMP
+
+
+
+
 
 
 

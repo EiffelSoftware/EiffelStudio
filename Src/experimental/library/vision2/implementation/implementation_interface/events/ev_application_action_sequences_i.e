@@ -32,8 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	post_launch_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	post_launch_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `post_launch_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -56,8 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	idle_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	idle_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `idle_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -80,9 +88,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pick_actions_internal: EV_PND_ACTION_SEQUENCE
+	pick_actions_internal: detachable EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `pick_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -105,9 +116,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	drop_actions_internal: EV_PND_ACTION_SEQUENCE
+	drop_actions_internal: detachable EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -130,8 +144,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	cancel_actions_internal: EV_PND_ACTION_SEQUENCE
+	cancel_actions_internal: detachable EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `cancel_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -183,14 +201,26 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pnd_motion_actions_internal: like pnd_motion_actions
+	pnd_motion_actions_internal: detachable like pnd_motion_actions
 		-- Implementation of once per object `pnd_motion_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	file_drop_actions_internal: like file_drop_actions
+	file_drop_actions_internal: detachable like file_drop_actions
 		-- Implementation of once per object `file_drop_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	uncaught_exception_actions_internal: like uncaught_exception_actions
+	uncaught_exception_actions_internal: detachable like uncaught_exception_actions
 		-- Implementation of once per object `uncaught_exception_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature
 
@@ -213,8 +243,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_motion_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]]
+	pointer_motion_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_motion_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -237,8 +271,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_button_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
+	pointer_button_press_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_button_press_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -261,8 +299,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_double_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
+	pointer_double_press_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_double_press_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -285,8 +327,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_button_release_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
+	pointer_button_release_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Implementation of once per object `pointer_button_release_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -308,8 +354,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	mouse_wheel_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]]
+	mouse_wheel_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]]
 			-- Implementation of once per object `mouse_wheel_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -332,8 +382,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	key_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
+	key_press_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
 			-- Implementation of once per object `key_press_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -355,8 +409,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	key_press_string_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]]
+	key_press_string_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]]
 			-- Implementation of once per object `key_press_string_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -379,8 +437,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	key_release_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
+	key_release_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
 			-- Implementation of once per object `key_release_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -403,8 +465,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	focus_in_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+	focus_in_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
 			-- Implementation of once per object `focus_in_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -427,8 +493,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	focus_out_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]];
+	focus_out_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
 			-- Implementation of once per object `focus_out_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -449,8 +519,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	theme_changed_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	theme_changed_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `theme_changed_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -473,8 +547,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	system_color_change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	system_color_change_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `system_color_change_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -495,8 +573,12 @@ feature {EV_ANY_I}	-- Implementation
 		deferred
 		end
 
-	destroy_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	destroy_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Impplementation of once per object `destroy_actions'
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -513,4 +595,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

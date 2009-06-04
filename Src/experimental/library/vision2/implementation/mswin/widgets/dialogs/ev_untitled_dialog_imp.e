@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_UNTITLED_DIALOG
+	interface: detachable EV_UNTITLED_DIALOG note option: stable attribute end
 			-- Interface for `Current'
 
 feature {NONE} -- Implementation
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			modal_dialog_imp: EV_UNTITLED_DIALOG_IMP_MODAL
 		do
 			create modal_dialog_imp.make_with_dialog_window (Current)
-			interface.replace_implementation (modal_dialog_imp)
+			attached_interface.replace_implementation (modal_dialog_imp)
 		end
 
 	promote_to_modeless_dialog
@@ -76,10 +76,10 @@ feature {NONE} -- Implementation
 			modeless_dialog_imp: EV_UNTITLED_DIALOG_IMP_MODELESS
 		do
 			create modeless_dialog_imp.make_with_dialog_window (Current)
-			interface.replace_implementation (modeless_dialog_imp)
+			attached_interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	common_dialog_imp: EV_UNTITLED_DIALOG_IMP_COMMON
+	common_dialog_imp: detachable EV_UNTITLED_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -99,4 +99,14 @@ note
 
 
 end -- class EV_UNTITLED_DIALOG_IMP
+
+
+
+
+
+
+
+
+
+
 

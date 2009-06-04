@@ -117,7 +117,7 @@ feature -- Basic operations
 		local
 			first_row_index: INTEGER
 			last_row_index: INTEGER
-			l_row_offsets: ARRAYED_LIST [INTEGER]
+			l_row_offsets: detachable ARRAYED_LIST [INTEGER]
 			invalid_y_start, invalid_y_end: INTEGER
 			i: INTEGER
 			l_row_count: INTEGER
@@ -127,7 +127,8 @@ feature -- Basic operations
 			l_visible_cumulative_height: INTEGER
 			l_found_index: INTEGER
 			l_found_row_offset: INTEGER
-			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+			l_visible_indexes_to_row_indexes: detachable EV_GRID_ARRAYED_LIST [INTEGER]
+			l_row_indexes_to_visible_indexes: detachable EV_GRID_ARRAYED_LIST [INTEGER]
 			l_is_row_height_fixed: BOOLEAN
 			l_row_height: INTEGER
 		do
@@ -171,7 +172,9 @@ feature -- Basic operations
 						end
 					else
 						l_visible_indexes_to_row_indexes := grid.visible_indexes_to_row_indexes
+						check l_visible_indexes_to_row_indexes /= Void end
 						l_row_offsets := grid.row_offsets
+						check l_row_offsets /= Void end
 							-- We now perform a binary search on `row_offsets' to find the highest row index with a vertical offset
 							-- that is less than `invalid_y_start'.
 						from
@@ -227,7 +230,9 @@ feature -- Basic operations
 						end
 							-- We have now found the first item that intersects the span, so we can iterate the visible indexes, constructing `result'
 							-- until we have passed the span length.
-						l_first_visible := grid.row_indexes_to_visible_indexes.i_th (l_found_index) + 1
+						l_row_indexes_to_visible_indexes := grid.row_indexes_to_visible_indexes
+						check l_row_indexes_to_visible_indexes /= Void end
+						l_first_visible := l_row_indexes_to_visible_indexes.i_th (l_found_index) + 1
 						l_found_index := l_visible_indexes_to_row_indexes.i_th (l_first_visible)
 						Result.extend (l_found_index)
 
@@ -264,42 +269,42 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	item_at_virtual_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
+	item_at_virtual_position (an_x, a_y: INTEGER): detachable EV_GRID_ITEM_I
 			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
 			-- left hand corner of the virtual size.
 		do
 			Result := item_at_position (an_x - grid.internal_client_x + grid.viewport_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
 		end
 
-	row_at_virtual_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I
+	row_at_virtual_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): detachable EV_GRID_ROW_I
 			-- `Result' is row at virtual y position, `a_y' relative to the top
 			--  of the virtual size.
 		do
 			Result := row_at_position (a_y - grid.internal_client_y + grid.viewport_y_offset, ignore_locked_rows)
 		end
 
-	column_at_virtual_position (a_x: INTEGER): EV_GRID_COLUMN_I
+	column_at_virtual_position (a_x: INTEGER): detachable EV_GRID_COLUMN_I
 			-- `Result' is row at virtual x position, `a_x' relative to the left
 			--  of the virtual size.
 		do
 			Result := column_at_position (a_x - grid.internal_client_x + grid.viewport_x_offset)
 		end
 
-	item_coordinates_at_position (an_x, a_y: INTEGER): EV_COORDINATE
+	item_coordinates_at_position (an_x, a_y: INTEGER): detachable EV_COORDINATE
 			-- `Result' is coordinates of item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any. No checking of whether the item at this posibion is `Void'.
 		local
 
-			l_item_i: EV_GRID_ITEM_I
+			l_item_i: detachable EV_GRID_ITEM_I
 		do
 			l_item_i := item_at_position (an_x, a_y)
 			if l_item_i /= Void then
-				create Result.make (l_item_i.column_i.index, l_item_i.row_i.index)
+				create Result.make (l_item_i.column.index, l_item_i.row.index)
 			end
 		end
 
-	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
+	item_at_position (an_x, a_y: INTEGER): detachable EV_GRID_ITEM_I
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any.
@@ -317,7 +322,7 @@ feature -- Basic operations
 				if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
 					Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
 					if Result /= Void then
-						if Result.column_i.is_locked or Result.row_i.is_locked then
+						if Result.column.is_locked or Result.row.is_locked then
 							Result := Void
 						end
 					end
@@ -325,7 +330,7 @@ feature -- Basic operations
 			end
 		end
 
-	row_at_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I
+	row_at_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): detachable EV_GRID_ROW_I
 			-- `Result' is row at position `a_y' relative to the top
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -343,7 +348,9 @@ feature -- Basic operations
 				if not vertical_span_items.is_empty then
 					Result := grid.row_internal (vertical_span_items.first)
 					if not ignore_locked_rows then
-						if Result.is_locked then
+						debug
+							if Result.is_locked then
+						end
 							Result := Void
 						end
 					end
@@ -351,7 +358,7 @@ feature -- Basic operations
 			end
 		end
 
-	column_at_position (a_x: INTEGER): EV_GRID_COLUMN_I
+	column_at_position (a_x: INTEGER): detachable EV_GRID_COLUMN_I
 			-- `Result' is column at position `a_x' relative to the left
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -373,7 +380,7 @@ feature -- Basic operations
 			end
 		end
 
-	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I
+	item_at_position_strict (an_x, a_y: INTEGER): detachable EV_GRID_ITEM_I
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. This version
 			-- returns `Void' if the pointed_part of the item is part of a tree node.
@@ -389,13 +396,13 @@ feature -- Basic operations
 			end
 		end
 
-	locked_item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
+	locked_item_at_position (an_x, a_y: INTEGER): detachable EV_GRID_ITEM_I
 			-- `Result' is locked item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
 			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
-			locked_row: EV_GRID_LOCKED_ROW_I
-			locked_column: EV_GRID_LOCKED_COLUMN_I
+			locked_row: detachable EV_GRID_LOCKED_ROW_I
+			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			row_height: INTEGER
 			column_width: INTEGER
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
@@ -425,7 +432,7 @@ feature -- Basic operations
 						if not horizontal_span_items.is_empty then
 							Result := grid.item_internal (horizontal_span_items.first, locked_row.row_i.index)
 							if Result /= Void then
-								if Result.column_i.is_locked and Result.column_i.locked_column.locked_index > locked_row.locked_index then
+								if Result.column.is_locked and then attached Result.column.implementation.locked_column as l_locked_column and then l_locked_column.locked_index > locked_row.locked_index then
 									Result := Void
 								end
 							end
@@ -441,7 +448,7 @@ feature -- Basic operations
 							if not vertical_span_items.is_empty then
 								Result := grid.item_internal (locked_column.column_i.index, vertical_span_items.first)
 								if Result /= Void then
-									if Result.row_i.is_locked and Result.row_i.locked_row.locked_index > locked_column.locked_index then
+									if Result.row.is_locked and then attached Result.row.implementation.locked_row as l_locked_row  and then l_locked_row.locked_index > locked_column.locked_index then
 										Result := Void
 									end
 								end
@@ -454,12 +461,12 @@ feature -- Basic operations
 			locked_items.go_to (l_cursor)
 		end
 
-	locked_row_at_position (a_y: INTEGER): EV_GRID_ROW_I
+	locked_row_at_position (a_y: INTEGER): detachable EV_GRID_ROW_I
 			-- `Result' is locked row at position `a_y' relative to the top
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
 			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
-			locked_row: EV_GRID_LOCKED_ROW_I
+			locked_row: detachable EV_GRID_LOCKED_ROW_I
 			row_height: INTEGER
 			intersection_found: BOOLEAN
 			l_cursor: CURSOR
@@ -490,12 +497,12 @@ feature -- Basic operations
 			locked_items.go_to (l_cursor)
 		end
 
-	locked_column_at_position (an_x: INTEGER): EV_GRID_COLUMN_I
+	locked_column_at_position (an_x: INTEGER): detachable EV_GRID_COLUMN_I
 			-- `Result' is locked column at position `an_x' relative to the left
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
 			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
-			locked_column: EV_GRID_LOCKED_COLUMN_I
+			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			column_width: INTEGER
 			intersection_found: BOOLEAN
 			l_cursor: CURSOR
@@ -536,7 +543,7 @@ feature -- Basic operations
 			redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height, grid.drawable, grid.viewport, Void)
 		end
 
-	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: EV_GRID_LOCKED_I)
+	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: detachable EV_GRID_LOCKED_I)
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the `drawable' widget of `grid'.
 --		require
@@ -550,22 +557,22 @@ feature -- Basic operations
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
 
-			current_row_list: SPECIAL [EV_GRID_ITEM_I]
-			current_row: EV_GRID_ROW_I
+			current_row_list: SPECIAL [detachable EV_GRID_ITEM_I]
+			current_row: detachable EV_GRID_ROW_I
 
 			physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index, first_row_index: INTEGER
 			last_column_index: INTEGER
-			grid_item: EV_GRID_ITEM_I
-			grid_item_interface: EV_GRID_ITEM
+			grid_item: detachable EV_GRID_ITEM_I
+			grid_item_interface: detachable EV_GRID_ITEM
 			current_column_index, current_row_index: INTEGER
-			column_offsets, row_offsets: ARRAYED_LIST [INTEGER]
+			column_offsets, row_offsets: detachable ARRAYED_LIST [INTEGER]
 			current_column_width, current_row_height: INTEGER
 			rectangle_width, rectangle_height: INTEGER
 			grid_item_exists: BOOLEAN
 			current_item_y_position, current_item_x_position: INTEGER
 			current_tree_adjusted_item_x_position, current_tree_adjusted_column_width: INTEGER
-			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			dynamic_content_function: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
 			current_subrow_indent: INTEGER
 			visible_column_indexes: ARRAYED_LIST [INTEGER]
@@ -577,10 +584,10 @@ feature -- Basic operations
 			parent_x_indent_position: INTEGER
 			tree_node_spacing: INTEGER
 			total_tree_node_width: INTEGER
-			collapse_pixmap, expand_pixmap: EV_PIXMAP
+			collapse_pixmap, expand_pixmap: detachable EV_PIXMAP
 			first_tree_node_indent: INTEGER
 			node_pixmap_width, node_pixmap_height: INTEGER
-			parent_row_i: EV_GRID_ROW_I
+			parent_row_i: detachable EV_GRID_ROW_I
 			l_pixmap: EV_PIXMAP
 
 			row_vertical_center: INTEGER
@@ -591,23 +598,24 @@ feature -- Basic operations
 			node_pixmap_vertical_center: INTEGER
 			l_x_start, l_x_end: INTEGER
 			current_horizontal_pos: INTEGER
-			loop_current_row, loop_parent_row: EV_GRID_ROW_I
-			loop_parent_row_last_displayed_subrow: EV_GRID_ROW
+			loop_current_row, loop_parent_row: detachable EV_GRID_ROW_I
+			loop_parent_row_last_displayed_subrow: detachable EV_GRID_ROW
 			are_tree_node_connectors_shown: BOOLEAN
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
 			tree_node_connector_color: EV_COLOR
-			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
+			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [detachable EV_GRID_ITEM_I]]
 			current_column: EV_GRID_COLUMN_I
 			row_count, row_height: INTEGER
 			is_tree_enabled, is_content_partially_dynamic : BOOLEAN
 			first_item_in_row_drawn: BOOLEAN
-			current_parent_row: EV_GRID_ROW_I
+			current_parent_row: detachable EV_GRID_ROW_I
 			v_y: INTEGER
-			locked_column: EV_GRID_LOCKED_COLUMN_I
-			locked_row: EV_GRID_LOCKED_ROW_I
+			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
+			locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_visible_index, l_next_visible_index, l_subrow_index: INTEGER
-			l_parent_row: EV_GRID_ROW
+			l_parent_row: detachable EV_GRID_ROW
+
 		do
 			if not grid.is_locked then
 				-- Perform no re-drawing if the update of the grid is locked.
@@ -659,9 +667,11 @@ feature -- Basic operations
 						if locked_column /= Void then
 							internal_client_x := locked_column.column_i.virtual_x_position
 							internal_client_y := locked.internal_client_y
-						else
+						elseif locked_row /= Void then
 							internal_client_y := locked_row.row_i.virtual_y_position
 							internal_client_x := locked.internal_client_x
+						else
+							check False end
 						end
 					end
 					internal_client_width := grid.viewable_width
@@ -717,6 +727,7 @@ feature -- Basic operations
 									current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
 									current_row_height := row_height
 								else
+									check row_offsets /= Void end
 									current_item_y_position := (row_offsets @ (current_row_index)) - (internal_client_y - vertical_buffer_offset)
 									if grid.is_row_height_fixed then
 										current_row_height := row_height
@@ -745,7 +756,7 @@ feature -- Basic operations
 
 										node_index := retrieve_node_index (current_row)
 
-										if drawing_subrow then
+										if parent_row_i /= Void then
 											parent_node_index := retrieve_node_index (parent_row_i)
 											from
 												current_parent_row := parent_row_i
@@ -868,7 +879,7 @@ feature -- Basic operations
 
 													node_index := retrieve_node_index (current_row)
 
-													if drawing_subrow then
+													if parent_row_i /= Void then
 														parent_node_index := retrieve_node_index (parent_row_i)
 														from
 															current_parent_row := parent_row_i
@@ -923,7 +934,7 @@ feature -- Basic operations
 										current_tree_adjusted_item_x_position := current_item_x_position
 										current_tree_adjusted_column_width := current_column_width
 
-										if grid_item_exists then
+										if grid_item_exists and then attached grid_item then
 											item_buffer_pixmap.set_foreground_color (grid_item.displayed_background_color)
 										else
 											item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
@@ -935,10 +946,10 @@ feature -- Basic operations
 											-- Fire the `pre_draw_overlay_actions' which enable a user to draw on top of the background
 											-- but bloe the features of drawn grid items before they are displayed.
 										if grid.pre_draw_overlay_actions_internal /= Void then
-											if grid_item_exists then
-												grid.pre_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+											if grid_item_exists and then attached grid_item then
+												grid.pre_draw_overlay_actions.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
 											else
-												grid.pre_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+												grid.pre_draw_overlay_actions.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
 											end
 										end
 
@@ -1014,11 +1025,13 @@ feature -- Basic operations
 															if current_horizontal_pos < column_offsets @ (node_index + 1) then
 																	-- Draw the vertical line at the node, connecting the top and bottom
 																	-- of the tree row.
+																if attached grid.row_indexes_to_visible_indexes as l_row_indexes_to_visible_indexes  then
+																	l_visible_index := l_row_indexes_to_visible_indexes.i_th (current_row.index) + 1
+																end
 
-																l_visible_index := grid.row_indexes_to_visible_indexes.i_th (current_row.index) + 1
 
-																if l_visible_index < grid.visible_row_count then
-																	l_next_visible_index := grid.visible_indexes_to_row_indexes.i_th (l_visible_index + 1)
+																if l_visible_index < grid.visible_row_count and then attached grid.visible_indexes_to_row_indexes as l_visible_indexes_to_row_indexes then
+																	l_next_visible_index := l_visible_indexes_to_row_indexes.i_th (l_visible_index + 1)
 																else
 																	-- In this case `l_visible_index' was the final row currently visible.
 																	-- We cannot retrieve `l_next_visible_index' from `grid.visible_indexes_to_row_indexes' in this case
@@ -1054,6 +1067,7 @@ feature -- Basic operations
 																-- We iterate backwards from the current position and for each subsequent parent node, determine
 																-- if a line must be drawn.
 															from
+																check parent_row_i /= Void end
 																loop_current_row := parent_row_i
 																loop_parent_row := parent_row_i.parent_row_i
 															until
@@ -1064,7 +1078,7 @@ feature -- Basic operations
 																		-- It is possible that the current vertical line segment that we must draw is outside the right hand
 																		-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
 																		-- drawing.
-																	l_parent_row := loop_parent_row.interface
+																	l_parent_row := loop_parent_row.attached_interface
 																	l_subrow_index := l_parent_row.subrow_count
 																	if l_subrow_index > 0 then
 																		loop_parent_row_last_displayed_subrow := l_parent_row.subrow (l_subrow_index)
@@ -1094,7 +1108,7 @@ feature -- Basic operations
 												end
 											end
 										end
-										if grid_item_exists then
+										if grid_item_exists and then attached grid_item then
 											if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
 												if current_column_index = node_index then
 													grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, current_subrow_indent, item_buffer_pixmap)
@@ -1104,14 +1118,13 @@ feature -- Basic operations
 											end
 											first_item_in_row_drawn := True
 										else
-
 											translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
 
 											if parent_node_index < current_column_index then
 												translated_parent_x_indent_position := 0
 											end
 
-										item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+											item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
 											if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
 													-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
 													-- As the item is `Void', we set the end to the right hand edge of the column.
@@ -1137,7 +1150,7 @@ feature -- Basic operations
 														-- If the grid column being drawn matches that in which the
 														-- node of `parent_row_i' is contained, then vertical lines must be drawn
 														-- to connect the lines.
-
+													check parent_row_i /= Void end
 													if current_row = parent_row_i.subrows [parent_row_i.subrow_count] then
 															-- We are drawing the last subrow of `parent_row_i' so we only draw the vertical line to the center of the line.
 														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
@@ -1152,11 +1165,11 @@ feature -- Basic operations
 										draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
 
 											-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
-										if grid.post_draw_overlay_actions_internal /= Void then
-											if grid_item_exists then
-												grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+										if attached grid.post_draw_overlay_actions_internal then
+											if grid_item_exists and then attached grid_item then
+												grid.post_draw_overlay_actions.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
 											else
-												grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+												grid.post_draw_overlay_actions.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
 											end
 										end
 
@@ -1171,9 +1184,9 @@ feature -- Basic operations
 											end
 										else
 											if locked_column /= Void then
-												if grid.row_internal (current_row_index).is_locked and then grid.row_internal (current_row_index).locked_row.locked_index > locked_column.locked_index then
-													if current_column.background_color /= Void then
-														drawable.set_foreground_color (current_column.background_color)
+												if grid.row_internal (current_row_index).is_locked and then attached grid.row_internal (current_row_index).locked_row as l_locked_row and then l_locked_row.locked_index > locked_column.locked_index then
+													if attached current_column.background_color as l_background_color then
+														drawable.set_foreground_color (l_background_color)
 													else
 														drawable.set_foreground_color (gray)
 													end
@@ -1181,10 +1194,10 @@ feature -- Basic operations
 												else
 													drawable.draw_sub_pixmap (0, current_item_y_position, item_buffer_pixmap, temp_rectangle)
 												end
-											else
-												if grid.column_internal (current_column_index).is_locked and then grid.column_internal (current_column_index).locked_column.locked_index > locked_row.locked_index then
-													if current_row.background_color /= Void then
-														drawable.set_foreground_color (current_row.background_color)
+											elseif locked_row /= Void then
+												if grid.column_internal (current_column_index).is_locked and then attached grid.column_internal (current_column_index).locked_column as l_locked_column and then l_locked_column.locked_index > locked_row.locked_index then
+													if attached current_row.background_color as l_background_color then
+														drawable.set_foreground_color (l_background_color)
 													else
 														drawable.set_foreground_color (gray)
 													end
@@ -1192,6 +1205,8 @@ feature -- Basic operations
 												else
 													drawable.draw_sub_pixmap (current_item_x_position, 0, item_buffer_pixmap, temp_rectangle)
 												end
+											else
+												check False end
 											end
 										end
 									end
@@ -1212,8 +1227,8 @@ feature -- Basic operations
 							item_buffer_pixmap.set_size (rectangle_width, internal_client_height)
 						end
 							-- Check to see if we must draw the background to the right of the items.
-						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
-							grid.fill_background_actions_internal.call ([item_buffer_pixmap, column_offsets @ (column_offsets.count), internal_client_y, rectangle_width, internal_client_height])
+						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions.is_empty then
+							grid.fill_background_actions.call ([item_buffer_pixmap, column_offsets @ (column_offsets.count), internal_client_y, rectangle_width, internal_client_height])
 						else
 							item_buffer_pixmap.set_foreground_color (grid.background_color)
 							item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
@@ -1231,6 +1246,7 @@ feature -- Basic operations
 							v_y := (row_height * (row_count))
 							rectangle_height := internal_client_height - (v_y - internal_client_y)
 						else
+							check row_offsets /= Void end
 							v_y := row_offsets @ (row_count + 1)
 							rectangle_height := internal_client_height - (v_y - internal_client_y)
 						end
@@ -1240,8 +1256,8 @@ feature -- Basic operations
 							if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then
 								item_buffer_pixmap.set_size (internal_client_width, rectangle_height)
 							end
-							if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
-								grid.fill_background_actions_internal.call ([item_buffer_pixmap, internal_client_x, v_y , internal_client_width, rectangle_height])
+							if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions.is_empty then
+								grid.fill_background_actions.call ([item_buffer_pixmap, internal_client_x, v_y , internal_client_width, rectangle_height])
 							else
 								item_buffer_pixmap.set_foreground_color (grid.background_color)
 								item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
@@ -1256,11 +1272,11 @@ feature -- Basic operations
 					end
 					else
 							-- In this situation, the grid is completely empty, so we simply fill the background color.
-						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
+						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions.is_empty then
 							if item_buffer_pixmap.width < a_width or item_buffer_pixmap.height < a_height then
 							   item_buffer_pixmap.set_size (a_width, a_height)
 							end
-							grid.fill_background_actions_internal.call ([item_buffer_pixmap, internal_client_x, internal_client_y, a_width, a_height])
+							grid.fill_background_actions.call ([item_buffer_pixmap, internal_client_x, internal_client_y, a_width, a_height])
 							temp_rectangle.move_and_resize (0, 0, a_width, a_height)
 							drawable.draw_sub_pixmap (an_x, a_y, item_buffer_pixmap, temp_rectangle)
 						else
@@ -1314,7 +1330,7 @@ feature {NONE} -- Implementation
 			valid_result: Result > 0 and Result <= grid.column_count
 		end
 
-	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER)
+	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: detachable EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER)
 			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
 			-- of `current_column_width' and `current_row_height'.
 		require

@@ -14,12 +14,12 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_TREE_NODE_LIST_I
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER_I
 		redefine
 			interface
@@ -29,7 +29,7 @@ inherit
 
 feature {EV_ANY} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 				-- Set default width & height for the pixmaps
@@ -38,7 +38,7 @@ feature {EV_ANY} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_TREE_NODE
+	selected_item: detachable EV_TREE_NODE
 			-- Currently selected tree item.
 		deferred
 		end
@@ -55,10 +55,10 @@ feature -- Status report
 			-- Is at least one tree item selected?
 		deferred
 		end
-		
+
 feature {EV_ANY_I}
 
-	interface: EV_TREE;
+	interface: detachable EV_TREE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -75,4 +75,13 @@ note
 
 
 end -- class EV_TREE_I
+
+
+
+
+
+
+
+
+
 

@@ -63,7 +63,7 @@ feature {NONE} -- WEL Implementation
 		require
 			measure_item_valid: measure_item /= Void
 		local
-			menu_item_imp: EV_MENU_ITEM_IMP
+			menu_item_imp: detachable EV_MENU_ITEM_IMP
 			item_type: INTEGER
 		do
 			item_type := measure_item.ctl_type
@@ -85,7 +85,7 @@ feature {NONE} -- WEL Implementation
 			draw_item_valid: draw_item /= Void
 		local
 			item_type: INTEGER
-			menu_item_imp: EV_MENU_ITEM_IMP
+			menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			item_type := draw_item.ctl_type
 			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
@@ -121,4 +121,13 @@ note
 
 
 end -- class EV_MENU_CONTAINER_IMP
+
+
+
+
+
+
+
+
+
 

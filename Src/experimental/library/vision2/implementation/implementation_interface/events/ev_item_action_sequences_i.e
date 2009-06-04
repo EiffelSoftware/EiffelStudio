@@ -32,9 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	pointer_motion_actions_internal: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_motion_actions'.
-
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -57,9 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
-
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -82,8 +88,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE;
+	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -100,4 +110,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

@@ -23,7 +23,7 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			gtk_container_remove
 		end
 
@@ -32,16 +32,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the fixed container.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
 			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (container_widget, True)
 				-- Set minimum size of container widget so that inserted items do no resize on entry.
 --			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, 1, 1)
@@ -53,10 +53,11 @@ feature -- Status setting
 	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
 		local
-			l_widget_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 			l_parent_box: POINTER
 		do
 			l_widget_imp ?= a_widget.implementation
+			check l_widget_imp /= Void end
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (l_parent_box, False)
 			{EV_GTK_EXTERNALS}.gtk_container_add (l_parent_box, l_widget_imp.c_object)
@@ -77,9 +78,10 @@ feature -- Status setting
 			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
 		local
 			l_parent_box: POINTER
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
+			check w_imp /= Void end
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
@@ -90,10 +92,11 @@ feature -- Status setting
 			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 			l_parent_box, l_parent_window, l_fixed_child: POINTER
 		do
 			w_imp ?= a_widget.implementation
+			check w_imp /= Void end
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
 
 			if app_implementation.rubber_band_is_drawn then
@@ -112,11 +115,12 @@ feature -- Status setting
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 			l_parent_box: POINTER
 			l_c_object: POINTER
 		do
 			w_imp ?= a_widget.implementation
+			check w_imp /= Void end
 			l_c_object := w_imp.c_object
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
@@ -187,7 +191,7 @@ feature {EV_ANY_I} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, l_parent_box)
 		end
 
-	interface: EV_FIXED;
+	interface: detachable EV_FIXED note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -206,4 +210,8 @@ note
 
 
 end -- class EV_FIXED
+
+
+
+
 

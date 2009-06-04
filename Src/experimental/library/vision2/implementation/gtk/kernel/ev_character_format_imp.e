@@ -25,13 +25,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create character format
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Do nothing
 		local
 			app_imp: like app_implementation
@@ -515,9 +515,13 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP
-			--
+			-- App implementation object
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
-			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	name: STRING_32
@@ -586,4 +590,14 @@ note
 
 
 end -- class EV_CHARACTER_FORMAT_IMP
+
+
+
+
+
+
+
+
+
+
 

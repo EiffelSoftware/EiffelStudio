@@ -23,7 +23,7 @@ inherit
 			update_for_pick_and_drop
 		redefine
 			interface,
-			initialize,
+			make,
 			event_widget,
 			set_pixmap,
 			needs_event_box
@@ -68,16 +68,22 @@ feature {NONE} -- Initialization
 			Result := False
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tool bar button.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL))
+			assign_interface (an_interface)
 		end
 
-	initialize
+	new_tool_bar_button: POINTER
+			-- Create a new gtk tool bar button item.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL)
+		end
+
+	make
 			-- Initialization of button box and events.
 		do
+			set_c_object (new_tool_bar_button)
 			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
 			{EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
@@ -112,20 +118,20 @@ feature -- Access
 			end
 		end
 
-	gray_pixmap: EV_PIXMAP
+	gray_pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current'.
 
 	tooltip: STRING_32
 			-- Tooltip use for describing `Current'.
 		do
-			if internal_tooltip /= Void then
-				Result := internal_tooltip.twin
+			if attached internal_tooltip as l_internal_tooltip then
+				Result := l_internal_tooltip.twin
 			else
 				Result := ""
 			end
 		end
 
-	internal_tooltip: STRING_32
+	internal_tooltip: detachable STRING_32
 		-- Tooltip for `Current'.
 
 feature -- Element change
@@ -133,7 +139,7 @@ feature -- Element change
 	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			a_parent_imp: EV_TOOL_BAR_IMP
+			a_parent_imp: detachable EV_TOOL_BAR_IMP
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
@@ -147,7 +153,7 @@ feature -- Element change
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		local
-			a_parent_imp: EV_TOOL_BAR_IMP
+			a_parent_imp: detachable EV_TOOL_BAR_IMP
 		do
 			Precursor {EV_ITEM_IMP} (a_pixmap)
 			a_parent_imp ?= parent_imp
@@ -253,7 +259,7 @@ feature -- Status report
 	parent_is_sensitive: BOOLEAN
 			-- Is `parent' sensitive?
 		local
-			sensitive_parent: EV_SENSITIVE
+			sensitive_parent: detachable EV_SENSITIVE
 		do
 			sensitive_parent ?= parent
 			if sensitive_parent /= Void then
@@ -296,7 +302,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_BUTTON;
+	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -313,4 +319,8 @@ note
 
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
+
+
+
+
 

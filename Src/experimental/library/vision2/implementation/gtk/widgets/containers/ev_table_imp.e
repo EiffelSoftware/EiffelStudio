@@ -27,8 +27,10 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			make
 		end
+
 create
 	make
 
@@ -36,11 +38,14 @@ feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN = True
 
-	make (an_interface: like interface)
-                        -- Create a table widget with `par' as
-                        -- parent.
+	old_make (an_interface: like interface)
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
 
 			-- Initialize internal values
@@ -48,6 +53,7 @@ feature {NONE} -- Implementation
 			columns := 1
 			create internal_array.make (1, 1)
 			rebuild_internal_item_list
+			Precursor
 		end
 
 feature -- Status report
@@ -112,10 +118,11 @@ feature -- Status settings
 	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Set the position of the `v' in the table.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			on_new_item (item_imp)
 			{EV_GTK_EXTERNALS}.gtk_table_attach_defaults (
 					container_widget,
@@ -130,10 +137,11 @@ feature -- Status settings
 	remove (v: EV_WIDGET)
 			-- Remove `v' from the table if present.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			on_removed_item (item_imp)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
@@ -160,7 +168,7 @@ feature -- Status settings
 				row_index := item_row_position (widget)
 				column_index := item_column_position (widget)
 			until
-				end_span or (column_index - 1) = interface.columns
+				end_span or (column_index - 1) = columns
 			loop
 				if item_at_position (column_index, row_index) = widget then
 					Result := Result + 1
@@ -181,7 +189,7 @@ feature -- Status settings
 				row_index := item_row_position (widget)
 				column_index := item_column_position (widget)
 			until
-				end_span or else (row_index - 1) = interface.rows
+				end_span or else (row_index - 1) = rows
 			loop
 				if item_at_position (column_index, row_index) = widget then
 					Result := Result + 1
@@ -201,12 +209,12 @@ feature -- Status settings
 			from
 				row_cnt := 1
 			until
-				row_cnt > interface.rows or found
+				row_cnt > rows or found
 			loop
 				from
 					column_cnt := 1
 				until
-					column_cnt > interface.columns or found
+					column_cnt > columns or found
 				loop
 					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := row_cnt
@@ -227,12 +235,12 @@ feature -- Status settings
 			from
 				row_cnt := 1
 			until
-				row_cnt > interface.rows or found
+				row_cnt > rows or found
 			loop
 				from
 					column_cnt := 1
 				until
-					column_cnt > interface.columns or found
+					column_cnt > columns or found
 				loop
 					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := column_cnt
@@ -284,7 +292,7 @@ feature {NONE} -- Externals
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TABLE;
+	interface: detachable EV_TABLE note option: stable attribute end;
 
 
 note
@@ -302,4 +310,8 @@ note
 
 
 end -- class EV_TABLE_IMP
+
+
+
+
 

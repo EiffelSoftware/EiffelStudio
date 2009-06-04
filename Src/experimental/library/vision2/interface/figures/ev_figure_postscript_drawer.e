@@ -85,8 +85,8 @@ feature -- Figure drawing
 				translate_to (cx + (w // 2), (point_height-(cy + (h //2))))
 				append_line_styles (ellipse)
 				add_ps_line ("1 " + (h / w).out + " scale")
-				if ellipse.is_filled then
-					add_ps_line (ellipse.background_color.out + " setrgbcolor")
+				if ellipse.is_filled and then attached ellipse.background_color as l_background_color then
+					add_ps_line (l_background_color.out + " setrgbcolor")
 					draw_arc (w // 2, 0, 360)
 					add_ps_line ("fill")
 				end
@@ -119,13 +119,13 @@ feature -- Figure drawing
 			if line.is_show_requested then
 				add_ps_line ("%%Drawing PS Figure Line")
 				draw_polyline (line, False)
-				if line.is_start_arrow then
-					draw_arrowhead (line.foreground_color.out, line.line_width.out, line.start_arrow.i_th_point (1),
-							line.start_arrow.i_th_point (2), line.start_arrow.i_th_point (3))
+				if line.is_start_arrow and then attached line.start_arrow as l_start_arrow then
+					draw_arrowhead (line.foreground_color.out, line.line_width.out, l_start_arrow.i_th_point (1),
+							l_start_arrow.i_th_point (2), l_start_arrow.i_th_point (3))
 				end
-				if line.is_end_arrow then
-					draw_arrowhead (line.foreground_color.out, line.line_width.out, line.end_arrow.i_th_point (1),
-							line.end_arrow.i_th_point (2), line.end_arrow.i_th_point (3))
+				if line.is_end_arrow and then attached line.end_arrow as l_end_arrow then
+					draw_arrowhead (line.foreground_color.out, line.line_width.out, l_end_arrow.i_th_point (1),
+							l_end_arrow.i_th_point (2), l_end_arrow.i_th_point (3))
 				end
 			end
 		end
@@ -174,9 +174,9 @@ feature -- Figure drawing
 				h := m.integer_item (4)
 				add_ps_line ("%%Drawing PS Figure Pie Slice%N")
 				add_ps_line ("gsave")
-				if slice.is_filled then
+				if slice.is_filled and then attached slice.background_color as l_background_color then
 					translate_to (cx + (w // 2), point_height-(cy + (h // 2)))
-					add_ps_line (slice.background_color.out + " setrgbcolor")
+					add_ps_line (l_background_color.out + " setrgbcolor")
 					draw_pie_slice (h, w, slice.line_width, ((slice.start_angle * 180) / Pi).rounded, ((slice.aperture * 180) / Pi).rounded, slice.dashed_line_style, True)
 					add_ps_line ("gsave")
 				end
@@ -208,13 +208,13 @@ feature -- Figure drawing
 			if line.is_show_requested then
 				add_ps_line ("%%Drawing PS Figure Polyline")
 				draw_polyline (line, line.is_closed)
-				if line.is_start_arrow then
-					draw_arrowhead (line.foreground_color.out, line.line_width.out, line.start_arrow.i_th_point (1),
-							line.start_arrow.i_th_point (2), line.start_arrow.i_th_point (3))
+				if line.is_start_arrow and then attached line.start_arrow as l_start_arrow then
+					draw_arrowhead (line.foreground_color.out, line.line_width.out, l_start_arrow.i_th_point (1),
+							l_start_arrow.i_th_point (2), l_start_arrow.i_th_point (3))
 				end
-				if line.is_end_arrow then
-					draw_arrowhead (line.foreground_color.out, line.line_width.out, line.end_arrow.i_th_point (1),
-							line.end_arrow.i_th_point (2), line.end_arrow.i_th_point (3))
+				if line.is_end_arrow and then attached line.end_arrow as l_end_arrow then
+					draw_arrowhead (line.foreground_color.out, line.line_width.out, l_end_arrow.i_th_point (1),
+							l_end_arrow.i_th_point (2), l_end_arrow.i_th_point (3))
 				end
 			end
 		end
@@ -322,7 +322,7 @@ feature -- Figure drawing
 
 feature -- Access
 
-	postscript_result: STRING
+	postscript_result: detachable STRING
 
 	point_width: INTEGER
 
@@ -356,17 +356,25 @@ feature {NONE} -- Implementation
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
+		local
+			l_ps_result: like postscript_result
 		do
-			postscript_result.append (a_code.to_string_8)
-			postscript_result.append_character ('%N')
+			l_ps_result := postscript_result
+			check l_ps_result /= Void end
+			l_ps_result.append (a_code.to_string_8)
+			l_ps_result.append_character ('%N')
 		end
 
 	add_ps_string (a_code: STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
+		local
+			l_ps_result: like postscript_result
 		do
-			postscript_result.append (a_code.to_string_8)
+			l_ps_result := postscript_result
+			check l_ps_result /= Void end
+			l_ps_result.append (a_code.to_string_8)
 		end
 
 	append_line_styles (a_figure: EV_ATOMIC_FIGURE)
@@ -423,8 +431,8 @@ feature {NONE} -- Implementation
 			add_ps_line ("newpath")
 			append_line_styles (a_figure)
 			add_ps_line ("1 1 scale")
-			if filled then
-				add_ps_line (a_figure.background_color.out + " setrgbcolor")
+			if filled and then attached a_figure.background_color as l_background_color then
+				add_ps_line (l_background_color.out + " setrgbcolor")
 			else
 				add_ps_line (a_figure.foreground_color.out + " setrgbcolor")
 			end
@@ -517,4 +525,8 @@ note
 
 
 end -- class EV_FIGURE_POSTSCRIPT_DRAWER
+
+
+
+
 

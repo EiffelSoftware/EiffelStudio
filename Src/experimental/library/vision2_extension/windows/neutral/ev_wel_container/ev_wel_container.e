@@ -51,7 +51,7 @@ feature -- Access
 			Result := implementation.implementation_window
 		end
 
-	item: WEL_WINDOW
+	item: detachable WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -79,8 +79,8 @@ feature -- Access
 			l: LINKED_LIST [like item]
 		do
 			create l.make
-			if implementation.item /= Void then
-				l.extend (implementation.item)
+			if attached implementation.item as l_item then
+				l.extend (l_item)
 			end
 			Result := l
 		end
@@ -106,7 +106,7 @@ feature -- Status setting
 			implementation.replace (a_window)
 		end
 
-	extend (an_item: like item)
+	extend (an_item: WEL_WINDOW)
 			-- Ensure that structure includes `an_item'.
 		do
 			replace (an_item)
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation of `Current'.
 		do
-			create {EV_WEL_CONTAINER_IMP} implementation.make (Current)
+			create {EV_WEL_CONTAINER_IMP} implementation.make
 		end
 
 note
@@ -162,4 +162,6 @@ note
 
 
 end -- class WEL_WINDOW_CELL
+
+
 

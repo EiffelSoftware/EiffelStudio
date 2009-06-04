@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST [reference G -> EV_ITEM]
+	EV_ITEM_LIST [G -> detachable EV_ITEM]
 
 inherit
 	EV_ANY
@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	item_by_data (some_data: ANY): like item
+	item_by_data (some_data: ANY): detachable like item
 			-- First item with `some_data'.
 		obsolete "Use `retrieve_item_by_data (some_data, True)' instead."
 		require
@@ -57,7 +57,7 @@ feature {NONE} -- Contract support
 			not_destroyed: not is_destroyed
 		local
 			c: CURSOR
-			item_par: EV_ITEM_LIST [G]
+			item_par: detachable EV_ITEM_LIST [G]
 		do
 			Result := True
 			c := cursor
@@ -148,7 +148,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	parent_of_items_is_current: is_usable and then not is_empty implies parent_of_items_is_current
 	items_unique: is_usable and not is_empty implies items_unique
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -164,4 +164,14 @@ note
 
 
 end -- class EV_ITEM_LIST
+
+
+
+
+
+
+
+
+
+
 

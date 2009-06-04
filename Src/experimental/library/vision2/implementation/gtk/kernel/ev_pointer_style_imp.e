@@ -27,13 +27,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE)
+	old_make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize
 		do
 			set_is_initialized (True)
@@ -42,9 +42,10 @@ feature {NONE} -- Initlization
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Initialize from `a_pixel_buffer'
 		local
-			l_pix_buf_imp: EV_PIXEL_BUFFER_IMP
+			l_pix_buf_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pix_buf_imp ?= a_pixel_buffer.implementation
+			check l_pix_buf_imp /= Void end
 			set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
 			set_x_hotspot (a_x_hotspot)
 			set_y_hotspot (a_x_hotspot)
@@ -123,9 +124,10 @@ feature {NONE} -- Initlization
 	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
 		local
-			a_pix_imp: EV_PIXMAP_IMP
+			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			a_pix_imp ?= a_cursor.implementation
+			check a_pix_imp /= Void end
 			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
 			set_x_hotspot (a_cursor.x_hotspot)
 			set_y_hotspot (a_cursor.y_hotspot)
@@ -134,9 +136,10 @@ feature {NONE} -- Initlization
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32)
 			-- Initalize from `a_pixmap'
 		local
-			a_pix_imp: EV_PIXMAP_IMP
+			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			a_pix_imp ?= a_pixmap.implementation
+			check a_pix_imp /= Void end
 			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
 			set_x_hotspot (a_hotspot_x)
 			set_y_hotspot (a_hotspot_y)
@@ -244,8 +247,8 @@ feature -- Implementation
 				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (
 					{EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default,
 					a_image,
-					interface.x_hotspot,
-					interface.y_hotspot
+					attached_interface.x_hotspot,
+					attached_interface.y_hotspot
 				)
 				{EV_GTK_EXTERNALS}.object_unref (a_image)
 			end
@@ -276,9 +279,10 @@ feature -- Duplication
 	copy_from_pointer_style (a_pointer_style: like interface)
 			-- Copy attributes of `a_pointer_style' to `Current'
 		local
-			l_pointer_style_imp: like Current
+			l_pointer_style_imp: detachable like Current
 		do
 			l_pointer_style_imp ?= a_pointer_style.implementation
+			check l_pointer_style_imp /= Void end
 			if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
 				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
 			end

@@ -20,13 +20,13 @@ inherit
 
 feature -- Access
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color of face.
 		local
 			color: POINTER
 		do
-			if background_color_imp /= Void then
-				Result := background_color_imp.interface.twin
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface.twin
 			else
 				color := background_color_pointer
 				create Result
@@ -38,13 +38,13 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: EV_COLOR
 			-- Color of foreground features like text.
 		local
 			color: POINTER
 		do
-			if foreground_color_imp /= Void then
-				Result := foreground_color_imp.interface.twin
+			if attached foreground_color_imp as l_foreground_color_imp then
+				Result := l_foreground_color_imp.attached_interface.twin
 			else
 				color := foreground_color_pointer
 				create Result
@@ -71,7 +71,7 @@ feature -- Status setting
 			end
 		end
 
-	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR)
+	real_set_background_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
 			-- Implementation of `set_background_color'
 			-- Used also by classes that inherit EV_WIDGET_IMP but not
 			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
@@ -162,16 +162,19 @@ feature -- Status setting
 			end
 		end
 
-	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR)
+	real_set_foreground_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
 			-- Implementation of `set_foreground_color'
 		local
 			color, l_null: POINTER
+			l_foreground_color_imp: like foreground_color_imp
 		do
 			if a_color /= Void then
 				color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, foreground_color_imp.red_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, foreground_color_imp.green_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, foreground_color_imp.blue_16_bit)
+				l_foreground_color_imp := foreground_color_imp
+				check l_foreground_color_imp /= Void end
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, l_foreground_color_imp.red_16_bit)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, l_foreground_color_imp.green_16_bit)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, l_foreground_color_imp.blue_16_bit)
 			end
 
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_NORMAL_ENUM, color)
@@ -212,10 +215,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	background_color_imp: EV_COLOR_IMP
+	background_color_imp: detachable EV_COLOR_IMP
 		-- Color used for the background of `Current'
 
-	foreground_color_imp: EV_COLOR_IMP
+	foreground_color_imp: detachable EV_COLOR_IMP
 		-- Color used for the foreground of `Current'
 
 	background_color_pointer: POINTER
@@ -242,7 +245,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_COLORIZABLE;
+	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -259,4 +262,8 @@ note
 
 
 end -- EV_COLORIZABLE_IMP
+
+
+
+
 

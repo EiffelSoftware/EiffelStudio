@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision printer. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	interface: EV_PRINTER;
+	interface: detachable EV_PRINTER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -53,4 +53,8 @@ note
 
 
 end -- class EV_PRINTER_I
+
+
+
+
 

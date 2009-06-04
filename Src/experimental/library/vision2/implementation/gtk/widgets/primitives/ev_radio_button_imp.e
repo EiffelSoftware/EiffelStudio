@@ -4,7 +4,7 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class
 	EV_RADIO_BUTTON_IMP
 
@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_BUTTON_IMP
 		export
 			{NONE}
@@ -24,8 +24,9 @@ inherit
 			default_alignment
 		redefine
 			interface,
+			old_make,
 			make,
-			initialize
+			new_gtk_button
 		end
 
 	EV_RADIO_PEER_IMP
@@ -39,36 +40,40 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create radio button.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_button_new (NULL))
-			enable_select
+			assign_interface (an_interface)
 		end
 
-	initialize
+	new_gtk_button: POINTER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_radio_button_new (NULL)
+		end
+
+	make
 			-- Initialize `Current'
 		do
 			Precursor
 			align_text_left
+			enable_select
 		end
 
 feature -- Status report
-	
+
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
-		end 
-	
+		end
+
 feature -- Status setting
 
 	enable_select
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)	
+				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -88,7 +93,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RADIO_BUTTON;
+	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -105,4 +110,8 @@ note
 
 
 end -- class EV_RADIO_BUTTON_IMP
+
+
+
+
 

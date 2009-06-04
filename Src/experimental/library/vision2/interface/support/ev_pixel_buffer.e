@@ -165,10 +165,16 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- Create implementation
 		do
-			create {EV_PIXEL_BUFFER_IMP} implementation.make (Current)
+			create {EV_PIXEL_BUFFER_IMP} implementation.make
 		end
 
 feature -- Implementation

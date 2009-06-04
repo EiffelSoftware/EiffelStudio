@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Vertical bar graph gauge for displaying progress of a process.
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_VERTICAL_PROGRESS_BAR_IMP}
-				implementation.make (Current)
+				implementation.make
 		end
 
 note
@@ -63,4 +63,8 @@ note
 
 
 end -- class EV_VERTICAL_PROGRESS_BAR
+
+
+
+
 

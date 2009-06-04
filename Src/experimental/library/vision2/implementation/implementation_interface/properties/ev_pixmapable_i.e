@@ -1,13 +1,13 @@
 note
-	description: 
+	description:
 		"Eiffel Vision pixmapable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "pixmap, bitmap, icon, graphic, image"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_PIXMAPABLE_I
 
 inherit
@@ -15,10 +15,10 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current'.
 		deferred
 		end
@@ -38,16 +38,16 @@ feature -- Element change
 		ensure
 			pixmap_removed: pixmap = Void
 		end
-		
+
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		do
-			Result := a_pixmap.is_equal (pixmap)
+			Result := attached pixmap as l_pixmap and then a_pixmap.is_equal (l_pixmap)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PIXMAPABLE;
+	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -66,4 +66,14 @@ note
 
 
 end -- class EV_PIXMAPABLE_I
+
+
+
+
+
+
+
+
+
+
 

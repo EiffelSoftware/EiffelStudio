@@ -19,17 +19,17 @@ inherit
 			parent
 		redefine
 			interface,
-			initialize,
+			make,
 			on_activate,
 			destroy,
 			show,
-			make
+			old_make
 		end
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			list_widget,
 			destroy
 		end
@@ -39,16 +39,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a menu.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			Precursor {EV_MENU_ITEM_IMP}
 			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (menu_item)
@@ -59,8 +59,6 @@ feature {NONE} -- Initialization
 				-- We set the image here for the image menu item instead of packing it in a box.
 			pixmapable_imp_initialize
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
-			Precursor {EV_MENU_ITEM_IMP}
-
 		end
 
 feature -- Basic operations
@@ -76,7 +74,7 @@ feature -- Basic operations
 			show_at (Void, pc.x + bw, pc.y + bw)
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
+	show_at (a_widget: detachable EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		local
@@ -89,7 +87,7 @@ feature -- Basic operations
 				l_x := a_x
 				l_y := a_y
 			end
-			if not interface.is_empty then
+			if count > 0 then
 					-- This is needed so that we can retrieve `Current' from the
 					-- GdkEvent when it is unmapped to remove the reference
 					-- of {EV_APPLICATION_IMP}.currently_shown_control
@@ -123,12 +121,12 @@ feature {EV_ANY_I} -- Implementation
 	on_activate
 			-- `Current' has been activated.
 		local
-			p_imp: EV_MENU_ITEM_LIST_IMP
+			p_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
 			p_imp ?= parent_imp
 			if p_imp /= Void then
 				if p_imp.item_select_actions_internal /= Void then
-					p_imp.item_select_actions_internal.call ([interface])
+					p_imp.item_select_actions.call ([attached_interface])
 				end
 			end
 			if select_actions_internal /= Void then
@@ -136,7 +134,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	interface: EV_MENU
+	interface: detachable EV_MENU note option: stable attribute end;
 		-- Interface object for `Current'.
 
 feature {NONE} -- Implementation
@@ -147,7 +145,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy the menu
 		do
-			interface.wipe_out
+			wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
 		end
 
@@ -166,4 +164,8 @@ note
 
 
 end -- class EV_MENU_IMP
+
+
+
+
 

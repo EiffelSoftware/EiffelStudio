@@ -223,7 +223,7 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	interface: EV_TEXT_COMPONENT;
+	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -242,4 +242,12 @@ note
 
 
 end -- class EV_TEXT_COMPONENT_I
+
+
+
+
+
+
+
+
 

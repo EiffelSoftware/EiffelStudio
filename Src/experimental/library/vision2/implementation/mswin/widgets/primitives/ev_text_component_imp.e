@@ -18,10 +18,10 @@ inherit
 		redefine
 			set_default_minimum_size,
 			interface,
-			initialize,
+			make,
 			wel_background_color,
 			wel_foreground_color,
-			background_color,
+			background_color_internal,
 			default_process_message
 		end
 
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			wel_set_font ((create {WEL_SHARED_FONTS}).gui_font)
@@ -288,27 +288,29 @@ feature {NONE} -- Deferred features
 
 	wel_background_color: WEL_COLOR_REF
 		do
-			Result := background_color_imp
-			if Result = Void then
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp
+			else
 				create Result.make_rgb (255, 255, 255)
 			end
 		end
 
 	wel_foreground_color: WEL_COLOR_REF
 		do
-			Result := foreground_color_imp
-			if Result = Void then
+			if attached foreground_color_imp as l_foreground_color_imp then
+				Result := l_foreground_color_imp
+			else
 				create Result.make_rgb (0, 0, 0)
 			end
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface
 			else
 				if is_sensitive then
 					Result := (create {EV_STOCK_COLORS}).Color_read_write
@@ -381,7 +383,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- interface
 
-	interface: EV_TEXT_COMPONENT;
+	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -398,4 +400,14 @@ note
 
 
 end -- class EV_TEXT_COMPONENT_IMP
+
+
+
+
+
+
+
+
+
+
 

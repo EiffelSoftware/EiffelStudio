@@ -126,10 +126,14 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ACCELERATOR_I} -- Implementation
 
-	actions_internal: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed on accelerator activation.
+	actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed on accelerator activation.
+		note
+			option: stable
+		attribute
+		end
 
-	interface: EV_ACCELERATOR;
+	interface: detachable EV_ACCELERATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -146,4 +150,14 @@ note
 
 
 end -- class EV_ACCELERATOR_I
+
+
+
+
+
+
+
+
+
+
 

@@ -12,21 +12,21 @@ note
 
 class
 	EV_CHECKABLE_LIST
-	
+
 inherit
 	EV_LIST
 		redefine
 			implementation,
 			create_implementation
 		end
-		
+
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES
 		undefine
 			is_equal
 		redefine
 			implementation
 		end
-	
+
 create
 	default_create,
 	make_with_strings
@@ -38,11 +38,11 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.checked_items	
+			Result := implementation.checked_items
 		ensure
 			bridge_ok: lists_equal (Result, implementation.checked_items)
 		end
-		
+
 	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			-- Is `list_item' currently checked?
 		require
@@ -65,7 +65,7 @@ feature -- Status setting
 		ensure
 			item_is_checked: is_item_checked (list_item)
 		end
-		
+
 	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure `list_item' is not checked.
 		require
@@ -76,7 +76,7 @@ feature -- Status setting
 		ensure
 			item_is_not_checked: not is_item_checked (list_item)
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECKABLE_LIST_I
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_CHECKABLE_LIST_IMP} implementation.make (Current)
+			create {EV_CHECKABLE_LIST_IMP} implementation.make
 		end
 
 invariant
@@ -111,4 +111,11 @@ note
 
 
 end -- class EV_CHECKABLE_LIST
+
+
+
+
+
+
+
 

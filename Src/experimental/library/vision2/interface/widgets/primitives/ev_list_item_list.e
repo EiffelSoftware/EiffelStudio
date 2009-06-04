@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		require
@@ -122,9 +122,6 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_string_array_not_void: a_string_array /= Void
-			a_string_array_with_no_void_strings:
-				a_string_array.linear_representation /= Void implies
-					not a_string_array.linear_representation.has (Void)
 		local
 			i, nb: INTEGER
 			l_set: INTEGER_INTERVAL
@@ -185,4 +182,14 @@ note
 
 
 end -- class EV_LIST_ITEM_LIST
+
+
+
+
+
+
+
+
+
+
 

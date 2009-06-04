@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	top_level_window_imp: WEL_WINDOW
+	top_level_window_imp: detachable WEL_WINDOW
 			-- Top level window that contains `Current'.
 
 feature {NONE} -- WEL Implementation
@@ -127,10 +127,11 @@ feature {NONE} -- WEL Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		local
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			theme_drawer: EV_THEME_DRAWER_IMP
 		do
 			bk_brush := background_brush
+			check bk_brush /= Void end
 			theme_drawer := application_imp.theme_drawer
 			theme_drawer.draw_widget_background (current_as_container, paint_dc, invalid_rect, bk_brush)
 			disable_default_processing
@@ -140,8 +141,12 @@ feature {NONE} -- WEL Implementation
 
 	current_as_container: EV_CONTAINER_IMP
 			-- Result is `Current' as a container.
+		local
+			l_result: detachable EV_CONTAINER_IMP
 		do
-			Result ?= Current
+			l_result ?= Current
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature {NONE} -- Deferred features
@@ -213,4 +218,14 @@ note
 
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP
+
+
+
+
+
+
+
+
+
+
 

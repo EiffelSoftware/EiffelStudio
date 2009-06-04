@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_TOGGLE_BUTTON_I 
+	EV_TOGGLE_BUTTON_I
 
 inherit
 	EV_BUTTON_I
@@ -21,7 +21,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOGGLE_BUTTON;
+	interface: detachable EV_TOGGLE_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -38,4 +38,12 @@ note
 
 
 end -- class EV_TOGGLE_BUTTON_I
+
+
+
+
+
+
+
+
 

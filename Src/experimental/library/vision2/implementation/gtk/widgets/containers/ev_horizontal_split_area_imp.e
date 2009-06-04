@@ -20,7 +20,8 @@ inherit
 
 	EV_SPLIT_AREA_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 create
@@ -28,17 +29,23 @@ create
 
 feature -- initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			container_widget := {EV_GTK_EXTERNALS}.gtk_hpaned_new
 			set_c_object (container_widget)
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_SPLIT_AREA;
+	interface: detachable EV_HORIZONTAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -57,4 +64,8 @@ note
 
 
 end -- class EV_HORIZONTAL_SPLIT_AREA_IMP
+
+
+
+
 

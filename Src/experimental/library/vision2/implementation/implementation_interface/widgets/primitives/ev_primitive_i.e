@@ -28,7 +28,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PRIMITIVE;
+	interface: detachable EV_PRIMITIVE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -45,4 +45,12 @@ note
 
 
 end -- class EV_PRIMITIVE_I
+
+
+
+
+
+
+
+
 

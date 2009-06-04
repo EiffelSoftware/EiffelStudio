@@ -20,7 +20,7 @@ inherit
 			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
 			{ANY} parent, width, height, resize_actions, set_minimum_height, is_show_requested, is_destroyed
 		redefine
-			initialize
+			initialize, create_interface_objects
 		end
 
 	EV_UTILITIES
@@ -32,16 +32,23 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
-			-- Initialize `Current'.
+	create_interface_objects
+			-- <Precursor>
 		do
-			Precursor {EV_VERTICAL_SPLIT_AREA}
 			create linear_representation.make (4)
 			create external_representation.make (4)
 			create all_holders.make (4)
 			create all_split_areas.make (4)
 			create stored_splitter_widths.make (4)
 			create minimized_states.make (4)
+			create pre_insertion_heights.make (0)
+			create pre_insertion_holders.make (0)
+		end
+
+	initialize
+			-- Initialize `Current'.
+		do
+			Precursor {EV_VERTICAL_SPLIT_AREA}
 			all_split_areas.extend (Current)
 			disabled_minimize_button_shown := True
 		end
@@ -99,8 +106,8 @@ feature -- Access
 	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' maximized in `Current'?
 		do
-			if maximized_tool /= Void then
-				Result := maximized_tool.tool = a_widget
+			if attached maximized_tool as l_maximized_tool then
+				Result := l_maximized_tool.tool = a_widget
 			end
 		ensure
 			Result_consistent: Result implies maximized_tool /= Void
@@ -298,8 +305,8 @@ feature -- Status setting
 			holder.simulate_minimum_height (a_height + holder_tool_height)--.min (max_size))
 			if Platform_is_windows then
 				holder.remove_simulated_height
-			else
-				application.do_once_on_idle (agent holder.remove_simulated_height)
+			elseif attached application as l_application then
+				l_application.do_once_on_idle (agent holder.remove_simulated_height)
 			end
 		end
 
@@ -371,9 +378,9 @@ feature -- Status setting
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here and parent_window (Current) /= Void then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then not attached l_application.locked_window
+			if locked_in_here and attached parent_window (Current) as l_parent_window then
+				l_parent_window.lock_update
 			end
 			store_heights_pre_insertion
 
@@ -398,8 +405,8 @@ feature -- Status setting
 			rebuild
 
 			restore_heights_post_insertion (holder, desired_height)
-			if locked_in_here and parent_window (Current) /= Void then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.unlock_update
 			end
 		ensure
 			contained: linear_representation.has (widget)
@@ -428,7 +435,9 @@ feature -- Status setting
 			holder.minimize_button.disable_sensitive
 			holder.maximize_button.disable_sensitive
 			create dialog
-			holder.main_box.parent.prune_all (holder.main_box)
+			if attached holder.main_box.parent as l_parent then
+				l_parent.prune_all (holder.main_box)
+			end
 			dialog.extend (holder.main_box)
 			dialog.enable_closeable
 			dialog.close_request_actions.wipe_out
@@ -450,9 +459,9 @@ feature -- Status setting
 			locked_in_here: BOOLEAN
 			original_index: INTEGER
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here and parent_window (Current) /= Void then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			if locked_in_here and attached parent_window (Current) as l_parent_window then
+				l_parent_window.lock_update
 			end
 			store_positions
 
@@ -478,8 +487,8 @@ feature -- Status setting
 			if not is_blocked then
 				restore_stored_positions
 			end
-			if locked_in_here and parent_window (Current) /= Void then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.unlock_update
 			end
 		ensure
 			remove: not linear_representation.has (a_widget)
@@ -495,7 +504,7 @@ feature -- Status setting
 			-- ourself.
 		local
 			index: INTEGER
-			dockable_dialog: EV_DOCKABLE_DIALOG
+			dockable_dialog: detachable EV_DOCKABLE_DIALOG
 			tool: EV_WIDGET
 		do
 			rebuilding_locked := True
@@ -521,8 +530,8 @@ feature -- Status setting
 				end
 				dockable_dialog.wipe_out
 				dockable_dialog.destroy
-				if tool.parent /= Void then
-					tool.parent.prune_all (tool)
+				if attached tool.parent as l_tool_parent then
+					l_tool_parent.prune_all (tool)
 				end
 				external_representation.remove
 			end
@@ -541,18 +550,21 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.lock_update
 			end
 			tool_holder := holder_of_widget (a_widget)
 			tool_holder.enable_maximized
 			maximize_tool (tool_holder)
-			tool_holder.maximize_button.set_pixmap (restore_pixmap)
+			if attached restore_pixmap as l_restore_pixmap then
+				tool_holder.maximize_button.set_pixmap (l_restore_pixmap)
+			end
+
 			tool_holder.maximize_button.set_tooltip (restore_string)
 			tool_holder.label.disable_dockable
-			if locked_in_here then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.unlock_update
 			end
 			maximize_actions.call ([a_widget])
 		ensure
@@ -568,19 +580,21 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			if locked_in_here and then attached parent_window (Current) as l_par_wind then
+				l_par_wind.lock_update
 			end
 			tool_holder := holder_of_widget (a_widget)
 			tool_holder.enable_minimized
 			tool_holder.set_restore_height (a_widget.height)
 			minimize_tool (tool_holder)
-			tool_holder.minimize_button.set_pixmap (restore_pixmap)
+			if attached restore_pixmap as l_restore_pixmap then
+				tool_holder.minimize_button.set_pixmap (l_restore_pixmap)
+			end
 			tool_holder.minimize_button.set_tooltip (restore_string)
 
-			if locked_in_here then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_par_wind then
+				l_par_wind.unlock_update
 			end
 			minimize_actions.call ([a_widget])
 		ensure
@@ -613,24 +627,29 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.lock_update
 			end
 			tool_holder := holder_of_widget (a_widget)
 
 			if tool_holder.is_maximized then
 				restore_maximized_tool (tool_holder, True)
-				tool_holder.maximize_button.set_pixmap (maximize_pixmap)
+				if attached maximize_pixmap as l_maximize_pixmap then
+					tool_holder.maximize_button.set_pixmap (l_maximize_pixmap)
+				end
+
 				tool_holder.label.enable_dockable
 			else
 				restore_minimized_tool (tool_holder)
-				tool_holder.minimize_button.set_pixmap (minimize_pixmap)
+				if attached minimize_pixmap as l_minimize_pixmap then
+					tool_holder.minimize_button.set_pixmap (l_minimize_pixmap)
+				end
 				tool_holder.minimize_button.set_tooltip ("Minimize")
 			end
 			restore_actions.call ([a_widget])
-			if locked_in_here then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.unlock_update
 			end
 		ensure
 			--	widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
@@ -706,9 +725,9 @@ feature -- Status setting
 		local
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here then
-				parent_window (Current).lock_update
+			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.lock_update
 			end
 			if top_widget_resizing then
 				from
@@ -743,8 +762,8 @@ feature -- Status setting
 				end
 				heights.forth
 			end
-			if locked_in_here then
-				parent_window (Current).unlock_update
+			if locked_in_here and then attached parent_window (Current) as l_parent_window then
+				l_parent_window.unlock_update
 			end
 		end
 
@@ -789,9 +808,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				elseif count = 2 then
 					cell_extend (place_holder_inside_insert_structure (holder_of_widget (linear_representation.i_th (1))))
 					cell_extend (place_holder_inside_insert_structure (holder_of_widget (linear_representation.i_th (2))))
-					if top_widget_resizing then
-						enable_item_expand (first)
-						disable_item_expand (second)
+					if top_widget_resizing and then attached first as l_first and then attached second as l_second then
+						enable_item_expand (l_first)
+						disable_item_expand (l_second)
 					end
 				elseif count /= 0 then
 					from
@@ -857,8 +876,12 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				all_split_areas.off or all_split_areas.count = 1
 			loop
 				split_area := all_split_areas.item
-				split_area.enable_item_expand (split_area.first)
-				split_area.disable_item_expand (split_area.second)
+				if attached split_area.first as l_first then
+					split_area.enable_item_expand (l_first)
+				end
+				if attached split_area.second as l_second then
+					split_area.disable_item_expand (l_second)
+				end
 				all_split_areas.forth
 			end
 		end
@@ -883,16 +906,16 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
 		-- All holders within `Current', includes externally docked holders.
 
-	maximize_pixmap: EV_PIXMAP
+	maximize_pixmap: detachable EV_PIXMAP
 		-- Pixmap associated with maximize buttons.
 
-	minimize_pixmap: EV_PIXMAP
+	minimize_pixmap: detachable EV_PIXMAP
 		-- Pixmap associated with minimize buttons.
 
-	close_pixmap: EV_PIXMAP
+	close_pixmap: detachable EV_PIXMAP
 		-- Pixmap associated with close buttons.
 
-	restore_pixmap: EV_PIXMAP
+	restore_pixmap: detachable EV_PIXMAP
 		-- Pixmap associated with restore buttons.
 
 	initialize_docking_areas (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
@@ -902,7 +925,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			index_of_tool: INTEGER
 			vertical_box: EV_VERTICAL_BOX
-			cell: EV_CELL
+			cell: detachable EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			counter: INTEGER
 		do
@@ -941,6 +964,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							-- If `a_holder' is immediately above `holder', then
 							-- do not allow docking to the top, as it is already
 							-- positioned there.
+						check cell /= Void end
 						holder.label_box.set_real_target (cell)
 					end
 					create cell
@@ -959,7 +983,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- Remove all docking areas added as result of last call to
 			-- `initialize_docking_areas'.
 		local
-			cell: EV_CELL
+			cell: detachable EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			box: EV_BOX
 		do
@@ -1016,13 +1040,13 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			a_tool_not_void: a_tool /= Void
 		do
-			if maximized_tool /= Void then
-				maximized_tool.silent_set_minimized
-				maximized_tool.disable_minimize_button
-				maximized_tool.remove_maximized_restore
-				maximized_tool.silent_remove_maximized
-				maximized_tool.label.enable_dockable
-				maximized_tool.maximize_button.set_tooltip (Maximize_string)
+			if attached maximized_tool as l_maximized_tool then
+				l_maximized_tool.silent_set_minimized
+				l_maximized_tool.disable_minimize_button
+				l_maximized_tool.remove_maximized_restore
+				l_maximized_tool.silent_remove_maximized
+				l_maximized_tool.label.enable_dockable
+				l_maximized_tool.maximize_button.set_tooltip (Maximize_string)
 				a_tool.silent_remove_minimized
 				a_tool.enable_minimize_button
 				a_tool.tool.show
@@ -1265,6 +1289,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			lower_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			position_of_tool: INTEGER
 			cursor: CURSOR
+			l_parent: detachable EV_CONTAINER
 		do
 			cursor := all_holders.cursor
 				-- Firstly hide the actual widget of the tool, so that its minimum size
@@ -1276,7 +1301,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				remove_tool_from_parent (a_tool)
 				lower_holder := all_holders.i_th (next_non_minimized_down (position_of_tool))
 				transfer_box_contents (a_tool.upper_box, lower_holder.upper_box)
-				lower_holder.upper_box.extend (a_tool.parent)
+				l_parent := a_tool.parent
+				check l_parent /= Void end
+				lower_holder.upper_box.extend (l_parent)
 					-- Now transfer all contents of `a_tool' upper bar?
 					-- This would keep all the minimized widgets together in the same box????
 					-- Not sure if it needs to be done.
@@ -1287,7 +1314,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			else
 				remove_tool_from_parent (a_tool)
 				lower_holder := i_th_holder (position_of_tool - 1)
-				lower_holder.lower_box.extend (a_tool.parent)
+				l_parent := a_tool.parent
+				check l_parent /= Void end
+				lower_holder.lower_box.extend (l_parent)
 				update_all_minimize_buttons
 			end
 			all_holders.go_to (cursor)
@@ -1505,15 +1534,17 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			immediate_tool_parent_not_void: a_tool.parent /= Void
 		local
-			l_parent: EV_CONTAINER
+			l_parent: detachable EV_CONTAINER
 		do
 			l_parent := a_tool.parent
 			check
 				l_parent_not_void: l_parent /= Void
 			end
-			l_parent.parent.prune_all (l_parent)
+			if attached l_parent.parent as l_parent_parent then
+				l_parent_parent.prune_all (l_parent)
+			end
 		ensure
-			tool_unparented: a_tool.parent.parent = Void
+			tool_unparented: attached a_tool.parent as l_par and then l_par.parent = Void
 		end
 
 	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
@@ -1522,9 +1553,11 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			tool_not_void: a_tool /= Void
 		local
-			split_area: EV_SPLIT_AREA
+			split_area: detachable EV_SPLIT_AREA
 		do
-			split_area ?= a_tool.parent.parent
+			if attached a_tool.parent as l_parent then
+				split_area ?= l_parent.parent
+			end
 			remove_tool_structure (a_tool)
 				-- We must now unparent the split area if it is empty and
 				-- is the last split area in the control.
@@ -1532,7 +1565,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				remove_parent_split_areas_bottom (split_area)
 			end
 		ensure
-			tool_not_parented: a_tool.parent.parent = Void
+			tool_not_parented: attached a_tool.parent as l_parent and then l_parent.parent = Void
 		end
 
 	remove_parent_split_areas_bottom (split_area: EV_SPLIT_AREA)
@@ -1542,7 +1575,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			split_area_not_void: split_area /= Void
 		local
 			counter: INTEGER
-			current_split_area, parent_split_area: EV_SPLIT_AREA
+			current_split_area, parent_split_area: detachable EV_SPLIT_AREA
 		do
 			from
 				counter := all_split_areas.index_of (split_area, 1)
@@ -1550,7 +1583,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				counter <= 1
 			loop
 				parent_split_area ?= all_split_areas.i_th (counter - 1)
+				check parent_split_area /= Void end
 				current_split_area ?= all_split_areas.i_th (counter)
+				check current_split_area /= Void end
 				if current_split_area.is_empty then
 					parent_split_area.prune_all (current_split_area)
 				else
@@ -1567,7 +1602,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			split_area_not_void: split_area /= Void
 		local
 			counter: INTEGER
-			current_split_area, parent_split_area: EV_SPLIT_AREA
+			current_split_area, parent_split_area: detachable EV_SPLIT_AREA
 		do
 			from
 				counter := all_split_areas.index_of (split_area, 1)
@@ -1578,6 +1613,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				parent_split_area ?= all_split_areas.i_th (counter + 1)
 				if parent_split_area /= Void then
 					current_split_area ?= all_split_areas.i_th (counter)
+					check current_split_area /= Void end
 					if current_split_area.is_empty then
 						parent_split_area.prune_all (current_split_area)
 					else
@@ -1596,15 +1632,17 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			split_area_not_void: split_area /= Void
 		local
-			parent_split_area: EV_SPLIT_AREA
-			new_parent_split_area: EV_SPLIT_AREA
+			parent_split_area: detachable EV_SPLIT_AREA
+			new_parent_split_area: detachable EV_SPLIT_AREA
 		do
 			from
 				parent_split_area ?= split_area
+				check parent_split_area /= Void end
 			until
 				parent_split_area.parent /= Void
 			loop
 				new_parent_split_area := all_split_areas.i_th (all_split_areas.index_of (parent_split_area, 1) - 1)
+				check new_parent_split_area /= Void end
 				if top_widget_resizing then
 					new_parent_split_area.set_first (parent_split_area)
 				else
@@ -1667,7 +1705,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- tools minimize button, as not all tools may be minimized at once.
 		local
 			minimized_count: INTEGER
-			maximized_holder, non_minimized_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			maximized_holder, non_minimized_holder: detachable MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
 		do
 			cursor := all_holders.cursor
@@ -1692,6 +1730,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				all_holders.forth
 			end
 			if minimized_count = count - 1 then
+				check non_minimized_holder /= Void end
 				non_minimized_holder.disable_minimize_button
 			end
 			all_holders.go_to (cursor)
@@ -1743,7 +1782,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	unparent_all_holders
 			-- Ensure all items in `all_holders' are not parented.
 		local
-			current_parent: EV_CONTAINER
+			current_parent: detachable EV_CONTAINER
 		do
 			from
 				all_holders.start
@@ -1765,21 +1804,24 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			linear_representation.has (a_widget) or external_representation.has (a_widget)
 		local
 			cursor: CURSOR
-			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			current_holder: detachable MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			l_result: detachable MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			cursor := all_holders.cursor
 			from
 				all_holders.start
 			until
-				Result /= Void
+				l_result /= Void
 			loop
 				current_holder := all_holders.item
 				if current_holder /= Void and then current_holder.tool = a_widget then
-					Result := all_holders.item
+					l_result := all_holders.item
 				end
 				all_holders.forth
 			end
 			all_holders.go_to (cursor)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 			position_not_changed: all_holders.index = old all_holders.index
@@ -1870,21 +1912,21 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	docked_out_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	docked_out_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 		-- Internal docked out actions, fired when a widget has been
 		-- docked out of `Current'.
 
-	docked_in_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	docked_in_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 		-- Internal docked in actions, fired when a widget has been
 		-- docked in to `Current'.
 
-	close_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	close_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 
-	restore_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	restore_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 
-	maximize_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	maximize_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 
-	minimize_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	minimize_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE note option: stable attribute end
 
 	pre_insertion_heights: ARRAYED_LIST [INTEGER]
 		-- All positions stored by last call to `store_heights_pre_insertion', used to
@@ -1893,7 +1935,7 @@ feature {NONE} -- Implementation
 	pre_insertion_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
 		-- All holders of `Current'. One for each widget.
 
-	maximized_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+	maximized_tool: detachable MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		-- Holder currently maximized in `Current', or `Void' if none.
 
 	box_contents (box: EV_BOX): ARRAYED_LIST [EV_WIDGET]
@@ -1902,7 +1944,7 @@ feature {NONE} -- Implementation
 		require
 			box_not_void: box /= Void
 		local
-			cursor: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
+			cursor: EV_DYNAMIC_LIST_CURSOR [detachable EV_WIDGET]
 		do
 			cursor := box.cursor
 			create Result.make (box.count)
@@ -1931,9 +1973,9 @@ feature {NONE} -- Implementation
 			contained: linear_representation.has (a_widget) or is_item_external (a_widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			first_minimized: EV_WIDGET
+			first_minimized: detachable EV_WIDGET
 			minimized_count: INTEGER
-			dialog: EV_DOCKABLE_DIALOG
+			dialog: detachable EV_DOCKABLE_DIALOG
 		do
 			holder := holder_of_widget (a_widget)
 			if maximized_tool /= Void then
@@ -1959,8 +2001,11 @@ feature {NONE} -- Implementation
 				linear_representation.forth
 			end
 			if count > 1 and minimized_count = count - 1 then
+				check first_minimized /= Void end
 				restore_minimized_tool (holder_of_widget (first_minimized))
-				holder_of_widget (first_minimized).minimize_button.set_pixmap (minimize_pixmap)
+				if attached minimize_pixmap as l_minimize_pixmap then
+					holder_of_widget (first_minimized).minimize_button.set_pixmap (l_minimize_pixmap)
+				end
 			end
 
 			all_holders.prune_all (holder)
@@ -1968,13 +2013,13 @@ feature {NONE} -- Implementation
 				-- parented for it to be contained in `Current'.
 				-- Unless `wipe_out' is being called as part of the insertion
 				-- process.
-			if holder.parent /= Void then
-				holder.parent.prune_all (holder)
+			if attached holder.parent as l_holder_parent then
+				l_holder_parent.prune_all (holder)
 			end
 				-- Now actually remove `a_widget' from its holder.
-			if a_widget.parent /= Void then
+			if attached a_widget.parent as l_widget_parent then
 				dialog ?= parent_window (a_widget)
-				a_widget.parent.prune_all (a_widget)
+				l_widget_parent.prune_all (a_widget)
 				if dialog /= Void then
 					dialog.destroy
 				end
@@ -2193,9 +2238,9 @@ feature {NONE} -- Implementation
 					all_split_areas.off
 				loop
 					split_area := all_split_areas.item
-					if split_area.full then
-						split_area.enable_item_expand (split_area.first)
-						split_area.disable_item_expand (split_area.second)
+					if attached split_area.first as l_first and then attached split_area.second as l_second then
+						split_area.enable_item_expand (l_first)
+						split_area.disable_item_expand (l_second)
 					end
 					all_split_areas.forth
 				end
@@ -2211,7 +2256,7 @@ feature {NONE} -- Implementation
 			Result := (create {PLATFORM}).is_windows
 		end
 
-	application: EV_APPLICATION
+	application: detachable EV_APPLICATION
 			-- Application for `Current'. May not be a Once, as it is
 			-- possible to change the application.
 		do
@@ -2248,4 +2293,7 @@ note
 
 
 end -- class MULTIPLE_SPLIT_AREA
+
+
+
 

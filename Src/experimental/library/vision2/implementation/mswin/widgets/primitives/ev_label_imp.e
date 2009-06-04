@@ -21,7 +21,7 @@ inherit
 		redefine
 			set_default_minimum_size,
 			interface,
-			initialize,
+			make,
 			on_size
 		end
 
@@ -123,19 +123,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, "", 0, 0, 0, 0, 0)
-			align_text_center
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+			align_text_center
 			set_default_font
 			disable_tabable_from
 			disable_tabable_to
@@ -155,7 +155,7 @@ feature -- Element change
 			-- `a_angle' is expressed in radians.
 		local
 			l_font: EV_FONT
-			l_font_imp: EV_FONT_IMP
+			l_font_imp: detachable EV_FONT_IMP
 			l_log_font: WEL_LOG_FONT
 		do
 			if a_angle /= angle then
@@ -163,6 +163,7 @@ feature -- Element change
 					-- We need to create a new `private_font' that has an escapement set.
 				l_font := font
 				l_font_imp ?= l_font.implementation
+				check l_font_imp /= Void end
 				l_log_font := l_font_imp.wel_font.log_font
 				l_log_font.set_escapement ((angle * 1800 / 3.14).rounded)
 				--l_log_font.set_orientation ((angle * 1800 / 3.14).rounded)
@@ -279,11 +280,11 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			l_draw_flags: INTEGER
 			l_draw_text_rect: WEL_RECT
 			l_rect: WEL_RECT
-			l_draw_font: WEL_FONT
-			l_font_imp: EV_FONT_IMP
+			l_draw_font: detachable WEL_FONT
+			l_font_imp: detachable EV_FONT_IMP
 			l_bk_brush: WEL_BRUSH
 			l_wel_color: WEL_COLOR_REF
-			l_color_imp: EV_COLOR_IMP
+			l_color_imp: detachable EV_COLOR_IMP
 			l_bitmap: WEL_BITMAP
 			l_is_remote: BOOLEAN
 		do
@@ -294,7 +295,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			l_draw_dc := draw_item_struct.dc
 			l_rect := draw_item_struct.rect_item
 
-			if internal_text /= Void then
+			if attached internal_text as l_internal_text then
 				l_is_remote := metrics.is_remote_session
 				if l_is_remote then
 					l_mem_dc := l_draw_dc
@@ -335,11 +336,13 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				l_draw_font := private_wel_font
 				if l_draw_font = Void then
 					l_font_imp ?= internal_font.implementation
+					check l_font_imp /= Void end
 					l_draw_font := l_font_imp.wel_font
 				end
 					 -- Draw the text
 				l_mem_dc.select_font (l_draw_font)
 				l_color_imp ?= foreground_color.implementation
+				check l_color_imp /= Void end
 				l_mem_dc.set_text_color (l_color_imp)
 
 					-- Set transparent because the background is drawn according to the label's set background color
@@ -348,10 +351,10 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 
 				if not is_sensitive then
 						-- Label is disabled
-					l_mem_dc.draw_disabled_text (internal_text, l_draw_text_rect, l_draw_flags)
+					l_mem_dc.draw_disabled_text (l_internal_text, l_draw_text_rect, l_draw_flags)
 				else
 						-- Label is NOT disabled
-					l_mem_dc.draw_text (internal_text, l_draw_text_rect, l_draw_flags)
+					l_mem_dc.draw_text (l_internal_text, l_draw_text_rect, l_draw_flags)
 				end
 				if not l_is_remote then
 					l_draw_dc.bit_blt (l_rect.left, l_rect.top, l_rect.width, l_rect.height, l_mem_dc,
@@ -395,7 +398,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I}
 
-	interface: EV_LABEL;
+	interface: detachable EV_LABEL note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -412,4 +415,13 @@ note
 
 
 end -- class EV_LABEL_IMP
+
+
+
+
+
+
+
+
+
 

@@ -107,8 +107,8 @@ feature {EV_WIDGET_I} -- Implementation
 		require
 			help_disabled: not help_enabled
 		do
-			connect_accelerator (Environment.Application.Help_accelerator)
-			connect_accelerator (Environment.Application.Contextual_help_accelerator)
+			connect_accelerator (environment.implementation.application_i.help_accelerator)
+			connect_accelerator (environment.implementation.application_i.Contextual_help_accelerator)
 			help_enabled := True
 		ensure
 			help_enabled: help_enabled
@@ -116,7 +116,7 @@ feature {EV_WIDGET_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TITLED_WINDOW;
+	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -133,4 +133,12 @@ note
 
 
 end -- class EV_TITLED_WINDOW_I
+
+
+
+
+
+
+
+
 

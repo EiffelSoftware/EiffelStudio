@@ -20,7 +20,7 @@ inherit
 		redefine
 			call_pebble_function,
 			reset_pebble_function,
-			initialize,
+			make,
 			interface,
 			pre_pick_steps,
 			post_drop_steps,
@@ -34,7 +34,7 @@ inherit
 			interface,
 			insert_i_th,
 			remove_i_th,
-			initialize
+			make
 		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
@@ -45,7 +45,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Set up `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	item_from_coords (a_x, a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Retrieve the Current row from `a_y' coordinate
 		do
 		end
@@ -80,7 +80,7 @@ feature -- Status report
 			a_enable_flag: BOOLEAN
 			i: INTEGER
 			a_cursor: CURSOR
-			a_list_item_imp: EV_LIST_ITEM_IMP
+			a_list_item_imp: detachable EV_LIST_ITEM_IMP
 		do
 			from
 				a_cursor := child_array.cursor
@@ -92,6 +92,7 @@ feature -- Status report
 				child_array.go_i_th (i)
 				if child_array.item /= Void then
 					a_list_item_imp ?= child_array.item.implementation
+					check a_list_item_imp /= Void end
 					a_enable_flag := a_list_item_imp.is_transport_enabled
 				end
 				i := i + 1
@@ -114,16 +115,23 @@ feature -- Status report
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 				-- Steps to perform before transport initiated.
+			local
+				l_pnd_row_imp: like pnd_row_imp
+				l_pebble: like pebble
 			do
 				temp_accept_cursor := accept_cursor
 				temp_deny_cursor := deny_cursor
-				app_implementation.on_pick (Current, pebble)
-				if pnd_row_imp /= Void then
-					if pnd_row_imp.pick_actions_internal /= Void then
-						pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
+				l_pebble := pebble
+				if l_pebble /= Void then
+					app_implementation.on_pick (Current, l_pebble)
+				end
+				l_pnd_row_imp := pnd_row_imp
+				if l_pnd_row_imp /= Void then
+					if l_pnd_row_imp.pick_actions_internal /= Void then
+						l_pnd_row_imp.pick_actions.call ([a_x, a_y])
 					end
-					accept_cursor := pnd_row_imp.accept_cursor
-					deny_cursor := pnd_row_imp.deny_cursor
+					accept_cursor := l_pnd_row_imp.accept_cursor
+					deny_cursor := l_pnd_row_imp.deny_cursor
 				else
 					if pick_actions_internal /= Void then
 						pick_actions_internal.call ([a_x, a_y])
@@ -131,7 +139,7 @@ feature -- Status report
 				end
 				pointer_x := a_screen_x.to_integer_16
 				pointer_y := a_screen_y.to_integer_16
-				if pnd_row_imp = Void then
+				if l_pnd_row_imp = Void then
 					if (pick_x = 0 and then pick_y = 0) then
 						App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 					else
@@ -144,7 +152,7 @@ feature -- Status report
 						App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 					end
 				else
-					if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
+					if (l_pnd_row_imp.pick_x = 0 and then l_pnd_row_imp.pick_y = 0) then
 						App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 					else
 						if pick_x > width then
@@ -154,8 +162,8 @@ feature -- Status report
 							pick_y := row_height.to_integer_16
 						end
 						App_implementation.set_x_y_origin (
-							pnd_row_imp.pick_x + (a_screen_x - a_x),
-							pnd_row_imp.pick_y + (a_screen_y - a_y) + ((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+							l_pnd_row_imp.pick_x + (a_screen_x - a_x),
+							l_pnd_row_imp.pick_y + (a_screen_y - a_y) + ((child_array.index_of (l_pnd_row_imp.attached_interface, 1) - 1) * row_height)
 						)
 					end
 				end
@@ -186,8 +194,8 @@ feature -- Status report
 			-- Source of pebble, used for widgets with deferred PND implementation
 			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.interface
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.attached_interface
 			else
 				Result := Precursor
 			end
@@ -196,8 +204,8 @@ feature -- Status report
 	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.able_to_transport (a_button)
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.able_to_transport (a_button)
 			else
 				Result := Precursor (a_button)
 			end
@@ -206,44 +214,44 @@ feature -- Status report
 	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
 			else
 				Result := Precursor (a_button, a_press)
 			end
 		end
 
-	pnd_row_imp: EV_LIST_ITEM_IMP
+	pnd_row_imp: detachable EV_LIST_ITEM_IMP
 			-- Implementation object of the current row if in PND transport.
 
-	temp_pebble: ANY
+	temp_pebble: detachable ANY
 
-	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	temp_pebble_function: detachable FUNCTION [ANY, TUPLE [], detachable ANY]
 			-- Returns data to be transported by PND mechanism.
 
-	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
+	temp_accept_cursor, temp_deny_cursor: detachable EV_POINTER_STYLE
 
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			temp_pebble := pebble
 			temp_pebble_function := pebble_function
-			if pnd_row_imp /= Void then
-				pebble := pnd_row_imp.pebble
-				pebble_function := pnd_row_imp.pebble_function
+			if attached pnd_row_imp as l_pnd_row_imp then
+				pebble := l_pnd_row_imp.pebble
+				pebble_function := l_pnd_row_imp.pebble_function
 			end
 
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y]);
-				pebble := pebble_function.last_result
+			if attached pebble_function as l_pebble_function then
+				l_pebble_function.call ([a_x, a_y]);
+				pebble := l_pebble_function.last_result
 			end
 		end
 
 	reset_pebble_function
 			-- Reset `pebble_function'.
 		do
-			if pebble_function /= Void then
-				pebble_function.clear_last_result
+			if attached pebble_function as l_pebble_function then
+				l_pebble_function.clear_last_result
 			end
 			pebble := temp_pebble
 			pebble_function := temp_pebble_function
@@ -270,14 +278,18 @@ feature -- Insertion
 		local
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER
-			a_list_item_imp: EV_LIST_ITEM_IMP
+			a_list_item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_cs := App_implementation.reusable_gtk_c_string
 			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_item_imp.list_iter.item, 1, str_value)
+			check a_list_item_imp /= Void end
+			l_list_iter := a_list_item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, 1, str_value)
 		end
 
 	g_value_string_struct: POINTER
@@ -290,33 +302,43 @@ feature -- Insertion
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
-			a_list_item_imp: EV_LIST_ITEM_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
+			a_list_item_imp: detachable EV_LIST_ITEM_IMP
+			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
+			check a_list_item_imp /= Void end
+			a_list_iter := a_list_item_imp.list_iter
+			check a_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
 			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			a_list_item_imp: EV_LIST_ITEM_IMP
+			a_list_item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, NULL)
+			check a_list_item_imp /= Void end
+			l_list_iter := a_list_item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, NULL)
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
 
 			child_array.go_i_th (i)
@@ -328,8 +350,8 @@ feature -- Insertion
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			set_text_on_position (i, v.text)
 
-			if v.pixmap /= Void then
-				set_row_pixmap (i, v.pixmap)
+			if attached v.pixmap as l_pixmap then
+				set_row_pixmap (i, l_pixmap)
 			end
 
 			if item_imp.is_transport_enabled then
@@ -339,7 +361,7 @@ feature -- Insertion
 
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
-	interface: EV_LIST_ITEM_LIST
+	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 
 	list_store: POINTER
 		-- Pointer to the model which holds all of the column data
@@ -348,12 +370,16 @@ feature {NONE} -- Implementation
 
 	remove_i_th (an_index: INTEGER)
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			clear_selection
 			item_imp ?= (child_array @ (an_index)).implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Void)
-			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, l_list_iter.item)
 			-- remove the row from the `ev_children'
 			child_array.go_i_th (an_index)
 			child_array.remove
@@ -383,4 +409,8 @@ note
 
 
 end -- class EV_LIST_ITEM_LIST_IMP
+
+
+
+
 

@@ -18,7 +18,7 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_CELL_IMP
@@ -47,8 +47,8 @@ inherit
 			set_configurable_target_menu_handler
 		redefine
 			interface,
-			initialize,
 			make,
+			old_make,
 			needs_event_box,
 			set_background_color,
 			set_foreground_color
@@ -65,27 +65,25 @@ feature {NONE} -- Initialization
 			Result := False
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create grid
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
-				-- We need to explicitly show the cell gtk widget as we are not calling the Precursor as the event hookup is not needed.
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			initialize_grid
-				-- Force a resize of all internal items to make sure everything is updated correctly.
-			{EV_GTK_EXTERNALS}.gtk_container_check_resize (c_object)
-
 				-- Initialize colors from gtk style.
 			set_focused_selection_color (color_from_state (base_style, {EV_GTK_EXTERNALS}.gtk_state_selected_enum))
 			set_non_focused_selection_color (color_from_state (base_style, {EV_GTK_EXTERNALS}.gtk_state_active_enum))
 			set_focused_selection_text_color (color_from_state (text_style, {EV_GTK_EXTERNALS}.gtk_state_selected_enum))
 			set_non_focused_selection_text_color (color_from_state (text_style, {EV_GTK_EXTERNALS}.gtk_state_active_enum))
+
+			Precursor {EV_CELL_IMP}
+				-- Force a resize of all internal items to make sure everything is updated correctly.
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (c_object)
+			initialize_grid
 
 			set_is_initialized (True)
 		end
@@ -122,7 +120,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- not include the horizontal overhang or underhang. This can
 			-- make quite a difference on certain platforms.
 		local
-			a_font_imp: EV_FONT_IMP
+			a_font_imp: detachable EV_FONT_IMP
 			a_pango_layout: POINTER
 			a_cs: EV_GTK_C_STRING
 			a_width, a_height: INTEGER
@@ -133,6 +131,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				tuple.put_integer (0, 2)
 			else
 				a_font_imp ?= f.implementation
+				check a_font_imp /= Void end
 				l_app_imp := app_implementation
 				a_pango_layout := l_app_imp.pango_layout
 				a_cs := l_app_imp.c_string_from_eiffel_string (s)
@@ -187,7 +186,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID;
+	interface: detachable EV_GRID note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -206,4 +205,8 @@ note
 
 
 end
+
+
+
+
 

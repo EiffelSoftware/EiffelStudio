@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision vertical range. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_RANGE;
+	interface: detachable EV_VERTICAL_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -33,4 +33,10 @@ note
 
 
 end -- class EV_VERTICAL_RANGE_I
+
+
+
+
+
+
 

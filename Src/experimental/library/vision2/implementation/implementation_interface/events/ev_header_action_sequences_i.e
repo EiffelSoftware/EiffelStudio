@@ -44,7 +44,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -60,7 +60,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 			-- Actions to be performed when a mouse pointer is pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -78,20 +78,40 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
-	item_resize_actions_internal: EV_HEADER_ITEM_ACTION_SEQUENCE
+	item_resize_actions_internal: detachable EV_HEADER_ITEM_ACTION_SEQUENCE
 		-- Implementation of once per object `item_resize_actions_internal'.
+		note
+			option: stable
+		attribute
+		end
 
-	item_resize_start_actions_internal: EV_HEADER_ITEM_ACTION_SEQUENCE
+	item_resize_start_actions_internal: detachable EV_HEADER_ITEM_ACTION_SEQUENCE
 		-- Implementation of once per object `item_resize_start_actions_internal'.
+		note
+			option: stable
+		attribute
+		end
 
-	item_resize_end_actions_internal: EV_HEADER_ITEM_ACTION_SEQUENCE
+	item_resize_end_actions_internal: detachable EV_HEADER_ITEM_ACTION_SEQUENCE
 		-- Implementation of once per object `item_resize_end_actions_internal'.
+		note
+			option: stable
+		attribute
+		end
 
-	item_pointer_button_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_button_press_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 		-- Implementation of once per object `item_pointer_button_press_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	item_pointer_double_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_double_press_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 		-- Implementation of once per object `item_double_button_press_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 	create_item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Create an item resize actions.
@@ -135,4 +155,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

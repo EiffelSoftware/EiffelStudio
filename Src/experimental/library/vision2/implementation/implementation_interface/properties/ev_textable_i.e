@@ -28,19 +28,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL)
+	set_text (a_text: detachable STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		deferred
 		ensure
-			text_cloned: text.is_equal (a_text) and then text /= a_text
+			text_cloned: attached a_text as l_text and then text.is_equal (l_text) and then text /= l_text
 		end
 
 feature {NONE} -- Implementation
 
-	interface: EV_TEXTABLE;
+	interface: detachable EV_TEXTABLE note option: stable attribute end;
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -59,4 +59,15 @@ note
 
 
 end -- class EV_TEXTABLE_I
+
+
+
+
+
+
+
+
+
+
+
 

@@ -109,7 +109,7 @@ feature -- Query
 			-- Return a pixel buffer iterator.
 		do
 			if pixel_iterator_internal = Void then
-				create pixel_iterator_internal.make_for_pixel_buffer (interface)
+				create pixel_iterator_internal.make_for_pixel_buffer (attached_interface)
 			end
 			Result := pixel_iterator_internal
 		end
@@ -126,10 +126,10 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	pixel_iterator_internal: EV_PIXEL_BUFFER_ITERATOR;
+	pixel_iterator_internal: detachable EV_PIXEL_BUFFER_ITERATOR note option: stable attribute end;
 		-- Iteration object for pixels of `Current'.
 
-	interface: EV_PIXEL_BUFFER;
+	interface: detachable EV_PIXEL_BUFFER note option: stable attribute end;
 		-- Interface object for `Current'.
 
 feature -- Obsolete

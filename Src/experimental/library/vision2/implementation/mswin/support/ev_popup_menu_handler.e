@@ -31,11 +31,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_menu (a_menu: EV_MENU_ITEM_LIST_IMP; a_window: WEL_WINDOW)
+	make_with_menu (a_menu: EV_MENU_ITEM_LIST_IMP; a_window: detachable WEL_WINDOW)
 			-- Initialize with `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
 		do
+			menu_item_list := a_menu
 			if a_window /= Void then
 				default_style := ws_childwindow
 				make_child (a_window, "EV_POPUT_MENU_HANDLER")
@@ -43,7 +44,6 @@ feature {NONE} -- Initialization
 				default_style := ws_overlappedwindow
 				make_top ("EV_POPUP_MENU_HANDLER")
 			end
-			menu_item_list := a_menu
 			set_menu (menu_item_list)
 		end
 
@@ -104,4 +104,14 @@ note
 
 
 end -- class EV_POPUP_MENU_HANDLER
+
+
+
+
+
+
+
+
+
+
 

@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOLTIPABLE;
+	interface: detachable EV_TOOLTIPABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -93,4 +93,8 @@ note
 
 
 end -- EV_TOOLTIPABLE_IMP
+
+
+
+
 

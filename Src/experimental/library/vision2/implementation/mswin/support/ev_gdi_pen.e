@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"EiffelVision implentation for retrieving a WEL_PEN"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,7 +65,7 @@ feature -- Access
 	color_green: INTEGER
 			-- Color of the pen (green component).
 
-	item: WEL_PEN
+	item: detachable WEL_PEN
 			-- WEL Pen object.
 
 feature -- Comparison
@@ -73,7 +73,7 @@ feature -- Comparison
 	is_equal(other: like Current): BOOLEAN
 			-- Does `Current' look the same as `other'?
 		do
-			Result := 
+			Result :=
 				dashed_line_mode = other.dashed_line_mode and then
 				line_width = other.line_width and then
 				color_red = other.color_red and then
@@ -111,4 +111,13 @@ note
 
 
 end -- class EV_GDI_PEN
+
+
+
+
+
+
+
+
+
 

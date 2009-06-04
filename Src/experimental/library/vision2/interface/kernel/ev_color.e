@@ -346,7 +346,7 @@ feature -- Conversion
 		end
 
 	set_rgb_with_16_bit (a_16_bit_red, a_16_bit_green, a_16_bit_blue: INTEGER)
-		
+
 			-- Set intensities  from `a_16_bit_red', `a_16_bit_green', and
 			-- `a_16_bit_blue' intensity. (16 bits per channel.)
 		require
@@ -503,10 +503,16 @@ feature {EV_ANY, EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_COLOR_IMP} implementation.make (Current)
+			create {EV_COLOR_IMP} implementation.make
 		end
 
 invariant
@@ -548,4 +554,12 @@ note
 
 
 end -- class EV_COLOR
+
+
+
+
+
+
+
+
 

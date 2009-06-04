@@ -36,19 +36,20 @@ feature {NONE} -- Initialization
 	make
 			-- Create an Add/Remove list with `list' and `text_field'.
 		do
-			default_create
-			build_widget
+
 			create add_actions
 			create remove_actions
 			create modify_actions
+			default_create
+			build_widget
 		end
 
 feature -- Access
 
-	list: EV_LIST
+	list: detachable EV_LIST note option: stable attribute end
 			-- List containing items user want to add/remove.
 
-	text_field: EV_TEXT_FIELD
+	text_field: detachable EV_TEXT_FIELD note option: stable attribute end
 			-- Text field used to interact with `list'.
 
 	add_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -64,19 +65,27 @@ feature -- Status
 
 	is_empty: BOOLEAN
 			-- Is `list' empty?
+		local
+			l_list: like list
 		do
-			Result := list.is_empty
+			l_list := list
+			check l_list /= Void end
+			Result := l_list.is_empty
 		end
 
 	count: INTEGER
 			-- Number of items in `list'?
+		local
+			l_list: like list
 		do
-			Result := list.count
+			l_list := list
+			check l_list /= Void end
+			Result := l_list.count
 		end
 
 feature -- Setting
 
-	set_is_entry_valid (f: like is_entry_valid)
+	set_is_entry_valid (f: attached like is_entry_valid)
 			-- Set `is_entry_valid' with `f'.
 		do
 			is_entry_valid := f
@@ -84,7 +93,7 @@ feature -- Setting
 			is_entry_valid_set: is_entry_valid = f
 		end
 
-	set_display_error_message (p: like display_error_message)
+	set_display_error_message (p: attached like display_error_message)
 			-- Set `display_error_message' with `p'.
 		do
 			display_error_message := p
@@ -94,13 +103,13 @@ feature -- Setting
 
 feature {NONE} -- Implementation: access
 
-	is_entry_valid: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
+	is_entry_valid: detachable FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN] note option: stable attribute end
 			-- Check if new entry is valid before adding it.
 
-	display_error_message: PROCEDURE [ANY, TUPLE [STRING_32]]
+	display_error_message: detachable PROCEDURE [ANY, TUPLE [STRING_32]] note option: stable attribute end
 			-- Display error message when entry is not valid.
 
-	add_button, apply_button, remove_button: EV_BUTTON
+	add_button, apply_button, remove_button: detachable EV_BUTTON note option: stable attribute end
 			-- Add, Apply and Remove button
 
 feature -- Cleaning
@@ -108,9 +117,15 @@ feature -- Cleaning
 	reset
 			-- Reset content of Current
 		do
-			list.wipe_out
-			text_field.remove_text
-			apply_button.disable_sensitive
+			if list /= Void then
+				list.wipe_out
+			end
+			if text_field /= Void then
+				text_field.remove_text
+			end
+			if apply_button /= Void then
+				apply_button.disable_sensitive
+			end
 		end
 
 feature {NONE} -- GUI building
@@ -128,6 +143,7 @@ feature {NONE} -- GUI building
 			extend (list)
 
 			build_text_field ("Entry: ")
+			check text_field /= Void end
 
 			text_field.change_actions.extend (agent update_button_status)
 			text_field.return_actions.extend (agent add_item_in)
@@ -214,7 +230,7 @@ feature {NONE} -- Action
 			list_not_void: list /= Void
 			text_not_void: text_field /= Void
 		local
-			list_item: EV_LIST_ITEM
+			list_item: detachable EV_LIST_ITEM
 		do
 			list_item := list.selected_item
 			if list_item /= Void  then
@@ -232,9 +248,11 @@ feature {NONE} -- Action
 			list_not_void: list /= Void
 			text_not_void: text_field /= Void
 		local
-			list_item: EV_LIST_ITEM
+			list_item: detachable EV_LIST_ITEM
 			txt: STRING_32
 		do
+			check text_field /= Void end
+			check apply_button /= Void end
 			txt := text_field.text
 			list_item := list.selected_item
 			if not txt.is_empty and then list_item /= Void then
@@ -255,8 +273,13 @@ feature {NONE} -- Action
 			text_not_void: text_field /= Void
 		local
 			l_text: STRING_32
-			l_item: EV_LIST_ITEM
+			l_item: detachable EV_LIST_ITEM
 		do
+			check text_field /= Void end
+			check list /= Void end
+			check add_button /= Void end
+			check apply_button /= Void end
+			check remove_button /= Void end
 			l_text := text_field.text
 			l_item := list.selected_item
 
@@ -311,4 +334,7 @@ note
 
 
 end -- class EV_ADD_REMOVE_LIST
+
+
+
 

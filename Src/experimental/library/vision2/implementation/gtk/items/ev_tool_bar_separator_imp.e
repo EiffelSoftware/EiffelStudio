@@ -18,7 +18,8 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			make
 		end
 
 	EV_PND_DEFERRED_ITEM
@@ -41,16 +42,22 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tool bar button.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_separator_tool_item_new)
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_SEPARATOR;
+	interface: detachable EV_TOOL_BAR_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -67,4 +74,8 @@ note
 
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
+
+
+
+
 

@@ -56,7 +56,7 @@ feature -- Implementation
 				-- Do not process timeout if `Current' is already executing.
 			if not is_destroyed and then not is_timeout_executing and then interval > 0 then
 				is_timeout_executing := True
-				interface.actions.call (Void)
+				attached_interface.actions.call (Void)
 				count := count + 1
 				is_timeout_executing := False
 			end
@@ -70,7 +70,7 @@ feature -- Implementation
 
 feature {EV_ANY_I} --Implementation
 
-	interface: EV_TIMEOUT
+	interface: detachable EV_TIMEOUT note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -93,4 +93,11 @@ note
 
 
 end -- class EV_TIMEOUT_I
+
+
+
+
+
+
+
 

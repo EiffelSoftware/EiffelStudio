@@ -20,17 +20,17 @@ inherit
 
 	EV_CELL_IMP
 		undefine
-			make
+			old_make
 		redefine
 			interface,
 			needs_event_box,
-			initialize
+			make
 		end
 
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
@@ -44,17 +44,17 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create frame.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_frame_new (NULL))
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_frame_new (NULL))
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
 			set_style (Ev_frame_etched_in)
 			align_text_left
 			Precursor {EV_CELL_IMP}
@@ -149,10 +149,12 @@ feature -- Access
 	text: STRING_32
 			-- Text of the frame
 		do
-			if internal_text = Void then
-				internal_text := ""
+			if attached internal_text as l_internal_text then
+				Result := l_internal_text.twin
+			else
+				Result := ""
+				internal_text := Result
 			end
-			Result := internal_text.twin
 		end
 
 feature -- Element change
@@ -169,7 +171,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING_32
+	internal_text: detachable STRING_32
 		-- Text used to represent frame's label text
 
 	internal_alignment_code: INTEGER
@@ -177,7 +179,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FRAME;
+	interface: detachable EV_FRAME note option: stable attribute end;
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 
@@ -196,4 +198,8 @@ note
 
 
 end -- class EV_FRAME_IMP
+
+
+
+
 

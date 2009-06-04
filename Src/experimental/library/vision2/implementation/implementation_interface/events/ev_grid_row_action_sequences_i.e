@@ -20,7 +20,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deselected.
 		do
@@ -42,7 +42,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is collapsed.
 		do
@@ -56,17 +56,33 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	deselect_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	expand_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	expand_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `expand_actions_internal'.
-			
-	collapse_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+		note
+			option: stable
+		attribute
+		end
+
+	collapse_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `collapse_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -83,4 +99,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

@@ -90,7 +90,7 @@ feature -- Measurement
 
 feature -- Access
 
-	originating_pixmap: EV_PIXMAP
+	originating_pixmap: detachable EV_PIXMAP
 		-- Pixmap `Current' was based on, if any.
 
 	rgb_hex_representation: STRING_8
@@ -269,4 +269,15 @@ note
 
 
 end -- class EV_RAW_IMAGE_DATA
+
+
+
+
+
+
+
+
+
+
+
 

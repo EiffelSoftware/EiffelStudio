@@ -36,13 +36,13 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the widget with `par' as parent.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			hash_code := 0
@@ -55,17 +55,21 @@ feature -- Access
 			-- Column to which current item belongs.
 		require
 			is_parented: is_parented
+		local
+			l_column_i: like column_i
 		do
-			Result := column_i.interface
+			l_column_i := column_i
+			check l_column_i /= Void end
+			Result := l_column_i.attached_interface
 		ensure
 			column_not_void: Result /= Void
 		end
 
-	parent: EV_GRID
+	parent: detachable EV_GRID
 			-- Grid to which `Current' is displayed in.
 		do
-			if parent_i /= Void then
-				Result := parent_i.interface
+			if attached parent_i as l_parent_i then
+				Result := l_parent_i.interface
 			end
 		end
 
@@ -73,8 +77,12 @@ feature -- Access
 			-- Row to which current item belongs.
 		require
 			parented: is_parented
+		local
+			l_row_i: like row_i
 		do
-			Result := row_i.interface
+			l_row_i := row_i
+			check l_row_i /= Void end
+			Result := l_row_i.attached_interface
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -86,15 +94,15 @@ feature -- Access
 			parented: parent /= Void
 		do
 			if column_locked_but_not_obscured_by_locked_row then
-				Result := column_i.virtual_x_position
+				Result := column.virtual_x_position
 			else
-				Result := column_i.virtual_x_position_unlocked
+				Result := column.virtual_x_position_unlocked
 			end
-			if parent_i /= Void then
-				Result := Result + parent_i.item_indent (Current)
+			if attached parent_i as l_parent_i then
+				Result := Result + l_parent_i.item_indent (Current)
 			end
 		ensure
-			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
+			valid_result: attached parent as l_parent implies Result >= 0 and Result <= l_parent.virtual_width - column.width + horizontal_indent
 		end
 
 	virtual_y_position: INTEGER
@@ -104,13 +112,13 @@ feature -- Access
 			parented: parent /= Void
 		do
 			if row_locked_but_not_obscured_by_locked_column then
-				Result := row_i.virtual_y_position
+				Result := row.virtual_y_position
 			else
-				Result := row_i.virtual_y_position_unlocked
+				Result := row.virtual_y_position_unlocked
 			end
 		ensure
-			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
-			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
+			valid_result_when_parent_row_height_fixed: attached parent as l_parent and then l_parent.is_row_height_fixed implies Result >= 0 and Result <= l_parent.virtual_height - l_parent.row_height
+			valid_result_when_parent_row_height_not_fixed: attached parent as l_parent2 and then not l_parent2.is_row_height_fixed implies Result >= 0 and Result <= l_parent2.virtual_height - row.height
 		end
 
 	horizontal_indent: INTEGER
@@ -120,12 +128,13 @@ feature -- Access
 		require
 			parented: parent /= Void
 		do
-			if parent_i /= Void then
-				Result := parent_i.item_indent (Current)
+			if attached parent_i as l_parent_i then
+				Result := l_parent_i.item_indent (Current)
 			end
 		ensure
-			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
-			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
+			parent_attached: attached parent as l_parent
+			not_parent_tree_enabled_implies_result_zero: not l_parent.is_tree_enabled implies Result = 0
+			parent_tree_enabled_implies_result_greater_or_equal_to_zero: l_parent.is_tree_enabled implies Result >= 0
 		end
 
 	required_width: INTEGER
@@ -142,7 +151,9 @@ feature -- Access
 			-- `True' when parent displayed.
 			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
 		do
-			Result := parent_i /= Void and then parent_i.is_displayed and then column_i.is_show_requested and then row_i.is_show_requested
+			Result := attached parent_i as l_parent_i and then l_parent_i.is_displayed
+				and then attached column_i as l_column_i and then l_column_i.is_show_requested
+				and then attached row_i as l_row_i and then l_row_i.is_show_requested
 		end
 
 	width: INTEGER
@@ -150,7 +161,9 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			Result := (column_i.width - horizontal_indent).max (0)
+			if attached column_i as l_column_i then
+				Result := (l_column_i.width - horizontal_indent).max (0)
+			end
 		ensure
 			Result_non_negative: Result >= 0
 		end
@@ -160,22 +173,22 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			if parent_i.is_row_height_fixed then
-				Result := parent_i.row_height
-			else
-				Result := row_i.height
+			if attached parent_i as l_parent_i and then l_parent_i.is_row_height_fixed then
+				Result := l_parent_i.row_height
+			elseif attached row_i as l_row_i then
+				Result := l_row_i.height
 			end
 		ensure
 			Result_non_negative: Result >= 0
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color: detachable EV_COLOR
 			-- Color of foreground features like text.
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color displayed behind foreground features.
 
-	tooltip: STRING_32
+	tooltip: detachable STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 
@@ -190,7 +203,9 @@ feature -- Status setting
 		require
 			parented: is_parented
 		do
-			parent_i.activate_item (interface)
+			if attached parent_i as l_parent_i then
+				l_parent_i.activate_item (attached_interface)
+			end
 		end
 
 	deactivate
@@ -198,7 +213,9 @@ feature -- Status setting
 		require
 			parented: is_parented
 		do
-			parent_i.deactivate_item (interface)
+			if attached parent_i as l_parent_i then
+				l_parent_i.deactivate_item (attached_interface)
+			end
 		end
 
 	enable_select
@@ -211,6 +228,7 @@ feature -- Status setting
 		do
 			l_selected := is_selected
 			l_parent_i := parent_i
+			check l_parent_i /= Void end
 			l_row := row
 			l_column := column
 
@@ -223,26 +241,26 @@ feature -- Status setting
 				if
 					not l_parent_i.is_row_selection_enabled and then
 					l_parent_i.row_select_actions_internal /= Void and then
-					not l_parent_i.row_select_actions_internal.is_empty and then
+					not l_parent_i.row_select_actions.is_empty and then
 					l_row.is_selected
 				then
 							-- Call row actions if selecting `Current' selects `row'.
-					l_parent_i.row_select_actions_internal.call ([l_row])
+					l_parent_i.row_select_actions.call ([l_row])
 				end
 				if
 					l_parent_i.column_select_actions_internal /= Void and then
-					not l_parent_i.column_select_actions_internal.is_empty and then
+					not l_parent_i.column_select_actions.is_empty and then
 					l_column.is_selected
 				then
 						-- Call column actions if selecting `Current' selects `column'.
 					l_column.implementation.set_internal_is_selected (False)
-					l_parent_i.column_select_actions_internal.call ([l_column])
+					l_parent_i.column_select_actions.call ([l_column])
 				end
 			end
 
 				-- Request that `Current' be redrawn
-			if parent_i /= Void and then not parent_i.is_destroyed then
-				parent_i.redraw_item (Current)
+			if not l_parent_i.is_destroyed then
+				l_parent_i.redraw_item (Current)
 			end
 		end
 
@@ -257,6 +275,7 @@ feature -- Status setting
 		do
 			l_selected := is_selected
 			l_parent_i := parent_i
+			check l_parent_i /= Void end
 			l_row := row
 			l_column := column
 
@@ -265,14 +284,14 @@ feature -- Status setting
 				if
 					not l_parent_i.is_row_selection_enabled and then
 					l_parent_i.row_deselect_actions_internal /= Void and then
-					not l_parent_i.row_deselect_actions_internal.is_empty and then
+					not l_parent_i.row_deselect_actions.is_empty and then
 					l_row.is_selected then
 							-- Call row deselect actions if deselecting `Current' deselects `row'
 						l_call_row_actions := True
 				end
 				if
 					l_parent_i.column_deselect_actions_internal /= Void and then
-					not l_parent_i.column_deselect_actions_internal.is_empty and then
+					not l_parent_i.column_deselect_actions.is_empty and then
 					l_column.is_selected then
 						l_call_column_actions := True
 				end
@@ -281,15 +300,15 @@ feature -- Status setting
 			disable_select_internal
 
 			if l_call_row_actions then
-				l_parent_i.row_deselect_actions_internal.call ([l_row])
+				l_parent_i.row_deselect_actions.call ([l_row])
 			end
 			if l_call_column_actions then
-				l_parent_i.column_deselect_actions_internal.call ([l_column])
+				l_parent_i.column_deselect_actions.call ([l_column])
 			end
 
 				-- Request that `Current' be redrawn
-			if parent_i /= Void then
-				parent_i.redraw_item (Current)
+			if not l_parent_i.is_destroyed then
+				l_parent_i.redraw_item (Current)
 			end
 		end
 
@@ -302,13 +321,20 @@ feature -- Status setting
 			l_width: INTEGER
 			extra_width: INTEGER
 			i: INTEGER
+			l_parent_i: like parent_i
+			l_column_i: like column_i
 		do
 					-- It is necessary to perform the recomputation immediately
 				-- as this may show the horizontal or vertical scroll bar
 				-- which affects the size of the viewable area in which `Current'
 				-- is to be displayed.
-			parent_i.recompute_horizontal_scroll_bar
-			parent_i.recompute_vertical_scroll_bar
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			l_parent_i.recompute_horizontal_scroll_bar
+			l_parent_i.recompute_vertical_scroll_bar
+
+			l_column_i := column_i
+			check l_column_i /= Void end
 
 				-- We can simply call `ensure_visible' on the row first, as the item
 				-- always matches the row offsets. However for the column it is not so simple
@@ -316,51 +342,55 @@ feature -- Status setting
 			row.ensure_visible
 
 				-- Nothing to perform if the item is indented past the width of its column
-			if horizontal_indent < column_i.width then
+			if horizontal_indent < l_column_i.width then
 				virtual_x := virtual_x_position
 				l_width := width
-				if virtual_x < parent_i.virtual_x_position then
-					parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
-				elseif virtual_x + l_width > parent_i.virtual_x_position + parent_i.viewable_width then
-					if parent_i.is_horizontal_scrolling_per_item then
+				if virtual_x < l_parent_i.virtual_x_position then
+					l_parent_i.set_virtual_position (virtual_x, l_parent_i.virtual_y_position)
+				elseif virtual_x + l_width > l_parent_i.virtual_x_position + l_parent_i.viewable_width then
+					if l_parent_i.is_horizontal_scrolling_per_item then
 							-- In this case, we must ensure that it is always the left item that still matches flush to
 							-- the left of the viewable area of `parent_i'.
 							-- The only way to determine the extra amount to add in order
 							-- for the top row to be flush with the top of the viewable area, is
 							-- to loop up until we find the first one that intersects the viewable area.
 						from
-							i := column_i.index
-							extra_width := parent_i.viewable_width
+							i := l_column_i.index
+							extra_width := l_parent_i.viewable_width
 						until
 							i = 1 or extra_width < 0
 						loop
-							extra_width := extra_width - parent_i.column (i).width
+							extra_width := extra_width - l_parent_i.column (i).width
 							i := i - 1
 						end
-						extra_width := parent_i.column (i + 1).width + extra_width
+						extra_width := l_parent_i.column (i + 1).width + extra_width
 					end
-					if l_width >= parent_i.viewable_width then
+					if l_width >= l_parent_i.viewable_width then
 							-- In this case, the width of the column is greater than the viewable width
 							-- so we simply set it to the left of the viewable area.
-						parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
+						l_parent_i.set_virtual_position (virtual_x, l_parent_i.virtual_y_position)
 					else
-						parent_i.set_virtual_position (virtual_x + l_width + extra_width - parent_i.viewable_width, parent_i.virtual_y_position)
+						l_parent_i.set_virtual_position (virtual_x + l_width + extra_width - l_parent_i.viewable_width, l_parent_i.virtual_y_position)
 					end
 				end
 			end
 		ensure
+			parent_not_void: attached parent as l_par
 			virtual_x_position_not_changed_if_indent_greater_or_equal_to_column_width: old (horizontal_indent > column.width) implies old virtual_x_position = virtual_x_position
-			virtual_x_position_not_changed_if_item_already_visible: old (virtual_x_position >= parent.virtual_x_position) and old (virtual_x_position + width <= parent.virtual_x_position + parent.viewable_width) implies old (virtual_x_position = virtual_x_position)
-			virtual_y_position_not_changed_if_item_already_visible: old (virtual_y_position >= parent.virtual_y_position) and old (virtual_y_position + height <= parent.virtual_y_position + parent.viewable_height) implies old (virtual_y_position = virtual_y_position)
-			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
-			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies row.virtual_y_position >= parent.virtual_y_position and virtual_y_position + row.height <= parent.virtual_y_position + (parent.viewable_height).max (row.height)
-			virtual_x_position_visible_if_indent_less_than_row_indent: horizontal_indent < column.width implies virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+--| FIXME IEK Fix old expressions with attached parent
+--			virtual_x_position_not_changed_if_item_already_visible: old (virtual_x_position >= l_par.virtual_x_position) and old (virtual_x_position + width <= l_par.virtual_x_position + l_par.viewable_width) implies old (virtual_x_position = virtual_x_position)
+--			virtual_y_position_not_changed_if_item_already_visible: old (virtual_y_position >= l_par.virtual_y_position) and old (virtual_y_position + height <= l_par.virtual_y_position + l_par.viewable_height) implies old (virtual_y_position = virtual_y_position)
+			row_visible_when_heights_fixed_in_parent: l_par.is_row_height_fixed implies row.virtual_y_position >= l_par.virtual_y_position and virtual_y_position + l_par.row_height <= l_par.virtual_y_position + (l_par.viewable_height).max (l_par.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not l_par.is_row_height_fixed implies row.virtual_y_position >= l_par.virtual_y_position and virtual_y_position + row.height <= l_par.virtual_y_position + (l_par.viewable_height).max (row.height)
+			virtual_x_position_visible_if_indent_less_than_row_indent: horizontal_indent < column.width implies virtual_x_position >= l_par.virtual_x_position and virtual_x_position + width <= l_par.virtual_x_position + (l_par.viewable_width).max (width)
 		end
 
 	redraw
 			-- Force `Current' to be re-drawn when next idle.
 		do
-			parent_i.redraw_item (Current)
+			if attached parent_i as l_parent_i then
+				l_parent_i.redraw_item (Current)
+			end
 		end
 
 feature -- Status report
@@ -374,8 +404,8 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected?
 		do
-			if parent_i /= Void and then parent_i.is_row_selection_enabled then
-				Result := row_i.is_selected
+			if attached parent_i as l_parent_i and then l_parent_i.is_row_selection_enabled then
+				Result := attached row_i as l_row_i and then l_row_i.is_selected
 			else
 				Result := internal_is_selected
 			end
@@ -390,7 +420,7 @@ feature -- Status report
 	is_destroyed: BOOLEAN
 			-- Is `Current' destroyed?
 		do
-			Result := Precursor {EV_ANY_I} or (is_parented and then parent_i.is_destroyed)
+			Result := Precursor {EV_ANY_I} or (is_parented and then attached parent_i as l_parent_i and then l_parent_i.is_destroyed)
 		end
 
 feature -- Element change
@@ -399,8 +429,8 @@ feature -- Element change
 			-- Set `foreground_color' with `a_color'.
 		do
 			foreground_color := a_color
-			if parent /= Void then
-				parent.implementation.redraw_item (Current)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (Current)
 			end
 		ensure
 			foreground_color_assigned: foreground_color = a_color
@@ -410,12 +440,12 @@ feature -- Element change
 			-- Set `background_color' with `a_color'.
 		do
 			background_color := a_color
-			if parent /= Void then
-				parent.implementation.redraw_item (Current)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (Current)
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL)
+	set_tooltip (a_tooltip: detachable STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
@@ -428,9 +458,9 @@ feature -- Element change
 			end
 		ensure
 			tooltip_reset: a_tooltip = Void implies tooltip = Void
-			tooltip_set: a_tooltip /= Void implies (
-				(tooltip.same_type (a_tooltip) implies tooltip = a_tooltip) or
-				(not tooltip.same_type (a_tooltip) implies tooltip.is_equal (a_tooltip)))
+			tooltip_set: a_tooltip /= Void and then attached tooltip as l_tooltip implies (
+				(l_tooltip.same_type (a_tooltip) implies l_tooltip = a_tooltip) or
+				(not l_tooltip.same_type (a_tooltip) implies a_tooltip.is_equal (l_tooltip)))
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
@@ -438,16 +468,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 	enable_select_internal
 			-- Set `is_selected' to True.
 			-- Does not ask the grid to be redrawn.
+		local
+			l_parent_i: like parent_i
 		do
 			if not is_selected then
-				if parent_i.is_row_selection_enabled then
+				l_parent_i := parent_i
+				check l_parent_i /= Void end
+				if l_parent_i.is_row_selection_enabled and then attached row_i as l_row_i then
 						-- We are in row selection mode so we manipulate the parent row directly
-					row_i.enable_select
+					l_row_i.enable_select
 				else
 					internal_is_selected := True
-					parent_i.add_item_to_selected_items (Current)
-					if parent_i.item_select_actions_internal /= Void then
-						parent_i.item_select_actions_internal.call ([interface])
+					l_parent_i.add_item_to_selected_items (Current)
+					if l_parent_i.item_select_actions_internal /= Void then
+						l_parent_i.item_select_actions.call ([attached_interface])
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call (Void)
@@ -460,15 +494,15 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 			-- Set `is_selected' `False'.
 			-- Does not ask the grid to be redrawn.
 		do
-			if is_selected then
-				if parent_i.is_row_selection_enabled then
+			if is_selected and then attached parent_i as l_parent_i then
+				if l_parent_i.is_row_selection_enabled and then attached row_i as l_row_i then
 						-- We are in row selection mode so we manipulate the parent row directly
-					row_i.disable_select
+					l_row_i.disable_select
 				else
 					internal_is_selected := False
-					parent_i.remove_item_from_selected_items (Current)
-					if parent_i.item_deselect_actions_internal /= Void then
-						parent_i.item_deselect_actions_internal.call ([interface])
+					l_parent_i.remove_item_from_selected_items (Current)
+					if l_parent_i.item_deselect_actions_internal /= Void then
+						l_parent_i.item_deselect_actions.call ([attached_interface])
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call (Void)
@@ -521,13 +555,13 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
-	parent_i: EV_GRID_I
+	parent_i: detachable EV_GRID_I
 		-- Grid that `Current' resides in if any.
 
-	column_i: EV_GRID_COLUMN_I
+	column_i: detachable EV_GRID_COLUMN_I
 		-- Grid column that `Current' resides in if any.
 
-	row_i: EV_GRID_ROW_I
+	row_i: detachable EV_GRID_ROW_I
 		-- Grid row that `Current' resides in if any.
 
 feature {EV_GRID_I} -- Implementation
@@ -545,8 +579,8 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `Current'.
 		do
-			if parent_i /= Void then
-				parent_i.internal_set_item (column_i.index, row_i.index, Void)
+			if attached parent_i as l_parent_i and then attached column_i as l_column_i and then attached row_i as l_row_i then
+				l_parent_i.internal_set_item (l_column_i.index, l_row_i.index, Void)
 			end
 			set_is_destroyed (True)
 		end
@@ -561,11 +595,11 @@ feature {NONE} -- Implementation
 	row_locked_but_not_obscured_by_locked_column: BOOLEAN
 			-- Is `row' locked and above `column' if also locked?
 		do
-			if row_i /= Void and then row_i.is_locked then
-				if not column_i.is_locked then
+			if attached row_i as l_row_i and then l_row_i.is_locked and then attached column_i as l_column_i then
+				if not l_column_i.is_locked then
 					Result := True
-				else
-					Result := row_i.locked_row.locked_index > column_i.locked_column.locked_index
+				elseif attached l_row_i.locked_row as l_locked_row and then attached l_column_i.locked_column as l_locked_column then
+					Result := l_locked_row.locked_index > l_locked_column.locked_index
 				end
 			end
 		end
@@ -573,11 +607,14 @@ feature {NONE} -- Implementation
 	column_locked_but_not_obscured_by_locked_row: BOOLEAN
 			-- Is `column' locked and above `row' if also locked?
 		do
-			if column_i /= Void and then column_i.is_locked then
-				if not row_i.is_locked then
+			if column.is_locked then
+				if not row.is_locked then
 					Result := True
-				else
-					Result := column_i.locked_column.locked_index > row_i.locked_row.locked_index
+				elseif
+					attached column_i as l_column_i and then attached row_i as l_row_i and then
+					attached l_column_i.locked_column as l_locked_column and then attached l_row_i.locked_row as l_locked_row
+				then
+					Result := l_locked_column.locked_index > l_locked_row.locked_index
 				end
 			end
 		end
@@ -591,24 +628,27 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 		local
 			back_color: EV_COLOR
 			focused: BOOLEAN
+			l_parent_i: like parent_i
 		do
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
 				-- Retrieve properties from interface
-			focused := parent_i.drawables_have_focus
+			focused := l_parent_i.drawables_have_focus
 
 			drawable.set_copy_mode
 			back_color := displayed_background_color
 			if is_selected then
 				if focused then
-					drawable.set_foreground_color (parent_i.focused_selection_color)
+					drawable.set_foreground_color (attached_parent.focused_selection_color)
 				else
-					drawable.set_foreground_color (parent_i.non_focused_selection_color)
+					drawable.set_foreground_color (attached_parent.non_focused_selection_color)
 				end
 
 				drawable.fill_rectangle (0 + an_indent, 0, a_width, a_height)
 				if focused then
-					drawable.set_foreground_color (parent_i.focused_selection_text_color)
+					drawable.set_foreground_color (l_parent_i.focused_selection_text_color)
 				else
-					drawable.set_foreground_color (parent_i.non_focused_selection_text_color)
+					drawable.set_foreground_color (l_parent_i.non_focused_selection_text_color)
 				end
 			else
 				drawable.set_foreground_color (displayed_foreground_color)
@@ -620,27 +660,31 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			-- `Result' is the background color in which `Current'
 			-- should be displayed. Based on the `Void' status of
 			-- `background_color', `row_i.background_color' and `parent_i.background_color'.
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := background_color
-			if Result = Void then
-				if parent_i.are_columns_drawn_above_rows then
-					Result := column_i.background_color
-					if Result = Void then
-						Result := row_i.background_color
-						if Result = Void then
-							Result := parent_i.background_color
+			l_result := background_color
+			if l_result = Void then
+				if attached_parent.are_columns_drawn_above_rows then
+					l_result := column.background_color
+					if l_result = Void then
+						l_result := row.background_color
+						if l_result = Void then
+							l_result := attached_parent.background_color
 						end
 					end
 				else
-					Result := row_i.background_color
-					if Result = Void then
-						Result := column_i.background_color
-						if Result = Void then
-							Result := parent_i.background_color
+					l_result := row.background_color
+					if l_result = Void then
+						l_result := column.background_color
+						if l_result = Void then
+							l_result := attached_parent.background_color
 						end
 					end
 				end
+				check l_result /= Void end
 			end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -649,34 +693,60 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			-- `Result' is the foreground color in which `Current'
 			-- should be displayed. Based on the `Void'/ non `Void' status of
 			-- `foreground_color', `row_i.foreground_color' and `parent_i.foreground_color'.
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := foreground_color
-			if Result = Void then
-				if parent_i.are_columns_drawn_above_rows then
-					Result := column_i.foreground_color
-					if Result = Void then
-						Result := row_i.foreground_color
-						if Result = Void then
-							Result := parent_i.foreground_color
+			l_result := foreground_color
+			if l_result = Void then
+				if attached_parent.are_columns_drawn_above_rows then
+					l_result := column.foreground_color
+					if l_result = Void then
+						l_result := row.foreground_color
+						if l_result = Void then
+							l_result := attached_parent.foreground_color
 						end
 					end
 				else
-					Result := row_i.foreground_color
-					if Result = Void then
-						Result := column_i.foreground_color
-						if Result = Void then
-							Result := parent_i.foreground_color
+					l_result := row.foreground_color
+					if l_result = Void then
+						l_result := column.foreground_color
+						if l_result = Void then
+							l_result := attached_parent.foreground_color
 						end
 					end
 				end
+				check l_result /= Void end
 			end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
 
+feature -- Implementation
+
+	attached_parent: attached like parent
+			-- Attached parent
+		local
+			l_parent: like parent
+		do
+			l_parent := parent
+			check l_parent /= Void end
+			Result := l_parent
+		end
+
+	attached_parent_i: attached like parent_i
+			-- Attached parent_i
+		local
+			l_parent_i: like parent_i
+		do
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			Result := l_parent_i
+		end
+
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
-	interface: EV_GRID_ITEM
+	interface: detachable EV_GRID_ITEM note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -697,4 +767,14 @@ note
 	]"
 
 end
+
+
+
+
+
+
+
+
+
+
 

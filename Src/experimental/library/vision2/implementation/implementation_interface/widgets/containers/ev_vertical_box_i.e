@@ -1,44 +1,44 @@
 note
-	description: 
+	description:
 		"EiffelVision vertical box. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "container, box, vertical"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_VERTICAL_BOX_I
-	
+
 inherit
 	EV_BOX_I
 		redefine
 			interface
 		end
-		
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	pointer_offset: INTEGER
 			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		do
-			Result := internal_screen.pointer_position.y - screen_y		
+			Result := internal_screen.pointer_position.y - screen_y
 		end
 
 	docking_dimension_of_current_item: INTEGER
 			-- Dimension of `interface.item' matching orientation of `Current'.
 		do
-			Result := interface.item.height
+			Result := attached_interface.item.height
 		end
-		
+
 	docking_dimension_of_current: INTEGER
 			-- Dimension of `Current' matching orientation of `Current'
 		do
 			Result := height
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_BOX;
+	interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -55,4 +55,12 @@ note
 
 
 end -- class EV_VERTICAL_BOX_I
+
+
+
+
+
+
+
+
 

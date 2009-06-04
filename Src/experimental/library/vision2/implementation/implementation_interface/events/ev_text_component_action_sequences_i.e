@@ -15,12 +15,17 @@ feature -- Event handling
 
 	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `text' changes.
+		local
+			l_result: like change_actions_internal
 		do
-			if change_actions_internal = Void then
-				change_actions_internal :=
-					 create_change_actions
+			l_result := change_actions_internal
+			if l_result /= Void then
+				Result := l_result
+			else
+				l_result := create_change_actions
+				change_actions_internal := l_result
+				Result := l_result
 			end
-			Result := change_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -32,8 +37,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	change_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `change_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +59,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

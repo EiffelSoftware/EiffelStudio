@@ -16,7 +16,7 @@ inherit
 				column_widths, update_column_width
 		redefine
 			interface,
-			initialize,
+			make,
 			call_pebble_function,
 			wipe_out,
 			pixmaps_size_changed,
@@ -30,7 +30,7 @@ inherit
 			call_pebble_function,
 			post_drop_steps,
 			on_mouse_button_event,
-			initialize,
+			make,
 			interface,
 			destroy,
 			able_to_transport,
@@ -53,7 +53,7 @@ inherit
 			destroy,
 			interface,
 			wipe_out,
-			initialize
+			make
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -72,12 +72,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a list widget with `par' as
-			-- parent and `col_nb' columns.
-			-- By default, a list allow only one selection.
+	old_make (an_interface: like interface)
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		local
+			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+		do
 			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
@@ -87,16 +91,10 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 			create ev_children.make (0)
+			create previous_selection.make (0)
 			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
 			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-		end
-
-	initialize
-			-- Initialize `Current'
-		local
-			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
@@ -152,7 +150,7 @@ feature {NONE} -- Implementation
 		local
 			new_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			newly_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
+			an_item: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			disconnect_selection_actions
 			if not mouse_button_pressed then
@@ -165,6 +163,7 @@ feature {NONE} -- Implementation
 				loop
 					if not previous_selection.has (new_selection.item) then
 						an_item ?= new_selection.item.implementation
+						check an_item /= Void end
 						newly_selected_items.extend (an_item)
 					end
 					previous_selection.prune_all (new_selection.item)
@@ -176,6 +175,7 @@ feature {NONE} -- Implementation
 					previous_selection.off
 				loop
 					an_item ?= previous_selection.item.implementation
+					check an_item /= Void end
 					call_deselect_actions (an_item)
 					previous_selection.forth
 				end
@@ -209,12 +209,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
 			a_row_number: INTEGER
-			clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			clicked_row: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			a_gdkwin, a_gtkwid: POINTER
 			l_x, l_y: INTEGER
 		do
@@ -240,14 +240,14 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 								clicked_row /= Void and then
 								clicked_row.pointer_button_press_actions_internal /= Void
 							then
-								clicked_row.pointer_button_press_actions_internal.call (t)
+								clicked_row.pointer_button_press_actions.call (t)
 							end
 						elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 							if
 								clicked_row /= Void and then
 								clicked_row.pointer_double_press_actions_internal /= Void
 							then
-								clicked_row.pointer_double_press_actions_internal.call (t)
+								clicked_row.pointer_double_press_actions.call (t)
 							end
 						end
 					end
@@ -266,12 +266,12 @@ feature {NONE} -- Implementation
 	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call the selections actions for `clicked_row'
 		do
-			if not previous_selection.has (clicked_row.interface) then
+			if not previous_selection.has (clicked_row.attached_interface) then
 				if clicked_row.select_actions_internal /= Void then
-					clicked_row.select_actions_internal.call (void)
+					clicked_row.select_actions.call (void)
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call ([clicked_row.interface])
+					select_actions_internal.call ([clicked_row.attached_interface])
 				end
 			end
 		end
@@ -280,10 +280,10 @@ feature {NONE} -- Implementation
 			-- Call deselect actions for `deselected_row'
 		do
 			if deselected_row.deselect_actions_internal /= Void then
-				deselected_row.deselect_actions_internal.call (Void)
+				deselected_row.deselect_actions.call (Void)
 			end
 			if deselect_actions_internal /= Void then
-				deselect_actions_internal.call ([deselected_row.interface])
+				deselect_actions_internal.call ([deselected_row.attached_interface])
 			end
 		end
 
@@ -369,8 +369,8 @@ feature {NONE} -- Implementation
 
 				if column_titles /= Void and then
 					column_titles.valid_index (i) and then
-						column_titles.i_th (i) /= Void then
-					temp_title := column_titles.i_th (i)
+						attached column_titles.i_th (i) as l_temp_title then
+					temp_title := l_temp_title
 				else
 					temp_title := once ""
 				end
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
-						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
+						a_row_imp.pointer_motion_actions.call (a_motion_tuple)
 					end
 				end
 			end
@@ -471,10 +471,10 @@ feature -- Access
 	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW
 			-- `i_th' row in `Current'
 		do
-			Result := (ev_children @ i).interface
+			Result := (ev_children @ i).attached_interface
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW
+	selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 			-- Item which is currently selected
 		local
 			a_selection: POINTER
@@ -491,7 +491,7 @@ feature -- Access
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
-					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
+					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).attached_interface)
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
 					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
@@ -522,7 +522,7 @@ feature -- Access
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
-					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
+					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).attached_interface)
 					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
@@ -607,9 +607,12 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			l_list_iter := (ev_children @ an_index).list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
 				call_selection_actions (a_row_imp)
@@ -621,9 +624,12 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			l_list_iter := (ev_children @ an_index).list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
 				call_deselect_actions (a_row_imp)
@@ -768,8 +774,8 @@ feature -- Implementation
 			-- Source of pebble, used for widgets with deferred PND implementation
 			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.interface
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.attached_interface
 			else
 				Result := Precursor
 			end
@@ -778,8 +784,8 @@ feature -- Implementation
 	set_to_drag_and_drop: BOOLEAN
 			-- Set transport mode to drag and drop.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.mode_is_drag_and_drop
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.mode_is_drag_and_drop
 			else
 				Result := mode_is_drag_and_drop
 			end
@@ -788,8 +794,8 @@ feature -- Implementation
 	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.able_to_transport (a_button)
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.able_to_transport (a_button)
 			else
 				Result := Precursor (a_button)
 			end
@@ -798,8 +804,8 @@ feature -- Implementation
 	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
 			else
 				Result := Precursor (a_button, a_press)
 			end
@@ -845,16 +851,19 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Initialize a pick and drop transport.
 		local
 			a_row_index: INTEGER
+			l_pnd_row_imp: like pnd_row_imp
 		do
 			a_row_index := row_index_from_y_coord (a_y)
 
 			if a_row_index > 0 then
-				pnd_row_imp := ev_children.i_th (a_row_index)
-				if not (pnd_row_imp.able_to_transport (a_button) or pnd_row_imp.mode_is_configurable_target_menu) then
+				l_pnd_row_imp := ev_children.i_th (a_row_index)
+				check l_pnd_row_imp /= Void end
+				pnd_row_imp := l_pnd_row_imp
+				if not (l_pnd_row_imp.able_to_transport (a_button) or l_pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
 			else
@@ -869,45 +878,53 @@ feature -- Implementation
 				)
 		end
 
-	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+	pnd_row_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Implementation object of the current row if in PND transport.
 
-	temp_pebble: ANY
+	temp_pebble: detachable ANY
 
-	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	temp_pebble_function: detachable FUNCTION [ANY, TUPLE [], detachable ANY]
 			-- Returns data to be transported by PND mechanism.
 
-	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
+	temp_accept_cursor, temp_deny_cursor: detachable EV_POINTER_STYLE
 
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			temp_pebble := pebble
 			temp_pebble_function := pebble_function
-			if pnd_row_imp /= Void then
-				pebble := pnd_row_imp.pebble
-				pebble_function := pnd_row_imp.pebble_function
+			if attached pnd_row_imp as l_pnd_row_imp then
+				pebble := l_pnd_row_imp.pebble
+				pebble_function := l_pnd_row_imp.pebble_function
 			end
 
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y]);
-				pebble := pebble_function.last_result
+			if attached pebble_function as l_pebble_function then
+				l_pebble_function.call ([a_x, a_y]);
+				pebble := l_pebble_function.last_result
 			end
 		end
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
+		local
+			l_pnd_row_imp: like pnd_row_imp
+			l_pebble: like pebble
 		do
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-			app_implementation.on_pick (Current, pebble)
+			l_pebble := pebble
+			if l_pebble /= Void then
+				app_implementation.on_pick (Current, l_pebble)
+			end
 
-			if pnd_row_imp /= Void then
-				if pnd_row_imp.pick_actions_internal /= Void then
-					pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
+			l_pnd_row_imp := pnd_row_imp
+
+			if l_pnd_row_imp /= Void then
+				if l_pnd_row_imp.pick_actions_internal /= Void then
+					l_pnd_row_imp.pick_actions.call ([a_x, a_y])
 				end
-				accept_cursor := pnd_row_imp.accept_cursor
-				deny_cursor := pnd_row_imp.deny_cursor
+				accept_cursor := l_pnd_row_imp.accept_cursor
+				deny_cursor := l_pnd_row_imp.deny_cursor
 			else
 				if pick_actions_internal /= Void then
 					pick_actions_internal.call ([a_x, a_y])
@@ -917,7 +934,7 @@ feature -- Implementation
 			pointer_x := a_screen_x.to_integer_16
 			pointer_y := a_screen_y.to_integer_16
 
-			if pnd_row_imp = Void then
+			if l_pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
@@ -930,7 +947,7 @@ feature -- Implementation
 					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
 			else
-				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
+				if (l_pnd_row_imp.pick_x = 0 and then l_pnd_row_imp.pick_y = 0) then
 					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
@@ -940,10 +957,10 @@ feature -- Implementation
 						pick_y := row_height.to_integer_16
 					end
 					App_implementation.set_x_y_origin (
-						pnd_row_imp.pick_x + (a_screen_x - a_x),
-						pnd_row_imp.pick_y +
+						l_pnd_row_imp.pick_x + (a_screen_x - a_x),
+						l_pnd_row_imp.pick_y +
 						(a_screen_y - a_y) +
-						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+						((ev_children.index_of (l_pnd_row_imp, 1) - 1) * row_height)
 					)
 				end
 			end
@@ -956,8 +973,8 @@ feature -- Implementation
 			App_implementation.set_x_y_origin (0, 0)
 
 			if pebble_function /= Void then
-				if pnd_row_imp /= Void then
-					pnd_row_imp.set_pebble_void
+				if attached pnd_row_imp as l_pnd_row_imp then
+					l_pnd_row_imp.set_pebble_void
 				else
 					temp_pebble := Void
 				end
@@ -995,7 +1012,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	item_from_coords (a_x, a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER
@@ -1013,7 +1030,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 		local
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER
-			a_list_iter: POINTER
+			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			--create a_cs.make (a_text)
 			a_cs := a_text
@@ -1023,8 +1040,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 
-			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)
+			a_list_iter := ev_children.i_th (a_row).list_iter
+			check a_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter.item, a_column, str_value)
 		end
 
 	g_value_string_struct: POINTER
@@ -1037,24 +1055,27 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
-			a_list_iter: POINTER
+			pixmap_imp: detachable EV_PIXMAP_IMP
+			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
-			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
+			a_list_iter := ev_children.i_th (a_row).list_iter
+			check a_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
 			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
 			-- Remove pixmap from `a_row'
 		local
-			a_list_iter: POINTER
+			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
-			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, NULL)
+			a_list_iter := ev_children.i_th (a_row).list_iter
+			check a_list_iter /= Void end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, NULL)
 		end
 
 feature {NONE} -- Implementation
@@ -1065,15 +1086,15 @@ feature {NONE} -- Implementation
 			child_exists: child /= Void
 		local
 			cur: CURSOR
-			txt: STRING_32
+			txt: detachable STRING_32
 			list: EV_MULTI_COLUMN_LIST_ROW
 			column_counter: INTEGER
 		do
-			list := child.interface
+			list := child.attached_interface
 			cur := list.cursor
 
-			if child.pixmap /= Void then
-				set_row_pixmap (a_row, child.pixmap)
+			if attached child.pixmap as l_child_pixmap then
+				set_row_pixmap (a_row, l_child_pixmap)
 			end
 			from
 				column_counter := 1
@@ -1105,22 +1126,27 @@ feature {NONE} -- Implementation
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `a_item' is visible on the screen.
 		local
-			list_item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			list_item_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_path: POINTER
 		do
 			list_item_imp ?= a_item.implementation
-			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			check list_item_imp /= Void end
+			l_list_iter := list_item_imp.list_iter
+			check l_list_iter /= Void end
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, l_list_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			item_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
 
 				-- Make sure list is large enough to fit `item_imp'
@@ -1151,10 +1177,13 @@ feature {NONE} -- Implementation
 			-- Set the items parent to void.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
-			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
+			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, l_list_iter.item)
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
@@ -1162,6 +1191,8 @@ feature {NONE} -- Implementation
 			child_array.remove
 			update_pnd_status
 		end
+
+feature -- Access
 
 	row_height: INTEGER
 			-- Height of rows in `Current'
@@ -1198,7 +1229,7 @@ feature {EV_ANY_I} -- Implementation
 	scrollable_area: POINTER
 		-- Gtk widget used to scroll tree view
 
-	interface: EV_MULTI_COLUMN_LIST;
+	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1215,4 +1246,8 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
+
+
+
+
 

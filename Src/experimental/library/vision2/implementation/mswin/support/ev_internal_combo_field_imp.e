@@ -65,10 +65,12 @@ feature -- Access
 
 	parent: EV_COMBO_BOX_IMP
 			-- Parent of `Current'.
+		local
+			l_parent: detachable EV_COMBO_BOX_IMP
 		do
-			Result ?= wel_parent
-		ensure
-			parent_not_void: parent /= Void
+			l_parent ?= wel_parent
+			check l_parent /= Void end
+			Result := l_parent
 		end
 
 feature -- Alignment
@@ -431,4 +433,13 @@ note
 		]"
 
 end
+
+
+
+
+
+
+
+
+
 

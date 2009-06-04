@@ -1,5 +1,5 @@
-note	
-	description: 
+note
+	description:
 		"[
 			Item for use with EV_TREE.
 			A tree item is also a tree-item container because if
@@ -31,7 +31,7 @@ feature -- Contract support
 	is_expandable: BOOLEAN
 			-- Is `Current' able to expand or collapse.
 		do
-			Result := parent_tree /= Void and count > 0
+			Result := implementation.parent_tree_i /= Void and count > 0
 		end
 
 feature {NONE} -- Contract support
@@ -41,7 +41,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_TREE_NODE}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I}-- Implementation
 
 	implementation: EV_TREE_ITEM_I
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TREE_ITEM_IMP} implementation.make (Current)
+			create {EV_TREE_ITEM_IMP} implementation.make
 		end
 
 note
@@ -70,4 +70,12 @@ note
 
 
 end -- class EV_TREE_ITEM
+
+
+
+
+
+
+
+
 

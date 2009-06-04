@@ -40,7 +40,7 @@ feature -- Measurement
 		do
 			Result := implementation.height
 		end
-		
+
 feature -- Element change
 
 	set_size (a_width, a_height: INTEGER)
@@ -52,7 +52,7 @@ feature -- Element change
 		ensure
 			set: width = a_width and height = a_height
 		end
-		
+
 	add_postscript_line (line: STRING_GENERAL)
 			-- Add `line' to the postscript drawable.
 		require
@@ -68,7 +68,7 @@ feature -- Commands
 		do
 			implementation.save_to_named_file (a_filename)
 		end
-		
+
 feature -- Status Settings
 
 	set_margins (a_left_margin, a_bottom_margin: INTEGER)
@@ -89,21 +89,27 @@ feature -- Status Settings
 		do
 			implementation.set_page_size (a_size, landscape)
 		end
-		
+
 feature {EV_ANY} -- Implementation
 
-	create_implementation 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
+	create_implementation
 			-- Create `implementation'.
 			-- Must be defined in each descendant to create the
 			-- appropriate `implementation' object.
 		do
-			implementation := create {EV_POSTSCRIPT_DRAWABLE_IMP}.make (Current)
+			implementation := create {EV_POSTSCRIPT_DRAWABLE_IMP}.make
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_POSTSCRIPT_DRAWABLE_IMP;
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -119,4 +125,8 @@ note
 
 
 end -- class EV_POSTSCRIPT_DRAWABLE
+
+
+
+
 

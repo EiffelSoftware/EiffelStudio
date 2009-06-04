@@ -18,7 +18,7 @@ inherit
 			bounding_box,
 			default_create
 		end
-		
+
 	EV_MODEL_SINGLE_POINTED
 		undefine
 			default_create
@@ -49,7 +49,7 @@ feature -- Access
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_y: INTEGER
 			-- y position of `point'.
 		do
@@ -60,13 +60,13 @@ feature -- Status
 
 	is_scalable: BOOLEAN = True
 			-- Is scalable? Yes, but a dot has no dimension and will therfore not grow.
-			
+
 	is_rotatable: BOOLEAN = True
 			-- Is roatatble?
-			
+
 	is_transformable: BOOLEAN = True
 			-- Is transformable?
-			
+
 feature -- Element change
 
 	set_point_position (ax, ay: INTEGER)
@@ -99,8 +99,8 @@ feature {NONE} -- Implementation
 			lw2, lw: INTEGER
 			p: EV_COORDINATE
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				lw := line_width
 				lw2 := as_integer (lw / 2)
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 				internal_bounding_box := Result.twin
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	set_center
@@ -137,4 +137,8 @@ note
 
 
 end -- class EV_MODEL_DOT
+
+
+
+
 

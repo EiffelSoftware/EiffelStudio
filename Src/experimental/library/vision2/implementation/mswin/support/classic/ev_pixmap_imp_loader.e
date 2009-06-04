@@ -25,7 +25,7 @@ inherit
 
 feature -- Status report
 
-	pixmap_filename: STRING
+	pixmap_filename: detachable STRING
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -45,14 +45,18 @@ feature {NONE} -- Implementation
 			filename_exists: pixmap_filename /= Void
 		local
 			filename_ptr: ANY
+			l_pixmap_filename: like pixmap_filename
 		do
 				-- Disable invariant checking.
 			disable_initialized
 
-			if pixmap_filename.is_empty then
+			l_pixmap_filename := pixmap_filename
+			check l_pixmap_filename /= Void end
+
+			if l_pixmap_filename.is_empty then
 				c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
 			else
-				filename_ptr := pixmap_filename.to_c
+				filename_ptr := l_pixmap_filename.to_c
 				c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
 			end
 			if last_pixmap_loading_had_error then
@@ -69,7 +73,7 @@ feature {NONE} -- Implementation
 		rgb_data		: POINTER -- Pointer on a C memory zone
 		alpha_data		: POINTER -- Pointer on a C memory zone
 		)
-		
+
 		deferred
 		end
 
@@ -102,4 +106,14 @@ note
 
 
 end -- class EV_PIXMAP_IMP_LOADER
+
+
+
+
+
+
+
+
+
+
 

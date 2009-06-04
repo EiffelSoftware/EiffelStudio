@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_RADIO_PEER_I
 
 inherit
@@ -21,14 +21,14 @@ feature -- Status report
 		deferred
 		end
 
-	peers: LINKED_LIST [like interface]
+	peers: LINKED_LIST [attached like interface]
 			-- List of all radio items in the group `interface' is in.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	selected_peer: like interface
+	selected_peer: attached like interface
 			-- Radio item that is currently selected.
 		deferred
 		ensure
@@ -44,7 +44,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RADIO_PEER;
+	interface: detachable EV_RADIO_PEER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -61,4 +61,12 @@ note
 
 
 end -- class EV_RADIO_PEER_I
+
+
+
+
+
+
+
+
 

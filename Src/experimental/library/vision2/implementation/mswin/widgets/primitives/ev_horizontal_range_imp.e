@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision horizontal range. %N%
 		%Mswindows implementation."
@@ -19,19 +19,26 @@ inherit
 	EV_RANGE_IMP
 		redefine
 			set_default_minimum_size,
-			interface
+			interface,
+			make
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create as horizontal range.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create an initialize `Current'
+		do
 			make_horizontal (default_parent, 0, 0, 0, 0, 0)
+			Precursor
 		end
 
 feature -- Status setting
@@ -45,7 +52,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_RANGE;
+	interface: detachable EV_HORIZONTAL_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -62,4 +69,10 @@ note
 
 
 end -- class EV_HORIZONTAL_RANGE_IMP
+
+
+
+
+
+
 

@@ -25,9 +25,10 @@ feature {NONE} -- Initialization
 			make_with_text (Void)
 		end
 
-	make_with_text (t: STRING_GENERAL)
+	make_with_text (t: detachable STRING_GENERAL)
 			-- Create a widget that is made to browse for directory.
 		do
+			default_start_directory := ""
 			default_create
 			build_widget (t)
 		end
@@ -40,7 +41,7 @@ feature {NONE} -- Initialization
 			make_with_text_and_parent (Void, win)
 		end
 
-	make_with_text_and_parent (t: STRING_GENERAL; win: like parent_window)
+	make_with_text_and_parent (t: detachable STRING_GENERAL; win: like parent_window)
 			-- Create a widget that is made to browse for directory.
 		require
 			win_not_void: win /= Void
@@ -53,16 +54,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	field: EV_TEXT_FIELD
+	field: detachable EV_TEXT_FIELD
 			-- Text field holding path value.
 
 	parent_window: EV_WINDOW
 			-- Window to which browsing dialog will be modal.
+		local
+			l_result: detachable EV_WINDOW
 		do
-			Result := internal_parent_window
-			if Result = Void then
-				Result := parent_window_of (Current)
+			l_result := internal_parent_window
+			if l_result = Void then
+				l_result := parent_window_of (Current)
 			end
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -76,8 +81,12 @@ feature -- Status
 			-- Current path set by user.
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_field: like field
 		do
-			Result := field.text
+			l_field := field
+			check l_field /= Void end
+			Result := l_field.text
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -95,8 +104,12 @@ feature -- Settings
 		require
 			not_destroyed: not is_destroyed
 			p_not_void: p /= Void
+		local
+			l_field: like field
 		do
-			field.set_text (p)
+			l_field := field
+			check l_field /= Void end
+			l_field.set_text (p)
 		ensure
 			path_set: path.is_equal (p)
 		end
@@ -112,25 +125,37 @@ feature -- Settings
 	set_browse_for_open_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
+		local
+			l_browse_button: like browse_button
 		do
-			browse_button.select_actions.wipe_out
-			browse_button.select_actions.extend (agent browse_for_open_file (filter))
+			l_browse_button := browse_button
+			check l_browse_button /= Void end
+			l_browse_button.select_actions.wipe_out
+			l_browse_button.select_actions.extend (agent browse_for_open_file (filter))
 		end
 
 	set_browse_for_save_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
+		local
+			l_browse_button: like browse_button
 		do
-			browse_button.select_actions.wipe_out
-			browse_button.select_actions.extend (agent browse_for_save_file (filter))
+			l_browse_button := browse_button
+			check l_browse_button /= Void end
+			l_browse_button.select_actions.wipe_out
+			l_browse_button.select_actions.extend (agent browse_for_save_file (filter))
 		end
 
 	set_browse_for_directory
 			-- Force directory browsing dialog to appear when user
 			-- click on `browse_button'.
+		local
+			l_browse_button: like browse_button
 		do
-			browse_button.select_actions.wipe_out
-			browse_button.select_actions.extend (agent browse_for_directory)
+			l_browse_button := browse_button
+			check l_browse_button /= Void end
+			l_browse_button.select_actions.wipe_out
+			l_browse_button.select_actions.extend (agent browse_for_directory)
 		end
 
 	set_default_start_directory (t: STRING_32)
@@ -144,18 +169,22 @@ feature -- Removal
 	remove_text, remove_path
 			-- Remove printed path from screen.
 		do
-			field.remove_text
+			if attached field as l_field then
+				l_field.remove_text
+			end
 		ensure
 			path_cleared: path.is_empty
 		end
 
 feature {NONE} -- GUI building
 
-	build_widget (t: STRING_GENERAL)
+	build_widget (t: detachable STRING_GENERAL)
 			-- Create Current using `t' as text label.
 		local
 			l_label: EV_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
+			l_browse_button: like browse_button
+			l_field: like field
 		do
 			if t /= Void then
 				create l_label.make_with_text (t)
@@ -168,16 +197,19 @@ feature {NONE} -- GUI building
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)
 
 			create field
-			create browse_button.make_with_text_and_action (Label_browse, agent browse_for_directory)
+			create l_browse_button.make_with_text_and_action (Label_browse, agent browse_for_directory)
+			browse_button := l_browse_button
 
-			l_hbox.extend (field)
-			l_hbox.extend (browse_button)
-			l_hbox.disable_item_expand (browse_button)
+			l_field := field
+			check l_field /= Void end
+			l_hbox.extend (l_field)
+			l_hbox.extend (l_browse_button)
+			l_hbox.disable_item_expand (l_browse_button)
 
 			extend (l_hbox)
 		end
 
-	browse_button: EV_BUTTON
+	browse_button: detachable EV_BUTTON
 			-- Browse for a file or a directory.
 
 	browse_for_directory
@@ -190,7 +222,6 @@ feature {NONE} -- GUI building
 			dd.set_title (Label_select_directory)
 			l_start_directory := start_directory
 			if
-				l_start_directory /= Void and then
 				not l_start_directory.is_empty and then
 				(create {DIRECTORY}.make (l_start_directory.as_string_8)).exists
 			then
@@ -198,8 +229,8 @@ feature {NONE} -- GUI building
 			end
 
 			dd.show_modal_to_window (parent_window)
-			if dd.directory /= Void and then not dd.directory.is_empty then
-				field.set_text (dd.directory)
+			if dd.directory /= Void and then not dd.directory.is_empty and then attached field as l_field then
+				l_field.set_text (dd.directory)
 			end
 		end
 
@@ -240,15 +271,19 @@ feature {NONE} -- GUI building
 				fd.set_start_directory (l_start_directory)
 			end
 			fd.show_modal_to_window (parent_window)
-			if fd.file_name /= Void and then not fd.file_name.is_empty then
-				field.set_text (fd.file_name)
+			if fd.file_name /= Void and then not fd.file_name.is_empty and then attached field as l_field then
+				l_field.set_text (fd.file_name)
 			end
 		end
 
 	start_directory: STRING_32
 			-- Start directory for browsing dialog.
+		local
+			l_field: like field
 		do
-			Result := field.text
+			l_field := field
+			check l_field /= Void end
+			Result := l_field.text
 			if Result.is_empty then
 				Result := default_start_directory
 			end
@@ -271,7 +306,7 @@ feature {NONE} -- Interface names
 
 feature {NONE} -- Parent window
 
-	parent_window_of (w: EV_WIDGET): EV_WINDOW
+	parent_window_of (w: detachable EV_WIDGET): detachable EV_WINDOW
 			-- Window to which browsing dialog will be modal.
 		do
 			if w /= Void then
@@ -282,7 +317,7 @@ feature {NONE} -- Parent window
 			end
 		end
 
-	internal_parent_window: EV_WINDOW
+	internal_parent_window: detachable EV_WINDOW
 			-- Window to which browsing dialog will be modal.
 
 invariant
@@ -301,4 +336,7 @@ note
 		]"
 
 end -- class EV_PATH_FIELD
+
+
+
 

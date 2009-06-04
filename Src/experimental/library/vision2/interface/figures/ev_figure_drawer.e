@@ -132,7 +132,7 @@ feature -- Figure drawing
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			a_x, a_y, a_width, a_height: INTEGER
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 		do
 			d := drawable
@@ -160,7 +160,7 @@ feature -- Figure drawing
 	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL)
 			-- Draw standard representation of `eql' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 		do
 			d := drawable
@@ -191,15 +191,15 @@ feature -- Figure drawing
 			d.set_foreground_color (line.foreground_color)
 			if line.is_start_arrow or else line.is_end_arrow then
 				d.set_line_width (0)
-				if line.is_start_arrow then
-					p := line.start_arrow
+				if line.is_start_arrow and then attached line.start_arrow as l_start_arrow then
+					p := l_start_arrow
 					p.i_th_point (2).set_angle (
 					line.start_angle
 					)
 					d.fill_polygon (p.point_array)
 				end
-				if line.is_end_arrow then
-					p := line.end_arrow
+				if line.is_end_arrow and then attached line.end_arrow as l_end_arrow then
+					p := l_end_arrow
 					p.i_th_point (2).set_angle (
 						line.end_angle
 					)
@@ -232,7 +232,7 @@ feature -- Figure drawing
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			cx, cy, a_width, a_height: INTEGER
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 		do
 			d := drawable
@@ -262,7 +262,7 @@ feature -- Figure drawing
 	draw_figure_polygon (polygon: EV_FIGURE_POLYGON)
 			-- Draw standard representation of `polygon' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 		do
 			d := drawable
@@ -297,14 +297,14 @@ feature -- Figure drawing
 					line.is_end_arrow
 				then
 					d.set_line_width (0)
-					if line.is_start_arrow then
-						p := line.start_arrow
+					if line.is_start_arrow and then attached line.start_arrow as l_start_arrow then
+						p := l_start_arrow
 						p.i_th_point (2).set_angle (
 							line.start_angle)
 						d.fill_polygon (p.point_array)
 					end
-					if line.is_end_arrow then
-						p := line.end_arrow
+					if line.is_end_arrow and then attached line.end_arrow as l_end_arrow then
+						p := l_end_arrow
 						p.i_th_point (2).set_angle (
 							line.end_angle)
 						d.fill_polygon (p.point_array)
@@ -326,7 +326,7 @@ feature -- Figure drawing
 		local
 			top, left: INTEGER
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 		do
 			d := drawable
 			if rectangle.dashed_line_style then
@@ -367,7 +367,7 @@ feature -- Figure drawing
 			-- Draw standard representation of `f' to canvas.
 		local
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 		do
 			d := drawable
 			if f.dashed_line_style then
@@ -460,4 +460,8 @@ note
 
 
 end -- class EV_FIGURE_DRAWER
+
+
+
+
 

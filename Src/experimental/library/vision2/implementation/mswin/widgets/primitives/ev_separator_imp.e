@@ -19,7 +19,7 @@ inherit
 			set_default_minimum_size
 		redefine
 			interface,
-			initialize,
+			make,
 			on_size
 		end
 
@@ -36,17 +36,17 @@ inherit
 			on_erase_background
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
- 	make (an_interface: like interface)
+ 	old_make (an_interface: like interface)
  			-- Make `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, "EV_SEPARATOR")
+			assign_interface (an_interface)
  		end
 
-	initialize
+	make
 		do
+			wel_make (default_parent, "EV_SEPARATOR")
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			disable_tabable_to
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- WEL Implementation
 
-	background_brush: WEL_BRUSH
+	background_brush: detachable WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 			-- By default there is no background.
@@ -95,7 +95,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY_I}
 
-	interface: EV_SEPARATOR;
+	interface: detachable EV_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -112,4 +112,14 @@ note
 
 
 end -- class EV_SEPARATOR_IMP
+
+
+
+
+
+
+
+
+
+
 

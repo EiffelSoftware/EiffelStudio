@@ -32,9 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	close_request_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	close_request_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `close_request_actions'.
-
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -57,9 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	move_actions_internal: EV_GEOMETRY_ACTION_SEQUENCE
+	move_actions_internal: detachable EV_GEOMETRY_ACTION_SEQUENCE
 			-- Implementation of once per object `move_actions'.
-
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -82,8 +88,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	show_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	show_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `show_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 feature -- Event handling
 
@@ -106,9 +116,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	hide_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	hide_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `hide_actions'.
-
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -125,4 +138,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

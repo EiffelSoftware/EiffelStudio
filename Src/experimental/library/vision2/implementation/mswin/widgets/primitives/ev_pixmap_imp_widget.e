@@ -30,7 +30,7 @@ inherit
 			is_tabable_from, is_tabable_to, enable_tabable_from, enable_tabable_to,
 			disable_tabable_from, disable_tabable_to
 		redefine
-			interface, initialize,
+			interface, make,
 			read_from_named_file,
 			clear, stretch, set_size, clear_rectangle, draw_point,
 			draw_text, draw_segment, draw_straight_line, draw_arc,
@@ -40,16 +40,16 @@ inherit
 		select
 			width,
 			height,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
 		rename
 			height as display_height, width as display_width,
-			initialize as widget_initialize
+			make as widget_initialize
 		undefine
-			set_background_color, set_foreground_color, background_color,
-			foreground_color, set_default_colors
+			set_background_color, set_foreground_color, background_color_internal,
+			foreground_color_internal, set_default_colors
 		redefine
 			interface, on_parented, on_orphaned, set_size, destroy,
 			translate_coordinates, on_middle_button_down,
@@ -77,34 +77,42 @@ feature {NONE} -- Initialization
 	make_with_drawable (other: EV_PIXMAP_IMP_DRAWABLE)
 			-- Create `Current' using attributes of `other'.
 		local
-			titled_window: EV_TITLED_WINDOW_IMP
+			titled_window: detachable EV_TITLED_WINDOW_IMP
+			l_internal_bitmap: like internal_bitmap
 		do
 				-- Create this new implementation using the
 				-- same interface as other.
-			base_make (other.interface)
+			if attached other.interface as l_interface then
+				assign_interface (l_interface)
+			else
+				check False end
+			end
+
 
 				-- Create the window control
-			background_color := other.background_color
+			background_color_internal := other.background_color
 			clip_area := other.clip_area
 			dashed_line_style := other.dashed_line_style
-			foreground_color := other.foreground_color
+			foreground_color_internal := other.foreground_color
 			internal_brush := other.internal_brush
-			if internal_brush /= Void then
-				internal_brush.increment_reference
+			if attached internal_brush as l_internal_brush then
+				l_internal_brush.increment_reference
 			end
-			private_font := other.private_font
+			if attached other.private_font as l_private_font then
+				private_font := l_private_font
+			end
 			private_wel_font := other.private_wel_font
 			internal_initialized_background_brush :=
 				other.internal_initialized_background_brush
 			internal_background_brush := other.internal_background_brush
-			if internal_background_brush /= Void then
-				internal_background_brush.increment_reference
+			if attached internal_background_brush as l_internal_background_brush then
+				l_internal_background_brush.increment_reference
 			end
 			internal_initialized_brush := other.internal_initialized_brush
 			internal_initialized_pen := other.internal_initialized_pen
 			internal_pen := other.internal_pen
-			if internal_pen /= Void then
-				internal_pen.increment_reference
+			if attached internal_pen as l_internal_pen then
+				l_internal_pen.increment_reference
 			end
 
 			line_width := other.line_width
@@ -114,19 +122,21 @@ feature {NONE} -- Initialization
 			dc.increment_reference
 			height := other.height
 			width := other.width
-			internal_bitmap := other.internal_bitmap
-			internal_bitmap.increment_reference
+			l_internal_bitmap := other.internal_bitmap
+			check l_internal_bitmap /= Void end
+			l_internal_bitmap.increment_reference
+			internal_bitmap := l_internal_bitmap
 			internal_mask_bitmap := other.internal_mask_bitmap
-			if internal_mask_bitmap /= Void then
-				internal_mask_bitmap.increment_reference
+			if attached internal_mask_bitmap as l_internal_mask_bitmap then
+				l_internal_mask_bitmap.increment_reference
 			end
 			mask_dc := other.mask_dc
-			if mask_dc /= Void then
-				mask_dc.increment_reference
+			if attached mask_dc as l_mask_dc then
+				l_mask_dc.increment_reference
 			end
 			palette := other.palette
-			if palette /= Void then
-				palette.increment_reference
+			if attached palette as l_palette then
+				l_palette.increment_reference
 			end
 			transparent_color := other.transparent_color
 
@@ -168,7 +178,7 @@ feature {NONE} -- Initialization
 			other.safe_destroy
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			wel_make (default_parent, "EV_PIXMAP")
@@ -196,8 +206,8 @@ feature -- Loading/Saving
 				-- `set_with_named_file' twice, firstly with an icon, and
 				-- then a png file, without the following line, then the
 				-- png would be corrupted/system crash.
-			if internal_mask_bitmap /= Void then
-				internal_mask_bitmap.decrement_reference
+			if attached internal_mask_bitmap as l_internal_mask_bitmap then
+				l_internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
 			end
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (file_name)
@@ -464,9 +474,9 @@ feature {NONE} -- Implementation
 			-- needs to be repainted.
 		local
 			l_bitmap_dc: WEL_MEMORY_DC
-			l_bitmap: WEL_BITMAP
-			l_mask_bitmap: WEL_BITMAP
-			l_mask_dc: WEL_MEMORY_DC
+			l_bitmap: detachable WEL_BITMAP
+--			l_mask_bitmap: WEL_BITMAP
+			l_mask_dc: detachable WEL_MEMORY_DC
 			bitmap_top, bitmap_left: INTEGER
 				-- Coordinates of the top-left corner of the
 				-- bitmap inside the drawn area
@@ -490,7 +500,7 @@ feature {NONE} -- Implementation
 					-- Call expose actions first, any pending invalidations called from 'expose_actions'
 					-- will be expunged at the end of this WM_PAINT message.
 				if expose_actions_internal /= Void then
-					expose_actions_internal.call ([
+					expose_actions.call ([
 						invalid_rect.x, invalid_rect.y,
 						invalid_rect.width, invalid_rect.height
 						])
@@ -498,8 +508,8 @@ feature {NONE} -- Implementation
 
 				theme_drawer := application_imp.theme_drawer
 
-				if parent_imp.background_color_imp /= Void then
-					create l_background_brush.make_solid (parent_imp.background_color_imp)
+				if attached parent_imp as l_parent_imp and then attached l_parent_imp.background_color_imp as l_background_color_imp then
+					create l_background_brush.make_solid (l_background_color_imp)
 				else
 					create l_background_brush.make_solid (wel_background_color)
 				end
@@ -520,6 +530,7 @@ feature {NONE} -- Implementation
 				l_rect.set_rect (0, 0, window_width, window_height)
 
 				if internal_mask_bitmap = Void then
+					check l_bitmap /= Void end
 					create l_helper
 					l_bitmap_info := l_helper.info_of_bitmap (l_bitmap)
 					if l_bitmap_info /= Void and then l_bitmap_info.header.bit_count = 32 and then
@@ -545,8 +556,7 @@ feature {NONE} -- Implementation
 
 						paint_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, l_bitmap_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
 					end
-				else
-					l_mask_bitmap := internal_mask_bitmap
+				elseif attached internal_mask_bitmap as l_mask_bitmap then
 					l_mask_dc := mask_dc
 						-- Need to blit to a back buffer to avoid blitting the same pixel twice, which causes flicker.
 					create l_back_buffer.make_compatible (l_bitmap_dc, window_width, window_height)
@@ -561,6 +571,8 @@ feature {NONE} -- Implementation
 					l_back_buffer_dc.unselect_bitmap
 					l_back_buffer_dc.delete
 					l_back_buffer.delete
+				else
+					check False end
 				end
 				l_background_brush.delete
 			end
@@ -667,7 +679,7 @@ feature {NONE} -- Private Implementation
 				Cs_owndc
  		end
 
- 	interface: EV_PIXMAP;
+ 	interface: detachable EV_PIXMAP note option: stable attribute end;
 			-- Interface for the bridge pattern.
 
 note
@@ -685,4 +697,14 @@ note
 
 
 end -- class EV_PIXMAP_IMP_WIDGET
+
+
+
+
+
+
+
+
+
+
 

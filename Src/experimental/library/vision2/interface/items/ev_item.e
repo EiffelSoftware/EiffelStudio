@@ -42,12 +42,24 @@ inherit
 
 feature -- Access
 
-	parent: EV_ITEM_LIST [EV_ITEM]
+	parent: detachable EV_ITEM_LIST [EV_ITEM]
 			-- Item list containing `Current'.
 		do
 			Result := implementation.parent
 		ensure then
 			bridge_ok: Result = implementation.parent
+		end
+
+	attached_parent: attached like parent
+			-- Attached `parent'.
+		require
+			parent /= Void
+		local
+			l_parent: like parent
+		do
+			l_parent := parent
+			check l_parent /= Void end
+			Result := l_parent
 		end
 
 feature {NONE} -- Contract support
@@ -79,4 +91,14 @@ note
 
 
 end -- class EV_ITEM
+
+
+
+
+
+
+
+
+
+
 

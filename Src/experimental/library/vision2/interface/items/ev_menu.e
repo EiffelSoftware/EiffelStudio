@@ -40,7 +40,7 @@ create
 
 feature -- Status report
 
-	parent: EV_MENU_ITEM_LIST
+	parent: detachable EV_MENU_ITEM_LIST
 			-- Menu item list containing `Current'.
 		do
 			Result := implementation.parent
@@ -57,7 +57,7 @@ feature -- Standard operations
 			implementation.show
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
+	show_at (a_widget: detachable EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget' or relative to the screen if `a_widget' is Void.
 		require
@@ -96,11 +96,11 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_MENU_IMP} implementation.make (Current)
+			create {EV_MENU_IMP} implementation.make
 		end
 
 invariant
-	one_selected_radio_item_per_separator: one_selected_radio_item_per_separator
+	one_selected_radio_item_per_separator: is_usable implies one_selected_radio_item_per_separator
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -117,4 +117,14 @@ note
 
 
 end -- class EV_MENU
+
+
+
+
+
+
+
+
+
+
 

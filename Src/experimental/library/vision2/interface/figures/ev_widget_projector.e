@@ -64,7 +64,7 @@ feature -- Access
 			-- `device' if conforms to EV_WIDGET.
 			-- `Void' otherwise.
 
-	area: EV_DRAWABLE
+	area: detachable EV_DRAWABLE
 			-- Area associated with `widget'.
 			-- `Void' if no buffer is used.
 
@@ -81,17 +81,20 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
+
 	change_area_position (a_x, a_y: INTEGER)
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
 		require
 			valid_position: a_x >= 0 and a_y >= 0
 		local
 			u: EV_RECTANGLE
+			l_area: like area
 		do
+			l_area := area
+			check l_area /= Void end
 			area_x := a_x
 			area_y := a_y
-			create u.make (0, 0, area.width, area.height)
+			create u.make (0, 0, l_area.width, l_area.height)
 			update_rectangle (u, 0, 0)
 		end
 
@@ -100,11 +103,11 @@ feature -- Basic operations
 	project
 			-- Make a standard projection of world on device.
 		local
-			e, u: EV_RECTANGLE
+			e, u: detachable EV_RECTANGLE
 		do
 			if not is_projecting then
 				is_projecting := True
-			
+
 				if world.is_redraw_needed then
 					full_project
 					world.full_redraw_performed
@@ -125,7 +128,7 @@ feature -- Basic operations
 	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'.
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 		do
 			drawable.set_background_color (world.background_color)
 			drawable.clear_rectangle (u.left, u.top, u.width, u.height)
@@ -150,12 +153,12 @@ feature -- Basic operations
 			if buffer_used then
 					-- Flush `drawable' on `area'.
 				pixmap ?= drawable
-				if pixmap /= Void then
+				if pixmap /= Void and then attached area as l_area then
 					u.set_x (area_x)
 					u.set_y (area_y)
-					u.set_width (area.width)
-					u.set_height (area.height)
-					area.draw_sub_pixmap (0, 0, pixmap, u)
+					u.set_width (l_area.width)
+					u.set_height (l_area.height)
+					l_area.draw_sub_pixmap (0, 0, pixmap, u)
 				end
 			end
 		end
@@ -174,13 +177,13 @@ feature -- Basic operations
 		require
 			buffer_used: buffer_used
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 		do
 			pixmap ?= drawable
-			if pixmap /= Void then
+			if pixmap /= Void and then attached area as l_area then
 				u.set_x (u.x + area_x)
 				u.set_y (u.y + area_y)
-				area.draw_sub_pixmap (a_x, a_y, pixmap, u)
+				l_area.draw_sub_pixmap (a_x, a_y, pixmap, u)
 			end
 		end
 
@@ -193,7 +196,7 @@ feature -- Basic operations
 
 feature {NONE} -- Event implementation
 
-	current_figure: EV_FIGURE
+	current_figure: detachable EV_FIGURE
 			-- Figure mouse is currently on.
 			--| To generate leave and enter actions.
 
@@ -204,10 +207,10 @@ feature {NONE} -- Event implementation
 	has_mouse: BOOLEAN
 			-- Does canvas have mouse on it?
 
-	figure_on_position (group: EV_FIGURE_GROUP; x, y: INTEGER): EV_FIGURE
+	figure_on_position (group: EV_FIGURE_GROUP; x, y: INTEGER): detachable EV_FIGURE
 			-- Figure mouse-cursor is on.
 		local
-			grp: EV_FIGURE_GROUP
+			grp: detachable EV_FIGURE_GROUP
 		do
 			if world.capture_figure /= Void then
 				Result := world.capture_figure
@@ -236,7 +239,7 @@ feature {NONE} -- Event implementation
 		screen_x, screen_y: INTEGER)
 			-- Pointer button down happened.
 		local
-			event_fig: EV_FIGURE
+			event_fig: detachable EV_FIGURE
 			p: BOOLEAN
 			w_x, w_y: INTEGER
 		do
@@ -247,6 +250,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
+				check event_fig /= Void end
 				call_actions (event_fig, event_fig.internal_pointer_button_press_actions,
 					[w_x - world.point.x, w_y - world.point.y, button,
 					x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -262,7 +266,7 @@ feature {NONE} -- Event implementation
 		screen_x, screen_y: INTEGER)
 			-- Pointer double click happened.
 		local
-			event_fig: EV_FIGURE
+			event_fig: detachable EV_FIGURE
 			p: BOOLEAN
 			w_x, w_y: INTEGER
 		do
@@ -273,6 +277,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
+				check event_fig /= Void end
 				call_actions (event_fig, event_fig.internal_pointer_double_press_actions,
 					[w_x - world.point.x, w_y - world.point.y, button,
 					x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -288,7 +293,7 @@ feature {NONE} -- Event implementation
 		screen_x, screen_y: INTEGER)
 			-- Pointer button up happened.
 		local
-			event_fig: EV_FIGURE
+			event_fig: detachable EV_FIGURE
 			p: BOOLEAN
 			w_x, w_y: INTEGER
 		do
@@ -299,7 +304,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, 
+				call_actions (event_fig,
 					event_fig.internal_pointer_button_release_actions,
 					[w_x - world.point.x, w_y - world.point.y, button,
 					x_tilt, y_tilt, pressure, screen_x, screen_y])
@@ -320,7 +325,7 @@ feature {NONE} -- Event implementation
 	has_focus (a_figure: EV_FIGURE): BOOLEAN
 			-- Is mouse cursor on `a_figure'?
 		local
-			grp: EV_FIGURE_GROUP
+			grp: detachable EV_FIGURE_GROUP
 		do
 			if current_figure = a_figure then
 				Result := True
@@ -335,22 +340,22 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	change_current (new_current_figure: EV_FIGURE)
+	change_current (new_current_figure: detachable EV_FIGURE)
 			-- Change current to `new_focused_figure'.
 			--| Generate leave and/or enter events accordingly.
 		local
-			old_figure: EV_FIGURE
-			event_fig: EV_FIGURE
-			same_fig: EV_FIGURE
+			old_figure: detachable EV_FIGURE
+			event_fig: detachable EV_FIGURE
+			same_fig: detachable EV_FIGURE
 			p: BOOLEAN
 		do
 			if current_figure /= new_current_figure then
 				if
-					new_current_figure /= Void and
-					new_current_figure.pointer_style /= Void and
-					new_current_figure.is_sensitive
+					new_current_figure /= Void and then
+					new_current_figure.is_sensitive and then
+					attached new_current_figure.pointer_style as l_new_current_figure_pointer_style
 				then
-					widget.set_pointer_style (new_current_figure.pointer_style)
+					widget.set_pointer_style (l_new_current_figure_pointer_style)
 				else
 					widget.set_pointer_style (Default_pixmaps.Standard_cursor)
 				end
@@ -362,7 +367,7 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = Void or else has_focus (event_fig)
 					loop
-						call_actions (event_fig, 
+						call_actions (event_fig,
 							event_fig.internal_pointer_leave_actions, Void)
 						p := True
 						event_fig := event_fig.group
@@ -375,7 +380,8 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = same_fig
 					loop
-						call_actions (event_fig, 
+						check event_fig /= Void end
+						call_actions (event_fig,
 							event_fig.internal_pointer_enter_actions, Void)
 						p := True
 						event_fig := event_fig.group
@@ -394,7 +400,7 @@ feature {NONE} -- Event implementation
 			-- Fire events that belong to mouse movement.
 			--| i.e. leave, enter, motion.
 		local
-			event_fig: EV_FIGURE
+			event_fig: detachable EV_FIGURE
 			p: BOOLEAN
 			w_x, w_y: INTEGER
 		do
@@ -420,7 +426,7 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	call_actions (f: EV_FIGURE; actions: EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: TUPLE)
+	call_actions (f: EV_FIGURE; actions: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: detachable TUPLE)
 			-- Call `actions' on `f' with `arg'.
 		do
 			if actions /= Void and then f.is_sensitive then
@@ -428,15 +434,15 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	on_pebble_request (a_x, a_y: INTEGER): ANY
+	on_pebble_request (a_x, a_y: INTEGER): detachable ANY
 			-- Pebble of current figure.
 			-- If figure is `Void', return pebble of world.
 			--| Because when a context menu is up, no events are sent
 			--| to the world, first simulate a mouse motion to update
 			--| the projection.
 		local
-			fig: EV_FIGURE
-		do	
+			fig: detachable EV_FIGURE
+		do
 			mouse_move (a_x, a_y, 0.0, 0.0, 0.0, 0, 0)
 			fig := current_figure
 			if fig = Void then
@@ -463,10 +469,10 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	on_drop_target_request (a_x, a_y: INTEGER): EV_ABSTRACT_PICK_AND_DROPABLE
+	on_drop_target_request (a_x, a_y: INTEGER): detachable EV_ABSTRACT_PICK_AND_DROPABLE
 			-- Find actual drop target.
 		local
-			event_fig: EV_FIGURE
+			event_fig: detachable EV_FIGURE
 			w_x, w_y: INTEGER
 		do
 			w_x := a_x + area_x
@@ -497,12 +503,12 @@ feature {NONE} -- Implementation
 		do
 			dx := (sine (point.angle_abs) * axle_length).rounded
 			dy := (cosine (point.angle_abs) * axle_length).rounded
-			if point.origin /= Void then
+			if attached point.origin as l_point_origin then
 				drawable.set_foreground_color (
 					create {EV_COLOR}.make_with_rgb (0, 0, 1)
 				)
 				drawable.draw_segment (point.x_abs, point.y_abs,
-					point.origin.x_abs, point.origin.y_abs)
+					l_point_origin.x_abs, l_point_origin.y_abs)
 			end
 			drawable.set_foreground_color (
 				create {EV_COLOR}.make_with_rgb (0, 1, 0)
@@ -543,4 +549,8 @@ note
 
 
 end -- class EV_WIDGET_PROJECTOR
+
+
+
+
 

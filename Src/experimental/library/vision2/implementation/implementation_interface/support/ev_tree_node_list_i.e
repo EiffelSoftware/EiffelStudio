@@ -14,7 +14,7 @@ inherit
 
 Feature -- Status report
 
-	find_item_recursively_by_data (data: ANY): EV_TREE_NODE
+	find_item_recursively_by_data (data: detachable ANY): detachable EV_TREE_NODE
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'.
 		local
@@ -23,24 +23,24 @@ Feature -- Status report
 		do
 			temp_cursor := cursor
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.after or Result /= Void
+				attached_interface.after or Result /= Void
 			loop
-				actual_item := interface.item
+				actual_item := attached_interface.item
 				if (data = Void and then actual_item.data = Void) or
-					data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then
-					data.is_equal (actual_item.data) then
+					(attached data as l_data and then attached actual_item.data as l_actual_item_data and then l_data.same_type (l_actual_item_data) and then
+					l_data.is_equal (l_actual_item_data)) then
 					Result := actual_item
 				end
-				interface.forth
+				attached_interface.forth
 			end
 			go_to (temp_cursor)
 		ensure
-			index_not_changed: old interface.index = interface.index
+			index_not_changed: old attached_interface.index = attached_interface.index
 		end
-		
-	retrieve_item_recursively_by_data (data: ANY; should_compare_objects: BOOLEAN): EV_TREE_NODE
+
+	retrieve_item_recursively_by_data (data: detachable ANY; should_compare_objects: BOOLEAN): detachable EV_TREE_NODE
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -50,25 +50,25 @@ Feature -- Status report
 		do
 			temp_cursor := cursor
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.after or Result /= Void
+				attached_interface.after or Result /= Void
 			loop
-				actual_item := interface.item
-				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then data.is_equal (actual_item.data)))
+				actual_item := attached_interface.item
+				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or attached data as l_data and then attached actual_item.data as l_actual_item_data and then l_data.same_type (l_actual_item_data) and then l_data.is_equal (l_actual_item_data)))
 				or (not should_compare_objects and data = actual_item.data) then
 					Result := actual_item
 				else
 					Result := actual_item.implementation.retrieve_item_recursively_by_data (data, should_compare_objects)
 				end
-				interface.forth
+				attached_interface.forth
 			end
 			go_to (temp_cursor)
 		ensure
-			index_not_changed: old interface.index = interface.index
+			index_not_changed: old attached_interface.index = attached_interface.index
 		end
-		
-	retrieve_items_recursively_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [EV_TREE_NODE]
+
+	retrieve_items_recursively_by_data (data: detachable ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [EV_TREE_NODE]
 			-- `Result' is all tree items contained in `Current' at any level,
 			-- with data matching `data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -79,60 +79,64 @@ Feature -- Status report
 			temp_cursor := cursor
 			create Result.make (0)
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.after
+				attached_interface.after
 			loop
-				actual_item := interface.item
-				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then data.is_equal (actual_item.data)))
+				actual_item := attached_interface.item
+				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or attached data as l_data and then attached actual_item.data as l_actual_item_data and then l_data.same_type (l_actual_item_data) and then l_data.is_equal (l_actual_item_data)))
 				or (not should_compare_objects and data = actual_item.data) then
 					Result.extend (actual_item)
 				end
 				Result.append (actual_item.implementation.retrieve_items_recursively_by_data (data, should_compare_objects))
-				interface.forth
+				attached_interface.forth
 			end
 			go_to (temp_cursor)
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-	
+
+
 	has_recursively (an_item: like item): BOOLEAN
 			-- Does `Current' contain `an_item' at any level?
 		local
 			temp_cursor: CURSOR
 			actual_item: EV_TREE_NODE
 		do
-			temp_cursor := cursor			
+			temp_cursor := cursor
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.after or Result = True
+				attached_interface.after or Result = True
 			loop
-				actual_item := interface.item
+				actual_item := attached_interface.item
 				if equal (an_item, actual_item) then
 					Result := True
 				else
 					Result := actual_item.implementation.has_recursively (an_item)
 				end
-				interface.forth
+				attached_interface.forth
 			end
 			go_to (temp_cursor)
 		ensure
-			index_not_changed: old interface.index = interface.index
+			index_not_changed: old attached_interface.index = attached_interface.index
 		end
-		
+
 	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
+		local
+			l_item: like interface_item
 		do
 			from
 				start
 			until
 				off
 			loop
-				item.recursive_do_all (action)
-				action.call ([item])
+				l_item := interface_item
+				check l_item /= Void end
+				l_item.recursive_do_all (action)
+				action.call ([l_item])
 				forth
 			end
 		end
@@ -153,4 +157,13 @@ note
 
 
 end -- class EV_TREE_ITEM_NODE_I
+
+
+
+
+
+
+
+
+
 

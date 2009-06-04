@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Scored vertical line.
@@ -27,18 +27,18 @@ inherit
 
 create
 	default_create
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_VERTICAL_SEPARATOR_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_VERTICAL_SEPARATOR_IMP} implementation.make (Current)
+			create {EV_VERTICAL_SEPARATOR_IMP} implementation.make
 		end
 
 note
@@ -56,4 +56,11 @@ note
 
 
 end -- class EV_VERTICAL_SEPARATOR
+
+
+
+
+
+
+
 

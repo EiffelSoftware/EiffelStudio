@@ -7,7 +7,7 @@ note
 					The only thing a drawer should ever know is
 					what kind of figure he has to draw and the
 					points of that figure.
-						
+
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -84,7 +84,7 @@ feature -- Status setting
 		ensure
 			dashed_line_style_disabled: not dashed_line_style
 		end
-		
+
 feature -- Events
 
 	bounding_box: EV_RECTANGLE
@@ -97,8 +97,8 @@ feature -- Events
 			l_item: EV_COORDINATE
 			grow: INTEGER
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				if point_count = 0 then
 					create Result
@@ -124,7 +124,7 @@ feature -- Events
 						min_y := min_y.min (val)
 						i := i + 1
 					end
-					
+
 					lw := line_width
 					grow := as_integer (lw / 2) + 1
 					ax := as_integer (min_x)--.truncated_to_integer
@@ -136,11 +136,11 @@ feature -- Events
 				internal_bounding_box := Result.twin
 			end
 		end
-		
+
 invariant
 	foreground_color_exists: foreground_color /= Void
 	line_width_non_negative: line_width >= 0
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -156,4 +156,8 @@ note
 
 
 end -- EV_MODEL_ATOMIC
+
+
+
+
 

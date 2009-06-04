@@ -1,4 +1,4 @@
-note	
+note
 	description:
 		"[
 			Menu item with state displayed as a circular check box.
@@ -11,7 +11,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_RADIO_MENU_ITEM
 
 inherit
@@ -37,12 +37,12 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 create
 	default_create,
 	make_with_text,
 	make_with_text_and_action
-	
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_RADIO_MENU_ITEM_IMP} implementation.make (Current)
+			create {EV_RADIO_MENU_ITEM_IMP} implementation.make
 		end
 
 note
@@ -81,4 +81,11 @@ note
 
 
 end -- class EV_RADIO_MENU_ITEM
+
+
+
+
+
+
+
 

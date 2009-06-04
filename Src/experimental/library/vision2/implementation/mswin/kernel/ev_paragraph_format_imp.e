@@ -7,13 +7,13 @@ note
 
 class
 	EV_PARAGRAPH_FORMAT_IMP
-	
+
 inherit
 	EV_PARAGRAPH_FORMAT_I
 		undefine
 			copy, is_equal
 		end
-	
+
 	WEL_PARAGRAPH_FORMAT2
 		rename
 			make as wel_make,
@@ -22,33 +22,33 @@ inherit
 			set_alignment as wel_set_alignment,
 			initialize as wel_initialize
 		end
-		
+
 	WEL_UNIT_CONVERSION
 		export
 			{NONE} all
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 	make
-		
+
 feature -- Access
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Make `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make
+			assign_interface (an_interface)
 		end
-		
-	initialize
+
+	make
 			-- Initialize `Current'.
 		do
+			wel_make
 			wel_set_alignment (pfa_left)
 			set_is_initialized (True)
 		end
-		
+
 feature -- Status report
 
 	alignment: INTEGER
@@ -82,10 +82,10 @@ feature -- Status report
 			screen_dc.get
 
 			Result := point_to_pixel (screen_dc, start_indent, 20)
-			
+
 			screen_dc.release
 		end
-		
+
 	right_margin: INTEGER
 			-- Right margin between line end and border in pixels.
 		local
@@ -94,12 +94,12 @@ feature -- Status report
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			Result := point_to_pixel (screen_dc, right_indent, 20)
-			
+
 			screen_dc.release
 		end
-		
+
 	top_spacing: INTEGER
 			-- Spacing between top of paragraph and previous line in pixels.
 		local
@@ -108,12 +108,12 @@ feature -- Status report
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			Result := point_to_pixel (screen_dc, space_before, 20)
-			
-			screen_dc.release	
+
+			screen_dc.release
 		end
-		
+
 	bottom_spacing: INTEGER
 			-- Spacing between bottom of paragraph and next line in pixels.
 		local
@@ -122,9 +122,9 @@ feature -- Status report
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			Result := point_to_pixel (screen_dc, space_after, 20)
-			
+
 			screen_dc.release
 		end
 
@@ -152,13 +152,13 @@ feature -- Status setting
 			-- Set `left_margin' to `a_margin'.
 		local
 			screen_dc: WEL_SCREEN_DC
-		do			
+		do
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			set_start_indent (pixel_to_point (screen_dc, a_margin * 20))
-			
+
 			screen_dc.release
 		end
 
@@ -170,12 +170,12 @@ feature -- Status setting
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			set_right_indent (pixel_to_point (screen_dc, a_margin * 20))
-			
+
 			screen_dc.release
 		end
-		
+
 	set_top_spacing (a_spacing: INTEGER)
 			-- Set `top_spacing' to `a_spacing'.
 		local
@@ -184,12 +184,12 @@ feature -- Status setting
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			set_space_before (pixel_to_point (screen_dc, a_spacing * 20))
-			
+
 			screen_dc.release
 		end
-		
+
 	set_bottom_spacing (a_spacing: INTEGER)
 			-- Set `bottom_spacing' to `a_spacing'.
 		local
@@ -199,7 +199,7 @@ feature -- Status setting
 			create screen_dc
 			screen_dc.get
 			set_space_after (pixel_to_point (screen_dc, a_spacing * 20))
-			
+
 			screen_dc.release
 		end
 
@@ -218,4 +218,13 @@ note
 
 
 end -- class EV_PARAGRAPH_FORMAT_IMP
+
+
+
+
+
+
+
+
+
 

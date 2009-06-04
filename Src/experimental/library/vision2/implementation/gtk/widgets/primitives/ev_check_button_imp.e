@@ -5,7 +5,7 @@ note
 	id: "$Id$";
 	date: "$Date$";
 	revision: "$Revision$"
-	
+
 class
 	EV_CHECK_BUTTON_IMP
 
@@ -14,15 +14,16 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_TOGGLE_BUTTON_IMP
 		undefine
 			default_alignment
 		redefine
-			make,
+			old_make,
 			set_text,
 			interface,
-			initialize
+			make,
+			new_gtk_button
 		end
 
 create
@@ -30,14 +31,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk check button.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_check_button_new)
+			assign_interface (an_interface)
 		end
-		
-	initialize
+
+	new_gtk_button: POINTER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_check_button_new
+		end
+
+	make
 			-- Initialize 'Current'
 		do
 			Precursor {EV_TOGGLE_BUTTON_IMP}
@@ -57,13 +62,13 @@ feature -- Element change
 
 			if gtk_pixmap /= NULL then
 				{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
-			end				
+			end
 		end
 
 feature {EV_ANY_I}
 
-	interface: EV_CHECK_BUTTON;
-	
+	interface: detachable EV_CHECK_BUTTON note option: stable attribute end;
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -79,4 +84,8 @@ note
 
 
 end -- class EV_CHECK_BUTTON_IMP
+
+
+
+
 

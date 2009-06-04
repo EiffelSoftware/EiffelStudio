@@ -35,8 +35,8 @@ inherit
 			ready_for_pnd_menu,
 			able_to_transport
 		redefine
-			initialize,
 			make,
+			old_make,
 			interface,
 			needs_event_box,
 			has_focus,
@@ -55,9 +55,9 @@ inherit
 			background_color_pointer,
 			foreground_color_pointer
 		redefine
-			initialize,
-			needs_event_box,
 			make,
+			needs_event_box,
+			old_make,
 			interface,
 			insert_i_th,
 			call_selection_action_sequences
@@ -78,13 +78,63 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a combo-box.
+		do
+			assign_interface (an_interface)
+		end
+
+feature {NONE} -- Initialization
+
+	call_selection_action_sequences
+			-- Call the appropriate selection action sequences
 		local
+			l_selected_item: detachable EV_LIST_ITEM
+			l_previous_selected_item_imp, l_selected_item_imp: detachable EV_LIST_ITEM_IMP
+		do
+			l_selected_item := selected_item
+			l_previous_selected_item_imp := previous_selected_item_imp
+			if is_list_shown then
+					-- Make sure that the list is hidden from the screen before calling selection actions.
+				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+			end
+			if l_selected_item /= Void then
+				l_selected_item_imp ?= l_selected_item.implementation
+				check l_selected_item_imp /= Void end
+				if l_selected_item_imp.select_actions_internal /= Void then
+					l_selected_item_imp.select_actions.call (Void)
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call (Void)
+				end
+			end
+			if l_previous_selected_item_imp /= Void then
+				if l_previous_selected_item_imp.deselect_actions_internal /= Void then
+					l_previous_selected_item_imp.deselect_actions.call (Void)
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call (Void)
+				end
+			end
+			previous_selected_item_imp := l_selected_item_imp
+			if l_selected_item_imp /= Void then
+				on_change_actions
+			end
+		end
+
+	previous_selected_item_imp: detachable EV_LIST_ITEM_IMP
+		-- Item that was selected previously.
+
+	make
+			-- Connect action sequences to signals.
+		local
+			a_cell_renderer: POINTER
+			a_attribute: EV_GTK_C_STRING
+			a_cs: EV_GTK_C_STRING
 			a_vbox: POINTER
 			a_focus_list: POINTER
 		do
-			base_make (an_interface)
+
 			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
 			container_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_entry_new
@@ -100,55 +150,8 @@ feature {NONE} -- Initialization
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
 			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
 			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
-		end
 
-feature {NONE} -- Initialization
 
-	call_selection_action_sequences
-			-- Call the appropriate selection action sequences
-		local
-			l_selected_item: EV_LIST_ITEM
-			l_previous_selected_item_imp, l_selected_item_imp: EV_LIST_ITEM_IMP
-		do
-			l_selected_item := selected_item
-			l_previous_selected_item_imp := previous_selected_item_imp
-			if is_list_shown then
-					-- Make sure that the list is hidden from the screen before calling selection actions.
-				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
-			end
-			if l_selected_item /= Void then
-				l_selected_item_imp ?= l_selected_item.implementation
-				if l_selected_item_imp.select_actions_internal /= Void then
-					l_selected_item_imp.select_actions_internal.call (Void)
-				end
-				if select_actions_internal /= Void then
-					select_actions_internal.call (Void)
-				end
-			end
-			if previous_selected_item_imp /= Void then
-				if previous_selected_item_imp.deselect_actions_internal /= Void then
-					previous_selected_item_imp.deselect_actions_internal.call (Void)
-				end
-				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call (Void)
-				end
-			end
-			previous_selected_item_imp := l_selected_item_imp
-			if l_selected_item_imp /= Void then
-				on_change_actions
-			end
-		end
-
-	previous_selected_item_imp: EV_LIST_ITEM_IMP
-		-- Item that was selected previously.
-
-	initialize
-			-- Connect action sequences to signals.
-		local
-			a_cell_renderer: POINTER
-			a_attribute: EV_GTK_C_STRING
-			a_cs: EV_GTK_C_STRING
-		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			align_text_left
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
@@ -180,7 +183,7 @@ feature {NONE} -- Initialization
 			initialize_tab_behavior
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v, i)
@@ -194,7 +197,7 @@ feature -- Status report
 	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		local
@@ -208,9 +211,14 @@ feature -- Status report
 
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- List of all the selected items. Used for list_item.is_selected implementation.
+		local
+			l_selected_item: like selected_item
 		do
 			create Result.make (0)
-			Result.extend (selected_item)
+			l_selected_item := selected_item
+			if l_selected_item /= Void then
+				Result.extend (l_selected_item)
+			end
 		end
 
 	select_item (an_index: INTEGER)
@@ -245,7 +253,7 @@ feature {NONE} -- Implementation
 			-- Focus for `Current' has changed'.
 		local
 			a_toggle: POINTER
-			l_popup: EV_POPUP_WINDOW_IMP
+			l_popup: detachable EV_POPUP_WINDOW_IMP
 		do
 			if a_has_focus then
 				if is_list_shown then
@@ -359,7 +367,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_COMBO_BOX;
+	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -376,4 +384,8 @@ note
 
 
 end -- class EV_COMBO_BOX_IMP
+
+
+
+
 

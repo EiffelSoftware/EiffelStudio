@@ -21,7 +21,7 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -31,11 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a window with a parent.
 		do
-			base_make (an_interface)
-			set_c_object (create_gtk_dialog)
+			assign_interface (an_interface)
 		end
 
 	printer_rdo, file_rdo, all_rdo, range_rdo,
@@ -47,7 +46,7 @@ feature {NONE} -- Initialization
 	collate_chk: EV_CHECK_BUTTON
 	print_btn, cancel_btn: EV_BUTTON
 
-	initialize
+	make
 				-- Setup window and action sequences.
 		local
 			printer_frame, range_frame, copies_frame, orientation_frame, page_type_frame: EV_FRAME
@@ -55,10 +54,11 @@ feature {NONE} -- Initialization
 			range_vbox, copies_vbox: EV_VERTICAL_BOX
 			printer_hbox, frame_container, range_hbox, copies_hbox1,
 			copies_hbox2, orientation_hbox, button_hbox, page_type_hbox: EV_HORIZONTAL_BOX
-			print_btn_imp, cancel_btn_imp: EV_BUTTON_IMP
+			print_btn_imp, cancel_btn_imp: detachable EV_BUTTON_IMP
 			hbox: POINTER
-			container_imp: EV_CONTAINER_IMP
+			container_imp: detachable EV_CONTAINER_IMP
 		do
+			set_c_object (create_gtk_dialog)
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_title ("Print")
 			set_is_initialized (False)
@@ -183,13 +183,16 @@ feature {NONE} -- Initialization
 			main_dialog_container.extend (button_hbox)
 
 			container_imp ?= main_dialog_container.implementation
+			check container_imp /= Void end
 			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, container_imp.c_object)
 
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
 			print_btn_imp ?= print_btn.implementation
+			check print_btn_imp /= Void end
 			print_btn_imp.enable_can_default
 			cancel_btn_imp ?= cancel_btn.implementation
+			check cancel_btn_imp /= Void end
 			cancel_btn_imp.enable_can_default
 			{EV_GTK_EXTERNALS}.gtk_widget_grab_default (print_btn_imp.visual_widget)
 			enable_closeable
@@ -535,7 +538,7 @@ feature {NONE} -- Implementation
 	B5: STRING = "B5"
 	C5: STRING = "C5"
 
-	interface: EV_PRINT_DIALOG;
+	interface: detachable EV_PRINT_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -552,4 +555,8 @@ note
 
 
 end -- class EV_PRINT_DIALOG_IMP
+
+
+
+
 

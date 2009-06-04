@@ -18,15 +18,15 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: EV_REGION)
+	old_make (an_interface: EV_REGION)
 			-- Creation method.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			make_empty
@@ -44,44 +44,52 @@ feature -- Element Change
 	intersect (a_region: EV_REGION): EV_REGION
 			-- Intersect `a_region' with `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
 			create Result
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_and)
 		end
 
 	union (a_region: EV_REGION): EV_REGION
 			-- Create a union `a_region' with `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
 			create Result
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_or)
 		end
 
 	subtract (a_region: EV_REGION): EV_REGION
 			-- Subtract `a_region' from `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
 			create Result
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_diff)
 		end
 
 	exclusive_or (a_region: EV_REGION): EV_REGION
 			-- Exclusive or `a_region' with `Current'
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
 			create Result
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			cwin_combine_rgn (l_result_imp.item, item, l_region_imp.item, {WEL_RGN_CONSTANTS}.rgn_xor)
 		end
 
@@ -90,9 +98,10 @@ feature -- Duplication
 	copy_region (a_region: EV_REGION)
 			-- Copy region `a_region' into `Current'.
 		local
-			l_region_imp: EV_REGION_IMP
+			l_region_imp: detachable EV_REGION_IMP
 		do
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			cwin_combine_rgn (item, l_region_imp.item, default_pointer, {WEL_RGN_CONSTANTS}.rgn_xor)
 		end
 
@@ -101,10 +110,11 @@ feature {NONE} -- Implementation
 	is_region_equal (other: EV_REGION): BOOLEAN
 			-- Does `other' have the same appearance as `Current'.
 		local
-			l_region_imp: EV_REGION_IMP
+			l_region_imp: detachable EV_REGION_IMP
 		do
 			if other /= Void then
 				l_region_imp ?= other.implementation
+				check l_region_imp /= Void end
 				Result := is_equal (l_region_imp)
 			end
 		end

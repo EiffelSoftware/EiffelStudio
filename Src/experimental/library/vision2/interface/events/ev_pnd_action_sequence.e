@@ -24,7 +24,7 @@ create {EV_PND_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	call (a_pebble_tuple: TUPLE [ANY])
+	call (a_pebble_tuple: detachable TUPLE [ANY])
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -33,45 +33,47 @@ feature -- Basic operations
 			l_is_accepting: BOOLEAN
 			l_tuple: TUPLE [ANY]
 		do
-			create snapshot.make (count)
-			snapshot.fill (Current)
-			inspect
-				state
-			when
-				Normal_state
-			then
-				from
-					is_aborted_stack.extend (False)
-					l_is_accepting := veto_pebble_function_result (a_pebble_tuple.item (1))
-					snapshot.start
-				until
-					snapshot.index > snapshot.count
-					or is_aborted_stack.item
-				loop
-					if snapshot.item.valid_operands (a_pebble_tuple) and l_is_accepting then
-						l_tuple := snapshot.item.empty_operands
-						l_tuple.put (a_pebble_tuple.item (1), 1)
-						snapshot.item.call (l_tuple)
+			if attached a_pebble_tuple then
+				create snapshot.make (count)
+				snapshot.fill (Current)
+				inspect
+					state
+				when
+					Normal_state
+				then
+					from
+						is_aborted_stack.extend (False)
+						l_is_accepting := veto_pebble_function_result (a_pebble_tuple.item (1))
+						snapshot.start
+					until
+						snapshot.index > snapshot.count
+						or is_aborted_stack.item
+					loop
+						if snapshot.item.valid_operands (a_pebble_tuple) and l_is_accepting then
+							l_tuple := snapshot.item.empty_operands
+							l_tuple.put (a_pebble_tuple.item (1), 1)
+							snapshot.item.call (l_tuple)
+						end
+						snapshot.forth
+					variant
+						snapshot.count + 1 - snapshot.index
 					end
-					snapshot.forth
-				variant
-					snapshot.count + 1 - snapshot.index
+					is_aborted_stack.remove
+				when
+					Paused_state
+				then
+					call_buffer.extend (a_pebble_tuple)
+				when
+					 Blocked_state
+				then
+					-- do_nothing
 				end
-				is_aborted_stack.remove
-			when
-				Paused_state
-			then
-				call_buffer.extend (a_pebble_tuple)
-			when
-				 Blocked_state
-			then
-				-- do_nothing
 			end
 		end
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN])
+	set_veto_pebble_function (a_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN])
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -102,7 +104,7 @@ feature -- Status report
 			go_to (cur)
 		end
 
-	veto_pebble_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
 			-- User function to determine whether dropping is allowed.
 
 feature -- Element change
@@ -116,17 +118,17 @@ feature -- Element change
 
 feature {NONE} -- Convenience
 
-	veto_pebble_function_result (a_pebble: ANY): BOOLEAN
+	veto_pebble_function_result (a_pebble: detachable ANY): BOOLEAN
 			-- Find out the computation of `veto_pebble_function' with `a_pebble'.
 		local
 			l_tuple: TUPLE [ANY]
 		do
-			if veto_pebble_function /= Void then
-				l_tuple := veto_pebble_function.empty_operands
+			if attached veto_pebble_function as l_veto_pebble_function then
+				l_tuple := l_veto_pebble_function.empty_operands
 				if l_tuple.valid_type_for_index (a_pebble, 1) then
 					l_tuple.put (a_pebble, 1)
-					Result := veto_pebble_function.valid_operands (l_tuple) and then
-						veto_pebble_function.item (l_tuple)
+					Result := l_veto_pebble_function.valid_operands (l_tuple) and then
+						l_veto_pebble_function.item (l_tuple)
 				else
 					Result := True
 				end
@@ -150,4 +152,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

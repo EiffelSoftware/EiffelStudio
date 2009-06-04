@@ -24,16 +24,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create zero intensity color.
 		do
-			base_make (an_interface)
-			name := Default_name.twin
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Do nothing.
 		do
+			name := Default_name.twin
 			set_is_initialized (True)
 		end
 
@@ -182,7 +182,7 @@ feature -- Conversion
 	set_with_other (other: EV_COLOR)
 			-- Take on the appearance of `other'.
 		local
-			imp: EV_COLOR_IMP
+			imp: detachable EV_COLOR_IMP
 		do
 			imp ?= other.implementation
 			check
@@ -213,7 +213,7 @@ feature {EV_ANY_I} -- Command
 
 feature {EV_ANY_I, ANY} -- Implementation
 
-	interface: EV_COLOR;
+	interface: detachable EV_COLOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -230,4 +230,14 @@ note
 
 
 end -- class EV_COLOR_IMP
+
+
+
+
+
+
+
+
+
+
 

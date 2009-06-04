@@ -92,12 +92,13 @@ feature -- Element change
 			assigned: x_offset = an_x
 			assigned: y_offset = a_y
 		end
-		
+
 	set_item_width (a_width: INTEGER)
 			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
+			a_width_positive: a_width > 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= item.minimum_width
 		do
@@ -111,6 +112,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
+			a_height_positive: a_height > 0
 			a_height_not_smaller_than_minimum_height:
 				a_height >= item.minimum_height
 		do
@@ -125,6 +127,8 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= item.minimum_width
 			a_height_not_smaller_than_minimum_height:
@@ -135,7 +139,7 @@ feature -- Element change
 			an_item_width_assigned: item.width = a_width
 			an_item_height_assigned: item.height = a_height
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -149,13 +153,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_VIEWPORT_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_VIEWPORT_IMP} implementation.make (Current)
+			create {EV_VIEWPORT_IMP} implementation.make
 		end
 
 invariant
@@ -178,4 +182,15 @@ note
 
 
 end -- class EV_VIEWPORT
+
+
+
+
+
+
+
+
+
+
+
 

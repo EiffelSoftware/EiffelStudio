@@ -19,7 +19,7 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		redefine
-			initialize,
+			make,
 			interface
 		end
 
@@ -28,16 +28,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Create password field with `*'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP}
-			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)		
+			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)
 		end
 
 feature {NONE} -- Implementation
 
-	interface: EV_PASSWORD_FIELD;
+	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -54,4 +54,8 @@ note
 
 
 end -- class EV_PASSWORD_FIELD_IMP
+
+
+
+
 

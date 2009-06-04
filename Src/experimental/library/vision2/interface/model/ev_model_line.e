@@ -169,8 +169,8 @@ feature -- Events
 			pa, pb: EV_COORDINATE
 			l_point_array: like point_array
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				l_point_array := point_array
 				pa := l_point_array.item (0)
@@ -243,4 +243,8 @@ note
 
 
 end -- class EV_MODEL_LINE
+
+
+
+
 

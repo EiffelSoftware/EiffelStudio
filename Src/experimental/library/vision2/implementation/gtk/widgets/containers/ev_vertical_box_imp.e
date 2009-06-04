@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"EiffelVision vertical box. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ note
 
 class
 	EV_VERTICAL_BOX_IMP
-	
+
 inherit
 	EV_VERTICAL_BOX_I
 		undefine
@@ -18,10 +18,11 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_BOX_IMP
 		redefine
 			interface,
+			old_make,
 			make
 		end
 
@@ -29,17 +30,22 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-	make (an_interface: like interface)
+
+	old_make (an_interface: like interface)
 			-- Create a GTK vertical box.
-		do	
-			base_make (an_interface)
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vbox_new (Default_homogeneous, Default_spacing))
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-    interface: EV_VERTICAL_BOX;
+    interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -56,4 +62,8 @@ note
 
 
 end -- class EV_VERTICAL_BOX_IMP
+
+
+
+
 

@@ -11,14 +11,14 @@ note
 
 class
 	EV_CHECKABLE_TREE
-	
+
 inherit
 	EV_TREE
 		redefine
 			implementation,
 			create_implementation
 		end
-		
+
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES
 		undefine
 			is_equal
@@ -33,11 +33,11 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.checked_items	
+			Result := implementation.checked_items
 		ensure
 			bridge_ok: lists_equal (Result, implementation.checked_items)
 		end
-		
+
 	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- Is `tree_item' currently checked?
 		require
@@ -60,7 +60,7 @@ feature -- Status setting
 		ensure
 			item_is_checked: is_item_checked (tree_item)
 		end
-		
+
 	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure `tree_item' is not checked.
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_CHECKABLE_TREE_IMP} implementation.make (Current)
+			create {EV_CHECKABLE_TREE_IMP} implementation.make
 		end
 
 invariant

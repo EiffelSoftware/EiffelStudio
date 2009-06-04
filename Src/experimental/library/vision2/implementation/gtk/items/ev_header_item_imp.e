@@ -48,18 +48,18 @@ feature -- Initialization
 			Result := False
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tree item.
 		do
-			base_make (an_interface)
-			set_c_object  ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize the header item.
 		local
 			l_label_ellipsize_symbol: POINTER
 		do
+			set_c_object  ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
@@ -108,10 +108,10 @@ feature -- Initialization
 			a_width := tree_view_column_width
 			if a_width /= width then
 				width := a_width
-				if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
+				if attached parent_imp as l_parent_imp and then (l_parent_imp.call_item_resize_start_actions or else l_parent_imp.item_resize_tuple /= Void) then
 						-- Always make sure that the event box is the same size as the header item.
 					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
-					parent_imp.on_resize (interface)
+					l_parent_imp.on_resize (attached_interface)
 				end
 			end
 		end
@@ -305,8 +305,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			a_button: POINTER
 			l_x: INTEGER
 			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			l_parent_imp: like parent_imp
 		do
 			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+
+			l_parent_imp := parent_imp
 					-- We don't want the button stealing focus.
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 			if n_args > 0 then
@@ -333,21 +336,21 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						if pointer_button_press_actions_internal /= Void then
 							pointer_button_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
-						if parent_imp /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x - parent_imp.item_x_offset (interface)
-							if parent_imp.pointer_button_press_actions_internal /= Void then
-								parent_imp.pointer_button_press_actions_internal.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+						if l_parent_imp /= Void then
+							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							if l_parent_imp.pointer_button_press_actions_internal /= Void then
+								l_parent_imp.pointer_button_press_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 							end
-							if parent_imp.item_pointer_button_press_actions_internal /= Void then
-								parent_imp.item_pointer_button_press_actions_internal.call ([interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
+							if l_parent_imp.item_pointer_button_press_actions_internal /= Void then
+								l_parent_imp.item_pointer_button_press_actions.call ([interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_button_release_enum
 					then
-						if parent_imp /= Void and then parent_imp.pointer_button_release_actions_internal /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x - parent_imp.item_x_offset (interface)
-							parent_imp.pointer_button_release_actions_internal.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+						if l_parent_imp /= Void and then l_parent_imp.pointer_button_release_actions_internal /= Void then
+							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							l_parent_imp.pointer_button_release_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_2button_press_enum
@@ -355,13 +358,13 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						if pointer_double_press_actions_internal /= Void then
 							pointer_double_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
-						if parent_imp /= Void then
-							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x - parent_imp.item_x_offset (interface)
-							if parent_imp.pointer_double_press_actions_internal /= Void then
-								parent_imp.pointer_double_press_actions_internal.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+						if l_parent_imp /= Void then
+							l_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_parent_imp.screen_x - l_parent_imp.item_x_offset (attached_interface)
+							if l_parent_imp.pointer_double_press_actions_internal /= Void then
+								l_parent_imp.pointer_double_press_actions.call ([l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 							end
-							if parent_imp.item_pointer_double_press_actions_internal /= Void then
-								parent_imp.item_pointer_double_press_actions_internal.call ([interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
+							if l_parent_imp.item_pointer_double_press_actions_internal /= Void then
+								l_parent_imp.item_pointer_double_press_actions.call ([attached_interface, l_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
 					elseif
@@ -408,7 +411,7 @@ feature {EV_HEADER_IMP} -- Implementation
 	item_event_id: INTEGER
 		-- Item event id of `Current'
 
-	parent_imp: EV_HEADER_IMP
+	parent_imp: detachable EV_HEADER_IMP
 		-- Parent of `Current'
 
 feature {NONE} -- Implementation
@@ -426,12 +429,12 @@ feature {NONE} -- Implementation
 	create_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
 			create Result
-			interface.init_drop_actions (Result)
+			attached_interface.init_drop_actions (Result)
 		end
 
 feature {NONE} -- Redundant implementation
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
@@ -446,7 +449,7 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	interface: EV_HEADER_ITEM;
+	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 		-- Interface object of `Current'.
 
 note

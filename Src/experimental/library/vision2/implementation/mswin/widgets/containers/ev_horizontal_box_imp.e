@@ -77,7 +77,7 @@ feature {NONE} -- Basic operation
 			-- current width.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
-			expandable: ARRAYED_LIST [INTEGER]
+			expandable: detachable ARRAYED_LIST [INTEGER]
 			litem: EV_WIDGET_IMP
 			rate, total_rest, mark: INTEGER
 			children_size, localint: INTEGER
@@ -147,10 +147,12 @@ feature {NONE} -- Basic operation
 						lchild.start
 						if expandable = Void then
 							next_non_expandable := -1
+							create expandable.make (0)
 						else
 							expandable.start
 							next_non_expandable := expandable.item
 						end
+						check expandable /= Void end
 					until
 						lchild.after
 					loop
@@ -353,7 +355,7 @@ feature {NONE} -- Implementation for automatic size compute
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_BOX;
+	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -370,4 +372,13 @@ note
 
 
 end -- class EV_HORIZONTAL_BOX_IMP
+
+
+
+
+
+
+
+
+
 

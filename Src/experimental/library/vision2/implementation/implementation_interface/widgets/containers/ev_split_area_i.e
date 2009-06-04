@@ -26,7 +26,7 @@ feature -- Access
 	second: like item
 			-- Second item of `Current'.
 
-	item: EV_WIDGET
+	item: detachable EV_WIDGET
 			-- Current item.
 		do
 			if item_refers_to_second then
@@ -178,7 +178,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put (an_item: like item)
+	put (an_item: EV_WIDGET)
 			-- Replace `item' with `an_item'.
 		do
 			if item = first then
@@ -193,7 +193,7 @@ feature -- Element change
 				(old item = old second implies item = second)
 		end
 
-	extend (an_item: like item)
+	extend (an_item: EV_WIDGET)
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
@@ -204,7 +204,7 @@ feature -- Element change
 			end
 		end
 
-	replace (an_item: like item)
+	replace (an_item: EV_WIDGET)
 			-- Replace item with `an_item'.
 		do
 			prune (item)
@@ -232,17 +232,17 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: LINEAR [like item]
+	linear_representation: LINEAR [EV_WIDGET]
 			-- Representation as a linear structure.
 		local
-			l: LINKED_LIST [like item]
+			l: LINKED_LIST [EV_WIDGET]
 		do
 			create l.make
-			if first /= Void then
-				l.extend (first)
+			if attached first as l_first then
+				l.extend (l_first)
 			end
-			if second /= Void then
-				l.extend (second)
+			if attached second as l_second then
+				l.extend (l_second)
 			end
 			Result := l
 		end
@@ -273,31 +273,30 @@ feature {EV_SPLIT_AREA_I} -- Status Report
 	first_visible: BOOLEAN
 			-- Is `first' not Void and visible?
 		do
-			Result := first /= Void and first.is_show_requested
+			Result := attached first as l_first and then l_first.is_show_requested
 		end
 
 	second_visible: BOOLEAN
 			-- Is `second' not Void and visible?
 		do
-			Result := second /= Void and second.is_show_requested
+			Result := attached second as l_second and then l_second.is_show_requested
 		end
 
-feature {EV_ANY_I, EV_ANY} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify `first_imp' and `second_imp'.
 		do
-			if first /= Void then
-				first.implementation.update_for_pick_and_drop (starting)
+			if attached first as l_first then
+				l_first.implementation.update_for_pick_and_drop (starting)
 			end
-			if second /= Void then
-				second.implementation.update_for_pick_and_drop (starting)
+			if attached second as l_second then
+				l_second.implementation.update_for_pick_and_drop (starting)
 			end
 		end
 
-	interface: EV_SPLIT_AREA;
+	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -314,4 +313,11 @@ note
 
 
 end -- class EV_SPLIT_AREA_I
+
+
+
+
+
+
+
 

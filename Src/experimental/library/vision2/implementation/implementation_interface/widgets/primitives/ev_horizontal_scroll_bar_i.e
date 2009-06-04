@@ -16,7 +16,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_SCROLL_BAR;
+	interface: detachable EV_HORIZONTAL_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -33,4 +33,10 @@ note
 
 
 end -- class EV_HORIZONTAL_SCROLL_BAR_I
+
+
+
+
+
+
 

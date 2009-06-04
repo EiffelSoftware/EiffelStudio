@@ -20,15 +20,15 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Initialize `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- No extra initialization needed.
 		do
 			set_is_initialized (True)
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 				res.extend (all_fonts.item)
 				all_fonts.forth
 			end
-			Result ?= res
+			Result := res
 		end
 
 	mouse_wheel_scroll_lines: INTEGER
@@ -126,4 +126,13 @@ note
 
 
 end -- class EV_ENVIRONMENT_IMP
+
+
+
+
+
+
+
+
+
 

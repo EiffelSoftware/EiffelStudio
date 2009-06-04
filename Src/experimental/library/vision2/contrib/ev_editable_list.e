@@ -26,12 +26,14 @@ feature -- Initialization
 		require
 			window_not_void: a_window /= Void
 		do
-			default_create
-			relative_window := a_window
 			create change_widgets.make (0)
 			create editable_columns.make (0)
 			create editable_rows.make (0)
 			create end_edit_actions.default_create
+			relative_window := a_window
+			default_create
+
+
 			resize_actions.force_extend (agent resized)
 			column_resized_actions.force_extend (agent resized)
 			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
@@ -83,9 +85,13 @@ feature -- Status setting
 	set_with_previous_text
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
 			-- value of `saved text' after an edit has been unsuccessful
+		local
+			l_saved_text: like saved_text
 		do
 			go_i_th (widget_row)
-			item.put_i_th (saved_text, widget_column)
+			l_saved_text := saved_text
+			check l_saved_text /= Void end
+			item.put_i_th (l_saved_text, widget_column)
 		end
 
 	set_unique_column_values (a_flag: BOOLEAN)
@@ -101,7 +107,7 @@ feature -- Status setting
 		end
 
 	set_column_editable (a_flag: BOOLEAN; i: INTEGER)
-			-- Make column at index 'i' editable according to 'a_flag'. 
+			-- Make column at index 'i' editable according to 'a_flag'.
 		do
 			if a_flag then
 				if not editable_columns.has (i) then
@@ -188,7 +194,7 @@ feature -- Status setting
 		require
 			editable_column: column_editable (i)
 		local
-			combo_box: EV_COMBO_BOX
+			combo_box: detachable EV_COMBO_BOX
 		do
 			if change_widgets.has (i) then
 				change_widgets.replace (a_widget, i)
@@ -206,7 +212,7 @@ feature -- Removal
 	remove_selected_item
 			-- Remove the currently selected item from the list.
 		local
-			list_item: EV_MULTI_COLUMN_LIST_ROW
+			list_item: detachable EV_MULTI_COLUMN_LIST_ROW
 		do
 			list_item := selected_item
 			if list_item /= Void  then
@@ -239,10 +245,10 @@ feature -- Editing
 	edit_row (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- User has double clicked list row so set up dialogs for in-place editing.
 		do
-			if selected_item /= Void then
+			if attached selected_item as l_selected_item then
 				widget_column := column_index (x, y)
-				widget_row := index_of (selected_item, 1)
-				saved_text := selected_item @ (widget_column)
+				widget_row := index_of (l_selected_item, 1)
+				saved_text := l_selected_item @ (widget_column)
 				calculate_offsets (x, y)
 				generate_edit_dialog
 			end
@@ -300,11 +306,14 @@ feature {NONE} -- Actions
 	hide_window_on_timer
 			--
 		do
+			check hide_timer /= Void end
 			hide_timer.destroy
-			internal_dialog.hide
+			if attached internal_dialog as l_internal_dialog then
+				l_internal_dialog.hide
+			end
 		end
 
-	hide_timer: EV_TIMEOUT
+	hide_timer: detachable EV_TIMEOUT note option: stable attribute end
 
 	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG)
 			-- Actions to check if user has press the return key on 'a_dialog'.
@@ -318,23 +327,32 @@ feature {NONE} -- Actions
 	update_actions
 			-- Actions to be performed when change widget is updated, redefine for custom
 			-- behaviour.
+		local
+			l_widget: like widget
+			l_saved_text: like saved_text
+			l_error_dialog: like error_dialog
 		do
-			if selected_item /= Void then
+			l_widget := widget
+			check l_widget /= Void end
+			if attached selected_item as l_selected_item then
 				if unique_column_values then
-					if is_valid_text (widget.text, widget_column, index_of (selected_item, 1)) then
-						selected_item.put_i_th (widget.text, widget_column)
+					if is_valid_text (l_widget.text, widget_column, index_of (l_selected_item, 1)) then
+						l_selected_item.put_i_th (l_widget.text, widget_column)
 					else
-						widget.set_text (saved_text)
-						create error_dialog.make_with_text
+						l_saved_text := saved_text
+						check l_saved_text /= Void end
+						l_widget.set_text (l_saved_text)
+						create l_error_dialog.make_with_text
 							("This column identifier is in use by another row.%N Please choose another.")
-						error_dialog.show_modal_to_window (relative_window)
+						error_dialog := l_error_dialog
+						l_error_dialog.show_modal_to_window (relative_window)
 					end
 				else
-					selected_item.put_i_th (widget.text, widget_column)
+					l_selected_item.put_i_th (l_widget.text, widget_column)
 				end
 			end
-			widget.focus_out_actions.wipe_out
-			widget.key_release_actions.wipe_out
+			l_widget.focus_out_actions.wipe_out
+			l_widget.key_release_actions.wipe_out
 			on_edit_end
 		end
 
@@ -343,11 +361,12 @@ feature {NONE} -- Actions
 			-- it hides the editable dialog.  If not `adding' then remove the
 			-- appropriate agent.
 		local
-			con: EV_CONTAINER
-			a_container: LINEAR [EV_WIDGET]
+			con: detachable EV_CONTAINER
+			a_container: detachable LINEAR [EV_WIDGET]
 			button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
 			a_container ?= a_container_arg.linear_representation
+			check a_container /= Void end
 			from
 				a_container.start
 			until
@@ -374,12 +393,17 @@ feature {NONE} -- Commands
 			-- Generate new edit dialog for row editing in column at index 'i'.
 		local
 			textable: EV_TEXTABLE
+			l_widget: like widget
+			l_internal_dialog: like internal_dialog
+			l_saved_text: like saved_text
 		do
 			if column_editable (widget_column) and row_editable (widget_row) then
 
 						-- Destroy previous editing dialog
-				if internal_dialog /= Void then
-					internal_dialog.destroy
+				l_internal_dialog := internal_dialog
+				if l_internal_dialog /= Void then
+					l_internal_dialog.destroy
+					internal_dialog := Void
 				end
 
 				if change_widgets.has (widget_column) then
@@ -390,21 +414,28 @@ feature {NONE} -- Commands
 					change_widgets.put (textable, widget_column)
 					widget ?= textable
 				end
+				l_widget := widget
+				check l_widget /= Void end
 
-						-- Setup the editable widget			
-				widget.key_release_actions.extend (agent on_key_release (?, internal_dialog))
+
 
 						-- Create the parent dialog
-				create internal_dialog
-				internal_dialog.extend (widget)
-				internal_dialog.disable_user_resize
-				internal_dialog.set_size (dialog_width, dialog_height)
-				internal_dialog.show_relative_to_window (relative_window)
-				internal_dialog.set_position (x_offset, y_offset)
+				create l_internal_dialog
+				internal_dialog := l_internal_dialog
+				l_internal_dialog.extend (l_widget)
+				l_internal_dialog.disable_user_resize
+				l_internal_dialog.set_size (dialog_width, dialog_height)
+				l_internal_dialog.show_relative_to_window (relative_window)
+				l_internal_dialog.set_position (x_offset, y_offset)
 				initialize_observers
 
-				widget.set_text (saved_text)
-				widget.focus_out_actions.extend (agent focus_lost)
+						-- Setup the editable widget			
+				l_widget.key_release_actions.extend (agent on_key_release (?, l_internal_dialog))
+
+				l_saved_text := saved_text
+				check l_saved_text /= Void end
+				l_widget.set_text (l_saved_text)
+				l_widget.focus_out_actions.extend (agent focus_lost)
 			end
 		end
 
@@ -426,11 +457,15 @@ feature {NONE} -- Commands
 			-- Redraw edit dialog in response to interface changes
 		require
 			has_internal_dialog: internal_dialog /= Void
+		local
+			l_internal_dialog: like internal_dialog
 		do
-			internal_dialog.set_size (dialog_width, dialog_height)
-			internal_dialog.show_relative_to_window (relative_window)
+			l_internal_dialog := internal_dialog
+			check l_internal_dialog /= Void end
+			l_internal_dialog.set_size (dialog_width, dialog_height)
+			l_internal_dialog.show_relative_to_window (relative_window)
 			calculate_x_offset (0)
-			internal_dialog.set_position (x_offset, y_offset)
+			l_internal_dialog.set_position (x_offset, y_offset)
 		end
 
 	hide_window
@@ -442,7 +477,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Widget
 
-	widget: EV_TEXT_COMPONENT
+	widget: detachable EV_TEXT_COMPONENT
 			-- The widget with the Current keyboard focus.
 
 	x_offset, y_offset: INTEGER
@@ -451,7 +486,7 @@ feature {NONE} -- Widget
 	widget_column, widget_row: INTEGER
 			-- The column/row index that 'widget' belongs to.
 
-	saved_text: STRING_32
+	saved_text: detachable STRING_32
 			-- Saved text of 'widget'.  Used to reset text in case non-unique
 			-- value entered and 'unique_column_values' in true.
 
@@ -572,22 +607,26 @@ feature {NONE} -- Implementation
 				end
 
 					-- Redraw internal dialog if required
-				if internal_dialog /= Void and then internal_dialog.is_displayed then
+				if attached internal_dialog as l_internal_dialog and then l_internal_dialog.is_displayed then
 					redraw_dialog
 				end
 			end
 		end
 
-	error_dialog: EV_INFORMATION_DIALOG
+	error_dialog: detachable EV_INFORMATION_DIALOG
 			-- Error dialog indicating name clash.
 
-	internal_dialog: EV_UNTITLED_DIALOG
+	internal_dialog: detachable EV_UNTITLED_DIALOG
 			-- Internal dialog for holding editable widget
 
 	combo_item_selected (combo_box: EV_COMBO_BOX)
 			--
+		local
+			l_selected_item: detachable EV_LIST_ITEM
 		do
-			i_th (widget_row).put_i_th (combo_box.selected_item.text, widget_column)
+			l_selected_item := combo_box.selected_item
+			check l_selected_item /= Void end
+			i_th (widget_row).put_i_th (l_selected_item.text, widget_column)
 		end
 
 
@@ -611,4 +650,7 @@ note
 
 
 end -- class EV_EDITABLE_LIST
+
+
+
 

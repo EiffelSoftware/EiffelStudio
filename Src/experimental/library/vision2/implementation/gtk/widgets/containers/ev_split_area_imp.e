@@ -24,14 +24,14 @@ inherit
 			replace
 		redefine
 			interface,
-			initialize,
+			make,
 			container_widget,
 			needs_event_box
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 		do
 			Precursor {EV_CONTAINER_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
@@ -48,24 +48,26 @@ feature -- Access
 			Result := {EV_GTK_EXTERNALS}.gtk_paned_struct_child1_size (container_widget).max (minimum_split_position).min (maximum_split_position)
 		end
 
-	set_first (an_item: like item)
+	set_first (an_item: attached like item)
 			-- Make `an_item' `first'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
 			set_item_resize (first, False)
 		end
 
-	set_second (an_item: like item)
+	set_second (an_item: attached like item)
 			-- Make `an_item' `second'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
@@ -75,10 +77,11 @@ feature -- Access
 	prune (an_item: like item)
 			-- Remove `an_item' if present from `Current'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			if has (an_item) and then an_item /= Void then
 				item_imp ?= an_item.implementation
+				check item_imp /= Void end
 				item_imp.set_parent_imp (Void)
 				{EV_GTK_EXTERNALS}.gtk_container_remove ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
@@ -98,13 +101,13 @@ feature -- Access
 			end
 		end
 
-	enable_item_expand (an_item: like item)
+	enable_item_expand (an_item: attached like item)
 			-- Let `an_item' expand when `Current' is resized.
 		do
 			set_item_resize (an_item, True)
 		end
 
-	disable_item_expand (an_item: like item)
+	disable_item_expand (an_item: attached like item)
 			-- Make `an_item' non-expandable on `Current' resize.
 		do
 			set_item_resize (an_item, False)
@@ -148,7 +151,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SPLIT_AREA;
+	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 
 note
@@ -166,4 +169,8 @@ note
 
 
 end -- class EV_SPLIT_AREA_IMP
+
+
+
+
 

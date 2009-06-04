@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Horizontal bar graph gauge for displaying progress of a process.
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_PROGRESS_BAR_IMP}
-				implementation.make (Current)
+				implementation.make
 		end
 
 note
@@ -57,4 +57,10 @@ note
 
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR
+
+
+
+
+
+
 

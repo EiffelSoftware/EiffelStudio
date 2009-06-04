@@ -215,7 +215,7 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 
 feature {EV_ANY_I} -- deferred feature
 
-	parent_imp: EV_SIZEABLE_CONTAINER_IMP
+	parent_imp: detachable EV_SIZEABLE_CONTAINER_IMP
 			-- Parent of `Current'.
 		deferred
 		end
@@ -407,4 +407,14 @@ note
 
 
 end -- EV_SIZEABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

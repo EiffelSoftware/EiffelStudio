@@ -194,7 +194,7 @@ feature -- Events
 					points.forth
 					if not points.after then
 						pb := points.item
-					end				
+					end
 				end
 				if points.count > 2 and then is_closed then
 					Result := Result or point_on_segment (x, y,
@@ -219,4 +219,8 @@ note
 
 
 end -- class EV_FIGURE_POLYLINE
+
+
+
+
 

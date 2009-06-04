@@ -33,13 +33,13 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			create subrows
@@ -81,8 +81,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			index := a_index
 		ensure
 			index_set: index = a_index
-			indexes_equivalent: parent_i.rows.i_th (index) = Current
-			index_less_than_row_count: index <= parent.row_count
+			indexes_equivalent: attached parent_i as l_parent_i and then l_parent_i.rows.i_th (index) = Current
+			index_less_than_row_count: attached parent as l_parent and then index <= l_parent.row_count
 		end
 
 	set_subrow_index (a_subrow_index: INTEGER)
@@ -93,8 +93,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			subrow_index := a_subrow_index
 		ensure
 			index_set: subrow_index = a_subrow_index
-			indexes_equivalent: a_subrow_index > 0 implies parent_row_i.subrows.i_th (subrow_index) = Current
-			index_less_than_row_count: subrow_index <= parent_row_i.subrow_count
+			indexes_equivalent: attached parent_row_i as l_parent_row_i and then a_subrow_index > 0 implies l_parent_row_i.subrows.i_th (subrow_index) = Current
+			index_less_than_row_count: attached parent_row_i as l_parent_row_i and then subrow_index <= l_parent_row_i.subrow_count
 		end
 
 	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER)
@@ -120,10 +120,10 @@ feature -- Access
 			i_positive: i > 0
 			i_less_than_subrow_count: i <= subrow_count
 		do
-			Result := subrows.i_th (i).interface
+			Result := subrows.i_th (i).attached_interface
 		ensure
 			subrow_not_void: Result /= Void
-			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = interface
+			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = attached_interface
 		end
 
 	has_subrow (a_row: EV_GRID_ROW): BOOLEAN
@@ -138,29 +138,29 @@ feature -- Access
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
 
-	parent_row: EV_GRID_ROW
+	parent_row: detachable EV_GRID_ROW
 			-- Parent row of Current if any, Void otherwise.
 		require
 			is_parented: parent /= Void
 		do
-			if parent_row_i /= Void then
-				Result := parent_row_i.interface
+			if attached parent_row_i as l_parent_row_i then
+				Result := l_parent_row_i.interface
 			end
 		ensure
 			result_void_when_tree_node_enabled: (parent = Void) or
-				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
-			has_parent: Result /= Void implies Result.has_subrow (interface)
+				(attached parent as l_parent and then not l_parent.is_tree_enabled) implies Result = Void
+			has_parent: Result /= Void implies Result.has_subrow (attached_interface)
 		end
 
-	parent: EV_GRID
+	parent: detachable EV_GRID
 			-- Grid to which current row belongs.
 		do
-			if parent_i /= Void then
-				Result := parent_i.interface
+			if attached parent_i as l_parent_i then
+				Result := l_parent_i.interface
 			end
 		end
 
-	parent_row_root: EV_GRID_ROW
+	parent_row_root: detachable EV_GRID_ROW
 			-- Parent row which is the root of the tree structure
 			-- in which `Current' is contained. May be `Current' if
 			-- `Current' is the root node of a tree structure.
@@ -169,34 +169,38 @@ feature -- Access
 		local
 			current_parent: EV_GRID_ROW_I
 		do
-			if parent.is_tree_enabled then
+			if attached parent as l_parent and then l_parent.is_tree_enabled then
 					-- If the tree is not enabled then `Result' must be False.
-				if parent_row_i /= Void then
+				if attached parent_row_i as l_parent_row_i then
 					from
-						current_parent := parent_row_i
+						current_parent := l_parent_row_i
 					until
 						current_parent.parent_row_i = Void
 					loop
-						current_parent := current_parent.parent_row_i
+						if attached current_parent.parent_row_i as l_par_row_i then
+							current_parent := l_par_row_i
+						end
 					end
-					Result := current_parent.interface
+					Result := current_parent.attached_interface
 				else
 						-- In this case, there is no `parent_row_i' as `Current'
 						-- is the root node of a tree, so return `interface'
-					Result := interface
+					Result := attached_interface
 				end
 			end
 		ensure
-			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
+			result_consistent_with_parent_tree_properties: (parent = Void or else (attached parent as l_parent and then not l_parent.is_tree_enabled)) = (Result = Void)
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM
+	item (i: INTEGER): detachable EV_GRID_ITEM
 			-- Item at `i'-th column, Void if none.
 		require
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
-			Result := parent_i.item (i, index)
+			if attached parent_i as l_parent_i then
+				Result := l_parent_i.item (i, index)
+			end
 		end
 
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
@@ -205,7 +209,7 @@ feature -- Access
 			is_parented: parent /= Void
 		local
 			i, a_count: INTEGER
-			a_item: EV_GRID_ITEM_I
+			a_item: detachable EV_GRID_ITEM_I
 			temp_parent_i: like parent_i
 		do
 			from
@@ -213,13 +217,14 @@ feature -- Access
 				a_count := count
 				create Result.make (a_count)
 				temp_parent_i := parent_i
+				check temp_parent_i /= Void end
 			until
 				i > a_count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
 				a_item := temp_parent_i.item_internal (i, index)
 				if a_item /= Void and then a_item.is_selected then
-					Result.extend (a_item.interface)
+					Result.extend (a_item.attached_interface)
 				end
 				i := i + 1
 			end
@@ -250,8 +255,8 @@ feature -- Access
 	is_selected: BOOLEAN
 			-- Is objects state set to selected.
 		do
-			if parent_i /= Void then
-				if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
+			if attached parent_i as l_parent_i then
+				if l_parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					Result := internal_is_selected
 				else
 					Result := internal_are_all_non_void_items_selected
@@ -271,16 +276,17 @@ feature -- Access
 	internal_update_selection (a_selection_state: BOOLEAN)
 			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
 		local
-			a_item: EV_GRID_ITEM_I
+			a_item: detachable EV_GRID_ITEM_I
 			i: INTEGER
 			a_count: INTEGER
 			a_index: INTEGER
-			a_parent_i: EV_GRID_I
+			a_parent_i: detachable EV_GRID_I
 		do
 			from
 				i := 1
 				a_index := index
 				a_parent_i := parent_i
+				check a_parent_i /= Void end
 				a_count := count
 			until
 				i > a_count
@@ -301,23 +307,24 @@ feature -- Access
 			-- Are all the non void items in `Current' selected?
 			-- False if no non void items are present.
 		local
-			a_item: EV_GRID_ITEM_I
+			a_item: detachable EV_GRID_ITEM_I
 			i: INTEGER
 			a_count: INTEGER
 			non_void_item_found: BOOLEAN
 			a_index: INTEGER
-			a_parent_i: EV_GRID_I
+			l_parent_i: detachable EV_GRID_I
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
 				a_index := index
-				a_parent_i := parent_i
+				l_parent_i := parent_i
+				check l_parent_i /= Void end
 			until
 				not Result or else i > a_count
 			loop
-				a_item := parent_i.item_internal (i, a_index)
+				a_item := l_parent_i.item_internal (i, a_index)
 				if a_item /= Void then
 					non_void_item_found := True
 					Result := a_item.is_selected
@@ -335,8 +342,8 @@ feature -- Access
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do
-			if is_locked then
-				Result := parent_i.internal_client_y + locked_row.offset
+			if is_locked and then attached parent_i as l_parent_i and then attached locked_row as l_locked_row then
+				Result := l_parent_i.internal_client_y + l_locked_row.offset
 			else
 				Result := virtual_y_position_unlocked
 			end
@@ -351,18 +358,18 @@ feature -- Access
 			-- If `is_locked' then `Result' is the "shadow" position where the row would
 			-- be if not locked.
 		do
-			if parent_i /= Void then
+			if attached parent_i as l_parent_i then
 					-- If there is no parent then return 0.
 
-				parent_i.perform_vertical_computation
+				l_parent_i.perform_vertical_computation
 					-- Recompute vertically if required.
 
-				if parent_i.row_offsets /= Void then
+				if attached l_parent_i.row_offsets as l_row_offsets then
 						-- As `row_offsets' exists, we can look it up,
 						-- otherwise it must be computed.
-					Result := parent_i.row_offsets @ (index)
+					Result := l_row_offsets @ (index)
 				else
-					Result := (index - 1) * parent_i.row_height
+					Result := (index - 1) * l_parent_i.row_height
 				end
 			end
 		ensure
@@ -383,7 +390,7 @@ feature -- Access
 
 feature -- Status report
 
-	locked_row: EV_GRID_LOCKED_ROW_I
+	locked_row: detachable EV_GRID_LOCKED_ROW_I
 		-- Locked row information for `Current'.
 		-- `Void' if not locked.
 
@@ -395,7 +402,7 @@ feature -- Status report
 			Result := subrows.count
 		ensure
 			subrow_count_non_negative: subrow_count >= 0
-			subrow_count_in_range: subrow_count <= (parent.row_count - index)
+			subrow_count_in_range: attached parent as l_parent and then subrow_count <= (l_parent.row_count - index)
 		end
 
 	subrow_count_recursive: INTEGER
@@ -410,8 +417,8 @@ feature -- Status report
 	count: INTEGER
 			-- Number of items in current.
 		do
-			if parent_i /= Void then
-				Result := parent_i.columns.count
+			if attached parent_i as l_parent_i then
+				Result := l_parent_i.columns.count
 			end
 		ensure
 			count_not_negative: count >= 0
@@ -436,15 +443,18 @@ feature -- Status report
 			-- or 0 if none.
 		local
 			counter: INTEGER
-			current_row_list: SPECIAL [EV_GRID_ITEM_I]
+			current_row_list: SPECIAL [detachable EV_GRID_ITEM_I]
 			current_row_list_count: INTEGER
-			a_item: EV_GRID_ITEM_I
+			a_item: detachable EV_GRID_ITEM_I
 			column_list_area: SPECIAL [EV_GRID_COLUMN_I]
 			a_physical_index: INTEGER
 			row_count: INTEGER
+			l_parent_i: like parent_i
 		do
-			current_row_list := parent_i.internal_row_data @ index
-			column_list_area := parent_i.columns.area
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			current_row_list := l_parent_i.internal_row_data @ index
+			column_list_area := l_parent_i.columns.area
 			current_row_list_count := current_row_list.count
 			row_count := count
 			from
@@ -465,11 +475,11 @@ feature -- Status report
 			valid_result: Result >= 0 and Result <= count
 		end
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
 			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed..
 
-	foreground_color: EV_COLOR
+	foreground_color: detachable EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 
@@ -483,8 +493,8 @@ feature -- Status report
 			-- Locked position of `Current' from top edge of viewable area of `parent'.
 			-- `Result' is 0 if not `is_locked'.
 		do
-			if is_locked then
-				Result := locked_row.offset
+			if is_locked and then attached locked_row as l_locked_row then
+				Result := l_locked_row.offset
 			end
 		ensure
 			not_locked_implies_result_zero: not is_locked implies result = 0
@@ -495,23 +505,29 @@ feature -- Status setting
 	lock_at_position (a_position: INTEGER)
 			-- Ensure `is_locked' is `True' with the vertical offset from
 			-- the top edge of the viewable area of `parent' set to `a_position'.
+		local
+			l_parent_i: like parent_i
+			l_locked_row: like locked_row
 		do
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
 			if is_locked then
 				unlock
 			end
 			is_locked := True
-			create locked_row.make (parent_i, a_position, Current)
-			locked_row.set_locked_index (parent_i.locked_indexes.count + 1)
-			parent_i.locked_indexes.extend (locked_row)
-			parent_i.reposition_locked_row (Current)
-			parent_i.redraw_row (Current)
-			if parent_i.item_pebble_function /= Void then
-				locked_row.drawing_area.set_pebble_function (agent parent_i.user_pebble_function_intermediary_locked (?, ?, locked_row))
+			create l_locked_row.make (l_parent_i, a_position, Current)
+			locked_row := l_locked_row
+			l_locked_row.set_locked_index (l_parent_i.locked_indexes.count + 1)
+			l_parent_i.locked_indexes.extend (l_locked_row)
+			l_parent_i.reposition_locked_row (Current)
+			l_parent_i.redraw_row (Current)
+			if l_parent_i.item_pebble_function /= Void then
+				l_locked_row.drawing_area.set_pebble_function (agent l_parent_i.user_pebble_function_intermediary_locked (?, ?, l_locked_row))
 			end
-			locked_row.drawing_area.drop_actions.set_veto_pebble_function (agent parent_i.veto_pebble_function_intermediary)
-			locked_row.drawing_area.drop_actions.extend (agent parent_i.drop_action_intermediary)
-			locked_row.drawing_area.set_accept_cursor (parent_i.interface.accept_cursor)
-			locked_row.drawing_area.set_deny_cursor (parent_i.interface.deny_cursor)
+			l_locked_row.drawing_area.drop_actions.set_veto_pebble_function (agent l_parent_i.veto_pebble_function_intermediary)
+			l_locked_row.drawing_area.drop_actions.extend (agent l_parent_i.drop_action_intermediary)
+			l_locked_row.drawing_area.set_accept_cursor (l_parent_i.attached_interface.accept_cursor)
+			l_locked_row.drawing_area.set_deny_cursor (l_parent_i.attached_interface.deny_cursor)
 		ensure
 			is_locked: is_locked
 			locked_position_set: locked_position = a_position
@@ -520,9 +536,9 @@ feature -- Status setting
 	unlock
 			-- Ensure `is_locked' is `False'.
 		do
-			if is_locked then
+			if is_locked and then attached parent_i as l_parent_i then
 				is_locked := False
-				parent_i.unlock_row (Current)
+				l_parent_i.unlock_row (Current)
 				locked_row := Void
 			end
 		ensure
@@ -534,9 +550,13 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 			is_expandable: is_expandable
+		local
+			l_parent_i: like parent_i
 		do
 			if not is_expanded then
 				is_expanded := True
+				l_parent_i := parent_i
+				check l_parent_i /= Void end
 				if subrow_count > 0 then
 						-- If `Current' has children then compute and redraw.
 						-- If `is_ensured_expandable' then it is possible that there
@@ -548,26 +568,26 @@ feature -- Status setting
 					if displayed_in_grid_tree then
 							-- Only recompute the row offsets if `Current' is visible
 							-- otherwise the row offsets are already correct.
-						parent_i.set_vertical_computation_required (index)
+						l_parent_i.set_vertical_computation_required (index)
 					end
 				end
 
-				if parent_i.row_expand_actions_internal /= Void then
+				if l_parent_i.row_expand_actions_internal /= Void then
 						-- The expand actions are fired after we set vertical computation
 						-- to ensure that if you query a dimension from within the actions,
 						-- they are up to date.
-					parent_i.row_expand_actions_internal.call ([interface])
+					l_parent_i.row_expand_actions.call ([attached_interface])
 				end
 				if expand_actions_internal /= Void then
-					expand_actions_internal.call (Void)
+					expand_actions.call (Void)
 				end
 
 				if is_ensured_expandable then
 					is_ensured_expandable := False
 					is_expanded := subrow_count > 0
 				end
-				if parent_i /= Void then
-					parent_i.redraw
+				if l_parent_i /= Void then
+					l_parent_i.redraw
 				end
 			end
 		ensure
@@ -579,8 +599,12 @@ feature -- Status setting
 			-- Hide all subrows of `Current'.
 		require
 			is_parented: parent /= Void
+		local
+			l_parent_i: like parent_i
 		do
 			if is_expanded then
+				l_parent_i := parent_i
+				check l_parent_i /= Void end
 				is_expanded := False
 
 				update_parent_expanded_node_counts_recursively (- contained_expanded_items_recursive)
@@ -589,20 +613,20 @@ feature -- Status setting
 				if displayed_in_grid_tree then
 						-- Only recompute the row offsets if `Current' is visible
 						-- otherwise the row offsets are already correct.
-					parent_i.set_vertical_computation_required (index)
+					l_parent_i.set_vertical_computation_required (index)
 				end
 
-				if parent_i.row_collapse_actions_internal /= Void then
+				if l_parent_i.row_collapse_actions_internal /= Void then
 						-- The collapse actions are fired after we set vertical computation
 						-- to ensure that if you query a dimension from within the actions,
 						-- they are up to date.
-					parent_i.row_collapse_actions_internal.call ([interface])
+					l_parent_i.row_collapse_actions.call ([attached_interface])
 				end
 				if collapse_actions_internal /= Void then
 					collapse_actions_internal.call (Void)
 				end
-				if parent_i /= Void then
-					parent_i.redraw
+				if l_parent_i /= Void then
+					l_parent_i.redraw
 				end
 			end
 		ensure
@@ -616,11 +640,11 @@ feature -- Status setting
 			is_parented: parent /= Void
 		do
 			internal_height := a_height
-			if not parent_i.is_row_height_fixed then
-				parent_i.set_vertical_computation_required (index)
-				parent_i.redraw
+			if attached parent_i as l_parent_i and then not l_parent_i.is_row_height_fixed then
+				l_parent_i.set_vertical_computation_required (index)
+				l_parent_i.redraw
 				if is_locked then
-					parent_i.reposition_locked_row (Current)
+					l_parent_i.reposition_locked_row (Current)
 				end
 			end
 		ensure
@@ -636,57 +660,60 @@ feature -- Status setting
 			l_height: INTEGER
 			extra_height: INTEGER
 			i: INTEGER
+			l_parent_i: like parent_i
 		do
 				-- It is necessary to perform the recomputation immediately
 				-- as this may show the horizontal or vertical scroll bar
 				-- which affects the size of the viewable area in which `Current'
 				-- is to be displayed.
-			parent_i.recompute_horizontal_scroll_bar
-			parent_i.recompute_vertical_scroll_bar
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			l_parent_i.recompute_horizontal_scroll_bar
+			l_parent_i.recompute_vertical_scroll_bar
 
 			virtual_y := virtual_y_position
-			if parent_i.is_row_height_fixed then
-				l_height := parent_i.row_height
+			if l_parent_i.is_row_height_fixed then
+				l_height := l_parent_i.row_height
 			else
 				l_height := height
 			end
-			if virtual_y < parent_i.virtual_y_position then
-				parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y)
-			elseif virtual_y + l_height > parent_i.virtual_y_position + parent_i.viewable_height then
-				if parent_i.is_vertical_scrolling_per_item then
+			if virtual_y < l_parent_i.virtual_y_position then
+				l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y)
+			elseif virtual_y + l_height > l_parent_i.virtual_y_position + l_parent_i.viewable_height then
+				if l_parent_i.is_vertical_scrolling_per_item then
 						-- In this case, we must ensure that it is always the top item that still matches flush to
 						-- the top of the viewable area of `parent_i'. There are two cases that we must handle.
-					if parent_i.is_row_height_fixed then
-						extra_height := parent_i.viewable_height \\ parent_i.row_height
+					if l_parent_i.is_row_height_fixed then
+						extra_height := l_parent_i.viewable_height \\ l_parent_i.row_height
 					else
 							-- In this case, the only way to determine the extra amount to add in order
 							-- for the top row to be flush with the top of the viewable area, is
 							-- to loop up until we find the first one that intersects the viewable area.
 						from
 							i := index
-							extra_height := parent_i.viewable_height
+							extra_height := l_parent_i.viewable_height
 						until
 							i = 1 or extra_height < 0
 						loop
-							extra_height := extra_height - parent_i.row (i).height
+							extra_height := extra_height - l_parent_i.row (i).height
 							i := i - 1
 						end
-						extra_height := parent_i.row (i + 1).height + extra_height
+						extra_height := l_parent_i.row (i + 1).height + extra_height
 					end
 				end
-				if l_height >= parent_i.viewable_height then
+				if l_height >= l_parent_i.viewable_height then
 						-- In this case, the height of the row is greater than the viewable height
 						-- so we simply set it at the top of the viewable area.
-					parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y)
+					l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y)
 				else
-					parent_i.set_virtual_position (parent_i.virtual_x_position, virtual_y + l_height + extra_height - parent_i.viewable_height)
+					l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y + l_height + extra_height - l_parent_i.viewable_height)
 				end
 			end
 		ensure
-			parent_virtual_x_position_unchanged: old parent.virtual_x_position = parent.virtual_x_position
+			parent_virtual_x_position_unchanged: attached old parent as l_old_parent and then attached parent as l_parent and then l_old_parent.virtual_x_position = l_parent.virtual_x_position
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
-			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
-			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
+			row_visible_when_heights_fixed_in_parent: l_parent.is_row_height_fixed implies  virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + l_parent.row_height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (l_parent.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not l_parent.is_row_height_fixed implies virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (height)
 		end
 
 	set_background_color (a_color: EV_COLOR)
@@ -695,7 +722,9 @@ feature -- Status setting
 			is_parented: parent /= Void
 		do
 			background_color := a_color
-			parent_i.redraw_row (Current)
+			if attached parent_i as l_parent_i then
+				l_parent_i.redraw_row (Current)
+			end
 		ensure
 			background_color_set: background_color = a_color
 		end
@@ -706,7 +735,9 @@ feature -- Status setting
 			is_parented: parent /= Void
 		do
 			foreground_color := a_color
-			parent_i.redraw_row (Current)
+			if attached parent_i as l_parent_i then
+				l_parent_i.redraw_row (Current)
+			end
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end
@@ -720,8 +751,8 @@ feature -- Status setting
 			-- `ensure_expandable', it is no longer be displayed as expandable if all subrows are then removed.
 			-- In this case, you must explicitly call `ensure_expandable' again after removing all subrows.
 		require
-			parented: parent /= Void
-			parent_tree_enabled: parent.is_tree_enabled
+			parented: attached parent as l_parent
+			parent_tree_enabled: l_parent.is_tree_enabled
 		do
 			is_ensured_expandable := True
 			redraw
@@ -750,7 +781,9 @@ feature -- Status setting
 		require
 			parented: parent /= Void
 		do
-			parent_i.redraw_row (Current)
+			if attached parent_i as l_parent_i then
+				l_parent_i.redraw_row (Current)
+			end
 		end
 
 	hide
@@ -759,18 +792,18 @@ feature -- Status setting
 			parented: parent /= Void
 		do
 			if is_show_requested then
-				if is_locked then
-					locked_row.widget.hide
+				if is_locked and then attached locked_row as l_locked_row then
+					l_locked_row.widget.hide
 				end
 				is_show_requested := False
-				if parent_i /= Void then
-					parent_i.adjust_non_displayed_row_count (1)
-					if parent_i.non_displayed_row_count = 1 then
-						parent_i.set_vertical_computation_required (1)
+				if attached parent_i as l_parent_i then
+					l_parent_i.adjust_non_displayed_row_count (1)
+					if l_parent_i.non_displayed_row_count = 1 then
+						l_parent_i.set_vertical_computation_required (1)
 					else
-						parent_i.set_vertical_computation_required (index)
+						l_parent_i.set_vertical_computation_required (index)
 					end
-					parent_i.redraw
+					l_parent_i.redraw
 				end
 			end
 		end
@@ -781,17 +814,17 @@ feature -- Status setting
 			parented: parent /= Void
 		do
 			if not is_show_requested then
-				if is_locked then
-					locked_row.widget.show
+				if is_locked and then  attached locked_row as l_locked_row then
+					l_locked_row.widget.show
 				end
 				is_show_requested := True
-				if is_locked then
-					locked_row.widget.show
+				if is_locked and then attached locked_row as l_locked_row then
+					l_locked_row.widget.show
 				end
-				if parent_i /= Void then
-					parent_i.adjust_non_displayed_row_count (-1)
-					parent_i.set_vertical_computation_required (index)
-					parent_i.redraw
+				if attached parent_i as l_parent_i then
+					l_parent_i.adjust_non_displayed_row_count (-1)
+					l_parent_i.set_vertical_computation_required (index)
+					l_parent_i.redraw
 				end
 			end
 		end
@@ -805,7 +838,7 @@ feature -- Status setting
 			-- `True' when show requested and parent displayed.
 			-- A row that is_displayed does not necessarily have to be visible on screen at that particular time.
 		do
-			Result := is_show_requested and then parent_i /= Void and then parent_i.is_displayed
+			Result := is_show_requested and then attached parent_i as l_parent_i and then l_parent_i.is_displayed
 		end
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
@@ -816,12 +849,12 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		require
 			i_positive: i > 0
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
-			is_parented: parent /= Void
-			valid_tree_structure: a_item /= Void and parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
-			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then interface.is_part_of_tree_structure implies interface.is_index_valid_for_item_setting_if_tree_node (i)
-			is_index_valid_for_item_removal_if_subrow: a_item = Void and then interface.is_part_of_tree_structure implies interface.is_index_valid_for_item_removal_if_tree_node (i)
+			is_parented: attached parent as l_parent
+			valid_tree_structure: a_item /= Void and l_parent.is_tree_enabled and attached parent_row as l_parent_row implies i >= l_parent_row.index_of_first_item
 		do
-			parent_i.set_item (i, index, a_item)
+			if attached parent_i as l_parent_i then
+				l_parent_i.set_item (i, index, a_item)
+			end
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -829,13 +862,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 	add_subrow (a_row: EV_GRID_ROW)
 			-- Make `a_row' a child of Current.
 		require
-			is_parented: parent /= Void
+			is_parented: attached parent as l_parent
 			a_row_not_void: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
 			a_row_is_not_current: a_row /= interface
 			a_row_is_not_a_subrow: a_row.parent_row = Void
 			same_parent: a_row.parent = parent
-			parent_enabled_as_tree: parent.is_tree_enabled
+			parent_enabled_as_tree: l_parent.is_tree_enabled
 			a_row_is_below_current: a_row.index > index
 			all_rows_between_row_and_current_are_subrows:
 				a_row.index = index + subrow_count_recursive + 1
@@ -854,8 +887,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- with index in subrows of `Current' given by `a_subrow_index'.
 		require
 			not_destroyed: not is_destroyed
-			is_parented: parent /= Void
-			parent_enabled_as_tree: parent.is_tree_enabled
+			is_parented: attached parent as l_parent
+			parent_enabled_as_tree: l_parent.is_tree_enabled
 			rows_to_insert_positive: rows_to_insert >= 1
 			valid_subrow_index: a_subrow_index >= 1 and a_subrow_index <= subrow_count + 1
 		local
@@ -871,34 +904,40 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				l_subrow := subrows.i_th (a_subrow_index - 1)
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
 			end
-			parent_i.insert_new_rows_parented (rows_to_insert, l_index, interface)
+			if attached parent as l_parent_i then
+				l_parent_i.insert_new_rows_parented (rows_to_insert, l_index, attached_interface)
+			end
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + rows_to_insert
-			parent_row_count_increased: parent.row_count = old parent.row_count + rows_to_insert
+			parent_row_count_increased: attached parent as l_parent and then attached old parent as l_old_parent and then l_parent.row_count = l_old_parent.row_count + rows_to_insert
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW)
 			-- Ensure that `a_row' is no longer a child row of `Current'.
 			-- Does not remove `a_row' from `parent_i'.
 		require
-			is_parented: parent /= Void
+			is_parented: attached parent as l_parent
 			a_row_not_void: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
 			a_row_is_not_current: a_row /= interface
 			a_row_is_a_subrow: a_row.parent_row = interface
 			same_parent: a_row.parent = parent
-			parent_enabled_as_tree: parent.is_tree_enabled
-			row_is_final_subrow_in_tree_structure:
-				a_row.index + a_row.subrow_count_recursive = parent_row_root.index + parent_row_root.subrow_count_recursive
+			parent_enabled_as_tree: l_parent.is_tree_enabled
+			row_is_final_subrow_in_tree_structure: attached parent_row_root as l_parent_row_root and then
+				(a_row.index + a_row.subrow_count_recursive = l_parent_row_root.index + l_parent_row_root.subrow_count_recursive)
 		local
 			row_imp: EV_GRID_ROW_I
 			i, last_changed_subrow_index: INTEGER
+			l_parent_i: like parent_i
 		do
 			row_imp := a_row.implementation
 			subrows.go_i_th (subrow_count)
 			subrows.remove
 			row_imp.internal_set_parent_row (Void)
 			row_imp.set_subrow_index (0)
+
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
 
 
 			if row_imp.subrow_count > 0 then
@@ -910,7 +949,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				until
 					i > last_changed_subrow_index
 				loop
-					parent_i.rows.i_th (i).update_depths_in_tree
+					l_parent_i.rows.i_th (i).update_depths_in_tree
 					i := i + 1
 				end
 			end
@@ -925,8 +964,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				update_parent_expanded_node_counts_recursively ( - (row_imp.expanded_subrow_count_recursive + 1))
 			end
 
-			parent_i.set_vertical_computation_required (index)
-			parent_i.redraw_client_area
+			l_parent_i.set_vertical_computation_required (index)
+			l_parent_i.redraw_client_area
 		ensure
 			removed: a_row.parent_row = Void
 			subrow_count_decreased: subrow_count = old subrow_count - 1
@@ -937,21 +976,22 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- if `a_row' is to be added within an existing tree structure and is used to
 			-- relax the preconditions that determine if a row may be added.
 		require
-			is_parented: parent /= Void
-			a_row_is_parented: parent.row (row_index).parent /= Void
-			a_row_is_not_current: parent.row (row_index) /= interface
-			a_row_is_not_a_subrow: parent.row (row_index).parent_row = Void
-			same_parent: parent.row (row_index).parent = parent
-			parent_enabled_as_tree: parent.is_tree_enabled
-			a_row_is_below_current: parent.row (row_index).index > index
+			is_parented: attached parent as l_parent
+			a_row_is_parented: l_parent.row (row_index).parent /= Void
+			a_row_is_not_current: l_parent.row (row_index) /= interface
+			a_row_is_not_a_subrow: l_parent.row (row_index).parent_row = Void
+			same_parent: l_parent.row (row_index).parent = l_parent
+			parent_enabled_as_tree: l_parent.is_tree_enabled
+			a_row_is_below_current: l_parent.row (row_index).index > index
 			all_rows_between_row_and_current_are_subrows:
-				not inserting_within_tree_structure implies parent.row (row_index).index = index + subrow_count_recursive + 1
+				not inserting_within_tree_structure implies l_parent.row (row_index).index = index + subrow_count_recursive + 1
 			row_not_empty_implies_row_index_of_first_item_greater_or_equal_to_index_of_first_item:
-				parent.row (row_index).index_of_first_item > 0 implies parent.row (row_index).index_of_first_item >= index_of_first_item
+				l_parent.row (row_index).index_of_first_item > 0 implies l_parent.row (row_index).index_of_first_item >= index_of_first_item
 		local
 			row_imp: EV_GRID_ROW_I
 			i, j, l_subrow_index: INTEGER
 			l_original_subrow_count: INTEGER
+			l_parent_i: like parent_i
 		do
 				-- Reset `is_ensured_expandable'
 			is_ensured_expandable := False
@@ -967,10 +1007,12 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 						-- Move the existing items as required to make space for the new.
 					subrows.shift_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
 				end
+				l_parent_i := parent_i
+				check l_parent_i /= Void end
 			until
 				i = j
 			loop
-				row_imp := parent_i.row (i).implementation
+				row_imp := l_parent_i.row (i).implementation
 				subrows.put_i_th (row_imp, l_subrow_index)
 				row_imp.internal_set_parent_row (Current)
 				row_imp.set_subrow_index (l_subrow_index)
@@ -991,11 +1033,11 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				-- Update all indices of subrows in `Current'.
 			update_subrow_indices (a_subrow_index + 1)
 
-			parent_i.set_vertical_computation_required (index)
-			parent_i.redraw_client_area
+			l_parent_i.set_vertical_computation_required (index)
+			l_parent_i.redraw_client_area
 		ensure
-			added: parent.row (row_index).parent_row = interface
-			subrow (a_subrow_index) = parent.row (row_index)
+			added: attached parent as l_parent and then l_parent.row (row_index).parent_row = interface
+			subrow (a_subrow_index) = l_parent.row (row_index)
 			node_counts_correct: node_counts_correct
 		end
 
@@ -1006,6 +1048,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		do
 			if not is_selected then
 				l_parent_i := parent_i
+				check l_parent_i /= Void end
 				if l_parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					if l_parent_i.is_single_row_selection_enabled then
 						l_parent_i.remove_selection
@@ -1013,7 +1056,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					internal_is_selected := True
 					l_parent_i.add_row_to_selected_rows (Current)
 					if l_parent_i.row_select_actions_internal /= Void then
-						l_parent_i.row_select_actions_internal.call ([interface])
+						l_parent_i.row_select_actions.call ([attached_interface])
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call (Void)
@@ -1021,21 +1064,19 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				else
 					internal_update_selection (True)
 				end
-				if l_parent_i /= Void then
-					l_parent_i.redraw_row (Current)
-				end
+				l_parent_i.redraw_row (Current)
 			end
 		end
 
 	disable_select
 			-- Deselect the object.
 		do
-			if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
+			if attached parent_i as l_parent_i and then (l_parent_i.is_row_selection_enabled or else index_of_first_item = 0) then
 				if internal_is_selected then
 					internal_is_selected := False
-					parent_i.remove_row_from_selected_rows (Current)
-					if parent_i.row_deselect_actions_internal /= Void then
-						parent_i.row_deselect_actions_internal.call ([interface])
+					l_parent_i.remove_row_from_selected_rows (Current)
+					if l_parent_i.row_deselect_actions_internal /= Void then
+						l_parent_i.row_deselect_actions.call ([attached_interface])
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call ([Void])
@@ -1044,16 +1085,16 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			else
 				internal_update_selection (False)
 			end
-			if parent_i /= Void then
-				parent_i.redraw_row (Current)
+			if attached parent_i as l_parent_i then
+				l_parent_i.redraw_row (Current)
 			end
 		end
 
 	destroy
 			-- Destroy `Current'.
 		do
-			if parent_i /= Void then
-				parent_i.remove_row (index)
+			if attached parent_i as l_parent_i then
+				l_parent_i.remove_row (index)
 			end
 			set_is_destroyed (True)
 		end
@@ -1064,12 +1105,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			is_parented: parent /= Void
 		local
 			i: INTEGER
-			a_parent_i: EV_GRID_I
+			a_parent_i: detachable EV_GRID_I
 			a_index: INTEGER
 		do
 			from
 				i := count
 				a_parent_i := parent_i
+				check a_parent_i /= Void end
 				a_index := index
 			until
 				i = 0
@@ -1089,7 +1131,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			valid_item_index: item_index >= 1 and item_index <= count
 		do
-			if parent_i.is_tree_enabled and parent_row_i /= Void then
+			if attached parent_i as l_parent_i and then l_parent_i.is_tree_enabled and parent_row_i /= Void then
 					-- Check and update `indent_depth_in_tree'.
 				update_depths_in_tree
 			end
@@ -1107,8 +1149,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			clear
 				-- Make sure row is unselected from grid before removal
 			disable_select
-			if parent_row_i /= Void then
-				parent_row_i.update_for_subrow_removal (Current)
+			if attached parent_row_i as l_parent_row_i then
+				l_parent_row_i.update_for_subrow_removal (Current)
 			end
 			unparent
 			parent_row_i := Void
@@ -1173,7 +1215,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 
-	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I)
+	internal_set_parent_row (a_parent_row: detachable EV_GRID_ROW_I)
 			-- Set the `parent_row' of `Current'
 		do
 			parent_row_i := a_parent_row
@@ -1184,9 +1226,9 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 			-- Update `depth_in_tree' and `indent_depth_in_tree' based
 			-- on `Current' `Parent_row_i'.
 		do
-			if parent_row_i /= Void then
-				depth_in_tree := parent_row_i.depth_in_tree + 1
-				indent_depth_in_tree := parent_row_i.indent_depth_in_tree + 1
+			if attached parent_row_i as l_parent_row_i then
+				depth_in_tree := l_parent_row_i.depth_in_tree + 1
+				indent_depth_in_tree := l_parent_row_i.indent_depth_in_tree + 1
 --				if parent_row_i.index_of_first_item /= 0 and index_of_first_item /= 0 and then parent_row_i.index_of_first_item /= index_of_first_item then
 --					indent_depth_in_tree := 1
 --				end
@@ -1205,10 +1247,10 @@ feature {EV_GRID_ITEM_I, EV_GRID_ROW_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implemen
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
-	parent_i: EV_GRID_I
+	parent_i: detachable EV_GRID_I
 		-- Grid that `Current' resides in.
 
-	parent_row_i: EV_GRID_ROW_I
+	parent_row_i: detachable EV_GRID_ROW_I
 		-- Row in which `Current' is parented.
 
 	depth_in_tree: INTEGER
@@ -1245,13 +1287,14 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 		require
 			adjustment_value_not_zero: adjustment_value /= 0
 		local
-			parent_row_imp: EV_GRID_ROW_I
+			parent_row_imp: detachable EV_GRID_ROW_I
 		do
 			from
 				parent_row_imp := Current
 			until
 				parent_row_imp = Void
 			loop
+				check parent_row_imp /= Void end
 				parent_row_imp.set_subrow_count_recursive (parent_row_imp.subrow_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
@@ -1263,13 +1306,14 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 		require
 			adjustment_value_not_zero: adjustment_value /= 0
 		local
-			parent_row_imp: EV_GRID_ROW_I
+			parent_row_imp: detachable EV_GRID_ROW_I
 		do
 			from
 				parent_row_imp := Current
 			until
 				(parent_row_imp = Void) or (parent_row_imp /= Current and not parent_row_imp.is_expanded)
 			loop
+				check parent_row_imp /= Void end
 				parent_row_imp.set_expanded_subrow_count_recursive (parent_row_imp.expanded_subrow_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
@@ -1318,9 +1362,9 @@ feature {EV_ANY_I} -- Contract support
 				Result := Result and expanded_subrow_count_recursive >= 0
 			end
 			Result := Result and expanded_subrow_count_recursive <= subrow_count_recursive
-			if parent_i.uses_row_offsets then
-				Result := Result and parent_i.visible_row_count >= 0
-				Result := Result and parent_i.visible_row_count <= parent_i.row_count
+			if attached parent_i as l_parent_i and then l_parent_i.uses_row_offsets then
+				Result := Result and l_parent_i.visible_row_count >= 0
+				Result := Result and l_parent_i.visible_row_count <= l_parent_i.row_count
 			end
 		end
 
@@ -1368,7 +1412,7 @@ feature {NONE} -- Implementation
 			-- If not parented at any level or one of these
 			-- parents is not expanded then `Result' is `False'.
 		local
-			l_parent: EV_GRID_ROW_I
+			l_parent: detachable EV_GRID_ROW_I
 		do
 			Result := True
 			from
@@ -1376,6 +1420,7 @@ feature {NONE} -- Implementation
 			until
 				l_parent = Void or not Result
 			loop
+				check l_parent /= Void end
 				if not l_parent.is_expanded then
 					Result := False
 				end
@@ -1393,7 +1438,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_DRAWER_I} -- Implementation
 
-	interface: EV_GRID_ROW
+	interface: detachable EV_GRID_ROW note option: stable attribute end
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -1416,4 +1461,13 @@ note
 	]"
 
 end
+
+
+
+
+
+
+
+
+
 

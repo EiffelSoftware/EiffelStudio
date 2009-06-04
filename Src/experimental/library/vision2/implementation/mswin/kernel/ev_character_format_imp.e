@@ -74,14 +74,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' and assign `an_interface' to `interface'.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
 		local
 			l_font: WEL_LOG_FONT
 		do
-			base_make (an_interface)
 			wel_make
 			set_default_format
 			set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
@@ -89,11 +94,6 @@ feature {NONE} -- Initialization
 				-- Retreive default font into `log_font' to ensure  `wel_screen_font_family'
 				-- is set correctly.
 			l_font := default_wel_log_font
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
 			set_is_initialized (True)
 		end
 
@@ -120,11 +120,12 @@ feature -- Access
 	font: EV_FONT
 			-- Font of the current format.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			a_wel_font: WEL_FONT
 		do
 			create Result
 			font_imp ?= Result.implementation
+			check font_imp /= Void end
 			create a_wel_font.make_indirect (log_font)
 			font_imp.set_by_wel_font (a_wel_font)
 
@@ -161,10 +162,11 @@ feature -- Status setting
 	set_font (a_font: EV_FONT)
 			-- Make `value' the new font.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			l_log_font: WEL_LOG_FONT
 		do
 			font_imp ?= a_font.implementation
+			check font_imp /= Void end
 			if font_imp.internal_face_name /= Void then
 				set_face_name (font_imp.internal_face_name)
 			end
@@ -202,18 +204,20 @@ feature -- Status setting
 	set_color (a_color: EV_COLOR)
 			-- Make `value' the new color.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			color_imp ?= a_color.implementation
+			check color_imp /= Void end
 			set_text_color (color_imp)
 		end
 
 	set_background_color (a_color: EV_COLOR)
 			-- Make `value' the new background color.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			color_imp ?= a_color.implementation
+			check color_imp /= Void end
 			wel_set_background_color (color_imp)
 			bcolor_set := True
 		end
@@ -379,4 +383,13 @@ note
 
 
 end -- class EV_CHARACTER_FORMAT_IMP
+
+
+
+
+
+
+
+
+
 

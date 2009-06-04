@@ -11,16 +11,17 @@ note
 
 class
 	EV_RICH_TEXT_TAB_POSITIONER
-	
+
 inherit
 	EV_DRAWING_AREA
 		redefine
-			initialize
+			initialize,
+			create_interface_objects
 		end
-		
+
 create
 	make_with_rich_text
-		
+
 feature {NONE} -- Creation
 
 	make_with_rich_text (a_rich_text: EV_RICH_TEXT)
@@ -28,25 +29,34 @@ feature {NONE} -- Creation
 		require
 			rich_text_not_void: a_rich_text /= Void
 		do
-			default_create
 			rich_text := a_rich_text
 			initial_tab_width := rich_text.tab_width
-			create_figures
+
+			default_create
+		end
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			create drag_actions
+			create start_drag_actions
+			create end_drag_actions
+			create all_polygons.make (positioners)
+			create figure_world
 		end
 
 	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DRAWING_AREA}
+			create_figures
 			set_minimum_height (16)
 				-- Ensure `Current' is redrawn as necessary.
 			expose_actions.extend (agent redraw_control)
-			create drag_actions
-			create start_drag_actions
-			create end_drag_actions
+
 			last_dashed_line_position := -1
 		end
-		
+
 	create_figures
 			-- Create all figures representing sliders.
 		local
@@ -54,11 +64,9 @@ feature {NONE} -- Creation
 			polygon: EV_FIGURE_POLYGON
 			coor1, coor2, coor3, coor4, coor5: EV_RELATIVE_POINT
 			move_handle: EV_MOVE_HANDLE
-			last_move_handle: EV_MOVE_HANDLE
+			last_move_handle: detachable EV_MOVE_HANDLE
 			line: EV_FIGURE_LINE
 		do
-			create all_polygons.make (positioners)
-			create figure_world
 			figure_world.set_background_color (fill_background_color)
 			create projector.make (figure_world, Current)
 			from
@@ -68,18 +76,18 @@ feature {NONE} -- Creation
 			loop
 				rich_text.tab_positions.extend (rich_text.tab_width)
 				create move_handle
-				if last_move_handle /= Void then
-					move_handle.set_origin (last_move_handle.point)
+				if attached last_move_handle as l_last_move_handle then
+					move_handle.set_origin (l_last_move_handle.point)
 				end
 				last_move_handle := move_handle
 				figure_world.extend (move_handle)
-				
+
 				create coor1.make_with_position (counter * rich_text.tab_width - width_of_figure // 2, height - point_height - base_height - 1)
 				create coor2.make_with_origin_and_position (coor1, 0, base_height)
 				create coor3.make_with_origin_and_position (coor2, width_of_figure // 2, point_height)
 				create coor4.make_with_origin_and_position (coor3, width_of_figure // 2, - point_height)
 				create coor5.make_with_origin_and_position (coor4, 0, - base_height)
-				
+
 				create polygon
 				polygon.extend_point (coor1)
 				polygon.extend_point (coor2)
@@ -88,35 +96,35 @@ feature {NONE} -- Creation
 				polygon.extend_point (coor5)
 				all_polygons.extend (polygon)
 				move_handle.extend (polygon)
-				
+
 					-- Connect events to `move_handle'.
 				move_handle.set_real_position_agent (agent position_handle (?, ?, polygon, counter))
 				move_handle.start_actions.extend (agent move_started (polygon, counter))
 				move_handle.move_actions.extend (agent slider_moving (?, ?, polygon, counter))
 				move_handle.end_actions.extend (agent move_completed (polygon, counter))
-				
+
 				create line
 				line.set_foreground_color (white)
 				line.set_point_a (create {EV_RELATIVE_POINT}.make_with_position (coor1.x + 1, coor1.y + 1))
 				line.set_point_b (create {EV_RELATIVE_POINT}.make_with_position (coor1.x + 1, coor1.y + base_height - 1))
 				move_handle.extend (line)
-				
+
 				create line
 				line.set_foreground_color (white)
 				line.set_point_a (create {EV_RELATIVE_POINT}.make_with_position (coor1.x + 1, coor1.y + base_height))
 				line.set_point_b (create {EV_RELATIVE_POINT}.make_with_position (coor1.x + width_of_figure // 2 , coor1.y + base_height + (point_height - 1)))
 				move_handle.extend (line)
-				
+
 				counter := counter + 1
 			end
 		end
 
 feature -- Status report
-	
+
 	start_drag_actions: EV_INTEGER_ACTION_SEQUENCE
 		-- Action sequence representing the start of a drag from one of the sliders.
 		-- The event data corresponds to the one based index of the slider.
-	
+
 	end_drag_actions: EV_INTEGER_ACTION_SEQUENCE
 		-- Action sequence representing the completion of a drag from one of the sliders.
 		-- The event data corresponds to the one based index of the slider.
@@ -144,13 +152,13 @@ feature {NONE} -- Implementation
 		do
 			end_drag_actions.call ([index])
 			disable_capture
-			
+
 				-- Remove dashed line from screen
 			screen.enable_dashed_line_style
 			screen.set_invert_mode
 			screen.draw_segment (last_dashed_line_position, rich_text.screen_y + 8, last_dashed_line_position, rich_text.screen_y + rich_text.height - 8)
 			last_dashed_line_position := - 1
-			
+
 			rich_text.tab_positions.go_i_th (index)
 			if index = 1 then
 				rich_text.tab_positions.replace (polygon.point_array.item (1).x)
@@ -169,7 +177,7 @@ feature {NONE} -- Implementation
 		do
 			position := polygon.point_array.item (1).x + width_of_figure // 2
 			drag_actions.call ([position])
-			
+
 				-- Draw dashed line representing position
 			screen.enable_dashed_line_style
 			screen.set_invert_mode
@@ -192,44 +200,45 @@ feature {NONE} -- Implementation
 				Result.put_integer_32 (0, 2)
 			end
 		end
-		
+
 	last_dashed_line_position: INTEGER
 		-- Last horizontal coordinate of dashed line drawn when slider is moved.
-		
+
 	all_polygons: ARRAYED_LIST [EV_FIGURE_POLYGON]
 		-- All polygons comprising `Current'. Each entry corresponds to a polygon representing a slider border.
-		
+
 	original_x: INTEGER
 		-- Original x position of slider at start of a drag operation.
-		
-	rich_text: EV_RICH_TEXT	
+
+	rich_text: EV_RICH_TEXT
 		-- Associated rich text widget.
 
 	figure_world: EV_FIGURE_WORLD
 		-- Figure world holding graphical representation of `Current',
 		-- Projected onto `Current' when graphical update is required.
-	
-	projector: EV_DRAWING_AREA_PROJECTOR
+
+	projector: detachable EV_DRAWING_AREA_PROJECTOR note option: stable attribute end
 		-- Projector for projection of `figure_world' to `Current'.
-	
+
 	width_of_figure: INTEGER = 6
 		-- Width of slider.
-	
+
 	point_height: INTEGER = 3
 		-- Height of point on slider.
-	
+
 	base_height: INTEGER = 4
 		-- Height of slider base.
-		
+
 	positioners: INTEGER = 32
 		-- Number of positioners on `Current'.
-	
+
 	initial_tab_width: INTEGER
 		-- Initial width of tabs in `rich_edit'.
 
 	redraw_control (an_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw visual elements of `Current'.
 		do
+			check projector /= Void end
 			projector.project
 		end
 
@@ -238,7 +247,7 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EV_STOCK_COLORS}).default_background_color
 		end
-		
+
 	white: EV_COLOR
 			-- Once access to color white.
 		once
@@ -272,4 +281,7 @@ note
 
 
 end -- class EV_RICH_TEXT_TAB_POSITIONER
+
+
+
 

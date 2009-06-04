@@ -34,7 +34,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOLTIPABLE;
+	interface: detachable EV_TOOLTIPABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -53,4 +53,12 @@ note
 
 
 end -- class EV_TOOLTIPABLE_I
+
+
+
+
+
+
+
+
 

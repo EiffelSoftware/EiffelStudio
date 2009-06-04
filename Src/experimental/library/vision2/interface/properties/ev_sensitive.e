@@ -73,7 +73,7 @@ feature {NONE} -- Contract support
 
 	parent_is_sensitive: BOOLEAN
 		local
-			sensitive_parent: EV_SENSITIVE
+			sensitive_parent: detachable EV_SENSITIVE
 		do
 			sensitive_parent ?= parent
 			if sensitive_parent /= Void then
@@ -101,4 +101,14 @@ note
 
 
 end -- class EV_SENSITIVE
+
+
+
+
+
+
+
+
+
+
 

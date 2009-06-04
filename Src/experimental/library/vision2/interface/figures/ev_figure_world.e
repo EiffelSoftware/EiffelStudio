@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create with a white background.
 		do
-			Precursor
 			background_color := Default_colors.White
 			grid_x := Default_grid_x
 			grid_y := Default_grid_x
 			grid_visible := True
 			full_redraw
+			Precursor
 		end
 
 feature -- Access
@@ -51,7 +51,7 @@ feature -- Access
 			-- Used for debugging purposes.
 			-- Default: False.
 
-	capture_figure: EV_FIGURE
+	capture_figure: detachable EV_FIGURE
 			-- Figure that has mouse capture.
 
 	grid_enabled: BOOLEAN
@@ -244,4 +244,8 @@ note
 
 
 end -- class EV_FIGURE_WORLD
+
+
+
+
 

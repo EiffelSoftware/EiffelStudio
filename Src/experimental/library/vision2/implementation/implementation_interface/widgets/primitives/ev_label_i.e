@@ -45,7 +45,7 @@ inherit
 
 feature {EV_ANY_I} -- implementation
 
-	interface: EV_LABEL;
+	interface: detachable EV_LABEL note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -64,4 +64,12 @@ note
 
 
 end --class EV_LABEL_I
+
+
+
+
+
+
+
+
 

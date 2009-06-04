@@ -29,7 +29,7 @@ inherit
 
 feature {EV_ANY} -- Initialization
 
-	initialize
+	make
 		do
 				-- Set default width & height for the pixmaps
 			initialize_pixmaps
@@ -46,7 +46,7 @@ feature -- Access
 		deferred
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW
+	selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items')
@@ -79,9 +79,13 @@ feature -- Status report
 			-- Title of `a_column'.
 		require
 			a_column_positive: a_column > 0
+		local
+			l_result: detachable STRING_32
 		do
 			if a_column <= column_titles.count then
-				Result := (column_titles @ a_column).twin
+				l_result := column_titles @ a_column
+				check l_result /= Void end
+				Result := l_result.twin
 			else
 				Result := ""
 			end
@@ -137,7 +141,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 		deferred
 		ensure
 			item_selected:
-				selected_items.has (interface.i_th (an_index))
+				selected_items.has (attached_interface.i_th (an_index))
 		end
 
 	deselect_item (an_index: INTEGER)
@@ -147,7 +151,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 		deferred
 		ensure
 			item_deselected:
-				not selected_items.has (interface.i_th (an_index))
+				not selected_items.has (interface_i_th (an_index))
 		end
 
 	clear_selection
@@ -485,11 +489,11 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_MULTI_COLUMN_LIST
+	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end
 
 feature {EV_ANY_I} -- Implementation
 
-	column_titles: LINKED_LIST [STRING_32]
+	column_titles: LINKED_LIST [detachable STRING_32]
 			-- All column titles set using `set_column_titles' and
 			-- `set_column_title'. We store it to give the user the
 			-- option to specify more titles than the current
@@ -524,4 +528,13 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_I
+
+
+
+
+
+
+
+
+
 

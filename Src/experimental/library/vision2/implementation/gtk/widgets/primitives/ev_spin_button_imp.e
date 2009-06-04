@@ -26,8 +26,8 @@ inherit
 			foreground_color_pointer
 		redefine
 			interface,
-			initialize,
-			make
+			make,
+			old_make
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -36,9 +36,9 @@ inherit
 			change_actions as text_change_actions,
 			change_actions_internal as text_change_actions_internal
 		redefine
-			make,
+			old_make,
 			interface,
-			initialize,
+			make,
 			set_text
 		end
 
@@ -47,21 +47,23 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the spin button.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
 		local
 			a_vbox: POINTER
 		do
-			Precursor {EV_GAUGE_IMP} (an_interface)
 			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
+			Precursor {EV_GAUGE_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
-		end
-
-	initialize
-		do
 			Precursor {EV_TEXT_FIELD_IMP}
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
 		end
@@ -78,7 +80,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SPIN_BUTTON;
+	interface: detachable EV_SPIN_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -95,4 +97,8 @@ note
 
 
 end -- class EV_SPIN_BUTTON_IMP
+
+
+
+
 

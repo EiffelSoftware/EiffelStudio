@@ -42,7 +42,8 @@ inherit
 			merge_left,
 			merge_right,
 			make_from_array,
-			default_create
+			default_create,
+			make_filled
 		end
 
 	EV_SINGLE_POINTED_FIGURE
@@ -53,11 +54,18 @@ inherit
 create
 	default_create,
 	make_with_point
-	
+
 create {EV_FIGURE_GROUP}
 	make_filled
 
 feature {NONE} -- Initialization
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (n)
+		end
 
 	default_create
 			-- Create without point.
@@ -71,10 +79,10 @@ feature -- Status setting
 	snap_to_grid
 			-- Move all move handles to most nearby point on the grid.
 		require
-			world_not_void: world /= Void
-			grid_enabled: world.grid_enabled
+			world_not_void: attached world as l_world
+			grid_enabled: l_world.grid_enabled
 		local
-			g: EV_FIGURE_GROUP
+			g: detachable EV_FIGURE_GROUP
 		do
 			from start until after loop
 				g ?= item
@@ -87,12 +95,12 @@ feature -- Status setting
 
 feature -- Status report
 
-	invalid_rectangle: EV_RECTANGLE
+	invalid_rectangle: detachable EV_RECTANGLE
 			-- Rectangle that needs erasing.
 			-- `Void' if no change is made.
 		local
 			f: EV_FIGURE
-			r: EV_RECTANGLE
+			r: detachable EV_RECTANGLE
 		do
 			from
 				start
@@ -112,12 +120,12 @@ feature -- Status report
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE
+	update_rectangle: detachable EV_RECTANGLE
 			-- Rectangle that needs redrawing.
 			-- `Void' if no change is made.
 		local
 			f: EV_FIGURE
-			r: EV_RECTANGLE
+			r: detachable EV_RECTANGLE
 		do
 			from
 				start
@@ -141,7 +149,7 @@ feature -- Status report
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			f: EV_FIGURE
-			r: EV_RECTANGLE
+			r: detachable EV_RECTANGLE
 		do
 			create Result.make (points.first.x_abs, points.first.y_abs, 1, 1)
 			from
@@ -277,7 +285,7 @@ feature -- List operations
 			Precursor {ARRAYED_LIST}
 			full_redraw
 		end
-		
+
 	append (s: SEQUENCE [EV_FIGURE])
 			-- Append a copy of `s'.
 		local
@@ -300,7 +308,7 @@ feature -- List operations
 			end
 			go_to (l_cursor)
 		end
-		
+
 	make_from_array (a: ARRAY [EV_FIGURE])
 			-- Create list from array `a'.
 		local
@@ -315,7 +323,7 @@ feature -- List operations
 				extend (a.item (i))
 				i := i + 1
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
@@ -338,7 +346,7 @@ feature {NONE} -- Implementation
 	full_redraw
 			-- Request `invalid_rectangle' to be ignored.
 		local
-			w: EV_FIGURE_WORLD
+			w: detachable EV_FIGURE_WORLD
 		do
 			w := world
 			if w /= Void then
@@ -361,4 +369,8 @@ note
 
 
 end -- class EV_FIGURE_GROUP
+
+
+
+
 

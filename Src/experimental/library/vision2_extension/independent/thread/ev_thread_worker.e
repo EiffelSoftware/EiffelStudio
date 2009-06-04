@@ -46,7 +46,7 @@ feature -- Status Report
 
 feature -- Basic Operation
 
-	do_work (a_job: like job; a_event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]])
+	do_work (a_job: attached like job; a_event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]])
 			-- Start `a_job' in a new thread, synchronize with GUI thread when thread
 			-- post events and call `a_event_handler' to handle these events.
 			-- Note: this feature is blocking although the GUI will still be responsive.
@@ -56,16 +56,21 @@ feature -- Basic Operation
 		local
 			l_thread: WORKER_THREAD
 			l_event: EV_THREAD_EVENT
+			l_application: detachable EV_APPLICATION
 		do
 			job := a_job
 			done := False
+			l_application := environment.application
 			create l_thread.make (agent do_job)
 			l_thread.launch
 			from
 			until
 				done
 			loop
-				environment.application.process_events
+				if l_application /= Void then
+					l_application.process_events
+				end
+
 				mutex.lock
 				from
 				until
@@ -110,10 +115,12 @@ feature {NONE} -- Implementation
 			-- Pass `process_event' agent as argument so that job can call back GUI thread
 			-- for event processing.
 		do
-			job.call ([agent post_event])
+			if attached job then
+				job.call ([agent post_event])
+			end
 		end
 
-	job: PROCEDURE [ANY, TUPLE [ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]]]
+	job: detachable PROCEDURE [ANY, TUPLE [ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]]] note option: stable attribute end
 			-- Job to be executed
 			-- Routine's argument is used to call back GUI thread for event processing.
 

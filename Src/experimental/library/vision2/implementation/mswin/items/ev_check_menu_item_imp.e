@@ -24,7 +24,7 @@ inherit
 		redefine
 			on_activate,
 			interface,
-			initialize
+			make
 		end
 
 	EV_CHECKABLE_MENU_ITEM_IMP
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize with state not `is_selected'.
 		do
 			Precursor
@@ -52,29 +52,29 @@ feature -- Status setting
 			-- Select this menu item.
 		do
 			is_selected := True
-			if has_parent then
-				parent_imp.check_item (id)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.check_item (id)
 			end
 		end
 
 	disable_select
 		do
 			is_selected := False
-			if has_parent then
-				parent_imp.uncheck_item (id)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.uncheck_item (id)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECK_MENU_ITEM
+	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end
 
 feature {NONE} -- Implementation
 
 	on_activate
 			-- Invert the state and call `Precursor'.
 		do
-			interface.toggle
+			toggle
 			Precursor
 		end
 
@@ -99,4 +99,14 @@ note
 
 
 end -- class EV_CHECK_MENU_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -41,7 +41,7 @@ feature -- Basic operations
 			Result := cwin_get_window_theme (item)
 		end
 
-	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect, a_clip_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect: WEL_RECT; a_clip_rect: detachable WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw a background theme using `theme' into `a_hdc'. `a_part_id' represents the part type to draw and `a_state_id' represents
 			-- the item state. Drawing is performed into `a_rect' and clipped to `a_clip_rect'. `background_brush' is not used for this themed version.
 		require else
@@ -54,19 +54,19 @@ feature -- Basic operations
 			end
 		end
 
-	get_notebook_parent (a_widget: EV_WIDGET_IMP): EV_NOTEBOOK_IMP
+	get_notebook_parent (a_widget: EV_WIDGET_IMP): detachable EV_NOTEBOOK_IMP
 			-- Return the first notebook parent of `Current' in the widget structure
 			-- unless a widget with a background color or a container with a background pixmap
 			-- is found.
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			l_parent: EV_CONTAINER_IMP
+			l_parent: detachable EV_CONTAINER_IMP
 			colored_container_found: BOOLEAN
 		do
 			if a_widget.background_color_imp = Void then
 				l_parent ?= a_widget
-				if l_parent = Void or l_parent /= Void and then l_parent.background_pixmap_imp = Void then
+				if l_parent = Void or else l_parent /= Void and then l_parent.background_pixmap_imp = Void then
 					from
 						l_parent := a_widget.parent_imp
 					until
@@ -88,9 +88,9 @@ feature -- Basic operations
 			-- The theming is ignored if `a_widget' has had a background color specifically set or if one of the containers `a_widget' is contained in
 			-- between itself and the notebook have a background color specifically set.
 		local
-			notebook_parent: EV_NOTEBOOK_IMP
+			notebook_parent: detachable EV_NOTEBOOK_IMP
 			l_rect: WEL_RECT
-			container_widget: EV_CONTAINER_IMP
+			container_widget: detachable EV_CONTAINER_IMP
 		do
 			notebook_parent ?= get_notebook_parent (a_widget)
 			if notebook_parent = Void then
@@ -157,7 +157,7 @@ feature -- Basic operations
 				-- be called to override the theme drawing color.
 				-- `cwin_draw_theme_text' can't draw grey disabled text. `cwin_dtt_grayed' not work. Set state_id to disabled state not work.
 				-- They all draw normal black text. So when not `is_sensitive' we use classic drawing routine.
-			if foreground_color.interface.is_equal ((create {EV_STOCK_COLORS}).default_foreground_color) and is_sensitive then
+			if foreground_color.attached_interface.is_equal ((create {EV_STOCK_COLORS}).default_foreground_color) and is_sensitive then
 				cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, 0, a_content_rect.item)
 			else
 				classic_drawer.draw_text (theme, a_hdc, a_part_id, a_state_id, text, dw_text_flags, is_sensitive, a_content_rect, foreground_color)
@@ -171,7 +171,7 @@ feature -- Query
 			-- a_color_id is one value from EV_THEME_COLOR_CONTANTS
 		local
 			l_wel_color: WEL_COLOR_REF
-			l_wel_err: WEL_ERROR
+			l_wel_err: detachable WEL_ERROR
 			l_int: INTEGER
 		do
 			debug ("VISION2_WINDOWS")
@@ -180,6 +180,7 @@ feature -- Query
 			end
 			l_int := cwin_get_theme_sys_color (a_theme, a_color_id)
 			debug ("VISION2_WINDOWS")
+				check l_wel_err /= Void end
 				if l_wel_err.last_error_code /= 0 then
 					l_wel_err.display_last_error
 				end
@@ -291,4 +292,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

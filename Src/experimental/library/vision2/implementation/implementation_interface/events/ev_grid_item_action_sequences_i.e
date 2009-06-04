@@ -26,9 +26,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	pointer_motion_actions_internal: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_motion_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -45,9 +48,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -64,9 +70,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -83,9 +92,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_release_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_release_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -102,8 +114,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_enter_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	pointer_enter_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_enter_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -120,8 +136,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_leave_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	pointer_leave_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_leave_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -135,7 +155,7 @@ feature -- Event handling
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 		do
@@ -149,11 +169,19 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	deselect_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -170,8 +198,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	drop_actions_internal: EV_PND_ACTION_SEQUENCE
+	drop_actions_internal: detachable EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -190,8 +222,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	activate_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
+	activate_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
 			-- Implementation of once per object `activate_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -208,8 +244,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	deactivate_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	deactivate_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deactivate_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -226,4 +266,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

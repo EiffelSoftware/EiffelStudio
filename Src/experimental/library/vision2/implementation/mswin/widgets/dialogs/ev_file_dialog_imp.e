@@ -19,19 +19,19 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			wel_make
 			set_filter ("*.*")
 			start_directory := "."
 			create filters.make (1)
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
 			set_is_initialized (True)
 		end
 
@@ -244,4 +244,8 @@ note
 
 
 end -- class EV_FILE_DIALOG_IMP
+
+
+
+
 

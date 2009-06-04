@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		local
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+	parent_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM]
 			-- The parent of the Current widget
 			-- May be void.
 		do
@@ -68,17 +68,17 @@ feature {EV_ANY_I} -- Implementation
 	destroy
 			-- Destroy `Current'
 		do
-			if parent_imp /= Void then
-					parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+					l_parent_imp.prune (interface)
 			end
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
-	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+	item_parent_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM]
 		-- Used to store parent imp of items where parent stores
 		-- items in a list widget instead of the c_object.
 
-	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM])
+	set_item_parent_imp (a_parent: detachable EV_ITEM_LIST_IMP [EV_ITEM])
 			-- Set `item_parent_imp' to `a_parent'.
 		do
 			item_parent_imp := a_parent
@@ -93,7 +93,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Redefined by descendents.
 		end
 
-	interface: EV_ITEM;
+	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -110,4 +110,8 @@ note
 
 
 end -- class EV_ITEM_IMP
+
+
+
+
 

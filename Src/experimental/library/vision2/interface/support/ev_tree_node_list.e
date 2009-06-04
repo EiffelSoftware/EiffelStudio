@@ -2,7 +2,7 @@ note
 	description:
 		"Base class for EV_TREE and EV_TREE_ITEM."
 	legal: "See notice at end of class."
-	status: "See notice at end of class."		
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,10 +14,10 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 feature -- Access
 
-	find_item_recursively_by_data (some_data: ANY): EV_TREE_NODE
+	find_item_recursively_by_data (some_data: ANY): detachable EV_TREE_NODE
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'.
 		obsolete "Use `retrieve_item_recursively_by_data' instead."
@@ -27,8 +27,8 @@ feature -- Access
 			not_found_in_empty: Result /= Void implies not is_empty
 			index_not_changed: old index = index
 		end
-		
-	retrieve_item_recursively_by_data (some_data: ANY; should_compare_objects: BOOLEAN): EV_TREE_NODE
+
+	retrieve_item_recursively_by_data (some_data: ANY; should_compare_objects: BOOLEAN): detachable EV_TREE_NODE
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -38,7 +38,7 @@ feature -- Access
 			not_found_in_empty: Result /= Void implies not is_empty
 			index_not_changed: old index = index
 		end
-		
+
 	retrieve_items_recursively_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [EV_TREE_NODE]
 			-- `Result' is all tree items contained in `Current' at any level
 			-- with data matching `some_data'. Compare objects if
@@ -61,9 +61,9 @@ feature -- Access
 			not_found_in_empty: Result implies not is_empty
 			index_not_changed: old index = index
 		end
-		
+
 feature -- Basic operation
-		
+
 	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -93,4 +93,13 @@ note
 
 
 end -- class EV_TREE_NODE_LIST
+
+
+
+
+
+
+
+
+
 

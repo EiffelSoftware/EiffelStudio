@@ -31,8 +31,8 @@ feature -- Status setting
 	destroy
 			-- Destroy the current item.
 		do
-			if parent_imp /= Void then
-				parent_imp.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.prune (interface)
 			end
 			set_is_destroyed (True)
 		end
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_I} -- Status report
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP]
+	cursor_on_widget: detachable CELL [detachable EV_WIDGET_IMP]
 			-- Widget currently under the pointer.
 		do
 			check
@@ -77,7 +77,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Redefined by descendents.
 		end
 
-	interface: EV_ITEM;
+	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -94,4 +94,14 @@ note
 
 
 end -- class EV_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
 

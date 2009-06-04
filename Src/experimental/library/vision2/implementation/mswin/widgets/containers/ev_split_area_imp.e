@@ -25,7 +25,7 @@ inherit
 			on_left_button_down
 		redefine
 			interface,
-			initialize,
+			make,
 			enable_sensitive,
 			disable_sensitive,
 			on_set_cursor,
@@ -50,16 +50,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			ev_wel_control_container_make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			ev_wel_control_container_make
 			Precursor {EV_CONTAINER_IMP}
 			first_expandable := True
 			second_expandable := True
@@ -70,11 +70,11 @@ feature {EV_ANY_I} -- Status Setting
 	enable_sensitive
 			-- Set `item' sensitive to user actions.
 		do
-			if first /= Void and not first_imp.internal_non_sensitive then
-				first_imp.enable_sensitive
+			if attached first as l_first and then not l_first.implementation.internal_non_sensitive then
+				l_first.enable_sensitive
 			end
-			if second /= Void and not second_imp.internal_non_sensitive then
-				second_imp.enable_sensitive
+			if attached second as l_second and then not l_second.implementation.internal_non_sensitive then
+				l_second.enable_sensitive
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
@@ -82,11 +82,11 @@ feature {EV_ANY_I} -- Status Setting
 	disable_sensitive
 			-- Set `item' insensitive to user actions.
 		do
-			if first /= Void then
-				first_imp.disable_sensitive
+			if attached first as l_first then
+				l_first.disable_sensitive
 			end
-			if second /= Void then
-				second_imp.disable_sensitive
+			if attached second as l_second then
+				l_second.disable_sensitive
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
@@ -112,20 +112,26 @@ feature {NONE} -- Implementation
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
+		local
+			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 			if hwnd_control = wel_item then
 				Result := True
 			elseif not Result and first /= Void then
-				Result := first_imp.is_control_in_window (hwnd_control)
+				l_widget_imp := first_imp
+				check l_widget_imp /= Void end
+				Result := l_widget_imp.is_control_in_window (hwnd_control)
 			elseif not Result and second /= Void then
-				Result := second_imp.is_control_in_window (hwnd_control)
+				l_widget_imp := second_imp
+				check l_widget_imp /= Void end
+				Result := l_widget_imp.is_control_in_window (hwnd_control)
 			end
 		end
 
 	prune (v: like item)
 			-- Remove one occurrence of `v' if any.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			if v /= Void then
 				if v = first then
@@ -147,9 +153,9 @@ feature {NONE} -- Implementation
 					-- If `v_imp' not Void (meaning `v' is being removed).
 				if v_imp /= Void then
 						-- Unparent `v_imp' from `Current'.
-					v_imp.set_parent (Void)
+					v_imp.set_parent_imp (Void)
 						-- Call `remove_item_actions' for `Current'.
-					remove_item_actions.call ([v_imp.interface])
+					remove_item_actions.call ([v_imp.attached_interface])
 						-- Reflect the changes by updating the position of the
 						-- splitter and laying out the widgets.
 					update_split_position
@@ -166,7 +172,7 @@ feature {NONE} -- Implementation
 			layout_widgets (True)
 		end
 
-	disable_item_expand (v: like item)
+	disable_item_expand (v: EV_WIDGET)
 			-- When `Current' is resized, do not resize `v'.
 		do
 			if v = first then
@@ -176,7 +182,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_item_expand (v: like item)
+	enable_item_expand (v: EV_WIDGET)
 			-- When `Current' is resized, resize `an_item' respectively.
 		do
 			if v = first then
@@ -221,22 +227,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	first_imp: EV_WIDGET_IMP
+	first_imp: detachable EV_WIDGET_IMP
 			-- `Result' is implementation of first.
 		do
-			if first /= Void then
-				Result ?= first.implementation
+			if attached first as l_first then
+				Result ?= l_first.implementation
 				check
 					implementation_of_first_not_void: Result /= Void
 				end
 			end
 		end
 
-	second_imp: EV_WIDGET_IMP
+	second_imp: detachable EV_WIDGET_IMP
 			-- `Result' is implementation of second.
 		do
-			if second /= Void then
-				Result ?= second.implementation
+			if attached second as l_second then
+				Result ?= l_second.implementation
 				check
 					implementation_of_second_not_void: Result /= Void
 				end
@@ -248,8 +254,8 @@ feature {NONE} -- Implementation
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		local
 			wel_point: WEL_POINT
-			wel_window: WEL_WINDOW
-			our_window: WEL_WINDOW
+			wel_window: detachable WEL_WINDOW
+			our_window: detachable WEL_WINDOW
 		do
 				--| We need to check that the cursor is currently over `Current'.
 				--| We used to query `cursor_on_widget.item', however, this is only
@@ -278,36 +284,39 @@ feature {NONE} -- Implementation
 			a_dc_not_void: a_dc /= Void
 		local
 			old_rop2: INTEGER
+			l_splitter_brush: like splitter_brush
 		do
 			a_dc.get
 			old_rop2 := a_dc.rop2
 			a_dc.set_rop2 (R2_xorpen)
-			a_dc.select_brush (splitter_brush)
+			l_splitter_brush := splitter_brush
+			check l_splitter_brush /= Void end
+			a_dc.select_brush (l_splitter_brush)
 			a_dc.rectangle (a_left, a_top, a_right, a_bottom)
 			a_dc.set_rop2 (old_rop2)
 			a_dc.unselect_brush
 			a_dc.release
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 			top_level_window_imp := a_window
-			if first /= Void then
-				widget_imp ?= first.implementation
+			if attached first as l_first then
+				widget_imp ?= l_first.implementation
 				check
 					widget_implementation_not_void: widget_imp /= Void
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
-			if second /= Void then
-				widget_imp ?= second.implementation
+			if attached second as l_second then
+				widget_imp ?= l_second.implementation
 				check
 					widget_implementation_not_void: widget_imp /= Void
 				end
@@ -346,49 +355,56 @@ feature {NONE} -- Implementation
 		require else
 			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
 		local
-			w: EV_WIDGET_IMP
-			container: EV_CONTAINER
+			w: detachable EV_WIDGET_IMP
+			container: detachable EV_CONTAINER
+			l_result: detachable EV_WIDGET_IMP
 		do
-			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if Result = Void and is_sensitive then
+			l_result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
 					-- children should recieve the tab stop.
 				if search_pos >= 1 and search_pos <= count then
 					if forwards then
-						if search_pos = 1 and first /= Void then
-							w ?= first.implementation
-							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						if search_pos = 1 and then attached first as l_first then
+							w ?= l_first.implementation
+							check w /= Void end
+							l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 						end
-						if Result = Void and second /= Void then
-							w ?= second.implementation
-							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						if l_result = Void and then attached second as l_second then
+							w ?= l_second.implementation
+							check w /= Void end
+							l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 						end
 					else
-						if search_pos = 2 and second /= Void then
-							w ?= second.implementation
+						if search_pos = 2 and attached second as l_second then
+							w ?= l_second.implementation
+							check w /= Void end
 							container ?= w.interface
 							if container /= Void then
-								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+								l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
 							else
-								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+								l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 							end
 						end
-						if Result = Void and first /= Void then
-							w ?= first.implementation
+						if l_result = Void and then attached first as l_first then
+							w ?= l_first.implementation
+							check w /= Void end
 							container ?= w.interface
 							if container /= Void then
-								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+								l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
 							else
-								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+								l_result := w.next_tabstop_widget (start_widget, 1, forwards)
 							end
 						end
 					end
 				end
 			end
-			if Result = Void then
-				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if l_result = Void then
+				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature {NONE} -- Implementation
@@ -423,14 +439,14 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	splitter_brush: WEL_BRUSH
+	splitter_brush: detachable WEL_BRUSH
 		-- Brush used to redraw the splitter while it is moving.
 		-- Created and destroyed at the start and end of splitter resizing.
 		-- Prevents keeping a reference to GDI objects when not required.
 
 feature {EV_ANY_I}
 
-	interface: EV_SPLIT_AREA
+	interface: detachable EV_SPLIT_AREA note option: stable attribute end
 
 feature {NONE} -- WEL internal
 
@@ -455,4 +471,11 @@ note
 
 
 end -- class EV_SPLIT_AREA_IMP
+
+
+
+
+
+
+
 

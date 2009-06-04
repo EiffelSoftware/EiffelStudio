@@ -73,18 +73,12 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
-		local
-			win: EV_WINDOW_IMP
 		do
 			initialize_sizeable
 			set_default_minimum_size
-			win ?= Current
-			if win = Void then
-				-- If `Current' is not a window.
-				--| All widgets are shown as default except
-				--| EV_WINDOW AND EV_TITLED_WINDOW.
+			if is_shown_by_default then
 				show
 			end
 			set_is_initialized (True)
@@ -107,41 +101,41 @@ feature -- Access
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
-			create Result.set (wel_point.x - interface.screen_x, wel_point.y -
-				interface.screen_y)
+			create Result.set (wel_point.x - screen_x, wel_point.y -
+				screen_y)
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Pointer displayed when the pointing device is over `Current'.
 		do
 			Result := cursor_pixmap
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: detachable EV_COLOR
 			-- Color used for the background of `Current'.
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface
 			else
 				Result := (create {EV_STOCK_COLORS}).default_background_color
 			end
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: detachable EV_COLOR
 			-- Color used for the foreground of `Current'.
 		do
-			if foreground_color_imp /= Void then
-				Result ?= foreground_color_imp.interface
+			if attached foreground_color_imp as l_foreground_color_imp then
+				Result := l_foreground_color_imp.attached_interface
 			else
 				Result := (create {EV_STOCK_COLORS}).default_foreground_color
 			end
 		end
 
-	top_level_window: EV_WINDOW
+	top_level_window: detachable EV_WINDOW
 			-- Top level window that contains `Current'.
 		do
-			if top_level_window_imp /= Void then
-				Result ?= top_level_window_imp.interface
+			if attached top_level_window_imp as l_top_level_window_imp then
+				Result ?= l_top_level_window_imp.attached_interface
 			end
 		end
 
@@ -153,13 +147,13 @@ feature -- Access
 			valid_parent: Result /= Void
 		end
 
-	Focus_on_widget: CELL [EV_WIDGET_IMP]
+	Focus_on_widget: CELL [detachable EV_WIDGET_IMP]
 			-- Widget that has currently the focus.
 		once
 			create Result.put (Void)
 		end
 
-	Cursor_on_widget: CELL [EV_WIDGET_IMP]
+	Cursor_on_widget: CELL [detachable EV_WIDGET_IMP]
 			-- This cell contains the widget_imp that currently
 			-- has the pointer of the mouse. As it is a once
 			-- feature, it is a shared data.
@@ -179,7 +173,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Parent of `Current'
 		local
 			l_parent_imp: like parent_imp
@@ -213,7 +207,7 @@ feature -- Access
 	screen_x: INTEGER
 			-- Horizontal offset of `Current' relative to screen
 		local
-			l_wind: EV_WINDOW_IMP
+			l_wind: detachable EV_WINDOW_IMP
 			l_parent: like parent_imp
 		do
 			if is_displayed then
@@ -224,6 +218,7 @@ feature -- Access
 					Result := x_position + l_parent.screen_x
 					l_wind := top_level_window_imp
 					if l_parent = l_wind then
+						check l_wind /= Void end
 							-- Parent is a window, since `screen_y' for a window gives
 							-- the coordinate of the top left corner of the window within
 							-- the screen, we need to add the the frame and the border
@@ -237,7 +232,7 @@ feature -- Access
 	screen_y: INTEGER
 			-- Vertical offset of `Current' relative to screen.
 		local
-			l_wind: EV_WINDOW_IMP
+			l_wind: detachable EV_WINDOW_IMP
 			l_parent: like parent_imp
 		do
 			if is_displayed then
@@ -247,7 +242,8 @@ feature -- Access
 				if l_parent /= Void then
 					Result := y_position + l_parent.screen_y
 					l_wind := top_level_window_imp
-					if l_parent = l_wind then
+					if l_wind = l_parent then
+						check l_wind /= Void end
 							-- Parent is a window, since `screen_y' for a window gives
 							-- the coordinate of the top left corner of the window within
 							-- the screen, we need to add the title bar if any, the frame,
@@ -273,10 +269,10 @@ feature -- Access
 			point: WEL_POINT
 		do
 			if is_show_requested then
-				if wel_parent /= Void then
+				if attached wel_parent as l_wel_parent then
 					rect := window_rect
 					create point.make (rect.x, rect.y)
-					point.screen_to_client (wel_parent)
+					point.screen_to_client (l_wel_parent)
 					Result := point.x
 				else
 					Result := absolute_x
@@ -297,10 +293,10 @@ feature -- Access
 			point: WEL_POINT
 		do
 			if is_show_requested then
-				if wel_parent /= Void then
+				if attached wel_parent as l_wel_parent then
 					rect := window_rect
 					create point.make (rect.x, rect.y)
-					point.screen_to_client (wel_parent)
+					point.screen_to_client (l_wel_parent)
 					Result := point.y
 				else
 					Result := absolute_y
@@ -351,8 +347,8 @@ feature -- Status setting
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.attached_interface.prune (attached_interface)
 			end
 			wel_destroy
 			set_is_destroyed (True)
@@ -367,7 +363,7 @@ feature -- Status setting
 			show_window (wel_item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
-				p_imp.notify_change (Nc_minsize, Current)
+				p_imp.notify_change (Nc_minsize, attached_interface.implementation)
 			end
 		end
 
@@ -386,7 +382,7 @@ feature -- Status setting
 	parent_is_sensitive: BOOLEAN
 			-- Is parent of `Current' sensitive?
 		do
-			if parent_imp /= Void and then parent_imp.is_sensitive then
+			if attached parent_imp as l_parent_imp and then l_parent_imp.is_sensitive then
 				result := True
 			end
 		end
@@ -458,7 +454,7 @@ feature -- Element change
 			end
 		end
 
-	set_parent (par: EV_CONTAINER)
+	set_parent_imp (par: detachable EV_CONTAINER_IMP)
 			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is
 			-- `Default_parent'.
@@ -487,14 +483,14 @@ feature -- Element change
 
 feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP, EV_WIDGET_IMP} -- Implementation
 
-	background_color_imp: EV_COLOR_IMP
+	background_color_imp: detachable EV_COLOR_IMP
 			-- Color used for the background of `Current'.
 
-	foreground_color_imp: EV_COLOR_IMP
+	foreground_color_imp: detachable EV_COLOR_IMP
 			-- Color used for the foreground of `Current'
 			-- usually the text.
 
-	parent_imp: EV_CONTAINER_IMP
+	parent_imp: detachable EV_CONTAINER_IMP
 			-- Parent container of `Current'.
 		local
 			l_wel_parent: like wel_parent
@@ -510,7 +506,7 @@ feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_C
 feature {NONE} -- Implementation, mouse_button_events
 
 	call_pointer_actions (
-		actions: EV_POINTER_BUTTON_ACTION_SEQUENCE;
+		actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE;
 		a_x, a_y, s_x, s_y, button: INTEGER)
 			-- If `actions' not `Void' call with
 			-- `a_x', `a_y', `s_x', `s_y', and `button'.
@@ -531,12 +527,12 @@ feature {NONE} -- Implementation, mouse_button_events
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport and not is_dock_executing then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+					application_imp.pointer_button_press_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
 				end
 				call_pointer_actions (pointer_button_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 				actions_called := True
 			end
-			if not is_destroyed and then interface.is_dockable then
+			if not is_destroyed and then attached_interface.is_dockable then
 				dragable_press (t.x, t.y, button, t.screen_x, t.screen_y)
 			end
 				-- `widget_source_being_dragged' is not Void, if a docking
@@ -547,7 +543,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			end
 			if not actions_called then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+					application_imp.pointer_button_press_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
 				end
 				call_pointer_actions (pointer_button_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 			end
@@ -560,7 +556,7 @@ feature {NONE} -- Implementation, mouse_button_events
 		do
 			t := translate_coordinates (x_pos, y_pos)
 			if application_imp.pointer_button_release_actions_internal /= Void then
-				application_imp.pointer_button_release_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+				application_imp.pointer_button_release_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
 			end
 			call_pointer_actions (pointer_button_release_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 		end
@@ -574,7 +570,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport then
 				if application_imp.pointer_double_press_actions_internal /= Void then
-					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+					application_imp.pointer_double_press_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
 				end
 				call_pointer_actions (pointer_double_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 				actions_called := True
@@ -584,7 +580,7 @@ feature {NONE} -- Implementation, mouse_button_events
 
 			if not actions_called then
 				if application_imp.pointer_double_press_actions_internal /= Void then
-					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+					application_imp.pointer_double_press_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
 				end
 				call_pointer_actions (pointer_double_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 			end
@@ -668,7 +664,7 @@ feature {NONE} -- Implementation
 			-- Absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y' on `Current'.
 		local
-			ww: WEL_WINDOW
+			ww: detachable WEL_WINDOW
 		do
 			create Result.make (a_x, a_y)
 			ww ?= Current
@@ -748,7 +744,7 @@ feature {NONE} -- Implementation
 					t := translate_coordinates (x_pos, y_pos)
 				end
 				if last_x /= t.x or last_y /= t.y then
-					application_imp.pointer_motion_actions_internal.call ([interface, t.screen_x, t.screen_y])
+					application_imp.pointer_motion_actions.call ([attached_interface, t.screen_x, t.screen_y])
 				end
 			end
 			if pointer_motion_actions_internal /= Void then
@@ -756,7 +752,7 @@ feature {NONE} -- Implementation
 					t := translate_coordinates (x_pos, y_pos)
 				end
 				if last_x /= t.x or last_y /= t.y then
-					pointer_motion_actions_internal.call ([t.x, t.y, 0.0, 0.0, 0.0, t.screen_x, t.screen_y ])
+					pointer_motion_actions.call ([t.x, t.y, 0.0, 0.0, 0.0, t.screen_x, t.screen_y ])
 					last_x := t.x
 					last_y := t.y
 				end
@@ -797,11 +793,11 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key press represented by `virtual_key'.
 		local
 			key: EV_KEY
-			l_top_level_window_imp: EV_WINDOW_I
+			l_top_level_window_imp: detachable EV_WINDOW_I
 			l_current: EV_WIDGET_I
 			l_pnd_finished: BOOLEAN
 			l_disable_default_processing: BOOLEAN
-			l_accel: EV_ACCELERATOR
+			l_accel: detachable EV_ACCELERATOR
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
@@ -836,10 +832,10 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					end
 				end
 				if application_imp.key_press_actions_internal /= Void then
-					application_imp.key_press_actions_internal.call ([interface, key])
+					application_imp.key_press_actions.call ([attached_interface, key])
 				end
 				if key_press_actions_internal /= Void then
-					key_press_actions_internal.call ([key])
+					key_press_actions.call ([key])
 				end
 				if virtual_key = vk_return and then not l_disable_default_processing then
 						-- Fire `select_actions' on Current widget if it is the expected
@@ -854,14 +850,14 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	accelerator_from_key_code (a_key_code: INTEGER): EV_ACCELERATOR
+	accelerator_from_key_code (a_key_code: INTEGER): detachable EV_ACCELERATOR
 			-- Return accelerator from current key pressed if any.
 		require
 			a_key_code_valid: a_key_code > 0
 		local
 			l_accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER_32]
 			l_accel: EV_ACCELERATOR
-			l_accel_imp: EV_ACCELERATOR_IMP
+			l_accel_imp: detachable EV_ACCELERATOR_IMP
 			l_top_level_window_imp: like top_level_window_imp
 		do
 			l_top_level_window_imp := top_level_window_imp
@@ -874,6 +870,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						l_accel := l_accel_list.item_for_iteration
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
+							check l_accel_imp /= Void end
 								-- Search for an accelerator based on current key combinations.
 							Result := l_accel_list.item (l_accel_imp.hash_code_function (a_key_code, application_imp.ctrl_pressed, application_imp.alt_pressed, application_imp.shift_pressed))
 						end
@@ -886,9 +883,10 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key release represented by `virtual_key'.
 		local
 			key: EV_KEY
-			l_top_level_window_imp: EV_WINDOW_I
+			l_top_level_window_imp: detachable EV_WINDOW_I
 			l_current: EV_WIDGET_I
 			l_disable_default_processing: BOOLEAN
+			l_app_imp: like application_imp
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
@@ -898,12 +896,13 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 				if not l_disable_default_processing and then propagate_key_event_to_toplevel_window (False) then
 					l_top_level_window_imp ?= top_level_window_imp
 					l_current := Current
-					if l_top_level_window_imp /= Void and l_top_level_window_imp /= l_current then
+					if l_top_level_window_imp /= Void and then l_current /= l_top_level_window_imp then
 						l_top_level_window_imp.key_release_actions.call ([key])
 					end
 				end
-				if application_imp.key_release_actions_internal /= Void then
-					application_imp.key_release_actions_internal.call ([interface, key])
+				l_app_imp := application_imp
+				if l_app_imp.key_release_actions_internal /= Void then
+					l_app_imp.key_release_actions.call ([attached_interface, key])
 				end
 				if key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([key])
@@ -933,7 +932,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- it goes to the previous one.
 		local
 			l_null, hwnd: POINTER
-			window: WEL_WINDOW
+			window: detachable WEL_WINDOW
 			l_top: like top_level_window_imp
 		do
 			l_top := top_level_window_imp
@@ -1009,7 +1008,7 @@ feature {NONE} -- Implementation
 		local
 			character_string: STRING_32
 			l_char: CHARACTER_32
-			l_key: EV_KEY
+			l_key: detachable EV_KEY
 			l_code: INTEGER_32
 			l_ignore_event: BOOLEAN
 		do
@@ -1048,7 +1047,7 @@ feature {NONE} -- Implementation
 
 				-- Check to see if default processing should be disabled.
 			if
-				(l_key /= Void and then default_key_processing_handler /= Void and then not default_key_processing_handler.item ([l_key])) or else
+				(l_key /= Void and then attached default_key_processing_handler as l_default_key_processing_handler and then not l_default_key_processing_handler.item ([l_key])) or else
 					-- If we have a default key processing handler, check to see if we should disable default processing.
 				(not has_focus or ignore_character_code (character_code))
 					-- When we loose the focus or press return, we do not perform the
@@ -1059,10 +1058,10 @@ feature {NONE} -- Implementation
 
 			if not l_ignore_event then
 				if application_imp.key_press_string_actions_internal /= Void then
-					application_imp.key_press_string_actions_internal.call ([interface, character_string])
+					application_imp.key_press_string_actions.call ([attached_interface, character_string])
 				end
 				if key_press_string_actions_internal /= Void then
-					key_press_string_actions_internal.call ([character_string])
+					key_press_string_actions.call ([character_string])
 				end
 			end
 		end
@@ -1075,11 +1074,11 @@ feature {NONE} -- Implementation
 			if is_displayed then
 				if application_imp.pick_and_drop_source = Void then
 					if application_imp.mouse_wheel_actions_internal /= Void then
-						application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
+						application_imp.mouse_wheel_actions.call ([attached_interface, delta // 120])
 						l_ignore_default_processing := True
 					end
 					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([delta // 120])
+						mouse_wheel_actions.call ([delta // 120])
 						l_ignore_default_processing := True
 					end
 				else
@@ -1102,7 +1101,7 @@ feature {NONE} -- Implementation, focus event
 		require
 			exists: exists
 		local
-			l_top_level_window_imp: EV_WINDOW_IMP
+			l_top_level_window_imp: detachable EV_WINDOW_IMP
 		do
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void and then l_top_level_window_imp /= Current then
@@ -1110,12 +1109,12 @@ feature {NONE} -- Implementation, focus event
 					-- in {EV_WINDOW_IMP}.window_on_wm_activate
 				Focus_on_widget.put (Current)
 				if application_imp.focus_in_actions_internal /= Void then
-					application_imp.focus_in_actions_internal.call ([interface])
+					application_imp.focus_in_actions.call ([attached_interface])
 				end
 				l_top_level_window_imp.set_last_focused_widget (wel_item)
-				application_imp.set_window_with_focus (l_top_level_window_imp.interface)
+				application_imp.set_window_with_focus (l_top_level_window_imp)
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (Void)
+					focus_in_actions.call (Void)
 				end
 			end
 				-- If we still have the focus after calling the focus_in
@@ -1129,15 +1128,18 @@ feature {NONE} -- Implementation, focus event
 
 	on_kill_focus
 			-- Called when a `Wm_killfocus' message is recieved.
+		local
+			l_top_level_window_imp: like top_level_window_imp
 		do
-			if top_level_window_imp /= Current then
+			l_top_level_window_imp := top_level_window_imp
+			if l_top_level_window_imp = Void or else Current /= l_top_level_window_imp then
 					-- Ignore focusing for EV_WINDOW_IMP and descendants as this is performed
 					-- in {EV_WINDOW_IMP}.window_on_wm_activate
 				if application_imp.focus_out_actions_internal /= Void then
-					application_imp.focus_out_actions_internal.call ([interface])
+					application_imp.focus_out_actions.call ([attached_interface])
 				end
 				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (Void)
+					focus_out_actions.call (Void)
 				end
 			end
 		end
@@ -1155,7 +1157,7 @@ feature {NONE} -- Implementation, focus event
 			-- to be the default push button.
 			-- This feature is redefined in EV_BUTTON_IMP.
 		local
-			top_level_dialog_imp: EV_DIALOG_I
+			top_level_dialog_imp: detachable EV_DIALOG_I
 		do
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
@@ -1206,14 +1208,18 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementati
 			-- in `on_set_cursor', due to the event propagation from the internal controls.
 		local
 			wel_cursor: WEL_CURSOR
-			cursor_imp: EV_POINTER_STYLE_IMP
+			l_cursor_pixmap: detachable EV_POINTER_STYLE
+			cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
-			cursor_imp ?= cursor_pixmap.implementation
+			l_cursor_pixmap := cursor_pixmap
+			check l_cursor_pixmap /= Void end
+			cursor_imp ?= l_cursor_pixmap.implementation
+			check cursor_imp /= Void end
 			wel_cursor := cursor_imp.wel_cursor
 			wel_cursor.increment_reference
 
-			if current_wel_cursor /= Void then
-				current_wel_cursor.decrement_reference
+			if attached current_wel_cursor as l_current_wel_cursor then
+				l_current_wel_cursor.decrement_reference
 				current_wel_cursor := Void
 			end
 
@@ -1231,7 +1237,7 @@ feature {NONE} -- Implementation, pick and drop
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_WIDGET
+	interface: detachable EV_WIDGET note option: stable attribute end
 
 feature -- Deferred features
 
@@ -1256,7 +1262,7 @@ feature -- Deferred features
 		deferred
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		deferred
@@ -1287,12 +1293,12 @@ feature -- Deferred features
 			end
 		end
 
-	wel_parent: WEL_WINDOW
+	wel_parent: detachable WEL_WINDOW
 			-- The wel parent of `Current'.
 		deferred
 		end
 
-	wel_set_parent (a_parent: WEL_WINDOW)
+	wel_set_parent (a_parent: detachable WEL_WINDOW)
 			-- Set the wel parent of `Current'.
 		deferred
 		end
@@ -1345,20 +1351,28 @@ feature -- Deferred features
 
 	wel_background_color: WEL_COLOR_REF
 			-- `Result' is background color of `Current'.
+		local
+			l_result: detachable WEL_COLOR_REF
 		do
-			Result := background_color_imp
-			if Result = Void then
-				create Result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnface)
+			l_result := background_color_imp
+			if l_result = Void then
+				create l_result.make_system ({WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	wel_foreground_color: WEL_COLOR_REF
 			-- `Result' is foreground color of `Current'.
+		local
+			l_result: detachable WEL_COLOR_REF
 		do
-			Result := foreground_color_imp
-			if Result = Void then
-				create Result.make_rgb (0, 0, 0)
+			l_result := foreground_color_imp
+			if l_result = Void then
+				create l_result.make_rgb (0, 0, 0)
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
@@ -1372,9 +1386,9 @@ feature -- Deferred features
 			start_widget_searched_cell.put (-1)
 
 			if not previous then
-				l_widget := next_tabstop_widget (interface, 0, False)
+				l_widget := next_tabstop_widget (attached_interface, 0, False)
 			else
-				l_widget := next_tabstop_widget (interface, 1, True)
+				l_widget := next_tabstop_widget (attached_interface, 1, True)
 			end
 			Result := l_widget.wel_item
 		end
@@ -1396,11 +1410,12 @@ feature -- Deferred features
 		require
 			start_widget_not_void: start_widget /= Void
 		local
-			w: EV_WIDGET_IMP
+			w: detachable EV_WIDGET_IMP
+			l_result: detachable EV_WIDGET_IMP
 		do
 			if interface /= start_widget then
 				if has_tabstop then
-					Result := Current
+					l_result := Current
 				end
 			else
 				if start_widget_searched_cell.item = 1 then
@@ -1408,7 +1423,7 @@ feature -- Deferred features
 						-- meaning there is no other widget to tab to and the original
 						-- widget must be returned.
 					w ?= start_widget.implementation
-					Result := w
+					l_result := w
 				elseif start_widget_searched_cell.item = -1 then
 
 					-- Record the fact that we have reached the original
@@ -1416,22 +1431,24 @@ feature -- Deferred features
 					start_widget_searched_cell.put (1)
 				end
 			end
-			if Result = Void then
-				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if l_result = Void then
+				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.
 		end
 
-	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): detachable EV_WIDGET_IMP
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
 			-- its children dependent on the state of `forwards'.
 		require
 			start_widget_not_void: start_widget /= Void
 		local
-			w: EV_WIDGET_IMP
+			w: detachable EV_WIDGET_IMP
 		do
 			if interface /= start_widget then
 				if (forwards and search_pos = 1) or (not forwards and search_pos = 0) then
@@ -1461,14 +1478,17 @@ feature -- Deferred features
 			start_widget_not_void: start_widget /= Void
 		local
 			l_parent_index, l_search_index: INTEGER
+			l_parent_imp: like parent_imp
 		do
-			l_parent_index := parent_imp.index_of_child (Current)
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
+			l_parent_index := l_parent_imp.index_of_child (Current)
 			if forwards then
 				l_search_index := l_parent_index + 1
 			else
 				l_search_index := l_parent_index - 1
 			end
-			Result := parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
+			Result := l_parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
 		ensure
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.
@@ -1487,6 +1507,12 @@ feature -- Deferred features
 		end
 
 feature {NONE} -- Implementation
+
+	is_shown_by_default: BOOLEAN
+			-- Is `Current' shown by default?
+		do
+			Result := True
+		end
 
 	create_file_drop_actions: like file_drop_actions
 			-- Create and initialize
@@ -1532,10 +1558,10 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if file_drop_actions_internal /= Void then
-					file_drop_actions_internal.call ([l_file_list])
+					file_drop_actions.call ([l_file_list])
 				end
 				if application_imp.file_drop_actions_internal /= Void then
-					application_imp.file_drop_actions_internal.call ([interface, l_file_list])
+					application_imp.file_drop_actions.call ([attached_interface, l_file_list])
 				end
 			end
 		end
@@ -1570,4 +1596,15 @@ note
 		]"
 
 end -- class EV_WIDGET_IMP
+
+
+
+
+
+
+
+
+
+
+
 

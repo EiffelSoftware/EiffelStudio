@@ -81,12 +81,12 @@ feature -- Access
 		do
 			if v /= Void then
 				Result := item = v or else
-					interface.lower_bar = v or else
-					interface.upper_bar = v
+					lower_bar = v or else
+					upper_bar = v
 			end
 		end
 
-	menu_bar: EV_MENU_BAR
+	menu_bar: detachable EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 		deferred
 		end
@@ -199,13 +199,13 @@ feature -- Status setting
 			-- Lock updates for this window on certain platforms until
 			-- `unlock_update' is called.
 		do
-			(create {EV_ENVIRONMENT}).application.implementation.set_locked_window (interface)
+			(create {EV_ENVIRONMENT}).implementation.application_i.set_locked_window (interface)
 		end
 
 	unlock_update
 			-- Unlock updates for this window on certain platforms.
 		do
-			(create {EV_ENVIRONMENT}).application.implementation.set_locked_window (Void)
+			(create {EV_ENVIRONMENT}).implementation.application_i.set_locked_window (Void)
 		end
 
 	enable_border
@@ -254,9 +254,13 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	accelerators_internal: EV_ACCELERATOR_LIST
+	accelerators_internal: detachable EV_ACCELERATOR_LIST
+		note
+			option: stable
+		attribute
+		end
 
-	interface: EV_WINDOW;
+	interface: detachable EV_WINDOW note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -273,4 +277,14 @@ note
 
 
 end -- class EV_WINDOW_I
+
+
+
+
+
+
+
+
+
+
 

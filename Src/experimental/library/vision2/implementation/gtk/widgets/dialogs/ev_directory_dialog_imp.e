@@ -17,7 +17,7 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
@@ -25,22 +25,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a window with a parent.
-		local
-			a_cs: EV_GTK_C_STRING
 		do
-			base_make (an_interface)
-			a_cs := "Select directory"
-			set_c_object
-				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Setup action sequences.
 		local
 			a_ok_button, a_cancel_button: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
+			a_cs := "Select directory"
+			set_c_object
+				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
+
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
@@ -75,7 +75,7 @@ feature -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			if
-				selected_button /= Void and then selected_button.is_equal (internal_accept)
+				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
 			then
 				Result := ""
 				a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
@@ -112,7 +112,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	interface: EV_DIRECTORY_DIALOG;
+	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -129,4 +129,8 @@ note
 
 
 end -- class EV_DIRECTORY_DIALOG_IMP
+
+
+
+
 

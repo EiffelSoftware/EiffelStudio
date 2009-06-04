@@ -36,7 +36,7 @@ inherit
 			interface,
 			enable_sensitive,
 			disable_sensitive,
-			initialize,
+			make,
 			on_size
 		end
 
@@ -97,24 +97,24 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with the default options.
 			-- Assign `Ev_frame_etched_in' to `frame_style'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			ev_wel_control_container_make
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
+			set_default_font
 			frame_style := Ev_frame_etched_in
 			text_alignment := default_alignment
 				-- Retrieve the theme for the frame (which is a special type of button).
-			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
-			set_default_font
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 		end
 
@@ -198,8 +198,8 @@ feature -- Element change
 			-- Update `text_width' and `text_size' based on
 			-- current font.
 		local
-			font_imp: EV_FONT_IMP
-			t: TUPLE [width: INTEGER; height: INTEGER]
+			font_imp: detachable EV_FONT_IMP
+			t: detachable TUPLE [width: INTEGER; height: INTEGER]
 			l_text: like text
 		do
 			l_text := text
@@ -214,9 +214,10 @@ feature -- Element change
 					font_not_void: font_imp /= Void
 				end
 				t := font_imp.string_size (l_text)
-			else
-				t := private_wel_font.string_size (l_text)
+			elseif attached private_wel_font as l_private_wel_font then
+				t := l_private_wel_font.string_size (l_text)
 			end
+			check t /= Void end
 			text_width := t.width
 			text_height := t.height
 		end
@@ -253,13 +254,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
 			top_level_window_imp := a_window
-			if item_imp /= Void then
-				item_imp.set_top_level_window_imp (a_window)
+			if attached item_imp as l_item_imp then
+				l_item_imp.set_top_level_window_imp (a_window)
 			end
 		end
 
@@ -270,8 +271,8 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minwidth: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				minwidth := item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				minwidth := l_item_imp.minimum_width
 			end
 			minwidth := minwidth + client_x + Border_width
 			minwidth := minwidth.max (text_width + 2 * Text_padding)
@@ -283,8 +284,8 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minheight: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				minheight := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				minheight := l_item_imp.minimum_height
 			end
 			minheight := minheight + client_y + Border_width
 			ev_set_minimum_height (minheight)
@@ -296,9 +297,9 @@ feature {NONE} -- Implementation for automatic size compute.
 		local
 			minheight, minwidth: INTEGER
 		do
-			if item_imp /= Void and then item_imp.is_show_requested then
-				minwidth := item_imp.minimum_width
-				minheight := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				minwidth := l_item_imp.minimum_width
+				minheight := l_item_imp.minimum_height
 			end
 			minwidth := minwidth + client_x + Border_width
 			minheight := minheight + client_y + Border_width
@@ -308,7 +309,7 @@ feature {NONE} -- Implementation for automatic size compute.
 
 feature {NONE} -- WEL Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	border_width: INTEGER
@@ -350,15 +351,15 @@ feature {NONE} -- WEL Implementation
 			cur_width: INTEGER
 			cur_height: INTEGER
 			r: WEL_RECT
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			pen: WEL_PEN
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			theme_drawer: EV_THEME_DRAWER_IMP
 			text_rect: WEL_RECT
 			drawstate: INTEGER
 			memory_dc: WEL_DC
 			wel_bitmap: WEL_BITMAP
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 			l_is_remote: BOOLEAN
 		do
 			l_is_remote := metrics.is_remote_session
@@ -392,6 +393,7 @@ feature {NONE} -- WEL Implementation
 
 			create r.make (0,0,0,0)
 			bk_brush := background_brush
+			check bk_brush /= Void end
 
 			theme_drawer.draw_widget_background (Current, memory_dc, invalid_rect, bk_brush)
 
@@ -443,14 +445,14 @@ feature {NONE} -- WEL Implementation
 			bk_brush.delete
 
 			if not text.is_empty then
-				if private_font /= Void then
-					font_imp ?= private_font.implementation
+				if attached private_font as l_private_font then
+					font_imp ?= l_private_font.implementation
 					check
 						font_not_void: font_imp /= Void
 					end
 					memory_dc.select_font (font_imp.wel_font)
-				else
-					memory_dc.select_font (private_wel_font)
+				elseif attached private_wel_font as l_private_wel_font then
+					memory_dc.select_font (l_private_wel_font)
 				end
 				memory_dc.set_text_color (wel_foreground_color)
 				memory_dc.set_background_color (wel_background_color)
@@ -461,6 +463,7 @@ feature {NONE} -- WEL Implementation
 				else
 					color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
 				end
+				check color_imp /= Void end
 				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_disabled, text, dt_center, is_sensitive, text_rect, color_imp)
 			end
 			if not l_is_remote then
@@ -495,7 +498,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FRAME;
+	interface: detachable EV_FRAME note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -512,4 +515,12 @@ note
 
 
 end -- class EV_FRAME_IMP
+
+
+
+
+
+
+
+
 

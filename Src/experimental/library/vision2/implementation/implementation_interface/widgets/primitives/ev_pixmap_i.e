@@ -121,7 +121,7 @@ feature -- Duplication
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PIXMAP;
+	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -138,4 +138,12 @@ note
 
 
 end -- class EV_PIXMAP_I
+
+
+
+
+
+
+
+
 

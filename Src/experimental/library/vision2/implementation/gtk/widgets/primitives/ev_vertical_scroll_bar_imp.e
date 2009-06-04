@@ -17,6 +17,7 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
+			old_make,
 			make
 		end
 
@@ -25,17 +26,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the horizontal scroll bar.
 		do
-			base_make (an_interface)
-			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
+			adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscrollbar_new (adjustment))
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SCROLL_BAR;
+	interface: detachable EV_VERTICAL_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -52,4 +59,8 @@ note
 
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP
+
+
+
+
 

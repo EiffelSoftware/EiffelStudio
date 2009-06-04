@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_HEADER_ITEM_IMP} implementation.make (Current)
+			create {EV_HEADER_ITEM_IMP} implementation.make
 		end
 
 invariant
@@ -162,4 +162,11 @@ note
 
 
 end -- class EV_HEADER_ITEM
+
+
+
+
+
+
+
 

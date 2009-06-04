@@ -48,24 +48,24 @@ feature -- Status report
 
 feature -- Element Change
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- `Result' is pixmap displayed in `Current'.
 			-- We do not simply return `internal_pixmap' as
 			-- the image must be stretched to fit the size allocated
 			-- by `parent'.
 		do
-			if internal_pixmap /= Void then
-				Result := internal_pixmap.twin
-				if parent /= Void and then internal_pixmap.width /= parent_imp.pixmaps_width and then internal_pixmap.height /= parent_imp.pixmaps_height then
-					Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
+			if attached internal_pixmap as l_internal_pixmap then
+				Result := l_internal_pixmap.twin
+				if attached parent_imp as l_parent_imp and then l_internal_pixmap.width /= l_parent_imp.pixmaps_width and then l_internal_pixmap.height /= l_parent_imp.pixmaps_height then
+					Result.stretch (l_parent_imp.pixmaps_width, l_parent_imp.pixmaps_height)
 				end
 			end
 		end
 
-	internal_pixmap: EV_PIXMAP
+	internal_pixmap: detachable EV_PIXMAP
 			-- Pixmap used at the start of the row.
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+	parent_imp: detachable EV_MULTI_COLUMN_LIST_IMP
 			-- Parent implementation of `Current'.
 		deferred
 		end
@@ -98,16 +98,17 @@ feature -- Contract support
 			-- Is `a_pixmap' equal to `pixmap'?
 		local
 			scaled_pixmap: EV_PIXMAP
-			multi_column_list: EV_MULTI_COLUMN_LIST
+			multi_column_list: detachable EV_MULTI_COLUMN_LIST
 		do
 			if parent /= Void then
 				scaled_pixmap := a_pixmap.twin
 				multi_column_list ?= parent
+				check multi_column_list /= Void end
 				scaled_pixmap.stretch (multi_column_list.pixmaps_width, multi_column_list.pixmaps_height)
 			else
 				scaled_pixmap := a_pixmap
 			end
-			Result := scaled_pixmap.is_equal (pixmap)
+			Result := attached pixmap as l_pixmap and then scaled_pixmap.is_equal (l_pixmap)
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
@@ -124,7 +125,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_MULTI_COLUMN_LIST_ROW;
+	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -141,4 +142,14 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_I
+
+
+
+
+
+
+
+
+
+
 

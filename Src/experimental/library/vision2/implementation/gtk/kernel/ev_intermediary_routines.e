@@ -12,12 +12,14 @@ class
 inherit
 	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
 
+	EV_ANY_HANDLER
+
 feature -- Timeout intermediary agent routine
 
 	on_timeout_intermediary (a_object_id: INTEGER)
 			-- Timeout has occurred.
 		local
-			a_timeout_imp: EV_TIMEOUT_IMP
+			a_timeout_imp: detachable EV_TIMEOUT_IMP
 		do
 			a_timeout_imp ?= eif_id_object (a_object_id)
 			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.is_timeout_executing and then a_timeout_imp.interval > 0 then
@@ -33,9 +35,10 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32)
 			-- Notebook page is switched
 		local
-			a_notebook_imp: EV_NOTEBOOK_IMP
+			a_notebook_imp: detachable EV_NOTEBOOK_IMP
 		do
 			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_notebook_imp /= Void end
 			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
@@ -44,8 +47,8 @@ feature -- Expose actions intermediary agent routines
 	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
 			-- Area needs to be redrawn
 		local
-			l_drawing_area_imp: EV_DRAWING_AREA_IMP
-			l_pixmap_imp: EV_PIXMAP_IMP
+			l_drawing_area_imp: detachable EV_DRAWING_AREA_IMP
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			l_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			if l_drawing_area_imp /= Void then
@@ -63,9 +66,10 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)
 			-- Gauge value changed
 		local
-			a_gauge_imp: EV_GAUGE_IMP
+			a_gauge_imp: detachable EV_GAUGE_IMP
 		do
 			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_gauge_imp /= Void end
 			a_gauge_imp.value_changed_handler
 		end
 
@@ -74,7 +78,7 @@ feature -- Widget intermediary agent routines
 	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
 			-- Size allocate happened on widget.
 		local
-			a_widget: EV_WIDGET_IMP
+			a_widget: detachable EV_WIDGET_IMP
 		do
 			a_widget ?= eif_id_object (a_object_id)
 			if a_widget /= Void and then not a_widget.is_destroyed then
@@ -85,7 +89,7 @@ feature -- Widget intermediary agent routines
 	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER)
 			-- Set Focus handling intermediary.
 		local
-			a_window: EV_WINDOW_IMP
+			a_window: detachable EV_WINDOW_IMP
 		do
 			a_window ?= eif_id_object (a_object_id)
 			if a_window /= Void and then not a_window.is_destroyed then
@@ -98,19 +102,24 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 	text_component_change_intermediary (a_c_object: POINTER)
 			-- Changed
 		local
-			a_text_component_imp: EV_TEXT_COMPONENT_IMP
+			a_text_component_imp: detachable EV_TEXT_COMPONENT_IMP
 		do
 			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_text_component_imp /= Void end
 			a_text_component_imp.on_change_actions
 		end
 
 	text_field_return_intermediary (a_c_object: POINTER)
 			-- Return
 		local
-			a_text_field_imp: EV_TEXT_FIELD_IMP
+			l_text_field_imp: detachable EV_TEXT_FIELD_IMP
 		do
-			a_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_field_imp.return_actions_internal.call (Void)
+			l_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check l_text_field_imp /= Void end
+
+			if attached l_text_field_imp.return_actions_internal as l_text_field_return_actions then
+				l_text_field_return_actions.call (Void)
+			end
 		end
 
 feature -- Button intermediary agent routines	
@@ -118,15 +127,19 @@ feature -- Button intermediary agent routines
 	button_select_intermediary (a_c_object: POINTER)
 			-- Selected
 		local
-			a_button_imp: EV_BUTTON_IMP
-			a_rad_imp: EV_RADIO_BUTTON_IMP
+			l_button_imp: detachable EV_BUTTON_IMP
+			l_rad_imp: detachable EV_RADIO_BUTTON_IMP
 		do
-			a_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_rad_imp ?= a_button_imp
-			if a_rad_imp /= Void and then not a_rad_imp.is_selected then
+			l_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			l_rad_imp ?= l_button_imp
+			if l_rad_imp /= Void and then not l_rad_imp.is_selected then
 				-- Do nothing as we shouldn't call the select actions of a radio button if it isn't selected
-			elseif a_button_imp.select_actions_internal /= Void and then a_button_imp.parent_imp /= Void then
-				a_button_imp.select_actions_internal.call (Void)
+			elseif
+					l_button_imp /= Void and then
+					attached l_button_imp.select_actions_internal as l_button_imp_select_actions and then
+					l_button_imp.parent_imp /= Void
+				then
+					l_button_imp_select_actions.call (Void)
 			end
 		end
 
@@ -135,10 +148,10 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 	menu_item_activate_intermediary (a_c_object: POINTER)
 			-- Item activated
 		local
-			a_menu_item_imp: EV_MENU_ITEM_IMP
+			a_menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			a_menu_item_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_menu_item_imp.parent_imp /= Void then
+			if a_menu_item_imp /= Void and then a_menu_item_imp.parent_imp /= Void then
 				a_menu_item_imp.on_activate
 			end
 		end
@@ -148,72 +161,80 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 	color_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Color dialog ok
 		local
-			a_color_dialog_imp: EV_COLOR_DIALOG_IMP
+			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
 		do
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_color_dialog_imp /= Void end
 			a_color_dialog_imp.on_ok
 		end
 
 	color_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Color dialog cancel
 		local
-			a_color_dialog_imp: EV_COLOR_DIALOG_IMP
+			a_color_dialog_imp: detachable EV_COLOR_DIALOG_IMP
 		do
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_color_dialog_imp /= Void end
 			a_color_dialog_imp.on_cancel
 		end
 
 	directory_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Directory dialog ok
 		local
-			a_directory_dialog_imp: EV_DIRECTORY_DIALOG_IMP
+			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_directory_dialog_imp /= Void end
 			a_directory_dialog_imp.on_ok
 		end
 
 	directory_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Directory dialog cancel
 		local
-			a_directory_dialog_imp: EV_DIRECTORY_DIALOG_IMP
+			a_directory_dialog_imp: detachable EV_DIRECTORY_DIALOG_IMP
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_directory_dialog_imp /= Void end
 			a_directory_dialog_imp.on_cancel
 		end
 
 	file_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- File dialog ok
 		local
-			a_file_dialog_imp: EV_FILE_DIALOG_IMP
+			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_file_dialog_imp /= Void end
 			a_file_dialog_imp.on_ok
 		end
 
 	file_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- File dialog cancel
 		local
-			a_file_dialog_imp: EV_FILE_DIALOG_IMP
+			a_file_dialog_imp: detachable EV_FILE_DIALOG_IMP
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_file_dialog_imp /= Void end
 			a_file_dialog_imp.on_cancel
 		end
 
 	font_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Font dialog ok
 		local
-			a_font_dialog_imp: EV_FONT_DIALOG_IMP
+			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_font_dialog_imp /= Void end
 			a_font_dialog_imp.on_ok
 		end
 
 	font_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Font dialog cancel
 		local
-			a_font_dialog_imp: EV_FONT_DIALOG_IMP
+			a_font_dialog_imp: detachable EV_FONT_DIALOG_IMP
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			check a_font_dialog_imp /= Void end
 			a_font_dialog_imp.on_cancel
 		end
 
@@ -232,4 +253,14 @@ note
 
 
 end -- class EV_INTERMEDIARY_ROUTINES
+
+
+
+
+
+
+
+
+
+
 

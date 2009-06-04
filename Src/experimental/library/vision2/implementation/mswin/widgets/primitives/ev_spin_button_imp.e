@@ -40,7 +40,7 @@ inherit
 			on_key_down,
 			on_size,
 			interface,
-			initialize,
+			make,
 			ev_apply_new_size,
 			top_level_window_imp,
 			set_top_level_window_imp,
@@ -63,7 +63,8 @@ inherit
 			resize_actions,
 			tooltip_window,
 			on_set_focus,
-			set_tooltip
+			set_tooltip,
+			initialize_gauge_control
 		end
 
 	WEL_CONTROL_WINDOW
@@ -148,31 +149,43 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with `an_interface'.
-		local
-			text_comp: EV_TEXT_FIELD
 		do
-			base_make (an_interface)
-			create text_comp
-			internal_text_field ?= text_comp.implementation
-			wel_make (default_parent, "")
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
+		local
+			text_comp: EV_TEXT_FIELD
+			l_internal_text_field: detachable like internal_text_field
 		do
+			create text_comp
+			l_internal_text_field ?= text_comp.implementation
+			check l_internal_text_field /= Void end
+			internal_text_field := l_internal_text_field
+			wel_make (default_parent, "")
+
 			set_default_font
-			create internal_arrows_control.make
-				(Current, 0, 0, default_spin_height, spin_width, -1)
-			internal_text_field.wel_set_parent (Current)
-			internal_arrows_control.set_buddy_window (internal_text_field)
-			internal_arrows_control.set_range (0, 100)
 			Precursor {EV_GAUGE_IMP}
-			last_change_value := 0
+
+			internal_text_field.wel_set_parent (Current)
 		ensure then
 			text_field_not_void: internal_text_field /= Void
 			arrows_not_void: internal_arrows_control /= Void
+		end
+
+	initialize_gauge_control
+			-- Initialize gauge control.
+		do
+			create child_cell
+			create internal_arrows_control.make
+				(Current, 0, 0, default_spin_height, spin_width, -1)
+			internal_arrows_control.set_buddy_window (internal_text_field)
+			internal_arrows_control.set_range (0, 100)
+			last_change_value := 0
+			Precursor
 		end
 
 feature -- Alignment
@@ -211,6 +224,7 @@ feature {EV_ANY_I} -- Access
 	value: INTEGER
 			-- Current value.
 		do
+			check internal_arrows_control /= Void end
 			Result := internal_arrows_control.position
 		end
 
@@ -220,16 +234,18 @@ feature {EV_ANY_I} -- Access
 	minimum: INTEGER
 			-- Minimum value.
 		do
+			check internal_arrows_control /= Void end
 			Result := internal_arrows_control.minimum
 		end
 
 	maximum: INTEGER
 			-- Maximum value.
 		do
+			check internal_arrows_control /= Void end
 			Result := internal_arrows_control.maximum
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	text: STRING_32
@@ -265,7 +281,7 @@ feature -- Setting
 				internal_text_field.minimum_height.max (default_spin_height))
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -282,12 +298,13 @@ feature -- Setting
 	set_tooltip (a_tooltip: STRING_GENERAL)
 		do
 			Precursor {EV_GAUGE_IMP} (a_tooltip)
+			check internal_arrows_control /= Void end
 			internal_arrows_control.set_tooltip (a_tooltip)
 		end
 
 feature {NONE} -- Access
 
-	internal_arrows_control: EV_INTERNAL_UP_DOWN_CONTROL
+	internal_arrows_control: detachable EV_INTERNAL_UP_DOWN_CONTROL note option: stable attribute end
 			-- Windows up down control used internally.
 
 	internal_text_field: EV_TEXT_FIELD_IMP
@@ -299,6 +316,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Make object sensitive to user input.
 		do
 			internal_text_field.enable_sensitive
+			check internal_arrows_control /= Void end
 			internal_arrows_control.enable
 			Precursor {EV_GAUGE_IMP}
 		end
@@ -307,6 +325,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Make object desensitive to user input.
 		do
 			internal_text_field.disable_sensitive
+			check internal_arrows_control /= Void end
 			internal_arrows_control.disable
 			Precursor {EV_GAUGE_IMP}
 		end
@@ -328,6 +347,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 	wel_set_value (i :INTEGER)
 			-- Assign `i`' to `value'.
 		do
+			check internal_arrows_control /= Void end
 			internal_arrows_control.set_position (i)
 				-- We must now store the value
 			last_change_value := i
@@ -338,6 +358,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 			-- bounds of `Current'.
 		do
 				-- Adapt interval
+			check internal_arrows_control /= Void end
 			internal_arrows_control.set_range (i, j)
 
 				-- Set value so that it is within bound [i..j].
@@ -352,9 +373,10 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		local
-			local_font_windows: EV_FONT_IMP
+			local_font_windows: detachable EV_FONT_IMP
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
+			check private_font /= Void end
 			local_font_windows ?= private_font.implementation
 			check
 				valid_font: local_font_windows /= Void
@@ -619,7 +641,7 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 			if virtual_key = Vk_return then
 				internal_text_field.set_caret_position (1)
 				translate_text
-				interface.return_actions.call (Void)
+				attached_interface.return_actions.call (Void)
 				if last_change_value /= value then
 					if change_actions_internal /= Void then
 						last_change_value := value
@@ -648,6 +670,7 @@ feature {NONE} -- Implementation
 			txt: like text
 			val: INTEGER
 		do
+			check internal_arrows_control /= Void end
 			txt := text
 			txt.prune_all (',')
 			if txt.is_integer then
@@ -693,7 +716,7 @@ feature {NONE} -- Implementation
 			-- Wm_vscroll message.
 			-- Here, we know it's a spin button.
 		local
-			up_down: WEL_UP_DOWN_CONTROL
+			up_down: detachable WEL_UP_DOWN_CONTROL
 			p: POINTER
 		do
 				-- To avoid the commands to be call two times, we check that
@@ -704,7 +727,7 @@ feature {NONE} -- Implementation
 						-- The message comes from a spin button
 					up_down ?= window_of_item (p)
 					check
-						up_down_has_buddy: up_down.buddy_window /= Void
+						up_down_has_buddy: up_down /= Void and then up_down.buddy_window /= Void
 					end
 					if last_change_value /= value then
 						if change_actions_internal /= Void then
@@ -728,6 +751,7 @@ feature {NONE} -- Implementation
 
 	on_size (size_type, a_width, a_height: INTEGER)
 		do
+			check internal_arrows_control /= Void end
 			internal_arrows_control.move_and_resize
 				(a_width - spin_width, 0, spin_width, a_height, True)
 			internal_text_field.set_move_and_size
@@ -738,13 +762,14 @@ feature {NONE} -- Implementation
 		(a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			wel_move_and_resize (a_x, a_y, a_width, a_height, repaint)
+			check internal_arrows_control /= Void end
 			internal_arrows_control.move_and_resize
 				(a_width - spin_width, 0, spin_width, a_height, repaint)
 			internal_text_field.ev_apply_new_size
 				(0, 0, a_width - spin_width, a_height, repaint)
 		end
 
-	tooltip_window: WEL_WINDOW
+	tooltip_window: detachable WEL_WINDOW
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events.
 		do
@@ -777,7 +802,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SPIN_BUTTON
+	interface: detachable EV_SPIN_BUTTON note option: stable attribute end
 
 invariant
 	internal_text_field_not_void: internal_text_field /= Void
@@ -798,4 +823,14 @@ note
 
 
 end -- class EV_SPIN_BUTTON_IMP
+
+
+
+
+
+
+
+
+
+
 

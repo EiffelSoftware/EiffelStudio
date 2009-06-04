@@ -11,7 +11,7 @@ note
 
 class
 	EV_SCALED_FONT_FACTORY
-	
+
 inherit
 	ANY
 		redefine
@@ -40,7 +40,7 @@ feature -- Access
 			from
 				i := 1
 			until
-				i > max_table_size or else 
+				i > max_table_size or else
 				orginal_fonts.item (i) = Void or else
 				orginal_fonts.item (i) = a_font
 			loop
@@ -50,27 +50,31 @@ feature -- Access
 		ensure
 			result_not_Void: Result /= Void
 		end
-		
+
 	scaled_font (an_id_font: EV_IDENTIFIED_FONT; should_height: INTEGER): EV_FONT
 			-- `an_id_font' scaled to `should_height'.
 		require
 			an_id_font_not_Void: an_id_font /= Void
 			should_hight_positive: should_height > 0
+		local
+			l_result: detachable EV_FONT
 		do
 			if an_id_font.id > max_table_size then
-				Result := scaled_font_internal (an_id_font.font, should_height)
+				l_result := scaled_font_internal (an_id_font.font, should_height)
 			else
 				check
 					an_id_font_is_in_table: orginal_fonts.item (an_id_font.id) = an_id_font.font
 				end
-				Result := scaled_fonts.item (an_id_font.id)
-				if Result = Void or else Result.height /= should_height then
-					Result := scaled_font_internal (an_id_font.font, should_height)
-					scaled_fonts.put (Result, an_id_font.id)
+				l_result := scaled_fonts.item (an_id_font.id)
+				if l_result = Void or else l_result.height /= should_height then
+					l_result := scaled_font_internal (an_id_font.font, should_height)
+					scaled_fonts.put (l_result, an_id_font.id)
 				end
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
-	
+
 feature -- Element change
 
 	register_font (an_id_font: EV_IDENTIFIED_FONT)
@@ -85,7 +89,7 @@ feature -- Element change
 				orginal_fonts.put (an_id_font.font, i)
 			end
 		end
-		
+
 	unregister_font (an_id_font: EV_IDENTIFIED_FONT)
 			-- Unregister `an_id_font' if in factory.
 		require
@@ -102,15 +106,15 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	scaled_fonts: ARRAY [EV_FONT]
+	scaled_fonts: ARRAY [detachable EV_FONT]
 			-- Table of scaled fonts.
-	
-	orginal_fonts: ARRAY [EV_FONT]
+
+	orginal_fonts: ARRAY [detachable EV_FONT]
 			-- Table of orginal fonts for `scaled_fonts'.
-	
+
 	max_table_size: INTEGER = 20
 			-- Maxmimum size of `scaled_fonts' and `orginal_fonts'.
-	
+
 	scaled_font_internal (a_font: EV_FONT; a_height: INTEGER): EV_FONT
 			-- `a_font' scaled to `a_height'.
 		require
@@ -119,7 +123,7 @@ feature {NONE} -- Implementation
 		do
 			if a_font.height = a_height then
 				Result := a_font
-			else	
+			else
 				create Result.make_with_values (a_font.family, a_font.weight, a_font.shape, a_height)
 				Result.preferred_families.append (a_font.preferred_families)
 			end
@@ -146,4 +150,8 @@ note
 
 
 end -- class EV_SCALED_FONT_FACTORY
+
+
+
+
 

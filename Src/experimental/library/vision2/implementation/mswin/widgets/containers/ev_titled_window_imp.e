@@ -25,7 +25,7 @@ inherit
 			minimize as wel_minimize
 		redefine
 			destroy,
-			make,
+			old_make,
 			default_style,
 			on_show,
 			on_size,
@@ -37,7 +37,9 @@ inherit
 			class_name,
 			is_displayed,
 			execute_resize_actions,
-			has_title_bar
+			has_title_bar,
+			make,
+			title_name
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -47,16 +49,26 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'
 		do
 			internal_class_name := new_class_name
 			internal_icon_name := ""
-			base_make (an_interface)
-			make_top ("EV_TITLED_WINDOW")
-			create accel_list.make (10)
+			Precursor
+		end
+
+	title_name: STRING
+			-- Title name used for registration.
+		do
+			Result := "EV_TITLED_WINDOW"
 		end
 
 feature -- Access
@@ -65,14 +77,14 @@ feature -- Access
 			-- Application name to be displayed by
 			-- the window manager.
 		do
-			if internal_title /= Void then
-				Result := internal_title.twin
+			if attached internal_title as l_internal_title then
+				Result := l_internal_title.twin
 			else
 				Result := ""
 			end
 		end
 
-	internal_title: STRING_32
+	internal_title: detachable STRING_32
 			-- Our internal represention of the application
 			-- name to be displayed by the window manager.
 
@@ -83,6 +95,8 @@ feature -- Access
 		do
 			if internal_icon_name /= Void then
 				Result := internal_icon_name.twin
+			else
+				Result := ""
 			end
 		end
 
@@ -90,12 +104,13 @@ feature -- Access
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon.
 		local
-			ev_pixmap_imp: EV_PIXMAP_IMP
+			ev_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			if current_icon_pixmap /= Void then
+			if attached current_icon_pixmap as l_current_icon_pixmap then
 				create Result
 				ev_pixmap_imp ?= Result.implementation
-				ev_pixmap_imp.set_with_resource (current_icon_pixmap)
+				check ev_pixmap_imp /= Void end
+				ev_pixmap_imp.set_with_resource (l_current_icon_pixmap)
 			else
 					-- Icon is not valid, return the default icon.
 				Result := default_pixmaps.Default_window_icon
@@ -161,8 +176,8 @@ feature -- Status setting
 			Precursor {EV_WINDOW_IMP}
 
 				-- Destroy the icon
-			if current_icon_pixmap /= Void then
-				current_icon_pixmap.decrement_reference
+			if attached current_icon_pixmap as l_current_icon_pixmap then
+				l_current_icon_pixmap.decrement_reference
 				current_icon_pixmap := Void
 			end
 		end
@@ -205,24 +220,28 @@ feature -- Element change
 	set_icon_pixmap (a_pixmap: EV_PIXMAP)
 			-- Make `pixmap' the new icon pixmap.
 		local
-			icon: WEL_ICON
-			built_icon: WEL_ICON
-			pixmap_imp: EV_PIXMAP_IMP_STATE
-			previous_icon_pixmap: WEL_ICON
+			icon: detachable WEL_ICON
+			built_icon: detachable WEL_ICON
+			pixmap_imp: detachable EV_PIXMAP_IMP_STATE
+			previous_icon_pixmap: detachable WEL_ICON
 		do
 			pixmap_imp ?= a_pixmap.implementation
+			check pixmap_imp /= Void end
 			icon := pixmap_imp.icon
 			if icon = Void then
 				pixmap_imp ?= a_pixmap.implementation
+				check pixmap_imp /= Void end
 				built_icon := pixmap_imp.build_icon
 				built_icon.enable_reference_tracking
 				icon := built_icon
 			end
+			check icon /= Void end
 
 				-- Remember the icon
+
 			previous_icon_pixmap := current_icon_pixmap
 			current_icon_pixmap := icon
-			current_icon_pixmap.increment_reference
+			icon.increment_reference
 
 			set_icon (icon, icon)
 
@@ -250,7 +269,7 @@ feature -- Standard window class values
 
 feature {EV_ANY_I} -- Implementation
 
-	current_icon_pixmap: WEL_ICON
+	current_icon_pixmap: detachable WEL_ICON
 			-- Current icon set. Void if none
 			-- Should not be destroyed until the window is destroyed
 
@@ -276,8 +295,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if exists then
 				mh := extra_minimum_height
-				if item_imp /= Void and item_imp.is_show_requested then
-					mh := mh + item_imp.minimum_height
+				if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+					mh := mh + l_item_imp.minimum_height
 				end
 				ev_set_minimum_height (mh)
 			end
@@ -291,9 +310,9 @@ feature {EV_ANY_I} -- Implementation
 			if exists then
 				mw := extra_minimum_width
 				mh := extra_minimum_height
-				if item_imp /= Void and item_imp.is_show_requested then
-					mw := mw + item_imp.minimum_width
-					mh := mh + item_imp.minimum_height
+				if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+					mw := mw + l_item_imp.minimum_width
+					mh := mh + l_item_imp.minimum_height
 				end
 				ev_set_minimum_size (mw, mh)
 			end
@@ -305,8 +324,8 @@ feature {EV_ANY_I} -- Implementation
 			exists: exists
 		do
 			Result := 2 * frame_width
-			Result := Result.max (interface.upper_bar.minimum_width).max
-				(interface.lower_bar.minimum_width)
+			Result := Result.max (upper_bar.minimum_width).max
+				(lower_bar.minimum_width)
 		end
 
 	extra_minimum_height: INTEGER
@@ -314,11 +333,11 @@ feature {EV_ANY_I} -- Implementation
 		require
 			exists: exists
 		local
-			menu_bar_imp: EV_MENU_BAR_IMP
+			menu_bar_imp: detachable EV_MENU_BAR_IMP
 		do
 			Result := title_bar_height + 2 * frame_height
-			if menu_bar /= Void then
-				menu_bar_imp ?= menu_bar.implementation
+			if attached menu_bar as l_menu_bar then
+				menu_bar_imp ?= l_menu_bar.implementation
 				check
 					menu_imp_not_void: menu_bar_imp /= Void
 				end
@@ -326,11 +345,11 @@ feature {EV_ANY_I} -- Implementation
 					Result := Result + menu_bar_height
 				end
 			end
-			if not interface.upper_bar.is_empty then
-				Result := Result + interface.upper_bar.minimum_height
+			if not upper_bar.is_empty then
+				Result := Result + upper_bar.minimum_height
 			end
-			if not interface.lower_bar.is_empty then
-				Result := Result + interface.lower_bar.minimum_height
+			if not lower_bar.is_empty then
+				Result := Result + lower_bar.minimum_height
 			end
 		end
 
@@ -370,13 +389,14 @@ feature {NONE} -- WEL Implementation
 					wel_resize (
 						width.min (maximum_width),
 						height.min (maximum_height))
-				else
+				elseif attached item_imp as l_item_imp then
+
 						-- When there is an item that is bigger than minimum_size
 						-- we try to stretch window as much as we can (ie not bigger
 						-- than the maximum size).
 					wel_resize (
-						(item_imp.width + extra_minimum_width).min (maximum_width),
-						(item_imp.height + extra_minimum_height).min (maximum_height))
+						(l_item_imp.width + extra_minimum_width).min (maximum_width),
+						(l_item_imp.height + extra_minimum_height).min (maximum_height))
 				end
 			end
 		end
@@ -424,14 +444,14 @@ feature {NONE} -- WEL Implementation
 			-- execute `resize_actions_internal' if not Void.
 		do
 			if resize_actions_internal /= Void then
-				resize_actions_internal.call (
+				resize_actions.call (
 					[screen_x, screen_y, a_width, a_height])
 			end
 				-- We must only fire restore actions if
 				-- `fire_restore_actions'.
 			if fire_restore_actions then
 				if restore_actions_internal /= Void then
-					restore_actions_internal.call (Void)
+					restore_actions.call (Void)
 				end
 				fire_restore_actions := False
 			end
@@ -451,16 +471,18 @@ feature {NONE} -- WEL Implementation
 			new_box_empty: new_box.is_empty
 		local
 			current_widget: EV_WIDGET
-			l_or_imp, l_ub_imp: EV_VERTICAL_BOX_IMP
+			l_or_imp, l_ub_imp: detachable EV_VERTICAL_BOX_IMP
 		do
 			fixme (once "[We should copy all attributes and action sequences.]")
 			l_ub_imp ?= new_box.implementation
+			check l_ub_imp /= Void end
 			if l_ub_imp.wel_item /= default_pointer then
 				from
 					l_or_imp ?= original_box.implementation
+					check l_or_imp /= Void end
 						-- We remove `original_box' from Current as otherwise we would
 						-- be violating the `parent_contains_current' invariant.
-					l_or_imp.set_parent (Void)
+					l_or_imp.set_parent_imp (Void)
 					original_box.start
 				until
 					original_box.is_empty
@@ -485,7 +507,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_TITLED_WINDOW
+	interface: detachable EV_TITLED_WINDOW note option: stable attribute end
 
 feature {NONE} -- Constants
 
@@ -510,4 +532,13 @@ note
 
 
 end -- class EV_TITLED_WINDOW_IMP
+
+
+
+
+
+
+
+
+
 

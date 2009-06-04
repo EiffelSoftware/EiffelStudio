@@ -268,15 +268,18 @@ feature -- Implementation
 		local
 			font_name_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
+			l_result: detachable STRING_32
 		do
 			{EV_GTK_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
-				Result := a_cs.string
+				l_result := a_cs.string
 			end
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.
-			if Result = Void or else Result.is_empty then
+			if l_result = Void or else l_result.is_empty then
 				Result := once "Sans 10"
+			else
+				Result := l_result
 			end
 		end
 
@@ -424,4 +427,14 @@ note
 
 
 end -- class EV_GTK_DEPENDENT_APPLICATION_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -18,13 +18,13 @@ inherit
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			needs_event_box,
 			call_button_event_actions
 		end
@@ -32,7 +32,7 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_HEADER_ACTION_SEQUENCES_IMP
@@ -48,21 +48,20 @@ feature -- Initialization
 			Result := False
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty Tree.
-		local
-			a_tree_view: POINTER
 		do
-			base_make (an_interface)
-			a_tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
-			set_c_object (a_tree_view)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		local
-			dummy_imp: EV_HEADER_ITEM_IMP
+			dummy_imp: detachable EV_HEADER_ITEM_IMP
+			a_tree_view: POINTER
 		do
+			a_tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			set_c_object (a_tree_view)
 				-- We don't want the header to steal focus.
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (visual_widget, True)
@@ -72,6 +71,7 @@ feature -- Initialization
 				-- Add our dummy column to the end to match Windows implementation
 			create dummy_item
 			dummy_imp ?= dummy_item.implementation
+			check dummy_imp /= Void end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
 			dummy_imp.set_width (1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
@@ -94,35 +94,45 @@ feature -- Initialization
 			a_type_array: MANAGED_POINTER
 			i: INTEGER
 			list_store: POINTER
+			l_gtype_size: INTEGER
 		do
-			create a_type_array.make ((a_columns) * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			l_gtype_size := {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype
+			create a_type_array.make ((a_columns) * l_gtype_size)
 			from
 				i := 1
 			until
 				i > a_columns
 			loop
-				{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, (i - 1)  * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+				{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
 				i := i + 1
 			end
 
-			list_store :=  {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns, a_type_array.item)
+			list_store :=  new_list_store (1) --{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns, a_type_array.item)
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (visual_widget, list_store)
 			model_count := a_columns
 		end
 
+	new_list_store (a_columns: INTEGER): POINTER
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_new ((gint) $a_columns, G_TYPE_STRING)"
+		end
+
 feature -- Element change
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			item_imp: EV_HEADER_ITEM_IMP
+			item_imp: detachable EV_HEADER_ITEM_IMP
 		do
 			if count + 2 > model_count then
 				resize_model (count + 2)
 					-- We are taking the dummy right column in to account
 			end
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
@@ -132,10 +142,11 @@ feature -- Element change
 	remove_i_th (a_position: INTEGER)
 			-- Remove item a`a_position'
 		local
-			item_imp: EV_HEADER_ITEM_IMP
+			item_imp: detachable EV_HEADER_ITEM_IMP
 		do
 			child_array.go_i_th (a_position)
 			item_imp ?= child_array.item.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
@@ -143,7 +154,7 @@ feature -- Element change
 
 feature {EV_HEADER_ITEM_IMP} -- Implementation
 
-	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
+	item_resize_tuple: detachable TUPLE [EV_HEADER_ITEM]
 		-- Reusable item resize tuple.
 
 	set_call_item_resize_start_actions (a_flag: BOOLEAN)
@@ -188,7 +199,7 @@ feature {NONE} -- Implementation
 		local
 			gdkwin: POINTER
 			a_pointer_x, a_pointer_y: INTEGER
-			a_item_imp: EV_HEADER_ITEM_IMP
+			a_item_imp: detachable EV_HEADER_ITEM_IMP
 			a_cursor: like cursor
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
@@ -199,7 +210,8 @@ feature {NONE} -- Implementation
 				until
 					Result > 0 or else off
 				loop
-					a_item_imp ?= item.implementation
+					a_item_imp ?= interface_item.implementation
+					check a_item_imp /= Void end
 					if {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
 						Result := index
 					end
@@ -260,7 +272,9 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	interface: EV_HEADER;
+feature {EV_ANY_I, EV_ITEM_I} -- Implementation
+
+	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

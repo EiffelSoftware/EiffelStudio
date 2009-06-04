@@ -30,7 +30,7 @@ inherit
 			on_size,
 			interface,
 			child_added,
-			initialize,
+			make,
 			insert_i_th,
 			remove_i_th,
 			i_th,
@@ -137,31 +137,33 @@ create
 	make
 
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, 0, 0, 0, 0, 0)
-			tab_pos := interface.tab_top
-			initialize_pixmaps
-			index := 0
-				-- Retrieve the theme for the tab.
-			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
-			Precursor {EV_WIDGET_LIST_IMP}
 			create ev_children.make (2)
+			tab_pos := {EV_NOTEBOOK}.tab_top
+			initialize_pixmaps
+			index := 0
+
+				-- Retrieve the theme for the tab.
+			wel_make (default_parent, 0, 0, 0, 0, 0)
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
+
+			Precursor {EV_WIDGET_LIST_IMP}
 			check_notebook_assertions := True
 		end
 
 feature {EV_ANY_I} --  Access
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	tab_pos: INTEGER
@@ -178,15 +180,7 @@ feature {EV_ANY_I} -- Status report
 	tab_position: INTEGER
 			-- Position of the tabs.
 		do
-			if tab_pos = interface.Tab_top then
-				Result:= interface.Tab_top
-			elseif tab_pos = interface.Tab_bottom then
-				Result:= interface.Tab_bottom
-			elseif tab_pos = interface.Tab_left then
-				Result:= interface.Tab_left
-			elseif tab_pos = interface.Tab_right then
-				Result:= interface.Tab_right
-			end
+			Result := tab_pos
 		end
 
 	pointed_tab_index: INTEGER
@@ -205,7 +199,7 @@ feature {EV_ANY_I} -- Status report
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		do
-			create Result.make_with_widgets (interface, an_item)
+			create Result.make_with_widgets (attached_interface, an_item)
 		end
 
 feature {EV_ANY_I} -- Status setting
@@ -214,8 +208,8 @@ feature {EV_ANY_I} -- Status setting
 			-- Set the current minimum size.
 		do
 			internal_set_font
-			if tab_pos = interface.Tab_top
-					or else tab_pos = interface.Tab_bottom then
+			if tab_pos = {EV_NOTEBOOK}.Tab_top
+					or else tab_pos = {EV_NOTEBOOK}.Tab_bottom then
 				ev_set_minimum_height (tab_height)
 			else
 				ev_set_minimum_width (tab_height)
@@ -226,7 +220,7 @@ feature {EV_ANY_I} -- Status setting
 			-- set position of tabs (left, right, top or bottom) according
 			-- to value of `pos'.
 		local
-			ww: EV_WIDGET_IMP
+			ww: detachable EV_WIDGET_IMP
 		do
  			tab_pos := pos
  			set_style (basic_style)
@@ -246,7 +240,7 @@ feature {EV_ANY_I} -- Status setting
    			-- `flag', otherwise make sensitive.
 		local
 			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			if not is_sensitive /= flag then
 				from
@@ -294,12 +288,12 @@ feature {EV_ANY_I} -- Element change
 			internal_set_font
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
 			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			top_level_window_imp := a_window
 			from
@@ -325,7 +319,7 @@ feature {EV_ANY_I} -- Basic operation
 			valid_child: is_child (a_child)
 		local
 			test: BOOLEAN
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 			nb: INTEGER
 		do
 			from
@@ -356,7 +350,7 @@ feature -- Assertion features
 			-- its parent.
 		local
 			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			from
 				counter := 0
@@ -383,7 +377,7 @@ feature {NONE} -- Implementation
 	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 			counter, nb, value: INTEGER
 		do
 			from
@@ -401,8 +395,8 @@ feature {NONE} -- Implementation
 
 				-- We found the biggest child.
 			if
-				tab_pos = interface.Tab_right
-				or else tab_pos = interface.Tab_left
+				tab_pos = {EV_NOTEBOOK}.Tab_right
+				or else tab_pos = {EV_NOTEBOOK}.Tab_left
 			then
 				ev_set_minimum_width (value + tab_height + 4)
 			else
@@ -414,7 +408,7 @@ feature {NONE} -- Implementation
 			-- Recompute the minimum_height of `Current'.
 		local
 			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 			value: INTEGER
 		do
 			from
@@ -433,8 +427,8 @@ feature {NONE} -- Implementation
 
 				-- We found the biggest child.
 			if
-				tab_pos = interface.Tab_top
-				or else tab_pos = interface.Tab_bottom
+				tab_pos = {EV_NOTEBOOK}.Tab_top
+				or else tab_pos = {EV_NOTEBOOK}.Tab_bottom
 			then
 				ev_set_minimum_height (value + tab_height + 4)
 			else
@@ -447,7 +441,7 @@ feature {NONE} -- Implementation
 			-- minimum_height of `Current'.
 		local
 			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 			mw, mh: INTEGER
 		do
 			from
@@ -467,13 +461,13 @@ feature {NONE} -- Implementation
 
 			-- We found the biggest child.
 			if
-				tab_pos = interface.Tab_top
-				or else tab_pos = interface.Tab_bottom
+				tab_pos = {EV_NOTEBOOK}.Tab_top
+				or else tab_pos = {EV_NOTEBOOK}.Tab_bottom
 			then
 				ev_set_minimum_size (mw + 6, mh + tab_height + 4)
 			elseif
-				tab_pos = interface.Tab_left
-				or else tab_pos = interface.Tab_right
+				tab_pos = {EV_NOTEBOOK}.Tab_left
+				or else tab_pos = {EV_NOTEBOOK}.Tab_right
 			then
 				ev_set_minimum_size (mw + tab_height + 4, mh + 6)
 			end
@@ -493,7 +487,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			tab_rect: WEL_RECT
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			from
 				tab_rect := sheet_rect
@@ -540,14 +534,14 @@ feature {NONE} -- WEL Implementation
  			Result := Ws_child + Ws_group + Ws_tabstop
 				+ Ws_clipchildren + Ws_clipsiblings
 				+ Ws_visible
-			if tab_pos = interface.tab_top then
+			if tab_pos = {EV_NOTEBOOK}.tab_top then
 				Result := Result + Tcs_singleline
-			elseif tab_pos = interface.tab_bottom then
+			elseif tab_pos = {EV_NOTEBOOK}.tab_bottom then
  				Result := Result + Tcs_bottom + Tcs_singleline
- 			elseif tab_pos = interface.tab_left then
+ 			elseif tab_pos = {EV_NOTEBOOK}.tab_left then
  				Result := Result + Tcs_vertical + Tcs_fixedwidth
 					+ Tcs_multiline
-			elseif tab_pos = interface.tab_right then
+			elseif tab_pos = {EV_NOTEBOOK}.tab_right then
  				Result := Result + Tcs_right + Tcs_vertical
 					+ Tcs_fixedwidth + Tcs_multiline
  			end
@@ -558,13 +552,13 @@ feature {NONE} -- WEL Implementation
 			-- the width of the tabs otherwise.
 		do
 
-			if tab_pos = interface.Tab_top then
+			if tab_pos = {EV_NOTEBOOK}.Tab_top then
 				Result := sheet_rect.top - client_rect.top
-			elseif tab_pos = interface.Tab_left then
+			elseif tab_pos = {EV_NOTEBOOK}.Tab_left then
 				Result := sheet_rect.left - client_rect.left
-			elseif tab_pos = interface.Tab_bottom then
+			elseif tab_pos = {EV_NOTEBOOK}.Tab_bottom then
 				Result := client_rect.bottom - sheet_rect.bottom
-			elseif tab_pos = interface.Tab_right then
+			elseif tab_pos = {EV_NOTEBOOK}.Tab_right then
 				Result := client_rect.right - sheet_rect.right
 			else
 				Result := 0
@@ -574,7 +568,7 @@ feature {NONE} -- WEL Implementation
 	hide_current_selection
 			-- Hide the currently selected page.
 		local
-			ww: EV_WIDGET_IMP
+			ww: detachable EV_WIDGET_IMP
 		do
 			ww ?= selected_window
 			if ww /= Void and then ww.exists then
@@ -593,13 +587,14 @@ feature {NONE} -- WEL Implementation
 			-- Selection has changed.
 			-- Shows the current selected page by default.
 		local
-			ww: EV_WIDGET_IMP
+			ww: detachable EV_WIDGET_IMP
 		do
 			ww ?= selected_window
+			check ww /= Void end
 			ww.show_window (ww.wel_item, sw_show)
 
 			if selection_actions_internal /= Void then
-				selection_actions_internal.call (Void)
+				selection_actions.call (Void)
 			end
 		end
 
@@ -672,23 +667,23 @@ feature {NONE} -- Implementation
 	i_th (i: INTEGER): EV_WIDGET
 			-- `Result' is item at `i'-th position.
 		local
-			wel_win: WEL_WINDOW
-			v_imp: EV_WIDGET_IMP
+			wel_win: detachable WEL_WINDOW
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			wel_win := get_item (i - 1).window
 			v_imp ?= wel_win
 			check
 				v_imp_not_void: v_imp /= Void
 			end
-			Result := v_imp.interface
+			Result := v_imp.attached_interface
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			wel_tci: WEL_TAB_CONTROL_ITEM
-			wel_win: WEL_WINDOW
-			v_imp: EV_WIDGET_IMP
+			wel_tci: detachable WEL_TAB_CONTROL_ITEM
+			wel_win: detachable WEL_WINDOW
+			v_imp: detachable EV_WIDGET_IMP
 		do
 				-- Should `v' be a pixmap,
 				-- promote implementation to EV_WIDGET_IMP.
@@ -725,8 +720,8 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			v_imp: EV_WIDGET_IMP
-			wel_win: WEL_WINDOW
+			v_imp: detachable EV_WIDGET_IMP
+			wel_win: detachable WEL_WINDOW
 		do
 			v_imp ?= i_th (i).implementation
 			check
@@ -736,7 +731,7 @@ feature {NONE} -- Implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
-			remove_item_actions.call ([v_imp.interface])
+			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
 			disable_notebook_assertions
@@ -773,7 +768,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			-- Select page containing `v'.
 		local
 			an_index: INTEGER
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			child_imp ?= v.implementation
 			check
@@ -791,9 +786,10 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
 			child_index: INTEGER
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			child_index := get_child_index (item_imp)
 			create a_wel_item.make
 			a_wel_item.set_text (a_text)
@@ -801,36 +797,41 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			update_item (child_index - 1, a_wel_item)
 		end
 
-	image_list: EV_IMAGE_LIST_IMP
+	image_list: detachable EV_IMAGE_LIST_IMP
 		-- Image list associated with `Current'.
 		-- `Void' if none.
 
-	set_item_pixmap (v: like item; a_pixmap: EV_PIXMAP)
+	set_item_pixmap (v: EV_WIDGET; a_pixmap: detachable EV_PIXMAP)
 			-- Assign `a_text' to the label for `an_item'.
 		require else
 			has_an_item: has (v)
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
 			child_index: INTEGER
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
+			l_image_list: like image_list
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			child_index := get_child_index (item_imp)
 			create a_wel_item.make
 				-- Ensure that the item mask allows `iimage' to be a required member.
 			a_wel_item.set_mask (tcif_image)
 
 			if a_pixmap /= Void then
-				if image_list = Void then
+				l_image_list := image_list
+				if l_image_list = Void then
 						-- If no image list is associated with `Current', retrieve
 						-- and associate one.
-					image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
-					{WEL_API}.send_message (wel_item, tcm_setimagelist, to_wparam (0), image_list.item)
+					l_image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
+					check l_image_list /= Void end
+					image_list := l_image_list
+					{WEL_API}.send_message (wel_item, tcm_setimagelist, to_wparam (0), l_image_list.item)
 				end
-				image_list.add_pixmap (a_pixmap)
+				l_image_list.add_pixmap (a_pixmap)
 					-- Set the `iimage' to the index of the image to be used
 					-- from the image list.
-				a_wel_item.set_iimage (image_list.last_position)
+				a_wel_item.set_iimage (l_image_list.last_position)
 			else
 					-- An `iimage' value of -1 signifies that no image
 					-- is associated with a tab.
@@ -841,7 +842,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			update_item (child_index - 1, a_wel_item)
 		end
 
-	item_pixmap (v: like item): EV_PIXMAP
+	item_pixmap (v: like item): detachable EV_PIXMAP
 			-- `Result' is pixmap associated with `Current' or `Void' if none.
 		require
 			has_an_item: has (v)
@@ -849,9 +850,11 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			a_wel_item: WEL_TAB_CONTROL_ITEM
 			image_icon: WEL_ICON
 			image_index: INTEGER
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
+			l_image_list: like image_list
 		do
-			if image_list /= Void then
+			l_image_list := image_list
+			if l_image_list /= Void then
 				create a_wel_item.make
 					-- Ensure the mask is set so the `iitem' state is retrieved.
 				a_wel_item.set_mask (tcif_image)
@@ -865,7 +868,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				if image_index >= 0 then
 						-- An image index greater or equal to zero indicates an image is used,
 						-- so we retrieve this image and
-					image_icon := image_list.get_icon (image_index, Ild_normal)
+					image_icon := l_image_list.get_icon (image_index, Ild_normal)
 					create Result
 					pix_imp ?= Result.implementation
 					check
@@ -891,9 +894,10 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
 			child_index: INTEGER
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			child_index := get_child_index (item_imp)
 			a_wel_item := get_item (child_index - 1)
 			Result := a_wel_item.text
@@ -902,7 +906,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 	selected_item: like item
 			-- Page displayed topmost.
 		local
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			child_imp ?= get_item (current_selection).window
 			if child_imp /= Void then
@@ -942,37 +946,42 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
 			-- container must be searched next.
 		require else
-			valid_search_pos: search_pos >= 0 and search_pos <= interface.count + 1
+			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
 		local
-			w: EV_WIDGET_IMP
-			container: EV_CONTAINER
+			w: detachable EV_WIDGET
+			w_imp: detachable EV_WIDGET_IMP
+			container: detachable EV_CONTAINER
+			l_result: detachable EV_WIDGET_IMP
 		do
-			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if Result = Void and is_sensitive then
+			l_result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
 					-- children should recieve the tab stop.
 				from
 					go_i_th (search_pos)
 				until
-					off or Result /= Void
+					off or l_result /= Void
 				loop
 					if index = selected_item_index then
 							-- We only need to search the item if it is the currently
 							-- selected item, as all other items may not be tabbed to.
-						w ?= item.implementation
+						w := item
+						check w /= Void end
+						w_imp ?= w.implementation
+						check w_imp /= Void end
 						if forwards then
-							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 						else
-							container ?= w.interface
+							container ?= w_imp.interface
 							if container /= Void then
-								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+								l_result := w_imp.next_tabstop_widget (start_widget, container.count, forwards)
 							else
-								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+								l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 							end
 						end
 					end
-					if Result = Void then
+					if l_result = Void then
 						if forwards then
 							forth
 						else
@@ -981,17 +990,19 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					end
 				end
 			end
-			if Result = Void then
-				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if l_result = Void then
+				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
-	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): detachable EV_WIDGET_IMP
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
 			-- its children dependent on the state of `forwards'.
 		do
-			if interface /= start_widget then
+			if attached_interface /= start_widget then
 				if (forwards and search_pos = 1) or (not forwards and search_pos < selected_item_index) then
 						-- We perform special handling here for notebooks, as only the `selected_item_index' tab
 						-- needs to be searched within the notebook. That is why we check `search_pos' against
@@ -1017,11 +1028,11 @@ feature {NONE} -- Font implementation
 	internal_set_font
 			-- Set actual font.
 		local
-			local_font_windows: EV_FONT_IMP
+			local_font_windows: detachable EV_FONT_IMP
 		do
 			if
-				(tab_pos = interface.Tab_top)
-				or else (tab_pos = interface.Tab_bottom)
+				(tab_pos = {EV_NOTEBOOK}.Tab_top)
+				or else (tab_pos = {EV_NOTEBOOK}.Tab_bottom)
 				--| FIXME, there appears to be no way to use a custom font
 				-- when the tabs are left or right. In this case, we use the default
 				-- font. Julian
@@ -1043,7 +1054,7 @@ feature {NONE} -- Font implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_NOTEBOOK;
+	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1060,4 +1071,14 @@ note
 
 
 end -- EV_NOTEBOOK_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -1,13 +1,13 @@
 note
-	description: 
+	description:
 		"Multiple widget container accessible as a list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "widget list, container"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_WIDGET_LIST
 
 inherit
@@ -42,7 +42,7 @@ inherit
 		end
 
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
@@ -69,4 +69,13 @@ note
 
 
 end -- class EV_WIDGET_LIST
+
+
+
+
+
+
+
+
+
 

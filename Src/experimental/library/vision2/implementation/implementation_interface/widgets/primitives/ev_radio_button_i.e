@@ -27,8 +27,8 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RADIO_BUTTON
-	
+	interface: detachable EV_RADIO_BUTTON note option: stable attribute end
+
 feature {NONE} -- Implementation
 
 	default_alignment: INTEGER
@@ -53,4 +53,12 @@ note
 
 
 end -- class EV_RADIO_BUTTON_I
+
+
+
+
+
+
+
+
 

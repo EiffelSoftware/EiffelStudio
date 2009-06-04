@@ -33,8 +33,8 @@ feature -- Access
 		local
 			a_str: POINTER
 		do
-			if real_text /= Void then
-				Result := real_text.string
+			if attached real_text as l_real_text then
+				Result := l_real_text.string
 			else
 				a_str :={EV_GTK_EXTERNALS}.gtk_label_get_label (text_label)
 				if a_str /= default_pointer then
@@ -118,7 +118,7 @@ feature {EV_ANY_IMP} -- Implementation
 			Result := False
 		end
 
-	real_text: EV_GTK_C_STRING
+	real_text: detachable EV_GTK_C_STRING
 			-- Internal `text'. (with ampersands)
 
 	filter_ampersand (s: STRING_32; char: CHARACTER)
@@ -162,7 +162,7 @@ feature {EV_ANY_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TEXTABLE
+	interface: detachable EV_TEXTABLE note option: stable attribute end;
 
 invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
@@ -182,4 +182,8 @@ note
 
 
 end -- class EV_TEXTABLE_IMP
+
+
+
+
 

@@ -22,16 +22,20 @@ inherit
 	EV_MODEL_PROJECTION_ROUTINES
 
 create
-	make
+	make_with_context
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create with `a_world' and `a_filename'.
 		do
-			base_make (an_interface)
-			if interface.context.printer_context /= Default_pointer then
-				create print_dc.make_by_pointer (interface.context.printer_context)
+			assign_interface (an_interface)
+		end
+
+	make_with_context (a_world: EV_MODEL_WORLD; a_context: EV_PRINT_CONTEXT)
+		do
+			if a_context.printer_context /= Default_pointer then
+				create print_dc.make_by_pointer (a_context.printer_context)
 			else
 				-- Create a print dc of the default printer
 				-- Set DC with info from context.
@@ -39,15 +43,16 @@ feature {NONE} -- Initialization
 			end
 			create a_printer.make_with_context (print_dc)
 			drawable := a_printer
-	
+
 			create draw_routines.make (0, 20)
-			make_with_world (interface.world)
-			register_basic_figures
+			make_with_world (a_world)
+			make
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			register_basic_figures
 			set_is_initialized (True)
 		end
 
@@ -84,14 +89,14 @@ feature -- Access
 
 				logical_x := print_dc.device_caps (logical_pixels_x)
 				logical_y := print_dc.device_caps (logical_pixels_y)
-				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y) 
+				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y)
 				if world.grid_enabled and world.grid_visible then
 					draw_grid
 				end
 				if world.is_show_requested then
 					project_figure_group (world, clip_rect)
 				end
-				
+
 					-- End drawing and print document.
 				a_printer.end_document
 
@@ -108,7 +113,7 @@ feature {NONE} -- Implementation
 
 	a_printer: EV_PRINTER
 			-- Drawable used for printing.
-			
+
 	greatest_common_denometer (value1, value2: INTEGER): INTEGER
 			-- `Result' is greatest common denometer of `value1' and `value2'
 		local
@@ -128,7 +133,7 @@ feature {NONE} -- Implementation
 			end
 			Result := l_value1
 		end
-	
+
 	set_dc_extents (wx, wy, vx, vy: INTEGER)
 			-- Set extents of `print_dc' to correctly print `wx', `wy' pixels per inch,
 			-- on a printer with resolution `vx', `vy'.
@@ -158,4 +163,8 @@ note
 
 
 end -- class EV_PRINT_PROJECTOR
+
+
+
+
 

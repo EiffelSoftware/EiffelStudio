@@ -235,7 +235,7 @@ feature -- Figure drawing
 			p0, p1: EV_COORDINATE
 			p0x, p0y, p1x, p1y: INTEGER
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			l_offset_x, l_offset_y: INTEGER
 		do
 			l_point_array := ellipse.point_array
@@ -281,7 +281,7 @@ feature -- Figure drawing
 	draw_figure_rotated_ellipse (ellipse: EV_MODEL_ROTATED_ELLIPSE)
 			-- Draw standard representation of `ellipse' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 			l_point_array: SPECIAL [EV_COORDINATE]
 			p0, p1, p2, p3: EV_COORDINATE
@@ -350,7 +350,7 @@ feature -- Figure drawing
 	draw_figure_equilateral (eql: EV_MODEL_EQUILATERAL)
 			-- Draw standard representation of `eql' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 			poly: ARRAY [EV_COORDINATE]
 		do
@@ -445,7 +445,7 @@ feature -- Figure drawing
 			p0, p1: EV_COORDINATE
 			p0x, p0y, p1x, p1y: INTEGER
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			l_offset_x, l_offset_y: INTEGER
 		do
 			l_point_array := slice.point_array
@@ -490,7 +490,7 @@ feature -- Figure drawing
 	draw_figure_rotated_pie_slice (slice: EV_MODEL_ROTATED_PIE_SLICE)
 			-- Draw standard representation of `slice' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 			l_point_array: SPECIAL [EV_COORDINATE]
 			p0, p1, p2, p3: EV_COORDINATE
@@ -559,7 +559,7 @@ feature -- Figure drawing
 	draw_figure_polygon (polygon: EV_MODEL_POLYGON)
 			-- Draw standard representation of `polygon' to canvas.
 		local
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			d: like drawable
 			polygon_array: ARRAY [EV_COORDINATE]
 		do
@@ -667,7 +667,7 @@ feature -- Figure drawing
 			-- Draw standad representation of `parallelogram' to canvas.
 		local
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			point_area: SPECIAL [EV_COORDINATE]
 			point_array: ARRAY [EV_COORDINATE]
 			p1, p2, p4: EV_COORDINATE
@@ -749,7 +749,7 @@ feature -- Figure drawing
 			l_point_array: SPECIAL [EV_COORDINATE]
 			p0, p1: EV_COORDINATE
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 		do
 			l_point_array := rectangle.point_array
 			p0 := l_point_array.item (0)
@@ -790,7 +790,7 @@ feature -- Figure drawing
 			-- Draw standart representation of `f' to canvas.
 		local
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			p_array: ARRAY [EV_COORDINATE]
 		do
 			d := drawable
@@ -828,7 +828,7 @@ feature -- Figure drawing
 			-- Draw standard representation of `f' to canvas.
 		local
 			d: like drawable
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			l_point_array: SPECIAL [EV_COORDINATE]
 			p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, p5x, p5y: INTEGER
 			p0, p1, p2, p3, p4, p5: EV_COORDINATE
@@ -1733,4 +1733,8 @@ note
 
 
 end -- class EV_MODEL_DRAWER
+
+
+
+
 

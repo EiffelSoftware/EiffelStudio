@@ -43,7 +43,7 @@ inherit
 			set_configurable_target_menu_mode,
 			set_configurable_target_menu_handler
 		redefine
-			initialize,
+			make,
 			destroy,
 			set_background_color,
 			set_foreground_color
@@ -66,26 +66,32 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
-			Precursor {EV_CELL_IMP}
-			initialize_grid
-			set_is_initialized (True)
 			create focused_selection_color
 			color_imp ?= focused_selection_color.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (wel_color_constants.color_highlight)
 			create non_focused_selection_color
 			color_imp ?= non_focused_selection_color.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (wel_color_constants.color_btnface)
 			create focused_selection_text_color
 			color_imp ?= focused_selection_text_color.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (wel_color_constants.color_highlighttext)
 			create non_focused_selection_text_color
 			color_imp ?= non_focused_selection_text_color.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (wel_color_constants.color_btntext)
+
+			Precursor {EV_CELL_IMP}
+			initialize_grid
+
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -98,15 +104,17 @@ feature -- Access
 			-- not include the horizontal overhang or underhang. This can
 			-- make quite a difference on certain platforms.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			screen_dc: WEL_SCREEN_DC
 			bounding_rect: WEL_RECT
 		do
-			font_imp ?= f.implementation
+
 			if s.is_empty then
 				tuple.width := 0
 				tuple.height := 0
 			else
+				font_imp ?= f.implementation
+				check font_imp /= Void end
 				bounding_rect := wel_rect
 				bounding_rect.set_rect (0, 0, 32767, 32767)
 				create screen_dc
@@ -152,7 +160,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID;
+	interface: detachable EV_GRID note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -169,4 +177,10 @@ note
 
 
 end
+
+
+
+
+
+
 

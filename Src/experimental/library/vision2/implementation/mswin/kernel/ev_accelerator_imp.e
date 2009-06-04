@@ -18,18 +18,18 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface.
 		do
-			base_make (an_interface)
-			create key
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Setup `Current'
 		do
+			create key
 			set_is_initialized (True)
 		end
 
@@ -94,7 +94,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	interface: EV_ACCELERATOR
+	interface: detachable EV_ACCELERATOR note option: stable attribute end;
 		-- Interface object of `Current'
 
 feature {NONE} -- Implementation
@@ -102,7 +102,6 @@ feature {NONE} -- Implementation
 	destroy
 			-- Free resources of `Current'
 		do
-			key := Void
 			set_is_destroyed (True)
 		end
 

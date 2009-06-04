@@ -28,7 +28,7 @@ class
 inherit
 	EV_CELL
 		redefine
-			initialize
+			initialize, create_interface_objects
 		end
 
 	EV_SHARED_APPLICATION
@@ -54,24 +54,31 @@ feature {NONE} -- Initialization
 			world_set: world = a_world
 		end
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			create drawing_area
+			create projector.make_with_buffer (world, drawing_area)
+			create autoscroll.make_with_interval (normal_timeout_interval)
+			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
+			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
+		end
+
 	initialize
-			-- Initialize `Current'.
+			-- <Precursor>
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			Precursor {EV_CELL}
 
-			create drawing_area
 			drawing_area.set_minimum_size (1, 1)
 			drawing_area.clear
 			drawing_area.flush
 
 			create horizontal_box
-			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			vertical_scrollbar.set_step (15)
 			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
-			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			horizontal_scrollbar.set_step (15)
 			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 			horizontal_box.extend (drawing_area)
@@ -79,7 +86,6 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			drawing_area.resize_actions.extend (agent on_resizing)
 
-			create projector.make_with_buffer (world, drawing_area)
 
 			create vertical_box
 			vertical_box.extend (horizontal_box)
@@ -93,7 +99,6 @@ feature {NONE} -- Initialization
 			drawing_area.key_press_actions.extend (agent on_key_pressed_on_drawing_area)
 			drawing_area.key_release_actions.extend (agent on_key_released_on_drawing_area)
 
-			create autoscroll.make_with_interval (normal_timeout_interval)
 			autoscroll.actions.extend (agent on_autoscroll_time_out)
 
 			extend (vertical_box)
@@ -581,4 +586,5 @@ note
 
 
 end -- class EV_MODEL_WORLD_CELL
+
 

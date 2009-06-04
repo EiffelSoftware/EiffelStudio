@@ -81,7 +81,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	interface: EV_REGION;
+	interface: detachable EV_REGION note option: stable attribute end;
 		-- Interface object for `Current'.
 
 note

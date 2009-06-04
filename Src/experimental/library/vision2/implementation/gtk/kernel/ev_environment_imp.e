@@ -23,13 +23,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Pass `an_interface' to base make.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- No initialization needed.
 		do
 			set_is_initialized (True)
@@ -42,9 +42,10 @@ feature -- Access
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
 		local
-			app_imp: EV_APPLICATION_IMP
+			app_imp: detachable EV_APPLICATION_IMP
 		once
-			app_imp ?= application.implementation
+			app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check app_imp /= Void end
 			Result := app_imp.readable_pixbuf_formats.linear_representation
 			Result.compare_objects
 		end
@@ -79,9 +80,10 @@ feature -- Access
 	font_families: LINEAR [STRING_32]
 			-- List of fonts available on the system
 		local
-			app_imp: EV_APPLICATION_IMP
+			app_imp: detachable EV_APPLICATION_IMP
 		once
-			app_imp ?= application.implementation
+			app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check app_imp /= Void end
 			Result := app_imp.font_names_on_system.linear_representation
 			Result.compare_objects
 		end
@@ -101,4 +103,14 @@ note
 
 
 end -- class EV_ENVIRONMENT_IMP
+
+
+
+
+
+
+
+
+
+
 

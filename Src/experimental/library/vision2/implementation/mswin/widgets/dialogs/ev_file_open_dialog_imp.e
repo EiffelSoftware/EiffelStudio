@@ -64,18 +64,21 @@ feature -- Status report
 
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
+		local
+			l_result: detachable ARRAYED_LIST [STRING_32]
 		do
 			if multiple_selection_enabled then
-				Result ?= multiple_file_names
-				check result_not_void: Result /= Void end
+				l_result ?= multiple_file_names
 			else
 					-- If there is no multiple selection, simply copy `file_name' into `Result'.
-				create Result.make (1)
+				create l_result.make (1)
 				if not file_name.is_empty then
 						-- if `file_name' is empty then cancel was selected and `Result' must be empty.
-					Result.extend (file_name.twin)
+					l_result.extend (file_name.twin)
 				end
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Status setting
@@ -197,7 +200,7 @@ feature {EV_ANY_I}
 
 feature {EV_ANY_I}
 
-	interface: EV_FILE_OPEN_DIALOG;
+	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -214,4 +217,13 @@ note
 
 
 end -- class EV_FILE_OPEN_DIALOG_IMP
+
+
+
+
+
+
+
+
+
 

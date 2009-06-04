@@ -22,7 +22,7 @@ inherit
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_ITEM;
+	interface: detachable EV_TREE_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -39,4 +39,12 @@ note
 
 
 end -- class EV_TREE_ITEM_I
+
+
+
+
+
+
+
+
 

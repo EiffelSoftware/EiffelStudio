@@ -14,7 +14,7 @@ deferred class
 feature -- Event handling
 
 	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed 
+			-- Actions to be performed
 		do
 			if select_actions_internal = Void then
 				select_actions_internal :=
@@ -32,14 +32,17 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	select_actions_internal: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
 	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed 
+			-- Actions to be performed
 		do
 			if deselect_actions_internal = Void then
 				deselect_actions_internal :=
@@ -57,14 +60,17 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	deselect_actions_internal: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
+	deselect_actions_internal: detachable EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
 	column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE
-			-- Actions to be performed 
+			-- Actions to be performed
 		do
 			if column_title_click_actions_internal = Void then
 				column_title_click_actions_internal :=
@@ -82,14 +88,17 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_title_click_actions_internal: EV_COLUMN_ACTION_SEQUENCE
+	column_title_click_actions_internal: detachable EV_COLUMN_ACTION_SEQUENCE
 			-- Implementation of once per object `column_title_click_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
 	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE
-			-- Actions to be performed 
+			-- Actions to be performed
 		do
 			if column_resized_actions_internal = Void then
 				column_resized_actions_internal :=
@@ -107,8 +116,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_resized_actions_internal: EV_COLUMN_ACTION_SEQUENCE;
+	column_resized_actions_internal: detachable EV_COLUMN_ACTION_SEQUENCE
 			-- Implementation of once per object `column_resized_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -125,4 +138,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

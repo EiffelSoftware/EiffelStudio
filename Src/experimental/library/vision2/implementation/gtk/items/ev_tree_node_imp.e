@@ -20,7 +20,8 @@ inherit
 			{EV_TREE_IMP}
 				child_array
 		redefine
-			interface
+			interface,
+			make
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -46,17 +47,22 @@ feature {NONE} -- Initialization
 	destroy
 			-- Clean up `Current'
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.prune (attached_interface)
 			end
 			set_is_destroyed (True)
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tree item.
 		do
-			base_make (an_interface)
-			internal_text := once ""
+			assign_interface (an_interface)
+		end
+
+	make
+		do
+			remove_internal_text
+			Precursor
 		end
 
 feature -- Status report
@@ -64,7 +70,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is the item selected?
 		local
-			a_tree_imp: EV_TREE_IMP
+			a_tree_imp: detachable EV_TREE_IMP
 		do
 			a_tree_imp := parent_tree_imp
 			if a_tree_imp /= Void then
@@ -76,10 +82,14 @@ feature -- Status report
 			-- is the item expanded?
 		local
 			a_tree_path: POINTER
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
-			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
+			check par_tree /= Void end
+			l_list_iter := list_iter
+			check l_list_iter /= Void end
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
@@ -190,13 +200,16 @@ feature {EV_ANY_I} -- Status setting
 			-- Select `Current' in its parent.
 		local
 			a_selection: POINTER
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
+				l_list_iter := list_iter
+				check l_list_iter /= Void end
 				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)
-				par_tree.ensure_item_visible (interface)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
+				par_tree.ensure_item_visible (attached_interface)
 			end
 		end
 
@@ -204,12 +217,15 @@ feature {EV_ANY_I} -- Status setting
 			-- Disable selection of `Current' in its parent.
 		local
 			a_selection: POINTER
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
+				l_list_iter := list_iter
+				check l_list_iter /= Void end
 				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
 			end
 		end
 
@@ -217,11 +233,15 @@ feature {EV_ANY_I} -- Status setting
 			-- Expand the item if `flag', collapse it otherwise.
 		local
 			a_tree_path: POINTER
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
 			a_success: BOOLEAN
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			par_tree := parent_tree_imp
-			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
+			check par_tree /= Void end
+			l_list_iter := list_iter
+			check l_list_iter /= Void end
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, l_list_iter.item)
 			if a_flag then
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
 			else
@@ -233,7 +253,7 @@ feature {EV_ANY_I} -- Status setting
 	set_text (a_text: STRING_GENERAL)
 			-- Set 'text' to 'a_text'
 		local
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
 		do
 			internal_text := a_text.twin
 			par_tree := parent_tree_imp
@@ -248,8 +268,8 @@ feature -- PND
 			-- Enable PND transport
 		do
 			is_transport_enabled := True
-			if parent_tree_imp /= Void then
-				parent_tree_imp.update_pnd_status
+			if attached parent_tree_imp as l_parent_tree_imp then
+				l_parent_tree_imp.update_pnd_status
 			end
 		end
 
@@ -257,8 +277,8 @@ feature -- PND
 			-- Disable PND transport
 		do
 			is_transport_enabled := False
-			if parent_tree_imp /= Void then
-				parent_tree_imp.update_pnd_status
+			if attached parent_tree_imp as l_parent_tree_imp then
+				l_parent_tree_imp.update_pnd_status
 			end
 		end
 
@@ -323,7 +343,7 @@ feature -- PND
 			-- Has 'Current' or a child of 'Current' pnd transport enabled?
 		local
 			a_cursor: CURSOR
-			a_tree_node_imp: EV_TREE_NODE_IMP
+			a_tree_node_imp: detachable EV_TREE_NODE_IMP
 			i: INTEGER
 		do
 			if is_transport_enabled then
@@ -337,6 +357,7 @@ feature -- PND
 				loop
 					if child_array.i_th (i) /= Void then
 						a_tree_node_imp ?= child_array.i_th (i).implementation
+						check a_tree_node_imp /= Void end
 						Result := a_tree_node_imp.is_transport_enabled_iterator
 					end
 					i := i + 1
@@ -381,7 +402,7 @@ feature {EV_ANY_I} -- Implementation
 			list_iter := a_iter
 		end
 
-	list_iter: EV_GTK_TREE_ITER_STRUCT
+	list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		-- Object representing position of `Current' in parent tree model
 
 	set_parent_imp (par_imp: like parent_imp)
@@ -389,30 +410,30 @@ feature {EV_ANY_I} -- Implementation
 			parent_imp := par_imp
 		end
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
+	parent_imp: detachable EV_ITEM_LIST_IMP [EV_TREE_NODE]
 
-	parent_tree_imp: EV_TREE_IMP
+	parent_tree_imp: detachable EV_TREE_IMP
 		local
-			l_par_tree: like parent_tree
+			l_par_tree: like parent_tree_i
 		do
-			l_par_tree := parent_tree
+			l_par_tree := parent_tree_i
 			if l_par_tree /= Void then
-				Result ?= l_par_tree.implementation
+				Result ?= l_par_tree
 			end
 		end
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
-	add_item_and_children_to_parent_tree (a_parent_tree: EV_TREE_IMP; a_parent_node: EV_TREE_NODE_IMP; a_index: INTEGER)
+	add_item_and_children_to_parent_tree (a_parent_tree: EV_TREE_IMP; a_parent_node: detachable EV_TREE_NODE_IMP; a_index: INTEGER)
 			-- Used for setting items within parent tree
 		local
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 			i: INTEGER
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
 			a_parent_iter: POINTER
 		do
-			if a_parent_node /= Void then
-				a_parent_iter := a_parent_node.list_iter.item
+			if a_parent_node /= Void and then attached a_parent_node.list_iter as l_list_iter then
+				a_parent_iter := l_list_iter.item
 			end
 			create a_tree_iter.make
 			set_list_iter (a_tree_iter)
@@ -425,6 +446,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				i > child_array.count
 			loop
 				item_imp ?= (child_array @ i).implementation
+				check item_imp /= Void end
 				item_imp.add_item_and_children_to_parent_tree (a_parent_tree, Current, i)
 				i := i + 1
 			end
@@ -451,7 +473,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		local
-			l_parent_tree: EV_TREE_IMP
+			l_parent_tree: detachable EV_TREE_IMP
 		do
 			l_parent_tree ?= parent_imp
 			if l_parent_tree /= Void then
@@ -472,10 +494,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	tooltip: STRING_32
 			-- Tooltip if any.
 		do
-			if internal_tooltip = Void then
-				Result := ""
+			if attached internal_tooltip as l_internal_tooltip then
+				Result := l_internal_tooltip.twin
 			else
-				Result := internal_tooltip.twin
+				Result := ""
 			end
 		ensure then
 			tooltip_not_void: Result /= Void
@@ -484,7 +506,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_internal_text
 			-- Make `internal_text' Void
 		do
-			internal_text := Void
+			internal_text := once ""
 		end
 
 	set_internal_text (a_text: STRING_GENERAL)
@@ -496,7 +518,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	internal_text: STRING_32
 		-- Internal representation of `text'.
 
-	internal_tooltip: STRING_32
+	internal_tooltip: detachable STRING_32
 		-- Internal representation of `tooltip'.
 
 	set_tooltip (a_text: STRING_GENERAL)
@@ -514,12 +536,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the pixmap for 'Current'.
 		local
-			a_pix_imp: EV_PIXMAP_IMP
-			par_tree: EV_TREE_IMP
+			a_pix_imp: detachable EV_PIXMAP_IMP
+			par_tree: detachable EV_TREE_IMP
 		do
 				-- Clean up previous pixmap if any
 			dispose
 			a_pix_imp ?= a_pixmap.implementation
+			check a_pix_imp /= Void end
 			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
@@ -533,7 +556,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_pixmap
 			-- Remove the pixmap for `Current'
 		local
-			par_tree: EV_TREE_IMP
+			par_tree: detachable EV_TREE_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
@@ -545,14 +568,15 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap displayed in 'Current' if any.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
+				check pix_imp /= Void end
 				pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
 			end
 		end
@@ -560,13 +584,14 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	gdk_pixbuf: POINTER
 		-- Stored gdk pixbuf data
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			item_imp: EV_TREE_NODE_IMP
-			par_t_imp: EV_TREE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
+			par_t_imp: detachable EV_TREE_IMP
 		do
 			item_imp ?= v.implementation
+			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -594,22 +619,25 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
-			item_imp: EV_TREE_NODE_IMP
-			par_tree_imp: EV_TREE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
+			par_tree_imp: detachable EV_TREE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			if count = 1 then
-				if parent_tree /= Void then
+				if parent_tree_i /= Void then
 					expanded_on_last_item_removal := is_expanded
 				else
 					expanded_on_last_item_removal := False
 				end
 			end
 			item_imp ?= (child_array @ (a_position)).implementation
-
+			check item_imp /= Void end
 				-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
-				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
+				l_list_iter := item_imp.list_iter
+				check l_list_iter /= Void end
+				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)
@@ -625,7 +653,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 feature {NONE} -- Redundant implementation
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
@@ -643,7 +671,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_NODE;
+	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -660,4 +688,8 @@ note
 
 
 end -- class EV_TREE_NODE_IMP
+
+
+
+
 

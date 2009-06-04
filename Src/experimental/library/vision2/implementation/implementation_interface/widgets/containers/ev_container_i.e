@@ -28,7 +28,29 @@ inherit
 
 feature -- Access
 
-	item: EV_WIDGET
+	interface_item: EV_WIDGET
+			-- Current item but guaranteed attached for calling from interface only
+		local
+			l_item: like item
+		do
+			l_item := item
+			check l_item /= Void end
+			Result := l_item
+		end
+
+	count: INTEGER_32
+			-- Number of elements in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		deferred
+		end
+
+	has (v: like item): BOOLEAN
+			-- Does structure include `v'?
+		deferred
+		end
+
+	item: detachable EV_WIDGET
 			-- Current item.
 		deferred
 		end
@@ -47,16 +69,16 @@ feature -- Access
 			positive: Result >= 0
 		end
 
-	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
+	merged_radio_button_groups: detachable ARRAYED_LIST [EV_CONTAINER]
 			-- `Result' is all other radio button groups
 			-- merged with `Current'.
 		do
-			if internal_merged_radio_button_groups /= Void then
-				Result := internal_merged_radio_button_groups.twin
-				Result.prune_all (interface)
+			if attached internal_merged_radio_button_groups as l_internal_merged_radio_button_groups then
+				Result := l_internal_merged_radio_button_groups.twin
+				Result.prune_all (attached_interface)
 			end
 		ensure
-			current_not_included: Result /= Void implies not Result.has (interface)
+			current_not_included: Result /= Void implies not Result.has (attached_interface)
 		end
 
 feature -- Element change
@@ -68,7 +90,7 @@ feature -- Element change
 		deferred
 		end
 
-	replace (v: like item)
+	replace (v: detachable like item)
 			-- Replace `item' with `v'.
 		deferred
 		end
@@ -80,29 +102,35 @@ feature -- Status setting
 		local
 			counter, original_count: INTEGER
 			container_i: EV_CONTAINER_I
+			l_internal_merged_radio_button_groups: like internal_merged_radio_button_groups
 		do
 			connect_radio_grouping (other)
-			container_i ?= other.implementation
+			container_i := other.implementation
 
 					-- If internal groups for both containers are empty, then create the internal, share
 					-- between the two objects, and fill with both of them.
 			if internal_merged_radio_button_groups = Void and container_i.internal_merged_radio_button_groups = Void then
-				create internal_merged_radio_button_groups.make (0)
-				container_i.set_internal_merged_radio_button_group (internal_merged_radio_button_groups)
-				internal_merged_radio_button_groups.extend (interface)
-				internal_merged_radio_button_groups.extend (other)
+				create l_internal_merged_radio_button_groups.make (0)
+				container_i.set_internal_merged_radio_button_group (l_internal_merged_radio_button_groups)
+				l_internal_merged_radio_button_groups.extend (attached_interface)
+				l_internal_merged_radio_button_groups.extend (other)
+				internal_merged_radio_button_groups := l_internal_merged_radio_button_groups
 
 					-- If `other' has no internal_group then set others group to `point' to that of `Current',
 					-- and add `other' to group.
 			elseif container_i.internal_merged_radio_button_groups = Void then
-				container_i.set_internal_merged_radio_button_group (internal_merged_radio_button_groups)
-				internal_merged_radio_button_groups.extend (other)
+				l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
+				check l_internal_merged_radio_button_groups /= Void end
+				container_i.set_internal_merged_radio_button_group (l_internal_merged_radio_button_groups)
+				l_internal_merged_radio_button_groups.extend (other)
 
 					-- If `Current' has no internal_group then set goup of `Current' to point to that of `other',
 					-- and add `Current' to group.
 			elseif internal_merged_radio_button_groups = Void then
 				set_internal_merged_radio_button_group (container_i.internal_merged_radio_button_groups)
-				container_i.internal_merged_radio_button_groups.extend (interface)
+				l_internal_merged_radio_button_groups := container_i.internal_merged_radio_button_groups
+				check l_internal_merged_radio_button_groups /= Void end
+				l_internal_merged_radio_button_groups.extend (attached_interface)
 
 					-- If `Current' and `other' already share the same list, they must be already
 					-- merged, and therefore, nothing is to be performed.
@@ -117,16 +145,22 @@ feature -- Status setting
 					internal_merged_radio_button_groups /= container_i.internal_merged_radio_button_groups
 				end
 					-- Store the original count so we only need to update as few groups as possible.
-				original_count := internal_merged_radio_button_groups.count
-				internal_merged_radio_button_groups.append (container_i.internal_merged_radio_button_groups)
+				l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
+				check l_internal_merged_radio_button_groups /= Void end
+				original_count := l_internal_merged_radio_button_groups.count
+				check l_internal_merged_radio_button_groups /= Void end
+				if attached container_i.internal_merged_radio_button_groups as l_container_merged_radio_groups then
+					l_internal_merged_radio_button_groups.append (l_container_merged_radio_groups)
+				end
+
 					-- Now update all references are correct for all members.
 				from
 					counter := original_count
 				until
-					counter > internal_merged_radio_button_groups.count
+					counter > l_internal_merged_radio_button_groups.count
 				loop
-					container_i ?= (internal_merged_radio_button_groups @ counter).implementation
-					container_i.set_internal_merged_radio_button_group (internal_merged_radio_button_groups)
+					container_i := (l_internal_merged_radio_button_groups @ counter).implementation
+					container_i.set_internal_merged_radio_button_group (l_internal_merged_radio_button_groups)
 					counter := counter + 1
 				end
 			else
@@ -139,21 +173,26 @@ feature -- Status setting
 	unmerge_radio_button_groups (other: EV_CONTAINER)
 			-- Remove `other' from radio button group of `Current'.
 		local
-			container_i: EV_CONTAINER_I
+			container_i: detachable EV_CONTAINER_I
+			l_internal_merged_radio_button_groups: like internal_merged_radio_button_groups
 		do
 			container_i ?= other.implementation
+			check container_i /= Void end
 				-- `other' is now no longer part of a group, so
 				-- set the internal group to Void
 			container_i.set_internal_merged_radio_button_group (Void)
 
+			l_internal_merged_radio_button_groups := internal_merged_radio_button_groups
+			check l_internal_merged_radio_button_groups /= Void end
+
 				-- Now remove `other' from internal group of `Current'.
-			internal_merged_radio_button_groups.prune_all (other)
+			l_internal_merged_radio_button_groups.prune_all (other)
 
 				-- If the group of `Current', is only now containing
 				-- `interface', then set group to `Void'.
-			if internal_merged_radio_button_groups.count = 1 then
+			if l_internal_merged_radio_button_groups.count = 1 then
 				check
-					container_must_be_interface: internal_merged_radio_button_groups @ 1 = interface
+					container_must_be_interface: l_internal_merged_radio_button_groups @ 1 = interface
 				end
 				internal_merged_radio_button_groups := Void
 			end
@@ -168,12 +207,12 @@ feature -- Basic operations
 			-- container to the children.
 		local
 			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
+			c: detachable EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			cur: detachable CURSOR
 			fg: EV_COLOR
 		do
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				cur := cs.cursor
@@ -192,10 +231,11 @@ feature -- Basic operations
 				l.forth
 			end
 			if cs /= Void then
+				check cur /= Void end
 				cs.go_to (cur)
 			end
 		ensure
-			foreground_color_propagated: interface.foreground_color_propagated
+			foreground_color_propagated: attached_interface.foreground_color_propagated
 		end
 
 	propagate_background_color
@@ -203,12 +243,12 @@ feature -- Basic operations
 			-- container to the children.
 		local
 			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
+			c: detachable EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			cur: detachable CURSOR
 			bg: EV_COLOR
 		do
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				cur := cs.cursor
@@ -227,26 +267,27 @@ feature -- Basic operations
 				l.forth
 			end
 			if cs /= Void then
+				check cur /= Void end
 				cs.go_to (cur)
 			end
 		ensure
-			background_color_propagated: interface.background_color_propagated
+			background_color_propagated: attached_interface.background_color_propagated
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CONTAINER
+	interface: detachable EV_CONTAINER note option: stable attribute end
 
 feature {EV_CONTAINER_I} -- Implementation
 
-	internal_merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
+	internal_merged_radio_button_groups: detachable ARRAYED_LIST [EV_CONTAINER]
 			-- Internal representation of all radio button groups
 			-- merged to `Current'.
 			-- This contains `interface', and this is removed by implementation
 			-- of `merged_radio_button_groups'. We need to include `interface', as
 			-- this object is shared between all linked containers.
 
-	set_internal_merged_radio_button_group (new_group: ARRAYED_LIST [EV_CONTAINER])
+	set_internal_merged_radio_button_group (new_group: detachable ARRAYED_LIST [EV_CONTAINER])
 			-- Assign `new_group' to `internal_merged_radio_button_group'.
 		do
 			internal_merged_radio_button_groups := new_group
@@ -257,9 +298,9 @@ feature {EV_CONTAINER_I} -- Implementation
 			-- `Is_selected'.
 		local
 			children: linear [EV_WIDGET]
-			radio_button: EV_RADIO_BUTTON
+			radio_button: detachable EV_RADIO_BUTTON
 		do
-			children := interface.linear_representation
+			children := attached_interface.linear_representation
 			from
 				children.start
 			until
@@ -282,9 +323,9 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			-- selected?
 		local
 			children: linear [EV_WIDGET]
-			radio_button: EV_RADIO_BUTTON
+			radio_button: detachable EV_RADIO_BUTTON
 		do
-			children := interface.linear_representation
+			children := attached_interface.linear_representation
 			from
 				children.start
 			until
@@ -302,9 +343,9 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			-- Does `Current' contain a selected radio button?
 		local
 			children: linear [EV_WIDGET]
-			radio_button: EV_RADIO_BUTTON
+			radio_button: detachable EV_RADIO_BUTTON
 		do
-			children := interface.linear_representation
+			children := attached_interface.linear_representation
 			from
 				children.start
 			until
@@ -322,9 +363,9 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			-- 	Does `Current' contain one or more radio buttons?
 		local
 			children: linear [EV_WIDGET]
-			radio_button: EV_RADIO_BUTTON
+			radio_button: detachable EV_RADIO_BUTTON
 		do
-			children := interface.linear_representation
+			children := attached_interface.linear_representation
 			from
 				children.start
 			until
@@ -346,11 +387,11 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			not_destroyed: not is_destroyed
 		local
 			cur: CURSOR
-			l: DYNAMIC_LIST [EV_WIDGET]
-			peer: EV_RADIO_BUTTON
-			peers: LINKED_LIST [EV_RADIO_PEER]
+			l: detachable DYNAMIC_LIST [EV_WIDGET]
+			peer: detachable EV_RADIO_BUTTON
+			peers: detachable LINKED_LIST [EV_RADIO_PEER]
 		do
-			l ?= interface.linear_representation
+			l ?= attached_interface.linear_representation
 			if l /= Void then
 				from
 					cur := l.cursor
@@ -380,12 +421,12 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		local
-			c: CURSOR
+			c: detachable CURSOR
 			l: LINEAR [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
 		do
 			Result := True
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				c := cs.cursor
@@ -401,6 +442,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
+				check c /= Void end
 				cs.go_to (c)
 			end
 		end
@@ -411,14 +453,14 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		local
-			c: CURSOR
+			c: detachable CURSOR
 			l: LINEAR [EV_WIDGET]
 			ll: LINKED_LIST [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
 		do
 			create ll.make
 			Result := True
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				c := cs.cursor
@@ -435,6 +477,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
+				check c /= Void end
 				cs.go_to (c)
 			end
 		end
@@ -444,13 +487,13 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		local
-			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
+			l: detachable LINEAR [EV_WIDGET]
+			c: detachable EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			cur: detachable CURSOR
 		do
 			Result := True
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				cur := cs.cursor
@@ -469,6 +512,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
+				check cur /= Void end
 				cs.go_to (cur)
 			end
 		end
@@ -479,12 +523,12 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			not_destroyed: not is_destroyed
 		local
 			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
+			c: detachable EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			cur: detachable CURSOR
 		do
 			Result := True
-			l := interface.linear_representation
+			l := attached_interface.linear_representation
 			cs ?= l
 			if cs /= Void then
 				cur := cs.cursor
@@ -503,6 +547,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				l.forth
 			end
 			if cs /= Void then
+				check cur /= Void end
 				cs.go_to (cur)
 			end
 		end
@@ -538,4 +583,14 @@ note
 
 
 end -- class EV_CONTAINER_I
+
+
+
+
+
+
+
+
+
+
 

@@ -22,8 +22,8 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
+			old_make,
 			make,
-			initialize,
 			default_wm_decorations,
 			client_area,
 			show,
@@ -38,21 +38,21 @@ inherit
 		end
 
 create
-	make
+	make, initialize_with_shadow
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			client_area := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			Precursor {EV_WINDOW_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (client_area)
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, client_area)
 
@@ -60,9 +60,6 @@ feature {NONE} -- Initialization
 --				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
 				{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 			end
-
-
-			Precursor {EV_WINDOW_IMP}
 
 				-- This completely disconnects the window from the window manager.
 			if override_redirect then
@@ -202,7 +199,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_POPUP_WINDOW;
+	interface: detachable EV_POPUP_WINDOW note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -221,4 +218,8 @@ note
 
 
 end -- class EV_POPUP_WINDOW_IMP
+
+
+
+
 

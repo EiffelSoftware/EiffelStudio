@@ -56,7 +56,7 @@ feature -- Access
 			cloned: Result /= implementation.title
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- Window `Current' is a transient for.
 		require
 			not_destroyed: not is_destroyed
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of last clicked button.
 		require
 			not_destroyed: not is_destroyed
@@ -76,7 +76,7 @@ feature -- Status report
 			Result := implementation.selected_button
 		ensure
 			bridge_ok: Result /= Void implies
-				Result.is_equal (implementation.selected_button)
+				Result ~ (implementation.selected_button)
 		end
 
 feature -- Status setting
@@ -113,6 +113,12 @@ feature -- Status setting
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	implementation: EV_STANDARD_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.
 
@@ -134,4 +140,14 @@ note
 
 
 end -- class EV_STANDARD_DIALOG
+
+
+
+
+
+
+
+
+
+
 

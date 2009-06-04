@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_BUTTON_I 
+	EV_BUTTON_I
 
 inherit
 	EV_PRIMITIVE_I
@@ -25,7 +25,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_FONTABLE_I
 		redefine
 			interface
@@ -36,7 +36,7 @@ inherit
 feature -- Access
 
 	is_default_push_button: BOOLEAN
-			-- Is this button currently a default push button 
+			-- Is this button currently a default push button
 			-- for a particular container?
 		deferred
 		end
@@ -70,7 +70,7 @@ feature -- Status Setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_BUTTON;
+	interface: detachable EV_BUTTON note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -89,4 +89,12 @@ note
 
 
 end -- class EV_BUTTON_I
+
+
+
+
+
+
+
+
 

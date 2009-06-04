@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HEADER_ITEM;
+	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -108,4 +108,11 @@ note
 
 
 end -- class EV_HEADER_ITEM_I
+
+
+
+
+
+
+
 

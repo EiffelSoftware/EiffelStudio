@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"EiffelVision font selection dialog."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	make_with_title
 
 feature -- Access
-		
+
 	font: EV_FONT
 			-- Font selected in `Current'.
 		require
@@ -46,13 +46,13 @@ feature -- Element change
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_FONT_DIALOG_I
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_FONT_DIALOG_IMP} implementation.make (Current)
+			create {EV_FONT_DIALOG_IMP} implementation.make
 		end
 
 note
@@ -70,4 +70,11 @@ note
 
 
 end -- class EV_FONT_DIALOG
+
+
+
+
+
+
+
 

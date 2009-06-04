@@ -2083,13 +2083,14 @@ rt_private void interpret(int flag, int where)
 	case BC_SPCREATE:
 		{
 			EIF_REFERENCE new_obj;						/* New object */
-			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit, is_make_filled;
+			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit, is_make_filled, is_make_empty;
 			uint32 elem_size = 0, bit_size = 0, i = 0, spec_type;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE nb_item, default_item;
 			uint32 nb = 0;
 
 			is_make_filled = EIF_TEST(*IC++);
+			is_make_empty = EIF_TEST(*IC++);
 			type = get_creation_type (1);
 
 			is_ref = EIF_TEST(*IC++);
@@ -2148,6 +2149,8 @@ rt_private void interpret(int flag, int where)
 				opush(last);
 				opush(&default_item);
 				opush(&nb_item);
+			} else if (is_make_empty) {
+				RT_SPECIAL_COUNT(new_obj) = 0;
 			} else {
 				if (is_bit) {
 					bit_size = get_uint32(&IC);

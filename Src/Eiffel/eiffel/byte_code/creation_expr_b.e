@@ -81,7 +81,7 @@ feature -- C code generation
 					elseif not l_type.associated_class.feature_of_rout_id (call.routine_id).is_empty then
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 						Result.call.set_precursor_type (l_type)
-					elseif call.routine_id = system.special_make_rout_id then
+					elseif is_simple_special_creation then
 							-- We cannot optimize the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
 						Result.set_call (call.enlarged_on (context.real_type (type)))
@@ -107,9 +107,9 @@ feature -- Analyze
 				get_register
 				l_call := call
 				if l_call /= Void then
-					if l_call.routine_id = system.special_make_rout_id then
+					if is_simple_special_creation then
 						check
-							is_special_call_valid: is_special_call_valid (False)
+							is_special_call_valid: is_special_call_valid
 						end
 						l_call.parameters.first.analyze
 					else
@@ -129,9 +129,9 @@ feature -- Analyze
 			-- Unanalyze creation code
 		do
 			if not real_type (type).is_basic and then attached call as l_call then
-				if l_call.routine_id = system.special_make_rout_id then
+				if is_simple_special_creation then
 					check
-						is_special_call_valid: is_special_call_valid (False)
+						is_special_call_valid: is_special_call_valid
 					end
 					l_call.parameters.first.unanalyze
 				else
@@ -170,6 +170,39 @@ feature -- Status report
 			-- so that there is no variation at run-time?
 		do
 			Result := info = Void and then type.is_standalone
+		end
+
+	is_special_creation: BOOLEAN
+			-- Is Current representing a creation expression for SPECIAL?
+		do
+			Result := call /= Void and then
+				(call.routine_id = system.special_make_filled_rout_id or
+				call.routine_id = system.special_make_empty_rout_id or
+				call.routine_id = system.special_make_rout_id)
+		ensure
+			definition: Result implies call /= Void
+		end
+
+	is_simple_special_creation: BOOLEAN
+			-- Is Current representing a creation expression for SPECIAL?
+		do
+			Result := call /= Void and then
+				(call.routine_id = system.special_make_empty_rout_id or
+				call.routine_id = system.special_make_rout_id)
+		ensure
+			definition: Result implies call /= Void
+		end
+
+	is_special_make_filled: BOOLEAN
+			-- Is Current representing a creation expression involving `make_filled' from SPECIAL?
+		do
+			Result := call /= Void and then call.routine_id = system.special_make_filled_rout_id
+		end
+
+	is_special_make_empty: BOOLEAN
+			-- Is Current representing a creation expression involving `make_filled' from SPECIAL?
+		do
+			Result := call /= Void and then call.routine_id = system.special_make_empty_rout_id
 		end
 
 feature -- Access
@@ -265,7 +298,6 @@ feature -- Generation
 			buf: GENERATION_BUFFER
 			l_basic_type: BASIC_A
 			l_call: like call
-			l_special_creation: BOOLEAN
 			l_class_type: SPECIAL_CLASS_TYPE
 			parameter: PARAMETER_BL
 			l_is_make_filled: BOOLEAN
@@ -276,19 +308,16 @@ feature -- Generation
 
 			l_basic_type ?= real_type (type)
 			l_call := call
-			l_special_creation := l_basic_type = Void and then
-				l_call /= Void and then (l_call.routine_id = system.special_make_rout_id or
-				l_call.routine_id = system.special_make_filled_rout_id)
 			if l_basic_type /= Void then
 				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")
 				l_basic_type.c_type.generate_default_value (buf)
 				buf.put_character (';')
-			elseif l_special_creation then
-				l_is_make_filled := l_call.routine_id = system.special_make_filled_rout_id
+			elseif is_special_creation then
+				l_is_make_filled := is_special_make_filled
 				check
-					is_special_call_valid: is_special_call_valid (l_is_make_filled)
+					is_special_call_valid: is_special_call_valid
 				end
 				check
 					is_special_type: type.has_associated_class_type (context.context_class_type.type)
@@ -306,7 +335,7 @@ feature -- Generation
 				end
 				info.generate_start (buf)
 				info.generate_gen_type_conversion (0)
-				l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled)
+				l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled, is_special_make_empty)
 				info.generate_end (buf)
 				l_generate_call := l_is_make_filled
 			else
@@ -357,15 +386,15 @@ feature -- Inlining
 
 feature {BYTE_NODE_VISITOR} -- Assertion support
 
-	is_special_call_valid (for_make_filled: BOOLEAN): BOOLEAN
+	is_special_call_valid: BOOLEAN
 			-- Is current creation call a call to SPECIAL.make_filled if `for_make_filled', otherwise to SPECIAL.make?
 		do
 			Result := call /= Void and then call.parameters /= Void and then
-				((not for_make_filled and call.parameters.count = 1) or (for_make_filled and call.parameters.count = 2))
+				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2))
 		ensure
 			is_special_call_valid: Result implies
 				(call /= Void and then call.parameters /= Void and then
-				((not for_make_filled and call.parameters.count = 1) or (for_make_filled and call.parameters.count = 2)))
+				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2)))
 		end
 
 note

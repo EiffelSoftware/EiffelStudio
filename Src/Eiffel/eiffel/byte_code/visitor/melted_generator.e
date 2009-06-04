@@ -583,14 +583,11 @@ feature {NONE} -- Visitors
 				l_basic_type.c_type.make_default_byte_code (ba)
 			else
 				l_call := a_node.call
-				if
-					l_call /= Void and then
-				 	(l_call.routine_id = system.special_make_rout_id or l_call.routine_id = system.special_make_filled_rout_id)
-				 then
-				 	l_is_make_filled := l_call.routine_id = system.special_make_filled_rout_id
+				if a_node.is_special_creation then
+				 	l_is_make_filled := a_node.is_special_make_filled
 					l_special_type := context.real_type (a_node.type)
 					check
-						is_special_call_valid: a_node.is_special_call_valid (l_is_make_filled)
+						is_special_call_valid: a_node.is_special_call_valid
 						is_special_type: l_special_type /= Void and then
 							l_special_type.associated_class.lace_class = system.special_class
 					end
@@ -605,6 +602,7 @@ feature {NONE} -- Visitors
 					ba.append (Bc_spcreate)
 						-- Say whether or not we should fill the SPECIAL.
 					ba.append_boolean (l_is_make_filled)
+					ba.append_boolean (a_node.is_special_make_empty)
 					a_node.info.make_byte_code (ba)
 					l_class_type.make_creation_byte_code (ba)
 					if l_is_make_filled then

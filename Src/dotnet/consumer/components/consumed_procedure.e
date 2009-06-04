@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			f := f | {FEATURE_ATTRIBUTE}.Is_attribute_setter
 		ensure
 			eiffel_name_set: eiffel_name = en
-			dotnet_name_set: dotnet_name = en
+			dotnet_name_set: dotnet_name = dn
 			donet_eiffel_name_set: equal (dotnet_eiffel_name, en)
 			is_frozen_set: is_frozen = True
 			is_static_set: is_static = a_is_static

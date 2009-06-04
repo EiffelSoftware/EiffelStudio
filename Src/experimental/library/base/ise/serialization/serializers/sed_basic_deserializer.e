@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 				-- Number of dynamic types in storable
 			nb := l_deser.read_compressed_natural_32.to_integer_32
-			create l_table.make (nb)
+			create l_table.make_filled (0, nb)
 
 				-- Read table which will give us mapping between the old dynamic types
 				-- and the new ones.
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.aliased_resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end

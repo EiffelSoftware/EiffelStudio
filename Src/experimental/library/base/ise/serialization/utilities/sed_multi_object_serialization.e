@@ -61,8 +61,12 @@ feature -- Basic Operations
 				l_raw_file.go (a_pos)
 				create l_reader.make (l_raw_file)
 				l_reader.set_for_reading
-				deserialized_object := retrieved (l_reader, True)
-				successful := deserialized_object /= Void
+				if l_reader.is_ready_for_reading then
+					deserialized_object := retrieved (l_reader, True)
+					successful := deserialized_object /= Void
+				else
+					successful := False
+				end
 			else
 				successful := False
 			end

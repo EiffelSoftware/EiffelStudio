@@ -61,7 +61,6 @@ feature {NONE} -- Implementation
 		local
 			l_dtype: INTEGER
 			l_int: like internal
-			l_array: detachable ARRAY [ANY]
 			l_area: SPECIAL [ANY]
 			i, nb: INTEGER
 		do
@@ -71,9 +70,7 @@ feature {NONE} -- Implementation
 					-- there will be in the system, we guessed that 500 should give
 					-- us a good initial number in most cases.
 				create Result.make (500)
-				l_array := a_list
-				l_area := l_array.area
-				l_array := Void
+				l_area := a_list.area
 				i := 0
 				nb := a_list.count
 			until

@@ -14,26 +14,27 @@ frozen class
 inherit
 	ABSTRACT_SPECIAL
 		redefine
-			debug_output,
 			is_equal,
-			copy
+			copy,
+			debug_output
 		end
 
 create
-	make,
+	make_empty,
 	make_filled,
 	make_from_native_array
 
 feature {INTERNAL} -- Initialization
 
-	make (n: INTEGER)
+	make_empty (n: INTEGER)
 			-- Create a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
 		do
 			create internal_native_array.make (n)
 		ensure
-			area_allocated: count = n
+			capacity_set: capacity = n
+			area_allocated: count = 0
 		end
 
 feature {NONE} -- Initialization
@@ -43,12 +44,12 @@ feature {NONE} -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			make (n)
+			make_empty (n)
 			fill_with (v, 0, n - 1)
 		ensure
 			capacity_set: capacity = n
 			count_set: count = n
-			filled: -- For every `i' in `0' .. `n - 1', `item' (`i') = `v'
+			filled: filled_with (v, 0, n - 1)
 		end
 
 	make_from_native_array (an_array: like native_array)
@@ -63,6 +64,7 @@ feature {NONE} -- Initialization
 				check not_possible: False end
 				internal_native_array := an_array
 			end
+			count := an_array.count
 		ensure
 				-- Commented because `equals' in .NET does not compare the content of arrays.
 --			native_array_set: native_array.equals (an_array)
@@ -103,7 +105,7 @@ feature -- Access
 				Result := start_position
 				nb := count
 			until
-				Result >= nb or else equal (item (Result), v)
+				Result >= nb or else item (Result) ~ v
 			loop
 				Result := Result + 1
 			end
@@ -150,16 +152,13 @@ feature -- Measurement
 	upper: INTEGER
 			-- Maximum index of Current
 		do
-			Result := internal_native_array.count - 1
+			Result := count - 1
 		ensure
 			definition: lower <= Result + 1
 		end
 
 	count: INTEGER
 			-- Count of special area
-		do
-			Result := internal_native_array.count
-		end
 
 	capacity: INTEGER
 			-- Count of special area
@@ -171,20 +170,10 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_default (i: INTEGER): BOOLEAN
-			-- Is item at index `i' set to a default value (or not set at all for attached reference types)?
-		require
-			index_big_enough: i >= 0
-			index_small_enough: i < count
-		local
-			default_value: detachable T
-		do
-			Result := item (i) = default_value
-		end
-
-	all_default (start_index, end_index: INTEGER): BOOLEAN
+	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
-			-- set to default values?
+			-- set to `v'?
+			-- (Use reference equality for comparison.)			
 		require
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1
@@ -198,16 +187,14 @@ feature -- Status report
 			until
 				i > end_index or else not Result
 			loop
-				Result := is_default (i)
+				Result := item (i) = v
 				i := i + 1
 			end
-		ensure
-			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
 	same_items (other: like Current; source_index, destination_index, n: INTEGER): BOOLEAN
-			-- Do all items between index `start_index' and `end_index' have
-			-- same value?
+			-- Are the `n' elements of `other' from `source_index' position the same as
+			-- the `n' elements of `Current' from `destination_index'?
 			-- (Use reference equality for comparison.)
 		require
 			other_not_void: other /= Void
@@ -280,12 +267,56 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
+	force (v: T; i: INTEGER)
+			-- If `i' is equal to `count' increase `count' by one and insert `v' at index `count',
+			-- otherwise replace `i'-th item by `v'.
+			-- (Indices begin at 0.)
+		require
+			index_big_enough: i >= 0
+			index_small_enough: i <= count
+			not_full: i = count implies count < capacity
+		do
+			if i < count then
+				put (v, i)
+			else
+				extend (v)
+			end
+		ensure
+			count_updated: count = (i + 1).max (old count)
+			same_capacity: capacity = old capacity
+			inserted: item (i) = v
+		end
+
+	extend (v: T)
+			-- Add `v' at index `count'.
+		require
+			count_small_enough: count < capacity
+		do
+			internal_native_array.put (count, v)
+			count := count + 1
+		ensure
+			count_increased: count = old count + 1
+			same_capacity: capacity = old capacity
+			inserted: item (count - 1) = v
+		end
+
+	extend_filled (v: T)
+			-- Set items between `count' and `capacity - 1' with `v'.
+		do
+			fill_with (v, count, capacity - 1)
+		ensure
+			same_capacity: capacity = old capacity
+			count_increased: count = capacity
+			filled: filled_with (v, old count, capacity - 1)
+		end
+
 	fill_with (v: T; start_index, end_index: INTEGER)
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
+			start_index_in_bound: start_index <= count
 			start_index_not_too_big: start_index <= end_index + 1
-			end_index_valid: end_index < count
+			end_index_valid: end_index < capacity
 		local
 			i, nb: INTEGER
 			l_array: like native_array
@@ -300,8 +331,56 @@ feature -- Element change
 				l_array.put (i, v)
 				i := i + 1
 			end
+			count := count.max (end_index + 1)
 		ensure
-			filled: -- For every `i' in `start_index' .. `end_index', `item' (`i') = `v'
+			same_capacity: capacity = old capacity
+			count_definition: count = (old count).max (end_index + 1)
+			filled: filled_with (v, start_index, end_index)
+		end
+
+	fill_with_default (start_index, end_index: INTEGER)
+			-- Clear items between `start_index' and `end_index'.
+		require
+			is_self_initializing: ({T}).has_default
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
+		do
+			fill_with (({T}).default, start_index, end_index)
+		ensure
+			filled: filled_with (({T}).default, start_index, end_index)
+		end
+
+	insert_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
+			-- Insert `n' elements of `other' from `source_index' position to Current at
+			-- `destination_index' and shift elements between `destination_index' and `count'
+			-- to the right. Other elements of Current remain unchanged.
+		require
+			other_not_void: other /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= other.count
+			n_is_small_enough_for_destination: count + n <= capacity
+			same_type: other.conforms_to (Current)
+		local
+			l_remaining_items: INTEGER
+		do
+			l_remaining_items := count - destination_index
+			if l_remaining_items = 0 then
+					-- It is being added at the end of Current, therefore we can simply extend.
+				copy_data (other, source_index, destination_index, n)
+			else
+					-- Simple case where we can perform a move of the existing items to the end
+					-- and then copy the elements of `other'.
+				{SYSTEM_ARRAY}.copy (internal_native_array, destination_index, internal_native_array, destination_index + n, l_remaining_items)
+				{SYSTEM_ARRAY}.copy (other.internal_native_array, source_index, internal_native_array, destination_index, n)
+				count := count + n
+			end
+		ensure
+			copied: same_items (other, source_index, destination_index, n)
+			count_updated: count = old count + n
 		end
 
 	copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
@@ -311,14 +390,17 @@ feature -- Element change
 			other_not_void: other /= Void
 			source_index_non_negative: source_index >= 0
 			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= other.count
-			n_is_small_enough_for_destination: destination_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= capacity
 			same_type: other.conforms_to (Current)
 		do
 			{SYSTEM_ARRAY}.copy (other.internal_native_array, source_index, internal_native_array, destination_index, n)
+			count := count.max (destination_index + n)
 		ensure
 			copied:	same_items (other, source_index, destination_index, n)
+			count_updated: count = (old count).max (destination_index + n)
 		end
 
 	move_data (source_index, destination_index, n: INTEGER)
@@ -327,16 +409,19 @@ feature -- Element change
 		require
 			source_index_non_negative: source_index >= 0
 			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= count
-			n_is_small_enough_for_destination: destination_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= capacity
 		local
 			l_array: like internal_native_array
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+			count := count.max (destination_index + n)
 		ensure
 			moved: same_items (old twin, source_index, destination_index, n)
+			count_updated: count = (old count).max (destination_index + n)
 		end
 
 	overlapping_move (source_index, destination_index, n: INTEGER)
@@ -345,17 +430,20 @@ feature -- Element change
 		require
 			source_index_non_negative: source_index >= 0
 			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
 			n_non_negative: n >= 0
 			different_source_and_target: source_index /= destination_index
 			n_is_small_enough_for_source: source_index + n <= count
-			n_is_small_enough_for_destination: destination_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= capacity
 		local
 			l_array: like internal_native_array
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+			count := count.max (destination_index + n)
 		ensure
 			moved: same_items (old twin, source_index, destination_index, n)
+			count_updated: count = (old count).max (destination_index + n)
 		end
 
 	non_overlapping_move (source_index, destination_index, n: INTEGER)
@@ -364,20 +452,23 @@ feature -- Element change
 		require
 			source_index_non_negative: source_index >= 0
 			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
 			n_non_negative: n >= 0
 			different_source_and_target: source_index /= destination_index
 			non_overlapping:
 				(source_index < destination_index implies source_index + n < destination_index) or
 				(source_index > destination_index implies destination_index + n < source_index)
 			n_is_small_enough_for_source: source_index + n <= count
-			n_is_small_enough_for_destination: destination_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= capacity
 		local
 			l_array: like internal_native_array
 		do
 			l_array := internal_native_array
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
+			count := count.max (destination_index + n)
 		ensure
 			moved: same_items (Current, source_index, destination_index, n)
+			count_updated: count = (old count).max (destination_index + n)
 		end
 
 feature -- Duplication
@@ -401,80 +492,301 @@ feature -- Duplication
 
 feature -- Resizing
 
+	keep_head (n: INTEGER)
+			-- Keep the first `n' entries.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= count
+		do
+			set_count (n)
+		ensure
+			count_updated: count = n
+			kept: same_items (old twin, 0, 0, n)
+		end
+
+	keep_tail (n: INTEGER)
+			-- Keep the last `n' entries.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= count
+		do
+			overlapping_move (count - n, 0, n)
+			set_count (n)
+		ensure
+			count_updated: count = n
+			kept: same_items (old twin, n, 0, n)
+		end
+
+	remove_head (n: INTEGER)
+			-- Remove the first `n' entries.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= count
+		do
+			keep_tail (count - n)
+		ensure
+			count_updated: count = old count - n
+			kept: same_items (old twin, n, 0, count)
+		end
+
+	remove_tail (n: INTEGER)
+			-- Keep the first  `count - n' entries.
+		require
+			non_negative_argument: n >= 0
+			less_than_count: n <= count
+		do
+			keep_head (count - n)
+		ensure
+			count_updated: count = old count - n
+			kept: same_items (old twin, 0, 0, count)
+		end
+
 	resized_area (n: INTEGER): like Current
 			-- Create a copy of Current with a count of `n'
 		require
 			n_non_negative: n >= 0
-		local
-			l_array: like internal_native_array
 		do
-			create Result.make (n)
-			l_array := internal_native_array
-			{SYSTEM_ARRAY}.copy (l_array, Result.internal_native_array, n.min (l_array.count))
+			create Result.make_empty (n)
+			Result.copy_data (Current, 0, 0, n.min (count))
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current
-			new_count: Result.count = n
+			new_count: Result.count =  n.min (old count)
 			preserved: Result.same_items (Current, 0, 0, n.min (old count))
+			capacity_preserved: n <= capacity implies Result.capacity = capacity
+			capcity_increased: n > capacity implies Result.capacity = n
+		end
+
+	resized_area_with_default (a_default_value: T; n: INTEGER): like Current
+			-- Create a copy of Current with a count of `n' where not yet initialized
+			-- entries are set to `a_default_value'.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_empty (n)
+			if n > count then
+				Result.copy_data (Current, 0, 0, count)
+				Result.fill_with (a_default_value, count, n - 1)
+			else
+				Result.copy_data (Current, 0, 0, n)
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_different_from_current: Result /= Current
+			new_count: Result.count = n.min (old count)
+			preserved: Result.same_items (Current, 0, 0, n.min (old count))
+			capacity_preserved: n <= capacity implies Result.capacity = capacity
+			capcity_increased: n > capacity implies Result.capacity = n
 		end
 
 	aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy
 		require
-			valid_new_count: n > count
+			n_non_negative: n > count
 		do
 			Result := resized_area (n)
 		ensure
 			Result_not_void: Result /= Void
+			new_count: Result.count = old count
+			new_capacity: Result.capacity = n
+			preserved: Result.same_items (old twin, 0, 0, old count)
+		end
+
+	aliased_resized_area_with_default (a_default_value: T; n: INTEGER): like Current
+			-- Try to resize `Current' with a count of `n', if not
+			-- possible a new copy. Non yet initialized entries are set to `a_default_value'.
+		require
+			n_non_negative: n > count
+		local
+			i: INTEGER
+		do
+			Result := aliased_resized_area (n)
+			from
+				i := Result.count
+			until
+				i = n
+			loop
+				Result.extend (a_default_value)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
 			new_count: Result.count = n
+			new_capacity: Result.capacity = n
 			preserved: Result.same_items (old twin, 0, 0, old count)
 		end
 
 feature -- Removal
 
+	replace_all (v: T)
+			-- Replace all items with `v'.
+		local
+			i: INTEGER
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				put (v, i)
+				i := i - 1
+			end
+		ensure
+			cleared: filled_with (v, 0, upper)
+		end
+
+	wipe_out
+			-- Reset count to zero.
+		do
+			set_count (0)
+		ensure
+			same_capacity: capacity = old capacity
+			count_reset: count = 0
+		end
+
 	clear_all
 			-- Reset all items to default values.
-		local
-			l_array: like internal_native_array
+		obsolete
+			"Because of the new precondition, it is recommended to use `fill_with' instead."
+		require
+			has_default: ({T}).has_default
 		do
-			l_array := internal_native_array
-			{SYSTEM_ARRAY}.clear (l_array, 0, l_array.count)
+			fill_with_default (0, upper)
 		ensure
-			cleared: all_default (0, upper)
+			same_capacity: capacity = old capacity
+			count_reset: count = old count
 		end
 
-	put_default (i: INTEGER)
-			-- Clear item at index `i', so that no references are kept to the object at this index.
-		require
-			index_big_enough: i >= 0
-			index_small_enough: i < count
-		do
-			{SYSTEM_ARRAY}.clear (internal_native_array, i, 1)
-		ensure
-			is_default: is_default (i)
-		end
+feature -- Iteration
 
-	fill_with_default (start_index, end_index: INTEGER)
-			-- Clear items between `start_index' and `end_index'.
+	do_all_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; start_index, end_index: INTEGER)
+			-- Apply `action' to every item, from first to last.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
 		require
-			start_index_non_negative: start_index >= 0
-			start_index_not_too_big: start_index <= end_index + 1
-			end_index_valid: end_index < count
+			action_not_void: action /= Void
 		local
 			i, nb: INTEGER
 		do
 			from
 				i := start_index
-				nb := end_index + 1
+				nb := end_index
 			until
-				i = nb
+				i > nb
 			loop
-				put_default (i)
+				action.call ([item (i)])
 				i := i + 1
 			end
-		ensure
-			filled: -- For every `i' in `start_index' .. `end_index', `is_default' (`i')
+		end
+
+	do_if_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER)
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+			test_not_void: test /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := start_index
+				nb := end_index
+			until
+				i > nb
+			loop
+				if test.item ([item (i)]) then
+					action.call ([item (i)])
+				end
+				i := i + 1
+			end
+		end
+
+	there_exists_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+			-- Is `test' true for at least one item?
+		require
+			test_not_void: test /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := start_index
+				nb := end_index
+			until
+				i > nb or Result
+			loop
+				Result := test.item ([item (i)])
+				i := i + 1
+			end
+		end
+
+	for_all_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+			-- Is `test' true for all items?
+		require
+			test_not_void: test /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := start_index
+				nb := end_index
+				Result := True
+			until
+				i > nb or not Result
+			loop
+				Result := test.item ([item (i)])
+				i := i + 1
+			end
+		end
+
+	do_all_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; start_index, end_index: INTEGER)
+			-- Apply `action' to every item, from first to last.
+			-- `action' receives item and its index.
+			-- Semantics not guaranteed if `action' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+		local
+			i, j, nb: INTEGER
+		do
+			from
+				i := start_index
+				j := lower
+				nb := end_index
+			until
+				i > nb
+			loop
+				action.call ([item (i), j])
+				j := j + 1
+				i := i + 1
+			end
+		end
+
+	do_if_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; test: FUNCTION [ANY, TUPLE [T, INTEGER], BOOLEAN]; start_index, end_index: INTEGER)
+			-- Apply `action' to every item that satisfies `test', from first to last.
+			-- `action' and `test' receive the item and its index.
+			-- Semantics not guaranteed if `action' or `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead.
+		require
+			action_not_void: action /= Void
+			test_not_void: test /= Void
+		local
+			i, j, nb: INTEGER
+		do
+			from
+				i := start_index
+				j := lower
+				nb := end_index
+			until
+				i > nb
+			loop
+				if test.item ([item (i), j]) then
+					action.call ([item (i), j])
+				end
+				j := j + 1
+				i := i + 1
+			end
 		end
 
 feature -- Output
@@ -485,6 +797,20 @@ feature -- Output
 			Result := Precursor
 			Result.append_string (", capacity=")
 			Result.append_integer (capacity)
+		end
+
+feature {NONE} -- Implementation
+
+	set_count (n: INTEGER)
+			-- Set `count' with `n'.
+		require
+			n_non_negative: n >= 0
+			valid_new_count: n <= count
+		do
+			count := n
+		ensure
+			count_set: count = n
+			capacity_preserved: capacity = old capacity
 		end
 
 feature {SPECIAL} -- Implementation: Access

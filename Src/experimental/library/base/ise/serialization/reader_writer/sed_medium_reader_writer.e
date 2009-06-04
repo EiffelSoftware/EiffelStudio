@@ -95,7 +95,8 @@ feature -- Status report
 			-- Is Current ready for future read operations?
 		do
 			Result := is_for_reading and then
-				medium.exists and then medium.is_open_read and then medium.support_storable
+				medium.exists and then medium.is_open_read and then
+				medium.support_storable and then medium.readable
 		end
 
 	is_ready_for_writing: BOOLEAN

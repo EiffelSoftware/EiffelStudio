@@ -8,16 +8,9 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class UNIX_FILE_INFO inherit
-
-	TO_SPECIAL [CHARACTER]
-		rename
-			area as buffered_file_info,
-			make_area as make_buffered_file_info
-		end
+class UNIX_FILE_INFO
 
 create
-
 	make
 
 feature -- Initialization
@@ -25,7 +18,6 @@ feature -- Initialization
 	make
 			-- Creation procedure
 		do
-			make_buffered_file_info (30)
 		end
 
 feature -- Access

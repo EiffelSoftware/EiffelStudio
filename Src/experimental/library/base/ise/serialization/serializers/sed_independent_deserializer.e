@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Implementation: access
 
-	attributes_mapping: detachable SPECIAL [SPECIAL [INTEGER]]
+	attributes_mapping: detachable SPECIAL [detachable SPECIAL [INTEGER]]
 			-- Mapping for each dynamic type id between old attribute location
 			-- and new attribute location.
 
@@ -32,16 +32,20 @@ feature {NONE} -- Implementation: access
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
 		local
 			a: like attributes_mapping
+			l_map: detachable SPECIAL [INTEGER]
 		do
 			a := attributes_mapping
 			if a /= Void then
 				check
 					attributes_mapping_has_dtype: a.valid_index (a_new_type_id)
-					attributes_mapping_not_void_item: a.item (a_new_type_id) /= Void
-					attributes_mapping_has_offset: a.item (a_new_type_id).valid_index (a_old_offset)
-					attributes_mapping_has_mapping: a.item (a_new_type_id).item (a_old_offset) >= 0
 				end
-				Result := a.item (a_new_type_id).item (a_old_offset)
+				l_map := a.item (a_new_type_id)
+				check
+					attributes_mapping_not_void_item: l_map /= Void
+					attributes_mapping_has_offset: l_map.valid_index (a_old_offset)
+					attributes_mapping_has_mapping: l_map.item (a_old_offset) >= 0
+				end
+				Result := l_map.item (a_old_offset)
 			else
 				check
 					attributes_mapping_not_void: False
@@ -67,8 +71,8 @@ feature {NONE} -- Implementation
 
 				-- Number of dynamic types in storable
 			nb := l_deser.read_compressed_natural_32.to_integer_32
-			create l_table.make (nb)
-			create attributes_mapping.make (nb)
+			create l_table.make_filled (0, nb)
+			create attributes_mapping.make_filled (Void, nb)
 
 				-- Read table which will give us mapping between the old dynamic types
 				-- and the new ones.
@@ -89,7 +93,7 @@ feature {NONE} -- Implementation
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.aliased_resized_area ((l_old_dtype + 1).max (l_table.count * 2))
+						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end
@@ -188,7 +192,8 @@ feature {NONE} -- Implementation
 					i := 1
 					l_map := attributes_map (a_dtype, l_field_count)
 					nb := nb + 1
-					create l_mapping.make (nb)
+					create l_mapping.make_empty (nb)
+					l_mapping.extend (0)
 				until
 					i = nb
 				loop
@@ -206,7 +211,7 @@ feature {NONE} -- Implementation
 								set_has_error
 								i := nb - 1 -- Jump out of loop
 							else
-								l_mapping.put (l_item.integer_32_item (1), i)
+								l_mapping.extend (l_item.integer_32_item (1))
 							end
 						end
 					else
@@ -219,7 +224,7 @@ feature {NONE} -- Implementation
 					a := attributes_mapping
 					if a /= Void then
 						if not a.valid_index (a_dtype) then
-							a := a.aliased_resized_area ((a_dtype + 1).max (a.count * 2))
+							a := a.aliased_resized_area_with_default (Void, (a_dtype + 1).max (a.count * 2))
 							attributes_mapping := a
 						end
 						a.put (l_mapping, a_dtype)

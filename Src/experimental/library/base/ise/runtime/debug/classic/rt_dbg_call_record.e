@@ -563,9 +563,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.finish
 									oi := ot.index
 									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
-									if not ort.valid_index (oi) then
-										ort.grow (oi + ort.count // 2)
-									end
 									ort.force (orcds, oi)
 								end
 							--else-- use previous values (ie: index)

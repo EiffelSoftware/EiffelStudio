@@ -204,7 +204,6 @@ feature {NONE} -- Implementation
 			l_dtype, l_spec_item_type: INTEGER
 			l_obj: ANY
 			l_area: SPECIAL [ANY]
-			l_array: detachable ARRAY [ANY]
 		do
 			if is_for_fast_retrieval then
 					-- Mark data with information that shows we have a mapping
@@ -216,9 +215,7 @@ feature {NONE} -- Implementation
 				l_spec_mapping := special_type_mapping
 
 				from
-					l_array := a_list
-					l_area := l_array.area
-					l_array := Void
+					l_area := a_list.area
 					i := 0
 					nb := a_list.count
 				until
@@ -286,7 +283,6 @@ feature {NONE} -- Implementation
 			l_obj: ANY
 			i, nb: INTEGER
 			l_area: SPECIAL [ANY]
-			l_array: detachable ARRAY [ANY]
 		do
 			l_int := internal
 			l_ser := serializer
@@ -295,9 +291,7 @@ feature {NONE} -- Implementation
 			l_is_for_slow_retrieval := not is_for_fast_retrieval
 
 			from
-				l_array := a_list
-				l_area := l_array.area
-				l_array := Void
+				l_area := a_list.area
 				i := 0
 				nb := a_list.count
 			until

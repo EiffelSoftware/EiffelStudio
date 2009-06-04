@@ -7,7 +7,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.MetadataConsumer">
-			<assertions precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
 		<setting name="console_application" value="true"/>

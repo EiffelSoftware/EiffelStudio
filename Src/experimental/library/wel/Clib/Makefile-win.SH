@@ -55,6 +55,7 @@ clean:
 	$(RM) *.dll
 	$(RM) *.BAK
 	$(RM) *.tds
+	$(RM) *.exp
 
 wel.lib: $(OBJECTS)
 	$alib_line

@@ -52,18 +52,16 @@ feature	-- Access
 			Result := l_result
 		end
 
-	available_locales: LINEAR[I18N_LOCALE_ID]
+	available_locales: LINEAR [I18N_LOCALE_ID]
 			-- return locales for which there is a locale-specific translation
 		do
-			create {ARRAYED_LIST[I18N_LOCALE_ID]} Result.make_from_array (locale_list)
-			Result.compare_objects
+			Result := locale_list
 		end
 
-	available_languages: LINEAR[I18N_LANGUAGE_ID]
+	available_languages: LINEAR [I18N_LANGUAGE_ID]
 			-- return languages for which there is a generic translation
 		do
-			create {ARRAYED_LIST[I18N_LANGUAGE_ID]} Result.make_from_array (language_list)
-			Result.compare_objects
+			Result := language_list
 		end
 
 feature {NONE} -- Internal data

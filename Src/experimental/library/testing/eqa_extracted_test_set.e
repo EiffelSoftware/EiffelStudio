@@ -362,33 +362,33 @@ feature {NONE} -- Object initialization
 			l_special: like new_special_any_instance
 		do
 			if attached {TYPE [SPECIAL [BOOLEAN]]} a_special as l_b_special then
-				Result := create {SPECIAL [BOOLEAN]}.make (a_count)
+				Result := create {SPECIAL [BOOLEAN]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [CHARACTER_8]]} a_special as l_c8_special then
-				Result := create {SPECIAL [CHARACTER_8]}.make (a_count)
+				Result := create {SPECIAL [CHARACTER_8]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [CHARACTER_32]]} a_special as l_c32_special then
-				Result := create {SPECIAL [CHARACTER_32]}.make (a_count)
+				Result := create {SPECIAL [CHARACTER_32]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [INTEGER_8]]} a_special as l_i8_special then
-				Result := create {SPECIAL [INTEGER_8]}.make (a_count)
+				Result := create {SPECIAL [INTEGER_8]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [INTEGER_16]]} a_special as l_i16_special then
-				Result := create {SPECIAL [INTEGER_16]}.make (a_count)
+				Result := create {SPECIAL [INTEGER_16]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [INTEGER_32]]} a_special as l_i32_special then
-				Result := create {SPECIAL [INTEGER_32]}.make (a_count)
+				Result := create {SPECIAL [INTEGER_32]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [INTEGER_64]]} a_special as l_i64_special then
-				Result := create {SPECIAL [INTEGER_64]}.make (a_count)
+				Result := create {SPECIAL [INTEGER_64]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [NATURAL_8]]} a_special as l_n8_special then
-				Result := create {SPECIAL [NATURAL_8]}.make (a_count)
+				Result := create {SPECIAL [NATURAL_8]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [NATURAL_16]]} a_special as l_n16_special then
-				Result := create {SPECIAL [NATURAL_16]}.make (a_count)
+				Result := create {SPECIAL [NATURAL_16]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [NATURAL_32]]} a_special as l_n32_special then
-				Result := create {SPECIAL [NATURAL_32]}.make (a_count)
+				Result := create {SPECIAL [NATURAL_32]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [NATURAL_64]]} a_special as l_n64_special then
-				Result := create {SPECIAL [NATURAL_64]}.make (a_count)
+				Result := create {SPECIAL [NATURAL_64]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [REAL]]} a_special as l_r_special then
-				Result := create {SPECIAL [REAL]}.make (a_count)
+				Result := create {SPECIAL [REAL]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [DOUBLE]]} a_special as l_d_special then
-				Result := create {SPECIAL [DOUBLE]}.make (a_count)
+				Result := create {SPECIAL [DOUBLE]}.make_empty (a_count)
 			elseif attached {TYPE [SPECIAL [POINTER]]} a_special as l_p_special then
-				Result := create {SPECIAL [POINTER]}.make (a_count)
+				Result := create {SPECIAL [POINTER]}.make_empty (a_count)
 			else
 
 					-- TYPE [SPECIAL [ANY]]
@@ -691,52 +691,52 @@ feature {NONE} -- Object initialization
 						if is_valid_id (l_id) and then is_existing_id (l_id) then
 							l_obj := object_for_id (l_id)
 							if field_conforms_to (dynamic_type (l_obj), l_gtype) then
-								a_special.put (l_obj, i-1)
+								a_special.extend (l_obj)
 							end
 						end
 					end
 				when boolean_type then
 					check l_b_special /= Void end
-					l_b_special.put (an_attributes.boolean_item (i), i-1)
+					l_b_special.extend (an_attributes.boolean_item (i))
 				when character_8_type then
 					check l_c8_special /= Void end
-					l_c8_special.put (an_attributes.character_8_item (i), i-1)
+					l_c8_special.extend (an_attributes.character_8_item (i))
 				when character_32_type then
 					check l_c32_special /= Void end
-					l_c32_special.put (an_attributes.character_32_item (i), i-1)
+					l_c32_special.extend (an_attributes.character_32_item (i))
 				when integer_8_type then
 					check l_i8_special /= Void end
-					l_i8_special.put (an_attributes.integer_8_item (i), i-1)
+					l_i8_special.extend (an_attributes.integer_8_item (i))
 				when integer_16_type then
 					check l_i16_special /= Void end
-					l_i16_special.put (an_attributes.integer_16_item (i), i-1)
+					l_i16_special.extend (an_attributes.integer_16_item (i))
 				when integer_32_type then
 					check l_i32_special /= Void end
-					l_i32_special.put (an_attributes.integer_32_item (i), i-1)
+					l_i32_special.extend (an_attributes.integer_32_item (i))
 				when integer_64_type then
 					check l_i64_special /= Void end
-					l_i64_special.put (an_attributes.integer_64_item (i), i-1)
+					l_i64_special.extend (an_attributes.integer_64_item (i))
 				when natural_8_type then
 					check l_n8_special /= Void end
-					l_n8_special.put (an_attributes.natural_8_item (i), i-1)
+					l_n8_special.extend (an_attributes.natural_8_item (i))
 				when natural_16_type then
 					check l_n16_special /= Void end
-					l_n16_special.put (an_attributes.natural_16_item (i), i-1)
+					l_n16_special.extend (an_attributes.natural_16_item (i))
 				when natural_32_type then
 					check l_n32_special /= Void end
-					l_n32_special.put (an_attributes.natural_32_item (i), i-1)
+					l_n32_special.extend (an_attributes.natural_32_item (i))
 				when natural_64_type then
 					check l_n64_special /= Void end
-					l_n64_special.put (an_attributes.natural_64_item (i), i-1)
+					l_n64_special.extend (an_attributes.natural_64_item (i))
 				when real_type then
 					check l_r_special /= Void end
-					l_r_special.put (an_attributes.real_32_item (i), i-1)
+					l_r_special.extend (an_attributes.real_32_item (i))
 				when double_type then
 					check l_d_special /= Void end
-					l_d_special.put (an_attributes.real_64_item (i), i-1)
+					l_d_special.extend (an_attributes.real_64_item (i))
 				when pointer_type then
 					check l_p_special /= Void end
-					l_p_special.put (an_attributes.pointer_item (i), i-1)
+					l_p_special.extend (an_attributes.pointer_item (i))
 				end
 				i := i + 1
 			end

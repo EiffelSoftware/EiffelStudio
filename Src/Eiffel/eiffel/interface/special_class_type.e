@@ -186,7 +186,8 @@ feature -- C code generation
 			if a_make_empty then
 				buffer.put_string ("RT_SPECIAL_COUNT(")
 				target_register.print_register
-				buffer.put_three_character ('0', ')', ';')
+				buffer.put_three_character (')', ' ', '=')
+				buffer.put_three_character (' ', '0', ';')
 			end
 
 			if gen_param.is_bit and not a_make_filled then

@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	MAIN_CONTROLLER
+	MASTER_CONTROLLER
 
 inherit
 	XWA_CONTROLLER redefine	make end

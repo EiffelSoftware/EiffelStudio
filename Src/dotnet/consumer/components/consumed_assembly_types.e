@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eiffel_names: SPECIAL [STRING]
+	eiffel_names: SPECIAL [detachable STRING]
 			-- Assembly types eiffel name
 
-	dotnet_names: SPECIAL [STRING]
+	dotnet_names: SPECIAL [detachable STRING]
 			-- Assembly types .NET name
 
 	flags: SPECIAL [INTEGER]
@@ -50,7 +50,7 @@ feature -- Access
 		local
 			i, l_index, namespace_count, l_count: INTEGER
 			namespace: detachable STRING
-			name: STRING
+			name: detachable STRING
 			l_namespaces: ARRAYED_LIST [STRING]
 		do
 			create l_namespaces.make (count)
@@ -69,7 +69,7 @@ feature -- Access
 					l_index := 0
 				end
 				namespace := Void
-				if l_index > 0 then
+				if name /= Void then
 					namespace := name.substring (1, l_index - 1)
 				end
 				if namespace /= Void and then not l_namespaces.has (namespace) then
@@ -98,7 +98,7 @@ feature -- Access
 			valid_name: namespaces.has (namespace_name)
 		local
 			i, l_index, types_count, l_count: INTEGER
-			name: STRING
+			name: detachable STRING
 			l_types_index: ARRAYED_LIST [INTEGER]
 		do
 			create l_types_index.make (count)

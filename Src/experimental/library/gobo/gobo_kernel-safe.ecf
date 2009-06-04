@@ -24,6 +24,12 @@
 		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
+			<file_rule>
+				<exclude>/basic/kl_special_routines.e$</exclude>
+				<exclude>/unicode/uc_v510_ctype_uppercase.e$</exclude>
+				<exclude>/unicode/uc_v510_ctype_titlecase.e$</exclude>
+				<exclude>/unicode/uc_v510_ctype_lowercase.e$</exclude>
+			</file_rule>
 		</cluster>
 		<cluster name="override" location="override\library\kernel\" recursive="true"/>
 		<cluster name="override_generated" location="override\generated\library\kernel\" recursive="true"/>

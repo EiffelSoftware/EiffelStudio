@@ -19,7 +19,7 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			create area.make (1 + (n // Integer_size))
+			create area.make_filled (0, 1 + (n // Integer_size))
 		ensure
 			allocated: area /= Void
 			enough_entries: count >= n
@@ -129,7 +129,7 @@ feature -- Resizing
 		do
 			new_count := 1 + (n // Integer_size)
 			if new_count > area.count then
-				area := area.aliased_resized_area (new_count)
+				area := area.aliased_resized_area_with_default (0, new_count)
 			end
 		ensure
 			consistent_count: count >= n
@@ -140,9 +140,9 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		do
-			area.clear_all
+			area.fill_with (0, 0, area.upper)
 		ensure
-			default_items: area.all_default (0, area.upper)
+			default_items: area.filled_with (0, 0, area.upper)
 		end
 
 feature -- Constants

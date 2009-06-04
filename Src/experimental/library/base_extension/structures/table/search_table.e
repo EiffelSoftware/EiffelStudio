@@ -205,10 +205,12 @@ feature -- Insertion, deletion
 			-- Set `control' to `Removed' or `Not_found_constant'.
 		require
 			valid_key: valid_key (key)
+		local
+			l_default_key: H
 		do
 			internal_search (key)
 			if control = Found_constant then
-				content.put_default (position)
+				content.put (l_default_key, position)
 				deleted_marks.put (True, position)
 				count := count - 1
 			end

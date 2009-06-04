@@ -175,6 +175,38 @@ feature
 			end
 		end
 
+	test1g (a: !COMPARABLE)
+		local
+			b: BOOLEAN
+		do
+			b := a < Current
+		end
+
+	test2g (a: !COMPARABLE)
+		local
+			b: BOOLEAN
+		do
+			if a /= Void then
+				b := a < Current
+			end
+		end
+
+	test3g (a: !COMPARABLE)
+		local
+			b: BOOLEAN
+		do
+			b := Current < a
+		end
+
+	test4g (a: !COMPARABLE)
+		local
+			b: BOOLEAN
+		do
+			if a /= Void then
+				b := Current < a
+			end
+		end
+
 	item (i: INTEGER): G
 		local
 			l_g: ?G

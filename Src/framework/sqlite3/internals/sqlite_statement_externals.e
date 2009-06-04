@@ -12,15 +12,6 @@ class
 
 feature -- Access
 
-	sqlite3_data_count (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
-		require
-			a_api_attached: attached a_api
-			a_api_is_interface_usable: a_api.is_interface_usable
-			not_a_stmt_is_null: a_stmt /= default_pointer
-		do
-			Result := c_sqlite3_data_count (a_api.api_pointer (once "sqlite3_data_count"), a_stmt)
-		end
-
 	sqlite3_column_count (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
 		require
 			a_api_attached: attached a_api
@@ -138,8 +129,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_sqlite3_column_count,
-	c_sqlite3_data_count (a_fptr: POINTER; a_stmt: POINTER): INTEGER
+	c_sqlite3_column_count (a_fptr: POINTER; a_stmt: POINTER): INTEGER
 		require
 			not_a_fptr_is_null: a_fptr /= default_pointer
 			not_a_stmt_is_null: a_stmt /= default_pointer

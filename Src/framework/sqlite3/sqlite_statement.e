@@ -49,12 +49,15 @@ feature {NONE} -- Initialization
 			a_db_is_accessible: a_db.is_accessible
 			a_db_is_readable: a_db.is_readable
 		do
-			create statement.make_from_string (a_statement)
-			db := a_db
+			create statement_string.make_from_string (a_statement)
+			create string.make_from_string (a_statement)
+			database := a_db
 			compile
 		ensure
-			statement_set: statement.same_string (a_statement)
-			db_set: db = a_db
+			string_set: string.same_string (a_statement)
+			statement_string_attached: attached statement_string
+			not_statement_string_is_empty: not statement_string.is_empty
+			database_set: database = a_db
 		end
 
 feature {NONE} -- Clean up
@@ -86,11 +89,10 @@ feature {NONE} -- Clean up
 							l_result := sqlite3_finalize (l_api, l_stmt)
 							if (l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_misuse then
 									-- Happens when the DB was closed before the statement was finalized.
-								check is_closed: db.is_closed end
+								check is_closed: database.is_closed end
 							else
 								check succeess: sqlite_success (l_result) end
 							end
-
 						else
 							check False end
 						end
@@ -109,24 +111,47 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	statement: IMMUTABLE_STRING_8
-			-- SQL statement
+	string: IMMUTABLE_STRING_8
+			-- The full statement string passed during initialization.
+			-- May contain multiple SQLite statments.
 
-	db: SQLITE_DATABASE
+	database: SQLITE_DATABASE
 			-- Database to execute the SQL statement on.
+
+	statement_string: IMMUTABLE_STRING_8
+			-- The actual compiled database string.
+			-- This may not be the same as `string' because statements string can be composed of
+			-- of multiple statements. After compilation this will contain a single statement.
+
+	next_statement: detachable SQLITE_STATEMENT
+			-- Next statement in the chain, when the supplied SQLite statement contained multiple SQLite
+			-- statements.
+
+feature -- Access: Error handling
 
 	last_exception: detachable SQLITE_EXCEPTION
 			-- Last occuring error, set during compilation.
 
 feature {NONE} -- Access
 
-	compile_statement: STRING
+	compile_statement_string: STRING
 			-- The statement used to compile with, which may be a modified version of `statement'.
 		do
-			Result := statement
+			Result := statement_string
 		ensure
 			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
+		end
+
+feature {SQLITE_STATEMENT} -- Measurement
+
+	changes_count: NATURAL
+			-- The number of changes executing this statement caused
+		do
+			Result := internal_changes_count
+			if attached next_statement as l_next then
+				Result := Result + l_next.changes_count
+			end
 		end
 
 feature {SQLITE_RESULT_ROW} -- Measurement
@@ -142,7 +167,7 @@ feature -- Status report
 
 	is_compiled: BOOLEAN
 			-- Indicates if the statement was successfully compiled, and if it is compiled with the
-			-- associated database `db'.
+			-- associated database `database'.
 		do
 			Result := internal_stmt /= default_pointer
 		ensure
@@ -156,10 +181,10 @@ feature -- Status report
 			-- associated database.
 		do
 			Result := is_compiled and then
-				internal_db = db.internal_db
+				internal_db = database.internal_db
 		ensure
 			not_internal_stmt_is_null: Result implies (is_compiled and then
-				internal_db = db.internal_db)
+				internal_db = database.internal_db)
 		end
 
 	has_error: BOOLEAN
@@ -183,9 +208,13 @@ feature -- Basic operations
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
-			is_executing: db.is_accessible implies is_executing -- Calls on the same thread can guarentee `is_executing'.
+			is_executing: database.is_accessible implies is_executing -- Calls on the same thread can guarentee `is_executing'.
 		do
 			is_abort_requested := True
+
+			if attached next_statement as l_next then
+				l_next.abort
+			end
 		ensure
 			is_abort_requested: is_abort_requested
 		end
@@ -202,87 +231,55 @@ feature -- Basic operations
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
-			db_is_accessible: db.is_accessible
-			db_is_readable: db.is_readable
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 		do
 			if not is_connected then
-					-- Reset internals
-				reset
+					-- Wipe out internals
+				reset_compilation_data
 
 					-- Attempt to recompile
 				compile
+			end
+
+			if attached next_statement as l_next then
+				l_next.ensure_connected
 			end
 		ensure
 			mark_increased: (not old is_connected) implies (mark > old mark)
 		end
 
-feature {NONE} -- Basic operations
+feature {SQLITE_STATEMENT} -- Basic operations: Execution
 
 	reset
-			-- Resets any cached compiled information
+			-- Resets any cached information from the last execution.
+		require
+			not_is_executing: not is_executing
 		do
-			internal_stmt := default_pointer
-			internal_db := default_pointer
 			is_abort_requested := False
-
-				-- The statement is no longer compiled so invalidate any retained linked
-				-- references.
-			mark := mark + 1
+			internal_changes_count := 0
+			last_exception := Void
 		ensure
-			not_is_compiled: not is_compiled
-			not_is_connected: not is_connected
 			not_is_abort_requested: not is_abort_requested
-			mark_increased: mark > old mark
+			internal_changes_count_reset: internal_changes_count = 0
+			last_exception_detached: not attached last_exception
+			not_has_error: not has_error
 		end
 
-	compile
-			-- Compiles the current statement.
+	reset_all
+			-- Resets any cached information from the last execution for all statments.
 		require
-			is_sqlite_available: is_sqlite_available
-			is_interface_usable: is_interface_usable
-			not_is_connected: not is_connected
-			db_is_readable: db.is_readable
-		local
-			l_db: like db
-			l_string: C_STRING
-			l_stmt_handle: POINTER
-			l_internal_db: POINTER
-			l_tail: POINTER
-			l_locked: BOOLEAN
-			l_result: INTEGER
+			not_is_executing: not is_executing
 		do
-			create l_string.make (compile_statement)
-				-- Note: Preparation does support mulitple statments in one string, but for now this is not supported.
-
-			l_db := db
-			l_db.lock
-			l_locked := True
-
-			l_internal_db := l_db.internal_db
-			l_result := sqlite3_prepare_v2 (sqlite_api, l_internal_db, l_string.item, l_string.count + 1, $l_stmt_handle, $l_tail)
-			if sqlite_success (l_result) then
-				check no_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end
-				internal_stmt := l_stmt_handle
-				internal_db := l_internal_db
-				last_exception := Void
-			else
-				internal_stmt := default_pointer
-				internal_db := default_pointer
-				last_exception := l_db.last_exception
+			reset
+			if attached next_statement as l_next then
+				l_next.reset_all
 			end
-
-			l_locked := False
-			l_db.unlock
 		ensure
-			not_internal_db_is_null: is_compiled implies internal_db /= default_pointer
-			internal_db_is_null: not is_compiled implies internal_db = default_pointer
-			last_exception_attached: not is_compiled implies attached last_exception
-			last_exception_attached: is_compiled implies not attached last_exception
-		rescue
-			if l_locked then
-				l_locked := False
-				db.unlock
-			end
+			not_is_abort_requested: not is_abort_requested
+			internal_changes_count_reset: internal_changes_count = 0
+			last_exception_detached: not attached last_exception
+			not_has_error: not has_error
 		end
 
 	execute_internal (a_callback: detachable PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: detachable ANY)
@@ -295,11 +292,12 @@ feature {NONE} -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			db_is_accessible: db.is_accessible
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 		local
 			l_api: like sqlite_api
 			l_stmt: like internal_stmt
-			l_db: like db
+			l_db: detachable like database
 			l_exception: detachable SQLITE_EXCEPTION
 			l_result: INTEGER
 			l_done: BOOLEAN
@@ -311,9 +309,10 @@ feature {NONE} -- Basic operations
 
 			l_api := sqlite_api
 			l_stmt := internal_stmt
-			l_db := db
+			l_db := database
 
-			is_abort_requested := False
+				-- Reset cache information
+			reset_all
 			is_executing := True
 
 				-- Note the locking sequencing, to ensure access to the error messages
@@ -331,37 +330,52 @@ feature {NONE} -- Basic operations
 				l_locked := False
 
 				if attached a_callback then
+						-- Increment the row index
+					l_row.index := l_row.index + 1
 						-- Call back with the result row.
 					a_callback.call ([l_row])
 				end
 
-					-- Check abort status
-				l_done := is_abort_requested
 
-				if not l_done and is_connected then
+				if is_connected then
 						-- The callback could have closed the DB connection so the check is needed.
 					l_db.lock -- (+1) 1
 					l_locked := True
-					l_result := sqlite3_step (l_api, l_stmt)
-				end
-				l_done := l_done or l_result = {SQLITE_RESULT_CODES}.sqlite_done
-			end
 
-				-- Fetch any error information, if any, and report it.
-			if l_locked then
-				if not sqlite_success (l_result) then
-					l_exception := l_db.last_exception
-					l_db.unlock -- (-1) 0
-					if attached l_exception then
-						l_exception.raise
+						-- Check abort status
+					l_done := is_abort_requested or l_result = {SQLITE_RESULT_CODES}.sqlite_done
+					if not l_done then
+						l_result := sqlite3_step (l_api, l_stmt)
 					end
 				else
-					l_db.unlock -- (-1) 0	
+					l_done := True
 				end
+			end
+
+				-- Fetch any error information, if any, and report it.		
+			if not sqlite_success (l_result) then
+				if is_connected then
+					l_exception := l_db.last_exception
+					if l_locked then
+						l_locked := False
+						l_db.unlock -- (-1) 0
+					end
+				end
+				if not attached l_exception then
+						-- No exception
+					l_exception := sqlite_exception (l_result, Void)
+				end
+				last_exception := l_exception
+				l_exception.raise
 			else
-					-- The connection was lost so no error information can be retrieved from the DB.
-				check not_is_connected: not is_abort_requested implies not is_connected end
-				sqlite_raise_on_failure (l_result)
+				if l_locked then
+					l_locked := False
+					l_db.unlock -- (-1) 0
+				end
+				if attached next_statement as l_next then
+						-- There is another statment to execute, process this before unlocking the database.
+					l_next.execute_internal (a_callback, a_bindings)
+				end
 			end
 
 				-- Reset the statement for repeated use.
@@ -372,9 +386,118 @@ feature {NONE} -- Basic operations
 			not_is_executing: not is_executing
 			mark_increased: mark > old mark
 		rescue
+			if l_locked then
+				check l_db_attached: attached l_db end
+				l_locked := False
+				l_db.unlock
+			end
 			if is_executing then
 				is_executing := False
 				sqlite3_reset (sqlite_api, internal_stmt).do_nothing
+			end
+		end
+
+feature {NONE} -- Basic operations: Compilation
+
+	reset_compilation_data
+			-- Clears any cached information related to the preperation/compilation of the statement
+		do
+			internal_stmt := default_pointer
+			internal_db := default_pointer
+			reset
+
+				-- The statement is no longer compiled so invalidate any retained linked
+				-- references.
+			mark := mark + 1
+		ensure
+			not_is_compiled: not is_compiled
+			not_is_connected: not is_connected
+			not_is_abort_requested: not is_abort_requested
+			internal_changes_count_reset: internal_changes_count = 0
+			last_exception_detached: not attached last_exception
+			mark_increased: mark > old mark
+			not_has_error: not has_error
+		end
+
+	compile
+			-- Compiles the current statement.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			not_is_connected: not is_connected
+			not_has_error: not has_error
+			database_is_readable: database.is_readable
+			database: database.is_readable
+		local
+			l_db: like database
+			l_string: C_STRING
+			l_next_string: STRING
+			l_next_statement: SQLITE_STATEMENT
+			l_stmt_handle: POINTER
+			l_internal_db: POINTER
+			l_tail: POINTER
+			l_locked: BOOLEAN
+			l_result: INTEGER
+		do
+			create l_string.make (compile_statement_string)
+
+			l_db := database
+			l_db.lock
+			l_locked := True
+
+			l_internal_db := l_db.internal_db
+			l_result := sqlite3_prepare_v2 (sqlite_api, l_internal_db, l_string.item, l_string.count + 1, $l_stmt_handle, $l_tail)
+			if sqlite_success (l_result) then
+				check no_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end
+				internal_stmt := l_stmt_handle
+				internal_db := l_internal_db
+				last_exception := Void
+				if l_tail /= default_pointer then
+						-- There is more to process, which means there should not already be a next statement because
+						-- this is the first compilation.
+					check next_statement_detached: not attached next_statement end
+					create l_string.make_shared_from_pointer (l_tail)
+					l_next_string := l_string.string
+					if not l_next_string.is_empty then
+							-- Create the next statement string, with only the compiled statement
+						create statement_string.make_from_string (statement_string.substring (1, statement_string.count - l_next_string.count))
+
+							-- Remove ; from the start of the statement, if it exists.
+						l_next_string.prune_all_leading (';')
+							-- Remove extra whitespace
+						l_next_string.left_adjust
+						if not l_next_string.is_empty then
+							create l_next_statement.make (l_next_string, l_db)
+							if l_next_statement.has_error then
+									-- An error occurred so the entire statement should be considered uncompiled
+								reset_compilation_data
+
+									-- Use statement's last exception and not the database's because of future/redefined error
+									-- processing could manipulate this.
+								last_exception := l_next_statement.last_exception
+							else
+								next_statement := l_next_statement
+							end
+						end
+
+					end
+				end
+			else
+				reset_compilation_data
+				last_exception := l_db.last_exception
+			end
+
+			l_locked := False
+			l_db.unlock
+		ensure
+			not_internal_db_is_null: is_compiled implies internal_db /= default_pointer
+			internal_db_is_null: not is_compiled implies internal_db = default_pointer
+			last_exception_attached: not is_compiled implies attached last_exception
+			last_exception_attached: is_compiled implies not attached last_exception
+		rescue
+			if l_locked then
+				l_locked := False
+				database.unlock
 			end
 		end
 
@@ -387,10 +510,16 @@ feature {SQLITE_INTERNALS} -- Implementation
 			-- The pointer to the database connection when the statement was compiled.
 			--|Used to determine if the database is the same when executing the statement.
 
+	internal_changes_count: NATURAL
+			-- Mutable version of `changes_count'.
+			-- Note: Do not use directly!
+
 invariant
-	statement_attached: attached statement
-	not_statement_is_empty: not statement.is_empty
-	db_attached: attached db
+	database_attached: attached database
+	statement_attached: attached statement_string
+	not_statement_is_empty: not statement_string.is_empty
+	string_attached: attached string
+	not_string_is_empty: not string.is_empty
 	not_internal_db_is_null: internal_stmt /= default_pointer implies internal_db /= default_pointer
 	internal_db_is_null: internal_stmt = default_pointer implies internal_db = default_pointer
 

@@ -54,10 +54,31 @@ feature -- Access
 	statement: SQLITE_STATEMENT
 			-- Statement used when generating the row.
 
+	index: NATURAL assign set_index
+			-- Row result index.
+
 feature {NONE} -- Access
 
 	statement_mark: NATURAL
 			-- The mark of the statement when created.
+
+feature {SQLITE_STATEMENT} -- Element change
+
+	set_index (a_index: NATURAL)
+			-- Increments the row index.
+			-- Note: Used when processing the results.
+			--|
+			--|A setter is used instead of in incrementing routine because new rows may be created and a
+			--|specific index needs to be set base off of the previously created row.
+			--
+			-- `a_index': The next index to set.
+		require
+			a_index_positive: a_index > 0
+		do
+			index := a_index
+		ensure
+			index_incremented: index = a_index
+		end
 
 feature -- Measurement
 
@@ -82,6 +103,22 @@ feature -- Status report
 			is_interface_usable: Result implies is_interface_usable
 			statement_is_connected: Result implies statement.is_connected
 			statement_mark_equal: Result implies statement.mark = statement_mark
+		end
+
+	is_null (a_column: NATURAL): BOOLEAN
+			-- Determines if a column contains a null value.
+			--
+			-- `a_column': The column index.
+			-- `Result': True if the column contains a null value; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			is_connected: is_connected
+			a_column_positive: a_column > 0
+			a_column_small_enough: a_column <= count
+		do
+			Result := type (a_column) = {SQLITE_TYPES}.sqlite_null
+		ensure
+			not_result: not Result implies type (a_column) /= {SQLITE_TYPES}.sqlite_null
 		end
 
 feature -- Query
@@ -184,7 +221,7 @@ feature -- Query: Value affinity
 			is_connected: is_connected
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
-			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_a_column_is_null: not is_null (a_column)
 		do
 			Result := sqlite3_column_int (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
 		end
@@ -198,7 +235,7 @@ feature -- Query: Value affinity
 			is_connected: is_connected
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
-			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_a_column_is_null: not is_null (a_column)
 		do
 			Result := sqlite3_column_int64 (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
 		end
@@ -212,7 +249,7 @@ feature -- Query: Value affinity
 			is_connected: is_connected
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
-			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_a_column_is_null: not is_null (a_column)
 		local
 			p: POINTER
 		do
@@ -233,7 +270,7 @@ feature -- Query: Value affinity
 			is_connected: is_connected
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
-			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_a_column_is_null: not is_null (a_column)
 		do
 			Result := real_64_value (a_column).truncated_to_real
 		end
@@ -247,7 +284,7 @@ feature -- Query: Value affinity
 			is_connected: is_connected
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
-			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_a_column_is_null: not is_null (a_column)
 		do
 			Result := sqlite3_column_double (sqlite_api, statement.internal_stmt, (a_column + 1).as_integer_32)
 		end

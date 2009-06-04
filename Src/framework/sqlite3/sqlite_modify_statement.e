@@ -12,26 +12,30 @@ class
 
 inherit
 	SQLITE_STATEMENT
+		export
+			{ANY} changes_count
+		end
 
 create
 	make
 
 feature -- Basic operations
 
-	execute
+	frozen execute
 			-- Executes the SQLite modification statement.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
 			not_is_executing: not is_executing
-			db_is_accessible: db.is_accessible
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 		do
 			execute_internal (Void, Void)
 		ensure
 			not_is_executing: not is_executing
 		end
 
-	execute_with_arguments (a_bindings: ANY)
+	frozen execute_with_arguments (a_bindings: ANY)
 			-- Executes the SQLite modification statement with bound set of arguments.
 			--
 			-- `a_bindings': The bound arguments to call the SQLite query statement with.
@@ -40,7 +44,8 @@ feature -- Basic operations
 			is_connected: is_connected
 			not_is_executing: not is_executing
 			a_bindings_attached: attached a_bindings
-			db_is_accessible: db.is_accessible
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 			not_implemented: False
 		do
 			execute_internal (Void, a_bindings)

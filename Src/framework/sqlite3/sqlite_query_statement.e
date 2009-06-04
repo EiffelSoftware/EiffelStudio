@@ -22,12 +22,13 @@ create
 feature -- Meansurement
 
 	column_count: NATURAL
-			-- The number of columns found in the compiled statement
+			-- The number of columns found in the compiled statement.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
 			is_compiled: is_compiled
 			is_connected: is_connected
+			database_is_accessible: database.is_accessible
 		do
 			Result := sqlite3_column_count (sqlite_api, internal_stmt).as_natural_32
 		end
@@ -44,6 +45,7 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			is_compiled: is_compiled
 			is_connected: is_connected
+			database_is_accessible: database.is_accessible
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= column_count
 		local
@@ -82,7 +84,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	execute_with_callback (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]])
+	frozen execute_with_callback (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]])
 			-- Executes the SQLite query statement and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
@@ -94,7 +96,8 @@ feature -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			db_is_accessible: db.is_accessible
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 			a_callback_attached: attached a_callback
 		do
 			execute_internal (a_callback, Void)
@@ -102,7 +105,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	execute_with_callback_and_arguments (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: ANY)
+	frozen execute_with_callback_and_arguments (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: ANY)
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
@@ -115,7 +118,8 @@ feature -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			db_is_accessible: db.is_accessible
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
 			a_callback_attached: attached a_callback
 			a_bindings_attached: attached a_bindings
 			not_implemented: False

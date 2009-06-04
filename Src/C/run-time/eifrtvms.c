@@ -69,6 +69,9 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
 #include <nam>		/* RMS NAM (name block) definitions */
 
 
+/* 'cause you've got... */
+#define CARDINALITY(a)  ( sizeof(a) / sizeof((a)[0]) )
+
 /* nested concatenation enables concatenation of macro values (instead of names) */
 #define CAT22(x,y) CAT2(x,y)
 
@@ -83,6 +86,7 @@ globalvalue eifrt_vms__pointer_size = sizeof (void*);
 #if __INITIAL_POINTER_SIZE <= 32
 #define _strdup32(s) strdup(s)
 #endif
+
 
 
 rt_shared const char eifrt_vms_valid_filename_chars[]
@@ -106,9 +110,6 @@ rt_shared const char eifrt_vms_path_delimiters[] = ":[]<>";
 /* NB. these are not complementary; a simple filename with no path delimiters is neither. */
 #define IS_VMS_FILESPEC(p)  ( NULL != strpbrk ( ((char*)(p)), eifrt_vms_path_delimiters) )
 #define IS_UNIX_FILESPEC(p) ( NULL != strchr  ( ((char*)(p)), '/') )
-
-
-
 
 
 
@@ -202,18 +203,18 @@ rt_public char* eifrt_vms_directory_file_name (const char* a_dir, char* a_buf)
 
 	/* perform a parse on the name supplied */
 #if __INITIAL_POINTER_SIZE > 32
+	REQUIRE ("dnm is short pointer", $is_32bits(dnm));
 #pragma message save
 #pragma message disable (MAYHIDELOSS)    // checked: pointers are 32 bits
+	fab.fab$l_dna = (char_ptr32)dnm;		// checked: pointer to static data must be 32 bits
 	if ($is_32bits (a_dir)) {
-	    fab.fab$l_fna = (__char_ptr32)a_dir;    // checked: ptr is 32 bit
+	    fab.fab$l_fna = (char_ptr32)a_dir;		// checked: is 32 bit pointer
+#pragma message restore
 	    dir32 = NULL;
 	} else {
 	    fab.fab$l_fna = dir32 = _strdup32 (a_dir);
 	    fab.fab$l_fna = dir32;
 	}
-	REQUIRE ("dnm is short pointer", $is_32bits(dnm));
-	fab.fab$l_dna = (__char_ptr32)dnm;	// checked: pointer to static data must be 32 bits
-#pragma message restore
 #else
 	fab.fab$l_dna = (char*)dnm; 
 	fab.fab$l_fna = (char*)a_dir; 
@@ -400,13 +401,13 @@ int eifrt_vms_spawn (const char *a_cmd, int a_flags)
 	if (!cmd_words[0]) {
 	    cmd = eifrt_vms_filespec (a_cmd, vms_cmd);
 	    vms_file_len = strlen (cmd);
-	    assert (vms_file_len < sizeof vms_cmd);
+	    CHECK ("cmd does not overflow vms_cmd buffer", vms_file_len < sizeof vms_cmd);
 	    cmd_count = 1;
 	} else {
 	    cmd = eifrt_vms_filespec (cmd_words[0], vms_cmd);
 	    err = access (cmd, F_OK);	    // debug? what's this for?
 	    vms_file_len = strlen (vms_cmd);
-	    assert (vms_file_len < sizeof vms_cmd);
+	    CHECK ("cmd does not overflow vms_cmd buffer", vms_file_len < sizeof vms_cmd);
 	    for (cmd_count=1;  cmd_words[cmd_count];  ++cmd_count) {
 		char *endp = vms_cmd + strlen (vms_cmd);
 		*endp++ = ' ';
@@ -414,7 +415,7 @@ int eifrt_vms_spawn (const char *a_cmd, int a_flags)
 		    cmd = eifrt_vms_filespec (cmd_words[cmd_count], endp);
 		else
 		    strcpy (endp, cmd_words[cmd_count]);
-		assert (strlen (vms_cmd) < sizeof vms_cmd);
+		CHECK ("vms_cmd does not overflow buffer", strlen(vms_cmd) < sizeof vms_cmd);
 	    }
 	    shfree();   
 	}
@@ -716,18 +717,19 @@ rt_public int eifrt_vms_unlink (const char *name) {
 #endif // moose
 #endif  /* EIF_VMS_OLD */
 
-/*** I18N (Internationalization) stuff ***/
 
-//#define VMS_TRACE
+/*** I18N (Internationalization) stuff ***/
 
 /* local forward references */
 static const char* spaces (size_t len) ;
 static const char* safe_string (const char*p) ;
+static const char* locale_category_name (int category) ;
 
-
+//#define VMS_TRACE_SETLOCALE
 #include <locale.h>
 #define NeedFunction_Prototypes
-/* setlocale is 32-bit only */
+
+/* jacket for setlocale: setlocale is 32-bit only */
 char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
 {
     char_ptr32 res, res1;
@@ -736,33 +738,85 @@ char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
     char_ptr32 DECC$SETLOCALE (int category, const char* locale);
     char_ptr32 __XSETLOCALE (int category, const char* locale);
 
+#ifdef VMS_TRACE_SETLOCALE
+    printf ("eifrtvms: setlocale(%s (%d), \"%s\")\n", locale_category_name (category), category, safe_string(locale));
+#endif
     if (!once) {
 	once = TRUE;
 	res = DECC$SETLOCALE (LC_ALL, NULL);
 	default_locale = _strdup32 (res);
-#ifdef VMS_TRACE
-	printf ("eifrtvms: first call to setlocale (LC_ALL,NULL) = %s\n", default_locale);
+#ifdef VMS_TRACE_SETLOCALE
+	printf ("eifrtvms: first call to setlocale (LC_ALL, NULL) = %s\n", default_locale);
 #endif
     }
-#ifdef VMS_TRACE
-    printf ("eifrtvms: setlocale(%d, \"%s\")\n", category, safe_string(locale));
-#endif
     res1 = DECC$SETLOCALE (category, locale);
+#ifdef VMS_TRACE_SETLOCALE
+    printf (" DECC$SETLOCALE returns \"%s\"\n", safe_string(res1));
+#endif
     res = __XSETLOCALE (category, locale);
-#ifdef VMS_TRACE
-    printf ("  returning \"%s\"\n", safe_string(res));
+#ifdef VMS_TRACE_SETLOCALE
+    printf (" returning \"%s\"\n", safe_string(res));
 #endif
     return res;
 }
 
 
+#define CATEGORY_MAP_ITEM(cat) {cat, #cat}
+typedef struct { int category; const char* name; } locale_category_map_item_t;
+static locale_category_map_item_t locale_category_map[] = {
+    CATEGORY_MAP_ITEM (LC_ALL), 
+    CATEGORY_MAP_ITEM (LC_COLLATE), 
+    CATEGORY_MAP_ITEM (LC_CTYPE), 
+    CATEGORY_MAP_ITEM (LC_MESSAGES), 
+    CATEGORY_MAP_ITEM (LC_MONETARY), 
+    CATEGORY_MAP_ITEM (LC_NUMERIC), 
+    CATEGORY_MAP_ITEM (LC_TIME),
+};
+
+static int locale_category_item_compare (int *cat1, locale_category_map_item_t *cat2)
+{
+    REQUIRE ("*int == *locale_category_map_item.category", offsetof (locale_category_map_item_t, category) == 0);
+    if (*cat1 < cat2->category)
+	return -1;
+    else if (*cat1 == cat2->category)
+	return 0;
+    else
+	return 1;
+}
+
+/* locale category name from `category' */
+static const char* locale_category_name (int category)
+{
+    locale_category_map_item_t *itemp;
+    const char* res = NULL;
+    static int once = FALSE;
+
+    if (!once) {
+	once = TRUE;
+	qsort (locale_category_map, CARDINALITY(locale_category_map), sizeof(locale_category_map[0]), 
+		(int (*)(const void*, const void*))locale_category_item_compare);
+    }
+    itemp = bsearch ((void*)&category, locale_category_map, CARDINALITY(locale_category_map), sizeof(locale_category_map[0]), 
+		(int (*)(const void*, const void*))locale_category_item_compare);
+    if (itemp == NULL)
+	res = "<unknown>";
+    else res = itemp->name;
+    return res;
+}
+
+
+
+//#define VMS_TRACE_NL_LANGINFO
 #include <langinfo.h>
-/* Currently, Eiffel I18N library I18N_POSIX_CONSTANTS uses hard-coded values for nl_langinfo item codes */
-/* This table those values to to corresponding VMS values */
-#define NL_ITEM(itm, eifval) NL_ENT (eifval, itm, #itm)
+
+/*  Currently, Eiffel I18N library class {I18N_POSIX_CONSTANTS}			*/
+/*	(ISE_EIFFEL:[library.i18n.locale.posix]i18n_posix_constants.e)		*/
+/*  uses hard-coded values for nl_langinfo item codes.				*/
+/*  This table maps those values to the corresponding VMS symbolic values.	*/
 #define NL_ENT(e,i,n) { e, i, n }
-typedef struct { int32 eifval; nl_item vmsval; const char* nam;} eifrt_vms_nl_map_item_t;
-static eifrt_vms_nl_map_item_t eifrt_vms_nl_item_map[] = {
+#define NL_ITEM(itm, eifval) NL_ENT (eifval, itm, #itm)
+typedef struct { int32 eifval; nl_item vmsval; const char* nam;} nl_map_item_t;
+static nl_map_item_t nl_item_map[] = {
 	//{"CODESET", CODESET, 0x0 }, 
 	NL_ITEM (CODESET, 0), 
 	NL_ITEM (ABDAY_1, 0x20000), NL_ITEM (ABDAY_2, 0x20001), NL_ITEM (ABDAY_3, 0x20002), NL_ITEM (ABDAY_4, 0x20003), 
@@ -778,7 +832,7 @@ static eifrt_vms_nl_map_item_t eifrt_vms_nl_item_map[] = {
 	NL_ITEM (AM_STR, 0x20026), NL_ITEM (PM_STR, 0x20027), 
 	NL_ITEM (D_T_FMT, 0x20028), NL_ITEM (D_FMT, 0x20029), NL_ITEM (T_FMT, 0x2002A), 
 	NL_ITEM (T_FMT_AMPM, 0x2002B), NL_ITEM (CRNCYSTR, 0x4000F)
-#ifdef moose  /* currently undefined in {I18N_POSIX_CONSTANTS.E} */
+#ifdef moose  /* these are currently unused in {I18N_POSIX_CONSTANTS} */
 	NL_ITEM (RADIXCHAR, ), NL_ITEM (THOUSEP, ), 
 	NL_ITEM (YESSTR, ), NL_ITEM (NOSTR, ), 
 	NL_ITEM (ERA, ), NL_ITEM (ERA_D_FMT, ), 
@@ -788,122 +842,159 @@ static eifrt_vms_nl_map_item_t eifrt_vms_nl_item_map[] = {
 #endif
 };
 
-
-/* 'cause I've got... */
-#define CARDINALITY(a)  ( sizeof(a) / sizeof((a)[0]) )
-
-static int eifrt_vms_nl_item_compare (const eifrt_vms_nl_map_item_t* p1, const eifrt_vms_nl_map_item_t* p2)
+static int nl_item_compare (const nl_map_item_t* p1, const nl_map_item_t* p2)
 {
     if (p1->eifval < p2->eifval)
-	return (-1);
+	return -1;
     else if (p1->eifval == p2->eifval)
-	return (0);
+	return 0;
     else
-	return (1);
+	return 1;
 }
 
-
+/* jacket for nl_langinfo () */
 char_ptr32 eifrt_vms_nl_langinfo (nl_item item)
 {   
     char_ptr32 res;
-    eifrt_vms_nl_map_item_t* nlp;
+    nl_map_item_t* nlp;
     nl_item itm = item;
     char_ptr32 DECC$NL_LANGINFO (nl_item item);
-    static int sorted;
+    static int sorted = FALSE;
 
-    res = DECC$NL_LANGINFO (item);
-    res = DECC$NL_LANGINFO (itm);
-    nlp = bsearch (&item, eifrt_vms_nl_item_map, CARDINALITY(eifrt_vms_nl_item_map), sizeof (*eifrt_vms_nl_item_map), 
-		(int (*)(const void*, const void*))eifrt_vms_nl_item_compare);
+    REQUIRE ("eifval first element of nl_map_item", offsetof (nl_map_item_t, eifval) == 0);
+    if (!sorted) {
+	sorted = TRUE;
+	qsort (nl_item_map, CARDINALITY(nl_item_map), sizeof (*nl_item_map), 
+                (int (*)(const void*, const void*))nl_item_compare);
+    }
+#ifdef DEBUG
+    res = DECC$NL_LANGINFO (item);	// what was this for? 
+    res = DECC$NL_LANGINFO (itm);	// what was this for? 
+#endif
+    nlp = bsearch (&item, nl_item_map, CARDINALITY(nl_item_map), sizeof (*nl_item_map), 
+		(int (*)(const void*, const void*))nl_item_compare);
     if (nlp) {
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_NL_LANGINFO
 	printf ("eifrtvms: nl_langinfo(\"%s\" (0x%x, mapped from 0x%x)\n", safe_string (nlp->nam), nlp->vmsval, item);
 #endif
 	res = DECC$NL_LANGINFO (nlp->vmsval);
     } else {
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_NL_LANGINFO
 	printf ("eifrtvms: nl_langinfo(unknown item code %d\n", item);
 #endif
 	res = DECC$NL_LANGINFO (item);
     }
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_NL_LANGINFO
     printf ("  returning \"%s\"\n", safe_string(res));
 #endif
     return res;
 }
 
+
 /*** ICONV jackets ***/
+
+//#define VMS_TRACE_ICONV
+//#define VMS_TRACE_ICONV_OPEN
 
 #undef iconv
 #undef iconv_open
 #undef iconv_close
 
-//size_t eifrt_vms_iconv (iconv_t cd, char_ptr_ptr32 inpbuf, size_t_ptr32 inpbytesleft, char_ptr_ptr32 outbuf, size_t_ptr32 outbytesleft)
-size_t eifrt_vms_iconv (iconv_t cd, const char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft)
+/* VMS iconv() is 32 bit only. This is the current prototype in <iconv.h>, under a  #pragma __pointer_size 32:
+**	size_t iconv (iconv_t cd, const char** inpbuf, size_t *inpbytesleft, char** outbuf, size_t *outbytesleft) ;
+*/
+size_t eifrt_vms_iconv (iconv_t a_cd, const char **a_inpbuf, size_t *a_inpbytesleft, char **a_outbuf, size_t *a_outbytesleft)
 {
     size_t res;
-    char_ptr32 inpbufx, outbufx;
-    size_t inpbytesleftx, outbytesleftx;
+    char_ptr32 inpbufx, inpbufx_orig;
+    char_ptr32 outbufx, outbufx_orig;
+    char_ptr_ptr32 inpbufpp, outbufpp;
+    size_t inpbytesleftx, outbytesleftx, outbytescount;
     size_t DECC$ICONV (iconv_t cd, char_ptr_ptr32 inpbf, size_t_ptr32 inpbytleft, char_ptr_ptr32 outbf, size_t_ptr32 outbytleft);
 
-#ifdef VMS_TRACE
-    char* outbuf_orig = *outbuf;
-    size_t outbytesleft_orig = *outbytesleft;
+#ifdef VMS_TRACE_ICONV
+    int err;
+    char* outbuf_orig = *a_outbuf;
 
-    printf ("eifrtvms: iconv (0x0%07Lp, 0x0%07Lp (\"%.*s\"), %d, 0x0%07Lp, %d)\n", 
-	    cd, *inpbuf, *inpbytesleft, *inpbuf, *inpbytesleft, *outbuf, *outbytesleft);
+    printf ("eifrt_vms_iconv (cd=0x%08Lp, *inpbuf=0x%08Lp (\"%.*s\"), *inpbytesleft=%d, \n\t *outbuf=0x%08Lp, *outbytesleft=%d)\n", 
+		a_cd, *a_inpbuf, *a_inpbytesleft, *a_inpbuf, *a_inpbytesleft, *a_outbuf, *a_outbytesleft);
 #endif
 
+#if __INITIAL_POINTER_SIZE > 32
+    /* marshall input arguments in 32 bit space */
+    if ($is_32bits (*a_inpbuf)) {
 #pragma message save
-#pragma message disable (MAYHIDELOSS)    // checked: inpbuf is obviously 32 bits here
-    inpbufx = (char_ptr32)*inpbuf;
-    outbufx = (char_ptr32)*outbuf;
+#pragma message disable (MAYHIDELOSS)    // checked: a_inpbuf is clearly 32 bits here
+	inpbufx_orig = NULL;
+	inpbufpp = (char_ptr_ptr32)a_inpbuf;		// (ditto)
 #pragma message restore
-    inpbytesleftx = *inpbytesleft;
-    outbytesleftx = *outbytesleft;
-    if (!$is_32bits(*inpbuf)) {
-	inpbufx = _malloc32 (*inpbytesleft);
-	memcpy (inpbufx, inpbuf, *inpbytesleft);
+    } else {
+	inpbufx = inpbufx_orig = _malloc32 (*a_inpbytesleft);
+	memcpy (inpbufx, *a_inpbuf, *a_inpbytesleft);
+	inpbufpp = &inpbufx;
     }
-    if (!$is_32bits(*outbuf)) {
-	outbufx = _malloc32 (*outbytesleft);
+    if ($is_32bits(*a_outbuf)) {
+#pragma message save
+#pragma message disable (MAYHIDELOSS)    // checked: a_outbuf is obviously 32 bits here
+	outbufx_orig = NULL;
+	outbufpp = (char_ptr_ptr32)a_outbuf;
+#pragma message restore
+    } else {
+	outbufx = outbufx_orig = _malloc32 (*a_outbytesleft);
+	outbufpp = &outbufx;
     }
-    res = iconv (cd, &inpbufx, &inpbytesleftx, &outbufx, &outbytesleftx);
-#ifdef VMS_TRACEXXX
-    printf (" iconv returning %d (\"%.*s\" (inpbytesleft: %d, outbytesleft: %d)\n", 
-	    res, *outbytesleft - outbytesleftx, outbufx - *outbytesleft + outbytesleftx, inpbytesleftx, outbytesleftx);
+    inpbytesleftx = *a_inpbytesleft;
+    outbytesleftx = *a_outbytesleft;
+    res = DECC$ICONV (a_cd, inpbufpp, &inpbytesleftx, outbufpp, &outbytesleftx);
+
+#else
+#error incomplete
+    res = DECC$ICONV (a_cd, a_inpbuf, a_inpbytesleft, a_outbuf, a_outbytesleft);
 #endif
 
-    if (!$is_32bits(*inpbuf)) {
-	free (inpbufx);
-    }
-    if (!$is_32bits(*outbuf)) {
-	memcpy (*outbuf, outbufx - *outbytesleft + outbytesleftx, *outbytesleft - outbytesleftx);
-	free (outbufx);
-    }
-    *inpbuf += *inpbytesleft - inpbytesleftx;
-    *inpbytesleft = inpbytesleftx;
-    *outbuf += *outbytesleft - outbytesleftx;
-    *outbytesleft = outbytesleftx;
+    outbytescount = *a_outbytesleft - outbytesleftx;	// count of bytes written to output buffer
+#ifdef VMS_TRACE_ICONV
+    err = errno;
+    printf ("  iconv(32) returned %d (\"%.*s\", inpbytesleft: %d, outbytesleft: %d)\n", 
+	    res, outbytescount, outbufx - outbytescount, inpbytesleftx, outbytesleftx);
+    if (res)
+	printf ("  errno: %d %s\n", err, strerror (err));
+#endif
 
-#ifdef VMS_TRACE
-    printf (" iconv returned %d (*outbuf: \"%.*s\", inpbuf: 0x0%07Lp, inpbytesleft: %d, outbuf: 0x0%07Lp, outbytesleft: %d)\n", 
-	    res, outbytesleft_orig - *outbytesleft, outbuf_orig, *inpbuf, *inpbytesleft, *outbuf, *outbytesleft);
+    if (!$is_32bits(*a_inpbuf)) {
+	*a_inpbuf += *a_inpbytesleft - inpbytesleftx;
+	free (inpbufx_orig);
+    }
+    *a_inpbytesleft = inpbytesleftx;
+
+    if (!$is_32bits(*a_outbuf)) {
+	CHECK ("outbuf consistent", outbufx_orig == outbufx - outbytescount);
+	memcpy (*a_outbuf, outbufx_orig, outbytescount);
+	*a_outbuf += outbytescount;
+	free (outbufx_orig);
+    }
+    *a_outbytesleft = outbytesleftx;
+
+#ifdef VMS_TRACE_ICONV
+    printf ("  returning %d (*outbuf: \"%.*s\"),\n\t updated *inpbuf=0x%08Lp, inpbytesleft= %d, *outbuf=0x%08Lp, *outbytesleft=%d)\n", 
+	    res, outbytescount, outbuf_orig, *a_inpbuf, *a_inpbytesleft, *a_outbuf, *a_outbytesleft);
 #endif
 
     return res;
 }
+
 
 int eifrt_vms_iconv_close (iconv_t cd)
 {
     int DECC$ICONV_CLOSE (iconv_t);
     static int level = 1;
 
-#ifdef VMS_TRACE
-    printf ("eifrtvms: %siconv_close (0x0%07Lp)\n", spaces(level), cd);
+#ifdef VMS_TRACE_ICONV_OPEN
+    printf ("eifrtvms: %siconv_close (0x%08Lp)\n", spaces(level), cd);
 #endif
     return DECC$ICONV_CLOSE (cd);
 }
+
 
 iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
 {   
@@ -914,7 +1005,7 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
     iconv_t DECC$ICONV_OPEN (const char* tocode, const char* fromcode);
 
     ++level;
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_ICONV_OPEN
     printf ("eifrtvms: %siconv_open (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (fromcode));
 #endif
     res = DECC$ICONV_OPEN (tocode, fromcode);
@@ -922,12 +1013,12 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
 	err = errno;
 	erv = vaxc$errno;
 	if (!strcasecmp (fromcode, "ASCII")) {
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif
 	    res = eifrt_vms_iconv_open (tocode, altcode);
 	} else if (!strcasecmp (tocode, "ASCII")) {
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif
 	    res = eifrt_vms_iconv_open (altcode, fromcode);
@@ -936,13 +1027,13 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
     if (res == (iconv_t)-1) {
 	err = errno;
 	erv = vaxc$errno;
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_ICONV_OPEN
 	printf (" %siconv_open failed, errno: %d [%s]\n", spaces(level), errno == EVMSERR ? vaxc$errno : errno, strerror (errno, vaxc$errno));
 #endif
     } else {
-#ifdef VMS_TRACE
+#ifdef VMS_TRACE_ICONV_OPEN
 	if (level == 1) 
-	    printf (" %siconv_open succeeded (return 0x0%07Lp.\n", spaces(level), res);
+	    printf (" %siconv_open succeeded (return 0x%08Lp.\n", spaces(level), res);
 #endif
     }
     --level;
@@ -968,6 +1059,7 @@ static const char* spaces (size_t len)
 	}
     return res;
 }
+
 /* allocate a string of length `len' filled with spaces */
 static char* spacedup (size_t len)
 {

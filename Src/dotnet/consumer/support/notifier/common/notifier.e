@@ -74,6 +74,7 @@ feature -- Clean Up
 			if application_thread.is_alive then
 				application_thread.join
 			end
+			is_zombie := True
 		ensure then
 			is_zombie: is_zombie
 		end

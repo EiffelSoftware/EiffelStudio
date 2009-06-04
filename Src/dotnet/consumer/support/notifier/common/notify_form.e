@@ -52,13 +52,13 @@ feature -- Status Setting
 				l_message := l_message.substring (1, 252)
 				l_message.append ("...")
 			end
-			notify_string := l_message
+			Precursor (l_message)
 		end
 
 	clear_notification
 			-- Clears last notification message.
 		do
-			notify_string := ""
+			Precursor
 			show_ballon := False
 		end
 

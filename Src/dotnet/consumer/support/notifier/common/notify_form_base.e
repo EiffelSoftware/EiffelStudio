@@ -74,7 +74,7 @@ feature -- Status Setting
 		do
 			notify_info ({SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path))
 		ensure
-			last_notification_set: last_notification = old notify_string
+			last_notification_set: last_notification ~ old notify_string.to_cil
 		end
 
 	notify_info (a_message: STRING)
@@ -83,20 +83,20 @@ feature -- Status Setting
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty
 		do
-			last_notification := notify_string
+			last_notification := notify_string.to_cil
 			if a_message.count > 64 then
 				notify_string := a_message.substring (0, 63)
 			else
 				notify_string := a_message
 			end
 		ensure
-			last_notification_set: last_notification = old notify_string
+			last_notification_set: last_notification ~ old notify_string.to_cil
 		end
 
 	restore_last_notification
 			-- Restores last message
 		do
-			if attached last_notification as l_notification then
+			if attached last_notification as l_notification and then l_notification.length > 0 then
 				notify_info (l_notification)
 			else
 				clear_notification

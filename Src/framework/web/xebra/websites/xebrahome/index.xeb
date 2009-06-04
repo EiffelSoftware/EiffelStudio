@@ -1,6 +1,6 @@
-<html>
-<page:controller class="MAIN_CONTROLLER"/>
-<body>
-Hello World!
-</body>
-</html>
+<page:include template="master">
+  <page:define_region id="content">
+    <h1>Hello</h21>
+    <p>Blablablabla</p>
+  </page:define_region>
+</page:include>

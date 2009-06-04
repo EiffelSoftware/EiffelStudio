@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 					or else Result >= 0
 					or else l_types.dotnet_names @ i = Void
 				loop
-					if (l_types.dotnet_names @ i).is_equal (a_type) then
+					if (l_types.dotnet_names @ i) ~ a_type then
 						Result := l_types.positions.item (i)
 					else
 						i := i + 1

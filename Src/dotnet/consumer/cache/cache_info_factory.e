@@ -30,7 +30,7 @@ feature -- Factory Functions
 				(create {EIFFEL_SERIALIZER}).serialize (Current, a_path, False)
 			end
 		ensure
-			a_path_exists: (create {DIRECTORY_INFO}.make (a_path)).exists
+			a_path_exists: (create {FILE_INFO}.make (a_path)).exists
 		end
 
 end -- class {CACHE_INFO_FACTORY}

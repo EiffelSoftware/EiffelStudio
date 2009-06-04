@@ -41,7 +41,6 @@
  * This file was originally produced by running Configure on Solaris,
  * by David Schwartz on 3-Dec-2001
  * and modified numerous times since then.
- * Most recently, on 27-Jul-2006 for Eiffel 5.7.60489
  *
  */
 
@@ -244,6 +243,12 @@
  *	available to add/relase core. Always true on Unix.
  */
 /*#define HAS_SBRK	/* ***VMS REVIEW*** */
+
+/* HAS_SIGACTION:
+ *	This symbol, if defined, indicates that the sigaction() routine is
+ *	available as a better alternative to the signal call.
+ */
+#define HAS_SIGACTION		/* NC */
 
 /* HAS_SIGALTSTACK:
  *	This symbol, if defined, indicates that the sigaltstack() routine is
@@ -704,10 +709,9 @@
 #define EIF_OS_OPENBSD 	9
 #define EIF_OS_UNICOS 	10
 #define EIF_OS_VXWORKS	11
-#define EIF_OS_VMS		12
-
-/* Define EIF_OS value */
-#define EIF_OS EIF_OS_VMS
+#define EIF_OS_VMS	12
+#define EIF_OS_HAIKU	13
+#define EIF_OS_IPHONE	14
 
 /* Define EIF_ARCH Constants */
 
@@ -722,24 +726,43 @@
 #define EIF_ARCH_HPPA	9
 #define EIF_ARCH_MIPS	10
 #define EIF_ARCH_MIPS_64	11
+#define EIF_ARCH_VAX	12
+#define EIF_ARCH_ALPHA	13
+#define EIF_ARCH_IA64	14  /* Itanium */
 
+/* Is 64 bits platform? */
+#undef EIF_64_BITS
 
 
 /* VMS specific */
 
 /* is VMS platform? */
-#if defined __VMS || defined __vms || defined VMS || defined vms
+#if defined __VMS || defined __vms || defined VMS  || defined vms
 #undef EIF_VMS
 #define EIF_VMS 1
+#define EIF_OS EIF_OS_VMS
+/* Define EIF_ARCH value */
+#if defined(__VAX)
+#define EIF_ARCH EIF_ARCH_VAX
+#elif defined(__ALPHA)
+#define EIF_ARCH EIF_ARCH_ALPHA
+#elif defined(__IA64)
+#define EIF_ARCH EIF_ARCH_IA64
 #endif
+
+/* Is 64 bits platform? */
+#if __INITIAL_POINTER_SIZE > 32
+#define	EIF_64_BITS
+#endif
+
+#endif /* __VMS... */
 
 #ifndef EIF_VMS
 # error configuration error EIF_VMS is not defined
 #endif
 
-/* Is 64 bits platform? */
-#if __INITIAL_POINTER_SIZE > 32
-#define   EIF_64_BITS
+#ifndef EIF_ARCH
+# error configuration error EIF_ARCH is not defined
 #endif
 
 

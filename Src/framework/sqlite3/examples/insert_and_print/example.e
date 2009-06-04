@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	EXAMPLE_1
+	EXAMPLE
 
 inherit
 	SQLITE_SHARED_API
@@ -27,10 +27,7 @@ feature {NONE} -- Initialization
 			i, i_count: INTEGER
 		do
 				-- Opens (or creates if it does not exist) a hidden database file.
-			create l_db.make_read_write (".db")
-			if not l_db.is_readable then
-				create l_db.make_create_read_write (".db")
-			end
+			create l_db.make_create_read_write (".db")
 			check is_readable: l_db.is_readable end
 
 				-- Drop any existing table
@@ -86,4 +83,35 @@ feature {NONE} -- Initialization
 			--l_db.close
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

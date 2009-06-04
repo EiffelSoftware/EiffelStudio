@@ -112,6 +112,15 @@ feature {SQLITE_INTERNALS} -- Query
 			Result := c_sqlite3_column_value (a_api.api_pointer (once "sqlite3_column_value"), a_stmt, a_column)
 		end
 
+	sqlite3_data_count (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_stmt_is_null: a_stmt /= default_pointer
+		do
+			Result := c_sqlite3_data_count (a_api.api_pointer (once "sqlite3_data_count"), a_stmt)
+		end
+
 feature {NONE} -- Externals
 
 	c_sqlite3_column_blob (a_fptr: POINTER; a_stmt: POINTER; a_column: INTEGER): POINTER
@@ -207,6 +216,19 @@ feature {NONE} -- Externals
 			"[
 				return (EIF_POINTER)(FUNCTION_CAST(sqlite3_value *, (sqlite3_stmt *, int)) $a_fptr) (
 					(sqlite3_stmt *)$a_stmt, (int)$a_column);
+			]"
+		end
+
+	c_sqlite3_data_count (a_fptr: POINTER; a_stmt: POINTER): INTEGER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_stmt_is_null: a_stmt /= default_pointer
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"[
+				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *)) $a_fptr) (
+					(sqlite3_stmt *)$a_stmt);
 			]"
 		end
 

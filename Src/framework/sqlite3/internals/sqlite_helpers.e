@@ -31,7 +31,7 @@ feature -- Query
 				a_code = {SQLITE_RESULT_CODES}.sqlite_done)
 		end
 
-	frozen sqlite_exception (a_code: INTEGER; a_message: detachable READABLE_STRING_8): detachable SQLITE_EXCEPTION
+	frozen sqlite_exception (a_code: INTEGER; a_message: detachable READABLE_STRING_8): SQLITE_EXCEPTION
 			-- Retrieves an exception object based on the exception error code and message.
 			--
 			-- `a_code': A non-successful result code.

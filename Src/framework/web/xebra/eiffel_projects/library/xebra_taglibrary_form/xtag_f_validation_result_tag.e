@@ -53,6 +53,7 @@ feature -- Implementation
 				a_servlet_class.render_feature.append_expression ("until")
 				a_servlet_class.render_feature.append_expression (l_messages_var + ".after")
 				a_servlet_class.render_feature.append_expression ("loop")
+				a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<br />%")")
 				a_servlet_class.render_feature.append_expression (response_variable_append + "(" + l_messages_var + ".item)")
 				a_servlet_class.render_feature.append_expression (l_messages_var + ".forth")
 				a_servlet_class.render_feature.append_expression ("end")

@@ -15,7 +15,8 @@ inherit
 		redefine
 			make_base,
 			generates_render,
-			generates_postrender
+			generates_postrender,
+			generates_afterrender
 		end
 
 feature -- Initialization
@@ -131,5 +132,6 @@ feature -- Implementation
 
 	generates_render: BOOLEAN = True
 	generates_postrender: BOOLEAN = True
+	generates_afterrender: BOOLEAN = True
 
 end

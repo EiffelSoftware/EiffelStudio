@@ -1,7 +1,7 @@
 note
 	description: "[
 		Extracts the virtual machine instructions generated for a compiled statement. This is not
-		intended for use within an application
+		intended for use within an application but for testing, or the enquisitive mind.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

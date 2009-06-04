@@ -1,6 +1,8 @@
 note
 	description: "[
 		An SQLite database connection for reading, writing and creating SQLite databases.
+		
+		Currently only on-disk databases are supported. Virtual databases will be coming.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -219,6 +221,18 @@ feature -- Status report
 			Result := internal_db = default_pointer
 		ensure
 			db_handle_is_null: Result implies internal_db = default_pointer
+		end
+
+	has_error: BOOLEAN
+			-- Indicates if an error occured during the last operation on an open database.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+		do
+			Result := last_exception /= Void
+		ensure
+			last_exception_attached: Result implies last_exception /= Void
 		end
 
 feature -- Status report: Comparison

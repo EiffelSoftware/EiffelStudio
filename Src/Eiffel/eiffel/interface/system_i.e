@@ -1442,10 +1442,8 @@ feature -- ANY.is_equal_rout_id routine id
 feature -- SPECIAL.make routine id
 
 	special_make_rout_id: INTEGER
-			-- Routine id of `make_empty' or `make' from SPECIAL. It actually depends on which SPECIAL class
-			-- we are compiling. By default 6.4 and newer are using `make_empty' whereas 6.3 and older are using
-			-- `make'.
-			-- Return 0 if SPECIAL has not been compiled or does not have a feature named `make_empty' or `make'.
+			-- Routine id of `make' from SPECIAL.
+			-- Return 0 if SPECIAL has not been compiled or does not have a feature named `make'.
 		local
 			feature_i: FEATURE_I
 		do
@@ -1453,18 +1451,31 @@ feature -- SPECIAL.make routine id
 			if Result < 0 then
 				Result := 0
 				if special_class /= Void and then special_class.compiled_class /= Void then
-					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
+					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 					if feature_i /= Void then
 						Result := feature_i.rout_id_set.first
-					else
-							-- For backward compatibility.
-						feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-						if feature_i /= Void then
-							Result := feature_i.rout_id_set.first
-						end
 					end
 				end
 				internal_special_make_rout_id := Result
+			end
+		end
+
+	special_make_empty_rout_id: INTEGER
+			-- Routine id of `make_empty' from SPECIAL.
+			-- Return 0 if SPECIAL has not been compiled or does not have a feature named `make_empty'.
+		local
+			feature_i: FEATURE_I
+		do
+			Result := internal_special_make_empty_rout_id
+			if Result < 0 then
+				Result := 0
+				if special_class /= Void and then special_class.compiled_class /= Void then
+					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
+					if feature_i /= Void then
+						Result := feature_i.rout_id_set.first
+					end
+				end
+				internal_special_make_empty_rout_id := Result
 			end
 		end
 
@@ -1482,12 +1493,6 @@ feature -- SPECIAL.make routine id
 					feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_filled_name_id)
 					if feature_i /= Void then
 						Result := feature_i.rout_id_set.first
-					else
-							-- For backward compatibility.
-						feature_i := special_class.compiled_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-						if feature_i /= Void then
-							Result := feature_i.rout_id_set.first
-						end
 					end
 				end
 				internal_special_make_filled_rout_id := Result
@@ -1508,6 +1513,7 @@ feature -- Routine IDS update
 			internal_default_create_rout_id := -1
 			internal_is_equal_rout_id := -1
 			internal_special_make_rout_id := - 1
+			internal_special_make_empty_rout_id := - 1
 			internal_special_make_filled_rout_id := - 1
 		end
 
@@ -1523,6 +1529,9 @@ feature {NONE} -- Implementation: predefined routine IDs
 			-- Once per compilation value of routine id of `default_create' from ANY.
 
 	internal_special_make_rout_id: INTEGER
+			-- Once per compilation value of routine id of `make' from SPECIAL.
+
+	internal_special_make_empty_rout_id: INTEGER
 			-- Once per compilation value of routine id of `make' from SPECIAL.
 
 	internal_special_make_filled_rout_id: INTEGER
@@ -3077,7 +3086,7 @@ feature -- Final mode generation
 			l_old_type_id_counter: INTEGER
 		do
 			eiffel_project.terminate_c_compilation
-			if not retried and is_finalization_needed then
+			if not retried and True then --is_finalization_needed then
 				create skeleton_table.make (400)
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void

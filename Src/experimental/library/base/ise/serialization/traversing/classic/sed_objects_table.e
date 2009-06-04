@@ -31,7 +31,7 @@ feature -- Status report
 	capacity: INTEGER
 			-- Default capacity of current.
 		do
-			Result := table.capacity
+			Result := table.count
 		end
 
 feature -- Access

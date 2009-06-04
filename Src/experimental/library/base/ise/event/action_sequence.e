@@ -42,11 +42,8 @@ inherit
 	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		rename
 			make as arrayed_list_make
-		export
-			{ACTION_SEQUENCE} same_items, subarray
 		redefine
 			default_create,
-			set_count,
 			prune
 		end
 
@@ -55,7 +52,6 @@ create
 	make
 
 create {ACTION_SEQUENCE}
-	array_make,
 	arrayed_list_make,
 	make_filled
 
@@ -85,7 +81,7 @@ feature -- Basic operations
 		do
 			if count > 0 then
 					-- Create a snapshot of the routine objects in `Current'.
-				create l_routines_snapshot.make (count)
+				create l_routines_snapshot.make_empty (count)
 				l_routines_snapshot.copy_data (area, 0, 0, count)
 					-- Iterate agents contained in `kamikazes' and remove them from `Current'
 					-- The agents will still be called from `l_routines_snapshot'.
@@ -162,21 +158,6 @@ feature -- Access
 			end
 		ensure
 			equal_to_name_internal: Result ~ name_internal
-		end
-
-	dummy_event_data: EVENT_DATA
-			-- Attribute of the generic type.
-			-- Useful for introspection and use in like statements.
-		obsolete "Not implemented. To be removed"
-		local
-			r: detachable EVENT_DATA
-		do
-			r := dummy_event_data_internal
-			if r = Void then
-				create r
-				dummy_event_data_internal := r
-			end
-			Result := r
 		end
 
 	event_data_names: detachable ARRAY [STRING]
@@ -354,9 +335,6 @@ feature {NONE} -- Implementation, ARRAYED_LIST
 					-- Transition from `is_empty' to not `is_empty'.
 				call_action_list (not_empty_actions)
 			end
-
-				-- Adjust `count'
-			count := new_count
 		end
 
 feature {NONE} -- Implementation

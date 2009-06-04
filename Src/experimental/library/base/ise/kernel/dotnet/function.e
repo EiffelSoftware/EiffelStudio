@@ -32,7 +32,6 @@ feature -- Access
 			callable: callable
 		local
 			l_rout_disp: like rout_disp
-			l_spec: like internal_special
 			l_result_type: detachable RESULT_TYPE
 		do
 			set_operands (args)
@@ -43,12 +42,8 @@ feature -- Access
 			if attached {RESULT_TYPE} l_result_type as l_result then
 				Result := l_result
 			else
-				l_spec := internal_special
-				if l_spec = Void then
-					create l_spec.make (1)
-					internal_special := l_spec
-				end
-				Result := l_spec.item (0)
+				check ({RESULT_TYPE}).has_default end
+				Result := ({RESULT_TYPE}).default
 			end
 			if is_cleanup_needed then
 				remove_gc_reference
@@ -108,11 +103,6 @@ feature -- Removal
 		do
 			last_result := l_result
 		end
-
-feature {NONE} -- Hack
-
-	internal_special: detachable SPECIAL [RESULT_TYPE];
-			-- Once per object behavior.
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

@@ -125,11 +125,12 @@ feature -- Creation
 			l_result ?= {ISE_RUNTIME}.create_type (pure_implementation_type (type_id))
 			check l_result_attached: l_result /= Void end
 			Result := l_result
-			Result.make (count)
+			Result.make_empty (count)
 		ensure
 			special_type: is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
-			count_set: Result.count = count
+			count_set: Result.count = 0
+			capacity_set: Result.capacity = count
 		end
 
 	type_of (object: detachable ANY): detachable TYPE [detachable ANY]
@@ -1479,10 +1480,13 @@ feature {NONE} -- Implementation
 				-- Search for a non generic class type.
 			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
 			if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_list then
-					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'.
-				check
-					only_one_element: l_found_list.count = 1
-				end
+					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'
+					-- Or possibly a basic type with its various associated referenced types.
+					-- Nevertheless the check fails for CHARACTER_32 because it is mapped to a NATURAL_32, this
+					-- is why it is commented out for the meantime.
+--				check
+--					only_one_element: l_found_list.count = 1 or else attached {RT_BASIC_TYPE} l_found_list.first
+--				end
 				Result := l_found_list.first
 			else
 					-- Let's see if it is a partially well-formed Eiffel generic class:

@@ -90,15 +90,18 @@ feature -- Element Change
 			-- Append a copy of `s'.
 		local
 			i: INTEGER
+			new_count: INTEGER
 		do
-			i := count + 1
-			conservative_resize (lower, lower + count + s.count)
+			new_count := count + s.count
+			if new_count > capacity then
+				grow (new_count)
+			end
 			from
+				i := count + 1
 				s.start
 			until
 				s.after
 			loop
-				set_count (count + 1)
 				put_i_th (s.item, i)
 				i := i + 1
 				s.forth
@@ -262,11 +265,10 @@ feature -- Element Change
 						i := i + 1
 					end
 				else
-					l_area.put_default (i)
 					i := i + 1
 				end
 			end
-			set_count (count - offset)
+			l_area.remove_tail (offset)
 			index := count + 1
 		ensure then
 			is_after: after

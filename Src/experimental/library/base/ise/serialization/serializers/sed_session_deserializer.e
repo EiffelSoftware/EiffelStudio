@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_deserializer_ready: a_deserializer.is_ready_for_reading
 		do
 			create internal
-			create object_references.make (1)
+			create object_references.make_empty (0)
 			deserializer := a_deserializer
 		ensure
 			deserializer_set: deserializer = a_deserializer
@@ -72,7 +72,7 @@ feature -- Basic operations
 
 					-- Read number of objects we are retrieving
 				l_count := deserializer.read_compressed_natural_32
-				create object_references.make (l_count.to_integer_32 + 1)
+				create object_references.make_filled (Void, l_count.to_integer_32 + 1)
 
 					-- Disable GC as only new memory will be allocated.
 				if not a_is_gc_enabled then
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation: Access
 	internal: INTERNAL
 			-- Facilities to inspect.
 
-	object_references: SPECIAL [ANY]
+	object_references: SPECIAL [detachable ANY]
 			-- Mapping between reference ID and the associated object.
 
 	missing_references: detachable SPECIAL [detachable ARRAYED_LIST [like new_tuple]]
@@ -135,7 +135,7 @@ feature {NONE} -- Cleaning
 			t: like tuple_stack
 		do
 			missing_references := Void
-			create object_references.make (0)
+			create object_references.make_empty (0)
 			t := tuple_stack
 			if t /= Void then
 				t.wipe_out
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			l_deser: like deserializer
 			l_int: like internal
 			l_spec_mapping: like special_type_mapping
-			l_obj: ANY
+			l_obj: detachable ANY
 			l_nat32: NATURAL_32
 			l_index: INTEGER
 			l_flags: NATURAL_8
@@ -290,6 +290,7 @@ feature {NONE} -- Implementation
 				l_index := l_nat32.to_integer_32
 
 				l_obj := object_references.item (l_index)
+				check l_obj_attached: l_obj /= Void end
 				l_dtype := l_int.dynamic_type (l_obj)
 
 				if l_int.is_special (l_obj) then
@@ -481,25 +482,25 @@ feature {NONE} -- Implementation
 			a_count_non_negative: a_count >= 0
 		do
 			inspect a_item_type
-			when {INTERNAL}.boolean_type then create {SPECIAL [BOOLEAN]} Result.make (a_count)
+			when {INTERNAL}.boolean_type then create {SPECIAL [BOOLEAN]} Result.make_empty (a_count)
 
-			when {INTERNAL}.character_8_type then create {SPECIAL [CHARACTER_8]} Result.make (a_count)
-			when {INTERNAL}.character_32_type then create {SPECIAL [CHARACTER_32]} Result.make (a_count)
+			when {INTERNAL}.character_8_type then create {SPECIAL [CHARACTER_8]} Result.make_empty (a_count)
+			when {INTERNAL}.character_32_type then create {SPECIAL [CHARACTER_32]} Result.make_empty (a_count)
 
-			when {INTERNAL}.natural_8_type then create {SPECIAL [NATURAL_8]} Result.make (a_count)
-			when {INTERNAL}.natural_16_type then create {SPECIAL [NATURAL_16]} Result.make (a_count)
-			when {INTERNAL}.natural_32_type then create {SPECIAL [NATURAL_32]} Result.make (a_count)
-			when {INTERNAL}.natural_64_type then create {SPECIAL [NATURAL_64]} Result.make (a_count)
+			when {INTERNAL}.natural_8_type then create {SPECIAL [NATURAL_8]} Result.make_empty (a_count)
+			when {INTERNAL}.natural_16_type then create {SPECIAL [NATURAL_16]} Result.make_empty (a_count)
+			when {INTERNAL}.natural_32_type then create {SPECIAL [NATURAL_32]} Result.make_empty (a_count)
+			when {INTERNAL}.natural_64_type then create {SPECIAL [NATURAL_64]} Result.make_empty (a_count)
 
-			when {INTERNAL}.integer_8_type then create {SPECIAL [INTEGER_8]} Result.make (a_count)
-			when {INTERNAL}.integer_16_type then create {SPECIAL [INTEGER_16]} Result.make (a_count)
-			when {INTERNAL}.integer_32_type then create {SPECIAL [INTEGER]} Result.make (a_count)
-			when {INTERNAL}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make (a_count)
+			when {INTERNAL}.integer_8_type then create {SPECIAL [INTEGER_8]} Result.make_empty (a_count)
+			when {INTERNAL}.integer_16_type then create {SPECIAL [INTEGER_16]} Result.make_empty (a_count)
+			when {INTERNAL}.integer_32_type then create {SPECIAL [INTEGER]} Result.make_empty (a_count)
+			when {INTERNAL}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make_empty (a_count)
 
-			when {INTERNAL}.real_32_type then create {SPECIAL [REAL]} Result.make (a_count)
-			when {INTERNAL}.real_64_type then create {SPECIAL [DOUBLE]} Result.make (a_count)
+			when {INTERNAL}.real_32_type then create {SPECIAL [REAL]} Result.make_empty (a_count)
+			when {INTERNAL}.real_64_type then create {SPECIAL [DOUBLE]} Result.make_empty (a_count)
 
-			when {INTERNAL}.pointer_type then create {SPECIAL [POINTER]} Result.make (a_count)
+			when {INTERNAL}.pointer_type then create {SPECIAL [POINTER]} Result.make_empty (a_count)
 			else
 				Result := internal.new_special_any_instance (a_dtype, a_count)
 			end
@@ -634,11 +635,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_boolean, i)
+				a_spec.extend (l_deser.read_boolean)
 				i := i + 1
 			end
 		end
@@ -653,11 +654,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_character_8, i)
+				a_spec.extend (l_deser.read_character_8)
 				i := i + 1
 			end
 		end
@@ -672,11 +673,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_character_32, i)
+				a_spec.extend (l_deser.read_character_32)
 				i := i + 1
 			end
 		end
@@ -691,11 +692,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_natural_8, i)
+				a_spec.extend (l_deser.read_natural_8)
 				i := i + 1
 			end
 		end
@@ -710,11 +711,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_natural_16, i)
+				a_spec.extend (l_deser.read_natural_16)
 				i := i + 1
 			end
 		end
@@ -729,11 +730,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_natural_32, i)
+				a_spec.extend (l_deser.read_natural_32)
 				i := i + 1
 			end
 		end
@@ -748,11 +749,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_natural_64, i)
+				a_spec.extend (l_deser.read_natural_64)
 				i := i + 1
 			end
 		end
@@ -767,11 +768,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_integer_8, i)
+				a_spec.extend (l_deser.read_integer_8)
 				i := i + 1
 			end
 		end
@@ -786,11 +787,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_integer_16, i)
+				a_spec.extend (l_deser.read_integer_16)
 				i := i + 1
 			end
 		end
@@ -805,11 +806,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_integer_32, i)
+				a_spec.extend (l_deser.read_integer_32)
 				i := i + 1
 			end
 		end
@@ -824,11 +825,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_integer_64, i)
+				a_spec.extend (l_deser.read_integer_64)
 				i := i + 1
 			end
 		end
@@ -843,11 +844,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_real_32, i)
+				a_spec.extend (l_deser.read_real_32)
 				i := i + 1
 			end
 		end
@@ -862,11 +863,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_real_64, i)
+				a_spec.extend (l_deser.read_real_64)
 				i := i + 1
 			end
 		end
@@ -881,11 +882,11 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_deser := deserializer
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
-				a_spec.put (l_deser.read_pointer, i)
+				a_spec.extend (l_deser.read_pointer)
 				i := i + 1
 			end
 		end
@@ -898,7 +899,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			from
-				nb := a_spec.count
+				nb := a_spec.capacity
 			until
 				i = nb
 			loop
@@ -918,7 +919,7 @@ feature {NONE} -- Implementation
 		local
 			l_nat32: NATURAL_32
 			l_index: INTEGER
-			l_sub_obj: ANY
+			l_sub_obj: detachable ANY
 			l_list: detachable ARRAYED_LIST [like new_tuple]
 			l_tuple: like new_tuple
 			l_missing: like missing_references
@@ -935,7 +936,7 @@ feature {NONE} -- Implementation
 				else
 					l_missing := missing_references
 					if l_missing = Void then
-						create l_missing.make (object_references.count)
+						create l_missing.make_filled (Void, object_references.count)
 						missing_references := l_missing
 					end
 					l_list := l_missing.item (l_index)
@@ -948,10 +949,12 @@ feature {NONE} -- Implementation
 					l_tuple.field_position := an_index
 					l_list.extend (l_tuple)
 				end
+			elseif attached {SPECIAL [detachable ANY]} an_obj as l_spec then
+				l_spec.force (Void, an_index)
 			end
 		end
 
-	update_reference (an_obj, a_sub_obj: ANY; an_index: INTEGER)
+	update_reference (an_obj, a_sub_obj: detachable ANY; an_index: INTEGER)
 			-- Connect `a_sub_obj' to `an_obj' at `an_index' position
 			-- which can be a field, special or tuple position depending
 			-- on type of `an_obj'.
@@ -965,8 +968,8 @@ feature {NONE} -- Implementation
 			l_int := internal
 
 			if l_int.is_special (an_obj) then
-				if attached {SPECIAL [ANY]} an_obj as l_spec then
-					l_spec.put (a_sub_obj, an_index)
+				if attached {SPECIAL [detachable ANY]} an_obj as l_spec then
+					l_spec.force (a_sub_obj, an_index)
 				end
 			elseif l_int.is_tuple (an_obj) then
 				if attached {TUPLE} an_obj as l_tuple then

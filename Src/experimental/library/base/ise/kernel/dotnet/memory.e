@@ -124,13 +124,13 @@ feature -- Status report
 	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
 		do
-			create Result.make (0)
+			create Result.make_empty (0)
 		end
 
 	objects_instance_of (an_object: ANY): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			create Result.make (0)
+			create Result.make_empty (0)
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]

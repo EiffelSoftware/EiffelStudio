@@ -11,19 +11,24 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			make_base,
 			generates_render,
-			generates_postrender
+			generates_postrender,
+			generates_afterrender
 		end
+
+create
+	make
 
 feature -- Initialization
 
-	make_base
+	make
 		do
-			Precursor
+			make_base
 			create value.make ("")
 			create name.make ("")
 			create text.make ("")
+			create cols.make ("45")
+			create rows.make ("5")
 		ensure then
 			value_attached: attached value
 			name_attached: attached name
@@ -41,6 +46,9 @@ feature -- Access
 	name: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the data object mapping for validation
 
+	cols, rows: XTAG_TAG_ARGUMENT
+			-- Columns and rows
+
 feature -- Implementation
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
@@ -54,6 +62,12 @@ feature -- Implementation
 			end
 			if a_id.is_equal ("text") then
 				text := a_attribute
+			end
+			if a_id.is_equal ("cols") then
+				cols := a_attribute
+			end
+			if a_id.is_equal ("rows") then
+				rows := a_attribute
 			end
 		end
 
@@ -72,7 +86,7 @@ feature -- Implementation
 						l_input_id := l_variable + "_" + a_servlet_class.get_unique_identifier
 
 							-- render feature
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"" + l_input_id +"%%%" name=%%%"" + l_input_id + "%%%" value=%%%"" + text.value (current_controller_id) + "%%%" />%")")
+						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "cols=%%%"" + cols.value (current_controller_id) +"%%%" name=%%%"" + l_input_id + "%%%">" + text.value (current_controller_id) + "%%%"</textarea>%")")
 
 						create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
 						a_variable_table.put (l_validator_list, {XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
@@ -123,5 +137,6 @@ feature -- Implementation
 
 	generates_render: BOOLEAN = True
 	generates_postrender: BOOLEAN = True
+	generates_afterrender: BOOLEAN = True
 
 end

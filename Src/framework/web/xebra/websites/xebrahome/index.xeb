@@ -1,0 +1,6 @@
+<html>
+<page:controller class="MAIN_CONTROLLER"/>
+<body>
+Hello World!
+</body>
+</html>

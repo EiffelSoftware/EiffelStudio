@@ -37,9 +37,11 @@ cd $XEBRA_DEV
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/websites
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd
 
 # Install apache
-mkdir httpd
+# mkdir httpd
 mkdir httpd_tmp
 cd $XEBRA_DEV/httpd_tmp
 wget http://mirrors.directorymix.com/apache/httpd/httpd-2.2.11.tar.bz2

@@ -16,7 +16,7 @@ note
 							 
 						radius1 is half horizontal distance between pa and pb.
 						radius2 is half vertical distance between pa and pb.
-						
+
 						]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ note
 
 deferred class
 	EV_MODEL_ELLIPTIC
-	
+
 inherit
 	EV_MODEL_ATOMIC
 		export
@@ -41,9 +41,9 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
-	
+
 	default_create
 			-- Create a EV_FIGURE_ELLIPTIC at (0,0) with no dimension.
 		do
@@ -53,32 +53,32 @@ feature {NONE} -- Initialization
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
 			is_center_valid := True
 		end
-		
+
 feature -- Access
-	
+
 	angle: DOUBLE = 0.0
 			-- Since not rotatable.
-			
+
 	is_scalable: BOOLEAN
 			-- Elliptic is scalable.
 		do
 			Result := True
 		end
-		
 
-	is_rotatable: BOOLEAN 
+
+	is_rotatable: BOOLEAN
 			-- Elliptic is not rotatable.
 			-- (Use a rotatable_elliptic)
 		do
 			Result := False
 		end
-			
-	is_transformable: BOOLEAN 
+
+	is_transformable: BOOLEAN
 			-- Elliptic is not transformable.
 		do
 			Result := False
 		end
-		
+
 	radius1: INTEGER
 			-- The horizontal radius.
 		local
@@ -88,10 +88,10 @@ feature -- Access
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			Result := as_integer ((p0.x_precise - p1.x_precise) / 2).abs
 		end
-		
+
 	radius2: INTEGER
 			-- The vertical radius.
 		local
@@ -103,26 +103,26 @@ feature -- Access
 			p1 := l_point_array.item (1)
 			Result := as_integer ((p0.y_precise - p1.y_precise) / 2).abs
 		end
-		
+
 	point_a_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_a_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (0).y
-		end	
-	
-		
+		end
+
+
 	point_b_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (1).x
 		end
-		
+
 	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
@@ -151,7 +151,7 @@ feature -- Element change
 		ensure
 			set: radius1 = radius
 		end
-		
+
 	set_radius2 (radius: INTEGER)
 			-- Set `radius2' to `radius'
 		require
@@ -177,16 +177,16 @@ feature -- Element change
 			-- Set position of `point_a' to position of (`ax', `ay').
 		do
 			point_array.item (0).set_precise (ax, ay)
-		
+
 			invalidate
 			center_invalidate
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 		do
 			point_array.item (1).set_precise (ax, ay)
-			
+
 			invalidate
 			center_invalidate
 		end
@@ -201,39 +201,39 @@ feature -- Events
 			l_point_array: like point_array
 			pa, pb: EV_COORDINATE
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				l_point_array := point_array
 				pa := l_point_array.item (0)
 				pb := l_point_array.item (1)
-				
+
 				v1 := pa.x_precise
 				v2 := pb.x_precise
 				min_x := v1.min (v2)
 				max_x := v1.max (v2)
-				
+
 				v1 := pa.y_precise
 				v2 := pb.y_precise
 				min_y := v1.min (v2)
 				max_y := v1.max (v2)
-				
+
 				check
 					max_x >= min_x
 					max_y >= min_y
 				end
-				
+
 				lw2 := line_width / 2
-				
+
 				lx := as_integer (min_x - lw2)
 				ly := as_integer (min_y - lw2)
 				w := as_integer ((max_x - min_x) + lw2) + 1
 				h := as_integer ((max_y - min_y) + lw2) + 1
 				create Result.make (lx, ly, w, h)
 				internal_bounding_box := Result.twin
-			end	
+			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	set_center
@@ -264,4 +264,8 @@ note
 
 
 end -- class EV_MODEL_ELLIPTIC
+
+
+
+
 

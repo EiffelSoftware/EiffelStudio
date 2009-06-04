@@ -26,8 +26,8 @@ feature -- Status report
 	text_length: INTEGER
 			-- Text length
 		do
-			if internal_text /= Void then
-				Result := internal_text.count
+			if attached internal_text as l_internal_text then
+				Result := l_internal_text.count
 			else
 				Result := 0
 			end
@@ -38,8 +38,8 @@ feature -- Access
 	text: STRING_32
 			-- Window text
 		do
-			if internal_text /= Void then
-				Result := internal_text.twin
+			if attached internal_text as l_internal_text then
+				Result := l_internal_text.twin
 			else
 				Result := ""
 			end
@@ -59,7 +59,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING_32
+	internal_text: detachable STRING_32
 			-- Text set to this control. When we use the SS_OWNERDRAW
 			-- flag, Windows does not handle the text anymore.
 
@@ -84,4 +84,14 @@ note
 
 
 end -- class EV_WEL_STATIC_OWNERDRAW
+
+
+
+
+
+
+
+
+
+
 

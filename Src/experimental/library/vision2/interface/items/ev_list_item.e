@@ -60,10 +60,10 @@ feature -- Access
 	default_identifier_name: STRING
 			-- Default `identifier_name' if no specific name is set.
 		do
-			if parent = Void then
-				Result := Precursor {EV_ITEM}
+			if attached parent as l_parent then
+				Result := "#" + l_parent.index_of (Current, 1).out
 			else
-				Result := "#" + parent.index_of (Current, 1).out
+				Result := Precursor {EV_ITEM}
 			end
 		end
 
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_LIST_ITEM_IMP} implementation.make (Current)
+			create {EV_LIST_ITEM_IMP} implementation.make
 		end
 
 note
@@ -130,4 +130,14 @@ note
 
 
 end -- class EV_LIST_ITEM
+
+
+
+
+
+
+
+
+
+
 

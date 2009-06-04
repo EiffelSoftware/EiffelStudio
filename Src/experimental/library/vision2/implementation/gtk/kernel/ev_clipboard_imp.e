@@ -25,13 +25,13 @@ create
 
 feature {NONE}-- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- initialize `Current'.
 		local
 			cs: EV_GTK_C_STRING
@@ -115,7 +115,7 @@ feature {EV_ANY_I}
 			set_is_destroyed (True)
 		end
 
-	interface: EV_CLIPBOARD;
+	interface: detachable EV_CLIPBOARD note option: stable attribute end;
 		-- Interface of `Current'
 
 note
@@ -133,4 +133,8 @@ note
 
 
 end -- class EV_CLIPBOARD_IMP
+
+
+
+
 

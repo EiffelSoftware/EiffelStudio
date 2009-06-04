@@ -4,24 +4,24 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_VIEWPORT_IMP
-	
+
 inherit
 	EV_VIEWPORT_I
 		redefine
 			interface,
 			set_offset
 		end
-		
+
 	EV_CELL_IMP
 		undefine
 			default_style,
 			default_ex_style
 		redefine
 			interface,
-			make,
+			old_make,
 			on_size,
 			ev_apply_new_size,
 			compute_minimum_width,
@@ -33,13 +33,12 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-	make (an_interface: like interface)
-			-- Initialize. 
+
+	old_make (an_interface: like interface)
+			-- Initialize.
 		do
-			base_make (an_interface)
-			wel_make (Default_parent, "")
-		end	
+			assign_interface (an_interface)
+		end
 
 feature -- Access
 
@@ -47,7 +46,7 @@ feature -- Access
 			-- Horizontal position of viewport relative to `item'.
 		do
 			if item /= Void then
-				Result := - item.x_position
+				Result := - interface_item.x_position
 			end
 		end
 
@@ -55,7 +54,7 @@ feature -- Access
 			-- Vertical position of viewport relative to `item'.
 		do
 			if item /= Void then
-				Result := - item.y_position
+				Result := - interface_item.y_position
 			end
 		end
 
@@ -63,26 +62,38 @@ feature -- Element change
 
 	set_x_offset (an_x: INTEGER)
 			-- Set `x_offset' to `an_x'.
+		local
+			l_item_imp: like item_imp
 		do
 			if item /= Void then
-				item_imp.ev_move (- an_x, item.y_position)
+				l_item_imp := item_imp
+				check l_item_imp /= Void end
+				l_item_imp.ev_move (- an_x, interface_item.y_position)
 			end
 		end
 
 	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
+		local
+			l_item_imp: like item_imp
 		do
 			if item /= Void then
-				item_imp.ev_move (item.x_position, - a_y)
+				l_item_imp := item_imp
+				check l_item_imp /= Void end
+				l_item_imp.ev_move (interface_item.x_position, - a_y)
 			end
 		end
 
 	set_offset (an_x, a_y: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
+		local
+			l_item_imp: like item_imp
 		do
 			if item /= Void then
-				item_imp.ev_move (- an_x, - a_y)
+				l_item_imp := item_imp
+				check l_item_imp /= Void end
+				l_item_imp.ev_move (- an_x, - a_y)
 			end
 		end
 
@@ -153,22 +164,24 @@ feature {NONE} -- Implementation
 			imp: like item_imp
 		do
 			imp := item_imp
+			check imp /= Void end
 			if originator then
-				imp.set_move_and_size (imp.x_position, imp.y_position, 
+				imp.set_move_and_size (imp.x_position, imp.y_position,
 					imp.width, imp.height)
 			else
 				imp.ev_apply_new_size (imp.x_position ,imp.y_position,
-					imp.width, imp.height, True)			
+					imp.width, imp.height, True)
 			end
 		end
-		
+
 	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			wel_win: EV_WIDGET_IMP
+			wel_win: detachable EV_WIDGET_IMP
+			l_item_imp: like item_imp
 		do
-			wel_win ?= item.implementation
+			wel_win ?= interface_item.implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
@@ -179,28 +192,29 @@ feature {NONE} -- Implementation
 			then
 				notify_change (Nc_minsize, wel_win)
 			end
-			
+
 				-- If we have not been displayed, then we
 				-- must update the ranges, as we may then
 				-- call `set_*_offset' for which the ranges
 				-- must be set. Not sure if this really is
-				-- the best solution. Julian 07/17/02.
+				-- the best solution. Julian 07/17/02
+			l_item_imp := item_imp
 			check
-				has_item: item_imp /= Void
+				has_item: l_item_imp /= Void
 			end
 			if scroller /= Void then
 				if is_horizontal_scroll_bar_visible then
-					set_horizontal_range (0, item_imp.width)
+					set_horizontal_range (0, l_item_imp.width)
 				end
 				if is_vertical_scroll_bar_visible then
-					set_vertical_range (0, item_imp.height)
+					set_vertical_range (0, l_item_imp.height)
 				end
 			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_VIEWPORT;
+	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -217,4 +231,11 @@ note
 
 
 end -- class EV_VIEWPORT_IMP
+
+
+
+
+
+
+
 

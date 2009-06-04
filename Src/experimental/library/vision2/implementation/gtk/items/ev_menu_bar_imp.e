@@ -19,7 +19,8 @@ inherit
 			{EV_WINDOW_IMP}
 				list_widget
 		redefine
-			interface
+			interface,
+			make
 		end
 
 	EV_ANY_IMP
@@ -32,11 +33,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_bar_new)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			Precursor
 		end
 
 feature -- Measurement
@@ -91,11 +98,11 @@ feature {EV_WINDOW_IMP} -- Implementation
 			parent_imp := a_wind
 		end
 
-	parent: EV_WINDOW
+	parent: detachable EV_WINDOW
 			-- Parent window of Current.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.interface
 			end
 		end
 
@@ -105,11 +112,11 @@ feature {EV_WINDOW_IMP} -- Implementation
 			parent_imp := Void
 		end
 
-	parent_imp: EV_WINDOW_IMP
+	parent_imp: detachable EV_WINDOW_IMP
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU_BAR;
+	interface: detachable EV_MENU_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -126,4 +133,8 @@ note
 
 
 end -- class EV_MENU_BAR_IMP
+
+
+
+
 

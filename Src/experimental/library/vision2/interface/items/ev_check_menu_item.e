@@ -1,4 +1,4 @@
-note	
+note
 	description:
 		"[
 			Menu item with a check box.
@@ -27,7 +27,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 create
 	default_create,
 	make_with_text,
@@ -38,9 +38,9 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_DESELECTABLE} 
+			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_DESELECTABLE}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_MENU_ITEM_I
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_CHECK_MENU_ITEM_IMP} implementation.make (Current)
+			create {EV_CHECK_MENU_ITEM_IMP} implementation.make
 		end
 
 note
@@ -69,4 +69,11 @@ note
 
 
 end -- class EV_CHECK_MENU_ITEM
+
+
+
+
+
+
+
 

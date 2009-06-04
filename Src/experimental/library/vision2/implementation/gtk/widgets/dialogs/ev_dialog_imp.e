@@ -21,11 +21,12 @@ inherit
 
 	EV_TITLED_WINDOW_IMP
 		redefine
-			make,
+			old_make,
 			interface,
 			call_close_request_actions,
-			initialize,
-			client_area
+			make,
+			client_area,
+			new_gtk_window
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -35,14 +36,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create empty dialog box.
 		do
-			base_make (an_interface)
-			set_c_object (create_gtk_dialog)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	new_gtk_window: POINTER
+			-- Return a new gtk window object for `Current'
+		do
+			Result := create_gtk_dialog
+		end
+
+	make
 			-- Initialize 'Current'
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
@@ -112,7 +118,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interface: EV_DIALOG
+	interface: detachable EV_DIALOG note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -137,4 +143,8 @@ note
 
 
 end -- class EV_DIALOG_IMP
+
+
+
+
 

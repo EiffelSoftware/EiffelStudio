@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"EiffelVision vertical separator. Implementation interface."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SEPARATOR;
+	interface: detachable EV_VERTICAL_SEPARATOR note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -36,4 +36,11 @@ note
 
 
 end -- class EV_VERTICAL_SEPARATOR_I
+
+
+
+
+
+
+
 

@@ -21,7 +21,7 @@ inherit
 			set_default_minimum_size
 		redefine
 			on_key_down,
-			initialize,
+			make,
 			interface,
 			update_current_push_button,
 			on_mouse_enter,
@@ -153,22 +153,22 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 20
 			text_alignment := default_alignment
 				-- Retrieve the theme for the button.
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
 			Precursor {EV_PRIMITIVE_IMP}
 			set_default_font
 		end
@@ -187,7 +187,7 @@ feature -- Status setting
 	set_default_minimum_size
 			-- Reset `Current' to its default minimum size.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			w,h: INTEGER
 			l_text: like wel_text
 		do
@@ -200,20 +200,23 @@ feature -- Status setting
 					end
 					w := extra_width + font_imp.string_width (l_text)
 					h := h.max (19 * font_imp.height // 9)
+				elseif attached private_wel_font as l_private_wel_font then
+
+					w := extra_width + l_private_wel_font.string_width (l_text)
+					h := h.max (19 * l_private_wel_font.height // 9)
 				else
-					w := extra_width + private_wel_font.string_width (l_text)
-					h := h.max (19 * private_wel_font.height // 9)
+					check False end
 				end
 			end
 
 
-			if pixmap_imp /= Void then
+			if pixmap_imp /= Void and then attached private_pixmap as l_private_pixmap then
 				if l_text.is_empty then
-					w := private_pixmap.width + pixmap_border * 2
+					w := l_private_pixmap.width + pixmap_border * 2
 				else
-					w := w + private_pixmap.width + pixmap_border
+					w := w + l_private_pixmap.width + pixmap_border
 				end
-				h := h.max (private_pixmap.height + pixmap_border * 2)
+				h := h.max (l_private_pixmap.height + pixmap_border * 2)
 			end
 			if l_text.is_empty and pixmap_imp = Void then
 				w := w + extra_width
@@ -303,26 +306,33 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP)
 			-- Make `pix' the pixmap of `Current'.
 		local
-			internal_pixmap_state: EV_PIXMAP_IMP_STATE
-			font_imp: EV_FONT_IMP
+			internal_pixmap_state: detachable EV_PIXMAP_IMP_STATE
+			l_internal_bitmap: detachable WEL_BITMAP
+			font_imp: detachable EV_FONT_IMP
 			size_difference: INTEGER
+			l_private_pixmap: like private_pixmap
 		do
-			private_pixmap := pix.twin
+			l_private_pixmap := pix.twin
+			private_pixmap := l_private_pixmap
 			if not text.is_empty then
-				if private_font /= Void then
-					font_imp ?= private_font.implementation
+				if attached private_font as l_private_font then
+					font_imp ?= l_private_font.implementation
 					check
 						font_not_void: font_imp /= Void
 					end
 					size_difference := font_imp.string_width (wel_text)
+				elseif attached private_wel_font as l_private_wel_font then
+					size_difference := l_private_wel_font.string_width (wel_text)
 				else
-					size_difference := private_wel_font.string_width (wel_text)
+					check False end
 				end
 			end
 
-			internal_pixmap_state ?= private_pixmap.implementation
-			internal_bitmap := internal_pixmap_state.get_bitmap
-			internal_bitmap.decrement_reference
+			internal_pixmap_state ?= l_private_pixmap.implementation
+			check internal_pixmap_state /= Void end
+			l_internal_bitmap := internal_pixmap_state.get_bitmap
+			internal_bitmap := l_internal_bitmap
+			l_internal_bitmap.decrement_reference
 			set_default_minimum_size
 			invalidate
 		end
@@ -363,7 +373,7 @@ feature {NONE} -- Implementation, focus event
 			-- Current is a push button, so we set it to be
 			-- the current push button.
 		local
-			top_level_dialog_imp: EV_DIALOG_I
+			top_level_dialog_imp: detachable EV_DIALOG_I
 		do
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
@@ -439,13 +449,14 @@ feature {EV_ANY_I} -- Drawing implementation
 	internal_background_brush: WEL_BRUSH
 			-- `Result' is background brush to be used for `Current'.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 			color: EV_COLOR
 		do
 			color_imp := background_color_imp
 			if color_imp = Void then
 				create color
 				color_imp ?= color.implementation
+				check color_imp /= Void end
 				color_imp.set_with_system_id ({WEL_COLOR_CONSTANTS}.Color_btnface)
 			end
 			create Result.make_solid (color_imp)
@@ -459,10 +470,10 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Temporary dc for quicker access to that of `draw_item'.
 			text_rect: WEL_RECT
 				-- Rect used to draw the text of `Current'.
-			internal_pixmap_state: EV_PIXMAP_IMP_STATE
+			internal_pixmap_state: detachable EV_PIXMAP_IMP_STATE
 				-- Pixmap state used to retrieve information about the pixmap of `Current', Void
 				-- if there is no pixmap.
-			wel_bitmap: WEL_BITMAP
+			wel_bitmap: detachable WEL_BITMAP
 				-- Bitmap used to draw `internal_pixmap_state' on `Current' if it is not Void.
 			l_rect: WEL_RECT
 				-- Rect of `Current' retrieved from `draw_item'.
@@ -473,12 +484,12 @@ feature {EV_ANY_I} -- Drawing implementation
 			memory_dc: WEL_DC
 				-- Dc used to perform all drawing on. This cuts out the flicker that would be present if
 				-- we did not buffer the drawing.
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 				-- Temporary font implementation used when retrieving font of `Current'.
 			height_offset: INTEGER
 				-- If `internal_pixmap_state' is not Void, this is used to find the number of pixels vertically from
 				-- the top of `Current' to where the pixmap should be drawn.
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 				-- Temporary color implementation.
 			image_width: INTEGER
 				-- Width of current image, or 0 when `internal_pixmap_state' is Void.
@@ -499,9 +510,9 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- spacing required on left had side of image and text.
 				-- Equal to `image_pixmap_space' when there is a text, or
 				-- `pixmap_border' // 2 when there is no text.
-			mask_bitmap: WEL_BITMAP
+			mask_bitmap: detachable WEL_BITMAP
 				-- Mask bitmap of current image.
-			l_background_brush: WEL_BRUSH
+			l_background_brush: detachable WEL_BRUSH
 
 			color_ref: WEL_COLOR_REF
 			coordinate: EV_COORDINATE
@@ -545,8 +556,10 @@ feature {EV_ANY_I} -- Drawing implementation
 					font_not_void: font_imp /= Void
 				end
 				memory_dc.select_font (font_imp.wel_font)
+			elseif attached private_wel_font as l_private_wel_font then
+				memory_dc.select_font (l_private_wel_font)
 			else
-				memory_dc.select_font (private_wel_font)
+				check False end
 			end
 
 					-- Calculate the draw state flags and then draw the background
@@ -599,8 +612,9 @@ feature {EV_ANY_I} -- Drawing implementation
 
 				-- If there is a pixmap on `Current', then assign its implementation to
 				--`internal_pixmap_state' and store its width in `image_width'.
-			if private_pixmap /= Void then
-				internal_pixmap_state ?= private_pixmap.implementation
+			if attached private_pixmap as l_private_pixmap then
+				internal_pixmap_state ?= l_private_pixmap.implementation
+				check internal_pixmap_state /= Void end
 					-- Compute values for re-sizing
 				image_width := internal_pixmap_state.width
 			end
@@ -632,11 +646,11 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Calculate `left_position' which is the offset in pixels from the left of the button
 				-- to draw the first graphical element. If a pixmap is set in `Current', then it will always be the first,
 				-- as the text is always aligned to the right of the pixmap.
-			if interface.is_left_aligned then
+			if text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then
 				left_position := left_spacing
-			elseif interface.is_center_aligned then
+			elseif text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then
 				left_position := (width - combined_width) // 2 - ((right_spacing - left_spacing) // 2)
-			elseif interface.is_right_aligned then
+			elseif text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then
 				left_position := width - combined_width - right_spacing
 			end
 
@@ -652,6 +666,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			else
 				color_imp ?= default_foreground_color_imp
 			end
+			check color_imp /= Void end
 			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, wel_text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
 
 				-- If we have a pixmap set on `Current', then we must draw it.
@@ -659,7 +674,9 @@ feature {EV_ANY_I} -- Drawing implementation
 					-- Compute distance from top of button to display image.
 				height_offset := (height - internal_pixmap_state.height - pixmap_border * 2) // 2
 					-- Retrieve the image of `Current'.
+
 				wel_bitmap := internal_bitmap
+				check wel_bitmap /= Void end
 					-- Perform the drawing.
 				if internal_pixmap_state.has_mask then
 					mask_bitmap := internal_pixmap_state.get_mask_bitmap
@@ -670,13 +687,13 @@ feature {EV_ANY_I} -- Drawing implementation
 				create coordinate.make (left_position, pixmap_border + height_offset)
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
-				if not is_sensitive and disabled_image /= Void then
+				if not is_sensitive and attached disabled_image as l_disabled_image then
 					l_icon := internal_pixmap_state.build_icon
 					color_imp ?= background_color.implementation
 					check
 						color_imp_not_void: color_imp /= Void
 					end
-					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (internal_bitmap, l_icon, dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
+					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (wel_bitmap, l_icon, dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
 					l_icon.dispose
 				else
 					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)
@@ -710,7 +727,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
+	disabled_image: detachable WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -739,8 +756,12 @@ feature {EV_ANY_I} -- Drawing implementation
 
 	default_foreground_color_imp: EV_COLOR_IMP
 			-- Default foreground color for widgets.
+		local
+			l_result: detachable EV_COLOR_IMP
 		once
-			Result ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+			l_result ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: result /= Void
 		end
@@ -768,7 +789,7 @@ feature {EV_ANY_I} -- Drawing implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_BUTTON;
+	interface: detachable EV_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -785,4 +806,14 @@ note
 
 
 end -- class EV_BUTTON_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -71,7 +71,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_POSITIONABLE;
+	interface: detachable EV_POSITIONABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -88,4 +88,12 @@ note
 
 
 end -- class EV_POSITIONABLE_I
+
+
+
+
+
+
+
+
 

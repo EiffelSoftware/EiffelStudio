@@ -102,35 +102,35 @@ feature -- Access
 			Result := internal_hash_id
 		end
 
-	pebble: ANY
+	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this figure.
 		do
-			if internal_pointer_style /= Void then
-				Result := internal_pointer_style
-			elseif group /= Void then
-				Result := group.pointer_style
+			if attached internal_pointer_style as l_internal_pointer_style then
+				Result := l_internal_pointer_style
+			elseif attached group as l_group then
+				Result := l_group.pointer_style
 			end
 		end
 
-	group: EV_MODEL_GROUP
+	group: detachable EV_MODEL_GROUP
 			-- The group `Current' is part of. Void if `Current' is
 			-- not part of a group.
 
-	world: EV_MODEL_WORLD
+	world: detachable EV_MODEL_WORLD
 			-- The world `Current' is part of. Void if `Current' is
 			-- not part of a world
 		do
 			if group /= Void then
 				Result ?= group
-				if Result = Void then
-					Result := group.world
+				if Result = Void and then attached group as l_group then
+					Result := l_group.world
 				end
 			end
 		end
@@ -144,7 +144,10 @@ feature -- Element change
 			l_point_array: SPECIAL [EV_COORDINATE]
 			l_coordinate: EV_COORDINATE
 			i, nb: INTEGER
+			l_group: like group
 		do
+			l_group := group
+			check l_group /= Void end
 			a_delta_x := a_x - x
 			if a_delta_x /= 0 then
 				l_point_array := point_array
@@ -158,8 +161,8 @@ feature -- Element change
 					l_coordinate.set_x_precise (l_coordinate.x_precise + a_delta_x)
 					i := i + 1
 				end
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 				invalidate
 				center.set_x (a_x)
@@ -176,7 +179,10 @@ feature -- Element change
 			l_point_array: SPECIAL [EV_COORDINATE]
 			l_coordinate: EV_COORDINATE
 			i, nb: INTEGER
+			l_group: like group
 		do
+			l_group := group
+			check l_group /= Void end
 			a_delta_y := a_y - y
 			if a_delta_y /= 0 then
 				l_point_array := point_array
@@ -190,8 +196,8 @@ feature -- Element change
 					l_coordinate.set_y_precise (l_coordinate.y_precise + a_delta_y)
 					i := i + 1
 				end
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 				invalidate
 				center.set_y (a_y)
@@ -208,7 +214,10 @@ feature -- Element change
 			l_point_array: SPECIAL [EV_COORDINATE]
 			l_coordinate: EV_COORDINATE
 			i, nb: INTEGER
+			l_group: like group
 		do
+			l_group := group
+			check l_group /= Void end
 			a_delta_y := a_y - y
 			a_delta_x := a_x - x
 			if a_delta_y /= 0 or a_delta_x /= 0 then
@@ -223,8 +232,8 @@ feature -- Element change
 					l_coordinate.set_precise (l_coordinate.x_precise + a_delta_x, l_coordinate.y_precise + a_delta_y)
 					i := i + 1
 				end
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 				center.set (a_x, a_y)
 				invalidate
@@ -275,8 +284,8 @@ feature -- Element change
 			end
 			projection_matrix.scale (a_scale_x, 1, center.x_precise, center.y_precise, angle)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -291,8 +300,8 @@ feature -- Element change
 			end
 			projection_matrix.scale (1, a_scale_y, center.x_precise, center.y_precise, angle)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -308,8 +317,8 @@ feature -- Element change
 
 			projection_matrix.scale (a_scale, a_scale, center.x_precise, center.y_precise, angle)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -325,8 +334,8 @@ feature -- Element change
 			end
 			projection_matrix.scale_abs (a_scale_x, 1, center.x_precise, center.y_precise)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -342,8 +351,8 @@ feature -- Element change
 			end
 			projection_matrix.scale_abs (1, a_scale_y, center.x_precise, center.y_precise)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -360,8 +369,8 @@ feature -- Element change
 
 			projection_matrix.scale_abs (a_scale, a_scale, center.x_precise, center.y_precise)
 			recursive_transform (projection_matrix)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -375,8 +384,8 @@ feature -- Element change
 			is_transformable: is_transformable
 		do
 			recursive_transform (a_transformation)
-			if is_in_group and then group.is_center_valid then
-				group.center_invalidate
+			if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+				l_group.center_invalidate
 			end
 		end
 
@@ -469,8 +478,8 @@ feature -- Status Report
 	has_capture: BOOLEAN
 			-- Are all events sent to `Current'?
 		do
-			if world /= Void then
-				Result := world.capture_figure = Current
+			if attached world as l_world then
+				Result := l_world.capture_figure = Current
 			end
 		end
 
@@ -480,7 +489,7 @@ feature -- Status Report
 	is_sensitive: BOOLEAN
 			-- Is object sensitive to user input?
 		do
-			if group = Void or else group.is_sensitive then
+			if group = Void or else attached group as l_group and then l_group.is_sensitive then
 				Result := internal_is_sensitive
 			end
 		end
@@ -500,8 +509,12 @@ feature -- Status settings
 			-- Grab all mouse events for `world'.
 		require
 			in_world: world /= Void
+		local
+			l_world: like world
 		do
-			world.set_capture_figure (Current)
+			l_world := world
+			check l_world /= Void end
+			l_world.set_capture_figure (Current)
 		ensure
 			capture_set: has_capture
 		end
@@ -511,8 +524,12 @@ feature -- Status settings
 		require
 			in_world: world /= Void
 			has_capture: has_capture
+		local
+			l_world: like world
 		do
-			world.remove_capture_figure
+			l_world := world
+			check l_world /= Void end
+			l_world.remove_capture_figure
 		ensure
 			capture_released: not has_capture
 		end
@@ -672,8 +689,8 @@ feature -- Events
 			ax, ay, w, h: INTEGER
 			l_item: EV_COORDINATE
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				if point_count = 0 then
 					create Result
@@ -720,8 +737,8 @@ feature --{EV_FIGURE} -- Status settings
 		do
 			if is_center_valid then
 				is_center_valid := False
-				if is_in_group and then group.is_center_valid then
-					group.center_invalidate
+				if is_in_group and then attached group as l_group and then l_group.is_center_valid then
+					l_group.center_invalidate
 				end
 			end
 		end
@@ -736,8 +753,8 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 		do
 			valid := False
 			internal_bounding_box := Void
-			if is_in_group then
-				group.invalidate
+			if is_in_group and then attached group as l_group then
+				l_group.invalidate
 			end
 		end
 
@@ -750,7 +767,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	invalid_rectangle: EV_RECTANGLE
+	invalid_rectangle: detachable EV_RECTANGLE
 			-- Area that needs erasing.
 		do
 			if not valid then
@@ -758,7 +775,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE
+	update_rectangle: detachable EV_RECTANGLE
 			-- Area that needs redrawing.
 		do
 			if not valid then
@@ -767,15 +784,14 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	internal_invalid_rectangle: EV_RECTANGLE
+	internal_invalid_rectangle: detachable EV_RECTANGLE
 			-- Area that needs updating.
 
-
-	real_pebble (a_x, a_y: INTEGER): ANY
+	real_pebble (a_x, a_y: INTEGER): detachable ANY
 			-- Calculated `pebble'.
 		do
-			if pebble_function /= Void then
-				Result := pebble_function.item ([a_x, a_y])
+			if attached pebble_function as l_pebble_function then
+				Result := l_pebble_function.item ([a_x, a_y])
 			else
 				Result := pebble
 			end
@@ -786,7 +802,7 @@ feature {EV_MODEL, EV_MODEL_PROJECTOR, EV_MODEL_PROJECTION_ROUTINES} -- Access
 	draw_id: INTEGER
 			-- Used to look up drawing routine.
 
-	last_update_rectangle: EV_RECTANGLE
+	last_update_rectangle: detachable EV_RECTANGLE
 			-- Last calculated bounding box when validate was called.
 
 
@@ -797,11 +813,11 @@ feature {EV_MODEL, EV_MODEL_PROJECTION_ROUTINES}
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	set_group (a_group: EV_MODEL_GROUP)
+	set_group (a_group: detachable EV_MODEL_GROUP)
 			-- Set `group' to `a_group'
 		do
-			if group /= Void and group /= a_group then
-				group.prune_all (Current)
+			if attached group as l_group and then  l_group /= a_group then
+				l_group.prune_all (Current)
 			end
 			group := a_group
 		ensure
@@ -880,32 +896,32 @@ feature {NONE} -- Contract support
 
 feature {EV_MODEL_WIDGET_PROJECTOR} -- Internal action Sequence
 
-	internal_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
+	internal_pointer_motion_actions: detachable EV_POINTER_MOTION_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_motion_actions'.
 
-	internal_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_button_press_actions'.
 
-	internal_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_double_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_double_press_actions'.
 
-	internal_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	internal_pointer_button_release_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object
 			-- `pointer_button_release_actions'.
 
-	internal_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_pointer_enter_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_enter_actions'.
 
-	internal_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_pointer_leave_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pointer_leave_actions'.
 
-	internal_pick_actions: EV_PND_START_ACTION_SEQUENCE
+	internal_pick_actions: detachable EV_PND_START_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `pick_actions'.
 
-	internal_conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_conforming_pick_actions: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `conforming_pick_actions'.
 
-	internal_drop_actions: EV_PND_ACTION_SEQUENCE
+	internal_drop_actions: detachable EV_PND_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `drop_actions'.
 
 feature {NONE} -- Implementation
@@ -930,10 +946,10 @@ feature {NONE} -- Implementation
 			Result := internal_projection_matrix
 		end
 
-	internal_projection_matrix: like projection_matrix
+	internal_projection_matrix: detachable EV_MODEL_TRANSFORMATION note option: stable attribute end
 			-- Internal projection matrix.
 
-	internal_pointer_style: EV_POINTER_STYLE
+	internal_pointer_style: detachable EV_POINTER_STYLE
 			-- `pointer_style'.
 
 	internal_is_sensitive: BOOLEAN
@@ -981,7 +997,7 @@ feature {NONE} -- Implementation
 			center_valid: is_center_valid
 		end
 
-	internal_bounding_box: EV_RECTANGLE
+	internal_bounding_box: detachable EV_RECTANGLE
 			-- Used to speed up bounding box calculation.
 
 invariant

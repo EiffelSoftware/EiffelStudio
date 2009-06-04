@@ -15,7 +15,7 @@ class
 inherit
 	EV_CHECKABLE_TREE_I
 		undefine
-			initialize
+			make
 		redefine
 			interface
 		end
@@ -35,10 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create `Current' with interface `an_interface'.
 		do
-			Precursor {EV_TREE_IMP} (an_interface)
+			Precursor {EV_TREE_IMP}
 				-- We explicitly set the check boxes style after creation
 				-- of the window and before items are populated as per the
 				-- MSDN guildines regarding TVS_CHECKBOXES style.
@@ -50,11 +50,12 @@ feature -- Status report
 	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- is `tree_item' checked?
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
 			original_mask: INTEGER
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
+			check item_imp /= Void end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -69,11 +70,12 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
 			original_mask: INTEGER
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
+			check item_imp /= Void end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -93,11 +95,12 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
 			original_mask: INTEGER
 			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
+			check item_imp /= Void end
 			original_mask := item_imp.mask
 			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
@@ -121,7 +124,7 @@ feature {EV_ANY_I} -- Implementation
 			pt: WEL_POINT
 			info: WEL_TV_HITTESTINFO
 			message_pos: INTEGER
-			tree_node: EV_TREE_NODE_IMP
+			tree_node: detachable EV_TREE_NODE_IMP
 		do
 			message_pos := cwel_get_message_pos
 
@@ -163,7 +166,7 @@ feature {NONE} -- Implementation
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Process all message plus `WM_GETDLGCODE'.
 		local
-			tree_node: EV_TREE_NODE_IMP
+			tree_node: detachable EV_TREE_NODE_IMP
 		do
 				-- Check to see if we are receiving the user defined message that
 				-- we sent within `on_wm_click'. If so, process the state change.
@@ -171,13 +174,14 @@ feature {NONE} -- Implementation
 					-- Retrieve the tree node whose checkable state has changed.
 				tree_node ?= (all_ev_children @ wparam)
 					-- Determine if the node is being checked or unchecked (reversed as we are about to set it explicitly).
-				if is_item_checked (tree_node.interface) then
+				check tree_node /= Void end
+				if is_item_checked (tree_node.attached_interface) then
 					tree_node.set_mask (tree_node.mask | tvif_state)
 					tree_node.set_statemask (tvis_stateimagemask)
 					tree_node.set_state (cwin_index_to_state_image_mask (1))
 						-- Call the uncheck actions if connected.
 					if uncheck_actions_internal /= Void then
-						uncheck_actions_internal.call ([tree_node.interface])
+						uncheck_actions_internal.call ([tree_node.attached_interface])
 					end
 				else
 					tree_node.set_mask (tree_node.mask | tvif_state)
@@ -185,7 +189,7 @@ feature {NONE} -- Implementation
 					tree_node.set_state (cwin_index_to_state_image_mask (2))
 						-- Call the uncheck actions if connected.
 					if check_actions_internal /= Void then
-						check_actions_internal.call ([tree_node.interface])
+						check_actions_internal.call ([tree_node.attached_interface])
 					end
 				end
 			else
@@ -202,7 +206,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_TREE;
+	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

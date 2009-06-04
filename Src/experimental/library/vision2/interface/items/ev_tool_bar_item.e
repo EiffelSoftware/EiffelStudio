@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_TOOL_BAR
+	parent: detachable EV_TOOL_BAR
 			-- Contains `Current'.
 		do
 			Result ?= Precursor {EV_ITEM}
@@ -40,4 +40,14 @@ note
 
 
 end -- class EV_TOOL_BAR_BUTTON
+
+
+
+
+
+
+
+
+
+
 

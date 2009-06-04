@@ -32,25 +32,25 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current' or Void if none.
 		do
-			if notebook /= Void then
-				Result := notebook_imp.item_pixmap (widget)
+			if attached notebook_imp as l_notebook_imp then
+				Result := l_notebook_imp.item_pixmap (widget)
 			end
 		end
 
@@ -59,24 +59,24 @@ feature -- Element change
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
-			if notebook /= Void then
-				notebook_imp.set_item_pixmap (widget, a_pixmap)
+			if attached notebook_imp as l_notebook_imp and then attached widget as l_widget then
+				l_notebook_imp.set_item_pixmap (l_widget, a_pixmap)
 			end
 		end
 
 	remove_pixmap
 			-- Make `pixmap' `Void'.
 		do
-			if notebook /= Void then
-				notebook_imp.set_item_pixmap (widget, Void)
+			if attached notebook_imp as l_notebook_imp and then attached widget as l_widget then
+				l_notebook_imp.set_item_pixmap (l_widget, Void)
 			end
 		end
 
 	wel_text: STRING_32
 			-- Text displayed in label.
 		do
-			if notebook /= Void then
-				Result := notebook_imp.item_text (widget)
+			if attached notebook_imp as l_notebook_imp and then attached widget as l_widget then
+				Result := l_notebook_imp.item_text (l_widget)
 			else
 					-- Although when `notebook' is Void it is not possible to query
 					-- `text' from the interface, this must be set to an empty string as
@@ -96,18 +96,20 @@ feature -- Element change
 	wel_set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
-			if notebook /= Void then
-				notebook_imp.set_item_text (widget, a_text)
+			if attached notebook_imp as l_notebook_imp then
+				l_notebook_imp.set_item_text (widget, a_text)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	notebook_imp: EV_NOTEBOOK_IMP
+	notebook_imp: detachable EV_NOTEBOOK_IMP
 			-- Access to implementation of `notebook'.
 			-- Note that `Result' may be `Void' if `notebook' is.
 		do
-			Result ?= notebook.implementation
+			if attached notebook as l_notebook then
+				Result ?= l_notebook.implementation
+			end
 		ensure
 			not_void_if_notebook_not_void: notebook /= Void implies result /= Void
 		end
@@ -123,7 +125,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_NOTEBOOK_TAB;
+	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -140,4 +142,13 @@ note
 
 
 end -- class EV_NOTEBOOK_TAB_IMP
+
+
+
+
+
+
+
+
+
 

@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"[
 			Displays two widgets one above the other separated by an adjustable
 			divider.
@@ -29,8 +29,8 @@ inherit
 	EV_SPLIT_AREA
 		redefine
 			implementation
-		end 
-	
+		end
+
 create
 	default_create
 
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_VERTICAL_SPLIT_AREA_IMP} implementation.make (Current)
+			create {EV_VERTICAL_SPLIT_AREA_IMP} implementation.make
 		end
 
 note
@@ -61,5 +61,12 @@ note
 
 
 
-end -- class EV_VERTICAL_SPLIT_AREA 
+end -- class EV_VERTICAL_SPLIT_AREA
+
+
+
+
+
+
+
 

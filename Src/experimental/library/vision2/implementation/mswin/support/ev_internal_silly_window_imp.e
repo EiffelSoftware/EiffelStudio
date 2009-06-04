@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			-- But as we can't implement a deferred feature
  			-- with an external, it is not possible.
  		local
-			range: EV_RANGE_IMP
+			range: detachable EV_RANGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -66,8 +66,8 @@ feature {NONE} -- Implementation
  							range_exists: range.exists
 						end
 						if range.change_actions_internal /= Void then
-							range.change_actions_internal.call
-								([range.interface.value])
+							range.change_actions.call
+								([range.attached_interface.value])
 						end
 					end
  				else
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
  	on_wm_hscroll (wparam, lparam: POINTER)
  			-- Wm_hscroll message.
  		local
- 			range: EV_RANGE_IMP
+ 			range: detachable EV_RANGE_IMP
  			p: POINTER
  		do
 			-- To avoid the commands to be call two times, we check that
@@ -98,8 +98,8 @@ feature {NONE} -- Implementation
 	 						range_exists: range.exists
 	 					end
 	 					if range.change_actions_internal /= Void then
-							range.change_actions_internal.call
-								([range.interface.value])
+							range.change_actions.call
+								([range.attached_interface.value])
 						end
 	 				end
 				else
@@ -115,11 +115,11 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			ww: WEL_WINDOW
+			ww: detachable WEL_WINDOW
 		do
 			create info.make_by_pointer (lparam)
 			if
-				has_child (info.window_from)
+				attached info.window_from as l_window and then has_child (l_window)
 			then
 				Precursor {WEL_FRAME_WINDOW} (wparam, lparam)
 			else
@@ -132,8 +132,8 @@ feature {NONE} -- Implementation
 				-- Also we need to force a new level on the return message stack
 				-- because WEL_DISPATCHER does not do it in this case.
 
-				if info.window_from /= Void then
-					ww := info.window_from.parent
+				if attached info.window_from as l_window_from then
+					ww := l_window_from.parent
 					if ww /= Void and then ww /= Current then
 						ww.increment_level
 						ww.on_wm_notify (wparam, lparam)
@@ -193,4 +193,13 @@ note
 
 
 end -- class EV_INTERNAL_SILLY_WINDOW_IMP
+
+
+
+
+
+
+
+
+
 

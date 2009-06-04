@@ -54,9 +54,10 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 		local
 			fill: INTEGER
 			expand, pad, pack_type: INTEGER
-			wid_imp: EV_WIDGET_IMP
+			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
+			check wid_imp /= Void end
 			{EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
 				container_widget,
 				wid_imp.c_object,
@@ -92,9 +93,10 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			-- Set whether `child' expands to fill available spare space.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
-			wid_imp: EV_WIDGET_IMP
+			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
+			check wid_imp /= Void end
 			{EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
 				container_widget,
 				wid_imp.c_object,
@@ -132,7 +134,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
-	interface: EV_BOX;
+	interface: detachable EV_BOX note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -151,4 +153,8 @@ note
 
 
 end -- class EV_BOX_IMP
+
+
+
+
 

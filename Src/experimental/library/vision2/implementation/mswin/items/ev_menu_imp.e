@@ -19,8 +19,8 @@ inherit
 	EV_MENU_ITEM_IMP
 		redefine
 			interface,
+			old_make,
 			make,
-			initialize,
 			has_parent,
 			disable_sensitive,
 			enable_sensitive,
@@ -32,32 +32,31 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
+			old_make,
 			interface,
 			make,
-			initialize,
 			dispose
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
+	old_make (an_interface: like interface)
 		do
-			Precursor {EV_MENU_ITEM_IMP} (an_interface)
-			create ev_children.make (2)
-			make_track
-			make_id
-			create radio_group.make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
-			Precursor {EV_MENU_ITEM_IMP}
+			create ev_children.make (2)
+			create radio_group.make
 			Precursor {EV_MENU_ITEM_LIST_IMP}
+			make_track
+			make_id
+			Precursor {EV_MENU_ITEM_IMP}
 		end
 
 feature {EV_ANY_I} -- Basic operations
@@ -65,20 +64,20 @@ feature {EV_ANY_I} -- Basic operations
 	disable_sensitive
    			-- Set `Current' insensitive.
    		local
-   			menu_bar_imp: EV_MENU_BAR_IMP
+   			menu_bar_imp: detachable EV_MENU_BAR_IMP
 		do
 			is_sensitive := False
 			set_insensitive (True)
-			if has_parent then
-				parent_imp.disable_position (parent_imp.index_of (interface, 1) - 1)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.disable_position (l_parent_imp.index_of (interface, 1) - 1)
 					--| Only disabling the position is not enough if we are parented in
 					--| a menu bar (i.e. always visible on the window). We must call
 					--| `draw_menu' on the window for the visual appearence of `Current' to
 					--| be updated immediately.
-				menu_bar_imp ?= parent_imp
+				menu_bar_imp ?= l_parent_imp
 				if menu_bar_imp /= Void then
-					if menu_bar_imp.parent_imp /= Void then
-						menu_bar_imp.parent_imp.draw_menu
+					if attached menu_bar_imp.parent_imp as l_menu_bar_parent_imp then
+						l_menu_bar_parent_imp.draw_menu
 					end
 				end
 			end
@@ -87,20 +86,20 @@ feature {EV_ANY_I} -- Basic operations
 	enable_sensitive
 			-- Set `Current' insensitive.
 		local
-   			menu_bar_imp: EV_MENU_BAR_IMP
+   			menu_bar_imp: detachable EV_MENU_BAR_IMP
 		do
 			is_sensitive := True
 			set_insensitive (False)
-			if has_parent then
-				parent_imp.enable_position (parent_imp.index_of (interface, 1) - 1)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.enable_position (l_parent_imp.index_of (interface, 1) - 1)
 					--| Only enabling the position is not enough if we are parented in
 					--| a menu bar (i.e. always visible on the window). We must call
 					--| `draw_menu' on the window for the visual appearence of `Current' to
 					--| be updated immediately.
-				menu_bar_imp ?= parent_imp
+				menu_bar_imp ?= l_parent_imp
 				if menu_bar_imp /= Void then
-					if menu_bar_imp.parent_imp /= Void then
-						menu_bar_imp.parent_imp.draw_menu
+					if attached menu_bar_imp.parent_imp as l_menu_bar_parent_imp then
+						l_menu_bar_parent_imp.draw_menu
 					end
 				end
 			end
@@ -159,12 +158,12 @@ feature {EV_ANY_I} -- Basic operations
 			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
+	show_at (a_widget: detachable EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		local
 			wel_point: WEL_POINT
-			wel_win: WEL_WINDOW
+			wel_win: detachable WEL_WINDOW
 			l_popup: EV_POPUP_MENU_HANDLER
 		do
 			if count > 0 then
@@ -218,8 +217,8 @@ feature {EV_ANY_I} -- Implementation
 				a_menu_item_imp := ev_children.item
 				max_plain_text_width := max_plain_text_width.max (menu_font.string_width (a_menu_item_imp.plain_text_without_ampersands))
 				max_accel_text_width := max_accel_text_width.max (menu_font.string_width (a_menu_item_imp.accelerator_text))
-				if a_menu_item_imp.pixmap_imp /= Void then
-					max_pixmap_width := max_pixmap_width.max (a_menu_item_imp.pixmap_imp.width)
+				if attached a_menu_item_imp.pixmap_imp as l_pixmap_imp then
+					max_pixmap_width := max_pixmap_width.max (l_pixmap_imp.width)
 				end
 				max_height := max_height.max (a_menu_item_imp.desired_height)
 
@@ -277,16 +276,16 @@ feature {NONE} -- Implementation
 		do
 
 			real_text := a_text.twin
-			if has_parent then
-				create wel_string.make (real_text)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				create wel_string.make (a_text)
 					-- Retrieve the index of `Current'.
-				pos := parent_imp.interface.index_of (interface, 1)
+				pos := l_parent_imp.attached_interface.index_of (attached_interface, 1)
 					-- Modify `Current'.
-				cwin_modify_menu (parent_imp.wel_item, pos - 1, Mf_Byposition +	Mf_String + Mf_popup,
+				cwin_modify_menu (l_parent_imp.wel_item, pos - 1, Mf_Byposition +	Mf_String + Mf_popup,
 					wel_item, wel_string.item)
 					-- Re-draw the menu bar.
-				if top_level_window_imp /= Void then
-					cwin_draw_menu_bar (top_level_window_imp.wel_item)
+				if attached top_level_window_imp as l_top_level_window_imp then
+					cwin_draw_menu_bar (l_top_level_window_imp.wel_item)
 				end
 			end
 		end
@@ -317,7 +316,7 @@ feature {NONE} -- Implementation
 			--| FIXME To be implemented for pick-and-dropable.
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_MENU_ITEM_IMP
 			-- `Result' is menu_item at pixel position `x_pos', `y_pos'.
 		do
 			--| FIXME to be implemented for pick-and-dropable.
@@ -340,7 +339,7 @@ feature {NONE} -- Implementation
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
+	client_to_screen (a_x, a_y: INTEGER): detachable WEL_POINT
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
@@ -367,7 +366,7 @@ feature {NONE} -- Implementation
 			-- Any feature calls after a call to destroy are
 			-- invalid.
 		do
-			interface.wipe_out
+			attached_interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
 			destroy_item
 		end
@@ -375,12 +374,12 @@ feature {NONE} -- Implementation
 	load_bounds_rect
 			-- Load rect struct which holds boundary information
 		local
-			menu_bar: EV_MENU_BAR_IMP
+			menu_bar: detachable EV_MENU_BAR_IMP
 		do
 			menu_bar ?= parent_imp
 
-			if menu_bar /= Void and then menu_bar.parent_imp /= Void then
-				if {WEL_API}.get_menu_item_rect (menu_bar.parent_imp.wel_item, menu_bar.wel_item, menu_bar.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+			if menu_bar /= Void and then attached menu_bar.parent_imp as l_menu_bar_parent_imp then
+				if {WEL_API}.get_menu_item_rect (l_menu_bar_parent_imp.wel_item, menu_bar.wel_item, menu_bar.index_of (interface, 1)-1, bounds_rect.item) = 0 then
 					bounds_rect.set_rect (0, 0, 0, 0)
 				end
 			else
@@ -390,7 +389,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU;
+	interface: detachable EV_MENU note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -407,4 +406,15 @@ note
 
 
 end -- class EV_MENU_IMP
+
+
+
+
+
+
+
+
+
+
+
 

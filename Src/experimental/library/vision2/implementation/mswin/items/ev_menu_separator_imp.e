@@ -19,13 +19,13 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
-			make,
+--			initialize,
 			interface,
 			desired_height,
 			on_measure_item,
 			on_draw_item
 		end
-		
+
 	EV_SYSTEM_PEN_IMP
 		export
 			{NONE} all
@@ -34,18 +34,17 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+--feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with `an_interface'.
-		do
-			base_make (an_interface)
-			make_id
-		end
+--	initialize
+--		do
+--			Precursor
+--			is_sensitive := False
+--		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Access
 
-	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+	radio_group: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radio items following this separator.
 
 	create_radio_group
@@ -58,7 +57,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 			radio_group_not_void: radio_group /= Void
 		end
 
-	set_radio_group (a_list: like radio_group)
+	set_radio_group (a_list: detachable like radio_group)
 			-- Assign `a_list' to `radio_group'.
 		require
 			a_list_not_void: a_list /= Void
@@ -137,7 +136,7 @@ feature -- WEL Implementation
 			measure_item_struct.set_item_width (0)
 			measure_item_struct.set_item_height (desired_height)
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	desired_height: INTEGER
@@ -148,7 +147,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_MENU_SEPARATOR;
+	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -165,4 +164,14 @@ note
 
 
 end -- class EV_MENU_SEPARATOR_IMP
+
+
+
+
+
+
+
+
+
+
 

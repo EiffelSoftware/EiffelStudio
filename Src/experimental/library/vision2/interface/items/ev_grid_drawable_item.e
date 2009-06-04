@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_DRAWABLE_ITEM_I} implementation.make (Current)
+			create {EV_GRID_DRAWABLE_ITEM_I} implementation.make
 		end
 
 note
@@ -92,4 +92,8 @@ note
 
 
 end
+
+
+
+
 

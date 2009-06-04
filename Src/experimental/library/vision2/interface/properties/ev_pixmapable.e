@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Copy of image displayed on `Current'.
 			-- Void if none.
 		require
@@ -28,12 +28,12 @@ feature -- Access
 			Result := implementation.pixmap
 		ensure
 			bridge_ok: (Result = Void and implementation.pixmap = Void) or
-				Result.is_equal (implementation.pixmap)
+				(attached Result and then attached implementation.pixmap as l_pixmap and then Result.is_equal (l_pixmap))
 		end
 
 feature {EV_BUILDER} -- Access
 
-	internal_pixmap_path: STRING_32
+	internal_pixmap_path: detachable STRING_32
 			-- Path of `pixmap'.
 
 feature -- Element change
@@ -73,7 +73,7 @@ feature {EV_BUILDER} -- Element change
 				internal_pixmap_path := a_path
 			end
 		ensure
-			path_set: a_path /= Void implies internal_pixmap_path.is_equal (a_path)
+			path_set: a_path /= Void implies (attached internal_pixmap_path as l_internal_pixmap_path and then a_path.is_equal (l_internal_pixmap_path))
 		end
 
 feature {NONE} -- Contract support
@@ -110,4 +110,14 @@ note
 
 
 end -- class EV_PIXMAPABLE
+
+
+
+
+
+
+
+
+
+
 

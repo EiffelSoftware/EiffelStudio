@@ -32,7 +32,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET
+	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position (`x', `y') if any.
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Status report
 			Result := implementation.widget_at_position (x, y)
 		end
 
-	widget_at_mouse_pointer: EV_WIDGET
+	widget_at_mouse_pointer: detachable EV_WIDGET
 			-- Widget underneath mouse pointer if any.
 		require
 			not_destroyed: not is_destroyed
@@ -170,10 +170,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_SCREEN_IMP} implementation.make (Current)
+			create {EV_SCREEN_IMP} implementation.make
 		end
 
 note
@@ -191,4 +197,14 @@ note
 
 
 end -- class EV_SCREEN
+
+
+
+
+
+
+
+
+
+
 

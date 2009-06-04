@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_IDENTIFIABLE
+	parent: detachable EV_IDENTIFIABLE
 			-- Parent of object
 		require
 			not_destroyed: not is_destroyed
@@ -29,10 +29,10 @@ feature -- Access
 			-- Name of object
 			-- If no specific name is set, `default_identifier_name' is used.
 		do
-			if internal_name = Void then
-				Result := default_identifier_name
+			if attached internal_name as l_internal_name then
+				Result := l_internal_name.twin
 			else
-				Result := internal_name.twin
+				Result := default_identifier_name
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -55,17 +55,17 @@ feature -- Access
 			-- Full name of object by prepending path of parent
 			-- Uses '.' as a separator.
 		do
-			if parent = Void then
-				Result := identifier_name.twin
-			else
-				Result := parent.full_identifier_path
-				Result.append_character (parent.identifier_path_separator)
+			if attached parent as l_parent then
+				Result := l_parent.full_identifier_path
+				Result.append_character (l_parent.identifier_path_separator)
 				Result.append_string (identifier_name)
+			else
+				Result := identifier_name.twin
 			end
 		ensure
 			result_not_void: Result /= Void
 			result_correct: parent = Void implies Result.is_equal (identifier_name)
-			result_correct: parent /= Void implies Result.is_equal (parent.full_identifier_path + "." + identifier_name)
+			result_correct: attached parent as l_parent implies Result.is_equal (l_parent.full_identifier_path + "." + identifier_name)
 		end
 
 feature -- Status report
@@ -107,7 +107,7 @@ feature {EV_IDENTIFIABLE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_name: STRING
+	internal_name: detachable STRING
 			-- Internal name set by `set_identifier_name'
 
 invariant

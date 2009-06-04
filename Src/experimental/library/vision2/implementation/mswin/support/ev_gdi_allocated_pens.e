@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
 		% GDI object allocated."
@@ -36,6 +36,7 @@ feature -- Access
 			--| created.
 		local
 			fake_object: EV_GDI_PEN
+			l_result: detachable WEL_PEN
 		do
 			debug("VISION2_WINDOWS_GDI")
 				io.put_string ("getting a pen...")
@@ -47,7 +48,9 @@ feature -- Access
 			create fake_object.make_with_values (a_dashed_mode, a_width, a_color)
 
 			if has_object (fake_object) then
-				Result ?= get_previously_allocated_object (found_object_index)
+				l_result ?= get_previously_allocated_object (found_object_index)
+				check l_result /= Void end
+				Result := l_result
 			else
 					-- New pen, not already in our table. So we create it...
 				create Result.make(a_dashed_mode, a_width, a_color)
@@ -80,4 +83,15 @@ note
 
 
 end -- class EV_GDI_ALLOCATED_PENS
+
+
+
+
+
+
+
+
+
+
+
 

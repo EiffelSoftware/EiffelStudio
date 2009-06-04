@@ -22,7 +22,7 @@ inherit
  			minimum_width, minimum_height, pnd_press, escape_pnd, update_for_pick_and_drop
 		redefine
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
-			destroy, interface, initialize, on_left_button_double_click,
+			destroy, interface, make, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
 			is_dockable_source, show, hide, is_show_requested
 		end
@@ -43,7 +43,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM, EV_TOOL_BAR_ITEM_IMP]
 		redefine
-			interface, initialize
+			interface, make
 		end
 
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -94,6 +94,14 @@ inherit
 create
 	make
 
+feature -- Initialize
+
+	old_make (an_interface: like interface)
+			-- Create `Current' with interface `an_interface'.
+		do
+			assign_interface (an_interface)
+		end
+
 feature {NONE} -- Initialization
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
@@ -105,10 +113,11 @@ feature {NONE} -- Initialization
 			-- (from WEL_WINDOW)
 			-- (export status {NONE})
 		local
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			theme_drawer: EV_THEME_DRAWER_IMP
 		do
 			bk_brush := background_brush
+			check bk_brush /= Void end
 			theme_drawer := application_imp.theme_drawer
 			theme_drawer.draw_widget_background (Current, paint_dc, invalid_rect, bk_brush)
 			bk_brush.delete
@@ -116,19 +125,22 @@ feature {NONE} -- Initialization
 			set_message_return_value (to_lresult (1))
 		end
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
-		do
-			base_make (an_interface)
-			create ev_children.make (2)
-		end
-
-	initialize
+	make
 			-- Initialize `Current'.
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 			l_prev_ex_style: INTEGER
 		do
+			create ev_children.make (2)
+			Precursor {EV_ITEM_LIST_IMP}
+			create radio_group.make
+			new_item_actions.extend (agent add_button)
+			new_item_actions.extend (agent add_radio_button)
+			new_item_actions.extend (agent add_toggle_button)
+			remove_item_actions.extend (agent remove_radio_button)
+
+				--| FIXME IEK `child_cell' needs to be created explicitly before `ctrl' due to use of `Current'
+			create child_cell
 			create ctrl.make_with_toolbar (default_parent, Current)
 			wel_make (ctrl, 0)
 				-- For some reasons most of the time on Windows XP with a manifest file
@@ -137,12 +149,6 @@ feature {NONE} -- Initialization
 			set_style (style & tbstyle_transparent.bit_not)
 
 			Precursor {EV_PRIMITIVE_IMP}
-			Precursor {EV_ITEM_LIST_IMP}
-			create radio_group.make
-			new_item_actions.extend (agent add_button)
-			new_item_actions.extend (agent add_radio_button)
-			new_item_actions.extend (agent add_toggle_button)
-			remove_item_actions.extend (agent remove_radio_button)
 
 			-- On Windows, we only can set ex style of toolbar this way.
 			l_prev_ex_style := {WEL_API}.send_message_result_integer (wel_item, tb_setextendedstyle, to_wparam (0), to_lparam (tbstyle_ex_mixedbuttons | tbstyle_ex_drawddarrows ))
@@ -152,7 +158,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	bar: EV_INTERNAL_TOOL_BAR_IMP
+	bar: detachable EV_INTERNAL_TOOL_BAR_IMP
 			-- WEL container of `Current'
 		do
 			Result ?= wel_parent
@@ -161,13 +167,17 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 			-- List of the direct children of `Current'.
 
-	parent_imp: EV_CONTAINER_IMP
+	parent_imp: detachable EV_CONTAINER_IMP
 			-- Parent container of `Current'.
+		local
+			l_bar: like bar
 		do
-			if bar.parent = default_parent then
+			l_bar := bar
+			check l_bar /= Void end
+			if l_bar.parent = default_parent then
 				Result := Void
 			else
-				Result ?= bar.parent
+				Result ?= l_bar.parent
 			end
 		end
 
@@ -181,12 +191,18 @@ feature -- Access
 		local
 			rect: WEL_RECT
 			point: WEL_POINT
+			l_bar: like bar
+			l_parent: detachable WEL_WINDOW
 		do
 			if is_show_requested then
 				if wel_parent /= Void then
-					rect := bar.window_rect
+					l_bar := bar
+					check l_bar /= Void end
+					rect := l_bar.window_rect
 					create point.make (rect.x, rect.y)
-					point.screen_to_client (bar.parent)
+					l_parent := l_bar.parent
+					check l_parent /= Void end
+					point.screen_to_client (l_parent)
 					Result := point.x
 				else
 					Result := absolute_x
@@ -206,12 +222,18 @@ feature -- Access
 		local
 			rect: WEL_RECT
 			point: WEL_POINT
+			l_bar: like bar
+			l_parent: detachable WEL_WINDOW
 		do
 			if is_show_requested then
 				if wel_parent /= Void then
-					rect := bar.window_rect
+					l_bar := bar
+					check l_bar /= Void end
+					rect := l_bar.window_rect
 					create point.make (rect.x, rect.y)
-					point.screen_to_client (bar.parent)
+					l_parent := l_bar.parent
+					check l_parent /= Void end
+					point.screen_to_client (l_parent)
 					Result := point.y
 				else
 					Result := absolute_y
@@ -223,8 +245,12 @@ feature -- Access
 
 	is_show_requested: BOOLEAN
 			-- Is `Current' displayed in its parent?
+		local
+			l_bar: like bar
 		do
-			Result := flag_set (bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
+			l_bar := bar
+			check l_bar /= Void end
+			Result := flag_set (l_bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
 
 	is_vertical: BOOLEAN
@@ -240,8 +266,12 @@ feature -- Status report
 
 	shown: BOOLEAN
 			-- Is the window shown?
+		local
+			l_bar: like bar
 		do
-			Result := flag_set (bar.style, Ws_visible)
+			l_bar := bar
+			check l_bar /= Void end
+			Result := flag_set (l_bar.style, Ws_visible)
 		end
 
 	has_vertical_button_style: BOOLEAN
@@ -259,8 +289,11 @@ feature -- Status setting
 			-- Need to notify the parent.
 		local
 			p_imp: like parent_imp
+			l_bar: like bar
 		do
-			show_window (bar.item, {WEL_WINDOW_CONSTANTS}.Sw_show)
+			l_bar := bar
+			check l_bar /= Void end
+			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -271,8 +304,11 @@ feature -- Status setting
 			-- Hide `Current'.
 		local
 			p_imp: like parent_imp
+			l_bar: like bar
 		do
-			show_window (bar.item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
+			l_bar := bar
+			check l_bar /= Void end
+			show_window (l_bar.item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -284,7 +320,7 @@ feature -- Status setting
 		do
 			if has_vertical_button_style then
 				set_style (default_style | Tbstyle_list)
-				update_buttons (interface, 1, count)
+				update_buttons (attached_interface, 1, count)
 			end
 		end
 
@@ -293,23 +329,27 @@ feature -- Status setting
 		do
 			if not has_vertical_button_style then
 				set_style (default_style)
-				update_buttons (interface, 1, count)
+				update_buttons (attached_interface, 1, count)
 			end
 		end
 
 	destroy
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
+		local
+			l_bar: like bar
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.attached_interface.prune (attached_interface)
 			end
-			bar.destroy
-			if default_imagelist /= Void then
-				destroy_toolbar_default_imagelist (default_imagelist)
+			l_bar := bar
+			check l_bar /= Void end
+			l_bar.destroy
+			if attached default_imagelist as l_default_imagelist then
+				destroy_toolbar_default_imagelist (l_default_imagelist)
 			end
-			if hot_imagelist /= Void then
-				destroy_toolbar_hot_imagelist (hot_imagelist)
+			if attached hot_imagelist as l_hot_imagelist then
+				destroy_toolbar_hot_imagelist (l_hot_imagelist)
 			end
 			set_is_destroyed (True)
 		end
@@ -365,12 +405,12 @@ feature -- Element change
 	insert_item (button: EV_TOOL_BAR_ITEM_IMP; an_index: INTEGER)
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
-			but: WEL_TOOL_BAR_BUTTON
+			but: detachable WEL_TOOL_BAR_BUTTON
 			button_text: STRING_32
-			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
-			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
-			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
-			dropdown_button: EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
+			radio_button: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
+			separator_button: detachable EV_TOOL_BAR_SEPARATOR_IMP
+			toggle_button: detachable EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+			dropdown_button: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
 		do
 			-- We need to check the type of tool bar button.
 			-- Depending on the type, `but' is created differently.
@@ -392,6 +432,8 @@ feature -- Element change
 				separator_button = Void then
 				create but.make_button (-1, button.id)
 			end
+
+			check but /= Void end
 
 				-- First, we take care of the pixmap,
 			if button.has_pixmap then
@@ -628,7 +670,7 @@ feature -- Basic operation
 	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN
 			-- Is `Current' at position `x_pos', `y_pos' a dockable source?
 		local
-			tool_bar_button: EV_TOOL_BAR_BUTTON_IMP
+			tool_bar_button: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			Result := is_dockable
 			tool_bar_button ?= find_item_at_position (x_pos, y_pos)
@@ -637,7 +679,7 @@ feature -- Basic operation
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_TOOL_BAR_ITEM_IMP
 			-- Find the item at `x_pos', `y_pos'.
 			-- Position is relative to `Current'.
 			-- If there is no button at (`x_pos',`y_pos'), the result is Void.
@@ -654,7 +696,7 @@ feature -- Basic operation
 			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
 			-- appropriate event item. Called on a pointer button press.
 		local
-			pre_drop_it, post_drop_it: EV_TOOL_BAR_BUTTON_IMP
+			pre_drop_it, post_drop_it: detachable EV_TOOL_BAR_BUTTON_IMP
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do
@@ -663,15 +705,15 @@ feature -- Basic operation
 
 			if pre_drop_it /= Void and then pre_drop_it.is_dockable and button = 1 and not is_dock_executing then
 				item_is_dockable_source := True
-				start_docking (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.interface)
+				start_docking (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.attached_interface)
 			end
 
 			if pre_drop_it /= Void and not transport_executing
 				and not item_is_in_pnd then
 				if pre_drop_it.pointer_button_press_actions_internal
 					/= Void then
-					pre_drop_it.interface.pointer_button_press_actions.call
-						([x_pos - child_x (pre_drop_it.interface), y_pos,
+					pre_drop_it.attached_interface.pointer_button_press_actions.call
+						([x_pos - child_x (pre_drop_it.attached_interface), y_pos,
 						button, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 					-- We record that the press actions have been called.
@@ -682,11 +724,11 @@ feature -- Basic operation
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
 			if not item_is_dockable_source then
-				if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-					not parent_is_pnd_source and pre_drop_it.parent /= Void then
+				if pre_drop_it /= Void and then pre_drop_it.is_transport_enabled and then
+					not parent_is_pnd_source and then pre_drop_it.parent /= Void then
 					pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-				elseif pnd_item_source /= Void then
-					pnd_item_source.pnd_press (
+				elseif attached pnd_item_source as l_pnd_item_source then
+					l_pnd_item_source.pnd_press (
 						x_pos, y_pos, button, pt.x, pt.y)
 				end
 
@@ -695,7 +737,7 @@ feature -- Basic operation
 				end
 			end
 			if not press_actions_called then
-				interface.pointer_button_press_actions.call
+				attached_interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 
@@ -708,8 +750,8 @@ feature -- Basic operation
 				--| EV_MULTI_COLUMN_LIST_IMP has a fuller explanation.
 			if not item_press_actions_called then
 				if post_drop_it /= Void and pre_drop_it = post_drop_it then
-					post_drop_it.interface.pointer_button_press_actions.call
-							([x_pos - child_x (post_drop_it.interface), y_pos,
+					post_drop_it.attached_interface.pointer_button_press_actions.call
+							([x_pos - child_x (post_drop_it.attached_interface), y_pos,
 							button, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 			end
@@ -720,14 +762,14 @@ feature -- Basic operation
 			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
 			-- appropriate event item. Called on a pointer button double click.
 		local
-			it: EV_TOOL_BAR_BUTTON_IMP
+			it: detachable EV_TOOL_BAR_BUTTON_IMP
 			pt: WEL_POINT
 		do
 			it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_double_press_actions.call
-				([x_pos - child_x (it.interface), y_pos, button, 0.0, 0.0, 0.0,
+				it.attached_interface.pointer_double_press_actions.call
+				([x_pos - child_x (it.attached_interface), y_pos, button, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 			end
 		end
@@ -739,6 +781,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 		local
 			found: BOOLEAN
 			local_children: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
+			l_result: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			local_children := ev_children
 			from
@@ -746,13 +789,14 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			until
 				found or else local_children.after
 			loop
-				Result ?= local_children.item
-				found := Result /= Void and then Result.id = command_id
+				l_result ?= local_children.item
+				found := l_result /= Void and then l_result.id = command_id
 				local_children.forth
 			end
 			check
-				button_with_command_id_exists: Result /= Void
+				button_with_command_id_exists: l_result /= Void
 			end
+			Result := l_result
 		end
 
 	on_button_clicked (command_id: INTEGER)
@@ -762,8 +806,8 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			valid_command_id: command_id > 0
 		local
 			but: EV_TOOL_BAR_BUTTON_IMP
-			toggle_but: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
-			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			toggle_but: detachable EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+			radio_button: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 				-- Assign button associated with `command_id' to but.
 			but := button_associated_with_id (command_id)
@@ -777,7 +821,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 
 			radio_button ?= but
 
-			if radio_button /= Void and radio_button.is_sensitive then
+			if radio_button /= Void and then radio_button.is_sensitive then
 				radio_button.update_radio_states
 				if radio_button.selected_peer = radio_button.interface then
 					radio_button.enable_select
@@ -785,7 +829,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			end
 
 				-- Call the actions.
-			but.interface.select_actions.call (Void)
+			but.attached_interface.select_actions.call (Void)
 		end
 
 	button_tooltip_text (command_id: INTEGER): STRING_32
@@ -799,10 +843,10 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 
 feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 
-	default_imagelist: EV_IMAGE_LIST_IMP
+	default_imagelist: detachable EV_IMAGE_LIST_IMP
 			-- "Default" image list associated with this toolbar.
 
-	hot_imagelist: EV_IMAGE_LIST_IMP
+	hot_imagelist: detachable EV_IMAGE_LIST_IMP
 			-- "Hot" image list associated with this toolbar.
 
 	setup_image_list (pixmap_width :INTEGER; pixmap_height :INTEGER)
@@ -860,7 +904,7 @@ feature {NONE} -- Implementation
 			-- Update display of all buttons with empty `text'.
 		local
 			a_cursor: CURSOR
-			but: EV_TOOL_BAR_SEPARATOR_IMP
+			but: detachable EV_TOOL_BAR_SEPARATOR_IMP
 		do
 			a_cursor := ev_children.cursor
 			from
@@ -923,7 +967,7 @@ feature {NONE} -- Implementation
 		local
 			list: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 			original_index: INTEGER
-			separator: EV_TOOL_BAR_SEPARATOR_IMP
+			separator: detachable EV_TOOL_BAR_SEPARATOR_IMP
 		do
 			from
 				original_index := index
@@ -947,47 +991,63 @@ feature {NONE} -- WEL Implementation
 			repaint: BOOLEAN)
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
+		local
+			l_bar: like bar
 		do
-			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
+			l_bar := bar
+			check l_bar /= Void end
+			l_bar.move_and_resize (a_x, a_y, a_width, height, repaint)
 			reposition
 		end
 
 	wel_resize (a_width, a_height: INTEGER)
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
+		local
+			l_bar: like bar
 		do
-			bar.resize (a_width, height)
+			l_bar := bar
+			check l_bar /= Void end
+			l_bar.resize (a_width, height)
 			reposition
 		end
 
 	wel_move (a_x, a_y: INTEGER)
 			-- Move `Current'.
+		local
+			l_bar: like bar
 		do
-			bar.move (a_x, a_y)
+			l_bar := bar
+			check l_bar /= Void end
+			l_bar.move (a_x, a_y)
 		end
 
 	wel_set_parent (a_parent: WEL_WINDOW)
 			-- Assign `a_parent' as the parent of `Current'.
+		local
+			l_bar: like bar
 		do
-			bar.set_parent (a_parent)
+			l_bar := bar
+			check l_bar /= Void end
+			l_bar.set_parent (a_parent)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
-			it: EV_TOOL_BAR_BUTTON_IMP
+			it: detachable EV_TOOL_BAR_BUTTON_IMP
 			pt: WEL_POINT
 		do
 			it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void and then it.pointer_motion_actions_internal /= Void then
-				it.pointer_motion_actions_internal.call
-				([x_pos - child_x (it.interface),
+				it.pointer_motion_actions.call
+				([x_pos - child_x (it.attached_interface),
 				y_pos, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 			end
-			if pnd_item_source /= Void and application_imp.dockable_source = Void then
-				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if attached pnd_item_source as l_pnd_item_source and application_imp.dockable_source = Void then
+				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
@@ -1005,7 +1065,7 @@ feature {NONE} -- WEL Implementation
 			--| on a radio button, we can stop Windows altering the
 			--| buttons state.
 		local
-			it: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			it: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			it ?= find_item_at_position (x_pos, y_pos)
 			if it /= Void then
@@ -1017,11 +1077,11 @@ feature {NONE} -- WEL Implementation
 	on_tbn_dropdown (info: WEL_NM_TOOL_BAR)
 			-- Drop down button drop down arrow clicked.
 		local
-			l_button: EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
+			l_button: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
 		do
 			l_button ?= button_associated_with_id (info.button_id)
 			check dropdown_notify_only_happen_on_dropdown_button: l_button /= Void end
-			l_button.interface.drop_down_actions.call ([])
+			l_button.attached_interface.drop_down_actions.call ([])
 		end
 
 	default_style: INTEGER
@@ -1042,7 +1102,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
 
-	background_brush: WEL_BRUSH
+	background_brush: detachable WEL_BRUSH
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background
@@ -1063,9 +1123,10 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		require
 			other_not_void: other /= Void
 		local
-			t_imp: EV_TOOL_BAR_IMP
+			t_imp: detachable EV_TOOL_BAR_IMP
 		do
 			t_imp ?= other.implementation
+			check t_imp /= Void end
 			Result := t_imp.radio_group = radio_group
 		end
 
@@ -1081,7 +1142,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -1098,7 +1159,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			button_imp: EV_TOOL_BAR_ITEM_IMP
+			button_imp: detachable EV_TOOL_BAR_ITEM_IMP
 		do
 			button_imp ?= w.implementation
 			check
@@ -1115,7 +1176,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -1130,7 +1191,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			item_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			t: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+			t: detachable EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do
 			t ?= w.implementation
 			if t /= Void then
@@ -1175,9 +1236,10 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is relative xcoor of `button' to `parent_imp'.
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.left
 		end
@@ -1186,9 +1248,10 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is relative ycoor of `button' to `parent_imp'.
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.top
 		end
@@ -1197,9 +1260,10 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is absolute xcoor of `button'.	
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := screen_x + button_rectangle.left
 		end
@@ -1208,9 +1272,10 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is absolute ycoor of `button'.	
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := screen_y + button_rectangle.top
 		end
@@ -1219,9 +1284,10 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is width of `button'.
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.width
 		end
@@ -1230,16 +1296,17 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			-- `Result' is height of `button'.
 		local
 			button_rectangle: WEL_RECT
-			but: EV_TOOL_BAR_BUTTON_IMP
+			but: detachable EV_TOOL_BAR_BUTTON_IMP
 		do
 			but ?= button.implementation
+			check but /= Void end
 			button_rectangle := button_rect (internal_get_index (but))
 			Result := button_rectangle.height
 		end
 
 feature {EV_ANY_I}
 
-	interface: EV_TOOL_BAR;
+	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1256,4 +1323,14 @@ note
 
 
 end -- class EV_TOOL_BAR_IMP
+
+
+
+
+
+
+
+
+
+
 

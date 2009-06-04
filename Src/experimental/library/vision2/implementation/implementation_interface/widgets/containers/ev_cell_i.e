@@ -33,14 +33,14 @@ feature {EV_ANY_I} -- Implementation
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify `item_imp'.
 		do
-			if item /= Void then
-				item.implementation.update_for_pick_and_drop (starting)
+			if attached item as l_item then
+				l_item.implementation.update_for_pick_and_drop (starting)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CELL;
+	interface: detachable EV_CELL note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -57,4 +57,13 @@ note
 
 
 end -- class EV_CELL
+
+
+
+
+
+
+
+
+
 

@@ -40,15 +40,15 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' empty.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current' to 1x1.
 		do
 			private_width := 1
@@ -62,17 +62,18 @@ feature {NONE} -- Initialization
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from not void `a_pointer_style'.
 		local
-			l_imp: EV_POINTER_STYLE_IMP
+			l_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			l_imp ?= a_pointer_style.implementation
+			check l_imp /= Void end
 			set_with_resource (l_imp.wel_cursor)
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Redefine
 		local
-			l_pixel_buffer: EV_PIXEL_BUFFER_IMP
-			l_gdip_bitmap: WEL_GDIP_BITMAP
+			l_pixel_buffer: detachable EV_PIXEL_BUFFER_IMP
+			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
 		do
 			l_pixel_buffer ?= a_pixel_buffer.implementation
 			check not_void: l_pixel_buffer /= Void end
@@ -81,11 +82,11 @@ feature {NONE} -- Initialization
 					-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
 					-- Because EV_PIXMAP_IMP_STATE doesn't have `private_bitmap' and `private_mask_bitmap' features,
 					-- we have to implement it in this class.				
-				if private_bitmap /= Void then
-					private_bitmap.delete
+				if attached private_bitmap as l_private_bitmap then
+					l_private_bitmap.delete
 				end
-				if private_mask_bitmap /= Void then
-					private_mask_bitmap.delete
+				if attached private_mask_bitmap as l_private_mask_bitmap then
+					l_private_mask_bitmap.delete
 				end
 				set_bitmap_and_mask (l_gdip_bitmap.new_bitmap, Void, a_pixel_buffer.width, a_pixel_buffer.height)
 			else
@@ -151,9 +152,11 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			--            "Unable to load the file".
 		local
 			pixmap_file: RAW_FILE
+			l_pixmap_filename: like pixmap_filename
 		do
-			pixmap_filename := file_name.as_string_8.string
-			create pixmap_file.make_open_read (pixmap_filename)
+			l_pixmap_filename := file_name.as_string_8.string
+			pixmap_filename := l_pixmap_filename
+			create pixmap_file.make_open_read (l_pixmap_filename)
 			pixmap_file.close
 
 			reset_bitmap_content
@@ -165,11 +168,12 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 	set_mask (a_mask: EV_BITMAP)
 			-- Set mask of `Current' to `a_mask'.
 		local
-			l_bitmap_imp: EV_BITMAP_IMP
+			l_bitmap_imp: detachable EV_BITMAP_IMP
 		do
 			l_bitmap_imp ?= a_mask.implementation
+			check l_bitmap_imp /= Void end
 			private_mask_bitmap := l_bitmap_imp.drawable
-			private_mask_bitmap.increment_reference
+			l_bitmap_imp.drawable.increment_reference
 		end
 
 feature {NONE} -- Saving
@@ -214,14 +218,14 @@ feature -- Access
 			end
 		end
 
-	icon: WEL_ICON
+	icon: detachable WEL_ICON
 			-- Current icon used. Void if none.
 		do
 			update_content
 			Result := private_icon
 		end
 
-	cursor: WEL_CURSOR
+	cursor: detachable WEL_CURSOR
 			-- Current cursor used. Void if none.
 		do
 			update_content
@@ -233,6 +237,8 @@ feature -- Access
 			--
 			-- The number of references if incremented when calling
 			-- this feature, call `WEL_BITMAP.decrement_reference'
+		local
+			l_private_bitmap: detachable WEL_BITMAP
 		do
 			update_content
 			if (private_icon /= Void or private_cursor /= Void) and private_bitmap = Void and
@@ -244,20 +250,20 @@ feature -- Access
 			else
 				if private_bitmap = Void then
 						-- No bitmap defined, create a new & empty bitmap.
-					private_bitmap := new_empty_bitmap
-					private_bitmap_id := private_bitmap.object_id
+					l_private_bitmap := new_empty_bitmap
+					private_bitmap_id := l_private_bitmap.object_id
+					private_bitmap := l_private_bitmap
 				end
 			end
-			check
-				private_bitmap_not_void: private_bitmap /= Void
-			end
-			private_bitmap.increment_reference
-			Result := private_bitmap
+			l_private_bitmap := private_bitmap
+			check l_private_bitmap /= Void end
+			l_private_bitmap.increment_reference
+			Result := l_private_bitmap
 		ensure then
 			Result_not_void: Result /= Void
 		end
 
-	get_mask_bitmap: WEL_BITMAP
+	get_mask_bitmap: detachable WEL_BITMAP
 			-- Monochrome bitmap used as mask. Void if none.
 			--
 			-- The number of references if incremented when calling
@@ -271,10 +277,10 @@ feature -- Access
 					retrieve_icon_information
 					reset_resource_content
 			end
-			if private_mask_bitmap /= Void then
-				private_mask_bitmap.increment_reference
+			if attached private_mask_bitmap as l_private_mask_bitmap then
+				l_private_mask_bitmap.increment_reference
+				Result := l_private_mask_bitmap
 			end
-			Result := private_mask_bitmap
 		end
 
 	has_mask: BOOLEAN
@@ -288,7 +294,7 @@ feature -- Access
 			end
 		end
 
-	palette: WEL_PALETTE
+	palette: detachable WEL_PALETTE
 			-- Current palette used. Void if none.
 		do
 			update_content
@@ -301,7 +307,7 @@ feature {EV_ANY_I} -- Status setting
 			-- Stretch the image to fit in size
 			-- `new_width' by `new_height'.
 		local
-			tmp_bitmap: WEL_BITMAP
+			tmp_bitmap: detachable WEL_BITMAP
 			l_mask_dc, l_old_mask_dc: WEL_MEMORY_DC
 			l_mask, l_old_mask: WEL_BITMAP
 			l_old_width, l_old_height: INTEGER
@@ -318,6 +324,7 @@ feature {EV_ANY_I} -- Status setting
 
 				-- Stretch the bitmap
 			tmp_bitmap := private_bitmap
+			check tmp_bitmap /= Void end
 			private_bitmap := stretch_wel_bitmap (
 				tmp_bitmap,
 				new_width,
@@ -326,10 +333,10 @@ feature {EV_ANY_I} -- Status setting
 			tmp_bitmap.decrement_reference
 
 				-- Stretch the mask if any.
-			if private_mask_bitmap /= Void then
+			if attached private_mask_bitmap as l_private_mask_bitmap then
 				create l_old_mask_dc.make
-				l_old_mask_dc.select_bitmap (private_mask_bitmap)
-				l_old_mask := private_mask_bitmap
+				l_old_mask_dc.select_bitmap (l_private_mask_bitmap)
+				l_old_mask := l_private_mask_bitmap
 				l_old_mask_dc.select_bitmap (l_old_mask)
 
 				create l_mask_dc.make
@@ -407,7 +414,7 @@ feature -- Navigation
 
 feature {EV_ANY_I} -- Delegated features
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- `Result' is widget implementation at current
 			-- cursor position.
 		do
@@ -416,7 +423,7 @@ feature {EV_ANY_I} -- Delegated features
 			end
 		end
 
-	pnd_screen: EV_SCREEN
+	pnd_screen: detachable EV_SCREEN
 			-- `Result' is screen used for pick and drop.
 		do
 			check
@@ -424,19 +431,19 @@ feature {EV_ANY_I} -- Delegated features
 			end
 		end
 
-	set_pebble (a_pebble: like pebble)
+	set_pebble (a_pebble: ANY)
 			-- Assign `a_pebble' to `pebble'.
 		do
 			pebble := a_pebble
 			promote_to_widget
-			interface.implementation.set_pebble (a_pebble)
+			attached_interface.implementation.set_pebble (a_pebble)
 		end
 
 	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Set `a_function' to compute `pebble'.
 		do
 			promote_to_widget
-			interface.implementation.set_pebble_function (a_function)
+			attached_interface.implementation.set_pebble_function (a_function)
 		end
 
 	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent)
@@ -444,7 +451,7 @@ feature {EV_ANY_I} -- Delegated features
 		do
 			actual_drop_target_agent := an_agent
 			promote_to_widget
-			interface.implementation.set_actual_drop_target_agent (an_agent)
+			attached_interface.implementation.set_actual_drop_target_agent (an_agent)
 		end
 
 	enable_transport
@@ -463,14 +470,14 @@ feature {EV_ANY_I} -- Delegated features
 			-- clipped.
 		do
 			promote_to_drawable
-			interface.implementation.set_size (new_width, new_height)
+			attached_interface.implementation.set_size (new_width, new_height)
 		end
 
 	reset_for_buffering (a_width, a_height: INTEGER)
 			-- Resets the size of the pixmap without keeping original image or clearing background.
 		do
 			promote_to_drawable
-			interface.implementation.reset_for_buffering (a_width, a_height)
+			attached_interface.implementation.reset_for_buffering (a_width, a_height)
 		end
 
 	redraw
@@ -483,7 +490,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Erase `Current' with `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.clear
+			attached_interface.implementation.clear
 		end
 
 	clear_rectangle (x1, y1, a_width, a_height: INTEGER)
@@ -491,56 +498,56 @@ feature {EV_ANY_I} -- Delegated features
 			-- with size `a_width' and `a_height' in `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.clear_rectangle (x1, y1, a_width, a_height)
+			attached_interface.implementation.clear_rectangle (x1, y1, a_width, a_height)
 		end
 
 	draw_point (a_x, a_y: INTEGER)
 			-- Draw point at position (`x', 'y') on `Current'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_point (a_x, a_y)
+			attached_interface.implementation.draw_point (a_x, a_y)
 		end
 
 	draw_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_text (a_x, a_y, a_text)
+			attached_interface.implementation.draw_text (a_x, a_y, a_text)
 		end
 
 	draw_rotated_text (a_x, a_y: INTEGER; a_angle: REAL; a_text: STRING)
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_rotated_text (a_x, a_y, a_angle, a_text)
+			attached_interface.implementation.draw_rotated_text (a_x, a_y, a_angle, a_text)
 		end
 
 	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_text_top_left (a_x, a_y, a_text)
+			attached_interface.implementation.draw_text_top_left (a_x, a_y, a_text)
 		end
 
 	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_ellipsed_text (a_x, a_y, a_text, clipping_width)
+			attached_interface.implementation.draw_ellipsed_text (a_x, a_y, a_text, clipping_width)
 		end
 
 	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_ellipsed_text_top_left (a_x, a_y, a_text, clipping_width)
+			attached_interface.implementation.draw_ellipsed_text_top_left (a_x, a_y, a_text, clipping_width)
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			promote_to_drawable
-			interface.implementation.draw_segment (x1, y1, x2, y2)
+			attached_interface.implementation.draw_segment (x1, y1, x2, y2)
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER)
@@ -548,7 +555,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- (`x2', 'y2').
 		do
 			promote_to_drawable
-			interface.implementation.draw_straight_line (x1, y1, x2, y2)
+			attached_interface.implementation.draw_straight_line (x1, y1, x2, y2)
 		end
 
 	draw_arc (
@@ -566,7 +573,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Angles are measured in radians.
 		do
 			promote_to_drawable
-			interface.implementation.draw_arc (
+			attached_interface.implementation.draw_arc (
 				a_x,
 				a_y,
 				a_vertical_radius,
@@ -584,7 +591,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw `a_pixmap' with upper-left corner on (`x', 'y').
 		do
 			promote_to_drawable
-			interface.implementation.draw_pixmap (
+			attached_interface.implementation.draw_pixmap (
 				a_x,
 				a_y,
 				a_pixmap
@@ -600,7 +607,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		do
 			promote_to_drawable
-			interface.implementation.draw_sub_pixmap (
+			attached_interface.implementation.draw_sub_pixmap (
 				a_x,
 				a_y,
 				a_pixmap,
@@ -612,7 +619,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw area of `a_pixel_buffer' with upper-left corner on (`x', `y').
 		do
 			promote_to_drawable
-			interface.implementation.draw_sub_pixel_buffer (
+			attached_interface.implementation.draw_sub_pixel_buffer (
 				x, y, a_pixel_buffer, area
 			)
 		end
@@ -627,7 +634,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- with size `a_width' and `a_height'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_rectangle (
+			attached_interface.implementation.draw_rectangle (
 				a_x,
 				a_y,
 				a_width,
@@ -645,7 +652,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_ellipse (
+			attached_interface.implementation.draw_ellipse (
 				a_x,
 				a_y,
 				a_vertical_radius,
@@ -662,7 +669,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- and last point in `points'.
 		do
 			promote_to_drawable
-			interface.implementation.draw_polyline (points, is_closed)
+			attached_interface.implementation.draw_polyline (points, is_closed)
 		end
 
 	draw_pie_slice (
@@ -681,7 +688,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Angles are measured in radians.
 		do
 			promote_to_drawable
-			interface.implementation.draw_pie_slice (
+			attached_interface.implementation.draw_pie_slice (
 				a_x,
 				a_y,
 				a_vertical_radius,
@@ -702,7 +709,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.fill_rectangle (
+			attached_interface.implementation.fill_rectangle (
 				a_x,
 				a_y,
 				a_width,
@@ -721,7 +728,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Fill with `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.fill_ellipse (
+			attached_interface.implementation.fill_ellipse (
 				a_x,
 				a_y,
 				a_vertical_radius,
@@ -736,7 +743,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Fill with `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.fill_polygon (points)
+			attached_interface.implementation.fill_polygon (points)
 		end
 
 	fill_pie_slice (
@@ -755,7 +762,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Angles are measured in radians. Fill with `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.fill_pie_slice (
+			attached_interface.implementation.fill_pie_slice (
 				a_x,
 				a_y,
 				a_vertical_radius,
@@ -765,7 +772,7 @@ feature {EV_ANY_I} -- Delegated features
 				)
 			end
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 		do
 				-- Simple pixmap => default drawing state.
 			Result := Void
@@ -782,7 +789,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw lines solid.
 		do
 			promote_to_drawable
-			interface.implementation.disable_dashed_line_style
+			attached_interface.implementation.disable_dashed_line_style
 		end
 
 	drawing_mode: INTEGER
@@ -796,7 +803,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw lines dashed.
 		do
 			promote_to_drawable
-			interface.implementation.enable_dashed_line_style
+			attached_interface.implementation.enable_dashed_line_style
 		end
 
 	font: EV_FONT
@@ -817,49 +824,49 @@ feature {EV_ANY_I} -- Delegated features
 			-- Do not apply any clipping.
 		do
 			promote_to_drawable
-			interface.implementation.remove_clipping
+			attached_interface.implementation.remove_clipping
 		end
 
 	remove_tile
 			-- Do not apply a tile when filling.
 		do
 			promote_to_drawable
-			interface.implementation.remove_tile
+			attached_interface.implementation.remove_tile
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE)
 			-- Assign `an_area' to the area which will be refreshed.
 		do
 			promote_to_drawable
-			interface.implementation.set_clip_area (an_area)
+			attached_interface.implementation.set_clip_area (an_area)
 		end
 
 	set_clip_region (a_region: EV_REGION)
 			-- Assign `a_region' to the area which will be refreshed.
 		do
 			promote_to_drawable
-			interface.implementation.set_clip_region (a_region)
+			attached_interface.implementation.set_clip_region (a_region)
 		end
 
 	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_logical_mode'.
 		do
 			promote_to_drawable
-			interface.implementation.set_drawing_mode (a_mode)
+			attached_interface.implementation.set_drawing_mode (a_mode)
 		end
 
 	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		do
 			promote_to_drawable
-			interface.implementation.set_font (a_font)
+			attached_interface.implementation.set_font (a_font)
 		end
 
 	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
 			promote_to_drawable
-			interface.implementation.set_line_width (a_width)
+			attached_interface.implementation.set_line_width (a_width)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
@@ -867,10 +874,10 @@ feature {EV_ANY_I} -- Delegated features
 			-- Set to Void to use `background_color' to fill.
 		do
 			promote_to_drawable
-			interface.implementation.set_tile (a_pixmap)
+			attached_interface.implementation.set_tile (a_pixmap)
 		end
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 		do
@@ -901,14 +908,14 @@ feature {EV_ANY_I} -- Delegated features
             -- Ungrab the user input.
 		do
 			promote_to_widget
-			interface.implementation.disable_capture
+			attached_interface.implementation.disable_capture
 		end
 
 	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		do
 			promote_to_widget
-			interface.implementation.disable_transport
+			attached_interface.implementation.disable_transport
 		end
 
 	draw_rubber_band
@@ -916,14 +923,14 @@ feature {EV_ANY_I} -- Delegated features
 			-- Draw a rubber band between initial pick point and cursor.
 		do
 			promote_to_widget
-			interface.implementation.draw_rubber_band
+			attached_interface.implementation.draw_rubber_band
 		end
 
 	enable_capture
             -- Grab the user input.
 		do
 			promote_to_widget
-			interface.implementation.enable_capture
+			attached_interface.implementation.enable_capture
 		end
 
 	end_transport (
@@ -936,7 +943,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Terminate the pick and drop mechanism.
 		do
 			promote_to_widget
-			interface.implementation.end_transport(
+			attached_interface.implementation.end_transport(
 				a_x,
 				a_y,
 				a_button,
@@ -949,14 +956,14 @@ feature {EV_ANY_I} -- Delegated features
 			-- Erase previously drawn rubber band.
 		do
 			promote_to_widget
-			interface.implementation.erase_rubber_band
+			attached_interface.implementation.erase_rubber_band
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 			-- Target at mouse position.
 		do
 			promote_to_widget
-			Result := interface.implementation.real_pointed_target
+			Result := attached_interface.implementation.real_pointed_target
 		end
 
 	set_pointer_style (c: EV_POINTER_STYLE)
@@ -964,15 +971,15 @@ feature {EV_ANY_I} -- Delegated features
 			-- Can be called through `interface'.
 		do
 			promote_to_widget
-			interface.implementation.set_pointer_style (c)
+			attached_interface.implementation.set_pointer_style (c)
 		end
 
-	internal_set_pointer_style (c: EV_POINTER_STYLE)
+	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		do
 			promote_to_widget
-			interface.implementation.internal_set_pointer_style (c)
+			attached_interface.implementation.internal_set_pointer_style (c)
 		end
 
 	start_transport (
@@ -990,7 +997,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Start a pick and drop transport.
 		do
 			promote_to_widget
-			interface.implementation.start_transport (
+			attached_interface.implementation.start_transport (
 				a_x,
 				a_y,
 				a_button,
@@ -1004,7 +1011,7 @@ feature {EV_ANY_I} -- Delegated features
 				)
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 		do
@@ -1016,17 +1023,17 @@ feature {EV_ANY_I} -- Delegated features
 			-- Disable sensitivity to user input events.
 		do
 			promote_to_widget
-			interface.implementation.disable_sensitive
+			attached_interface.implementation.disable_sensitive
 		end
 
 	enable_sensitive
 			-- Enable sensitivity to user input events.
 		do
 			promote_to_widget
-			interface.implementation.enable_sensitive
+			attached_interface.implementation.enable_sensitive
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: EV_COLOR
 		do
 				-- Returns default foreground color.
 			create Result.make_with_rgb (0, 0, 0)
@@ -1042,7 +1049,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Request that `Current' not be displayed.
 		do
 			promote_to_widget
-			interface.implementation.hide
+			attached_interface.implementation.hide
 		end
 
 	is_displayed: BOOLEAN
@@ -1072,7 +1079,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- See also `is_displayed'.
 		do
 			if is_destroyed then
-				Result := interface.implementation.is_show_requested
+				Result := attached_interface.implementation.is_show_requested
 			else
 					-- Simple pixmap => not in a container.
 					-- This should never be called, as `show' upgrades
@@ -1093,7 +1100,7 @@ feature {EV_ANY_I} -- Delegated features
 			Result := width
 		end
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		do
@@ -1122,53 +1129,53 @@ feature {EV_ANY_I} -- Delegated features
 			Result.set (0, 0)
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over current widget.
 		do
 			promote_to_widget
-			Result := interface.implementation.pointer_style
+			Result := attached_interface.implementation.pointer_style
 		end
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 			promote_to_widget
-			Result := interface.implementation.screen_x
+			Result := attached_interface.implementation.screen_x
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 			promote_to_widget
-			Result := interface.implementation.screen_y
+			Result := attached_interface.implementation.screen_y
 		end
 
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		do
 			promote_to_drawable
-			interface.implementation.set_background_color(a_color)
+			attached_interface.implementation.set_background_color(a_color)
 		end
 
 	set_focus
 			-- Grab keyboard focus.
 		do
 			promote_to_widget
-			interface.implementation.set_focus
+			attached_interface.implementation.set_focus
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'.
 		do
 			promote_to_drawable
-			interface.implementation.set_foreground_color(a_color)
+			attached_interface.implementation.set_foreground_color(a_color)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_height(a_minimum_height)
+			attached_interface.implementation.set_minimum_height(a_minimum_height)
 		end
 
 	set_minimum_size (
@@ -1179,7 +1186,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_size (
+			attached_interface.implementation.set_minimum_size (
 				a_minimum_width,
 				a_minimum_height
 				)
@@ -1190,21 +1197,21 @@ feature {EV_ANY_I} -- Delegated features
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_width(a_minimum_width)
+			attached_interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
 	set_tooltip (a_text: STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		do
 			promote_to_widget
-			interface.implementation.set_tooltip (a_text)
+			attached_interface.implementation.set_tooltip (a_text)
 		end
 
 	show
 			-- Request that `Current' be displayed.
 		do
 			promote_to_widget
-			interface.implementation.show
+			attached_interface.implementation.show
 		end
 
 	tooltip: STRING_32
@@ -1214,28 +1221,28 @@ feature {EV_ANY_I} -- Delegated features
 				not_destroyed: not is_destroyed
 			end
 			promote_to_widget
-			Result := interface.implementation.tooltip
+			Result := attached_interface.implementation.tooltip
 		end
 
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.x_position
+			Result := attached_interface.implementation.x_position
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.y_position
+			Result := attached_interface.implementation.y_position
 		end
 
 	on_parented
 			-- `Current' has just been added to a container.
 		do
 			promote_to_widget
-			interface.implementation.on_parented
+			attached_interface.implementation.on_parented
 		end
 
 feature {EV_PIXMAP_I} -- Implementation
@@ -1258,55 +1265,61 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_simple_imp: EV_PIXMAP_IMP
-			other_imp: EV_PIXMAP_IMP_STATE
+			other_simple_imp: detachable EV_PIXMAP_IMP
+			other_imp: detachable EV_PIXMAP_IMP_STATE
+			l_private_bitmap: like private_bitmap
 		do
 			reset_resource_content
 			reset_bitmap_content
 
 			other_simple_imp ?= other_interface.implementation
 			if other_simple_imp /= Void then
-				if other_simple_imp.pixmap_filename /= Void then
-					pixmap_filename := other_simple_imp.pixmap_filename.twin
+				if attached other_simple_imp.pixmap_filename as l_pixmap_filename then
+					pixmap_filename := l_pixmap_filename.twin
 				end
 				private_width := other_simple_imp.private_width
 				private_height := other_simple_imp.private_height
 				private_bitmap := other_simple_imp.private_bitmap
-				if private_bitmap /= Void then
-					private_bitmap.increment_reference
-					private_bitmap_id := private_bitmap.object_id
+				l_private_bitmap := private_bitmap
+				if l_private_bitmap /= Void then
+					l_private_bitmap.increment_reference
+					private_bitmap_id := l_private_bitmap.object_id
 				end
 				private_mask_bitmap := other_simple_imp.private_mask_bitmap
-				if private_mask_bitmap /= Void then
-					private_mask_bitmap.increment_reference
+				if attached private_mask_bitmap as l_private_mask_bitmap then
+					l_private_mask_bitmap.increment_reference
 				end
 				private_icon := other_simple_imp.private_icon
-				if private_icon /= Void then
-					private_icon.increment_reference
+				if attached private_icon as l_private_icon then
+					l_private_icon.increment_reference
 				end
 				private_cursor := other_simple_imp.private_cursor
-				if private_cursor /= Void then
-					private_cursor.increment_reference
+				if attached private_cursor as l_private_cursor then
+					l_private_cursor.increment_reference
 				end
 				private_palette := other_simple_imp.private_palette
-				if private_palette /= Void then
-					private_palette.increment_reference
+				if attached private_palette as l_private_palette then
+					l_private_palette.increment_reference
 				end
 				copy_events_from_other (other_simple_imp)
 				update_needed := other_simple_imp.update_needed
 			else
 				other_imp ?= other_interface.implementation
-				private_bitmap := other_imp.get_bitmap
-				private_bitmap_id := private_bitmap.object_id
+				check other_imp /= Void end
+				l_private_bitmap := other_imp.get_bitmap
+				check l_private_bitmap /= Void end
+				private_bitmap := l_private_bitmap
+				private_bitmap_id := l_private_bitmap.object_id
+
 				if other_imp.has_mask then
 					private_mask_bitmap := other_imp.get_mask_bitmap
 				end
-				private_palette := other_imp.palette
-				if private_palette /= Void then
-					private_palette.increment_reference
+				if attached other_imp.palette as l_palette then
+					private_palette := l_palette
+					l_palette.increment_reference
 				end
-				private_width := private_bitmap.width
-				private_height := private_bitmap.height
+				private_width := l_private_bitmap.width
+				private_height := l_private_bitmap.height
 				copy_events_from_other (other_imp)
 				update_needed := False
 			end
@@ -1325,7 +1338,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 
 feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 
-	pixmap_filename: STRING
+	pixmap_filename: detachable STRING
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -1338,7 +1351,7 @@ feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP, EV_POINTER_STYLE_IMP
 	private_height: INTEGER
 			-- Current height
 
-	private_bitmap: WEL_BITMAP
+	private_bitmap: detachable WEL_BITMAP
 			-- Current bitmap used. Void if not initialized or if
 			-- `update_needed' is set.
 
@@ -1348,16 +1361,16 @@ feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP, EV_POINTER_STYLE_IMP
 			-- As we wish to ensure that placing `Current' back in the image list uses the already
 			-- cached version, we have to keep the original private_bitmap id.
 
-	private_mask_bitmap: WEL_BITMAP
+	private_mask_bitmap: detachable WEL_BITMAP
 			-- Monochrome bitmap used as mask. Void if none.
 
-	private_icon: WEL_ICON
+	private_icon: detachable WEL_ICON
 			-- Icon representing `Current'. Void if none.
 
-	private_cursor: WEL_CURSOR
+	private_cursor: detachable WEL_CURSOR
 			-- Cursor representing `Current'. Void if none.
 
-	private_palette: WEL_PALETTE
+	private_palette: detachable WEL_PALETTE
 			-- Palette for bitmap. Void if none.
 
 feature {EV_ANY_I} -- Implementation
@@ -1391,12 +1404,16 @@ feature {NONE} -- Implementation
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file".
 		local
-			dib: WEL_DIB
+			dib: detachable WEL_DIB
 			memory_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
 			l_header: WEL_BITMAP_INFO_HEADER
 			l_bitmap_info: WEL_BITMAP_INFO
 			l_quad: WEL_RGB_QUAD
+			l_private_icon: like private_icon
+			l_private_bitmap: like private_bitmap
+			l_private_mask_bitmap: like private_mask_bitmap
+			l_private_palette: like private_palette
 		do
 			if error_code = Loadpixmap_error_noerror then
 				inspect
@@ -1404,22 +1421,25 @@ feature {NONE} -- Implementation
 				when Loadpixmap_hicon then
 						-- No error while loading the file
 						-- create the icon
-					create private_icon.make_by_pointer (rgb_data)
-					private_icon.set_unshared
-					private_icon.enable_reference_tracking
+					create l_private_icon.make_by_pointer (rgb_data)
+					private_icon := l_private_icon
+					l_private_icon.set_unshared
+					l_private_icon.enable_reference_tracking
 					retrieve_pixmap_size
 
 				when Loadpixmap_hbitmap then
-					create private_bitmap.make_by_pointer (rgb_data)
-					private_bitmap_id := private_bitmap.object_id
-					private_bitmap.set_unshared
-					private_bitmap.enable_reference_tracking
+					create l_private_bitmap.make_by_pointer (rgb_data)
+					private_bitmap := l_private_bitmap
+					private_bitmap_id := l_private_bitmap.object_id
+					l_private_bitmap.set_unshared
+					l_private_bitmap.enable_reference_tracking
 
-					create private_mask_bitmap.make_by_pointer (alpha_data)
-					private_mask_bitmap.set_unshared
-					private_mask_bitmap.enable_reference_tracking
-					private_width := private_bitmap.width
-					private_height := private_bitmap.height
+					create l_private_mask_bitmap.make_by_pointer (alpha_data)
+					private_mask_bitmap := l_private_mask_bitmap
+					l_private_mask_bitmap.set_unshared
+					l_private_mask_bitmap.enable_reference_tracking
+					private_width := l_private_bitmap.width
+					private_height := l_private_bitmap.height
 
 				when Loadpixmap_rgb_data then
 					create l_header.make
@@ -1434,27 +1454,30 @@ feature {NONE} -- Implementation
 						4 * pixmap_width * pixmap_height)
 					create s_dc
 					s_dc.get
-					create private_bitmap.make_by_dib (s_dc, dib, Dib_colors_constants.Dib_rgb_colors)
-					private_bitmap_id := private_bitmap.object_id
-					private_bitmap.enable_reference_tracking
+					create l_private_bitmap.make_by_dib (s_dc, dib, Dib_colors_constants.Dib_rgb_colors)
+					private_bitmap := l_private_bitmap
+					private_bitmap_id := l_private_bitmap.object_id
+					l_private_bitmap.enable_reference_tracking
 					s_dc.release
 
 						-- Update the size
-					private_width := private_bitmap.width
-					private_height := private_bitmap.height
+					private_width := l_private_bitmap.width
+					private_height := l_private_bitmap.height
 
 						-- We reused the palette, we need to temporarily share
 						-- the palette object so that it doesn't get destroyed when
 						-- we dispose the DIB, then unshare it afterwards.
-					private_palette := dib.palette
-					private_palette.set_shared
-					private_palette.enable_reference_tracking
+					l_private_palette := dib.palette
+					check l_private_palette /= Void end
+					private_palette := l_private_palette
+					l_private_palette.set_shared
+					l_private_palette.enable_reference_tracking
 
 					dib.dispose
 					dib := Void
 
 						-- Reset shared status back to unshared.
-					private_palette.set_unshared
+					l_private_palette.set_unshared
 
 						-- Let's build the mask.
 					if alpha_data /= Default_pointer then
@@ -1483,11 +1506,12 @@ feature {NONE} -- Implementation
 							(4 * ((pixmap_width + 31) // 32)) * pixmap_height)
 
 						create memory_dc.make
-						create private_mask_bitmap.make_by_dib (
+						create l_private_mask_bitmap.make_by_dib (
 							memory_dc, dib,
 							Dib_colors_constants.Dib_rgb_colors
 							)
-						private_mask_bitmap.enable_reference_tracking
+						private_mask_bitmap := l_private_mask_bitmap
+						l_private_mask_bitmap.enable_reference_tracking
 
 						memory_dc.unselect_all
 						memory_dc.delete
@@ -1521,11 +1545,11 @@ feature {NONE} -- Implementation
 			-- Reset the resource-content (icon, cursor) and free
 			-- any allocated GDI resource.
 		do
-			if private_icon /= Void then
-				private_icon.decrement_reference
+			if attached private_icon as l_private_icon then
+				l_private_icon.decrement_reference
 				private_icon := Void
-			elseif private_cursor /= Void then
-				private_cursor.decrement_reference
+			elseif attached private_cursor as l_private_cursor then
+				l_private_cursor.decrement_reference
 				private_cursor := Void
 			end
 		end
@@ -1534,16 +1558,16 @@ feature {NONE} -- Implementation
 			-- Reset the bitmap-content (bitmap, mask, palette) and free
 			-- any allocated GDI resource.
 		do
-			if private_bitmap /= Void then
-				private_bitmap.decrement_reference
+			if attached private_bitmap as l_private_bitmap then
+				l_private_bitmap.decrement_reference
 				private_bitmap := Void
 			end
-			if private_mask_bitmap /= Void then
-				private_mask_bitmap.decrement_reference
+			if attached private_mask_bitmap as l_private_mask_bitmap then
+				l_private_mask_bitmap.decrement_reference
 				private_mask_bitmap := Void
 			end
-			if private_palette /= Void then
-				private_palette.decrement_reference
+			if attached private_palette as l_private_palette then
+				l_private_palette.decrement_reference
 				private_palette := Void
 			end
 		end
@@ -1558,7 +1582,7 @@ feature {NONE} -- Implementation
 				-- Discard current implementation
 			if not is_destroyed then
 				create drawable_pixmap.make_with_simple (Current)
-				interface.replace_implementation (drawable_pixmap)
+				attached_interface.replace_implementation (drawable_pixmap)
 				safe_destroy
 			end
 		end
@@ -1573,7 +1597,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_destroyed then
 				create widget_pixmap.make_with_simple (Current)
-				interface.replace_implementation (widget_pixmap)
+				attached_interface.replace_implementation (widget_pixmap)
 
 					-- Discard current implementation
 				safe_destroy
@@ -1650,14 +1674,16 @@ feature {NONE} -- Implementation
 		require
 			icon_or_cursor_defined: private_icon /= Void or private_cursor /= Void
 		local
-			icon_info: WEL_ICON_INFO
+			icon_info: detachable WEL_ICON_INFO
 			info_mask_bitmap: WEL_BITMAP
 		do
 				-- Retrieve the information from the icon/cursor
-			if private_icon /= Void then
-				icon_info := private_icon.get_icon_info
+			if attached private_icon as l_private_icon then
+				icon_info := l_private_icon.get_icon_info
+			elseif attached private_cursor as l_private_cursor then
+				icon_info := l_private_cursor.get_icon_info
 			else
-				icon_info := private_cursor.get_icon_info
+				check False end
 			end
 
 				-- Ensure that we successfully retrieved the information.
@@ -1701,27 +1727,31 @@ feature {NONE} -- Implementation
 				private_palette = Void and
 				private_mask_bitmap = Void
 		local
-			icon_info: WEL_ICON_INFO
+			icon_info: detachable WEL_ICON_INFO
 			mem1_dc: WEL_MEMORY_DC
 			mem2_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
 			new_width : INTEGER
 			new_height: INTEGER
 			icon_mask_bitmap: WEL_BITMAP
-			a_wel_bitmap: WEL_BITMAP
+			a_wel_bitmap: detachable WEL_BITMAP
 			mask_dest_dc: WEL_MEMORY_DC
+			l_private_bitmap: like private_bitmap
+			l_private_mask_bitmap: like private_mask_bitmap
 		do
 				-- Retrieve the information from the icon/cursor
-			if icon /= Void then
-				icon_info := icon.get_icon_info
-			else
-				icon_info := cursor.get_icon_info
+			if attached icon as l_icon then
+				icon_info := l_icon.get_icon_info
+			elseif attached cursor as l_cursor then
+
+				icon_info := l_cursor.get_icon_info
 			end
 
 				-- Ensure that we successfully retrieved the information.
 			if icon_info = Void then
 				exception_raise ("Unable to retrieve icon information")
 			end
+			check icon_info /= Void end
 			icon_info.enable_reference_tracking_on_bitmaps
 
 				-- Retrieve the new `bitmap' and `mask_bitmap' from
@@ -1746,9 +1776,10 @@ feature {NONE} -- Implementation
 
 					-- Associate `mem2_dc' with `bitmap'.
 				create mem2_dc.make_by_dc (s_dc)
-				create private_bitmap.make_compatible (mem2_dc, new_width, new_height)
-				private_bitmap_id := private_bitmap.object_id
-				private_bitmap.enable_reference_tracking
+				create l_private_bitmap.make_compatible (mem2_dc, new_width, new_height)
+				private_bitmap := l_private_bitmap
+				private_bitmap_id := l_private_bitmap.object_id
+				l_private_bitmap.enable_reference_tracking
 
 				a_wel_bitmap := get_bitmap
 				mem2_dc.select_bitmap (a_wel_bitmap)
@@ -1762,11 +1793,13 @@ feature {NONE} -- Implementation
 				a_wel_bitmap.decrement_reference
 
 					-- Associate `mem2_dc' with `mask_bitmap'.
-				create private_mask_bitmap.make_compatible (mem2_dc,
+				create l_private_mask_bitmap.make_compatible (mem2_dc,
 					new_width, new_height)
-				private_mask_bitmap.enable_reference_tracking
+				l_private_mask_bitmap.enable_reference_tracking
+				private_mask_bitmap := l_private_mask_bitmap
 
 				a_wel_bitmap := get_mask_bitmap
+				check a_wel_bitmap /= Void end
 				mem2_dc.select_bitmap (a_wel_bitmap)
 
 					-- Copy the first half of `icon_mask_bitmap' into
@@ -1783,16 +1816,18 @@ feature {NONE} -- Implementation
 				s_dc.release
 			else
 					-- Everything went ok, replace the bitmaps
-				private_bitmap := icon_info.color_bitmap
-				private_bitmap_id := private_bitmap.object_id
-				private_bitmap.increment_reference
+				l_private_bitmap := icon_info.color_bitmap
+				private_bitmap := l_private_bitmap
+				private_bitmap_id := l_private_bitmap.object_id
+				l_private_bitmap.increment_reference
 
 					-- Flip the mask as 1 means full opacity in Vision2.
-				create private_mask_bitmap.make_by_bitmap (icon_info.mask_bitmap)
-				private_mask_bitmap.enable_reference_tracking
+				create l_private_mask_bitmap.make_by_bitmap (icon_info.mask_bitmap)
+				private_mask_bitmap := l_private_mask_bitmap
+				l_private_mask_bitmap.enable_reference_tracking
 				create mask_dest_dc.make
-				mask_dest_dc.select_bitmap (private_mask_bitmap)
-				mask_dest_dc.pat_blt (0, 0, private_mask_bitmap.width, private_mask_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.dstinvert)
+				mask_dest_dc.select_bitmap (l_private_mask_bitmap)
+				mask_dest_dc.pat_blt (0, 0, l_private_mask_bitmap.width, l_private_mask_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.dstinvert)
 				mask_dest_dc.unselect_bitmap
 				mask_dest_dc.delete
 			end
@@ -1838,7 +1873,7 @@ feature {NONE} -- Color depth implementation
 			l_app_i: EV_APPLICATION_I
 		do
 			create l_env
-			l_app_i := l_env.application.implementation
+			l_app_i := l_env.implementation.application_i
 			l_app_i.system_color_change_actions.extend (agent refresh_color_depth)
 		ensure
 			action_added:
@@ -1905,21 +1940,22 @@ feature {
 		EV_CONTAINER_IMP
 		} -- Implementation
 
-	interface: EV_PIXMAP
+	interface: detachable EV_PIXMAP note option: stable attribute end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
-			a_drawable_pixmap: EV_PIXMAP_IMP_DRAWABLE
+			a_drawable_pixmap: detachable EV_PIXMAP_IMP_DRAWABLE
 		do
 			promote_to_drawable
-			a_drawable_pixmap ?= interface.implementation
+			a_drawable_pixmap ?= attached_interface.implementation
+			check a_drawable_pixmap /= Void end
 			Result := a_drawable_pixmap.sub_pixmap (area)
 		end
 
-	set_bitmap_and_mask (a_bitmap, a_mask: WEL_BITMAP; a_bitmap_width, a_bitmap_height: INTEGER)
+	set_bitmap_and_mask (a_bitmap: WEL_BITMAP; a_mask: detachable WEL_BITMAP; a_bitmap_width, a_bitmap_height: INTEGER)
 			-- Set `private_bitmap' and `private_mask_bitmap' of `Current' to `a_bitmap' and `a_mask'
 			-- `a_bitmap_width' and `a_bitmap_height' avoid calculating `width' and `height' from logical bitmap
 		require
@@ -1930,10 +1966,10 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 		do
 			private_bitmap := a_bitmap
 			private_bitmap_id := a_bitmap.object_id
-			private_bitmap.enable_reference_tracking
+			a_bitmap.enable_reference_tracking
 			if a_mask /= Void then
 				private_mask_bitmap := a_mask
-				private_mask_bitmap.enable_reference_tracking
+				a_mask.enable_reference_tracking
 			end
 			private_width := a_bitmap_width
 			private_height := a_bitmap_height
@@ -1941,27 +1977,27 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 invariant
 	not_both_icon_and_cursor:
-		not (private_icon /= Void and private_cursor /= Void)
+		not (attached private_icon and attached private_cursor)
 
 	bitmap_reference_tracked:
-		private_bitmap /= Void implies
-			private_bitmap.reference_tracked
+		attached private_bitmap as l_private_bitmap implies
+			l_private_bitmap.reference_tracked
 
 	palette_reference_tracked:
-		private_palette /= Void implies
-			private_palette.reference_tracked
+		attached private_palette as l_private_palette implies
+			l_private_palette.reference_tracked
 
 	mask_reference_tracked:
-		private_mask_bitmap /= Void implies
-			private_mask_bitmap.reference_tracked
+		attached private_mask_bitmap as l_private_mask_bitmap implies
+			l_private_mask_bitmap.reference_tracked
 
 	icon_reference_tracked:
-		private_icon /= Void implies
-			private_icon.reference_tracked
+		attached private_icon as l_private_icon implies
+			l_private_icon.reference_tracked
 
 	cursor_reference_tracked:
-		private_cursor /= Void implies
-			private_cursor.reference_tracked
+		attached private_cursor as l_private_cursor implies
+			l_private_cursor.reference_tracked
 
 note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"

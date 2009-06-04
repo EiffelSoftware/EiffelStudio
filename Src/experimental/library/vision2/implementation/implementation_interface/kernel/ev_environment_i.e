@@ -17,16 +17,35 @@ inherit
 			interface
 		end
 
-feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
+feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Status report
 
-	application: EV_APPLICATION
+	application: detachable EV_APPLICATION
 			-- Single application object for system.
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_result: detachable EV_APPLICATION_I
 		do
-			Result := application_cell.item
-		ensure
-			Result = application_cell.item
+			l_result := application_cell.item
+			if attached l_result then
+				Result := l_result.interface
+			end
+		end
+
+	application_i: EV_APPLICATION_I
+			-- Single application implementation object for system.
+		require
+			not_destroyed: not is_destroyed
+		local
+			l_result: detachable EV_APPLICATION_I
+		do
+			l_result := application_cell.item
+			if not attached l_result then
+				application_cell.put (create {EV_APPLICATION_IMP}.make)
+				l_result := application_cell.item
+			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	supported_image_formats: LINEAR [STRING_32]
@@ -72,28 +91,28 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_ENVIRONMENT
+	interface: detachable EV_ENVIRONMENT note option: stable attribute end
             -- Provides a common user interface to platform dependent
             -- functionality implemented by `Current'
 
-feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Access
+--feature {EV_APPLICATION, EV_ENVIRONMENT} -- Access
 
-	set_application (an_application: EV_APPLICATION)
-			-- Specify `an_application' as the single application object for the
-			-- system. Must be called exactly once from EV_APPLICATION's
-			-- creation procedure.
-		require
-			not_destroyed: not is_destroyed
-			application_not_already_set: application = Void
-		do
-			application_cell.put (an_application)
-		ensure
-			application_assigned: application = an_application
-		end
+--	set_application (an_application: EV_APPLICATION)
+--			-- Specify `an_application' as the single application object for the
+--			-- system. Must be called exactly once from EV_APPLICATION's
+--			-- creation procedure.
+--		require
+--			not_destroyed: not is_destroyed
+--			application_not_already_set: application = Void
+--		do
+--			application_cell.put (an_application)
+--		ensure
+--			application_assigned: application = an_application
+--		end
 
 feature {NONE} -- Implementation
 
-	Application_cell: CELL [EV_APPLICATION]
+	Application_cell: CELL [detachable EV_APPLICATION_I]
 			-- A global cell where `item' is the single application object for
 			-- the system.
 		note
@@ -127,4 +146,13 @@ note
 
 
 end -- class EV_ENVIRONMENT_I
+
+
+
+
+
+
+
+
+
 

@@ -58,7 +58,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			initialize
+			make
 		end
 
 	WEL_TREE_VIEW_ITEM
@@ -109,12 +109,17 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Perfrom post creation initialization on `Current'.
+		do
 			create ev_children.make (1)
 			create real_text.make (0)
 			wel_make
@@ -124,11 +129,6 @@ feature {NONE} -- Initialization
 			has_pixmap := False
 			image_index := 0
 			set_image (image_index, image_index)
-		end
-
-	initialize
-			-- Perfrom post creation initialization on `Current'.
-		do
 			Precursor
 			create internal_children.make (1)
 			set_is_initialized (True)
@@ -136,29 +136,22 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I}-- Access
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
+	parent_imp: detachable EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 			-- Parent implementation.
 
-	top_parent_imp: EV_TREE_IMP
+	top_parent_imp: detachable EV_TREE_IMP
 			-- Implementation of `parent_tree'.
-		local
-			loc_parent_tree: like parent_tree
 		do
-			loc_parent_tree := parent_tree
-			if loc_parent_tree /= Void then
-				Result ?= loc_parent_tree.implementation
-				check
-					parent_tree_not_void: Result /= Void
-				end
-			end
+			Result ?= parent_tree_i
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 			image_icon: WEL_ICON
-			image_list: EV_IMAGE_LIST_IMP
+			image_list: detachable EV_IMAGE_LIST_IMP
+			l_top_parent_imp: detachable like top_parent_imp
 		do
 				-- Retrieve the pixmap from the imagelist
 			if has_pixmap then
@@ -168,7 +161,10 @@ feature {EV_ANY_I}-- Access
 					check
 						pix_imp /= Void
 					end
-					image_list := top_parent_imp.image_list
+					l_top_parent_imp ?= top_parent_imp
+					check l_top_parent_imp /= Void end
+					image_list := l_top_parent_imp.image_list
+					check image_list /= Void end
 					image_icon := image_list.get_icon (image_index, Ild_normal)
 					-- We now set the brivate bitmap id as we want to ensure when it is placed back in
 						-- the image list, the icon already contained is used.
@@ -182,30 +178,39 @@ feature {EV_ANY_I}-- Access
 			end
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN
+			-- Is `Current' selected?
+		do
+			if attached top_parent_imp as l_top_parent_imp then
+				Result := l_top_parent_imp.is_selected (Current)
+			end
+
+		end
+
+	is_expanded: BOOLEAN
+			-- is `Current' expanded?
+		do
+			if attached top_parent_imp as l_top_parent_imp then
+				Result := l_top_parent_imp.is_expanded (Current)
+			end
+		end
+
 feature {EV_ANY_I} -- Status report
 
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of `Current'.
 
-	is_selected: BOOLEAN
-			-- Is `Current' selected?
-		do
-			Result := top_parent_imp.is_selected (Current)
-		end
-
-	is_expanded: BOOLEAN
-			-- is `Current' expanded ?
-		do
-			Result := top_parent_imp.is_expanded (Current)
-		end
-
 	is_parent: BOOLEAN
 			-- is `Current' the parent of other items?
 		do
-			if top_parent_imp /= Void then
-				Result := top_parent_imp.is_parent (Current)
+			if attached top_parent_imp as l_top_parent_imp then
+				Result := l_top_parent_imp.is_parent (Current)
+			elseif attached internal_children as l_internal_children then
+				Result := not l_internal_children.is_empty
 			else
-				Result := not internal_children.is_empty
+				check False end
 			end
 		end
 
@@ -232,24 +237,30 @@ feature {EV_ANY_I} -- Status setting
 	enable_select
 			-- Select `Current'.
 		do
-			top_parent_imp.select_item (Current)
+			if attached top_parent_imp as l_top_parent_imp then
+				l_top_parent_imp.select_item (Current)
+			end
 		end
 
 	disable_select
 			-- Deselect `Current'.
 		do
-			if top_parent_imp /= Void then
-				top_parent_imp.deselect_item (Current)
+			if attached top_parent_imp as l_top_parent_imp then
+				l_top_parent_imp.deselect_item (Current)
 			end
 		end
 
 	set_expand (flag: BOOLEAN)
 			-- Expand `Current' if `flag', else collapse `Current'.
+		local
+			l_top_parent_imp: like top_parent_imp
 		do
+			l_top_parent_imp := top_parent_imp
+			check l_top_parent_imp /= Void end
 			if flag then
-				top_parent_imp.expand_item (Current)
+				l_top_parent_imp.expand_item (Current)
 			else
-				top_parent_imp.collapse_item (Current)
+				l_top_parent_imp.collapse_item (Current)
 			end
 		end
 
@@ -258,15 +269,19 @@ feature {EV_ANY_I} -- Element change
 	wel_text: STRING_32
 			-- Text of `Current'.
 		do
-			if real_text /= Void then
-				Result := real_text.twin
+			if attached real_text as l_real_text then
+				Result := l_real_text.twin
+			else
+				Result := ""
 			end
 		end
 
 	text_length: INTEGER
 			-- Number of characters in `text'.
 		do
-			Result := real_text.count
+			if attached real_text as l_real_text then
+				Result := l_real_text.count
+			end
 		end
 
 	real_text: STRING_32
@@ -275,7 +290,7 @@ feature {EV_ANY_I} -- Element change
 	wel_set_text (txt: STRING_GENERAL)
 			-- Make `txt' the new label of `Current'.
 		local
-			tree: EV_TREE_IMP
+			tree: detachable EV_TREE_IMP
 		do
 			real_text := txt.twin
 			set_mask (Tvif_text)
@@ -291,16 +306,16 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			if parent_tree /= Void then
-				Result := screen_x - parent_tree.screen_x
+			if attached parent_tree as l_parent_tree then
+				Result := screen_x - l_parent_tree.screen_x
 			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			if parent_tree /= Void then
-				Result := screen_y - parent_tree.screen_y
+			if attached parent_tree as l_parent_tree then
+				Result := screen_y - l_parent_tree.screen_y
 			end
 		end
 
@@ -365,12 +380,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_TREE_NODE_IMP
 			-- `Result' is tree node at pixel position `x_pos', `y_pos'.
 		do
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
+	client_to_screen (a_x, a_y: INTEGER): detachable WEL_POINT
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
@@ -459,8 +474,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		do
 				-- We must destroy the pixmap before we set a new one,
 				-- to ensure that we free up Windows GDI objects
-			if private_pixmap /= Void then
-				private_pixmap.destroy
+			if attached private_pixmap as l_private_pixmap then
+				l_private_pixmap.destroy
 				private_pixmap := Void
 			end
 			private_pixmap := p.twin
@@ -478,8 +493,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		do
 			if has_pixmap then
 				has_pixmap := False
-				if private_pixmap /= Void then
-					private_pixmap.destroy
+				if attached private_pixmap as l_private_pixmap then
+					l_private_pixmap.destroy
 					private_pixmap := Void
 				end
 
@@ -495,10 +510,11 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			-- Add/Remove the pixmap to the parent by updating the
 			-- parent's image list.
 		local
-			image_list: EV_IMAGE_LIST_IMP
+			image_list: detachable EV_IMAGE_LIST_IMP
 			root_imp: like top_parent_imp
 		do
 			root_imp := top_parent_imp
+			check root_imp /= Void end
 
 			if has_pixmap then
 				image_list := root_imp.image_list
@@ -509,10 +525,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 					image_list := root_imp.image_list
 				end
 
-				if private_pixmap /= Void then
-					image_list.add_pixmap (private_pixmap)
-					image_index := image_list.last_position
-					private_pixmap.destroy
+				if attached private_pixmap as l_private_pixmap and then attached image_list as l_image_list then
+					l_image_list.add_pixmap (l_private_pixmap)
+					image_index := l_image_list.last_position
+					l_private_pixmap.destroy
 					private_pixmap := Void
 				end
 			else
@@ -527,7 +543,11 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			-- list.
 		do
 			set_image (0, 0) -- 0 = transparent image.
-			top_parent_imp.set_tree_item (Current)
+			if attached top_parent_imp as l_top_parent_imp then
+				l_top_parent_imp.set_tree_item (Current)
+			else
+				check False end
+			end
 		end
 
 	general_reset_pixmap
@@ -554,7 +574,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32
+			if internal_tooltip_string = a_tooltip then
+				internal_tooltip_string := a_tooltip.as_string_32.string
+			end
 		end
 
 feature {EV_TREE_IMP} -- Implementation, pick and drop
@@ -570,11 +593,11 @@ feature {EV_TREE_IMP} -- Implementation, pick and drop
 
 feature {EV_TREE_IMP} -- Implementation
 
-	internal_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
+	internal_children: detachable ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- Holds the children of `Current'.
 			--| May be void if `Current' is parented.
 
-	set_internal_children (list: ARRAYED_LIST [EV_TREE_NODE_IMP])
+	set_internal_children (list: detachable ARRAYED_LIST [EV_TREE_NODE_IMP])
 			-- Make `list' the new list of children.
 		do
 			internal_children := list
@@ -585,9 +608,9 @@ feature {EV_TREE_IMP} -- Implementation
 	relative_position: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 			-- `Result' is position relative to `parent_imp'.
 		local
-			loop_parent: EV_TREE_NODE_IMP
+			loop_parent: detachable EV_TREE_NODE_IMP
 			counter: INTEGER
-			l_top_parent: EV_TREE_IMP
+			l_top_parent: detachable EV_TREE_IMP
 		do
 			from
 				loop_parent := Current
@@ -606,7 +629,7 @@ feature {EV_TREE_IMP} -- Implementation
 					-- As this feature has no pre-conditions, we protect against this case
 					-- as requested. See bug report 3806. Julian.
 
-				Result.x_pos := top_parent_imp.indent * counter + 1
+				Result.x_pos := l_top_parent.indent * counter + 1
 					--|FIXME The relative y_position is always returned as 0.				
 				Result.y_pos := 0
 			end
@@ -617,27 +640,31 @@ feature {NONE} -- Implementation
 	insert_item (item_imp: EV_TREE_NODE_IMP; pos: INTEGER)
 			-- Insert `item_imp' at the `index' position.
 		do
-			if top_parent_imp /= Void then
+			if attached top_parent_imp as l_top_parent_imp then
 				if pos = 1 then
-					top_parent_imp.general_insert_item
+					l_top_parent_imp.general_insert_item
 					(item_imp, h_item, Tvi_first, pos)
 				else
-					top_parent_imp.general_insert_item
+					l_top_parent_imp.general_insert_item
 					(item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)
 				end
+			elseif attached internal_children as l_internal_children then
+				l_internal_children.go_i_th (pos)
+				l_internal_children.put_left (item_imp)
 			else
-				internal_children.go_i_th (pos)
-				internal_children.put_left (item_imp)
+				check False end
 			end
 		end
 
 	remove_item (item_imp: EV_TREE_NODE_IMP)
 			-- Remove `item_imp' from `Current'.
 		do
-			if top_parent_imp /= Void then
-				top_parent_imp.general_remove_item (item_imp)
+			if attached top_parent_imp as l_top_parent_imp then
+				l_top_parent_imp.general_remove_item (item_imp)
+			elseif attached internal_children as l_internal_children then
+				l_internal_children.prune_all (item_imp)
 			else
-				internal_children.prune_all (item_imp)
+				check False end
 			end
 		end
 
@@ -670,7 +697,7 @@ feature {NONE} -- Implementation
 	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		local
-			l_parent_tree: EV_TREE_IMP
+			l_parent_tree: detachable EV_TREE_IMP
 			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
 			l_parent_tree ?= parent_imp
@@ -682,8 +709,8 @@ feature {NONE} -- Implementation
 						-- to the count as queried from the interface
 					l_parent_tree.general_remove_item (c.last)
 				end
-			elseif internal_children /= Void then
-				internal_children.prune_all (internal_children.last)
+			elseif attached internal_children as l_internal_children then
+				l_internal_children.prune_all (l_internal_children.last)
 			end
 		end
 
@@ -698,14 +725,19 @@ feature {NONE} -- Implementation
 			-- Load bounds rect.
 		local
 			a_rect: WEL_RECT
+			l_parent_tree: like parent_tree_i
+			l_top_parent_imp: like top_parent_imp
 		do
-			if top_parent_imp = Void then
+			l_top_parent_imp := top_parent_imp
+			if l_top_parent_imp = Void then
 				bounds_rect.set_rect (0, 0, 0, 0)
 			else
 				create a_rect.make (0, 0, 0, 0)
 				a_rect.set_left (h_item.to_integer_32)
-				if {WEL_API}.send_message_result_boolean (top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(1), a_rect.item) then
-					bounds_rect.set_rect (parent_tree.screen_x + a_rect.left, parent_tree.screen_y + a_rect.top, parent_tree.screen_x + a_rect.right, parent_tree.screen_y + a_rect.bottom)
+				l_parent_tree := parent_tree_i
+				check l_parent_tree /= Void end
+				if {WEL_API}.send_message_result_boolean (l_top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(1), a_rect.item) then
+					bounds_rect.set_rect (l_parent_tree.screen_x + a_rect.left, l_parent_tree.screen_y + a_rect.top, l_parent_tree.screen_x + a_rect.right, l_parent_tree.screen_y + a_rect.bottom)
 				else
 					bounds_rect.set_rect (0, 0, 0, 0)
 				end
@@ -714,7 +746,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_NODE
+	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
@@ -734,4 +766,14 @@ note
 
 
 end -- class EV_TREE_NODE_IMP
+
+
+
+
+
+
+
+
+
+
 

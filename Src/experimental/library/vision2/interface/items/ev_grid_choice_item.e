@@ -43,16 +43,16 @@ feature {NONE} -- Initialize
 
 feature -- Element change
 
-	set_item_strings (a_string_array: like item_strings)
+	set_item_strings (a_string_array: attached like item_strings)
 			-- Set each item in `Current' to the strings referenced in `a_string_array'.
 		require
 			a_string_array_not_void: a_string_array /= Void
 		do
 			item_strings := a_string_array
-			if choice_list /= Void and then not choice_list.is_destroyed then
+			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
 				set_strings
 			end
-			if item_strings.index_set.count > 1 then
+			if a_string_array.index_set.count > 1 then
 				set_pixmap (drop_down_pixmap)
 			else
 				remove_pixmap
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Access
 
-	item_strings: INDEXABLE [STRING_GENERAL, INTEGER]
+	item_strings: detachable INDEXABLE [STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
 	required_width: INTEGER
@@ -83,19 +83,19 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	choice_list: EV_GRID
+	choice_list: detachable EV_GRID
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
 	update_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT)
 			-- Update layout for displaying current.
 		do
-			if a_item /= Void and a_layout /= Void and pixmap /= Void then
+			if a_item /= Void and a_layout /= Void and attached pixmap as l_pixmap then
 					-- We have the pixmap enabled, let's compute the position
 					-- of the `text' and `pixmap' so that the pixmap appears
 					-- on the right edge of `a_item'.
 				a_layout.set_text_x (left_border)
-				a_layout.set_pixmap_x (a_item.width - pixmap.width - 2)
+				a_layout.set_pixmap_x (a_item.width - l_pixmap.width - 2)
 				a_layout.set_has_text_pixmap_overlapping (False)
 			end
 		end
@@ -103,19 +103,21 @@ feature {NONE} -- Implementation
 	set_strings
 			-- Update `choice_list' with `item_strings'.
 		require
-			choice_list_not_void: choice_list /= Void
-			choice_list_not_destroyed: not choice_list.is_destroyed
+			choice_list_not_destroyed: attached choice_list as l_c_list and then not l_c_list.is_destroyed
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			i, j, nb: INTEGER
 			l_interval: INTEGER_INTERVAL
 			l_text, l_selected_text: STRING_32
 			l_font: EV_FONT
+			l_choice_list: like choice_list
 		do
-			choice_list.wipe_out
-			if item_strings /= Void then
+			l_choice_list := choice_list
+			check l_choice_list /= Void end
+			l_choice_list.wipe_out
+			if attached item_strings as l_item_strings then
 				from
-					l_interval := item_strings.index_set
+					l_interval := l_item_strings.index_set
 					j := 1
 					i := l_interval.lower
 					nb := l_interval.upper
@@ -123,10 +125,10 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					l_text := item_strings.item (i)
-					create l_item.make_with_text (item_strings.item (i))
+					l_text := l_item_strings.item (i)
+					create l_item.make_with_text (l_item_strings.item (i))
 					i := i + 1
-					choice_list.set_item (1, j, l_item)
+					l_choice_list.set_item (1, j, l_item)
 					j := j + 1
 					if l_text.is_equal (l_selected_text) then
 						create l_font
@@ -146,41 +148,48 @@ feature {NONE} -- Implementation
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_maximum_height, l_maximum_width: INTEGER
-			l_screen: EV_SCREEN_IMP
+			l_screen: detachable EV_SCREEN_IMP
+			l_choice_list: EV_GRID
+			l_popup_window: detachable EV_POPUP_WINDOW
 		do
 			l_screen ?= (create {EV_SCREEN}).implementation
 			check l_screen_not_void: l_screen /= Void end
-			create choice_list
-			choice_list.hide_header
-			choice_list.enable_single_row_selection
-			choice_list.enable_selection_key_handling
-			choice_list.enable_row_height_fixed
-			choice_list.set_minimum_height (choice_list.row_height)
+			create l_choice_list
+			choice_list := l_choice_list
+			l_choice_list.hide_header
+			l_choice_list.enable_single_row_selection
+			l_choice_list.enable_selection_key_handling
+			l_choice_list.enable_row_height_fixed
+			l_choice_list.set_minimum_height (l_choice_list.row_height)
 
 			create l_vbox
 			l_vbox.set_border_width (1)
 			l_vbox.set_background_color ((create {EV_STOCK_COLORS}).black)
-			l_vbox.extend (choice_list)
-			popup_window.extend (l_vbox)
+			l_vbox.extend (l_choice_list)
+
+			l_popup_window := popup_window
+			check l_popup_window /= Void end
+
+			l_popup_window.extend (l_vbox)
 
 			set_strings
 
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
-			l_maximum_height := (l_screen.virtual_height - popup_window.y_position).max (0)
-			l_maximum_width := (l_screen.virtual_width - popup_window.x_position).max (0)
-			choice_list.column (1).set_width (left_border + l_maximum_width.min (
-				(popup_window.width - 2).max (choice_list.column (1).required_width_of_item_span (1, choice_list.row_count))))
+			l_maximum_height := (l_screen.virtual_height - l_popup_window.y_position).max (0)
+			l_maximum_width := (l_screen.virtual_width - l_popup_window.x_position).max (0)
+			l_choice_list.column (1).set_width (left_border + l_maximum_width.min (
+				(popup_window.width - 2).max (l_choice_list.column (1).required_width_of_item_span (1, l_choice_list.row_count))))
 				-- +2 to take into account 2 pixels border of the vertical box.
-			popup_window.set_height (2 + l_maximum_height.min (choice_list.row_count * choice_list.row_height))
-			popup_window.set_width (popup_window.width.max (2 + choice_list.column (1).width))
+			l_popup_window.set_height (2 + l_maximum_height.min (l_choice_list.row_count * l_choice_list.row_height))
+			l_popup_window.set_width (l_popup_window.width.max (2 + l_choice_list.column (1).width))
 
-			choice_list.set_background_color (implementation.displayed_background_color)
-			popup_window.set_background_color (implementation.displayed_background_color)
-			choice_list.set_foreground_color (implementation.displayed_foreground_color)
+			l_choice_list.set_background_color (implementation.displayed_background_color)
+			l_popup_window.set_background_color (implementation.displayed_background_color)
+			l_choice_list.set_foreground_color (implementation.displayed_foreground_color)
 
 				-- Initialize action sequences when `Current' is shown.
-			popup_window.show_actions.extend (agent initialize_actions)
+			l_popup_window.show_actions.extend (agent initialize_actions)
 		end
 
 	initialize_actions
@@ -189,15 +198,15 @@ feature {NONE} -- Implementation
 				-- No selection yet.
 			has_user_selected_item := False
 
-			if choice_list /= Void and then not choice_list.is_destroyed then
+			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
 					-- Initialize actions.
-				choice_list.set_focus
-				choice_list.focus_out_actions.extend (agent deactivate)
-				choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
-				choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
-				choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
-				choice_list.key_press_actions.extend (agent on_key)
-				choice_list.hide_horizontal_scroll_bar
+				l_choice_list.set_focus
+				l_choice_list.focus_out_actions.extend (agent deactivate)
+				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
+				l_choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
+				l_choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
+				l_choice_list.key_press_actions.extend (agent on_key)
+				l_choice_list.hide_horizontal_scroll_bar
 			else
 					-- Something wrong happend here, we should deactivate if possible.
 				if not is_destroyed and is_parented then
@@ -209,15 +218,18 @@ feature {NONE} -- Implementation
 	on_mouse_move (a_x, a_y: INTEGER)
 			-- Handle mouse moving actions.
 		local
-			l_item: EV_GRID_ITEM
+			l_item: detachable EV_GRID_ITEM
 			l_list: LIST [EV_GRID_ITEM]
+			l_choice_list: detachable like choice_list
 		do
-			l_item := choice_list.item_at_virtual_position (choice_list.virtual_x_position + a_x,
-				choice_list.virtual_y_position + a_y)
+			l_choice_list := choice_list
+			check l_choice_list /= Void end
+			l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
+				l_choice_list.virtual_y_position + a_y)
 			if l_item /= Void then
-				l_list := choice_list.selected_items
-				if l_list /= Void and then not l_list.is_empty and then l_list.first /= l_item then
-					choice_list.remove_selection
+				l_list := l_choice_list.selected_items
+				if not l_list.is_empty and then l_list.first /= l_item then
+					l_choice_list.remove_selection
 					l_item.enable_select
 				end
 			end
@@ -226,16 +238,19 @@ feature {NONE} -- Implementation
 	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Handle mouse actions.
 		local
-			l_item: EV_GRID_ITEM
+			l_item: detachable EV_GRID_ITEM
 			l_list: LIST [EV_GRID_ITEM]
+			l_choice_list: detachable like choice_list
 		do
+			l_choice_list := choice_list
+			check l_choice_list /= Void end
 			if a_button = 1 then
-				l_item := choice_list.item_at_virtual_position (choice_list.virtual_x_position + a_x,
-					choice_list.virtual_y_position + a_y)
+				l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
+					l_choice_list.virtual_y_position + a_y)
 				if l_item /= Void then
-					l_list := choice_list.selected_items
-					if l_list /= Void and then not l_list.is_empty and then l_list.first /= l_item then
-						choice_list.remove_selection
+					l_list := l_choice_list.selected_items
+					if not l_list.is_empty and then l_list.first /= l_item then
+						l_choice_list.remove_selection
 						l_item.enable_select
 					end
 					has_user_selected_item := True
@@ -260,12 +275,12 @@ feature {NONE} -- Implementation
 	deactivate
 			-- Cleanup from previous call to activate.
 		local
-			l_item: EV_GRID_LABEL_ITEM
+			l_item: detachable EV_GRID_LABEL_ITEM
 		do
-			if choice_list /= Void and then not choice_list.is_destroyed then
-				choice_list.focus_out_actions.wipe_out
-				if has_user_selected_item and then not choice_list.selected_rows.is_empty then
-					l_item ?= choice_list.selected_rows.first.item (1)
+			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
+				l_choice_list.focus_out_actions.wipe_out
+				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
+					l_item ?= l_choice_list.selected_rows.first.item (1)
 					if l_item /= Void then
 						set_text (l_item.text)
 					end
@@ -301,7 +316,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
+	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

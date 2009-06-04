@@ -38,9 +38,9 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_DESELECTABLE} and Precursor {EV_TOOL_BAR_BUTTON} 
+			Result := Precursor {EV_DESELECTABLE} and Precursor {EV_TOOL_BAR_BUTTON}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
+			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make
 		end
 
 note
@@ -69,4 +69,11 @@ note
 
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON
+
+
+
+
+
+
+
 

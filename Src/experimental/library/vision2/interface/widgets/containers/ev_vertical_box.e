@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"[
 			Horizontal linear widget container.
 		]"
@@ -25,12 +25,12 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_VERTICAL_BOX
 
 inherit
 	EV_BOX
-		redefine	
+		redefine
 			implementation
 		end
 
@@ -38,7 +38,7 @@ create
 	default_create
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-   
+
 	implementation: EV_VERTICAL_BOX_I
 			-- Responsible for interaction with native graphics toolkit.
 
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_VERTICAL_BOX_IMP} implementation.make (Current)
+			create {EV_VERTICAL_BOX_IMP} implementation.make
 		end
 
 note
@@ -65,4 +65,12 @@ note
 
 
 end -- class EV_VERTICAL_BOX
+
+
+
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision printer, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,21 @@ inherit
 		end
 
 create
-	make
+	make_with_dc
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	make_with_dc (a_dc: WEL_PRINTER_DC)
+			-- Create and initialize `Current' using `a_dc'.
+		do
+			set_printer_dc (a_dc)
+			make
+		end
+
+	old_make (an_interface: like interface)
 			-- Create `Current', a printer object.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
 	set_default_colors
@@ -81,14 +88,14 @@ feature -- Status setting
 			dc.end_document
 		end
 
-	redraw 
-			-- Force `Current' to redraw itself. 
-		do 
-		end 
+	redraw
+			-- Force `Current' to redraw itself.
+		do
+		end
 
 feature -- Implementation
-	
-	interface: EV_PRINTER;
+
+	interface: detachable EV_PRINTER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -105,4 +112,8 @@ note
 
 
 end -- class EV_PRINTER_IMP
+
+
+
+
 

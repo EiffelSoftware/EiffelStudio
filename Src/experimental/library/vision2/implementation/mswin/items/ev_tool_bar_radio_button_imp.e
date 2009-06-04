@@ -17,7 +17,7 @@ inherit
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_RADIO_PEER_IMP
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Post creation initialization.
 		do
 			Precursor
@@ -45,8 +45,8 @@ feature -- Status report
 			-- Select `Current'.
 		do
 			update_radio_states
-			if parent_imp /= Void then
-					parent_imp.check_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.check_button (id)
 			end
 		end
 
@@ -54,8 +54,8 @@ feature -- Status report
 			-- Deselect `Current'
 		do
 			is_selected := False
-			if parent_imp /= Void then
-				parent_imp.uncheck_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.uncheck_button (id)
 			end
 		end
 
@@ -66,27 +66,29 @@ feature -- Implementation
 			-- and assign True to `is_selected'.
 		local
 			cur: CURSOR
+			l_radio_group: like radio_group
 		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
+			l_radio_group := radio_group
+			if l_radio_group /= Void then
+				cur := l_radio_group.cursor
 				from
-					radio_group.start
+					l_radio_group.start
 				until
-					radio_group.off
+					l_radio_group.off
 				loop
-					if radio_group.item /= Current then
-						radio_group.item.disable_select
+					if l_radio_group.item /= Current then
+						l_radio_group.item.disable_select
 					end
-					radio_group.forth
+					l_radio_group.forth
 				end
-				radio_group.go_to (cur)
+				l_radio_group.go_to (cur)
 			end
 			is_selected := True
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_RADIO_BUTTON;
+	interface: detachable EV_TOOL_BAR_RADIO_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -103,4 +105,13 @@ note
 
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
+
+
+
+
+
+
+
+
+
 

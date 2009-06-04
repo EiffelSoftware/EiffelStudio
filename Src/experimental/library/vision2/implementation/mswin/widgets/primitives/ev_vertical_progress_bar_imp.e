@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"EiffelVision vertical progress bar. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_VERTICAL_PROGRESS_BAR_I
-		redefine	
+		redefine
 			interface
 		end
 
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_PROGRESS_BAR;
+	interface: detachable EV_VERTICAL_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -60,4 +60,10 @@ note
 
 
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP
+
+
+
+
+
+
 

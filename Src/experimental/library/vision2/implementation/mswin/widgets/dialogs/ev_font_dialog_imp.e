@@ -43,16 +43,16 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			wel_make
 				-- We must set the style of `Current'.
 				-- Modifying the flags changes the appearence.
 			cwel_choose_font_set_lpfnhook (item, wel_standard_dialog_procedure)
@@ -67,7 +67,7 @@ feature -- Access
 		local
 			wel_font: WEL_FONT
 			ev_font: EV_FONT
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			dc: WEL_MEMORY_DC
 			text_metric: WEL_TEXT_METRIC
 		do
@@ -91,6 +91,7 @@ feature -- Access
 				create wel_font.make_indirect (log_font)
 				create ev_font
 				font_imp ?= ev_font.implementation
+				check font_imp /= Void end
 				font_imp.set_by_wel_font (wel_font)
 				Result := ev_font
 			else
@@ -100,11 +101,15 @@ feature -- Access
 
 	title: STRING_32
 			-- Title of `Current'.
+		local
+			l_result: detachable STRING_32
 		do
-			Result := internal_title
-			if Result = Void then
-				Result := "Font"
+			l_result := internal_title
+			if l_result = Void then
+				l_result := "Font"
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature -- Element change
@@ -120,10 +125,11 @@ feature -- Element change
 	set_font (a_font: EV_FONT)
 			-- Set the initial font to `a_font'
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 		do
 			font_imp ?= a_font.implementation
-			font_imp.update_preferred_faces (Void)
+			check font_imp /= Void end
+			font_imp.update_preferred_faces ("")
 			set_log_font (font_imp.wel_log_font)
 		end
 
@@ -239,7 +245,7 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	internal_title: STRING_32
+	internal_title: detachable STRING_32
 			-- Storage for `title'.
 
 	activate (a_parent: WEL_COMPOSITE_WINDOW)
@@ -258,8 +264,8 @@ feature {NONE} -- Implementation
 			inspect msg
 			when {WEL_WM_CONSTANTS}.wm_initdialog then
 					-- Initialize the title of dialog properly.
-				if internal_title /= Void then
-					create l_str.make (internal_title)
+				if attached internal_title as l_internal_title then
+					create l_str.make (l_internal_title)
 					{WEL_API}.set_window_text (hdlg, l_str.item)
 				end
 			else
@@ -268,7 +274,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I}
 
-	interface: EV_FONT_DIALOG;
+	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -282,4 +288,11 @@ note
 		]"
 
 end -- class EV_FONT_DIALOG_IMP
+
+
+
+
+
+
+
 

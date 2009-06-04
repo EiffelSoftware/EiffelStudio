@@ -28,20 +28,24 @@ feature {NONE} -- Initialization
 			a_dc_not_void: a_dc /= Void
 		do
 				-- default_create not being called as initialization relies on `a_dc'.
-			create_implementation
+			create {EV_PRINTER_IMP} implementation.make_with_dc (a_dc)
 			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
-			implementation.set_printer_dc (a_dc)
-			implementation.initialize
 			set_default_colors
 			initialize
 		end
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_PRINTER_IMP} implementation.make (Current)
+			-- Do nothing
 		end
 
 feature -- Measurement
@@ -96,4 +100,8 @@ note
 
 
 end -- class EV_PRINTER
+
+
+
+
 

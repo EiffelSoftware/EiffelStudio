@@ -31,10 +31,10 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		local
-			l_app: EV_APPLICATION_IMP
+			l_app: detachable EV_APPLICATION_IMP
 			l_window: like tooltip_window
 		do
-			l_app ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_app ?= (create {EV_ENVIRONMENT}).implementation.application_i
 			check l_app_not_void: l_app /= Void end
 			if not a_tooltip.is_empty then
 				if tool_info /= Void then
@@ -67,18 +67,29 @@ feature -- Element change
 				end
 			end
 				-- Assign `a_tooltip' to `tooltip'.
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32
+			if internal_tooltip_string = a_tooltip then
+				internal_tooltip_string := a_tooltip.as_string_32.twin
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	tool_info: WEL_TOOL_INFO
+	tool_info: detachable WEL_TOOL_INFO
 			-- Structure that holds the tooltip data for current widget.
+		note
+			option: stable
+		attribute
+		end
 
-	internal_tooltip_string: STRING_32
-		-- Internal text of tooltip assigned to `Current'.
+	internal_tooltip_string: detachable STRING_32
+			-- Internal text of tooltip assigned to `Current'.
+		note
+			option: stable
+		attribute
+		end
 
-	tooltip_window: WEL_WINDOW
+	tooltip_window: detachable WEL_WINDOW
 			-- Window of `Current' for use with tooltips.
 			--| This is redefined in descendents as necessary.
 			--| When redefinition has taken place in all descendents then

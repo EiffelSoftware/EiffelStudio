@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision color selection dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
@@ -25,15 +25,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a directory selection dialog with `par' as
 			-- parent.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Connect action sequences to button signals.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			base_make (an_interface)
-
-			-- Create the gtk object.
+				-- Create the gtk object.
 			a_cs := "Color selection dialog"
 			set_c_object (
 				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
@@ -43,11 +47,6 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (
 				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_struct_help_button (c_object)
 			)
-		end
-
-	initialize
-			-- Connect action sequences to button signals.
-		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 			real_signal_connect (
@@ -74,9 +73,9 @@ feature -- Access
 		local
 			color_struct: POINTER
 		do
-			if not user_clicked_ok and then internal_set_color /= Void then
-				Result := internal_set_color.twin
-			else				
+			if not user_clicked_ok and then attached internal_set_color as l_internal_set_color then
+				Result := l_internal_set_color.twin
+			else
 				color_struct := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_get_current_color (
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_dialog_struct_color_selection (c_object),
@@ -112,9 +111,9 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_set_color: EV_COLOR
+	internal_set_color: detachable EV_COLOR
 		-- Color explicitly set with `set_color'.
-		
+
 feature {NONE} -- Externals
 
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER
@@ -144,10 +143,10 @@ feature {NONE} -- Externals
 		alias
 			"help_button"
 		end
-	
+
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_COLOR_DIALOG;
+	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -164,4 +163,8 @@ note
 
 
 end -- class EV_COLOR_DIALOG_IMP
+
+
+
+
 

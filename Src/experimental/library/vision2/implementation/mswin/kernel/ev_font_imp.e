@@ -45,7 +45,7 @@ inherit
 create
 	make
 
-feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
+feature -- Initialization
 
 	--|----------------------------------------------------------------
 	--| Note on implementation. VB 10 jan 2000
@@ -58,10 +58,15 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	--| cannot be instantiated without arguments.
 	--|----------------------------------------------------------------
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			create wel_font.make_indirect (Default_wel_log_font)
 
 				-- Create and setup the preferred font face mechanism
@@ -76,12 +81,6 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			family := family_screen
 			internal_face_name := Default_wel_log_font.face_name
 			update_internal_is_proportional(Default_wel_log_font)
-		end
-
-
-	initialize
-			-- Initialize `Current'.
-		do
 			set_is_initialized (True)
 		end
 
@@ -197,11 +196,12 @@ feature -- Element change
 			-- internally, the previous charset is still used, and preforming this
 			-- redefinition fixes the char_set issue and is also faster.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			log_font: WEL_LOG_FONT
 			new_wel_font: WEL_FONT
 		do
 			font_imp ?= font.implementation
+			check font_imp /= Void end
 			log_font := font_imp.wel_font.log_font
 			create new_wel_font.make_indirect (log_font)
 			set_by_wel_font (new_wel_font)
@@ -334,7 +334,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Destroy `Current'.
 		do
 			wel_font.delete
-			wel_font := Void
 			set_is_destroyed (True)
 		end
 
@@ -356,6 +355,7 @@ feature {EV_ANY_I} -- Implementation
 			dc: WEL_MEMORY_DC
 			text_metric: WEL_TEXT_METRIC
 		do
+			found_face := once ""
 				-- First, set the family
 			inspect family
 			when family_screen then
@@ -394,7 +394,11 @@ feature {EV_ANY_I} -- Implementation
 				end
 				if found then
 					Wel_log_font.set_face_name (found_face)
-					wel_log_font.set_char_set (font_enumerator.text_metrics.item (found_face).character_set)
+					if attached font_enumerator.text_metrics as l_text_metrics then
+						if attached l_text_metrics.item (found_face) as l_text_metric then
+							wel_log_font.set_char_set (l_text_metric.character_set)
+						end
+					end
 				else
 						-- Preferred face not found, leave Windows do
 						-- its best.
@@ -754,4 +758,13 @@ note
 
 
 end -- class EV_FONT_IMP
+
+
+
+
+
+
+
+
+
 

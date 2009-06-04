@@ -12,7 +12,7 @@ note
 				Equilateral with side_count sides the same size. ce is center_point and co is corner_point.
 				ce == point_array.item (0)
 				co == point_array.item (1)
-				
+
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,31 +65,31 @@ feature -- Access
 
 	side_count: INTEGER
 			-- Number of sides.
-			
+
 	corner_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (1).x
 		end
-		
+
 	corner_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (1).y
 		end
-		
+
 	center_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	center_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (0).y
 		end
-		
+
 	angle: DOUBLE
 			-- Upright position.
 		local
@@ -99,17 +99,17 @@ feature -- Access
 			co := point_array.item (1)
 			Result := line_angle (ce.x_precise, ce.y_precise, co.x_precise, co.y_precise) - pi / 2
 		end
-			
+
 feature -- Status report
 
 	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
-		
+
 	is_scalable: BOOLEAN = False
 			-- Is scalable? (No)
 			-- All sides must have the same length.
 			-- Use EV_FIGURE_POLYGONE if you need scaling abilities.
-			
+
 	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 
@@ -125,7 +125,7 @@ feature -- Status setting
 		ensure
 			side_count_assigned: side_count = n
 		end
-		
+
 feature -- Element change
 
 	set_point_a_position (ax, ay: INTEGER)
@@ -133,7 +133,7 @@ feature -- Element change
 		do
 			set_x_y (ax, ay)
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `corner_point' to position of `a_point_b'.
 		do
@@ -204,7 +204,7 @@ feature -- Implementation
 				create poly.make (side_count)
 				ang_step := pi_times_two / side_count
 				ang := line_angle (cex, cey, cox, coy)
-				
+
 				ang := ang + ang_step
 			until
 				i > nb
@@ -224,8 +224,8 @@ feature -- Implementation
 			ax, ay, w, h: INTEGER
 			poly: SPECIAL [EV_COORDINATE]
 		do
-			if internal_bounding_box /= Void then
-				Result := internal_bounding_box.twin
+			if attached internal_bounding_box as l_internal_bounding_box then
+				Result := l_internal_bounding_box.twin
 			else
 				from
 					poly := polygon_array.area
@@ -287,4 +287,8 @@ note
 
 
 end -- class EV_MODEL_EQUILATERAL
+
+
+
+
 

@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation of `Current'.
 		do
-			create {EV_TOOL_BAR_IMP} implementation.make (Current)
+			create {EV_TOOL_BAR_IMP} implementation.make
 		end
 
 feature -- Status report
@@ -154,4 +154,11 @@ note
 
 
 end -- class EV_TOOL_BAR
+
+
+
+
+
+
+
 

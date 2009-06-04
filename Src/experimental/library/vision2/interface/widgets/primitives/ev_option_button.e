@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"Button that displays a `menu' when pressed.%N%
 		%The most recently `selected_item' is displayed on the button."
 	legal: "See notice at end of class."
@@ -10,14 +10,15 @@ note
 
 class
 	EV_OPTION_BUTTON
-	
+
 obsolete "Very limited. Just call show on an EV_MENU when an EV_BUTTON is selected and add custom behaviour."
 
 inherit
-	EV_BUTTON 
+	EV_BUTTON
 		redefine
 			initialize,
-			set_text
+			set_text,
+			create_interface_objects
 		end
 
 create
@@ -26,11 +27,16 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			create menu
+		end
+
 	initialize
 			-- Create `menu' and connect event handlers.
 		do
 			Precursor {EV_BUTTON}
-			create menu
 			select_actions.extend (agent menu.show)
 			menu.item_select_actions.extend (agent on_item_select)
 		end
@@ -78,7 +84,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected_item: EV_MENU_ITEM
+	selected_item: detachable EV_MENU_ITEM
 			-- Most recently selected `menu' item.
 
 feature -- Element change
@@ -89,7 +95,7 @@ feature -- Element change
 			implementation.set_text (a_text)
 			menu.set_text (a_text)
 		end
-  
+
 feature {NONE} -- Implementation
 
 	on_item_select (an_item: EV_MENU_ITEM)
@@ -100,7 +106,7 @@ feature {NONE} -- Implementation
 		do
 			selected_item := an_item
 			implementation.set_text (an_item.text)
-		ensure	
+		ensure
 			selected_item_assigned: selected_item = an_item
 			text_assigned: an_item.text = Void and text = Void
 				or text.is_equal (an_item.text)
@@ -124,4 +130,13 @@ note
 
 
 end -- class EV_OPTION_BUTTON
+
+
+
+
+
+
+
+
+
 

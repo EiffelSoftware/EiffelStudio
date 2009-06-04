@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
@@ -52,25 +52,26 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make (an_interface: EV_PIXEL_BUFFER)
+	old_make (an_interface: EV_PIXEL_BUFFER)
 			-- Creation method.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 			make_with_size (1, 1)
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap''s image data.
 		local
-			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 			l_pixbuf: POINTER
 		do
 			l_pixmap_imp ?= a_pixmap.implementation
+			check l_pixmap_imp /= Void end
 			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
 			set_gdkpixbuf (l_pixbuf)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			if reusable_managed_pointer = Void then
@@ -98,8 +99,8 @@ feature -- Command
 				else
 					set_gdkpixbuf (filepixbuf)
 				end
-			else
-				internal_pixmap.set_with_named_file (a_file_name)
+			elseif attached internal_pixmap as l_internal_pixmap then
+				l_internal_pixmap.set_with_named_file (a_file_name)
 			end
 		end
 
@@ -109,11 +110,13 @@ feature -- Command
 			l_cs, l_file_type: EV_GTK_C_STRING
 			g_error: POINTER
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
-			l_format, l_extension: STRING_32
-			l_app_imp: EV_APPLICATION_IMP
+			l_extension: STRING_32
+			l_format: detachable STRING_32
+			l_app_imp: detachable EV_APPLICATION_IMP
 			i: INTEGER
 		do
-			l_app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_app_imp /= Void end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
 			l_extension := a_file_name.split ('.').last.as_upper
 			if l_extension.is_equal ("JPEG") then
@@ -130,7 +133,7 @@ feature -- Command
 				i := i + 1
 			end
 			if l_format /= Void then
-				if l_format.is_equal ("JPG") then
+				if ("JPG").is_equal (l_format)  then
 					l_format := "jpeg"
 				end
 				if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
@@ -142,8 +145,8 @@ feature -- Command
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
 				else
-					if l_format.is_equal ("PNG") then
-						internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, create {FILE_NAME}.make_from_string (a_file_name))
+					if ("PNG").is_equal (l_format) and then attached internal_pixmap as l_internal_pixmap then
+						l_internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, create {FILE_NAME}.make_from_string (a_file_name))
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
@@ -158,30 +161,35 @@ feature -- Command
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Draw Current to `a_drawable'
 		local
-			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 			l_pixbuf: POINTER
+			l_internal_pixmap: like internal_pixmap
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
 				create Result
 				l_pixmap_imp ?= Result.implementation
+				check l_pixmap_imp /= Void end
 				l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
 				{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
 			else
-				Result := internal_pixmap.sub_pixmap (a_rect)
+				l_internal_pixmap := internal_pixmap
+				check l_internal_pixmap /= Void end
+				Result := l_internal_pixmap.sub_pixmap (a_rect)
 			end
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
-			l_imp: EV_PIXEL_BUFFER_IMP
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pixbuf: POINTER
 			l_internal_pixmap: EV_PIXMAP
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
 				create Result
 				l_imp ?= Result.implementation
+				check l_imp /= Void end
 				l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 				l_imp.set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pixbuf))
@@ -190,6 +198,7 @@ feature -- Command
 				create Result
 				l_internal_pixmap := sub_pixmap (a_rect)
 				l_imp ?= Result.implementation
+				check l_imp /= Void end
 				l_imp.set_internal_pixmap (l_internal_pixmap)
 			end
 		end
@@ -198,7 +207,7 @@ feature -- Command
 			-- Get RGBA value at `a_y', `a_y'.
 		local
 			byte_pos: INTEGER_32
-			l_managed_pointer: MANAGED_POINTER
+			l_managed_pointer: detachable MANAGED_POINTER
 			l_n_channels: NATURAL
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
@@ -211,6 +220,7 @@ feature -- Command
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
+			check l_managed_pointer /= Void end
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
@@ -220,7 +230,7 @@ feature -- Command
 			-- Set RGBA value at `a_x', `a_y' to `rgba'.
 		local
 			byte_pos: INTEGER_32
-			l_managed_pointer: MANAGED_POINTER
+			l_managed_pointer: detachable MANAGED_POINTER
 			l_n_channels: NATURAL
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
@@ -233,6 +243,7 @@ feature -- Command
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
+			check l_managed_pointer /= Void end
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
@@ -245,10 +256,10 @@ feature -- Command
 			l_x, l_y, l_width, l_height: INTEGER
 			l_string_size: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			l_pixmap: EV_PIXMAP
-			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 			l_pixbuf_ptr, l_pixbuf_ptr2: POINTER
 			l_pixbuf: EV_PIXEL_BUFFER
-			l_pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			l_pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_color: EV_COLOR
 			l_grey_value, l_composite_alpha: NATURAL_8
 		do
@@ -272,9 +283,11 @@ feature -- Command
 			l_pixmap.draw_text_top_left (0, 0, a_text)
 
 			l_pixmap_imp ?= l_pixmap.implementation
+			check l_pixmap_imp /= Void end
 
 			create l_pixbuf
 			l_pixbuf_imp ?= l_pixbuf.implementation
+			check l_pixbuf_imp /= Void end
 
 				-- Retrieve pixbuf from drawable and set the previous background color 'l_grey_value' to transparent alpha.
 			l_pixbuf_ptr := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
@@ -293,11 +306,12 @@ feature -- Command
 	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		local
-			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_dest_width, l_dest_height: INTEGER
 			l_x, l_y: INTEGER
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check l_pixel_buffer_imp /= Void end
 			-- We must make sure dest rectangle not larger than source rectangle
 			-- http://library.gnome.org/devel/gdk-pixbuf/stable/gdk-pixbuf-scaling.html#gdk-pixbuf-composite
 			-- They say:
@@ -354,8 +368,8 @@ feature -- Query
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
 				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_width (gdk_pixbuf)
-			else
-				Result := internal_pixmap.width
+			elseif attached internal_pixmap as l_internal_pixmap then
+				Result := l_internal_pixmap.width
 			end
 		end
 
@@ -364,8 +378,8 @@ feature -- Query
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
 				Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_height (gdk_pixbuf)
-			else
-				Result := internal_pixmap.height
+			elseif attached internal_pixmap as l_internal_pixmap then
+				Result := l_internal_pixmap.height
 			end
 		end
 
@@ -399,10 +413,10 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
-	reusable_managed_pointer: MANAGED_POINTER
+	reusable_managed_pointer: detachable MANAGED_POINTER
 		-- Managed pointer used for inspecting current.
 
-	internal_pixmap: EV_PIXMAP
+	internal_pixmap: detachable EV_PIXMAP
 		-- Pixmap used for fallback implementation on gtk 1.2
 
 	set_gdkpixbuf (a_pixbuf: POINTER)
@@ -460,9 +474,10 @@ feature {NONE} -- Obsolete
 		obsolete
 			"Use draw_pixel_buffer_with_x_y instead"
 		local
-			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check l_pixel_buffer_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 

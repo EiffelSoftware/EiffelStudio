@@ -13,8 +13,7 @@ class
 inherit
 	EV_ANY
 		redefine
-			implementation,
-			application_exists
+			implementation
 		end
 
 create
@@ -22,7 +21,7 @@ create
 
 feature -- Access
 
-	application: EV_APPLICATION
+	application: detachable EV_APPLICATION
 			-- Single application object for system.
 		require
 			not_destroyed: not is_destroyed
@@ -116,28 +115,23 @@ feature -- Access
 			Result := implementation.has_printer
 		end
 
-feature {NONE} -- Contract support
-
-	application_exists: BOOLEAN
-			-- Does the application exist? This is used to stop
-			-- manipulation of widgets before an application is created.
-			-- As we are now in the process of creating the application,
-			-- we return True.
-		do
-			Result := True
-		end
-
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Implementation
 
 	implementation: EV_ENVIRONMENT_I
 			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_ENVIRONMENT_IMP} implementation.make (Current)
+			create {EV_ENVIRONMENT_IMP} implementation.make
 		end
 
 note
@@ -155,4 +149,12 @@ note
 
 
 end -- class EV_ENVIRONMENT
+
+
+
+
+
+
+
+
 

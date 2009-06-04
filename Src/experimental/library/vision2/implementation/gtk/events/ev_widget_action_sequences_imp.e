@@ -113,7 +113,7 @@ feature -- Event handling
 			create Result
 		end
 
-	create_file_drop_actions: like file_drop_actions_internal
+	create_file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]]
 			-- Create a file_drop action sequence.
 		do
 			create Result
@@ -157,4 +157,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

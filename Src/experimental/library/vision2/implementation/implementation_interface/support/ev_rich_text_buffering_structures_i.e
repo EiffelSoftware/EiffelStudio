@@ -82,7 +82,7 @@ feature -- Status Setting
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
 		local
-			hashed_character_format: STRING_32
+			hashed_character_format: detachable STRING_8
 			temp_string: STRING_32
 			format_index: INTEGER
 			vertical_offset, counter: INTEGER
@@ -90,10 +90,11 @@ feature -- Status Setting
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			height_in_half_points: INTEGER
 		do
-			hashed_character_format := a_format.interface.hash_value
+			hashed_character_format := a_format.attached_interface.hash_value
+			check hashed_character_format /= Void end
 			if not hashed_formats.has (hashed_character_format) then
-				hashed_formats.put (a_format.interface, hashed_character_format)
-				formats.extend (a_format.interface)
+				hashed_formats.put (a_format.attached_interface, hashed_character_format)
+				formats.extend (a_format.attached_interface)
 
 					-- Rich text requires font heights to be in half points, so
 					-- multiply by 2.
@@ -189,7 +190,7 @@ feature -- Status Setting
 			end
 		end
 
-	rich_text: EV_RICH_TEXT_I
+	rich_text: detachable EV_RICH_TEXT_I
 			-- Rich text associated with `Current'.
 
 	internal_text: STRING_32
@@ -204,14 +205,17 @@ feature {EV_ANY_I} -- Status Setting
 			text_not_void: a_text /= Void
 		local
 			counter: INTEGER
+			l_rich_text: like rich_text
 		do
+			l_rich_text := rich_text
+			check l_rich_text /= Void end
 			create paragraph_start_indexes.make (50)
 			create paragraph_formats.make (50)
 
 				-- Add the first line which is always 1.
 			paragraph_start_indexes.extend (1)
 
-			build_paragraph_from_format (rich_text.internal_paragraph_format (1))
+			build_paragraph_from_format (l_rich_text.internal_paragraph_format (1))
 				-- Now iterate `a_string' and determine each line as determined by `%N'.
 			from
 				counter := 1
@@ -219,13 +223,13 @@ feature {EV_ANY_I} -- Status Setting
 				counter > a_text.count
 			loop
 				if a_text.code (counter) = ('%N').natural_32_code then
-				if not rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
-						-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
-						-- we must add one to convert to caret positions, and one to check that we are checking the first character
-						-- of the next line (past the %N) to determine if the format changed.
-					paragraph_start_indexes.extend (counter + 1)
-					build_paragraph_from_format (rich_text.internal_paragraph_format (counter + 1))
-				end
+					if not l_rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
+							-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
+							-- we must add one to convert to caret positions, and one to check that we are checking the first character
+							-- of the next line (past the %N) to determine if the format changed.
+						paragraph_start_indexes.extend (counter + 1)
+						build_paragraph_from_format (l_rich_text.internal_paragraph_format (counter + 1))
+					end
 				end
 				counter := counter + 1
 			end
@@ -244,10 +248,15 @@ feature {EV_ANY_I} -- Status Setting
 		local
 			current_character: WIDE_CHARACTER
 			found_opening_brace: BOOLEAN
-			paragraph_format: EV_PARAGRAPH_FORMAT
+			paragraph_format: detachable EV_PARAGRAPH_FORMAT
 			last_load_value, current_load_value,
 			key_index, keys_count: INTEGER
+			l_rich_text: like rich_text
+			l_current_format: like current_format
 		do
+			l_rich_text := rich_text
+			check l_rich_text /= Void end
+
 			last_load_successful := True
 			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
 				create format_stack.make (8)
@@ -255,7 +264,7 @@ feature {EV_ANY_I} -- Status Setting
 				create all_colors.make (0, 50)
 					-- If there are no color table in the RTF, we default to the
 					-- foreground color of `rich_text'.
-				all_colors.force (rich_text.foreground_color, 0)
+				all_colors.force (l_rich_text.foreground_color, 0)
 				create all_formats.make (50)
 				create all_paragraph_formats.make (50)
 				create all_paragraph_indexes.make (50)
@@ -269,8 +278,10 @@ feature {EV_ANY_I} -- Status Setting
 				last_colorblue := -1
 					-- These three values are set to -1 as we use this to determine
 					-- if the auto color is set as color 0 in the color table.
-				create current_format
-				plain_text := ""
+				create l_current_format
+				current_format := l_current_format
+
+				create plain_text.make_empty
 
 				from
 					main_iterator := 1
@@ -281,10 +292,11 @@ feature {EV_ANY_I} -- Status Setting
 					if found_opening_brace then
 						if current_character = '{' then
 								-- Store state on stack
-							format_stack.extend (current_format.twin)
+							format_stack.extend (l_current_format.twin)
 						elseif current_character = '}' then
 								-- retrieve state from stack.
-							current_format := format_stack.item
+							l_current_format := format_stack.item
+							current_format := l_current_format
 							format_stack.remove
 						elseif current_character = '\' then
 							process_keyword (rtf_text, main_iterator)
@@ -303,7 +315,7 @@ feature {EV_ANY_I} -- Status Setting
 						end
 					elseif current_character = '{' then
 							-- Store state on stack
-						format_stack.extend (current_format.twin)
+						format_stack.extend (l_current_format.twin)
 						found_opening_brace := True
 					end
 
@@ -313,21 +325,21 @@ feature {EV_ANY_I} -- Status Setting
 
 					update_main_iterator
 
-					if rich_text.file_access_actions_internal /= Void then
+					if l_rich_text.file_access_actions_internal /= Void then
 							-- Here we update the `file_access_actions' with the range 0-90
 							-- for the character formatting.
 						current_load_value := (main_iterator * 90) // rtf_text.count
 						if current_load_value /= last_load_value then
 								-- Fire the `file_access_actions' only if changed.	
 							last_load_value := current_load_value
-							rich_text.file_access_actions.call ([current_load_value])
+							l_rich_text.file_access_actions.call ([current_load_value])
 						end
 					end
 				end
 				check
 					no_carriage_returns: not plain_text.has ('%R')
 				end
-				rich_text.flush_buffer
+				l_rich_text.flush_buffer
 				keys_count := all_paragraph_format_keys.count
 				from
 					all_paragraph_format_keys.start
@@ -336,20 +348,21 @@ feature {EV_ANY_I} -- Status Setting
 				loop
 					key_index := all_paragraph_format_keys.index
 					paragraph_format := all_paragraph_formats.item (all_paragraph_format_keys.item)
+					check paragraph_format /= Void end
 					if key_index < keys_count then
-						rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), all_paragraph_indexes.i_th (key_index + 1), paragraph_format)
+						l_rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), all_paragraph_indexes.i_th (key_index + 1), paragraph_format)
 					else
-						rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), rich_text.text_length, paragraph_format)
+						l_rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), l_rich_text.text_length, paragraph_format)
 					end
 
-					if rich_text.file_access_actions_internal /= Void then
+					if l_rich_text.file_access_actions_internal /= Void then
 							-- Here we update the `file_access_actions' with the range 90-100 for the
 							-- paragraph formatting.
 						current_load_value := 90 + ((key_index * 10) // keys_count)
 						if current_load_value /= last_load_value then
 								-- Fire the `file_access_actions' only if changed.	
 							last_load_value := current_load_value
-							rich_text.file_access_actions.call ([current_load_value])
+							l_rich_text.file_access_actions.call ([current_load_value])
 						end
 					end
 					all_paragraph_format_keys.forth
@@ -455,66 +468,80 @@ feature {NONE} -- Implementation
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		local
-			character_format: EV_CHARACTER_FORMAT
+			character_format: detachable EV_CHARACTER_FORMAT
 			a_font: EV_FONT
 			effects: EV_CHARACTER_FORMAT_EFFECTS
 			paragraph_format: EV_PARAGRAPH_FORMAT
+			l_current_format: like current_format
+			l_rich_text: like rich_text
 		do
-			if not all_formats.has (current_format.character_format_out) then
+			l_current_format := current_format
+			check l_current_format /= Void end
+
+			l_rich_text := rich_text
+			check l_rich_text /= Void end
+
+			check all_formats /= Void end
+			check all_colors /= Void end
+
+			if not all_formats.has (l_current_format.character_format_out) then
 					-- Only create a new character format if an equivalent one does not already
 					-- exist in `all_formats'.
 				create character_format
 
-				if first_color_is_auto and current_format.text_color = 0 then
-					character_format.set_color (rich_text.foreground_color)
+				if first_color_is_auto and l_current_format.text_color = 0 then
+					character_format.set_color (l_rich_text.foreground_color)
 				else
-					character_format.set_color (all_colors.item (current_format.text_color))
+					character_format.set_color (all_colors.item (l_current_format.text_color))
 				end
 
-				if first_color_is_auto and current_format.highlight_color = 0 then
-					character_format.set_background_color (rich_text.background_color)
-				elseif current_format.highlight_set then
-					character_format.set_background_color (all_colors.item (current_format.highlight_color))
+				if first_color_is_auto and l_current_format.highlight_color = 0 then
+					character_format.set_background_color (l_rich_text.background_color)
+				elseif l_current_format.highlight_set then
+					character_format.set_background_color (all_colors.item (l_current_format.highlight_color))
 				end
-				a_font := all_fonts.item (current_format.character_format).twin
-				if current_format.is_bold then
+
+				check all_fonts /= Void end
+				a_font := all_fonts.item (l_current_format.character_format).twin
+				if l_current_format.is_bold then
 					a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				end
-				if current_format.is_italic then
+				if l_current_format.is_italic then
 					a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 				end
 				create effects
-				if current_format.is_striked_out then
+				if l_current_format.is_striked_out then
 					effects.enable_striked_out
 				end
-				if current_format.is_underlined then
+				if l_current_format.is_underlined then
 					effects.enable_underlined
 				end
-				effects.set_vertical_offset (half_points_to_pixels (current_format.vertical_offset))
+				effects.set_vertical_offset (half_points_to_pixels (l_current_format.vertical_offset))
 				character_format.set_effects (effects)
 
 					-- RTF uses half points to specify font heights so divide by 2.
-				a_font.set_height_in_points (current_format.font_height // 2)
+				a_font.set_height_in_points (l_current_format.font_height // 2)
 				character_format.set_font (a_font)
-				all_formats.put (character_format, current_format.character_format_out)
+				all_formats.put (character_format, l_current_format.character_format_out)
 			end
-			if all_paragraph_formats.is_empty or else not all_paragraph_formats.has (current_format.paragraph_format_out) then
+			if attached all_paragraph_formats and then (all_paragraph_formats.is_empty or else not all_paragraph_formats.has (l_current_format.paragraph_format_out)) then
 				create paragraph_format
-				paragraph_format.set_alignment (current_format.alignment)
-				paragraph_format.set_left_margin (current_format.left_margin)
-				paragraph_format.set_right_margin (current_format.right_margin)
-				paragraph_format.set_top_spacing (current_format.top_spacing)
-				paragraph_format.set_bottom_spacing (current_format.bottom_spacing)
+				paragraph_format.set_alignment (l_current_format.alignment)
+				paragraph_format.set_left_margin (l_current_format.left_margin)
+				paragraph_format.set_right_margin (l_current_format.right_margin)
+				paragraph_format.set_top_spacing (l_current_format.top_spacing)
+				paragraph_format.set_bottom_spacing (l_current_format.bottom_spacing)
 
-				all_paragraph_formats.put (paragraph_format, current_format.paragraph_format_out)
+				all_paragraph_formats.put (paragraph_format, l_current_format.paragraph_format_out)
 			end
-			if all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.is_equal (current_format.paragraph_format_out) then
-				all_paragraph_format_keys.extend (current_format.paragraph_format_out)
+			if attached all_paragraph_format_keys and then attached all_paragraph_indexes and then (all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.is_equal (l_current_format.paragraph_format_out)) then
+				all_paragraph_format_keys.extend (l_current_format.paragraph_format_out)
 				all_paragraph_indexes.extend (number_of_characters_opened + 1)
 			end
 
-			character_format := all_formats.item (current_format.character_format_out)
-			rich_text.buffered_append (a_text, character_format)
+			character_format := all_formats.item (l_current_format.character_format_out)
+			check character_format /= Void end
+			l_rich_text.buffered_append (a_text, character_format)
 			number_of_characters_opened := number_of_characters_opened + a_text.count
 		end
 
@@ -555,7 +582,10 @@ feature {NONE} -- Implementation
 			reading_tag_value: BOOLEAN
 			tag_start_position: INTEGER
 			processing_moved_iterator: BOOLEAN
+			l_current_format: like current_format
 		do
+			l_current_format := current_format
+			check l_current_format /= Void end
 			tag_start_position := index
 			tag := ""
 			tag_value := ""
@@ -601,7 +631,7 @@ feature {NONE} -- Implementation
 			if tag.is_equal (tab_tag_string) then
 				buffer_formatting (tab_string)
 			elseif tag.is_equal (rtf_color_string) then
-				current_format.set_text_color (tag_value.to_integer)
+				l_current_format.set_text_color (tag_value.to_integer)
 			elseif tag.is_equal (line_string) then
 				buffer_formatting (new_line_string)
 			elseif tag.is_equal (rtf_unicode_string) then
@@ -612,49 +642,49 @@ feature {NONE} -- Implementation
 				buffer_formatting (l_char)
 			elseif tag.is_equal (rtf_bold_string) then
 				if tag_value.is_empty then
-					current_format.set_bold (True)
+					l_current_format.set_bold (True)
 				else
 					check
 						tag_is_zero: tag_value.is_equal ("0")
 					end
-					current_format.set_bold (False)
+					l_current_format.set_bold (False)
 				end
 			elseif tag.is_equal (rtf_italic_string) then
 				if tag_value.is_empty then
-					current_format.set_italic (True)
+					l_current_format.set_italic (True)
 				else
 					check
 						tag_is_zero: tag_value.is_equal ("0")
 					end
-					current_format.set_italic (False)
+					l_current_format.set_italic (False)
 				end
 			elseif tag.is_equal (rtf_strikeout_string) then
 				if tag_value.is_empty then
-					current_format.set_striked_out (True)
+					l_current_format.set_striked_out (True)
 				else
 					check
 						tag_is_zero: tag_value.is_equal ("0")
 					end
-					current_format.set_striked_out (False)
+					l_current_format.set_striked_out (False)
 				end
 			elseif tag.is_equal (rtf_underline_string) then
 				if tag_value.is_empty then
-					current_format.set_underlined (True)
+					l_current_format.set_underlined (True)
 				else
 					check
 						tag_is_zero: tag_value.is_equal ("0")
 					end
-					current_format.set_underlined (False)
+					l_current_format.set_underlined (False)
 				end
 			elseif tag.is_equal (rtf_underline_none_string) then
-				current_format.set_underlined (False)
+				l_current_format.set_underlined (False)
 			elseif tag.is_equal (rtf_vertical_offset) then
 				check
 					tag_not_empty: not tag.is_empty
 				end
-				current_format.set_vertical_offset (tag_value.to_integer)
+				l_current_format.set_vertical_offset (tag_value.to_integer)
 			elseif tag.is_equal (rtf_highlight_string) then
-				current_format.set_highlight_color (tag_value.to_integer)
+				l_current_format.set_highlight_color (tag_value.to_integer)
 			elseif tag.is_equal (rtf_red) then
 				last_colorred := tag_value.to_integer
 			elseif tag.is_equal (rtf_green) then
@@ -663,9 +693,9 @@ feature {NONE} -- Implementation
 				last_colorblue := tag_value.to_integer
 			elseif tag.is_equal (rtf_font_string) then
 				last_fontindex := tag_value.to_integer
-				current_format.set_character_format (tag_value.to_integer)
+				l_current_format.set_character_format (tag_value.to_integer)
 			elseif tag.is_equal (rtf_font_size_string) then
-				current_format.set_font_height (tag_value.to_integer)
+				l_current_format.set_font_height (tag_value.to_integer)
 			elseif tag.is_equal (rtf_charset) then
 				last_fontcharset := tag_value.to_integer
 			elseif tag.is_equal (rtf_family_nill) then
@@ -699,23 +729,23 @@ feature {NONE} -- Implementation
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			elseif tag.is_equal (rtf_new_paragraph) then
-				current_format.reset_paragraph
+				l_current_format.reset_paragraph
 			elseif tag.is_equal (rtf_paragraph_left_aligned) then
-				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
+				l_current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 			elseif tag.is_equal (rtf_paragraph_center_aligned) then
-				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
+				l_current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 			elseif tag.is_equal (rtf_paragraph_right_aligned) then
-				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
+				l_current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 			elseif tag.is_equal (rtf_paragraph_justified) then
-				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
+				l_current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 			elseif tag.is_equal (rtf_paragraph_left_indent) then
-				current_format.set_left_margin (half_points_to_pixels (tag_value.to_integer) // 10)
+				l_current_format.set_left_margin (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_paragraph_right_indent) then
-				current_format.set_right_margin (half_points_to_pixels (tag_value.to_integer) // 10)
+				l_current_format.set_right_margin (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_paragraph_space_before) then
-				current_format.set_top_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
+				l_current_format.set_top_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_paragraph_space_after) then
-				current_format.set_bottom_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
+				l_current_format.set_bottom_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_fonttable) then
 				process_fonttable (rtf_text)
 				processing_moved_iterator := True
@@ -855,10 +885,12 @@ feature {NONE} -- Implementation
 				-- Perform nothing if family is Nill.
 			end
 				-- It is possible that no font name was specificed in the RTF.
-			if last_fontname /= Void and then not last_fontname.is_empty then
-				a_font.preferred_families.extend (last_fontname)
+			if attached last_fontname as l_last_fontname and then not l_last_fontname.is_empty then
+				a_font.preferred_families.extend (l_last_fontname)
 			end
-			all_fonts.force (a_font, last_fontindex)
+			if all_fonts /= Void then
+				all_fonts.force (a_font, last_fontindex)
+			end
 		end
 
 	process_colortable (rtf_text: STRING_32)
@@ -871,6 +903,7 @@ feature {NONE} -- Implementation
 			current_character: WIDE_CHARACTER
 			a_color: EV_COLOR
 		do
+			check all_colors /= Void end
 			depth := 1
 			from
 				move_main_iterator (1)
@@ -909,7 +942,7 @@ feature {NONE} -- Implementation
 		-- Any color references to this color must use either the foreground or
 		-- background color of the control, instead of its actual value.
 
-	last_fontname: STRING_32
+	last_fontname: detachable STRING_32
 	last_colorindex: INTEGER
 	last_fontindex: INTEGER
 	last_fontcharset: INTEGER
@@ -919,20 +952,20 @@ feature {NONE} -- Implementation
 	last_colorblue: INTEGER
 		-- Current values read in by parsing RTF.
 
-	all_fonts: ARRAY [EV_FONT]
+	all_fonts: detachable ARRAY [EV_FONT] note option: stable attribute end
 		-- All fonts retrieved during parsing, accessible through their index in the font table.
 
-	all_colors: ARRAY [EV_COLOR]
+	all_colors: detachable ARRAY [EV_COLOR] note option: stable attribute end
 		-- All colors retrieved during parsing, accessible through their index in the color table.
 
-	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING_32]
+	all_formats: detachable HASH_TABLE [EV_CHARACTER_FORMAT, STRING_32] note option: stable attribute end
 		-- All unique formats retreived during parsing.
 
-	all_paragraph_formats: HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING_32]
+	all_paragraph_formats: detachable HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING_32] note option: stable attribute end
 
-	all_paragraph_format_keys: ARRAYED_LIST [STRING_32]
+	all_paragraph_format_keys: detachable ARRAYED_LIST [STRING_32] note option: stable attribute end
 
-	all_paragraph_indexes: ARRAYED_LIST [INTEGER]
+	all_paragraph_indexes: detachable ARRAYED_LIST [INTEGER] note option: stable attribute end
 
 	number_of_characters_opened: INTEGER
 
@@ -986,10 +1019,10 @@ feature {NONE} -- Implementation
 		end
 
 
-	current_format: RTF_FORMAT_I
+	current_format: detachable RTF_FORMAT_I
 		-- The current format retrieved from the RTF.
 
-	format_stack: ARRAYED_STACK [RTF_FORMAT_I]
+	format_stack: detachable ARRAYED_STACK [RTF_FORMAT_I] note option: stable attribute end
 		-- A stack to hold current formatting for RTF being loaded.
 		-- Each set of formatting contained within braces is only local to those braces,
 		-- so we pop and push the current formats from the stack as we enter and leave braces.
@@ -1002,9 +1035,13 @@ feature {NONE} -- Implementation
 		-- A temporary value used by `move_main_iterator' to ensure that multiple calls to
 		-- move forwards do not move backwards.
 
-	plain_text: STRING_32
-		-- A string representation of the contents of from the last
-		-- RTF file loaded.
+	plain_text: detachable STRING_32
+			-- A string representation of the contents of from the last
+			-- RTF file loaded.
+		note
+			option: stable
+		attribute
+		end
 
 	update_main_iterator
 			-- Ensure `main_iterator' takes the value of `temp_iterator'.
@@ -1211,11 +1248,11 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	paragraph_start_indexes: ARRAYED_LIST [INTEGER]
+	paragraph_start_indexes: detachable ARRAYED_LIST [INTEGER] note option: stable attribute end
 		-- Indexes of every paragraph format change in a document in order.
 		-- Call `generate_paragraph_information' to fill.
 
-	paragraph_formats: ARRAYED_LIST [STRING_32]
+	paragraph_formats: detachable ARRAYED_LIST [STRING_32] note option: stable attribute end
 		-- A string representation of Each paragraph change found in
 		-- `paragraph_start_indexes'. Call `generate_paragraph_information' to fill.
 
@@ -1355,4 +1392,14 @@ note
 
 
 end -- class EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+
+
+
+
+
+
+
+
+
+
 

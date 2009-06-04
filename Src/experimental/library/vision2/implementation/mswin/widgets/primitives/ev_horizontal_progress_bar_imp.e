@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision horizontal progress bar. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_PROGRESS_BAR;
+	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -59,4 +59,10 @@ note
 
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
+
+
+
+
+
+
 

@@ -59,15 +59,23 @@ feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 			Result := internal_font_faces
 		end
 
-	text_metrics: HASH_TABLE [WEL_TEXT_METRIC, STRING_32]
+	text_metrics: detachable HASH_TABLE [WEL_TEXT_METRIC, STRING_32]
 			-- Text metrics found on system, accessible by face name.
 			-- Any metrics that share the same face name will not be accessible,
 			-- only the first found.
+		note
+			option: stable
+		attribute
+		end;
 
-	log_fonts: HASH_TABLE [WEL_LOG_FONT, STRING_32]
+	log_fonts: detachable HASH_TABLE [WEL_LOG_FONT, STRING_32]
 			-- Log fonts found on system accessible by face name.
 			-- Any metrics that share the same face name will not be accessible,
 			-- only the first found.
+		note
+			option: stable
+		attribute
+		end;
 
 feature {NONE} -- Basic operations
 
@@ -81,6 +89,9 @@ feature {NONE} -- Basic operations
 			face_found: STRING_32
 		do
 			face_found := elf.log_font.face_name.twin
+			check internal_font_faces /= Void end
+			check text_metrics /= Void end
+			check log_fonts /= Void end
 			if not internal_font_faces.has (face_found) then
 				internal_font_faces.extend (face_found)
 			end
@@ -88,8 +99,12 @@ feature {NONE} -- Basic operations
 			log_fonts.put (elf.log_font, face_found)
 		end
 
-	internal_font_faces: ARRAYED_LIST [STRING_32];
-			-- Font faces found on the current system.		
+	internal_font_faces: detachable ARRAYED_LIST [STRING_32]
+			-- Font faces found on the current system.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -106,4 +121,15 @@ note
 
 
 end -- class EV_WEL_FONT_ENUMERATOR_IMP
+
+
+
+
+
+
+
+
+
+
+
 

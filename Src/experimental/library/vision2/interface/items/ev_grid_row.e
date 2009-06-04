@@ -27,7 +27,7 @@ inherit
 		end
 
 create
-	{EV_GRID} default_create
+	{EV_GRID, EV_GRID_I} default_create
 
 feature -- Access
 
@@ -70,7 +70,7 @@ feature -- Access
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
 
-	parent_row: EV_GRID_ROW
+	parent_row: detachable EV_GRID_ROW
 			-- Parent row of Current if any, Void otherwise.
 		require
 			not_destroyed: not is_destroyed
@@ -79,11 +79,11 @@ feature -- Access
 			Result := implementation.parent_row
 		ensure
 			result_void_when_tree_node_enabled: (parent = Void) or
-				(parent /= Void and then not parent.is_tree_enabled) implies Result = Void
+				(parent /= Void and then not attached_parent.is_tree_enabled) implies Result = Void
 			has_parent: Result /= Void implies Result.has_subrow (Current)
 		end
 
-	parent: EV_GRID
+	parent: detachable EV_GRID
 			-- Grid to which current row belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Access
 			Result := implementation.parent
 		end
 
-	parent_row_root: EV_GRID_ROW
+	parent_row_root: detachable EV_GRID_ROW
 			-- Parent row which is the root of the tree structure
 			-- in which `Current' is contained. May be `Current' if
 			-- `Current' is the root node of a tree structure.
@@ -101,10 +101,10 @@ feature -- Access
 		do
 			Result := implementation.parent_row_root
 		ensure
-			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
+			result_consistent_with_parent_tree_properties: (parent = Void or else not attached_parent.is_tree_enabled) = (Result = Void)
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM
+	item (i: INTEGER): detachable EV_GRID_ITEM
 			-- Item at `i'-th column, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -204,7 +204,7 @@ feature -- Access
 			Result := implementation.is_expandable
 		end
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
 			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -215,7 +215,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color: detachable EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -261,7 +261,7 @@ feature -- Status report
 			Result := implementation.subrow_count
 		ensure
 			subrow_count_non_negative: subrow_count >= 0
-			subrow_count_in_range: subrow_count <= (parent.row_count - index)
+			subrow_count_in_range: subrow_count <= (attached_parent.row_count - index)
 		end
 
 	subrow_count_recursive: INTEGER
@@ -273,7 +273,7 @@ feature -- Status report
 			Result := implementation.subrow_count_recursive
 		ensure
 			subrow_count_recursive_greater_or_equal_to_subrow_count: subrow_count_recursive >= subrow_count
-			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
+			subrow_count_recursive_in_range: subrow_count_recursive <= (attached_parent.row_count - index)
 		end
 
 	index: INTEGER
@@ -285,7 +285,7 @@ feature -- Status report
 			Result := implementation.index
 		ensure
 			index_positive: Result > 0
-			index_less_than_row_count: Result <= parent.row_count
+			index_less_than_row_count: Result <= attached_parent.row_count
 		end
 
 	count: INTEGER
@@ -321,10 +321,10 @@ feature -- Status setting
 			-- `Current' is locked at it's current vertical offset from
 			-- the top edge of the viewable area of `parent'.
 		do
-			lock_at_position (virtual_y_position - parent.virtual_y_position)
+			lock_at_position (virtual_y_position - attached_parent.virtual_y_position)
 		ensure
 			is_locked: is_locked
-			locked_position_set: locked_position = virtual_y_position - parent.virtual_y_position
+			locked_position_set: locked_position = virtual_y_position - attached_parent.virtual_y_position
 		end
 
 	lock_at_position (a_position: INTEGER)
@@ -388,10 +388,10 @@ feature -- Status setting
 		do
 			implementation.ensure_visible
 		ensure
-			parent_virtual_x_position_unchanged: old parent.virtual_x_position = parent.virtual_x_position
+			parent_virtual_x_position_unchanged: old attached_parent.virtual_x_position = attached_parent.virtual_x_position
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
-			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
-			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
+			row_visible_when_heights_fixed_in_parent: attached_parent.is_row_height_fixed implies  virtual_y_position >= attached_parent.virtual_y_position and virtual_y_position + attached_parent.row_height <= attached_parent.virtual_y_position + (attached_parent.viewable_height).max (attached_parent.row_height)
+			row_visible_when_heights_not_fixed_in_parent: not attached_parent.is_row_height_fixed implies virtual_y_position >= attached_parent.virtual_y_position and virtual_y_position + height <= attached_parent.virtual_y_position + (attached_parent.viewable_height).max (height)
 		end
 
 	ensure_expandable
@@ -405,7 +405,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
-			parent_tree_enabled: parent.is_tree_enabled
+			parent_tree_enabled: attached_parent.is_tree_enabled
 		do
 			implementation.ensure_expandable
 		ensure
@@ -506,7 +506,7 @@ feature -- Element change
 			a_row_is_not_current: a_row /= Current
 			a_row_is_not_a_subrow: a_row.parent_row = Void
 			same_parent: a_row.parent = parent
-			parent_enabled_as_tree: parent.is_tree_enabled
+			parent_enabled_as_tree: attached_parent.is_tree_enabled
 			a_row_is_below_current: a_row.index > index
 			all_rows_between_row_and_current_are_subrows:
 				a_row.index = index + subrow_count_recursive + 1
@@ -525,13 +525,13 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
-			parent_enabled_as_tree: parent.is_tree_enabled
+			parent_enabled_as_tree: attached_parent.is_tree_enabled
 			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
 		do
 			implementation.insert_subrows (1, subrow_index)
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + 1
-			parent_row_count_increased: parent.row_count = old parent.row_count + 1
+			parent_row_count_increased: attached_parent.row_count = old attached_parent.row_count + 1
 		end
 
 	insert_subrows (rows_to_insert, subrow_index: INTEGER)
@@ -540,14 +540,14 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
-			parent_enabled_as_tree: parent.is_tree_enabled
+			parent_enabled_as_tree: attached_parent.is_tree_enabled
 			rows_to_insert_positive: rows_to_insert >= 1
 			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
 		do
 			implementation.insert_subrows (rows_to_insert, subrow_index)
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + rows_to_insert
-			parent_row_count_increased: parent.row_count = old parent.row_count + rows_to_insert
+			parent_row_count_increased: attached_parent.row_count = old attached_parent.row_count + rows_to_insert
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW)
@@ -561,9 +561,9 @@ feature -- Element change
 			a_row_is_not_current: a_row /= Current
 			a_row_is_a_subrow: a_row.parent_row = Current
 			same_parent: a_row.parent = parent
-			parent_enabled_as_tree: parent.is_tree_enabled
-			row_is_final_subrow_in_tree_structure:
-				a_row.index  + a_row.subrow_count_recursive = parent_row_root.index + parent_row_root.subrow_count_recursive
+			parent_enabled_as_tree: attached_parent.is_tree_enabled
+			row_is_final_subrow_in_tree_structure: attached parent_row_root as l_parent_row_root and then
+				a_row.index  + a_row.subrow_count_recursive = l_parent_row_root.index + l_parent_row_root.subrow_count_recursive
 		do
 			implementation.remove_subrow (a_row)
 		ensure
@@ -666,24 +666,44 @@ feature -- Contract support
 			end
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature -- Implementation
+
+	attached_parent: attached like parent
+			-- Attached parent
+		require
+			parent /= Void
+		local
+			l_parent: like parent
+		do
+			l_parent := parent
+			check l_parent /= Void end
+			Result := l_parent
+		end
+
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_ROW_I
 		-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_ROW_I} implementation.make (Current)
+			create {EV_GRID_ROW_I} implementation.make
 		end
 
 invariant
 --	We currently cannot hold this invariant during expand/collapse, thus
 --	it is commented until we find a better way to express it:
 --	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
-	tree_disabled_in_parent_implies_no_subrows: parent /= Void and then not parent.is_tree_enabled implies subrow_count = 0
+	tree_disabled_in_parent_implies_no_subrows: parent /= Void and then not attached_parent.is_tree_enabled implies subrow_count = 0
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_y_position = virtual_y_position_unlocked
 
 note
@@ -698,4 +718,13 @@ note
 	]"
 
 end
+
+
+
+
+
+
+
+
+
 

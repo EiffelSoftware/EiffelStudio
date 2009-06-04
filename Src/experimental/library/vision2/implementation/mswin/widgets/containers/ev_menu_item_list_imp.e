@@ -16,7 +16,8 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MENU_ITEM, EV_MENU_ITEM_IMP]
 		redefine
-			interface
+			interface,
+			make
 		end
 
 	WEL_MENU
@@ -38,12 +39,18 @@ inherit
 			{NONE} all
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize
+		do
 			create ev_children.make (2)
+			Precursor
 		end
 
 feature -- Standard output
@@ -51,8 +58,8 @@ feature -- Standard output
 	print_radio_groups
 		local
 			cur: CURSOR
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			list_imp: EV_MENU_ITEM_LIST_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			list_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
 			cur := ev_children.cursor
 			from
@@ -194,15 +201,15 @@ feature {NONE} -- Implementation
 	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 			-- List of menu items in menu.
 
-	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+	radio_group: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radios groups
 
 	insert_item (item_imp: EV_ITEM_IMP; pos: INTEGER)
 			-- Insert `item_imp' on `pos' in `ev_children'.
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			menu_imp: EV_MENU_IMP
-			menu_item_imp: EV_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			menu_imp: detachable EV_MENU_IMP
+			menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			ev_children.go_i_th (pos)
 
@@ -211,6 +218,7 @@ feature {NONE} -- Implementation
 				insert_separator_item (sep_imp, pos)
 			else
 				menu_item_imp ?= item_imp
+				check menu_item_imp /= Void end
 				menu_imp ?= menu_item_imp
 				if menu_imp /= Void then
 					insert_menu (menu_imp, pos)
@@ -238,9 +246,9 @@ feature {NONE} -- Implementation
 			menu_item_imp_not_void: menu_item_imp /= Void
 			valid_pos: pos > 0
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			menu_imp: EV_MENU_IMP
-			chk_imp: EV_CHECKABLE_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			menu_imp: detachable EV_MENU_IMP
+			chk_imp: detachable EV_CHECKABLE_MENU_ITEM_IMP
 			menu_flag: INTEGER
 		do
 			menu_flag := Mf_byposition | Mf_ownerdraw
@@ -279,12 +287,13 @@ feature {NONE} -- Implementation
 			-- Remove `item_imp' from `ev_children'.
 		local
 			pos: INTEGER
-			menu_item_imp: EV_MENU_ITEM_IMP
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			rgroup: like radio_group
+			menu_item_imp: detachable EV_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
+			rgroup: detachable like radio_group
 		do
 			menu_item_imp ?= item_imp
+			check menu_item_imp /= Void end
 			pos := ev_children.index_of (menu_item_imp, 1)
 
 				-- Enable `menu_item_imp' if necessary.
@@ -317,17 +326,18 @@ feature {NONE} -- Implementation
 					radio_imp.remove_from_radio_group
 				else
 					sep_imp ?= item_imp
-					if sep_imp.radio_group /= Void then
-						if not sep_imp.radio_group.is_empty then
+					check sep_imp /= Void end
+					if attached sep_imp.radio_group as l_radio_group then
+						if not l_radio_group.is_empty then
 							-- Merge `rgroup' with the one from `sep_imp'.
 							from
-								sep_imp.radio_group.last.enable_select
-								sep_imp.radio_group.start
+								l_radio_group.last.enable_select
+								l_radio_group.start
 							until
-								sep_imp.radio_group.is_empty
+								l_radio_group.is_empty
 							loop
-								uncheck_item (sep_imp.radio_group.item.id)
-								sep_imp.radio_group.item.set_radio_group (rgroup)
+								uncheck_item (l_radio_group.item.id)
+								l_radio_group.item.set_radio_group (rgroup)
 							end
 						end
 						sep_imp.remove_radio_group
@@ -348,8 +358,8 @@ feature {NONE} -- Implementation
 	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER)
 			-- Insert `sep_imp' on `pos' in `ev_children'.
 		local
-			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			rgroup: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
+			rgroup: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 		do
 			from
 				ev_children.go_i_th (pos + 1)
@@ -389,9 +399,9 @@ feature {NONE} -- Implementation
 	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			chk_imp: EV_CHECK_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
+			chk_imp: detachable EV_CHECK_MENU_ITEM_IMP
 		do
 			cwin_insert_menu (wel_item, pos -1, Mf_byposition | Mf_ownerdraw,
 				cwel_integer_to_pointer (menu_item_imp.id),
@@ -452,20 +462,21 @@ feature {NONE} -- Implementation
 	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' of type EV_MENU_SEPARATOR_IMP?
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
 			sep_imp ?= item_imp
+			check sep_imp /= Void end
 			Result := sep_imp /= Void
 		end
 
-	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP
+	separator_imp_by_index (an_index: INTEGER): detachable EV_MENU_SEPARATOR_IMP
 			-- Separator before item with `an_index'.
 		require
 			an_index_within_bounds:
 				an_index > 0 and then an_index <= ev_children.count
 		local
 			cur_item: INTEGER
-			sep_imp: EV_MENU_SEPARATOR_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
 			from
 				ev_children.start
@@ -486,7 +497,7 @@ feature {NONE} -- Implementation
 			-- Propagate the `on_menu_char' message to the submenus until
 			-- the message is handled.
 		local
-			sub_menu: EV_MENU_IMP
+			sub_menu: detachable EV_MENU_IMP
 			cur: CURSOR
 		do
 			cur := ev_children.cursor
@@ -528,12 +539,12 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 		require
 			a_menu_not_void: a_menu /= Void
 		local
-			l_menu_item: EV_MENU_ITEM_IMP
+			l_menu_item: detachable EV_MENU_ITEM_IMP
 			l_comparator: PREDICATE [ANY, TUPLE [EV_MENU_ITEM_IMP]]
 		do
 			l_comparator := agent (a_menu_item: EV_MENU_ITEM_IMP; a_wel_menu: WEL_MENU): BOOLEAN
 				local
-					l_menu: EV_MENU_IMP
+					l_menu: detachable EV_MENU_IMP
 				do
 					l_menu ?= a_menu_item
 					if l_menu /= Void then
@@ -542,14 +553,14 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 				end (?, a_menu)
 			l_menu_item := menu_item_from_comparator (l_comparator)
 			if l_menu_item /= Void and then l_menu_item.select_actions_internal /= Void then
-				l_menu_item.select_actions_internal.call (Void)
+				l_menu_item.select_actions.call (Void)
 			end
 		end
 
 	menu_item_clicked (a_id: INTEGER)
 			-- Call `on_activate' for menu item with `a_id'.
 		local
-			l_menu_item: EV_MENU_ITEM_IMP
+			l_menu_item: detachable EV_MENU_ITEM_IMP
 			l_comparator: PREDICATE [ANY, TUPLE [EV_MENU_ITEM_IMP]]
 		do
 			l_comparator := agent (a_menu_item: EV_MENU_ITEM_IMP; a_item_id: INTEGER): BOOLEAN
@@ -560,20 +571,20 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			if l_menu_item /= Void then
 				l_menu_item.on_activate
 				if item_select_actions_internal /= Void then
-					item_select_actions_internal.call ([l_menu_item.interface])
+					item_select_actions_internal.call ([l_menu_item.attached_interface])
 				end
 			end
 		end
 
-	menu_item_from_comparator (a_comparator: PREDICATE [ANY, TUPLE [EV_MENU_ITEM_IMP]]): EV_MENU_ITEM_IMP
+	menu_item_from_comparator (a_comparator: PREDICATE [ANY, TUPLE [EV_MENU_ITEM_IMP]]): detachable EV_MENU_ITEM_IMP
 			-- Retrieve menu item using comparator predicate `a_comparator'.
 		require
 			a_comparator_not_void: a_comparator /= Void
 		local
 			i: INTEGER
 			l_count: INTEGER
-			l_sub_menu: EV_MENU_IMP
-			l_menu_item: EV_MENU_ITEM_IMP
+			l_sub_menu: detachable EV_MENU_IMP
+			l_menu_item: detachable EV_MENU_ITEM_IMP
 		do
 			from
 				i := 1
@@ -597,7 +608,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU_ITEM_LIST;
+	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -614,4 +625,13 @@ note
 
 
 end -- class EV_MENU_ITEM_LIST_IMP
+
+
+
+
+
+
+
+
+
 

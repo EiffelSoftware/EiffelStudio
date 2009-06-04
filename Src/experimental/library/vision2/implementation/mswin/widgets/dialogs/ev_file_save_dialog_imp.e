@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision file open dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 			set_filter as wel_set_filter,
 			set_filter_index as wel_set_filter_index,
 			set_initial_directory as wel_set_initial_directory,
-			file_title as wel_file_title,			
+			file_title as wel_file_title,
 			dispose as destroy
 		end
 
@@ -154,4 +154,8 @@ note
 
 
 end -- class EV_SAVE_OPEN_DIALOG_IMP
+
+
+
+
 

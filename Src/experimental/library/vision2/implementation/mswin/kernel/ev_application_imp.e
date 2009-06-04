@@ -12,7 +12,8 @@ class
 inherit
 	EV_APPLICATION_I
 		redefine
-			wait_for_input
+			wait_for_input,
+			make
 		end
 
  	WEL_APPLICATION
@@ -60,20 +61,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create the application with `an_interface' interface.
 		local
 			l_result: INTEGER
 			l_process: POINTER
 		do
+			Precursor
 			create dispatcher.make
 			if {PLATFORM}.is_thread_capable then
 				create idle_action_mutex.make
 			end
-			base_make (an_interface)
-			set_application (Current)
 			create blocking_windows_stack.make (5)
 			init_instance
 			init_application
@@ -101,6 +101,8 @@ feature {NONE} -- Initialization
 			l_result := {WEL_API}.duplicate_handle (l_process, l_process, l_process, $l_process, 0, False, 0x2)
 			check l_result_good: l_result /= 0 end
 			process_handle := l_process
+
+			set_application (Current)
 		end
 
 feature -- Access
@@ -203,7 +205,7 @@ feature -- Basic operation
 
 feature {NONE} -- Thread implementation
 
-	idle_action_mutex: MUTEX
+	idle_action_mutex: detachable MUTEX note option: stable attribute end
 			-- Mutex used to access idle_actions.
 
 feature -- Root window
@@ -241,18 +243,13 @@ feature -- Element change
 			Application_windows_id.prune_all (w.item)
 		end
 
-	window_with_focus: EV_WINDOW_IMP
+	window_with_focus: detachable EV_WINDOW_IMP
 			-- `Result' is EV_WINDOW with current focus.
 
-	set_window_with_focus (a_window: EV_WINDOW)
+	set_window_with_focus (a_window: detachable EV_WINDOW_IMP)
 			-- Assign implementation of `a_window' to `window_with_focus'.
-		local
-			win_imp: EV_WINDOW_IMP
 		do
-			if a_window /= Void then
-				win_imp ?= a_window.implementation
-			end
-			window_with_focus := win_imp
+			window_with_focus := a_window
 		end
 
 feature {NONE} -- Implementation
@@ -281,7 +278,7 @@ feature {EV_ANY_I}-- Status report
 			--| This was introduced to allow the previous internal
 			--| implementation to be kept although changing the interface.
 		local
-			ev_win: EV_WINDOW_IMP
+			ev_win: detachable EV_WINDOW_IMP
 			res: ARRAYED_LIST [EV_WINDOW]
 		do
 			create res.make (Application_windows_id.count)
@@ -294,7 +291,7 @@ feature {EV_ANY_I}-- Status report
 				if is_window (Application_windows_id.item) then
 					ev_win ?= window_of_item (Application_windows_id.item)
 					if ev_win /= Void then
-						res.extend (ev_win.interface)
+						res.extend (ev_win.attached_interface)
 						Application_windows_id.forth
 					else
 							-- Object has been collected, we remove it
@@ -352,7 +349,7 @@ feature {EV_ANY_HANDLER, EV_WEL_CONTROL_CONTAINER_IMP, EV_WIDGET_IMP, WEL_ANY} -
 
 feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
 
-	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
+	pick_and_drop_source: detachable EV_PICK_AND_DROPABLE_IMP
 		-- The current pick and drop source.
 		--| If `Void' then no pick and drop is currently executing.
 		--| This allows us to globally check whether a pick and drop
@@ -361,7 +358,7 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 	drop_actions_executing: BOOLEAN
 		-- Are the `drop_actions' for a pick and dropable object currently executing?
 
-	dockable_source: EV_DOCKABLE_SOURCE_IMP
+	dockable_source: detachable EV_DOCKABLE_SOURCE_IMP
 		-- The current dockable source if a dock is executing.
 
 feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
@@ -521,7 +518,7 @@ feature -- Basic operation
 			cwin_post_quit_message (0)
 			set_is_destroyed (True)
 			window_with_focus := Void
-			interface.destroy_actions.call (Void)
+			destroy_actions.call (Void)
 				-- Destroy `process_handle'
 			l_result := {WEL_API}.close_handle (process_handle)
 			check l_result_ok: l_result /= 0 end
@@ -610,8 +607,8 @@ feature {NONE} -- Implementation
 					set_is_destroyed (True)
 				else
 					l_process_events := True
-					if window_with_focus /= Void and then window_with_focus.exists and then is_dialog (window_with_focus.wel_item) then
-							msg.process_dialog_message (window_with_focus.wel_item)
+					if attached window_with_focus as l_window_with_focus and then l_window_with_focus.exists and then is_dialog (l_window_with_focus.wel_item) then
+							msg.process_dialog_message (l_window_with_focus.wel_item)
 							l_process_events := not msg.last_boolean_result
 								-- Only process events if the event was not a dialog message.
 					end

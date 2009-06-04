@@ -58,13 +58,13 @@ create
 
 feature -- Access
 
-	parent: EV_TOOL_BAR
+	parent: detachable EV_TOOL_BAR
 			-- Parent of the current item.
 		do
 			Result ?= Precursor {EV_TOOL_BAR_ITEM}
 		end
 
-	gray_pixmap: EV_PIXMAP
+	gray_pixmap: detachable EV_PIXMAP
 			-- Gray image displayed when the button is not hot
 			-- i.e. when the mouse cursor is not over it.
 		require
@@ -73,7 +73,7 @@ feature -- Access
 			Result := implementation.gray_pixmap
 		ensure
 			bridge_ok: (Result = Void and implementation.gray_pixmap = Void) or
-				Result.is_equal (implementation.gray_pixmap)
+				(Result /= Void and then Result ~ (implementation.gray_pixmap))
 		end
 
 feature -- Element change
@@ -86,8 +86,8 @@ feature -- Element change
 		do
 			implementation.set_gray_pixmap (a_gray_pixmap)
 		ensure
-			pixmap_assigned: a_gray_pixmap.is_equal (gray_pixmap) and
-							 gray_pixmap /= a_gray_pixmap
+			pixmap_assigned: attached gray_pixmap as l_gray_pixmap and then a_gray_pixmap.is_equal (l_gray_pixmap) and then
+							 l_gray_pixmap /= a_gray_pixmap
 		end
 
 	remove_gray_pixmap
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make (Current)
+			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make
 		end
 
 note
@@ -164,4 +164,14 @@ note
 
 
 end -- class EV_TOOL_BAR_BUTTON
+
+
+
+
+
+
+
+
+
+
 

@@ -17,9 +17,7 @@ inherit
 	EV_ANY
 		redefine
 			implementation,
-			application_exists,
-			initialize,
-			action_sequence_call_counter
+			initialize
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES
@@ -34,6 +32,7 @@ feature {NONE} -- Initialization is
 		do
 			set_tooltip_delay (default_tooltip_delay)
 			Precursor
+				-- We need to create implementation here
 		ensure then
 			tooltip_delay_initialized: tooltip_delay = default_tooltip_delay
 		end
@@ -51,7 +50,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.windows)
 		end
 
-	locked_window: EV_WINDOW
+	locked_window: detachable EV_WINDOW
 			-- Window currently locked. Void if no window
 			-- is currently locked.
 			--
@@ -62,7 +61,7 @@ feature -- Access
 			Result := implementation.locked_window
 		end
 
-	captured_widget: EV_WIDGET
+	captured_widget: detachable EV_WIDGET
 			-- Widget currently captured. Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -257,7 +256,7 @@ feature -- Status report
 	default_tooltip_delay: INTEGER = 500
 			-- Default delay in milleseconds for tooltips.
 
-	focused_widget: EV_WIDGET
+	focused_widget: detachable EV_WIDGET
 			-- Widget that has keyboard focus.
 		require
 			not_destroyed: not is_destroyed
@@ -358,31 +357,6 @@ feature -- Event handling
 			implementation.remove_idle_action (a_idle_action)
 		end
 
-feature {EV_ANY, EV_LITE_ACTION_SEQUENCE} -- Implementation
-
-	action_sequence_call_counter: NATURAL_32
-			-- Counter used in post-conditions to determine if any actions sequences have been
-			-- called as a result of the routine the post-condition is applied to.
-
-feature {EV_LITE_ACTION_SEQUENCE} -- Implementation
-
-	increase_action_sequence_call_counter
-			-- Increase `action_sequence_call_counter' by one.
-		do
-			action_sequence_call_counter := action_sequence_call_counter + 1
-		end
-
-feature {NONE} -- Contract support
-
-	application_exists: BOOLEAN
-			-- Does the application exist? This is used to stop
-			-- manipulation of widgets before an application is created.
-			-- As we are now in the process of creating the application,
-			-- we return True.
-		do
-			Result := True
-		end
-
 feature {EV_ANY, EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I, EXCEPTIONS, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_APPLICATION_I
@@ -390,15 +364,24 @@ feature {EV_ANY, EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I,
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
+		local
+			l_environment: EV_ENVIRONMENT
 		do
-			create {EV_APPLICATION_IMP} implementation.make (Current)
+				-- Set the application implementation object from the shared one in EV_ENVIRONMENT.
+			create l_environment
+			implementation := l_environment.implementation.application_i
 		end
 
 invariant
 	tooltip_delay_not_negative: tooltip_delay >= 0
-	windows_not_void: windows /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -415,5 +398,14 @@ note
 
 
 end -- class EV_APPLICATION
+
+
+
+
+
+
+
+
+
 
 

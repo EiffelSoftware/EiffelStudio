@@ -32,8 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	new_item_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE;
+	new_item_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `new_item_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +54,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

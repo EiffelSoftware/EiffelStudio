@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Interactive vertical range widget. A sliding thumb displays the
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_VERTICAL_RANGE_IMP} implementation.make (Current)
+			create {EV_VERTICAL_RANGE_IMP} implementation.make
 		end
 
 note
@@ -62,4 +62,10 @@ note
 
 
 end -- class EV_VERTICAL_RANGE
+
+
+
+
+
+
 

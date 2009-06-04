@@ -31,7 +31,7 @@ inherit
 			{EV_PIXMAP_IMP_WIDGET} wel_drawing_mode
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy,
 			sub_pixmap
 		end
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			promote_from_simple (other)
 
 				-- Initialize the drawable part.
-			initialize -- from EV_DRAWABLE_IMP
+			make -- from EV_DRAWABLE_IMP
 
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.
@@ -65,8 +65,8 @@ feature {NONE} -- Initialization
 			if dc.palette_selected then
 				dc.unselect_palette
 			end
-			if palette /= Void then
-				dc.select_palette (palette)
+			if attached palette as l_palette then
+				dc.select_palette (l_palette)
 			end
 		end
 
@@ -83,27 +83,33 @@ feature {NONE} -- Initialization
 		local
 			s_dc: WEL_SCREEN_DC
 			other_bitmap: WEL_BITMAP
-			other_mask_bitmap: WEL_BITMAP
+			other_mask_bitmap: detachable WEL_BITMAP
+			l_internal_mask_bitmap: like internal_mask_bitmap
+			l_internal_bitmap: like internal_bitmap
+			l_mask_dc: like mask_dc
 		do
 				-- Create the bitmaps
 			other_bitmap := other.get_bitmap
-			create internal_bitmap.make_by_bitmap(other_bitmap)
+			create l_internal_bitmap.make_by_bitmap(other_bitmap)
+			internal_bitmap := l_internal_bitmap
 			other_bitmap.decrement_reference
 
-			internal_bitmap.enable_reference_tracking
+			l_internal_bitmap.enable_reference_tracking
 
 			if other.has_mask then
 				other_mask_bitmap := other.get_mask_bitmap
-				create internal_mask_bitmap.make_by_bitmap(
+				check other_mask_bitmap /= Void end
+				create l_internal_mask_bitmap.make_by_bitmap(
 					other_mask_bitmap
 					)
 				other_mask_bitmap.decrement_reference
-				internal_mask_bitmap.enable_reference_tracking
+				l_internal_mask_bitmap.enable_reference_tracking
+				internal_mask_bitmap := l_internal_mask_bitmap
 			end
 
 			palette := other.palette
-			if palette /= Void then
-				palette.increment_reference
+			if attached palette as l_palette then
+				l_palette.increment_reference
 			end
 
 				-- Create the DCs and map the bitmaps onto the DCs.
@@ -112,12 +118,13 @@ feature {NONE} -- Initialization
 
 			create dc.make_by_dc(s_dc)
 			dc.enable_reference_tracking
-			dc.select_bitmap (internal_bitmap)
+			dc.select_bitmap (l_internal_bitmap)
 
-			if internal_mask_bitmap /= Void then
-				create mask_dc.make_by_dc(s_dc)
-				mask_dc.enable_reference_tracking
-				mask_dc.select_bitmap (internal_mask_bitmap)
+			if l_internal_mask_bitmap /= Void then
+				create l_mask_dc.make_by_dc(s_dc)
+				l_mask_dc.enable_reference_tracking
+				l_mask_dc.select_bitmap (l_internal_mask_bitmap)
+				mask_dc := l_mask_dc
 			end
 			s_dc.release
 
@@ -125,8 +132,8 @@ feature {NONE} -- Initialization
 			copy_events_from_other (other)
 
 				-- Update the dimension attributes
-			width := internal_bitmap.width
-			height := internal_bitmap.height
+			width := l_internal_bitmap.width
+			height := l_internal_bitmap.height
 
 				-- Destroy `other' implementation
 			other.safe_destroy
@@ -170,8 +177,8 @@ feature {NONE} -- Initialization
 			if dc.palette_selected then
 				dc.unselect_palette
 			end
-			if palette /= Void then
-				dc.select_palette (palette)
+			if attached palette as l_palette then
+				dc.select_palette (l_palette)
 			end
 		end
 
@@ -231,7 +238,7 @@ feature {NONE} -- Initialization
 			check should_not_be_called: False end
 		end
 
-	initialize
+	make
 		do
 			disable_tabable_from
 			disable_tabable_to
@@ -252,24 +259,26 @@ feature -- Access
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Return the subpixmap of `Current' described by rectangle `area'.
 		local
-			a_pixmap_imp: EV_PIXMAP_IMP
-			a_private_bitmap, a_private_mask_bitmap: WEL_BITMAP
+			a_pixmap_imp: detachable EV_PIXMAP_IMP
+			a_private_bitmap: WEL_BITMAP
+			a_private_mask_bitmap: detachable WEL_BITMAP
 			reusable_dc: WEL_MEMORY_DC
 		do
 			create Result
 			a_pixmap_imp ?= Result.implementation
+			check a_pixmap_imp /= Void end
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
 
 			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
 
-			if has_mask then
+			if has_mask and then attached mask_dc as l_mask_dc then
 				-- Add mask to result
 				reusable_dc.unselect_bitmap
-				create a_private_mask_bitmap.make_compatible (mask_dc, area.width, area.height)
+				create a_private_mask_bitmap.make_compatible (l_mask_dc, area.width, area.height)
 				reusable_dc.select_bitmap (a_private_mask_bitmap)
-				reusable_dc.bit_blt (0, 0, area.width, area.height, mask_dc, area.x, area.y, srccopy)
+				reusable_dc.bit_blt (0, 0, area.width, area.height, l_mask_dc, area.x, area.y, srccopy)
 			end
 
 			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, a_private_mask_bitmap, area.width, area.height)
@@ -282,15 +291,15 @@ feature -- Access
 	dc: WEL_MEMORY_DC
 			-- The device context corresponding to the image
 
-	mask_dc: WEL_MEMORY_DC
+	mask_dc: detachable WEL_MEMORY_DC
 			-- The device context corresponding to the mask
 
-	icon: WEL_ICON
+	icon: detachable WEL_ICON
 			-- Current icon used.
 		do
 		end
 
-	cursor: WEL_CURSOR
+	cursor: detachable WEL_CURSOR
 			-- Current cursor used.
 		do
 		end
@@ -301,24 +310,28 @@ feature -- Access
 			--
 			-- Call `WEL_BITMAP.decrement_reference' when you don't
 			-- need it anymore.
+		local
+			l_internal_bitmap: like internal_bitmap
 		do
 			dc.unselect_bitmap
-			create Result.make_by_bitmap (internal_bitmap)
+			l_internal_bitmap := internal_bitmap
+			check l_internal_bitmap /= Void end
+			create Result.make_by_bitmap (l_internal_bitmap)
 			Result.enable_reference_tracking
-			dc.select_bitmap (internal_bitmap)
+			dc.select_bitmap (l_internal_bitmap)
 		end
 
-	get_mask_bitmap: WEL_BITMAP
+	get_mask_bitmap: detachable WEL_BITMAP
 			-- Monochrome bitmap used as mask. Void if none.
 			--
 			-- Call `WEL_BITMAP.decrement_reference' when you don't
 			-- need it anymore.
 		do
-			if mask_dc /= Void and internal_mask_bitmap /= Void then
-				mask_dc.unselect_bitmap
-				create Result.make_by_bitmap (internal_mask_bitmap)
+			if attached mask_dc as l_mask_dc and then attached internal_mask_bitmap as l_internal_mask_bitmap then
+				l_mask_dc.unselect_bitmap
+				create Result.make_by_bitmap (l_internal_mask_bitmap)
 				Result.enable_reference_tracking
-				mask_dc.select_bitmap (internal_mask_bitmap)
+				l_mask_dc.select_bitmap (l_internal_mask_bitmap)
 			end
 		end
 
@@ -328,10 +341,10 @@ feature -- Access
 			Result := internal_mask_bitmap /= Void
 		end
 
-	palette: WEL_PALETTE
+	palette: detachable WEL_PALETTE
 			-- Current palette used. Void if none.
 
-	transparent_color: EV_COLOR
+	transparent_color: detachable EV_COLOR
 			-- Color used as transparent (Void by default).
 
 feature -- Status setting
@@ -344,7 +357,7 @@ feature -- Status setting
 		do
 				-- Downcast it to simple and perform the stretch
 			simple_pixmap := create_simple_pixmap
-			simple_pixmap.copy_pixmap (interface)
+			simple_pixmap.copy_pixmap (attached_interface)
 			simple_pixmap.stretch (new_width, new_height)
 
 				-- Adapt the current object to the simple
@@ -359,52 +372,61 @@ feature -- Status setting
 		local
 			l_resized_bitmap: WEL_BITMAP
 			l_resized_bitmap_dc: WEL_MEMORY_DC
+			l_internal_bitmap: like internal_bitmap
+			l_internal_mask_bitmap: like internal_mask_bitmap
 		do
 				-- Resize the bitmap
 			if dc.bitmap_selected then
 				dc.unselect_bitmap
 			end
+			l_internal_bitmap := internal_bitmap
+			check l_internal_bitmap /= Void end
 			l_resized_bitmap := resize_wel_bitmap (
-				internal_bitmap,
+				l_internal_bitmap,
 				new_width,
 				new_height,
 				our_background_brush
 				)
 				-- Get rid of the old bitmap
-			internal_bitmap.decrement_reference
+
+			l_internal_bitmap.decrement_reference
 			internal_bitmap := Void
 
 				-- Assign the new bitmap
-			internal_bitmap := l_resized_bitmap
-			dc.select_bitmap (internal_bitmap)
+			l_internal_bitmap := l_resized_bitmap
+			internal_bitmap := l_internal_bitmap
+			dc.select_bitmap (l_internal_bitmap)
 
 				-- Resize the mask (if any)
-			if has_mask then
-				create l_resized_bitmap_dc.make_by_dc (mask_dc)
+			if has_mask and then attached mask_dc as l_mask_dc then
+				create l_resized_bitmap_dc.make_by_dc (l_mask_dc)
 				create l_resized_bitmap.make_compatible (l_resized_bitmap_dc, new_width, new_height)
 				l_resized_bitmap.enable_reference_tracking
 				l_resized_bitmap_dc.select_bitmap (l_resized_bitmap)
 
+				l_internal_mask_bitmap := internal_mask_bitmap
+				check l_internal_mask_bitmap /= Void end
+
 					-- Create a new opaque mask of size `new_width', `new_height'.
 				l_resized_bitmap_dc.pat_blt (0, 0, new_width, new_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.whiteness)
 					-- Copy existing mask data over new mask.
-				l_resized_bitmap_dc.bit_blt (0, 0, internal_mask_bitmap.width, internal_mask_bitmap.height, mask_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+				l_resized_bitmap_dc.bit_blt (0, 0, l_internal_mask_bitmap.width, l_internal_mask_bitmap.height, l_mask_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
 				l_resized_bitmap_dc.unselect_bitmap
 				l_resized_bitmap_dc.delete
 
-				mask_dc.unselect_bitmap
+				l_mask_dc.unselect_bitmap
 
 					-- Get rid of the old bitmap
-				internal_mask_bitmap.decrement_reference
+				l_internal_mask_bitmap.decrement_reference
 
 					-- Assign the new bitmap
 				internal_mask_bitmap := l_resized_bitmap
-				mask_dc.select_bitmap (internal_mask_bitmap)
+				l_mask_dc.select_bitmap (l_resized_bitmap)
 			end
 
 				-- Update width & height attributes
-			width := internal_bitmap.width
-			height := internal_bitmap.height
+			width := l_internal_bitmap.width
+			height := l_internal_bitmap.height
 		end
 
 	reset_for_buffering (a_width, a_height: INTEGER)
@@ -412,6 +434,8 @@ feature -- Status setting
 		local
 			new_bitmap: WEL_BITMAP
 			s_dc: WEL_SCREEN_DC
+			l_internal_bitmap: like internal_bitmap
+			l_internal_mask_bitmap: like internal_mask_bitmap
 		do
 				-- Get a screen dc to create our temporary DCs
 			create s_dc
@@ -426,21 +450,26 @@ feature -- Status setting
 
 
 				-- Get rid of the old bitmap
-			internal_bitmap.decrement_reference
+			l_internal_bitmap := internal_bitmap
+			check l_internal_bitmap /= Void end
+			l_internal_bitmap.decrement_reference
 			internal_bitmap := Void
 
 				-- Assign the new bitmap
-			internal_bitmap := new_bitmap
+			l_internal_bitmap := new_bitmap
+			internal_bitmap := l_internal_bitmap
 			dc.select_bitmap (new_bitmap)
 
 
 				-- Remove the mask (if any)
-			if has_mask then
+			if has_mask and then attached mask_dc as l_mask_dc then
 
 					-- Get rid of the old bitmap
-				internal_mask_bitmap.decrement_reference
+				l_internal_mask_bitmap := internal_mask_bitmap
+				check l_internal_mask_bitmap /= Void end
+				l_internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
-				mask_dc.unselect_bitmap
+				l_mask_dc.unselect_bitmap
 			end
 
 				-- Update width & height attributes
@@ -470,25 +499,34 @@ feature -- Element change
 	set_mask (a_mask: EV_BITMAP)
 			-- Set bitmap mask of `Current' to `a_mask'.
 		local
-			l_bitmap_imp: EV_BITMAP_IMP
+			l_bitmap_imp: detachable EV_BITMAP_IMP
 			s_dc: WEL_SCREEN_DC
 			other_mask_bitmap: WEL_BITMAP
+			l_internal_mask_bitmap: like internal_mask_bitmap
+			l_mask_dc: like mask_dc
 		do
-			if internal_mask_bitmap /= Void then
-				mask_dc.unselect_all
-				mask_dc.delete
-				internal_mask_bitmap.decrement_reference
+			l_internal_mask_bitmap := internal_mask_bitmap
+			if l_internal_mask_bitmap /= Void then
+				l_mask_dc := mask_dc
+				check l_mask_dc /= Void end
+				l_mask_dc.unselect_all
+				l_mask_dc.delete
+				l_internal_mask_bitmap.decrement_reference
 			end
 			l_bitmap_imp ?= a_mask.implementation
+			check l_bitmap_imp /= Void end
 			other_mask_bitmap := l_bitmap_imp.drawable
-			create internal_mask_bitmap.make_by_bitmap (other_mask_bitmap)
-			internal_mask_bitmap.enable_reference_tracking
+			create l_internal_mask_bitmap.make_by_bitmap (other_mask_bitmap)
+			internal_mask_bitmap := l_internal_mask_bitmap
+			l_internal_mask_bitmap.enable_reference_tracking
+
 
 			create s_dc
 			s_dc.get
-			create mask_dc.make_by_dc (s_dc)
-			mask_dc.enable_reference_tracking
-			mask_dc.select_bitmap (internal_mask_bitmap)
+			create l_mask_dc.make_by_dc (s_dc)
+			l_mask_dc.enable_reference_tracking
+			l_mask_dc.select_bitmap (l_internal_mask_bitmap)
+			mask_dc := l_mask_dc
 
 			s_dc.release
 		end
@@ -534,14 +572,14 @@ feature {
 		EV_PIXMAP_IMP_WIDGET
 		} -- Implementation
 
- 	interface: EV_PIXMAP
+ 	interface: detachable EV_PIXMAP note option: stable attribute end
 			-- Interface for the bridge pattern.
 
-	internal_bitmap: WEL_BITMAP
+	internal_bitmap: detachable WEL_BITMAP
 			-- Bitmap mapped onto the current DC and
 			-- representing the current drawing.
 
-	internal_mask_bitmap: WEL_BITMAP
+	internal_mask_bitmap: detachable WEL_BITMAP
 			-- Bitmap mapped onto the current mask DC and
 			-- representing the current mask.
 
@@ -551,19 +589,21 @@ feature {
 				-- Turn off invariant checking.
 			set_is_initialized (False)
 			dc.decrement_reference
-			dc := Void
-			internal_bitmap.decrement_reference
-			internal_bitmap := Void
+			if attached internal_bitmap as l_internal_bitmap then
+				l_internal_bitmap.decrement_reference
+				internal_bitmap := Void
+			end
 
-			if has_mask then
-				mask_dc.decrement_reference
-				mask_dc := Void
-				internal_mask_bitmap.decrement_reference
+			if has_mask and then attached mask_dc as l_mask_dc then
+				l_mask_dc.decrement_reference
+				if attached internal_mask_bitmap as l_internal_mask_bitmap then
+					l_internal_mask_bitmap.decrement_reference
+				end
 				internal_mask_bitmap := Void
 			end
 
-			if palette /= Void then
-				palette.decrement_reference
+			if attached palette as l_palette then
+				l_palette.decrement_reference
 				palette := Void
 			end
 
@@ -598,7 +638,7 @@ feature {EV_PIXMAP} -- Duplication
 
 feature {NONE} -- Private Implementation
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Initialize the bridge pattern.
 		do
 		end
@@ -609,10 +649,13 @@ feature {NONE} -- Private Implementation
 			--| implemented in the simple pixmap version.
 		local
 			dummy_interface: EV_PIXMAP
+			l_result: detachable EV_PIXMAP_IMP
 		do
 				-- Create a simple pixmap
 			create dummy_interface
-			Result ?= dummy_interface.implementation
+			l_result ?= dummy_interface.implementation
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	promote_to_widget
@@ -624,7 +667,7 @@ feature {NONE} -- Private Implementation
 			widget_pixmap: EV_PIXMAP_IMP_WIDGET
 		do
 			create widget_pixmap.make_with_drawable(Current)
-			interface.replace_implementation(widget_pixmap)
+			attached_interface.replace_implementation(widget_pixmap)
 		end
 
 	resize_wel_bitmap(
@@ -643,11 +686,11 @@ feature {NONE} -- Private Implementation
 			-- `Result'.
 		local
 			new_bitmap	: WEL_BITMAP
-			new_dc		: WEL_MEMORY_DC
-			old_dc		: WEL_MEMORY_DC
+			new_dc		: detachable WEL_MEMORY_DC
+			old_dc		: detachable WEL_MEMORY_DC
 			old_width	: INTEGER
 			old_height	: INTEGER
-			s_dc		: WEL_SCREEN_DC
+			s_dc		: detachable WEL_SCREEN_DC
 		do
 				-- Get a screen dc to create our temporary DCs
 			create s_dc
@@ -711,10 +754,10 @@ feature -- Delegated features
 			-- Create `file_drop_actions'
 		do
 			promote_to_widget
-			Result := interface.implementation.create_file_drop_actions
+			Result := attached_interface.implementation.create_file_drop_actions
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- `Result' is widget implementation at current
 			-- cursor position.
 		do
@@ -723,7 +766,7 @@ feature -- Delegated features
 			end
 		end
 
-	pnd_screen: EV_SCREEN
+	pnd_screen: detachable EV_SCREEN
 			-- `Result' is screen used for pick and drop.
 		do
 			check
@@ -735,38 +778,39 @@ feature -- Delegated features
 			-- `Current' has just been added to a container
 		do
 			promote_to_widget
-			interface.implementation.on_parented
+			attached_interface.implementation.on_parented
 		end
 
 	disable_capture
             -- Ungrab the user input.
 		local
-			new_imp: EV_PIXMAP_IMP_WIDGET
+			new_imp: detachable EV_PIXMAP_IMP_WIDGET
 		do
 			promote_to_widget
-			new_imp ?= interface.implementation
+			new_imp ?= attached_interface.implementation
+			check new_imp /= Void end
 			new_imp.disable_capture
 		end
 
-	set_pebble (a_pebble: like pebble)
+	set_pebble (a_pebble: ANY)
 			-- Assign `a_pebble' to `pebble'.
 		do
 			promote_to_widget
-			interface.implementation.set_pebble (a_pebble)
+			attached_interface.implementation.set_pebble (a_pebble)
 		end
 
 	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent)
 			-- Assign `an_agent' to `actual_drop_target_agent'.
 		do
 			promote_to_widget
-			interface.implementation.set_actual_drop_target_agent (an_agent)
+			attached_interface.implementation.set_actual_drop_target_agent (an_agent)
 		end
 
 	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		do
 			promote_to_widget
-			interface.implementation.disable_transport
+			attached_interface.implementation.disable_transport
 		end
 
 	draw_rubber_band
@@ -774,16 +818,17 @@ feature -- Delegated features
 			-- Draw a rubber band between initial pick point and cursor.
 		do
 			promote_to_widget
-			interface.implementation.draw_rubber_band
+			attached_interface.implementation.draw_rubber_band
 		end
 
 	enable_capture
             -- Grab the user input.
 		local
-			new_imp: EV_PIXMAP_IMP_WIDGET
+			new_imp: detachable EV_PIXMAP_IMP_WIDGET
 		do
 			promote_to_widget
-			new_imp ?= interface.implementation
+			new_imp ?= attached_interface.implementation
+			check new_imp /= Void end
 			new_imp.enable_capture
 		end
 
@@ -791,7 +836,7 @@ feature -- Delegated features
             -- Activate pick/drag and drop mechanism.
 		do
 			promote_to_widget
-			interface.implementation.enable_transport
+			attached_interface.implementation.enable_transport
 		end
 
 	end_transport (
@@ -804,7 +849,7 @@ feature -- Delegated features
 			-- Terminate the pick and drop mechanism.
 		do
 			promote_to_widget
-			interface.implementation.end_transport(
+			attached_interface.implementation.end_transport(
 				a_x,
 				a_y,
 				a_button,
@@ -836,24 +881,25 @@ feature -- Delegated features
 			-- Erase previously drawn rubber band.
 		do
 			promote_to_widget
-			interface.implementation.erase_rubber_band
+			attached_interface.implementation.erase_rubber_band
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 			-- Target at mouse position
 		do
 			promote_to_widget
-			Result := interface.implementation.real_pointed_target
+			Result := attached_interface.implementation.real_pointed_target
 		end
 
 	set_pointer_style (c: EV_POINTER_STYLE)
 			-- Set `c' as new cursor pixmap.
 			-- Can be called through `interface'.
 		local
-			new_imp: EV_PIXMAP_IMP_WIDGET
+			new_imp: detachable EV_PIXMAP_IMP_WIDGET
 		do
 			promote_to_widget
-			new_imp ?= interface.implementation
+			new_imp ?= attached_interface.implementation
+			check new_imp /= Void end
 			new_imp.set_pointer_style(c)
 		end
 
@@ -861,10 +907,11 @@ feature -- Delegated features
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		local
-			new_imp: EV_PIXMAP_IMP
+			new_imp: detachable EV_PIXMAP_IMP
 		do
 			promote_to_widget
-			new_imp ?= interface.implementation
+			new_imp ?= attached_interface.implementation
+			check new_imp /= Void end
 			new_imp.internal_set_pointer_style (c)
 		end
 
@@ -883,7 +930,7 @@ feature -- Delegated features
 			-- Start a pick and drop transport.
 		do
 			promote_to_widget
-			interface.implementation.start_transport (
+			attached_interface.implementation.start_transport (
 				a_x,
 				a_y,
 				a_button,
@@ -901,28 +948,28 @@ feature -- Delegated features
 			-- Disable sensitivity to user input events.
 		do
 			promote_to_widget
-			interface.implementation.disable_sensitive
+			attached_interface.implementation.disable_sensitive
 		end
 
 	enable_sensitive
 			-- Enable sensitivity to user input events.
 		do
 			promote_to_widget
-			interface.implementation.enable_sensitive
+			attached_interface.implementation.enable_sensitive
 		end
 
 	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		do
 			promote_to_widget
-			Result := interface.implementation.has_focus
+			Result := attached_interface.implementation.has_focus
 		end
 
 	hide
 			-- Request that `Current' not be displayed when its parent is.
 		do
 			promote_to_widget
-			interface.implementation.hide
+			attached_interface.implementation.hide
 		end
 
 	is_displayed: BOOLEAN
@@ -957,7 +1004,7 @@ feature -- Delegated features
 			Result := width
 		end
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		do
@@ -993,39 +1040,39 @@ feature -- Delegated features
 			Result.set (0, 0)
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over `Current'.
 		do
 			promote_to_widget
-			Result := interface.implementation.pointer_style
+			Result := attached_interface.implementation.pointer_style
 		end
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.screen_x
+			Result := attached_interface.implementation.screen_x
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.screen_y
+			Result := attached_interface.implementation.screen_y
 		end
 
 	set_focus
 			-- Grab keyboard focus.
 		do
 			promote_to_widget
-			interface.implementation.set_focus
+			attached_interface.implementation.set_focus
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_height(a_minimum_height)
+			attached_interface.implementation.set_minimum_height(a_minimum_height)
 		end
 
 	set_minimum_size (
@@ -1036,7 +1083,7 @@ feature -- Delegated features
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_size (
+			attached_interface.implementation.set_minimum_size (
 				a_minimum_width,
 				a_minimum_height
 				)
@@ -1046,42 +1093,42 @@ feature -- Delegated features
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_minimum_width(a_minimum_width)
+			attached_interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
 	set_tooltip (a_text: STRING_GENERAL)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
-			interface.implementation.set_tooltip(a_text)
+			attached_interface.implementation.set_tooltip(a_text)
 		end
 
 	show
 			-- Request that `Current' be displayed when its parent is.
 		do
 			promote_to_widget
-			interface.implementation.show
+			attached_interface.implementation.show
 		end
 
 	tooltip: STRING_32
 			-- Text displayed when user moves mouse over widget.
 		do
 			promote_to_widget
-			Result := interface.implementation.tooltip
+			Result := attached_interface.implementation.tooltip
 		end
 
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.x_position
+			Result := attached_interface.implementation.x_position
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			promote_to_widget
-			Result := interface.implementation.y_position
+			Result := attached_interface.implementation.y_position
 		end
 
 	redraw
@@ -1095,21 +1142,21 @@ invariant
 		is_initialized implies internal_bitmap /= Void
 
 	bitmap_reference_tracked:
-		internal_bitmap /= Void implies
-			internal_bitmap.reference_tracked
+		attached internal_bitmap as l_internal_bitmap implies
+			l_internal_bitmap.reference_tracked
 
 	palette_reference_tracked:
-		palette /= Void implies palette.reference_tracked
+		attached palette as l_palette implies l_palette.reference_tracked
 
 	mask_bitmap_reference_tracked:
-		internal_mask_bitmap /= Void implies
-			internal_mask_bitmap.reference_tracked
+		attached internal_mask_bitmap as l_internal_mask_bitmap implies
+			l_internal_mask_bitmap.reference_tracked
 
 	dc_reference_tracked:
-		dc /= Void implies dc.reference_tracked
+		attached dc as l_dc implies l_dc.reference_tracked
 
 	mask_dc_reference_tracked:
-		mask_dc /= Void implies mask_dc.reference_tracked;
+		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1126,4 +1173,14 @@ note
 
 
 end -- class EV_PIXMAP_IMP_DRAWABLE
+
+
+
+
+
+
+
+
+
+
 

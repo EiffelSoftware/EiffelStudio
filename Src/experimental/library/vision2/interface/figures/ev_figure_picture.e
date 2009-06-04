@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create in (0, 0)
 		do
-			Precursor {EV_ATOMIC_FIGURE}
 			pixmap := default_pixmap
+			Precursor {EV_ATOMIC_FIGURE}
 			is_default_pixmap_used := True
 		end
 
@@ -122,4 +122,8 @@ note
 
 
 end -- class EV_FIGURE_PICTURE
+
+
+
+
 

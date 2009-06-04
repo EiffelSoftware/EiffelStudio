@@ -32,11 +32,8 @@ feature {NONE} -- Initialization
 			-- Note that internally, we need to initialize a new EV_WINDOW which will be included
 			-- in `windows' from EV_APPLICATION.
 		do
-			create {WEL_EV_CONTAINER_IMP} implementation.make (Current)
-			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
-			implementation.initialize
+			default_create
 			implementation.set_real_parent (a_parent, x_position, y_position, a_width, a_height)
-			initialize
 		end
 
 feature -- Access
@@ -57,9 +54,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			-- For a normal Vision2 widget, this would be executed to build
-			-- the implementation. For this widget, this is never called,
-			-- as `Current' must be built using `make_with_parent'.
+			create {WEL_EV_CONTAINER_IMP} implementation.make
 		end
 
 note
@@ -77,4 +72,6 @@ note
 
 
 end -- class WEL_EV_CONTAINER
+
+
 

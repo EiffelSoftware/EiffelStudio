@@ -11,28 +11,26 @@ class
 inherit
 	EV_HEADER_ITEM
 
+
 create {EV_GRID_COLUMN_I}
-	make_with_grid_column
+	default_create
 
-feature {NONE} -- Initialization
+feature {EV_GRID_COLUMN_I}
 
-	make_with_grid_column (a_column: EV_GRID_COLUMN_I)
-			-- Create and associate `Current' with `a_column'
-		require
-			a_column_not_void: a_column /= Void
+	set_column (a_column: EV_GRID_COLUMN_I)
+			-- Set `Column
 		do
-			default_create
 			column := a_column
 		end
 
 feature -- Access
 
-	column: EV_GRID_COLUMN_I
+	column: detachable EV_GRID_COLUMN_I note option: stable attribute end
 		-- Grid column to which `Current' is associated with.
 
 invariant
-	column_not_void: column /= Void
-	parented_whilst_in_grid: column.is_show_requested implies column.parent.header = parent
+
+	parented_whilst_in_grid: attached column as l_column and then l_column.is_show_requested and then attached l_column.parent as l_column_parent implies l_column_parent.header = parent
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -49,4 +47,10 @@ note
 
 
 end
+
+
+
+
+
+
 

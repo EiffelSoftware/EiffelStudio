@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST_I [reference G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST_I [G -> detachable EV_CONTAINABLE]
 
 inherit
 	EV_ANY_I
@@ -17,7 +17,17 @@ inherit
 
 feature -- Access
 
-	item: G
+	interface_item: attached G
+			-- Current item but guaranteed attached for calling from interface only
+		local
+			l_item: like item
+		do
+			l_item := item
+			check l_item /= Void end
+			Result := l_item
+		end
+
+	item: detachable G
 			-- Current item
 		require
 			readable: index > 0 and then index <= count
@@ -30,20 +40,32 @@ feature -- Access
 	index: INTEGER
 			-- Index of current position
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [G]
+	cursor: EV_DYNAMIC_LIST_CURSOR [detachable G]
 			-- Current cursor position.
 		local
-			an_item: like item
+			an_item: detachable like item
+			l_index: INTEGER
 		do
-			if index > 0 and then index <= count then
+			l_index := index
+			if l_index > 0 and then l_index <= count then
 				an_item := item
 			end
-			create Result.make (an_item, index <= 0, index > count)
+			create Result.make (an_item, l_index <= 0, l_index > count)
 		ensure
 			not_void: Result /= Void
 		end
 
-	i_th (i: INTEGER): G
+	interface_i_th (i: INTEGER): attached G
+			-- Current i_th item but guaranteed attached for calling from interface only
+		local
+			l_item: like i_th
+		do
+			l_item := i_th (i)
+			check l_item /= Void end
+			Result := l_item
+		end
+
+	i_th (i: INTEGER): detachable G
 			-- Item at `i'-th position.
 		require
 			i_within_bounds: i > 0 and then i <= count
@@ -82,29 +104,32 @@ feature -- Access
 			end
 		end
 
-	retrieve_item_by_data (data: ANY; should_compare_objects: BOOLEAN): G
+	retrieve_item_by_data (data: detachable ANY; should_compare_objects: BOOLEAN): detachable G
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
 		local
-			c: CURSOR
+			l_item: like item
+			l_count: like count
+			l_index: like index
 		do
-			c := cursor
 			from
-				interface.start
+				l_index := 1
+				l_count := count
 			until
-				interface.after or Result /= Void
+				l_index = l_count + 1 or Result /= Void
 			loop
+				l_item := i_th (l_index)
+				check l_item /= Void end
 				if
-					(should_compare_objects and then ((data = Void and then item.data = Void) or
-					data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data)))
-					or (not should_compare_objects and data = item.data)
+					(should_compare_objects and then ((data = Void and then l_item.data = Void) or
+					attached data as l_data and then attached l_item.data as l_item_data and then l_data.same_type (l_item_data) and then l_data.is_equal (l_item_data)))
+					or (not should_compare_objects and data = l_item.data)
 				then
-					Result := item
+					Result := l_item
 				end
-				interface.forth
+				l_index := l_index + 1
 			end
-			go_to (c)
 		end
 
 	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G]
@@ -112,23 +137,26 @@ feature -- Access
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
 		local
-			c: CURSOR
+			l_item: like item
+			l_index: like index
+			l_count: like count
 		do
 			create Result.make (0)
-			c := cursor
 			from
-				interface.start
+				l_index := 1
+				l_count := count
 			until
-				interface.after
+				l_index = l_count + 1
 			loop
-				if (should_compare_objects and then ((data = Void and then item.data = Void) or
-					data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data)))
-					or (not should_compare_objects and data = item.data) then
-					Result.extend (item)
+				l_item := i_th (l_index)
+				check l_item /= Void end
+				if (should_compare_objects and then ((data = Void and then l_item.data = Void) or
+					(attached data as l_data and then attached l_item.data as l_item_data and then l_data.same_type (l_item_data) and then l_data.is_equal (l_item_data))))
+					or (not should_compare_objects and data = l_item.data) then
+					Result.extend (l_item)
 				end
-				interface.forth
+				l_index := l_index + 1
 			end
-			go_to (c)
 		end
 
 feature -- Measurement
@@ -144,12 +172,8 @@ feature -- Status report
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
 			-- if it points to an item, `Current' must have it.
-		local
-			dlc: EV_DYNAMIC_LIST_CURSOR [G]
 		do
-			dlc ?= p
-			Result := dlc /= Void and then
-				(dlc.item = Void or else has (dlc.item))
+			Result := attached {like cursor} p as dlc and then (dlc.item = Void or else (attached dlc.item as l_dlc_item and then has (l_dlc_item)))
 		end
 
 	has (v: like item): BOOLEAN
@@ -209,7 +233,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
-			dlc: EV_DYNAMIC_LIST_CURSOR [G]
+			dlc: detachable EV_DYNAMIC_LIST_CURSOR [detachable G]
 		do
 			dlc ?= p
 			check
@@ -219,8 +243,10 @@ feature -- Cursor movement
 				index := count + 1
 			elseif dlc.before then
 				index := 0
+			elseif attached dlc.item as l_item then
+				index := index_of (l_item, 1)
 			else
-				index := index_of (dlc.item, 1)
+				check False end
 			end
 		end
 
@@ -325,7 +351,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	merge_left (other: like interface)
+	merge_left (other: like attached_interface)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -343,7 +369,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: like interface)
+	merge_right (other: like attached_interface)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -383,10 +409,10 @@ feature -- Removal
 			--| on entry to a routine, we cannot check that we were not off
 			--| before evaluating old item. Julian.
 			cursor_not_moved: not old has (v) implies
-				old interface.index = interface.index
-			cursor_not_moved: old has (v) and then old interface.index <
+				old attached_interface.index = attached_interface.index
+			cursor_not_moved: old has (v) and then old attached_interface.index <
 				old index_of (v, 1) implies index = old index
-			cursor_not_moved: old has (v) and then old interface.index >=
+			cursor_not_moved: old has (v) and then old attached_interface.index >=
 				old index_of (v, 1) implies index = old index - 1
 			not_has_v: not has (v)
 		end
@@ -433,24 +459,22 @@ feature -- Removal
 			-- Remove all items.
 		local
 			l_index: INTEGER
-			l_interface: like interface
 		do
 			from
-				l_interface := interface
-				l_index := l_interface.count
+				l_index := count
 			until
 				l_index = 0
 			loop
-				l_interface.go_i_th (l_index)
-				l_interface.remove
+				go_i_th (l_index)
+				remove
 				l_index := l_index - 1
 			end
-			l_interface.go_i_th (l_index)
+			go_i_th (l_index)
 		end
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		require
 			i_within_bounds: i > 0 and i <= count + 1
@@ -470,7 +494,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_DYNAMIC_LIST [G]
+	interface: detachable EV_DYNAMIC_LIST [G] note option: stable attribute end;
 
 invariant
 	index_within_bounds: is_usable implies (index >= 0 and then
@@ -491,4 +515,13 @@ note
 
 
 end -- class EV_DYNAMIC_LIST_I
+
+
+
+
+
+
+
+
+
 

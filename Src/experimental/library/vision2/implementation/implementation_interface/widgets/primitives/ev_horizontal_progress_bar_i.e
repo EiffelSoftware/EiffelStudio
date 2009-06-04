@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision horizontal progress bar. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ deferred class
 inherit
 	EV_PROGRESS_BAR_I
 		redefine
-			interface	
+			interface
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_PROGRESS_BAR;
+	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -33,4 +33,10 @@ note
 
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_I
+
+
+
+
+
+
 

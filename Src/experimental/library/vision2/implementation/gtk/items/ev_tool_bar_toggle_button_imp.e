@@ -18,7 +18,7 @@ inherit
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
 			interface,
-			make
+			new_tool_bar_button
 		end
 
 create
@@ -26,11 +26,10 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
-		-- Create the tool-bar toggle button.
+	new_tool_bar_button: POINTER
+			-- <Precursor>
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_toggle_tool_button_new)
+			Result := {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_new
 		end
 
 feature -- Status setting
@@ -61,7 +60,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_TOGGLE_BUTTON;
+	interface: detachable EV_TOOL_BAR_TOGGLE_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -78,4 +77,8 @@ note
 
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+
+
+
+
 

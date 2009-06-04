@@ -59,19 +59,18 @@ create
 	make
 
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the widget with `par' as parent.
 		do
-			base_make (an_interface)
-			--wel_make
-			create internal_text.make (0)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			create internal_text.make (0)
 			create lv_item.make
 			create cb_item.make
 			set_is_initialized (True)
@@ -88,15 +87,19 @@ feature -- Access
 	wel_text: STRING_32
 			-- Text of the item.
 		do
-			if internal_text /= Void then
-				Result := internal_text.twin
+			if attached internal_text as l_internal_text then
+				Result := l_internal_text.twin
+			else
+				Result := ""
 			end
 		end
 
 	text_length: INTEGER
 			-- Length of text in characters.
 		do
-			Result := internal_text.count
+			if attached internal_text as l_internal_text then
+				Result := l_internal_text.count
+			end
 		end
 
 	text: STRING_32
@@ -104,11 +107,13 @@ feature -- Access
 			Result := lv_item.text
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
-			pix_imp: EV_PIXMAP_IMP
-			image_icon: WEL_ICON
+			pix_imp: detachable EV_PIXMAP_IMP
+			image_icon: detachable WEL_ICON
+			l_pixmap: detachable EV_PIXMAP
+
 		do
 				-- Retrieve the pixmap from the imagelist
 			if has_pixmap then
@@ -118,15 +123,21 @@ feature -- Access
 					check
 						pix_imp /= Void
 					end
-					image_icon := parent_imp.image_list.get_icon (image_index, Ild_normal)
-						-- We now set the brivate bitmap id as we want to ensure when it is placed back in
-						-- the image list, the icon already contained is used.
-					pix_imp.set_private_bitmap_id (parent_imp.image_list.image_id_to_bitmap_id_index.item (image_index))
-					image_icon.enable_reference_tracking
-					pix_imp.set_with_resource (image_icon)
-					image_icon.decrement_reference
+					if attached parent_imp as l_parent_imp and then attached l_parent_imp.image_list as l_image_list then
+						image_icon := l_image_list.get_icon (image_index, Ild_normal)
+							-- We now set the brivate bitmap id as we want to ensure when it is placed back in
+							-- the image list, the icon already contained is used.
+						pix_imp.set_private_bitmap_id (l_image_list.image_id_to_bitmap_id_index.item (image_index))
+						image_icon.enable_reference_tracking
+						pix_imp.set_with_resource (image_icon)
+						image_icon.decrement_reference
+					else
+						check False end
+					end
 				else
-					Result := private_pixmap
+					l_pixmap := private_pixmap
+					check l_pixmap /= Void end
+					Result := l_pixmap
 				end
 			end
 		end
@@ -136,8 +147,8 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected?
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.internal_is_selected (Current)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.internal_is_selected (Current)
 			end
 		end
 
@@ -148,8 +159,8 @@ feature -- Status setting
 			wel_set_text (a_text)
 			lv_item.set_text (a_text)
 			cb_item.set_text (a_text)
-			if parent_imp /= Void then
-				parent_imp.refresh_item (Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.refresh_item (Current)
 			end
 		end
 
@@ -158,8 +169,8 @@ feature -- Status setting
 		do
 				-- If `Current' is already selected, then
 				-- there is no need to do anything.
-			if not is_selected then
-				parent_imp.internal_select_item (Current)
+			if not is_selected and then attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_select_item (Current)
 			end
 		end
 
@@ -168,8 +179,8 @@ feature -- Status setting
 		do
 				-- If `Current' is not seelcted then
 				-- there is no need to do anything.
-			if is_selected then
-				parent_imp.internal_deselect_item (Current)
+			if is_selected and then attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_deselect_item (Current)
 			end
 		end
 
@@ -178,13 +189,17 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			Result := screen_x - parent_imp.screen_x
+			if attached parent_imp as l_parent_imp then
+				Result := screen_x - l_parent_imp.screen_x
+			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			Result := screen_y - parent_imp.screen_y
+			if attached parent_imp as l_parent_imp then
+				Result := screen_y - l_parent_imp.screen_y
+			end
 		end
 
 	screen_x: INTEGER
@@ -232,10 +247,12 @@ feature {EV_ANY_I} -- Access
 	index: INTEGER
 			-- One-based Index of the current item.
 		do
-			Result := parent_imp.internal_get_index (Current)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.internal_get_index (Current)
+			end
 		end
 
-	parent_imp: EV_LIST_ITEM_LIST_IMP
+	parent_imp: detachable EV_LIST_ITEM_LIST_IMP
 		-- Parent of `Current'
 
 	set_parent_imp (par_imp: like parent_imp)
@@ -251,7 +268,9 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
 		require
 			parent_not_void: parent_imp /= Void
 		do
-			Result := parent_imp.get_item_position (index - 1).y
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.get_item_position (index - 1).y
+			end
 		end
 
 	is_displayed: BOOLEAN
@@ -260,15 +279,15 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
 			local_index: INTEGER -- current index
 			first_index: INTEGER -- first displayed index
 			last_index: INTEGER	-- last displayed index
-			combo_imp: EV_COMBO_BOX_IMP
+			combo_imp: detachable EV_COMBO_BOX_IMP
 			is_visible: BOOLEAN -- Is the list visible?
 		do
-			if parent_imp /= Void then -- otherwise...it's not displayed
+			if attached parent_imp as l_parent_imp then -- otherwise...it's not displayed
 				local_index := index - 1
-				first_index := parent_imp.top_index
-				last_index := first_index + parent_imp.visible_count
+				first_index := l_parent_imp.top_index
+				last_index := first_index + l_parent_imp.visible_count
 
-				combo_imp ?= parent_imp
+				combo_imp ?= l_parent_imp
 				if combo_imp /= Void then
 						-- The parent is not a combo. Is the list visible?
 					is_visible := combo_imp.is_list_shown
@@ -297,8 +316,8 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 		do
 				-- We must destroy the pixmap before we set a new one,
 				-- to ensure that we free up Windows GDI objects
-			if private_pixmap /= Void then
-				private_pixmap.destroy
+			if attached private_pixmap as l_private_pixmap then
+				l_private_pixmap.destroy
 				private_pixmap := Void
 			end
 			private_pixmap := p.twin
@@ -316,8 +335,8 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 		do
 			if has_pixmap then
 				has_pixmap := False
-				if private_pixmap /= Void then
-					private_pixmap.destroy
+				if attached private_pixmap as l_private_pixmap then
+					l_private_pixmap.destroy
 					private_pixmap := Void
 				end
 
@@ -333,41 +352,48 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 			-- Add/Remove the pixmap to the parent by updating the
 			-- parent's image list.
 		local
-			image_list: EV_IMAGE_LIST_IMP
+			image_list: detachable EV_IMAGE_LIST_IMP
+			l_parent_imp: like parent_imp
 		do
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
 			if has_pixmap then
-				image_list := parent_imp.image_list
+				image_list := l_parent_imp.image_list
 					-- Create the image list and associate it
 					-- to the control if it's not already done.
 				if image_list = Void then
-					parent_imp.setup_image_list
-					image_list := parent_imp.image_list
+					l_parent_imp.setup_image_list
+					image_list := l_parent_imp.image_list
 				end
+				check image_list /= Void end
 
-				if private_pixmap /= Void then
-					image_list.add_pixmap (private_pixmap)
+				if attached private_pixmap as l_private_pixmap then
+					image_list.add_pixmap (l_private_pixmap)
 					image_index := image_list.last_position
-					private_pixmap.destroy
+					l_private_pixmap.destroy
 					private_pixmap := Void
 				end
 			else
 				image_index := 0 -- transparent image.
 			end
-			parent_imp.set_pixmap_of_child (Current, index, image_index)
+			l_parent_imp.set_pixmap_of_child (Current, index, image_index)
 		end
 
 	remove_pixmap_in_parent
 			-- Remove pixmap of `Current'.
 		do
-			if parent_imp.image_list /= Void then
-				parent_imp.remove_pixmap_of_child (Current, index)
+			if attached parent_imp as l_parent_imp and then l_parent_imp.image_list /= Void then
+				l_parent_imp.remove_pixmap_of_child (Current, index)
 			end
 		end
 
 	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32
+			if internal_tooltip_string = a_tooltip then
+				internal_tooltip_string := a_tooltip.as_string_32.string
+			end
 		end
 
 feature {EV_ITEM_LIST_I} -- Implementation
@@ -409,15 +435,17 @@ feature {NONE} -- Implementation
 	load_bounds_rect
 			-- Load bounds rect.
 		local
-			a_list: EV_LIST_IMP
-			a_box: EV_COMBO_BOX_IMP
+			a_list: detachable EV_LIST_IMP
+			a_box: detachable EV_COMBO_BOX_IMP
 			a_rect: WEL_RECT
 			an_index, a_height: INTEGER
+			l_parent_imp: like parent_imp
 		do
 			create a_rect.make (0, 0, 0, 0)
-			a_list ?= parent_imp
+			l_parent_imp := parent_imp
+			a_list ?= l_parent_imp
 			if a_list = Void then
-				a_box ?= parent_imp
+				a_box ?= l_parent_imp
 				if a_box = Void then
 					bounds_rect.set_rect (0, 0, 0, 0)
 				else
@@ -429,9 +457,10 @@ feature {NONE} -- Implementation
 						bounds_rect.set_rect (0, 0, 0, 0)
 					end
 				end
-			else
-				if {WEL_API}.send_message_result_boolean (a_list.wel_item, lvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(parent_imp.index_of (interface, 1)), a_rect.item) then
-					bounds_rect.set_rect (parent.screen_x+a_rect.left, parent.screen_y+a_rect.top, parent.screen_x+a_rect.right, parent.screen_y+a_rect.bottom)
+			elseif attached parent as l_parent then
+				check l_parent_imp /= Void end
+				if {WEL_API}.send_message_result_boolean (a_list.wel_item, lvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(l_parent_imp.index_of (interface, 1)), a_rect.item) then
+					bounds_rect.set_rect (l_parent.screen_x+a_rect.left, l_parent.screen_y+a_rect.top, l_parent.screen_x+a_rect.right, l_parent.screen_y+a_rect.bottom)
 				else
 					bounds_rect.set_rect (0, 0, 0, 0)
 				end
@@ -448,7 +477,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_LIST_ITEM;
+	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -465,4 +494,13 @@ note
 
 
 end -- class EV_LIST_ITEM_IMP
+
+
+
+
+
+
+
+
+
 

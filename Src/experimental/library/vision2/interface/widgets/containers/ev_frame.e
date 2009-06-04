@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation of frame.
 		do
-			create {EV_FRAME_IMP} implementation.make (Current)
+			create {EV_FRAME_IMP} implementation.make
 		end
 
 invariant
@@ -134,4 +134,12 @@ note
 
 
 end -- class EV_FRAME
+
+
+
+
+
+
+
+
 

@@ -70,10 +70,10 @@ feature -- Status setting
 
 feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 
-	start_arrow: EV_FIGURE_POLYGON
+	start_arrow: detachable EV_FIGURE_POLYGON
 			-- Triangle acting as arrow on `point_a'.
 
-	end_arrow: EV_FIGURE_POLYGON
+	end_arrow: detachable EV_FIGURE_POLYGON
 			-- Triangle acting as arrow on `point_b'.
 
 	update_arrows
@@ -82,35 +82,41 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			s: INTEGER
 		do
 			s := Arrow_size + line_width
-			if end_arrow /= Void then
-				end_arrow.i_th_point (1).set_position (-s, -s // 2)
-				end_arrow.i_th_point (3).set_position (-s, s // 2)
+			if attached end_arrow as l_end_arrow then
+				l_end_arrow.i_th_point (1).set_position (-s, -s // 2)
+				l_end_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
-			if start_arrow /= Void then
-				start_arrow.i_th_point (1).set_position (-s, -s // 2)
-				start_arrow.i_th_point (3).set_position (-s, s // 2)
+			if attached start_arrow as l_start_arrow then
+				l_start_arrow.i_th_point (1).set_position (-s, -s // 2)
+				l_start_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
 		end
 
 	build_start_arrow
 			-- Create `start_arrow'.
+		local
+			l_start_arrow: like start_arrow
 		do
-			create start_arrow
-			start_arrow.set_point_count (3)
-			start_arrow.i_th_point (2).set_origin (start_point)
-			start_arrow.i_th_point (1).set_origin (start_arrow.i_th_point (2))
-			start_arrow.i_th_point (3).set_origin (start_arrow.i_th_point (2))
+			create l_start_arrow
+			start_arrow := l_start_arrow
+			l_start_arrow.set_point_count (3)
+			l_start_arrow.i_th_point (2).set_origin (start_point)
+			l_start_arrow.i_th_point (1).set_origin (l_start_arrow.i_th_point (2))
+			l_start_arrow.i_th_point (3).set_origin (l_start_arrow.i_th_point (2))
 			update_arrows
 		end
 
 	build_end_arrow
 			-- Create `end_arrow'.
+		local
+			l_end_arrow: like end_arrow
 		do
-			create end_arrow
-			end_arrow.set_point_count (3)
-			end_arrow.i_th_point (2).set_origin (end_point)
-			end_arrow.i_th_point (1).set_origin (end_arrow.i_th_point (2))
-			end_arrow.i_th_point (3).set_origin (end_arrow.i_th_point (2))
+			create l_end_arrow
+			end_arrow := l_end_arrow
+			l_end_arrow.set_point_count (3)
+			l_end_arrow.i_th_point (2).set_origin (end_point)
+			l_end_arrow.i_th_point (1).set_origin (l_end_arrow.i_th_point (2))
+			l_end_arrow.i_th_point (3).set_origin (l_end_arrow.i_th_point (2))
 			update_arrows
 		end
 
@@ -163,4 +169,8 @@ note
 
 
 end -- class EV_ARROWED_FIGURE
+
+
+
+
 

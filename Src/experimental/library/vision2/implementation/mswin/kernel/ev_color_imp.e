@@ -27,17 +27,17 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make
-			name := default_name
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			wel_make
+			name := default_name
 			set_is_initialized (True)
 		end
 
@@ -221,4 +221,12 @@ note
 
 
 end -- class EV_COLOR_IMP
+
+
+
+
+
+
+
+
 

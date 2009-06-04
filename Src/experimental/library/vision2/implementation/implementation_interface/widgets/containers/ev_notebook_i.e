@@ -32,7 +32,7 @@ feature {EV_NOTEBOOK} -- Access
 	item_text (an_item: like item): STRING_32
 			-- Label of `an_item'.
 		require
-			interface_has_an_item: interface.has (an_item)
+			interface_has_an_item: attached an_item and then attached_interface.has (an_item)
 		deferred
 		ensure
 			not_void: Result /= Void
@@ -79,17 +79,17 @@ feature {EV_NOTEBOOK} -- Status setting
 			-- Display tabs at `a_tab_position'.
 		require
 			a_position_within_range:
-				a_tab_position = interface.Tab_left or
-				a_tab_position = interface.Tab_right or
-				a_tab_position = interface.Tab_bottom or
-				a_tab_position = interface.Tab_top
+				a_tab_position = attached_interface.Tab_left or
+				a_tab_position = attached_interface.Tab_right or
+				a_tab_position = attached_interface.Tab_bottom or
+				a_tab_position = attached_interface.Tab_top
 		deferred
 		end
 
 	select_item (an_item: like item)
 			-- Display `an_item' above all others.
 		require
-			interface_has_an_item: interface.has (an_item)
+			interface_has_an_item: attached an_item and then attached_interface.has (an_item)
 		deferred
 		ensure
 			item_selected: selected_item = an_item
@@ -100,34 +100,34 @@ feature {EV_NOTEBOOK} -- Element change
 	set_item_text (an_item: like item; a_text: STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		require
-			interface_has_an_item: interface.has (an_item)
+			interface_has_an_item: attached an_item and then attached_interface.has (an_item)
 			a_text_not_void: a_text /= Void
 		deferred
 		end
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_I} -- Implementation
 
-	interface: EV_NOTEBOOK
+	interface: detachable EV_NOTEBOOK note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
 invariant
 	tab_position_within_range: is_usable implies
-		tab_position = interface.Tab_left or
-		tab_position = interface.Tab_right or
-		tab_position = interface.Tab_bottom or
-		tab_position = interface.Tab_top
+		tab_position = attached_interface.Tab_left or
+		tab_position = attached_interface.Tab_right or
+		tab_position = attached_interface.Tab_bottom or
+		tab_position = attached_interface.Tab_top
 		selected_item_not_void: is_usable and count > 0 implies selected_item /= Void
 		selected_item_index_within_range:
 			is_usable and count > 0 implies (
-			selected_item_index >= interface.index_of (interface.first, 1) and
-			selected_item_index <= interface.index_of (interface.last, 1) )
+			selected_item_index >= attached_interface.index_of (attached_interface.first, 1) and
+			selected_item_index <= attached_interface.index_of (attached_interface.last, 1) )
 		selected_item_is_i_th_of_selected_item_index:
 			count > 0 implies
-			selected_item = interface.i_th (selected_item_index)
+			selected_item = attached_interface.i_th (selected_item_index)
 		selected_item_index_is_index_of_selected_item:
-			count > 0 implies
-			selected_item_index = interface.index_of (selected_item, 1)
+			count > 0 implies attached selected_item as l_selected_item and then
+			selected_item_index = attached_interface.index_of (l_selected_item, 1)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -144,4 +144,13 @@ note
 
 
 end -- class EV_NOTEBOOK_I
+
+
+
+
+
+
+
+
+
 

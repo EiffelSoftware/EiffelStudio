@@ -258,7 +258,7 @@ feature {EV_FONT, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FONT
+	interface: detachable EV_FONT note option: stable attribute end
 
 	update_font_face
 			-- Update the font face according to `preferred_faces' and `family'.
@@ -301,4 +301,12 @@ note
 
 
 end -- class EV_FONT_I
+
+
+
+
+
+
+
+
 

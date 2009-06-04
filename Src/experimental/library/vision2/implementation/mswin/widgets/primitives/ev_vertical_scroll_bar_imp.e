@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision vertical scroll bar. %N%
 		%Mswindows implementation."
@@ -19,18 +19,25 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
-			set_default_minimum_size
+			set_default_minimum_size,
+			make
 		end
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create as vertical scrollbar.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create an initialize `Current'
+		do
 			make_vertical (default_parent, 0, 0, 0, 0, -1)
+			Precursor
 		end
 
 feature -- Status setting
@@ -44,7 +51,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SCROLL_BAR;
+	interface: detachable EV_VERTICAL_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -61,4 +68,10 @@ note
 
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP
+
+
+
+
+
+
 

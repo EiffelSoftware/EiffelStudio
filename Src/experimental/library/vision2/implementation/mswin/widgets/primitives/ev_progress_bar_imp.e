@@ -20,7 +20,7 @@ inherit
 			valid_maximum
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	WEL_PROGRESS_BAR
@@ -93,15 +93,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current'.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, 0, 0, 0, 0, -1)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 		do
+			wel_make (default_parent, 0, 0, 0, 0, -1)
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
 			disable_tabable_to
@@ -168,7 +168,7 @@ feature -- Status setting
 	recreate_current (a_new_style: INTEGER)
 			-- Re create `Current' with `a_new_style'.
 		local
-			wel_imp: WEL_WINDOW
+			wel_imp: detachable WEL_WINDOW
 			old_x, old_y, old_height, old_width, old_step, old_leap, old_value,
 			old_minimum, old_maximum: INTEGER
 				-- As we have to destroy the WEL control, we must store
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PROGRESS_BAR;
+	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -233,4 +233,13 @@ note
 
 
 end -- class EV_PROGRESS_BAR_IMP
+
+
+
+
+
+
+
+
+
 

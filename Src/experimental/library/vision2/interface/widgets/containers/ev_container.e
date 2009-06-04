@@ -74,9 +74,9 @@ feature -- Access
 			not_destroyed: not is_destroyed
 			readable: readable
 		do
-			Result := implementation.item
+			Result := implementation.interface_item
 		ensure
-			bridge_ok: Result = implementation.item
+			bridge_ok: Result = implementation.interface_item
 		end
 
 	count: INTEGER
@@ -94,9 +94,9 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		local
 			l: LINEAR [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			c: CURSOR
-			ct: EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			c: detachable CURSOR
+			ct: detachable EV_CONTAINER
 		do
 			Result := has (an_item)
 			l := linear_representation
@@ -115,12 +115,12 @@ feature -- Access
 				end
 				l.forth
 			end
-			if cs /= Void then
+			if cs /= Void and then c /= Void then
 				cs.go_to (c)
 			end
 		end
 
-	background_pixmap: EV_PIXMAP
+	background_pixmap: detachable EV_PIXMAP
 			-- `Result' is pixmap displayed on background of `Current'.
 			-- It is tessellated and fills whole of `Current'.
 		do
@@ -144,20 +144,20 @@ feature -- Status setting
 			-- then first radio button contained will be checked.
 		require
 			not_destroyed: not is_destroyed
-			other_is_merged: merged_radio_button_groups.has (other)
+			other_is_merged: attached merged_radio_button_groups as l_merged_r_b_groups and then l_merged_r_b_groups.has (other)
 		do
 			implementation.unmerge_radio_button_groups (other)
 		ensure
 			other_not_merged: other.merged_radio_button_groups = Void
-			not_contained_in_this_group: merged_radio_button_groups /= Void implies
-				not merged_radio_button_groups.has (other)
+			not_contained_in_this_group: attached merged_radio_button_groups as l_merged_r_b_groups implies
+				not l_merged_r_b_groups.has (other)
 			other_first_radio_button_now_selected: not old other.has_selected_radio_button and
 				old other.has_radio_button implies
 				other.first_radio_button_selected
 			original_radio_button_still_selected: old has_selected_radio_button implies
 				has_selected_radio_button
 			other_first_radio_button_now_selected: not old has_selected_radio_button and
-				old other.has_radio_button and old merged_radio_button_groups.count = 1 and has_radio_button implies
+				old other.has_radio_button and (attached old merged_radio_button_groups as l_merged_r_b_groups and then l_merged_r_b_groups.count = 1) and has_radio_button implies
 				first_radio_button_selected
 			other_original_radio_button_still_selected: old other.has_selected_radio_button implies
 				other.has_selected_radio_button
@@ -166,7 +166,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
+	merged_radio_button_groups: detachable ARRAYED_LIST [EV_CONTAINER]
 			-- `Result' is all other radio button groups
 			-- merged with `Current'. Void if no other containers
 			-- are merged.
@@ -350,8 +350,8 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := a_widget = parent or else
-				(parent /= Void and then parent.is_parent_recursive (a_widget))
+			Result := attached parent as l_parent and then
+				(l_parent = a_widget or else l_parent.is_parent_recursive (a_widget))
 		end
 
 	may_contain (v: EV_WIDGET): BOOLEAN
@@ -359,7 +359,7 @@ feature -- Contract support
 			-- Instances of EV_WINDOW may not be inserted
 			-- in a container even though they are widgets.
 		local
-			l_window: EV_WINDOW
+			l_window: detachable EV_WINDOW
 		do
 			l_window ?= v
 			Result := l_window = Void
@@ -413,4 +413,14 @@ note
 
 
 end -- class EV_CONTAINER
+
+
+
+
+
+
+
+
+
+
 

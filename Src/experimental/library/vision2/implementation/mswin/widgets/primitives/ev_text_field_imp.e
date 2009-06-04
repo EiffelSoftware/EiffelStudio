@@ -20,14 +20,14 @@ inherit
 		redefine
 			on_key_down,
 			interface,
-			initialize,
+			make,
 			next_dlgtabitem
 		end
 
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			set_font
 		end
 
@@ -107,20 +107,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with inteface `an_interface'.
 		do
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
-			base_make (an_interface)
-			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
-			-- (export status {NONE})
 		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			set_default_font
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
@@ -204,7 +203,7 @@ feature {NONE} -- WEL Implementation
 	recreate_current
 			-- Destroy the existing widget and recreate current using the new style.
 		local
-			par_imp: WEL_WINDOW
+			par_imp: detachable WEL_WINDOW
 			cur_x: INTEGER
 			cur_y: INTEGER
 			cur_width: INTEGER
@@ -230,6 +229,7 @@ feature {NONE} -- WEL Implementation
 			if par_imp = Void then
 				par_imp ?= default_parent
 			end
+			check par_imp /= Void end
 			cur_x := x_position
 			cur_y := y_position
 			cur_width := ev_width
@@ -265,13 +265,13 @@ feature {NONE} -- WEL Implementation
 			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
 		local
-			spin_button: EV_SPIN_BUTTON_IMP
+			spin_button: detachable EV_SPIN_BUTTON_IMP
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return and is_editable then
 				set_caret_position (1)
-				interface.return_actions.call (Void)
+				attached_interface.return_actions.call (Void)
 			end
 				--| EV_SPIN_BUTTON_IMP is composed of `Current'.
 				--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
@@ -286,7 +286,7 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			interface.change_actions.call (Void)
+			attached_interface.change_actions.call (Void)
 		end
 
 	enable
@@ -316,16 +316,16 @@ feature {EV_SPIN_BUTTON_IMP} -- Implementation
 			-- uses an instance of EV_TEXT_FIELD internally.
 		local
 			l_widget: EV_WIDGET_IMP
-			l_spin_button_imp: EV_SPIN_BUTTON_IMP
+			l_spin_button_imp: detachable EV_SPIN_BUTTON_IMP
 			l_interface: EV_WIDGET
 		do
 				-- Reset the start widget searched flag.
 			start_widget_searched_cell.put (-1)
 			l_spin_button_imp ?= wel_parent
 			if l_spin_button_imp /= Void then
-				l_interface := l_spin_button_imp.interface
+				l_interface := l_spin_button_imp.attached_interface
 			else
-				l_interface := interface
+				l_interface := attached_interface
 			end
 			if not previous then
 				l_widget := next_tabstop_widget (l_interface, 0, False)
@@ -337,7 +337,7 @@ feature {EV_SPIN_BUTTON_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	interface: EV_TEXT_FIELD;
+	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -354,4 +354,14 @@ note
 
 
 end -- class EV_TEXT_FIELD_IMP
+
+
+
+
+
+
+
+
+
+
 

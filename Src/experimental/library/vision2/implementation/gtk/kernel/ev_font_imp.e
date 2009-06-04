@@ -24,13 +24,13 @@ create
 
 feature {NONE} -- Initialization
 
- 	make (an_interface: like interface)
+ 	old_make (an_interface: like interface)
  			-- Create the default font.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set up `Current'
 		local
 			l_app_imp: like app_implementation
@@ -339,6 +339,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 			l_font_names_on_system_as_lower: ARRAYED_LIST [STRING_32]
 			l_item_string: STRING_32
 			i, l_preferred_families_count: INTEGER
+			l_result: detachable STRING_32
 		do
 			l_preferred_families := preferred_families
 
@@ -348,16 +349,16 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 					l_preferred_families_count := l_preferred_families.count
 					i := 1
 				until
-					Result /= Void or else i > l_preferred_families_count
+					l_result /= Void or else i > l_preferred_families_count
 				loop
 					l_item_string := l_preferred_families [i]
 					if l_item_string /= Void and then l_font_names_on_system_as_lower.has (l_item_string.as_lower) then
-						Result := l_item_string.twin
+						l_result := l_item_string.twin
 					end
 					i := i + 1
 				end
 			end
-			if Result = Void then
+			if l_result = Void then
 				-- We have not found a preferred family
 				if font_is_default then
 					-- If the use has made no setting changes we use default gtk
@@ -377,6 +378,8 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 						Result.append (lucida_string)
 					end
 				end
+			else
+				Result := l_result
 			end
 		end
 
@@ -456,13 +459,17 @@ feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
-			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FONT
+	interface: detachable EV_FONT note option: stable attribute end
 		-- Interface coupling object for `Current'
 
 	destroy
@@ -493,4 +500,14 @@ note
 
 
 end -- class EV_FONT_IMP
+
+
+
+
+
+
+
+
+
+
 

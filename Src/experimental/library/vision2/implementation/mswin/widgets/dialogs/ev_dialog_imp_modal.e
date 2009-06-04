@@ -36,7 +36,7 @@ feature -- Basic operations
 	show_modal_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		local
-			parent_window_imp: WEL_WINDOW
+			parent_window_imp: detachable WEL_WINDOW
 				-- Create the dialog.
 		do
 			if exists then
@@ -44,6 +44,7 @@ feature -- Basic operations
 			else
 				parent_window := a_parent_window
 				parent_window_imp ?= a_parent_window.implementation
+				check parent_window_imp /= Void end
 				internal_dialog_make (parent_window_imp, 0, Void)
 			end
 		end
@@ -52,14 +53,16 @@ feature -- Basic operations
 			-- Show `Current' and wait until window is closed.
 		do
 			promote_to_dialog_window
-			interface.implementation.show_relative_to_window (a_parent_window)
+			attached_interface.implementation.show_relative_to_window (a_parent_window)
 		end
 
 	hide
 			-- Hide `Current' if displayed.
 		do
-			promote_to_dialog_window
-			interface.implementation.hide
+			if is_show_requested then
+				promote_to_dialog_window
+				attached_interface.implementation.hide
+			end
 		end
 
 feature {EV_WINDOW_IMP} -- Implementation
@@ -89,12 +92,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			err: WEL_ERROR
 		do
+			check a_parent /= Void end
 				-- Initialise the common controls
 			create common_controls_dll.make
 
@@ -116,7 +120,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_MODAL
+	common_dialog_imp: detachable EV_DIALOG_IMP_MODAL
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -155,4 +159,14 @@ note
 
 
 end -- class EV_DIALOG_IMP_MODAL
+
+
+
+
+
+
+
+
+
+
 

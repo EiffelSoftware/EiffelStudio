@@ -26,11 +26,11 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap shown in `Current'
 		do
-			if internal_pixmap /= Void then
-				Result := internal_pixmap.interface.twin
+			if attached internal_pixmap as l_internal_pixmap then
+				Result := l_internal_pixmap.attached_interface.twin
 			end
 		end
 
@@ -38,9 +38,13 @@ feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
+		local
+			l_internal_pixmap: like internal_pixmap
 		do
-			internal_pixmap ?= a_pixmap.twin.implementation
-			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
+			l_internal_pixmap ?= a_pixmap.twin.implementation
+			check l_internal_pixmap /= Void end
+			internal_pixmap := l_internal_pixmap
+			internal_set_pixmap (l_internal_pixmap, l_internal_pixmap.width, l_internal_pixmap.height)
 		end
 
 	remove_pixmap
@@ -57,9 +61,12 @@ feature {EV_ANY_I} -- Implementation
 			--
 		local
 			gtk_pix_wid: POINTER
+			l_internal_pixmap: like internal_pixmap
 		do
 			internal_remove_pixmap
-			if a_width /= internal_pixmap.width or else a_height /= internal_pixmap.height then
+			l_internal_pixmap ?= internal_pixmap
+			check l_internal_pixmap /= Void end
+			if a_width /= l_internal_pixmap.width or else a_height /= l_internal_pixmap.height then
 				-- We need to scale pixmap before it is placed in to pixmap holder			
 				a_pixmap_imp.stretch (a_width, a_height)
 			end
@@ -81,7 +88,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	internal_pixmap: EV_PIXMAP_IMP
+	internal_pixmap: detachable EV_PIXMAP_IMP
 			-- Internal stored pixmap.		
 
 feature {NONE} -- Implementation
@@ -103,7 +110,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PIXMAPABLE;
+	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -120,4 +127,8 @@ note
 
 
 end -- EV_PIXMAPABLE_IMP
+
+
+
+
 

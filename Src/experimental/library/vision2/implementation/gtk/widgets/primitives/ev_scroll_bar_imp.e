@@ -45,12 +45,12 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
 				adjustment,
 				value_range.upper + leap
-			)			
+			)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SCROLL_BAR;
+	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -67,4 +67,8 @@ note
 
 
 end -- class EV_SCROLL_BAR_IMP
+
+
+
+
 

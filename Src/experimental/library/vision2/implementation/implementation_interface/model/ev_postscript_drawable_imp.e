@@ -21,17 +21,17 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialize
+feature -- Initialize
 
-	make (an_interface: EV_POSTSCRIPT_DRAWABLE)
+	old_make (an_interface: EV_POSTSCRIPT_DRAWABLE)
 			-- Create a EV_POSTSCRIPT_DRAWBALE_IMP with front end `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
 feature {EV_ANY} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -62,21 +62,21 @@ feature -- Access
 	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used to instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: detachable EV_COLOR
 			-- Color of foreground features like text.
 
-	background_color: EV_COLOR
+	background_color_internal: detachable EV_COLOR
 			-- Color displayed behind foregournd features.
 
 	font: EV_FONT
@@ -178,8 +178,8 @@ feature -- Element change
 	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
-			create foreground_color.make_with_rgb (0, 0, 0)
-			create background_color.make_with_rgb (1, 1, 1)
+			create foreground_color_internal.make_with_rgb (0, 0, 0)
+			create background_color_internal.make_with_rgb (1, 1, 1)
 		end
 
 	set_default_font
@@ -198,13 +198,13 @@ feature -- Element change
 			then
 				add_ps (a_color.out + " setrgbcolor")
 			end
-			foreground_color := a_color
+			foreground_color_internal := a_color
 		end
 
 	set_background_color (a_color: like background_color)
 			-- Assign `a_color' to `foreground_color'.
 		do
-			background_color := a_color
+			background_color_internal := a_color
 		end
 
 	set_margins (a_left_margin, a_bottom_margin: INTEGER)
@@ -315,10 +315,10 @@ feature -- Clearing and drawing operations
 			file_with_header.append ("} bind def%N")
 
 			-- draw all pages
-			if clip_area = Void then
-				create clip_rectangle.make (0, 0, width, height)
+			if attached clip_area as l_clip_area then
+				clip_rectangle := l_clip_area
 			else
-				clip_rectangle := clip_area
+				create clip_rectangle.make (0, 0, width, height)
 			end
 
 			from
@@ -389,6 +389,8 @@ feature -- Duplication
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		do
+			check do_not_call: False end
+			create Result
 		end
 
 feature -- Drawing operations
@@ -816,4 +818,8 @@ note
 
 
 end -- class EV_POSTSCRIPT_DRAWABLE_IMP
+
+
+
+
 

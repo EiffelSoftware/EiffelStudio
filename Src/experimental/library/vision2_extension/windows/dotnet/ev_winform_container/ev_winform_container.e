@@ -26,12 +26,12 @@ inherit
 
 feature -- Access
 
-	item: WINFORMS_CONTROL
+	item: detachable WINFORMS_CONTROL
 			-- `Result' is WINFORMS_CONTROL contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_wel_winform_container: WEL_WINFORM_CONTAINER
+			l_wel_winform_container: detachable WEL_WINFORM_CONTAINER
 		do
 			l_wel_winform_container ?= wel_item
 			if l_wel_winform_container /= Void then
@@ -109,4 +109,6 @@ note
 
 
 end -- class EV_WINFORM_CONTAINER
+
+
 

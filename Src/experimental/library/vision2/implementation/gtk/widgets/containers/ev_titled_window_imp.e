@@ -23,7 +23,7 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			make,
+			old_make,
 			default_wm_decorations,
 			is_displayed,
 			call_window_state_event
@@ -36,11 +36,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the titled window.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
+			assign_interface (an_interface)
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
@@ -86,8 +85,8 @@ feature -- Access
 	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
 		do
-			if icon_name_holder /= Void then
-				Result := icon_name_holder
+			if attached icon_name_holder as l_icon_name_holder then
+				Result := l_icon_name_holder
 			else
 				Result := title
 			end
@@ -95,8 +94,17 @@ feature -- Access
 
 	icon_pixmap: EV_PIXMAP
 			-- Window icon.
+		do
+			if attached icon_pixmap_internal as l_icon_pixmap_internal then
+				Result := l_icon_pixmap_internal
+			else
+				Result := default_pixmaps.default_window_icon
+			end
+		end
 
-	icon_mask: EV_PIXMAP
+	icon_pixmap_internal: detachable EV_PIXMAP
+
+	icon_mask: detachable EV_PIXMAP
 			-- Transparency mask for `icon_pixmap'.
 
 feature -- Status report
@@ -176,13 +184,13 @@ feature -- Element change
 	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			pixmap_imp ?= an_icon.twin.implementation
-			icon_pixmap := pixmap_imp.interface
 			check
 				icon_implementation_exists: pixmap_imp /= Void
 			end
+			icon_pixmap_internal := pixmap_imp.interface
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 
@@ -196,10 +204,10 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	icon_name_holder: STRING_32
+	icon_name_holder: detachable STRING_32
 			-- Name holder for applications icon name
 
-	interface: EV_TITLED_WINDOW;
+	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -216,4 +224,8 @@ note
 
 
 end -- class EV_TITLED_WINDOW_IMP
+
+
+
+
 

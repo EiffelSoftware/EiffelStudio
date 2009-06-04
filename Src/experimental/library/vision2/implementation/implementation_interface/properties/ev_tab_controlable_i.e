@@ -60,7 +60,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TAB_CONTROLABLE;
+	interface: detachable EV_TAB_CONTROLABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -79,4 +79,12 @@ note
 
 
 end -- class EV_TAB_CONTROLLABLE_I
+
+
+
+
+
+
+
+
 

@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_POSITIONED_I 
+	EV_POSITIONED_I
 
 inherit
 	EV_ANY_I
@@ -17,12 +17,12 @@ inherit
 		end
 
 feature -- Measurement
-	
+
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		deferred
 		end
-	
+
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		deferred
@@ -47,7 +47,7 @@ feature -- Measurement
 			-- Vertical size in pixels.
 		deferred
 		end
-	
+
 	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		deferred
@@ -60,7 +60,7 @@ feature -- Measurement
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_POSITIONED
+	interface: detachable EV_POSITIONED note option: stable attribute end;
 		-- Provides a common user interface to platform dependent functionality
 		-- implemented by `Current'.
 		-- (See bridge pattern notes in ev_any.e)
@@ -84,4 +84,12 @@ note
 
 
 end -- class EV_POSITIONED_I
+
+
+
+
+
+
+
+
 

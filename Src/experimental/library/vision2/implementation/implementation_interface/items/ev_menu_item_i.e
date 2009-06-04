@@ -4,10 +4,10 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_ITEM_I
-	
+
 inherit
 	EV_ITEM_I
 		redefine
@@ -28,7 +28,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU_ITEM;
+	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -45,4 +45,12 @@ note
 
 
 end -- class EV_MENU_ITEM_I
+
+
+
+
+
+
+
+
 

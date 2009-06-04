@@ -47,7 +47,7 @@ create
 
 feature {NONE} --
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			--
 		do
 
@@ -59,24 +59,24 @@ feature {NONE} --
 
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			make_id
-			create real_text.make (0)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Do post creation initialization.
 		do
+			make_id
+			create real_text.make (0)
 			is_sensitive := True
 			set_is_initialized (True)
 		end
 
-	parent_imp: EV_TOOL_BAR_IMP
+	parent_imp: detachable EV_TOOL_BAR_IMP
 		-- The parent of `Current'.
 
 feature -- Access
@@ -84,24 +84,30 @@ feature -- Access
 	wel_text: STRING_32
 			-- Text of `Current'
 		do
-			if real_text /= Void then
-				Result := real_text.twin
+			if attached real_text as l_real_text then
+				Result := l_real_text.twin
+			else
+				Result := ""
 			end
 		end
 
 	text_length: INTEGER
 			-- Number of characters of `real_text'.
 		do
-			Result := real_text.count
+			if attached real_text as l_real_text then
+				Result := l_real_text.count
+			end
 		end
 
-	real_text: STRING_32
+	real_text: detachable STRING_32
 			-- Internal `text'. Not to be returned directly. Use clone.
 
 	index: INTEGER
 			-- Index of the current item.
 		do
-			Result := parent_imp.internal_get_index (Current) + 1
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.internal_get_index (Current) + 1
+			end
 		end
 
 	set_parent_imp (a_parent_imp: like parent_imp)
@@ -110,16 +116,16 @@ feature -- Access
 		do
 			if a_parent_imp /= Void then
 				parent_imp := a_parent_imp
-				parent_imp.auto_size
+				a_parent_imp.auto_size
 			else
 				parent_imp := Void
 			end
 		end
 
-	gray_pixmap: EV_PIXMAP
+	gray_pixmap: detachable EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 			image_icon: WEL_ICON
 			image_list: EV_IMAGE_LIST_IMP
 		do
@@ -131,19 +137,23 @@ feature -- Access
 					check
 						pix_imp /= Void
 					end
-					image_list := parent_imp.default_imagelist
-					image_icon := image_list.get_icon (image_index, Ild_normal)
-					pix_imp.set_with_resource (image_icon)
+					if attached parent_imp as l_parent_imp and then attached l_parent_imp.default_imagelist as l_default_imagelist then
+						image_list := l_default_imagelist
+						image_icon := l_default_imagelist.get_icon (image_index, Ild_normal)
+						pix_imp.set_with_resource (image_icon)
+					else
+						check False end
+					end
 				else
 					Result := private_gray_pixmap
 				end
 			end
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 			an_icon: WEL_ICON
 		do
 				-- Retrieve the pixmap from the imagelist
@@ -154,10 +164,14 @@ feature -- Access
 					check
 						pix_imp /= Void
 					end
-					an_icon := parent_imp.hot_imagelist.get_icon (image_index, Ild_normal)
-					an_icon.enable_reference_tracking
-					pix_imp.set_with_resource (an_icon)
-					an_icon.decrement_reference
+					if attached parent_imp as l_parent_imp and then attached l_parent_imp.hot_imagelist as l_hot_imagelist then
+						an_icon := l_hot_imagelist.get_icon (image_index, Ild_normal)
+						an_icon.enable_reference_tracking
+						pix_imp.set_with_resource (an_icon)
+						an_icon.decrement_reference
+					else
+						check False end
+					end
 				else
 					Result := private_pixmap
 				end
@@ -200,8 +214,8 @@ feature -- Status setting
 			 -- this new state is respected at the end of the transport.
 		do
 			is_sensitive := True
-			if parent_imp /= Void then
-				parent_imp.enable_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.enable_button (id)
 			end
 		end
 
@@ -214,16 +228,16 @@ feature -- Status setting
 			 -- this new state is respected at the end of the transport.
 		do
 			is_sensitive := False
-			if parent_imp /= Void then
-				parent_imp.disable_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.disable_button (id)
 			end
 		end
 
 	parent_is_sensitive: BOOLEAN
 			-- Is parent of `Current' sensitive?
 		do
-			if parent_imp /= Void and then parent_imp.is_sensitive then
-				result := True
+			if attached parent_imp as l_parent_imp and then l_parent_imp.is_sensitive then
+				Result := True
 			end
 		end
 
@@ -238,9 +252,11 @@ feature -- Status setting
 	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32
+			if internal_tooltip_string = a_tooltip then
+				internal_tooltip_string := a_tooltip.as_string_32.string
+			end
 		end
-
 
 feature -- Element change
 
@@ -250,9 +266,9 @@ feature -- Element change
 			if txt /= Void then
 				real_text := txt.twin
 			end
-			if parent_imp /= Void then
-				parent_imp.internal_reset_button (Current)
-				parent_imp.auto_size
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_reset_button (Current)
+				l_parent_imp.auto_size
 			end
 		end
 
@@ -261,16 +277,16 @@ feature -- Element change
 		do
 				-- We must destroy the pixmap before we set a new one,
 				-- to ensure that we free up Windows GDI objects
-			if private_pixmap /= Void then
-				private_pixmap.destroy
+			if attached private_pixmap as l_private_pixmap then
+				l_private_pixmap.destroy
 				private_pixmap := Void
 			end
 			private_pixmap := p.twin
 			has_pixmap := True
 
 				-- If the item is currently contained in the toolbar then
-			if parent_imp /= Void then
-				parent_imp.internal_reset_button (Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_reset_button (Current)
 			end
 		end
 
@@ -279,32 +295,37 @@ feature -- Element change
 		do
 			if has_pixmap then
 				has_pixmap := False
-				if private_pixmap /= Void then
-					private_pixmap.destroy
+				if attached private_pixmap as l_private_pixmap then
+					l_private_pixmap.destroy
 					private_pixmap := Void
 				end
 
 					-- If the item is currently contained in the toolbar then
-				if parent_imp /= Void then
-					parent_imp.internal_reset_button (Current)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.internal_reset_button (Current)
 				end
 			end
 		end
 
 	set_gray_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed gray pixmap.
+		local
+			l_private_gray_pixmap: like private_gray_pixmap
 		do
-			if private_gray_pixmap /= Void then
-				private_gray_pixmap.destroy
+			l_private_gray_pixmap := private_gray_pixmap
+			if l_private_gray_pixmap /= Void then
+				l_private_gray_pixmap.destroy
 				private_gray_pixmap := Void
 			end
-			private_gray_pixmap.copy (p)
+			create l_private_gray_pixmap
+			l_private_gray_pixmap.copy (p)
+			private_gray_pixmap := l_private_gray_pixmap
 
 			has_gray_pixmap := True
 
 				-- If the item is currently contained in the toolbar then
-			if has_pixmap and parent_imp /= Void then
-				parent_imp.internal_reset_button (Current)
+			if has_pixmap and attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_reset_button (Current)
 			end
 		end
 
@@ -313,14 +334,14 @@ feature -- Element change
 		do
 			if has_gray_pixmap then
 				has_gray_pixmap := False
-				if private_gray_pixmap /= Void then
-					private_gray_pixmap.destroy
+				if attached private_gray_pixmap as l_private_gray_pixmap then
+					l_private_gray_pixmap.destroy
 					private_gray_pixmap := Void
 				end
 
 					-- If the item is currently contained in the toolbar then
-				if parent_imp /= Void then
-					parent_imp.internal_reset_button (Current)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.internal_reset_button (Current)
 				end
 			end
 		end
@@ -329,35 +350,44 @@ feature -- Element change
 			-- Add the pixmap to the parent by updating the
 			-- parent's image list.
 		local
-			default_imagelist: EV_IMAGE_LIST_IMP
-			hot_imagelist: EV_IMAGE_LIST_IMP
-			local_pixmap: EV_PIXMAP
-			local_gray_pixmap: EV_PIXMAP
+			default_imagelist: detachable EV_IMAGE_LIST_IMP
+			hot_imagelist: detachable EV_IMAGE_LIST_IMP
+			local_pixmap: detachable EV_PIXMAP
+			local_gray_pixmap: detachable EV_PIXMAP
 			gray_pixmap_position: INTEGER
 			pixmap_position: INTEGER
+			l_parent_imp: like parent_imp
+			l_private_pixmap: like private_pixmap
 		do
-			default_imagelist := parent_imp.default_imagelist
-			if parent_imp.has_false_image_list and has_pixmap then
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
+			default_imagelist := l_parent_imp.default_imagelist
+			if l_parent_imp.has_false_image_list and has_pixmap then
 					-- In this situation, a false image list is being used in `parent_imp' to
 					-- ensure buttons are displayed at their minimum sizes. We remove this image
 					-- list as `Current' has an image and we wish to use this with a new image list.
-				parent_imp.remove_image_list
+				l_parent_imp.remove_image_list
 				default_imagelist := Void
 			end
+
+			l_private_pixmap := private_pixmap
+
 				-- Create the image list and associate it
 				-- to the control if it's not already done.
 			if default_imagelist = Void then
 				if has_pixmap then
-					parent_imp.setup_image_list (private_pixmap.width, private_pixmap.height)
-					parent_imp.disable_false_image_list
+					check l_private_pixmap /= Void end
+					l_parent_imp.setup_image_list (l_private_pixmap.width, l_private_pixmap.height)
+					l_parent_imp.disable_false_image_list
 				else
+
 						-- Now set up an empty image list in `parent_imp' with a size 1x1.
 						-- This ensures that when no pixmap is associated with an item, the button is
 						-- approximately the size of the text only.
-					parent_imp.enable_false_image_list
-					parent_imp.setup_image_list (1, 1)
-					default_imagelist := parent_imp.default_imagelist
-					hot_imagelist := parent_imp.hot_imagelist
+					l_parent_imp.enable_false_image_list
+					l_parent_imp.setup_image_list (1, 1)
+					default_imagelist := l_parent_imp.default_imagelist
+					hot_imagelist := l_parent_imp.hot_imagelist
 					image_index := -1
 				end
 			end
@@ -365,13 +395,14 @@ feature -- Element change
 			if private_pixmap = Void and private_gray_pixmap = Void then
 				-- image_index is already up-to-date.
 			else
-				default_imagelist := parent_imp.default_imagelist
-				hot_imagelist := parent_imp.hot_imagelist
+				default_imagelist := l_parent_imp.default_imagelist
+				hot_imagelist := l_parent_imp.hot_imagelist
 
 				local_pixmap := private_pixmap
 				if local_pixmap = Void then
 					local_pixmap := pixmap
 				end
+				check local_pixmap /= Void end
 
 				if has_gray_pixmap then
 					local_gray_pixmap := private_gray_pixmap
@@ -383,8 +414,10 @@ feature -- Element change
 						-- have the same bitmap.
 					local_gray_pixmap := local_pixmap
 				end
-
+				check local_gray_pixmap /= Void end
 					-- Look for `gray_pixmap' and `pixmap' in the imagelist
+				check default_imagelist /= Void end
+				check hot_imagelist /= Void end
 				default_imagelist.pixmap_position (local_gray_pixmap)
 				hot_imagelist.pixmap_position (local_pixmap)
 				gray_pixmap_position := default_imagelist.last_position
@@ -408,12 +441,11 @@ feature -- Element change
 				image_index := default_imagelist.last_position
 
 					-- Destroy the pixmaps.
-				if private_pixmap /= Void then
-					private_pixmap.destroy
-					private_pixmap := Void
-				end
-				if private_gray_pixmap /= Void then
-					private_gray_pixmap.destroy
+				check l_private_pixmap /= Void end
+				l_private_pixmap.destroy
+				private_pixmap := Void
+				if attached private_gray_pixmap as l_private_gray_pixmap then
+					l_private_gray_pixmap.destroy
 					private_gray_pixmap := Void
 				end
 			end
@@ -424,48 +456,48 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_x (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_x (attached_interface)
 			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_y (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_y (attached_interface)
 			end
 		end
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_x_absolute (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_x_absolute (attached_interface)
 			end
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_y_absolute (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_y_absolute (attached_interface)
 			end
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_width (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_width (attached_interface)
 			end
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.child_height (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.child_height (attached_interface)
 			end
 		end
 
@@ -500,25 +532,25 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	private_gray_pixmap: EV_PIXMAP
+	private_gray_pixmap: detachable EV_PIXMAP
 			-- Internal gray pixmap for Current. Void if none.
 
 	destroy
 			-- Destroy `Current'.
 		do
 			Precursor {EV_TOOL_BAR_ITEM_IMP}
-			if private_pixmap /= Void then
-				private_pixmap.destroy
+			if attached private_pixmap as l_private_pixmap then
+				l_private_pixmap.destroy
 			end
-			if private_gray_pixmap /= Void then
-				private_gray_pixmap.destroy
+			if attached private_gray_pixmap as l_private_gray_pixmap then
+				l_private_gray_pixmap.destroy
 			end
 		end
 
 
 feature {NONE} -- Implementation, pick and drop
 
-	widget_source: EV_WIDGET_IMP
+	widget_source: detachable EV_WIDGET_IMP
 			-- Widget drag source used for transport.
 		do
 			Result := parent_imp
@@ -526,7 +558,7 @@ feature {NONE} -- Implementation, pick and drop
 
 feature {EV_ANY_I} -- Interface
 
-	interface: EV_TOOL_BAR_BUTTON;
+	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -543,4 +575,13 @@ note
 
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
+
+
+
+
+
+
+
+
+
 

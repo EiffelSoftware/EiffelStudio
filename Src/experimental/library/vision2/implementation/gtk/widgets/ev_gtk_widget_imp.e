@@ -33,7 +33,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	initialize
+	make
 			-- Initialize `c_object'.
 		local
 			l_visual_widget, l_c_object: POINTER
@@ -134,7 +134,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := Result.max (0)
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		do
 			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
@@ -213,15 +213,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
+	internal_set_pointer_style (a_cursor: detachable EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
 			a_window: POINTER
-			a_cursor_imp: EV_POINTER_STYLE_IMP
+			a_cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			if a_cursor /= Void then
 				a_cursor_imp ?= a_cursor.implementation
+				check a_cursor_imp /= Void end
 				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 			end
 			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
@@ -237,7 +238,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	previous_gdk_cursor: POINTER
 			-- Pointer to the previously create GdkCursor.
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
 
@@ -259,10 +260,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_app_imp := app_implementation
 				-- If any previous widget has the capture then disable it.
 				-- If a Pick and Drop is occurring we leave the capture as is.
-			if l_app_imp.captured_widget /= Void and then not l_app_imp.is_in_transport then
-				l_interface := interface
-				if l_interface /= l_app_imp.captured_widget then
-					l_app_imp.captured_widget.disable_capture
+			if attached l_app_imp.captured_widget as l_captured_widget and then not l_app_imp.is_in_transport then
+				l_interface := attached_interface
+				if l_interface /= l_captured_widget then
+					l_captured_widget.disable_capture
 				end
 			end
 			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
@@ -282,7 +283,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Does widget have the keyboard focus?
 		local
 			l_window, l_widget: POINTER
-			l_widget_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 			l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 				-- This will return `c_object' if not toplevel window is found in hierarchy.
@@ -290,7 +291,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (l_window)
 				if l_widget /= default_pointer then
 					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
-					Result := l_widget_imp = Current
+					if l_widget_imp /= Void then
+						Result := l_widget_imp = Current
+					end
 				end
 			end
 		end
@@ -356,7 +359,7 @@ feature -- Status report
 	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 		local
-			l_win: EV_WINDOW_IMP
+			l_win: detachable EV_WINDOW_IMP
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM = {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM
 				-- If Current is shown, let's check that it's top parent window is shown too.
@@ -370,7 +373,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	top_level_gtk_window_imp: EV_GTK_WINDOW_IMP
+	top_level_gtk_window_imp: detachable EV_GTK_WINDOW_IMP
 			-- Window implementation that `Current' is contained within (if any)
 		local
 			wind_ptr: POINTER
@@ -381,16 +384,16 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Window implementation that `Current' is contained within (if any)
 		do
 			Result ?= top_level_gtk_window_imp
 		end
 
-	top_level_window: EV_WINDOW
+	top_level_window: detachable EV_WINDOW
 			-- Window the current is contained within (if any)
 		local
-			a_window_imp: EV_WINDOW_IMP
+			a_window_imp: detachable EV_WINDOW_IMP
 		do
 			a_window_imp ?= top_level_gtk_window_imp
 			if a_window_imp /= Void then

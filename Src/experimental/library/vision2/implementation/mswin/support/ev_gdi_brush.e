@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"EiffelVision implentation for retrieving a WEL_BRUSH"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make_with_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF)
+	make_with_values (a_pattern: detachable WEL_BITMAP; a_color: detachable WEL_COLOR_REF)
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
@@ -35,12 +35,12 @@ feature -- Access
 		do
 			Result := (color_red |<< 16) | (color_green |<< 8) | color_blue
 
-			if pattern /= Void then
-				Result := Result | pattern.item.hash_code
+			if attached pattern as l_pattern then
+				Result := Result | l_pattern.item.hash_code
 			end
 		end
 
-	pattern: WEL_BITMAP
+	pattern: detachable WEL_BITMAP
 			-- Pattern of the brush
 
 	color_red: INTEGER
@@ -52,7 +52,7 @@ feature -- Access
 	color_green: INTEGER
 			-- Color of the pen (green component)
 
-	item: WEL_BRUSH
+	item: detachable WEL_BRUSH
 			-- WEL Brush object
 
 feature -- Comparison
@@ -67,10 +67,10 @@ feature -- Comparison
 				other.color_blue = color_blue and
 				other.color_green = color_green
 
-			if pattern /= Void then
-				equal_pattern := 
-					other.pattern /= Void and then
-					pattern.item.hash_code = other.pattern.item.hash_code
+			if attached pattern as l_pattern then
+				equal_pattern :=
+					attached other.pattern as l_other_pattern and then
+					l_pattern.item.hash_code = l_other_pattern.item.hash_code
 			else
 				equal_pattern := other.pattern = Void
 			end
@@ -80,7 +80,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF)
+	set_values (a_pattern: detachable WEL_BITMAP; a_color: detachable WEL_COLOR_REF)
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
@@ -94,7 +94,7 @@ feature -- Element change
 				color_red := -1
 				color_blue := -1
 				color_green := -1
-			end				
+			end
 		end
 
 note
@@ -112,4 +112,15 @@ note
 
 
 end -- class EV_GDI_BRUSH
+
+
+
+
+
+
+
+
+
+
+
 

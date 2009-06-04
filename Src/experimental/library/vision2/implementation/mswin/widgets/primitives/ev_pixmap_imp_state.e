@@ -47,7 +47,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	get_mask_bitmap: WEL_BITMAP
+	get_mask_bitmap: detachable WEL_BITMAP
 			-- Monochrome bitmap used as mask.
 			--
 			-- The number of references if incremented when calling
@@ -59,12 +59,12 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	icon: WEL_ICON
+	icon: detachable WEL_ICON
 			-- Current pixmap in HICON format. Void if none.
 		deferred
 		end
 
-	cursor: WEL_CURSOR
+	cursor: detachable WEL_CURSOR
 			-- Current pixmap in HCURSOR format. Void if none.
 		deferred
 		end
@@ -76,7 +76,7 @@ feature -- Access
 			has_mask_implies_mask_bitmap_not_void: Result implies get_mask_bitmap /= Void
 		end
 
-	palette: WEL_PALETTE
+	palette: detachable WEL_PALETTE
 		-- Current palette used. Void if none.
 		deferred
 		end
@@ -90,8 +90,8 @@ feature -- Saving
 			a_filename_not_void: a_filename /= Void
 			a_filename_valid: a_filename.is_valid
 		local
-			bmp_format: EV_BMP_FORMAT
-			png_format: EV_PNG_FORMAT
+			bmp_format: detachable EV_BMP_FORMAT
+			png_format: detachable EV_PNG_FORMAT
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
 			a_fn: C_STRING
@@ -160,37 +160,72 @@ feature -- Misc.
 			-- as we need to use this in cases where `other' will
 			-- not conform to EV_PIXMAP_IMP.
 		do
-			expose_actions_internal := other.expose_actions_internal
-			focus_in_actions_internal := other.focus_in_actions_internal
-			focus_out_actions_internal := other.focus_out_actions_internal
-			key_press_actions_internal := other.key_press_actions_internal
-			key_press_string_actions_internal := other.key_press_string_actions_internal
-			key_release_actions_internal := other.key_release_actions_internal
-			pointer_button_press_actions_internal := other.pointer_button_press_actions_internal
-			pointer_button_release_actions_internal := other.pointer_button_release_actions_internal
-			pointer_double_press_actions_internal := other.pointer_double_press_actions_internal
-			pointer_enter_actions_internal := other.pointer_enter_actions_internal
-			pointer_leave_actions_internal := other.pointer_leave_actions_internal
-			pointer_motion_actions_internal := other.pointer_motion_actions_internal
-			resize_actions_internal := other.resize_actions_internal
-			conforming_pick_actions_internal := other.conforming_pick_actions_internal
-			drop_actions_internal := other.drop_actions_internal
-			pick_actions_internal := other.pick_actions_internal
-			pick_ended_actions_internal := other.pick_ended_actions_internal
+			if attached other.expose_actions_internal as l_event then
+				expose_actions_internal := l_event
+			end
+			if attached other.focus_in_actions_internal as l_event then
+				focus_in_actions_internal := l_event
+			end
+			if attached other.focus_out_actions_internal as l_event then
+				focus_out_actions_internal := l_event
+			end
+			if attached other.key_press_actions_internal as l_event then
+				key_press_actions_internal := l_event
+			end
+			if attached other.key_press_string_actions_internal as l_event then
+				key_press_string_actions_internal := l_event
+			end
+			if attached other.key_release_actions_internal as l_event then
+				key_release_actions_internal := l_event
+			end
+			if attached other.pointer_button_press_actions_internal as l_event then
+				pointer_button_press_actions_internal := l_event
+			end
+			if attached other.pointer_button_release_actions_internal as l_event then
+				pointer_button_release_actions_internal := l_event
+			end
+			if attached other.pointer_double_press_actions_internal as l_event then
+				pointer_double_press_actions_internal := l_event
+			end
+			if attached other.pointer_enter_actions_internal as l_event then
+				pointer_enter_actions_internal := l_event
+			end
+			if attached other.pointer_leave_actions_internal as l_event then
+				pointer_leave_actions_internal := l_event
+			end
+			if attached other.pointer_motion_actions_internal as l_event then
+				pointer_motion_actions_internal := l_event
+			end
+			if attached other.resize_actions_internal as l_event then
+				resize_actions_internal := l_event
+			end
+			if attached other.conforming_pick_actions_internal as l_event then
+				conforming_pick_actions_internal := l_event
+			end
+			if attached other.drop_actions_internal as l_event then
+				drop_actions_internal := l_event
+			end
+			if attached other.pick_actions_internal as l_event then
+				pick_actions_internal := l_event
+			end
+			if attached other.pick_ended_actions_internal as l_event then
+				pick_ended_actions_internal := l_event
+			end
 		end
 
 	raw_image_data: EV_RAW_IMAGE_DATA
 			-- RGBA representation of `Current'.
 		local
-			mask_dc, mem_dc: WEL_MEMORY_DC
+			mask_dc, mem_dc: detachable WEL_MEMORY_DC
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
 			array_area: SPECIAL [NATURAL_8]
 			col_Ref_item: NATURAL_32
 			mask_dc_item, mem_dc_item: POINTER
-			tmp_mask_bitmap, tmp_bitmap: WEL_BITMAP
+			tmp_mask_bitmap, tmp_bitmap: detachable WEL_BITMAP
 			l_has_mask: BOOLEAN
 			l_x, l_y: INTEGER
+			l_interface: like interface
 		do
 			create Result.make_with_alpha_zero (width, height)
 			create mem_dc.make
@@ -200,11 +235,14 @@ feature -- Misc.
 			if l_has_mask then
 				create mask_dc.make
 				tmp_mask_bitmap := get_mask_bitmap
+				check tmp_mask_bitmap /= Void end
 				mask_dc.select_bitmap (tmp_mask_bitmap)
 				mask_dc_item := mask_dc.item
 			end
 
-			Result.set_originating_pixmap (interface)
+			l_interface := interface
+			check l_interface /= Void end
+			Result.set_originating_pixmap (l_interface)
 			from
 				a_width := width * 4
 				array_size := a_width * height
@@ -243,8 +281,10 @@ feature -- Misc.
 			end
 
 			if l_has_mask then
+				check mask_dc /= Void end
 				mask_dc.unselect_bitmap
 				mask_dc.delete
+				check tmp_mask_bitmap /= Void end
 				tmp_mask_bitmap.decrement_reference
 				tmp_mask_bitmap := Void
 			end
@@ -263,16 +303,24 @@ feature -- Misc.
 
 	build_icon: WEL_ICON
 			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
+		local
+			l_result: detachable WEL_ICON
 		do
-			Result ?= build_graphical_resource (True)
+			l_result ?= build_graphical_resource (True)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	build_cursor: WEL_CURSOR
 			-- Build a WEL_CURSOR from `bitmap' and `mask_bitmap'.
+		local
+			l_result: detachable WEL_CURSOR
 		do
-			Result ?= build_graphical_resource (False)
+			l_result ?= build_graphical_resource (False)
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -280,10 +328,14 @@ feature -- Misc.
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
 		local
-			l_pixel_buffer: EV_PIXEL_BUFFER_IMP
+			l_pixel_buffer: detachable EV_PIXEL_BUFFER_IMP
+			l_interface: like interface
 		do
+			l_interface := interface
+			check l_interface /= Void end
 			l_pixel_buffer ?= a_pixel_buffer.implementation
-			l_pixel_buffer.draw_to_drawable (interface)
+			check l_pixel_buffer /= Void end
+			l_pixel_buffer.draw_to_drawable (l_interface)
 		end
 
 feature -- Measurement
@@ -308,10 +360,10 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			mem_dc: WEL_MEMORY_DC
 			empty_mask_bitmap: WEL_BITMAP
 			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
-			ev_cursor_interface: EV_CURSOR
+			ev_cursor_interface: detachable EV_CURSOR
 			l_bitmap: WEL_BITMAP
 			tmp_bitmap: WEL_BITMAP
-			tmp_mask_bitmap: WEL_BITMAP
+			tmp_mask_bitmap: detachable WEL_BITMAP
 			l_mask_bitmap_dc: WEL_MEMORY_DC
 			l_bitmap_dc: WEL_MEMORY_DC
 		do
@@ -347,6 +399,7 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 				mem_dc.pat_blt (0, 0, width, height,
 				raster_operations.whiteness)
 				tmp_mask_bitmap := get_mask_bitmap
+				check tmp_mask_bitmap /= Void end
 				create l_mask_bitmap_dc.make_by_dc (mem_dc)
 				l_mask_bitmap_dc.select_bitmap (tmp_mask_bitmap)
 					-- We need to invert the mask as Windows uses 0 for Opaque and 1 for Transparent.
@@ -377,10 +430,8 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			empty_mask_bitmap.decrement_reference
 			icon_info.delete
 			tmp_bitmap.decrement_reference
-			tmp_bitmap := Void
 			if tmp_mask_bitmap /= Void then
 				tmp_mask_bitmap.decrement_reference
-				tmp_mask_bitmap := Void
 			end
 		end
 
@@ -444,7 +495,7 @@ feature {
 		EV_PIXMAP_IMP_WIDGET
 		} -- Implementation
 
-	interface: EV_PIXMAP;
+	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -461,4 +512,14 @@ note
 
 
 end -- class EV_PIXMAP_IMP_STATE
+
+
+
+
+
+
+
+
+
+
 

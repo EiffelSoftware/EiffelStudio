@@ -93,7 +93,7 @@ feature -- Duplication
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_cursor: EV_CURSOR
+			other_cursor: detachable EV_CURSOR
 		do
 			check
 				not_destroyed: not is_destroyed
@@ -132,4 +132,14 @@ note
 
 
 end -- class EV_CURSOR
+
+
+
+
+
+
+
+
+
+
 

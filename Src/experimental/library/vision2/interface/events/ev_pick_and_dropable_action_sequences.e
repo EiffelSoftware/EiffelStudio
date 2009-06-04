@@ -33,7 +33,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE
 			-- Actions to be performed when a transport from `Current' ends.
 			-- If transport completed successfully, then event data
@@ -52,13 +52,22 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble is dropped here.
 		do
 			Result := implementation.drop_actions
+			if Result.is_empty then
+				init_drop_actions (Result)
+			end
 		ensure
 			not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	init_drop_actions (a_drop_actions: EV_PND_ACTION_SEQUENCE)
+			-- Setup drop actions
+		deferred
 		end
 
 note
@@ -76,4 +85,8 @@ note
 
 
 end
+
+
+
+
 

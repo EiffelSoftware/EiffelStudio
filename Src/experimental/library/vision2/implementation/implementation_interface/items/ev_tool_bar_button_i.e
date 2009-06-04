@@ -44,7 +44,7 @@ inherit
 
 feature -- Access
 
-	gray_pixmap: EV_PIXMAP
+	gray_pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current'.
 		deferred
 		end
@@ -68,10 +68,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
-		do
 
+		do
 			if starting then
-				if not interface.drop_actions.accepts_pebble (application_implementation.pick_and_drop_source.pebble) then
+				if
+					attached application_implementation.pick_and_drop_source as l_pnd_source and then
+					attached l_pnd_source.pebble as l_pebble and then not
+					attached_interface.drop_actions.accepts_pebble (l_pebble)
+				then
 					enabled_before := is_sensitive
 					disable_sensitive_internal
 				end
@@ -133,7 +137,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	interface: EV_TOOL_BAR_BUTTON;
+	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -150,4 +154,13 @@ note
 
 
 end -- class EV_TOOL_BAR_BUTTON_I
+
+
+
+
+
+
+
+
+
 

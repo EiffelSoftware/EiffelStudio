@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_point_position (a_point.x, a_point.y)
 		end
-		
+
 	make_with_position (a_point_x, a_point_y: INTEGER)
 			-- Create on (`a_point_x', `a_point_y')
 		do
@@ -45,7 +45,7 @@ feature -- Access
 			Result_x_equal_point_x: Result.x = point_x
 			Result_y_eqyal_point_y: Result.y = point_y
 		end
-		
+
 	point_relative: EV_COORDINATE
 			-- `point' relative to `group'.`point'.
 		do
@@ -55,34 +55,34 @@ feature -- Access
 			Result_x_equal_point_x_relative: Result.x = point_x_relative
 			Result_y_eqyal_point_y_relative: Result.y = point_y_relative
 		end
-		
+
 	point_x: INTEGER
 			-- x position of `point'.
 		deferred
 		end
-		
+
 	point_x_relative: INTEGER
 			-- horizontal distance between `point_x' and `group'.`point_x'.
 		do
-			if group = Void then
-				Result := point_x
+			if attached group as l_group then
+				Result := point_x - l_group.point_x
 			else
-				Result := point_x - group.point_x
+				Result := point_x
 			end
 		end
-		
+
 	point_y: INTEGER
 			-- y position of `point'.
 		deferred
 		end
-		
+
 	point_y_relative: INTEGER
 			-- vertical distance between `point_y' and `group'.`point_y'.
 		do
-			if group = Void then
-				Result := point_y
+			if attached group as l_group then
+				Result := point_y - l_group.point_y
 			else
-				Result := point_y - group.point_y
+				Result := point_y
 			end
 		end
 
@@ -97,30 +97,30 @@ feature -- Status setting
 		do
 			set_point_position (a_point.x, a_point.y)
 		end
-		
+
 	set_point_position (ax, ay: INTEGER)
 			-- Set position of `point' to (`ax', `ay').
 		deferred
 		end
-		
+
 	set_point_position_relative (ax, ay: INTEGER)
 			-- Set position of `point_relative' to (`ax', `ay').
 		do
-			if group /= Void then
-				set_point_position (group.point_x + ax, group.point_y + ay)
+			if attached group as l_group then
+				set_point_position (l_group.point_x + ax, l_group.point_y + ay)
 			else
 				set_point_position (ax, ay)
 			end
 		end
 
 feature {NONE} -- Implementation
-	
+
 	point_array: SPECIAL [EV_COORDINATE]
 			-- Relative points `Current' consists of.
 		deferred
 		end
-		
-	group: EV_MODEL_GROUP
+
+	group: detachable EV_MODEL_GROUP
 			-- Group `Current' is part of
 		deferred
 		end
@@ -140,4 +140,8 @@ note
 
 
 end -- class EV_MODEL_SINGLE_POINTED
+
+
+
+
 

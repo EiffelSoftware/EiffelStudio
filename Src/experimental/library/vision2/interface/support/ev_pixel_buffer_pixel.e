@@ -167,7 +167,9 @@ feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation
 		do
 			current_column_value := a_column
 			current_row_value := a_row
-			internal_color_value := internal_pixel_buffer.get_pixel (a_column, a_row)
+			if internal_pixel_buffer /= Void then
+				internal_color_value := internal_pixel_buffer.get_pixel (a_column, a_row)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -214,7 +216,11 @@ feature {NONE} -- Implementation
 	internal_color_value: NATURAL_32
 		-- Packed color value which is updated by `update'.
 
-	internal_pixel_buffer: EV_PIXEL_BUFFER_I
-		-- Pixel buffer for which `Current' change values of.
+	internal_pixel_buffer: detachable EV_PIXEL_BUFFER_I
+			-- Pixel buffer for which `Current' change values of.
+		note
+			option: stable
+		attribute
+		end;
 
 end

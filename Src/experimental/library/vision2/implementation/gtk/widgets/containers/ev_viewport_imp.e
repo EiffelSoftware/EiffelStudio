@@ -21,13 +21,14 @@ inherit
 	EV_CELL_IMP
 		redefine
 			interface,
-			make,
+			old_make,
 			container_widget,
 			visual_widget,
 			on_removed_item,
 			needs_event_box,
 			gtk_insert_i_th,
-			gtk_container_remove
+			gtk_container_remove,
+			make
 		end
 
 create
@@ -41,15 +42,20 @@ feature {NONE} -- Initialization
 			Result := False
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Initialize.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			viewport := {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
 			set_c_object (viewport)
 			{EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (viewport, {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 			container_widget := viewport
+			Precursor
 		end
 
 feature -- Access
@@ -71,10 +77,10 @@ feature -- Element change
 	block_resize_actions
 			-- Block any resize actions that may occur.
 		do
-			if item /= Void then
+			if attached item as l_item then
 				-- The blocking of resize actions is due to set uposition causing temporary resizing.
-				if item.implementation.resize_actions_internal /= Void then
-					item.implementation.resize_actions_internal.block
+				if l_item.implementation.resize_actions_internal /= Void then
+					l_item.implementation.resize_actions.block
 				end
 			end
 		end
@@ -82,9 +88,9 @@ feature -- Element change
 	unblock_resize_actions
 			-- Unblock all resize actions.
 		do
-			if item /= Void then
-				if item.implementation.resize_actions_internal /= Void then
-					item.implementation.resize_actions_internal.resume
+			if attached item as l_item then
+				if l_item.implementation.resize_actions_internal /= Void then
+					l_item.implementation.resize_actions.resume
 				end
 			end
 		end
@@ -142,11 +148,15 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			w_imp: EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 			l_parent_box: POINTER
 			l_c_object: POINTER
+			l_item: like item
 		do
-			w_imp ?= item.implementation
+			l_item := item
+			check l_item /= Void end
+			w_imp ?= l_item.implementation
+			check w_imp /= Void end
 			l_c_object := w_imp.c_object
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
@@ -229,7 +239,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VIEWPORT;
+	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -246,4 +256,8 @@ note
 
 
 end -- class EV_VIEWPORT_IMP
+
+
+
+
 

@@ -35,19 +35,19 @@ create
 
 feature {EV_DIALOG_I} -- Implementation
 
-	other_imp: EV_UNTITLED_DIALOG_IMP
+	other_imp: detachable EV_UNTITLED_DIALOG_IMP note option: stable attribute end
 			-- Previous Implementation if any, Void otherwise.
-			
+
 feature {NONE} -- Implementation
 
-	common_dialog_imp: EV_DIALOG_IMP_MODAL
+	common_dialog_imp: detachable EV_DIALOG_IMP_MODAL
 			-- Dialog implementation type common to all descendents.
 		do
 		end
-			
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_UNTITLED_DIALOG;
+	interface: detachable EV_UNTITLED_DIALOG note option: stable attribute end;
 			-- Interface for `Current'.
 
 note
@@ -65,4 +65,8 @@ note
 
 
 end -- class EV_DIALOG_IMP_MODAL
+
+
+
+
 

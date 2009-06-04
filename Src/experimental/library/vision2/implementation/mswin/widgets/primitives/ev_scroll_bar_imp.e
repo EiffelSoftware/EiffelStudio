@@ -21,7 +21,7 @@ inherit
 			on_scroll
 		redefine
 			interface,
-			initialize,
+			make,
 			wel_background_color,
 			set_leap,
 			set_range
@@ -92,7 +92,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	initialize
+	make
 		do
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
@@ -107,10 +107,14 @@ feature {NONE} -- Implementation
 		end
 
 	wel_background_color: WEL_COLOR_REF
+		local
+			l_result: detachable WEL_COLOR_REF
 		do
-			Result := background_color_imp
-			if Result = Void then
+			l_result := background_color_imp
+			if l_result = Void then
 				create Result.make_system (Color_scrollbar)
+			else
+				Result := l_result
 			end
 		end
 
@@ -169,7 +173,7 @@ feature {EV_ANY_I} -- Implementation
 			wel_set_range (value_range.lower, value_range.upper + leap - 1)
 		end
 
-	interface: EV_SCROLL_BAR;
+	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -186,4 +190,13 @@ note
 
 
 end -- class EV_RANGE_IMP
+
+
+
+
+
+
+
+
+
 

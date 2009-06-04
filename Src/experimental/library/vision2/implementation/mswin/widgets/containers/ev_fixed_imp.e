@@ -25,7 +25,8 @@ inherit
 			compute_minimum_size,
 			on_size,
 			insert_i_th,
-			notify_change
+			notify_change,
+			make
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -47,14 +48,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the fixed container.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			ev_wel_control_container_make
 			create ev_children.make (2)
+			Precursor
 		end
 
 feature -- Status setting
@@ -62,12 +68,13 @@ feature -- Status setting
 	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
 		local
-			v_imp: EV_WIDGET_IMP
-			wel_win: WEL_WINDOW
+			v_imp: detachable EV_WIDGET_IMP
+			wel_win: detachable WEL_WINDOW
 		do
 				-- Add `a_widget' to `Current'.
 			a_widget.implementation.on_parented
 			v_imp ?= a_widget.implementation
+			check v_imp /= Void end
 			ev_children.go_i_th (count + 1)
 			ev_children.put_left (v_imp)
 			wel_win ?= Current
@@ -88,9 +95,10 @@ feature -- Status setting
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
 		local
-			wel_win: EV_WIDGET_IMP
+			wel_win: detachable EV_WIDGET_IMP
 		do
 			wel_win ?= a_widget.implementation
+			check wel_win /= Void end
 			wel_win.ev_move (a_x, a_y)
 			wel_win.parent_ask_resize (a_width, a_height)
 			wel_win.invalidate
@@ -101,7 +109,7 @@ feature -- Status setting
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
-			wel_win: EV_WIDGET_IMP
+			wel_win: detachable EV_WIDGET_IMP
 		do
 			application_implementation.erase_rubber_band
 			wel_win ?= a_widget.implementation
@@ -117,7 +125,7 @@ feature -- Status setting
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			wel_win: EV_WIDGET_IMP
+			wel_win: detachable EV_WIDGET_IMP
 		do
 			wel_win ?= a_widget.implementation
 			check
@@ -132,10 +140,10 @@ feature {EV_ANY_I} -- Implementation
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- Child widgets in z-order starting with farthest away.
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Assign `a_window' to `top_level_window_imp'.
 		do
 			top_level_window_imp := a_window
@@ -154,7 +162,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := Ws_child | Ws_visible | Ws_clipchildren | Ws_clipsiblings
 		end
 
-	interface: EV_FIXED
+	interface: detachable EV_FIXED note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -230,7 +238,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (v, i)
@@ -309,7 +317,7 @@ feature {NONE} -- WEL Implementation
 			original_index: INTEGER
 			temp_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			current_child: EV_WIDGET_IMP
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 		do
 				-- Disable default windows processing which would re-draw the
 				-- complete background of `Current'. This is not nice behaviour
@@ -351,6 +359,7 @@ feature {NONE} -- WEL Implementation
 			end
 				-- Fill the remaining region, `main_region'.
 			bk_brush := background_brush
+			check bk_brush /= Void end
 			paint_dc.fill_region (main_region, bk_brush)
 				-- Restore our index in the children.
 			temp_children.go_i_th (original_index)
@@ -363,7 +372,7 @@ feature {NONE} -- WEL Implementation
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' currently contained in `Current'.
 		do
-			Result := a_child = item.implementation
+			Result := a_child = interface_item.implementation
 		end
 
 note
@@ -379,4 +388,11 @@ note
 
 
 end -- class EV_FIXED_IMP
+
+
+
+
+
+
+
 

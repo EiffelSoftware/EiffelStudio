@@ -7,7 +7,7 @@ note
 
 deferred class
 	EV_ITEM_PIXMAP_SCALER_I
-	
+
 inherit
 	EV_ANY_I
 		redefine
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_ITEM_PIXMAP_SCALER;
+	interface: detachable EV_ITEM_PIXMAP_SCALER note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -80,4 +80,12 @@ note
 
 
 end -- class EV_PIXMAPABLE_ITEM_HOLDER_I
+
+
+
+
+
+
+
+
 

@@ -28,7 +28,8 @@ inherit
 			interface,
 			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			make
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -43,27 +44,32 @@ inherit
 create
 	make
 
-feature {NONE} -- initialization
+feature -- initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			ev_wel_control_container_make
+			Precursor
 		end
 
 feature -- Element change
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
 			top_level_window_imp := a_window
-			if item_imp /= Void then
-				item_imp.set_top_level_window_imp (a_window)
+			if attached item_imp as l_item_imp then
+				l_item_imp.set_top_level_window_imp (a_window)
 			end
 		end
 
@@ -74,8 +80,8 @@ feature {EV_ANY_I} -- Implementation
 		local
 			mw: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
 			end
 			ev_set_minimum_width (mw)
 		end
@@ -85,8 +91,8 @@ feature {EV_ANY_I} -- Implementation
 		local
 			mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mh := l_item_imp.minimum_height
 			end
 			ev_set_minimum_height (mh)
 		end
@@ -97,14 +103,14 @@ feature {EV_ANY_I} -- Implementation
 		local
 			mw, mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
+				mh := l_item_imp.minimum_height
 			end
 			ev_set_minimum_size (mw, mh)
 		end
 
-	interface: EV_CELL;
+	interface: detachable EV_CELL note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -123,4 +129,14 @@ note
 
 
 end -- class EV_CELL_IMP
+
+
+
+
+
+
+
+
+
+
 

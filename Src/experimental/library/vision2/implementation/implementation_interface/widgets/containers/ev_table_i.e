@@ -24,7 +24,7 @@ feature -- Access
 	columns: INTEGER
 			-- Number of columns in `Current'.
 
-	item_at_position (a_column, a_row: INTEGER): EV_WIDGET
+	item_at_position (a_column, a_row: INTEGER): detachable EV_WIDGET
 			-- Widget at coordinates (`row', `column')
 		do
 			Result := internal_array.item ((a_row - 1) * columns + a_column)
@@ -34,6 +34,7 @@ feature -- Access
 			-- List of items in `Current'.
 		local
 			i, j: INTEGER
+			l_item: detachable EV_WIDGET
 		do
 			create Result.make (internal_array.count)
 			if internal_array.count > 0 then
@@ -43,19 +44,19 @@ feature -- Access
 				until
 					i > j
 				loop
-					if internal_array.item (i) /= Void and not Result.has
-						(internal_array.item (i)) then
-						Result.extend (internal_array.item (i))
+					l_item := internal_array.item (i)
+					if attached l_item and then not Result.has
+						(l_item) then
+						Result.extend (l_item)
 					end
 					i := i + 1
 				end
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_not_has_void: not Result.has (Void)
 		end
 
-	to_array: ARRAY [EV_WIDGET]
+	to_array: ARRAY [detachable EV_WIDGET]
 			-- A representation of `Current' as ARRAY. Included to
 			-- ease transition from inheritance of ARRAY to
 			-- inheritance of CHAIN. Contains contents of all cells
@@ -311,6 +312,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 		local
 			new: ARRAY [EV_WIDGET]
 			col_index, row_index, column_max, row_max: INTEGER
+			l_item: detachable EV_WIDGET
 		do
 			create new.make (1, a_column * a_row)
 			column_max := columns.min (a_column)
@@ -326,7 +328,9 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 				until
 					col_index > column_max
 				loop
-					new.put (item_at_position (col_index, row_index),
+					l_item := item_at_position (col_index, row_index)
+					check l_item /= Void end
+					new.put (l_item,
 						((row_index - 1) * a_column) + col_index)
 					col_index := col_index + 1
 				end
@@ -565,23 +569,23 @@ feature -- Element change
 			-- Remove all items.
 		do
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.off
+				attached_interface.off
 			loop
-				interface.prune (item)
+				attached_interface.prune (item)
 			end
 		end
 
 	cursor: CURSOR
 			-- Current cursor position.
 		local
-			an_item: like item
+			an_item: detachable like item
 		do
 			if index > 0 and then index <= count then
 				an_item := item
 			end
-			create {EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
+			create {EV_DYNAMIC_LIST_CURSOR [detachable EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
 		end
 
 	valid_cursor (p: CURSOR): BOOLEAN
@@ -589,17 +593,17 @@ feature -- Element change
 			-- This is True if `p' conforms to EV_TABLE_CURSOR and
 			-- if it points to an item, `Current' must have it.
 		local
-			dlc: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
+			dlc: detachable EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
 		do
 			dlc ?= p
 			Result := dlc /= Void and then
-				(dlc.item = Void or else has (dlc.item))
+				(dlc.item = Void or else attached dlc.item as l_item and then has (l_item))
 		end
 
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
-			dlc: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
+			dlc: detachable EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
 		do
 			dlc ?= p
 			check
@@ -609,8 +613,8 @@ feature -- Element change
 				index := count + 1
 			elseif dlc.before then
 				index := 0
-			else
-				index := interface.index_of (dlc.item, 1)
+			elseif attached dlc.item as l_item then
+				index := attached_interface.index_of (l_item, 1)
 			end
 		end
 
@@ -693,7 +697,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TABLE
+	interface: detachable EV_TABLE note option: stable attribute end
 
 	Default_homogeneous: BOOLEAN = False
 		-- `Current' is not homogeneous by default.
@@ -704,7 +708,7 @@ feature {EV_ANY_I} -- Implementation
 	Default_column_spacing: INTEGER = 0
 		-- Default column spacing of `Current'.
 
-	internal_array: ARRAY [EV_WIDGET]
+	internal_array: ARRAY [detachable EV_WIDGET]
 		-- Array representing `Current'.
 		-- All widgets are contained in here, and we manipulate
 		-- this as the table is modified.
@@ -729,4 +733,13 @@ note
 
 
 end -- class EV_TABLE_I
+
+
+
+
+
+
+
+
+
 

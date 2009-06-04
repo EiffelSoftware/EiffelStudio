@@ -1,5 +1,5 @@
 note
-	description: "Access to the vision2 application through a once feature"
+	description: "Access to the vision2 application if created."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "EV_APPLICATION, application, once, access"
@@ -12,12 +12,15 @@ class
 feature -- Access
 
 	ev_application: EV_APPLICATION
-			-- Current application. This once feature must be called
-			-- only if the application has been created
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		ensure
-			Result_not_void: Result /= Void
+			-- Current application if created yet.
+		require
+			application_exists: attached shared_environment.application
+		local
+			l_result: detachable EV_APPLICATION
+		do
+			l_result := shared_environment.application
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	process_events_and_idle
@@ -27,6 +30,12 @@ feature -- Access
 		do
 			ev_application.process_events
 				-- Idle actions are called when all events are processed.
+		end
+
+	shared_environment: EV_ENVIRONMENT
+			-- Shared EV_ENVIRONMENT object.
+		once
+			Result := create {EV_ENVIRONMENT}
 		end
 
 note
@@ -44,4 +53,9 @@ note
 
 
 end -- class EV_SHARED_APPLICATION
+
+
+
+
+
 

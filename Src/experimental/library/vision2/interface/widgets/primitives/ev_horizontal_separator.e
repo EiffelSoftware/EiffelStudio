@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_HORIZONTAL_SEPARATOR_IMP} implementation.make (Current)
+			create {EV_HORIZONTAL_SEPARATOR_IMP} implementation.make
 		end
 
 note
@@ -53,4 +53,11 @@ note
 
 
 end -- class EV_HORIZONTAL_SEPARATOR
+
+
+
+
+
+
+
 

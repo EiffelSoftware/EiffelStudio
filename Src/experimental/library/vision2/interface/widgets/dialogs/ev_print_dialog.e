@@ -1,4 +1,4 @@
-note 
+note
         description: "EiffelVision print dialog."
 	legal: "See notice at end of class."
         status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 create
         default_create,
         make_with_title
-        
+
 feature -- Event handling
 
 	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -393,9 +393,9 @@ feature -- Element change
 		ensure
 			minimum_from_page_set: minimum_from_page = value
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
-		
+
 	implementation: EV_PRINT_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.
 
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_PRINT_DIALOG_IMP} implementation.make (Current)
+			create {EV_PRINT_DIALOG_IMP} implementation.make
 		end
 
 note
@@ -422,4 +422,8 @@ note
 
 
 end -- class EV_PRINT_DIALOG
+
+
+
+
 

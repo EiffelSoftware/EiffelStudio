@@ -71,9 +71,9 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			pnd_item_source := Void
 			application_imp.clear_transport_just_ended
 				-- If we are executing a pick and drop
-			if application_imp.pick_and_drop_source /= Void then
+			if attached application_imp.pick_and_drop_source as l_pnd_source then
 					-- We use default values which cause pick and drop to end.
-				application_imp.pick_and_drop_source.end_transport (0, 0, 2, 0, 0, 0,
+				l_pnd_source.end_transport (0, 0, 2, 0, 0, 0,
 					0, 0)
 			end
 		end
@@ -87,10 +87,10 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
 			pt := client_to_screen (x_pos, y_pos)
 			if application_imp.pointer_button_press_actions_internal /= Void then
-				application_imp.pointer_button_press_actions_internal.call ([interface, 2, pt.x, pt.y])
+				application_imp.pointer_button_press_actions.call ([attached_interface, 2, pt.x, pt.y])
 			end
-			if pointer_button_press_actions_internal /= Void then
-				pointer_button_press_actions_internal.call
+			if attached pointer_button_press_actions_internal as l_actions then
+				l_actions.call
 					([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
@@ -105,8 +105,8 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 
 	item_is_in_pnd: BOOLEAN
 		do
-			if pnd_item_source /= Void then
-				Result := pnd_item_source.is_pnd_in_transport or else pnd_item_source.is_dnd_in_transport
+			if attached pnd_item_source as l_pnd_item_source then
+				Result := l_pnd_item_source.is_pnd_in_transport or else l_pnd_item_source.is_dnd_in_transport
 			end
 		end
 
@@ -120,15 +120,15 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if (not item_is_pnd_source and not is_pnd_in_transport
-				and not is_dnd_in_transport) or (item_is_pnd_source and not
-				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport)
+				and not is_dnd_in_transport) or (item_is_pnd_source and then attached pnd_item_source as l_pnd_item_source and then not
+				l_pnd_item_source.is_pnd_in_transport and then not
+				l_pnd_item_source.is_dnd_in_transport)
 			then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, 3, pt.x, pt.y])
+					application_imp.pointer_button_press_actions.call ([attached_interface, 3, pt.x, pt.y])
 				end
-				if pointer_button_press_actions_internal /= Void then
-					pointer_button_press_actions_internal.call
+				if attached pointer_button_press_actions_internal as l_actions then
+					l_actions.call
 						([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 				press_actions_called := True
@@ -156,23 +156,23 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			pt := client_to_screen (x_pos, y_pos)
 			if
 				not (item_is_pnd_source and not is_pnd_in_transport and not
-				is_dnd_in_transport) or (item_is_pnd_source and not
-				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport)
+				is_dnd_in_transport) or (item_is_pnd_source and then attached pnd_item_source as l_pnd_item_source and then not
+				l_pnd_item_source.is_pnd_in_transport and then not
+				l_pnd_item_source.is_dnd_in_transport)
 			then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, 1, pt.x, pt.y])
+					application_imp.pointer_button_press_actions.call ([attached_interface, 1, pt.x, pt.y])
 				end
-				if pointer_button_press_actions_internal /= Void then
+				if attached pointer_button_press_actions_internal as l_actions then
 						-- The above `if' statement was added as an extra at a later date
 						-- and is not incorporated into the main if to avoid the
 						-- possibility of breaking something. Julian.
-					pointer_button_press_actions_internal.call
+					l_actions.call
 						([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 				press_actions_called := True
 			end
-			if interface.is_dockable then
+			if attached_interface.is_dockable then
 				pt := client_to_screen (x_pos, y_pos)
 				dragable_press (x_pos, y_pos,
 				1,
@@ -186,7 +186,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			-- Wmlbuttonup message
 		local
 			pt: WEL_POINT
-			tool_bar: EV_TOOL_BAR_IMP
+			tool_bar: detachable EV_TOOL_BAR_IMP
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
@@ -195,8 +195,8 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				if tool_bar /= Void then
 					tool_bar.end_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y)
 				end
-			elseif item_is_pnd_source then
-				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
+			elseif item_is_pnd_source and then attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
 				parent_is_pnd_source := False
@@ -204,10 +204,10 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				check_dragable_release (x_pos, y_pos)
 			end
 			if application_imp.pointer_button_release_actions_internal /= Void then
-				application_imp.pointer_button_release_actions_internal.call ([interface, 1, pt.x, pt.y])
+				application_imp.pointer_button_release_actions.call ([attached_interface, 1, pt.x, pt.y])
 			end
-			if pointer_button_release_actions_internal /= Void then
-				pointer_button_release_actions_internal.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			if attached pointer_button_release_actions_internal as l_actions then
+				l_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
 
@@ -241,11 +241,11 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			internal_propagate_pointer_double_press
 				(keys, x_pos, y_pos, a_button)
 			if application_imp.pointer_double_press_actions_internal /= Void then
-				application_imp.pointer_double_press_actions_internal.call ([interface, a_button, pt.x, pt.y])
+				application_imp.pointer_double_press_actions.call ([attached_interface, a_button, pt.x, pt.y])
 			end
-			if pointer_double_press_actions_internal /= Void then
+			if attached pointer_double_press_actions_internal as l_pointer_double_press_actions then
 					-- Call pointer_double_press_actions on `Current'.
-				pointer_double_press_actions_internal.call
+				l_pointer_double_press_actions.call
 					([x_pos, y_pos, a_button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
@@ -263,7 +263,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		deferred
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		deferred
 		end
@@ -289,7 +289,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		deferred
 		end
 
-	interface: EV_WIDGET
+	interface: detachable EV_WIDGET note option: stable attribute end;
 
 feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
@@ -317,7 +317,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
 
-	pnd_item_source: EV_PICK_AND_DROPABLE_ITEM_IMP
+	pnd_item_source: detachable EV_PICK_AND_DROPABLE_ITEM_IMP
 			-- PND source if PND started in an item.
 
 	item_is_pnd_source: BOOLEAN
@@ -325,7 +325,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
 	item_is_dockable_source: BOOLEAN
 
-	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP)
+	set_item_source (source: detachable EV_PICK_AND_DROPABLE_ITEM_IMP)
 			-- Assign `source' to `pnd_item_source'
 		do
 			pnd_item_source := source
@@ -363,7 +363,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 		end
 
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 		deferred
 		end
 
@@ -395,17 +395,17 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 		deferred
 		end
 
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
 		deferred
 		end
 
-	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_release_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_release_actions'.
 		deferred
 		end
 
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'. is
 		deferred
 		end
@@ -425,4 +425,15 @@ note
 
 
 end -- class EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+
+
+
+
+
+
+
+
+
+
+
 

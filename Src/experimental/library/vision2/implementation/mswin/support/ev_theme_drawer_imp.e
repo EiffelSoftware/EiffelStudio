@@ -35,7 +35,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect, a_clip_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect: WEL_RECT; a_clip_rect: detachable WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw a background theme using the theme `theme' into `a_hdc'. `a_part_id' represents the part type to draw and `a_state_id' represents
 			-- the item state. Drawing is performed into `a_rect' and clipped to `a_clip_rect'. If not themed then use `background_brush' for the background.
 		require
@@ -69,7 +69,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: detachable WEL_BRUSH)
 			-- For the  WEL_WINDOW represented by `wel_item', copy the background of it's `parent' into `a_hdc' using
 			-- `a_rect'. On classic implementations, simply use `background_brush' if not Void.
 		require
@@ -113,7 +113,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_bitmap_on_dc (dc: WEL_DC; a_bitmap, mask_bitmap: WEL_BITMAP; an_x, a_y: INTEGER; is_sensitive: BOOLEAN)
+	draw_bitmap_on_dc (dc: WEL_DC; a_bitmap: WEL_BITMAP; mask_bitmap: detachable WEL_BITMAP; an_x, a_y: INTEGER; is_sensitive: BOOLEAN)
 			-- Draw `a_bitmap' on `dc' at `an_x'. `a_y'.
 			-- Take `is_sensitive' into acount, and draw `a_bitmap' greyed out if not `is_sensitive'.
 		require
@@ -258,4 +258,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

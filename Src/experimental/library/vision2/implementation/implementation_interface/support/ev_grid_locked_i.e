@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			create viewport
 			create fixed
 			viewport.extend (fixed)
+			widget := viewport
 			fixed.extend (drawing_area)
 			drawing_area.expose_actions.extend (agent (grid.drawer).redraw_area_in_drawable_coordinates (?, ?, ?, ?, drawing_area, viewport, Current))--simple_redraw)
 
@@ -42,7 +43,6 @@ feature {NONE} -- Initialization
 			drawing_area.focus_in_actions.extend (agent focus_in_received)
 			drawing_area.focus_out_actions.extend (agent focus_out_received)
 			drawing_area.mouse_wheel_actions.extend (agent mouse_wheel_received)
-			widget := viewport
 		end
 
 feature -- Access

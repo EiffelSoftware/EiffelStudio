@@ -69,10 +69,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_CLIPBOARD_IMP} implementation.make (Current)
+			create {EV_CLIPBOARD_IMP} implementation.make
 		end
 
 invariant
@@ -90,4 +96,12 @@ note
 		]"
 
 end -- class EV_CLIPBOARD
+
+
+
+
+
+
+
+
 

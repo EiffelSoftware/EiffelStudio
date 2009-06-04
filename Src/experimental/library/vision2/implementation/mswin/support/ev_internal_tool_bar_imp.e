@@ -69,7 +69,7 @@ feature {NONE} -- WEL Implementation
 					toolbar.wel_item, tb_gettooltips, to_wparam (0), to_lparam (0))
 					-- We create `tooltip' from retrieved pointer.	
 				create tooltip.make_by_pointer (int)
-				app := toolbar.application_imp.interface
+				app := toolbar.application_imp.attached_interface
 					-- If there is a tooltip delay and it has changed then
 					-- assign the delay to `tooltip'.
 					--| The first time this tooltip is shown after setting
@@ -92,7 +92,7 @@ feature {NONE} -- WEL Implementation
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 		local
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			current_height: INTEGER
 			theme_drawer: EV_THEME_DRAWER_IMP
 		do
@@ -106,6 +106,7 @@ feature {NONE} -- WEL Implementation
 						-- `Current' in which it is parented. Therefore we must clear the background
 						-- of `Current' that is not occupied by `tool_bar'.
 				bk_brush := toolbar.background_brush
+				check bk_brush /= Void end
 				invalid_rect.set_top (invalid_rect.top + current_height)
 				theme_drawer := toolbar.application_imp.theme_drawer
 				theme_drawer.draw_widget_background (toolbar, paint_dc, invalid_rect, bk_brush)
@@ -151,4 +152,12 @@ note
 
 
 end -- class EV_INTERNAL_TOOL_BAR_IMP
+
+
+
+
+
+
+
+
 

@@ -5,9 +5,9 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_GRID_ROW_ACTION_SEQUENCES
-	
+
 inherit
 	REFACTORING_HELPER
 
@@ -20,15 +20,15 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deselected.
 		do
 			Result := implementation.deselect_actions
 		ensure
 			result_not_void: Result /= Void
-		end		
-	
+		end
+
 	expand_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is expanded.
 		do
@@ -36,7 +36,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is collapsed.
 		do
@@ -44,7 +44,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	implementation: EV_GRID_ROW_ACTION_SEQUENCES_I;
@@ -64,4 +64,9 @@ note
 
 
 end
+
+
+
+
+
 

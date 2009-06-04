@@ -39,8 +39,8 @@ feature -- Status setting
 			enable_sensitive
 		ensure
 			is_sensitive_if_parent_sensitive:
-				(has_parent and then parent_is_sensitive) implies interface.implementation.is_sensitive
-			is_sensitive_if_orphaned: not has_parent implies interface.implementation.is_sensitive
+				(has_parent and then parent_is_sensitive) implies attached_interface.implementation.is_sensitive
+			is_sensitive_if_orphaned: not has_parent implies attached_interface.implementation.is_sensitive
 		end
 
 	user_disable_sensitive
@@ -77,7 +77,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	interface: EV_SENSITIVE;
+	interface: detachable EV_SENSITIVE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -96,4 +96,12 @@ note
 
 
 end -- class EV_SENSITIVE_I
+
+
+
+
+
+
+
+
 

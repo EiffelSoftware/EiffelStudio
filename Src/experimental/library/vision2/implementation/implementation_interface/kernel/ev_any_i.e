@@ -24,11 +24,10 @@ note
 deferred class
 	EV_ANY_I
 
-feature {EV_ANY_I} -- Initialization
+feature {EV_ANY, EV_ANY_I} -- Initialization
 
-	frozen base_make (an_interface: like interface)
+	frozen assign_interface (an_interface: attached like interface)
 			-- Assign `an_interface' to `interface'
-			--| Must be called from `make'.
 			--| See notes on initialization in ev_any.e
 		require
 			an_interface_not_void: an_interface /= Void
@@ -43,10 +42,12 @@ feature {EV_ANY_I} -- Initialization
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: EV_ANY)
+	old_make (an_interface: like interface)
 			-- Create underlying native toolkit objects.
 			-- Every descendant should exactly one a creation procedure `make'.
 			-- Must call `base_make'.
+		obsolete
+			"Should no longer be used"
 		require
 			an_interface_not_void: an_interface /= Void
 		deferred
@@ -55,10 +56,8 @@ feature {EV_ANY} -- Initialization
 			base_make_called: base_make_called
 		end
 
-	initialize
-			-- Do post creation initialization.
-			-- While make must be redefined in each descendant,
-			-- initialize may remain more general.
+	make
+			-- Creation routine and initialization for `Current'.
 			--| Called from EV_ANY.default_create
 		deferred
 		ensure
@@ -96,9 +95,21 @@ feature -- Status report
 			Result := get_state_flag (is_destroyed_flag)
 		end
 
+feature -- Implementation
+
+	attached_interface: attached like interface
+			-- Attached version of `interface'.
+		local
+			l_result: like interface
+		do
+			l_result := interface
+			check l_result /= Void end
+			Result := l_result
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_ANY
+	interface: detachable EV_ANY note option: stable attribute end
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 			-- (see bridge pattern notes in ev_any.e)
@@ -184,7 +195,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_in_destroy_set: is_in_destroy = flag
 		end
 
-	set_interface (an_interface: like interface)
+	set_interface (an_interface: attached like interface)
 			-- Assign `an_interface' to `interface'.
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
@@ -228,13 +239,13 @@ feature {NONE} -- Contract support
 	is_usable: BOOLEAN
 			-- Is `Current' usable?
 		do
-			Result := get_state_flag (is_initialized_flag) and not is_destroyed
+			Result := attached interface and then get_state_flag (is_initialized_flag) and then not is_destroyed
 		end
 
 invariant
 	interface_coupled: is_usable implies
-		interface /= Void and then interface.implementation = Current
-	base_make_called: base_make_called
+		interface /= Void and then attached_interface.implementation = Current
+	base_make_called: is_usable implies base_make_called
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -251,4 +262,12 @@ note
 
 
 end -- class EV_ANY_I
+
+
+
+
+
+
+
+
 

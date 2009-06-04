@@ -16,18 +16,18 @@ inherit
 create
 	make
 
-feature {NONE} -- Initlization
+feature -- Initlization
 
-	make (an_interface: EV_BEEP)
+	old_make (an_interface: EV_BEEP)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			create beep_routines
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			create beep_routines
 			set_is_initialized (True)
 		end
 
@@ -36,7 +36,6 @@ feature {NONE} -- Initlization
 			-- No externals to deallocate, just set the flags.
 		do
 			set_is_destroyed (True)
-			beep_routines := Void
 		end
 
 feature -- Commands

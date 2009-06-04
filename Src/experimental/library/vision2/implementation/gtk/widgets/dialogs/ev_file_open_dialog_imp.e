@@ -19,7 +19,7 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			initialize,
+			make,
 			file_name
 		end
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 		do
 			Precursor
 			set_title ("Open")
@@ -43,14 +43,17 @@ feature {NONE} -- Access
 			-- Retrieve file name selected by user.
 		local
 			l_file_names: like file_names
+			l_result: detachable STRING_32
 		do
 			l_file_names := file_names
 			if not l_file_names.is_empty then
-				Result := l_file_names.first
+				l_result := l_file_names.first
 			end
-			if Result = Void then
-				Result := Precursor {EV_FILE_DIALOG_IMP}
+			if l_result = Void then
+				l_result := Precursor {EV_FILE_DIALOG_IMP}
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	file_names: ARRAYED_LIST [STRING_32]
@@ -61,7 +64,7 @@ feature {NONE} -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			create Result.make (1)
-			if selected_button /= Void and then selected_button.is_equal (internal_accept) then
+			if attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept) then
 					fnlist := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filenames (c_object)
 			end
 			if fnlist /= Default_pointer then
@@ -104,7 +107,7 @@ feature {NONE} -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
 		end
 
-	interface: EV_FILE_OPEN_DIALOG;
+	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -121,4 +124,8 @@ note
 
 
 end -- class EV_FILE_OPEN_DIALOG_IMP
+
+
+
+
 

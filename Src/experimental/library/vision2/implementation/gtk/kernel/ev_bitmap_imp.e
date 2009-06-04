@@ -24,13 +24,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set up action sequence connections and create graphics context.
 		do
 			drawable := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, 1, 1, 1)
@@ -107,12 +107,12 @@ feature {NONE} -- Implementation
 			-- Access to application object implementation.
 		local
 			env: EV_ENVIRONMENT
+			l_result: detachable EV_APPLICATION_IMP
 		once
 			create env
-			Result ?= env.application.implementation
-			check
-				result_not_void: Result /= Void
-			end
+			l_result ?= env.implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	redraw
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			-- Not applicable
 		end
 
-	interface: EV_BITMAP
+	interface: detachable EV_BITMAP note option: stable attribute end;
 
 end -- class EV_SCREEN_IMP
 

@@ -22,7 +22,7 @@ class
 	EV_SCROLLABLE_AREA
 
 inherit
-	EV_VIEWPORT 
+	EV_VIEWPORT
 		redefine
 			implementation,
 			create_implementation,
@@ -139,7 +139,7 @@ feature -- Element change
 		ensure
 			hidden: not is_vertical_scroll_bar_visible
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
+			create {EV_SCROLLABLE_AREA_IMP} implementation.make
 		end
 
 invariant
@@ -181,4 +181,11 @@ note
 
 
 end -- class EV_SCROLLABLE_AREA
+
+
+
+
+
+
+
 

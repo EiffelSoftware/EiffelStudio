@@ -55,7 +55,7 @@ inherit
 
 feature -- Access
 
-	pebble: ANY
+	pebble: detachable ANY
 		-- Data to be transported by pick and drop mechanism.
 		do
 			check
@@ -66,7 +66,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble
 		end
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 		do
 			check
@@ -113,13 +113,17 @@ feature -- Access
 	accept_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
+		local
+			l_result: detachable EV_POINTER_STYLE
 		do
 			check
 				not_destroyed: not is_destroyed
 			end
-			Result := implementation.accept_cursor
-			if Result = Void then
+			l_result := implementation.accept_cursor
+			if l_result = Void then
 				Result := Default_pixmaps.Standard_cursor
+			else
+				Result := l_result
 			end
 		ensure then
 			bridge_ok: Result = implementation.accept_cursor
@@ -128,19 +132,23 @@ feature -- Access
 	deny_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
+		local
+			l_result: detachable EV_POINTER_STYLE
 		do
 			check
 				not_destroyed: not is_destroyed
 			end
-			Result := implementation.deny_cursor
-			if Result = Void then
+			l_result := implementation.deny_cursor
+			if l_result = Void then
 				Result := Default_pixmaps.No_cursor
+			else
+				Result := l_result
 			end
 		ensure then
 			bridge_ok: Result = implementation.deny_cursor
 		end
 
-	configurable_target_menu_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
+	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
 			-- Agent used for customizing the Pick and Drop Target Menu of `Current'.
 		do
 			Result := implementation.configurable_target_menu_handler
@@ -148,7 +156,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pebble (a_pebble: like pebble)
+	set_pebble (a_pebble: ANY)
 			-- Assign `a_pebble' to `pebble'.
 			-- Overrides `set_pebble_function'.
 		do
@@ -168,7 +176,7 @@ feature -- Status setting
 			implementation.remove_pebble
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -227,7 +235,7 @@ feature -- Status setting
 			target_menu_mode_set: mode_is_configurable_target_menu
 		end
 
-	set_configurable_target_menu_handler (a_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]])
+	set_configurable_target_menu_handler (a_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]])
 			-- Set Configurable Target Menu Handler to `a_handler'.
 		do
 			implementation.set_configurable_target_menu_handler (a_handler)
@@ -379,4 +387,14 @@ note
 
 
 end -- class EV_PICK_AND_DROPABLE
+
+
+
+
+
+
+
+
+
+
 

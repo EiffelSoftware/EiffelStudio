@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Interactive horizontal range widget. A sliding thumb displays the
@@ -33,13 +33,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_RANGE_I
 			-- Platform dependent access.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- Create implementation of horizontal range.
 		do
-			create {EV_HORIZONTAL_RANGE_IMP} implementation.make (Current)
+			create {EV_HORIZONTAL_RANGE_IMP} implementation.make
 		end
 
 note
@@ -57,4 +57,10 @@ note
 
 
 end -- class EV_HORIZONTAL_RANGE
+
+
+
+
+
+
 

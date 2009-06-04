@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} -- Interface
 
-	interface: EV_RANGE;
+	interface: detachable EV_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -108,4 +108,12 @@ note
 
 
 end -- class EV_RANGE_IMP
+
+
+
+
+
+
+
+
 

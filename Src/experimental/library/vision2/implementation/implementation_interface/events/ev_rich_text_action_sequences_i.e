@@ -24,7 +24,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selection changes.
 		do
@@ -36,7 +36,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed while loading or saving.
 			-- Event data is percentage of file written (0-100).
@@ -56,26 +56,38 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	caret_move_actions_internal: EV_INTEGER_ACTION_SEQUENCE
+	caret_move_actions_internal: detachable EV_INTEGER_ACTION_SEQUENCE
 			-- Implementation of once per object `caret_move_actions'.
-			
+		note
+			option: stable
+		attribute
+		end
+
 	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a selection change action sequence.
 		deferred
 		end
 
-	selection_change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	selection_change_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `selection_change_actions'.
-			
+		note
+			option: stable
+		attribute
+		end
+
 	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a file access action sequence.
 		deferred
 		end
-		
+
 feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
-		
-	file_access_actions_internal: EV_INTEGER_ACTION_SEQUENCE;
+
+	file_access_actions_internal: detachable EV_INTEGER_ACTION_SEQUENCE
 			-- Implementation of once per object `file_access_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -92,4 +104,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
 		% GDI object allocated "
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	get (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF): WEL_BRUSH
+	get (a_pattern: detachable WEL_BITMAP; a_color: detachable WEL_COLOR_REF): WEL_BRUSH
 			-- `Result' is WEL_BRUSH with `a_pattern' as pattern
 			-- and `a_color' as color.
 			--| If an identical brush exists in our system then we return that
@@ -36,6 +36,8 @@ feature -- Access
 
 		local
 			fake_object: EV_GDI_BRUSH
+			l_result: detachable WEL_BRUSH
+			l_color: detachable WEL_COLOR_REF
 		do
 			debug("VISION2_WINDOWS_GDI")
 				io.put_string ("getting a brush...")
@@ -47,13 +49,17 @@ feature -- Access
 			create fake_object.make_with_values(a_pattern, a_color)
 
 			if has_object (fake_object) then
-				Result ?= get_previously_allocated_object (found_object_index)
+				l_result ?= get_previously_allocated_object (found_object_index)
+				check l_result /= Void end
+				Result := l_result
 			else
 					-- New object, not already in our table. So we create it...
 				if a_pattern /= Void then
 					create Result.make_by_pattern(a_pattern)
 				else
-					create Result.make_solid(a_color)
+					l_color := a_color
+					check l_color /= Void end
+					create Result.make_solid(l_color)
 				end
 				Result.enable_reference_tracking
 				fake_object.set_item (Result)
@@ -84,4 +90,15 @@ note
 
 
 end -- class EV_GDI_ALLOCATED_BRUSHES
+
+
+
+
+
+
+
+
+
+
+
 

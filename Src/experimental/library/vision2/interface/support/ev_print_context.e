@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			selection_type := all_pages
 			copies := 1
 			output_to_file := False
+			file_name := ""
 			printer_name := "Default"
 			portrait := True
 			horizontal_resolution := 575
@@ -230,4 +231,15 @@ note
 
 
 end -- class EV_PRINT_CONTEXT
+
+
+
+
+
+
+
+
+
+
+
 

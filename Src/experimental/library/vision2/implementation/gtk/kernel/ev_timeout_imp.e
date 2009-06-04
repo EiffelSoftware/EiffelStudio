@@ -30,16 +30,19 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Call base make only.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
-			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
+			if internal_id = 0 then
+				internal_id := eif_current_object_id
+			end
+			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (internal_id)
 			on_timeout_agent := agent on_timeout
 			set_is_initialized (True)
 		end
@@ -70,13 +73,17 @@ feature -- Access
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
-	interface: EV_TIMEOUT
+	interface: detachable EV_TIMEOUT note option: stable attribute end
 		-- Interface object.
 
 	app_implementation: EV_APPLICATION_IMP
-			-- Return the instance of EV_APPLICATION_IMP.
+			-- App implementation object
+		local
+			l_result: detachable EV_APPLICATION_IMP
 		once
-			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	on_timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE]
@@ -127,4 +134,14 @@ note
 
 
 end -- class EV_TIMEOUT_IMP
+
+
+
+
+
+
+
+
+
+
 

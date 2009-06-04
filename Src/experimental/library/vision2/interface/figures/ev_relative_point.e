@@ -90,7 +90,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	origin: EV_RELATIVE_POINT
+	origin: detachable EV_RELATIVE_POINT
 			-- Origin the position is relative to.
 			-- If this is Void, x and y are relative to (0, 0).
 
@@ -120,7 +120,7 @@ feature -- Access
 			-- Relative vertical scaling factor.
 			--| Only propagation purpose.
 
-	positioner: PROCEDURE [ANY, TUPLE [like Current]]
+	positioner: detachable PROCEDURE [ANY, TUPLE [like Current]]
 			-- Take special absolute positioning action.
 			-- A positioner is expected to use the routines:
 			-- set_x_abs, set_y_abs.
@@ -205,8 +205,8 @@ feature -- Status report
 				Result := True
 			elseif origin = Void or else has_positioner then
 				Result := False
-			else
-				Result := origin.relative_to (org)
+			elseif attached origin as l_origin then
+				Result := l_origin.relative_to (org)
 			end
 		end
 
@@ -228,12 +228,16 @@ feature -- Element change
 			new_origin_not_void: new_origin /= Void
 			no_dependance_circle: not new_origin.relative_to (Current)
 				and new_origin /= Current
+		local
+			l_origin: like origin
 		do
-			if origin /= Void then
-				origin.notify_list_ids.prune (object_id)
+			l_origin := origin
+			if l_origin /= Void then
+				l_origin.notify_list_ids.prune (object_id)
 			end
-			origin := new_origin
-			origin.notify_list_ids.extend (object_id)
+			l_origin := new_origin
+			origin := l_origin
+			l_origin.notify_list_ids.extend (object_id)
 			notify_of_position_change
 		end
 
@@ -402,24 +406,24 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 			l_scale_x_abs, l_scale_y_abs, l_angle_abs: DOUBLE
 		do
 			if position_changed or else controlled_by_positioner then
-				if positioner /= Void then
+				if attached positioner as l_positioner then
 					check
 						positioning_agent_loop: not being_positioned
 					end
 					being_positioned := True
-					positioner.call ([Current])
+					l_positioner.call ([Current])
 					being_positioned := False
 				else
-					if origin = Void then
+					if attached origin as l_origin then
+						l_origin.calculate_absolute_position
+						l_x_abs := l_origin.last_x_abs
+						l_y_abs := l_origin.last_y_abs
+						l_scale_x_abs := l_origin.last_scale_x_abs
+						l_scale_y_abs := l_origin.last_scale_y_abs
+						l_angle_abs := l_origin.last_angle_abs
+					else
 						l_scale_x_abs := 1
 						l_scale_y_abs := 1
-					else
-						origin.calculate_absolute_position
-						l_x_abs := origin.last_x_abs
-						l_y_abs := origin.last_y_abs
-						l_scale_x_abs := origin.last_scale_x_abs
-						l_scale_y_abs := origin.last_scale_y_abs
-						l_angle_abs := origin.last_angle_abs
 					end
 					l_x_abs := l_x_abs + x_transformed (
 						l_angle_abs, l_scale_x_abs
@@ -490,11 +494,11 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 			pnt_exists: pnt /= Void
 			relative_to_pnt: relative_to (pnt)
 		do
-			if origin /= pnt then
-				Result := origin.angle_rel_to (pnt)
+			if attached origin as l_origin and then l_origin /= pnt then
+				Result := l_origin.angle_rel_to (pnt)
 			end
-			if origin /= Void then
-				Result := Result + origin.angle
+			if attached origin as l_origin then
+				Result := Result + l_origin.angle
 			end
 		end
 
@@ -505,8 +509,8 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 			pnt_exists: pnt /= Void
 			relative_to_pnt: relative_to (pnt)
 		do
-			if origin /= pnt then
-				Result := origin.x_rel_to (pnt)
+			if attached origin as l_origin and then l_origin /= pnt then
+				Result := l_origin.x_rel_to (pnt)
 			end
 			Result := Result + x_transformed (angle_rel_to (pnt), scale_x_abs)
 		end
@@ -518,8 +522,8 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 			pnt_exists: pnt /= Void
 			relative_to_pnt: relative_to (pnt)
 		do
-			if origin /= pnt then
-				Result := origin.y_rel_to (pnt)
+			if attached origin as l_origin and then l_origin /= pnt then
+				Result := l_origin.y_rel_to (pnt)
 			end
 			Result := Result + y_transformed (angle_rel_to (pnt), scale_y_abs)
 		end
@@ -535,8 +539,8 @@ feature -- Representation
 	out_rel: STRING
 			-- A string with all relative coordinates of origins.
 		do
-			if origin /= Void then
-				Result := origin.out_rel + "+"
+			if attached origin as l_origin then
+				Result := l_origin.out_rel + "+"
 			else
 				Result := ""
 			end
@@ -573,7 +577,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 	notify_list: LINKED_LIST [EV_RELATIVE_POINT]
 			-- Immediate dependant points.
 		local
-			i: EV_RELATIVE_POINT
+			i: detachable EV_RELATIVE_POINT
 		do
 			create Result.make
 			from
@@ -595,8 +599,8 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 	notify_of_position_change
 			-- Set flag `position_changed' and in all referring positions.
 		local
-			i: EV_RELATIVE_POINT
-			f: EV_FIGURE
+			i: detachable EV_RELATIVE_POINT
+			f: detachable EV_FIGURE
 			ids: like notify_list_ids
 		do
 			if not position_changed then
@@ -629,7 +633,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 invariant
 	notify_list_exists: notify_list_ids /= Void
 	has_origin_implies_origin_notifies:
-		origin /= Void implies origin.notify_list_ids.has (object_id)
+		attached origin as l_origin implies l_origin.notify_list_ids.has (object_id)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -646,4 +650,8 @@ note
 
 
 end -- class EV_RELATIVE_POINT
+
+
+
+
 

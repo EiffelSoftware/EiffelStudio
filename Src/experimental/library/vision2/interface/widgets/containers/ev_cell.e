@@ -16,8 +16,8 @@ note
 	keywords: "container"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	EV_CELL
 
 inherit
@@ -25,7 +25,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_DOCKABLE_TARGET
 		undefine
 			is_in_default_state
@@ -42,7 +42,7 @@ feature -- Access
 			-- Does `Current' include `v'?
 		do
 			Result := not is_destroyed and
-				(v /= Void and then implementation.item = v)	
+				(v /= Void and then implementation.item = v)
 		end
 
 feature -- Status report
@@ -76,17 +76,14 @@ feature -- Status report
 		do
 			Result := full and not is_destroyed
 		end
-		
+
 	count: INTEGER
 			-- Number of items in `Current'.
 		do
-			if full then
-				Result := 1
-			end
+			Result := implementation.count
 		ensure then
 			valid_result: Result = 0 or Result = 1
 		end
-		
 
 feature -- Removal
 
@@ -114,8 +111,8 @@ feature -- Conversion
 			l: LINKED_LIST [like item]
 		do
 			create l.make
-			if implementation.item /= Void then
-				l.extend (implementation.item)
+			if readable then
+				l.extend (item)
 			end
 			Result := l
 		end
@@ -130,7 +127,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation of `Current'.
 		do
-			create {EV_CELL_IMP} implementation.make (Current) 
+			create {EV_CELL_IMP} implementation.make
 		end
 
 note
@@ -148,4 +145,13 @@ note
 
 
 end -- class EV_CELL
+
+
+
+
+
+
+
+
+
 

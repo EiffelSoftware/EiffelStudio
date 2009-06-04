@@ -22,19 +22,22 @@ feature -- Access
 	font: EV_FONT
 			-- Font of `Current'.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			private_font_twin: WEL_FONT
+			l_private_wel_font: like private_wel_font
 		do
-			if private_font = Void then
+			if attached private_font as l_private_font then
+				Result := l_private_font.twin
+			else
 				create Result
 				font_imp ?= Result.implementation
-				create private_font_twin.make_indirect (private_wel_font.log_font)
+				check font_imp /= Void end
+				l_private_wel_font := private_wel_font
+				check l_private_wel_font /= Void end
+				create private_font_twin.make_indirect (l_private_wel_font.log_font)
 				font_imp.set_by_wel_font (private_font_twin)
-				private_font_twin := Void
 				private_font := Result
 				private_wel_font := Void
-			else
-				Result := private_font.twin
 			end
 		end
 
@@ -43,10 +46,10 @@ feature -- Access
 			-- Faster than calling `font' as we do not need to
 			-- create a new EV_FONT every time.
 		do
-			if private_font = Void then
-				Result := font
+			if attached private_font as l_private_font then
+				Result := l_private_font
 			else
-				Result := private_font
+				Result := font
 			end
 		end
 
@@ -76,7 +79,7 @@ feature -- Status setting
 	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		local
-			local_font_windows: EV_FONT_IMP
+			local_font_windows: detachable EV_FONT_IMP
 		do
 			private_font := ft
 			local_font_windows ?= private_font.implementation
@@ -98,10 +101,14 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	private_font: EV_FONT
+	private_font: detachable EV_FONT
 			-- font used for implementation
+		note
+			option: stable
+		attribute
+		end;
 
-	private_wel_font: WEL_FONT
+	private_wel_font: detachable WEL_FONT
 			-- WEL font used for implementation
 
 feature {NONE} -- Implementation : The wel values, are deferred here, but
@@ -138,4 +145,14 @@ note
 
 
 end -- class EV_FONTABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

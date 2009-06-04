@@ -27,21 +27,24 @@ feature {NONE} -- Initialization
 		require
 			a_world_not_void: a_world /= Void
 			a_filename_not_void: a_filename /= Void
+		local
+			l_filename: like filename
 		do
 			create draw_routines.make (0, 20)
 			make_with_world (a_world)
 			set_margins (Default_left_margin, Default_bottom_margin)
 			set_page_size (Letter, False)
 			register_basic_figures
-			create filename.make
-			filename.set_file_name (a_filename)
+			create l_filename.make
+			l_filename.set_file_name (a_filename)
+			filename := l_filename
 		end
 
 feature {NONE} -- Implementation
 
-	filename: FILE_NAME
+	filename: detachable FILE_NAME
 
-	file: PLAIN_TEXT_FILE
+	file: detachable PLAIN_TEXT_FILE
 
 	output_to_postscript
 			-- Output standard projection to postscript.
@@ -127,14 +130,23 @@ feature -- Basic operations
 
 	project
 			-- Make standard projection of world on device.
+		local
+			l_file: like file
+			l_filename: like filename
+			l_postscript_result: like postscript_result
 		do
 			if not is_projecting then
 				is_projecting := True
 				-- Full projection.
 				output_to_postscript
-				create file.make_open_write (filename)
-				file.put_string (postscript_result)
-				file.close
+				l_filename := filename
+				check l_filename /= Void end
+				create l_file.make_open_write (l_filename)
+				file := l_file
+				l_postscript_result := postscript_result
+				check l_postscript_result /= Void end
+				l_file.put_string (l_postscript_result)
+				l_file.close
 				file := Void
 				filename := Void
 			end
@@ -156,4 +168,8 @@ note
 
 
 end -- class EV_POSTSCRIPT_PROJECTOR
+
+
+
+
 

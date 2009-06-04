@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface,
 			default_wm_decorations,
-			initialize
+			make
 		end
 
 create
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			Result := 0
 		end
 
-	interface: EV_UNTITLED_DIALOG;
+	interface: detachable EV_UNTITLED_DIALOG note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -56,4 +56,8 @@ note
 
 
 end -- class EV_DIALOG_IMP
+
+
+
+
 

@@ -84,15 +84,16 @@ feature -- Access
 			Result := -drawable_position.y
 		end
 
-	world_as_pixmap (a_border: INTEGER): EV_PIXMAP
+	world_as_pixmap (a_border: INTEGER): detachable EV_PIXMAP
 			-- Image of the `world' with `a_border'.
 		require
 			a_border_positive: a_border >= 0
 		local
 			rectangle: EV_RECTANGLE
-			old_drawable: like drawable
-			old_drawable_position: EV_COORDINATE
+			old_drawable: detachable like drawable
+			old_drawable_position: detachable EV_COORDINATE
 			u_x, u_y: INTEGER
+			l_result: detachable EV_PIXMAP
 		do
 			is_world_too_large := False
 			old_drawable := drawable
@@ -111,7 +112,9 @@ feature -- Access
 			end
 			world.validate
 
-			Result ?= drawable
+			l_result ?= drawable
+			check l_result /= Void end
+			Result := l_result
 			set_drawable_position (old_drawable_position)
 			drawable := old_drawable
 			full_project
@@ -119,8 +122,12 @@ feature -- Access
 			Result_not_void: Result /= Void
 		rescue
 			is_world_too_large := True
-			set_drawable_position (old_drawable_position)
-			drawable := old_drawable
+			if old_drawable_position /= Void then
+				set_drawable_position (old_drawable_position)
+			end
+			if old_drawable /= Void then
+				drawable := old_drawable
+			end
 			full_project
 		end
 
@@ -169,7 +176,7 @@ feature -- Display updates
 	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 			u_x, u_y: INTEGER
 		do
 			u_x := u.x
@@ -195,10 +202,10 @@ feature -- Display updates
 			world.validate
 
 			pixmap ?= drawable
-			if pixmap /= Void then
+			if pixmap /= Void and then attached area as l_area then
 				u.set_x (u_x - drawable_position.x)
 				u.set_y (u_y - drawable_position.y)
-				area.draw_sub_pixmap (
+				l_area.draw_sub_pixmap (
 					u_x - area_x,
 					u_y - area_y,
 					pixmap,
@@ -210,14 +217,14 @@ feature -- Display updates
 	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 		do
 			if world.is_show_requested then
 				pixmap ?= drawable
-				if pixmap /= Void then
+				if pixmap /= Void and then attached area as l_area then
 					u.set_x (u.x + area_x - drawable_position.x)
 					u.set_y (u.y + area_y - drawable_position.y)
-					area.draw_sub_pixmap (a_x, a_y, pixmap, u)
+					l_area.draw_sub_pixmap (a_x, a_y, pixmap, u)
 				end
 			end
 		end
@@ -226,18 +233,18 @@ feature -- Display updates
 			-- Update display by drawing the right part of the buffer on `area'.
 		local
 			u: EV_RECTANGLE
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 		do
 			if world.is_show_requested then
 				pixmap ?= drawable
-				if pixmap /= Void then
+				if pixmap /= Void and then attached area as l_area then
 					create u.set (
 						area_x - drawable_position.x,
 						area_y - drawable_position.y,
-						area.width,
-						area.height
+						l_area.width,
+						l_area.height
 					)
-					area.draw_sub_pixmap (0, 0, pixmap, u)
+					l_area.draw_sub_pixmap (0, 0, pixmap, u)
 				end
 			end
 		end
@@ -253,11 +260,14 @@ feature {NONE} -- Implementation
 			-- Move buffer so that `area' is in its middle.
 		local
 			buffer_bounds: EV_RECTANGLE
+			l_area: like area
 		do
+			l_area := area
+			check l_area /= Void end
 			area_centered := True
 			create buffer_bounds.make (
-				(area_x - area.width * (Buffer_scale_factor - 1) / 2).rounded,
-				(area_y - area.height * (Buffer_scale_factor - 1) / 2).rounded,
+				(area_x - l_area.width * (Buffer_scale_factor - 1) / 2).rounded,
+				(area_y - l_area.height * (Buffer_scale_factor - 1) / 2).rounded,
 				drawable.width,
 				drawable.height
 				)
@@ -269,7 +279,7 @@ feature {NONE} -- Implementation
 			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
 			-- the size given by `area_width' and `area_height'.
 		local
-			buffer: EV_PIXMAP
+			buffer: detachable EV_PIXMAP
 		do
 			buffer ?= drawable
 			if
@@ -283,15 +293,19 @@ feature {NONE} -- Implementation
 
 	buffer_covers_area: BOOLEAN
 			-- Is `area' still in the surface covered by buffer ?
+		local
+			l_area: like area
 		do
+			l_area := area
+			check l_area /= Void end
 			Result :=
 				area_x > drawable_position.x
 					and then
-				area_x + area.width < drawable_position.x + drawable.width
+				area_x + l_area.width < drawable_position.x + drawable.width
 					and then
 				area_y > drawable_position.y
 					and then
-				area_y + area.height < drawable_position.y + drawable.height
+				area_y + l_area.height < drawable_position.y + drawable.height
 		end
 
 	recenter_agent: PROCEDURE [ANY, TUPLE]
@@ -318,4 +332,8 @@ note
 
 
 end -- class EV_MODEL_BUFFER_PROJECTOR
+
+
+
+
 

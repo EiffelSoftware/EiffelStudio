@@ -26,7 +26,7 @@ inherit
 			is_in_default_state,
 			implementation
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER
 		undefine
 			is_equal
@@ -47,7 +47,7 @@ create
 
 feature -- Access
 
-	selected_item: EV_TREE_NODE
+	selected_item: detachable EV_TREE_NODE
 			-- Currently selected item at any level
 			-- within tree hierarchy.
 		require
@@ -89,7 +89,7 @@ feature -- Contract support
 				-- it cannot be True.
 			Result := False
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -97,18 +97,18 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TREE_NODE_LIST}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
-	implementation: EV_TREE_I	
+
+	implementation: EV_TREE_I
 			-- Responsible for interaction with native graphics toolkit.
-		
+
 feature {NONE} -- Implementation
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TREE_IMP} implementation.make (Current)
+			create {EV_TREE_IMP} implementation.make
 		end
 
 note
@@ -126,4 +126,13 @@ note
 
 
 end -- class EV_TREE
+
+
+
+
+
+
+
+
+
 

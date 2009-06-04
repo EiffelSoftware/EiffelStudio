@@ -32,7 +32,7 @@ create
 
 feature -- Status report
 
-	parent: EV_WINDOW
+	parent: detachable EV_WINDOW
 			-- Parent of `Current'.
 		do
 			Result := implementation.parent
@@ -45,10 +45,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_MENU_BAR_IMP} implementation.make (Current)
+			create {EV_MENU_BAR_IMP} implementation.make
 		end
 
 note
@@ -66,4 +72,13 @@ note
 
 
 end -- class EV_MENU BAR
+
+
+
+
+
+
+
+
+
 

@@ -28,10 +28,10 @@ inherit
 
 feature -- Access
 
-	pebble: ANY
+	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 
 	pebble_positioning_enabled: BOOLEAN
@@ -43,14 +43,14 @@ feature -- Access
 			Result := internal_pebble_positioning_enabled
 		end
 
-	configurable_target_menu_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
+	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
 
-	accept_cursor: EV_POINTER_STYLE
+	accept_cursor: detachable EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
 			-- `pebble' during pick and drop.
 
-	deny_cursor: EV_POINTER_STYLE
+	deny_cursor: detachable EV_POINTER_STYLE
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
@@ -87,7 +87,7 @@ feature -- Status setting
 			pick_y_assigned: pick_y = a_y
 		end
 
-	set_pebble (a_pebble: like pebble)
+	set_pebble (a_pebble: ANY)
 			-- Assign `a_pebble' to `pebble'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -97,11 +97,11 @@ feature -- Status setting
 			enable_transport
 			-- Data to be transported by pick and drop mechanism.
 		ensure
-			pebble_assigned: interface.implementation.pebble = a_pebble
-			is_transport_enabled: interface.implementation.is_transport_enabled
+			pebble_assigned: pebble = a_pebble
+			is_transport_enabled: is_transport_enabled
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
 			-- Assign `a_function' to `pebble_function'.
 		require
 			a_function_not_void: a_function /= Void
@@ -110,8 +110,8 @@ feature -- Status setting
 			pebble_function := a_function
 			enable_transport
 		ensure
-			pebble_function_assigned: interface.implementation.pebble_function = a_function
-			is_transport_enabled: interface.implementation.is_transport_enabled
+			pebble_function_assigned: pebble_function = a_function
+			is_transport_enabled: is_transport_enabled
 		end
 
 	remove_pebble
@@ -147,7 +147,7 @@ feature -- Status setting
 			pebble_not_void: pebble /= Void or pebble_function /= Void
 		deferred
 		ensure
-			is_transport_enabled: interface.implementation.is_transport_enabled
+			is_transport_enabled: is_transport_enabled
 		end
 
 	disable_transport
@@ -270,7 +270,7 @@ feature {EV_ANY_I} -- Implementation
 		a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
-	
+
 			-- Start a pick and drop transport.
 		deferred
 		end
@@ -279,7 +279,7 @@ feature {EV_ANY_I} -- Implementation
 		a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER)
-	
+
 			-- Terminate the pick and drop mechanism.
 		deferred
 		end
@@ -288,13 +288,13 @@ feature {EV_ANY_I} -- Implementation
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Executed when `pebble' is being moved.
 			-- Draw a rubber band from pick position to pointer position.
 		local
-			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			real_target: EV_PICK_AND_DROPABLE
-			application: EV_APPLICATION_IMP
+			target: detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			real_target: detachable EV_PICK_AND_DROPABLE
+			application: detachable EV_APPLICATION_IMP
 		do
 			erase_rubber_band
 			pointer_x := a_screen_x.to_integer_16
@@ -304,9 +304,10 @@ feature {EV_ANY_I} -- Implementation
 
 			target := pointed_target
 			real_target ?= target
-			application ?= environment.application.implementation
+			application ?= environment.implementation.application_i
+			check application /= Void end
 			if application.pnd_motion_actions_internal /= Void then
-				application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
+				application.pnd_motion_actions.call ([a_x, a_y, real_target])
 			end
 
 				-- Cursor needs to be constantly updated so for widgets that handle
@@ -316,34 +317,35 @@ feature {EV_ANY_I} -- Implementation
 			update_pointer_style (target)
 		end
 
-	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE)
+	update_pointer_style (target: detachable EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Assign correct cursor for transport to `Current'.
 		do
 			if
-				target /= Void and then (
-					target.drop_actions.accepts_pebble (pebble)
+				target /= Void and then attached pebble as l_pebble and then (
+					target.drop_actions.accepts_pebble (l_pebble)
 				)
 			then
-				if accept_cursor /= Void then
-					internal_set_pointer_style (accept_cursor)
+				if attached accept_cursor as l_accept_cursor then
+					internal_set_pointer_style (l_accept_cursor)
 				else
+
 					internal_set_pointer_style (default_accept_cursor)
 				end
 			else
-				if deny_cursor /= Void then
-					internal_set_pointer_style (deny_cursor)
+				if attached deny_cursor as l_deny_cursor then
+					internal_set_pointer_style (l_deny_cursor)
 				else
 					internal_set_pointer_style (default_deny_cursor)
 				end
 			end
 		end
 
-	pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE
+	pointed_target: detachable EV_ABSTRACT_PICK_AND_DROPABLE
 			-- Target at mouse position.
 		local
 			rpt: like real_pointed_target
-			widget_target: EV_WIDGET
-			a: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
+			widget_target: detachable EV_WIDGET
+			a: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			widget_x, widget_y: INTEGER
 		do
 			rpt := real_pointed_target
@@ -359,7 +361,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 			-- Default target at mouse position.
 		deferred
 		end
@@ -378,9 +380,9 @@ feature {EV_ANY_I} -- Implementation
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y])
-				pebble := pebble_function.last_result
+			if attached pebble_function as l_pebble_function then
+				l_pebble_function.call ([a_x, a_y])
+				pebble := l_pebble_function.last_result
 			end
 		end
 
@@ -390,7 +392,7 @@ feature {EV_ANY_I} -- Implementation
 			-- If `starting' then the pick and drop is starting,
 			-- else it is ending.
 		local
-			window_imp: EV_WINDOW_IMP
+			window_imp: detachable EV_WINDOW_IMP
 			windows: LINEAR [EV_WINDOW]
 		do
 			windows := application_implementation.windows
@@ -415,7 +417,7 @@ feature {EV_WIDGET, EV_WIDGET_I}
 		deferred
 		end
 
-	internal_set_pointer_style (c: EV_POINTER_STYLE)
+	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
 			-- Assign `c' to `pointer_style'
 		deferred
 		end
@@ -435,7 +437,7 @@ feature {EV_ANY_I} -- Implementation
 	application_implementation: EV_APPLICATION_I
 			-- Application implementation object.
 		do
-			Result := environment.application.implementation
+			Result := environment.implementation.application_i
 		end
 
 	environment: EV_ENVIRONMENT
@@ -444,7 +446,7 @@ feature {EV_ANY_I} -- Implementation
 			create Result
 		end
 
-	interface: EV_PICK_AND_DROPABLE
+	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end
 		-- Provides a common user interface to platform dependent functionality
 		-- implemented by `Current'.
 
@@ -454,7 +456,7 @@ invariant
 		mode_is_drag_and_drop.to_integer +
 		mode_is_target_menu.to_integer = 1
 	pebble_function_takes_two_integer_open_operands:
-		pebble_function /= Void implies pebble_function.valid_operands ([1,1])
+		attached pebble_function as l_pebble_function implies l_pebble_function.valid_operands ([1,1])
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -471,4 +473,14 @@ note
 
 
 end -- class EV_PICK_AND_DROPABLE_I
+
+
+
+
+
+
+
+
+
+
 

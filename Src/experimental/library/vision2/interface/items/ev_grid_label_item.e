@@ -32,6 +32,7 @@ inherit
 			is_in_default_state,
 			implementation,
 			create_implementation,
+			create_interface_objects,
 			initialize
 		end
 
@@ -105,8 +106,8 @@ feature -- Status Setting
 		do
 			font := a_font
 			implementation.string_size_changed
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			font_assigned: font = a_font
@@ -119,8 +120,8 @@ feature -- Status Setting
 			pixmap_not_void: a_pixmap /= Void
 		do
 			pixmap := a_pixmap
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			pixmap_set: pixmap = a_pixmap
@@ -132,8 +133,8 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 		do
 			pixmap := Void
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			pixmap_removed: pixmap = Void
@@ -146,8 +147,8 @@ feature -- Status Setting
 			a_left_border_non_negative: a_left_border >= 0
 		do
 			left_border := a_left_border
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			left_border_set: left_border = a_left_border
@@ -160,8 +161,8 @@ feature -- Status Setting
 			a_right_border_non_negative: a_right_border >= 0
 		do
 			right_border := a_right_border
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			right_border_set: right_border = a_right_border
@@ -174,8 +175,8 @@ feature -- Status Setting
 			a_top_border_non_negative: a_top_border >= 0
 		do
 			top_border := a_top_border
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			top_border_set: top_border = a_top_border
@@ -188,8 +189,8 @@ feature -- Status Setting
 			a_bottom_border_non_negative: a_bottom_border >= 0
 		do
 			bottom_border := a_bottom_border
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			bottom_border_set: bottom_border = a_bottom_border
@@ -202,8 +203,8 @@ feature -- Status Setting
 			a_spacing_non_negative: a_spacing >= 0
 		do
 			spacing := a_spacing
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			spacing_set: spacing = a_spacing
@@ -217,8 +218,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (False, 1)
 			boolean_flags := boolean_flags.set_bit (True, 2)
 			boolean_flags := boolean_flags.set_bit (False, 3)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_center_aligned
@@ -232,8 +233,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (False, 1)
 			boolean_flags := boolean_flags.set_bit (False, 2)
 			boolean_flags := boolean_flags.set_bit (True, 3)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_right_aligned
@@ -247,8 +248,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (True, 1)
 			boolean_flags := boolean_flags.set_bit (False, 2)
 			boolean_flags := boolean_flags.set_bit (False, 3)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_left_aligned
@@ -262,8 +263,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (False, 4)
 			boolean_flags := boolean_flags.set_bit (True, 5)
 			boolean_flags := boolean_flags.set_bit (False, 6)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_vertically_center_aligned
@@ -277,8 +278,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (True, 4)
 			boolean_flags := boolean_flags.set_bit (False, 5)
 			boolean_flags := boolean_flags.set_bit (False, 6)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_top_aligned
@@ -292,8 +293,8 @@ feature -- Status Setting
 			boolean_flags := boolean_flags.set_bit (False, 4)
 			boolean_flags := boolean_flags.set_bit (False, 5)
 			boolean_flags := boolean_flags.set_bit (True, 6)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			alignment_set: is_bottom_aligned
@@ -313,8 +314,8 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 		do
 			boolean_flags := boolean_flags.set_bit (True, 7)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			full_select_enabled: is_full_select_enabled
@@ -326,8 +327,8 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 		do
 			boolean_flags := boolean_flags.set_bit (False, 7)
-			if parent /= Void then
-				parent.implementation.redraw_item (implementation)
+			if attached parent as l_parent then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			full_select_disabled: not is_full_select_enabled
@@ -380,10 +381,10 @@ feature -- Status report
 	text: STRING_32
 		-- Text displayed in `Current'.
 
-	font: EV_FONT
+	font: detachable EV_FONT
 		-- Typeface appearance for `Current'.
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 		-- Image displayed to left of `text'.
 
 	is_left_aligned: BOOLEAN
@@ -440,7 +441,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (6) = True
 		end
 
-	layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
+	layout_procedure: detachable PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
 			-- Procedure which may be used to calculate the position of `text' and `pixmap' relative to `Current',
 			-- ready for the drawing implementation.
 			-- This procedure is fired each time that `Current' must be re-drawn and by filling the passed EV_GRID_LABEL_ITEM_LAYOUT object, the
@@ -490,9 +491,15 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 feature {NONE} -- Implementation
 
 	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
+			-- <Precursor>
 		do
-			create {EV_GRID_LABEL_ITEM_I} implementation.make (Current)
+			create {EV_GRID_LABEL_ITEM_I} implementation.make
+		end
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			text := ""
 		end
 
 note
@@ -510,4 +517,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

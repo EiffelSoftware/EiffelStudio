@@ -21,14 +21,15 @@ inherit
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		export
-			{NONE} set_parent
+			{NONE} set_parent_imp
 		undefine
 			show,
 			hide,
-			ev_apply_new_size
+			ev_apply_new_size,
+			has
 		redefine
 			destroy,
-			set_parent,
+			set_parent_imp,
 			client_height,
 			client_y,
 			parent_ask_resize,
@@ -38,12 +39,13 @@ inherit
 			compute_minimum_size,
 			on_destroy,
 			interface,
-			initialize,
 			on_size,
 			insert,
 			screen_x, screen_y,
 			default_process_message,
-			next_tabstop_widget
+			next_tabstop_widget,
+			make,
+			is_shown_by_default
 		end
 
 	WEL_FRAME_WINDOW
@@ -130,28 +132,48 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			make_top ("")
+			assign_interface (an_interface)
 		end
 
-	initialize
+	title_name: STRING
+			-- Title name used for registration.
+		do
+			Result := ""
+		end
+
+	is_top_level: BOOLEAN
+			-- Does `Current' need to be made as a top-level window?
+		do
+			Result := True
+		end
+
+	make
 			-- Initialize `Current'.
 		do
+			if is_top_level then
+				make_top (title_name)
+			else
+				make_child (application_imp.silly_main_window, title_name)
+			end
+
+			create accel_list.make (10)
+			create upper_bar
+			create lower_bar
+			user_can_resize := True
+
+			internal_is_border_enabled := True
+
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 
-				-- Create accelerator list for window.
-			create accel_list.make (10)
-
-			user_can_resize := True
-			init_bars
 			application_imp.add_root_window (Current)
+			init_bars
+
 			set_is_initialized (True)
-			internal_is_border_enabled := True
 		end
 
 	class_style: INTEGER
@@ -164,10 +186,8 @@ feature {NONE} -- Initialization
 	init_bars
 			-- Initialize `lower_bar' and `upper_bar'.
 		local
-			ub_imp, lb_imp: EV_VERTICAL_BOX_IMP
+			ub_imp, lb_imp: detachable EV_VERTICAL_BOX_IMP
 		do
-			create upper_bar
-			create lower_bar
 			ub_imp ?= upper_bar.implementation
 			lb_imp ?= lower_bar.implementation
 			check
@@ -188,9 +208,9 @@ feature -- Access
 			-- Top of the client area of `Current'.
 		do
 			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
-			if not interface.upper_bar.is_empty then
+			if not upper_bar.is_empty then
 					-- Add 1 pixel to separate client area and upper bar.
-				Result := Result + interface.upper_bar.minimum_height + 1
+				Result := Result + upper_bar.minimum_height + 1
 			end
 			Result := Result.min (height)
 		end
@@ -199,9 +219,9 @@ feature -- Access
 			-- Height of the client area of `Current'.
 		do
 			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} - client_y
-			if not interface.lower_bar.is_empty then
+			if not lower_bar.is_empty then
 					-- Add 1 pixel to separate client area and lower bar.
-				Result := Result - interface.lower_bar.minimum_height - 1
+				Result := Result - lower_bar.minimum_height - 1
 			end
 			Result := Result.max (0)
 		end
@@ -239,7 +259,7 @@ feature -- Access
 			Result := Current
 		end
 
-	menu_bar: EV_MENU_BAR
+	menu_bar: detachable EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
 feature -- Status setting
@@ -355,14 +375,15 @@ feature -- Element change
 			ev_move (x_position, a_y)
 		end
 
-	set_parent (par: EV_CONTAINER)
+	set_parent_imp (par_imp: detachable EV_CONTAINER_IMP)
 			-- Make `par' the new parent of `Current'.
-			-- `par' can be Void then the parent is the screen.
+			-- `par_imp' can be Void then the parent is the screen.
 		local
-			ww: WEL_WINDOW
+			ww: detachable WEL_WINDOW
 		do
-			if par /= Void then
-				ww ?= par.implementation
+			if par_imp /= Void then
+				ww ?= par_imp
+				check ww /= Void end
 				wel_set_parent (ww)
 			else
 				wel_set_parent (Void)
@@ -398,11 +419,12 @@ feature -- Element change
 	set_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Assign `a_menu_bar' to `menu_bar'.
 		local
-			mb_imp: WEL_MENU
-			mb: EV_MENU_BAR_IMP
+			mb_imp: detachable WEL_MENU
+			mb: detachable EV_MENU_BAR_IMP
 		do
 			menu_bar := a_menu_bar
-			mb_imp ?= menu_bar.implementation
+			mb_imp ?= a_menu_bar.implementation
+			check mb_imp /= Void end
 			set_menu (mb_imp)
 			mb ?= a_menu_bar.implementation
 			check
@@ -415,10 +437,10 @@ feature -- Element change
 	remove_menu_bar
 			-- Assign `Void' to `menu_bar'.
 		local
-			mb: EV_MENU_BAR_IMP
+			mb: detachable EV_MENU_BAR_IMP
 		do
-			if menu_bar /= Void then
-				mb ?= menu_bar.implementation
+			if attached menu_bar as l_menu_bar then
+				mb ?= l_menu_bar.implementation
 				check
 					implementation_not_void: mb /= Void
 				end
@@ -442,10 +464,11 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 	connect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Connect key combination `an_accel' to `Current'.
 		local
-			acc_imp: EV_ACCELERATOR_IMP
+			acc_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
+				check acc_imp /= Void end
 				accel_list.put (an_accel, acc_imp.hash_code)
 			end
 		end
@@ -454,10 +477,11 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 	disconnect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Disconnect key combination `an_accel' from `Current'.
 		local
-			acc_imp: EV_ACCELERATOR_IMP
+			acc_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
+				check acc_imp /= Void end
 				accel_list.remove (acc_imp.hash_code)
 			end
 		end
@@ -468,12 +492,13 @@ feature {NONE} -- Implementation
 			-- Wm_settingchange message
 			-- Update the system fonts.
 		local
-			mb_imp: EV_MENU_BAR_IMP
+			mb_imp: detachable EV_MENU_BAR_IMP
 		do
 			Precursor {WEL_FRAME_WINDOW}
 
-			if menu_bar /= Void then
-				mb_imp ?= menu_bar.implementation
+			if attached menu_bar as l_menu_bar then
+				mb_imp ?= l_menu_bar.implementation
+				check mb_imp /= Void end
 				mb_imp.rebuild_control
 			end
 		end
@@ -491,25 +516,25 @@ feature {NONE} -- Implementation
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		local
-			bar_imp: EV_VERTICAL_BOX_IMP
+			bar_imp: detachable EV_VERTICAL_BOX_IMP
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			if item /= Void then
-				item_imp.ev_apply_new_size (client_x, client_y,
+			if attached item_imp as l_item_imp then
+				l_item_imp.ev_apply_new_size (client_x, client_y,
 					client_width, client_height, True)
 			end
 			if menu_bar /= Void then
 				draw_menu
 			end
-			if not interface.upper_bar.is_empty then
-				bar_imp ?= interface.upper_bar.implementation
+			if not upper_bar.is_empty then
+				bar_imp ?= upper_bar.implementation
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
 				bar_imp.set_move_and_size (0, 0, client_width, client_y)
 			end
-			if not interface.lower_bar.is_empty then
-				bar_imp ?= interface.lower_bar.implementation
+			if not lower_bar.is_empty then
+				bar_imp ?= lower_bar.implementation
 				check
 					bar_imp_not_void: bar_imp /= Void
 				end
@@ -522,10 +547,11 @@ feature {NONE} -- Implementation
 	on_menu_command (menu_id: INTEGER)
 			-- `menu_id' has been chosen from the menu.
 		local
-			menu_bar_imp: EV_MENU_BAR_IMP
+			menu_bar_imp: detachable EV_MENU_BAR_IMP
 		do
-			if menu_bar /= Void then
-				menu_bar_imp ?= menu_bar.implementation
+			if attached menu_bar as l_menu_bar then
+				menu_bar_imp ?= l_menu_bar.implementation
+				check menu_bar_imp /= Void end
 				menu_bar_imp.menu_item_clicked (menu_id)
 			end
 		end
@@ -533,10 +559,11 @@ feature {NONE} -- Implementation
 	on_menu_opened (a_menu: WEL_MENU)
 			-- `a_menu' has been opened.
 		local
-			menu_bar_imp: EV_MENU_BAR_IMP
+			menu_bar_imp: detachable EV_MENU_BAR_IMP
 		do
-			if has_menu then
-				menu_bar_imp ?= menu_bar.implementation
+			if has_menu and then attached menu_bar as l_menu_bar then
+				menu_bar_imp ?= l_menu_bar.implementation
+				check menu_bar_imp /= Void end
 				menu_bar_imp.menu_opened (a_menu)
 			end
 		end
@@ -561,14 +588,14 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 		do
 			mw := 2 * frame_width
 
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := mw + item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := mw + l_item_imp.minimum_width
 			end
-			mw := mw.max (interface.upper_bar.minimum_width).max
-				(interface.lower_bar.minimum_width)
+			mw := mw.max (upper_bar.minimum_width).max
+				(lower_bar.minimum_width)
 			ev_set_minimum_width (
-				mw.max (interface.upper_bar.minimum_width).max
-					(interface.lower_bar.minimum_width))
+				mw.max (upper_bar.minimum_width).max
+					(lower_bar.minimum_width))
 		end
 
 	compute_minimum_height
@@ -580,14 +607,14 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if not interface.upper_bar.is_empty then
-				mh := mh + interface.upper_bar.minimum_height + 1
+			if not upper_bar.is_empty then
+				mh := mh + upper_bar.minimum_height + 1
 			end
-			if item_imp /= Void and item_imp.is_show_requested then
-				mh := mh + item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mh := mh + l_item_imp.minimum_height
 			end
-			if not interface.lower_bar.is_empty then
-				mh := mh + interface.lower_bar.minimum_height + 1
+			if not lower_bar.is_empty then
+				mh := mh + lower_bar.minimum_height + 1
 			end
 			ev_set_minimum_height (mh)
 		end
@@ -599,29 +626,29 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 		do
 			mw := 2 * frame_width
 
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := mw + item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := mw + l_item_imp.minimum_width
 			end
-			mw := mw.max (interface.upper_bar.minimum_width).max
-				(interface.lower_bar.minimum_width)
+			mw := mw.max (upper_bar.minimum_width).max
+				(lower_bar.minimum_width)
 
 			mh := 2 * frame_height
 
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if not interface.upper_bar.is_empty then
-				mh := mh + interface.upper_bar.minimum_height + 1
+			if not upper_bar.is_empty then
+				mh := mh + upper_bar.minimum_height + 1
 			end
-			if item_imp /= Void then
-				mh := mh + item_imp.minimum_height
+			if attached item_imp as l_item_imp then
+				mh := mh + l_item_imp.minimum_height
 			end
-			if not interface.lower_bar.is_empty then
-				mh := mh + interface.lower_bar.minimum_height + 1
+			if not lower_bar.is_empty then
+				mh := mh + lower_bar.minimum_height + 1
 			end
 			ev_set_minimum_size (
-				mw.max (interface.upper_bar.minimum_width).max
-				(interface.lower_bar.minimum_width), mh)
+				mw.max (upper_bar.minimum_width).max
+				(lower_bar.minimum_width), mh)
 		end
 
 feature {NONE} -- Inapplicable
@@ -741,28 +768,28 @@ feature {EV_ANY_I} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		local
-			bar_imp: EV_VERTICAL_BOX_IMP
+			bar_imp: detachable EV_VERTICAL_BOX_IMP
 			w_rect: WEL_RECT
 		do
-			if size_type /= Wel_window_constants.Size_minimized then
+			if interface /= Void and then size_type /= Wel_window_constants.Size_minimized then
 				w_rect := window_rect
 				internal_set_size (w_rect.width, w_rect.height)
 
-				if not interface.upper_bar.is_empty then
-					bar_imp ?= interface.upper_bar.implementation
+				if not upper_bar.is_empty then
+					bar_imp ?= upper_bar.implementation
 					check
 						bar_imp_not_void: bar_imp /= Void
 					end
 					bar_imp.set_move_and_size (0, 0, client_width, client_y)
 				end
 
-				if item /= Void then
-					item_imp.set_move_and_size (client_x, client_y,
+				if attached item_imp as l_item_imp then
+					l_item_imp.set_move_and_size (client_x, client_y,
 						client_width, client_height)
 				end
 
-				if not interface.lower_bar.is_empty then
-					bar_imp ?= interface.lower_bar.implementation
+				if not lower_bar.is_empty then
+					bar_imp ?= lower_bar.implementation
 					check
 						bar_imp_not_void: bar_imp /= Void
 					end
@@ -793,7 +820,9 @@ feature {EV_ANY_I} -- Implementation
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
-			interface.move_actions.call ([x_position, y_position, ev_width, ev_height])
+   			if interface /= Void then
+   				interface.move_actions.call ([x_position, y_position, ev_width, ev_height])
+   			end
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
@@ -813,9 +842,9 @@ feature {EV_ANY_I} -- Implementation
 			-- Set the parent sensitive if it exists.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
-			if parent_imp /= Void and not parent_imp.destroyed and then not
-				parent_imp.is_sensitive then
-				parent_imp.disable_sensitive
+			if attached parent_imp as l_parent_imp and then not l_parent_imp.destroyed and then not
+				l_parent_imp.is_sensitive then
+				l_parent_imp.disable_sensitive
 			end
 		end
 
@@ -823,7 +852,7 @@ feature {EV_ANY_I} -- Implementation
 			-- User clicked on "close" ('X').
 		do
 			if close_request_actions_internal /= Void then
-				close_request_actions_internal.call (Void)
+				close_request_actions.call (Void)
 			end
 				-- Do not actually close the window.
 			set_default_processing (False)
@@ -833,7 +862,7 @@ feature {EV_ANY_I} -- Implementation
 			-- `Current' has been activated thanks to the click of a window.
 		local
 			msg: INTEGER
-			source: EV_PICK_AND_DROPABLE_IMP
+			source: detachable EV_PICK_AND_DROPABLE_IMP
 		do
 			application_imp.clear_override_from_mouse_activate
 			msg := cwin_hi_word (lparam)
@@ -913,20 +942,20 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	source_at_pointer_position (button_pressed: INTEGER): EV_PICK_AND_DROPABLE_IMP
+	source_at_pointer_position (button_pressed: INTEGER): detachable EV_PICK_AND_DROPABLE_IMP
 			-- `Result' is EV_PICK_AND_DROPABLE at current pointer_position.
 			-- `button_pressed' is pointer button which caused this feature to be
 			-- called. This allows us to avoid excessive processing when we know
 			-- that the type of transport of the widget does not match the button.
 		local
-			wel_window: WEL_WINDOW
+			wel_window: detachable WEL_WINDOW
 			wel_point: WEL_POINT
-			widget_imp: EV_WIDGET_IMP
-			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
-			an_item_imp: EV_ITEM_IMP
-			sensitive: EV_SENSITIVE
-			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
-			l_pebble_function: FUNCTION [ANY, TUPLE, ANY]
+			widget_imp: detachable EV_WIDGET_IMP
+			item_list_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
+			an_item_imp: detachable EV_ITEM_IMP
+			sensitive: detachable EV_SENSITIVE
+			combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
+			l_pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -1015,11 +1044,11 @@ feature {EV_ANY_I} -- Implementation
 			-- This implementation is learn from www.codeproject.com "Docking Toolbars in Plain C"
 		local
 			l_windows: LINEAR [EV_WINDOW]
-			l_tool_window: EV_POPUP_WINDOW--FAKE_FOCUS_GROUPABLE
-			l_imp: EV_WINDOW_IMP
+			l_tool_window: detachable EV_POPUP_WINDOW--FAKE_FOCUS_GROUPABLE
+			l_imp: detachable EV_WINDOW_IMP
 			l_keep_alive: INTEGER
 			l_syn_others: BOOLEAN
-			l_test: EV_WINDOW--FAKE_FOCUS_GROUPABLE
+			l_test: detachable EV_WINDOW--FAKE_FOCUS_GROUPABLE
 		do
 			--| Removed use of EV_FAKE_FOCUS windows.
 			l_keep_alive := wparam.to_integer_32
@@ -1074,7 +1103,7 @@ feature {EV_ANY_I} -- Implementation
 			-- message `msg'.
 		local
 			a_menu: WEL_MENU
-			modeless_dialog_imp: EV_DIALOG_IMP_MODELESS
+			modeless_dialog_imp: detachable EV_DIALOG_IMP_MODELESS
 		do
 				-- The `Wm_ncactive' message is sent by windows when the
 				-- non client area of Current needs to be changed to indicate an
@@ -1135,20 +1164,22 @@ feature {EV_ANY_I} -- Implementation
 						-- We must now restore the focus to `last_focused_widget'
 						-- as the window is now being re-activated.
 				if not l_is_minimized then
-					application_imp.set_window_with_focus (interface)
+					application_imp.set_window_with_focus (Current)
 					if application_imp.focus_in_actions_internal /= Void then
-						application_imp.focus_in_actions_internal.call ([interface])
+						application_imp.focus_in_actions.call ([attached_interface])
 					end
 					if focus_in_actions_internal /= Void then
 						focus_in_actions_internal.call (Void)
 					end
 					if is_window (last_focused_widget) then
-						window_of_item (last_focused_widget).set_focus
+						if attached window_of_item (last_focused_widget) as l_window then
+							l_window.set_focus
 							-- Calling disable_default_processing is required in order to
 							-- stop the focus being removed from `last_focused_widget' after
 							-- we set it. However, this stops on_set_focus being called, so we
 							-- execute the code ourselves.
-						disable_default_processing
+							disable_default_processing
+						end
 					end
 				end
 			else
@@ -1156,10 +1187,10 @@ feature {EV_ANY_I} -- Implementation
 				application_imp.set_window_with_focus (Void)
 				focus_on_widget.put (Void)
 				if application_imp.focus_out_actions_internal /= Void then
-					application_imp.focus_out_actions_internal.call ([interface])
+					application_imp.focus_out_actions.call ([attached_interface])
 				end
 				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (Void)
+					focus_out_actions.call (Void)
 				end
 			end
 		end
@@ -1174,7 +1205,7 @@ feature {EV_ANY_I} -- Implementation
 			--| on a widget within the dialog from the on_show actions. Julian.
 		local
 			windows: LINEAR [EV_WINDOW]
-			dialog_imp_modal: EV_DIALOG_IMP_MODAL
+			dialog_imp_modal: detachable EV_DIALOG_IMP_MODAL
 			found: BOOLEAN
 		do
 			windows := application_imp.windows
@@ -1211,7 +1242,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	accelerators: WEL_ACCELERATORS
+	--accelerators: WEL_ACCELERATORS
 			-- List of accelerators connected to this window.
 			-- Used in EV_TITLED_WINDOW_IMP but added here to
 			-- avoid assignment attempt in {EV_APPLICATION_IMP}.process_message.
@@ -1248,14 +1279,18 @@ feature {EV_ANY_I} -- Implementation
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
 			-- container must be searched next.
 		require else
-			valid_search_pos: search_pos >= 0 and search_pos <= interface.count + 1
+			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
 		local
-			w: EV_WIDGET_IMP
-			container: EV_CONTAINER
+			w: detachable EV_WIDGET_IMP
+			container: detachable EV_CONTAINER
+			l_item: like item
 		do
 				-- A window cannot receive the tabstop, so we simply
 				-- continue the search within `item'.
-			w ?= item.implementation
+			l_item := item
+			check l_item /= Void end
+			w ?= l_item.implementation
+			check w /= Void end
 			if forwards then
 				Result := w.next_tabstop_widget (start_widget, 1, forwards)
 			else
@@ -1345,16 +1380,16 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 	is_parented_window: BOOLEAN
 			-- If current is parented window?
 
-	switch_between_parented_window (a_parent: EV_WINDOW)
+	switch_between_parented_window (a_parent: detachable EV_WINDOW)
 			-- Change window native item to parent window if `a_parent' not void.
 			-- If `a_parent' void then change to not parented window.
 		local
-			l_window: WEL_WINDOW
+			l_window: detachable WEL_WINDOW
 			l_width, l_height, l_x, l_y: INTEGER
-			l_old_child: EV_WIDGET
+			l_old_child: detachable EV_WIDGET
 			l_old_child_upper, l_old_child_lower: EV_WIDGET
 			l_result: INTEGER
-			l_menu_bar: EV_MENU_BAR
+			l_menu_bar: detachable EV_MENU_BAR
 		do
 			l_width := width
 			l_height := height
@@ -1394,9 +1429,9 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			set_size (l_width, l_height)
 			set_position (l_x, l_y)
 
-			set_widget_parent (l_old_child, interface)
-			set_widget_parent (l_old_child_lower, interface)
-			set_widget_parent (l_old_child_upper, interface)
+			set_widget_parent (l_old_child, Current)
+			set_widget_parent (l_old_child_lower, Current)
+			set_widget_parent (l_old_child_upper, Current)
 
 			if l_menu_bar /= Void then
 				set_menu_bar (l_menu_bar)
@@ -1405,10 +1440,10 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			switched: wel_item /= old wel_item
 		end
 
-	clear_parent (a_widget: EV_WIDGET)
+	clear_parent (a_widget: detachable EV_WIDGET)
 			-- Clear the parent of `a_widget'.
 		local
-			l_imp: EV_WIDGET_IMP
+			l_imp: detachable EV_WIDGET_IMP
 		do
 			if a_widget /= Void then
 				l_imp ?= a_widget.implementation
@@ -1417,20 +1452,17 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			end
 		end
 
-	set_widget_parent (a_widget: EV_WIDGET; a_parent: EV_CONTAINER)
-			-- Set `a_widget' parent to `a_parent' if possible.
+	set_widget_parent (a_widget: detachable EV_WIDGET; a_parent_imp: WEL_WINDOW)
+			-- Set `a_widget_imp' parent to `a_parent_imp' if possible.
 		require
-			not_void: a_parent /= Void
+			not_void: a_parent_imp /= Void
 		local
-			l_parent_imp: WEL_WINDOW
-			l_child_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 		do
  			if a_widget /= Void then
- 				l_parent_imp ?= a_parent.implementation
- 				check not_void: l_parent_imp /= Void end
-				l_child_imp ?= a_widget.implementation
-				check l_child_imp /= Void end
-				l_child_imp.wel_set_parent (l_parent_imp)
+ 				l_widget_imp ?= a_widget.implementation
+ 				check l_widget_imp /= Void end
+				l_widget_imp.wel_set_parent (a_parent_imp)
 			end
 		end
 
@@ -1482,7 +1514,7 @@ feature {NONE} -- Features that should be directly implemented by externals
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_WINDOW
+	interface: detachable EV_WINDOW note option: stable attribute end
 
 	destroy
 			-- Destroy `Current', but set the parent sensitive
@@ -1492,7 +1524,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 				application_imp.remove_root_window (Current)
 
 					-- Remove parent/children relationship
-				interface.wipe_out
+				replace (Void)
 
 					-- No one should be referencing Current anymore.
 				set_is_destroyed (True)
@@ -1503,6 +1535,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 					--| Does not have such a concept.
 				wel_destroy_window
 			end
+		end
+
+	is_shown_by_default: BOOLEAN
+			-- <Precursor>
+		do
+				-- Windows and descendents are not shown by default.
+			Result := False
 		end
 
 note
@@ -1520,4 +1559,15 @@ note
 
 
 end -- class EV_WINDOW_IMP
+
+
+
+
+
+
+
+
+
+
+
 

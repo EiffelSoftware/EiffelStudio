@@ -84,7 +84,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	interface: EV_POINTER_STYLE;
+	interface: detachable EV_POINTER_STYLE note option: stable attribute end;
 			-- Interface
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

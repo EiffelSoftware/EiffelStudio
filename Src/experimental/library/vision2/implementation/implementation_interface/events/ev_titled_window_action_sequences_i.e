@@ -31,9 +31,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	maximize_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	maximize_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `maximize_actions'.
-		
+		note
+			option: stable
+		attribute
+		end
+
 feature -- Event handling
 
 	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -55,9 +59,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	minimize_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	minimize_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `minimize_actions'.
-			
+		note
+			option: stable
+		attribute
+		end;
+
 feature -- Event handling
 
 	restore_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -80,8 +88,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	restore_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	restore_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `minimize_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -98,4 +110,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

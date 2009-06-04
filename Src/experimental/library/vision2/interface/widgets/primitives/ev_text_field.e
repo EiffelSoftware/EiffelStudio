@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_TEXT_FIELD_IMP} implementation.make (Current)
+			create {EV_TEXT_FIELD_IMP} implementation.make
 		end
 
 invariant
@@ -106,4 +106,11 @@ note
 
 
 end -- class EV_TEXT_FIELD
+
+
+
+
+
+
+
 

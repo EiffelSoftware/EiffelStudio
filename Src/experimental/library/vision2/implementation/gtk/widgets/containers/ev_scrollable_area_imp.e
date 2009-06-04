@@ -26,14 +26,15 @@ inherit
 			horizontal_adjustment,
 			vertical_adjustment,
 			interface,
-			make,
+			old_make,
 			on_size_allocate,
 			x_offset,
 			y_offset,
 			set_x_offset,
 			set_y_offset,
 			child_has_resized,
-			needs_event_box
+			needs_event_box,
+			make
 		end
 
 create
@@ -41,10 +42,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create scrollable area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 
 				-- Remove shadow so that the scrollable area looks like any other container.
@@ -63,6 +69,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (scrolled_window, 1, 1)
+			Precursor
 		end
 
 	needs_event_box: BOOLEAN = True
@@ -195,11 +202,12 @@ feature {NONE} -- Implementation
 	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Set item in center of `Current' if smaller.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
-			if item /= Void then
-				item_imp ?= item.implementation
+			if attached item as l_item then
+				item_imp ?= l_item.implementation
+				check item_imp /= Void end
 				{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 			end
 		end
@@ -242,7 +250,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation		
 
-	interface: EV_SCROLLABLE_AREA;
+	interface: detachable EV_SCROLLABLE_AREA note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -261,4 +269,8 @@ note
 
 
 end -- class EV_SCROLLABLE_AREA_IMP
+
+
+
+
 

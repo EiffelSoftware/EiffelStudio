@@ -8,7 +8,7 @@ note
 
 class
 	RTF_FORMAT_I
-	
+
 inherit
 	EV_PARAGRAPH_CONSTANTS
 		rename
@@ -34,28 +34,28 @@ feature -- Access
 
 	highlight_color: INTEGER
 				-- Highlighting applied to text.
-			
+
 	highlight_set: BOOLEAN
 			-- Has `highlight_color' been explicitly set and does not correspond to auto?
 
 	text_color: INTEGER
 			-- Text color of format
-			
+
 	color_set: BOOLEAN
 			-- Has `text_color' been explicitly set and does not correspond to auto?
 
 	is_bold: BOOLEAN
 			-- Is format bold?
-			
+
 	is_italic: BOOLEAN
 			-- Is format italic?
-			
+
 	is_striked_out: BOOLEAN
 			-- Is format striken out?
-			
+
 	is_underlined: BOOLEAN
 			-- Is format underlined?
-			
+
 	vertical_offset: INTEGER
 			-- Vertical offset in pixels.
 
@@ -66,7 +66,7 @@ feature -- Access
 			-- Current character format index.
 
 	boolean_out (a_boolean: BOOLEAN): STRING
-			-- 
+			--
 		do
 			if a_boolean then
 				Result := true_constant
@@ -74,17 +74,19 @@ feature -- Access
 				Result := false_constant
 			end
 		end
-		
+
 	true_constant: STRING = "T"
 	false_constant: STRING = "F"
-		
-			
+
+
 	character_format_out: STRING
 			-- Result is representation of character format attributes of `Current'.
 			-- Paragraph and formats need to be buffered independently, hence a
-			-- seperate out fetaure for each of these set of attributes.
+			-- seperate out feature for each of these set of attributes.
 		do
-			if internal_character_format_out = Void then
+			if attached internal_character_format_out as l_internal_character_format_out then
+				Result := l_internal_character_format_out
+			else
 				create Result.make (30)
 				Result.append_integer (highlight_color)
 				Result.append (boolean_out (is_bold))
@@ -98,16 +100,14 @@ feature -- Access
 				Result.append (boolean_out (highlight_set))
 				Result.append (boolean_out (color_set))
 				internal_character_format_out := Result
-			else
-				Result := internal_character_format_out
 			end
 		end
-		
+
 feature -- Access
-	
+
 	alignment: INTEGER
 			-- Alignment of text.
-			
+
 	bottom_spacing: INTEGER
 			-- Bottom spacing
 
@@ -119,7 +119,7 @@ feature -- Access
 
 	left_margin: INTEGER
 			-- Left margin
-			
+
 	reset_paragraph
 			-- Ensure all paragraph formatting attributes are reset to
 			-- default values.
@@ -143,7 +143,9 @@ feature -- Access
 			-- Paragraph and formats need to be buffered independently, hence a
 			-- seperate out fetaure for each of these set of attributes.
 		do
-				if internal_paragraph_format_out = Void then
+				if attached internal_paragraph_format_out as l_internal_paragraph_format_out then
+					Result := l_internal_paragraph_format_out
+				else
 					create Result.make (16)
 					Result.append_integer (alignment)
 					Result.append_integer (bottom_spacing)
@@ -151,11 +153,9 @@ feature -- Access
 					Result.append_integer (right_margin)
 					Result.append_integer (left_margin)
 					internal_paragraph_format_out := Result
-				else
-					Result := internal_paragraph_format_out
 				end
 		end
-	
+
 feature -- Element change
 
 	set_bottom_spacing (a_bottom_spacing: INTEGER)
@@ -234,7 +234,7 @@ feature -- Element change
 		ensure
 			is_bold_assigned: is_bold = a_is_bold
 		end
-		
+
 	set_italic (an_is_italic: BOOLEAN)
 			-- Set `is_italic' to `an_is_italic'.
 		do
@@ -252,7 +252,7 @@ feature -- Element change
 		ensure
 			is_striked_out_assigned: is_striked_out = an_is_striked_out
 		end
-		
+
 	set_underlined (an_is_underlined: BOOLEAN)
 			-- Set `is_underlined' to `an_is_underlined'.
 		do
@@ -261,7 +261,7 @@ feature -- Element change
 		ensure
 			is_underlined: is_underlined = an_is_underlined
 		end
-		
+
 	set_vertical_offset (an_offset: INTEGER)
 			-- Set `vertical_offset' to `an_offset'.
 		do
@@ -292,7 +292,7 @@ feature -- Element change
 		ensure
 			character_format_assigned: character_format = a_character_format
 		end
-		
+
 	set_alignment (an_alignment: INTEGER)
 			-- Set `alignment' to `an_alignment'.
 		require
@@ -306,10 +306,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_character_format_out: STRING
+	internal_character_format_out: detachable STRING
 			-- Once per object for `character_format_out'.
-			
-	internal_paragraph_format_out: STRING
+
+	internal_paragraph_format_out: detachable STRING
 			-- Once per object for `paragraph_format_out'.
 
 	reset_internals
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 		ensure
 			internal_character_format_out_reset: internal_character_format_out = Void
 		end
-		
+
 invariant
 	character_format_non_negative: character_format >= 0
 	font_height_non_negative: font_height >= 0
@@ -346,4 +346,15 @@ note
 
 
 end -- class RTF_FORMAT_I
+
+
+
+
+
+
+
+
+
+
+
 

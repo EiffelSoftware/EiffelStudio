@@ -16,17 +16,17 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			initialize, interface, destroy, get_dc, release_dc, redraw
+			make, interface, destroy, get_dc, release_dc, redraw
 		end
 
 	EV_PRIMITIVE_IMP
 		undefine
 			set_background_color,
 			set_foreground_color,
-			background_color,
-			foreground_color
+			background_color_internal,
+			foreground_color_internal
 		redefine
-			interface, initialize, on_left_button_down,
+			interface, make, on_left_button_down,
 			on_middle_button_down, on_right_button_down,
 			destroy
 		end
@@ -58,23 +58,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' empty with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 			-- Set up action sequence connections
 			-- and `Precursor' initialization.
 		do
 			wel_make (default_parent, "Drawing area")
+
+			Precursor {EV_PRIMITIVE_IMP}
+
 			create screen_dc.make (Current)
 			internal_paint_dc := screen_dc
 			internal_paint_dc.get
+
 			Precursor {EV_DRAWABLE_IMP}
-			Precursor {EV_PRIMITIVE_IMP}
+
 			disable_tabable_from
 		end
 
@@ -83,6 +87,7 @@ feature -- Access
 	dc: WEL_DC
 			-- The device context of the control.
 		do
+			check internal_paint_dc /= Void end
 			Result := internal_paint_dc
 		end
 
@@ -95,6 +100,7 @@ feature {NONE} -- Implementation
 			-- Release the dc if not already released
 		do
 			if not in_paint then
+				check internal_paint_dc /= Void end
 				if internal_paint_dc.exists then
 					internal_paint_dc.release
 				end
@@ -108,17 +114,18 @@ feature {NONE} -- Implementation
 			-- Get the dc if not already get.
 		do
 			if not in_paint then
+				check internal_paint_dc /= Void end
 				if not internal_paint_dc.exists then
 					internal_paint_dc.get
 					internal_paint_dc.set_background_transparent
-					if internal_pen /= Void then
-						internal_paint_dc.select_pen (internal_pen)
+					if attached internal_pen as l_internal_pen then
+						internal_paint_dc.select_pen (l_internal_pen)
 					else
 						internal_paint_dc.select_pen (empty_pen)
 					end
 
-					if internal_brush /= Void then
-						internal_paint_dc.select_brush (internal_brush)
+					if attached internal_brush as l_internal_brush then
+						internal_paint_dc.select_brush (l_internal_brush)
 					else
 						internal_paint_dc.select_brush (empty_brush)
 					end
@@ -184,6 +191,7 @@ feature {NONE} -- Implementation
 					])
 
 					-- Switch back the dc from paint_dc to screen_dc.
+				check screen_dc /= Void end
 				internal_paint_dc := screen_dc
 				in_paint := False
 
@@ -298,14 +306,14 @@ feature -- Commands.
 
 feature {NONE} -- Implementation
 
-	interface: EV_DRAWING_AREA
+	interface: detachable EV_DRAWING_AREA note option: stable attribute end
 
 feature {EV_DRAWABLE_IMP} -- Internal datas.
 
-	internal_paint_dc: WEL_DC
+	internal_paint_dc: detachable WEL_DC note option: stable attribute end
 			-- dc we use when painting
 
-	screen_dc: WEL_CLIENT_DC;
+	screen_dc: detachable WEL_CLIENT_DC note option: stable attribute end;
 			-- dc we use when painting outside a WM_PAINT message
 
 note
@@ -323,4 +331,12 @@ note
 
 
 end -- class EV_DRAWING_AREA_IMP
+
+
+
+
+
+
+
+
 

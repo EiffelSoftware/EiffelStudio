@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			group_show_requested: group.is_show_requested
 		local
 			draw_item: EV_MODEL
-			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
+			dr: detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]
 			i, nb: INTEGER
 		do
 			from
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			draw_routines_has: draw_routines.item (f.draw_id) /= Void
 			f_show_requested: f.is_show_requested
 		local
-			bbox: EV_RECTANGLE
+			bbox: detachable EV_RECTANGLE
 			l_tuple: TUPLE [EV_MODEL]
 			l_draw_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
@@ -95,6 +95,7 @@ feature {NONE} -- Implementation
 			else
 				bbox := f.last_update_rectangle
 			end
+			check bbox /= Void end
 			if bbox.intersects (rect) then
 				-- If we paint f we have to add it
 				-- to the invalidate rectangle. That way
@@ -123,7 +124,7 @@ feature {NONE} -- Implementation
 		local
 			draw_item: EV_MODEL
 			i, nb: INTEGER
-			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
+			dr: detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
 			from
 				i := 1
@@ -226,4 +227,8 @@ note
 
 
 end -- class EV_MODEL_PROJECTION_ROUTINES
+
+
+
+
 

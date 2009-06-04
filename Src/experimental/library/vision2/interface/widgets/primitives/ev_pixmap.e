@@ -131,7 +131,7 @@ feature {EV_ANY} -- Contract support
 
 feature {EV_BUILDER} -- Access
 
-	pixmap_path: STRING_32
+	pixmap_path: detachable STRING_32
 		-- Path of `pixmap'.
 
 	pixmap_exists: BOOLEAN
@@ -155,7 +155,7 @@ feature {EV_BUILDER} -- Status setting
 			pixmap_exists_set: not pixmap_exists
 		end
 
-	set_pixmap_path (path: STRING_GENERAL)
+	set_pixmap_path (path: detachable STRING_GENERAL)
 			-- Assign `path' to `pixmap_path'.
 		do
 			if path = Void then
@@ -164,7 +164,7 @@ feature {EV_BUILDER} -- Status setting
 				pixmap_path := path
 			end
 		ensure
-			pixmap_path_set: path /= Void implies pixmap_path.is_equal (path)
+			pixmap_path_set: attached path as l_path implies (attached pixmap_path as l_pixmap_path and then l_path.is_equal (l_pixmap_path))
 		end
 
 feature -- Status setting
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_PIXMAP_IMP} implementation.make (Current)
+			create {EV_PIXMAP_IMP} implementation.make
 		end
 
 note
@@ -290,4 +290,14 @@ note
 
 
 end -- class EV_PIXMAP
+
+
+
+
+
+
+
+
+
+
 

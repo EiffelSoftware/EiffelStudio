@@ -123,7 +123,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -153,7 +153,7 @@ feature -- Event handling
 			Result := item_activate_actions_internal
 		end
 
-	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -170,7 +170,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -187,7 +187,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -204,7 +204,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -223,7 +223,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -267,7 +267,7 @@ feature -- Event handling
 			Result := virtual_size_changed_actions_internal
 		end
 
-	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed before the features of an item cell in `Current' have been drawn but after the background of
 			-- the cell has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn background.
@@ -291,7 +291,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed after an item cell in `Current'  has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn item.
 			-- grid_item: EV_GRID_ITEM The item which has just been drawn, may be Void in the case that an
@@ -343,70 +343,158 @@ feature -- Event handling
 
 feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
-	item_activate_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
+	item_activate_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
 			-- Implementation of once per object `item_activate_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	item_drop_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
+	item_drop_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
 			-- Implementation of once per object  `item_drop_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	item_deactivate_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
+	item_deactivate_actions_internal: detachable EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_deactivate_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	item_select_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
+	item_select_actions_internal: detachable EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_select_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	item_deselect_actions_internal: EV_GRID_ITEM_ACTION_SEQUENCE
+	item_deselect_actions_internal: detachable EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `item_deselect_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	row_select_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+	row_select_actions_internal: detachable EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_select_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	column_select_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
+	column_select_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
 			-- Implementation of once per object `column_select_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	row_deselect_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+	row_deselect_actions_internal: detachable EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_deselect_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	column_deselect_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
+	column_deselect_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
 			-- Implementation of once per object `column_deselect_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_motion_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_motion_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `motion_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_double_press_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_double_press_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `double_press_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_leave_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_leave_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `pointer_leave_item_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_enter_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
+	pointer_enter_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `pointer_enter_item_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_button_press_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_press_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `pointer_button_press_item_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pointer_button_release_item_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+	pointer_button_release_item_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, detachable EV_GRID_ITEM]]
 			-- Implementation of once per object `pointer_button_release_item_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	row_expand_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+	row_expand_actions_internal: detachable EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_expand_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	row_collapse_actions_internal: EV_GRID_ROW_ACTION_SEQUENCE
+	row_collapse_actions_internal: detachable EV_GRID_ROW_ACTION_SEQUENCE
 			-- Implementation of once per object `row_collapse_actions_internal'.
+		note
+			option: stable
+		attribute
+		end;
 
-	virtual_position_changed_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
+	virtual_position_changed_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
 			-- Implementation of once per object `virtual_position_changed_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	virtual_size_changed_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
+	virtual_size_changed_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
 			-- Implementation of once per object `virtual_size_changed_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	pre_draw_overlay_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	pre_draw_overlay_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Implementation of once per object `pre_draw_overlay_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	post_draw_overlay_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
+	post_draw_overlay_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, detachable EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Implementation of once per object `post_draw_overlay_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
-	fill_background_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]];
+	fill_background_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]]
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -423,4 +511,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

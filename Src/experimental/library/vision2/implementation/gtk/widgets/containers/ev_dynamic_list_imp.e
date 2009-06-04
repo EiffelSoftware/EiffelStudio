@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST_IMP [reference G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST_IMP [G -> detachable EV_CONTAINABLE]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -17,7 +17,7 @@ inherit
 
 feature -- Initialization
 
-	initialize
+	make
 			-- Initialize the dynamic list.
 		do
 			create child_array.make (0)
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	i_th (i: INTEGER): G
+	i_th (i: INTEGER): like item
 			-- Item at `i'-th position.
 		do
 			if child_array /= Void then
@@ -46,7 +46,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 
 	child_array: ARRAYED_LIST [G]
 
-	interface: EV_DYNAMIC_LIST [G]
+	interface: detachable EV_DYNAMIC_LIST [G] note option: stable attribute end
 
 invariant
 
@@ -81,4 +81,8 @@ note
 
 
 end -- class EV_DYNAMIC_LIST_IMP
+
+
+
+
 

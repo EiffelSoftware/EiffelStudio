@@ -34,7 +34,7 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			interface,
-			initialize
+			make
 		end
 
 	EV_DOCKABLE_TARGET_IMP
@@ -51,23 +51,22 @@ inherit
 			top_level_window_imp
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 				-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+
+		do
 			ev_wel_control_container_make
 			create ev_children.make (2)
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
 			border_width := Default_border_width
-		end
-
-
-	initialize
-
-		do
 			Precursor {EV_WIDGET_LIST_IMP}
 			remove_item_actions.extend (agent removed_so_update_non_expandable_children (?))
 			new_item_actions.extend (agent added_so_update_non_expandable_children (?))
@@ -120,26 +119,26 @@ feature -- Access
 			l_cursor: CURSOR
 		do
 			childexpand_nb := childvisible_nb
-			if non_expandable_children /= Void then
+			if attached non_expandable_children as l_non_expandable_children then
 				from
-					l_cursor := non_expandable_children.cursor
-					non_expandable_children.start
+					l_cursor := l_non_expandable_children.cursor
+					l_non_expandable_children.start
 				until
-					non_expandable_children.off
+					l_non_expandable_children.off
 				loop
-					if ev_children.i_th (non_expandable_children.item).is_show_requested then
+					if ev_children.i_th (l_non_expandable_children.item).is_show_requested then
 						childexpand_nb := childexpand_nb - 1
 					end
-					non_expandable_children.forth
+					l_non_expandable_children.forth
 				end
-				non_expandable_children.go_to (l_cursor)
+				l_non_expandable_children.go_to (l_cursor)
 			end
 		end
 
 	childexpand_nb: INTEGER
 			-- Number of visible children which are expanded.
 
-	non_expandable_children: ARRAYED_LIST [INTEGER]
+	non_expandable_children: detachable ARRAYED_LIST [INTEGER]
 			-- Position of the non expandable children in growing order.
 
 feature {EV_ANY, EV_ANY_I}-- Status report
@@ -148,16 +147,18 @@ feature {EV_ANY, EV_ANY_I}-- Status report
 			-- Is the `child' expandable. ie: does it
 			-- allow the parent to resize or move it.
 		local
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
+			l_non_expandable_children: like non_expandable_children
 		do
-			if non_expandable_children = Void then
+			l_non_expandable_children := non_expandable_children
+			if l_non_expandable_children = Void then
 				Result := True
 			else
 				child_imp ?= child.implementation
 				check
 					valid_cast: child_imp /= Void
 				end
-				Result := not non_expandable_children.has
+				Result := not l_non_expandable_children.has
 					(ev_children.index_of (child_imp, 1))
 			end
 		end
@@ -169,9 +170,10 @@ feature {EV_ANY, EV_ANY_I}-- Status setting
 			-- not expandable otherwise.
 		local
 			list: ARRAYED_LIST [INTEGER]
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 			value, an_index: INTEGER
 			placed: BOOLEAN
+			l_non_expandable_children: like non_expandable_children
 		do
 				-- First, we find the index of the child.
 			child_imp ?= child.implementation
@@ -180,21 +182,25 @@ feature {EV_ANY, EV_ANY_I}-- Status setting
 			end
 			an_index := ev_children.index_of (child_imp, 1)
 
+			l_non_expandable_children := non_expandable_children
+
 				-- Then, we set the information
 			if flag then
-				if non_expandable_children /= Void then
-					non_expandable_children.prune_all (an_index)
-					if non_expandable_children.is_empty then
+				if l_non_expandable_children /= Void then
+					l_non_expandable_children.prune_all (an_index)
+					if l_non_expandable_children.is_empty then
+						l_non_expandable_children := Void
 						non_expandable_children := Void
 					end
 				end
 			else
-				if non_expandable_children = Void then
-					create non_expandable_children.make (1)
-					non_expandable_children.extend (an_index)
+				if l_non_expandable_children = Void then
+					create l_non_expandable_children.make (1)
+					non_expandable_children := l_non_expandable_children
+					l_non_expandable_children.extend (an_index)
 				else
 					from
-						list := non_expandable_children
+						list := l_non_expandable_children
 						placed := False
 						list.start
 					until
@@ -226,9 +232,10 @@ feature -- Contract support
 			-- `Result' True if `new_child' contained in `ev_children'.
   			-- Used in the postcondition of 'add_child'.
    		local
-   			child_imp: EV_WIDGET_IMP
+   			child_imp: detachable EV_WIDGET_IMP
    		do
  			child_imp ?= new_child
+ 			check child_imp /= Void end
  			Result := ev_children.has (child_imp)
  		end
 
@@ -238,7 +245,7 @@ feature {NONE} -- Basic operation
 			-- Adjust `non_expandable_children' accordingly
 			-- when a child is removed.
 		local
-			wid_imp: EV_WIDGET_IMP
+			wid_imp: detachable EV_WIDGET_IMP
 			an_index: INTEGER
 		do
 			wid_imp ?= wid.implementation
@@ -246,20 +253,20 @@ feature {NONE} -- Basic operation
 				child_implementation_not_void: wid_imp /= Void
 			end
 			an_index := ev_children.index_of (wid_imp, 1)
-			if non_expandable_children /= Void then
-				non_expandable_children.prune_all (an_index)
-				if non_expandable_children.is_empty then
+			if attached non_expandable_children as l_non_expandable_children then
+				l_non_expandable_children.prune_all (an_index)
+				if l_non_expandable_children.is_empty then
 					non_expandable_children := Void
 				else
 					from
-						non_expandable_children.start
+						l_non_expandable_children.start
 					until
-						non_expandable_children.off
+						l_non_expandable_children.off
 					loop
-						if an_index < non_expandable_children.item then
-							non_expandable_children.replace (non_expandable_children.item - 1)
+						if an_index < l_non_expandable_children.item then
+							l_non_expandable_children.replace (l_non_expandable_children.item - 1)
 						end
-						non_expandable_children.forth
+						l_non_expandable_children.forth
 					end
 				end
 			end
@@ -269,24 +276,28 @@ feature {NONE} -- Basic operation
 			-- Adjust `non_expandable_children' accordingly
 			-- when a child is added.
 		local
-			wid_imp: EV_WIDGET_IMP
+			wid_imp: detachable EV_WIDGET_IMP
 			an_index: INTEGER
+			l_non_expandable_children: like non_expandable_children
 		do
 			wid_imp ?= wid.implementation
 			check
 				child_implementation_not_void: wid_imp /= Void
 			end
 			an_index := ev_children.index_of (wid_imp, 1)
-			if non_expandable_children /= Void then
+
+			l_non_expandable_children := non_expandable_children
+
+			if l_non_expandable_children /= Void then
 				from
-					non_expandable_children.start
+					l_non_expandable_children.start
 				until
-					non_expandable_children.off
+					l_non_expandable_children.off
 				loop
-					if non_expandable_children.item >= an_index then
-						non_expandable_children.replace (non_expandable_children.item + 1)
+					if l_non_expandable_children.item >= an_index then
+						l_non_expandable_children.replace (l_non_expandable_children.item + 1)
 					end
-					non_expandable_children.forth
+					l_non_expandable_children.forth
 				end
 			end
 		end
@@ -311,7 +322,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the `Current'.
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	set_insensitive (flag: BOOLEAN)
@@ -360,7 +371,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -388,7 +399,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 
 feature {EV_ANY, EV_ANY_I} -- Interface
 
-	interface: EV_BOX;
+	interface: detachable EV_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -405,4 +416,14 @@ note
 
 
 end -- class EV_BOX_IMP
+
+
+
+
+
+
+
+
+
+
 

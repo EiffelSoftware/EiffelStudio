@@ -14,7 +14,6 @@ inherit
 	EV_ANY
 		redefine
 			implementation,
-			initialize,
 			is_in_default_state
 		end
 
@@ -31,13 +30,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_interval (an_interval)
-		end
-
-	initialize
-			-- Create action sequence.
-		do
-			create actions
-			Precursor
 		end
 
 feature -- Access
@@ -113,10 +105,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			create actions
+		end
+
 	create_implementation
 			-- Create implementation of button.
 		do
-			create {EV_TIMEOUT_IMP} implementation.make (Current)
+			create {EV_TIMEOUT_IMP} implementation.make
 		end
 
 invariant
@@ -139,4 +137,11 @@ note
 
 
 end -- class EV_TIMEOUT
+
+
+
+
+
+
+
 

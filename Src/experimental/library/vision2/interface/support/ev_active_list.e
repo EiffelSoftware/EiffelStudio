@@ -15,6 +15,7 @@ inherit
 	ACTIVE_LIST [G]
 		redefine
 			default_create,
+			make_filled,
 			on_item_added_at,
 			on_item_removed_at
 		end
@@ -30,9 +31,17 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize.
 		do
-			Precursor {ACTIVE_LIST}
 			create internal_add_actions
 			create internal_remove_actions
+			Precursor {ACTIVE_LIST}
+		end
+
+	make_filled (n: INTEGER)
+			-- Make filled.
+		do
+			create internal_add_actions
+			create internal_remove_actions
+			Precursor {ACTIVE_LIST} (n)
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
@@ -88,4 +97,15 @@ note
 
 
 end -- class EV_ACTIVE_LIST
+
+
+
+
+
+
+
+
+
+
+
 

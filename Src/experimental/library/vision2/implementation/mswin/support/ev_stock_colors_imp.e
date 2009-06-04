@@ -7,17 +7,18 @@ note
 	revision: "$Revision$"
 
 class
-	EV_STOCK_COLORS_IMP 
+	EV_STOCK_COLORS_IMP
 
 feature -- Access
 
 	Color_dialog, Color_3d_face: EV_COLOR
 			-- Color usually used for the background of dialogs.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			create Result
 			color_imp ?= Result.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnface)
 		end
 
@@ -25,10 +26,11 @@ feature -- Access
 			-- Used for 3D-effects (light color)
 			-- Name "color highlight"
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			create Result
 			color_imp ?= Result.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id
 				(Wel_color_constants.Color_btnhighlight)
 		end
@@ -37,10 +39,11 @@ feature -- Access
 			-- Used for 3D-effects (dark color)
 			-- Name "color shadow"
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			create Result
 			color_imp ?= Result.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnshadow)
 		end
 
@@ -48,10 +51,11 @@ feature -- Access
 			-- Color usually used for the background of editable
 			-- widgets when they are read_only.
 		local
-			color_imp: EV_COLOR_IMP
+			color_imp: detachable EV_COLOR_IMP
 		do
 			create Result
 			color_imp ?= Result.implementation
+			check color_imp /= Void end
 			color_imp.set_with_system_id
 				(Wel_color_constants.Color_inactiveborder)
 		end
@@ -97,4 +101,15 @@ note
 
 
 end -- class EV_STOCK_COLORS_IMP
+
+
+
+
+
+
+
+
+
+
+
 

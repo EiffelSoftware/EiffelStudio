@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_FILE_OPEN_DIALOG_IMP} implementation.make (Current)
+			create {EV_FILE_OPEN_DIALOG_IMP} implementation.make
 		end
 
 invariant
@@ -110,4 +110,8 @@ note
 
 
 end -- class EV_FILE_OPEN_DIALOG
+
+
+
+
 

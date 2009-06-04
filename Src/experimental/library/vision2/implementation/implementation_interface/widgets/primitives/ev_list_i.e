@@ -4,10 +4,10 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_LIST_I
-	
+
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
@@ -21,19 +21,19 @@ feature -- Access
 		local
 			original_position: INTEGER
 		do
-			original_position := interface.index
+			original_position := attached_interface.index
 			create Result.make(2)
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.off
+				attached_interface.off
 			loop
-				if interface.item.is_selected then
-					Result.extend (interface.item)
+				if attached_interface.item.is_selected then
+					Result.extend (attached_interface.item)
 				end
-				interface.forth
+				attached_interface.forth
 			end
-			interface.go_i_th (original_position)
+			attached_interface.go_i_th (original_position)
 		end
 
 feature -- Status report
@@ -59,19 +59,19 @@ feature -- Status setting
 			-- Allow only one item to be selected.
 		deferred
 		end
-		
+
 	disable_default_key_processing
 			-- Ensure default key processing is not performed.
 		do
 			default_key_processing_disabled := True
 		end
-		
+
 	default_key_processing_disabled: BOOLEAN
 		-- Has default key processing been disabled?
 
 feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
-	interface: EV_LIST;
+	interface: detachable EV_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -88,4 +88,12 @@ note
 
 
 end -- class EV_LIST_I
+
+
+
+
+
+
+
+
 

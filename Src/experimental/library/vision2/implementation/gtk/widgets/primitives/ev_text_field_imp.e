@@ -23,7 +23,7 @@ inherit
 			needs_event_box,
 			on_key_event,
 			set_minimum_width_in_characters,
-			initialize
+			make
 		end
 
 	EV_FONTABLE_IMP
@@ -51,23 +51,23 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk entry.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
 		local
 			a_vbox: POINTER
 		do
-			base_make (an_interface)
 			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text (once "")
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
 			align_text_left
 			Precursor
 		end
@@ -327,7 +327,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result
 		end
 
-	stored_text: STRING_32
+	stored_text: detachable STRING_32
 			-- Value of 'text' prior to a change action, used to compare
 			-- between old and new text.
 
@@ -338,11 +338,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			new_text := text
 			if --not in_change_action and then
-			(stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
+			(attached stored_text as l_stored_text and then not new_text.is_equal (l_stored_text)) or else stored_text = Void then
 					-- The text has actually changed
 				in_change_action := True
-				if change_actions_internal /= Void then
-					change_actions_internal.call (Void)
+				if attached change_actions_internal as l_change_actions_internal then
+					l_change_actions_internal.call (Void)
 				end
 				in_change_action := False
 				stored_text := text
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 
-	interface: EV_TEXT_FIELD;
+	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -385,4 +385,8 @@ note
 
 
 end -- class EV_TEXT_FIELD_IMP
+
+
+
+
 

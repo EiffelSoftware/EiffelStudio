@@ -51,7 +51,7 @@ feature -- Status setting
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 
-	interface: EV_TEXT_FIELD
+	interface: detachable EV_TEXT_FIELD note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -73,4 +73,12 @@ note
 
 
 end --class EV_TEXT_FIELD_I
+
+
+
+
+
+
+
+
 

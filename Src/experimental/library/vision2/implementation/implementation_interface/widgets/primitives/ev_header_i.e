@@ -46,8 +46,8 @@ feature -- Access
 			until
 				item = an_item
 			loop
-				if an_item /= item then
-					Result := Result + item.width
+				if an_item /= item and then attached item as l_item then
+					Result := Result + l_item.width
 				end
 				forth
 			end
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HEADER;
+	interface: detachable EV_HEADER note option: stable attribute end
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
@@ -86,4 +86,11 @@ note
 
 
 end -- class EV_HEADER_I
+
+
+
+
+
+
+
 

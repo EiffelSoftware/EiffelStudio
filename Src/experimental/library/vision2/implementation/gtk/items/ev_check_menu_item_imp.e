@@ -16,9 +16,11 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		redefine
-			make,
+			old_make,
 			interface,
-			on_activate
+			on_activate,
+			make,
+			initialize_menu_item
 		end
 
 create
@@ -26,11 +28,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a menu.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	initialize_menu_item
+			-- <Precursor>
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_check_menu_item_new)
+		end
+
+	make
+			-- <Precursor>
+		do
+			Precursor {EV_MENU_ITEM_IMP}
 			{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_show_toggle (menu_item, True)
 			disable_select
 		end
@@ -80,7 +93,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	interface: EV_CHECK_MENU_ITEM;
+	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -97,4 +110,8 @@ note
 
 
 end -- class EV_CHECK_MENU_ITEM_IMP
+
+
+
+
 

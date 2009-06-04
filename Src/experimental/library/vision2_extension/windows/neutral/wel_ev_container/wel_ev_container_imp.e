@@ -9,23 +9,23 @@ note
 
 class
 	WEL_EV_CONTAINER_IMP
-	
+
 inherit
 	WEL_EV_CONTAINER_I
 		redefine
 			interface
 		end
-		
+
 	EV_CELL_IMP
 		redefine
 			interface,
 			notify_change,
 			ev_set_minimum_size
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- initialization
 
 	set_real_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER)
@@ -34,7 +34,7 @@ feature {NONE} -- initialization
 			-- Create EV_APPLICATION if one has not been created.
 		local
 			temp_window: EV_WINDOW
-			application: EV_APPLICATION
+			application: detachable EV_APPLICATION
 		do
 			-- We check EV_ENVIRONMENT to see if EV_APPLICATION exisits.
 			-- If it does not, then we must create an instance ourselves.
@@ -45,14 +45,14 @@ feature {NONE} -- initialization
 			wel_set_parent (a_parent)
 			wel_move_and_resize (x_pos, y_pos, a_width, a_height, True)
 			child_cell.resize (a_width, a_height)
-			
-			create temp_window	
+
+			create temp_window
 			top_level_window_imp ?= temp_window.implementation
 			check
 				top_level_window_imp /= Void
 			end
 		end
-		
+
 feature {WEL_EV_CONTAINER_I}-- Access
 
 	implementation_window: WEL_WINDOW
@@ -63,17 +63,17 @@ feature {WEL_EV_CONTAINER_I}-- Access
 
 feature {NONE} -- Implementation
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
+	notify_change (type: INTEGER; child: detachable EV_ANY_I)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
-			-- in class EV_SIZEABLE_IMP. If the container is shown, 
+			-- in class EV_SIZEABLE_IMP. If the container is shown,
 			-- we integrate the changes immediatly, otherwise, we postpone
 			-- them.
 			-- Use the constants defined in EV_SIZEABLE_IMP
 		local
 			p_imp: like parent_imp
 			top_imp: like top_level_window_imp
-			t: EV_SIZEABLE_CONTAINER_IMP
+			t: detachable EV_SIZEABLE_CONTAINER_IMP
 		do
 			if not is_in_min_height and not is_in_min_width then
 			if is_in_notify.item then
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 				is_notify_originator := True
 				is_in_notify.put (True)
 				top_imp := top_level_window_imp
-				if wel_parent /= Void and then wel_parent.shown then
+				if attached wel_parent as l_wel_parent and then l_wel_parent.shown then
 					inspect type
 					when Nc_minwidth then
 						set_minwidth_recomputation_needed (False)
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			end
 			end
 		end
-		
+
 	ev_set_minimum_size (a_width, a_height: INTEGER)
 			-- Assign `mw' to minimum_width and `mh' to minimum_height.
 			-- Should check if the user didn't set the minimum width
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			top_imp := top_level_window_imp
-			if not do_change and then wel_parent /= void and then wel_parent.shown then
+			if not do_change and then attached wel_parent as l_wel_parent and then l_wel_parent.shown then
 				rw := child_cell.width
 				rh := child_cell.height
 				if a_width > rw or a_height > rh then
@@ -165,10 +165,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
-	interface: WEL_EV_CONTAINER;
+	interface: detachable WEL_EV_CONTAINER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -185,4 +185,6 @@ note
 
 
 end -- class WEL_EV_CONTAINER_IMP
+
+
 

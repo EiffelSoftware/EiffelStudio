@@ -14,7 +14,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_CELL_IMP
 		rename
 			replace as cell_replace,
@@ -28,10 +28,10 @@ inherit
 			ev_apply_new_size,
 			process_message
 		end
-		
+
 create
 	make
-		
+
 feature -- Access
 
 	implementation_window: WEL_WINDOW
@@ -39,30 +39,34 @@ feature -- Access
 		do
 			Result := Current
 		end
-		
-	item: WEL_WINDOW
+
+	item: detachable WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		do
 			Result ?= internal_child_window
 		end
-		
+
 feature -- Status setting
-		
-	replace (a_window: WEL_WINDOW)
+
+	replace (a_window: detachable WEL_WINDOW)
 			-- Replace `item' with `a_window'
+		local
+			l_internal_child_window: like internal_child_window
 		do
 			if item /= Void then
-				internal_child_window.set_parent (Default_parent)
+				l_internal_child_window := internal_child_window
+				check l_internal_child_window /= Void end
+				l_internal_child_window.set_parent (Default_parent)
 				internal_child_window := Void
-			end	
+			end
 			if a_window /= Void then
-				connect_window (a_window)	
+				connect_window (a_window)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
-	internal_child_window: WEL_WINDOW
+	internal_child_window: detachable WEL_WINDOW
 		-- WEL_WINDOW contained in `Current'.
 
 	connect_window (a_window: WEL_WINDOW)
@@ -74,9 +78,9 @@ feature {NONE} -- Implementation
 				-- Keep a reference to the window.
 			internal_child_window := a_window
 				-- Size `item' to fit the size of `Current'.
-			internal_child_window.resize (width, height)
+			a_window.resize (width, height)
 		end
-		
+
 	compute_minimum_width, compute_minimum_height,
 	compute_minimum_size
 			-- Recompute the minimum dimensions of `Current'.
@@ -86,15 +90,15 @@ feature {NONE} -- Implementation
 			-- as the child is a WEL_WINDOW, there is no minimum size
 			-- for the child to take into account here.
 		end
-		
+
 	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		local
 			t: like resize_actions_internal
 		do
 			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
-				if internal_child_window /= Void then
-					internal_child_window.resize (a_width, a_height)
+				if attached internal_child_window as l_internal_child_window then
+					l_internal_child_window.resize (a_width, a_height)
 				end
 			end
 				-- We cannot call the precursor so we have to implement
@@ -108,8 +112,8 @@ feature {NONE} -- Implementation
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Apply new size to `Current'.
 		do
-			if internal_child_window /= Void then
-				internal_child_window.resize (client_width, client_height)
+			if attached internal_child_window as l_internal_child_window then
+				l_internal_child_window.resize (client_width, client_height)
 			end
 		end
 
@@ -165,7 +169,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_WEL_CONTAINER;
+	interface: detachable EV_WEL_CONTAINER note option: stable attribute end;
 		-- Interface of `Current'.
 
 note
@@ -183,4 +187,6 @@ note
 
 
 end -- class EV_WEL_CONTAINER_IMP
+
+
 

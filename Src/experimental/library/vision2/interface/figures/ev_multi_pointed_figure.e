@@ -15,11 +15,7 @@ feature -- Access
 	point_count: INTEGER
 			-- Dynamic number of points in `Current'.
 		do
-			if points /= Void then
-				Result := points.count
-			end
-		ensure
-			correct: points /= Void implies Result = points.count
+			Result := points.count
 		end
 
 	i_th_point (i: INTEGER): EV_RELATIVE_POINT
@@ -76,7 +72,7 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-	
+
 	points: ARRAYED_LIST [EV_RELATIVE_POINT]
 			-- Relative points `Current' consists of.
 		deferred
@@ -97,4 +93,8 @@ note
 
 
 end -- class EV_MULTI_POINTED_FIGURE
+
+
+
+
 

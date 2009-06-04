@@ -13,7 +13,7 @@ inherit
 		redefine
 			build_text_field
 		end
-		
+
 create
 	make_with_parent
 
@@ -34,8 +34,8 @@ feature -- Access
 
 	parent_window: EV_WINDOW
 			-- Parent window in which browsing dialogs will be modal to.
-			
-	path_field: EV_PATH_FIELD
+
+	path_field: detachable EV_PATH_FIELD note option: stable attribute end
 			-- Entry where path will be inserted.
 
 feature -- Settings
@@ -44,6 +44,7 @@ feature -- Settings
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
+			check path_field /= Void end
 			path_field.set_browse_for_open_file (filter)
 		end
 
@@ -51,20 +52,23 @@ feature -- Settings
 			-- Force directory browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
+			check path_field /= Void end
 			path_field.set_browse_for_directory
 		end
-			
+
 feature {NONE} -- Implementation
 
 	build_text_field (t: STRING_GENERAL)
 			-- Create a text field which has a browse button attached to it.
 		do
 			create path_field.make_with_text_and_parent (t, parent_window)
-			text_field := path_field.field
+			if attached path_field.field as l_field then
+				text_field := l_field
+			end
 			extend (path_field)
 			disable_item_expand (path_field)
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -80,4 +84,7 @@ note
 
 
 end -- class EV_ADD_REMOVE_PATH_LIST
+
+
+
 

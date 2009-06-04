@@ -32,13 +32,16 @@ feature {NONE} -- Implementation
 	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := a_tooltip.twin
+			internal_tooltip_string := a_tooltip.as_string_32
+			if internal_tooltip_string = a_tooltip then
+				internal_tooltip_string := a_tooltip.as_string_32.string
+			end
 		end
 
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_ITEM;
+	interface: detachable EV_TREE_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -55,4 +58,12 @@ note
 
 
 end -- class EV_TREE_ITEM_IMP
+
+
+
+
+
+
+
+
 

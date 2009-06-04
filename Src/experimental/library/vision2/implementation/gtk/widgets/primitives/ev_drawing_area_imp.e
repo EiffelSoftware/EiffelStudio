@@ -21,8 +21,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			foreground_color,
-			background_color,
+			foreground_color_internal,
+			background_color_internal,
 			set_foreground_color,
 			set_background_color
 		redefine
@@ -30,7 +30,7 @@ inherit
 			dispose,
 			destroy,
 			call_button_event_actions,
-			initialize,
+			make,
 			tooltips_pointer,
 			set_tooltip,
 			tooltip,
@@ -46,18 +46,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
+			assign_interface (an_interface)
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			create tooltip_repeater
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- When false, this means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
@@ -360,7 +361,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	interface: EV_DRAWING_AREA
+	interface: detachable EV_DRAWING_AREA note option: stable attribute end
 		-- Interface object of Current.
 
 	destroy
@@ -399,4 +400,8 @@ note
 
 
 end -- class EV_DRAWING_AREA_IMP
+
+
+
+
 

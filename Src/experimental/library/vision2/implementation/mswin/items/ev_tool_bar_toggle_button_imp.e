@@ -28,11 +28,11 @@ feature -- Status setting
 			-- Select `Current'.
 		do
 			is_selected := True
-			if parent_imp /= Void then
-				parent_imp.check_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.check_button (id)
 			end
 			if select_actions_internal /= Void then
-				select_actions_internal.call (Void)
+				select_actions.call (Void)
 			end
 		end
 
@@ -40,22 +40,22 @@ feature -- Status setting
 			-- Deselect `Current'
 		do
 			is_selected := False
-			if parent_imp /= Void then
-				parent_imp.uncheck_button (id)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.uncheck_button (id)
 			end
-			if select_actions_internal /= Void then	
-				select_actions_internal.call (Void)
+			if select_actions_internal /= Void then
+				select_actions.call (Void)
 			end
 		end
 
 feature -- Status report
-	
+
 	is_selected: BOOLEAN
 			-- Is `Current selected'?
-	
+
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_TOGGLE_BUTTON
+	interface: detachable EV_TOOL_BAR_TOGGLE_BUTTON note option: stable attribute end
 
 feature {EV_TOOL_BAR_IMP} -- Status setting
 
@@ -81,4 +81,13 @@ note
 
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+
+
+
+
+
+
+
+
+
 

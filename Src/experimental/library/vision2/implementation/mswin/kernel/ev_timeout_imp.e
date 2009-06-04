@@ -26,15 +26,15 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create timer.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 		do
 			Internal_timeout.add_timeout (Current)
 			set_is_initialized (True)
@@ -86,4 +86,11 @@ note
 
 
 end -- class EV_TIMEOUT_IMP
+
+
+
+
+
+
+
 

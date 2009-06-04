@@ -35,11 +35,7 @@ feature -- Status setting
 			not_is_destroyed: not is_destroyed
 			can_be_selected: not is_selected implies is_selectable
 		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
+			implementation.toggle
 		ensure
 			is_selected_changed: action_sequence_call_counter = old action_sequence_call_counter implies is_selected /= old is_selected
 		end
@@ -81,4 +77,9 @@ note
 
 
 end -- class EV_DESELECTABLE
+
+
+
+
+
 

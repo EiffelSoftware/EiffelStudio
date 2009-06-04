@@ -27,7 +27,7 @@ inherit
 		end
 
 create
-	{EV_GRID} default_create
+	{EV_GRID, EV_GRID_I} default_create
 
 feature -- Access
 
@@ -75,7 +75,7 @@ feature -- Access
 			title_not_void: Result /= Void
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM
+	item (i: INTEGER): detachable EV_GRID_ITEM
 			-- Item at `i'-th row, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -86,7 +86,7 @@ feature -- Access
 			Result := implementation.item (i)
 		end
 
-	parent: EV_GRID
+	parent: detachable EV_GRID
 			-- Grid to which current column belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -144,7 +144,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
 			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -155,7 +155,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color: detachable EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -166,7 +166,7 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap display on header of `parent' to left of `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -205,11 +205,15 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
+		local
+			l_parent: like parent
 		do
-			lock_at_position (virtual_x_position - parent.virtual_x_position)
+			l_parent := parent
+			check l_parent /= Void end
+			lock_at_position (virtual_x_position - l_parent.virtual_x_position)
 		ensure
 			is_locked: is_locked
-			locked_position_set: locked_position = virtual_x_position - parent.virtual_x_position
+			locked_position_set: attached parent as l_par and then locked_position = virtual_x_position - l_par.virtual_x_position
 		end
 
 	lock_at_position (a_position: INTEGER)
@@ -268,9 +272,10 @@ feature -- Status setting
 		do
 			implementation.ensure_visible
 		ensure
-			parent_virtual_y_position_unchanged: old parent.virtual_y_position = parent.virtual_y_position
+			parented: attached parent
+			parent_virtual_y_position_unchanged: attached parent as l_parent and then attached old parent as l_old_parent and then l_old_parent.virtual_y_position = l_parent.virtual_y_position
 			to_implement_assertion ("old_is_visible_implies_horizontal_position_not_changed")
-			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
+			column_visible: virtual_x_position >= l_parent.virtual_x_position and virtual_x_position + width <= l_parent.virtual_x_position + (l_parent.viewable_width).max (width)
 		end
 
 	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER
@@ -278,8 +283,8 @@ feature -- Status setting
 			-- row index `start_row', `end_row'.
 		require
 			not_destroyed: not is_destroyed
-			parented: parent /= Void
-			valid_rows: start_row >= 1 and end_row <= parent.row_count and start_row <= end_row
+			parented: attached parent as l_parent
+			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row <= end_row
 		do
 			Result := implementation.required_width_of_item_span (start_row, end_row)
 		ensure
@@ -292,10 +297,14 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
 			is_show_requested: is_show_requested
+		local
+			l_parent: like parent
 		do
-			set_width (required_width_of_item_span (1, parent.row_count))
+			l_parent := parent
+			check l_parent /= Void end
+			set_width (required_width_of_item_span (1, l_parent.row_count))
 		ensure
-			width_set: width = required_width_of_item_span (1, parent.row_count)
+			width_set: attached parent as l_par and then width = required_width_of_item_span (1, l_par.row_count)
 		end
 
 feature -- Status report
@@ -309,7 +318,7 @@ feature -- Status report
 			Result := implementation.index
 		ensure
 			index_positive: Result > 0
-			index_less_than_column_count: Result <= parent.column_count
+			index_less_than_column_count: attached parent as l_parent and then Result <= l_parent.column_count
 		end
 
 	count: INTEGER
@@ -332,9 +341,9 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
-			is_parented: parent /= Void
-			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
-			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
+			is_parented: attached parent as l_parent
+			item_may_be_added_to_tree_node: a_item /= Void and then l_parent.row (i).is_part_of_tree_structure implies l_parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
+			item_may_be_removed_from_tree_node: a_item = Void and then l_parent.row (i).is_part_of_tree_structure implies l_parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
 		do
 			implementation.set_item (i, a_item)
 		ensure
@@ -438,16 +447,19 @@ feature -- Contract support
 		local
 			i, a_count, a_index: INTEGER
 			a_row: EV_GRID_ROW
+			l_parent: like parent
 		do
 			from
 				i := 1
 				Result := True
 				a_count := count
 				a_index := index
+				l_parent := parent
+				check l_parent /= Void end
 			until
 				i > a_count or not Result
 			loop
-				a_row := parent.row (i)
+				a_row := l_parent.row (i)
 				if a_row.is_part_of_tree_structure then
 					Result := a_row.is_index_valid_for_item_removal_if_tree_node (a_index)
 				end
@@ -463,16 +475,19 @@ feature -- Contract support
 		local
 			i, a_count, a_index: INTEGER
 			a_row: EV_GRID_ROW
+			l_parent: like parent
 		do
 			from
 				i := 1
+				l_parent := parent
+				check l_parent /= Void end
 				Result := True
 				a_count := count
 				a_index := index
 			until
 				i > a_count or not Result
 			loop
-				a_row := parent.row (i)
+				a_row := l_parent.row (i)
 				if a_row.is_part_of_tree_structure then
 					Result := a_row.is_index_valid_for_item_setting_if_tree_node (a_index)
 				end
@@ -480,17 +495,23 @@ feature -- Contract support
 			end
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_COLUMN_I
 		-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_COLUMN_I} implementation.make (Current)
+			create {EV_GRID_COLUMN_I} implementation.make
 		end
 
 invariant
@@ -508,4 +529,10 @@ note
 	]"
 
 end
+
+
+
+
+
+
 

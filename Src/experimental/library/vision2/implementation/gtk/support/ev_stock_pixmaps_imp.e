@@ -65,40 +65,44 @@ feature -- Access
 	Collate_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing collated printing.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_from_xpm_data (collate_pixmap_xpm)
 		end
 
 	No_collate_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing non collated printing.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_from_xpm_data (no_collate_pixmap_xpm)
 		end
 
 	Landscape_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing landscape printing.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_from_xpm_data (landscape_pixmap_xpm)
 		end
 
 	Portrait_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing portrait printing.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_from_xpm_data (portrait_pixmap_xpm)
 		end
 
@@ -120,13 +124,14 @@ feature {NONE} -- Implementation
 			-- Retrieve pixmap from gtk stock id
 		local
 			a_cs: EV_GTK_C_STRING
-			pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
 			retried: BOOLEAN
 		do
 			if not retried then
 				a_cs := a_stock_id
 				create Result
 				pixbuf_imp ?= Result.implementation
+				check pixbuf_imp /= Void end
 				pixbuf_imp.set_from_stock_id (a_cs.item)
 			else
 				create Result
@@ -300,4 +305,14 @@ note
 
 
 end -- class EV_STOCK_PIXMAPS_IMP
+
+
+
+
+
+
+
+
+
+
 

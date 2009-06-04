@@ -20,43 +20,64 @@ inherit
 		end
 
 	EV_TITLED_WINDOW_IMP
+		export
+			{EV_DIALOG_IMP_COMMON}
+				wnd_class
 		redefine
 			interface,
-			make,
+			old_make,
 			show,
 			process_message,
 			set_x_position,
 			set_y_position,
 			set_position,
 			on_destroy,
-			show_relative_to_window
+			show_relative_to_window,
+			make,
+			title_name
 		end
 
 create
 	make,
 	make_with_real_dialog
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
+	make
 		do
 			internal_class_name := new_class_name + "_AS_DIALOG"
 			internal_icon_name := ""
-			base_make (an_interface)
-			make_top ("EV_DIALOG_WINDOW")
 			create accel_list.make (10)
 			apply_center_dialog := True
+			Precursor {EV_TITLED_WINDOW_IMP}
 		end
 
-	make_with_real_dialog (other_imp: like common_dialog_imp)
+	title_name: STRING
+		do
+			Result := "EV_DIALOG_WINDOW"
+		end
+
+	old_make (an_interface: like interface)
+			-- Create `Current' with interface `an_interface'.
+		do
+			assign_interface (an_interface)
+		end
+
+	make_with_real_dialog (other_imp: EV_DIALOG_IMP_COMMON)
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: other_imp /= Void
+		local
+			l_interface: like interface
 		do
 			apply_center_dialog := False
 
-			make (other_imp.interface)
+			make
+
+			l_interface ?= other_imp.interface
+			check l_interface /= Void end
+
+			old_make (l_interface)
 
 				-- Copy the attributes from the dialog to the window
 			copy_from_real_dialog (other_imp)
@@ -92,7 +113,7 @@ feature -- Status Report
 			Result := False
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 
@@ -150,7 +171,7 @@ feature -- Basic operations
 			call_show_actions := True
 			parent_window := a_parent_window
 			promote_to_modal_dialog
-			interface.implementation.show_modal_to_window (a_parent_window)
+			attached_interface.implementation.show_modal_to_window (a_parent_window)
 		end
 
 	show_relative_to_window (a_parent_window: EV_WINDOW)
@@ -159,13 +180,13 @@ feature -- Basic operations
 			call_show_actions := True
 			parent_window := a_parent_window
 			promote_to_modeless_dialog
-			interface.implementation.show_relative_to_window (a_parent_window)
+			attached_interface.implementation.show_relative_to_window (a_parent_window)
 		end
 
 	show
 			-- Show `Current' if not already displayed.
 		local
-			button_imp: EV_BUTTON_IMP
+			button_imp: detachable EV_BUTTON_IMP
 		do
 			if not is_displayed then
 				set_text (internal_title)
@@ -177,12 +198,14 @@ feature -- Basic operations
 
 
 					-- Set the focus to the `default_push_button' if any
-				if default_push_button /= Void and then
-					default_push_button.is_show_requested and then
-					default_push_button.is_sensitive
+				if attached default_push_button as l_default_push_button and then
+					l_default_push_button.is_show_requested and then
+					l_default_push_button.is_sensitive and then
+					attached attached_interface.default_push_button as l_interface_default_push_button
 				then
-					button_imp ?= interface.default_push_button.implementation
-					set_default_push_button (button_imp.interface)
+					button_imp ?= l_interface_default_push_button.implementation
+					check button_imp /= Void end
+					set_default_push_button (l_interface_default_push_button)
 					button_imp.set_focus
 				end
 				Precursor {EV_TITLED_WINDOW_IMP}
@@ -192,7 +215,7 @@ feature -- Basic operations
 					-- the show actions are called in this case. Is there a way to avoid this?		
 				if call_show_actions then
 					if show_actions_internal /= Void then
-						show_actions_internal.call (Void)
+						show_actions.call (Void)
 					end
 					call_show_actions := False
 				end
@@ -204,7 +227,7 @@ feature {EV_DIALOG_I} -- Implementation
 	apply_center_dialog: BOOLEAN
 			-- Should `center_dialog' be called?
 
-	parent_window: EV_WINDOW
+	parent_window: detachable EV_WINDOW
 			-- Parent window if any, Void otherwise
 
 	destroy_implementation
@@ -228,12 +251,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	move_children (other_imp: like common_dialog_imp)
+	move_children (other_imp: EV_DIALOG_IMP_COMMON)
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local
-			loc_item_imp: EV_WIDGET_IMP
+			loc_item_imp: detachable EV_WIDGET_IMP
 		do
+			check other_imp /= Void end
 			loc_item_imp ?= other_imp.item_imp
 			if loc_item_imp /= Void then
 				loc_item_imp.set_top_level_window_imp (Current)
@@ -274,14 +298,14 @@ feature {NONE} -- Implementation
 		local
 			x_pos, y_pos: INTEGER
 			l_screen: EV_SCREEN
-			l_screen_imp: EV_SCREEN_IMP
+			l_screen_imp: detachable EV_SCREEN_IMP
 		do
 			create l_screen
 			l_screen_imp ?= l_screen.implementation
 			check l_screen_imp_not_void: l_screen_imp /= Void end
-			if parent_window /= Void and then parent_window.is_displayed then
-				x_pos := parent_window.x_position + (parent_window.width - width) // 2
-				y_pos := parent_window.y_position + (parent_window.height - height) // 2
+			if attached parent_window as l_parent_window and then l_parent_window.is_displayed then
+				x_pos := l_parent_window.x_position + (l_parent_window.width - width) // 2
+				y_pos := l_parent_window.y_position + (l_parent_window.height - height) // 2
 			else
 				x_pos := (l_screen_imp.width - width) // 2
 				y_pos := (l_screen_imp.height - height) // 2
@@ -311,7 +335,7 @@ feature {NONE} -- Implementation
 			modal_dialog_imp: EV_DIALOG_IMP_MODAL
 		do
 			create modal_dialog_imp.make_with_dialog_window (Current)
-			interface.replace_implementation (modal_dialog_imp)
+			attached_interface.replace_implementation (modal_dialog_imp)
 		end
 
 	promote_to_modeless_dialog
@@ -321,17 +345,21 @@ feature {NONE} -- Implementation
 			modeless_dialog_imp: EV_DIALOG_IMP_MODELESS
 		do
 			create modeless_dialog_imp.make_with_dialog_window (Current)
-			interface.replace_implementation (modeless_dialog_imp)
+			attached_interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	copy_from_real_dialog (other_imp: like common_dialog_imp)
+	copy_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON)
 			-- Fill current with `other_imp' content.
 		local
-			other_menu_bar: EV_MENU_BAR
+			other_menu_bar: detachable EV_MENU_BAR
 		do
+			internal_class_name := other_imp.class_name
+			create wnd_class.make (other_imp.class_name)
 			accel_list := other_imp.accel_list
-			accelerators := other_imp.accelerators
-			accelerators_internal := other_imp.accelerators_internal
+			if attached other_imp.accelerators_internal as l_event then
+				accelerators_internal := l_event
+			end
+
 			accept_cursor := other_imp.accept_cursor
 			actual_drop_target_agent := other_imp.actual_drop_target_agent
 			awaiting_movement := other_imp.awaiting_movement
@@ -339,16 +367,30 @@ feature {NONE} -- Implementation
 			background_pixmap_imp := other_imp.background_pixmap_imp
 			set_state_flag (base_make_called_flag, other_imp.base_make_called)
 			child_cell := other_imp.child_cell
-			close_request_actions_internal := other_imp.close_request_actions_internal
+			if attached other_imp.close_request_actions_internal as l_event then
+				close_request_actions_internal := l_event
+			end
+
 			commands := other_imp.commands
-			conforming_pick_actions_internal := other_imp.conforming_pick_actions_internal
+			if attached other_imp.conforming_pick_actions_internal as l_event then
+				conforming_pick_actions_internal := l_event
+			end
+
 			cursor_pixmap := other_imp.cursor_pixmap
 			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
-			drop_actions_internal := other_imp.drop_actions_internal
+			if attached other_imp.drop_actions_internal as l_event then
+				drop_actions_internal := l_event
+			end
+
 			default_key_processing_handler := other_imp.default_key_processing_handler
-			focus_in_actions_internal := other_imp.focus_in_actions_internal
-			focus_out_actions_internal := other_imp.focus_out_actions_internal
+			if attached other_imp.focus_in_actions_internal as l_event then
+				focus_in_actions_internal := l_event
+			end
+			if attached other_imp.focus_out_actions_internal as l_event then
+				focus_out_actions_internal := l_event
+			end
+
 			foreground_color_imp := other_imp.foreground_color_imp
 			has_heavy_capture := other_imp.has_heavy_capture
 			help_enabled := other_imp.help_enabled
@@ -374,43 +416,70 @@ feature {NONE} -- Implementation
 			is_pnd_in_transport := other_imp.is_pnd_in_transport
 			is_transport_enabled := other_imp.is_transport_enabled
 			item := other_imp.item
-			key_press_actions_internal := other_imp.key_press_actions_internal
-			key_press_string_actions_internal := other_imp.key_press_string_actions_internal
-			key_release_actions_internal := other_imp.key_release_actions_internal
+			if attached other_imp.key_press_actions_internal as l_event then
+				key_press_actions_internal := l_event
+			end
+			if attached other_imp.key_press_string_actions_internal as l_event then
+				key_press_string_actions_internal := l_event
+			end
+			if attached other_imp.key_release_actions_internal as l_event then
+				key_release_actions_internal := l_event
+			end
+
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
-			other_menu_bar := other_imp.menu_bar
-				-- Now remove the menu bar from the old implementation.
-				-- If we do not do this, then we will not be able to set
-				-- it in `Current'.
-			if other_menu_bar /= Void then
-				other_imp.remove_menu_bar
-				set_menu_bar (other_menu_bar)
+
+			if attached other_imp.move_actions_internal as l_event then
+				move_actions_internal := l_event
 			end
-			move_actions_internal := other_imp.move_actions_internal
-			new_item_actions_internal := other_imp.new_item_actions_internal
+
+			if attached other_imp.new_item_actions_internal as l_event then
+				new_item_actions_internal := l_event
+			end
+
 			pebble := other_imp.pebble
 			pebble_function := other_imp.pebble_function
-			pick_actions_internal := other_imp.pick_actions_internal
+			if attached other_imp.pick_actions_internal as l_event then
+				pick_actions_internal := l_event
+			end
+
 			pick_x := other_imp.pick_x
 			pick_y := other_imp.pick_y
 			pnd_stored_cursor := other_imp.pnd_stored_cursor
-			pointer_button_press_actions_internal := other_imp.pointer_button_press_actions_internal
-			pointer_button_release_actions_internal := other_imp.pointer_button_release_actions_internal
-			pointer_double_press_actions_internal := other_imp.pointer_double_press_actions_internal
-			pointer_enter_actions_internal := other_imp.pointer_enter_actions_internal
-			pointer_leave_actions_internal := other_imp.pointer_leave_actions_internal
-			pointer_motion_actions_internal := other_imp.pointer_motion_actions_internal
+			if attached other_imp.pointer_button_press_actions_internal as l_event then
+				pointer_button_press_actions_internal := l_event
+			end
+			if attached other_imp.pointer_button_release_actions_internal as l_event then
+				pointer_button_release_actions_internal := l_event
+			end
+			if attached other_imp.pointer_double_press_actions_internal as l_event then
+				pointer_double_press_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_enter_actions_internal as l_event then
+				pointer_enter_actions_internal := l_event
+			end
+			if attached other_imp.pointer_leave_actions_internal as l_event then
+				pointer_leave_actions_internal := l_event
+			end
+			if attached other_imp.pointer_motion_actions_internal as l_event then
+				pointer_motion_actions_internal := l_event
+			end
+
 			pointer_x := other_imp.pointer_x
 			pointer_y := other_imp.pointer_y
 			press_action := other_imp.press_action
 			radio_group := other_imp.radio_group
 			release_action := other_imp.release_action
 			remove_item_actions := other_imp.remove_item_actions
-			resize_actions_internal := other_imp.resize_actions_internal
+			if attached other_imp.resize_actions_internal as l_event then
+				resize_actions_internal := l_event
+			end
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
 			shared := other_imp.shared
-			show_actions_internal := other_imp.show_actions_internal
+			if attached other_imp.show_actions_internal as l_event then
+				show_actions_internal := l_event
+			end
 			user_can_resize := other_imp.user_can_resize
 			user_interface_mode := other_imp.user_interface_mode
 			apply_center_dialog := other_imp.apply_center_dialog
@@ -423,6 +492,15 @@ feature {NONE} -- Implementation
 			copy_box_attributes (other_imp.lower_bar, lower_bar)
 			create upper_bar
 			copy_box_attributes (other_imp.upper_bar, upper_bar)
+
+			other_menu_bar := other_imp.menu_bar
+				-- Now remove the menu bar from the old implementation.
+				-- If we do not do this, then we will not be able to set
+				-- it in `Current'.
+			if other_menu_bar /= Void then
+				other_imp.remove_menu_bar
+				set_menu_bar (other_menu_bar)
+			end
 
 			set_ex_style (other_imp.ex_style)
 		end
@@ -443,14 +521,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_COMMON
+	common_dialog_imp: detachable EV_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
 
 feature {EV_ANY, EV_ANY_I}
 
-	interface: EV_DIALOG;
+	interface: detachable EV_DIALOG note option: stable attribute end;
 			-- Interface for `Current'
 
 note
@@ -468,4 +546,14 @@ note
 
 
 end -- class EV_DIALOG_IMP
+
+
+
+
+
+
+
+
+
+
 

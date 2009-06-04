@@ -12,11 +12,13 @@ deferred class
 
 inherit
 	EV_CONTAINER_I
+		undefine
+			interface_item
 		redefine
 			interface
 		end
 
-	EV_DYNAMIC_LIST_I [EV_WIDGET]
+	EV_DYNAMIC_LIST_I [detachable EV_WIDGET]
 		redefine
 			interface
 		end
@@ -34,13 +36,13 @@ feature {EV_ANY_I} -- implementation
 			until
 				off
 			loop
-				item.implementation.update_for_pick_and_drop (starting)
+				interface_item.implementation.update_for_pick_and_drop (starting)
 				forth
 			end
 			go_to (loc_cursor)
 		end
 
-	interface: EV_WIDGET_LIST;
+	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -57,4 +59,13 @@ note
 
 
 end -- class WIDGET_LIST
+
+
+
+
+
+
+
+
+
 

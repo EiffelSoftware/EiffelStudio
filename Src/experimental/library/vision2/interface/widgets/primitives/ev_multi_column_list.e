@@ -60,7 +60,7 @@ feature -- Access
 			bridge_ok: Result = implementation.column_count
 		end
 
-	selected_item: like item
+	selected_item: detachable like item
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
+			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make
 		end
 
 note
@@ -462,4 +462,13 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST
+
+
+
+
+
+
+
+
+
 

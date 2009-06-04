@@ -25,18 +25,18 @@ inherit
 
 feature -- Access
 
-	parent: EV_ITEM_LIST [EV_ITEM]
+	parent: detachable EV_ITEM_LIST [EV_ITEM]
 			-- Item list containing `Current'.
 		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result ?= l_parent_imp.interface
 				check
 					parent_not_void: Result /= Void
 				end
 			end
 		end
 
-	parent_imp: EV_ITEM_LIST_I [EV_ITEM]
+	parent_imp: detachable EV_ITEM_LIST_I [detachable EV_ITEM]
 			-- The parent of the Current widget
 			-- Can be void.
 		deferred
@@ -50,7 +50,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	interface: EV_ITEM;
+	interface: detachable EV_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -69,4 +69,14 @@ note
 
 
 end -- class EV_ITEM_I
+
+
+
+
+
+
+
+
+
+
 

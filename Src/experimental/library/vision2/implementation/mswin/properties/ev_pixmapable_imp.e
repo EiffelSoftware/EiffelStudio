@@ -14,20 +14,20 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Give a copy of pixmap used by `Current'.
 		do
-			if private_pixmap /= Void then
+			if attached private_pixmap as l_private_pixmap then
 				create Result
-				Result.copy (private_pixmap)
+				Result.copy (l_private_pixmap)
 			end
 		end
 
-	pixmap_imp: EV_PIXMAP_IMP_STATE
+	pixmap_imp: detachable EV_PIXMAP_IMP_STATE
 			-- Implementation of pixmap in `Current'.
 		do
-			if private_pixmap /= Void then
-				Result ?= private_pixmap.implementation
+			if attached private_pixmap as l_private_pixmap then
+				Result ?= l_private_pixmap.implementation
 			end
 		end
 
@@ -47,8 +47,9 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	private_pixmap: EV_PIXMAP;
+	private_pixmap: detachable EV_PIXMAP;
 			-- Pixmap of `Current'.
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -65,4 +66,14 @@ note
 
 
 end -- class EV_PIXMAPABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

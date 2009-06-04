@@ -7,34 +7,34 @@ note
 
 deferred class
 	EV_NOTEBOOK_TAB_I
-	
+
 inherit
 	EV_ANY_I
 		redefine
 			interface
 		end
-	
+
 	EV_TEXTABLE_I
 		redefine
 			interface
 		end
-	
+
 	EV_PIXMAPABLE_I
 		redefine
 			interface
 		end
-		
+
 	EV_SELECTABLE_I
 		redefine
 			interface
 		end
-		
+
 feature -- Access
 
-	notebook: EV_NOTEBOOK
+	notebook: detachable EV_NOTEBOOK
 			-- Notebook in which `Current' is displayed.
-		
-	widget: EV_WIDGET
+
+	widget: detachable EV_WIDGET
 			-- Widget to which `Current' is associated.
 
 feature {EV_NOTEBOOK_TAB} -- Status Setting
@@ -52,26 +52,26 @@ feature {EV_NOTEBOOK_TAB} -- Status Setting
 			notebook_set: notebook = a_notebook
 			widget_set: widget = a_widget
 		end
-		
+
 	is_selected: BOOLEAN
 			-- Is objects state set to selected.
 		do
-			if notebook /= Void then
-				Result := notebook.selected_item = widget
+			if attached notebook as l_notebook then
+				Result := l_notebook.selected_item = widget
 			end
 		end
 
 	enable_select
 			-- Select the object.
 		do
-			if notebook /= Void and widget /= Void then
-				notebook.select_item (widget)
+			if attached notebook as l_notebook and then attached widget as l_widget then
+				l_notebook.select_item (l_widget)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_NOTEBOOK_TAB;
+	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -90,4 +90,14 @@ note
 
 
 end -- class EV_NOTEBOOK_TAB_I
+
+
+
+
+
+
+
+
+
+
 

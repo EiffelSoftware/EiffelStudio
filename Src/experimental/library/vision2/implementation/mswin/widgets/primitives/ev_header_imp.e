@@ -17,7 +17,7 @@ inherit
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
@@ -27,7 +27,7 @@ inherit
 			on_right_button_down, on_left_button_down, on_middle_button_down
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy,
 			on_mouse_move,
 			on_set_cursor
@@ -36,7 +36,7 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	WEL_HEADER_CONTROL
@@ -124,25 +124,25 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			create ev_children.make (2)
 			initialize_pixmaps
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
-			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			set_default_font
 			disable_tabable_from
 			disable_tabable_to
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature -- Status report
@@ -183,7 +183,7 @@ feature -- Removal
 
 feature -- Miscellaneous
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_HEADER_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_HEADER_ITEM_IMP
 			-- `Result' is list item at pixel position `x_pos', `y_pos'.
 		local
 			hd_hit_test_info: WEL_HD_HIT_TEST_INFO
@@ -196,11 +196,11 @@ feature -- Miscellaneous
 
 feature {EV_ANY_I}
 
-	interface: EV_HEADER
+	interface: detachable EV_HEADER note option: stable attribute end
 
 feature {EV_HEADER_ITEM_IMP} -- Implementation
 
-	image_list: EV_IMAGE_LIST_IMP
+	image_list: detachable EV_IMAGE_LIST_IMP
 		-- Image list associated with `Current'.
 		-- `Void' if none.
 
@@ -246,20 +246,22 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 		local
 			desired_width: INTEGER
 			l_text: STRING_32
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 			margin: INTEGER
 		do
 			margin := {WEL_API}.send_message_result_integer (wel_item, hdm_get_bitmap_margin, cwel_integer_to_pointer (0), cwel_integer_to_pointer (0))
 			l_text := header_item.text
 			if not l_text.is_empty then
-				if private_font /= Void then
-					font_imp ?= private_font.implementation
+				if attached private_font as l_private_font then
+					font_imp ?= l_private_font.implementation
 					check
 						font_not_void: font_imp /= Void
 					end
 					desired_width := font_imp.string_width (l_text)
+				elseif attached private_wel_font as l_private_wel_font then
+					desired_width := l_private_wel_font.string_width (l_text)
 				else
-					desired_width := private_wel_font.string_width (l_text)
+					check False end
 				end
 			end
 
@@ -302,7 +304,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `Current'.
 		do
-			interface.wipe_out
+			attached_interface.wipe_out
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
@@ -315,7 +317,7 @@ feature {NONE} -- Implementation
 		do
 			header_item := ev_children @ (info.item_index + 1)
 			if item_resize_start_actions_internal /= Void then
-				item_resize_start_actions_internal.call ([header_item.interface])
+				item_resize_start_actions_internal.call ([header_item.attached_interface])
 			end
 			if not header_item.user_can_resize then
 					-- Prevent the item from resizing if not `user_can_resize'.
@@ -339,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 			if item_resize_actions_internal /= Void then
 				header_item := ev_children @ (info.item_index + 1)
-				item_resize_actions_internal.call ([header_item.interface])
+				item_resize_actions_internal.call ([header_item.attached_interface])
 			end
 		end
 
@@ -350,7 +352,7 @@ feature {NONE} -- Implementation
 		do
 			if item_resize_end_actions_internal /= Void then
 				header_item := ev_children @ (info.item_index + 1)
-				item_resize_end_actions_internal.call ([header_item.interface])
+				item_resize_end_actions_internal.call ([header_item.attached_interface])
 			end
 		end
 
@@ -380,8 +382,8 @@ feature {NONE} -- Implementation
 		local
 			pt: WEL_POINT
 			l_pointed_divider_index: INTEGER
-			l_item_imp: EV_HEADER_ITEM_IMP
-			l_item: EV_HEADER_ITEM
+			l_item_imp: detachable EV_HEADER_ITEM_IMP
+			l_item: detachable EV_HEADER_ITEM
 			l_x_offset: INTEGER
 		do
 			pt := client_to_screen (x_pos, y_pos)
@@ -389,11 +391,11 @@ feature {NONE} -- Implementation
 			l_x_offset := x_pos
 			l_item_imp := find_item_at_position (x_pos, y_pos)
 			if transport_executing then
-				if l_item_imp /= Void and l_item_imp.is_transport_enabled and
-					not parent_is_pnd_source and l_item_imp.parent /= Void then
+				if l_item_imp /= Void and then l_item_imp.is_transport_enabled and then
+					not parent_is_pnd_source and then l_item_imp.parent /= Void then
 					l_item_imp.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-				elseif pnd_item_source /= Void then
-					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				elseif attached pnd_item_source as l_pnd_item_source then
+					l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 				if item_is_pnd_source_at_entry = item_is_pnd_source then
 					pnd_press (x_pos, y_pos, button, pt.x, pt.y)
@@ -401,14 +403,14 @@ feature {NONE} -- Implementation
 			else
 				if l_pointed_divider_index = 0 then
 						-- Clicking on the divider should not register as an item button click.
-					 if l_item_imp /= Void then
-					 	l_item := l_item_imp.interface
-					 	l_x_offset := l_x_offset - item_x_offset (l_item)
-					 	if l_item_imp.pointer_button_press_actions_internal /= Void then
-					 		l_item_imp.pointer_button_press_actions_internal.call (
-					 			[l_x_offset, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
-					 	end
-					 end
+					if l_item_imp /= Void then
+						l_item := l_item_imp.attached_interface
+						l_x_offset := l_x_offset - item_x_offset (l_item)
+						if l_item_imp.pointer_button_press_actions_internal /= Void then
+							l_item_imp.pointer_button_press_actions.call (
+								[l_x_offset, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+						end
+					end
 					if item_pointer_button_press_actions_internal /= Void then
 						item_pointer_button_press_actions_internal.call (
 							[l_item, l_x_offset, y_pos, button]
@@ -416,7 +418,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not press_actions_called and call_press_event then
-					interface.pointer_button_press_actions.call
+					attached_interface.pointer_button_press_actions.call
 						([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 			end
@@ -430,21 +432,21 @@ feature {NONE} -- Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button double press.
 		local
-			l_item_imp: EV_HEADER_ITEM_IMP
+			l_item_imp: detachable EV_HEADER_ITEM_IMP
 			pt: WEL_POINT
 			l_x_offset: INTEGER
-			l_item: EV_HEADER_ITEM
+			l_item: detachable EV_HEADER_ITEM
 		do
 			if pointed_divider_index = 0 then
 					-- Clicking on the divider should not register as an item button click.
 				l_item_imp := find_item_at_position (x_pos, y_pos)
 				l_x_offset := x_pos
 				if l_item_imp /= Void then
-					l_item := l_item_imp.interface
+					l_item := l_item_imp.attached_interface
 					l_x_offset := l_x_offset - item_x_offset (l_item)
 					pt := client_to_screen (x_pos, y_pos)
 					if l_item_imp.pointer_double_press_actions_internal /= Void then
-						l_item_imp.pointer_double_press_actions_internal.call
+						l_item_imp.pointer_double_press_actions.call
 								([l_x_offset, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 					end
 				end
@@ -462,18 +464,18 @@ feature {NONE} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
-			it: EV_HEADER_ITEM_IMP
+			it: detachable EV_HEADER_ITEM_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				if it.pointer_motion_actions_internal /= Void then
-					it.pointer_motion_actions_internal.call ([x_pos - item_x_offset (it.interface), y_pos, 0.0, 0.0, 0.0, pt.x, pt.y])
+					it.pointer_motion_actions.call ([x_pos - item_x_offset (it.attached_interface), y_pos, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 			end
-			if pnd_item_source /= Void then
-				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
@@ -505,4 +507,14 @@ note
 
 
 end -- class EV_HEADER_IMP
+
+
+
+
+
+
+
+
+
+
 

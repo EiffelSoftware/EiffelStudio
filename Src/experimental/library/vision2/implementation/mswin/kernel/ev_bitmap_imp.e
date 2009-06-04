@@ -5,7 +5,7 @@ note
 	keywords: "pixmap, mask, bitmap"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_BITMAP_IMP
 
@@ -18,7 +18,7 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy
 		end
 
@@ -27,13 +27,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set up action sequence connections and create graphics context.
 		do
 			create dc.make
@@ -44,8 +44,8 @@ feature -- Initialization
 				-- Set colors used for mask.  White means opaque, black means transparent
 				-- As we need to draw what parts of the picture you see, the foreground color
 				-- has to be white.
-			background_color := create {EV_COLOR}.make_with_rgb (0, 0, 0)
-			foreground_color := create {EV_COLOR}.make_with_rgb (1, 1, 1)
+			background_color_internal := create {EV_COLOR}.make_with_rgb (0, 0, 0)
+			foreground_color_internal := create {EV_COLOR}.make_with_rgb (1, 1, 1)
 			Precursor {EV_DRAWABLE_IMP}
 
 			set_is_initialized (True)
@@ -122,7 +122,7 @@ feature -- Implementation
 		do
 		end
 
-	interface: EV_BITMAP;
+	interface: detachable EV_BITMAP note option: stable attribute end;
 			-- Interface
 
 note
@@ -139,4 +139,12 @@ note
 
 
 end -- class EV_BITMAP_IMP
+
+
+
+
+
+
+
+
 

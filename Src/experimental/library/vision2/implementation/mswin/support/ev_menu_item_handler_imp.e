@@ -43,8 +43,8 @@ feature -- Basic operations
 			-- general list
 		local
 			ht: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			cc: ARRAYED_LIST [EV_ITEM_IMP]
-			it: EV_MENU_ITEM_IMP
+			cc: detachable ARRAYED_LIST [EV_ITEM_IMP]
+			it: detachable EV_MENU_ITEM_IMP
 		do
 			-- Initializations
 			--| FIXME cc := item_imp.ev_children
@@ -75,8 +75,8 @@ feature -- Basic operations
 			-- general list
 		local
 			ht: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			cc: ARRAYED_LIST [EV_ITEM_IMP]
-			it: EV_MENU_ITEM_IMP
+			cc: detachable ARRAYED_LIST [EV_ITEM_IMP]
+			it: detachable EV_MENU_ITEM_IMP
 		do
 			-- Initializations
 			ht := menu_items
@@ -96,11 +96,6 @@ feature -- Basic operations
 					end
 					cc.forth
 				end
-			end
-
-			-- If the hash-table is empty, we destroy it.
-			if ht.is_empty then
-				ht := Void
 			end
 		end
 
@@ -126,4 +121,14 @@ note
 
 
 end -- class EV_MENU_ITEM_HANDLER_IMP
+
+
+
+
+
+
+
+
+
+
 

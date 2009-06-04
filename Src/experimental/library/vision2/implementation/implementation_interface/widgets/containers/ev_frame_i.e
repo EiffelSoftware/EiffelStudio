@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		"Eiffel Vision frame. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_TEXT_ALIGNABLE_I
 		redefine
 			interface,
 			default_alignment
 		end
-	
+
 	EV_FONTABLE_I
 		redefine
 			interface
@@ -48,12 +48,12 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FRAME
+	interface: detachable EV_FRAME note option: stable attribute end
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-			
+
 feature {NONE} -- Implementation
-			
+
 	default_alignment: INTEGER
 			-- Default alignment used during
 			-- creation of real implementation
@@ -76,4 +76,12 @@ note
 
 
 end -- class EV_FRAME_I
+
+
+
+
+
+
+
+
 

@@ -19,8 +19,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
 			make,
+			old_make,
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed,
@@ -31,13 +31,13 @@ inherit
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			align_text_left,
 			align_text_center,
 			align_text_right
@@ -46,7 +46,7 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			fontable_widget
 		end
 
@@ -60,17 +60,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_button_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	new_gtk_button: POINTER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_button_new
+		end
+
+	make
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		do
+			set_c_object (new_gtk_button)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -180,8 +185,8 @@ feature {NONE} -- implementation
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		local
-			top_level_dialog_imp: EV_DIALOG_IMP
-			rad_but: EV_RADIO_BUTTON_IMP
+			top_level_dialog_imp: detachable EV_DIALOG_IMP
+			rad_but: detachable EV_RADIO_BUTTON_IMP
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
 			top_level_dialog_imp ?= top_level_window_imp
@@ -217,7 +222,7 @@ feature {NONE} -- implementation
 
 feature {EV_ANY_I} -- implementation
 
-	interface: EV_BUTTON
+	interface: detachable EV_BUTTON note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -239,4 +244,8 @@ note
 
 
 end -- class EV_BUTTON_IMP
+
+
+
+
 

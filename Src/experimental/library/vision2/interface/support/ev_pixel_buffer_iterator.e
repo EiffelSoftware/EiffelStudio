@@ -121,17 +121,19 @@ feature
 	item: EV_PIXEL_BUFFER_PIXEL
 			-- Pixel at current iteration position.
 			-- Object is reused for efficiency so retained references will be automatically updated.
-			-- If pixel buffer is not locked then result is Void
+			-- If locked then a default pixel is returned.
 		do
 			if pixel_buffer.is_locked then
 				Result := internal_item
 					-- Update internal_item with `Current' pixel
 				Result.sync_with_pixel_buffer_value (column_value, row_value)
+			else
+				create Result
 			end
 		end
 
 	update_pixel (a_column, a_row: NATURAL_32; a_pixel: EV_PIXEL_BUFFER_PIXEL)
-			-- Update pixel value at `a_column', `a_row' with pixel data contained in `a_pixel'.
+			-- Update `a_pixel' with pixel value at `a_column', `a_row' of `Current'
 		require
 			a_column_valid: a_column >= 1 and then a_column <= max_column_value
 			a_row_valid: a_row >= 1 and then a_row <= max_row_value

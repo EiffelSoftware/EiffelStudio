@@ -37,7 +37,7 @@ feature -- Status report
 			if is_destroyed then
 					-- If we have upgraded the implementation, then
 					-- we need to query the interface.
-				Result := interface.implementation.is_show_requested
+				Result := attached_interface.implementation.is_show_requested
 			else
 				Result := flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 			end
@@ -49,15 +49,15 @@ feature -- Basic operations
 			-- Show `Current' and wait until window is closed.
 		do
 			promote_to_dialog_window
-			interface.implementation.show_modal_to_window (a_parent_window)
+			attached_interface.implementation.show_modal_to_window (a_parent_window)
 		end
 
 	show_relative_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		local
-			parent_window_imp: WEL_WINDOW
+			parent_window_imp: detachable WEL_WINDOW
 				-- Create the dialog.
-			other_menu_bar: EV_MENU_BAR
+			other_menu_bar: detachable EV_MENU_BAR
 		do
 			if exists then
 					-- We handle the case where `Current' has already been
@@ -65,7 +65,7 @@ feature -- Basic operations
 					-- relative to a new window.
 				if a_parent_window /= parent_window then
 					promote_to_dialog_window
-					interface.implementation.show_relative_to_window (a_parent_window)
+					attached_interface.implementation.show_relative_to_window (a_parent_window)
 					parent_window := a_parent_window
 					parent_window_imp ?= a_parent_window.implementation
 				else
@@ -75,15 +75,16 @@ feature -- Basic operations
 					show_actions_internal.call (Void)
 				end
 			else
-				other_menu_bar := interface.implementation.menu_bar
+				other_menu_bar := attached_interface.implementation.menu_bar
 				parent_window := a_parent_window
 				parent_window_imp ?= a_parent_window.implementation
+				check parent_window_imp /= Void end
 				internal_dialog_make (parent_window_imp, 0, Void)
 				if show_actions_internal /= Void then
-					show_actions_internal.call (Void)
+					show_actions.call (Void)
 				end
 				if other_menu_bar /= Void then
-					interface.set_menu_bar (other_menu_bar)
+					attached_interface.set_menu_bar (other_menu_bar)
 				end
 			end
 		end
@@ -99,7 +100,7 @@ feature -- Basic operations
 			-- depending on from where they were called.
 		do
 			promote_to_dialog_window
-			interface.implementation.show
+			attached_interface.implementation.show
 		end
 
 	terminate (a_result: INTEGER)
@@ -122,6 +123,7 @@ feature {NONE} -- Implementation
 				--| This is far from good. Another way to see this bug in action is to use a 5.4 or earlier
 				--| of EiffelStudio, open a class in the editor and introduce a syntax error. Compile, and
 				--| the development window is then obscured by the window that was behind it. Julian.
+			check parent_window /= Void end
 			if
 				has_focus and then
 				not parent_window.is_destroyed and then
@@ -131,13 +133,14 @@ feature {NONE} -- Implementation
 				parent_window.set_focus
 			end
 			promote_to_dialog_window
-			interface.implementation.hide
+			attached_interface.implementation.hide
 		end
 
 	destroy
 			-- Destroy `Current'.
 		do
 				--| FIXME, this is the same hack as in `hide' which has a full explanation.
+			check parent_window /= Void end
 			if
 				has_focus and then
 				not parent_window.is_destroyed and then
@@ -156,13 +159,15 @@ feature {NONE} -- Implementation
 			result_id := Idcancel
 		end
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			tmp_result: POINTER
 			err: WEL_ERROR
 		do
+				-- Make sure that parent is attached.
+			check a_parent /= Void end
 				-- Initialise the common controls
 			create common_controls_dll.make
 
@@ -215,4 +220,14 @@ note
 
 
 end -- class EV_DIALOG_IMP_MODELESS
+
+
+
+
+
+
+
+
+
+
 

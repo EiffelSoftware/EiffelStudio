@@ -34,9 +34,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Handle motion event for `Current'.
 		local
-			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
+			l_dockable_source: detachable EV_DOCKABLE_SOURCE_IMP
 			l_call_events: BOOLEAN
-			l_current: ANY
+			l_current: detachable EV_PICK_AND_DROPABLE_IMP
 		do
 			l_call_events := True
 			l_current := Current
@@ -53,7 +53,8 @@ feature {EV_APPLICATION_IMP} -- Implementation
 				l_call_events := False
 			elseif is_dockable then
 				l_dockable_source ?= l_current
-				if l_dockable_source.awaiting_movement or else app_implementation.docking_source = l_current then
+				check l_dockable_source /= Void end
+				if l_dockable_source.awaiting_movement or else app_implementation.docking_source = l_dockable_source then
 					l_dockable_source.dragable_motion (
 						a_motion_tuple.integer_32_item (1),
 						a_motion_tuple.integer_32_item (2),
@@ -64,16 +65,16 @@ feature {EV_APPLICATION_IMP} -- Implementation
 						a_motion_tuple.integer_32_item (7)
 					)
 				end
-				if app_implementation.docking_source = l_current then
+				if app_implementation.docking_source = l_dockable_source then
 					l_call_events := False
 				end
 			end
-			if l_call_events and then pointer_motion_actions_internal /= Void then
-				pointer_motion_actions_internal.call (a_motion_tuple)
+			if l_call_events and then attached pointer_motion_actions_internal as l_pointer_motion_actions_internal then
+				l_pointer_motion_actions_internal.call (a_motion_tuple)
 			end
 		end
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	pointer_motion_actions_internal: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
 		deferred
 		end
 
@@ -84,7 +85,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 		deferred
 		end
 
@@ -93,7 +94,7 @@ feature {NONE} -- Implementation
 	enable_capture
 			-- Grab all the mouse and keyboard events.
 		local
-			l_interface: EV_WIDGET
+			l_interface: detachable EV_WIDGET
 			l_grab_widget: POINTER
 		do
 			if not has_capture then
@@ -110,6 +111,7 @@ feature {NONE} -- Implementation
 					internal_set_focus
 				end
 				l_interface ?= interface
+				check l_interface /= Void end
 				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
 				if app_implementation.focused_popup_window /= top_level_window_imp then
@@ -203,11 +205,16 @@ feature -- Implementation
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
+		local
+			l_pebble: like pebble
 		do
 				-- Force any pending graphics calls.
 			{EV_GTK_EXTERNALS}.gdk_flush
 			update_pointer_style (pointed_target)
-			app_implementation.on_pick (Current, pebble)
+			l_pebble := pebble
+			if l_pebble /= Void then
+				app_implementation.on_pick (Current, l_pebble)
+			end
 			if pick_actions_internal /= Void then
 				pick_actions_internal.call ([a_x, a_y])
 			end
@@ -250,14 +257,14 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Handle mouse button events.
 		local
 			app_imp: EV_APPLICATION_IMP
-			l_top_level_window_imp: EV_WINDOW_IMP
+			l_top_level_window_imp: detachable EV_WINDOW_IMP
 			l_call_events: BOOLEAN
-			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
-			l_current: ANY
+			l_dockable_source: detachable EV_DOCKABLE_SOURCE_IMP
+			l_current: detachable EV_PICK_AND_DROPABLE_IMP
 			l_press: BOOLEAN
 		do
 			l_press := a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum
@@ -268,6 +275,7 @@ feature -- Implementation
 				if not app_imp.is_in_transport then
 					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then is_dockable and then a_button = 1 then
 						l_dockable_source ?= Current
+						check l_dockable_source /= Void end
 						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
@@ -281,7 +289,7 @@ feature -- Implementation
 					end
 					l_dockable_source ?= l_current
 					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
-						if l_dockable_source.awaiting_movement or else app_imp.docking_source = l_current then
+						if l_dockable_source.awaiting_movement or else app_imp.docking_source = l_dockable_source then
 							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
 					end
@@ -297,10 +305,10 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
-		
+
 			-- Initialize a pick and drop transport.
 		local
-			l_configure_agent: PROCEDURE [ANY, TUPLE]
+			l_configure_agent: detachable PROCEDURE [ANY, TUPLE]
 			l_pebble: like pebble
 		do
 			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
@@ -311,34 +319,38 @@ feature -- Implementation
 			if l_pebble /= Void then
 				l_configure_agent := agent (a_pebble: like pebble; a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
 				local
-					l_cursor: EV_POINTER_STYLE
+					l_cursor: detachable EV_POINTER_STYLE
 				do
 					pebble := a_pebble
-					enable_capture
-					pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
-					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
-							-- Set correct accept cursor if `Current' accepts its own pebble.
-						if accept_cursor /= Void then
-							l_cursor := accept_cursor
+					if a_pebble /= Void then
+						enable_capture
+						pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
+						if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
+								-- Set correct accept cursor if `Current' accepts its own pebble.
+							if accept_cursor /= Void then
+								l_cursor := accept_cursor
+							else
+								l_cursor := default_accept_cursor
+							end
 						else
-							l_cursor := default_accept_cursor
+								-- Set correct deny cursor
+							if deny_cursor /= Void then
+								l_cursor := deny_cursor
+							else
+								l_cursor := default_deny_cursor
+							end
 						end
-					else
-							-- Set correct deny cursor
-						if deny_cursor /= Void then
-							l_cursor := deny_cursor
-						else
-							l_cursor := default_deny_cursor
-						end
+						check l_cursor /= Void end
+						internal_set_pointer_style (l_cursor)
 					end
-					internal_set_pointer_style (l_cursor)
-				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
-			end
 
-			if ready_for_pnd_menu (a_button, a_press) then
-				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, l_pebble, l_configure_agent, a_menu_only)
-			elseif l_configure_agent /= Void then
-				l_configure_agent.call (Void)
+				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
+
+				if ready_for_pnd_menu (a_button, a_press) then
+					app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, l_pebble, l_configure_agent, a_menu_only)
+				elseif l_configure_agent /= Void then
+					l_configure_agent.call (Void)
+				end
 			end
 		end
 
@@ -346,7 +358,7 @@ feature -- Implementation
 			-- Source of `pebble', used for widgets with deferred PND implementation
 			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
 		do
-			Result := interface
+			Result := attached_interface
 		end
 
 	ready_for_pnd_menu (a_button: INTEGER; a_press: BOOLEAN): BOOLEAN
@@ -358,9 +370,10 @@ feature -- Implementation
 	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- End a pick and drop transport.
 		local
-			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			l_pebble_tuple: TUPLE [like pebble]
+			target: detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			l_pebble_tuple: TUPLE [attached like pebble]
 			app_imp: EV_APPLICATION_IMP
+			l_pebble: like pebble
 		do
 			disable_capture
 			app_imp := app_implementation
@@ -374,28 +387,34 @@ feature -- Implementation
 					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_pointer)
 				end
 			end
-				-- Make sure 'in_transport' returns False before firing any drop actions.
-			App_imp.on_drop (pebble)
 
-				-- Call appropriate action sequences
-			l_pebble_tuple := [pebble]
-			if
-				able_to_transport (a_button) or else ready_for_pnd_menu (a_button, False)
-			then
-				target := pointed_target
-				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
-					target.drop_actions.call (l_pebble_tuple)
-					App_imp.drop_actions.call (l_pebble_tuple)
+			l_pebble := pebble
+			if l_pebble /= Void then
+					-- Make sure 'in_transport' returns False before firing any drop actions.
+				App_imp.on_drop (l_pebble)
+
+					-- Call appropriate action sequences
+				l_pebble_tuple := [l_pebble]
+				if
+					able_to_transport (a_button) or else ready_for_pnd_menu (a_button, False)
+				then
+					target := pointed_target
+					if attached target as l_trg and then l_trg.drop_actions.accepts_pebble (l_pebble) then
+						l_trg.drop_actions.call (l_pebble_tuple)
+						App_imp.drop_actions.call (l_pebble_tuple)
+					else
+						App_imp.cancel_actions.call (l_pebble_tuple)
+					end
 				else
 					App_imp.cancel_actions.call (l_pebble_tuple)
 				end
-			else
-				App_imp.cancel_actions.call (l_pebble_tuple)
+
+				if pick_ended_actions_internal /= Void then
+					pick_ended_actions_internal.call ([target])
+				end
 			end
 
-			if pick_ended_actions_internal /= Void then
-				pick_ended_actions_internal.call ([target])
-			end
+
 			enable_transport
 			post_drop_steps (a_button)
 		end
@@ -407,14 +426,14 @@ feature -- Implementation
 			reset_pebble_function
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 			-- Hole at mouse position
 		local
 			gdkwin: POINTER
 			a_x, a_y: INTEGER
-			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
-			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
-			a_pnd_item: EV_PND_DEFERRED_ITEM
+			a_wid_imp: detachable EV_PICK_AND_DROPABLE_IMP
+			a_pnd_deferred_item_parent: detachable EV_PND_DEFERRED_ITEM_PARENT
+			a_pnd_item: detachable EV_PND_DEFERRED_ITEM
 			l_app_imp: like app_implementation
 		do
 			l_app_imp := app_implementation
@@ -434,7 +453,7 @@ feature -- Implementation
 					{EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_wid_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM and then
 					not a_wid_imp.is_destroyed
 				then
-					if l_app_imp.pnd_targets.has (a_wid_imp.interface.object_id) then
+					if l_app_imp.pnd_targets.has (a_wid_imp.attached_interface.object_id) then
 						Result := a_wid_imp.interface
 					end
 					a_pnd_deferred_item_parent ?= a_wid_imp
@@ -443,7 +462,7 @@ feature -- Implementation
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
 						gdkwin := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
-						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.interface.object_id) then
+						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface
 						end
 					end
@@ -455,7 +474,7 @@ feature -- Implementation
 			-- Create and initialize `drop_actions' for `Current'
 		do
 			create Result
-			interface.init_drop_actions (Result)
+			attached_interface.init_drop_actions (Result)
 		end
 
 	pointer_position: EV_COORDINATE
@@ -471,7 +490,7 @@ feature -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PICK_AND_DROPABLE;
+	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -488,4 +507,14 @@ note
 
 
 end -- class EV_PICK_AND_DROPABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

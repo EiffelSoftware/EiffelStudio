@@ -32,17 +32,17 @@ create
 
 feature {NONE} -- Status Setting
 
-	set_first (v: like item)
+	set_first (v: EV_WIDGET)
 			-- Assign `v' to `first'.
 		local
-			l_imp: EV_WIDGET_IMP
+			l_imp: detachable EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
-			l_imp.set_parent (interface)
+			l_imp.set_parent_imp (Current)
 			first := v
-			disable_item_expand (first)
+			disable_item_expand (v)
 			if second_visible then
 				set_split_position (minimum_split_position)
 			else
@@ -52,19 +52,19 @@ feature {NONE} -- Status Setting
 			new_item_actions.call ([v])
 		end
 
-	set_second (v: like item)
+	set_second (v: EV_WIDGET)
 			-- Assign `v' to `second'.
 		local
-			l_imp: EV_WIDGET_IMP
+			l_imp: detachable EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
-			l_imp.set_parent (interface)
+			l_imp.set_parent_imp (Current)
 			second := v
 			notify_change (Nc_minsize, Current)
 			if first_visible then
-				set_split_position (height - splitter_width - second.minimum_height.min
+				set_split_position (height - splitter_width - v.minimum_height.min
 					(height - minimum_split_position - splitter_width))
 			else
 				set_split_position (0)
@@ -93,14 +93,14 @@ feature {NONE} -- Implementation
 		local
 			mh, mw, sep_wid: INTEGER
 		do
-			if first_visible then
-				mw := first.minimum_width
-				mh := first.minimum_height
+			if first_visible and then attached first as l_first then
+				mw := l_first.minimum_width
+				mh := l_first.minimum_height
 				sep_wid := splitter_width
 			end
-			if second_visible then
-				mw := mw.max (second.minimum_width)
-				mh := mh + second.minimum_height + sep_wid
+			if second_visible and then attached second as l_second then
+				mw := mw.max (l_second.minimum_width)
+				mh := mh + l_second.minimum_height + sep_wid
 			end
 			ev_set_minimum_size (mw, mh)
 		end
@@ -110,12 +110,12 @@ feature {NONE} -- Implementation
 		local
 			mh, sep_wid: INTEGER
 		do
-			if first_visible then
-				mh := first.minimum_height
+			if first_visible and then attached first as l_first then
+				mh := l_first.minimum_height
 				sep_wid := splitter_width
 			end
-			if second_visible then
-				mh := mh + second.minimum_height + sep_wid
+			if second_visible and then attached second as l_second then
+				mh := mh + l_second.minimum_height + sep_wid
 			end
 			ev_set_minimum_height (mh)
 		end
@@ -125,11 +125,11 @@ feature {NONE} -- Implementation
 		local
 			mw: INTEGER
 		do
-			if first_visible then
-				mw := first.minimum_width
+			if first_visible and then attached first as l_first then
+				mw := l_first.minimum_width
 			end
-			if second_visible then
-				mw := mw.max (second.minimum_width)
+			if second_visible and then attached second as l_second then
+				mw := mw.max (l_second.minimum_width)
 			end
 			ev_set_minimum_width (mw)
 		end
@@ -152,33 +152,42 @@ feature {NONE} -- Implementation
 	layout_widgets (originator: BOOLEAN)
 		local
 			rect: WEL_RECT
+			l_first_imp: like first_imp
+			l_second_imp: like second_imp
 		do
 			if first_visible and not second_visible then
+				l_first_imp := first_imp
+				check l_first_imp /= Void end
 				if originator then
-					first_imp.set_move_and_size (0, 0, width, height)
+					l_first_imp.set_move_and_size (0, 0, width, height)
 				else
-					first_imp.ev_apply_new_size (0, 0, width, height, True)
+					l_first_imp.ev_apply_new_size (0, 0, width, height, True)
 				end
 			end
 
 			if second_visible and not first_visible then
+				l_second_imp := second_imp
+				check l_second_imp /= Void end
 				if originator then
-					second_imp.set_move_and_size (0, 0, width, height)
+					l_second_imp.set_move_and_size (0, 0, width, height)
 				else
-					second_imp.ev_apply_new_size (0, 0, width, height, True)
+					l_second_imp.ev_apply_new_size (0, 0, width, height, True)
 				end
 			end
 
 			if first_visible and second_visible then
+				l_first_imp := first_imp
+				l_second_imp := second_imp
+				check l_first_imp /= Void and l_second_imp /= Void end
 				if originator then
-					first_imp.set_move_and_size (0, 0, width, internal_split_position)
-					second_imp.set_move_and_size (0, internal_split_position +
+					l_first_imp.set_move_and_size (0, 0, width, internal_split_position)
+					l_second_imp.set_move_and_size (0, internal_split_position +
 						splitter_width, width, height - internal_split_position -
 						splitter_width)
 				else
-					first_imp.ev_apply_new_size (0, 0, width, internal_split_position,
+					l_first_imp.ev_apply_new_size (0, 0, width, internal_split_position,
 						True)
-					second_imp.ev_apply_new_size (0, internal_split_position +
+					l_second_imp.ev_apply_new_size (0, internal_split_position +
 						splitter_width, width, height - internal_split_position -
 						splitter_width, True)
 				end
@@ -308,6 +317,7 @@ feature {NONE} -- Implementation
 			-- Wm_lbuttondown message handling.
 		local
 			splitter_bitmap: WEL_BITMAP
+			l_top_level_window_imp: like top_level_window_imp
 		do
 			-- We have to call pointer actions here
 			-- See bug#14692
@@ -316,7 +326,9 @@ feature {NONE} -- Implementation
 				-- Pressing the left button on the splitter to move it, was
 				-- not bringing the window it was contained in to the front.
 				-- This fixes this.
-			top_level_window_imp.move_to_foreground
+			l_top_level_window_imp := top_level_window_imp
+			check l_top_level_window_imp /= Void end
+			l_top_level_window_imp.move_to_foreground
 				-- We must check that we are in the correct location for the split area,
 				-- as if a notebook is placed inside, there are areas of `Current' that receive
 				-- the left button click. For example, to the right of the tabs.
@@ -328,7 +340,6 @@ feature {NONE} -- Implementation
 				create splitter_bitmap.make_direct (8, 8, 1, 1, splitter_string_bitmap)
 				create splitter_brush.make_by_pattern (splitter_bitmap)
 				splitter_bitmap.delete
-				splitter_bitmap := Void
 
 				set_click_position (x_pos, y_pos)
 				set_capture
@@ -340,6 +351,7 @@ feature {NONE} -- Implementation
 		local
 			new_pos: INTEGER
 			window_dc: WEL_WINDOW_DC
+			l_splitter_brush: like splitter_brush
 		do
 				-- Stop the splitter moving.
 			if has_capture then
@@ -355,7 +367,9 @@ feature {NONE} -- Implementation
 					new_pos := y_pos - click_relative_position
 				end
 				set_split_position (new_pos)
-				splitter_brush.delete
+				l_splitter_brush := splitter_brush
+				check l_splitter_brush /= Void end
+				l_splitter_brush.delete
 				splitter_brush := Void
 			end
 
@@ -389,7 +403,7 @@ feature {NONE} -- WEL internal
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SPLIT_AREA;
+	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -406,4 +420,11 @@ note
 
 
 end -- class EV_VERTICAL_SPLIT_AREA_IMP
+
+
+
+
+
+
+
 

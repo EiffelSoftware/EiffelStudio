@@ -6,8 +6,8 @@ note
 	keywords: "color, colored, colorable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_COLORIZABLE_I
 
 inherit
@@ -15,16 +15,38 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Access
 
-	foreground_color: EV_COLOR
+	frozen foreground_color: EV_COLOR
+			-- Color of foreground features like text.
+		local
+			l_result: detachable like foreground_color_internal
+		do
+			l_result := foreground_color_internal
+			check l_result /= Void end
+			Result := l_result
+		end
+
+	frozen background_color: EV_COLOR
+			-- Color displayed behind foreground features.
+		local
+			l_result: detachable like background_color_internal
+		do
+			l_result := background_color_internal
+			check l_result /= Void end
+			Result := l_result
+		end
+
+feature {NONE} -- Implementation
+
+	foreground_color_internal: detachable EV_COLOR
 			-- Color of foreground features like text.
 		deferred
 		end
 
-	background_color: EV_COLOR
-			-- Color displayed behind foregournd features.
+	background_color_internal: detachable EV_COLOR
+			-- Color displayed behind foreground features.
 		deferred
 		end
 
@@ -36,7 +58,7 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_assigned: is_initialized implies interface.implementation.foreground_color.is_equal (a_color)
+			foreground_color_assigned: is_initialized implies foreground_color.is_equal (a_color)
 		end
 
 	set_background_color (a_color: like background_color)
@@ -45,7 +67,7 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			background_color_assigned: is_initialized implies interface.implementation.background_color.is_equal (a_color)
+			background_color_assigned: is_initialized implies background_color.is_equal (a_color)
 		end
 
 feature -- Status setting
@@ -53,11 +75,11 @@ feature -- Status setting
 	set_default_colors
 			-- Set foreground and background color to their default values.
 		deferred
-		end	
+		end
 
 feature {EV_ANY_I} -- Implementation
-	
-	interface: EV_COLORIZABLE;
+
+	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -74,4 +96,14 @@ note
 
 
 end -- class EV_COLORIZABLE_I
+
+
+
+
+
+
+
+
+
+
 

@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface,
 			replace,
-			initialize,
+			make,
 			remove_i_th,
 			needs_event_box
 		end
@@ -46,19 +46,19 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a fixed widget.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize the notebook.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, True)
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
 			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
-		end
-
-	initialize
-			-- Initialize the notebook.
-		do
 			Precursor {EV_WIDGET_LIST_IMP}
 			selected_item_index_internal := 0
 			initialize_pixmaps
@@ -71,7 +71,7 @@ feature -- Access
 		local
 			i: INTEGER
 			gdkwin, mouse_ptr_wid, tab_label: POINTER
-			a_wid: EV_WIDGET_IMP
+			a_wid: detachable EV_WIDGET_IMP
 		do
 			from
 				i := 1
@@ -83,7 +83,8 @@ feature -- Access
 			until
 				Result > 0 or else i > count or else mouse_ptr_wid = default_pointer
 			loop
-				a_wid ?= i_th (i).implementation
+				a_wid ?= interface_i_th (i).implementation
+				check a_wid /= Void end
 				tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
 				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (mouse_ptr_wid) then
 					Result := i
@@ -104,17 +105,18 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		do
-			create Result.make_with_widgets (interface, an_item)
+			create Result.make_with_widgets (attached_interface, an_item)
 		end
 
 	item_text (an_item: like item): STRING_32
 			-- Label of `an_item'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 			a_event_box, a_hbox, a_list, a_label: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
 				a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
@@ -133,14 +135,15 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			end
 		end
 
-	item_pixmap (an_item: like item): EV_PIXMAP
+	item_pixmap (an_item: attached like item): detachable EV_PIXMAP
 			-- Pixmap of `an_item'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 			a_event_box, a_hbox, a_list, a_image, a_pixbuf: POINTER
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
 				a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
@@ -151,6 +154,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 				if a_pixbuf /= default_pointer then
 					create Result
 					pix_imp ?= Result.implementation
+					check pix_imp /= Void end
 					pix_imp.set_pixmap_from_pixbuf (a_pixbuf)
 				end
 			end
@@ -163,7 +167,7 @@ feature -- Status report
 		local
 			p: POINTER
 			pn: INTEGER
-			imp: EV_WIDGET_IMP
+			imp: detachable EV_WIDGET_IMP
 		do
 			if count > 0 then
 				pn := selected_item_index_internal - 1
@@ -172,6 +176,7 @@ feature -- Status report
 					pn
 				)
 				imp ?= eif_object_from_c (p)
+				check imp /= Void end
 				Result ?= imp.interface
 			end
 		end
@@ -193,13 +198,13 @@ feature -- Status report
  			inspect
  				gtk_pos
  			when 0 then
- 				Result := interface.Tab_left
+ 				Result := attached_interface.Tab_left
  			when 1 then
- 				Result := interface.Tab_right
+ 				Result := attached_interface.Tab_right
  			when 2 then
- 				Result := interface.Tab_top
+ 				Result := attached_interface.Tab_top
  			when 3 then
- 				Result := interface.Tab_bottom
+ 				Result := attached_interface.Tab_bottom
 			end
 		end
 
@@ -210,13 +215,13 @@ feature {EV_NOTEBOOK} -- Status setting
 		local
 			gtk_pos: INTEGER
 		do
-			if a_tab_position = interface.Tab_left then
+			if a_tab_position = attached_interface.Tab_left then
 				gtk_pos := 0
-			elseif a_tab_position = interface.Tab_right then
+			elseif a_tab_position = attached_interface.Tab_right then
 				gtk_pos := 1
-			elseif a_tab_position = interface.Tab_top then
+			elseif a_tab_position = attached_interface.Tab_top then
 				gtk_pos := 2
-			elseif a_tab_position = interface.Tab_bottom then
+			elseif a_tab_position = attached_interface.Tab_bottom then
 				gtk_pos := 3
 			end
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (visual_widget, gtk_pos)
@@ -225,7 +230,7 @@ feature {EV_NOTEBOOK} -- Status setting
 	select_item (an_item: like item)
 			-- Display `an_item' above all others.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
 			check
@@ -250,7 +255,7 @@ feature -- Element change
 			end
 		end
 
-	replace (v: like item)
+	replace (v: attached like item)
 			-- Replace current item by `v'.
 		local
 			i: INTEGER
@@ -291,11 +296,12 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 	set_item_text (an_item: like item; a_text: STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 			a_cs: EV_GTK_C_STRING
 			a_event_box, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			a_cs := a_text
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
@@ -306,14 +312,15 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			{EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
 
-	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP)
+	set_item_pixmap (an_item: attached like item; a_pixmap: detachable EV_PIXMAP)
 			-- Assign `a_pixmap' to the tab for `an_item'.
 		local
-			item_imp: EV_WIDGET_IMP
+			item_imp: detachable EV_WIDGET_IMP
 			a_event_box, a_hbox, a_image, a_list, a_pixbuf: POINTER
-			a_pix_imp: EV_PIXMAP_IMP
+			a_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
+			check item_imp /= Void end
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
@@ -324,6 +331,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
 			if a_pixmap /= Void then
 				a_pix_imp ?= a_pixmap.implementation
+				check a_pix_imp /= Void end
 				a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 				{EV_GTK_EXTERNALS}.gtk_image_set_from_pixbuf (a_image, a_pixbuf)
 			else
@@ -360,7 +368,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
-	interface: EV_NOTEBOOK;
+	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -379,4 +387,14 @@ note
 
 
 end -- class EV_NOTEBOOK_IMP
+
+
+
+
+
+
+
+
+
+
 

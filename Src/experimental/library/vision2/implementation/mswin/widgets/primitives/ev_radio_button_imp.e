@@ -25,7 +25,7 @@ inherit
 			on_wm_theme_changed
 		redefine
 			interface,
-			initialize,
+			make,
 			update_current_push_button,
 			internal_default_height,
 			set_default_minimum_size,
@@ -115,7 +115,7 @@ create
 
 feature {NONE} -- Initalization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor
@@ -132,10 +132,12 @@ feature -- Status setting
 				-- we are using a large font, hence we do nothing
 				-- with the system font.
  			if not has_system_font and not text.is_empty then
- 				if private_font /= Void then
- 					extra_width := 20 + private_font.implementation.height // 2
+ 				if attached private_font as l_private_font then
+ 					extra_width := 20 + l_private_font.implementation.height // 2
+ 				elseif attached private_wel_font as l_private_wel_font then
+ 					extra_width := 20 + l_private_wel_font.height // 2
  				else
- 					extra_width := 20 + private_wel_font.height // 2
+ 					check False end
  				end
  			end
 			Precursor {EV_BUTTON_IMP}
@@ -147,22 +149,24 @@ feature -- Status setting
 			--| want it to work over multiple controls (see: EV_CONTAINER).
 		local
 			cur: CURSOR
+			l_radio_group: like radio_group
 		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
+			l_radio_group := radio_group
+			if l_radio_group /= Void then
+				cur := l_radio_group.cursor
 				from
-					radio_group.start
+					l_radio_group.start
 				until
-					radio_group.off
+					l_radio_group.off
 				loop
-					radio_group.item.set_unchecked
-					radio_group.forth
+					l_radio_group.item.set_unchecked
+					l_radio_group.forth
 				end
-				radio_group.go_to (cur)
+				l_radio_group.go_to (cur)
 			end
 			set_checked
 			if select_actions_internal /= Void then
-				select_actions_internal.call (Void)
+				select_actions.call (Void)
 			end
 		end
 
@@ -188,29 +192,29 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		local
 			l_cur: CURSOR
 		do
-			if radio_group /= Void then
-				l_cur := radio_group.cursor
-				radio_group.start
-				radio_group.search (Current)
+			if attached radio_group as l_radio_group then
+				l_cur := l_radio_group.cursor
+				l_radio_group.start
+				l_radio_group.search (Current)
 				check
-					radio_group_not_off: not radio_group.off
+					radio_group_not_off: not l_radio_group.off
 				end
 				if previous then
-					radio_group.forth
-					if radio_group.off then
-						Result := radio_group.first.wel_item
+					l_radio_group.forth
+					if l_radio_group.off then
+						Result := l_radio_group.first.wel_item
 					else
-						Result := radio_group.item.wel_item
+						Result := l_radio_group.item.wel_item
 					end
 				else
-					radio_group.back
-					if radio_group.off then
-						Result := radio_group.last.wel_item
+					l_radio_group.back
+					if l_radio_group.off then
+						Result := l_radio_group.last.wel_item
 					else
-						Result := radio_group.item.wel_item
+						Result := l_radio_group.item.wel_item
 					end
 				end
-				radio_group.go_to (l_cur)
+				l_radio_group.go_to (l_cur)
 			else
 				Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 			end
@@ -243,7 +247,7 @@ feature {NONE} -- Implementation, focus event
 			-- it goes to the previous one.
 		local
 			hwnd, l_null: POINTER
-			window: WEL_WINDOW
+			window: detachable WEL_WINDOW
 			l_top: like top_level_window_imp
 		do
 			l_top := top_level_window_imp
@@ -274,7 +278,7 @@ feature {NONE} -- Implementation, focus event
 			-- Current is NOT a push button so we set the current push button
 			-- to be the default push button.
 		local
-			top_level_dialog_imp: EV_DIALOG_I
+			top_level_dialog_imp: detachable EV_DIALOG_I
 		do
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
@@ -311,7 +315,7 @@ feature {NONE} -- Implementation, focus event
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RADIO_BUTTON;
+	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -328,4 +332,14 @@ note
 
 
 end -- class EV_RADIO_BUTTON_IMP
+
+
+
+
+
+
+
+
+
+
 

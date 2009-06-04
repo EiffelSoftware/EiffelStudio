@@ -22,7 +22,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SEPARATOR;
+	interface: detachable EV_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -39,4 +39,8 @@ note
 
 
 end -- class EV_SEPARATOR_IMP
+
+
+
+
 

@@ -76,7 +76,7 @@ feature -- Status setting
 		ensure
 			dashed_line_style_disabled: not dashed_line_style
 		end
-		
+
 invariant
 	foreground_color_exists: foreground_color /= Void
 	line_width_non_negative: line_width >= 0
@@ -96,4 +96,8 @@ note
 
 
 end -- class EV_ATOMIC_FIGURE
+
+
+
+
 

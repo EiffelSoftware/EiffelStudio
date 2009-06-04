@@ -1,4 +1,4 @@
-note 
+note
 	description: "EiffelVision file save dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 		do
 			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	interface: EV_FILE_SAVE_DIALOG
+	interface: detachable EV_FILE_SAVE_DIALOG note option: stable attribute end
 
 	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
@@ -58,4 +58,8 @@ note
 
 
 end -- class EV_FILE_SAVE_DIALOG_IMP
+
+
+
+
 

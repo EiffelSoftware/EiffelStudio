@@ -32,9 +32,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pick_actions_internal: EV_PND_START_ACTION_SEQUENCE
+	pick_actions_internal: detachable EV_PND_START_ACTION_SEQUENCE
 			-- Implementation of once per object `pick_actions'.
-			
+		note
+			option: stable
+		attribute
+		end
+
 feature -- Event handling
 
 	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE
@@ -56,9 +60,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pick_ended_actions_internal: EV_PND_FINISHED_ACTION_SEQUENCE
+	pick_ended_actions_internal: detachable EV_PND_FINISHED_ACTION_SEQUENCE
 			-- Implementation of once per object `pick_ended_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -81,9 +88,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	conforming_pick_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	conforming_pick_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `conforming_pick_actions'.
-
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -106,8 +116,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	drop_actions_internal: EV_PND_ACTION_SEQUENCE;
+	drop_actions_internal: detachable EV_PND_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -124,4 +138,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

@@ -25,18 +25,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			make_id
+			assign_interface (an_interface)
+
 		end
 
-	initialize
+	make
 			-- Do post creation initialization.
 		do
+			make_id
 			set_is_initialized (True)
 		end
 
@@ -84,7 +85,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_TOOL_BAR_IMP
+	parent_imp: detachable EV_TOOL_BAR_IMP
 		-- The parent of `Current'.
 
 	set_parent_imp (a_parent_imp: like parent_imp)
@@ -93,7 +94,7 @@ feature {NONE} -- Implementation
 		do
 			if a_parent_imp /= Void then
 				parent_imp := a_parent_imp
-				parent_imp.auto_size
+				a_parent_imp.auto_size
 			else
 				parent_imp := Void
 			end
@@ -157,7 +158,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Interface
 
-	interface: EV_TOOL_BAR_SEPARATOR
+	interface: detachable EV_TOOL_BAR_SEPARATOR note option: stable attribute end
 
 invariant
 	no_pixmap: has_pixmap = False
@@ -178,4 +179,13 @@ note
 
 
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
+
+
+
+
+
+
+
+
+
 

@@ -365,8 +365,8 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 			text_file: PLAIN_TEXT_FILE
-			paragraph_indexes: ARRAYED_LIST [INTEGER]
-			paragraph_formats: ARRAYED_LIST [STRING_32]
+			paragraph_indexes: detachable ARRAYED_LIST [INTEGER]
+			paragraph_formats: detachable ARRAYED_LIST [STRING_32]
 			paragraphs_exhausted: BOOLEAN
 			last_load_value, current_load_value: INTEGER
 		do
@@ -380,6 +380,8 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			buffer.generate_paragraph_information (l_text)
 			paragraph_indexes := buffer.paragraph_start_indexes
 			paragraph_formats := buffer.paragraph_formats
+			check paragraph_formats /= Void end
+			check paragraph_indexes /= Void end
 
 			current_lower_line_index := 1
 			last_paragraph_change := 1
@@ -471,13 +473,14 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			filename_not_void: a_filename /= Void
 		local
 			text_file: RAW_FILE
-			l_text: STRING
+			l_text: detachable STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
 			initialize_for_loading
 			create text_file.make_open_read (a_filename)
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string
+			check l_text /= Void end
 			text_file.close
 			create buffer.set_rich_text (Current)
 			buffer.set_with_rtf (l_text)
@@ -624,7 +627,7 @@ feature {NONE} -- Implementation
 
 feature {EV_FONT_I} -- Implementation
 
-	interface: EV_RICH_TEXT;
+	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -641,4 +644,13 @@ note
 
 
 end -- class EV_RICH_TEXT_I
+
+
+
+
+
+
+
+
+
 

@@ -158,10 +158,16 @@ feature -- Comparison
 
 feature -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- Create `implementation'.
 		do
-			create {EV_POINTER_STYLE_IMP} implementation.make (Current)
+			create {EV_POINTER_STYLE_IMP} implementation.make
 		end
 
 	implementation: EV_POINTER_STYLE_I;

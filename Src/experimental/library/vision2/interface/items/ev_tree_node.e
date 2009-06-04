@@ -65,13 +65,13 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_NODE_LIST
+	parent: detachable EV_TREE_NODE_LIST
 			-- Parent of `Current'.
 		do
 			Result := implementation.parent
 		end
 
-	parent_tree: EV_TREE
+	parent_tree: detachable EV_TREE
 			-- Contains `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -84,10 +84,10 @@ feature -- Access
 	default_identifier_name: STRING
 			-- Default `identifier_name' if no specific name is set.
 		do
-			if parent = Void then
-				Result := Precursor {EV_ITEM}
+			if attached parent as l_parent then
+				Result := "#" + l_parent.index_of (Current, 1).out
 			else
-				Result := "#" + parent.index_of (Current, 1).out
+				Result := Precursor {EV_ITEM}
 			end
 		end
 
@@ -98,7 +98,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			if parent_tree /= Void then
+			if implementation.parent_tree_i /= Void then
 				Result := implementation.is_expanded
 			end
 		end
@@ -139,7 +139,7 @@ feature -- Contract support
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?
 		local
-			a_parent: EV_TREE_NODE
+			a_parent: detachable EV_TREE_NODE
 		do
 			a_parent ?= parent
 			Result := a_list = a_parent or else
@@ -176,4 +176,14 @@ note
 
 
 end -- class EV_TREE_NODE
+
+
+
+
+
+
+
+
+
+
 

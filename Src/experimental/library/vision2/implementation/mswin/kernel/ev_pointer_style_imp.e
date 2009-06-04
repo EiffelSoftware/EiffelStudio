@@ -18,15 +18,15 @@ inherit
 create
 	make
 
-feature {NONE} -- Initlization
+feature -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE)
+	old_make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize
 		do
 			build_default_icon (to_windows_constants ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor))
@@ -40,9 +40,13 @@ feature {NONE} -- Initlization
 			build_mask_bitmap (a_pixel_buffer.width, a_pixel_buffer.height)
 			build_bitmap (a_pixel_buffer)
 			build_native_cursor (a_pixel_buffer.width, a_pixel_buffer.height, a_x_hotspot, a_y_hotspot)
-			wel_bitmap.delete
+			if attached wel_bitmap as l_wel_bitmap then
+				l_wel_bitmap.delete
+			end
 			wel_bitmap := Void
-			wel_mask_bitmap.delete
+			if attached wel_mask_bitmap as l_wel_mask_bitmap then
+				l_wel_mask_bitmap.delete
+			end
 			wel_mask_bitmap := Void
 		end
 
@@ -55,17 +59,21 @@ feature {NONE} -- Initlization
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER)
 			-- Initalize from `a_pixmap'
 		local
-			l_simple_imp: EV_PIXMAP_IMP
-			l_imp: EV_PIXMAP_IMP_STATE
+			l_simple_imp: detachable EV_PIXMAP_IMP
+			l_imp: detachable EV_PIXMAP_IMP_STATE
+			l_wel_cursor: detachable like wel_cursor
 		do
 			destroy_gdi_objects
 			l_simple_imp ?= a_pixmap.implementation
-			l_imp ?= a_pixmap.implementation
-			if l_simple_imp /= Void and then l_simple_imp.private_cursor /= Void then
+			if l_simple_imp /= Void and then attached l_simple_imp.private_cursor as l_private_cursor then
 				-- If already have one, then we don't need to create a new gdi cursor.
-				wel_cursor := l_simple_imp.private_cursor
+				wel_cursor := l_private_cursor
 			else
-				wel_cursor ?= l_imp.build_graphical_resource (False)
+				l_imp ?= a_pixmap.implementation
+				check l_imp /= Void end
+				l_wel_cursor ?= l_imp.build_graphical_resource (False)
+				check l_wel_cursor /= Void end
+				wel_cursor := l_wel_cursor
 				wel_cursor.enable_reference_tracking
 			end
 			set_x_hotspot (a_hotspot_x)
@@ -98,7 +106,7 @@ feature -- Command
 	set_hotspot_imp (a_position: INTEGER; a_is_x: BOOLEAN)
 			-- Set hotspot implementation
 		local
-			l_icon_info: WEL_ICON_INFO
+			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
 			check l_icon_info /= Void end
@@ -132,9 +140,10 @@ feature -- Query
 	width: INTEGER
 			-- Width
 		local
-			l_icon_info: WEL_ICON_INFO
+			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
+			check l_icon_info /= Void end
 			Result := l_icon_info.width
 			l_icon_info.delete
 		end
@@ -142,9 +151,10 @@ feature -- Query
 	height: INTEGER
 			-- Height
 		local
-			l_icon_info: WEL_ICON_INFO
+			l_icon_info: detachable WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
+			check l_icon_info /= Void end
 			Result := l_icon_info.height
 			l_icon_info.delete
 		end
@@ -206,10 +216,11 @@ feature -- Duplication
 	copy_from_pointer_style (a_pointer_style: like interface)
 			-- Copy attributes of `a_pointer_style' to `Current.
 		local
-			a_pointer_style_imp: like Current
+			a_pointer_style_imp: detachable like Current
 		do
 				-- Copy wel_cursor from `a_pointer_style'
 			a_pointer_style_imp ?= a_pointer_style.implementation
+			check a_pointer_style_imp /= Void end
 			wel_cursor := a_pointer_style_imp.wel_cursor.twin
 		end
 
@@ -218,8 +229,6 @@ feature {NONE} -- Implementation
 	build_default_icon (a_idi_constant: POINTER)
 			-- Create the pixmap corresponding to the
 			-- Windows Icon constants `Idi_constant'.
-		require
-			not_created: wel_cursor = Void
 		do
 			create wel_cursor.make_by_predefined_id (a_idi_constant)
 			wel_cursor.enable_reference_tracking
@@ -236,6 +245,8 @@ feature {NONE} -- Implementation
 			not_void: wel_mask_bitmap /= Void
 		local
 			l_icon_info: WEL_ICON_INFO
+			l_wel_bitmap: like wel_bitmap
+			l_wel_mask_bitmap: like wel_mask_bitmap
 		do
 			create l_icon_info.make
 			l_icon_info.set_unshared
@@ -244,8 +255,12 @@ feature {NONE} -- Implementation
 			l_icon_info.set_x_hotspot (a_x_hotspot)
 			l_icon_info.set_y_hotspot (a_y_hotspot)
 
-			l_icon_info.set_color_bitmap (wel_bitmap)
-			l_icon_info.set_mask_bitmap (wel_mask_bitmap)
+			l_wel_bitmap := wel_bitmap
+			check l_wel_bitmap /= Void end
+			l_wel_mask_bitmap := wel_mask_bitmap
+			check l_wel_mask_bitmap /= Void end
+			l_icon_info.set_color_bitmap (l_wel_bitmap)
+			l_icon_info.set_mask_bitmap (l_wel_mask_bitmap)
 
 			create wel_cursor.make_by_icon_info (l_icon_info)
 			wel_cursor.enable_reference_tracking
@@ -259,15 +274,21 @@ feature {NONE} -- Implementation
 		require
 			not_craeted: wel_bitmap = Void
 		local
-			l_buffer_imp: EV_PIXEL_BUFFER_IMP
-			l_pixmap_imp: EV_PIXMAP_IMP_STATE
+			l_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
+			l_pixmap: detachable EV_PIXMAP
+			l_pixmap_imp: detachable EV_PIXMAP_IMP_STATE
+			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
 		do
 			l_buffer_imp ?= a_pixel_buffer.implementation
 			check not_void: l_buffer_imp /= Void end
 			if l_buffer_imp.is_gdi_plus_installed then
-				wel_bitmap := l_buffer_imp.gdip_bitmap.new_bitmap
+				l_gdip_bitmap ?= l_buffer_imp.gdip_bitmap
+				check l_gdip_bitmap /= Void end
+				wel_bitmap := l_gdip_bitmap.new_bitmap
 			else
-				l_pixmap_imp ?= l_buffer_imp.pixmap.implementation
+				l_pixmap ?= l_buffer_imp.pixmap
+				check l_pixmap /= Void end
+				l_pixmap_imp ?= l_pixmap.implementation
 				check not_void: l_pixmap_imp /= Void end
 				wel_bitmap := l_pixmap_imp.get_bitmap
 			end
@@ -282,14 +303,16 @@ feature {NONE} -- Implementation
 			not_created: wel_mask_bitmap = Void
 		local
 			l_mem_dc: WEL_MEMORY_DC
+			l_wel_mask_bitmap: like wel_mask_bitmap
 		do
 			create l_mem_dc.make
-			create wel_mask_bitmap.make_compatible (
+			create l_wel_mask_bitmap.make_compatible (
 				l_mem_dc,
 				a_width,
 				a_height
 				)
-			l_mem_dc.select_bitmap (wel_mask_bitmap)
+			l_mem_dc.select_bitmap (l_wel_mask_bitmap)
+			wel_mask_bitmap := l_wel_mask_bitmap
 					-- We have no mask so make sure that all of the pixmap is visible.
 			l_mem_dc.pat_blt (0, 0, a_width, a_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.blackness)
 			l_mem_dc.unselect_bitmap
@@ -301,28 +324,25 @@ feature {NONE} -- Implementation
 	destroy_gdi_objects
 			-- destroy all gdi objects
 		do
-			if wel_cursor /= Void and then wel_cursor.exists then
-				wel_cursor.decrement_reference
-				wel_cursor := Void
+			if attached wel_cursor as l_wel_cursor and then l_wel_cursor.exists then
+				l_wel_cursor.decrement_reference
 			end
-			if wel_bitmap /= Void and then wel_bitmap.exists then
-				if wel_bitmap.reference_tracked then
-					wel_bitmap.decrement_reference
+			if attached wel_bitmap as l_wel_bitmap and then l_wel_bitmap.exists then
+				if l_wel_bitmap.reference_tracked then
+					l_wel_bitmap.decrement_reference
 				else
-					wel_bitmap.delete
+					l_wel_bitmap.delete
 				end
-				wel_bitmap := Void
 			end
-			if wel_mask_bitmap /= Void and then wel_mask_bitmap.exists then
-				wel_mask_bitmap.delete
-				wel_mask_bitmap := Void
+			if attached wel_mask_bitmap as l_wel_mask_bitmap and then l_wel_mask_bitmap.exists then
+				l_wel_mask_bitmap.delete
 			end
 		end
 
-	wel_bitmap: WEL_BITMAP
+	wel_bitmap: detachable WEL_BITMAP
 			-- Dib 32bits rbga bitmap.
 
-	wel_mask_bitmap: WEL_BITMAP;
+	wel_mask_bitmap: detachable WEL_BITMAP;
 			-- Mask bitmap
 
 	Idc_constants: WEL_IDC_CONSTANTS

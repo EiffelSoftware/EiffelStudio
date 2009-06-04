@@ -31,13 +31,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a list item with an empty name.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
 			internal_text := once ""
@@ -49,16 +49,16 @@ feature -- PND
 	enable_transport
 		do
 			is_transport_enabled := True
-			if parent_imp /= Void then
-				parent_imp.update_pnd_connection (True)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.update_pnd_connection (True)
 			end
 		end
 
 	disable_transport
 		do
 			is_transport_enabled := False
-			if parent_imp /= Void then
-				parent_imp.update_pnd_status
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.update_pnd_status
 			end
 		end
 
@@ -141,7 +141,7 @@ feature -- PND
 			end
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE
+	real_pointed_target: detachable EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
@@ -151,8 +151,8 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is the item selected.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.selected_items.has (interface)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.selected_items.has (attached_interface)
 			end
 		end
 
@@ -160,14 +160,22 @@ feature -- Status setting
 
 	enable_select
 			-- Select the item.
+		local
+			l_parent_imp: like parent_imp
 		do
-			parent_imp.select_item (parent_imp.index_of (interface, 1))
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
+			l_parent_imp.select_item (l_parent_imp.index_of (attached_interface, 1))
 		end
 
 	disable_select
 			-- Deselect the item.
+		local
+			l_parent_imp: like parent_imp
 		do
-			parent_imp.deselect_item (parent_imp.index_of (interface, 1))
+			l_parent_imp := parent_imp
+			check l_parent_imp /= Void end
+			l_parent_imp.deselect_item (l_parent_imp.index_of (attached_interface, 1))
 		end
 
 	text: STRING_32
@@ -187,8 +195,8 @@ feature -- Element change
 	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 		do
-			if internal_tooltip /= Void then
-				Result := internal_tooltip.twin
+			if attached internal_tooltip as l_internal_tooltip then
+				Result := l_internal_tooltip.twin
 			else
 				Result := ""
 			end
@@ -198,17 +206,20 @@ feature -- Element change
 			-- Set current button text to `txt'.
 		do
 			internal_text := txt.twin
-			if parent_imp /= Void then
-				parent_imp.set_text_on_position (parent_imp.index_of (interface, 1) , txt)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.set_text_on_position (l_parent_imp.index_of (attached_interface, 1) , txt)
 			end
 		end
 
 	set_pixmap (a_pix: EV_PIXMAP)
 			-- Set the rows `pixmap' to `a_pix'.
+		local
+			l_pixmap: detachable EV_PIXMAP
 		do
-			pixmap := a_pix.twin
-			if parent_imp /= Void then
-				parent_imp.set_row_pixmap (parent_imp.index_of (interface, 1), pixmap)
+			l_pixmap := a_pix.twin
+			pixmap := l_pixmap
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.set_row_pixmap (l_parent_imp.index_of (attached_interface, 1), l_pixmap)
 			end
 		end
 
@@ -216,12 +227,12 @@ feature -- Element change
 			-- Remove the rows pixmap.
 		do
 			pixmap := Void
-			if parent_imp /= Void then
-				parent_imp.remove_row_pixmap (parent_imp.index_of (interface, 1))
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.remove_row_pixmap (l_parent_imp.index_of (attached_interface, 1))
 			end
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 
 feature -- Measurement
 
@@ -230,7 +241,7 @@ feature -- Measurement
 		local
 			l_h_adjust: POINTER
 			l_parent_imp: like parent_imp
-			l_list_imp: EV_LIST_IMP
+			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
 			l_parent_imp := parent_imp
@@ -251,7 +262,7 @@ feature -- Measurement
 		local
 			l_v_adjust: POINTER
 			l_parent_imp: like parent_imp
-			l_list_imp: EV_LIST_IMP
+			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
 			l_parent_imp := parent_imp
@@ -342,8 +353,8 @@ feature {NONE} -- Implementation
 	destroy
 			-- Clean up `Current'
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune (interface)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.attached_interface.prune (attached_interface)
 			end
 			set_is_destroyed (True)
 			pixmap := Void
@@ -358,7 +369,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 			-- Do nothing
 		end
 
-	internal_tooltip: STRING_32
+	internal_tooltip: detachable STRING_32
 		-- Tooltip used for `Current'.
 
 	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT)
@@ -367,12 +378,12 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 			list_iter := a_iter
 		end
 
-	list_iter: EV_GTK_TREE_ITER_STRUCT
+	list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		-- Object representing position of `Current' in parent tree model
 
-	parent_imp: EV_LIST_ITEM_LIST_IMP
+	parent_imp: detachable EV_LIST_ITEM_LIST_IMP
 
-	set_parent_imp (a_parent_imp: EV_LIST_ITEM_LIST_IMP)
+	set_parent_imp (a_parent_imp: detachable EV_LIST_ITEM_LIST_IMP)
 			--
 		do
 			parent_imp := a_parent_imp
@@ -380,7 +391,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
-	interface: EV_LIST_ITEM;
+	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -397,4 +408,8 @@ note
 
 
 end -- class EV_LIST_ITEM_IMP
+
+
+
+
 

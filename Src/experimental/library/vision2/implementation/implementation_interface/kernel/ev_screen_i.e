@@ -22,12 +22,12 @@ feature -- Status report
 		deferred
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET
+	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position (`x', `y') if any.
 		deferred
 		end
 
-	widget_at_mouse_pointer: EV_WIDGET
+	widget_at_mouse_pointer: detachable EV_WIDGET
 			-- Widget at mouse pointer if any.
 		local
 			l_pointer_position: like pointer_position
@@ -113,7 +113,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	interface: EV_SCREEN;
+	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -130,4 +130,14 @@ note
 
 
 end -- class EV_SCREEN_I
+
+
+
+
+
+
+
+
+
+
 

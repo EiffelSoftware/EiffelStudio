@@ -22,7 +22,7 @@ create
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
-	interface: EV_TOOL_BAR_DROP_DOWN_BUTTON
+	interface: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON note option: stable attribute end
 			-- Tool bar drop down button bridge.
 
 

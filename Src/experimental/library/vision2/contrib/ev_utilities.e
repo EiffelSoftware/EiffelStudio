@@ -13,18 +13,18 @@ class
 
 feature -- Access
 
-	parent_window (a_widget: EV_WIDGET): EV_WINDOW
+	parent_window (a_widget: EV_WIDGET): detachable EV_WINDOW
 			-- Returns top level window containing `a_widget', or
 			-- Void if none.
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			window: EV_WINDOW
+			window: detachable EV_WINDOW
 		do
 			window ?= a_widget.parent
 			if window = Void then
-				if a_widget.parent /= Void then
-					Result := parent_window (a_widget.parent)
+				if attached a_widget.parent as l_widget_parent then
+					Result := parent_window (l_widget_parent)
 				end
 			else
 				Result := window
@@ -33,18 +33,18 @@ feature -- Access
 			shown_implies_result_not_void: a_widget.is_displayed implies Result /= Void
 		end
 
-	parent_dialog (a_widget: EV_WIDGET): EV_DIALOG
+	parent_dialog (a_widget: EV_WIDGET): detachable EV_DIALOG
 			-- `Result' is top level dialog containing `a_widget' or
 			-- `Void' if none.
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			dialog: EV_DIALOG
+			dialog: detachable EV_DIALOG
 		do
 			dialog ?= a_widget.parent
 			if dialog = Void then
-				if a_widget.parent /= Void then
-					Result := parent_dialog (a_widget.parent)
+				if attached a_widget.parent as l_widget_parent then
+					Result := parent_dialog (l_widget_parent)
 				end
 			else
 				Result := dialog
@@ -66,4 +66,7 @@ note
 
 
 end -- class EV_UTILITIES
+
+
+
 

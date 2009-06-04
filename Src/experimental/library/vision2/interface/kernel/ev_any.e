@@ -50,9 +50,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 			-- Standard creation procedure.
 			--| Must be called exactly once during creation.
 		do
-			check
-				application_exists: application_exists
-			end
+			create_interface_objects
 			create_implementation
 			check
 				not_already_called: not implementation.get_state_flag ({EV_ANY_I}.interface_default_create_called_flag)
@@ -62,7 +60,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 					--| special purpose feature is provided.
 			end
 			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
-			implementation.initialize
+			implementation.assign_interface (Current)
 			initialize
 		ensure then
 			is_coupled: implementation /= Void
@@ -73,7 +71,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 
 feature -- Access
 
-	data: ANY
+	data: detachable ANY
 		-- Arbitrary user data may be stored here.
 
 feature -- Element change
@@ -140,7 +138,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		do
 			temp := {ISE_RUNTIME}.check_assert (False)
 			implementation.disable_initialized
-			new_implementation.set_interface(Current)
+			new_implementation.set_interface (Current)
 			implementation := new_implementation
 			implementation.enable_initialized
 			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
@@ -154,11 +152,18 @@ feature {EV_ANY} -- Implementation
 			-- Create `implementation'.
 			-- Must be defined in each descendant to create the
 			-- appropriate `implementation' object.
-		require
-			implementation_not_already_created: implementation = Void
+--		require
+--			implementation_not_already_created: implementation = Void
 		deferred
 		ensure
-			implementation_created: implementation /= Void
+			implementation_created: attached implementation
+		end
+
+	create_interface_objects
+			-- Create objects to be used by `Current' in `initialize'
+			-- Implemented by descendants to create attached objects
+			-- in order to adhere to void-safety due to the implementation bridge pattern.
+		deferred
 		end
 
 	initialize
@@ -216,20 +221,13 @@ feature {EV_ANY} -- Contract support
 			-- Call counter for `{EV_LITE_ACTION_SEQUENCE}.call', used to determine
 			-- if calls have been made as a result of a routine executing.
 		do
-			Result := (create {EV_ENVIRONMENT}).application.action_sequence_call_counter
+			Result := (create {EV_ENVIRONMENT}).implementation.application_i.action_sequence_call_counter
 		end
 
 	is_usable: BOOLEAN
 			-- Is `Current' usable?
 		do
-			Result := is_initialized and not is_destroyed
-		end
-
-	application_exists: BOOLEAN
-			-- Does the application exist? This is used to stop
-			-- manipulation of widgets before an application is created.
-		do
-			Result := (create {EV_ENVIRONMENT}).application /= Void
+			Result := default_create_called and then not is_destroyed
 		end
 
 	default_create_called: BOOLEAN
@@ -246,13 +244,14 @@ feature {EV_ANY} -- Contract support
 
 invariant
 	is_initialized: is_initialized
+	default_create_called: default_create_called
 	is_coupled:
-		implementation /= Void and then implementation.interface = Current
+		default_create_called implies implementation.interface = Current
 			-- The interface object (descended from this class)
 			-- and the implementation object (from EV_ANY_I)
 			-- must always be coupled.
 			--| (See bridge pattern notes below.)
-	default_create_called: default_create_called
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -270,4 +269,14 @@ note
 
 
 end -- class EV_ANY
+
+
+
+
+
+
+
+
+
+
 

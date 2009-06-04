@@ -93,7 +93,7 @@ feature {EV_BUILDER} -- Access
 
 feature -- Status report
 
-	selected_item: EV_WIDGET
+	selected_item: detachable EV_WIDGET
 			-- Page displayed topmost.
 		require
 			not_destroyed: not is_destroyed
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_NOTEBOOK_IMP} implementation.make (Current)
+			create {EV_NOTEBOOK_IMP} implementation.make
 		end
 
 invariant
@@ -266,7 +266,7 @@ invariant
 	selected_item_is_i_th_of_selected_item_index:
 		is_usable and not is_empty implies selected_item = i_th (selected_item_index)
 	selected_item_index_is_index_of_selected_item:
-		is_usable and not is_empty implies selected_item_index = index_of (selected_item, 1)
+		is_usable and not is_empty implies attached selected_item as l_selected_item and then selected_item_index = index_of (l_selected_item, 1)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -283,4 +283,13 @@ note
 
 
 end -- class EV_NOTEBOOK
+
+
+
+
+
+
+
+
+
 

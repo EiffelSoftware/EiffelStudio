@@ -194,7 +194,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	interface: EV_CHARACTER_FORMAT;
+	interface: detachable EV_CHARACTER_FORMAT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -211,4 +211,12 @@ note
 
 
 end -- class EV_CHARACTER_FORMAT_I
+
+
+
+
+
+
+
+
 

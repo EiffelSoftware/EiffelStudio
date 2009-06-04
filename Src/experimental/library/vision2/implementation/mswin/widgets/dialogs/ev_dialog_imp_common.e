@@ -101,12 +101,16 @@ feature {NONE} -- Initialization
 				-- Assign id of `a_other_imp' to `id'.
 			id := a_other_imp.id
 			other_imp := a_other_imp
-			base_make (other_imp.interface)
 			copy_attributes
 				-- Now remove the menu from `a_other_imp'.
 				-- If we do not do this, then we are unable
 				-- to set the menu in `Current'.
-			a_other_imp.interface.remove_menu_bar
+			a_other_imp.attached_interface.remove_menu_bar
+			if attached other_imp.interface as l_interface then
+				interface := l_interface
+			else
+				check False end
+			end
 		end
 
 feature -- Status Report
@@ -130,7 +134,7 @@ feature -- Status Report
 			Result := False
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 		do
@@ -172,10 +176,10 @@ feature {EV_DIALOG_I} -- Implementation
 	apply_center_dialog: BOOLEAN
 			-- Should `center_dialog' be called?
 
-	parent_window: EV_WINDOW
+	parent_window: detachable EV_WINDOW note option: stable attribute end;
 			-- Parent window if any, Void otherwise.
 
-	other_imp: EV_DIALOG_IMP
+	other_imp: detachable EV_DIALOG_IMP note option: stable attribute end;
 			-- Previous Implementation if any, Void otherwise.
 
 	destroy_implementation
@@ -200,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER; a_name: detachable STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end
@@ -218,8 +222,9 @@ feature {NONE} -- Implementation
 		local
 			dialog_window_imp: EV_DIALOG_IMP
 		do
-			create dialog_window_imp.make_with_real_dialog (Current)
-			interface.replace_implementation (dialog_window_imp)
+			create dialog_window_imp.make
+			dialog_window_imp.make_with_real_dialog (Current)
+			attached_interface.replace_implementation (dialog_window_imp)
 		end
 
 	copy_attributes
@@ -227,9 +232,16 @@ feature {NONE} -- Implementation
 		require
 			other_window_not_void: other_imp /= Void
 		do
+			create dialog_children.make
+			lower_bar := other_imp.lower_bar
+			upper_bar := other_imp.upper_bar
+			internal_class_name := other_imp.internal_class_name
+			wnd_class := other_imp.wnd_class
 			accel_list := other_imp.accel_list
-			accelerators := other_imp.accelerators
-			accelerators_internal := other_imp.accelerators_internal
+			if attached other_imp.accelerators_internal as l_event then
+				accelerators_internal := l_event
+			end
+
 			accept_cursor := other_imp.accept_cursor
 			actual_drop_target_agent := other_imp.actual_drop_target_agent
 			awaiting_movement := other_imp.awaiting_movement
@@ -237,16 +249,31 @@ feature {NONE} -- Implementation
 			background_pixmap_imp := other_imp.background_pixmap_imp
 			set_state_flag (base_make_called_flag, other_imp.base_make_called)
 			child_cell := other_imp.child_cell
-			close_request_actions_internal := other_imp.close_request_actions_internal
+			if attached other_imp.close_request_actions_internal as l_event then
+				close_request_actions_internal := l_event
+			end
+
 			commands := other_imp.commands
-			conforming_pick_actions_internal := other_imp.conforming_pick_actions_internal
+			if attached other_imp.conforming_pick_actions_internal as l_event then
+				conforming_pick_actions_internal := l_event
+			end
+
 			cursor_pixmap := other_imp.cursor_pixmap
 			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
-			drop_actions_internal := other_imp.drop_actions_internal
+			if attached other_imp.drop_actions_internal as l_event then
+				drop_actions_internal := l_event
+			end
+
 			default_key_processing_handler := other_imp.default_key_processing_handler
-			focus_in_actions_internal := other_imp.focus_in_actions_internal
-			focus_out_actions_internal := other_imp.focus_out_actions_internal
+			if attached other_imp.focus_in_actions_internal as l_event then
+				focus_in_actions_internal := l_event
+			end
+
+			if attached other_imp.focus_out_actions_internal as l_event then
+				focus_out_actions_internal := l_event
+			end
+
 			foreground_color_imp := other_imp.foreground_color_imp
 			has_heavy_capture := other_imp.has_heavy_capture
 			help_enabled := other_imp.help_enabled
@@ -272,34 +299,77 @@ feature {NONE} -- Implementation
 			is_pnd_in_transport := other_imp.is_pnd_in_transport
 			is_transport_enabled := other_imp.is_transport_enabled
 			item := other_imp.item
-			key_press_actions_internal := other_imp.key_press_actions_internal
-			key_press_string_actions_internal := other_imp.key_press_string_actions_internal
-			key_release_actions_internal := other_imp.key_release_actions_internal
+			if attached other_imp.key_press_actions_internal as l_event then
+				key_press_actions_internal := l_event
+			end
+
+			if attached other_imp.key_press_string_actions_internal as l_event then
+				key_press_string_actions_internal := l_event
+			end
+
+			if attached other_imp.key_release_actions_internal as l_event then
+				key_release_actions_internal := l_event
+			end
+
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
 			menu_bar := other_imp.menu_bar
-			move_actions_internal := other_imp.move_actions_internal
-			new_item_actions_internal := other_imp.new_item_actions_internal
+
+			if attached other_imp.move_actions_internal as l_event then
+				move_actions_internal := l_event
+			end
+
+			if attached other_imp.new_item_actions_internal as l_event then
+				new_item_actions_internal := l_event
+			end
+
 			pebble := other_imp.pebble
 			pebble_function := other_imp.pebble_function
-			pick_actions_internal := other_imp.pick_actions_internal
+			if attached other_imp.pick_actions_internal as l_event then
+				pick_actions_internal := l_event
+			end
+
 			pick_x := other_imp.pick_x
 			pick_y := other_imp.pick_y
 			pnd_stored_cursor := other_imp.pnd_stored_cursor
-			pointer_button_press_actions_internal := other_imp.pointer_button_press_actions_internal
-			pointer_button_release_actions_internal := other_imp.pointer_button_release_actions_internal
-			pointer_double_press_actions_internal := other_imp.pointer_double_press_actions_internal
-			pointer_enter_actions_internal := other_imp.pointer_enter_actions_internal
-			pointer_leave_actions_internal := other_imp.pointer_leave_actions_internal
-			pointer_motion_actions_internal := other_imp.pointer_motion_actions_internal
+			if attached other_imp.pointer_button_press_actions_internal as l_event then
+				pointer_button_press_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_button_release_actions_internal as l_event then
+				pointer_button_release_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_double_press_actions_internal as l_event then
+				pointer_double_press_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_enter_actions_internal as l_event then
+				pointer_enter_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_leave_actions_internal as l_event then
+				pointer_leave_actions_internal := l_event
+			end
+
+			if attached other_imp.pointer_motion_actions_internal as l_event then
+				pointer_motion_actions_internal := l_event
+			end
+
 			pointer_x := other_imp.pointer_x
 			pointer_y := other_imp.pointer_y
 			press_action := other_imp.press_action
-			show_actions_internal := other_imp.show_actions_internal
+			if attached other_imp.show_actions_internal as l_event then
+				show_actions_internal := l_event
+			end
+
 			radio_group := other_imp.radio_group
 			release_action := other_imp.release_action
 			remove_item_actions := other_imp.remove_item_actions
-			resize_actions_internal := other_imp.resize_actions_internal
+			if attached other_imp.resize_actions_internal as l_event then
+				resize_actions_internal := l_event
+			end
+
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
 			scroller := other_imp.scroller
 			shared := other_imp.shared
@@ -314,8 +384,8 @@ feature {NONE} -- Implementation
 				}")
 			if post_creation_update_actions.is_empty then
 				create upper_bar
-				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.upper_bar, upper_bar))
 				create lower_bar
+				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.upper_bar, upper_bar))
 				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.lower_bar, lower_bar))
 			end
 		end
@@ -332,8 +402,9 @@ feature {NONE} -- Implementation
 			-- May be redefined to setup the dialog and its
 			-- children.
 		local
-			button_imp: EV_BUTTON_IMP
+			button_imp: detachable EV_BUTTON_IMP
 		do
+			check other_imp /= Void end
 				-- Copy the attributes from the window to the dialog
 			copy_attributes
 			post_creation_update_actions.call (Void)
@@ -361,12 +432,14 @@ feature {NONE} -- Implementation
 			end
 
 				-- Set the focus to the `default_push_button' if any
-			if default_push_button /= Void and then
-				default_push_button.is_show_requested and then
-				default_push_button.is_sensitive
+			if attached default_push_button as l_default_push_button and then
+				l_default_push_button.is_show_requested and then
+				l_default_push_button.is_sensitive and then
+				attached default_push_button as l_interface_default_push_button
 			then
-				button_imp ?= interface.default_push_button.implementation
-				set_default_push_button (button_imp.interface)
+				button_imp ?= l_interface_default_push_button.implementation
+				check button_imp /= Void end
+				set_default_push_button (l_interface_default_push_button)
 				button_imp.set_focus
 			end
 
@@ -381,9 +454,10 @@ feature {NONE} -- Implementation
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local
-			loc_item_imp: EV_WIDGET_IMP
+			loc_item_imp: detachable EV_WIDGET_IMP
 		do
 			--| FIXME handle EV_SPLIT_AREA_IMP and EV_TABLE_IMP
+			check other_imp /= Void end
 			loc_item_imp ?= other_imp.item_imp
 			if loc_item_imp /= Void then
 				loc_item_imp.set_top_level_window_imp (Current)
@@ -433,11 +507,12 @@ feature {NONE} -- Implementation
 		local
 			x_pos, y_pos: INTEGER
 			l_screen: EV_SCREEN
-			l_screen_imp: EV_SCREEN_IMP
+			l_screen_imp: detachable EV_SCREEN_IMP
 		do
 			create l_screen
 			l_screen_imp ?= l_screen.implementation
 			check l_screen_imp_not_void: l_screen_imp /= Void end
+			check parent_window /= Void end
 			if parent_window /= Void and then parent_window.is_displayed then
 				x_pos := parent_window.x_position + (parent_window.width - width) // 2
 				y_pos := parent_window.y_position + (parent_window.height - height) // 2
@@ -466,15 +541,17 @@ feature {NONE} -- Implementation
 	on_wm_command (wparam, lparam: POINTER)
 			-- Wm_command message.
 		local
-			text_field_imp: EV_TEXT_FIELD_IMP
-			original_top_window: EV_WINDOW_IMP
+			text_field_imp: detachable EV_TEXT_FIELD_IMP
+			original_top_window: detachable EV_WINDOW_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 				-- Escape has been pressed in `Current', so we
 				-- call the `select_actions' of the default_cancel_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			if cwin_lo_word (wparam) = idcancel and lparam = default_pointer then
-				if focus_on_widget.item /= Void then
-					focus_on_widget.item.process_standard_key_press (Vk_escape)
+				l_widget_imp := focus_on_widget.item
+				if l_widget_imp /= Void then
+					l_widget_imp.process_standard_key_press (Vk_escape)
 				end
 
 				-- Enter has been pressed in `Current', so we
@@ -484,8 +561,9 @@ feature {NONE} -- Implementation
 				cwin_hi_word (wparam) = bn_clicked or
 				(cwin_lo_word (wparam) = idok and lparam = default_pointer)
 			then
-				if focus_on_widget.item /= Void then
-					original_top_window := Focus_on_widget.item.top_level_window_imp
+				l_widget_imp := focus_on_widget.item
+				if l_widget_imp /= Void then
+					original_top_window := l_widget_imp.top_level_window_imp
 						-- We must now call the `return_actions' on the text_field.
 					text_field_imp ?= focus_on_widget.item
 					if text_field_imp /= Void then
@@ -496,8 +574,8 @@ feature {NONE} -- Implementation
 						-- If you display a dialog modally to another dialog, and destroy
 						-- the top dialog from the return actions of a text field, the default
 						-- push button of the lower dialog would be fired.
-					if focus_on_widget.item.top_level_window_imp = original_top_window then
-						focus_on_widget.item.process_standard_key_press (Vk_return)
+					if l_widget_imp.top_level_window_imp = original_top_window then
+						l_widget_imp.process_standard_key_press (Vk_return)
 					end
 				end
 			else
@@ -530,11 +608,14 @@ feature {NONE} -- Implementation
 			-- Wm_ctlcolordialog message received.
 		local
 			paint_dc: WEL_PAINT_DC
+			l_background_brush: like background_brush
 		do
 			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.set_background_color (wel_background_color)
 			paint_dc.set_text_color (wel_foreground_color)
-			set_message_return_value (background_brush.item)
+			l_background_brush := background_brush
+			check l_background_brush /= Void end
+			set_message_return_value (l_background_brush.item)
 			--| FIXME Julian should we really delete this brush here?
 			--| doesn't seem to make much difference to GDI count, is it necessary?
 			--| If it is determined that it is required, uncomment.
@@ -559,7 +640,7 @@ feature {NONE} -- Implementation
 					-- has the focus. Anyway, in the case where we have a child,
 					-- we need to connect the focus out actions to `on_wm_activate'.
 					-- Julian 07/11/02
-				if not interface.is_empty then
+				if not attached_interface.is_empty then
 					if focus_out_actions_internal /= Void then
 						focus_out_actions_internal.call (Void)
 					end
@@ -567,14 +648,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_COMMON
+	common_dialog_imp: detachable EV_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_DIALOG;
+	interface: detachable EV_DIALOG note option: stable attribute end;
 			-- Interface for `Current'.
 
 note
@@ -592,4 +673,14 @@ note
 
 
 end -- class EV_DIALOG_IMP_COMMON
+
+
+
+
+
+
+
+
+
+
 

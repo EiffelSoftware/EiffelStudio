@@ -44,7 +44,7 @@ inherit
 			set_selection
 		redefine
 			interface,
-			make,
+			old_make,
 			enable_word_wrapping,
 			disable_word_wrapping,
 			first_position_from_line_number,
@@ -62,7 +62,9 @@ inherit
 			wel_text_length,
 			set_background_color,
 			scroll_to_end,
-			selected_text
+			selected_text,
+			make,
+			initialize_text_widget
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -207,28 +209,19 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
+	old_make (an_interface: like interface)
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
 		local
 			screen_dc: WEL_SCREEN_DC
 			logical_pixels: INTEGER
 		do
-			base_make (an_interface)
-				-- Associate `Current' as `rich_text' inherited from EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-				-- This is because instances of EV_RICH_TEXT_BUFFERING_STRUCTURES need access to
-				-- a rich text implementation object and they may be created independently.
-			set_rich_text (Current)
-
-			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, -1)
-			show_vertical_scroll_bar
-			set_text_limit (2560000)
-			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
-			enable_all_notifications
-			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
-				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
-
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
 			create tab_positions
@@ -243,8 +236,28 @@ feature {NONE} -- Initialization
 			screen_dc.release
 			tab_width := logical_pixels // 2
 
-				-- Ensure all structures for buffering are set to defaults.
-			clear_structures
+				-- Associate `Current' as `rich_text' inherited from EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+				-- This is because instances of EV_RICH_TEXT_BUFFERING_STRUCTURES need access to
+				-- a rich text implementation object and they may be created independently.
+
+			create child_cell
+			set_rich_text (Current)
+
+			Precursor {EV_TEXT_IMP}
+			enable_all_notifications
+		end
+
+	initialize_text_widget
+			-- <Precursor>
+		do
+			multiple_line_edit_make (default_parent, "", 0, 0, 0, 0, -1)
+			show_vertical_scroll_bar
+			set_default_font
+			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
+				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
+
+			set_text_limit (2560000)
+			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 		end
 
 	default_style: INTEGER
@@ -301,10 +314,11 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			char_imp: EV_CHARACTER_FORMAT_IMP
+			char_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			create Result
 			char_imp ?= Result.implementation
+			check char_imp /= Void end
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), char_imp.item)
 		ensure
 			result_not_void: Result /= Void
@@ -316,9 +330,12 @@ feature -- Status report
 			-- features.
 		local
 			char_format: EV_CHARACTER_FORMAT
+			l_result: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			create char_format
-			Result ?= char_format.implementation
+			l_result ?= char_format.implementation
+			check l_result /= Void end
+			Result := l_result
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), Result.item)
 		ensure
 			result_not_void: Result /= Void
@@ -363,10 +380,11 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			imp: EV_PARAGRAPH_FORMAT_IMP
+			imp: detachable EV_PARAGRAPH_FORMAT_IMP
 		do
 			create Result
 			imp ?= Result.implementation
+			check imp /= Void end
 			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), imp.item)
 		ensure
 			result_not_void: Result /= Void
@@ -783,7 +801,7 @@ feature -- Status setting
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT2
+			wel_character_format: detachable WEL_CHARACTER_FORMAT2
 		do
 			safe_store_caret
 			set_selection (first_pos - 1, last_pos - 1)
@@ -807,7 +825,7 @@ feature -- Status setting
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT2
+			wel_character_format: detachable WEL_CHARACTER_FORMAT2
 			mask: INTEGER
 		do
 			disable_redraw
@@ -899,7 +917,11 @@ feature -- Status setting
 				formats.extend (format)
 				heights.extend (format.font.height * 2)
 			end
-			format_out := format.hash_value
+			if attached format.hash_value as l_hash_value then
+				format_out := l_hash_value
+			else
+				format_out := ""
+			end
 			formats_index.put (formats.index_of (format, 1), start_pos)
 			start_formats.put (format_out, start_pos)
 			end_formats.put (format_out, end_pos)
@@ -969,7 +991,7 @@ feature -- Status setting
 			temp_string, default_font_format: STRING_32
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
-			character_format_i: EV_CHARACTER_FORMAT_I
+			character_format_i: detachable EV_CHARACTER_FORMAT_I
 			current_character: WIDE_CHARACTER
 		do
 				-- Store original caret position.
@@ -1003,6 +1025,7 @@ feature -- Status setting
 					formats.off
 				loop
 					character_format_i ?= formats.item.implementation
+					check character_format_i /= Void end
 					build_font_from_format (character_format_i)
 					formats.forth
 				end
@@ -1181,8 +1204,8 @@ feature -- Status setting
 			else
 				set_default_font
 			end
-			if parent_imp /= Void then
-				parent_imp.notify_change (nc_minsize, Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.notify_change (nc_minsize, Current)
 			end
 			set_background_color (background_color)
 			enable_all_notifications
@@ -1325,7 +1348,7 @@ feature -- Status setting
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT2
+			wel_character_format: detachable WEL_CHARACTER_FORMAT2
 		do
 			safe_store_caret
 			wel_character_format ?= format.implementation
@@ -1393,9 +1416,13 @@ feature -- Status setting
 
 	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
+		local
+			l_background_color_imp: detachable EV_COLOR_IMP
 		do
-			background_color_imp ?= color.implementation
-			wel_set_background_color (background_color_imp)
+			l_background_color_imp ?= color.implementation
+			background_color_imp := l_background_color_imp
+			check l_background_color_imp /= Void end
+			wel_set_background_color (l_background_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -1475,7 +1502,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 	font_char_set (a_font: EV_FONT): INTEGER
 			-- `Result' is char set of font `a_font'.
 		local
-			font_imp: EV_FONT_IMP
+			font_imp: detachable EV_FONT_IMP
 		do
 			font_imp ?= a_font.implementation
 			check
@@ -1510,12 +1537,13 @@ feature {NONE} -- Implementation
 			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 		local
-			paragraph: WEL_PARAGRAPH_FORMAT2
+			paragraph: detachable WEL_PARAGRAPH_FORMAT2
 		do
 			disable_redraw
 			safe_store_caret
 			set_selection (start_position - 1, end_position - 1)
 			paragraph ?= format.implementation
+			check paragraph /= Void end
 			paragraph.set_mask (mask)
 			set_paragraph_format (paragraph)
 			safe_restore_caret
@@ -1529,7 +1557,7 @@ feature {NONE} -- Implementation
 			a_font_not_void: a_font /= Void
 			index_not_negative: index >= 0
 		local
-			a_font_imp: EV_FONT_IMP
+			a_font_imp: detachable EV_FONT_IMP
 			log_font: WEL_LOG_FONT
 			current_family: INTEGER
 			family: STRING_32
@@ -1622,7 +1650,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RICH_TEXT;
+	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1639,4 +1667,15 @@ note
 
 
 end -- class EV_RICH_TEXT_IMP
+
+
+
+
+
+
+
+
+
+
+
 

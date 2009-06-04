@@ -23,20 +23,20 @@ inherit
 
 	MEMORY
 
-feature {EV_APPLICATION} -- Initialization
+feature -- Initialization
 
-	initialize
+	old_make (an_interface: like interface)
+		do
+			assign_interface (an_interface)
+		end
+
+	make
 			-- Create pick and drop target list.
 			-- Set F1 as default help key.
 			-- Create default help engine.
 		local
 			f1_key: EV_KEY
-			environment_imp: EV_ENVIRONMENT_IMP
 		do
-				-- Set the application in EV_ENVIRONMENT.
-			environment_imp ?= (create {EV_ENVIRONMENT}).implementation
-			environment_imp.set_application (interface)
-
 				-- Initialize contextual help.
 			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
 			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
@@ -110,7 +110,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 				if try_lock then
 					l_locked := True
-					idle_actions_internal.call (Void)
+					idle_actions.call (Void)
 					unlock
 					l_locked := False
 					if a_relinquish_cpu then
@@ -161,16 +161,16 @@ feature -- Access
 		deferred
 		end
 
-	locked_window: EV_WINDOW
+	locked_window: detachable EV_WINDOW
 			-- Window currently locked. Void if no window
 			-- is currently locked.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
 
-	captured_widget: EV_WIDGET
+	captured_widget: detachable EV_WIDGET
 			-- Widget currently captured. Void if none.
 
-	pick_and_drop_source: EV_PICK_AND_DROPABLE_I
+	pick_and_drop_source: detachable EV_PICK_AND_DROPABLE_I
 			-- The current pick and drop source.
 		deferred
 		end
@@ -233,7 +233,7 @@ feature -- Element Change
 			invoke_garbage_collection_when_inactive := a_enabled
 		end
 
-	set_captured_widget (a_captured_widget: EV_WIDGET)
+	set_captured_widget (a_captured_widget: detachable EV_WIDGET)
 			-- Set `captured_widget' to the widget that has the current capture 'a_capture_widget'.
 		do
 			captured_widget := a_captured_widget
@@ -279,7 +279,7 @@ feature -- Element Change
 			help_engine_set: help_engine = an_engine
 		end
 
-	set_locked_window (a_window: EV_WINDOW)
+	set_locked_window (a_window: detachable EV_WINDOW)
 			-- Set `locked_window' to `a_window'.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
@@ -335,14 +335,14 @@ feature -- Basic operation
 			-- Send help context of widget under mouse cursor when left mouse button is pressed to help engine.
 			-- Cancel contextual help mode when right mouse button is pressed.
 		do
-			if focused_widget /= Void then
-				captured_widget := focused_widget
-				old_pointer_button_press_actions := captured_widget.pointer_button_press_actions
-				captured_widget.pointer_button_press_actions.wipe_out
-				captured_widget.pointer_button_press_actions.extend_kamikaze (contextual_help_procedure)
-				old_pointer_style := captured_widget.pointer_style
-				captured_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Help_cursor)
-				captured_widget.enable_capture
+			if attached focused_widget as l_focused_widget then
+				captured_widget := l_focused_widget
+				old_pointer_button_press_actions := l_focused_widget.pointer_button_press_actions
+				l_focused_widget.pointer_button_press_actions.wipe_out
+				l_focused_widget.pointer_button_press_actions.extend_kamikaze (contextual_help_procedure)
+				old_pointer_style := l_focused_widget.pointer_style
+				l_focused_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Help_cursor)
+				l_focused_widget.enable_capture
 			end
 		end
 
@@ -351,7 +351,7 @@ feature -- Basic operation
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			an_help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+			an_help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
 			an_help_context := a_widget.help_context
 			if an_help_context /= Void then
@@ -366,7 +366,7 @@ feature -- Basic operation
 			a_idle_action_not_void: a_idle_action /= Void
 		do
 			lock
-			if not idle_actions.has (a_idle_action) then
+			if not idle_actions.has (a_idle_action) and then idle_actions_internal /= Void then
 				idle_actions_internal.extend (a_idle_action)
 			end
 			unlock
@@ -412,11 +412,21 @@ feature -- Events
 			-- Perform `an_action' one time only on idle.
 		do
 			lock
-			if not idle_actions.has (an_action) then
+			if not idle_actions.has (an_action) and then idle_actions_internal /= Void then
 				idle_actions_internal.extend_kamikaze (an_action)
 			end
 			unlock
 		end
+
+	increase_action_sequence_call_counter
+			-- Increase `action_sequence_call_counter' by one.
+		do
+			action_sequence_call_counter := action_sequence_call_counter + 1
+		end
+
+	action_sequence_call_counter: NATURAL_32
+			-- Counter used in post-conditions to determine if any actions sequences have been
+			-- called as a result of the routine the post-condition is applied to.
 
 feature -- Event handling
 
@@ -436,7 +446,7 @@ feature -- Status report
 		deferred
 		end
 
-	focused_widget: EV_WIDGET
+	focused_widget: detachable EV_WIDGET
 			-- Widget with keyboard focus
 		local
 			current_windows: like windows
@@ -473,7 +483,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	interface: EV_APPLICATION
+	interface: detachable EV_APPLICATION note option: stable attribute end
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -528,17 +538,17 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: detachable PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
-			trg: EV_ABSTRACT_PICK_AND_DROPABLE
-			pnd_trg: EV_PICK_AND_DROPABLE
+			trg: detachable EV_ABSTRACT_PICK_AND_DROPABLE
+			pnd_trg: detachable EV_PICK_AND_DROPABLE
 			targets: like pnd_targets
-			identified: IDENTIFIED
-			sensitive: EV_SENSITIVE
-			l_item_data: EV_PND_TARGET_DATA
-			l_search_tree: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]
+			identified: detachable IDENTIFIED
+			sensitive: detachable EV_SENSITIVE
+			l_item_data: detachable EV_PND_TARGET_DATA
+			l_search_tree: detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
 			l_comparator_agent: PREDICATE [ANY, TUPLE [EV_PND_TARGET_DATA, EV_PND_TARGET_DATA]]
 			l_arrayed_list: ARRAYED_LIST [EV_PND_TARGET_DATA]
@@ -552,49 +562,54 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			create l_menu
 			create identified
 			cur := targets.cursor
-			if a_pebble /= Void then
-				from
-					targets.start
-						-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
-					l_comparator_agent :=
-						agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
-							do
-								Result := first_item.name < second_item.name
+			from
+				targets.start
+					-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
+				l_comparator_agent :=
+					agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
+						local
+							l_first_name, l_second_name: detachable STRING
+						do
+							l_first_name := first_item.name
+							l_second_name := second_item.name
+							if l_first_name /= Void and then l_second_name /= Void then
+								Result := l_first_name < l_second_name
 							end
-				until
-					targets.after
-				loop
-					trg ?= identified.id_object (targets.item_for_iteration)
-					pnd_trg ?= trg
-					if trg /= Void and then (pnd_trg = Void or else not pnd_trg.is_destroyed) then
-						if
-							trg.drop_actions.accepts_pebble (a_pebble)
-						then
-							sensitive ?= trg
-							if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
-								l_has_targets := True
-								if not l_configurable_item_added then
-									l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
-									l_configurable_item_added := True
+						end
+			until
+				targets.after
+			loop
+				trg ?= identified.id_object (targets.item_for_iteration)
+				pnd_trg ?= trg
+				if trg /= Void and then (pnd_trg = Void or else not pnd_trg.is_destroyed) then
+					if
+						trg.drop_actions.accepts_pebble (a_pebble)
+					then
+						sensitive ?= trg
+						if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
+							l_has_targets := True
+							if not l_configurable_item_added then
+								check a_configure_agent /= Void end
+								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
+								l_configurable_item_added := True
+							end
+							if attached trg.target_data_function as l_target_data_function then
+								l_item_data := l_target_data_function.item ([a_pebble])
+							end
+							if l_item_data /= Void then
+								l_item_data.set_target (trg)
+								create l_object_comparable.make (l_item_data, l_comparator_agent)
+								if l_search_tree = Void then
+									create l_search_tree.make (l_object_comparable)
+								else
+									l_search_tree.put (l_object_comparable)
 								end
-								if trg.target_data_function /= Void then
-									l_item_data := trg.target_data_function.item ([a_pebble])
-								end
-								if l_item_data /= Void then
-									l_item_data.set_target (trg)
-									create l_object_comparable.make (l_item_data, l_comparator_agent)
-									if l_search_tree = Void then
-										create l_search_tree.make (l_object_comparable)
-									else
-										l_search_tree.put (l_object_comparable)
-									end
-									l_item_data := Void
-								end
+								l_item_data := Void
 							end
 						end
 					end
-					targets.forth
 				end
+				targets.forth
 			end
 
 			if l_has_targets then
@@ -615,15 +630,17 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				end
 
 				l_menu_count := l_menu.count
-				if a_pnd_source.configurable_target_menu_handler /= Void then
-					a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
+				if attached a_pnd_source.configurable_target_menu_handler as l_menu_handler then
+					l_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
 				else
 					from
 						l_arrayed_list.start
 					until
 						l_arrayed_list.after
 					loop
-						l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
+						if attached l_arrayed_list.item.target as l_target  then
+							l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_target.drop_actions).call ([a_pebble])))
+						end
 						l_arrayed_list.forth
 					end
 				end
@@ -633,9 +650,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					a_configure_agent.call (Void)
 				end
 			else
-				if a_pnd_source.configurable_target_menu_handler /= Void then
+				if attached a_pnd_source.configurable_target_menu_handler as l_configurable_target_menu_handler then
 					create l_menu
-					a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
+					l_configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
 					if not l_menu.is_destroyed and then l_menu.count > 0 and then not ctrl_pressed then
 							-- If the pebble is Void then no menu should be displayed if Ctrl is pressed.
 						l_menu.show_at (Void, a_screen_x - menu_placement_offset, a_screen_y - menu_placement_offset)
@@ -656,7 +673,7 @@ feature {NONE} -- Debug
 			-- Output all PND targets.
 		local
 			cur: CURSOR
-			trg: EV_ABSTRACT_PICK_AND_DROPABLE
+			trg: detachable EV_ABSTRACT_PICK_AND_DROPABLE
 			identified: IDENTIFIED
 		do
 			cur := pnd_targets.cursor
@@ -667,8 +684,8 @@ feature {NONE} -- Debug
 				pnd_targets.after
 			loop
 				trg ?= identified.id_object (pnd_targets.item_for_iteration)
-				if trg /= Void then
-					io.error.put_string (trg.target_name.as_string_8)
+				if trg /= Void and then attached trg.target_name as l_target_name then
+					io.error.put_string (l_target_name.as_string_8)
 				end
 				pnd_targets.forth
 			end
@@ -699,7 +716,8 @@ feature -- Implementation
 		require
 			an_exception_not_void: an_exception /= Void
 		local
-			l_exception_string: STRING_8
+			l_exception_string: detachable STRING_8
+			l_exception_dialog: like exception_dialog
 			l_label: EV_TEXT
 			l_label_box: EV_HORIZONTAL_BOX
 			l_vbox: EV_VERTICAL_BOX
@@ -709,28 +727,32 @@ feature -- Implementation
 			l_frame: EV_FRAME
 			l_error_box: EV_HORIZONTAL_BOX
 			l_error_label: EV_LABEL
+			l_exception_message: STRING
 		do
 				-- Clean up any locked windows of captures.
-			if locked_window /= Void then
-				locked_window.unlock_update
+			if attached locked_window as l_locked_window then
+				l_locked_window.unlock_update
 			end
-			if captured_widget /= Void then
-				captured_widget.disable_capture
+			if attached captured_widget as l_captured_widget then
+				l_captured_widget.disable_capture
 			end
 			if
 				not uncaught_exception_actions_called and then
 				uncaught_exception_actions_internal /= Void and then
-				not uncaught_exception_actions_internal.is_empty
+				not uncaught_exception_actions.is_empty
 			then
 				uncaught_exception_actions_called := True
-				uncaught_exception_actions_internal.call ([an_exception])
+				uncaught_exception_actions.call ([an_exception])
 				uncaught_exception_actions_called := False
 			else
 				if show_exception_dialog then
 						-- Show a basic exception dialog so that exception doesn't get lost if undealt with.
-					l_exception_string := an_exception.exception_trace.twin
+					l_exception_string := an_exception.exception_trace
+					check l_exception_string /= Void end
+					l_exception_string := l_exception_string.twin
 					l_exception_string.prune_all ('%R')
-					create exception_dialog
+					create l_exception_dialog
+					exception_dialog := l_exception_dialog
 					create l_label
 					l_label.disable_word_wrapping
 					l_label.disable_edit
@@ -761,12 +783,12 @@ feature -- Implementation
 					l_label_box.extend (l_label)
 					l_frame.set_text ("Exception Trace")
 					l_vbox.extend (l_frame)
-					exception_dialog.extend (l_vbox)
+					l_exception_dialog.extend (l_vbox)
 					create l_hbox
 					l_vbox.extend (l_hbox)
 					l_vbox.disable_item_expand (l_hbox)
 					create l_ignore.make_with_text ("Ignore")
-					l_ignore.select_actions.extend (agent exception_dialog.destroy)
+					l_ignore.select_actions.extend (agent l_exception_dialog.destroy)
 					l_hbox.extend (create {EV_CELL})
 					l_hbox.extend (l_ignore)
 					l_hbox.disable_item_expand (l_ignore)
@@ -777,10 +799,15 @@ feature -- Implementation
 					l_hbox.disable_item_expand (l_quit)
 					l_hbox.set_border_width (5)
 					l_hbox.set_padding (5)
-					exception_dialog.set_title ("Uncaught Exception: " + an_exception.message)
-					exception_dialog.set_minimum_height (350)
-					exception_dialog.set_size (500, 300)
-					exception_dialog.raise
+					if attached an_exception.message as l_message then
+						l_exception_message := l_message
+					else
+						l_exception_message := ""
+					end
+					l_exception_dialog.set_title ("Uncaught Exception: " + l_exception_message)
+					l_exception_dialog.set_minimum_height (350)
+					l_exception_dialog.set_size (500, 300)
+					l_exception_dialog.raise
 						--| FIXME Behavior would be better if dialog has full application modality.
 
 						-- Set "Ignore" as the default
@@ -789,7 +816,7 @@ feature -- Implementation
 			end
 		end
 
-	exception_dialog: EV_DIALOG
+	exception_dialog: detachable EV_DIALOG
 		-- Dialog used for showing uncaught exceptions.
 
 	show_exception_dialog: BOOLEAN = True
@@ -801,8 +828,12 @@ feature -- Implementation
 
 	new_exception: EXCEPTION
 			-- New exception object representating the last exception caught in Current
+		local
+			l_result: detachable EXCEPTION
 		do
-			Result := exception_manager.last_exception
+			l_result := exception_manager.last_exception
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			new_exception_not_void: Result /= Void
 		end
@@ -812,13 +843,13 @@ feature {NONE} -- Implementation
 	stop_processing_requested: BOOLEAN
 			-- Has 'stop_processing' been called?
 
-	clipboard_internal: EV_CLIPBOARD
+	clipboard_internal: detachable EV_CLIPBOARD note option: stable attribute end
 			-- Internal clipboard object.
 
-	old_pointer_style: EV_POINTER_STYLE
+	old_pointer_style: detachable EV_POINTER_STYLE
 			-- Pointer style of window being used while contextual help is enabled
 
- 	old_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+ 	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
 
 	screen: EV_SCREEN
@@ -836,7 +867,7 @@ feature {NONE} -- Implementation
 	help_handler
 			-- Display contextual help for currently focused widget.
 		local
-			w: EV_WIDGET
+			w: detachable EV_WIDGET
 		do
 			w := focused_widget
 			if w /= Void then
@@ -860,7 +891,7 @@ feature {NONE} -- Implementation
 			-- Send help context of widget under mouse cursor when left mouse button is pressed to help engine.
 			-- Cancel contextual help mode when right mouse button is pressed.
 		local
-			w: EV_WIDGET
+			w: detachable EV_WIDGET
 		do
 			if button = 1 then
 				disable_contextual_help
@@ -874,26 +905,27 @@ feature {NONE} -- Implementation
 	disable_contextual_help
 			-- Disable contextual help: remove capture and restore mouse pointer style.
 		do
-			check
-				valid_capture_widget: captured_widget /= Void
+			if attached captured_widget as l_captured_widget then
+				if attached old_pointer_button_press_actions as l_actions then
+					l_captured_widget.pointer_button_press_actions.fill (l_actions)
+				end
+				if attached old_pointer_style as l_old_pointer_style then
+					l_captured_widget.set_pointer_style (l_old_pointer_style)
+				end
+				l_captured_widget.disable_capture
+			else
+				check False end
 			end
-			if old_pointer_button_press_actions /= Void then
-				captured_widget.pointer_button_press_actions.fill (old_pointer_button_press_actions)
-			end
-			check
-				valid_old_pointer_style: old_pointer_style /= Void
-			end
-			captured_widget.set_pointer_style (old_pointer_style)
-			captured_widget.disable_capture
+
 		end
 
-	focused_widget_from_container (a_widget: EV_WIDGET): EV_WIDGET
+	focused_widget_from_container (a_widget: EV_WIDGET): detachable EV_WIDGET
 			-- Child widget of `a_widget' with keyboard focus, if any
 		local
-			a_container: EV_CONTAINER
+			a_container: detachable EV_CONTAINER
 			a_widget_list: LINEAR [EV_WIDGET]
-			chain: CHAIN [EV_WIDGET]
-			cursor: CURSOR
+			chain: detachable CHAIN [EV_WIDGET]
+			cursor: detachable CURSOR
 		do
 			if a_widget.has_focus then
 				Result := a_widget
@@ -914,6 +946,7 @@ feature {NONE} -- Implementation
 						a_widget_list.forth
 					end
 					if chain /= Void then
+						check cursor /= Void end
 						chain.go_to (cursor)
 					end
 				end
@@ -928,11 +961,6 @@ feature {NONE} -- Implementation
 			msec_non_negative: msec >= 0
 		deferred
 		end
-
-invariant
-	dockable_targets_not_void: is_usable implies dockable_targets /= Void
-	pnd_targets_not_void: is_usable implies pnd_targets /= void
-	windows_not_void: is_usable implies windows /= void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -949,4 +977,14 @@ note
 
 
 end -- class EV_APPLICATION_I
+
+
+
+
+
+
+
+
+
+
 

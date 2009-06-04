@@ -8,42 +8,42 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST_I [reference G -> EV_ITEM]
+	EV_ITEM_LIST_I [G -> detachable EV_ITEM]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
 		redefine
 			interface
 		end
-		
+
 feature -- Access
 
-	item_by_data (data: ANY): like item
+	item_by_data (data: ANY): detachable like item
 			-- First item with `data'.
 		require
 			data_not_void: data /= Void
 		local
 			c: CURSOR
-			curr_data: like data
+			curr_data: detachable like data
 		do
 			c := cursor
 			from
-				interface.start
+				attached_interface.start
 			until
-				interface.after or Result /= Void
+				attached_interface.after or Result /= Void
 			loop
-				curr_data := interface.item.data
+				curr_data := attached_interface.item.data
 				if equal (curr_data, data) then
-					Result := interface.item
+					Result := attached_interface.item
 				end
-				interface.forth
+				attached_interface.forth
 			end
 			go_to (c)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_ITEM_I} -- Implementation
 
-	interface: EV_ITEM_LIST [G];
+	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
 
@@ -62,4 +62,13 @@ note
 
 
 end -- class EV_ITEM_LIST_I
+
+
+
+
+
+
+
+
+
 

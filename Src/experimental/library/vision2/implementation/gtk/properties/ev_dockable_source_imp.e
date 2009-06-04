@@ -21,7 +21,7 @@ feature -- Status setting
 				a_x, a_y, a_button: INTEGER;
 				a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 				a_screen_x, a_screen_y: INTEGER)
-			
+
 				-- Filter out duplicate events.
 			do
 				if not awaiting_movement then
@@ -90,7 +90,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		do
 			enable_capture
 			App_implementation.docking_source := Current
-			initialize_transport (a_screen_x, a_screen_y, interface)
+			initialize_transport (a_screen_x, a_screen_y, attached_interface)
 		end
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
@@ -100,7 +100,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 			set_pointer_style (Drag_cursor)
 		end
 
-	orig_cursor: EV_POINTER_STYLE
+	orig_cursor: detachable EV_POINTER_STYLE
 
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
@@ -141,7 +141,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		deferred
 		end
 
-	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
+	internal_set_pointer_style (a_cursor: detachable EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end
@@ -160,12 +160,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			--
 		deferred
 		end
 
-	interface: EV_DOCKABLE_SOURCE;
+	interface: detachable EV_DOCKABLE_SOURCE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -182,4 +182,14 @@ note
 
 
 end -- class EV_DOCKABLE_IMP
+
+
+
+
+
+
+
+
+
+
 

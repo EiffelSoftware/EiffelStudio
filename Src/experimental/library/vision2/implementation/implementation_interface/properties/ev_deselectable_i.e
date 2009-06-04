@@ -1,13 +1,13 @@
 note
-	description: 
+	description:
 		"Eiffel Vision deselectable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "deselect, deselectable, selectable, select"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_DESELECTABLE_I
 
 inherit
@@ -15,8 +15,21 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Status setting
+
+	toggle
+			-- Change `is_selected'.
+		require
+			not_is_destroyed: not is_destroyed
+			can_be_selected: not is_selected implies is_selectable
+		do
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
+		end
 
 	disable_select
 			-- Deselect the object.
@@ -29,7 +42,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_DESELECTABLE;
+	interface: detachable EV_DESELECTABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
@@ -48,4 +61,12 @@ note
 
 
 end -- class EV_DESELECTABLE_I
+
+
+
+
+
+
+
+
 

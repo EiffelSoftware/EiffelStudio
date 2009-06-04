@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_DIRECTORY_DIALOG_IMP} implementation.make (Current)
+			create {EV_DIRECTORY_DIALOG_IMP} implementation.make
 		end
 
 note
@@ -87,4 +87,8 @@ note
 
 
 end -- class EV_DIRECTORY_DIALOG
+
+
+
+
 

@@ -20,7 +20,7 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			make,
+			old_make,
 			width,
 			height,
 			destroy,
@@ -30,8 +30,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			foreground_color,
-			background_color,
+			foreground_color_internal,
+			background_color_internal,
 			set_foreground_color,
 			set_background_color,
 			needs_event_box
@@ -41,7 +41,7 @@ inherit
 			height,
 			destroy,
 			dispose,
-			initialize
+			make
 		end
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
@@ -57,19 +57,19 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_image_new)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		local
 			gdkpix, gdkmask: POINTER
 			l_app_imp: like app_implementation
 		do
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_image_new)
 			Precursor {EV_PRIMITIVE_IMP}
 			l_app_imp := app_implementation
 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (l_app_imp.default_gdk_window, 1, 1, Default_color_depth)
@@ -86,10 +86,11 @@ feature {NONE} -- Initialization
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
 		local
-			a_pointer_style_imp: EV_POINTER_STYLE_IMP
+			a_pointer_style_imp: detachable EV_POINTER_STYLE_IMP
 			l_pixbuf: POINTER
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
+			check a_pointer_style_imp /= Void end
 
 			if a_pointer_style_imp.predefined_cursor_code > 0 then
 				-- We are building from a stock cursor.
@@ -139,9 +140,10 @@ feature {NONE} -- Initialization
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
 		local
-			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check l_pixel_buffer_imp /= Void end
 			set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
 		end
 
@@ -292,9 +294,10 @@ feature -- Element change
 	set_mask (a_mask: EV_BITMAP)
 			-- Set the GdkBitmap used for masking `Current'.
 		local
-			a_mask_imp: EV_BITMAP_IMP
+			a_mask_imp: detachable EV_BITMAP_IMP
 		do
 			a_mask_imp ?= a_mask.implementation
+			check a_mask_imp /= Void end
 			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
 		end
 
@@ -312,7 +315,7 @@ feature -- Access
 			color_struct_size: INTEGER
 		do
 			create Result.make_with_alpha_zero (width, height)
-			Result.set_originating_pixmap (interface)
+			Result.set_originating_pixmap (attached_interface)
 			a_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
 
 			from
@@ -350,9 +353,10 @@ feature -- Duplication
 			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_imp: EV_PIXMAP_IMP
+			other_imp: detachable EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
+			check other_imp /= Void end
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
 			internal_xpm_data := other_imp.internal_xpm_data
 		end
@@ -530,7 +534,7 @@ feature {NONE} -- Constants
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PIXMAP;
+	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -547,4 +551,14 @@ note
 
 
 end -- EV_PIXMAP_IMP
+
+
+
+
+
+
+
+
+
+
 

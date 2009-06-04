@@ -17,13 +17,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: EV_REGION)
+	old_make (an_interface: EV_REGION)
 			-- Creation method.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			gdk_region := {EV_GTK_EXTERNALS}.gdk_region_new
@@ -58,44 +58,52 @@ feature -- Access
 	intersect (a_region: EV_REGION): EV_REGION
 			-- Intersect `a_region' with `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
-			Result := interface.twin
+			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_region_intersect (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	union (a_region: EV_REGION): EV_REGION
 			-- Create a union `a_region' with `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
-			Result := interface.twin
+			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_region_union (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	subtract (a_region: EV_REGION): EV_REGION
 			-- Subtract `a_region' from `Current'.
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
-			Result := interface.twin
+			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_region_subtract (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	exclusive_or (a_region: EV_REGION): EV_REGION
 			-- Exclusive or `a_region' with `Current'
 		local
-			l_result_imp, l_region_imp: EV_REGION_IMP
+			l_result_imp, l_region_imp: detachable EV_REGION_IMP
 		do
-			Result := interface.twin
+			Result := attached_interface.twin
 			l_result_imp ?= Result.implementation
+			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
+			check l_region_imp /= Void end
 			{EV_GTK_EXTERNALS}.gdk_region_xor (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
@@ -104,10 +112,11 @@ feature -- Duplication
 	copy_region (other: EV_REGION)
 			-- Update `Current' to be the same as `other'.
 		local
-			l_region_imp: EV_REGION_IMP
+			l_region_imp: detachable EV_REGION_IMP
 		do
 			dispose
 			l_region_imp ?= other.implementation
+			check l_region_imp /= Void end
 			gdk_region := {EV_GTK_EXTERNALS}.gdk_region_copy (l_region_imp.gdk_region)
 		end
 
@@ -121,10 +130,11 @@ feature {NONE} -- Implementation
 	is_region_equal (other: EV_REGION): BOOLEAN
 			-- Does `other' have the same appearance as `Current'.
 		local
-			l_region_imp: EV_REGION_IMP
+			l_region_imp: detachable EV_REGION_IMP
 		do
 			if other /= Void then
 				l_region_imp ?= other.implementation
+				check l_region_imp /= Void end
 				Result := {EV_GTK_EXTERNALS}.gdk_region_equal (gdk_region, l_region_imp.gdk_region)
 			end
 		end

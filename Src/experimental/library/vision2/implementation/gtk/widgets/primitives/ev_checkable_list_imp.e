@@ -24,7 +24,7 @@ inherit
 	EV_LIST_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			initialize_model
 		end
 
@@ -37,7 +37,7 @@ create
 
 feature -- Initialization
 
-	initialize
+	make
 			-- Setup `Current'
 		local
 			a_column, a_cell_renderer: POINTER
@@ -106,19 +106,24 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, 1 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_boolean (a_type_array.item, 2 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
-			list_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, a_type_array.item)			end
+			list_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, a_type_array.item)
+		end
 
 feature -- Access
 
 	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			--
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
 			a_gvalue.memory_free
 		end
@@ -129,14 +134,18 @@ feature -- Status setting
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if check_actions_internal /= Void then
 				check_actions_internal.call ([list_item])
@@ -147,14 +156,18 @@ feature -- Status setting
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, False)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if uncheck_actions_internal /= Void then
 				uncheck_actions_internal.call ([list_item])
@@ -163,7 +176,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_LIST;
+	interface: detachable EV_CHECKABLE_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -180,4 +193,14 @@ note
 
 
 end -- class EV_CHECKABLE_LIST_IMP
+
+
+
+
+
+
+
+
+
+
 

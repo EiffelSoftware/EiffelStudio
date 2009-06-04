@@ -29,8 +29,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	check_actions_internal: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
+	check_actions_internal: detachable EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Implementation of once per object `check_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 feature -- Event handling
 
@@ -53,8 +57,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	uncheck_actions_internal: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE;
+	uncheck_actions_internal: detachable EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Implementation of once per object `uncheck_actions'.
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -71,4 +79,15 @@ note
 
 
 end -- class EV_CHECKABLE_TREE_ACTION_SEQUENCES_I
+
+
+
+
+
+
+
+
+
+
+
 

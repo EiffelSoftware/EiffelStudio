@@ -19,7 +19,7 @@ create
 
 feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 
-	make (current_item: G; before_state, after_state: BOOLEAN)
+	make (current_item: detachable G; before_state, after_state: BOOLEAN)
 			-- Create a cursor pointing to `current_item'.
 			-- When `current_item' Void, must be before or after.
 		require
@@ -49,7 +49,7 @@ feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 
 feature {EV_DYNAMIC_LIST_I, EV_TABLE_I} -- Access
 
-	item: G
+	item: detachable G
 		-- Item `Current' points to.
 
 	after: BOOLEAN
@@ -76,4 +76,13 @@ note
 
 
 end -- class EV_DYNAMIC_LIST_CURSOR
+
+
+
+
+
+
+
+
+
 

@@ -9,13 +9,20 @@ class
 
 feature -- Access
 
-	target: EV_ABSTRACT_PICK_AND_DROPABLE
+	target: detachable EV_ABSTRACT_PICK_AND_DROPABLE
 		-- Target of PND menu item.
 
 	name: STRING_32
-		-- Name for PND menu item.
+			-- Name for PND menu item.
+		do
+			if attached internal_name as l_internal_name then
+				Result := l_internal_name
+			else
+				Result := ""
+			end
+		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 		-- Pixmap used in PND menu item, if Void then no pixmap is used.
 
 feature -- Element Change
@@ -25,7 +32,7 @@ feature -- Element Change
 		require
 			a_name_not_void: a_name /= Void
 		do
-			name := a_name
+			internal_name := a_name
 		ensure
 			name_assigned: name = a_name
 		end
@@ -51,6 +58,8 @@ feature {EV_APPLICATION_I} -- Implementation
 		ensure
 			target_assigned: target = a_target
 		end
+
+	internal_name: detachable STRING_32;
 
 note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

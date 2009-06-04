@@ -19,7 +19,7 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WIDGET_IMP}
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PRIMITIVE;
+	interface: detachable EV_PRIMITIVE note option: stable attribute end;
 
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
@@ -108,4 +108,8 @@ note
 
 
 end -- class EV_PRIMITIVE_IMP
+
+
+
+
 

@@ -15,7 +15,7 @@ deferred class
 inherit
 	EV_ANY_I
 		export
-			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_ANY_IMP}
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_ANY_I}
 				is_destroyed
 		end
 
@@ -58,10 +58,11 @@ feature {EV_ANY_I} -- Access
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, object_id, $c_object_dispose)
+			if internal_id = 0 then
+				internal_id := eif_current_object_id
+			end
+			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose)
 			c_object := l_c_object
-		ensure
-			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
 
 	frozen couple_object_id_with_gtk_object (a_gtk_object: POINTER; a_object_id: INTEGER)
@@ -78,7 +79,7 @@ feature {EV_ANY_I} -- Access
 			]"
 		end
 
-	frozen eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP
+	frozen eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		external
 			"C inline use %"ev_any_imp.h%""
@@ -128,7 +129,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
 		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
@@ -147,7 +148,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
 		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
@@ -253,9 +254,12 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			--
 		local
 			env: EV_ENVIRONMENT
+			l_app_imp: detachable EV_APPLICATION_IMP
 		once
 			create env
-			Result ?= env.application.implementation
+			l_app_imp ?= env.implementation.application_i
+			check l_app_imp /= Void end
+			Result := l_app_imp
 		end
 
 feature -- Measurement
@@ -282,4 +286,14 @@ note
 
 
 end -- class EV_ANY_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -7,7 +7,7 @@ note
 
 deferred class
 	EV_DOCKABLE_TARGET_ACTION_SEQUENCES_I
-	
+
 feature -- Event handling
 
 	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
@@ -23,8 +23,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	docked_actions_internal: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE;
+	docked_actions_internal: detachable EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
 			-- Implementation of once per object `docked_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -41,4 +45,14 @@ note
 
 
 end -- class EV_DOCKABLE_TARGET_ACTION_SEQUENCES_I
+
+
+
+
+
+
+
+
+
+
 

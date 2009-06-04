@@ -47,16 +47,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Initialize.
 		do
-			base_make (an_interface)
-			wel_make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set new UI style for dialog if supported.
 		do
+			wel_make
 			if shell32_version >= version_500 then
 				-- See header comment of {WEL_BIF_CONSTANTS}.Bif_usenewui
 				add_flag (Bif_usenewui)
@@ -191,7 +191,7 @@ feature {EV_ANY_I}
 
 feature {EV_ANY_I}
 
-	interface: EV_DIRECTORY_DIALOG;
+	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -208,4 +208,8 @@ note
 
 
 end -- class EV_DIRECTORY_DIALOG_IMP
+
+
+
+
 

@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision password field. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 			Result := Precursor + Es_password
 		end
 
-	interface: EV_PASSWORD_FIELD;
+	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +50,10 @@ note
 
 
 end -- class EV_PASSWORD_FIELD_IMP
+
+
+
+
+
+
 

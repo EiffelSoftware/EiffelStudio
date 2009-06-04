@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	background_color: EV_COLOR
+	background_color: detachable EV_COLOR
 			-- Color used to fill `Current'.
 
 feature -- Status report
@@ -63,4 +63,8 @@ note
 
 
 end -- class EV_MODEL_CLOSED
+
+
+
+
 

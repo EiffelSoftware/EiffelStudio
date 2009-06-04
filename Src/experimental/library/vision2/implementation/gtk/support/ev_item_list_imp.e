@@ -27,14 +27,14 @@ inherit
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_ITEM_LIST [G];
+	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
 
@@ -53,4 +53,8 @@ note
 
 
 end -- class EV_ITEM_LIST_IMP
+
+
+
+
 

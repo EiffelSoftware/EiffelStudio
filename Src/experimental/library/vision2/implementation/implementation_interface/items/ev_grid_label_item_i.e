@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface,
 			perform_redraw,
-			initialize,
+			make,
 			required_width
 		end
 
@@ -22,7 +22,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			must_recompute_text_dimensions := True
@@ -38,9 +38,10 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			l_interface: like interface
 		do
 			l_interface := interface
+			check l_interface /= Void end
 			Result := l_interface.left_border + text_width + l_interface.right_border
-			if l_interface.pixmap /= Void then
-				Result := Result + l_interface.pixmap.width + l_interface.spacing
+			if attached l_interface.pixmap as l_pixmap then
+				Result := Result + l_pixmap.width + l_interface.spacing
 			end
 		end
 
@@ -101,19 +102,19 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			l_text_dimensions: TUPLE [w: INTEGER; h: INTEGER]
 		do
 			if must_recompute_text_dimensions then
-				if parent_i /= Void then
+				if attached parent_i as l_parent_i then
 					l_text_dimensions := text_dimensions
-					if interface.font /= Void then
-						parent_i.string_size (interface.text, interface.font, l_text_dimensions)
+					if attached attached_interface.font as l_font then
+						l_parent_i.string_size (attached_interface.text, l_font, l_text_dimensions)
 					else
-						parent_i.string_size (interface.text, internal_default_font, l_text_dimensions)
+						l_parent_i.string_size (attached_interface.text, internal_default_font, l_text_dimensions)
 					end
 				else
 						-- Item is not parented so we use the slower font implementation directly.
-					if interface.font /= Void then
-						l_text_dimensions := interface.font.string_size (interface.text)
+					if attached attached_interface.font as l_font then
+						l_text_dimensions := l_font.string_size (attached_interface.text)
 					else
-						l_text_dimensions := internal_default_font.string_size (interface.text)
+						l_text_dimensions := internal_default_font.string_size (attached_interface.text)
 					end
 				end
 				internal_text_width := l_text_dimensions.w
@@ -138,7 +139,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		local
 			l_interface: like interface
 			back_color: EV_COLOR
-			l_pixmap: EV_PIXMAP
+			l_pixmap: detachable EV_PIXMAP
 			pixmap_width: INTEGER
 			pixmap_height: INTEGER
 			left_border, right_border, top_border, bottom_border, spacing_used: INTEGER
@@ -150,13 +151,18 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			selection_x, selection_y, selection_width, selection_height: INTEGER
 			focused: BOOLEAN
 			l_clip_width, l_clip_height: INTEGER
+			l_parent_i: like parent_i
+			l_column_i: like column_i
 		do
 			recompute_text_dimensions
 				-- Update the dimensions of the text if required.
 
 				-- Retrieve properties from interface
 			l_interface := interface
-			focused := parent_i.drawables_have_focus
+			check l_interface /= Void end
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			focused := l_parent_i.drawables_have_focus
 			left_border := l_interface.left_border
 			right_border := l_interface.right_border
 			top_border := l_interface.top_border
@@ -219,25 +225,29 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			text_y := top_border + vertical_text_offset_into_available_space
 
 
-			if l_interface.layout_procedure /= Void then
+			if attached l_interface.layout_procedure as l_layout_procedure then
 				grid_label_item_layout.set_pixmap_x (pixmap_x)
 				grid_label_item_layout.set_pixmap_y (pixmap_y)
 				grid_label_item_layout.set_text_x (text_x)
 				grid_label_item_layout.set_text_y (text_y)
 				grid_label_item_layout.set_grid_label_item (l_interface)
 				grid_label_item_layout.set_has_text_pixmap_overlapping (True)
-				l_interface.layout_procedure.call ([l_interface, grid_label_item_layout])
+				l_layout_procedure.call ([l_interface, grid_label_item_layout])
 				text_x := grid_label_item_layout.text_x
 				text_y := grid_label_item_layout.text_y
 				pixmap_x := grid_label_item_layout.pixmap_x
 				pixmap_y := grid_label_item_layout.pixmap_y
 
-				if pixmap_x > text_x and not grid_label_item_layout.has_text_pixmap_overlapping then
-					space_remaining_for_text := pixmap_x - text_x
+				if attached grid_label_item_layout.grid_label_item as l_grid_label_item then
+					if pixmap_x > text_x and not grid_label_item_layout.has_text_pixmap_overlapping then
+						space_remaining_for_text := pixmap_x - text_x
+					else
+						space_remaining_for_text := l_grid_label_item.width - text_x
+					end
+					space_remaining_for_text_vertical := l_grid_label_item.height - text_y
 				else
-					space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
+					check False end
 				end
-				space_remaining_for_text_vertical := grid_label_item_layout.grid_label_item.height - text_y
 			end
 
 			drawable.set_copy_mode
@@ -245,9 +255,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			drawable.set_foreground_color (back_color)
 			if is_selected then
 				if focused then
-					drawable.set_foreground_color (parent_i.focused_selection_color)
+					drawable.set_foreground_color (l_parent_i.focused_selection_color)
 				else
-					drawable.set_foreground_color (parent_i.non_focused_selection_color)
+					drawable.set_foreground_color (l_parent_i.non_focused_selection_color)
 				end
 
 					-- Calculate the area that must be selected in `Current'.
@@ -265,9 +275,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 				drawable.fill_rectangle (selection_x + an_indent, selection_y, selection_width, selection_height)
 				if focused then
-					drawable.set_foreground_color (parent_i.focused_selection_text_color)
+					drawable.set_foreground_color (l_parent_i.focused_selection_text_color)
 				else
-					drawable.set_foreground_color (parent_i.non_focused_selection_text_color)
+					drawable.set_foreground_color (l_parent_i.non_focused_selection_text_color)
 				end
 				drawable.set_copy_mode
 			else
@@ -276,20 +286,23 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				-- Now assign a clip area based on the borders of the item before we draw the text and the pixmap as they
 				-- may be clipped based on the amount of space available to them based on the border settings.
 
-			l_clip_width := column_i.width - right_border
+			l_column_i := column_i
+			check l_column_i /= Void end
+
+			l_clip_width := l_column_i.width - right_border
 			l_clip_height := height - bottom_border
 
 			if l_clip_width > 0 and then l_clip_height > 0 then
 					-- Only draw if the clipping area is not empty
-				internal_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
+				internal_rectangle.move_and_resize (left_border, top_border, l_column_i.width - right_border, height - bottom_border)
 				drawable.set_clip_area (internal_rectangle)
 				if l_pixmap /= Void then
 						-- Now blit the pixmap
 					drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
 				end
 
-				if l_interface.font /= Void then
-					drawable.set_font (l_interface.font)
+				if attached l_interface.font as l_font then
+					drawable.set_font (l_font)
 				else
 					drawable.set_font (internal_default_font)
 				end
@@ -312,7 +325,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID_LABEL_ITEM;
+	interface: detachable EV_GRID_LABEL_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -328,4 +341,13 @@ note
 		]"
 
 end
+
+
+
+
+
+
+
+
+
 

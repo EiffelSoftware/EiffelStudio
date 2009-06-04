@@ -24,18 +24,18 @@ inherit
 			gtk_insert_i_th
 		redefine
 			interface,
-			initialize
+			make
 		end
 
-	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
+	EV_DYNAMIC_LIST_IMP [detachable EV_WIDGET]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
 			Precursor {EV_CONTAINER_IMP}
@@ -44,12 +44,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			v_imp ?= v.implementation
+			check v_imp /= Void end
 			gtk_insert_i_th (list_widget, v_imp.c_object, i - 1)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -59,12 +60,13 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 			a_index: INTEGER
 		do
 			a_index := index
 				-- Store the index in case it is changed as a result of an event on the pass back to gtk
-			v_imp ?= i_th (i).implementation
+			v_imp ?= interface_i_th (i).implementation
+			check v_imp /= Void end
 			child_array.go_i_th (i)
 			child_array.remove
 			on_removed_item (v_imp)
@@ -81,7 +83,7 @@ feature {NONE} -- Implementation
 			Result := container_widget
 		end
 
-	interface: EV_WIDGET_LIST;
+	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -100,4 +102,8 @@ note
 
 
 end -- class EV_WIDGET_LIST_IMP
+
+
+
+
 

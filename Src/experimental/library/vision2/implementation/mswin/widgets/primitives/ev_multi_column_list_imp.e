@@ -17,7 +17,7 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
 			interface,
-			initialize,
+			make,
 			remove_row_pixmap,
 			wipe_out
 		end
@@ -40,17 +40,17 @@ inherit
 			on_key_down,
 			interface,
 			set_default_minimum_size,
-			initialize,
+			make,
 			on_size,
 			enable_sensitive, disable_sensitive,
-			background_color,
+			background_color_internal,
 			destroy
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW, EV_MULTI_COLUMN_LIST_ROW_IMP]
 		redefine
 			interface,
-			initialize,
+			make,
 			wipe_out
 		end
 
@@ -139,27 +139,27 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Make with `an_interface'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		local
+			wel_column: WEL_LIST_VIEW_COLUMN
+		do
 			create ev_children.make (0)
 			create internal_selected_items.make (2)
 
 				-- Create the WEL LISTVIEW.
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-		end
-
-	initialize
-			-- Initialize `Current'.
-		local
-			wel_column: WEL_LIST_VIEW_COLUMN
-		do
-			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
 			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 
 				-- Create the last column
 			create wel_column.make
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW
+	selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
@@ -231,7 +231,7 @@ feature -- Status setting
 	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `an_item' is visible in `Current'.
 		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			item_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			item_imp ?= an_item.implementation
 			check
@@ -292,7 +292,7 @@ feature -- Status setting
 	disable_multiple_selection
 			-- Allow only one item to be selected.
 		local
-			old_selected_item: EV_MULTI_COLUMN_LIST_ROW
+			old_selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 		do
 			if multiple_selection_enabled then
 					-- Unselect all selected and remember the top
@@ -377,10 +377,14 @@ feature -- Status setting
 
 	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
+		local
+			l_background_color_imp: like background_color_imp
 		do
-			background_color_imp ?= color.implementation
-			set_text_background_color (background_color_imp)
-			wel_set_background_color (background_color_imp)
+			l_background_color_imp ?= color.implementation
+			check l_background_color_imp /= Void end
+			background_color_imp := l_background_color_imp
+			set_text_background_color (l_background_color_imp)
+			wel_set_background_color (l_background_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -389,9 +393,13 @@ feature -- Status setting
 
 	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
+		local
+			l_foreground_color_imp: like foreground_color_imp
 		do
-			foreground_color_imp ?= color.implementation
-			set_text_foreground_color (foreground_color_imp)
+			l_foreground_color_imp ?= color.implementation
+			check l_foreground_color_imp /= Void end
+			foreground_color_imp := l_foreground_color_imp
+			set_text_foreground_color (l_foreground_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -449,7 +457,7 @@ feature {NONE} -- Implementation
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
 			col_width: INTEGER
-			col_text: STRING_32
+			col_text: detachable STRING_32
 			col_index: INTEGER
 		do
 			if column_widths.count >= wel_column_count + 1 then
@@ -531,8 +539,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	find_item_at_position (x_pos, y_pos: INTEGER):
-		EV_MULTI_COLUMN_LIST_ROW_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Find the item at the given position`x_pos', 1y_pos'
 			-- relative to `Current'.
 		local
@@ -571,7 +578,7 @@ feature -- Element change
 			until
 				c.after
 			loop
-				c.item.interface.destroy
+				c.item.attached_interface.destroy
 				c.forth
 			end
 			reset_content
@@ -587,7 +594,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			litem: WEL_LIST_VIEW_ITEM
 			first_string: STRING_32
 		do
-			list := item_imp.interface
+			list := item_imp.attached_interface
 
 				-- Add the new columns if some are needed
 			if list.count > wel_column_count then
@@ -621,8 +628,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 				list.forth
 			end
 				-- Now update image.
-			if item_imp.pixmap /= Void then
-				set_row_pixmap (an_index, item_imp.pixmap)
+			if attached item_imp.pixmap as l_pixmap then
+				set_row_pixmap (an_index, l_pixmap)
 			end
 			invalidate
 		end
@@ -658,13 +665,19 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			row_not_void: row /= Void
 		local
 			litem: WEL_LIST_VIEW_ITEM
+			l_image_list: like image_list
+			l_internal_pixmap: detachable EV_PIXMAP
 		do
 			create litem.make_with_attributes (
 				Lvif_text, internal_get_index (row) - 1, item_index - 1, 0, an_item)
 					-- Add image to the item if one is set.
 				if item_index = 1 and then row.internal_pixmap /= Void then
-					image_list.add_pixmap (row.internal_pixmap)
-					litem.set_image (image_list.last_position)
+					l_image_list := image_list
+					check l_image_list /= Void end
+					l_internal_pixmap := row.internal_pixmap
+					check l_internal_pixmap /= Void end
+					l_image_list.add_pixmap (l_internal_pixmap)
+					litem.set_image (l_image_list.last_position)
 				end
 			{WEL_API}.send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 		end
@@ -683,9 +696,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			from
 				current_index := item_index + 1
 			until
-				current_index > row.interface.count
+				current_index > row.attached_interface.count
 			loop
-				set_item_text (row, row.interface.i_th (current_index), current_index)
+				set_item_text (row, row.attached_interface.i_th (current_index), current_index)
 				current_index := current_index + 1
 			end
 		end
@@ -698,12 +711,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			from
 				current_index := item_index
 			until
-				current_index > row.interface.count
+				current_index > row.attached_interface.count
 			loop
-				set_item_text (row, row.interface.i_th (current_index), current_index)
+				set_item_text (row, row.attached_interface.i_th (current_index), current_index)
 				current_index := current_index + 1
 			end
-			set_item_text (row, "", row.interface.count + 1)
+			set_item_text (row, "", row.attached_interface.count + 1)
 		end
 
 	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER
@@ -788,7 +801,9 @@ feature {NONE} -- Implementation, Pixmap handling
 			image_list_not_void: image_list /= Void
 		do
 				-- Destroy the image list.
-			image_list.destroy
+			if attached image_list as l_image_list then
+				l_image_list.destroy
+			end
 			image_list := Void
 
 				-- Remove the image list from the multicolumn list.
@@ -803,7 +818,7 @@ feature {NONE} -- Implementation, Pixmap handling
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 			cur: CURSOR
 		do
 				-- We only do the job if there are some images.
@@ -844,15 +859,18 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 		local
 			image_index		: INTEGER
 			wel_row			: WEL_LIST_VIEW_ITEM
+			l_image_list	: like image_list
 		do
 				-- Create the imagelist and associate it
 				-- to the control if it's not already done.
 			if image_list = Void then
 				setup_image_list
 			end
+			l_image_list := image_list
+			check l_image_list /= Void end
 
-			image_list.add_pixmap (a_pixmap)
-			image_index := image_list.last_position
+			l_image_list.add_pixmap (a_pixmap)
+			image_index := l_image_list.last_position
 
 				-- Retrieve the first item of the row
 			wel_row := wel_get_item (a_row - 1, 0)
@@ -902,16 +920,16 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 			loop
 				child_imp := ev_children.item
 				child_imp.on_orphaned
-				remove_item_actions.call ([child_imp.interface])
+				remove_item_actions.call ([child_imp.attached_interface])
 				child_imp.set_parent_imp (Void)
-				if internal_selected_items.has (child_imp.interface) then
+				if internal_selected_items.has (child_imp.attached_interface) then
 					if child_imp.deselect_actions_internal /= Void then
-						child_imp.deselect_actions_internal.call (Void)
+						child_imp.deselect_actions.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call ([child_imp.interface])
+						deselect_actions.call ([child_imp.attached_interface])
 					end
-					internal_selected_items.prune (child_imp.interface)
+					internal_selected_items.prune (child_imp.attached_interface)
 				end
 				ev_children.remove
 			end
@@ -931,7 +949,7 @@ feature {NONE} -- Selection implementation
 			-- Current selected items (non cached version)
 		local
 			i: INTEGER
-			interf: EV_MULTI_COLUMN_LIST_ROW
+			imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			c: like ev_children
 			wel_sel_items: like wel_selected_items
 		do
@@ -943,8 +961,8 @@ feature {NONE} -- Selection implementation
 			until
 				i = selected_count
 			loop
-				interf ?= (c @ (wel_sel_items @ i + 1)).interface
-				Result.extend (interf)
+				imp := (c @ (wel_sel_items @ i + 1))
+				Result.extend (imp.attached_interface)
 				i := i + 1
 			end
 		ensure
@@ -958,7 +976,7 @@ feature {NONE} -- WEL Implementation
 			-- Propagate `event_id' and `button' to item at position
 			-- `x_pos', `y_pos'. Called on pointer press.
 		local
-			pre_drop_mcl_row, post_drop_mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			pre_drop_mcl_row, post_drop_mcl_row: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do
@@ -978,7 +996,7 @@ feature {NONE} -- WEL Implementation
 				is_pnd_in_transport and not item_is_in_pnd then
 				if pre_drop_mcl_row.pointer_button_press_actions_internal
 					/= Void then
-					pre_drop_mcl_row.interface.pointer_button_press_actions.call
+					pre_drop_mcl_row.attached_interface.pointer_button_press_actions.call
 					([x_pos, y_pos - relative_y (pre_drop_mcl_row), button,
 					0.0, 0.0, 0.0, pt.x, pt.y])
 				end
@@ -989,13 +1007,13 @@ feature {NONE} -- WEL Implementation
 				--| was originally clicked on, has not been removed during the press actions.
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
-			if pre_drop_mcl_row /= Void and
-				pre_drop_mcl_row.is_transport_enabled and not
-				parent_is_pnd_source and pre_drop_mcl_row.parent /= Void then
+			if pre_drop_mcl_row /= Void and then
+				pre_drop_mcl_row.is_transport_enabled and then not
+				parent_is_pnd_source and then pre_drop_mcl_row.parent /= Void then
 					pre_drop_mcl_row.pnd_press (
 						x_pos, y_pos, button, pt.x, pt.y)
-				elseif pnd_item_source /= Void then
-					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				elseif attached pnd_item_source as l_pnd_item_source then
+					l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
@@ -1003,7 +1021,7 @@ feature {NONE} -- WEL Implementation
 			end
 
 			if not press_actions_called and call_press_event then
-				interface.pointer_button_press_actions.call
+				attached_interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 
@@ -1017,7 +1035,7 @@ feature {NONE} -- WEL Implementation
 				-- then call `pointer_button_press_actions'.
 				if post_drop_mcl_row /= Void and
 					pre_drop_mcl_row = post_drop_mcl_row and call_press_event then
-					post_drop_mcl_row.interface.pointer_button_press_actions.
+					post_drop_mcl_row.attached_interface.pointer_button_press_actions.
 						call ([x_pos, y_pos - relative_y (post_drop_mcl_row),
 						button, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
@@ -1031,13 +1049,13 @@ feature {NONE} -- WEL Implementation
 			-- Propagate `event_id' and `button' to item at position
 			-- `x_pos', `y_pos'. Called on pointer press.
 		local
-			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			mcl_row: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void then
-				mcl_row.interface.pointer_double_press_actions.call ([x_pos,
+				mcl_row.attached_interface.pointer_double_press_actions.call ([x_pos,
 					y_pos - relative_y (mcl_row), button, 0.0, 0.0, 0.0,
 					pt.x, pt.y])
 			end
@@ -1197,13 +1215,13 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface
 			else
 				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
@@ -1226,7 +1244,7 @@ feature {NONE} -- WEL Implementation
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW)
 			-- A column was tapped.
 		do
-			interface.column_title_click_actions.call ([info.isubitem + 1])
+			attached_interface.column_title_click_actions.call ([info.isubitem + 1])
 			disable_default_processing
 		end
 
@@ -1234,7 +1252,7 @@ feature {NONE} -- WEL Implementation
 			-- An item has changed.
 			--| For example, one of the items has been selected or deselected.
 		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			item_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
@@ -1243,11 +1261,12 @@ feature {NONE} -- WEL Implementation
 						-- Item is being selected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
+					check item_imp /= Void end
 					if item_imp.select_actions_internal /= Void then
-						item_imp.select_actions_internal.call (Void)
+						item_imp.select_actions.call (Void)
 					end
 					if select_actions_internal /= Void then
-						select_actions_internal.call ([item_imp.interface])
+						select_actions.call ([item_imp.attached_interface])
 					end
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
@@ -1256,11 +1275,12 @@ feature {NONE} -- WEL Implementation
 						-- Item is being deselected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
+					check item_imp /= Void end
 					if item_imp.deselect_actions_internal /= Void then
-						item_imp.deselect_actions_internal.call (Void)
+						item_imp.deselect_actions.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call ([item_imp.interface])
+						deselect_actions.call ([item_imp.attached_interface])
 					end
 				end
 			end
@@ -1284,17 +1304,17 @@ feature {NONE} -- WEL Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Mouse moved on `Current'.
 		local
-			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			mcl_row: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void then
-				mcl_row.interface.pointer_motion_actions.call ([x_pos,
+				mcl_row.attached_interface.pointer_motion_actions.call ([x_pos,
 					y_pos - relative_y (mcl_row), 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
-			if pnd_item_source /= Void then
-				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
@@ -1311,12 +1331,12 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	image_list: EV_IMAGE_LIST_IMP
+	image_list: detachable EV_IMAGE_LIST_IMP
 			-- Image list to store all images required by items.
 
 feature {EV_ANY, EV_ANY_I} -- Interface
 
-	interface: EV_MULTI_COLUMN_LIST;
+	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -1333,4 +1353,14 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
+
+
+
+
+
+
+
+
+
+
 

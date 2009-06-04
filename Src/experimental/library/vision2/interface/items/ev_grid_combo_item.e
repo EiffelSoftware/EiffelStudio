@@ -43,8 +43,8 @@ feature -- Element change
 		require
 			a_string_array_not_void: a_string_array /= Void
 		do
-			if combo_box /= Void then
-				combo_box.set_strings (a_string_array)
+			if attached combo_box as l_combo_box then
+				l_combo_box.set_strings (a_string_array)
 			end
 			item_strings := a_string_array
 		ensure
@@ -53,11 +53,11 @@ feature -- Element change
 
 feature -- Access
 
-	combo_box: EV_COMBO_BOX
+	combo_box: detachable EV_COMBO_BOX
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
-	item_strings: INDEXABLE [STRING_GENERAL, INTEGER]
+	item_strings: detachable INDEXABLE [STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
 feature {NONE} -- Implementation
@@ -72,16 +72,19 @@ feature {NONE} -- Implementation
 			a_widget: EV_WIDGET
 			a_x_position, a_y_position: INTEGER
 			l_x_coord: INTEGER
+			l_parent: like parent
 		do
 			a_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
 			l_x_offset := left_border
-			if pixmap /= Void then
+			if attached pixmap as l_pixmap then
 					-- Calculate x offset for pixmap spacing if any
-				l_x_offset := l_x_offset + pixmap.width + spacing
+				l_x_offset := l_x_offset + l_pixmap.width + spacing
 			end
 
-			l_x_coord := (virtual_x_position + l_x_offset) - parent.virtual_x_position
+			l_parent := parent
+			check l_parent /= Void end
+			l_x_coord := (virtual_x_position + l_x_offset) - l_parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)
 
 			a_width := a_popup.width - l_x_coord - right_border
@@ -114,22 +117,25 @@ feature {NONE} -- Implementation
 
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
+		local
+			l_combo_box: EV_COMBO_BOX
 		do
-			create combo_box
-			popup_window.extend (combo_box)
+			create l_combo_box
+			combo_box := l_combo_box
+			popup_window.extend (l_combo_box)
 
-			if font /= Void then
-				combo_box.set_font (font)
+			if attached font as l_font then
+				l_combo_box.set_font (l_font)
 			end
 
-			if item_strings /= Void then
-				combo_box.set_strings (item_strings)
+			if attached item_strings as l_item_strings then
+				l_combo_box.set_strings (l_item_strings)
 			end
-			combo_box.set_background_color (implementation.displayed_background_color)
+			l_combo_box.set_background_color (implementation.displayed_background_color)
 			popup_window.set_background_color (implementation.displayed_background_color)
-			combo_box.set_foreground_color (implementation.displayed_foreground_color)
+			l_combo_box.set_foreground_color (implementation.displayed_foreground_color)
 
-			combo_box.set_text (text)
+			l_combo_box.set_text (text)
 
 			update_popup_dimensions (popup_window)
 
@@ -140,20 +146,22 @@ feature {NONE} -- Implementation
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
-			combo_box.set_focus
-			combo_box.focus_out_actions.extend (agent deactivate)
-			combo_box.return_actions.extend (agent deactivate)
-			user_cancelled_activation := False
-			combo_box.key_press_actions.extend (agent handle_key)
+			if attached combo_box as l_combo_box then
+				l_combo_box.set_focus
+				l_combo_box.focus_out_actions.extend (agent deactivate)
+				l_combo_box.return_actions.extend (agent deactivate)
+				user_cancelled_activation := False
+				l_combo_box.key_press_actions.extend (agent handle_key)
+			end
 		end
 
 	deactivate
 			-- Cleanup from previous call to activate.
 		do
-			if combo_box /= Void then
-				combo_box.focus_out_actions.wipe_out
+			if attached combo_box as l_combo_box then
+				l_combo_box.focus_out_actions.wipe_out
 				if not user_cancelled_activation then
-					set_text (combo_box.text)
+					set_text (l_combo_box.text)
 				end
 				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box := Void
@@ -161,7 +169,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void
+	combo_box_parented_during_activation: attached combo_box as l_combo_box implies l_combo_box.parent /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -178,4 +186,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

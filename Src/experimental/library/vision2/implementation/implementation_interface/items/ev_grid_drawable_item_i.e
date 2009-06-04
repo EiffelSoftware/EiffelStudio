@@ -51,8 +51,11 @@ feature {NONE} -- Implementation
 			-- Redraw `Current'.
 		local
 			pixmap: EV_PIXMAP
+			l_parent_i: like parent_i
 		do
-			pixmap := parent_i.drawer.drawable_item_buffer_pixmap
+			l_parent_i := parent_i
+			check l_parent_i /= Void end
+			pixmap := l_parent_i.drawer.drawable_item_buffer_pixmap
 			if pixmap.width < a_width or pixmap.height < a_height then
 					-- Resize `pixmap'so that it is at least as large as `Current'.
 					-- Note that we do not reduce the size of `pixmap' for performance reasons.
@@ -93,12 +96,12 @@ feature {EV_ANY_I} -- Implementation
 			create Result
 		end
 
-	expose_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
+	expose_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] note option: stable attribute end
 			-- Implementation of once per object `expose_actions'.
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID_DRAWABLE_ITEM;
+	interface: detachable EV_GRID_DRAWABLE_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -117,4 +120,8 @@ note
 
 
 end
+
+
+
+
 

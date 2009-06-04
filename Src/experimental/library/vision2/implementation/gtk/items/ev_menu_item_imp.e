@@ -17,7 +17,7 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			needs_event_box
 		end
 
@@ -45,20 +45,26 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a menu.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	initialize_menu_item
+			-- Create and initialize gtk menu object.
+		do
 			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
 			pixmapable_imp_initialize
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		local
 			box: POINTER
 		do
+			initialize_menu_item
 			Precursor {EV_ITEM_IMP}
 			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
@@ -121,12 +127,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_activate
 		local
-			p_imp: EV_MENU_ITEM_LIST_IMP
+			p_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
 			p_imp ?= parent_imp
 			if p_imp /= Void then
 				if p_imp.item_select_actions_internal /= Void then
-					p_imp.item_select_actions_internal.call ([interface])
+					p_imp.item_select_actions.call ([attached_interface])
 				end
 				{EV_GTK_EXTERNALS}.gtk_menu_shell_deactivate (p_imp.list_widget)
 			end
@@ -136,7 +142,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	interface: EV_MENU_ITEM;
+	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -153,4 +159,8 @@ note
 
 
 end -- class EV_MENU_ITEM_IMP
+
+
+
+
 

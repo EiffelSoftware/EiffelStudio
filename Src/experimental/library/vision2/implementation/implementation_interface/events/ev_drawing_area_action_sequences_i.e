@@ -32,8 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	expose_actions_internal: EV_GEOMETRY_ACTION_SEQUENCE;
+	expose_actions_internal: detachable EV_GEOMETRY_ACTION_SEQUENCE
 			-- Implementation of once per object `expose_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +54,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

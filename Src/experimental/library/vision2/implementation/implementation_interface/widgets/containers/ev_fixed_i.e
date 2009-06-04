@@ -123,7 +123,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FIXED;
+	interface: detachable EV_FIXED note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -142,4 +142,11 @@ note
 
 
 end -- class EV_FIXED_I
+
+
+
+
+
+
+
 

@@ -49,19 +49,20 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make
+			assign_interface (an_interface)
+
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 			--| Currently no need to do anything here.
 		do
+			wel_make
 			enable_page_numbers
 			set_maximum_range (1)
 			add_flag (pd_enableprinthook)
@@ -75,9 +76,9 @@ feature -- Access
 			-- Return a print context for the dialog box.
 		do
 			Result := Precursor {EV_PRINT_DIALOG_I}
-			if private_dc /= Void then
-				private_dc.set_shared
-				Result.set_printer_context (private_dc.item)
+			if attached private_dc as l_private_dc then
+				l_private_dc.set_shared
+				Result.set_printer_context (l_private_dc.item)
 				Result.set_horizontal_resolution (((dc.width / dc.device_caps (logical_pixels_x)) * 72).rounded - 1)
 				Result.set_vertical_resolution (((dc.height / dc.device_caps (logical_pixels_y)) * 72).rounded - 1)
 					-- Subtract the -1 as print projector coordinates are 0 based.
@@ -87,11 +88,14 @@ feature -- Access
 
 	title: STRING_32
 			-- Title of `Current'.
+		local
+			l_result: detachable STRING_32
 		do
-			Result := internal_title
-			if Result = Void then
-				Result := "Print"
+			l_result := internal_title
+			if l_result = Void then
+				l_result := "Print"
 			end
+			Result := l_result
 		end
 
 feature -- Element change
@@ -256,7 +260,7 @@ feature -- Status_report
 
 feature {NONE} -- Implementation
 
-	internal_title: STRING_32
+	internal_title: detachable STRING_32
 			-- Storage for `title'.
 
 	activate (a_parent: WEL_COMPOSITE_WINDOW)
@@ -275,8 +279,8 @@ feature {NONE} -- Implementation
 			inspect msg
 			when {WEL_WM_CONSTANTS}.wm_initdialog then
 					-- Initialize the title of dialog properly.
-				if internal_title /= Void then
-					create l_str.make (internal_title)
+				if attached internal_title as l_internal_title then
+					create l_str.make (l_internal_title)
 					{WEL_API}.set_window_text (hdlg, l_str.item)
 				end
 			else
@@ -298,4 +302,8 @@ note
 
 
 end -- class EV_PRINT_DIALOG_IMP
+
+
+
+
 

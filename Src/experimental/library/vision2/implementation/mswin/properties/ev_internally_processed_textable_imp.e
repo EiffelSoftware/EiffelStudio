@@ -38,10 +38,11 @@ feature {NONE} -- Implementation
 	escaped_text (s: STRING_GENERAL): STRING_32
 			-- `text' with doubled ampersands.
 		do
-			if s /= Void then
-				Result := s.twin
-				escape_ampersands (Result)
+			Result := s.as_string_32
+			if Result = s then
+				create Result.make_from_string (s)
 			end
+			escape_ampersands (Result)
 		end
 
 	escape_ampersands (s: STRING_32)
@@ -117,4 +118,13 @@ note
 
 
 end -- class EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
+
+
+
+
+
+
+
+
+
 

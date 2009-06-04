@@ -78,18 +78,18 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the menu item.
 		do
-			base_make (an_interface)
-			make_id
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `is_sensitive' True.
 		do
+			make_id
 			is_sensitive := True
 			set_is_initialized (True)
 			set_text ("")
@@ -133,8 +133,8 @@ feature -- Status setting
    			-- Set current item sensitive.
 		do
 			is_sensitive := True
-			if has_parent then
-				parent_imp.enable_item (id)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.enable_item (id)
 			end
    		end
 
@@ -142,8 +142,8 @@ feature -- Status setting
    			-- Set current item insensitive.
 		do
 			is_sensitive := False
-			if has_parent then
-				parent_imp.disable_item (id)
+			if has_parent and then attached parent_imp as l_parent_imp then
+				l_parent_imp.disable_item (id)
 			end
    		end
 
@@ -164,12 +164,13 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
-			a_menu_bar: EV_MENU_BAR_IMP
-			a_menu: EV_MENU_IMP
+			a_menu_bar: detachable EV_MENU_BAR_IMP
+			a_menu: detachable EV_MENU_IMP
 		do
 			a_menu_bar ?= parent_imp
 			if a_menu_bar = Void then
 				a_menu ?= parent_imp
+				check a_menu /= Void end
 				Result := screen_x - a_menu.screen_x
 			else
 				Result := screen_x - a_menu_bar.screen_x
@@ -179,12 +180,13 @@ feature -- Measurement
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
-			a_menu_bar: EV_MENU_BAR_IMP
-			a_menu: EV_MENU_IMP
+			a_menu_bar: detachable EV_MENU_BAR_IMP
+			a_menu: detachable EV_MENU_IMP
 		do
 			a_menu_bar ?= parent_imp
 			if a_menu_bar = Void then
 				a_menu ?= parent_imp
+				check a_menu /= Void end
 				Result := screen_y - a_menu.screen_y
 			else
 				Result := screen_y - a_menu_bar.screen_y
@@ -246,12 +248,14 @@ feature {NONE} -- Implementation
 			--| Does not return internal toolkit string because it is possible
 			--| to set the string without parent.
 		do
-			if real_text /= Void then
-				Result := real_text.twin
+			if attached real_text as l_real_text then
+				Result := l_real_text.twin
+			else
+				Result := ""
 			end
 		end
 
-	real_text: STRING_32
+	real_text: detachable STRING_32
 
 	wel_set_text (a_text: STRING_GENERAL)
 			-- Set `text' to `a_txt'. See `wel_text'.
@@ -261,32 +265,34 @@ feature {NONE} -- Implementation
 			end
 
 				-- Force the menu bar to be recomputed.
-			if parent_imp /= Void then
-				parent_imp.rebuild_control
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.rebuild_control
 			end
 		end
 
 	text_length: INTEGER
 			-- Length of text'.
 		do
-			Result := real_text.count
+			if attached real_text as l_real_text then
+				Result := l_real_text.count
+			end
 		end
 
-	parent_imp: EV_MENU_ITEM_LIST_IMP
+	parent_imp: detachable EV_MENU_ITEM_LIST_IMP
 			-- The menu or menu-bar this item is in.
 
-	parent: EV_MENU_ITEM_LIST
+	parent: detachable EV_MENU_ITEM_LIST
 			-- Item list containing `Current'.
 		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result ?= l_parent_imp.interface
 			end
 		end
 
 	has_parent: BOOLEAN
 			-- Is this menu item in a menu?
 		do
-			Result := parent_imp /= Void and then parent_imp.item_exists (id)
+			Result := attached parent_imp as l_parent_imp and then l_parent_imp.item_exists (id)
 		end
 
 	remove_pixmap
@@ -294,11 +300,11 @@ feature {NONE} -- Implementation
 		do
 			if private_pixmap /= Void then
 				private_pixmap := Void
-				if parent_imp /= Void then
-					parent_imp.internal_replace (Current, parent_imp.index_of (interface, 1))
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.internal_replace (Current, l_parent_imp.index_of (interface, 1))
 
 						-- Force the menu bar to be recomputed.
-					parent_imp.rebuild_control
+					l_parent_imp.rebuild_control
 				end
 			end
 		end
@@ -307,11 +313,11 @@ feature {NONE} -- Implementation
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			Precursor (a_pixmap)
-			if parent_imp /= Void then
-				parent_imp.internal_replace (Current, parent_imp.index_of (interface, 1))
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.internal_replace (Current, l_parent_imp.index_of (interface, 1))
 
 						-- Force the menu bar to be recomputed.
-				parent_imp.rebuild_control
+				l_parent_imp.rebuild_control
 			end
 		end
 
@@ -335,11 +341,11 @@ feature {NONE} -- Implementation
 
 feature {EV_MENU_ITEM_IMP} -- Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP
-			-- Window containing `Current' in parenting heirarchy.
+	top_level_window_imp: detachable EV_WINDOW_IMP
+			-- Window containing `Current' in parenting hierarchy.
 		local
-			a_menu: EV_MENU_IMP
-			a_menu_bar: EV_MENU_BAR_IMP
+			a_menu: detachable EV_MENU_IMP
+			a_menu_bar: detachable EV_MENU_BAR_IMP
 		do
 			if parent_imp /= Void then
 				a_menu ?= parent_imp
@@ -446,19 +452,21 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 			pixmap_height: INTEGER
 			text_height: INTEGER
 		do
-			text_height := menu_font.string_height (real_text) + 4
-			if pixmap_imp /= Void then
-				pixmap_height := pixmap_imp.height + 4 -- We add + 4 for drawing the edge when the item is selected
-				Result := text_height.max (pixmap_height)
-			else
-				Result := text_height
+			if attached real_text as l_real_text then
+				text_height := menu_font.string_height (l_real_text) + 4
+				if attached pixmap_imp as l_pixmap_imp then
+					pixmap_height := l_pixmap_imp.height + 4 -- We add + 4 for drawing the edge when the item is selected
+					Result := text_height.max (pixmap_height)
+				else
+					Result := text_height
+				end
 			end
 		end
 
 	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Process `Wm_measureitem' message.
 		local
-			par_imp: EV_MENU_IMP
+			par_imp: detachable EV_MENU_IMP
 		do
 			par_imp ?= parent_imp
 			if par_imp /= void then
@@ -471,7 +479,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
 		local
-			par_imp: EV_MENU_IMP
+			par_imp: detachable EV_MENU_IMP
 		do
 			par_imp ?= parent_imp
 			if par_imp /= void then
@@ -514,8 +522,8 @@ feature {NONE} -- WEL Implementation
 			if not accel_text.is_empty then
 				accel_text_width := menu_font.string_width (" "+accel_text)
 			end
-			if pixmap_imp /= Void then
-				pixmap_width := pixmap_imp.width + Menu_bar_item_pixmap_text_space
+			if attached pixmap_imp as l_pixmap_imp then
+				pixmap_width := l_pixmap_imp.width + Menu_bar_item_pixmap_text_space
 			end
 
 				-- Compute the result
@@ -556,7 +564,7 @@ feature {NONE} -- WEL Implementation
 			on_draw_menu_item_left_part (draw_item_struct)
 
 				-- Draw the text part
-			if real_text /= void then
+			if attached real_text as l_real_text then
 					-- Select the right colors
 				if selected_state then
 					background_color := system_color_highlight
@@ -583,7 +591,7 @@ feature {NONE} -- WEL Implementation
 				draw_dc.set_background_color (background_color)
 
 					-- Compute where to put texts
-				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (real_text)) // 2)
+				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (l_real_text)) // 2)
 
 					-- Compute the drawing flags
 				draw_flags := Wel_drawing_constants.Dt_left
@@ -679,19 +687,19 @@ feature {NONE} -- WEL Implementation
 			end
 
 					-- Draw the pixmap if needed
-			if pixmap_imp /= Void then
+			if attached pixmap_imp as l_pixmap_imp then
 				if disabled_state then
 					draw_flags := Wel_drawing_constants.Dss_disabled
 				else
 					draw_flags := Wel_drawing_constants.Dss_normal
 				end
-				icon_top_position := top_pos + (draw_item_struct_rect.height - pixmap_imp.height - 2) // 2
+				icon_top_position := top_pos + (draw_item_struct_rect.height - l_pixmap_imp.height - 2) // 2
 				left_pos := left_pos + 1
 
-				wel_icon := extract_icon (pixmap_imp)
-				if disabled_state and disabled_image /= Void then
-					l_bitmap := pixmap_imp.get_bitmap
-					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, pixmap_imp.has_mask)
+				wel_icon := extract_icon (l_pixmap_imp)
+				if disabled_state and then attached disabled_image as l_disabled_image then
+					l_bitmap := l_pixmap_imp.get_bitmap
+					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, l_pixmap_imp.has_mask)
 					l_bitmap.decrement_reference
 				else
 					draw_dc.draw_state_icon (Void, wel_icon, left_pos, icon_top_position, draw_flags)
@@ -759,35 +767,35 @@ feature {NONE} -- WEL Implementation
 			end
 
 					-- Draw the pixmap if needed
-			if pixmap_imp /= Void then
+			if attached pixmap_imp as l_pixmap_imp then
 				if disabled_state then
 					draw_flags := Wel_drawing_constants.Dss_disabled
 				else
 					draw_flags := Wel_drawing_constants.Dss_normal
 				end
-				icon_top_position := top_pos + (draw_item_struct_rect.height - pixmap_imp.height) // 2
+				icon_top_position := top_pos + (draw_item_struct_rect.height - l_pixmap_imp.height) // 2
 
-				wel_icon := extract_icon (pixmap_imp)
-				if disabled_state and disabled_image /= Void then
-					l_bitmap := pixmap_imp.get_bitmap
-					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, pixmap_imp.has_mask)
+				wel_icon := extract_icon (l_pixmap_imp)
+				if disabled_state and then attached disabled_image as l_disabled_image then
+					l_bitmap := l_pixmap_imp.get_bitmap
+					l_disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, l_pixmap_imp.has_mask)
 					l_bitmap.decrement_reference
 				else
 					draw_dc.draw_state_icon (Void, wel_icon, left_pos + left_pos_start, icon_top_position, draw_flags)
 				end
 				wel_icon.decrement_reference
-				left_pos_start := left_pos_start + pixmap_imp.width + Menu_bar_item_pixmap_text_space
+				left_pos_start := left_pos_start + l_pixmap_imp.width + Menu_bar_item_pixmap_text_space
 			end
 
 				-- Draw the text part
-			if real_text /= void then
+			if attached real_text as l_real_text then
 					-- Set the font properties
 				draw_dc.select_font (menu_font)
 				draw_dc.set_background_color (background_color)
 				draw_dc.set_text_color (text_color)
 
 					-- Compute where to put texts
-				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (real_text)) // 2)
+				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (l_real_text)) // 2)
 				create rect.make (left_pos + left_pos_start, text_top_pos, right_pos, bottom_pos)
 
 					-- Compute the drawing flags
@@ -809,7 +817,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
+	disabled_image: detachable WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -880,8 +888,8 @@ feature {NONE} -- Contract Support
 	parent_is_sensitive: BOOLEAN
 			-- is parent of `Current' sensitive?
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.is_sensitive
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.is_sensitive
 			end
 		end
 
@@ -895,7 +903,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	interface: EV_MENU_ITEM
+	interface: detachable EV_MENU_ITEM note option: stable attribute end
 
 feature {NONE} -- Implementation
 
@@ -925,18 +933,20 @@ feature {NONE} -- Implementation
 	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON
 			-- Extract the icon from `pixmap_imp'.
 		local
-			pix_imp: EV_PIXMAP_IMP
+			pix_imp: detachable EV_PIXMAP_IMP
+			l_result: detachable WEL_ICON
 		do
 			pix_imp ?= a_pixmap_imp_state
 			if pix_imp /= Void then
-				Result := pix_imp.icon
+				l_result := pix_imp.icon
 			end
-			if Result /= Void then
-				Result.increment_reference
+			if l_result /= Void then
+				l_result.increment_reference
 			else
-				Result := a_pixmap_imp_state.build_icon
-				Result.enable_reference_tracking
+				l_result := a_pixmap_imp_state.build_icon
+				l_result.enable_reference_tracking
 			end
+			Result := l_result
 		end
 
 	bounds_rect: WEL_RECT
@@ -951,12 +961,12 @@ feature {NONE} -- Implementation
 	load_bounds_rect
 			-- Load bounds rect.
 		do
-			if parent_imp = Void then
-				bounds_rect.set_rect (0, 0, 0, 0)
-			else
-				if {WEL_API}.get_menu_item_rect (Default_pointer, parent_imp.wel_item, parent_imp.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+			if attached parent_imp as l_parent_imp then
+				if {WEL_API}.get_menu_item_rect (Default_pointer, l_parent_imp.wel_item, l_parent_imp.index_of (interface, 1)-1, bounds_rect.item) = 0 then
 					bounds_rect.set_rect (0, 0, 0, 0)
 				end
+			else
+				bounds_rect.set_rect (0, 0, 0, 0)
 			end
 		end
 
@@ -980,4 +990,15 @@ note
 
 
 end -- class EV_MENU_ITEM_IMP
+
+
+
+
+
+
+
+
+
+
+
 

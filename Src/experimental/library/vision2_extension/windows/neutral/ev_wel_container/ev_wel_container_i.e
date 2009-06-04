@@ -8,7 +8,7 @@ note
 
 deferred class
 	EV_WEL_CONTAINER_I
-	
+
 inherit
 	EV_CELL_I
 		rename
@@ -22,15 +22,15 @@ feature -- Access
 			-- Window containing `item'.
 		deferred
 		end
-		
-	item: WEL_WINDOW
+
+	item: detachable WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		deferred
 		end
 
 feature -- Status setting
-		
-	replace (a_window: WEL_WINDOW)
+
+	replace (a_window: detachable WEL_WINDOW)
 			-- Replace `item' with `a_window'.
 		deferred
 		end
@@ -51,9 +51,9 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	wel_message_actions_internal: EV_WEL_MESSAGE_ACTION_SEQUENCE;
+	wel_message_actions_internal: detachable EV_WEL_MESSAGE_ACTION_SEQUENCE note option: stable attribute end;
 			-- Implementation of once per object `pointer_motion_actions'.
-		
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -70,4 +70,6 @@ note
 
 
 end -- class EV_WEL_CONTAINER_I
+
+
 

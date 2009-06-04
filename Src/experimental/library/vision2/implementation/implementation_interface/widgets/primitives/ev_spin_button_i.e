@@ -25,7 +25,7 @@ inherit
 
 feature {EV_ANY_I} -- Implementatio
 
-	interface: EV_SPIN_BUTTON;
+	interface: detachable EV_SPIN_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -42,4 +42,12 @@ note
 
 
 end -- class EV_SPIN_BUTTON_I
+
+
+
+
+
+
+
+
 

@@ -18,10 +18,10 @@ inherit
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			make,
 			interface,
 			set_item_parent_imp,
-			create_select_actions
+			create_select_actions,
+			new_tool_bar_button
 		end
 
 	EV_RADIO_PEER_IMP
@@ -35,12 +35,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Make a radio button with a default of selected.
+	new_tool_bar_button: POINTER
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_tool_button_new (NULL))
-				-- Needed to prevent calling of action sequence.
+			Result := {EV_GTK_EXTERNALS}.gtk_radio_tool_button_new (NULL)
 		end
 
 feature -- Status setting
@@ -98,7 +95,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_get_group (visual_widget)
 		end
 
-	interface: EV_TOOL_BAR_RADIO_BUTTON;
+	interface: detachable EV_TOOL_BAR_RADIO_BUTTON note option: stable attribute end;
 			-- Interface of `Current'
 
 note
@@ -116,4 +113,8 @@ note
 
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
+
+
+
+
 

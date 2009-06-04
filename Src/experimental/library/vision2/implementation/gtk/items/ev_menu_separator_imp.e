@@ -22,9 +22,8 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			is_sensitive,
-			make,
 			interface,
-			initialize,
+			make,
 			dispose,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
@@ -36,19 +35,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a menu.
+	make
+			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
-			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
-		end
-
-	initialize
-			-- Do nothing because an empty GtkMenuItem is a separator.
-		do
 			real_text := ""
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -68,11 +61,11 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	is_sensitive: BOOLEAN
-	
+
 	enable_sensitive
 			-- Implemented to fulfill assertions but leave c_object unsensitive.
 		do
@@ -83,7 +76,7 @@ feature {NONE} -- Implementation
 			-- Implemented to fulfill assertions but leave c_object unsensitive.
 		do
 			is_sensitive := False
-		end	
+		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
@@ -93,7 +86,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (box)
 			Precursor
 		end
-		
+
 	box: POINTER
 		-- Dummy hbox used for holding *able widgets to satisfy invariants.
 
@@ -113,15 +106,27 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	pointer_motion_actions_internal: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
+		note
+			option: stable
+		attribute
+		end
 
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_button_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
+		note
+			option: stable
+		attribute
+		end
 
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
+		note
+			option: stable
+		attribute
+		end
 
 feature {NONE} -- Implementation
 
-	interface: EV_MENU_SEPARATOR;
+	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -138,4 +143,14 @@ note
 
 
 end -- class EV_MENU_SEPARATOR_IMP
+
+
+
+
+
+
+
+
+
+
 

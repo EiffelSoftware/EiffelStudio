@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_CHECK_BUTTON_I 
+	EV_CHECK_BUTTON_I
 
 inherit
 	EV_TOGGLE_BUTTON_I
@@ -17,17 +17,17 @@ inherit
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECK_BUTTON
-	
+	interface: detachable EV_CHECK_BUTTON note option: stable attribute end
+
 feature {NONE} -- Implementation
 
 	default_alignment: INTEGER
 			-- Default alignment used during
 			-- creation of real implementation
 		do
-			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left 
+			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -43,4 +43,12 @@ note
 
 
 end -- class EV_CHECK_BUTTON_I
+
+
+
+
+
+
+
+
 

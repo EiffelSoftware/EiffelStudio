@@ -33,14 +33,14 @@ feature -- Access
 		deferred
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- Window this dialog is a transient for.
 		deferred
 		end
 
 feature -- Status report
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of the last clicked button.
 		deferred
 		end
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			Result := ev_ok
 		end
 
-	interface: EV_STANDARD_DIALOG;
+	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -91,4 +91,14 @@ note
 
 
 end -- class EV_STANDARD_DIALOG_I
+
+
+
+
+
+
+
+
+
+
 

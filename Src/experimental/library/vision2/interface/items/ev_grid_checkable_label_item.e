@@ -62,7 +62,7 @@ feature -- Status setting
 		do
 			implementation.enable_sensitive
 		ensure
-			is_sensitive: (parent = Void or parent.is_sensitive) implies is_sensitive
+			is_sensitive: (parent = Void or else (attached parent as l_parent and then l_parent.is_sensitive)) implies is_sensitive
 		end
 
 	disable_sensitive
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_GRID_CHECKABLE_LABEL_ITEM_I} implementation.make (Current)
+			create {EV_GRID_CHECKABLE_LABEL_ITEM_I} implementation.make
 		end
 
 note

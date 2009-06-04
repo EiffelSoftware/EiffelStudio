@@ -23,9 +23,8 @@ inherit
 			hide_horizontal_scroll_bar as wel_hide_horizontal_scroll_bar,
 			hide_vertical_scroll_bar as wel_hide_vertical_scroll_bar
 		redefine
-			interface,	
+			interface,
 			make,
-			initialize,
 			default_style,
 			default_ex_style,
 			x_offset,
@@ -46,20 +45,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Initialize current with `interface' `an_interface'. 
-		do
-			Precursor {EV_VIEWPORT_IMP} (an_interface)
-		end
-
-	initialize
+	make
 			-- Perform post creation initialization.
 		do
 			Precursor {EV_VIEWPORT_IMP}
 			create scroller.make (Current, 50, 50, 10, 30)
 			enable_horizontal_scroll_bar
 			enable_vertical_scroll_bar
-			
+
 			wel_hide_horizontal_scroll_bar
 			wel_hide_vertical_scroll_bar
 				-- Ensure that the scroll bars will be displayed
@@ -73,29 +66,45 @@ feature -- Access
 	horizontal_step: INTEGER
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.horizontal_line
+			l_scroller := scroller
+			check l_scroller /= Void end
+			Result := l_scroller.horizontal_line
 		end
 
 	vertical_step: INTEGER
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scrollbar.
+		local
+			l_scroller: like scroller
 		do
-			Result := scroller.vertical_line
+			l_scroller := scroller
+			check l_scroller /= Void end
+			Result := l_scroller.vertical_line
 		end
 
 feature -- Element change
 
 	set_horizontal_step (a_step: INTEGER)
 			-- Set `horizontal_step' to `a_step'.
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_horizontal_line (a_step)
+			l_scroller := scroller
+			check l_scroller /= Void end
+			l_scroller.set_horizontal_line (a_step)
 		end
 
 	set_vertical_step (a_step: INTEGER)
 			-- Set `vertical_step' to `a_step'.
+		local
+			l_scroller: like scroller
 		do
-			scroller.set_vertical_line (a_step)
+			l_scroller := scroller
+			check l_scroller /= Void end
+			l_scroller.set_vertical_line (a_step)
 		end
 
 	show_horizontal_scroll_bar
@@ -125,7 +134,7 @@ feature -- Element change
 			is_vertical_scroll_bar_visible := False
 			wel_hide_vertical_scroll_bar
 		end
-		
+
 	internal_show_vertical_scroll_bar
 			-- Display vertical scroll bar if `is_vertical_scroll_bar_visible'.
 		do
@@ -133,7 +142,7 @@ feature -- Element change
 				show_vertical_scroll_bar
 			end
 		end
-		
+
 	internal_show_horizontal_scroll_bar
 			-- Display horizontal scroll bar if `is_horizontal_scroll_bar_visible'.
 		do
@@ -220,20 +229,25 @@ feature {NONE} -- Implementation
 			cl_width, cl_height: INTEGER
 			imp_h, imp_w: INTEGER
 			new_x, new_y: INTEGER
+			l_scroller: like scroller
 		do
 			if not is_in_size_call then
 					-- Avoid recursive call when performing resizing
 				is_in_size_call := True
 
+				l_scroller := scroller
+				check l_scroller /= Void end
+
 					-- Local variables for fast access later in computation
 				imp := item_imp
+				check imp /= Void end
 				imp_w := imp.width
 				imp_h := imp.height
 				cl_width := client_width
 				cl_height := client_height
 				cw := imp_w - cl_width
 				ch := imp_h - cl_height
-				
+
 				if cw > 0 then
 						-- Item is too big to fit in width.
 					internal_show_horizontal_scroll_bar
@@ -296,8 +310,8 @@ feature {NONE} -- Implementation
 					if is_horizontal_scroll_bar_visible then
 						set_horizontal_position (new_x.abs)
 						set_horizontal_range (0, imp_w)
-						scroller.set_horizontal_page (cl_width)	
-					end			
+						l_scroller.set_horizontal_page (cl_width)
+					end
 					if ch > 0 then
 							-- Here client_height isn't too small to contain `item', we need
 							-- to move down `item' at the correct place. Meaning that the
@@ -317,7 +331,7 @@ feature {NONE} -- Implementation
 						if is_vertical_scroll_bar_visible then
 							set_vertical_range (0, imp_h)
 							set_vertical_position (new_y.abs)
-							scroller.set_vertical_page (cl_height)				
+							l_scroller.set_vertical_page (cl_height)
 						end
 
 						if originator then
@@ -351,7 +365,7 @@ feature {NONE} -- Implementation
 						if is_vertical_scroll_bar_visible then
 							set_vertical_range (0, imp_h)
 							set_vertical_position (new_y.abs)
-							scroller.set_vertical_page (cl_height)
+							l_scroller.set_vertical_page (cl_height)
 						end
 						if originator then
 							imp.set_move_and_size ((-cw) // 2,
@@ -378,7 +392,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_VIEWPORT;
+	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -395,4 +409,11 @@ note
 
 
 end -- class EV_SCROLLABLE_AREA_IMP
+
+
+
+
+
+
+
 

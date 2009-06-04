@@ -5,32 +5,37 @@ note
 	id: "$Id$";
 	date: "$Date$";
 	revision: "$Revision$"
-	
+
 class
 	EV_TOGGLE_BUTTON_IMP
-	
+
 inherit
 	EV_TOGGLE_BUTTON_I
 		redefine
 			interface
 		end
-	
+
 	EV_BUTTON_IMP
 		redefine
-			make,
-			interface
+			old_make,
+			interface,
+			new_gtk_button
 		end
-	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk toggle button.
 		do
-			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_toggle_button_new)
+			assign_interface (an_interface)
+		end
+
+	new_gtk_button: POINTER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_new
 		end
 
 feature -- Status setting
@@ -48,20 +53,20 @@ feature -- Status setting
 		do
 			if is_selected then
 				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
-			end	
+			end
 		end
 
 feature -- Status report
-	
+
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
-		end 
+		end
 
 feature {EV_ANY_I}
 
-	interface: EV_TOGGLE_BUTTON;
+	interface: detachable EV_TOGGLE_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -78,4 +83,8 @@ note
 
 
 end -- class EV_TOGGLE_BUTTON_IMP
+
+
+
+
 

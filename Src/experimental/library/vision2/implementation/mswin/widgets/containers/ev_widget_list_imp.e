@@ -15,12 +15,14 @@ inherit
 		end
 
 	EV_CONTAINER_IMP
+		undefine
+			interface_item
 		redefine
 			interface,
 			next_tabstop_widget
 		end
 
-	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
+	EV_DYNAMIC_LIST_IMP [detachable EV_WIDGET, detachable EV_WIDGET_IMP]
 		redefine
 			interface,
 			insert_i_th,
@@ -29,11 +31,11 @@ inherit
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_WIDGET_IMP
-			wel_win: WEL_WINDOW
+			v_imp: detachable EV_WIDGET_IMP
+			wel_win: detachable WEL_WINDOW
 		do
 				-- Should `v' be a pixmap,
 				-- promote implementation to EV_WIDGET_IMP.
@@ -59,20 +61,23 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			v_imp: EV_WIDGET_IMP
+			v: detachable EV_WIDGET
+			v_imp: detachable EV_WIDGET_IMP
 		do
-			v_imp ?= i_th (i).implementation
+			v := i_th (i)
+			check v /= Void end
+			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
-			remove_item_actions.call ([v_imp.interface])
+			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
 			notify_change (Nc_minsize, Current)
 
 				-- Unlink the widget from its parent and
 				-- signal it.
-			v_imp.set_parent (Void)
+			v_imp.set_parent_imp (Void)
 			v_imp.on_orphaned
 		end
 
@@ -83,6 +88,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- located inside the current window?
 		local
 			loc_cursor: CURSOR
+			l_item: detachable EV_WIDGET_IMP
 		do
 			if hwnd_control = wel_item then
 				Result := True
@@ -93,8 +99,9 @@ feature {EV_ANY_I} -- WEL Implementation
 				until
 					Result or ev_children.after
 				loop
-					Result := ev_children.item.
-						is_control_in_window (hwnd_control)
+					l_item := ev_children.item
+					check l_item /= Void end
+					Result := l_item.is_control_in_window (hwnd_control)
 					ev_children.forth
 				end
 				ev_children.go_to (loc_cursor)
@@ -117,35 +124,40 @@ feature {EV_ANY_I} -- WEL Implementation
 		require else
 			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
 		local
-			w: EV_WIDGET_IMP
-			container: EV_CONTAINER
+			w: detachable EV_WIDGET
+			w_imp: detachable EV_WIDGET_IMP
+			container: detachable EV_CONTAINER
 			l_cursor: CURSOR
+			l_result: detachable EV_WIDGET_IMP
 		do
 			l_cursor := cursor
-			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			l_result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
 					-- We do not iterate through a container it is not sensitive as no children
 					-- should receive the tab stop.
-			if Result = Void and is_sensitive then
+			if l_result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
 					-- we are sensitive. In the case of a non-sensitive container, no
 					-- children should recieve the tab stop.
 				from
 					go_i_th (search_pos)
 				until
-					off or Result /= Void
+					off or l_result /= Void
 				loop
-					w ?= item.implementation
+					w := item
+					check w /= Void end
+					w_imp ?= w.implementation
+					check w_imp /= Void end
 					if forwards then
-						Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 					else
-						container ?= w.interface
+						container ?= w_imp.interface
 						if container /= Void then
-							Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+							l_result := w_imp.next_tabstop_widget (start_widget, container.count, forwards)
 						else
-							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							l_result := w_imp.next_tabstop_widget (start_widget, 1, forwards)
 						end
 					end
-					if Result = Void then
+					if l_result = Void then
 						if forwards then
 							forth
 						else
@@ -154,15 +166,17 @@ feature {EV_ANY_I} -- WEL Implementation
 					end
 				end
 			end
-			if Result = Void then
-				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if l_result = Void then
+				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 			go_to (l_cursor)
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_WIDGET_LIST;
+	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -179,4 +193,13 @@ note
 
 
 end -- class EV_WIDGET_LIST_IMP
+
+
+
+
+
+
+
+
+
 

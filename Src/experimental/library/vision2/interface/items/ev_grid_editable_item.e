@@ -48,10 +48,10 @@ feature -- Element change
 
 feature -- Access
 
-	validation_agent: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
+	validation_agent: detachable FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
 		-- Agent used to validate `text_field' text.
 
-	text_field: EV_TEXT_FIELD
+	text_field: detachable EV_TEXT_FIELD
 		-- Text field used to edit `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
@@ -60,15 +60,15 @@ feature -- Action
 	deactivate
 			-- Cleanup from previous call to activate.
 		do
-			if text_field /= Void then
-				text_field.focus_out_actions.wipe_out
-				if not user_cancelled_activation and then (validation_agent = Void or else validation_agent.item ([text_field.text])) then
-					set_text (text_field.text)
+			if attached text_field as l_text_field then
+				l_text_field.focus_out_actions.wipe_out
+				if not user_cancelled_activation and then (validation_agent = Void or else (attached validation_agent as l_validation_agent and then l_validation_agent.item ([l_text_field.text]))) then
+					set_text (l_text_field.text)
 				end
 			end
 			Precursor {EV_GRID_LABEL_ITEM}
-			if text_field /= Void then
-				text_field.destroy
+			if attached text_field as l_text_field then
+				l_text_field.destroy
 				text_field := Void
 			end
 		end
@@ -84,15 +84,19 @@ feature {NONE} -- Implementation
 			a_width: INTEGER
 			a_widget_y_offset: INTEGER
 			a_widget: EV_WIDGET
+			l_parent: detachable like parent
 		do
 			a_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
 			l_x_offset := left_border
-			if pixmap /= Void then
-				l_x_offset := l_x_offset + pixmap.width + spacing
+			if attached pixmap as l_pixmap then
+				l_x_offset := l_x_offset + l_pixmap.width + spacing
 			end
 
-			l_x_coord := (virtual_x_position + l_x_offset) - parent.virtual_x_position
+			l_parent := parent
+			check l_parent /= Void end
+
+			l_x_coord := (virtual_x_position + l_x_offset) - l_parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)
 
 			a_width := a_popup.width - l_x_coord - right_border
@@ -123,21 +127,24 @@ feature {NONE} -- Implementation
 
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
+		local
+			l_text_field: like text_field
 		do
-			create text_field
+			create l_text_field
+			text_field := l_text_field
 				-- Hide the border of the text field.
-			text_field.implementation.hide_border
-			if font /= Void then
-				text_field.set_font (font)
+			l_text_field.implementation.hide_border
+			if attached font as l_font then
+				l_text_field.set_font (l_font)
 			end
 
-			text_field.set_text (text)
+			l_text_field.set_text (text)
 
-			text_field.set_background_color (implementation.displayed_background_color)
+			l_text_field.set_background_color (implementation.displayed_background_color)
 			popup_window.set_background_color (implementation.displayed_background_color)
-			text_field.set_foreground_color (implementation.displayed_foreground_color)
+			l_text_field.set_foreground_color (implementation.displayed_foreground_color)
 
-			popup_window.extend (text_field)
+			popup_window.extend (l_text_field)
 				-- Change `popup_window' to suit `Current'.
 			update_popup_dimensions (popup_window)
 
@@ -146,16 +153,20 @@ feature {NONE} -- Implementation
 
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
+		local
+			l_text_field: detachable like text_field
 		do
-			text_field.return_actions.extend (agent deactivate)
-			text_field.focus_out_actions.extend (agent deactivate)
-			text_field.set_focus
+			l_text_field := text_field
+			check l_text_field /= Void end
+			l_text_field.return_actions.extend (agent deactivate)
+			l_text_field.focus_out_actions.extend (agent deactivate)
+			l_text_field.set_focus
 			user_cancelled_activation := False
-			text_field.key_press_actions.extend (agent handle_key)
+			l_text_field.key_press_actions.extend (agent handle_key)
 		end
 
 invariant
-	text_field_parented_during_activation: text_field /= Void implies text_field.parent /= Void
+	text_field_parented_during_activation: attached text_field as l_text_field implies l_text_field.parent /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -172,4 +183,13 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
 

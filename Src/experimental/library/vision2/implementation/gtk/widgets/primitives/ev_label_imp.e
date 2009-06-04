@@ -20,7 +20,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			make
 		end
 
 	EV_TEXTABLE_IMP
@@ -38,18 +39,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a gtk label.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize label.
 		local
 			a_cs: EV_GTK_C_STRING
 			int_value: INTEGER
 		do
-			base_make (an_interface)
 			textable_imp_initialize
 			set_c_object (text_label)
 			align_text_center
 			a_cs := app_implementation.c_string_from_eiffel_string (once "justify")
 			{EV_GTK_EXTERNALS}.g_object_get_integer (text_label, a_cs.item, $int_value)
+			Precursor
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -71,7 +79,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_LABEL;
+	interface: detachable EV_LABEL note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -88,5 +96,9 @@ note
 
 
 end --class LABEL_IMP
+
+
+
+
 
 

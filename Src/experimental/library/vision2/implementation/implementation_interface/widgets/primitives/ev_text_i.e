@@ -133,7 +133,7 @@ feature -- Assertions
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TEXT;
+	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -150,4 +150,12 @@ note
 
 
 end -- class EV_TEXT_I
+
+
+
+
+
+
+
+
 

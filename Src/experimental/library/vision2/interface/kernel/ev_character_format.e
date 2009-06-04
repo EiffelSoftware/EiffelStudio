@@ -215,7 +215,7 @@ feature -- Duplication
 
 feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	hash_value: STRING
+	hash_value: detachable STRING
 			-- A hashable representation of `Current'.
 		do
 			if internal_out = Void or changed then
@@ -225,7 +225,7 @@ feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			Result := internal_out
 		end
 
-	internal_out: STRING
+	internal_out: detachable STRING
 		-- Internal representation of last call to `out'. Buffered for speed, used in `hash_value'.
 
 	changed: BOOLEAN
@@ -238,10 +238,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- Create implementation of drawing area.
 		do
-			create {EV_CHARACTER_FORMAT_IMP} implementation.make (Current)
+			create {EV_CHARACTER_FORMAT_IMP} implementation.make
 		end
 
 invariant
@@ -264,4 +270,14 @@ note
 
 
 end -- class EV_CHARACTER_FORMAT
+
+
+
+
+
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision Progress bar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,18 +17,25 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
+			old_make,
 			make
 		end
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the progress bar.
 		do
 			Precursor {EV_GAUGE_IMP} (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_progress_bar_new_with_adjustment (adjustment))
 			gtk_progress_bar := c_object
 			enable_segmentation
+			Precursor
 		end
 
 feature -- Status report
@@ -78,7 +85,7 @@ feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_bar: POINTER
 
-	interface: EV_PROGRESS_BAR;
+	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -95,4 +102,8 @@ note
 
 
 end -- class EV_PROGRESS_BAR_IMP
+
+
+
+
 

@@ -129,10 +129,16 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			
+		end
+
 	create_implementation
 			-- Create implementation.
 		do
-			create {EV_REGION_IMP} implementation.make (Current)
+			create {EV_REGION_IMP} implementation.make
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

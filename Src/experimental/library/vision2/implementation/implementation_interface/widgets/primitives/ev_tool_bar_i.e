@@ -97,7 +97,7 @@ feature {EV_ANY_I}
 			until
 				off
 			loop
-				item.implementation.update_for_pick_and_drop (starting)
+				interface_item.implementation.update_for_pick_and_drop (starting)
 				forth
 			end
 			go_to (l_cursor)
@@ -105,7 +105,7 @@ feature {EV_ANY_I}
 
 feature {NONE} -- Implementation
 
-	interface: EV_TOOL_BAR;
+	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -122,4 +122,13 @@ note
 
 
 end -- class EV_TOOL_BAR_I
+
+
+
+
+
+
+
+
+
 

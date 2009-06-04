@@ -19,7 +19,7 @@ create {EV_ANY_I}
 
 feature -- Access
 
-	grid_label_item: EV_GRID_LABEL_ITEM
+	grid_label_item: detachable EV_GRID_LABEL_ITEM
 			-- Associated EV_GRID_LABEL_ITEM to which the properties of `Current' are applied.
 
 	pixmap_x: INTEGER
@@ -86,7 +86,7 @@ feature -- Status Setting
 
 feature {EV_ANY_I} -- Implementation
 
-	set_grid_label_item (a_grid_label_item: EV_GRID_LABEL_ITEM)
+	set_grid_label_item (a_grid_label_item: like grid_label_item)
 			-- Assign `a_grid_label_item' to `grid_label_item'.
 		do
 			grid_label_item := a_grid_label_item
@@ -109,4 +109,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

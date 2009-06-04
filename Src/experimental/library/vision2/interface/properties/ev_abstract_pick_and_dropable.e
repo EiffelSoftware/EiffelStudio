@@ -19,24 +19,32 @@ inherit
 
 feature -- Access
 
-	pebble: ANY
+	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 		deferred
 		end
 
-	target_name: STRING_GENERAL
+	target_name: detachable STRING_GENERAL
 			-- Optional textual name describing `Current' pick and drop hole.
+		note
+			option: stable
+		attribute
+		end
 
-	target_data_function: FUNCTION [ANY, TUPLE [ANY], EV_PND_TARGET_DATA]
+	target_data_function: detachable FUNCTION [ANY, TUPLE [like pebble], EV_PND_TARGET_DATA]
 			-- Function for computing target meta data based on source pebble.
 			-- Primarily used for Pick and Drop target menu.
+		note
+			option: stable
+		attribute
+		end
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 		deferred
 		end
 
-	accept_cursor: EV_POINTER_STYLE
+	accept_cursor: detachable EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred
@@ -44,7 +52,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	deny_cursor: EV_POINTER_STYLE
+	deny_cursor: detachable EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		deferred
@@ -71,7 +79,7 @@ feature -- Status setting
 			pebble_removed: pebble = Void and pebble_function = Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -100,7 +108,7 @@ feature -- Status setting
 			target_name := a_name.twin
 		ensure
 			target_name_assigned:
-				a_name /= target_name and a_name.is_equal (target_name)
+				attached target_name as l_target_name and then a_name /= l_target_name and then a_name.is_equal (l_target_name)
 		end
 
 	set_target_data_function (a_function: FUNCTION [ANY, TUPLE [like pebble], EV_PND_TARGET_DATA])
@@ -121,7 +129,7 @@ feature -- Status setting
 			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			accept_cursor_assigned: accept_cursor.is_equal (a_cursor)
+			accept_cursor_assigned: attached accept_cursor as l_accept_cursor and then l_accept_cursor.is_equal (a_cursor)
 		end
 
 	set_deny_cursor (a_cursor: like deny_cursor)
@@ -131,7 +139,7 @@ feature -- Status setting
 			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			deny_cursor_assigned: deny_cursor.is_equal (a_cursor)
+			deny_cursor_assigned: attached deny_cursor as l_deny_cursor and then l_deny_cursor.is_equal (a_cursor)
 		end
 
 feature -- User input events
@@ -178,10 +186,16 @@ feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Hash table of current pnd targets.
 		once
-			Result := (create {EV_ENVIRONMENT}).application.implementation.pnd_targets
+			Result := (create {EV_ENVIRONMENT}).implementation.application_i.pnd_targets
 		end
 
 	Default_pixmaps: EV_STOCK_PIXMAPS
@@ -205,4 +219,14 @@ note
 
 
 end -- class EV_ABSTRACT_PICK_AND_DROPABLE
+
+
+
+
+
+
+
+
+
+
 

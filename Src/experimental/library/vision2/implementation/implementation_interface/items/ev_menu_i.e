@@ -4,10 +4,10 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_I
-	
+
 inherit
 	EV_MENU_ITEM_I
 		redefine
@@ -22,11 +22,11 @@ inherit
 
 feature -- Access
 
-	parent: EV_MENU_ITEM_LIST
+	parent: detachable EV_MENU_ITEM_LIST
 			-- Item list containing `Current'.
 		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
+			if attached parent_imp as l_parent_imp then
+				Result ?= l_parent_imp.interface
 			end
 		end
 
@@ -37,29 +37,29 @@ feature -- Basic operations
 		deferred
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
+	show_at (a_widget: detachable EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		deferred
 		end
-		
+
 feature {EV_MENU} -- Contract support
 
 	one_radio_item_selected_per_separator: BOOLEAN
 			-- Is there at most one selected radio item between
 			-- consecutive separators?
 		local
-			separator: EV_MENU_SEPARATOR
+			separator: detachable EV_MENU_SEPARATOR
 			checked_radio_items: INTEGER
-			radio_item: EV_RADIO_MENU_ITEM
+			radio_item: detachable EV_RADIO_MENU_ITEM
 			a_cursor: CURSOR
 		do
-			a_cursor := interface.cursor
+			a_cursor := cursor
 			Result := True
 			from
-				interface.start
+				start
 			until
-				interface.off or not Result
+				index = count + 1 or not Result
 			loop
 				separator ?= item
 				if separator /= Void then
@@ -72,16 +72,16 @@ feature {EV_MENU} -- Contract support
 						Result := False
 					end
 				end
-				interface.forth
+				forth
 			end
-			interface.go_to (a_cursor)
+			go_to (a_cursor)
 		ensure
 			index_not_changed: index = old index
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU;	
+	interface: detachable EV_MENU note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -98,4 +98,14 @@ note
 
 
 end -- class EV_MENU_I
+
+
+
+
+
+
+
+
+
+
 

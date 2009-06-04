@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	interface: EV_TOOL_BAR_DROP_DOWN_BUTTON
+	interface: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

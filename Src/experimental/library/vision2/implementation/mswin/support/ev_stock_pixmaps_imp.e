@@ -71,13 +71,14 @@ feature -- Default pixmaps
 			-- Pixmap used as default icon for new windows
 			-- (Vision2 logo)
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 				-- Create a default pixmap
 			create Result
 
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_with_default
 		end
 
@@ -87,7 +88,7 @@ feature {NONE} -- Implementation
 			-- Create the pixel buffer corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
-			pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
 			wel_icon: WEL_ICON
 		do
 				-- Create a default pixel buffer
@@ -97,6 +98,7 @@ feature {NONE} -- Implementation
 			create wel_icon.make_by_predefined_id (Idi_constant)
 			wel_icon.enable_reference_tracking
 			pixbuf_imp ?= Result.implementation
+			check pixbuf_imp /= Void end
 			pixbuf_imp.set_from_icon (wel_icon)
 			wel_icon.decrement_reference
 		end
@@ -105,7 +107,7 @@ feature {NONE} -- Implementation
 			-- Create the pixmap corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 			wel_icon: WEL_ICON
 		do
 				-- Create a default pixmap
@@ -117,6 +119,7 @@ feature {NONE} -- Implementation
 
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
+			check pixmap_imp /= Void end
 			pixmap_imp.set_with_resource (wel_icon)
 
 			wel_icon.decrement_reference
@@ -137,4 +140,13 @@ note
 
 
 end -- class EV_STOCK_PIXMAPS_IMP
+
+
+
+
+
+
+
+
+
 

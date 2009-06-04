@@ -24,10 +24,22 @@ inherit
 	EV_HORIZONTAL_BOX
 		redefine
 			initialize,
-			is_in_default_state
+			is_in_default_state,
+			create_interface_objects
 		end
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			create include_list
+			create include_button.make_with_text ("->")
+			create include_label.make_with_text ("Include:")
+			create exclude_label.make_with_text ("Exclude:")
+			create exclude_button.make_with_text ("<-")
+			create exclude_list
+		end
 
 	initialize
 			-- Set defaults.
@@ -37,22 +49,21 @@ feature {NONE} -- Initialization
 			Precursor {EV_HORIZONTAL_BOX}
 
 			create vb
-			create exclude_label.make_with_text ("Exclude:")
+
 			exclude_label.align_text_left
 			vb.extend (exclude_label)
 			vb.disable_item_expand (exclude_label)
-			create exclude_list
 			exclude_list.enable_multiple_selection
 			vb.extend (exclude_list)
 			extend (vb)
 
 			create vb
 			vb.extend (create {EV_CELL})
-			create include_button.make_with_text ("->")
+
 			include_button.select_actions.extend (agent on_include)
 			vb.extend (include_button)
 			vb.disable_item_expand (include_button)
-			create exclude_button.make_with_text ("<-")
+
 			exclude_button.select_actions.extend (agent on_exclude)
 			vb.extend (exclude_button)
 			vb.disable_item_expand (exclude_button)
@@ -63,11 +74,10 @@ feature {NONE} -- Initialization
 			disable_item_expand (vb)
 
 			create vb
-			create include_label.make_with_text ("Include:")
+
 			include_label.align_text_left
 			vb.extend (include_label)
 			vb.disable_item_expand (include_label)
-			create include_list
 			include_list.enable_multiple_selection
 			vb.extend (include_list)
 			extend (vb)
@@ -147,4 +157,7 @@ note
 
 
 end -- class EV_INCLUDE_EXCLUDE
+
+
+
 

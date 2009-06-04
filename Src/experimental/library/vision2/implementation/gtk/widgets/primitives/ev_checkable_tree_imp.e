@@ -15,7 +15,7 @@ class
 inherit
 	EV_CHECKABLE_TREE_I
 		undefine
-			initialize,
+			make,
 			call_pebble_function,
 			reset_pebble_function,
 			wipe_out,
@@ -27,8 +27,8 @@ inherit
 	EV_TREE_IMP
 		redefine
 			interface,
+			old_make,
 			make,
-			initialize,
 			initialize_model
 		end
 
@@ -41,13 +41,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor {EV_TREE_IMP} (an_interface)
 		end
 
-	initialize
+	make
 			-- Setup `Current'
 		local
 			a_column, a_cell_renderer: POINTER
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 				if a_selected then
 						-- We are toggling so `a_selected' is status before toggle
 					if uncheck_actions_internal /= Void then
-						uncheck_actions_internal	.call ([a_tree_item])
+						uncheck_actions_internal.call ([a_tree_item])
 					end
 				else
 					if check_actions_internal /= Void then
@@ -124,12 +124,16 @@ feature -- Access
 	is_item_checked (list_item: EV_TREE_NODE): BOOLEAN
 			--
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
 			a_gvalue.memory_free
 		end
@@ -140,14 +144,18 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= tree_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if check_actions_internal /= Void then
 				check_actions_internal.call ([tree_item])
@@ -158,14 +166,18 @@ feature -- Status setting
 			-- Ensure check associated with `tree_item' is
 			-- unchecked.
 		local
-			item_imp: EV_TREE_NODE_IMP
+			item_imp: detachable EV_TREE_NODE_IMP
+			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_gvalue: POINTER
 		do
 			item_imp ?= tree_item.implementation
+			check item_imp /= Void end
+			l_list_iter := item_imp.list_iter
+			check l_list_iter /= Void end
 			a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, False)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if uncheck_actions_internal /= Void then
 				uncheck_actions_internal.call ([tree_item])
@@ -175,7 +187,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_TREE;
+	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

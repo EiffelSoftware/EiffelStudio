@@ -1,5 +1,5 @@
 note
-	description: 
+	description:
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
 		% GDI object allocated."
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			value_item_to_remove: INTEGER
 		do
 			found_object_index := 0
-		
+
 			from
 				i := 1
 				value_item_to_remove := 2147483646
@@ -136,13 +136,16 @@ feature {NONE} -- Implementation
 			-- Retrieve the WEL object located in the array at index `real_object_index'.
 		local
 			real_object: G
+			l_result: detachable WEL_GDI_ANY
 		do
 				-- Requested pen has been already allocated. We return the
 				-- item found in our table.
 			real_object := allocated_objects.item (real_object_index)
 			real_object.update (cache_time)
 
-			Result := real_object.item
+			l_result ?= real_object.item
+			check l_result /= Void end
+			Result := l_result
 			Result.increment_reference
 
 			debug("VISION2_WINDOWS_GDI")
@@ -154,11 +157,11 @@ feature {NONE} -- Implementation
 	swap_allocated_objects (first_index, second_index: INTEGER)
 			-- Swap objects at indexes `first_index' and `second_index'.
 		require
-			valid_first_index: 
-				first_index >= 1 and then 
+			valid_first_index:
+				first_index >= 1 and then
 				first_index <= allocated_objects_number
-			valid_second_index: 
-				second_index >= 1 and then 
+			valid_second_index:
+				second_index >= 1 and then
 				second_index <= allocated_objects_number
 		local
 			first_object: G
@@ -166,7 +169,7 @@ feature {NONE} -- Implementation
 		do
 			first_object := allocated_objects.item (first_index)
 			second_object := allocated_objects.item (second_index)
-			
+
 			allocated_objects.put (first_object, second_index)
 			allocated_objects.put (second_object, first_index)
 		end
@@ -191,4 +194,13 @@ note
 
 
 end -- class EV_GDI_ALLOCATED_OBJECTS
+
+
+
+
+
+
+
+
+
 

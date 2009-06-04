@@ -1,4 +1,4 @@
-note 
+note
 	description	: "EiffelVision horizontal separator, windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 		local
 			cur_height_div_two: INTEGER
 			r: WEL_RECT
-			bk_brush: WEL_BRUSH
+			bk_brush: detachable WEL_BRUSH
 			pen: WEL_PEN
 		do
 			cur_height_div_two := ev_height // 2
@@ -46,8 +46,10 @@ feature {NONE} -- Implementation
 			if cur_height_div_two > 1 then
 					-- We need to draw a background.
 				bk_brush := background_brush
-				create r.make (0, 0, width, cur_height_div_two - 1)
-				paint_dc.fill_rect (r, bk_brush)
+				if bk_brush /= Void then
+					create r.make (0, 0, width, cur_height_div_two - 1)
+					paint_dc.fill_rect (r, bk_brush)
+				end
 			end
 
 			pen := shadow_pen
@@ -65,6 +67,7 @@ feature {NONE} -- Implementation
 				if bk_brush = Void then
 					bk_brush := background_brush
 				end
+				check bk_brush /= Void end
 				create r.make (0, cur_height_div_two + 1, width, height)
 				paint_dc.fill_rect (r, bk_brush)
 			end
@@ -83,7 +86,7 @@ feature {NONE} -- Implementation
 			paint_dc.unselect_pen
 		end
 
-	interface: EV_HORIZONTAL_SEPARATOR;
+	interface: detachable EV_HORIZONTAL_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -100,4 +103,14 @@ note
 
 
 end -- class EV_HORIZONTAL_SEPARATOR_IMP
+
+
+
+
+
+
+
+
+
+
 

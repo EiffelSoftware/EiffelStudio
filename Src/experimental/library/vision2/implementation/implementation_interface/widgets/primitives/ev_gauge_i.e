@@ -134,7 +134,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GAUGE
+	interface: detachable EV_GAUGE note option: stable attribute end
 
 invariant
 
@@ -155,4 +155,12 @@ note
 
 
 end -- class EV_GAUGE_I
+
+
+
+
+
+
+
+
 

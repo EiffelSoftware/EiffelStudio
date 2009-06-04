@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_GRID_COLUMN_ACTION_SEQUENCES_I
 
 feature -- Access
@@ -20,7 +20,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deselected.
 		do
@@ -34,11 +34,19 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
+		note
+			option: stable
+		attribute
+		end
 
-	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	deselect_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -55,4 +63,15 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
 

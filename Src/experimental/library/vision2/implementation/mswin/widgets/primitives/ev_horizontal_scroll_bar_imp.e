@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"Eiffel Vision horizontal scrollbar. %N%
 		%Mswindows implementation."
@@ -19,7 +19,8 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			set_default_minimum_size,
-			interface
+			interface,
+			make
 		end
 
 create
@@ -27,13 +28,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create as horizontal scrollbar.
 		do
-			base_make (an_interface)
-			make_horizontal (default_parent, 0, 0, 0, 0, -1)
+			assign_interface (an_interface)
 		end
-	
+
+	make
+			-- Create an initialize `Current'.
+		do
+			make_horizontal (default_parent, 0, 0, 0, 0, -1)
+			Precursor
+		end
+
 feature -- Status setting
 
    	set_default_minimum_size
@@ -46,7 +53,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_SCROLL_BAR;
+	interface: detachable EV_HORIZONTAL_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -63,4 +70,10 @@ note
 
 
 end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
+
+
+
+
+
+
 

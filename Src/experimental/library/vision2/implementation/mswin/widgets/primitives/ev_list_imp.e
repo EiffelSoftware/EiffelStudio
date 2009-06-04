@@ -11,12 +11,12 @@ class
 inherit
 	EV_LIST_I
 		redefine
-			interface, initialize, selected_item, selected_items, wipe_out
+			interface, make, selected_item, selected_items, wipe_out
 		end
 
 	EV_LIST_ITEM_LIST_IMP
 		redefine
-			initialize, interface, wipe_out
+			make, interface, wipe_out
 		end
 
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -32,8 +32,8 @@ inherit
 			on_right_button_double_click, pnd_press, escape_pnd, set_background_color,
 			set_foreground_color
 		redefine
-			make, on_key_down, on_mouse_move, set_default_minimum_size,
-			initialize, interface, on_size, enable_sensitive, disable_sensitive, background_color,
+			old_make, on_key_down, on_mouse_move, set_default_minimum_size,
+			make, interface, on_size, enable_sensitive, disable_sensitive, background_color_internal,
 			destroy
 		end
 
@@ -83,32 +83,35 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 			-- `Current' will be in single selection mode.
+
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
 		local
 			wel_lv_column: WEL_LIST_VIEW_COLUMN
 		do
-			base_make (an_interface)
 			create ev_children.make (2)
 			create internal_selected_items.make (2)
+
+			Precursor {EV_LIST_ITEM_LIST_IMP}
 
 				-- Create the WEL LISTVIEW.
 			wel_make (Default_parent, 0, 0, 0, 0, 0)
 			create wel_lv_column.make
 			append_column (wel_lv_column)
 			set_extended_view_style (default_ex_style)
-		end
 
-	initialize
-			-- Initialize `Current'.
-		do
 			Precursor {EV_PRIMITIVE_IMP}
-			Precursor {EV_LIST_ITEM_LIST_IMP}
-			initialize_pixmaps
 
+			initialize_pixmaps
 				-- Set the WEL extended view style
 			if comctl32_version >= version_470 then
 				set_extended_view_style (get_extended_view_style +
@@ -121,7 +124,7 @@ feature -- Access
 	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 
-	selected_item: EV_LIST_ITEM
+	selected_item: detachable EV_LIST_ITEM
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items')
@@ -153,7 +156,7 @@ feature -- Status setting
 	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure `an_item' is visible in `Current'.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 		do
 			item_imp ?= an_item.implementation
 			check
@@ -178,7 +181,7 @@ feature -- Status setting
 			-- Make `selected_items' empty.
 		local
 			local_selected_items: like selected_items
-			list_item_imp: EV_LIST_ITEM_IMP
+			list_item_imp: detachable EV_LIST_ITEM_IMP
 		do
 			if not internal_selected_items_uptodate then
 				internal_selected_items := retrieve_selected_items
@@ -191,6 +194,7 @@ feature -- Status setting
 				local_selected_items.after
 			loop
 				list_item_imp ?= local_selected_items.item.implementation
+				check list_item_imp /= Void end
 					-- We now directly deselect the item through the implementation
 					-- rather than calling the interface.
 				internal_deselect_item (list_item_imp)
@@ -218,7 +222,7 @@ feature -- Status setting
 	disable_multiple_selection
 			-- Allow only one item to be selected.
 		local
-			old_selected_item: EV_LIST_ITEM
+			old_selected_item: detachable EV_LIST_ITEM
 		do
 			if multiple_selection_enabled then
 					-- Unselect all selected and remember the top
@@ -242,7 +246,7 @@ feature -- Status setting
 			end
 		end
 
-	selected_items_at_disable_sensitive: ARRAYED_LIST [EV_LIST_ITEM]
+	selected_items_at_disable_sensitive: detachable ARRAYED_LIST [EV_LIST_ITEM]
 		-- All the selected items at the point `disable_sensitive'
 		-- was called. When we call `disable_sensitive' on a list, we
 		-- do not want the selected items to be highlighted any longer.
@@ -253,23 +257,26 @@ feature -- Status setting
 	enable_sensitive
 			-- Make object sensitive to user input.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
+			l_selected_items_at_disable_sensitive: like selected_items_at_disable_sensitive
 		do
 				-- Do nothing if we are already sensitive.
 			if not is_sensitive then
 				-- If we had any selected items when calling `disable_sensitive' then
 				-- restore these to be selected again.
-				if selected_items_at_disable_sensitive /= Void then
+				l_selected_items_at_disable_sensitive := selected_items_at_disable_sensitive
+				if l_selected_items_at_disable_sensitive /= Void then
 					from
-						selected_items_at_disable_sensitive.start
+						l_selected_items_at_disable_sensitive.start
 					until
-						selected_items_at_disable_sensitive.off
+						l_selected_items_at_disable_sensitive.off
 					loop
-						item_imp ?= selected_items_at_disable_sensitive.item.implementation
+						item_imp ?= l_selected_items_at_disable_sensitive.item.implementation
+						check item_imp /= Void end
 						if has (item_imp.interface) then
 							internal_select_item (item_imp)
 						end
-						selected_items_at_disable_sensitive.forth
+						l_selected_items_at_disable_sensitive.forth
 					end
 					internal_selected_items_uptodate := False
 				end
@@ -298,9 +305,13 @@ feature -- Status setting
 
 	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
+		local
+			l_background_color_imp: like background_color_imp
 		do
-			background_color_imp ?= color.implementation
-			set_text_background_color (background_color_imp)
+			l_background_color_imp ?= color.implementation
+			check l_background_color_imp /= Void end
+			background_color_imp := l_background_color_imp
+			set_text_background_color (l_background_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -309,9 +320,13 @@ feature -- Status setting
 
 	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
+		local
+			l_foreground_color_imp: like foreground_color_imp
 		do
-			foreground_color_imp ?= color.implementation
-			set_text_foreground_color (foreground_color_imp)
+			l_foreground_color_imp ?= color.implementation
+			check l_foreground_color_imp /= Void end
+			foreground_color_imp := l_foreground_color_imp
+			set_text_foreground_color (l_foreground_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -324,7 +339,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
-			pre_drop_it, post_drop_it: EV_LIST_ITEM_IMP
+			pre_drop_it, post_drop_it: detachable EV_LIST_ITEM_IMP
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do
@@ -334,7 +349,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				and not item_is_in_pnd then
 				if pre_drop_it.pointer_button_press_actions_internal
 					/= Void then
-					pre_drop_it.pointer_button_press_actions_internal.call(
+					pre_drop_it.pointer_button_press_actions.call(
 						[x_pos,y_pos - pre_drop_it.relative_y, button, 0.0,
 						0.0, 0.0, pt.x, pt.y])
 				end
@@ -345,11 +360,11 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				--| was originally clicked on, has not been removed during the press actions.
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
-			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-				not parent_is_pnd_source and pre_drop_it.parent /= Void then
+			if pre_drop_it /= Void and then pre_drop_it.is_transport_enabled and then
+				not parent_is_pnd_source and then pre_drop_it.parent /= Void then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then
-				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			elseif attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
@@ -357,7 +372,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			end
 
 			if not press_actions_called and call_press_event then
-				interface.pointer_button_press_actions.call
+				attached_interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 
@@ -377,7 +392,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
 					if post_drop_it.pointer_button_press_actions_internal
 						/= Void then
-						post_drop_it.pointer_button_press_actions_internal.call(
+						post_drop_it.pointer_button_press_actions.call(
 							[x_pos,y_pos - post_drop_it.relative_y, button, 0.0,
 							0.0, 0.0, pt.x, pt.y])
 					end
@@ -392,14 +407,14 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button double press.
 		local
-			it: EV_LIST_ITEM_IMP
+			it: detachable EV_LIST_ITEM_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				if it.pointer_double_press_actions_internal /= Void then
-					it.pointer_double_press_actions_internal.call
+					it.pointer_double_press_actions.call
 						([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 					end
 			end
@@ -541,16 +556,16 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			loop
 				child_imp := ev_children.item
 				child_imp.on_orphaned
-				remove_item_actions.call ([child_imp.interface])
+				remove_item_actions.call ([child_imp.attached_interface])
 				child_imp.set_parent_imp (Void)
-				if internal_selected_items.has (child_imp.interface) then
+				if internal_selected_items.has (child_imp.attached_interface) then
 					if child_imp.deselect_actions_internal /= Void then
-						child_imp.deselect_actions_internal.call (Void)
+						child_imp.deselect_actions.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call (Void)
+						deselect_actions.call (Void)
 					end
-					internal_selected_items.prune (child_imp.interface)
+					internal_selected_items.prune (child_imp.attached_interface)
 				end
 				ev_children.remove
 			end
@@ -581,9 +596,13 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current'.
+		local
+			l_image_list: like image_list
 		do
 				-- Destroy the image list.
-			destroy_imagelist (image_list)
+			l_image_list := image_list
+			check l_image_list /= Void end
+			destroy_imagelist (l_image_list)
 			image_list := Void
 
 				-- Remove the image list from the list.
@@ -594,7 +613,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 
 feature {EV_ANY_I} -- Implementation
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_LIST_ITEM_IMP
 			-- `Result' is list item at pixel position `x_pos', `y_pos'.
 		local
 			pt: WEL_POINT
@@ -630,7 +649,7 @@ feature {EV_ANY_I} -- Implementation
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 			item_interface: EV_LIST_ITEM
 		do
 				-- Selections can only occur when `Current' is sensitive.
@@ -645,12 +664,12 @@ feature {EV_ANY_I} -- Implementation
 							-- Item is being selected
 						internal_selected_items_uptodate := False
 						item_imp := ev_children @ (info.iitem + 1)
-						item_interface := item_imp.interface
+						item_interface := item_imp.attached_interface
 						if item_imp.select_actions_internal /= Void then
-							item_imp.select_actions_internal.call (Void)
+							item_imp.select_actions.call (Void)
 						end
 						if select_actions_internal /= Void then
-							select_actions_internal.call (Void)
+							select_actions.call (Void)
 						end
 
 					elseif flag_set(info.uoldstate, Lvis_selected) and
@@ -659,12 +678,12 @@ feature {EV_ANY_I} -- Implementation
 							-- Item is being unselected
 						internal_selected_items_uptodate := False
 						item_imp := ev_children @ (info.iitem + 1)
-						item_interface := item_imp.interface
+						item_interface := item_imp.attached_interface
 						if item_imp.deselect_actions_internal /= Void then
-							item_imp.deselect_actions_internal.call (Void)
+							item_imp.deselect_actions.call (Void)
 						end
 						if deselect_actions_internal /= Void then
-							deselect_actions_internal.call (Void)
+							deselect_actions.call (Void)
 						end
 					end
 				end
@@ -688,19 +707,19 @@ feature {EV_ANY_I} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
-			it: EV_LIST_ITEM_IMP
+			it: detachable EV_LIST_ITEM_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				if it.pointer_motion_actions_internal /= Void then
-					it.pointer_motion_actions_internal.call ([x_pos, y_pos -
+					it.pointer_motion_actions.call ([x_pos, y_pos -
 						it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
 			end
-			if pnd_item_source /= Void then
-				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
@@ -715,7 +734,7 @@ feature {EV_ANY_I} -- Implementation
 			--| items on top. We must now calculate the area which will not be
 			--|re-drawn by the items and now draw that ourseleves first.
 		local
-			bkg_color: WEL_COLOR_REF
+			bkg_color: detachable WEL_COLOR_REF
 			brush: WEL_BRUSH
 			rect1, rect2: WEL_RECT
 			reg, temp_reg, new_reg: WEL_REGION
@@ -734,6 +753,7 @@ feature {EV_ANY_I} -- Implementation
 			else
 				create bkg_color.make_system (Color_btnface)
 			end
+			check bkg_color /= Void end
 			create brush.make_solid (bkg_color)
 				-- Create a region coresponding to `invalid_rect'.
 			create reg.make_rect_indirect (invalid_rect)
@@ -789,13 +809,13 @@ feature {EV_ANY_I} -- Implementation
 			brush.delete
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface
 			else
 				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
@@ -813,7 +833,7 @@ feature {NONE} -- Implementation
 			-- Current selected items (non cached version)
 		local
 			i: INTEGER
-			interf: EV_LIST_ITEM
+			imp: EV_LIST_ITEM_IMP
 			c: like ev_children
 			wel_sel_items: like wel_selected_items
 		do
@@ -825,8 +845,8 @@ feature {NONE} -- Implementation
 			until
 				i = selected_count
 			loop
-				interf ?= (c @ (wel_sel_items @ i + 1)).interface
-				Result.extend (interf)
+				imp := (c @ (wel_sel_items @ i + 1))
+				Result.extend (imp.attached_interface)
 				i := i + 1
 			end
 		end
@@ -871,7 +891,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_LIST;
+	interface: detachable EV_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -888,4 +908,13 @@ note
 
 
 end -- class EV_LIST_IMP
+
+
+
+
+
+
+
+
+
 

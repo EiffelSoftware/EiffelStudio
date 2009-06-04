@@ -29,7 +29,7 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
-	image_list: EV_IMAGE_LIST_IMP
+	image_list: detachable EV_IMAGE_LIST_IMP
 			-- Image list to store all images required by items.
 
 	setup_image_list
@@ -47,7 +47,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		local
-			pixmap: EV_PIXMAP
+			pixmap: detachable EV_PIXMAP
 			cur: CURSOR
 		do
 				-- We only do this if there are images associated with
@@ -185,7 +185,7 @@ feature {EV_LIST_ITEM_IMP} -- Pick & Drop
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_LIST_ITEM_LIST;
+	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -202,4 +202,14 @@ note
 
 
 end -- class EV_LIST_ITEM_LIST_IMP
+
+
+
+
+
+
+
+
+
+
 

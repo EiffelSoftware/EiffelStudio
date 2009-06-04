@@ -17,30 +17,29 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			on_ok,
 			show_modal_to_window
 		end
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a window with a parent.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Setup action sequences.
 		local
+			a_ok_button, a_cancel_button: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			base_make (an_interface)
 			a_cs := "Select file"
 			set_c_object
 				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
 			create filters.make (0)
-		end
-
-	initialize
-			-- Setup action sequences.
-		local
-			a_ok_button, a_cancel_button: POINTER
-		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
@@ -77,7 +76,7 @@ feature -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			if
-				selected_button /= Void and then selected_button.is_equal (internal_accept)
+				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
 			then
 				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object))
 				Result := a_cs.string
@@ -257,7 +256,7 @@ feature {NONE} -- Implementation
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
 			filter_string_list: LIST [STRING_32]
-			current_filter_string, current_filter_description: STRING_GENERAL
+			current_filter_string, current_filter_description: detachable STRING_GENERAL
 			filter_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
@@ -275,7 +274,7 @@ feature {NONE} -- Implementation
 					filter_string_list := current_filter_string.to_string_32.split (';')
 					if current_filter_description /= Void then
 						filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
-						a_cs := current_filter_description
+						create a_cs.set_with_eiffel_string (current_filter_description)
 						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
 						from
 							filter_string_list.start
@@ -311,7 +310,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interface: EV_FILE_DIALOG;
+	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -328,4 +327,8 @@ note
 
 
 end -- class EV_FILE_DIALOG_IMP
+
+
+
+
 

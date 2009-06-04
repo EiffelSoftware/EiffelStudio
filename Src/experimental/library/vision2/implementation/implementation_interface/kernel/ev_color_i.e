@@ -17,9 +17,9 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create zero intinsity color.
 		deferred
 		ensure then
@@ -107,7 +107,7 @@ feature {EV_COLOR} -- Conversion
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		deferred
 		ensure
-			within_range: Result >= 0 and result <= interface.Max_24_bit
+			within_range: Result >= 0 and result <= {EV_COLOR}.Max_24_bit
 		end
 
 	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER)
@@ -115,7 +115,7 @@ feature {EV_COLOR} -- Conversion
 			-- with blue in the least significant 8 bits.
 		require
 			within_range: a_24_bit_rgb >= 0 and
-				a_24_bit_rgb <= interface.Max_24_bit
+				a_24_bit_rgb <= {EV_COLOR}.Max_24_bit
 		deferred
 		ensure
 			rgb_assigned: rgb_24_bit = a_24_bit_rgb
@@ -127,7 +127,7 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,255]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_8_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_8_bit
 		end
 
 	green_8_bit: INTEGER
@@ -136,7 +136,7 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,255]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_8_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_8_bit
 		end
 
 	blue_8_bit: INTEGER
@@ -145,14 +145,14 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,255]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_8_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_8_bit
 		end
 
 	set_red_with_8_bit (an_8_bit_red: INTEGER)
 			-- Set `red' from `an_8_bit_red' intinsity.
 		require
 			within_range: an_8_bit_red >= 0 and
-				an_8_bit_red <= interface.Max_8_bit
+				an_8_bit_red <= {EV_COLOR}.Max_8_bit
 		deferred
 		ensure
 			red_assigned: red_8_bit = an_8_bit_red
@@ -162,7 +162,7 @@ feature {EV_COLOR} -- Conversion
 			-- Set `green' from `an_8_bit_green' intinsity.
 		require
 			within_range: an_8_bit_green >= 0 and
-				an_8_bit_green <= interface.Max_8_bit
+				an_8_bit_green <= {EV_COLOR}.Max_8_bit
 		deferred
 		ensure
 			green_assigned: green_8_bit = an_8_bit_green
@@ -172,7 +172,7 @@ feature {EV_COLOR} -- Conversion
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		require
 			within_range: an_8_bit_blue >= 0 and
-				an_8_bit_blue <= interface.Max_8_bit
+				an_8_bit_blue <= {EV_COLOR}.Max_8_bit
 		deferred
 		ensure
 			blue_assigned: blue_8_bit = an_8_bit_blue
@@ -184,7 +184,7 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,65535]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_16_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_16_bit
 		end
 
 	green_16_bit: INTEGER
@@ -193,7 +193,7 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,65535]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_16_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_16_bit
 		end
 
 	blue_16_bit: INTEGER
@@ -202,14 +202,14 @@ feature {EV_COLOR} -- Conversion
 			-- Range [0,65535]
 		deferred
 		ensure
-			within_range: Result >= 0 and Result <= interface.Max_16_bit
+			within_range: Result >= 0 and Result <= {EV_COLOR}.Max_16_bit
 		end
 
 	set_red_with_16_bit (a_16_bit_red: INTEGER)
 			-- Set `red' from `a_8_bit_red' intinsity.
 		require
 			within_range: a_16_bit_red >= 0 and
-				a_16_bit_red <= interface.Max_16_bit
+				a_16_bit_red <= {EV_COLOR}.Max_16_bit
 		deferred
 		ensure
 			red_assigned: red_16_bit = a_16_bit_red
@@ -219,7 +219,7 @@ feature {EV_COLOR} -- Conversion
 			-- Set `green' from `a_16_bit_green' intinsity.
 		require
 			within_range: a_16_bit_green >= 0 and
-				a_16_bit_green <= interface.Max_16_bit
+				a_16_bit_green <= {EV_COLOR}.Max_16_bit
 		deferred
 		ensure
 			green_assigned: green_16_bit = a_16_bit_green
@@ -229,7 +229,7 @@ feature {EV_COLOR} -- Conversion
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		require
 			within_range: a_16_bit_blue >= 0 and
-				a_16_bit_blue <= interface.Max_16_bit
+				a_16_bit_blue <= {EV_COLOR}.Max_16_bit
 		deferred
 		ensure
 			blue_assigned: blue_16_bit = a_16_bit_blue
@@ -248,7 +248,7 @@ feature --{EV_COLOR_I, EV_COLOR} -- Implementation
 	Default_name: STRING = "noname"
 			-- To be used as `name' when none is supplied.
 
-	interface: EV_COLOR
+	interface: detachable EV_COLOR note option: stable attribute end
 			-- Interface of the current color.
 
 	delta: REAL
@@ -257,30 +257,6 @@ feature --{EV_COLOR_I, EV_COLOR} -- Implementation
 		deferred
 		end
 
-
-invariant
-	red_within_range: red >= 0 and red <= 1
-	green_within_range: green >= 0 and green <= 1
-	blue_within_range: blue >= 0 and blue <= 1
-	red_8_bit_within_range: red_8_bit >= 0 and red_8_bit <= interface.Max_8_bit
-	green_8_bit_within_range: green >= 0 and green_8_bit <= interface.Max_8_bit
-	blue_8_bit_within_range:
-		blue_8_bit >= 0 and blue_8_bit <= interface.Max_8_bit
-	red_16_bit_within_range:
-		red_16_bit >= 0 and red_16_bit <= interface.Max_16_bit
-	green_16_bit_within_range:
-		green_16_bit >= 0 and green_16_bit <= interface.Max_16_bit
-	blue_16_bit_within_range:
-		blue_16_bit >= 0 and blue_16_bit <= interface.Max_16_bit
-	rgb_24_bit_within_range:
-		rgb_24_bit >= 0 and rgb_24_bit <= interface.Max_24_bit
-	red_16_bit_conversion: ((red * interface.Max_16_bit) - red_16_bit).abs <= delta * interface.Max_16_bit
-	red_8_bit_conversion: ((red * interface.Max_8_bit) - red_8_bit).abs <= delta * interface.Max_8_bit
-	green_16_bit_conversion: ((green * interface.Max_16_bit) - green_16_bit).abs <= delta * interface.Max_16_bit
-	green_8_bit_conversion: ((green * interface.Max_8_bit) - green_8_bit).abs < delta * interface.Max_8_bit
-	blue_16_bit_conversion: ((blue * interface.Max_16_bit) - blue_16_bit).abs < delta * interface.Max_16_bit
-	blue_8_bit_conversion: ((blue * interface.Max_8_bit) - blue_8_bit).abs < delta * interface.Max_8_bit
-	name_not_void: name /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -297,4 +273,12 @@ note
 
 
 end -- class EV_COLOR_I
+
+
+
+
+
+
+
+
 

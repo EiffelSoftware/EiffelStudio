@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			make_with_point (a_point_a)
 			set_point_b_position (a_point_b.x, a_point_b.y)
 		end
-		
+
 	make_with_positions (a_point_a_x, a_point_a_y, a_point_b_x, a_point_b_y: INTEGER)
 			-- Create on position (`a_point_a_x' `a_point_a_y') and (`a_point_b_x', `a_point_b_y')
 		do
@@ -61,7 +61,7 @@ feature -- Access
 			Result_x_equal_point_b_x: Result.x = point_b_x
 			Result_y_equal_point_b_y: Result.y = point_b_y
 		end
-		
+
 	point_b_relative: EV_COORDINATE
 			-- `point_b' relative to `group'.`point'.
 		do
@@ -71,22 +71,22 @@ feature -- Access
 			Result_x_equal_point_b_x_relative: Result.x = point_b_x_relative
 			Result_y_eqyal_point_b_y_relative: Result.y = point_b_y_relative
 		end
-		
+
 	point_b_x: INTEGER
 			-- x position of `point_b'.
 		deferred
 		end
-		
+
 	point_b_x_relative: INTEGER
 			-- horizontal distance between `point_b_x' and `group'.`point_x'.
 		do
-			if group = Void then
-				Result := point_b_x
+			if attached group as l_group then
+				Result := point_b_x - l_group.point_x
 			else
-				Result := point_b_x - group.point_x
+				Result := point_b_x
 			end
 		end
-		
+
 	point_b_y: INTEGER
 			-- y position of `point_b'.
 		deferred
@@ -96,10 +96,10 @@ feature -- Access
 	point_b_y_relative: INTEGER
 			-- vertical distance between `point_b_y' and `group'.`point_y'.
 		do
-			if group = Void then
-				Result := point_b_y
+			if attached group as l_group then
+				Result := point_b_y - l_group.point_y
 			else
-				Result := point_b_y - group.point_y
+				Result := point_b_y
 			end
 		end
 
@@ -114,17 +114,17 @@ feature -- Status setting
 		do
 			set_point_b_position (a_point.x, a_point.y)
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to (`ax',`ay').
 		deferred
 		end
-		
+
 	set_point_b_position_relative (ax, ay: INTEGER)
 			-- Set position of `point_b_relative' to (`ax', `ay').
 		do
-			if group /= Void then
-				set_point_b_position (group.point_x + ax, group.point_y + ay)
+			if attached group as l_group then
+				set_point_b_position (l_group.point_x + ax, l_group.point_y + ay)
 			else
 				set_point_b_position (ax, ay)
 			end
@@ -145,4 +145,8 @@ note
 
 
 end -- class EV_MODEL_DOUBLE_POINTED
+
+
+
+
 

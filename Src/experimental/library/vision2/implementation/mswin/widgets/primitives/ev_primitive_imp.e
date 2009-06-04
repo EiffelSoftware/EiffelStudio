@@ -39,33 +39,29 @@ inherit
 
 feature -- Access
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER)
+	set_parent_imp (par_imp: detachable EV_CONTAINER_IMP)
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		local
-			par_imp: EV_CONTAINER_IMP
-			ww: WEL_WINDOW
+			ww: detachable WEL_WINDOW
 		do
-			if par /= Void then
-				par_imp ?= par.implementation
-				ww ?= par.implementation
+			if par_imp /= Void then
+				ww ?= par_imp
+				check ww /= Void end
 				wel_set_parent (ww)
-				check
-					valid_cast: par_imp /= Void
-				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
 			elseif parent_imp /= Void then
 				wel_set_parent (default_parent)
 			end
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -80,7 +76,7 @@ feature -- Basic operations
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
-	tooltip_window: WEL_WINDOW
+	tooltip_window: detachable WEL_WINDOW
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events. May be redefined in
 			-- descendents that are composed of more than one window
@@ -152,7 +148,7 @@ feature {EV_ANY_I} -- Implementation
 			--| Redefine this for each primitive that changes its appearence
 		end
 
-	interface: EV_PRIMITIVE
+	interface: detachable EV_PRIMITIVE note option: stable attribute end
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
@@ -176,4 +172,14 @@ note
 
 
 end -- class EV_PRIMITIVE_IMP
+
+
+
+
+
+
+
+
+
+
 

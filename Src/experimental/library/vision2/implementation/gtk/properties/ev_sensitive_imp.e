@@ -61,14 +61,14 @@ feature {EV_ANY_I} -- Implementation
 			Result := parent /= Void
 		end
 
-	parent: EV_ANY
+	parent: detachable EV_ANY
 		deferred
 		end
 
 	parent_is_sensitive: BOOLEAN
 			-- Is `parent' sensitive?
 		local
-			sensitive_parent: EV_SENSITIVE
+			sensitive_parent: detachable EV_SENSITIVE
 		do
 			sensitive_parent ?= parent
 			if sensitive_parent /= Void then
@@ -76,7 +76,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	interface: EV_SENSITIVE;
+	interface: detachable EV_SENSITIVE note option: stable attribute end;
 			-- Interface object for implementation
 
 note
@@ -94,4 +94,14 @@ note
 
 
 end -- EV_SENSITIVE_IMP
+
+
+
+
+
+
+
+
+
+
 

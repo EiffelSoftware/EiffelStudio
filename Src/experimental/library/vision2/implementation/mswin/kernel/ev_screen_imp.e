@@ -16,7 +16,8 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface, destroy
+			interface, destroy,
+			make
 		end
 
 	WEL_INPUT_EVENT
@@ -35,14 +36,20 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current', a screen object.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		do
 			create dc
 			dc.get
+			Precursor
 		end
 
 feature -- Access
@@ -68,14 +75,14 @@ feature -- Status report
 			create Result.set (wel_point.x, wel_point.y)
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET
+	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position (`x', `y') if any.
 		local
-			l_window: WEL_WINDOW
+			l_window: detachable WEL_WINDOW
 			wel_point: WEL_POINT
-			widget_imp: EV_WIDGET_IMP
-			internal_combo_box: EV_INTERNAL_COMBO_BOX_IMP
-			internal_combo_field: EV_INTERNAL_COMBO_FIELD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			internal_combo_box: detachable EV_INTERNAL_COMBO_BOX_IMP
+			internal_combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
 		do
 				-- Assign the cursor position to `wel_point'.
 			create wel_point.make (x, y)
@@ -259,8 +266,11 @@ feature -- Status setting
 
 feature -- Implementation
 
-	interface: EV_SCREEN
-
+	interface: detachable EV_SCREEN
+		note
+			option: stable
+		attribute
+		end
 
 feature {NONE} -- Constants
 
@@ -294,4 +304,13 @@ note
 
 
 end -- class EV_SCREEN_IMP
+
+
+
+
+
+
+
+
+
 

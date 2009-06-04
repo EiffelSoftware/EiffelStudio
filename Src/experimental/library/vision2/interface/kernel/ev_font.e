@@ -394,10 +394,16 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+
+		end
+
 	create_implementation
 			-- Create implementation of drawing area.
 		do
-			create {EV_FONT_IMP} implementation.make (Current)
+			create {EV_FONT_IMP} implementation.make
 		end
 
 invariant
@@ -427,4 +433,12 @@ note
 
 
 end -- class EV_FONT
+
+
+
+
+
+
+
+
 

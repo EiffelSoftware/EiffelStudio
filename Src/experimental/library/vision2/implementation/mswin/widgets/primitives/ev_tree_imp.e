@@ -13,7 +13,7 @@ inherit
 	EV_TREE_I
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
@@ -31,10 +31,10 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			interface,
-			initialize,
+			make,
 			set_background_color,
 			set_foreground_color,
-			background_color,
+			background_color_internal,
 			destroy
 		end
 
@@ -43,7 +43,7 @@ inherit
 			item_by_data
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -107,24 +107,26 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, 0, 0, 0, 0, 0)
-			create ev_children.make (1)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Do post creation initialization.
 		do
-			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_TREE_I}
 			create all_ev_children.make (1)
 
+			create ev_children.make (1)
+
+			wel_make (default_parent, 0, 0, 0, 0, 0)
+
+			Precursor {EV_PRIMITIVE_IMP}
 			set_is_initialized (True)
 		end
 
@@ -136,7 +138,7 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of `Current'.
 
-	selected_item: EV_TREE_NODE
+	selected_item: detachable EV_TREE_NODE
 			-- Currently selected item.
 		local
 			handle: POINTER
@@ -144,13 +146,13 @@ feature -- Access
 			if selected then
 				handle := {WEL_API}.send_message_result (wel_item, Tvm_getnextitem,
 					to_wparam (Tvgn_caret), to_lparam (0))
-				Result ?= (all_ev_children @ handle).interface
-			else
-				Result := Void
+				if attached (all_ev_children @ handle) as l_item then
+					Result := l_item.interface
+				end
 			end
 		end
 
-	selected_item_imp: EV_TREE_NODE_IMP
+	selected_item_imp: detachable EV_TREE_NODE_IMP
 			-- Currently selected_item_imp.
 			-- Added for speed, if we did not have this,
 			-- then we would have to do another reverse assigment
@@ -175,7 +177,6 @@ feature -- Basic operations
 			-- if `par' is the default_pointer, the parent is the tree.
 		local
 			struct: WEL_TREE_VIEW_INSERT_STRUCT
-			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
 				-- First, we add the item
 			create struct.make
@@ -190,8 +191,7 @@ feature -- Basic operations
 			all_ev_children.force (item_imp, last_item)
 
 				-- Then, we add the subitems if there are some.
-			if item_imp.internal_children /= Void then
-				c := item_imp.internal_children
+			if attached item_imp.internal_children as c then
 				from
 					c.start
 				until
@@ -264,6 +264,7 @@ feature -- Basic operations
 		local
 			hwnd: POINTER
 			a_default_pointer: POINTER
+			l_item: detachable EV_TREE_NODE_IMP
 		do
 			create Result.make (1)
 			from
@@ -277,7 +278,10 @@ feature -- Basic operations
 			until
 				hwnd = a_default_pointer
 			loop
-				Result.extend (all_ev_children @ hwnd)
+				l_item := all_ev_children @ hwnd
+				if attached l_item then
+					Result.extend (l_item)
+				end
 				hwnd := {WEL_API}.send_message_result (wel_item,
 					Tvm_getnextitem, to_wparam (Tvgn_next), hwnd)
 			end
@@ -287,7 +291,7 @@ feature -- Basic operations
 			-- Ensure `tree_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
-			tree_node_imp: EV_TREE_NODE_IMP
+			tree_node_imp: detachable EV_TREE_NODE_IMP
 		do
 			tree_node_imp ?= tree_node.implementation
 			check
@@ -357,7 +361,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP
+	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_TREE_NODE_IMP
 			-- Find the item at `x_pos', `y_pos' pixel coordinates
 			-- within `Current' (Origin of coordinates is top left).
 		local
@@ -385,7 +389,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- WEL Implementation
 
-	image_list: EV_IMAGE_LIST_IMP
+	image_list: detachable EV_IMAGE_LIST_IMP
 			-- WEL image list to store all images required by items.
 
 	setup_image_list
@@ -411,7 +415,12 @@ feature {EV_ANY_I} -- WEL Implementation
 			image_list_not_void: image_list /= Void
 		do
 				-- Remove the image list.
-			destroy_imagelist (image_list)
+			if attached image_list as l_image_list then
+				destroy_imagelist (l_image_list)
+			else
+				check False end
+			end
+
 			image_list := Void
 
 				-- Remove the image list from the multicolumn list.
@@ -424,7 +433,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event. Called on a pointer button press.
 		local
-			pre_drop_it, post_drop_it: EV_TREE_NODE_IMP
+			pre_drop_it, post_drop_it: detachable EV_TREE_NODE_IMP
 			pt: WEL_POINT
 			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 			item_press_actions_called: BOOLEAN
@@ -451,11 +460,11 @@ feature {EV_ANY_I} -- WEL Implementation
 				--| was originally clicked on, has not been removed during the press actions.
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
-			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-				not parent_is_pnd_source and pre_drop_it.parent /= Void then
+			if pre_drop_it /= Void and then pre_drop_it.is_transport_enabled and
+				then not parent_is_pnd_source and then pre_drop_it.parent /= Void then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then
-				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			elseif attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
@@ -463,7 +472,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 
 			if not press_actions_called and call_press_event then
-				interface.pointer_button_press_actions.call
+				attached_interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 
@@ -504,7 +513,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event. Called on a pointer button double press.
 		local
-			it: EV_TREE_NODE_IMP
+			it: detachable EV_TREE_NODE_IMP
 			pt: WEL_POINT
 			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 		do
@@ -538,8 +547,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				-- If we are removing the selected item then we set the return
 				-- value to 1 (True) which stops windows from selecting the next
 				-- item in `Current'.
-			if removing_item then
-				wel_parent.set_message_return_value (to_lresult (1))
+			if removing_item and then attached wel_parent as l_wel_parent then
+				l_wel_parent.set_message_return_value (to_lresult (1))
 			end
 		end
 
@@ -548,7 +557,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		local
 			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			p: POINTER
-			elem: EV_TREE_NODE_IMP
+			elem: detachable EV_TREE_NODE_IMP
 		do
 			clist := all_ev_children
 
@@ -562,8 +571,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 			end
 
-			if info.new_item /= Void then
-				p := info.new_item.h_item
+			if attached info.new_item as l_new_item then
+				p :=l_new_item.h_item
 				if p /= default_pointer then
 					elem := clist.item (p)
 					if elem /= Void then
@@ -595,13 +604,14 @@ feature {EV_ANY_I} -- WEL Implementation
 			--| Set `expand_called_manually' to true for duration of this
 			--| feature. See comment for `expand_called_manually'.
 		local
-			tree_item: EV_TREE_NODE_IMP
+			tree_item: detachable EV_TREE_NODE_IMP
 		do
 			expand_called_manually := True
 			tree_item ?= an_item
+			check tree_item /= Void end
 			if not is_expanded (tree_item) then
 				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
-				tree_item.interface.expand_actions.call (Void)
+				tree_item.attached_interface.expand_actions.call (Void)
 			end
 			expand_called_manually := False
 		end
@@ -611,13 +621,14 @@ feature {EV_ANY_I} -- WEL Implementation
 			--| Set `expand_called_manually' to true for duration of this
 			--| feature. See comment for `expand_called_manually'.
 		local
-			tree_item: EV_TREE_NODE_IMP
+			tree_item: detachable EV_TREE_NODE_IMP
 		do
 			expand_called_manually := True
 			tree_item ?= an_item
+			check tree_item /= Void end
 			if is_expanded (tree_item) then
 				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
-				tree_item.interface.collapse_actions.call (Void)
+				tree_item.attached_interface.collapse_actions.call (Void)
 			end
 			expand_called_manually := False
 		end
@@ -626,13 +637,22 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
+		local
+			l_new_item: detachable WEL_TREE_VIEW_ITEM
+			l_item: detachable EV_TREE_NODE_IMP
 		do
 			if not expand_called_manually then
+				l_new_item := info.new_item
+				check l_new_item /= Void end
+				l_new_item := all_ev_children @ (l_new_item.h_item)
+				check l_new_item /= Void end
+				l_item ?= l_new_item
+				check l_item /= Void end
 				if info.action = Tve_collapse then
-					(all_ev_children @ info.new_item.h_item).interface.
+					(l_item).attached_interface.
 						collapse_actions.call (Void)
 				elseif info.action = Tve_expand then
-					(all_ev_children @ info.new_item.h_item).interface.
+					(l_item).attached_interface.
 						expand_actions.call (Void)
 				end
 			end
@@ -648,7 +668,7 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
-			it: EV_TREE_NODE_IMP
+			it: detachable EV_TREE_NODE_IMP
 			pt: WEL_POINT
 			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 		do
@@ -661,8 +681,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				y_pos - offsets.y_pos, 0.0, 0.0, 0.0, pt.x,
 					pt.y])
 			end
-			if pnd_item_source /= Void then
-				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
@@ -677,13 +697,13 @@ feature {EV_ANY_I} -- WEL Implementation
 			disable_default_processing
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
 		do
-			if background_color_imp /= Void then
-				Result ?= background_color_imp.interface
+			if attached background_color_imp as l_background_color_imp then
+				Result := l_background_color_imp.attached_interface
 			else
 				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
@@ -691,9 +711,13 @@ feature {EV_ANY_I} -- WEL Implementation
 
 	set_background_color (color: EV_COLOR)
 			--
+		local
+			l_background_color_imp: like background_color_imp
 		do
-			background_color_imp ?= color.implementation
-			wel_set_background_color (background_color_imp)
+			l_background_color_imp ?= color.implementation
+			check l_background_color_imp /= Void end
+			background_color_imp := l_background_color_imp
+			wel_set_background_color (l_background_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -702,9 +726,13 @@ feature {EV_ANY_I} -- WEL Implementation
 
 	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
+		local
+			l_foreground_color_imp: like foreground_color_imp
 		do
-			foreground_color_imp ?= color.implementation
-			set_text_color (foreground_color_imp)
+			l_foreground_color_imp ?= color.implementation
+			check l_foreground_color_imp /= Void end
+			foreground_color_imp := l_foreground_color_imp
+			set_text_color (l_foreground_color_imp)
 			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
@@ -720,7 +748,7 @@ feature {EV_ANY_I} -- WEL Implementation
 
 feature {EV_ANY_I}
 
-	interface: EV_TREE;
+	interface: detachable EV_TREE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -737,4 +765,14 @@ note
 
 
 end -- class EV_TREE_IMP
+
+
+
+
+
+
+
+
+
+
 

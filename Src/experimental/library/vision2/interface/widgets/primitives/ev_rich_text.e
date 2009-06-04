@@ -10,7 +10,7 @@ note
 
 class
 	EV_RICH_TEXT
-	
+
 inherit
 	EV_TEXT
 		redefine
@@ -18,12 +18,12 @@ inherit
 			create_implementation,
 			is_in_default_state
 		end
-		
+
 	EV_RICH_TEXT_ACTION_SEQUENCES
 		redefine
 			implementation
 		end
-		
+
 feature -- Access
 
 	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT
@@ -40,7 +40,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	selected_character_format: EV_CHARACTER_FORMAT
 			-- `Result' is character format of current selection.
 			-- If more than one format is contained in the selection, `Result'
@@ -72,7 +72,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
@@ -117,7 +117,7 @@ feature -- Access
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end	
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
@@ -137,9 +137,9 @@ feature -- Access
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end	
+				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_position' to `end_position'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
@@ -157,7 +157,7 @@ feature -- Access
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end	
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 
 	buffer_locked_in_format_mode: BOOLEAN
@@ -174,7 +174,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	buffer_locked_in_append_mode: BOOLEAN
 			-- Is buffered appending underway?
 			-- `True' after one or more calls to `buffered_append' and `False'
@@ -189,7 +189,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		require
@@ -205,7 +205,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		require
@@ -223,7 +223,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		require
@@ -237,7 +237,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	tab_positions: EV_ACTIVE_LIST [INTEGER]
 			-- Width of each tab position in pixels, from left to right.
 			-- Insert values to update tab widths used in `Current'.
@@ -253,7 +253,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	tab_width: INTEGER
 			-- Default width in pixels of each tab in `Current'.
 		require
@@ -267,7 +267,7 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	last_load_successful: BOOLEAN
 			-- Did last call to `set_with_named_file' complete succesfully?
 			-- If an invalid RTF file is passed, `Result' is `False'.
@@ -294,7 +294,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
@@ -327,7 +327,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from caret positions `start_position' to `end_position' applying all attributes
 			-- of `format' that are set to `True' within `applicable_attributes', ignoring others.
@@ -344,7 +344,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
@@ -384,7 +384,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
@@ -407,7 +407,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
@@ -419,7 +419,7 @@ feature -- Status setting
 			start_position >= 1 and end_position <= text_length + 1 and start_position <= end_position
 		do
 			implementation.flush_buffer_to (start_position, end_position)
-		ensure	
+		ensure
 			buffer_locked_for_append: not buffer_locked_in_append_mode
 			caret_consistent: old caret_position <= text_length + 1 implies caret_position = old caret_position
 			unselected: not has_selection
@@ -439,7 +439,7 @@ feature -- Status setting
 				old buffer_locked_in_format_mode implies (caret_position = old caret_position)
 			unselected: not has_selection
 		end
-		
+
 	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' in pixels to `tab_width'.
 		require
@@ -454,7 +454,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	save_to_named_file (a_filename: FILE_NAME)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
@@ -468,7 +468,7 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
+
 	set_with_named_file (a_filename: FILE_NAME)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation of drawing area.
 		do
-			create {EV_RICH_TEXT_IMP} implementation.make (Current)
+			create {EV_RICH_TEXT_IMP} implementation.make
 		end
 
 invariant
@@ -525,4 +525,12 @@ note
 
 
 end -- class EV_RICH_TEXT
+
+
+
+
+
+
+
+
 

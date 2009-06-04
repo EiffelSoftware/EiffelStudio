@@ -79,16 +79,18 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 		local
 			l_angle: DOUBLE
 			p: EV_COORDINATE
+			l_internal_start_arrow: like internal_start_arrow
 		do
 			if is_start_arrow then
 
 				l_angle := start_angle
 				p := start_point
-
-				if internal_start_arrow = Void then
-					create internal_start_arrow
-					internal_start_arrow.set_point_count (3)
-					set_arrow (internal_start_arrow, l_angle, p)
+				l_internal_start_arrow := internal_start_arrow
+				if l_internal_start_arrow = Void then
+					create l_internal_start_arrow
+					internal_start_arrow := l_internal_start_arrow
+					l_internal_start_arrow.set_point_count (3)
+					set_arrow (l_internal_start_arrow, l_angle, p)
 					internal_start_angle := l_angle
 					internal_start_point_x := p.x_precise
 					internal_start_point_y := p.y_precise
@@ -99,14 +101,13 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 					internal_start_point_x /= p.x_precise or else
 					internal_start_point_y /= p.y_precise
 				then
-					set_arrow (internal_end_arrow, l_angle, p)
+					set_arrow (l_internal_start_arrow, l_angle, p)
 					internal_start_angle := l_angle
 					internal_start_point_x := p.x_precise
 					internal_start_point_y := p.y_precise
 					internal_arrow_size := arrow_size
 				end
-
-				Result := internal_start_arrow
+				Result := l_internal_start_arrow
 			else
 				create Result
 			end
@@ -117,17 +118,20 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 		local
 			l_angle: DOUBLE
 			p: EV_COORDINATE
+			l_internal_end_arrow: like internal_end_arrow
 		do
 			if is_end_arrow then
 
 				l_angle := end_angle
 				p := end_point
 
-				if internal_end_arrow = Void then
-					create internal_end_arrow
-					internal_end_arrow.set_point_count (3)
+				l_internal_end_arrow := internal_end_arrow
+				if l_internal_end_arrow = Void then
+					create l_internal_end_arrow
+					internal_end_arrow := l_internal_end_arrow
+					l_internal_end_arrow.set_point_count (3)
 
-					set_arrow (internal_end_arrow, l_angle, p)
+					set_arrow (l_internal_end_arrow, l_angle, p)
 					internal_end_angle := l_angle
 					internal_end_point_x := p.x_precise
 					internal_end_point_y := p.y_precise
@@ -138,14 +142,13 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 					internal_end_point_x /= p.x_precise or else
 					internal_end_point_y /= p.y_precise
 				then
-					set_arrow (internal_end_arrow, l_angle, p)
+					set_arrow (l_internal_end_arrow, l_angle, p)
 					internal_end_angle := l_angle
 					internal_end_point_x := p.x_precise
 					internal_end_point_y := p.y_precise
 					internal_arrow_size := arrow_size
 				end
-
-				Result := internal_end_arrow
+				Result := l_internal_end_arrow
 			else
 				create Result
 			end
@@ -212,12 +215,12 @@ feature {NONE} -- Implementation
 			arrow.set_i_th_point_y (3, as_integer(p + ssin - hscos))--.truncated_to_integer)
 		end
 
-	internal_start_arrow: EV_MODEL_POLYGON
+	internal_start_arrow: detachable EV_MODEL_POLYGON
 	internal_start_angle: DOUBLE
 	internal_start_point_x, internal_start_point_y: DOUBLE
 			-- Values needed to speed up calculation of `start_arrow'.
 
-	internal_end_arrow: EV_MODEL_POLYGON
+	internal_end_arrow: detachable EV_MODEL_POLYGON
 	internal_end_angle: DOUBLE
 	internal_end_point_x, internal_end_point_y: DOUBLE
 			-- Values needed to speed up calculation of `end_arrow'.
@@ -239,4 +242,8 @@ note
 
 
 end -- class EV_MODEL_ARROWED
+
+
+
+
 

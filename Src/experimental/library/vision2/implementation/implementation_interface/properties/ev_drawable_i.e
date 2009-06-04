@@ -55,13 +55,13 @@ feature -- Access
 		deferred
 		end
 
-	clip_area: EV_RECTANGLE
+	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 		deferred
 		end
 
-	tile: EV_PIXMAP
+	tile: detachable EV_PIXMAP
 			-- Pixmap that is used to instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 		deferred
@@ -92,7 +92,7 @@ feature -- Element change
 		deferred
 		ensure
 			line_width_assigned: is_usable implies
-				interface.line_width = a_width
+				attached_interface.line_width = a_width
 		end
 
 	set_drawing_mode (a_mode: INTEGER)
@@ -102,7 +102,7 @@ feature -- Element change
 		deferred
 		ensure
 			drawing_mode_assigned: is_usable implies
-				interface.drawing_mode = a_mode
+				attached_interface.drawing_mode = a_mode
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE)
@@ -112,7 +112,7 @@ feature -- Element change
 		deferred
 		ensure
 			clip_area_assigned: is_usable implies
-				interface.clip_area.is_equal (an_area)
+				attached attached_interface.clip_area as l_clip_area and then an_area.is_equal (l_clip_area)
 		end
 
 	set_clip_region (a_region: EV_REGION)
@@ -126,7 +126,7 @@ feature -- Element change
 			-- Do not apply any clipping.
 		deferred
 		ensure
-			clip_area_void: is_usable implies interface.clip_area = Void
+			clip_area_void: is_usable implies attached_interface.clip_area = Void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
@@ -136,14 +136,14 @@ feature -- Element change
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		ensure
-			tile_assigned: is_usable implies interface.tile /= Void
+			tile_assigned: is_usable implies attached_interface.tile /= Void
 		end
 
 	remove_tile
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
-			tile_void: is_usable implies interface.tile = Void
+			tile_void: is_usable implies attached_interface.tile = Void
 		end
 
 	enable_dashed_line_style
@@ -151,7 +151,7 @@ feature -- Element change
 		deferred
 		ensure
 			dashed_line_style_enabled: is_usable implies
-				interface.dashed_line_style
+				attached_interface.dashed_line_style
 		end
 
 	disable_dashed_line_style
@@ -159,7 +159,7 @@ feature -- Element change
 		deferred
 		ensure
 			dashed_line_style_disabled: is_usable implies
-				not interface.dashed_line_style
+				not attached_interface.dashed_line_style
 		end
 
 feature -- Clearing and drawing operations
@@ -383,7 +383,7 @@ feature -- Drawing operations (filled)
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_DRAWABLE;
+	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -400,4 +400,14 @@ note
 
 
 end -- class EV_DRAWABLE_I
+
+
+
+
+
+
+
+
+
+
 

@@ -16,15 +16,16 @@ inherit
 
 feature -- Status report
 
-	peers: LINKED_LIST [like interface]
+	peers: LINKED_LIST [attached like interface]
 			-- List of all radio items in the group `Current' is in.
 		local
 			cur, wid_obj, l_null: POINTER
-			peer_imp: like Current
+			peer_imp: detachable EV_RADIO_PEER_IMP
+			l_interface: like interface
 		do
 			create Result.make
 			if radio_group = l_null or else widget_object (radio_group) = l_null then
-				Result.extend (interface)
+				Result.extend (attached_interface)
 			else
 				from
 					cur := radio_group
@@ -35,7 +36,9 @@ feature -- Status report
 					if wid_obj /= default_pointer then
 						peer_imp ?= eif_object_from_c (wid_obj)
 						if peer_imp /= Void then
-							Result.extend (peer_imp.interface)
+							l_interface ?= peer_imp.interface
+							check l_interface /= Void end
+							Result.extend (l_interface)
 						end
 					end
 					cur := {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
@@ -43,35 +46,38 @@ feature -- Status report
 			end
 		end
 
-	selected_peer: like interface
+	selected_peer: attached like interface
 			-- Radio item that is currently selected.
 		local
 			cur, wid_obj, l_null: POINTER
-			peer_imp: like Current
+			peer_imp: detachable EV_RADIO_PEER_IMP
+			l_result: like interface
 		do
 			if radio_group = l_null or else widget_object (radio_group) = l_null then
-				Result := interface
+				Result := attached_interface
 			else
 				from
 					cur := radio_group
 				until
-					cur = l_null or else Result /= void
+					cur = l_null or else l_result /= void
 				loop
 					wid_obj := widget_object (cur)
 					if wid_obj /= l_null then
 						peer_imp ?= eif_object_from_c (widget_object (cur))
 						if peer_imp /= Void and then peer_imp.is_selected then
-							Result := peer_imp.interface
+							l_result ?= peer_imp.interface
 						end
 					end
 					cur := {EV_GTK_EXTERNALS}.gslist_struct_next (cur)
 				end
+				check l_result /= Void end
+				Result := l_result
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP
+	eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
 		deferred
 		end
 
@@ -96,7 +102,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	interface: EV_RADIO_PEER;
+	interface: detachable EV_RADIO_PEER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -113,4 +119,8 @@ note
 
 
 end -- class EV_RADIO_PEER
+
+
+
+
 

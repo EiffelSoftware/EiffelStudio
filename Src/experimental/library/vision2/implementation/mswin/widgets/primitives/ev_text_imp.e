@@ -28,7 +28,7 @@ inherit
 		redefine
 			append_text,
 			interface,
-			initialize,
+			make,
 			selection_start,
 			selection_end,
 			set_caret_position,
@@ -138,22 +138,28 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' empty.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'.
+		do
+			initialize_text_widget
+			Precursor {EV_TEXT_COMPONENT_IMP}
+		end
+
+	initialize_text_widget
+			-- Initialize text widget.
+		do
 			wel_make (default_parent, "", 0, 0, 0, 0,0)
 			show_vertical_scroll_bar
 				-- Remove the standard upper limit on characters in
 				-- `Current'. Default is 32,767.
 			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
-		end
-
-	initialize
-			-- Initialize `Current'.
-		do
 			set_default_font
-			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 feature -- Access
@@ -197,7 +203,7 @@ feature -- Access
 	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			exp: STRING_GENERAL
+			exp: detachable STRING_GENERAL
 		do
 			if a_text /= Void then
 					-- Replace "%N" with "%R%N" for Windows.
@@ -451,6 +457,7 @@ feature {NONE} -- Implementation
 		local
 			i, j, nb, l_count : INTEGER
 			l_null : CHARACTER
+			l_result: detachable STRING_32
 		do
 				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
 			from
@@ -473,16 +480,16 @@ feature {NONE} -- Implementation
 
 				-- Replace all found occurrences with '%R%N'.
 			if l_count > 0 then
-				create Result.make_filled (l_null, nb + l_count)
+				create l_result.make_filled (l_null, nb + l_count)
 				from
 					i := 2
 					j := 1
 					if nb > 0 then
 						if a_string.code (1) = ('%N').natural_32_code then
-							Result.put ('%R', j)
+							l_result.put ('%R', j)
 							j := j + 1
 						end
-						Result.put_code (a_string.code (1), j)
+						l_result.put_code (a_string.code (1), j)
 					end
 				until
 					i > nb
@@ -492,15 +499,17 @@ feature {NONE} -- Implementation
 						 a_string.code (i - 1) /= ('%R').natural_32_code
 					then
 						j := j + 1
-						Result.put ('%R', j)
+						l_result.put ('%R', j)
 					end
 					j := j + 1
-					Result.put_code (a_string.code (i), j)
+					l_result.put_code (a_string.code (i), j)
 					i := i + 1
 				end
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := a_string.to_string_32
+			else
+				Result := l_result
 			end
 		end
 
@@ -510,7 +519,7 @@ feature {NONE} -- WEL Implementation
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		local
-			back: WEL_COLOR_REF
+			back: detachable WEL_COLOR_REF
 		do
 				-- We always use the background color, unless `Current' has been made
 				-- non editable, and the user has not set a background color.
@@ -565,7 +574,7 @@ feature {NONE} -- WEL Implementation
 	on_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a key is pressed.
 		local
-			dialog: EV_DIALOG
+			dialog: detachable EV_DIALOG
 		do
 			dialog ?= top_level_window
 			if virtual_key = vk_escape and dialog /= Void then
@@ -587,7 +596,7 @@ feature {NONE} -- WEL Implementation
 	recreate_current (a_additional_style: INTEGER)
 			-- Destroy the existing widget and recreate current using the new style added with `a_additional_style'.
 		local
-			par_imp: WEL_WINDOW
+			par_imp: detachable WEL_WINDOW
 			cur_x: INTEGER
 			cur_y: INTEGER
 			cur_width: INTEGER
@@ -648,7 +657,7 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- interface
 
-	interface: EV_TEXT;
+	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -665,4 +674,14 @@ note
 
 
 end -- class EV_TEXT_IMP
+
+
+
+
+
+
+
+
+
+
 

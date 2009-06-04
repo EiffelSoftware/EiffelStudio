@@ -243,10 +243,16 @@ feature {EV_ANY, EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			
+		end
+
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'
 		do
-			create {EV_ACCELERATOR_IMP} implementation.make (Current)
+			create {EV_ACCELERATOR_IMP} implementation.make
 		end
 
 feature -- Status report
@@ -275,4 +281,12 @@ note
 
 
 end -- class EV_ACCELERATOR
+
+
+
+
+
+
+
+
 

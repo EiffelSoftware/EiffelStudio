@@ -14,7 +14,7 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 create
 	default_create
 
@@ -39,10 +39,11 @@ feature {NONE} -- Status Setting
 			key_combination_unique: an_item /= Void implies
 				(occurrences (an_item) = 1 and not key_combination_exists (an_item))
 		local
-			accelerator_imp: EV_ACCELERATOR_IMP
+			accelerator_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_item /= Void then
 				accelerator_imp ?= an_item.implementation
+				check accelerator_imp /= Void end
 				accelerator_imp.enable_parented
 			end
 		end
@@ -50,10 +51,11 @@ feature {NONE} -- Status Setting
 	disable_item_parented (an_item: like item)
 			-- Assign False to `parented' for `an_item'.
 		local
-			accelerator_imp: EV_ACCELERATOR_IMP
+			accelerator_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_item /= Void then
 				accelerator_imp ?= an_item.implementation
+				check accelerator_imp /= Void end
 				accelerator_imp.disable_parented
 			end
 		end
@@ -93,4 +95,15 @@ note
 
 
 end -- class EV_ACCELERATOR_LIST
+
+
+
+
+
+
+
+
+
+
+
 

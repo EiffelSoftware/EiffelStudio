@@ -1,11 +1,11 @@
-note	
+note
 	description: "Eiffel Vision check menu. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_CHECK_MENU_ITEM_I
 
 inherit
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	interface: EV_CHECK_MENU_ITEM;
+	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -38,4 +38,12 @@ note
 
 
 end -- class EV_CHECK_MENU_ITEM_I
+
+
+
+
+
+
+
+
 

@@ -124,6 +124,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
+			a_width_positive: a_width > 0
 		do
 			implementation.set_item_width (a_widget, a_width.max (a_widget.minimum_width))
 		ensure
@@ -136,6 +137,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
+			a_height_positive: a_height > 0
 		do
 			implementation.set_item_height (a_widget, a_height.max (a_widget.minimum_height))
 		ensure
@@ -149,6 +151,8 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
 		do
 			implementation.set_item_size (a_widget,
 				a_width.max (a_widget.minimum_width),
@@ -168,7 +172,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_FIXED_IMP} implementation.make (Current)
+			create {EV_FIXED_IMP} implementation.make
 		end
 
 note
@@ -186,4 +190,14 @@ note
 
 
 end -- class EV_FIXED
+
+
+
+
+
+
+
+
+
+
 

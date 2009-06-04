@@ -19,7 +19,7 @@ inherit
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			call_button_event_actions,
 			destroy,
 			x_position,
@@ -45,7 +45,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
+	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		do
 			if a_key_press then
@@ -107,8 +107,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (a_x, a_y, a_width, a_height))
 				end
 			end
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (Current)
+			if attached parent_imp as l_parent_imp then
+				l_parent_imp.child_has_resized (Current)
 			end
 		end
 
@@ -118,14 +118,14 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 		do
 			if a_has_focus then
 				if app_implementation.focus_in_actions_internal /= Void then
-					app_implementation.focus_in_actions_internal.call ([interface])
+					app_implementation.focus_in_actions.call ([attached_interface])
 				end
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.call (Void)
 				end
 			else
 				if app_implementation.focus_out_actions_internal /= Void then
-					app_implementation.focus_out_actions_internal.call ([interface])
+					app_implementation.focus_out_actions.call ([attached_interface])
 				end
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
@@ -156,7 +156,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		
+
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 			--| GTK sends both GDK_BUTTON_PRESS and GDK_2BUTTON_PRESS events
@@ -184,7 +184,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if a_button = 4 and mouse_wheel_delta > 0 then
 						-- This is for scrolling up
 					if app_implementation.mouse_wheel_actions_internal /= Void then
-						app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
+						app_implementation.mouse_wheel_actions.call ([attached_interface, mouse_wheel_delta])
 					end
 					if mouse_wheel_actions_internal /= Void then
 						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
@@ -192,7 +192,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				elseif a_button = 5 and mouse_wheel_delta > 0 then
 						-- This is for scrolling down
 					if app_implementation.mouse_wheel_actions_internal /= Void then
-						app_implementation.mouse_wheel_actions_internal.call ([interface, -mouse_wheel_delta])
+						app_implementation.mouse_wheel_actions.call ([attached_interface, -mouse_wheel_delta])
 					end
 					if mouse_wheel_actions_internal /= Void then
 						mouse_wheel_actions_internal.call ([-mouse_wheel_delta])
@@ -202,14 +202,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if a_button >= 1 and then a_button <= 3 then
 					if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_button_press_actions_internal /= Void then
-							app_implementation.pointer_button_press_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
+							app_implementation.pointer_button_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
 						if pointer_button_press_actions_internal /= Void then
 							pointer_button_press_actions_internal.call (t)
 						end
 					elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_double_press_actions_internal /= Void then
-							app_implementation.pointer_double_press_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
+							app_implementation.pointer_double_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
 						if pointer_double_press_actions_internal /= Void then
 							pointer_double_press_actions_internal.call (t)
@@ -220,7 +220,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					-- We have a button release event
 				if a_button >= 1 and a_button <= 3 then
 					if app_implementation.pointer_button_release_actions_internal /= Void then
-						app_implementation.pointer_button_release_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
+						app_implementation.pointer_button_release_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 					end
 					if pointer_button_release_actions_internal /= Void then
 						pointer_button_release_actions_internal.call (t)
@@ -231,11 +231,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Access
 
-	parent: EV_CONTAINER
+	parent: detachable EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		local
-			a_par_imp: EV_CONTAINER_IMP
+			a_par_imp: detachable EV_CONTAINER_IMP
 		do
 			a_par_imp := parent_imp
 			if a_par_imp /= Void then
@@ -257,8 +257,8 @@ feature -- Element change
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		local
 			l_height: INTEGER
-			l_viewport_parent: EV_VIEWPORT_IMP
-			l_fixed_parent: EV_FIXED_IMP
+			l_viewport_parent: detachable EV_VIEWPORT_IMP
+			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, height_request_string.item, $l_height)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
@@ -270,7 +270,7 @@ feature -- Element change
 			else
 				l_fixed_parent ?= parent_imp
 				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_width (interface, a_minimum_width.max (width))
+					l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (width))
 				end
 			end
 		end
@@ -279,8 +279,8 @@ feature -- Element change
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
 			l_width: INTEGER
-			l_viewport_parent: EV_VIEWPORT_IMP
-			l_fixed_parent: EV_FIXED_IMP
+			l_viewport_parent: detachable EV_VIEWPORT_IMP
+			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, width_request_string.item, $l_width)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
@@ -292,7 +292,7 @@ feature -- Element change
 			else
 				l_fixed_parent ?= parent_imp
 				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_height (interface, a_minimum_height.max (height))
+					l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (height))
 				end
 			end
 		end
@@ -301,8 +301,8 @@ feature -- Element change
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
-			l_viewport_parent: EV_VIEWPORT_IMP
-			l_fixed_parent: EV_FIXED_IMP
+			l_viewport_parent: detachable EV_VIEWPORT_IMP
+			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 
@@ -313,7 +313,7 @@ feature -- Element change
 			else
 				l_fixed_parent ?= parent_imp
 				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_size (interface, a_minimum_width.max (width), a_minimum_height.max (height))
+					l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (width), a_minimum_height.max (height))
 				end
 			end
 		end
@@ -324,7 +324,7 @@ feature -- Measurement
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_fixed_imp: EV_FIXED_IMP
+			a_fixed_imp: detachable EV_FIXED_IMP
 		do
 			a_fixed_imp ?= parent_imp
 			if a_fixed_imp /= Void then
@@ -338,7 +338,7 @@ feature -- Measurement
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_fixed_imp: EV_FIXED_IMP
+			a_fixed_imp: detachable EV_FIXED_IMP
 		do
 			a_fixed_imp ?= parent_imp
 			if a_fixed_imp /= Void then
@@ -367,7 +367,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
+	set_parent_imp (a_container_imp: detachable EV_CONTAINER_IMP)
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
@@ -380,14 +380,14 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if not is_destroyed then
 				internal_set_pointer_style (Void)
-				if parent_imp /= Void then
-					parent_imp.interface.prune_all (interface)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.attached_interface.prune_all (attached_interface)
 				end
 				Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
 
-	parent_imp: EV_CONTAINER_IMP
+	parent_imp: detachable EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 
@@ -396,8 +396,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_widget_mapped
 			-- `Current' has been mapped on to the screen.
 		do
-			if pointer_style /= Void and then previous_gdk_cursor = default_pointer then
-				internal_set_pointer_style (pointer_style)
+			if attached pointer_style as l_pointer_style and then previous_gdk_cursor = default_pointer then
+				internal_set_pointer_style (l_pointer_style)
 			end
 		end
 
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 		local
 			l: POINTER
 			child: POINTER
-			fg: EV_COLOR
+			fg: detachable EV_COLOR
 			a_child_list: POINTER
 		do
 			if {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object) then
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 		local
 			l: POINTER
 			child: POINTER
-			bg: EV_COLOR
+			bg: detachable EV_COLOR
 			a_child_list: POINTER
 		do
 			if
@@ -475,7 +475,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	interface: EV_WIDGET;
+	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -492,4 +492,14 @@ note
 
 
 end -- class EV_WIDGET_IMP
+
+
+
+
+
+
+
+
+
+
 

@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end
 			-- Implementation of once per object `select_actions'.
 
 	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -50,7 +50,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	drop_down_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	drop_down_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE note option: stable attribute end;
 			-- Implementation of once per object `drop_down_acions'.
 
 note
@@ -68,4 +68,11 @@ note
 
 
 end
+
+
+
+
+
+
+
 

@@ -22,42 +22,44 @@ inherit
 	EV_PROJECTION_ROUTINES
 
 create
-	make
+	make_with_context
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create with `a_world' and `a_filename'.
+	make_with_context (a_world: EV_FIGURE_WORLD; a_context: EV_PRINT_CONTEXT)
 		do
-			base_make (an_interface)
-			if interface.context.printer_context /= Default_pointer then
-				create print_dc.make_by_pointer (interface.context.printer_context)
+			if a_context.printer_context /= Default_pointer then
+				create dc.make_by_pointer (a_context.printer_context)
 			else
 				-- Create a print dc of the default printer
 				-- Set DC with info from context.
-				create {WEL_DEFAULT_PRINTER_DC} print_dc.make
+				create {WEL_DEFAULT_PRINTER_DC} dc.make
 			end
-			create a_printer.make_with_context (print_dc)
+			create a_printer.make_with_context (dc)
 			drawable := a_printer
-	
-			create draw_routines.make (0, 20)
-			make_with_world (interface.world)
-			register_basic_figures
+			make_with_world (a_world)
+			make
 		end
 
-	initialize
+	old_make (an_interface: like interface)
+			-- Create with `a_world' and `a_filename'.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
 			-- Initialize `Current'.
 		do
+			create draw_routines.make (0, 20)
+			register_basic_figures
 			set_is_initialized (True)
 		end
 
 	destroy
 			-- Destroy `Current'.
 		do
-			if print_dc /= Void then
-				print_dc.unselect_all
-				print_dc.dispose
-			end
+			dc.unselect_all
+			dc.dispose
 		end
 
 feature -- Access
@@ -80,18 +82,18 @@ feature -- Access
 				create clip_rect.make (0, 0, drawable.width, drawable.height)
 
 				drawable.clear_rectangle (clip_rect.left, clip_rect.top, clip_rect.right, clip_rect.bottom)
-				print_dc.set_map_mode (mm_constants.mm_anisotropic)
+				dc.set_map_mode (mm_constants.mm_anisotropic)
 
-				logical_x := print_dc.device_caps (logical_pixels_x)
-				logical_y := print_dc.device_caps (logical_pixels_y)
-				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y) 
+				logical_x := dc.device_caps (logical_pixels_x)
+				logical_y := dc.device_caps (logical_pixels_y)
+				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y)
 				if world.grid_enabled and world.grid_visible then
 					draw_grid
 				end
 				if world.is_show_requested then
 					project_figure_group (world, clip_rect)
 				end
-				
+
 					-- End drawing and print document.
 				a_printer.end_document
 
@@ -104,11 +106,11 @@ feature {NONE} -- Implementation
 
 	pixels_per_inch: INTEGER = 72
 
-	print_dc: WEL_PRINTER_DC
+	dc: WEL_PRINTER_DC
 
 	a_printer: EV_PRINTER
 			-- Drawable used for printing.
-			
+
 	greatest_common_denometer (value1, value2: INTEGER): INTEGER
 			-- `Result' is greatest common denometer of `value1' and `value2'
 		local
@@ -128,9 +130,9 @@ feature {NONE} -- Implementation
 			end
 			Result := l_value1
 		end
-	
+
 	set_dc_extents (wx, wy, vx, vy: INTEGER)
-			-- Set extents of `print_dc' to correctly print `wx', `wy' pixels per inch,
+			-- Set extents of `dc' to correctly print `wx', `wy' pixels per inch,
 			-- on a printer with resolution `vx', `vy'.
 		require
 			values_positive: wx > 0 and wy > 0 and vx > 0 and vy > 0
@@ -139,8 +141,8 @@ feature {NONE} -- Implementation
 		do
 			gx := greatest_common_denometer (wx.abs, vx.abs)
 			gy := greatest_common_denometer (wy.abs, vy.abs)
-			print_dc.set_window_extent ((wx/gx).rounded, (wy/gy).rounded)
-			print_dc.set_viewport_extent ((vx/gx).rounded, (vy/gy).rounded)
+			dc.set_window_extent ((wx/gx).rounded, (wy/gy).rounded)
+			dc.set_viewport_extent ((vx/gx).rounded, (vy/gy).rounded)
 		end
 
 note
@@ -158,4 +160,8 @@ note
 
 
 end -- class EV_PRINT_PROJECTOR
+
+
+
+
 

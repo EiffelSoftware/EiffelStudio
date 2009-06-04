@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Responsible for interaction with native graphics toolkit.
 		do
-			create {EV_TITLED_WINDOW_IMP} implementation.make (Current)
+			create {EV_TITLED_WINDOW_IMP} implementation.make
 		end
 
 invariant
@@ -219,4 +219,12 @@ note
 
 
 end -- class EV_TITLED_WINDOW
+
+
+
+
+
+
+
+
 

@@ -36,10 +36,11 @@ feature -- Status report
 	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			-- is `list_item' checked?
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 			i: INTEGER
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
 			i := ev_children.index_of (item_imp, 1) - 1
 			Result := cwin_listview_getcheckstate (wel_item, i)
 		end
@@ -51,9 +52,10 @@ feature -- Status setting
 			-- checked.
 		local
 			i: INTEGER
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
 			i := ev_children.index_of (item_imp, 1) - 1
 			cwin_listview_setcheckstate (wel_item, i, True)
 
@@ -64,9 +66,10 @@ feature -- Status setting
 			-- checked.
 		local
 			i: INTEGER
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: detachable EV_LIST_ITEM_IMP
 		do
 			item_imp ?= list_item.implementation
+			check item_imp /= Void end
 			i := ev_children.index_of (item_imp, 1) - 1
 			cwin_listview_setcheckstate (wel_item, i, False)
 		end
@@ -81,7 +84,7 @@ feature {NONE} -- Implementation
 --			-- redraw only the parts that need redrawing.
 --		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 			-- Redefined from EV_LIST_IMP to prevent `uncheck_actions'
 			-- frombeing fired when an item is inserted to `Current'.
@@ -104,7 +107,7 @@ feature {NONE} -- Implementation
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if (info.unewstate - info.uoldstate).abs = 4096 then
 					item_imp := ev_children @ (info.iitem + 1)
-					item_interface := item_imp.interface
+					item_interface := item_imp.attached_interface
 					if flag_set (info.unewstate, 4096) then
 						if uncheck_actions_internal /= Void then
 							uncheck_actions_internal.call ([item_interface])
@@ -145,7 +148,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CHECKABLE_LIST;
+	interface: detachable EV_CHECKABLE_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -162,4 +165,13 @@ note
 
 
 end -- class EV_CHECKABLE_LIST_IMP
+
+
+
+
+
+
+
+
+
 

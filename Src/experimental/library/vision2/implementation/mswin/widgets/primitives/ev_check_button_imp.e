@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_TOGGLE_BUTTON_IMP
 		undefine
 			default_alignment
@@ -33,11 +33,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create the check button with no label.
 		do
-			base_make (an_interface)
-			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+			Precursor
 			extra_width := 20
 			text_alignment := default_alignment
 		end
@@ -51,10 +50,10 @@ feature -- Status setting
 				-- we are using a large font, hence we do nothing
 				-- with the system font.
  			if not has_system_font and not text.is_empty then
- 				if private_font /= Void then
-	 				extra_width := 20 + private_font.implementation.height // 2
-	 			else
- 					extra_width := 20 + private_wel_font.height // 2
+ 				if attached private_font as l_private_font then
+	 				extra_width := 20 + l_private_font.implementation.height // 2
+	 			elseif attached private_wel_font as l_private_wel_font then
+ 					extra_width := 20 + l_private_wel_font.height // 2
  				end
  			end
 			Precursor {EV_TOGGLE_BUTTON_IMP}
@@ -93,7 +92,7 @@ feature {NONE} -- Implementation
 					| Ws_tabstop | Ws_clipchildren | Ws_clipsiblings
 					| Bs_autocheckbox
 		end
-		
+
 	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
@@ -104,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interface: EV_CHECK_BUTTON;
+	interface: detachable EV_CHECK_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -121,4 +120,14 @@ note
 
 
 end -- class EV_CHECK_BUTTON_IMP
+
+
+
+
+
+
+
+
+
+
 

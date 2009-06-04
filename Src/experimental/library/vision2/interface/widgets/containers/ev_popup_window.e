@@ -80,7 +80,11 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_POPUP_WINDOW_IMP} implementation.make (Current)
+			if has_shadow then
+				create {EV_POPUP_WINDOW_IMP} implementation.initialize_with_shadow
+			else
+				create {EV_POPUP_WINDOW_IMP} implementation.make
+			end
 		end
 
 note
@@ -98,4 +102,12 @@ note
 
 
 end
+
+
+
+
+
+
+
+
 

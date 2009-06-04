@@ -55,7 +55,7 @@ feature -- Drawing operations
 
 feature {NONE} -- Implementation
 
-	interface: EV_DRAWING_AREA;
+	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
 
@@ -74,4 +74,12 @@ note
 
 
 end -- class EV_DRAWING_AREA_I
+
+
+
+
+
+
+
+
 

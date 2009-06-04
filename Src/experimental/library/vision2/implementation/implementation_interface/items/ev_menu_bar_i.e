@@ -21,14 +21,14 @@ inherit
 
 feature -- Status report
 
-	parent: EV_WINDOW
+	parent: detachable EV_WINDOW
 			-- Parent of `Current'.
 		deferred
 		end
 
 feature {EV_ANY} -- Implementation
 
-	interface: EV_MENU_BAR;
+	interface: detachable EV_MENU_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -45,4 +45,13 @@ note
 
 
 end -- class EV_MENU_BAR_I
+
+
+
+
+
+
+
+
+
 

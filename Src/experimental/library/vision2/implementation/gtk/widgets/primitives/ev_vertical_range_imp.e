@@ -1,4 +1,4 @@
-note 
+note
 	description: "Eiffel Vision vertical range. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,6 +17,7 @@ inherit
 	EV_RANGE_IMP
 		redefine
 			interface,
+			old_make,
 			make
 		end
 
@@ -25,16 +26,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the vertical range.
 		do
 			Precursor {EV_RANGE_IMP} (an_interface)
+		end
+
+	make
+			-- Create and initialize `Current'.
+		do
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment))
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_RANGE;
+	interface: detachable EV_VERTICAL_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -51,4 +58,8 @@ note
 
 
 end -- class EV_VERTICAL_RANGE_IMP
+
+
+
+
 

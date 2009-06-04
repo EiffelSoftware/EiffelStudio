@@ -87,7 +87,7 @@ feature -- Implementation
 		a_c_object: POINTER;
 		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		invoke_after_handler: BOOLEAN)
 				--
 		local
@@ -224,25 +224,30 @@ feature {NONE} -- Implementation
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= default_pointer
 		local
-			retried: BOOLEAN
-			l_integer_pointer_tuple: like integer_pointer_tuple
-			app_imp: EV_APPLICATION_IMP
+			retry_count: INTEGER
+			l_integer_pointer_tuple: detachable like integer_pointer_tuple
+			app_imp: detachable EV_APPLICATION_IMP
 		do
-			if not retried then
+			if retry_count = 0 then
 				if n_args > 0 then
 					l_integer_pointer_tuple := integer_pointer_tuple
 					l_integer_pointer_tuple.integer := n_args
 					l_integer_pointer_tuple.pointer := args
 				end
 				action.call (l_integer_pointer_tuple)
-			else
-				app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			elseif retry_count = 1 then
+				app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
+				check app_imp /= Void end
 				app_imp.on_exception_action (app_imp.new_exception)
 			end
 		rescue
-			if not retried then
-				retried := True
+			retry_count := retry_count + 1
+			if retry_count = 1 then
+					-- Only retry once
 				retry
+			else
+					-- There is an exception from calling `on_exception_action' so we exit gracefully.
+				print ("Error: An exception was raised when during handling of a previous exception%N")
 			end
 		end
 
@@ -295,7 +300,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy
-		
+
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
@@ -363,4 +368,14 @@ note
 
 
 end -- class EV_GTK_CALLBACK_MARSHAL
+
+
+
+
+
+
+
+
+
+
 

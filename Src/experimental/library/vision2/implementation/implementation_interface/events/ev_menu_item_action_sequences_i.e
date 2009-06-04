@@ -32,8 +32,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
+		note
+			option: stable
+		attribute
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -50,4 +54,14 @@ note
 
 
 end
+
+
+
+
+
+
+
+
+
+
 

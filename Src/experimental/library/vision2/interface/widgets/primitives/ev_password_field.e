@@ -1,4 +1,4 @@
-note 
+note
 	description:
 		"[
 			Input field for a single line of `text', displayed
@@ -33,13 +33,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PASSWORD_FIELD_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Initialization
 
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_PASSWORD_FIELD_IMP} implementation.make (Current)
+			create {EV_PASSWORD_FIELD_IMP} implementation.make
 		end
 
 note
@@ -57,4 +57,10 @@ note
 
 
 end -- class EV_PASSWORD_FIELD
+
+
+
+
+
+
 

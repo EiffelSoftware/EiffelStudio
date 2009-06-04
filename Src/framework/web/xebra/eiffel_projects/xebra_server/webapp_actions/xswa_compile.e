@@ -42,7 +42,7 @@ feature -- Access
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
 		do
-			Result  := " -config " + webapp.config.name.out + "-voidunsafe.ecf -target " + webapp.config.name.out + " -c_compile -stop"
+			Result  := " -config " + webapp.config.name.out + ".ecf -target " + webapp.config.name.out + " -c_compile -stop"
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
 --			end

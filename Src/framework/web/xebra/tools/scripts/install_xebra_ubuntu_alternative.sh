@@ -1,4 +1,6 @@
 # install.sh
+echo "This script does not work at the moment.";
+exit;
 
 
 if [ -x "$XEBRA_DEV" ]; then

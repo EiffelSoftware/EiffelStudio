@@ -1,6 +1,9 @@
 note
 	description: "[
 		SQLite C macros used to determine the success/failure of an SQLite API operation.
+		
+		These codes are used by the internals of the SQLite library, but are also used in the
+		SQLite exceptions {SQLITE_EXCEPTION}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

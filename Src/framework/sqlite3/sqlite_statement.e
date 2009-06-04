@@ -137,6 +137,9 @@ feature {SQLITE_RESULT_ROW} -- Measurement
 
 feature -- Status report
 
+	is_executing: BOOLEAN
+			-- Indicates if the statement is currently be executed.
+
 	is_compiled: BOOLEAN
 			-- Indicates if the statement was successfully compiled, and if it is compiled with the
 			-- associated database `db'.
@@ -159,8 +162,13 @@ feature -- Status report
 				internal_db = db.internal_db)
 		end
 
-	is_executing: BOOLEAN
-			-- Indicates if the statement is currently be executed.
+	has_error: BOOLEAN
+			-- Indicates if an error occured during the last operation.
+		do
+			Result := last_exception /= Void
+		ensure
+			last_exception_attached: Result implies last_exception /= Void
+		end
 
 feature {NONE} -- Status report
 

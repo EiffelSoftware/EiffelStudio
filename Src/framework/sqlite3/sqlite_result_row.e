@@ -86,6 +86,26 @@ feature -- Status report
 
 feature -- Query
 
+	column_name (a_column: NATURAL): IMMUTABLE_STRING_8
+			-- Retrieve the name of a column in a statment.
+			--
+			-- `a_column': The column index to retrieve a name for.
+			-- `Result': A column name, or an
+		require
+			is_interface_usable: is_interface_usable
+			is_connected: is_connected
+			a_column_positive: a_column > 0
+			a_column_small_enough: a_column <= count
+		do
+			if attached {SQLITE_QUERY_STATEMENT} statement as l_query then
+				Result := l_query.column_name (a_column)
+			else
+				create Result.make_empty
+			end
+		ensure
+			result_attached: attached Result
+		end
+
 	value alias "[]" (a_column: NATURAL): detachable ANY
 			-- Fetches a value for the column `a_column'.
 			-- Unlike the specific type functions such as `string_value', `real_value', ... the result

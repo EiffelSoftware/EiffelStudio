@@ -754,6 +754,7 @@ feature -- Input
 				create Result.make_from_managed_pointer (l_data)
 			end
 			bytes_read := amount_read
+			ext_data.memory_free
 		end
 
 	receive (size, flags: INTEGER): detachable PACKET
@@ -792,6 +793,7 @@ feature -- Input
 			if l_data /= Void then
 				create Result.make_from_managed_pointer (l_data)
 			end
+			ext_data.memory_free
 		end
 
 feature -- socket options

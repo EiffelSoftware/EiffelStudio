@@ -9,9 +9,9 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="encoding" location="$EIFFEL_SRC\library\encoding\encoding.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="i18n" location="$EIFFEL_SRC\library\i18n\i18n.ecf"/>
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<cluster name="interface_names" location=".\"/>
 	</target>
 </system>

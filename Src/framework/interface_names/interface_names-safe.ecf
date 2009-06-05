@@ -9,9 +9,9 @@
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoding" location="$EIFFEL_SRC\library\encoding\encoding-safe.ecf" readonly="false"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
-		<library name="i18n" location="$EIFFEL_SRC\library\i18n\i18n-safe.ecf"/>
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n-safe.ecf"/>
 		<cluster name="interface_names" location=".\"/>
 	</target>
 </system>

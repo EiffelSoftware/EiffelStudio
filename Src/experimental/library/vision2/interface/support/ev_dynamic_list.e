@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST [G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST [G -> detachable EV_CONTAINABLE]
 
 inherit
 	EV_CONTAINABLE
@@ -208,7 +208,7 @@ feature -- Element change
 			extendible: extendible
 			sequence_not_void: s /= Void
 			sequence_not_current: s /= Current
-			not_parented: not s.there_exists (agent (v: like item): BOOLEAN do Result := v.parent /= Void end)
+			not_parented: not s.there_exists (agent (v: like item): BOOLEAN do Result := v /= Void and then v.parent /= Void end)
 		do
 			implementation.append (s)
 		ensure
@@ -249,7 +249,7 @@ feature -- Element change
 			parent_is_current: v.parent = Current
 			item_replaced: v = item
 			not_has_old_item: not has (old item)
-			old_item_parent_void: (old item).parent = Void
+			old_item_parent_void: attached (old item) as l_item and then l_item.parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -326,7 +326,7 @@ feature -- Element change
 			parent_is_current: v.parent = Current
 			item_replaced: v = i_th (i)
 			not_has_old_item: not has (old i_th (i))
-			old_item_parent_void: (old i_th (i)).parent = Void
+			old_item_parent_void: attached (old i_th (i)) as l_item and then l_item.parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -381,7 +381,7 @@ feature -- Removal
 		ensure then
 			not_has_v: not has (v)
 			had_item_implies_parent_void:
-				old has (v) implies v.parent = Void
+				old has (v) implies (v /= Void and then v.parent = Void)
 			had_item_implies_count_decreased:
 				old has (v) implies count = old count - 1
 			had_item_and_was_after_implies_index_decreased:
@@ -395,7 +395,7 @@ feature -- Removal
 			implementation.remove
 		ensure then
 			v_removed: not has (old item)
-			parent_void: (old item).parent = Void
+			parent_void: attached (old item) as l_item and then l_item.parent = Void
 			count_decreased: count = old count - 1
 			index_same: index = old index
 		end
@@ -407,7 +407,7 @@ feature -- Removal
 			implementation.remove_left
 		ensure then
 			left_neighbor_removed: not has (old i_th (index - 1))
-			parent_void: (old i_th (index - 1)).parent = Void
+			parent_void: attached (old i_th (index -1)) as l_item and then l_item.parent = Void
 			index_decreased: index = old index - 1
 		end
 
@@ -418,7 +418,7 @@ feature -- Removal
 			implementation.remove_right
 		ensure then
 			right_neighbor_removed: not has (old i_th (index + 1))
-			parent_void: (old i_th (index + 1)).parent = Void
+			parent_void: attached (old i_th (index + 1)) as l_item and then l_item.parent = Void
 			index_same: index = old index
 		end
 

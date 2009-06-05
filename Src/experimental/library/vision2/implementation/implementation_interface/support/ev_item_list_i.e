@@ -32,9 +32,11 @@ feature -- Access
 			until
 				attached_interface.after or Result /= Void
 			loop
-				curr_data := attached_interface.item.data
-				if equal (curr_data, data) then
-					Result := attached_interface.item
+				if attached attached_interface.item as l_item then
+					curr_data := l_item.data
+					if equal (curr_data, data) then
+						Result := l_item
+					end
 				end
 				attached_interface.forth
 			end

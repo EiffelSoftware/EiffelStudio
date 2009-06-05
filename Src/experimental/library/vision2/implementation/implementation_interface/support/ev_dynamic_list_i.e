@@ -132,7 +132,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G]
+	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [attached G]
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -363,6 +363,7 @@ feature -- Element change
 				other.is_empty
 			loop
 				v := other.item
+				check v /= Void end
 				other.remove
 				insert_i_th (v, index)
 				index := index + 1
@@ -381,6 +382,7 @@ feature -- Element change
 			loop
 				other.finish
 				v := other.item
+				check v /= Void end
 				other.remove
 				insert_i_th (v, index + 1)
 			end

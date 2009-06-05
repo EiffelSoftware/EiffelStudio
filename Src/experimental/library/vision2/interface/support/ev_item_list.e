@@ -66,9 +66,11 @@ feature {NONE} -- Contract support
 			until
 				after or Result = False
 			loop
-				item_par ?= item.parent
-				if item_par /= Current then
-					Result := False
+				if attached item as l_item then
+					item_par ?= l_item.parent
+					if item_par /= Current then
+						Result := False
+					end
 				end
 				forth
 			end

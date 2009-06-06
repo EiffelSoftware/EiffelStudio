@@ -45,6 +45,15 @@ feature -- Status report
 			Result := not is_running
 		end
 
+	wait_for_exit
+			-- Waits until process is terminated
+		do
+			if attached {PROCESS} run_process as p  and then p.is_running then
+				o.dprint ("Waiting for run_process to exit...", 3)
+				p.wait_for_exit
+			end
+		end
+
 feature -- Status setting
 
 	stop
@@ -57,6 +66,7 @@ feature -- Status setting
 			end
 			is_running := False
 		end
+
 
 feature {NONE} -- Implementation
 
@@ -86,6 +96,7 @@ feature -- Agents
 		do
 			config_outputter
 			is_running := False
+			o.dprint ("Run process for " + webapp.config.name.out + " has exited.", 3)
 		end
 
 	run_output_handler (a_ouput: STRING)

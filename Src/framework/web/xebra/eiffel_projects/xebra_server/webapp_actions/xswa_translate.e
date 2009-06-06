@@ -78,6 +78,9 @@ feature -- Access
 			if not webapp.cleaned then
 				Result.append (" -clean")
 			end
+			if not file_exists (servlet_gen_exe) then
+				Result.append (" -clean")
+			end
 		ensure
 			Result_attached: Result /= void
 		end

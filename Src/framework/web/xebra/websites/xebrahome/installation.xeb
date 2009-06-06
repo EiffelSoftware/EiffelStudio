@@ -1,0 +1,184 @@
+<page:include template="three_column_design">
+	<page:define_region id="title">
+	Installation
+	</page:define_region>
+	<page:define_region id="right_content">
+	Lorempa asdkja sldkjsa dflaksjdf laksjdf laskdjf laksjdf laksdjf laksdjflkasdjflkajsldkfjalksd jflka
+	</page:define_region>
+	<page:define_region id="left_content">
+	Lorempa asdkja sldkjsa dflaksjdf laksjdf laskdjf laksjdf laksdjf laksdjflkasdjflkajsldkfjalksd jflka
+	</page:define_region>
+	<page:define_region id="middle_content">
+		<h3>Notes</h3>
+		<p>Use Xebra revision 78995 for this tutorial.</p>
+		<p>This tutorial was tested with EiffelStudio 6.4.7.8600 (<span
+			class="path">$ISE_EIFFEL</span>) and eiffel_src (<span class="path">$EIFFEL_SRC</span>)
+		revision 78995.</p>
+		<p>The env vars <span class="path">$EIFFEL_SRC</span>, <span
+			class="path">$ISE_EIFFEL</span>, <span class="path">$ISE_PLATFORM</span>
+		and <span class="path">$ISE_LIBRARY</span> are expected to be set.</p>
+		<h2>Windows</h2>
+		<h3>Checkout Xebra</h3>
+		<ul>
+			<li>Define <span class="path">$XEBRA_DEV</span> and checkout
+			xebra from <a
+				href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/"
+				class="path">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a>
+			to <span class="path">$XEBRA_DEV</span></li>
+		</ul>
+		<h3>Setup Apache</h3>
+		<ul>
+			<li>Download apache httpd-2.2.11 windows binary from <a
+				href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a>
+
+			</li>
+			<li>Install (Choose Custom Installation and install Build
+			Headers and Libraries as well)</li>
+			<li>Copy <a
+				href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects/apache_mod_xebra_win/Debug/mod_xebra.so">mod_xebra.so</a>
+			to your <span class="path">Apache2.2\modules</span> folder.</li>
+			<li>Add the following lines to <span class="path">Apache2.2\conf\httpd.conf</span>:
+			<ul class="code">
+				<li>LoadModule xebra_module modules/mod_xebra.so</li>
+				<li>AddHandler mod_xebra .xeb</li>
+				<li>XebraServer_port &quot;55000&quot;</li>
+				<li>XebraServer_host &quot;localhost&quot;</li>
+				<li>LogLevel debug</li>
+			</ul>
+			</li>
+		</ul>
+		<ul>
+			<li>(If apache is installed as a service, stop the service Start
+			apache: open a console, browse to <span class="path">Apache2.2\bin</span>
+			and run <span class="code">httpd</span></li>
+			<li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You
+			should see the Fail Whale and a message saying &quot;Cannot connect
+			to XebraServer. See apache error log.&quot;</li>
+			<li>In order to be able to browse to the pre-created websites,
+			copy the content of the folder <span class="path">
+			xebra\httpd\htdocs</span> to <span class="path">Apache2.2\htdocs</span>.</li>
+		</ul>
+		<h3>Compile the Xebra Translator</h3>
+		<ul>
+			<li>Launch estudio and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator-voidunsafe.ecf</span>
+
+			</li>
+			<li>Compile</li>
+		</ul>
+		<h3>Run the Xebra Server</h3>
+		<ul>
+			<li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini
+			</span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>,
+			and <span class="path">webapps_root</span> to your configuration.</li>
+			<li>Launch estudio and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf
+
+			</span></li>
+			<li>Go to the Exceptions Handling dialog and disable
+			DEVELOPER_EXCEPTION.</li>
+			<li>Open the Execution Parameters dialog and set <span
+				class="path">config.ini -d 10</span> as argument.</li>
+			<li>Compile and run</li>
+			<li>Browse to <a href="http://localhost/helloworld/hello.xeb">http://localhost/helloworld/hello.xeb</a>.
+			The server now translates, generates, compiles and finally runns the
+			xebrawebpp application.</li>
+		</ul>
+
+		<h2>Ubuntu 9.04</h2>
+		<h3>Checkout Xebra</h3>
+		<ul>
+			<li>Define <span class="path">$XEBRA_DEV</span> and checkout
+			xebra from <a
+				href="https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/"
+				class="path">https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/</a>
+			to <span class="path">$XEBRA_DEV</span></li>
+		</ul>
+
+		<h3>Setup Apache</h3>
+		<p>Note: Mod_xebra does currently not run with the apache
+		distribution that comes with ubuntu.</p>
+
+		<ul>
+			<li>Download apache unix source httpd-2.2.11 from <span
+				class="path"><a href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a></span><a
+				href="http://httpd.apache.org/download.cgi"> </a></li>
+			<li>Extract</li>
+			<li>Define <span class="path">$APACHE2 </span>where you want to
+			install apache, e.g. to <span class="path">$XEBRA_DEV/httpd</span></li>
+			<li>Run the following commands:
+			<ul class="code">
+				<li>CFLAGS=&quot;-ggdb&quot;./configure --prefix={insert path
+				here}</li>
+				<li>make install</li>
+			</ul>
+			</li>
+			<li>Compile the module by running
+			<ul class="code">
+				<li>cd $XEBRA_DEV/c_projects/mod_xebra</li>
+				<li>$APACHE2/bin/apxs -c -Wc,-ggdb
+				-I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include mod_xebra.c
+				mod_xebra.h</li>
+			</ul>
+			</li>
+			<li>Install the module to apache by running
+			<ul class="code">
+				<li>sudo $APACHE2/bin/apxs -i mod_xebra.la</li>
+			</ul>
+			</li>
+
+			<li>Add the following lines to <span class="path">Apache2.2\conf\httpd.conf</span>:
+			<ul class="code">
+				<li>LoadModule xebra_module modules/mod_xebra.so</li>
+				<li>AddHandler mod_xebra .xeb</li>
+				<li>XebraServer_port &quot;55000&quot;</li>
+				<li>XebraServer_host &quot;localhost&quot;</li>
+				<li>LogLevel debug</li>
+			</ul>
+			</li>
+
+			<li>Restart apache (if necessary, you need to stop and start
+			instead of restart)
+			<ul class="code">
+				<li>sudo$ APACHE2/bin/apachectl restart</li>
+			</ul>
+			Make sure no other apache is running, e.g. run
+			<ul class="code">
+				<li>sudoapache2ctl stop</li>
+			</ul>
+			</li>
+			<li>Browse to <a href="http://localhost/test.xeb">http://localhost/test.xeb</a>.You
+			should see the Fail Whale and a message saying &quot;Cannot connect
+			to XebraServer. See apache error log.&quot;</li>
+
+			<li>In order to be able to browse to the pre-created websites,
+			copy the content of the folder <span class="path">
+			xebra/httpd/htdocs</span> to <span class="path">$APACHE2/htdocs</span>.</li>
+			<li>Hint: keep an eye on the apache error log <span class="code">tail
+			-f $APACHE2/logs/error_log</span></li>
+		</ul>
+		<h3>Compile the Xebra Translator</h3>
+		<ul>
+			<li>Launch estudio and open the project <span class="path">$XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator-voidunsafe.ecf</span>
+
+			</li>
+			<li>Compile</li>
+		</ul>
+		<h3>Run the Xebra Server</h3>
+		<ul>
+			<li>Open the file <span class="path">$XEBRA_DEV/eiffel_projects/xebra_server/config.ini
+			</span>and adapt <span class="path">translator</span>, <span class="path">compiler</span>,
+			and <span class="path">webapps_root</span> to your configuration.</li>
+			<li>Open estudio in a terminal and open the project <span
+				class="path">$XEBRA_DEV/eiffel_projects/xebra_server/xebra_server-voidunsafe.ecf
+
+			</span></li>
+			<li>Go to the Exceptions Handling dialog and disable
+			DEVELOPER_EXCEPTION.</li>
+			<li>Open the Execution Parameters dialog and set <span
+				class="path">config.ini -d 10</span> as argument.</li>
+			<li>Compile and Run</li>
+			<li>Browse to <a href="http://localhost/helloworld/hello.xeb">http://localhost/helloworld/hello.xeb</a>.
+			The server now translates, generates, compiles and finally runns the
+			application.</li>
+		</ul>
+	</page:define_region>
+</page:include>

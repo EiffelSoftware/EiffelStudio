@@ -6,8 +6,6 @@ indexing
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 */
 
-#include <eif_eiffel.h>
-#include <Cocoa/Cocoa.h>
 #include "objc_callback_marshal.h"
 
 EIF_OBJECT callback_object;

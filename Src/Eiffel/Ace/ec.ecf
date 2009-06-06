@@ -182,7 +182,7 @@
 		</library>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" readonly="false"/>
 		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false"/>
-		<library name="testing_library" location="$EIFFEL_SRC\library\testing\testing.ecf" readonly="false"/>
+		<library name="testing_library" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>

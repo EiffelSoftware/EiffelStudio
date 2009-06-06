@@ -1,0 +1,4 @@
+<xeb:container>
+<p>Hi, here is some random information about random stuff...</p>
+<page:controller class="master_controller" />
+</xeb:container>

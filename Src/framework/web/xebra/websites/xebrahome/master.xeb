@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <page:controller class="master_controller" />
 <head>
@@ -7,22 +6,15 @@
 <link href="base.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<table width="807" border="0" align="center" cellpadding="0" cellspacing="0" id="MainTable" >
-  <tr>
-    <td><img id="xebraweb2_01" src="images/xebraweb2_01.gif" width="9" height="92" alt="" /></td>
-    <td><img id="xebraweb2_02" src="images/xebraweb2_02.gif" width="787" height="92" alt="" /></td>
-    <td><img id="xebraweb2_03" src="images/xebraweb2_03.gif" width="11" height="92" alt="" /></td>
-  </tr>
-  <tr>
-    <td c background="images/xebraweb2_04.gif"><img src="images/xebraweb2_04.gif" alt="" name="xebraweb2_04" width="9" height="177" id="xebraweb2_04" /></td>
-    <td class="contentTd"><page:region id="content" /></td>
-    <td background="images/xebraweb2_06.gif"><img src="images/xebraweb2_06.gif" alt="" name="xebraweb2_06" width="11" height="177" id="xebraweb2_06" /></td>
-  </tr>
-  <tr>
-    <td><img id="xebraweb2_07" src="images/xebraweb2_07.gif" width="9" height="15" alt="" /></td>
-    <td><img id="xebraweb2_08" src="images/xebraweb2_08.gif" width="787" height="15" alt="" /></td>
-    <td><img id="xebraweb2_09" src="images/xebraweb2_09.gif" width="11" height="15" alt="" /></td>
-  </tr>
-</table>
+<div id="main">
+<div id="header">
+<div class="nav btn_download" onclick="location.href='download.xeb';"></div>
+<div class="nav btn_documentation"
+	onclick="location.href='documentation.xeb';"></div>
+<div class="nav btn_about" onclick="location.href='about.xeb';"></div>
+</div>
+<page:region id="content" />
+<div id="footer">Copyright (c) 1993-2009 Eiffel Software</div>
+</div>
 </body>
 </html>

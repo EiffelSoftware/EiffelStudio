@@ -1,0 +1,22 @@
+<page:include template="master">
+<div class="title"><page:region id="design_title" /></div>
+	<page:define_region id="content">
+		<div class="box15">
+		<div class="cap top"></div>
+		<div class="text"><page:region id="left_content" /></div>
+		<div class="cap bottom"></div>
+		</div>
+
+		<div class="box35">
+		<div class="cap top"></div>
+		<div class="text"><page:region id="middle_content" /></div>
+		<div class="cap bottom"></div>
+		</div>
+
+		<div class="box15">
+		<div class="cap top"></div>
+		<div class="text"><page:region id="right_content" /></div>
+		<div class="cap bottom"></div>
+		</div>
+	</page:define_region>
+</page:include>

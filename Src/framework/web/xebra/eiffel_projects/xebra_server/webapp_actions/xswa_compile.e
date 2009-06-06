@@ -49,6 +49,9 @@ feature -- Access
 			if not webapp.cleaned then
 				Result.append (" -clean")
 			end
+			if not file_exists (webapp_exe) then
+				Result.append (" -clean")
+			end
 		ensure
 			Result_attached: Result /= Void
 		end

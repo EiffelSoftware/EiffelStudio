@@ -128,27 +128,23 @@ feature -- Status Setting
 		end
 
 	shutdown
-			-- Shuts the application down
+			-- Initiates shutdown and waits for termination
 		do
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
-				(create {EXECUTION_ENVIRONMENT}).sleep (fourbillionnanoseconds)
+				run_action.wait_for_exit
 			end
-			run_action.stop
 		end
+
 
 	shutdown_all
 			-- Shuts the application down and all process (compile and translate)
 		do
-			if run_action.is_running then
-				shutdown_action.execute.do_nothing;
-				(create {EXECUTION_ENVIRONMENT}).sleep (fourbillionnanoseconds)
-
-			end
-			run_action.stop
+			shutdown
 			compile_action.stop
 			translate_action.stop
 		end
+
 
 	set_server_config (a_config: XS_CONFIG)
 			-- Setter

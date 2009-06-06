@@ -36,9 +36,6 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	Default_listening_port: INTEGER = 55001
-
-
 	session_manager: XWA_SESSION_MANAGER
 		-- The session manager for a wep app. Has to be
 		-- created before threads are spawned

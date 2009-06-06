@@ -1,0 +1,14 @@
+<page:include template="master">
+	<page:define_region id="design_title">
+		<page:region id="title" />
+	</page:define_region>
+	<page:define_region id="left_content">
+		<page:include template="doc_nav.xeb" />
+	</page:define_region>
+	<page:define_region id="middle_content">
+		<page:region id="doc_content" />
+	</page:define_region>
+	<page:define_region id="right_content">
+		<page:include template="doc_float.xeb" />
+	</page:define_region>
+</page:include>

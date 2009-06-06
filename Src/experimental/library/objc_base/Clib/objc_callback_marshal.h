@@ -10,7 +10,7 @@ indexing
 #define _OBJC_CALLBACK_MARSHAL_H_INCLUDED_
 
 #include <eif_eiffel.h>
-#include <Cocoa/Cocoa.h>
+#include <objc/objc-class.h>
 
 BOOL bridge_bool (id self, SEL name);
 void bridge_void_ptr (id self, SEL name, void* arg1);

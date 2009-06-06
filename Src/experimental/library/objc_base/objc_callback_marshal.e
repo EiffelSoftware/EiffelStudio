@@ -1,7 +1,7 @@
 note
 	description: "[
 		Objective-C 2.0 Runtime library. Support for using the dynamic properties of the Objective-C language.
-		This class handles the callbacks from C/Objective-C.		
+		This class handles the callbacks from C/Objective-C.
 		]"
 	author: "Daniel Furrer"
 	date: "$Date$"
@@ -51,8 +51,8 @@ feature -- Eiffel interaction
 			object_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], POINTER]
 		do
 			map.search (a_class)
-			if map.found then
-				map.found_item.extend (a_agent, a_selector)
+			if map.found and then attached map.found_item as l_item then
+				l_item.extend (a_agent, a_selector)
 			else
 				create object_table.make (1000)
 				object_table.extend (a_agent, a_selector)
@@ -78,7 +78,7 @@ feature -- Eiffel interaction
 	callback_void_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
 		local
 			c_string: C_STRING
-			l_agent: ROUTINE [ANY, TUPLE [POINTER]]
+--			l_agent: ROUTINE [ANY, TUPLE [POINTER]]
 		do
 			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 			io.put_string ("VP Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N ")

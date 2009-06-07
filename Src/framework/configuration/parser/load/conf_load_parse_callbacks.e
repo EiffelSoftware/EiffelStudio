@@ -1320,16 +1320,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			end
 			if current_group /= Void and then attached {CONF_LIBRARY} current_group then
-				report_non_client_options (<<
-					at_namespace,
-					at_full_class_checking,
-					at_cat_call_detection,
-					at_is_attached_by_default,
-					at_is_void_safe,
-					at_void_safety,
-					at_syntax_level,
-					at_syntax
-				>>)
+				report_non_client_options
 			end
 		ensure
 			current_option_not_void: not is_error implies current_option /= Void
@@ -1759,20 +1750,63 @@ feature {NONE} -- Processing of options
 			end
 		end
 
-	report_non_client_options (t: ARRAY [like at_syntax])
-			-- Report any options listed in `t' that they cannot be overridden if specified in the current context (`current_attributes').
-		require
-			t_attached: t /= Void
+	non_client_options: ARRAY [TUPLE [name: STRING; id: INTEGER]]
+			-- Non-client option names with their IDs
 		local
+			ids: ARRAY [like at_syntax]
+			i: INTEGER
+			o: like at_syntax
+			a: HASH_TABLE [like at_syntax, STRING]
+		once
+			a := tag_attributes.item (t_option)
+			ids := <<
+					at_namespace,
+					at_full_class_checking,
+					at_cat_call_detection,
+					at_is_attached_by_default,
+					at_is_void_safe,
+					at_void_safety,
+					at_syntax_level,
+					at_syntax
+				>>
+			from
+				i := 1
+				create Result.make (1, 0)
+			until
+				i > ids.upper
+			loop
+				o := ids.item (i)
+				check
+					a.has_item (o)
+				end
+				from
+					a.start
+				until
+					a.item_for_iteration = o
+				loop
+					a.forth
+				end
+				Result.force ([a.key_for_iteration, o], i)
+				i := i + 1
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	report_non_client_options
+			-- Report options that cannot be overridden if specified in the current context (`current_attributes').
+		local
+			o: like non_client_options
 			i: INTEGER
 		do
+			o := non_client_options
 			from
-				i := t.lower
+				i := o.lower
 			until
-				i > t.upper
+				i > o.upper
 			loop
-				if current_attributes.has (t [i]) then
-					set_parse_warning_message (conf_interface_names.e_parse_incorrect_option_override (current_attributes.item (t [i])))
+				if current_attributes.has (o [i].id) then
+					set_parse_warning_message (conf_interface_names.e_parse_incorrect_option_override (o[i].name))
 				end
 				i := i + 1
 			end

@@ -13,9 +13,9 @@ feature
 		do
 			create test2.make
 
-			create s.make (5)
+			create s.make_filled (x, 5)
 
-			check s.all_default (0, 4) end
+			check s.filled_with (x, 0, 4) end
 			create t.make (5)
 			t.put (x, "Weasel")
 			print (t.item ("Weasel").generating_type)

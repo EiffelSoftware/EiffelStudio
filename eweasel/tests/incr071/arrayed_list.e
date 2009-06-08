@@ -20,6 +20,7 @@ class ARRAYED_LIST [G] inherit
 			item as array_item,
 			at as array_infix_at,
 			make as array_make,
+			make_filled as array_make_filled,
 			put as put_i_th,
 			count as array_count,
 			index_set as array_index_set,
@@ -589,7 +590,7 @@ feature {NONE} -- Implementation
 			index_large_enough: pos >= 1
 		do
 			if count + 1 > capacity then
-				auto_resize (lower, count + 1)
+				grow (count + 1)
 			end
 			set_count (count + 1)
 			subcopy (Current, pos , count - 1 , pos + 1)

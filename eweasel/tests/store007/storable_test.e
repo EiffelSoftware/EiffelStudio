@@ -104,22 +104,22 @@ feature -- Specials
 
 	create_specials is
 		do
-			create spec_i8.make (100)
-			create spec_i16.make (100)
-			create spec_i32.make (100)
-			create spec_i64.make (100)
-			create spec_n8.make (100)
-			create spec_n16.make (100)
-			create spec_n32.make (100)
-			create spec_n64.make (100)
-			create spec_r32.make (100)
-			create spec_r64.make (100)
-			create spec_p.make (100)
-			create spec_c.make (100)
+			create spec_i8.make_filled (0, 100)
+			create spec_i16.make_filled (0, 100)
+			create spec_i32.make_filled (0, 100)
+			create spec_i64.make_filled (0, 100)
+			create spec_n8.make_filled (0, 100)
+			create spec_n16.make_filled (0, 100)
+			create spec_n32.make_filled (0, 100)
+			create spec_n64.make_filled (0, 100)
+			create spec_r32.make_filled (0.0, 100)
+			create spec_r64.make_filled (0.0, 100)
+			create spec_p.make_filled (default_pointer, 100)
+			create spec_c.make_filled ('%/000/', 100)
 
-			create spec_s.make (100)
+			create spec_s.make_filled (Void, 100)
 			spec_s.put ("FDS", 10)
-			create spec_t.make (100)
+			create spec_t.make_filled (Void, 100)
 			spec_t.put ([12, 23, 45, "Fds"], 90)
 		end
 

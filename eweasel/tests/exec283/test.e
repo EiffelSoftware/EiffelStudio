@@ -20,7 +20,7 @@ feature
 			l_p: SPECIAL [POINTER]
 			l_r8: SPECIAL [REAL_64]
 			l_r4: SPECIAL [REAL_32]
-			l_a: SPECIAL [ANY]
+			l_a: SPECIAL [detachable ANY]
 			l_exp1: SPECIAL [EXP1]
 			l_exp2: SPECIAL [EXP2]
 			l_exp3: SPECIAL [EXP3]
@@ -28,29 +28,36 @@ feature
 			l_exp5: SPECIAL [EXP5 [STRING]]
 			l_exp6: SPECIAL [EXP6 [STRING]]
 			l_exp7: SPECIAL [EXP7]
+			exp1: EXP1
+			exp2: EXP2
+			exp3: EXP3
+			exp4: EXP4
+			exp5: EXP5 [STRING]
+			exp6: EXP6 [STRING]
+			exp7: EXP7
 		do
-			create l_n8.make (10)
-			create l_n4.make (10)
-			create l_n2.make (10)
-			create l_n1.make (10)
-			create l_i8.make (10)
-			create l_i4.make (10)
-			create l_i2.make (10)
-			create l_i1.make (10)
-			create l_b.make (10)
-			create l_c4.make (10)
-			create l_c1.make (10)
-			create l_p.make (10)
-			create l_r8.make (10)
-			create l_r4.make (10)
-			create l_a.make (10)
-			create l_exp1.make (10)
-			create l_exp2.make (10)
-			create l_exp3.make (10)
-			create l_exp4.make (10)
-			create l_exp5.make (10)
-			create l_exp6.make (10)
-			create l_exp7.make (10)
+			create l_n8.make_filled (0, 10)
+			create l_n4.make_filled (0, 10)
+			create l_n2.make_filled (0, 10)
+			create l_n1.make_filled (0, 10)
+			create l_i8.make_filled (0, 10)
+			create l_i4.make_filled (0, 10)
+			create l_i2.make_filled (0, 10)
+			create l_i1.make_filled (0, 10)
+			create l_b.make_filled (False, 10)
+			create l_c4.make_filled ('%/000/', 10)
+			create l_c1.make_filled ('%/000/', 10)
+			create l_p.make_filled (default_pointer, 10)
+			create l_r8.make_filled (0.0, 10)
+			create l_r4.make_filled (0.0, 10)
+			create l_a.make_filled (Void, 10)
+			create l_exp1.make_filled (exp1, 10)
+			create l_exp2.make_filled (exp2, 10)
+			create l_exp3.make_filled (exp3, 10)
+			create l_exp4.make_filled (exp4, 10)
+			create l_exp5.make_filled (exp5, 10)
+			create l_exp6.make_filled (exp6, 10)
+			create l_exp7.make_filled (exp7, 10)
 
 			display_info (l_n8)
 			display_info (l_n4)
@@ -75,28 +82,28 @@ feature
 			display_info (l_exp6)
 			display_info (l_exp7)
 
-			l_n8.clear_all
-			l_n4.clear_all
-			l_n2.clear_all
-			l_n1.clear_all
-			l_i8.clear_all
-			l_i4.clear_all
-			l_i2.clear_all
-			l_i1.clear_all
-			l_b.clear_all
-			l_c4.clear_all
-			l_c1.clear_all
-			l_p.clear_all
-			l_r8.clear_all
-			l_r4.clear_all
-			l_a.clear_all
-			l_exp1.clear_all
-			l_exp2.clear_all
-			l_exp3.clear_all
-			l_exp4.clear_all
-			l_exp5.clear_all
-			l_exp6.clear_all
-			l_exp7.clear_all
+			l_n8.fill_with (0, 0, 9)
+			l_n4.fill_with (0, 0, 9)
+			l_n2.fill_with (0, 0, 9)
+			l_n1.fill_with (0, 0, 9)
+			l_i8.fill_with (0, 0, 9)
+			l_i4.fill_with (0, 0, 9)
+			l_i2.fill_with (0, 0, 9)
+			l_i1.fill_with (0, 0, 9)
+			l_b.fill_with (False, 0, 9)
+			l_c4.fill_with ('%/000/', 0, 9)
+			l_c1.fill_with ('%/000/', 0, 9)
+			l_p.fill_with (default_pointer, 0, 9)
+			l_r8.fill_with (0.0, 0, 9)
+			l_r4.fill_with (0.0, 0, 9)
+			l_a.fill_with (Void, 0, 9)
+			l_exp1.fill_with (exp1, 0, 9)
+			l_exp2.fill_with (exp2, 0, 9)
+			l_exp3.fill_with (exp3, 0, 9)
+			l_exp4.fill_with (exp4, 0, 9)
+			l_exp5.fill_with (exp5, 0, 9)
+			l_exp6.fill_with (exp6, 0, 9)
+			l_exp7.fill_with (exp7, 0, 9)
 
 			display_info (l_n8)
 			display_info (l_n4)
@@ -121,28 +128,28 @@ feature
 			display_info (l_exp6)
 			display_info (l_exp7)
 
-			check_all_default (l_n8)
-			check_all_default (l_n4)
-			check_all_default (l_n2)
-			check_all_default (l_n1)
-			check_all_default (l_i8)
-			check_all_default (l_i4)
-			check_all_default (l_i2)
-			check_all_default (l_i1)
-			check_all_default (l_b)
-			check_all_default (l_c4)
-			check_all_default (l_c1)
-			check_all_default (l_p)
-			check_all_default (l_r8)
-			check_all_default (l_r4)
-			check_all_default (l_a)
-			check_all_default (l_exp1)
-			check_all_default (l_exp2)
-			check_all_default (l_exp3)
-			check_all_default (l_exp4)
-			check_all_default (l_exp5)
-			check_all_default (l_exp6)
-			check_all_default (l_exp7)
+			check_all_default (l_n8, 0)
+			check_all_default (l_n4, 0)
+			check_all_default (l_n2, 0)
+			check_all_default (l_n1, 0)
+			check_all_default (l_i8, 0)
+			check_all_default (l_i4, 0)
+			check_all_default (l_i2, 0)
+			check_all_default (l_i1, 0)
+			check_all_default (l_b, False)
+			check_all_default (l_c4, '%/000/')
+			check_all_default (l_c1, '%/000/')
+			check_all_default (l_p, default_pointer)
+			check_all_default (l_r8, 0.0)
+			check_all_default (l_r4, 0.0)
+			check_all_default (l_a, Void)
+			check_all_default (l_exp1, exp1)
+			check_all_default (l_exp2, exp2)
+			check_all_default (l_exp3, exp3)
+			check_all_default (l_exp4, exp4)
+			check_all_default (l_exp5, exp5)
+			check_all_default (l_exp6, exp6)
+			check_all_default (l_exp7, exp7)
 		end
 
 	display_info (a_spec: SPECIAL [ANY]) is
@@ -155,11 +162,11 @@ feature
 			print (" elements.%N")
 		end
 
-	check_all_default (a_spec: SPECIAL [ANY]) is
+	check_all_default (a_spec: SPECIAL [ANY]; a_def: ANY) is
 		require
 			a_spec_not_void: a_spec /= Void
 		do
-			if not a_spec.all_default (a_spec.lower, a_spec.upper) then
+			if not a_spec.filled_with (a_def, a_spec.lower, a_spec.upper) then
 				print (a_spec.generating_type)
 				print (" does not have all default elements.%N")
 			end

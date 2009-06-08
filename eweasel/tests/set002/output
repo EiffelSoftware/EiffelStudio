@@ -21,21 +21,21 @@ Set 2: 2, 4, 5,
 Create string set as type LINKED_SET
 reference comparison set
 Filling string set
-Set 1: bar, bla, baz, foo, 
-Set 2: boo, bla, baz, 
+Set 1: True, True, True, True, 
+Set 2: True, True, True, 
 Create string set as type LINKED_SET
 object comparison set
 Filling string set
-Set 1: bar, bla, baz, foo, 
-Set 2: boo, bla, baz, 
+Set 1: True, True, True, True, 
+Set 2: True, True, True, 
 Create string set as type BINARY_SEARCH_TREE_SET
 reference comparison set
 Filling string set
-Set 1: bar, baz, bla, foo, 
-Set 2: baz, bla, boo, 
+Set 1: True, True, True, True, 
+Set 2: True, True, True, 
 Create string set as type BINARY_SEARCH_TREE_SET
 object comparison set
 Filling string set
-Set 1: bar, baz, bla, foo, 
-Set 2: baz, bla, boo, 
+Set 1: True, True, True, True, 
+Set 2: True, True, True, 
 Execution completed

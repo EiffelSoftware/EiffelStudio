@@ -208,18 +208,35 @@ feature {NONE} -- Implementation
 			string_set1.symdif (string_set2)
 			Io.put_string ("Set 1: ")
 			from string_set1.start until string_set1.after loop
-				Io.put_string (string_set1.item)
+				Io.put_boolean (expected_results_set1.has (string_set1.item))
 				Io.put_string (", ")
 				string_set1.forth
 			end
 			Io.put_new_line
 			Io.put_string ("Set 2: ")
 			from string_set2.start until string_set2.after loop
-				Io.put_string (string_set2.item)
+				Io.put_boolean (expected_results_set2.has (string_set2.item))
 				Io.put_string (", ")
 				string_set2.forth
 			end
 			Io.put_new_line
+		end
+
+	expected_results_set1: HASH_TABLE [STRING, STRING]
+		once
+			create Result.make (5)
+			Result.put ("bar", "bar")
+			Result.put ("baz", "baz")
+			Result.put ("bla", "bla")
+			Result.put ("foo", "foo")
+		end
+
+	expected_results_set2: HASH_TABLE [STRING, STRING]
+		once
+			create Result.make (5)
+			Result.put ("baz", "baz")
+			Result.put ("bla", "bla")
+			Result.put ("boo", "boo")
 		end
 		
 end -- class TEST

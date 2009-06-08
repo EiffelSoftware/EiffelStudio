@@ -82,7 +82,7 @@ feature -- Creation
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		do
-			create Result.make (count)
+		--	create Result.make_filled (count)
 			c_set_dynamic_type ($Result, type_id)
 		ensure
 			special_type: is_special (Result)

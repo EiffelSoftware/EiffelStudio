@@ -2186,8 +2186,7 @@ end
 			if old_feature.is_attribute and then
 				(not is_attribute or else
 				old_feature.type.is_expanded /= type.is_expanded or else
-				old_feature.type.is_reference /= type.is_reference or else
-				old_feature.is_stable /= is_stable)
+				old_feature.type.is_reference /= type.is_reference)
 			then
 				create vdrd6
 				vdrd6.init (old_feature, Current)

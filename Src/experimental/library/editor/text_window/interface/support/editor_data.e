@@ -560,13 +560,13 @@ feature {NONE} -- Implementation
 	colors: SPECIAL [EV_COLOR]
 			-- Color table
 		once
-			create Result.make (max_color_id + 1)
+			create Result.make_filled (Void, max_color_id + 1)
 		end
 
 	fonts: SPECIAL [EV_FONT]
 			-- Font table
 		once
-			create Result.make (max_font_id + 1)
+			create Result.make_filled (Void, max_font_id + 1)
 		end
 
 	init_colors

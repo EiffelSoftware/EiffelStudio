@@ -142,17 +142,18 @@ feature {NONE} -- Private Constants
 	space_images: SPECIAL [STRING_32]
 			-- Quick look up for `wide_image' when count is 10 or less
 		once
-			create Result.make (11)
-			Result.put (" ", 1)
-			Result.put ("  ", 2)
-			Result.put ("   ", 3)
-			Result.put ("    ", 4)
-			Result.put ("     ", 5)
-			Result.put ("      ", 6)
-			Result.put ("       ", 7)
-			Result.put ("        ", 8)
-			Result.put ("         ", 9)
-			Result.put ("          ", 10)
+			create Result.make_empty (11)
+			Result.extend ("")
+			Result.extend (" ")
+			Result.extend ("  ")
+			Result.extend ("   ")
+			Result.extend ("    ")
+			Result.extend ("     ")
+			Result.extend ("      ")
+			Result.extend ("       ")
+			Result.extend ("        ")
+			Result.extend ("         ")
+			Result.extend ("          ")
 		end
 
 note

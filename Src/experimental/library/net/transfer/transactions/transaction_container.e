@@ -10,8 +10,10 @@ note
 deferred class TRANSACTION_CONTAINER [G -> TRANSACTION] inherit
 
 	SEQUENCE[G]
+		rename
+			put as sequence_put
 		undefine
-			has, index_of, occurrences, off, put, prune, prune_all, readable
+			has, index_of, occurrences, off, sequence_put, prune, prune_all, readable
 		end
 
 feature -- Access

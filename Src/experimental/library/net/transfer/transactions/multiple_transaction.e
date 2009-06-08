@@ -32,8 +32,7 @@ inherit
 			item as transaction
 		export
 			{ANY} valid_index, valid_cursor_index
-			{MULTIPLE_TRANSACTION} cursor, go_to, area, subcopy, i_th, upper,
-				valid_cursor, subarray, lower
+			{MULTIPLE_TRANSACTION} cursor, go_to, area, i_th, upper, valid_cursor, lower
 			{NONE} all
 		end
 

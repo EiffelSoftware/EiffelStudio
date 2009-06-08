@@ -30,7 +30,8 @@ inherit
 			put_i_th,
 			append,
 			make_from_array,
-			prune_all
+			prune_all,
+			extend
 		end
 
 feature {NONE} -- Initialization
@@ -84,6 +85,16 @@ feature -- Element Change
 			in_operation := False
 
 			added_item (v, 1)
+		end
+
+	extend (v: like item)
+			-- <Precursor>
+		do
+			in_operation := True
+			Precursor {ARRAYED_LIST} (v)
+			in_operation := False
+
+			added_item (v, count)
 		end
 
 	append (s: SEQUENCE [like item])

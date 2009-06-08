@@ -80,8 +80,8 @@ feature -- Element Change
 			l_message_return_value_area := message_return_value_area
 			if l_has_return_value_area = Void then
 					-- Areas need to be created first.
-				create l_has_return_value_area.make (Initial_area_size)
-				create l_message_return_value_area.make (Initial_area_size)
+				create l_has_return_value_area.make_filled (False, Initial_area_size)
+				create l_message_return_value_area.make_filled (default_pointer, Initial_area_size)
 				has_return_value_area := l_has_return_value_area
 				message_return_value_area := l_message_return_value_area
 			end
@@ -92,9 +92,9 @@ feature -- Element Change
 
 			if l_has_return_value_area.count < level_count then
 					-- Areas need to be resized.
-				l_has_return_value_area := l_has_return_value_area.resized_area (
+				l_has_return_value_area := l_has_return_value_area.aliased_resized_area_with_default (False,
 					level_count + Area_resize_increment)
-				l_message_return_value_area := l_message_return_value_area.resized_area (
+				l_message_return_value_area := l_message_return_value_area.aliased_resized_area_with_default (default_pointer,
 					level_count + Area_resize_increment)
 				has_return_value_area := l_has_return_value_area
 				message_return_value_area := l_message_return_value_area
@@ -117,12 +117,12 @@ feature -- Element Change
 		do
 			l_default_processing_area := default_processing_area
 			if l_default_processing_area = Void then
-				create l_default_processing_area.make (Initial_area_size)
+				create l_default_processing_area.make_filled (False, Initial_area_size)
 				default_processing_area := l_default_processing_area
 			end
 
 			if l_default_processing_area.count < level_count then
-				l_default_processing_area := l_default_processing_area.aliased_resized_area (
+				l_default_processing_area := l_default_processing_area.aliased_resized_area_with_default (False,
 					level_count + Area_resize_increment)
 				default_processing_area := l_default_processing_area
 			end
@@ -185,14 +185,14 @@ feature {NONE} -- Implementation
 	Area_resize_increment: INTEGER = 2;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

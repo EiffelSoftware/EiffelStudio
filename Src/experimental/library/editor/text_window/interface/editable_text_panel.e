@@ -997,7 +997,7 @@ feature {NONE} -- Private Constants
 			c: CHARACTER
 			i: INTEGER
 		once
-			create Result.make (256)
+			create Result.make_filled (False, 256)
 			from
 				i := 0
 			until

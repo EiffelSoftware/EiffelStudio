@@ -8,7 +8,7 @@ note
 class CACHE [T -> IDABLE]
 
 inherit
-	TO_SPECIAL [ARRAY [H_CELL[T]]]
+	TO_SPECIAL [detachable ARRAY [H_CELL[T]]]
 
 	SHARED_CONFIGURE_RESOURCES
 
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			array: ARRAY [H_CELL[T]]
 		do
-			make_area (s)
+			make_filled_area (Void, s)
 			create array_count.make (0, s - 1)
 			create history.make (s)
 			create index.make (0, s - 1)

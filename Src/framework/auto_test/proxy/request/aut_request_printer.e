@@ -371,7 +371,7 @@ feature {NONE} -- Byte code generation
 			result_attached: Result /= Void
 		end
 
-	setup_byte_code_in_context (a_locals: ARRAY [TYPE_A])
+	setup_byte_code_in_context (a_locals: ARRAYED_LIST [TYPE_A])
 			-- Setup for byte-code generation for feature `feature_for_byte_code_injection' in `context'.
 		require
 			a_locals_attached: a_locals /= Void
@@ -395,7 +395,7 @@ feature {NONE} -- Byte code generation
 			if a_locals /= Void then
 				l_local_count := a_locals.count
 			end
-			l_byte_code.set_locals (a_locals, l_local_count)
+			l_byte_code.set_locals (a_locals.to_array, l_local_count)
 			last_byte_code := l_byte_code
 			context.set_byte_code (last_byte_code)
 			context.init (interpreter_root_class.types.first)

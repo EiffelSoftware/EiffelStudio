@@ -965,7 +965,7 @@ feature {NONE} -- Registers: implementation
 			-- Names of registers indexed by their level
 		once
 				-- `c_void' is not used.
-			create Result.make (c_nb_types * 2)
+			create Result.make_filled (Void, c_nb_types * 2)
 				-- Simple registers.
 			Result.put ("ti1_", c_int8)
 			Result.put ("ti2_", c_int16)

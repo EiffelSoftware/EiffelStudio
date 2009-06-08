@@ -79,11 +79,11 @@ feature {NONE} -- Initialization
 			create hidden_command_features.make ("Commands", False)
 
 			from
-				loop_counter := 1
+				entities.start
 			until
-				loop_counter = entities.count
+				entities.after
 			loop
-				l_entity := entities.item (loop_counter)
+				l_entity := entities.item
 				if should_add (l_entity) then
 					if l_entity.is_property_or_event then
 						initialize_property_or_event (l_entity)
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 						misc_features.extend (l_entity)
 					end
 				end
-				loop_counter := loop_counter + 1
+				entities.forth
 			end
 
 					-- Add features to feature category list if not empty.
@@ -196,24 +196,13 @@ feature {NONE} -- Initialization
 		require
 			a_consumed_not_void: a_consumed /= Void
 		local
-			i, nb: INTEGER
-			l_constructors: ARRAY [CONSUMED_CONSTRUCTOR]
+			l_constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 		do
 			l_constructors := a_consumed.constructors
 			if l_constructors = Void or else l_constructors.is_empty then
 				create constructors.make (0)
 			else
-				from
-					i := 1
-					nb := l_constructors.count
-					create constructors.make (nb)
-				until
-					i > nb
-				loop
-					constructors.extend (l_constructors.item (i))
-					i := i + 1
-				end
-				loop_counter := i
+				constructors := l_constructors.twin
 			end
 		ensure
 			constructors_set: constructors /= Void
@@ -225,8 +214,8 @@ feature {NONE} -- Initialization
 			a_consumed_not_void: a_consumed /= Void
 		local
 			l_c_parent: CONSUMED_REFERENCED_TYPE
-			l_interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
-			i, nb: INTEGER
+			l_interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
+			nb: INTEGER
 		do
 			l_interfaces := a_consumed.interfaces
 			if l_interfaces = Void or else l_interfaces.is_empty then
@@ -245,17 +234,16 @@ feature {NONE} -- Initialization
 					create ancestors.make (nb)
 				end
 				from
-					i := 1
+					l_interfaces.start
 				until
-					i > nb
+					l_interfaces.after
 				loop
-					l_c_parent := l_interfaces.item (i)
+					l_c_parent := l_interfaces.item
 					if l_c_parent /= Void then
 						ancestors.extend (l_c_parent)
 					end
-					i := i + 1
+					l_interfaces.forth
 				end
-				loop_counter := i
 			end
 		ensure
 			ancestors_set: ancestors /= Void
@@ -577,7 +565,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	entities: ARRAY [CONSUMED_ENTITY]
+	entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- All field, procedure and function implemented/inherited.
 
 	constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
@@ -591,9 +579,6 @@ feature {NONE} -- Implementation
 	events_features, hidden_events_features: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]
 			-- Property and event feature lists.
 
-	loop_counter: INTEGER
-			-- Reusable loop counter
-
 	ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR
 			-- Associated class context.
 
@@ -604,7 +589,7 @@ invariant
 	ancestors_not_void: ancestors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -617,22 +602,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DOTNET_CLASS_AS

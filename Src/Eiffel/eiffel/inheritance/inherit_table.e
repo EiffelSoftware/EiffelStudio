@@ -620,7 +620,7 @@ end;
 				-- "like Current" type of `parent_c'
 			actual_parent_type: CL_TYPE_A
 			l_feature_name_id: INTEGER
-			i: INTEGER
+			i, nb: INTEGER
 			l_inherit_info_cache: like inherit_info_cache
 			l_inherit_feat_cache: like inherit_feat_cache
 		do
@@ -656,9 +656,10 @@ end;
 				end;
 
 					-- Iteration on the parent feature table
-				i := parent_table.count - 1
+				i := 0
+				nb := parent_table.count
 			until
-				i < 0
+				i = nb
 			loop
 				l_feature_name_id := parent_table [i].feature_name_id
 
@@ -670,7 +671,7 @@ end;
 					put (l_inherit_feat_cache.new_inherit_feat, l_feature_name_id)
 				end
 				found_item.insert (l_inherit_info_cache.new_inherited_info (parent_table [i], parent_c, parent_type))
-				i := i - 1
+				i := i + 1
 			end
 
 				-- Check renamings of `parent_c'
@@ -825,7 +826,7 @@ end;
 			end
 		end
 
-	uninitialized_features: ARRAYED_LIST [INTEGER]
+	uninitialized_features: ARRAYED_LIST [INHERIT_FEAT]
 			-- Iteration position for features that have yet to have their feature ids initialized.
 		once
 			create Result.make (35)
@@ -863,12 +864,7 @@ end;
 			a_class /= Void;
 			feature_table /= Void;
 		local
-			feature_name_id: INTEGER;
 			inherit_feat: INHERIT_FEAT;
-			l_count, i: INTEGER
-			l_keys: like keys
-			l_content: like content
-			l_iteration_position: INTEGER
 			l_check_undefinition, l_check_redefinition: BOOLEAN
 			l_adaptations: like adaptations
 			l_origin_table: like origin_table
@@ -893,31 +889,15 @@ end;
 				l_check_undefinition := parents.are_features_undefined
 				l_check_redefinition := parents.are_features_redefined
 					-- Iteration on the structure.				
-				l_count := count
-				iteration_position := -1
-				l_keys := keys
-				l_content := content
-				l_iteration_position := -1
+				start
 			until
-				i = l_count
+				after
 			loop
-				from
-						-- Increase 'i' to signify another iteration up to 'count' iterations.
-					i := i + 1
-						-- Find the next valid key (feature_name_id)
-					feature_name_id := 0
-				until
-					feature_name_id /= 0
-				loop
-					l_iteration_position := l_iteration_position + 1
-					feature_name_id := l_keys [l_iteration_position]
-				end
-
-				inherit_feat := l_content [l_iteration_position]
+				inherit_feat := item_for_iteration
 
 					-- Calculates attribute `inherited_feature' of
 					-- instance `inherit_feat'.
-				inherit_feat.process (a_class, feature_name_id, l_check_undefinition, l_check_redefinition)
+				inherit_feat.process (a_class, key_for_iteration, l_check_undefinition, l_check_redefinition)
 				if inherit_feat.inherited_info /= Void then
 						-- Feature is coming from a single parent.
 						-- Initialize (without feature id processing) then insert into origin table
@@ -945,22 +925,22 @@ end;
 							l_used_feature_ids.put (l_feature_id)
 							l_highest_feature_id := l_highest_feature_id.max (l_feature_id)
 						else
-							l_uninitialized_features.extend (l_iteration_position)
+							l_uninitialized_features.extend (inherit_feat)
 						end
 					else
-						l_uninitialized_features.extend (l_iteration_position)
+						l_uninitialized_features.extend (inherit_feat)
 					end
 				end
+				forth
 			end
 
 				-- Add all unaliased features to `Current'.
 			from
-				i := 1
+				l_uninitialized_features.start
 					-- Set `l_feature_id' to zero so that it gets correctly set to 1 when it enters the loop
 				l_feature_id := 0
-				l_count := l_uninitialized_features.count
 			until
-				i > l_count
+				l_uninitialized_features.after
 			loop
 				if l_compilation_straight then
 						-- Retrieve next available feature id.
@@ -978,13 +958,13 @@ end;
 					l_used_feature_ids.put (l_feature_id)
 
 						-- Set feature id and add to `Current'.
-					l_content [l_uninitialized_features [i]].inherited_info.copy_a_feature_for_feature_table
-					l_content [l_uninitialized_features [i]].inherited_info.a_feature.set_feature_id (l_feature_id)
-					add_to_inherit_table (l_content [l_uninitialized_features [i]].inherited_info)
+					l_uninitialized_features.item.inherited_info.copy_a_feature_for_feature_table
+					l_uninitialized_features.item.inherited_info.a_feature.set_feature_id (l_feature_id)
+					add_to_inherit_table (l_uninitialized_features.item.inherited_info)
 				else
-					assign_feature_id_and_insert (l_content [l_uninitialized_features [i]].inherited_info)
+					assign_feature_id_and_insert (l_uninitialized_features.item.inherited_info)
 				end
-				i := i + 1
+				l_uninitialized_features.forth
 			end
 
 			if l_compilation_straight then
@@ -1604,20 +1584,16 @@ end;
 			deferred_info: INHERIT_INFO;
 			inherit_feat: INHERIT_FEAT;
 			vdrs4: VDRS4;
-			l_count, i: INTEGER
 			l_features_list: ARRAYED_LIST [INHERIT_INFO]
 		do
 			from
 					-- We iterate 'count' times so as to only call 'forth' that number of times
 					-- instead of 'count' + 1 which will iterate the entire 'content' structure.
-				l_count := count
-				iteration_position := - 1
+				start
 			until
-				i = l_count
+				after
 			loop
-				forth
-				i := i + 1
-				inherit_feat := item_for_iteration;
+				inherit_feat := item_for_iteration
 				if inherit_feat.inherited_info = Void then
 					if inherit_feat.features.count > 0 then
 							-- Cannot find a redefinition
@@ -1672,9 +1648,10 @@ end;
 							l_features_list.forth
 						end
 					end
-				end;
-			end;
-		end;
+				end
+				forth
+			end
+		end
 
 	init_inherited_feature (inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT; a_add_to_table: BOOLEAN) is
 			-- Initialization of an inherited feature
@@ -1992,7 +1969,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2005,22 +1982,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

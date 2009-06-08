@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			l_reader: EIFFEL_DESERIALIZER
 			l_reference_file: FILE_NAME
 			l_referenced_assemblies_mapping: CONSUMED_ASSEMBLY_MAPPING
-			l_referenced_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_referenced_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			i, cnt: INTEGER
 			l_cons_ass: CONSUMED_ASSEMBLY
 		do
@@ -346,12 +346,13 @@ feature {NONE} -- Implementation
 			l_referenced_assemblies := l_referenced_assemblies_mapping.assemblies
 			if l_referenced_assemblies /= Void then
 				from
-					i := l_referenced_assemblies.lower
-					cnt := l_referenced_assemblies.upper
+					l_referenced_assemblies.start
+					i := 1
+					cnt := l_referenced_assemblies.count
 				until
 					i > cnt
 				loop
-					l_cons_ass := l_referenced_assemblies [i]
+					l_cons_ass := l_referenced_assemblies.i_th (i)
 					l_dep_guid := l_cons_ass.unique_id
 						-- if it's not the assembly itself
 					if not l_dep_guid.is_equal (l_guid) then

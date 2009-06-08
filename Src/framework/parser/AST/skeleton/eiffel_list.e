@@ -30,21 +30,14 @@ feature {NONE} -- Initialization
 	make (n: INTEGER)
 			-- Creation of the list with the comparison set on object
 		do
-				-- We always use 1 for lower so we can optimize array setup.
-			lower := 1
-			upper := n
-			create area.make (n)
+			Precursor (n)
 			object_comparison := True
 		end
 
 	make_filled (n: INTEGER)
 			-- Creation of the list with the comparison set on object
 		do
-				-- We always use 1 for lower so we can optimize array setup.
-			lower := 1
-			upper := n
-			count := n
-			create area.make (n)
+			Precursor (n)
 			object_comparison := True
 		end
 
@@ -72,10 +65,10 @@ feature -- Roundtrip
 		do
 			if separator_list = Void then
 				if capacity >= 2 then
-					create separator_list.make (capacity - 1)
+					create separator_list.make_filled (capacity - 1)
 				else
 						-- One should never get here as this will yield in a call on void.
-					check one_should_never_get_here: false end
+					check one_should_never_get_here: False end
 				end
 			end
 			separator_list.reverse_extend (l_as.index)
@@ -95,7 +88,7 @@ feature -- Access
 		require
 			not_empty: not is_empty
 		do
-			Result := area.item (capacity - count)
+			Result := area.item (insertion_position)
 		end
 
 feature -- Roundtrip/Token
@@ -183,7 +176,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,22 +189,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_LIST

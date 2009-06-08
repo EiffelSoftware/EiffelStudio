@@ -35,18 +35,15 @@ feature {COMPILER_EXPORTER}
 	extend (a_rout_id: like first)
 			-- Insert routine id `a_rout_id' in set if not already
 			-- present.
-		local
-			l_pos: INTEGER
 		do
 			if first = Dead_value then
 					-- This is the first routine id to be added as `first' is unset.
 				first := a_rout_id
 			elseif first /= a_rout_id and then not has (a_rout_id) then
 				if area /= Void then
-					l_pos := area.count
-					area := area.aliased_resized_area (l_pos + 1)
+					area := area.aliased_resized_area_with_default (0, area.count + 1)
 				else
-					create area.make (1)
+					create area.make_filled (0, 1)
 				end
 					-- Processing for attribute table:
 					-- Since the byte code inspects the first value of this	
@@ -57,10 +54,10 @@ feature {COMPILER_EXPORTER}
 					Routine_id_counter.is_attribute (a_rout_id) and then
 					not Routine_id_counter.is_attribute (first)
 				then
-					area.put (first, l_pos)
+					area.put (first, area.count - 1)
 					first := a_rout_id
 				else
-					area.put (a_rout_id, l_pos)
+					area.put (a_rout_id, area.count - 1)
 				end
 			end
 		end
@@ -90,7 +87,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -103,22 +100,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ROUT_ID_SET

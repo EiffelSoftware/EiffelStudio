@@ -11,23 +11,12 @@ class
 inherit
 	EIFFEL_LIST [INDEX_AS]
 		redefine
-			process, make, first_token, last_token
+			process, first_token, last_token
 		end
 
 create
-	make
-
-create {INDEXING_CLAUSE_AS}
+	make,
 	make_filled
-
-feature -- Initialization
-
-	make (n: INTEGER)
-			-- Allocate list with `n' items.
-			-- (`n' may be zero for empty list.)
-		do
-			Precursor {EIFFEL_LIST} (n)
-		end
 
 feature -- Visitor
 

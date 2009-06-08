@@ -536,8 +536,8 @@ feature -- Visit nodes
 			process_cluster (an_override)
 			if an_override.override = Void then
 				create l_groups.make (application_target.libraries.count + application_target.clusters.count)
-				l_groups.merge_right (application_target.libraries.linear_representation)
-				l_groups.merge_right (application_target.clusters.linear_representation)
+				l_groups.append (application_target.libraries.linear_representation)
+				l_groups.append (application_target.clusters.linear_representation)
 			else
 				l_groups := an_override.override
 			end
@@ -1100,7 +1100,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1124,10 +1124,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

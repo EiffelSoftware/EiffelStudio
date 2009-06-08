@@ -1143,7 +1143,6 @@ feature -- Implementation
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
-			l_parameters_area: SPECIAL [EXPR_AS]
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
@@ -1396,13 +1395,12 @@ feature -- Implementation
 									-- Delayed call with all arguments open.
 									-- Create l_parameters.
 								from
-									create l_parameters.make_filled (l_formal_count)
-									l_parameters_area := l_parameters.area
+									create l_parameters.make (l_formal_count)
 									i := 0
 								until
 									i = l_formal_count
 								loop
-									l_parameters_area.put (create {OPERAND_AS}.initialize (Void, Void, Void), i)
+									l_parameters.extend (create {OPERAND_AS}.initialize (Void, Void, Void))
 									i := i + 1
 								end
 								l_actual_count := l_formal_count
@@ -1642,7 +1640,7 @@ feature -- Implementation
 										-- It means that the result type is a like argument. In that case,
 										-- we take the static signature of the feature to evaluate `l_result_type'.
 										-- This fix eweasel test#term141.
-									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
+									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments.to_array)
 								end
 								if l_pure_result_type.is_like_argument and then is_byte_node_enabled then
 										-- Ensure the expandedness status of the result type matches
@@ -8439,7 +8437,7 @@ feature {NONE} -- Agents
 					l_expr ?= a_target_node
 					l_operand_node ?= l_expr
 					if l_operand_node = Void then
-						l_expressions.put (l_expr)
+						l_expressions.replace (l_expr)
 						l_expressions.forth
 					end
 				end
@@ -8455,7 +8453,7 @@ feature {NONE} -- Agents
 						l_operand_node ?= l_expr
 						if l_operand_node = Void then
 								-- Closed operands, we insert its expression.
-							l_expressions.put (l_expr)
+							l_expressions.replace (l_expr)
 							l_expressions.forth
 						end
 						l_parameters_node.forth
@@ -8481,7 +8479,7 @@ feature {NONE} -- Agents
 					until
 						l_last_open_positions.after
 					loop
-						l_expressions.put (
+						l_expressions.replace (
 							create {INTEGER_CONSTANT}.make_with_value (l_last_open_positions.item))
 						l_expressions.forth
 						l_last_open_positions.forth
@@ -8581,10 +8579,7 @@ feature {NONE} -- Agents
 			l_cur_class := context.current_class.eiffel_class_c
 			create l_func
 			create l_args.make (1)
-			l_args.start
-			l_args.put (a_target_type)
-			l_args.put_name (
-				{PREDEFINED_NAMES}.fake_inline_agent_target_name_id, 1)
+			l_args.extend_with_name (a_target_type, {PREDEFINED_NAMES}.fake_inline_agent_target_name_id)
 			l_func.set_arguments (l_args)
 			l_func.set_type (a_feature_type, 0)
 

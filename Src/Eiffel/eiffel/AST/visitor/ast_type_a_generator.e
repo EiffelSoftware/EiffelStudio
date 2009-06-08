@@ -304,7 +304,7 @@ feature {NONE} -- Visitor implementation
 					g := 1
 					count := l_as.generic_count
 					create l_actual_generic.make (1, count)
-					create l_names.make (count)
+					create l_names.make_filled (0, count)
 					create l_type.make (l_class_c.class_id, l_actual_generic, l_names)
 				until
 					i > count or l_has_error

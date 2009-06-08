@@ -228,7 +228,7 @@ feature {NONE}
 			args: FEAT_ARG
 		do
 			create  args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create  Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, 0)
@@ -255,7 +255,7 @@ feature {NONE}
 			f: FORMAL_A
 		do
 			create args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
@@ -272,7 +272,7 @@ feature {NONE}
 			f: FORMAL_A
 		do
 			create args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
@@ -289,7 +289,7 @@ feature {NONE}
 			f: FORMAL_A
 		do
 			create args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
@@ -307,8 +307,8 @@ feature {NONE}
 		do
 			create f.make (False, False, 1)
 			create args.make (2)
-			args.put_i_th (Integer_type, 1)
-			args.put_i_th (f, 2)
+			args.extend (Integer_type)
+			args.extend (f)
 			create Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)

@@ -182,11 +182,10 @@ feature {NONE} -- Implementation
 			add_choice_property (
 				conf_interface_names.option_void_safety_name,
 				conf_interface_names.option_void_safety_description,
-				<<
-					conf_interface_names.option_void_safety_none_name,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.option_void_safety_none_name,
 					conf_interface_names.option_void_safety_initialization_name,
-					conf_interface_names.option_void_safety_all_name
-				>>,
+					conf_interface_names.option_void_safety_all_name>>),
 				an_options.void_safety,
 				c
 			)
@@ -200,11 +199,10 @@ feature {NONE} -- Implementation
 			add_choice_property (
 				conf_interface_names.option_syntax_name,
 				conf_interface_names.option_syntax_description,
-				<<
-					conf_interface_names.option_syntax_obsolete_name,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.option_syntax_obsolete_name,
 					conf_interface_names.option_syntax_transitional_name,
-					conf_interface_names.option_syntax_standard_name
-				>>,
+					conf_interface_names.option_syntax_standard_name>>),
 				an_options.syntax,
 				c
 			)
@@ -468,7 +466,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_choice_property (name, description: STRING_32; items: ARRAY [STRING_32];
+	add_choice_property (name, description: STRING_32; items: ARRAYED_LIST [STRING_32];
 		option: CONF_VALUE_CHOICE; inherited_option: detachable CONF_VALUE_CHOICE)
 			-- Add a choice property `option' with the given `name' and `description'
 			-- that contains specified `items' and may inherit from `inherited_option' if it is attached.
@@ -485,9 +483,9 @@ feature {NONE} -- Implementation
 			l_choice_prop.disable_text_editing
 			if inherited_option /= Void then
 				l_choice_prop.set_refresh_action (
-					agent (content: ARRAY [STRING_32]; i: CONF_VALUE_CHOICE): STRING_32
+					agent (content: ARRAYED_LIST [STRING_32]; i: CONF_VALUE_CHOICE): STRING_32
 						do
-							Result := content [i.index]
+							Result := content.i_th (i.index)
 						end
 					(items, inherited_option)
 				)
@@ -517,7 +515,7 @@ feature {NONE} -- Implementation
 				l_choice_prop.set_value (l_choice_prop.item_strings [option.index])
 			end
 			l_choice_prop.change_value_actions.put_front (
-				agent (o: CONF_VALUE_CHOICE; content: ARRAY [STRING_32]; value: STRING_32)
+				agent (o: CONF_VALUE_CHOICE; content: ARRAYED_LIST [STRING_32]; value: STRING_32)
 					local
 						i: INTEGER
 					do
@@ -527,7 +525,7 @@ feature {NONE} -- Implementation
 							until
 								i <= 0
 							loop
-								if value.is_equal (content [i]) then
+								if value.is_equal (content.i_th ((i))) then
 									o.put_index (i.to_natural_8)
 									i := 1
 								end

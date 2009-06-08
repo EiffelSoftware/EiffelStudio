@@ -4496,6 +4496,8 @@ feature -- Implementation
 	process_bin_eq_as (l_as: BIN_EQ_AS)
 		local
 			l_left_type, l_right_type: TYPE_A
+			l_attached_left_type: TYPE_A
+			l_attached_right_type: TYPE_A
 			l_left_expr, l_right_expr: EXPR_B
 			l_conv_info: CONVERSION_INFO
 			l_binary: BINARY_B
@@ -4526,9 +4528,19 @@ feature -- Implementation
 				if not is_inherited then
 					l_as.set_class_id (class_id_of (l_left_type))
 				end
+				if l_left_type.is_attached then
+					l_attached_left_type := l_left_type
+				else
+					l_attached_left_type := l_left_type.as_attached_type
+				end
+				if l_right_type.is_attached then
+					l_attached_right_type := l_right_type
+				else
+					l_attached_right_type := l_right_type.as_attached_type
+				end
 				if
-					not (l_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
-					l_right_type.conform_to (context.current_class, l_left_type.actual_type))
+					not (l_attached_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
+					l_attached_right_type.conform_to (context.current_class, l_left_type.actual_type))
 				then
 					if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
 						l_conv_info := context.last_conversion_info

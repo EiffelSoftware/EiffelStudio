@@ -1972,6 +1972,7 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
+			unsigned char *OLD_IC;
 			EIF_BOOLEAN has_closed, is_precompiled, is_basic, is_target_closed, is_inline_agent;
 			EIF_TYPED_VALUE *aclosed_operands, *aopen_map;
 			int32 class_id, feature_id, open_count;
@@ -1999,10 +2000,12 @@ rt_private void interpret(int flag, int where)
 				closed_operands = (EIF_REFERENCE) (aclosed_operands->it_ref);
 			}
 			stagval = tagval;
+			OLD_IC = IC;
 				/* Create new object */
 			new_obj = RTLNRW(type, NULL, NULL, NULL, class_id, feature_id, open_map, is_precompiled, 
 							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
 			
+			IC = OLD_IC;
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */

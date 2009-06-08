@@ -65,7 +65,7 @@ feature -- Initialization
 --			upper_set: (agent (l_max_index: INTEGER): BOOLEAN do Result := (agent upper).item ([]) = l_max_index end).item ([max_index])
 --			items_set: (agent: BOOLEAN 
 --				do
---					Result := area.all_default (0, (agent upper).item ([]) - (agent lower).item ([]))
+--					Result := area.filled_with (({G}).default, 0, (agent upper).item ([]) - (agent lower).item ([]))
 --				ensure
 --					definition: Result = ((agent count).item ([]) = 0) or else
 --						((
@@ -276,7 +276,7 @@ feature -- Status report
 	all_default: BOOLEAN is
 			-- Are all items set to default values?
 		do
-			Result := area.all_default (0, upper - lower)
+			Result := area.filled_with (({G}).default, 0, upper - lower)
 		ensure
 			definition: Result = (count = 0 or else
 				((item (upper) = Void or else
@@ -500,7 +500,7 @@ feature -- Removal
 	discard_items is
 			-- Reset all items to default values with reallocation.
 		do
-			make_area (capacity)
+			make_filled_area (({G}).default, capacity)
 		ensure
 			default_items: all_default
 		end
@@ -508,7 +508,7 @@ feature -- Removal
 	clear_all is
 			-- Reset all items to default values.
 		do
-			area.clear_all
+			area.fill_with (({G}).default, 0, area.upper)
 		ensure
 			stable_lower: lower = old lower
 			stable_upper: upper = old upper
@@ -550,7 +550,7 @@ feature -- Resizing
 				old_count := upper - lower + 1
 			end
 			if empty_area then
-				make_area (new_size)
+				make_filled_area (({G}).default, new_size)
 			else
 				if new_size > old_size then
 					area := area.aliased_resized_area (new_size)
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if empty_area then
-				make_area (new_size)
+				make_filled_area (({G}).default, new_size)
 			else
 				if new_size > old_size then
 					area := area.aliased_resized_area (new_size)

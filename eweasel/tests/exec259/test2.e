@@ -10,7 +10,7 @@ feature
 		local
 			g: SPECIAL [G]
 		do
-			create g.make (10)
+			create g.make_filled (({G}).default, 10)
 		end
 
 

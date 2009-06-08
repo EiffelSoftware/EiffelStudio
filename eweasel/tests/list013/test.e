@@ -16,7 +16,7 @@ feature
 				valid_count: list.count = 2
 			end
 
-			a := list
+			a := list.to_array
 
 			a.do_all(agent detect_void (?, 1))
 			a.do_if(agent detect_void (?, 1), agent is_void_string (? , 1))

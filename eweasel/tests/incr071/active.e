@@ -37,6 +37,12 @@ feature -- Status report
 		deferred
 		end;
 
+	replaceable: BOOLEAN
+			-- Can current item be replaced?
+		do
+			Result := True
+		end
+
 feature -- Element change
 
 	replace (v: G) is

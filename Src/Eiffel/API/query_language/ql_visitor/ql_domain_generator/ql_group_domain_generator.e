@@ -75,7 +75,7 @@ feature -- Process
 					until
 						l_group_set.after
 					loop
-						l_list.put (l_group_set.item_for_iteration)
+						l_list.extend (l_group_set.item_for_iteration)
 						l_group_set.forth
 					end
 					process_groups_from_list (l_list, a_item)

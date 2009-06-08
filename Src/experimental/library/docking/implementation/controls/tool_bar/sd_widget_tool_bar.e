@@ -119,7 +119,7 @@ feature -- Command
 			l_widget_item ?= a_item
 			if l_widget_item /= Void then
 				extend_fixed (l_widget_item.widget)
-				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
+				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width.max (1), l_widget_item.widget.minimum_height.max (1))
 			end
 			set_need_calculate_size (True)
 		end

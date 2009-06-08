@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interface: SD_DRAWING_AREA;
+	interface: detachable SD_DRAWING_AREA note option: stable attribute end;
 			-- <Precursor>
 
 note

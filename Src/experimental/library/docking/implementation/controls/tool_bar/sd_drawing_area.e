@@ -40,7 +40,7 @@ feature {EV_ANY_I} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {SD_DRAWING_AREA_IMP} implementation.make (Current)
+			create {SD_DRAWING_AREA_IMP} implementation.make
 		end
 
 	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)

@@ -130,7 +130,7 @@ feature {NONE} -- Implemention
 				a_history.forth
 			end
 			if l_draw_array.count >= 2 then
-				internal_pixmap.draw_polyline (l_draw_array, False)
+				internal_pixmap.draw_polyline (l_draw_array.to_array, False)
 			end
 		end
 

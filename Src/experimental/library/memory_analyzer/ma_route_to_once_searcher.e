@@ -206,7 +206,7 @@ feature {NONE} -- Results
 
 			l_column_count := a_grid.column_count
 			l_row_count := a_grid.row_count
-			create l_states.make (l_column_count + 1)
+			create l_states.make_filled (0, l_column_count + 1)
 			create l_text.make (100)
 			from
 				i := 1

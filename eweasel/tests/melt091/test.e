@@ -9,8 +9,10 @@ feature
 	make
 		local
 			s: STRING
+			a: ROUTINE [ANY, TUPLE]
 		do
-			s := "$STRING"
+			s := "$VALUE"
+			a := agent print
 		end
 	
 end

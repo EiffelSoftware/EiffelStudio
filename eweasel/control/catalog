@@ -944,7 +944,7 @@ test	redefined-once-with-alt-precondition	melt087  tcf fail execution melting
 test	character_32-constant		melt088  tcf fail execution melting
 test	alt-precondition-call-on-void-target	melt089  tcf fail execution melting
 test	melted-object-test-with-anchored-none	melt090  tcf fail execution melting
-test	melted-string-crash			melt091  tcf fail execution melting
+test	melted-creation-crash			melt091  tcf pass execution melting
 test	melted-agent-exception-crash	melt092  tcf fail execution melting agents
 test	raise-exception-inspect-branch	melt093  tcf fail execution melting
 test	dollar-with-expanded-attribute-in-generic	melt094  tcf fail execution melting

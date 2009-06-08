@@ -1,8 +1,6 @@
 note
 	description: "[
 		An SQLite database connection for reading, writing and creating SQLite databases.
-		
-		Currently only on-disk databases are supported. Virtual databases will be coming.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,13 +35,32 @@ inherit
 		end
 
 create
-	make_read,
-	make_read_write,
+	make,
+	make_open_read,
+	make_open_read_write,
 	make_create_read_write
 
 feature {NONE} -- Initialization
 
-	make_read (a_file_name: READABLE_STRING_GENERAL)
+	make (a_source: SQLITE_SOURCE)
+			-- Initializes the database from a database source, which could be a file or in memory.
+			-- Note: The connection is not opened when using this approach, use one of the `open_*'
+			--       routines after initialization, or one of the `make_open_*' convenience routines.
+			--
+			-- `a_source': The source where the database is or should be located.
+		require
+			is_sqlite_available: is_sqlite_available
+			a_source_attached: attached a_source
+		do
+			source := a_source
+			if {PLATFORM}.is_thread_capable then
+				internal_thread_id := get_current_thread_id.to_integer_32
+			end
+		ensure
+			source_set: source = a_source
+		end
+
+	frozen make_open_read (a_file_name: READABLE_STRING_GENERAL)
 			-- Creates a database from a local file in a read-only mode.
 			--
 			-- `a_file_name': The file where the database is located.
@@ -54,11 +71,11 @@ feature {NONE} -- Initialization
 			a_file_name_is_string_8: a_file_name.is_string_8
 			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
 		do
-			make_common (a_file_name)
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_read
 		end
 
-	make_read_write (a_file_name: READABLE_STRING_GENERAL)
+	frozen make_open_read_write (a_file_name: READABLE_STRING_GENERAL)
 			-- Creates a database from a local file in a read-write mode.
 			--
 			-- `a_file_name': The file where the database is located.
@@ -69,11 +86,11 @@ feature {NONE} -- Initialization
 			a_file_name_is_string_8: a_file_name.is_string_8
 			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
 		do
-			make_common (a_file_name)
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_read_write
 		end
 
-	make_create_read_write (a_file_name: READABLE_STRING_GENERAL)
+	frozen make_create_read_write (a_file_name: READABLE_STRING_GENERAL)
 			-- Creates a database from a local file in a read-write mode. In the event the database doesn't
 			-- exist then a new database will be created.
 			--
@@ -84,27 +101,8 @@ feature {NONE} -- Initialization
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_file_name_is_string_8: a_file_name.is_string_8
 		do
-			make_common (a_file_name)
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_create_read_write
-		end
-
-	make_common (a_file_name: READABLE_STRING_GENERAL)
-			-- Common initialization for a database connection.
-			-- Note: For internal use only!
-			--
-			-- `a_file_name': The file where the database is located.
-		require
-			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-		do
-			create file_name.make_from_string (a_file_name.as_string_8)
-			if {PLATFORM}.is_thread_capable then
-				internal_thread_id := get_current_thread_id.to_integer_32
-			end
-		ensure
-			file_name_set: file_name.same_string (a_file_name.as_string_8)
 		end
 
 feature {NONE} -- Clean up
@@ -119,8 +117,8 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	file_name: IMMUTABLE_STRING_8
-			-- Data base file name where the data is, or is to be, located.
+	source: SQLITE_SOURCE
+			-- Database source where the data is, or is to be, located.
 
 feature -- Access: Error reporting
 
@@ -245,12 +243,20 @@ feature -- Status report: Comparison
 		do
 			Result := internal_db = a_other.internal_db
 			if not Result then
-					-- May enter here because one of the databases may be closed.
-				if {PLATFORM}.is_windows then
-					Result := file_name.same_string (a_other.file_name)
-				else
-					Result := file_name.same_string (a_other.file_name)
+				if
+					attached {SQLITE_FILE_SOURCE} source as l_source and then
+					not l_source.is_temporary and then
+					attached {SQLITE_FILE_SOURCE} a_other.source as l_other_source and then
+					not l_other_source.is_temporary
+				then
+						-- May enter here because one of the databases may be closed.
+					if {PLATFORM}.is_windows then
+						Result := l_source.locator.same_string (l_other_source.locator)
+					else
+						Result := l_source.locator.same_string (l_other_source.locator)
+					end
 				end
+
 			end
 		end
 
@@ -284,7 +290,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
-			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
+			source_exists: source.exists
 		local
 			l_flags: INTEGER
 		do
@@ -303,7 +309,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
-			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
+			source_exists: source.exists
 		do
 			open_internal (SQLITE_OPEN_READONLY)
 		end
@@ -314,7 +320,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
-			file_name_exists: (create {RAW_FILE}.make (file_name)).exists
+			source_exists: source.exists
 		do
 			open_internal (SQLITE_OPEN_READWRITE)
 		ensure
@@ -483,7 +489,7 @@ feature {NONE} -- Basic operations
 			internal_flags := l_flags
 
 				-- Open the database connection.
-			create l_file_name.make (file_name)
+			create l_file_name.make (source.locator)
 			l_result := sqlite3_open_v2 (sqlite_api, l_file_name.item, $l_db, l_flags, default_pointer)
 			if sqlite_success (l_result) then
 				check not_l_db_is_null: l_db /= default_pointer end
@@ -537,8 +543,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	file_name_attached: attached file_name
-	not_file_name_is_empty: not file_name.is_empty
+	source_attached: attached source
 	is_readable: not is_closed implies is_readable
 	locked_thread_id_unset: not {PLATFORM}.is_thread_capable implies internal_thread_id = 0
 	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id > 0

@@ -687,21 +687,19 @@ feature {NONE} -- Element Change
 			a_consumed_type_not_void: a_consumed_type /= Void
 			a_feature_not_void: a_feature /= Void
 		local
-			l_constructors: ARRAY [CONSUMED_CONSTRUCTOR]
-			i, l_count: INTEGER
+			l_constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			l_found: BOOLEAN
 		do
 			l_constructors := a_consumed_type.constructors
 			if l_constructors /= Void then
 				from
-					i := 1
-					l_count := l_constructors.count
+					l_constructors.start
 				until
-					i > l_count or l_found
+					l_constructors.after or else l_found
 				loop
-					Result := l_constructors.item (i)
+					Result := l_constructors.item
 					l_found := Result.eiffel_name.is_equal (a_feature.name)
-					i := i + 1
+					l_constructors.forth
 				end
 				if not l_found then
 					Result := Void
@@ -715,56 +713,55 @@ feature {NONE} -- Element Change
 			a_consumed_type_not_void: a_consumed_type /= Void
 			a_feature_not_void: a_feature /= Void
 		local
-			l_properties: ARRAY [CONSUMED_PROPERTY]
-			l_events: ARRAY [CONSUMED_EVENT]
-			l_counter: INTEGER
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 		do
 			l_properties := a_consumed_type.properties
 			if l_properties /= Void then
 				from
-					l_counter := 1
+					l_properties.start
 				until
-					l_counter > l_properties.count or Result /= Void
+					l_properties.after or else Result /= Void
 				loop
 					if
-						l_properties.item (l_counter).getter /= Void and
-						l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name)
+						l_properties.item.getter /= Void and
+						l_properties.item.getter.eiffel_name.is_equal (a_feature.name)
 					then
-						Result := l_properties.item (l_counter).getter
+						Result := l_properties.item.getter
 					elseif
-						l_properties.item (l_counter).setter /= Void and
-						l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name)
+						l_properties.item.setter /= Void and
+						l_properties.item.setter.eiffel_name.is_equal (a_feature.name)
 					then
-						Result := l_properties.item (l_counter).setter
+						Result := l_properties.item.setter
 					end
-					l_counter := l_counter + 1
+					l_properties.forth
 				end
 			end
 			if Result = Void then
 				l_events := a_consumed_type.events
 				if l_events /= Void then
 					from
-						l_counter := 1
+						l_events.start
 					until
-						l_counter > l_events.count or Result /= Void
+						l_events.after or else Result /= Void
 					loop
 						if
-							l_events.item (l_counter).adder /= Void and
-							l_events.item (l_counter).adder.eiffel_name.is_equal (a_feature.name)
+							l_events.item.adder /= Void and
+							l_events.item.adder.eiffel_name.is_equal (a_feature.name)
 						then
-							Result := l_events.item (l_counter).adder
+							Result := l_events.item.adder
 						elseif
-							l_events.item (l_counter).remover /= Void and
-							l_events.item (l_counter).remover.eiffel_name.is_equal (a_feature.name)
+							l_events.item.remover /= Void and
+							l_events.item.remover.eiffel_name.is_equal (a_feature.name)
 						then
-							Result := l_events.item (l_counter).remover
+							Result := l_events.item.remover
 						elseif
-							l_events.item (l_counter).raiser /= Void and
-							l_events.item (l_counter).raiser.eiffel_name.is_equal (a_feature.name)
+							l_events.item.raiser /= Void and
+							l_events.item.raiser.eiffel_name.is_equal (a_feature.name)
 						then
-							Result := l_events.item (l_counter).raiser
+							Result := l_events.item.raiser
 						end
-						l_counter := l_counter + 1
+						l_events.forth
 					end
 				end
 			end
@@ -802,7 +799,7 @@ invariant
 	do_flat: not is_short
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -815,22 +812,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DOTNET_FEAT_TEXT_FORMATTER_DECORATOR

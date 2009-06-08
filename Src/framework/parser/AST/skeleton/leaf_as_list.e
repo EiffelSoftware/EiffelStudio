@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			a_trunk_number_positive: a_trunk_number > 0
 		do
 			create trunks.make (a_trunk_number)
-			create current_trunk.make (trunk_size)
+			create current_trunk.make_filled (Void, trunk_size)
 			trunks.extend (current_trunk)
 			count := 0
 			in_trunk_count := 0
@@ -62,7 +62,7 @@ feature -- Element change
 			a_leaf_index_positive: a_leaf.index > 0
 		do
 			if in_trunk_count = trunk_size then
-				create current_trunk.make (trunk_size)
+				create current_trunk.make_filled (Void, trunk_size)
 				trunks.extend (current_trunk)
 				in_trunk_count := 0
 			end
@@ -667,7 +667,7 @@ feature -- Comment extraction
 					l_cmt_list := l_break.extract_comment
 					if not l_cmt_list.is_empty then
 						Result.finish
-						Result.merge_right (l_cmt_list)
+						Result.append (l_cmt_list)
 					end
 				end
 				i := i + 1

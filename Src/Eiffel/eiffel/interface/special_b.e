@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			args: FEAT_ARG
 		do
 			create args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id (Names_heap.make_name_id, 0)
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			args: FEAT_ARG
 		do
 			create  args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create  Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_empty_name_id, 0)
@@ -280,8 +280,8 @@ feature {NONE} -- Implementation
 		do
 			create f.make (False, False, 1)
 			create args.make (2)
-			args.put_i_th (f, 1)
-			args.put_i_th (Integer_type, 2)
+			args.extend (f)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id (Names_heap.make_filled_name_id, 0)
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			f: FORMAL_A
 		do
 			create args.make (1)
-			args.put_i_th (Integer_type, 1)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
@@ -314,8 +314,8 @@ feature {NONE} -- Implementation
 		do
 			create f.make (False, False, 1)
 			create args.make (2)
-			args.put_i_th (f, 1)
-			args.put_i_th (Integer_type, 2)
+			args.extend (f)
+			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
 			Result.set_feature_name_id (Names_heap.put_name_id, 0)

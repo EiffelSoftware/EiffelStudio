@@ -2117,7 +2117,7 @@ end
 		do
 			Result := constrained_type_cache [a_formal_position - 1]
 			if Result = Void then
-				create l_recursion_break.make (generics.count + 1)
+				create l_recursion_break.make_filled (False, generics.count + 1)
 				from
 					Result := constraint (a_formal_position)
 				until
@@ -2517,8 +2517,8 @@ feature -- Validity class
 				if
 					l_feature = Void or else
 					l_feature.argument_count /= 2 or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
-					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
+					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments.to_array).is_reference or else
 					not l_feature.type.is_boolean
 				then
 					error_handler.insert_error (
@@ -2529,7 +2529,7 @@ feature -- Validity class
 					l_feature = Void or else
 					l_feature.argument_count /= 1 or else
 					not l_feature.arguments.i_th (1).is_like_current or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
 					not l_feature.type.is_boolean
 				then
 					error_handler.insert_error (
@@ -2548,7 +2548,7 @@ feature -- Validity class
 					l_feature = Void or else
 					l_feature.argument_count /= 1 or else
 					not l_feature.arguments.i_th (1).is_like_current or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
+					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments.to_array).is_reference or else
 					not l_feature.type.is_void
 				then
 					error_handler.insert_error (
@@ -3002,7 +3002,7 @@ feature -- Properties
 				-- Check if `constraint_cache' has been created.
 			l_cache := constraint_cache
 			if l_cache = Void then
-				create l_cache.make (generics.count)
+				create l_cache.make_filled (Void, generics.count)
 				constraint_cache := l_cache
 			end
 				-- Check if an entry for `a_formal_dec' was created.
@@ -3039,7 +3039,7 @@ feature -- Properties
 				-- Check if `constraint_cache' has been created.
 			l_cache := constraint_cache
 			if l_cache = Void then
-				create l_cache.make (generics.count)
+				create l_cache.make_filled (Void, generics.count)
 				constraint_cache := l_cache
 			end
 				-- Check if an entry for `a_formal_dec' was created.
@@ -3064,7 +3064,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation: Properties
 
-	constraint_cache: SPECIAL [like formal_constraint_cache]
+	constraint_cache: SPECIAL [detachable like formal_constraint_cache]
 			-- To store computed information about generic constraints of Current.
 
 	formal_constraint_cache: TUPLE [
@@ -3075,10 +3075,10 @@ feature {NONE} -- Implementation: Properties
 		do
 		end
 
-	constrained_type_cache: SPECIAL [TYPE_A]
+	constrained_type_cache: SPECIAL [detachable TYPE_A]
 			-- Constraining type for each given formal, if there exists one
 
-	constrained_types_cache: SPECIAL [TYPE_SET_A]
+	constrained_types_cache: SPECIAL [detachable TYPE_SET_A]
 			-- Constraining types for each given formal
 			--| In case someone requests a type set for a single constraint this is just fine.
 			--| That is why we have two caches.
@@ -3798,8 +3798,8 @@ feature {COMPILER_EXPORTER} -- Setting
 		do
 			generics := g
 			if g /= Void then
-				create constrained_type_cache.make (g.count)
-				create constrained_types_cache.make (g.count)
+				create constrained_type_cache.make_filled (Void, g.count)
+				create constrained_types_cache.make_filled (Void, g.count)
 			end
 		ensure
 			generics_set: generics = g
@@ -3878,7 +3878,7 @@ feature -- Genericity
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 			l_formal_dec: FORMAL_DEC_AS
-			l_formals: SPECIAL [TYPE_FEATURE_I]
+			l_formals: SPECIAL [detachable TYPE_FEATURE_I]
 		do
 				-- Clean previously stored information.
 			l_old := generic_features
@@ -3888,7 +3888,7 @@ feature -- Genericity
 					-- parameters of a class which introduce them if the class
 					-- is processed at degree 4 and nothing really changed.
 					-- Fixes eweasel test#incrXXX.
-				create l_formals.make (generics.count + 1)
+				create l_formals.make_filled (Void, generics.count + 1)
 				from
 					l_old.start
 				until
@@ -4627,35 +4627,35 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLASS_C

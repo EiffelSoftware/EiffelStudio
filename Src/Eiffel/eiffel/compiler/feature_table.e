@@ -155,7 +155,7 @@ feature -- Access
 		require
 			computed: is_computed
 		local
-			i, l_count, l_id: INTEGER
+			l_id: INTEGER
 			l_server: FEATURE_SERVER
 		do
 			Result := feature_table
@@ -163,22 +163,19 @@ feature -- Access
 				Result := feature_table_cache.item_id (feat_tbl_id)
 				if Result = Void then
 					from
-						l_count := count
-							-- Create Result filled with at least `l_count' items.
-						create Result.make_filled (l_count)
+							-- Create Result filled with at least `count' items.
+						create Result.make (count)
 						Result.set_id (feat_tbl_id)
 						l_server := system.feature_server
-							--
-						iteration_position := -1
+						internal_table_start
 					until
-						i = l_count
+						internal_table_after
 					loop
-						i := i + 1
-						internal_table_forth
-						l_id := content [iteration_position]
+						l_id := internal_table_item_for_iteration
 						if l_id > 0 then
-							Result.put_i_th (l_server.item (l_id), i)
+							Result.extend (l_server.item (l_id))
 						end
+						internal_table_forth
 					end
 					feature_table_cache.force (Result)
 				end
@@ -753,33 +750,28 @@ end
 			l_feat: FEATURE_I
 			nb: INTEGER
 			l_feature_server: FEATURE_SERVER
-			i: INTEGER
 		do
 			from
 				nb := count
 				l_feature_server := system.feature_server
-				create feature_table.make_filled (nb)
+				create feature_table.make (nb)
 				feature_table.set_id (feat_tbl_id)
 				create select_table.make (nb, Current)
 				create feature_id_table.make (1, nb)
 				create body_index_table.make (nb)
-				iteration_position := -1
+				internal_table_start
 			until
-				i = nb
+				internal_table_after
 			loop
-					-- We loop 'nb' times so that when all features are computed we exit loop immediately.
-				internal_table_forth
-				i := i + 1
 					-- Retrieve feature from current routine id of `Current'.
-				check l_id_positive: content [iteration_position] > 0 end
-				l_feat := l_feature_server.item (content [iteration_position])
+				check l_id_positive: internal_table_item_for_iteration > 0 end
+				l_feat := l_feature_server.item (internal_table_item_for_iteration)
 
 				feature_id_table.force (l_feat.feature_name_id, l_feat.feature_id)
 				body_index_table.put (l_feat.feature_name_id, l_feat.body_index)
 				select_table.add_feature (l_feat)
-					-- We can use `i' to insert the feature in to the correct
-					-- part of the feature table.
-				feature_table.put_i_th (l_feat, i)
+				feature_table.extend (l_feat)
+				internal_table_forth
 			end
 			is_computed := True
 		ensure

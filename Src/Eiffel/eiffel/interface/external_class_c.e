@@ -341,7 +341,7 @@ feature {NONE} -- Implementation: Overloading
 			from
 				i := 1
 				nb := a_list.count
-				create l_processed.make (nb + 1)
+				create l_processed.make_filled (False, nb + 1)
 				create Result.make (nb)
 			until
 				i > nb
@@ -408,7 +408,7 @@ feature -- Query
 			a_feat_is_external: a_feat.is_external
 		local
 			l_consumed_type: CONSUMED_TYPE
-			l_properties: ARRAY [CONSUMED_PROPERTY]
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			l_prop: CONSUMED_PROPERTY
 			i, nb: INTEGER
 			done: BOOLEAN
@@ -421,12 +421,12 @@ feature -- Query
 			if l_consumed_type /= Void and l_consumed_type.properties /= Void then
 				l_properties := l_consumed_type.properties
 				from
-					i := l_properties.lower
-					nb := l_properties.upper
+					i := 1
+					nb := l_properties.count
 				until
 					i > nb or done
 				loop
-					l_prop := l_properties.item (i)
+					l_prop := l_properties.i_th (i)
 					if l_prop /= Void then
 						if l_prop.getter.eiffel_name.is_equal (a_feat.feature_name) then
 							done := True
@@ -906,9 +906,8 @@ feature {NONE} -- Initialization
 						if j >= l_record_pos then
 							l_external_type := internal_type_from_consumed_type (True,
 								l_arg.type)
-							l_feat_arg.put_i_th (l_external_type, m + 1)
 							l_names_heap.put (l_arg.eiffel_name)
-							l_feat_arg.argument_names.put (l_names_heap.found_item, m)
+							l_feat_arg.extend_with_name (l_external_type, l_names_heap.found_item)
 							m := m + 1
 						end
 
@@ -1640,7 +1639,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1653,22 +1652,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EXTERNAL_CLASS_C

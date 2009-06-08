@@ -186,8 +186,6 @@ feature
 		require
 			parents_not_void: parents /= Void
 		local
-			i, l_iteration_position: INTEGER
-			l_keys: like keys
 			l_replicated_feature_set: LINKED_LIST [SELECTION_LIST]
 			l_selection_list: SELECTION_LIST
 			l_feature_replication_generator: AST_FEATURE_REPLICATION_GENERATOR
@@ -195,30 +193,20 @@ feature
 			l_class_as: CLASS_AS
 		do
 			from
-					-- If we perform 'count' iterations this means we exit
-					-- immediately after the last item has been processed
-					-- instead of calling a needless extra 'forth'
-				i := count
-				l_keys := keys
+				start
 			until
-				i = 0
+				after
 			loop
-					-- Move 'iteration' position to the next usable 'content' slot.
-				if l_keys [l_iteration_position] /= 0 then
-					content [l_iteration_position].process_selection (parents, old_t, new_t)
-
-						-- Check if replication was processed.
-						-- All non replicated features get removed during selection processing.
-					if content [l_iteration_position].has_replicated_features then
-						if l_replicated_feature_set = Void then
-							create l_replicated_feature_set.make
-						end
-						l_replicated_feature_set.extend (content [l_iteration_position])
+				item_for_iteration.process_selection (parents, old_t, new_t)
+					-- Check if replication was processed.
+					-- All non replicated features get removed during selection processing.
+				if item_for_iteration.has_replicated_features then
+					if l_replicated_feature_set = Void then
+						create l_replicated_feature_set.make
 					end
-						-- Decrement processed selection list counter.
-					i := i - 1
+					l_replicated_feature_set.extend (item_for_iteration)
 				end
-				l_iteration_position := l_iteration_position + 1
+				forth
 			end
 
 			if l_replicated_feature_set /= Void then
@@ -281,7 +269,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,22 +282,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create new instance of NAMES_HEAP
 		do
 			top_index := 1
-			create area.make (Chunk)
+			create area.make_filled (Void, Chunk)
 			create lookup_table.make (Chunk)
 			initialize_constants
 		end
@@ -113,7 +113,7 @@ feature -- Element change
 				l_top_index := top_index
 				found_item := l_top_index
 				if area.count <= l_top_index then
-					area := area.aliased_resized_area (l_top_index + (l_top_index // 2).max (Chunk))
+					area := area.aliased_resized_area_with_default (Void, l_top_index + (l_top_index // 2).max (Chunk))
 				end
 					-- Duplicate string as the heap cannot work if `s' is externally
 					-- modified.

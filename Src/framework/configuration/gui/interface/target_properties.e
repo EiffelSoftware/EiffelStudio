@@ -70,7 +70,9 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- compilation type
-			create l_choice_prop.make_with_choices (conf_interface_names.target_compilation_type_name, <<conf_interface_names.target_compilation_type_standard, conf_interface_names.target_compilation_type_dotnet>>)
+			create l_choice_prop.make_with_choices (conf_interface_names.target_compilation_type_name,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+				<<conf_interface_names.target_compilation_type_standard, conf_interface_names.target_compilation_type_dotnet>>))
 			l_choice_prop.set_description (conf_interface_names.target_compilation_type_description)
 			l_choice_prop.disable_text_editing
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (s_msil_generation, l_choice_prop)))
@@ -381,7 +383,8 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_choice_prop)
 
-			create l_choice_prop.make_with_choices (conf_interface_names.target_msil_generation_type_name, <<"exe", "dll">>)
+			create l_choice_prop.make_with_choices (conf_interface_names.target_msil_generation_type_name,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"exe", "dll">>))
 			l_choice_prop.set_description (conf_interface_names.target_msil_generation_type_description)
 			add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
 			if not l_il_generation then

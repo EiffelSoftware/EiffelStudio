@@ -134,7 +134,6 @@ feature -- Initialization
 				-- Creation of data structures
 			create arguments.make (nb_arg)
 				-- Fill the data structures
-			nb_arg := 1
 			from
 				i := 1
 			until
@@ -149,9 +148,7 @@ feature -- Initialization
 				until
 					j > dec_count
 				loop
-					arguments.put_name (id_list.i_th (j), nb_arg)
-					arguments.put_i_th (arg_type, nb_arg)
-					nb_arg := nb_arg + 1
+					arguments.extend_with_name (arg_type, id_list.i_th (j))
 					j := j + 1
 				end
 				i := i + 1

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Initialize file protocol.
 		do
 			create file.make (address.name)
-			create buffer.make (Default_buffer_size)
+			create buffer.make_filled ('%/000/', Default_buffer_size)
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode
 		end
@@ -169,7 +169,7 @@ feature -- Status setting
 			-- Set size of read buffer.
 		do
 			read_buffer_size := n
-			create buffer.make (read_buffer_size)
+			create buffer.make_filled ('%/000/', read_buffer_size)
 		ensure then
 			buffer_size_correct: buffer.count = read_buffer_size
 		end

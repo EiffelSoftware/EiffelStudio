@@ -290,9 +290,9 @@ feature {NONE} -- Encoder Implementation
 				n := s.count
 				i := (8 * n) \\ 6
 				if i > 0 then
-					create f.make (8 * n + (6 - i))
+					create f.make_filled (False, 8 * n + (6 - i))
 				else
-					create f.make (8 * n)
+					create f.make_filled (False, 8 * n)
 				end
 				i := 0
 			until

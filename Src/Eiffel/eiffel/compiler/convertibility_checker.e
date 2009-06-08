@@ -42,7 +42,7 @@ feature -- Initialization/Checking
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
 			a_convertors: EIFFEL_LIST [CONVERT_FEAT_AS])
-		
+
 			-- Initialize `convert_to' and `convert_from' of `a_class' using `a_convertors'.
 			-- Performs also basic checking on `a_convertors'.
 			-- Update `Error_handler' if any error is found.
@@ -313,8 +313,13 @@ feature -- Initialization/Checking
 					if l_cl_type /= Void then
 						l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
 					end
-					l_success := a_source_type.same_as (l_conversion_type)
-					if l_success then
+						-- In case there is a mismatch in attachment marks,
+						-- the types can still be the same if they conform to each other.
+					if a_source_type.same_as (l_conversion_type) or else
+						a_source_type.conform_to (a_context_class, l_conversion_type) and then
+						l_conversion_type.conform_to (a_context_class, a_source_type)
+					then
+						l_success := True
 						l_feat_name_id := l_convert_table.item_for_iteration
 					end
 					l_convert_table.forth
@@ -359,8 +364,13 @@ feature -- Initialization/Checking
 						if l_cl_type /= Void then
 							l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
 						end
-						l_success := a_target_type.same_as (l_conversion_type)
-						if l_success then
+							-- In case there is a mismatch in attachment marks,
+							-- the types can still be the same if they conform to each other.
+						if a_target_type.same_as (l_conversion_type) or else
+							a_target_type.conform_to (a_context_class, l_conversion_type) and then
+							l_conversion_type.conform_to (a_context_class, a_target_type)
+						then
+							l_success := True
 							l_feat_name_id := l_convert_table.item_for_iteration
 						end
 						l_convert_table.forth
@@ -463,7 +473,7 @@ feature {NONE} -- Implementation: checking
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
 			a_convert_feat: CONVERT_FEAT_AS)
-		
+
 			-- Check validity of feature represented by `a_convert_feat' in `a_feat_tbl'.
 			-- Update `Error_handler' if any error is found.
 		require
@@ -536,7 +546,7 @@ feature {NONE} -- Implementation: checking
 			a_feat_tbl: FEATURE_TABLE;
 			a_convert_feat: CONVERT_FEAT_AS;
 			a_type: NAMED_TYPE_A)
-		
+
 			-- Check validity of `a_type' used to convert to or from using `a_convert_feat' routine
 			-- so that it matches routine specified in `a_convert_feat', and that `a_type' does not
 			-- conform to `a_class'.
@@ -669,7 +679,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -682,22 +692,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CONVERTIBILITY_CHECKER

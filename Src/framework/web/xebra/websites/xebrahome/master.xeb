@@ -10,7 +10,7 @@
 <div id="header">
 <div class="nav btn_download" onclick="location.href='download.xeb';"></div>
 <div class="nav btn_documentation"
-	onclick="location.href='documentation.xeb';"></div>
+	onclick="location.href='doc.xeb';"></div>
 <div class="nav btn_about" onclick="location.href='about.xeb';"></div>
 </div>
 <page:region id="content" />

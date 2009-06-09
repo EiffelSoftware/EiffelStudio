@@ -31,7 +31,8 @@ feature -- Access
 		do
 			l_f := app_dir.twin
 			l_f.set_file_name ("config.ini")
-			Result := l_f.string + " -d " + webapp_debug_level.out
+			Result := l_f.string + " -d " + config.arg_config.debug_level.out
+						--webapp_debug_level.out
 		ensure
 			Result_attached: Result /= Void
 		end

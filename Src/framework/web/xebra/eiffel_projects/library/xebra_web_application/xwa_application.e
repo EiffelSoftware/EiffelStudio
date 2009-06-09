@@ -100,9 +100,9 @@ feature {NONE} -- Operations Internal
 						end
 						o.iprint ("Shutting down...")
 						server.shutdown
-						o.iprint ("Bye!")
 					end
 					server.join
+					o.iprint ("Bye!")
 				end
 			end
 		end

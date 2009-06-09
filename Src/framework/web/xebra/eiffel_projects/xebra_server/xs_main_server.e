@@ -79,30 +79,7 @@ feature -- Operations
 						io.last_character.is_equal ('x')
 					loop
 						io.read_character
-
-						--test
-						if io.last_character.is_equal ('c') then
-							from
-								server_config.webapps.start
-							until
-								server_config.webapps.after
-							loop
-								server_config.webapps.item_for_iteration.cleaned := False
-							end
-						end
-
-						if io.last_character.is_equal ('c') then
-							from
-								server_config.webapps.start
-							until
-								server_config.webapps.after
-							loop
-								server_config.webapps.item_for_iteration.cleaned := False
-							end
-						end
-						
 					end
-
 					o.iprint ("Shutting down...")
 					o.dprint ("Terminating Web Applications...",3)
 					create l_webapp_handler.make (server_config)

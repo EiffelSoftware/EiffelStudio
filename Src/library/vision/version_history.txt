@@ -1,4 +1,0 @@
-EiffelVision Library:
----------------------
-
-25/07/1999: Font size in now specified in point.

@@ -160,14 +160,17 @@ feature -- Command
 	compute_minimum_size
 			-- <Precursor>
 		do
-			tool_bar.compute_minimum_size
-			if attached {EV_WIDGET} tool_bar as lt_widget then
-				check has: has_fixed (lt_widget) end
+			-- See bug#15525, toolbar can be void if `is_destroyed'
+			if not is_destroyed then
+				tool_bar.compute_minimum_size
+				if attached {EV_WIDGET} tool_bar as lt_widget then
+					check has: has_fixed (lt_widget) end
 
-				set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
-				set_item_size (lt_widget, minimum_width, minimum_height)
-			else
-				check not_possible: False end
+					set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
+					set_item_size (lt_widget, minimum_width, minimum_height)
+				else
+					check not_possible: False end
+				end
 			end
 		end
 

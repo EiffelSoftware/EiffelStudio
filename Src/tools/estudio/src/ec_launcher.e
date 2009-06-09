@@ -473,7 +473,6 @@ feature -- Environment
 			fn: FILE_NAME
 			file: RAW_FILE
 			i: INTEGER
-			l_has_compat_index: INTEGER
 		do
 				--| Compute command line, args, and working directory
 			create {ARRAYED_LIST [STRING]} ec_arguments.make (cmdline_arguments_count + 1)
@@ -481,55 +480,24 @@ feature -- Environment
 
 			if cmdline_arguments_count > 0 then
 					--| And now we get the parameters for EiffelStudio
-				l_has_compat_index := cmdline_arguments.index_of_word_option ("compat")
-				if cmdline_arguments_count = 1 and l_has_compat_index > 0 then
-					ec_arguments.extend ("-compat")
-				elseif
-					(cmdline_arguments_count = 1 and l_has_compat_index = 0) or
-					(cmdline_arguments_count = 2 and l_has_compat_index > 0)
-				then
-					if l_has_compat_index > 0 then
-						ec_arguments.extend ("-compat")
-					end
-						--| use the -config argument
-					ec_arguments.extend ("-config")
-					if l_has_compat_index = 1 then
-						s := cmdline_argument (2).twin
+				if cmdline_arguments_count = 1 then
+					if not eiffel_layout.is_default_mode then
+						ec_arguments.extend (eiffel_layout.command_line_profile_option)
 					else
-						check
-							absent_or_last: l_has_compat_index = 0 or l_has_compat_index = 2
-						end
+							--| use the required -config argument
+						ec_arguments.extend ("-config")
 						s := cmdline_argument (1)
-					end
 
-						--| Try to be smart and guess if the path is relative or not
-					cwd := Execution_environment.current_working_directory
-					create fn.make
-					if fn.is_file_name_valid (s) then
-						create file.make (s)
-					end
-					if file = Void or else not file.exists then
-						fn.set_directory (cwd)
-						fn.set_file_name (s)
-						if fn.is_valid then
-							create file.make (fn)
-							if file.exists then
-								s := fn
-							end
+							--| `s' is the path to the config file
+						if s.has (' ') and then not s.has ('"') then
+							s.left_adjust
+							s.right_adjust
+							s.prepend_character ('"')
+							s.append_character ('"')
 						end
-						fn := Void
-						file := Void
+						ec_arguments.extend (s)
 					end
-
-						--| `s' is the path to the config file
-					if s.has (' ') and then not s.has ('"') then
-						s.left_adjust
-						s.right_adjust
-						s.prepend_character ('"')
-						s.append_character ('"')
-					end
-					ec_arguments.extend (s)
-				elseif cmdline_arguments_count >= 1  then
+				else
 					from
 						i := 1
 					until

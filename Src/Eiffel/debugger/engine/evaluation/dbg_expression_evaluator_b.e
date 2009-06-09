@@ -1381,11 +1381,11 @@ feature {BYTE_NODE} -- Visitor
 	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
-			l_class: CLASS_C
-			l_def_create_feat_i: FEATURE_I
+--			l_class: CLASS_C
+--			l_def_create_feat_i: FEATURE_I
 			l_tmp_target_backup: like tmp_target
-			l_call_value: DBG_EVALUATED_VALUE
-			l_value: DUMP_VALUE
+--			l_call_value: DBG_EVALUATED_VALUE
+--			l_value: DUMP_VALUE
 			l_type_i: CL_TYPE_A
 		do
 			debug ("refactor_fixme")

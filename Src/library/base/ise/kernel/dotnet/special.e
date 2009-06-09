@@ -205,6 +205,28 @@ feature -- Status report
 			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
+	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
+			-- Are all items between index `start_index' and `end_index'
+			-- set to `v'?
+			-- (Use reference equality for comparison.)			
+		require
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
+		local
+			i: INTEGER
+		do
+			from
+				Result := True
+				i := start_index
+			until
+				i > end_index or else not Result
+			loop
+				Result := item (i) = v
+				i := i + 1
+			end
+		end
+
 	same_items (other: like Current; source_index, destination_index, n: INTEGER): BOOLEAN
 			-- Do all items between index `start_index' and `end_index' have
 			-- same value?

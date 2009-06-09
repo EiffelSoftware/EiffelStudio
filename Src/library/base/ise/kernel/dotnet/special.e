@@ -453,6 +453,32 @@ feature -- Resizing
 			preserved: Result.same_items (old twin, 0, 0, old count)
 		end
 
+	aliased_resized_area_with_default (a_default_value: T; n: INTEGER): like Current
+			-- Try to resize `Current' with a count of `n', if not
+			-- possible a new copy. Non yet initialized entries are set to `a_default_value'.
+		require
+			n_non_negative: n > count
+		local
+			i: INTEGER
+			l_old_count: INTEGER
+		do
+			l_old_count := count
+			Result := aliased_resized_area (n)
+			from
+				i := l_old_count
+			until
+				i = n
+			loop
+				Result.put (a_default_value, i)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+			new_count: Result.count = n
+			new_capacity: Result.capacity = n
+			preserved: Result.same_items (old twin, 0, 0, old count)
+		end
+
 feature -- Removal
 
 	clear_all

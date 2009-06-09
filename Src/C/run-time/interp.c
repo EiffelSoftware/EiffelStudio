@@ -3359,6 +3359,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			unsigned long stagval;
+			unsigned char *OLD_IC;
 			int32 body_index;	/* routine body index */
 			int32 number;	/* number of the once manifest string in routine body */
 			int32 length;	/* length of once manifest string */
@@ -3371,7 +3372,9 @@ rt_private void interpret(int flag, int where)
 
 			last = iget();
 			last->type = SK_REF;
+			OLD_IC = IC;
 			RTCOMS (last->it_ref, body_index, number, (char *) string, length, 0);
+			IC = OLD_IC;
 
 			if (tagval != stagval) {
 				sync_registers(MTC scur,stop);

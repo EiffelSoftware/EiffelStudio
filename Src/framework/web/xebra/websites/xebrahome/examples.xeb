@@ -4,13 +4,17 @@
 	</page:define_region>
 	<page:define_region id="doc_content">
 		<h2>Introduction</h2>
-This page covers the basic functionality of a xebra web page, from the basic display to forms and automatic wrapping and validation.
-<h2>Basic components</h2>
-Xebra consists of a module, a server and a web application. You installed the first two in the tutorial and ran an exampel web application.
-A xebra web application consists of .xeb files which contain the html pages with additional tags. Xebra is fully xml compatiblel
-<h2>Master pages</h2>
+		This page covers the basic functionality of a xebra web page, from the basic display to forms and automatic wrapping and validation.
+		<h2>Basic components</h2>
+		Xebra consists of a module, a server and a web application. You installed the first two in the tutorial and ran an exampel web application.
+		A xebra web application consists of .xeb files which contain the html pages with additional tags. Xebra is fully xml compatiblel
+		<h2>Master pages</h2>
+		master pages
 		<h2>Forms and variables</h2>
+		forms and variables
 		<h2>Counter</h2>
+		counters
 		<h2>Validation</h2>
+		validation
 	</page:define_region>
 </page:include>

@@ -36,6 +36,7 @@ feature -- Operations
 			not_a_path_is_detached_or_empty: a_path /= Void and then not a_path.is_empty
 		local
 			l_include: RX_PCRE_MATCHER
+			l_exclude: RX_PCRE_MATCHER
 			l_files: DS_ARRAYED_LIST [STRING]
 			l_webapp_config: XS_WEBAPP_CONFIG
 			l_webapp_config_reader: XS_WEBAPP_CONFIG_READER
@@ -43,8 +44,10 @@ feature -- Operations
 			create Result.make (1)
 			create l_webapp_config_reader.make
 			create l_include.make
+			create l_exclude.make
 			l_include.compile (Webapp_config_filename)
-			l_files := (create {FILE_UTILITIES}).scan_for_files (a_path, -1, l_include, Void)
+			l_exclude.compile (".svn")
+			l_files := (create {FILE_UTILITIES}).scan_for_files (a_path, -1, l_include, l_exclude)
 
 			from
 				l_files.start

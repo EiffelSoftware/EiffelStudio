@@ -144,10 +144,10 @@
 							Description="EiffelStudio development environment" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>
-						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (6.3 compatibility mode)"
-							Description="EiffelStudio development environment backward compatible with EiffelStudio 6.3" Show="normal"
+						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (6.4 experimental mode)"
+							Description="EiffelStudio development environment using experimental facilities of EiffelStudio 6.4" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
-							Arguments="-compat"
+							Arguments="-experiment"
 							/>
 						<Shortcut Id="estudio.exe2" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
 							Description="EiffelStudio development environment" Show="normal"

@@ -12,6 +12,7 @@ feature
 			a: ROUTINE [ANY, TUPLE]
 		do
 			s := "$VALUE"
+			s := once "$VALUE"
 			a := agent print
 		end
 	

@@ -23,7 +23,7 @@ feature -- Initialization
 		do
 			server_config := a_server_config
             create http_socket.make_server_by_port (default_http_server_port)
---          create thread_pool.make (max_thread_number, agent request_handler_spawner)
+         --	create thread_pool.make (max_thread_number, agent request_handler_spawner)
 	       	http_socket.set_accept_timeout (500)
             stop := False
 		ensure
@@ -52,12 +52,14 @@ feature -- Inherited Features
 --                	o.dprint ("%N__________________________________%N",3)
 --	                o.dprint ("Connection to http server accepted",1)
 		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
-	--					thread_pool.add_work (agent {XS_REQUEST_HANDLER}.do_execute (thread_http_socket, webapp_handler))
-		            		--singleusermode
+						--multithread
+						--thread_pool.add_work (agent l_r_handler.receive_message (thread_http_socket, server_config))
+		            	--singleusermode
 		            	l_r_handler.receive_message (thread_http_socket, server_config)
 					end
 				end
             end
+         --   thread_pool.terminate
             http_socket.cleanup
         	check
         		http_socket.is_closed
@@ -105,8 +107,6 @@ feature -- Status setting
 		do
 			stop := True
 		end
-
-
 
 feature {POOLED_THREAD} -- Implementation
 

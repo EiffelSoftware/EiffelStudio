@@ -1,0 +1,6 @@
+<page:include template="about_master">
+	<page:define_region id="title"> About
+	</page:define_region>
+	<page:define_region id="about_content"> about.
+	</page:define_region>
+</page:include>

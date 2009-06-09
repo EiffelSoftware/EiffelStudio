@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			create users.make (2)
 
 			users.force ( create {USER}.make (1, "fabio", "123", False), "fabio")
+			users.force ( create {USER}.make (1, "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc", "123", False), "fabio")
 			users.force ( create {USER}.make (1, "admin", "123", True), "admin")
 
 			reservations.force (create {RESERVATION}.make_with_arguments (1, "Fabio Zuend", "2009-02-06", 4, "Big event!"))

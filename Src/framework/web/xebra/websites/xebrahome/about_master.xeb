@@ -3,10 +3,10 @@
 		<page:region id="title" />		
 	</page:define_region> 
 	<page:define_region id="left_content">
-		   <page:include template="doc_nav" />
+		   <page:include template="about_nav" />
 	</page:define_region>
 	<page:define_region id="middle_content">
-		<page:region id="doc_content" />
+		<page:region id="about_content" />
 	</page:define_region>
 	<page:define_region id="right_content">
 		  <page:include template="doc_float" /> 

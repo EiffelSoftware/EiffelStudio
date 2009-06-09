@@ -1,9 +1,9 @@
 <xeb:container>
-
-<ul>
-	<li> <a href="examples.xeb">Examples</a> </li>
-	<li> <a href="tutorials.xeb">Tutorials</a> </li>
-	<li> <a href="faq.xeb">FAQ</a> </li> 
-</ul>	
-<page:controller class="master_controller" />
+	<ul>
+		<li><a href="installation.xeb">Installation</a></li>
+		<li><a href="examples.xeb">Examples</a></li>
+		<li><a href="tutorials.xeb">Tutorials</a></li>
+		<li><a href="faq.xeb">FAQ</a></li>
+	</ul>
+	<page:controller class="master_controller" />
 </xeb:container>

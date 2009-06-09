@@ -1,4 +1,6 @@
 <xeb:container>
-<p>Hi, here is some random information about random stuff...</p>
-<page:controller class="master_controller" />
+<p>News</p>
+	<p>Search</p>
+	<p>bliblibla</p>
+	<page:controller class="master_controller" />
 </xeb:container>

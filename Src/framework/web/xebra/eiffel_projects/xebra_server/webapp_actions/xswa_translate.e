@@ -58,7 +58,7 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t " + config.taglib.out + " -d 10"
+			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t " + config.taglib.out + " -d " + config.arg_config.debug_level.out
 		ensure
 			Result_attached: Result /= void
 		end

@@ -1,14 +1,8 @@
-<page:include template="three_column_design">
+<page:include template="doc_master">
 	<page:define_region id="title">
 	Installation
 	</page:define_region>
-	<page:define_region id="right_content">
-	Lorempa asdkja sldkjsa dflaksjdf laksjdf laskdjf laksjdf laksdjf laksdjflkasdjflkajsldkfjalksd jflka
-	</page:define_region>
-	<page:define_region id="left_content">
-	Lorempa asdkja sldkjsa dflaksjdf laksjdf laskdjf laksjdf laksdjf laksdjflkasdjflkajsldkfjalksd jflka
-	</page:define_region>
-	<page:define_region id="middle_content">
+	<page:define_region id="doc_content">
 		<h3>Notes</h3>
 		<p>Use Xebra revision 78995 for this tutorial.</p>
 		<p>This tutorial was tested with EiffelStudio 6.4.7.8600 (<span

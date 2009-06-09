@@ -12,6 +12,8 @@ class
 inherit
 	SHARED_CODE_FILES
 
+	SHARED_COMPILER_PROFILE
+
 	COMPILER_EXPORTER
 
 	SHARED_GENERATION
@@ -928,6 +930,10 @@ feature -- Plug and Makefile file
 			buffer.put_integer (System.version_tag)
 			buffer.put_string (";%N%Tegc_project_version = ")
 			buffer.put_integer (System.project_creation_time)
+
+			if is_experimental_mode then
+				buffer.put_string (";%N%Tegc_has_old_special_semantic = 0")
+			end
 
 				-- Generate the number of dynamic types.
 			buffer.put_string (";%N%Tscount = ")

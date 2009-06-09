@@ -90,7 +90,7 @@ feature -- Execution
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
 			file: RAW_FILE
-			ebench_name: STRING
+			ebench_name, l_profile: STRING
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			if not Eiffel_project.initialized then
@@ -101,9 +101,15 @@ feature -- Execution
 				if not file.exists or else file.is_directory then
 					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name), parent_window, Void)
 				else
-					ebench_name := "%"" + eiffel_layout.Estudio_command_name + "%""
-					ebench_name.append (" ")
+					ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
+					l_profile := eiffel_layout.command_line_profile_option
+					if not l_profile.is_empty then
+						ebench_name.append_character (' ')
+						ebench_name.append (l_profile)
+					end
+					ebench_name.append (" -config %"")
 					ebench_name.append (a_project_file_name)
+					ebench_name.append_character ('"')
 					launch_ebench (ebench_name)
 				end
 			end
@@ -161,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -174,22 +180,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_OPEN_PROJECT_COMMAND

@@ -13,6 +13,8 @@ inherit
 
 	SHARED_FLAGS
 
+	SHARED_COMPILER_PROFILE
+
 	CONF_DEFAULT_OPTION_SETTING
 
 create
@@ -32,7 +34,8 @@ feature {NONE} -- Initialization
 			--create prof_setting.make
 			--prof_setting.stop_profiling
 
-			if index_of_word_option ("compat") > 0 then
+			initialize_from_arguments
+			if is_compatible_mode then
 				set_is_63_compatible (True)
 			end
 

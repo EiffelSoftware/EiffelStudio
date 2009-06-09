@@ -1,8 +1,10 @@
 <xeb:container>
+	<span class="subnav">
 	<ul>
 		<li><a href="about.xeb">About</a></li>
 		<li><a href="about.xeb">foo</a></li>
 		<li><a href="about.xeb">bar</a></li>
 	</ul>
+	</span>
 	<page:controller class="master_controller" />
 </xeb:container>

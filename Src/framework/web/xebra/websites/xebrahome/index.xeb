@@ -1,10 +1,10 @@
 <page:include template="one_column_design">
 	<page:define_region id="design_title">
-		Download	
+		Xebra - Eiffel Web Framework	
 	</page:define_region>
 
-	<page:define_region id="middle_content">	
-		here
+	<page:define_region id="middle_content">
+		hi!
 	</page:define_region>
 
 </page:include>

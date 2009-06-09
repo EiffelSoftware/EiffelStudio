@@ -1,0 +1,8 @@
+<page:include template="doc_master">
+	<page:define_region id="title">
+	Tutorials
+	</page:define_region>
+	<page:define_region id="doc_content">
+		tutorials
+	</page:define_region>
+</page:include>

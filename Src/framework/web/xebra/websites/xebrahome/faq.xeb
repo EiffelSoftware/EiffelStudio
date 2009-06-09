@@ -1,0 +1,12 @@
+<page:include template="doc_master">
+	<page:define_region id="title">
+	FAQ
+	</page:define_region>
+	<page:define_region id="doc_content">
+		<h2>"Socket could not be bound!"</h2>
+		<h3>Problem</h3>
+		On startup, the webapp says <span class="code">[webapp][ERROR in G_XEBRAHOME_APPLICATION] Socket could not be bound!</span>
+		<h3>Solution</h3>		
+		Make sure no other instance of the webapp is running that would occupy the socket. If no other instance is running, try to wait for a couple of seconds as the socket may be released soon automatically.
+	</page:define_region>
+</page:include>

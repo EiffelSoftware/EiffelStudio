@@ -53,7 +53,7 @@ make install
 rm -Rf $XEBRA_DEV/httpd_tmp
 
 # Compile and install xebra module
-cd $XEBRA_DEV/c_projects/mod_xebra
+cd $XEBRA_DEV/c_projects/apache_mod_xebra
 $XEBRA_DEV/httpd/bin/apxs -c -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include mod_xebra.c mod_xebra.h
 $XEBRA_DEV/httpd/bin/apxs -i mod_xebra.la
 echo "LoadModule xebra_module modules/mod_xebra.so" >> $XEBRA_DEV/httpd/conf/httpd.conf 

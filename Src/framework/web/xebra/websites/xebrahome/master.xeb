@@ -8,10 +8,10 @@
 <body>
 <div id="main">
 <div id="header">
-<div class="nav btn_download" onclick="location.href='download.xeb';"></div>
-<div class="nav btn_documentation"
-	onclick="location.href='doc.xeb';"></div>
-<div class="nav btn_about" onclick="location.href='about.xeb';"></div>
+<div class="xebra_head" onclick="javascript:document.location.href='index.xeb';"> </div>
+<div id="btn_download" onclick="location.href='download.xeb';"></div>
+<div id="btn_documentation"	onclick="location.href='doc.xeb';"></div>
+<div id="btn_about" onclick="location.href='about.xeb';"></div>
 </div>
 <page:region id="content" />
 <div id="footer">Copyright (c) 1993-2009 Eiffel Software</div>

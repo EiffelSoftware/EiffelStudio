@@ -17,8 +17,8 @@ indexing
 	.../library/net/Clib/network.c
 */
 
-#ifdef __VMS	/* module name clash with .../C/ipc/shared/network.c */
-#pragma module NET_NETWORK
+#ifdef __VMS 		/* n.b. EIF_VMS is not defined yet */
+#pragma module NET_NETWORK 	/* resolves module name clash with .../C/ipc/shared/network.c */
 #endif /* __VMS */
 
 
@@ -1005,6 +1005,9 @@ void c_set_blocking(EIF_INTEGER fd)
 #elif defined VXWORKS
 	int arg = 0;
 	eif_net_check(ioctl((int) fd, FIONBIO, (int) &arg)); 
+#elif defined EIF_VMS
+	int arg = 0;
+	eif_net_check(ioctl((int) fd, FIONBIO, &arg)); 
 #else
 	int arg = 0;
 	eif_net_check(ioctl((int) fd, FIONBIO, (char *) &arg));
@@ -1021,6 +1024,9 @@ void c_set_non_blocking(EIF_INTEGER fd)
 #elif defined VXWORKS
 	int arg = 1;
 	eif_net_check(ioctl((int) fd, FIONBIO, (int) &arg)); 
+#elif defined EIF_VMS
+	int arg = 1;
+	eif_net_check(ioctl((int) fd, FIONBIO, &arg)); 
 #else
 	int arg = 1;
 	eif_net_check(ioctl ((int) fd, FIONBIO, (char *) &arg));

@@ -818,6 +818,7 @@ static  void    print_instructions (void)
 
 			case BC_SPCREATE:
 				if (get_char8(&ip)) { fprintf (ofp, "make_filled"); }
+				if (get_char8(&ip)) { fprintf (ofp, "make_empty"); }
 				get_creation_type ();
 				fprintf (ofp, " ");
 					/* Read various flags about special we want to create. */

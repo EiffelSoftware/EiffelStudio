@@ -53,6 +53,11 @@ inherit
 
 	CONF_DEFAULT_OPTION_SETTING
 
+	SHARED_COMPILER_PROFILE
+		rename
+			reset as reset_compiler_profile
+		end
+
 create
 	make
 
@@ -367,6 +372,7 @@ feature -- Properties
 			Result.put (gui_help, gui_cmd_name)
 			Result.put (gc_stats_help, gc_stats_cmd_name)
 			Result.put (compat_help, compat_cmd_name)
+			Result.put (experiment_help, experiment_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -425,7 +431,8 @@ feature -- Output
 		do
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
-			io.put_string (" [-help | -compat | -version | -batch | -clean | -verbose | -use_settings |%N%T")
+			io.put_string (" [-help | [-compat | -experiment] | -version |%N%T")
+			io.put_string ("-batch | -clean | -verbose | -use_settings |%N%T")
 			io.put_string ("-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
 			if eiffel_layout.Has_documentation_generation then
@@ -587,7 +594,10 @@ feature -- Update
 	analyze_options
 			-- Analyze the options entered by the user.
 		do
-					-- Default Project Options
+				-- Reset compiler_profile
+			reset_compiler_profile
+
+				-- Default Project Options
 			from
 				current_option := 1
 			until
@@ -1225,8 +1235,21 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-compat") then
-					-- This option enables the default set of options of 6.3 and earlier if not specified in the ECF file.
-				set_is_63_compatible (True)
+					-- This option enables the default set of options of 6.3 and earlier if not specified
+					-- in the ECF file.
+				if is_experimental_mode then
+					option_error := True
+				else
+					set_is_63_compatible (True)
+					set_compatible_mode
+				end
+			elseif option.is_equal ("-experiment") then
+					-- This option enables the new options of the compiler that are not mainstream.
+				if is_compatible_mode then
+					option_error := True
+				else
+					set_experimental_mode
+				end
 			elseif option.is_equal ("-auto_test") then
 				create l_at_args.make
 				from

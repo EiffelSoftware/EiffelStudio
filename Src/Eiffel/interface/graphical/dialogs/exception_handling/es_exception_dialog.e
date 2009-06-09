@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -231,9 +236,17 @@ feature {NONE} -- Action handlers
 
 	on_restart_now
 			-- Called when the user selects the Restart button
+		local
+			l_cmd_line, l_profile: STRING
 		do
 				-- Launch new EiffelStudio process
-			(create {COMMAND_EXECUTOR}).execute ("%"" + (create {EIFFEL_LAYOUT}).eiffel_layout.estudio_command_name + "%"")
+			l_cmd_line := "%"" + eiffel_layout.estudio_command_name + "%""
+			l_profile := eiffel_layout.command_line_profile_option
+			if not l_profile.is_empty then
+				l_cmd_line.append_character (' ')
+				l_cmd_line.append (l_profile)
+			end
+			(create {COMMAND_EXECUTOR}).execute (l_profile)
 
 				-- Perform quit of current process
 			on_quit
@@ -330,7 +343,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -354,11 +367,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

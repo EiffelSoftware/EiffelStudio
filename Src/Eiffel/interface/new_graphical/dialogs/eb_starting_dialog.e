@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 			ace_file_name_not_void: ace_file_name /= Void
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-			ebench_name: STRING
+			ebench_name, l_profile: STRING
 			last_char: CHARACTER
 			ace_name, dir_name: STRING
 		do
@@ -539,7 +539,12 @@ feature {NONE} -- Implementation
 					l_loader.compile_project
 				end
 			else
-				ebench_name := "%"" + eiffel_layout.Estudio_command_name + "%""
+				ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
+				l_profile := eiffel_layout.command_line_profile_option
+				if not l_profile.is_empty then
+					ebench_name.append_character (' ')
+					ebench_name.append (l_profile)
+				end
 				ebench_name.append (" -clean")
 				if dir_name /= Void and not dir_name.is_empty then
 					ebench_name.append (" -project_path %"")

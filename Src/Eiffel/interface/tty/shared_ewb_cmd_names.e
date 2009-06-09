@@ -70,6 +70,8 @@ feature {NONE}
 
 	edit_class_cmd_name: STRING = "edit"
 
+	experiment_cmd_name: STRING = "experiment"
+
 	exported_cmd_name: STRING = "exported"
 
 	externals_cmd_name: STRING = "externals"

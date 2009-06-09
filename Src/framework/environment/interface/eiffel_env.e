@@ -12,6 +12,8 @@ deferred class EIFFEL_ENV
 inherit
 	ANY
 
+	SHARED_COMPILER_PROFILE
+
 	EIFFEL_ENVIRONMENT_CONSTANTS
 		export
 			{NONE} all
@@ -130,11 +132,14 @@ feature -- Status update
 			l_op_env: like operating_environment
 			l_file: RAW_FILE
 			l_dir: DIRECTORY
+			l_dir_name: DIRECTORY_NAME
 			l_value: detachable STRING_8
 			l_variables: like required_environment_variables
 			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
 		do
+			initialize_from_arguments
+
 			l_is_valid := True
 
 			if {PLATFORM_CONSTANTS}.is_unix then
@@ -151,7 +156,10 @@ feature -- Status update
 				l_variable := l_variables.item
 				l_value := get_environment (l_variable.var)
 
-				if l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then ({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/"))) then
+				if
+					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
+					({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/")))
+				then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)
 				end
@@ -204,6 +212,15 @@ feature -- Status update
 			l_value := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
 			if l_value = Void or else l_value.is_empty then
 				set_environment (lib_path, {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
+			else
+					-- To avoid having to edit the value of ISE_LIBRARY when compiling against
+					-- a certain compiler profile, we modify the value of the ISE_LIBRARY environment
+					-- variable.
+				if is_experimental_mode and l_value.substring_index ("experimental", 1) = 0 then
+					create l_dir_name.make_from_string (l_value)
+					l_dir_name.extend ("experimental")
+					set_environment (l_dir_name, {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
+				end
 			end
 
 				-- Make sure to define ISE_USER_SETTINGS if not defined.
@@ -1337,7 +1354,13 @@ feature -- Directories (platform independent)
 				Result := unix_layout_base_path.twin
 				Result.extend_from_array (<<unix_layout_lib_dir, product_version_name>>)
 			else
-				Result := install_path
+				Result := install_path.twin
+			end
+			if is_experimental_mode then
+				Result.extend ("experimental")
+			elseif is_compatible_mode then
+					-- In 6.4, there is no compatible mode,
+					-- so nothing to be done.
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1348,7 +1371,12 @@ feature -- Directories (platform independent)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := lib_path.twin
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend_from_array (<<unix_layout_lib_dir, product_version_name>>)
+			else
+				Result := install_path.twin
+			end
 			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty

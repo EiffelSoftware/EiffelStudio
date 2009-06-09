@@ -76,6 +76,8 @@ feature {NONE}
 
 	edit_class_help: STRING_GENERAL do Result := locale.translation ("edit the text of a class") end
 
+	experiment_help: STRING_GENERAL do Result := locale.translation ("enable experimental functionalities") end
+
 	exported_help: STRING_GENERAL do Result := locale.translation ("show the exported features of a class") end
 
 	externals_help: STRING_GENERAL do Result := locale.translation ("show the external features of a class") end

@@ -100,7 +100,6 @@ feature -- Element Change
 	append (s: SEQUENCE [like item])
 			-- Append a copy of `s'.
 		local
-			i: INTEGER
 			new_count: INTEGER
 		do
 			new_count := count + s.count
@@ -108,13 +107,11 @@ feature -- Element Change
 				grow (new_count)
 			end
 			from
-				i := count + 1
 				s.start
 			until
 				s.after
 			loop
-				put_i_th (s.item, i)
-				i := i + 1
+				extend (s.item)
 				s.forth
 			end
 		end

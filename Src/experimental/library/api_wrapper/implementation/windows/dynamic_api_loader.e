@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <windows.h>"
 		alias
-			"return (EIF_POINTER) LoadLibraryA ((LPCTSTR)$a_path);"
+			"return (EIF_POINTER) LoadLibraryA ((LPCSTR)$a_path);"
 		end
 
 	c_get_proc_address (a_hnd: POINTER; a_api_name: POINTER): POINTER

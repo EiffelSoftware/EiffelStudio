@@ -15,12 +15,12 @@ create
 
 feature -- Status Change
 
-	logout (a_bean: STRING): STRING
+	logout (a_bean: ANY)
 			-- Removes the user from the session
 		do
 			if attached current_session as session  then
 					session.remove ("auth")
-					Result := "/demoapplication/logout.xeb"
+					--Result := "/demoapplication/logout.xeb"
 			end
 		end
 
@@ -48,7 +48,7 @@ feature -- Status Change
 			Result_attached: Result /= Void
 		end
 
-	login_with_bean (a_login: LOGIN_BEAN): STRING
+	login_with_bean (a_login: LOGIN_BEAN)
 			-- Tries to log in with the information provided by `a_login'
 		do
 			print ("%NTRY TO LOGIN WITH: " + a_login.out)
@@ -56,9 +56,9 @@ feature -- Status Change
 				if attached current_session as session then
 					session.put (user, "auth")
 				end
-				Result := "/demoapplication/home.xeb"
-			else
-				Result := "/demoapplication/login.xeb"
+			--Result := "/demoapplication/home.xeb"
+			--else
+			--	Result := "/demoapplication/login.xeb"
 			end
 
 		end

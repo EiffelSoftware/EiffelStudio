@@ -4,7 +4,7 @@
     <h2><span class="style1">Login</span> </h2>
     <p><span class="error">
       </span></p>
-    <xeb:if condition="not_authenticated">
+    <xeb:container render="not_authenticated">
     	<f:form class="LOGIN_BEAN" variable="login_bean">
 	    	<table width="400" border="0" cellpadding="2" cellspacing="2" bgcolor="#FFFFFF">
 		  <tr>
@@ -32,6 +32,6 @@
 		  </tr>
 		</table>
     	</f:form>
-    </xeb:if>
+    </xeb:container>
   </page:define_region>
 </page:include>

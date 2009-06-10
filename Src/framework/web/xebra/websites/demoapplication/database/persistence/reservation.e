@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 	make
 		do
 			id := 0
-			name := ""
+			name := "default_name"
+			date := "01-01-1990"
 			persons := 0
 			description := ""
 		end
@@ -51,8 +52,20 @@ feature -- Access
 		do
 			name := a_name
 		end
-	date:  STRING
+	date:  STRING assign set_date
+	set_date (a_date: STRING)
+		do
+			date := a_date
+		end
 	persons: INTEGER
+	s_persons: STRING assign set_s_persons
+		do
+			Result := persons.out
+		end
+	set_s_persons (a_s_persons: STRING)
+		do
+			persons := a_s_persons.to_integer
+		end
 	description: STRING assign set_description
 	set_description (a_desc: STRING)
 		do
@@ -63,5 +76,5 @@ feature -- Access
 invariant
 	not_name_is_detached_or_empty: name /= Void and then not name.is_empty
 	not_date_is_detached_or_empty: date /= Void and then not date.is_empty
-	not_description_is_detached_or_empty: description /= Void and then not description.is_empty
+	not_description_is_detached_or_empty: description /= Void
 end

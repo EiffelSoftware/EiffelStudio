@@ -52,18 +52,18 @@ feature {NONE} -- Implementation
 		local
 			temp_list: STRING
 		do
-			a_servlet_class.render_feature.append_local (variable.value (current_controller_id), type.value (current_controller_id))
-			temp_list := a_servlet_class.render_feature.new_local ("LIST [" + type.value (current_controller_id) + "]")
-			a_servlet_class.render_feature.append_expression (temp_list + " := " + current_controller_id + "." + list.value (current_controller_id))
-			a_servlet_class.render_feature.append_expression ("from --" + temp_list)
-			a_servlet_class.render_feature.append_expression (temp_list + ".start")
-			a_servlet_class.render_feature.append_expression ("until")
-			a_servlet_class.render_feature.append_expression (temp_list + ".after")
-			a_servlet_class.render_feature.append_expression ("loop")
-			a_servlet_class.render_feature.append_expression (variable.value (current_controller_id) + " := " + temp_list + ".item")
+			a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), type.value (current_controller_id))
+			temp_list := a_servlet_class.render_html_page.new_local ("LIST [" + type.value (current_controller_id) + "]")
+			a_servlet_class.render_html_page.append_expression (temp_list + " := " + current_controller_id + "." + list.value (current_controller_id))
+			a_servlet_class.render_html_page.append_expression ("from --" + temp_list)
+			a_servlet_class.render_html_page.append_expression (temp_list + ".start")
+			a_servlet_class.render_html_page.append_expression ("until")
+			a_servlet_class.render_html_page.append_expression (temp_list + ".after")
+			a_servlet_class.render_html_page.append_expression ("loop")
+			a_servlet_class.render_html_page.append_expression (variable.value (current_controller_id) + " := " + temp_list + ".item")
 			generate_children (a_servlet_class, a_variable_table)
-			a_servlet_class.render_feature.append_expression (temp_list + ".forth")
-			a_servlet_class.render_feature.append_expression ("end --from " + temp_list)
+			a_servlet_class.render_html_page.append_expression (temp_list + ".forth")
+			a_servlet_class.render_html_page.append_expression ("end --from " + temp_list)
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

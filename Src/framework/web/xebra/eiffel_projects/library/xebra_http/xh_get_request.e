@@ -45,7 +45,7 @@ feature -- Implementation
 			-- <Precursor>
 			-- Calls prehandle_get_request
 		do
-			a_servlet.prehandle_get_request (Current, a_response)
+			-- Do nothing
 		end
 
 end

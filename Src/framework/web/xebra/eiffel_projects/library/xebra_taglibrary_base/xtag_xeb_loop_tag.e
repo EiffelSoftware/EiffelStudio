@@ -22,33 +22,33 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			times := "0"
+			create times.make ("0")
 		end
 
 feature {NONE} -- Access
 
-	times: STRING
+	times: XTAG_TAG_ARGUMENT
 			-- Number of repetitions of the body
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
 			temp_var_name: STRING
 		do
-			temp_var_name := a_servlet_class.render_feature.new_local ("NATURAL")
-			a_servlet_class.render_feature.append_expression ("from")
-			a_servlet_class.render_feature.append_expression (temp_var_name + " := 1")
-			a_servlet_class.render_feature.append_expression ("until")
-			a_servlet_class.render_feature.append_expression (temp_var_name + " > " + Controller_variable + "." + times)
-			a_servlet_class.render_feature.append_expression ("loop")
+			temp_var_name := a_servlet_class.render_html_page.new_local ("NATURAL")
+			a_servlet_class.render_html_page.append_expression ("from")
+			a_servlet_class.render_html_page.append_expression (temp_var_name + " := 1")
+			a_servlet_class.render_html_page.append_expression ("until")
+			a_servlet_class.render_html_page.append_expression (temp_var_name + " > " + times.value (current_controller_id))
+			a_servlet_class.render_html_page.append_expression ("loop")
 			generate_children (a_servlet_class, variable_table)
-			a_servlet_class.render_feature.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
-			a_servlet_class.render_feature.append_expression ("end")
+			a_servlet_class.render_html_page.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
+			a_servlet_class.render_html_page.append_expression ("end")
 		end
 
-	internal_put_attribute (id: STRING; a_attribute: STRING)
+	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if id.is_equal ("times") then

@@ -24,7 +24,7 @@ feature -- Initialization
 			-- Call this constructor, if you inherit
 		do
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
-			render := ""
+			create render.make ("")
 			current_controller_id := ""
 			tag_id := ""
 		ensure
@@ -39,7 +39,7 @@ feature {XTAG_TAG_SERIALIZER} -- Access
 	children: LIST [XTAG_TAG_SERIALIZER]
 			-- All the children tags of the tag
 
-	render: STRING
+	render: XTAG_TAG_ARGUMENT
 			-- String representation of boolean (either call or constant) for
 			-- rendering
 
@@ -101,7 +101,7 @@ feature -- Basic implementation
 			id_is_not_empty: not id.is_empty
 		do
 			if id.is_equal (Render_attribute_name) then
-				render := a_attribute
+				create render.make (a_attribute)
 			else
 				internal_put_attribute (id, create {XTAG_TAG_ARGUMENT}.make (a_attribute))
 			end
@@ -121,28 +121,34 @@ feature -- Basic implementation
 			a_variable_table_attached: attached a_variable_table
 		do
 				-- Generate debug information for a feature respectively
+			if generates_make then
+				append_debug_info (a_servlet_class.make_feature)
+			end
+			if generates_booleans then
+				append_debug_info (a_servlet_class.set_all_booleans)
+			end
+			if generates_clean_up then
+				append_debug_info (a_servlet_class.clean_up_after_render)
+			end
 			if generates_render then
-				append_debug_info (a_servlet_class.render_feature)
-			end
-			if generates_prerender then
-				append_debug_info (a_servlet_class.prerender_get_feature)
-			end
-			if generates_postrender then
-				append_debug_info (a_servlet_class.prerender_post_feature)
-			end
-			if generates_getrender then
-				append_debug_info (a_servlet_class.prerender_get_feature)
-			end
-			if generates_afterrender then
-				append_debug_info (a_servlet_class.afterrender_feature)
+				append_debug_info (a_servlet_class.render_html_page)
 			end
 
 				-- If the render option is set, overwrite definition of tag
-			if not render.is_empty then
-				append_debug_info (a_servlet_class.render_feature)
-				a_servlet_class.render_feature.append_expression ("if " + current_controller_id + "." + render + " then")
+			if not render.value (current_controller_id).is_empty then
+				append_debug_info (a_servlet_class.make_feature)
+				append_debug_info (a_servlet_class.set_all_booleans)
+				append_debug_info (a_servlet_class.clean_up_after_render)
+				append_debug_info (a_servlet_class.render_html_page)
+
+				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%""+"%"] := " + render.plain_value (current_controller_id))
+
+				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [" + "%"%"" + "] and then render_conditions [" + "%"%"" + "] then")
+				a_servlet_class.render_html_page.append_expression ("if attached render_conditions [" + "%"%"" + "] and then render_conditions [" + "%"%"" + "] then")
 				internal_generate (a_servlet_class, a_variable_table)
-				a_servlet_class.render_feature.append_expression ("end")
+				
+				a_servlet_class.clean_up_after_render.append_expression ("end")
+				a_servlet_class.render_html_page.append_expression ("end")
 			else
 				internal_generate (a_servlet_class, a_variable_table)
 			end
@@ -171,36 +177,38 @@ feature -- Basic implementation
 			a_variable_table_attached: attached a_variable_table
 			current_controller_id_set: attached current_controller_id and not current_controller_id.is_empty
 		deferred
+		ensure
+			all_variables_removed: old a_variable_table.count = a_variable_table.count
 		end
 
 feature -- Debug configuration
 
+	generates_wrap: BOOLEAN
+			-- Does the tag write statements in the wrap_form_to_internal feature?
+		do
+			Result := False
+		end
+
+	generates_booleans: BOOLEAN
+			-- Does the tag write statements in the set_all_booleans feature?
+		do
+			Result := False
+		end
+
+	generates_clean_up: BOOLEAN
+			-- Does the tag write statements in the clean_up_after_render feature?
+		do
+			Result := False
+		end
+
 	generates_render: BOOLEAN
-			-- Does the tag write statements in the render feature?
+			-- Does the tag write statements in the render_html_page feature?
 		do
 			Result := False
 		end
 
-	generates_prerender: BOOLEAN
-			-- Does the tag write statements in the prerender feature?
-		do
-			Result := False
-		end
-
-	generates_postrender: BOOLEAN
-			-- Does the tag write statements in the POST render feature?
-		do
-			Result := False
-		end
-
-	generates_getrender: BOOLEAN
-			-- Does the tag write statements in the GET render feature?
-		do
-			Result := False
-		end
-
-	generates_afterrender: BOOLEAN
-			-- Does the tag write statements in the afterrender feature?
+	generates_make: BOOLEAN
+			-- Does the tag write statements in the constructor feature?
 		do
 			Result := False
 		end

@@ -70,6 +70,12 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	is_empty: BOOLEAN
+			-- Is the value the empty string?
+		do
+			Result := internal_value.is_empty
+		end
+
 	value (a_controller_id: STRING): STRING
 			-- The value it represents
 		do
@@ -79,6 +85,17 @@ feature -- Access
 				Result := "%"+" + internal_value + "+%""
 			else
 				Result := escape_string (internal_value)
+			end
+		end
+
+	plain_value (a_controller_id: STRING): STRING
+		do
+			if is_dynamic then
+				Result := a_controller_id + "." + internal_value
+			elseif is_variable then
+				Result := internal_value
+			else
+				Result := internal_value
 			end
 		end
 

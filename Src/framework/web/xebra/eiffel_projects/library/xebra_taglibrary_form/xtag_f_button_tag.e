@@ -16,8 +16,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render,
-			generates_postrender
+			generates_render
 		end
 
 create
@@ -30,11 +29,9 @@ feature -- Initialization
 			make_base
 			create value.make ("")
 			create action.make ("")
-			create type.make ("")
 		ensure
 			value_attached: attached value
 			action_attached: attached action
-			type_attached: attached type
 		end
 
 feature -- Access
@@ -46,9 +43,6 @@ feature -- Access
 			-- Name of the feature which will be executed
 			-- when the button is pressed
 
-	type: XTAG_TAG_ARGUMENT
-			-- Type of the button (submit, push, etc.)
-
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
@@ -56,19 +50,25 @@ feature -- Implementation
 		local
 			l_button_id: STRING
 		do
-			if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_variable then
-				if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_agent_var then
-					if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.form_validation_booleans] as l_validation_vars then
-						l_button_id := l_variable + "_" + a_servlet_class.get_unique_identifier
+			if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
+				if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_wrap_object_name then
+					l_button_id := a_servlet_class.render_html_page.new_uid
 
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<button type=%%%"" + type.value (current_controller_id) + "%%%" name=%%%"" + l_button_id + "%%%" type=%%%"button%%%">" + value.value (current_controller_id) + "</button>%")")
-						a_servlet_class.prerender_post_feature.append_expression ("if " + concatenate_with ("and", l_validation_vars) + " and " + request_variable + ".arguments.has_key (%"" + l_button_id + "%") then")
-						a_servlet_class.prerender_post_feature.append_expression (l_agent_var + " := agent " + current_controller_id + "." + action.value (current_controller_id))
-						a_servlet_class.prerender_post_feature.append_expression ("end")
-					end
+					a_servlet_class.render_html_page.append_expression (
+						response_variable_append + "(%"<button name=%%%"" +
+						l_button_id + "%%%" type=%%%"submit%%%">" +
+						value.value (current_controller_id) + "</button>%")")
+
+					a_servlet_class.render_html_page.append_expression ("agent_table [%"" + l_button_id + "%"] := agent (a_request: XH_REQUEST) do")
+					a_servlet_class.render_html_page.append_expression ("if fill_bean (a_request) then")
+					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (" + l_wrap_object_name + ")")
+					a_servlet_class.render_html_page.append_expression ("end")
+					a_servlet_class.render_html_page.append_expression ("end -- XTAG_F_BUTTON_TAG")
+
+					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_button_id + "%"] then -- XTAG_F_BUTTON_TAG")
+					l_form_expressions.extend ("agent_table [%"" + l_button_id + "%"].call ([a_request])")
+					l_form_expressions.extend ("end")
 				end
-			else
-				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATING XTAG_F_BUTTON_TAG")
 			end
 		end
 
@@ -81,12 +81,8 @@ feature -- Implementation
 			if a_id.is_equal ("action") then
 				action := a_attribute
 			end
-			if a_id.is_equal ("type") then
-				type := a_attribute
-			end
 		end
 
 	generates_render: BOOLEAN = True
-	generates_postrender: BOOLEAN = True
 
 end

@@ -34,7 +34,7 @@ feature -- Implementation
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			write_string_to_result (text.value (current_controller_id), a_servlet_class.render_feature)
+			write_string_to_result (text.value (current_controller_id), a_servlet_class.render_html_page)
 			generate_children (a_servlet_class, a_variable_table)
 		end
 

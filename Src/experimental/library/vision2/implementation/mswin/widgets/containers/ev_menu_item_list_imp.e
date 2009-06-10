@@ -29,11 +29,6 @@ inherit
 
 	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
 
-	WEL_RETURN_VALUE
-		export
-			{NONE} all
-		end
-
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all

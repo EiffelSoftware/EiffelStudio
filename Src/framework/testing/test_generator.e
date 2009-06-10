@@ -388,7 +388,7 @@ feature {NONE} -- Basic operations
 				if l_task.has_next_step then
 					l_task.cancel
 				end
-				test_task := Void
+				minimize_task := Void
 			end
 			if attached statistics_task as l_task then
 				if l_task.has_next_step then

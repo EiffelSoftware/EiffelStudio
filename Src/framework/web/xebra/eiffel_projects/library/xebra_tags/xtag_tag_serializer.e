@@ -119,6 +119,8 @@ feature -- Basic implementation
 		require
 			a_servlet_class_attached: attached a_servlet_class
 			a_variable_table_attached: attached a_variable_table
+		local
+			l_render_condition_id: STRING
 		do
 				-- Generate debug information for a feature respectively
 			if generates_make then
@@ -141,14 +143,20 @@ feature -- Basic implementation
 				append_debug_info (a_servlet_class.clean_up_after_render)
 				append_debug_info (a_servlet_class.render_html_page)
 
-				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%""+"%"] := " + render.plain_value (current_controller_id))
+				l_render_condition_id := a_servlet_class.get_unique_identifier
+				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + current_controller_id + "." + render.plain_value (current_controller_id))
 
-				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [" + "%"%"" + "] and then render_conditions [" + "%"%"" + "] then")
-				a_servlet_class.render_html_page.append_expression ("if attached render_conditions [" + "%"%"" + "] and then render_conditions [" + "%"%"" + "] then")
+				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+				a_servlet_class.render_html_page.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+				a_servlet_class.handle_form_internal.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+				a_servlet_class.fill_bean.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+
 				internal_generate (a_servlet_class, a_variable_table)
-				
+
 				a_servlet_class.clean_up_after_render.append_expression ("end")
 				a_servlet_class.render_html_page.append_expression ("end")
+				a_servlet_class.handle_form_internal.append_expression ("end")
+				a_servlet_class.fill_bean.append_expression ("end")
 			else
 				internal_generate (a_servlet_class, a_variable_table)
 			end

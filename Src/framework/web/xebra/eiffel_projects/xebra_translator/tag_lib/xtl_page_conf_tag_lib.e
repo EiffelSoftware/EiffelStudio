@@ -32,11 +32,15 @@ feature -- Initialization
 			make
 			id := a_id
 			parser_callback := a_parser_callback
-			create {ARRAYED_LIST [STRING]} allowed_tags.make (5)
-			allowed_tags.extend ("controller")
-			allowed_tags.extend ("region")
-			allowed_tags.extend ("define_region")
-			allowed_tags.extend ("include")
+			create {HASH_TABLE [ARRAYED_LIST [STRING], STRING]} allowed_tags.make (5)
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "controller")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "region")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "define_region")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "include")
+			allowed_tags ["controller"].extend ("class")
+			allowed_tags ["region"].extend ("id")
+			allowed_tags ["define_region"].extend ("id")
+			allowed_tags ["include"].extend ("template")
 		ensure
 			id_attached: attached id
 			parser_callback_attached: attached parser_callback
@@ -47,7 +51,7 @@ feature {NONE} -- Access
 	parser_callback: XP_XML_PARSER_CALLBACKS
 			-- The parser_callback using Current
 
-	allowed_tags: LIST [STRING]
+	allowed_tags: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- All the tag names which are allowed
 
 feature -- Access
@@ -88,21 +92,23 @@ feature -- Access
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
 			-- Verifies that `a_attribute' belongs to `a_tag'
 		do
-			Result := True
+			Result := False
+			if attached allowed_tags [a_tag] as l_attributes then
+				from
+					l_attributes.start
+				until
+					l_attributes.after
+				loop
+					Result := Result or else l_attributes.item.is_equal (a_attribute)
+					l_attributes.forth
+				end
+			end
 		end
 
 	contains (a_tag_id: STRING): BOOLEAN
 			-- Checks, if the tag is available in the tag library
 		do
-			from
-				allowed_tags.start
-				Result := False
-			until
-				allowed_tags.after
-			loop
-				Result := Result or else allowed_tags.item.is_equal (a_tag_id)
-				allowed_tags.forth
-			end
+			Result := attached allowed_tags [a_tag_id]
 		end
 
 	handle_controller_attribute (a_id: STRING; a_value: XP_TAG_ARGUMENT)
@@ -112,7 +118,6 @@ feature -- Access
 				parser_callback.put_class_name (a_value.value (""))
 			end
 		end
-
 
 invariant
 	id_attached: attached id

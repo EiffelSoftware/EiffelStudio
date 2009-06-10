@@ -179,10 +179,25 @@ safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 safe_md %STUDIO_DIR\rb
 
-cdd %INIT_DIR
 give_time_to organize the delivery and to start filling it
 
-call make_libraries.btm
+remtrace Build the normal libraries
+cdd %INIT_DIR
+call make_libraries.btm %STUDIO_DIR library
+remtrace build the experimental libraries
+cdd %INIT_DIR
+md %STUDIO_DIR\experimental
+call make_libraries.btm %STUDIO_DIR\experimental experimental/library
+
+remtrace Build the C_libraries
+cd %STUDIO_DIR\C_library\zlib
+all_makes
+cd %STUDIO_DIR\C_library\libpng
+all_makes
+copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\zlib.lib %STUDIO_DIR\experimental\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
+copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\libpng.lib %STUDIO_DIR\experimental\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
+
+
 cdd %INIT_DIR
 
 REM Fill directories

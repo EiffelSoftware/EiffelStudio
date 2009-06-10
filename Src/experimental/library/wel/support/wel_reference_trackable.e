@@ -38,7 +38,7 @@ feature -- Status Setting
 			-- Runtime Id of `Current'.
 		do
 			if internal_object_id = 0 then
-				internal_object_id := eif_current_object_id
+				internal_object_id := eif_object_id (Current)
 			end
 			Result := internal_object_id
 		end

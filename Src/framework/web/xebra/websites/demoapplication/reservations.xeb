@@ -21,14 +21,18 @@
 				<xeb:iterate list="global_state.db.reservations"
 					variable="reservation" type="RESERVATION">
 					<tr>
-						<td><xeb:variable id="reservation" feature="name" /></td>
-						<td><xeb:variable id="reservation" feature="date" /></td>
+						<td><xeb:display feature="#{reservation.name}"/></td>
+						<td><xeb:display feature="#{reservation.date}"/></td>
 						
 						
 						
-						<td><xeb:variable id="reservation" feature="persons.out" /></td>
+						<td><xeb:display feature="#{reservation.s_persons}"/></td>
 						<xeb:container render="authenticated_admin">
-							<td class="style2"><a href="http://www.google.com/">bah </a></td>
+							<td class="style2">
+							<f:form>
+								<f:command_link label="Delete" action="delete" variable="reservation" />
+							</f:form>
+							</td>					
 						</xeb:container>
 						<xeb:container render="not_authenticated_admin">
 							<td class="style2"><a href="">Details</a></td>
@@ -39,33 +43,33 @@
 		</xeb:container>
 		<xeb:container render="authenticated_admin">
 			<h2 class="style1">New Reservation</h2>
-			<form id="form1" name="form1" method="post" action="insert.xeb">
+			<f:form variable="new_reservation" class="RESERVATION">
 			<table width="400" border="0" cellpadding="2" cellspacing="2">
 				<tr>
 					<td>Name</td>
-					<td><input type="text" name="name" id="name" /></td>
+					<td><f:input_text value="name" name="a_name" text="#{new_reservation.name}" /></td>
 				</tr>
 				<tr>
 					<td>Date</td>
-					<td><input type="text" name="date" id="date" /></td>
+					<td><f:input_text value="date" name="a_date" text="#{new_reservation.date}" /></td>
 				</tr>
 				<tr>
 					<td>Persons</td>
-					<td><input type="text" name="persons" id="persons" /></td>
+					<td><f:input_text value="s_persons" name="a_s_persons" text="#{new_reservation.s_persons}" /></td>
 				</tr>
 				<tr>
 					<td>Description</td>
-					<td><textarea name="description" id="description" cols="45"
-						rows="5"></textarea></td>
+					<td><f:text_area value="description" name="a_description" text="#{new_reservation.description}"
+						cols="45" rows="5"/></td>
 				</tr>
 				<tr>
 					<td colspan="2">
-					<div align="center"><input type="submit" name="submit"
-						id="submit" value="Submit" /></div>
+					<div align="center">
+					<f:button value="Save" action="save" type="submit" /></div>
 					</td>
 				</tr>
 			</table>
-			</form>
+			</f:form>
 		</xeb:container>
 	</page:define_region>
 </page:include>

@@ -28,6 +28,21 @@ feature -- Status Change
 			Result_attached: Result /= Void
 		end
 
+	save (a_bean: ANY)
+		do
+			if attached {RESERVATION} a_bean as l_reservation then
+				global_state.db.reservations.extend (l_reservation)
+			end
+		end
+
+	delete (a_bean: ANY)
+		do
+			if attached {RESERVATION} a_bean as l_reservation then
+				global_state.db.reservations.start
+				global_state.db.reservations.prune (l_reservation)
+			end
+		end
+
 	get_res_name_from_args: STRING
 			-- Retrieve reservartion name from request arguments
 		do

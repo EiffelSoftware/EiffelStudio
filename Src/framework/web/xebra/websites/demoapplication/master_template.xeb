@@ -14,7 +14,7 @@
 	<xeb:container render="authenticated"> Welcome
 	          <xeb:display feature="%=username%" />
 	          ,<f:form variable="b" class="login_bean">
-			<f:command_link label="Logout" action="logout" />
+			<f:command_link label="Logout" action="logout" variable="b" />
 		</f:form>
 		
 	</xeb:container> 

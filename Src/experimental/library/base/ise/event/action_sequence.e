@@ -39,11 +39,13 @@ class
 	ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
 
 inherit
-	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	INTERACTIVE_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		rename
 			make as arrayed_list_make
 		redefine
 			default_create,
+			on_item_added_at,
+			on_item_removed_at,
 			prune
 		end
 
@@ -62,6 +64,24 @@ feature {NONE} -- Initialization
 		do
 			arrayed_list_make (0)
 			state := Normal_state
+		end
+
+feature -- Miscellaneous
+
+	on_item_added_at (an_item: like item; item_index: INTEGER)
+			-- `an_item' has just been added at index `item_index'.
+		do
+			if count = 1 and not_empty_actions_internal /= Void then
+				call_action_list (not_empty_actions)
+			end
+		end
+
+	on_item_removed_at (an_item: like item; item_index: INTEGER)
+			-- `an_item' has just been removed from index `item_index'.
+		do
+			if count = 0 and empty_actions_internal /= Void then
+				call_action_list (empty_actions)
+			end
 		end
 
 feature -- Basic operations
@@ -260,7 +280,7 @@ feature -- Removal
 			l_compare_objects: BOOLEAN
 			l_kamikazes: like kamikazes_internal
 		do
-			Precursor {ARRAYED_LIST}(v)
+			Precursor (v)
 			l_kamikazes := kamikazes_internal
 			if l_kamikazes /= Void then
 				if object_comparison then
@@ -321,20 +341,6 @@ feature -- Event handling
 				empty_actions_internal := r
 			end
 			Result := r
-		end
-
-feature {NONE} -- Implementation, ARRAYED_LIST
-
-	set_count (new_count: INTEGER)
-			-- Set `count' to `new_count'
-		do
-			if empty_actions_internal /= Void and then count /= 0 and new_count = 0 then
-					-- Transition from not `is_empty' to `is_empty'.
-				call_action_list (empty_actions)
-			elseif not_empty_actions_internal /= Void and then count = 0 and new_count /= 0 then
-					-- Transition from `is_empty' to not `is_empty'.
-				call_action_list (not_empty_actions)
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -449,6 +455,14 @@ feature -- Obsolete
 			if not is_empty then
 				a_source_connection_agent.call (Void)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 invariant

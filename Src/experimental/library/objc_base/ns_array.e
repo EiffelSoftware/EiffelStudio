@@ -7,7 +7,7 @@ note
 -- FIXME NSUInteger has been replaced by INTEGER. may cause problems
 
 class
-	NS_ARRAY [T -> NS_OBJECT create make_shared end]
+	NS_ARRAY [T -> NS_OBJECT create share_from_pointer end]
 
 inherit
 	NS_OBJECT
@@ -15,7 +15,7 @@ inherit
 create
 	make_with_objects
 create {NS_OBJECT}
-	make_shared
+	share_from_pointer
 
 feature {NONE} -- Creation
 
@@ -51,7 +51,7 @@ feature
 		require
 			index_in_range: 0 <= a_index and a_index < count
 		do
-			create Result.make_shared ({NS_ARRAY_API}.object_at_index (item, a_index))
+			create Result.share_from_pointer ({NS_ARRAY_API}.object_at_index (item, a_index))
 		ensure
 			result_not_void: Result /= void
 		end

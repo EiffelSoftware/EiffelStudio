@@ -69,31 +69,4 @@ feature -- Creating and Initializing Strings
 
  feature -- Working with URLs
 
-feature -- NSString Additions: Drawing String Objects
-
--- FIXME: This is a Category addition of the AppKit. May be different on the iPhone
-
-	frozen draw_at_point_with_attributes (a_ns_string: POINTER; a_point: POINTER; a_attributes: POINTER)
-			--- (void)drawAtPoint:(NSPoint)aPoint withAttributes:(NSDictionary *)attributes
-		external
-			"C inline use <Foundation/NSString.h>"
-		alias
-			"[(NSString*)$a_ns_string drawAtPoint: *(NSPoint*)$a_point withAttributes: $a_attributes];"
-		end
-
-	frozen size_with_attributes (a_ns_string: POINTER; a_attributes: POINTER; res: POINTER)
-			-- - (NSSize)sizeWithAttributes:(NSDictionary *)attributes
-		external
-			"C inline use <Foundation/NSString.h>"
-		alias
-			"[
-				{
-					NSSize size = [(NSString*)$a_ns_string sizeWithAttributes: $a_attributes];
-					memcpy($res, &size, sizeof(NSSize));
-				}
-			]"
-		end
-
-feature -- NSString Additions: Getting the Bounding Rect of Rendered Strings
-
 end

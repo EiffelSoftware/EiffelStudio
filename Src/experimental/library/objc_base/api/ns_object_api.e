@@ -18,27 +18,27 @@ feature -- Identifying classes
 
 feature -- Managing Reference Counts
 
-	retain_count (a_item_ptr: POINTER):  NATURAL_64
-		require
-			a_item_ptr_not_null: a_item_ptr /= default_pointer
+	frozen retain_count (a_item_ptr: POINTER):  NATURAL_64
+--		require
+--			a_item_ptr_not_null: a_item_ptr /= default_pointer
 		external
 			"C inline use <Foundation/NSObject.h>"
 		alias
 			"return [(NSObject *) $a_item_ptr retainCount];"
 		end
 
-	release (a_item_ptr: POINTER)
-		require
-			a_item_ptr_not_null: a_item_ptr /= default_pointer
+	frozen release (a_item_ptr: POINTER)
+--		require
+--			a_item_ptr_not_null: a_item_ptr /= default_pointer
 		external
 			"C inline use <Foundation/NSObject.h>"
 		alias
 			"[(NSObject *) $a_item_ptr release];"
 		end
 
-	retain (a_item_ptr: POINTER)
-		require
-			a_item_ptr_not_null: a_item_ptr /= default_pointer
+	frozen retain (a_item_ptr: POINTER)
+--		require
+--			a_item_ptr_not_null: a_item_ptr /= default_pointer
 		external
 			"C inline use <Foundation/NSObject.h>"
 		alias

@@ -9,11 +9,32 @@ class
 
 feature -- Working with Classes
 
+	frozen class_get_name (a_class: POINTER): POINTER
+		external
+			"C inline use <objc/objc-class.h>"
+		alias
+			"return class_getName((Class)$a_class);"
+		end
+
 	frozen class_get_method_implementation (a_class, a_sel: POINTER): POINTER
 		external
 			"C inline use <objc/objc-class.h>"
 		alias
 			"return class_getMethodImplementation((Class)$a_class, (SEL) $a_sel);"
+		end
+
+	frozen class_get_superclass (a_class: POINTER): POINTER
+		external
+			"C inline use <objc/objc-class.h>"
+		alias
+			"return class_getSuperclass((Class)$a_class);"
+		end
+
+	frozen class_set_superclass (a_class: POINTER; a_superclass: POINTER): POINTER
+		external
+			"C inline use <objc/objc-class.h>"
+		alias
+			"return class_setSuperclass((Class)$a_class, $a_superclass);"
 		end
 
 feature -- Adding Classes

@@ -163,6 +163,10 @@ extern "C" {
 /* TUPLE class */
 #define eif_builtin_TUPLE_count(area)						(RT_SPECIAL_COUNT(area) - 1) /* - 1 because first argument is for object_comparison */
 
+/* WEL_IDENTIFIED class */
+#define eif_builtin_WEL_IDENTIFIED_eif_current_object_id(object)	eif_reference_id(object)
+#define eif_builtin_WEL_IDENTIFIED_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
+
 #ifdef __cplusplus
 }
 #endif

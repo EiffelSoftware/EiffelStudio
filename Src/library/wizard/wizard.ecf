@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="wizard" uuid="68F1C6F4-ADCF-4E47-BC9A-417FB38D03C2" library_target="wizard">
+	<target name="wizard">
+		<description>WEL library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location="$(ISE_LIBRARY)\library\wizard\help\Clib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="htmlhelp.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
+		<cluster name="unix_wizard" location=".\" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+			<file_rule>
+				<exclude>/\mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="windows_wizard" location=".\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<option namespace="Wizard">
+			</option>
+			<file_rule>
+				<exclude>/\unix$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

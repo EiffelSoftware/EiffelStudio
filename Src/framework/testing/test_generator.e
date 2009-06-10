@@ -772,6 +772,7 @@ feature {NONE} -- Implementation
 			if not l_string.is_empty then
 				if attached output_file as l_file then
 					l_file.put_string (l_string)
+					l_file.flush
 				end
 				if attached output as l_output and then l_output.is_interface_usable then
 					l_output.formatter.add_string (l_string)

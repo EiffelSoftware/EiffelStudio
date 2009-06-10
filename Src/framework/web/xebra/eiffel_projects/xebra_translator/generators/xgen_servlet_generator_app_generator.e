@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			Result.append_local ("constants_file", "PLAIN_TEXT_FILE")
 			Result.append_local ("constants_file_name", "FILE_NAME")
 			Result.append_expression ("create constants_file_name.make_from_string (%"./%")")
-			Result.append_expression ("constants_file_name.set_file_name (%"servlet_constants.e%")")
+			Result.append_expression ("constants_file_name.set_file_name (%"g_servlet_constants.e%")")
 			Result.append_expression ("create constants_file.make (constants_file_name)")
 			Result.append_expression ("constants_file.open_write")
 			Result.append_expression ("create buf.make (constants_file)")

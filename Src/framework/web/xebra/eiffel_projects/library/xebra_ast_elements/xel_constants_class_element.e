@@ -19,7 +19,7 @@ feature -- Initialization
 	make_constant
 			--
 		do
-			make ("SERVLET_CONSTANTS")
+			make ("G_SERVLET_CONSTANTS")
 			create constants_table.make (10)
 		ensure then
 			constants_attached: attached constants_table

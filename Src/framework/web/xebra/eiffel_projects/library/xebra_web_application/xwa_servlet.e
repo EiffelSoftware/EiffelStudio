@@ -93,6 +93,7 @@ feature -- Basic Operations
 			set_all_booleans (a_request, a_response)
 			a_request.call_pre_handler (Current, a_response)
 			if a_response.goto_request.is_empty then
+				set_all_booleans (a_request, a_response)
 				render_html_page (a_request, a_response)
 				if a_response.goto_request.is_empty then
 					clean_up_after_render (a_request, a_response)

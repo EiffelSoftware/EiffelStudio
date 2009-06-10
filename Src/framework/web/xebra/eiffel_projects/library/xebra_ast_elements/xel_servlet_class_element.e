@@ -63,7 +63,7 @@ feature {NONE} -- Constants
 
 feature -- Constants
 
-	Constants_class_name: STRING = "SERVLET_CONSTANTS"
+	Constants_class_name: STRING = "G_SERVLET_CONSTANTS"
 
 
 feature -- If you delete this line you'll get a syntax error

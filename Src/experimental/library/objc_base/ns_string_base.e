@@ -14,13 +14,13 @@ create
 	make_with_string,
 	make_with_cstring
 create {NS_OBJECT}
-	make_shared
+	make_from_pointer
 
 feature {NONE} -- Creation
 
 	make_with_cstring (a_c_string: C_STRING)
 		do
-			make_shared ({NS_STRING_API}.string_with_c_string (a_c_string.item))
+			make_from_pointer ({NS_STRING_API}.string_with_c_string (a_c_string.item))
 		end
 
 	make_with_string (a_string: STRING_GENERAL)

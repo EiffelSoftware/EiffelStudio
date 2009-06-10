@@ -11,9 +11,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render,
-			generates_postrender,
-			generates_afterrender
+			generates_render
 		end
 
 create
@@ -76,67 +74,55 @@ feature -- Implementation
 		local
 			l_input_id: STRING
 			l_validator_list: LIST [STRING]
-			l_is_valid: STRING
-			l_validator_temp: STRING
-			l_message_var: STRING
+			l_validator_var, l_validation_var: STRING
 		do
-			if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_variable then
-				if attached {LIST[STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_validation_booleans] as l_validation_vars then
-					if attached {HASH_TABLE [STRING, STRING]} a_variable_table [{XTAG_F_FORM_TAG}.form_lazy_validation_table] as  l_validation_table then
-						l_input_id := l_variable + "_" + a_servlet_class.get_unique_identifier
+			if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
+				if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_variable then
+					l_input_id := a_servlet_class.render_html_page.new_local ("STRING")
 
-							-- render feature
-						a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "cols=%%%"" + cols.value (current_controller_id) +"%%%" name=%%%"" + l_input_id + "%%%">" + text.value (current_controller_id) + "%%%"</textarea>%")")
+						-- RENDER HTML PAGE
+					a_servlet_class.render_html_page.append_expression (l_input_id + " := get_unique_id")
+					a_servlet_class.render_html_page.append_expression
+						(response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "cols=%%%"" +
+						cols.value (current_controller_id) +"%%%" name=%%%"" + l_input_id + "%%%">" +
+						text.value (current_controller_id) + "%%%"</textarea>%")")
 
-						create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
-						a_variable_table.put (l_validator_list, {XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
-						generate_children (a_servlet_class, a_variable_table)
-						a_variable_table.remove ({XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
+						-- WRAP FORM TO INTERNAL REPRESENTATION
+					create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
 
-							-- prerender post feature
-						a_servlet_class.prerender_post_feature.append_expression ("if attached " +
-							request_variable + ".arguments [%"" + l_input_id + "%"] as argument then")
-						l_is_valid := a_servlet_class.prerender_post_feature.new_local ("BOOLEAN")
-						l_validation_vars.extend (l_is_valid)
-						a_servlet_class.prerender_post_feature.append_expression (l_is_valid + " := True")
-						l_validator_temp := a_servlet_class.prerender_post_feature.new_local ("XWA_VALIDATOR")
-						l_message_var := get_validation_local (l_validation_table, a_servlet_class, name.value (current_controller_id))
-						if not a_variable_table.is_empty then
-							a_servlet_class.afterrender_feature.append_expression (l_message_var + ".wipe_out")
-							from
-								l_validator_list.start
-							until
-								l_validator_list.after
-							loop
-								a_servlet_class.prerender_post_feature.append_expression ("create {" + l_validator_list.item + "}" + l_validator_temp + ".make")
-								a_servlet_class.prerender_post_feature.append_expression (l_is_valid + " := " +
-									l_is_valid + " and " + l_validator_temp + ".validate (argument)")
+					a_variable_table.put (l_validator_list, {XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
+					generate_children (a_servlet_class, a_variable_table)
+					a_variable_table.remove ({XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
 
-								a_servlet_class.prerender_post_feature.append_expression ("if not " + l_validator_temp + ".validate (argument)" + " then")
-								a_servlet_class.prerender_post_feature.append_expression (l_message_var + ".extend (" + l_validator_temp + ".message)")
-								a_servlet_class.prerender_post_feature.append_expression ("end")
-								l_validator_list.forth
-							end
-							a_servlet_class.prerender_post_feature.append_expression ("if " + l_is_valid + " then")
+						-- FORM EXPRESSIONS
+					a_servlet_class.fill_bean.append_expression ("if attached a_request.arguments [%"" + l_input_id + "%"] as argument then")
+					l_validation_var := a_servlet_class.fill_bean.new_local ("BOOLEAN")
+					a_servlet_class.fill_bean.append_expression (l_validation_var + " := True")
+					if not l_validator_list.is_empty then
+						l_validator_var := a_servlet_class.fill_bean.new_local ("XWA_VALIDATOR")
+						from -- Loop over all validators
+							l_validator_list.start
+						until
+							l_validator_list.after
+						loop
+							a_servlet_class.fill_bean.append_expression ("create {" + l_validator_list.item + "}" +  l_validator_var + ".make")
+							a_servlet_class.fill_bean.append_expression ("if not " + l_validator_var + ".validate (argument) then")
+							a_servlet_class.fill_bean.append_expression (l_validation_var + " := False")
+							a_servlet_class.fill_bean.append_expression ("add_error (%"" + name.plain_value (current_controller_id) + "%", " + l_validator_var + ".message)")
+							a_servlet_class.fill_bean.append_expression ("end")
+							l_validator_list.forth
 						end
-						a_servlet_class.prerender_post_feature.append_expression (l_variable + "." + value.value (current_controller_id) + " := argument")
-						if not a_variable_table.is_empty then
-							a_servlet_class.prerender_post_feature.append_expression ("end")
-						end
-
-						a_servlet_class.prerender_post_feature.append_expression ("end")
 					end
-				else
-					a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATING OF XTAG_F_INPUT_TAG!")
+					a_servlet_class.fill_bean.append_expression ("Result := Result and " + l_validation_var)
+					a_servlet_class.fill_bean.append_expression ("if " + l_validation_var + " then")
+					a_servlet_class.fill_bean.append_expression (l_variable + "." + value.plain_value (current_controller_id) + " := argument")
+					a_servlet_class.fill_bean.append_expression ("end")
+					a_servlet_class.fill_bean.append_expression ("end")
 				end
-			else
-				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATING OF XTAG_F_INPUT_TAG!")
 			end
 		end
 
 
 	generates_render: BOOLEAN = True
-	generates_postrender: BOOLEAN = True
-	generates_afterrender: BOOLEAN = True
 
 end

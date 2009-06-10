@@ -237,6 +237,10 @@
 				<ComponentGroupRef Id="Core.library"/>
 			</Feature>
 
+			<Feature Id="Experimental_library_feature" Title="Experimental Library" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.experimental.library"/>
+			</Feature>
+
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
 				<Condition Level="0"><![CDATA[GDIPLUSNEEDED = "0"]]></Condition>
 				<ComponentGroupRef Id="gdiplus"/>

@@ -18,20 +18,19 @@ feature -- Command
 			bitmap_not_selected_by_dc: True
 		local
 			l_orignal_dc: WEL_MEMORY_DC
-			l_bits: ARRAY [CHARACTER]
+			l_bits: MANAGED_POINTER
 			l_info: WEL_BITMAP_INFO
 			l_result: INTEGER
 		do
 			create l_orignal_dc.make
 			l_info := info_of_bitmap (a_bitmap)
 
-			-- When use SetDiBits/GetDiBits Api, windows require bitmap is not selected by any dc.
+				-- When use SetDiBits/GetDiBits Api, windows require bitmap is not selected by any dc.
+			l_bits := l_orignal_dc.di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 
-			l_bits := l_orignal_dc.di_bits (a_bitmap, 0, a_bitmap.height, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
-
-			-- Following line is KEY to mirror bitmap
+				-- Following line is KEY to mirror bitmap
 			l_info.header.set_height (- l_info.header.height)
-			l_result := l_orignal_dc.set_di_bits (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+			l_result := l_orignal_dc.set_di_bits_pointer (a_bitmap, 0, a_bitmap.height, l_bits, l_info, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
 
 			l_info.header.dispose
 			l_info.dispose

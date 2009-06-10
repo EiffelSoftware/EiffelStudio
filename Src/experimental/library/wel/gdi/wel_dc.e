@@ -725,6 +725,24 @@ feature -- Status setting
 				scan_lines, l_char_array.item, bitmap_info.item, usage)
 		end
 
+	set_di_bits_pointer (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
+			bits: MANAGED_POINTER; bitmap_info: WEL_BITMAP_INFO;
+			usage: INTEGER): INTEGER
+			-- Set device-independent bits of `a_bitmap'.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			positive_start_scan: start_scan >= 0
+			positive_scan_lines: scan_lines >= 0
+			bits_not_void: bits /= Void
+			bitmap_info_not_void: bitmap_info /= Void
+			valid_usage: valid_dib_colors_constant (usage)
+		do
+			cwin_set_di_bits (item, a_bitmap.item, start_scan,
+				scan_lines, bits.item, bitmap_info.item, usage)
+		end
+
 	select_palette (a_palette: WEL_PALETTE)
 			-- Select the `a_palette' as the current palette.
 		require
@@ -1668,7 +1686,7 @@ feature -- Basic operations
 		local
 			bmi, bmi2: WEL_BITMAP_INFO
 			bfh: WEL_BITMAP_FILE_HEADER
-			bits: WEL_CHARACTER_ARRAY
+			bits: MANAGED_POINTER
 			size: INTEGER
 			rgb_quad: WEL_RGB_QUAD
 			rf: RAW_FILE
@@ -1705,8 +1723,7 @@ feature -- Basic operations
 			create l_ptr.share_from_pointer (bfh.item, bfh.structure_size)
 			rf.put_managed_pointer (l_ptr, 0, bfh.structure_size)
 
-			create bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
-				Dib_rgb_colors))
+			bits := di_bits_pointer (a_bitmap, 0, bmi2.header.height, bmi2, Dib_rgb_colors)
 
 			-- Write the bitmap info header
 			l_ptr.set_from_pointer (bmi2.item, size)
@@ -1743,6 +1760,31 @@ feature -- Basic operations
 			cwin_get_di_bits (item, a_bitmap.item, start_scan,
 				scan_lines, a.item, bitmap_info.item, usage)
 			Result := a.to_array (1)
+		ensure
+			result_not_void: Result /= Void
+			consistent_count: Result.count = bitmap_info.header.size_image
+		end
+
+	di_bits_pointer (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
+			bitmap_info: WEL_BITMAP_INFO;
+			usage: INTEGER): MANAGED_POINTER
+			-- Device-independent bits of `a_bitmap'.
+			-- `start_scan' specifies the first scan line to
+			-- retrieve and `scan_lines' specifies the number of
+			-- scan lines to retrieve. `bitmap_info' specifies the
+			-- desired format for the dib data.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			positive_start_scan: start_scan >= 0
+			positive_scan_lines: scan_lines >= 0
+			bitmap_info_not_void: bitmap_info /= Void
+			valid_usage: valid_dib_colors_constant (usage)
+		do
+			create Result.make (bitmap_info.header.size_image)
+			cwin_get_di_bits (item, a_bitmap.item, start_scan,
+				scan_lines, Result.item, bitmap_info.item, usage)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count = bitmap_info.header.size_image

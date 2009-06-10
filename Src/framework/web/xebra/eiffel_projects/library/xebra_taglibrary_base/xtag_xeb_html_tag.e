@@ -53,17 +53,17 @@ feature {NONE}
 
 			--if children.count > 0 then
 				if l_cashable then
-					write_string_to_result (l_tag + ">", a_servlet_class.render_feature)
+					write_string_to_result (l_tag + ">", a_servlet_class.render_html_page)
 				else
-					write_string_to_result_uncashed (l_tag + ">", a_servlet_class.render_feature)
+					write_string_to_result_uncashed (l_tag + ">", a_servlet_class.render_html_page)
 				end
 
 				generate_children (a_servlet_class, a_variable_table)
 
 				if l_cashable then
-					write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_feature)
+					write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_html_page)
 				else
-					write_string_to_result_uncashed ("</" + tag_id + ">", a_servlet_class.render_feature)
+					write_string_to_result_uncashed ("</" + tag_id + ">", a_servlet_class.render_html_page)
 				end
 
 			--else

@@ -11,8 +11,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render,
-			generates_postrender
+			generates_render
 		end
 
 create
@@ -34,6 +33,9 @@ feature -- Access
 	label: XTAG_TAG_ARGUMENT
 			-- The text of the link
 
+	variable: XTAG_TAG_ARGUMENT
+			-- Variable which has to be past to the callee
+
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
@@ -43,15 +45,16 @@ feature -- Implementation
 			l_unique_var: STRING
 		do
 			if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.form_id] as l_unique_form_id then
-				if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.form_var_redirect] as l_redirect_var then
+				if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
 						-- Figure out, if the post request comes from this link, if yes execute the function with the appropriate argument
-					l_unique_id :=  a_servlet_class.prerender_post_feature.new_local ("STRING")
-					l_unique_var :=  a_servlet_class.prerender_post_feature.new_uid
+					l_unique_id :=  a_servlet_class.render_html_page.new_uid
+					l_unique_var :=  a_servlet_class.render_html_page.new_local ("STRING")
+					a_servlet_class.render_html_page.append_expression (l_unique_var + " := get_unique_id")
 
-					a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"" +
+					a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"" +
 						forms1 + l_unique_form_id +
 						forms2 + l_unique_var +
-						value +
+						value + "%" + " + l_unique_var + "+ %"" +
 						submit + l_unique_form_id +
 						stopsubmit + label.value (current_controller_id) +
 						stopahref +
@@ -59,14 +62,18 @@ feature -- Implementation
 						stopinput +
 						"%")"
 					)
-					a_servlet_class.prerender_post_feature.append_expression ("if attached request.arguments[%"" + l_unique_var + "%"] as argument then")
-					a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + current_controller_id + "." + action.value (current_controller_id) + " (argument)")
-					a_servlet_class.prerender_post_feature.append_expression ("end")
+					a_servlet_class.render_html_page.append_expression ("agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST; a_object: ANY) do")
+					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")
+					a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_TAG")
+
+					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_unique_var + "%"] then")
+					l_form_expressions.extend ("agent_table [a_request.arguments [%"" + l_unique_var + "%"]].call ([a_request])")
+					l_form_expressions.extend ("end")
 				else
-					a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
+					a_servlet_class.render_html_page.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
 				end
 			else
-				a_servlet_class.render_feature.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
+				a_servlet_class.render_html_page.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
 			end
 		end
 
@@ -79,10 +86,12 @@ feature -- Implementation
 			if a_id.is_equal ("action") then
 				action := a_attribute
 			end
+			if a_id.is_equal ("variable") then
+				variable := a_attribute
+			end
 		end
 
 	generates_render: BOOLEAN = True
-	generates_postrender: BOOLEAN = True
 
 feature -- Constants
 

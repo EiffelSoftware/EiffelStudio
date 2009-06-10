@@ -28,6 +28,7 @@
 	<tag id="command_link" class="XTAG_F_COMMAND_LINK_TAG">
 		<attribute id="label" />
 		<attribute id="action" />
+		<attribute id="variable" />
 	</tag>
 	<tag id="validator" class="XTAG_F_VALIDATOR_TAG">
 		<attribute id="class" />

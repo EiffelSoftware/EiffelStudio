@@ -14,9 +14,7 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render,
-			generates_postrender,
-			generates_afterrender
+			generates_render
 		end
 
 create
@@ -47,67 +45,59 @@ feature -- Implementation
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
-			l_data_var: STRING
-			l_redirect_var: STRING
-			l_agent_var: STRING
-			l_form_id: STRING
-			l_validation_booleans: LIST [STRING]
-			l_validation_table: HASH_TABLE [STRING, STRING]
+			l_id: STRING
+			l_variable_exists: BOOLEAN
+			l_agent_expressions: LIST [STRING]
 		do
-			if attached variable then
-				a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), data_class.value (current_controller_id))
-				a_servlet_class.make_feature.append_expression ("create " + variable.value (current_controller_id) + ".make")
-				a_variable_table.put (variable.value (current_controller_id), Form_var_key)
+			l_variable_exists := not variable.is_empty
+			if l_variable_exists then
+				a_servlet_class.add_variable_by_name_type (variable.plain_value (current_controller_id), data_class.plain_value (current_controller_id))
+				a_servlet_class.make_feature.append_expression ("create " + variable.plain_value (current_controller_id) + ".make")
 			end
-			l_form_id := a_servlet_class.prerender_post_feature.new_uid
-			l_data_var := a_servlet_class.render_feature.new_uid
-			--l_redirect_var := a_servlet_class.get_unique_identifier
-			--a_servlet_class.add_variable_by_name_type (l_redirect_var, "STRING")
-			l_redirect_var := a_servlet_class.prerender_post_feature.new_local ("STRING")
-			l_agent_var := a_servlet_class.prerender_post_feature.new_local ("FUNCTION [ANY, TUPLE [" + data_class.value (current_controller_id) + "], STRING]")
 
-			a_servlet_class.prerender_post_feature.append_expression ("if " + request_variable + ".arguments.has_key (%"" + l_data_var + "%") then")
-
-			create l_validation_table.make (2)
-
-			a_variable_table.put (l_redirect_var, Form_var_redirect)
-			a_variable_table.put (l_form_id, Form_id)
-			a_variable_table.put (l_agent_var, Form_agent_var)
-			a_variable_table.put (l_validation_table, Form_lazy_validation_table)
-
-			a_servlet_class.render_feature.append_expression (Response_variable + ".append (%"<form id=%%%"" + l_form_id + "%%%" action=%%%"%" +"
+			l_id := a_servlet_class.render_html_page.new_local ("STRING")
+			a_servlet_class.render_html_page.append_expression (l_id + ":= get_unique_id")
+			a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"<form id=%%%"" + l_id + "%%%" action=%%%"%" +"
 				+ Request_variable + ".target_uri + %"%%%" method=%%%"post%%%">%")")
 
-			create {ARRAYED_LIST [STRING]} l_validation_booleans.make (2)
-			a_variable_table.put (l_validation_booleans, Form_validation_booleans)
+			create {ARRAYED_LIST [STRING]} l_agent_expressions.make (2)
+			a_variable_table.put (l_id, Form_id)
+			a_variable_table.put (l_agent_expressions, Form_agent_var)
+			a_variable_table.put (variable.plain_value (current_controller_id), Form_var_key)
+
 			generate_children (a_servlet_class, a_variable_table)
-			a_variable_table.remove (Form_validation_booleans)
 
-			a_servlet_class.render_feature.append_expression (response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + l_data_var + "%%%" />%")")
-			write_string_to_result ("</form>", a_servlet_class.render_feature)
-			if not l_validation_booleans.is_empty then
-				a_servlet_class.prerender_post_feature.append_expression ("if not (" + concatenate_with ("and", l_validation_booleans) + ") then")
-				a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := %"%"")
-				a_servlet_class.prerender_post_feature.append_expression ("end")
-			end
-
-			if attached variable then
-				a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_agent_var + " then")
-				a_servlet_class.prerender_post_feature.append_expression (l_redirect_var + " := " + l_agent_var + ".item ([" + variable.value (current_controller_id) + "])")
-				a_servlet_class.prerender_post_feature.append_expression ("end")
-			end
-
-
-			a_servlet_class.prerender_post_feature.append_expression ("if attached " + l_redirect_var + " and then not " + l_redirect_var + ".is_empty then")
-			a_servlet_class.prerender_post_feature.append_expression (response_variable + ".set_goto_request (" + l_redirect_var + ")")
-			a_servlet_class.prerender_post_feature.append_expression ("end")
-			a_servlet_class.prerender_post_feature.append_expression ("end")
-
-			a_variable_table.remove (Form_var_key)
-			a_variable_table.remove (Form_var_redirect)
-			a_variable_table.remove (Form_id)
 			a_variable_table.remove (Form_agent_var)
-			a_variable_table.remove (Form_lazy_validation_table)
+			a_variable_table.remove (Form_id)
+			a_variable_table.remove (Form_var_key)
+
+			a_servlet_class.render_html_page.append_expression ("agent_table [" + l_id + "] := agent (a_request: XH_REQUEST) do -- FORM_TAG")
+
+			from
+				l_agent_expressions.start
+			until
+				l_agent_expressions.after
+			loop
+				a_servlet_class.render_html_page.append_expression (l_agent_expressions.item)
+				l_agent_expressions.forth
+			end
+
+			a_servlet_class.render_html_page.append_expression ("end")
+
+			a_servlet_class.render_html_page.append_expression (Response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + l_id + "%%%" value=%%%"%"+" + l_id + "+%"%%%" />%")")
+			write_string_to_result ("</form>", a_servlet_class.render_html_page)
+
+			a_servlet_class.handle_form_internal.append_expression ("if attached a_request.arguments [%"" + l_id + "%"] as form_argument then")
+
+				a_servlet_class.handle_form_internal.append_expression ("agent_table [form_argument].call ([a_request])")
+
+			if l_variable_exists then
+				a_servlet_class.clean_up_after_render.append_expression_to_end ("if validation_errors.empty then")
+				a_servlet_class.clean_up_after_render.append_expression_to_end ("create " + variable.plain_value (current_controller_id) + ".make")
+				a_servlet_class.clean_up_after_render.append_expression_to_end ("end")
+			end
+
+			a_servlet_class.handle_form_internal.append_expression ("end")
 		ensure then
 			a_variable_table_immuted: a_variable_table.count = old a_variable_table.count
 		end
@@ -124,8 +114,6 @@ feature -- Implementation
 		end
 
 	generates_render: BOOLEAN = True
-	generates_postrender: BOOLEAN = True
-	generates_afterrender: BOOLEAN = False
 
 feature -- Constants
 
@@ -135,7 +123,6 @@ feature -- Constants
 	Form_validation_booleans: STRING = "Form_validation_booleans"
 	Form_agent_var: STRING = "Form_agent_var"
 	Form_lazy_validation_table: STRING = "Form_lazy_validation_table"
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

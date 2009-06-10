@@ -38,10 +38,10 @@ feature -- Implementation
 			Result := a_the_request.substring (6, l_i-2)
 		end
 
-	call_pre_handler (servlet: XWA_SERVLET; response: XH_RESPONSE)
+	call_pre_handler (servlet: XWA_SERVLET; a_response: XH_RESPONSE)
 			-- <Precursor>
 			-- Calls prehandle_post_request
 		do
-			servlet.prehandle_post_request (Current, response)
+			servlet.handle_form (Current, a_response)
 		end
 end

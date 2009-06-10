@@ -20,41 +20,46 @@ feature -- Initialization
 			--
 		do
 			make (a_name)
-			create make_feature.make ("make")
+			create make_feature.make (make_signature)
 			add_feature (make_feature)
-			create prerender_post_feature.make (Prerender_post_feature_name)
-			add_feature (prerender_post_feature)
-			create prerender_get_feature.make (Prerender_get_feature_name)
-			add_feature (prerender_get_feature)
-			create render_feature.make_with_const_class (Render_feature_name, a_const_class)
-			add_feature (render_feature)
-			create afterrender_feature.make (Afterrender_feature_name)
-			add_feature (afterrender_feature)
+			create set_all_booleans.make (set_all_booleans_signature)
+			add_feature (set_all_booleans)
+			create handle_form_internal.make (handle_form_internal_signature)
+			add_feature (handle_form_internal)
+			create render_html_page.make_with_const_class (render_html_page_signature, a_const_class)
+			add_feature (render_html_page)
+			create clean_up_after_render.make (clean_up_after_render_signature)
+			add_feature (clean_up_after_render)
+			create fill_bean.make (fill_bean_signature)
+			add_feature (fill_bean)
+			fill_bean.append_expression_to_start ("Result := True")
+				--Ensure that the result is always True if nothing else checked!
+
 		end
 
 feature -- Access
 
 	make_feature: XEL_FEATURE_ELEMENT
 
+	set_all_booleans: XEL_FEATURE_ELEMENT
 
-	render_feature: XEL_RENDER_FEATURE_ELEMENT
+	clean_up_after_render: XEL_FEATURE_ELEMENT
 
+	render_html_page: XEL_RENDER_FEATURE_ELEMENT
 
-	prerender_post_feature: XEL_FEATURE_ELEMENT
+	handle_form_internal: XEL_FEATURE_ELEMENT
 
-
-	prerender_get_feature: XEL_FEATURE_ELEMENT
-
-
-	afterrender_feature: XEL_FEATURE_ELEMENT
-
+	fill_bean: XEL_FEATURE_ELEMENT
 
 feature {NONE} -- Constants
 
-	Render_feature_name: STRING = "handle_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Prerender_post_feature_name: STRING = "prehandle_post_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Prerender_get_feature_name: STRING = "prehandle_get_request (request: XH_REQUEST; response: XH_RESPONSE)"
-	Afterrender_feature_name: STRING = "afterhandle_request (request: XH_REQUEST; response: XH_RESPONSE)"
+	make_signature: STRING = "make"
+	set_all_booleans_signature: STRING = "set_all_booleans (request: XH_REQUEST; response: XH_RESPONSE)"
+	clean_up_after_render_signature: STRING = "clean_up_after_render (request: XH_REQUEST; response: XH_RESPONSE)"
+	render_html_page_signature: STRING = "render_html_page (request: XH_REQUEST; response: XH_RESPONSE)"
+	handle_form_bean_signature: STRING = "handle_form_bean (a_request: XH_REQUEST; a_response: XH_RESPONSE; a_real_bean: ANY)"
+	handle_form_internal_signature: STRING = "handle_form_internal (a_request: XH_REQUEST; a_response: XH_RESPONSE)"
+	fill_bean_signature: STRING = "fill_bean (a_request: XH_REQUEST): BOOLEAN"
 
 feature -- Constants
 

@@ -198,9 +198,6 @@ feature -- Tag
 			end
 
 			state.on_start_tag (l_namespace, l_prefix, l_local_part)
-		ensure then
-			stack_bigger_or_html_tag: (tag_stack.count = old tag_stack.count)
-											implies state = state_html
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
@@ -234,8 +231,6 @@ feature -- Tag
 			end
 
 			state.on_attribute (l_namespace, l_prefix, l_local_part, l_value)
-		ensure then
-			stack_does_not_change: tag_stack.count = old tag_stack.count
 		end
 
 	on_start_tag_finish
@@ -333,6 +328,14 @@ feature {XP_CALLBACK_STATE} -- Implementation
 			create {XTL_PAGE_CONF_TAG_LIB} Result.make_with_arguments (Configuration_tag, Current)
 		ensure
 			result_attached: attached Result
+		end
+
+	fail
+			-- Stops the parsing
+		do
+			state := create {XP_EMPTY_CALLBACK_STATE}.make (Current)
+			tag_stack.wipe_out
+			create root_tag.make_empty
 		end
 
 feature -- Constants

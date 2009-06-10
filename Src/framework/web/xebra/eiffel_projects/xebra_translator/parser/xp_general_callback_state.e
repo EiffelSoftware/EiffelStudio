@@ -69,6 +69,7 @@ feature -- Implementation
 				parser_callback.tag_stack.remove
 			else
 				parser_callback.error_manager.add_error (create {XERROR_PARSE}.make (["Unmatched: " + a_prefix + ":" + a_local_part]), False)
+				parser_callback.fail
 			end
 		end
 
@@ -89,14 +90,17 @@ feature -- Implementation
 					elseif taglib.argument_belongs_to_tag (l_local_part, parser_callback.tag_stack.item.id) then
 						if parser_callback.tag_stack.item.has_attribute (l_local_part) then
 							parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"]))
+							parser_callback.fail
 						else
 							parser_callback.tag_stack.item.put_attribute (l_local_part, l_value)
 						end
 					else
 						parser_callback.error_manager.add_warning (create {XERROR_UNEXPECTED_ATTRIBUTE}.make (["<"+parser_callback.tag_stack.item.id + " " + l_local_part + "=%"" + l_value.value ("") + "%">"  ]))
+						parser_callback.fail
 					end
 				else
 					parser_callback.error_manager.add_warning (create {XERROR_UNDEFINED_NAMESPACE}.make (parser_callback.tag_stack.item.namespace))
+					parser_callback.fail
 				end
 
 			else

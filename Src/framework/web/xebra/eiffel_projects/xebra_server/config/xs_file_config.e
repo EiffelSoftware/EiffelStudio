@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			create compiler.make_empty
 			create translator.make_empty
 			create finalize_webapps.make_empty
-			create assume_webapps_are_running.make_empty
+
 	--		create arg_config.make_empty
 			create taglib.make_empty
 		ensure then
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			compiler_attached: compiler /= Void
 			translator_attached: translator /= Void
 			finalize_webapps_attached: finalize_webapps /= Void
-			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
+
 		end
 
 
@@ -69,8 +69,7 @@ feature -- Access
 	finalize_webapps:  SETTABLE_BOOLEAN assign set_finalize_webapps
 			-- Specifies whether webapps should be finalized. Read from config.ini
 
-	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
-			-- Specifies whether webapps should be finalized. Read from config.ini
+
 
 
 	compiler_filename: FILE_NAME
@@ -110,7 +109,7 @@ feature -- Stauts Report
 	print_configuration: STRING
 			-- Renders the configuration to a string
 		do
-			Result := "%N---------------- Server Configuration ----------------"
+			Result := "%N---------------- Server Configuration File ----------------"
 			Result.append("%N-Webapps: " + webapps.count.out + " webapps at '" + webapps_root.out + "'")
 
 			from
@@ -124,10 +123,8 @@ feature -- Stauts Report
 
 			Result.append ( "%N-Compiler in '" + compiler.out +
 							"%N-Translator in '" + translator.out +
-							"%N-Finalize webapps '" + finalize_webapps.out +  "'" +
-							"%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
-		--	Result.append (arg_config.print_configuration)
-			Result.append ("%N------------------------------------------------------")
+							"%N-Finalize webapps '" + finalize_webapps.out +  "'")
+			Result.append ("%N-----------------------------------------------------------")
 
 		ensure
 			Result_attached: Result /= Void
@@ -204,15 +201,7 @@ feature -- Setters
 			finalize_webapps_set: finalize_webapps = a_finalize_webapps
 		end
 
-	set_assume_webapps_are_running (a_assume_webapps_are_running: like assume_webapps_are_running)
-			-- Sets assume_webapps_are_running.
-		require
-			a_assume_webapps_are_running_attached: a_assume_webapps_are_running /= Void
-		do
-			assume_webapps_are_running := a_assume_webapps_are_running
-		ensure
-			assume_webapps_are_running_set: assume_webapps_are_running = a_assume_webapps_are_running
-		end
+
 
 invariant
 	taglib_attached: taglib /= Void
@@ -222,5 +211,4 @@ invariant
 	compiler_attached: compiler /= Void
 	translator_attached: translator /= Void
 	finalize_webapps_attached: finalize_webapps /= Void
-	assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 end

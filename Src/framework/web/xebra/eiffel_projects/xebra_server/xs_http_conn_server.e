@@ -18,7 +18,7 @@ create make
 
 feature -- Initialization
 
-	make 
+	make
 			-- Initializes current
 		do
 
@@ -26,6 +26,7 @@ feature -- Initialization
          --	create thread_pool.make (max_thread_number, agent request_handler_spawner)
 	       	http_socket.set_accept_timeout (500)
             stop := False
+            launched := False
 		ensure
 			http_socket_attached: http_socket /= Void
 		end
@@ -37,6 +38,7 @@ feature -- Inherited Features
 		local
 			l_r_handler: XS_REQUEST_HANDLER
 		do
+			launched := True
 			create l_r_handler.make
 			from
                 http_socket.listen (max_tcp_clients.as_integer_32)
@@ -72,6 +74,8 @@ feature -- Access
 
 	stop: BOOLEAN
 			-- Set true to stop accept loop
+
+	launched: BOOLEAN
 
 feature -- Status
 

@@ -18,6 +18,7 @@ feature -- Initialization
 	make (a_main_server: XS_MAIN_SERVER)
 			-- Initializes current
 		do
+			launched := False
 			main_server := a_main_server
 		ensure
 			main_server_set: main_server = a_main_server
@@ -28,7 +29,7 @@ feature -- Inherited Features
 	execute
 			-- <Precursor>	
 		do
-
+			launched := True
 			o.iprint ("(enter 'x' to shut down)")
 			from
 				io.read_character
@@ -44,6 +45,8 @@ feature -- Access
 
 	main_server: XS_MAIN_SERVER
 
+	launched: BOOLEAN
+
 feature -- Status
 
 feature -- Constants
@@ -51,11 +54,6 @@ feature -- Constants
 
 feature -- Status setting
 
-	stop
-			-- Stops the thread
-		do
-			exit
-		end
 
 invariant
 	main_server_attached: main_server /= Void

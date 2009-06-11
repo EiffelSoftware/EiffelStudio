@@ -21,10 +21,12 @@ feature {NONE} -- Initialization
 			create debug_level.make_empty
 			create clean.make_empty
 			create config_filename.make_empty
+			create assume_webapps_are_running.make_empty
 		ensure
 			debug_level_attached: debug_level /= Void
 			clean_attached: clean /= Void
 			config_filename_attached: config_filename /= Void
+			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 		end
 
 feature -- Access
@@ -36,18 +38,24 @@ feature -- Access
 
 	config_filename: SETTABLE_STRING assign set_config_filename
 
+	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
+			-- Specifies
+
 feature -- Status report
 
 	print_configuration: STRING
 			-- Renders the configuration to a string
 		do
-			Result := "%N-Debug Level '" + debug_level.out + "'" +
-					  "%N-Clean '" + clean.out + "'"
+			Result := "%N---------------- Server Arguments ----------------"
+			Result.append ( "%N-Debug Level '" + debug_level.out + "'" +
+					  "%N-Clean '" + clean.out + "'" +
+					  "%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
+			Result.append ("%N--------------------------------------------------")
 		ensure
 			Result_attached: Result /= Void
 		end
 
-feature -- Status setting
+feature {XS_MAIN_SERVER} -- Status setting
 
 	set_debug_level  (a_debug_level: like debug_level)
 			-- Sets debug_level.
@@ -79,9 +87,20 @@ feature -- Status setting
 			config_filename_set: config_filename  = a_config_filename
 		end
 
+	set_assume_webapps_are_running (a_assume_webapps_are_running: like assume_webapps_are_running)
+			-- Sets assume_webapps_are_running.
+		require
+			a_assume_webapps_are_running_attached: a_assume_webapps_are_running /= Void
+		do
+			assume_webapps_are_running := a_assume_webapps_are_running
+		ensure
+			assume_webapps_are_running_set: assume_webapps_are_running = a_assume_webapps_are_running
+		end
+
 invariant
 	debug_level_attached: debug_level /= Void
 	clean_attached: clean /= Void
 	config_filename_attached: config_filename /= Void
+	assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 end
 

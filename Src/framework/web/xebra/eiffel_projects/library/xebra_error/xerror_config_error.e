@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			make_error ([]);
+			make_error ([])
 		end
 
 feature -- Access

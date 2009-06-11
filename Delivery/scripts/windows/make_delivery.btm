@@ -126,6 +126,12 @@ fullrd widget_test
 cd ..
 cd ..
 remtrace precomp
+safe_md %STUDIO_DIR\experimental
+safe_md %STUDIO_DIR\experimental\precomp
+safe_md %STUDIO_DIR\experimental\precomp\spec
+cd %STUDIO_DIR\experimental\precomp\spec
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
@@ -186,7 +192,6 @@ cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR library
 remtrace build the experimental libraries
 cdd %INIT_DIR
-md %STUDIO_DIR\experimental
 call make_libraries.btm %STUDIO_DIR\experimental experimental/library
 
 remtrace Build the C_libraries

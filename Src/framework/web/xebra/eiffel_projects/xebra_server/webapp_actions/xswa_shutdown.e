@@ -42,15 +42,15 @@ feature {NONE} -- Implementation
 		local
 			l_webapp_socket: NETWORK_STREAM_SOCKET
 		do
-			create l_webapp_socket.make_client_by_port (webapp.config.port, webapp.config.host.out)
-			o.dprint ("Shutdown connect to " + webapp.config.name.out + "@" + webapp.config.port.out, 4)
+			create l_webapp_socket.make_client_by_port (webapp.app_config.port, webapp.app_config.host.out)
+			o.dprint ("Shutdown connect to " + webapp.app_config.name.out + "@" + webapp.app_config.port.out, 4)
 			l_webapp_socket.connect
             if  l_webapp_socket.is_connected then
 				o.dprint ("Sending shutdown signal", 2)
 	            l_webapp_socket.independent_store (Shutdown_message)
 	            l_webapp_socket.cleanup
 	        else
-	         	o.eprint ("Cannot shutdown connect to '" + webapp.config.name.out + "'", generating_type)
+	         	o.eprint ("Cannot shutdown connect to '" + webapp.app_config.name.out + "'", generating_type)
 			end
 			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_response
 		end

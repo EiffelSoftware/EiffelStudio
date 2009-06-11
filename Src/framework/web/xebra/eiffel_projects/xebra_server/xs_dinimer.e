@@ -40,6 +40,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+
+	set_clean (a_clean: like clean)
+			-- Sets clean.
+		require
+			a_clean_attached: a_clean /= Void
+		do
+			clean  := a_clean
+		ensure
+			clean_set: clean  = a_clean
+		end
+
+
+
 feature -- Status report
 
 feature -- Status setting

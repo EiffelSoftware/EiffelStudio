@@ -13,7 +13,7 @@
 <div id="btn_documentation"	onclick="location.href='doc.xeb';"></div>
 <div id="btn_about" onclick="location.href='about.xeb';"></div>
 </div>
-<page:region id="content" />
+<page:declare_region id="content" />
 <div id="footer">Copyright (c) 1993-2009 Eiffel Software</div>
 </div>
 </body>

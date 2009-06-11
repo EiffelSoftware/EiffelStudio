@@ -12,23 +12,22 @@ class
 
 inherit
 	THREAD
-	XU_SHARED_OUTPUTTER
+	XS_SHARED_SERVER_OUTPUTTER
 
 create make
 
 feature -- Initialization
 
-	make  (a_server_config: XS_CONFIG)
+	make 
 			-- Initializes current
 		do
-			server_config := a_server_config
+
             create http_socket.make_server_by_port (default_http_server_port)
          --	create thread_pool.make (max_thread_number, agent request_handler_spawner)
 	       	http_socket.set_accept_timeout (500)
             stop := False
 		ensure
 			http_socket_attached: http_socket /= Void
-			server_config_set: server_config = a_server_config
 		end
 
 feature -- Inherited Features
@@ -39,8 +38,6 @@ feature -- Inherited Features
 			l_r_handler: XS_REQUEST_HANDLER
 		do
 			create l_r_handler.make
-			o.set_name ({XS_MAIN_SERVER}.Name)
-			o.set_debug_level (server_config.arg_config.debug_level)
 			from
                 http_socket.listen (max_tcp_clients.as_integer_32)
             until
@@ -55,7 +52,7 @@ feature -- Inherited Features
 						--multithread
 						--thread_pool.add_work (agent l_r_handler.receive_message (thread_http_socket, server_config))
 		            	--singleusermode
-		            	l_r_handler.receive_message (thread_http_socket, server_config)
+		            	l_r_handler.receive_message (thread_http_socket)
 					end
 				end
             end
@@ -72,8 +69,6 @@ feature -- Access
 
 	http_socket: NETWORK_STREAM_SOCKET
 			-- The socket
-
-	server_config: XS_CONFIG
 
 	stop: BOOLEAN
 			-- Set true to stop accept loop
@@ -121,5 +116,4 @@ feature {POOLED_THREAD} -- Implementation
 
 invariant
 	http_socket_attached: http_socket /= Void
-	server_config_attached: server_config /= Void
 end

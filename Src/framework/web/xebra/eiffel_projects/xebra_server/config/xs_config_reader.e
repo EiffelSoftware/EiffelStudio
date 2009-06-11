@@ -12,8 +12,8 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
-	XU_SHARED_OUTPUTTER
-	XI_READER [XS_CONFIG]
+	XS_SHARED_SERVER_OUTPUTTER
+	XI_READER [XS_FILE_CONFIG]
 
 create
 	make
@@ -29,7 +29,7 @@ feature {NONE} -- Internal Access
 
 feature -- Status report
 
-	check_attributes (a_config: XS_CONFIG): detachable XS_CONFIG
+	check_attributes (a_config: XS_FILE_CONFIG): detachable XS_FILE_CONFIG
 			-- Checks if all attributes have been set
 		require else
 			a_config_attached: a_config /= Void
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	process_property (a_property: INI_PROPERTY; a_config: XS_CONFIG)
+	process_property (a_property: INI_PROPERTY; a_config: XS_FILE_CONFIG)
 			-- Process document properties
 		require else
 			a_property_attached: a_property /= Void

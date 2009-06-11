@@ -11,7 +11,8 @@ deferred class
 	XS_WEBAPP_ACTION
 
 inherit
-	XU_SHARED_OUTPUTTER
+	XS_SHARED_SERVER_OUTPUTTER
+	XS_SHARED_SERVER_CONFIG
 
 feature {NONE} -- Initialization
 
@@ -33,36 +34,16 @@ feature -- Access
 	is_running: BOOLEAN
 		-- True if the action has to wait e.g. for a process to terminate
 
---	stop_action: detachable XS_WEBAPP_ACTION
---		-- Is used to stop an other action before the action is executed
-
 	next_action: detachable XS_WEBAPP_ACTION
 		-- Is executed after the action has executed
-
-	config: XS_CONFIG
-			-- The attached server_config
-		require
-			internal_server_config_attached: internal_server_config /= Void
-		do
-			if attached  internal_server_config as c then
-				Result := c
-			else
-				Result := create {XS_CONFIG}.make_empty
-			end
-		ensure
-			Result_attached: Result /= Void
-		end
-
-	internal_server_config: detachable XS_CONFIG
-		-- Internal detachable server_config
 
 feature -- Paths
 
 	app_dir: FILE_NAME
 			-- The directory to the application
 		do
-			Result := config.webapps_root_filename.twin
-			Result.extend (webapp.config.name.out)
+			Result := config.file.webapps_root_filename.twin
+			Result.extend (webapp.app_config.name.out)
 			end
 
 	run_workdir : FILE_NAME
@@ -70,7 +51,7 @@ feature -- Paths
 		do
 			Result := app_dir.twin
 			Result.extend ("EIFGENs")
-			Result.extend (webapp.config.name.out)
+			Result.extend (webapp.app_config.name.out)
 			Result.extend ("W_code")
 		end
 
@@ -78,7 +59,7 @@ feature -- Paths
 			-- Returns the path to the melted file
 		do
 			Result := run_workdir.twin
-			Result.set_file_name (webapp.config.name.out + ".melted")
+			Result.set_file_name (webapp.app_config.name.out + ".melted")
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -88,9 +69,9 @@ feature -- Paths
 		do
 			Result := run_workdir.twin
 			if {PLATFORM}.is_windows then
-				Result.set_file_name (webapp.config.name.out + ".exe")
+				Result.set_file_name (webapp.app_config.name.out + ".exe")
 			else
-				Result.set_file_name (webapp.config.name.out)
+				Result.set_file_name (webapp.app_config.name.out)
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -98,19 +79,16 @@ feature -- Paths
 
 feature -- Operations
 
-	config_outputter
-			-- Has to be called in every new thread (?), also in every process_exit_handler...
-		do
-			o.set_name ({XS_MAIN_SERVER}.name)
-			o.set_debug_level (config.arg_config.debug_level)
-		end
-
+--	config_outputter
+--			-- Has to be called in every new thread (?), also in every process_exit_handler...
+--		do
+--			o.set_name ({XS_MAIN_SERVER}.name)
+--			o.set_debug_level (args.debug_level)
+--		end
 
 	execute: XH_RESPONSE
 			-- Executes the action if necessary and stops the stop_action if attached.
 			-- Returns a XH_RESPONSE which can be sent to the http server
-		require
-			config_set: internal_server_config /= Void
 		do
 			if is_necessary then
 				Result := internal_execute
@@ -202,13 +180,7 @@ feature -- Status setting
 			not_running: is_running = False
 		end
 
-	set_config (a_config: XS_CONFIG)
-			-- Setter
-		do
-			internal_server_config := a_config
-		ensure
-			config_attached: internal_server_config /= Void
-		end
+
 
 feature {NONE} -- Implementation
 
@@ -264,6 +236,5 @@ feature {NONE} -- Implementation
 
 invariant
 	webapp_attached: webapp /= Void
-	config_attached: config /= Void
 end
 

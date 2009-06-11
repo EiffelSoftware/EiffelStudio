@@ -69,6 +69,7 @@ feature -- Setters
 		ensure
 			host_set: host  = a_host
 		end
+		
 invariant
 	name_attached: name /= Void
 	port_attached: port /= Void

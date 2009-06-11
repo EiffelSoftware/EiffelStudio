@@ -42,7 +42,7 @@ feature -- Access
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
 		do
-			Result  := " -config " + webapp.config.name.out + ".ecf -target " + webapp.config.name.out + " -c_compile -stop"
+			Result  := " -config " + webapp.app_config.name.out + ".ecf -target " + webapp.app_config.name.out + " -c_compile -stop"
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
 --			end
@@ -81,7 +81,7 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			if attached {PROCESS} compile_process as p and then p.is_running  then
-				o.dprint ("Terminating compile_process for " + webapp.config.name.out  + "", 2)
+				o.dprint ("Terminating compile_process for " + webapp.app_config.name.out  + "", 2)
 				p.terminate
 				p.wait_for_exit
 			end
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_running then
 				webapp.shutdown
-				if can_launch_process (config.compiler_filename, app_dir) then
+				if can_launch_process (config.file.compiler_filename, app_dir) then
 					if attached compile_process as p then
 						if p.is_running then
 							o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
-					compile_process := launch_process (config.compiler_filename,
+					compile_process := launch_process (config.file.compiler_filename,
 													compiler_args,
 													app_dir,
 													agent compile_process_exited,
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 					is_running := True
 				end
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.config.name.out)).render_to_response
+			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
 		end
 
 feature -- Agent
@@ -120,7 +120,7 @@ feature -- Agent
 	compile_process_exited
 			-- Sets is_running := False
 		do
-			config_outputter
+--			config_outputter
 			is_running := False
 			if output_handler.has_successfully_terminated then
 				next_action.execute.do_nothing

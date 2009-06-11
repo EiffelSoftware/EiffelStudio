@@ -26,6 +26,6 @@ feature {NONE} -- Initialization
 		do
 			create l_arg_parser.make
 			create l_server.make
-			l_arg_parser.execute (agent l_server.run (l_arg_parser))
+			l_arg_parser.execute (agent l_server.setup (l_arg_parser))
 		end
 end

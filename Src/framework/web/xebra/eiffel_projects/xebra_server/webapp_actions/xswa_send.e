@@ -39,8 +39,8 @@ feature {NONE} -- Implementation
 			l_webapp_socket: NETWORK_STREAM_SOCKET
 		do
 			o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 10)
-			create l_webapp_socket.make_client_by_port (webapp.config.port, webapp.config.host)
-			o.dprint ("Connecting to " + webapp.config.name.out + "@" + webapp.config.port.out, 2)
+			create l_webapp_socket.make_client_by_port (webapp.app_config.port, webapp.app_config.host)
+			o.dprint ("Connecting to " + webapp.app_config.name.out + "@" + webapp.app_config.port.out, 2)
 			l_webapp_socket.connect
             if  l_webapp_socket.is_connected then
 				o.dprint ("Forwarding request", 2)
@@ -50,10 +50,10 @@ feature {NONE} -- Implementation
 					o.dprint ("Response retrieved", 2)
 	            	Result := l_response
 	            else
-	            	Result := (create {XER_BAD_RESPONSE}.make (webapp.config.name.out)).render_to_response
+	            	Result := (create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_response
 	            end
 	        else
-	        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.config.name.out)).render_to_response
+	        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_response
 	        end
 		end
 

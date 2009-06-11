@@ -8,11 +8,11 @@ note
 	revision: "$Revision$"
 
 class
-	XS_CONFIG
+	XS_FILE_CONFIG
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
-	XU_SHARED_OUTPUTTER
+	XS_SHARED_SERVER_OUTPUTTER
 	XI_CONFIG
 		redefine
 			make_empty
@@ -32,11 +32,11 @@ feature {NONE} -- Initialization
 			create translator.make_empty
 			create finalize_webapps.make_empty
 			create assume_webapps_are_running.make_empty
-			create arg_config.make_empty
+	--		create arg_config.make_empty
 			create taglib.make_empty
 		ensure then
 			taglib_attached: taglib /= Void
-			arg_config_attached: arg_config /= Void
+--			arg_config_attached: arg_config /= Void
 			webapps_attached: webapps /= Void
 			webapps_root_attached: webapps_root /= Void
 			compiler_attached: compiler /= Void
@@ -51,8 +51,8 @@ feature -- Access
 	webapps:  HASH_TABLE [XS_WEBAPP, STRING]
 			-- The webapps the server knows about
 
-	arg_config: XS_ARG_CONFIG
-			-- The config settings read from the execute arguments.		
+--	arg_config: XS_ARG_CONFIG
+--			-- The config settings read from the execute arguments.		
 
 	webapps_root:  SETTABLE_STRING assign set_webapps_root
 			-- The webapps root directory. Read from config.ini
@@ -118,7 +118,7 @@ feature -- Stauts Report
 			until
 				webapps.after
 			loop
-				Result.append ("%N--'" + webapps.item_for_iteration.config.name.out + "' on "+ webapps.item_for_iteration.config.host.out + "@" + webapps.item_for_iteration.config.port.out)
+				Result.append ("%N--'" + webapps.item_for_iteration.app_config.name.out + "' on "+ webapps.item_for_iteration.app_config.host.out + "@" + webapps.item_for_iteration.app_config.port.out)
 				webapps.forth
 			end
 
@@ -126,7 +126,7 @@ feature -- Stauts Report
 							"%N-Translator in '" + translator.out +
 							"%N-Finalize webapps '" + finalize_webapps.out +  "'" +
 							"%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
-			Result.append (arg_config.print_configuration)
+		--	Result.append (arg_config.print_configuration)
 			Result.append ("%N------------------------------------------------------")
 
 		ensure
@@ -141,14 +141,14 @@ feature -- Setters
 			a_webapps_attached: a_webapps /= Void
 		do
 			webapps := a_webapps
-			from
-				webapps.start
-			until
-				webapps.after
-			loop
-				webapps.item_for_iteration.set_server_config (current)
-				webapps.forth
-			end
+--			from
+--				webapps.start
+--			until
+--				webapps.after
+--			loop
+--				webapps.item_for_iteration.set_server_config (current)
+--				webapps.forth
+--			end
 		ensure
 			webapps_set: equal (webapps, a_webapps)
 		end
@@ -216,7 +216,7 @@ feature -- Setters
 
 invariant
 	taglib_attached: taglib /= Void
-	arg_config_attached: arg_config /= Void
+--	arg_config_attached: arg_config /= Void
 	webapps_root_attached: webapps_root /= Void
 	webapps_attached: webapps /= Void
 	compiler_attached: compiler /= Void

@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	pixmaps_on_right: ARRAY [EV_PIXMAP]
+	pixmaps_on_right: detachable ARRAY [detachable EV_PIXMAP]
 		do
 			Result := implementation.pixmaps_on_right
 		end

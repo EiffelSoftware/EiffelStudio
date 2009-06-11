@@ -22,10 +22,10 @@ feature -- Access
 		deferred
 		end
 
-	closing_brace_map: attached HASH_TABLE [attached ARRAY [attached STRING_32], attached STRING_32]
+	closing_brace_map: attached HASH_TABLE [attached ARRAYED_LIST [attached STRING_32], attached STRING_32]
 			-- Map of close to open braces.
 		do
-			if attached {HASH_TABLE [attached ARRAY [attached STRING_32], attached STRING_32]} internal_closing_brace_map as l_result then
+			if attached {HASH_TABLE [attached ARRAYED_LIST [attached STRING_32], attached STRING_32]} internal_closing_brace_map as l_result then
 				Result := l_result
 			else
 				Result := reserve_opening_brace_map (opening_brace_map)
@@ -223,7 +223,7 @@ feature -- Query
 		local
 			l_image: detachable STRING_32
 			l_match_image: detachable STRING_32
-			l_matches: detachable ARRAY [attached STRING_32]
+			l_matches: detachable ARRAYED_LIST [attached STRING_32]
 			l_prev: detachable like previous_token
 			l_stop: BOOLEAN
 		do
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -341,22 +341,22 @@ feature {NONE} -- Implementation: Internal cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

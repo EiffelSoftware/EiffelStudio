@@ -334,7 +334,7 @@ feature {NONE} -- Initialization
 	setup_grid_from_component
 			-- Fill data into the displaying grid from given `component'.
 		do
-			create extracted_entries.make_from_array (new_extractor.eis_entries.linear_representation)
+			create extracted_entries.make_from_array (new_extractor.eis_entries.linear_representation.to_array)
 			cached_column := sorting_column
 			cached_descend := descend_order
 			new_sorter.sort (extracted_entries)

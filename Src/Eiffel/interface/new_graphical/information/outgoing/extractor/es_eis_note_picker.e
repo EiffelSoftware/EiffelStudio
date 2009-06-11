@@ -19,7 +19,7 @@ feature {NONE} -- Implementation
 											name: STRING_32;
 											protocol: STRING_32;
 											source: STRING_32;
-											tags: ARRAY [STRING_32];
+											tags: ARRAYED_LIST [STRING_32];
 											id: STRING;
 											others: HASH_TABLE [STRING_32, STRING_32]])
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.

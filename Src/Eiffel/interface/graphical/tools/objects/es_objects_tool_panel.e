@@ -244,11 +244,10 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			end
 		end
 
-	objects_grids_contents_to_array: ARRAY [STRING]
+	objects_grids_contents: ARRAYED_LIST [STRING]
 			--
 		local
 			lst: LIST [INTEGER]
-			res: ARRAYED_LIST [STRING]
 			nb: INTEGER
 			s: STRING
 		do
@@ -262,7 +261,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 				objects_grids.forth
 			end
 
-			create res.make (nb)
+			create Result.make (nb)
 			from
 				objects_grids.start
 			until
@@ -270,19 +269,18 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			loop
 				s := objects_grids.key_for_iteration.twin
 				s.prepend_character ('#')
-				res.extend (s)
+				Result.extend (s)
 				lst := objects_grids.item_for_iteration.ids
 				from
 					lst.start
 				until
 					lst.after
 				loop
-					res.extend (lst.item.out)
+					Result.extend (lst.item.out)
 					lst.forth
 				end
 				objects_grids.forth
 			end
-			Result := res
 		ensure
 			Result_has_no_void_item: not Result.has (Void)
 		end
@@ -424,7 +422,7 @@ feature {NONE} -- Interface
 		do
 			reset_objects_grids_contents_to_default
 			apref := preferences.debug_tool_data.objects_tool_layout_preference
-			apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
+			apref.set_value (objects_grids_contents.to_array) --| Should trigger "update"				
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_grid: ES_OBJECTS_GRID )

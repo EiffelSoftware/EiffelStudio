@@ -274,7 +274,7 @@ feature {NONE} -- Pick and Drop implementation
 			ocl: CLASS_C
 			t: like internal_item_stone_data_i_th
 		do
-			create internal_items_stone_data.make (row.count + 1) -- FIXME: upper value ?
+			create internal_items_stone_data.make_filled (Void, row.count + 1) -- FIXME: upper value ?
 			if attached object_address as oadd and then not oadd.is_void then
 					--| For now we don't support this for external type
 				ostn := object_name

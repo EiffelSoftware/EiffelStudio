@@ -395,7 +395,8 @@ feature{NONE} -- Implementation
 				-- Build "Layout" section.
 			l_grid.add_section (interface_names.l_layout)
 
-			create l_scope.make_with_choices (interface_names.l_scope, <<interface_names.l_eiffelstudio, interface_names.l_target>>)
+			create l_scope.make_with_choices (interface_names.l_scope,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (<<interface_names.l_eiffelstudio, interface_names.l_target>>))
 			if a_descriptor.is_global_scope then
 				l_scope.set_value (interface_names.l_eiffelstudio)
 			else

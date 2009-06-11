@@ -30,6 +30,22 @@
 		<cluster name="string" location="svn\library\string\" recursive="true">
 			<option namespace="String">
 			</option>
+			<file_rule>
+				<exclude>/unicode/st_imported_unicode_v410_character_class_routines.e$</exclude>
+				<exclude>/unicode/st_imported_unicode_v410_normalization_routines.e$</exclude>
+				<exclude>/unicode/st_imported_unicode_v500_character_class_routines.e$</exclude>
+				<exclude>/unicode/st_imported_unicode_v500_full_case_mapping.e$</exclude>
+				<exclude>/unicode/st_imported_unicode_v500_normalization_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v410_character_class_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v410_normalization_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v500_character_class_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v500_full_case_mapping.e$</exclude>
+				<exclude>/unicode/st_unicode_v500_normalization_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v510_character_class_routines.e$</exclude>
+				<exclude>/unicode/st_unicode_v510_full_case_mapping.e$</exclude>
+				<exclude>/unicode/st_unicode_v510_normalization_routines.e$</exclude>
+			</file_rule>
 		</cluster>
+		<cluster name="override" location="override\library\string\" recursive="true"/>
 	</target>
 </system>

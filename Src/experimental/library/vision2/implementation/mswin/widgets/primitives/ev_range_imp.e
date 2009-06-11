@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	EV_RANGE_I
+		export
+			{EV_ANY, EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} attached_interface
 		redefine
 			interface
 		end
@@ -89,7 +91,7 @@ feature {NONE} -- Implementation
 				+ Ws_clipsiblings
 		end
 
-feature {EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} -- Interface
+feature {EV_ANY, EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} -- Interface
 
 	interface: detachable EV_RANGE note option: stable attribute end;
 

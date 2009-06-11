@@ -26,7 +26,7 @@ feature -- Status report
 		deferred
 		end
 
-feature {EV_ANY} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_BAR note option: stable attribute end;
 

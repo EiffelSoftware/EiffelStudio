@@ -221,7 +221,7 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
             -- Provides a common user interface to platform dependent

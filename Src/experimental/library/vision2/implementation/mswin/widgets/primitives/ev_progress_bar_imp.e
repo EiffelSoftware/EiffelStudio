@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			leap := a_leap
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
@@ -229,17 +229,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PROGRESS_BAR_IMP
-
-
-
-
-
-
-
-
-
-

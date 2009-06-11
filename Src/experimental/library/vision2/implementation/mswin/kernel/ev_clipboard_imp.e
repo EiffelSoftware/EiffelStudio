@@ -103,7 +103,7 @@ feature -- Status Setting
 			end
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I}
 
 	interface: detachable EV_CLIPBOARD note option: stable attribute end;
 		-- Interface of `Current'

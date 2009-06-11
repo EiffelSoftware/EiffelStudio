@@ -87,7 +87,7 @@ feature -- Status setting
 			spacing_set: bottom_spacing = a_spacing
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PARAGRAPH_FORMAT note option: stable attribute end;
 

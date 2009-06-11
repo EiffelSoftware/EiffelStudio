@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_clipchildren + Ws_clipsiblings
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;
 
@@ -55,14 +55,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
-
-
-
-
-
-
-

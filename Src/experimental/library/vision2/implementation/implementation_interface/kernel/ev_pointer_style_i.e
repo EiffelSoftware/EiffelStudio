@@ -82,7 +82,7 @@ feature -- Duplication
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_POINTER_STYLE note option: stable attribute end;
 			-- Interface

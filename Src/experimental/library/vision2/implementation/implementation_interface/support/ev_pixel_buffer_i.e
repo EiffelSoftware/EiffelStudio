@@ -124,13 +124,15 @@ feature -- Query
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_PIXEL_BUFFER note option: stable attribute end;
+		-- Interface object for `Current'.
+
 feature {NONE} -- Implementation
 
 	pixel_iterator_internal: detachable EV_PIXEL_BUFFER_ITERATOR note option: stable attribute end;
 		-- Iteration object for pixels of `Current'.
-
-	interface: detachable EV_PIXEL_BUFFER note option: stable attribute end;
-		-- Interface object for `Current'.
 
 feature -- Obsolete
 

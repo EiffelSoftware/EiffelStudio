@@ -601,7 +601,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 

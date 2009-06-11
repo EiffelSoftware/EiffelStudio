@@ -69,7 +69,7 @@ feature -- Status setting
 	default_key_processing_disabled: BOOLEAN
 		-- Has default key processing been disabled?
 
-feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST note option: stable attribute end;
 

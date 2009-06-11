@@ -183,7 +183,7 @@ feature {EV_LIST_ITEM_IMP} -- Pick & Drop
 		deferred
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 

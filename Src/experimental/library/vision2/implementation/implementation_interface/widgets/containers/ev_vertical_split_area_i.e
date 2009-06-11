@@ -41,7 +41,7 @@ feature
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 

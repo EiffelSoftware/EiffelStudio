@@ -35,7 +35,7 @@ feature -- Element change
 			assigned: is_usable implies font.is_equal (a_font)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FONTABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

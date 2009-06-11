@@ -260,6 +260,8 @@ feature {EV_ANY_I} -- Implementation
 		attribute
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_WINDOW note option: stable attribute end;
 
 note

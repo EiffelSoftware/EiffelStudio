@@ -95,19 +95,15 @@ feature -- Status report
 			Result := get_state_flag (is_destroyed_flag)
 		end
 
-feature -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	attached_interface: attached like interface
 			-- Attached version of `interface'.
-		local
-			l_result: like interface
+		require
+			interface_attached: interface /= Void
 		do
-			l_result := interface
-			check l_result /= Void end
-			Result := l_result
+			Result := interface
 		end
-
-feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ANY note option: stable attribute end
 			-- Provides a common user interface to possibly platform

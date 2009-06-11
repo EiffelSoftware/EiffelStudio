@@ -20,10 +20,9 @@ inherit
 create
 	make
 
-feature {EV_TOOL_BAR_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR_DROP_DOWN_BUTTON note option: stable attribute end
 			-- Tool bar drop down button bridge.
-
 
 end

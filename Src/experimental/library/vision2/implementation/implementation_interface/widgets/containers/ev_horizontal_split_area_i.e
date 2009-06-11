@@ -40,7 +40,7 @@ feature
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_SPLIT_AREA note option: stable attribute end;
 

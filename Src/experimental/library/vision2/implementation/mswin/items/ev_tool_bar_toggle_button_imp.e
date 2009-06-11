@@ -53,7 +53,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current selected'?
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR_TOGGLE_BUTTON note option: stable attribute end
 
@@ -77,17 +77,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
-
-
-
-
-
-
-
-
-
-

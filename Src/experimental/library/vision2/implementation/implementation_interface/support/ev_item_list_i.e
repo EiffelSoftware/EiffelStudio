@@ -43,7 +43,7 @@ feature -- Access
 			go_to (c)
 		end
 
-feature {EV_ANY_I, EV_ITEM_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ITEM_I} -- Implementation
 
 	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent

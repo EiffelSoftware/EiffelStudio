@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CELL note option: stable attribute end;
 

@@ -34,7 +34,7 @@ feature -- Status setting
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PRINTER note option: stable attribute end;
 

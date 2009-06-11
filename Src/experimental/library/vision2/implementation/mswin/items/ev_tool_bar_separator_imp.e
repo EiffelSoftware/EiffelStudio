@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 		end
 
 
-feature {EV_ANY_I} -- Interface
+feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: detachable EV_TOOL_BAR_SEPARATOR note option: stable attribute end
 
@@ -175,17 +175,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
-
-
-
-
-
-
-
-
-
-

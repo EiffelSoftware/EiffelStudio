@@ -248,6 +248,13 @@ feature -- Measurement
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_WIDGET note option: stable attribute end;
+		-- Provides a common user interface to platform dependent functionality
+		-- implemented by `Current'.
+		-- (See bridge pattern notes in ev_any.e)
+
 feature {EV_ANY_I} -- Implementation
 
 	disable_default_processing_on_key (a_key: EV_KEY): BOOLEAN
@@ -255,11 +262,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Result := attached default_key_processing_handler as l_default_key_processing_handler and then not l_default_key_processing_handler.item ([a_key])
 		end
-
-	interface: detachable EV_WIDGET note option: stable attribute end;
-		-- Provides a common user interface to platform dependent functionality
-		-- implemented by `Current'.
-		-- (See bridge pattern notes in ev_any.e)
 
 	on_parented
 			-- `Current' is about to be put into a container.

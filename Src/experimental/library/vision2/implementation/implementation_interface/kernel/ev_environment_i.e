@@ -89,7 +89,7 @@ feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER
 		deferred
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ENVIRONMENT note option: stable attribute end
             -- Provides a common user interface to platform dependent

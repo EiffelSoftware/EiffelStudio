@@ -85,7 +85,7 @@ feature -- Contract support
 			end
 		end
 
-feature {EV_LIST_ITEM_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

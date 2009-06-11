@@ -105,7 +105,7 @@ feature {EV_NOTEBOOK} -- Element change
 		deferred
 		end
 
-feature {EV_NOTEBOOK, EV_NOTEBOOK_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_NOTEBOOK note option: stable attribute end
 			-- Provides a common user interface to platform dependent

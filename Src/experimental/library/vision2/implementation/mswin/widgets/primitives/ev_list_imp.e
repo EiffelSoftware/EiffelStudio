@@ -889,7 +889,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST note option: stable attribute end;
 
@@ -904,17 +904,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_LIST_IMP
-
-
-
-
-
-
-
-
-
-

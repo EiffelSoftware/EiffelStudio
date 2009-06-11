@@ -68,7 +68,7 @@ feature -- Implementation
 	is_timeout_executing: BOOLEAN
 		-- Is the timeout currently executing?
 
-feature {EV_ANY_I} --Implementation
+feature {EV_ANY, EV_ANY_I} --Implementation
 
 	interface: detachable EV_TIMEOUT note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

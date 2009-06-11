@@ -40,7 +40,7 @@ feature -- Status setting
 			selected: is_selected
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SELECTABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

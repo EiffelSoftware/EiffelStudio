@@ -289,6 +289,8 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report

@@ -722,10 +722,12 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	attached_parent: attached like parent
 			-- Attached parent
+		require
+			parent_attached: parent /= Void
 		local
 			l_parent: like parent
 		do
@@ -736,6 +738,8 @@ feature -- Implementation
 
 	attached_parent_i: attached like parent_i
 			-- Attached parent_i
+		require
+			parent_i_attached: parent_i /= Void
 		local
 			l_parent_i: like parent_i
 		do
@@ -744,7 +748,19 @@ feature -- Implementation
 			Result := l_parent_i
 		end
 
-feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
+	attached_column_i: attached like column_i
+			-- Attached `column_i'
+		require
+			column_i_attached: column_i /= Void
+		local
+			l_column_i: like column_i
+		do
+			l_column_i := column_i
+			check l_column_i /= Void end
+			Result := l_column_i
+		end
+
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	interface: detachable EV_GRID_ITEM note option: stable attribute end
 			-- Provides a common user interface to platform dependent

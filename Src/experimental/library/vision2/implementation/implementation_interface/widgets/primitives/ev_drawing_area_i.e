@@ -53,7 +53,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 			-- Responsible for interaction with the underlying native graphics

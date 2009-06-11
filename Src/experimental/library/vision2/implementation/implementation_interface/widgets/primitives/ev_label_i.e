@@ -43,7 +43,7 @@ inherit
 --		deferred
 --		end
 
-feature {EV_ANY_I} -- implementation
+feature {EV_ANY, EV_ANY_I} -- implementation
 
 	interface: detachable EV_LABEL note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

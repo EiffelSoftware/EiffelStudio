@@ -547,7 +547,7 @@ feature {NONE} -- Implementation : deferred features
 		deferred
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CONTAINER note option: stable attribute end
 

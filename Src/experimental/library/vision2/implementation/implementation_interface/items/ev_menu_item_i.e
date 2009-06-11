@@ -26,7 +26,7 @@ inherit
 
 	EV_MENU_ITEM_ACTION_SEQUENCES_I
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 

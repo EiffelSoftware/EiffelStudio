@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			checked_item_increases_count: is_item_checked (node) implies list.count = old list.count + 1
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 

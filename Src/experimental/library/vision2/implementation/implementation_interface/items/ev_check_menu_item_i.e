@@ -19,7 +19,7 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end;
 

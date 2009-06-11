@@ -1933,12 +1933,7 @@ feature {NONE} -- Constants
 			create Result
 		end
 
-feature {
-		EV_PIXMAP_IMP,
-		EV_PIXMAP_IMP_DRAWABLE,
-		EV_PIXMAP_IMP_WIDGET,
-		EV_CONTAINER_IMP
-		} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PIXMAP note option: stable attribute end
 

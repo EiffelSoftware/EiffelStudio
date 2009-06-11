@@ -13,6 +13,8 @@ deferred class
 
 inherit
 	EV_ANY_I
+		export
+			{ANY} attached_interface
 		redefine
 			interface
 		end
@@ -243,7 +245,7 @@ feature {EV_COLOR} -- Conversion
 			set_blue (other.blue)
 		end
 
-feature --{EV_COLOR_I, EV_COLOR} -- Implementation
+feature -- Implementation
 
 	Default_name: STRING = "noname"
 			-- To be used as `name' when none is supplied.

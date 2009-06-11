@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 		-- Created and destroyed at the start and end of splitter resizing.
 		-- Prevents keeping a reference to GDI objects when not required.
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end
 
@@ -467,15 +467,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPLIT_AREA_IMP
-
-
-
-
-
-
-
-

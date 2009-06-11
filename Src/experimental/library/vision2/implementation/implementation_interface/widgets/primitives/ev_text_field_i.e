@@ -49,7 +49,7 @@ feature -- Status setting
 			-- Redefined in EV_TEXT_FIELD_IMP as it is not needed by all EV_TEXT_FIELD_I descendents.
 		end
 
-feature {EV_TEXT_FIELD_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end
 			-- Provides a common user interface to platform dependent

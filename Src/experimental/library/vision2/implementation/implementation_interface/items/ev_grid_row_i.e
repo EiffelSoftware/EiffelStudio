@@ -21,6 +21,8 @@ inherit
 		end
 
 	EV_DESELECTABLE_I
+		export
+			{EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} attached_interface
 		redefine
 			interface,
 			is_selectable
@@ -1436,7 +1438,7 @@ feature {NONE} -- Implementation
 			result_positive: result > 0
 		end
 
-feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	interface: detachable EV_GRID_ROW note option: stable attribute end
 			-- Provides a common user interface to possibly dependent

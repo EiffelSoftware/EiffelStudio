@@ -1304,7 +1304,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := button_rectangle.height
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
@@ -1319,18 +1319,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_IMP
-
-
-
-
-
-
-
-
-
-
-

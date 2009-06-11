@@ -69,7 +69,7 @@ feature -- Status setting
 			height_assigned: height = minimum_height or else height = a_height
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_POSITIONABLE note option: stable attribute end;
 

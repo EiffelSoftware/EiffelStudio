@@ -198,7 +198,7 @@ feature {EV_ANY_I}
 			end
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I}
 
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 

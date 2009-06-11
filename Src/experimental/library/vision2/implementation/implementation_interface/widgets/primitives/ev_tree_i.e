@@ -56,7 +56,7 @@ feature -- Status report
 		deferred
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TREE note option: stable attribute end;
 

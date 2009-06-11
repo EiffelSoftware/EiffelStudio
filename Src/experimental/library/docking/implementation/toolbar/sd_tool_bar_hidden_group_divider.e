@@ -33,15 +33,15 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_items /= Void
 		local
-			l_widths: ARRAY [INTEGER]
+			l_widths: ARRAYED_LIST [INTEGER]
 		do
 			from
-				create l_widths.make (1, a_items.count)
+				create l_widths.make_filled (a_items.count)
 				a_items.start
 			until
 				a_items.after
 			loop
-				l_widths.put (a_items.item.width, a_items.index)
+				l_widths.put_i_th (a_items.item.width, a_items.index)
 				a_items.forth
 			end
 			algorithm.set_items_width (l_widths)

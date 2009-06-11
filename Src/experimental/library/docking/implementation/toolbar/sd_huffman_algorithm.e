@@ -125,7 +125,7 @@ feature -- Query
 			Result := l_item_count = item_width.count
 		end
 
-	item_width: ARRAY [INTEGER]
+	item_width: ARRAYED_LIST [INTEGER]
 			-- Groups to be calculated. Integer is each group width.
 
 	group_count: INTEGER
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation functions
 			until
 				a_group.after
 			loop
-				Result := item_width.item (a_group.item) + Result
+				Result := item_width.i_th (a_group.item) + Result
 				a_group.forth
 			end
 		ensure

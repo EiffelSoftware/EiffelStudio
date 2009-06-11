@@ -16,8 +16,8 @@ inherit
 		redefine
 			update_for_pick_and_drop,
 			interface,
-			initialize,
-			gdk_events_mask
+			gdk_events_mask,
+			make
 		end
 
 	EV_SHARED_APPLICATION
@@ -30,7 +30,7 @@ create
 
 feature -- Initialize
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor

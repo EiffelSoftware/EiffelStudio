@@ -57,8 +57,12 @@ feature -- Access
 			-- Attached grid in which `Current' is contained.
 		require
 			parent /= Void
+		local
+			l_par: like parent
 		do
-			Result := implementation.attached_parent
+			l_par := parent
+			check l_par_attached: l_par /= Void end
+			Result := l_par
 		end
 
 	row: EV_GRID_ROW

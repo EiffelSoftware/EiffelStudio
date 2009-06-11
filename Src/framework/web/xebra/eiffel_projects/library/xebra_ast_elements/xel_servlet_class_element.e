@@ -32,9 +32,8 @@ feature -- Initialization
 			add_feature (clean_up_after_render)
 			create fill_bean.make (fill_bean_signature)
 			add_feature (fill_bean)
-			fill_bean.append_expression_to_start ("Result := True")
 				--Ensure that the result is always True if nothing else checked!
-
+			fill_bean.append_expression_to_start ("Result := True")
 		end
 
 feature -- Access

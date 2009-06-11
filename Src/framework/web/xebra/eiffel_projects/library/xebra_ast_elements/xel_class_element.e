@@ -14,7 +14,6 @@ inherit
 create
 	make
 
-
 feature -- Initialization
 
 	make (a_signature: STRING)

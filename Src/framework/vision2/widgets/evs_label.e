@@ -84,7 +84,7 @@ feature -- Element change
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		local
 			l_lines: LIST [STRING_32]
-			l_text_lines: ARRAYED_LIST [ARRAY [STRING_32]]
+			l_text_lines: ARRAYED_LIST [ARRAYED_LIST [STRING_32]]
 			l_text_sizes: ARRAYED_LIST [ARRAY [INTEGER]]
 			l_words: like split_words
 			l_sizes: like measure_words
@@ -267,7 +267,7 @@ feature -- Basic operations
 
 feature {NONE} -- Line analysis
 
-	split_words (a_line: STRING_32): ARRAY [STRING_32]
+	split_words (a_line: STRING_32): ARRAYED_LIST [STRING_32]
 			-- Splits a line of text into words and whitespace
 			--
 			-- `a_line': A line of text to split into words
@@ -275,13 +275,12 @@ feature {NONE} -- Line analysis
 		require
 			a_line_attached: a_line /= Void
 		local
-			l_words: ARRAYED_LIST [STRING_32]
 			l_word: STRING_32
 			l_count, i: INTEGER
 			c: CHARACTER_32
 			l_last_is_space: BOOLEAN
 		do
-			create l_words.make (0)
+			create Result.make (0)
 			if not a_line.is_empty then
 				create l_word.make (24)
 				from
@@ -295,15 +294,14 @@ feature {NONE} -- Line analysis
 					l_last_is_space := (c.is_character_8 and then c.is_space)
 					c := a_line.item (i)
 					if i > 1 and then (c.is_character_8 and then c.is_space) /= l_last_is_space then
-						l_words.extend (l_word)
+						Result.extend (l_word)
 						create l_word.make (24)
 					end
 					l_word.append_character (c)
 					i := i + 1
 				end
-				l_words.extend (l_word)
+				Result.extend (l_word)
 			end
-			Result := l_words
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: a_line.is_empty = Result.is_empty
@@ -337,7 +335,7 @@ feature {NONE} -- Line analysis
 			until
 				i > l_count
 			loop
-				l_word := a_words.item (i)
+				l_word := a_words.i_th (i)
 				l_len := a_cache.item (l_word)
 				if l_len = 0 then
 					l_len := l_font.string_width (l_word)
@@ -357,7 +355,7 @@ feature {NONE} -- Line analysis
 
 feature {NONE} -- Line rendering
 
-	text_lines: LIST [ARRAY [STRING_32]]
+	text_lines: LIST [ARRAYED_LIST [STRING_32]]
 			-- Original lines, split into words
 
 	text_sizes: LIST [ARRAY [INTEGER]]
@@ -373,7 +371,7 @@ feature {NONE} -- Line rendering
 			l_wrapped: like is_text_wrapped
 			l_ellipsed: like is_text_ellipsed
 			l_font: like font
-			l_words: ARRAY [STRING_32]
+			l_words: like split_words
 			l_sizes: ARRAY [INTEGER]
 			l_word: STRING_32
 			l_small_word: STRING_32
@@ -413,7 +411,7 @@ feature {NONE} -- Line rendering
 							i > l_count
 						loop
 							l_len := l_sizes.item (i)
-							l_word := l_words.item (i)
+							l_word := l_words.i_th (i)
 
 							if not l_wrapped or l_eval_width + l_len <= l_width then
 								l_eval_width := l_eval_width + l_len
@@ -455,7 +453,7 @@ feature {NONE} -- Line rendering
 										l_word := l_word.substring (2, l_word.count)
 									end
 									if not l_word.is_empty then
-										l_text.append (l_words.item (i))
+										l_text.append (l_words.i_th (i))
 									end
 								end
 							end
@@ -526,7 +524,7 @@ invariant
 			text_lines /= Void implies text_lines.count = text_sizes.count
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -550,11 +548,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

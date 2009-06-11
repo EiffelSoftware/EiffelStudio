@@ -736,11 +736,11 @@ feature {NONE} -- Style management
 
 	build_resources
 		do
-			create selected_row_colors.make (2)
+			create selected_row_colors.make_filled (Void, 2)
 			selected_row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (240, 255, 240), 0)
 			selected_row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (225, 255, 225), 1)
 
-			create row_colors.make (2)
+			create row_colors.make_filled (Void, 2)
 			row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255), 0)
 			row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (245, 245, 245), 1)
 
@@ -771,7 +771,7 @@ invariant
 	value_font_not_void: value_font /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -795,11 +795,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

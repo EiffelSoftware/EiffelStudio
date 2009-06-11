@@ -27,7 +27,7 @@ feature -- Initialization
 			regions_set: regions = a_regions
 		end
 
-feature {NONE}
+feature -- Access
 
 	regions: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
 			-- Regions of a template
@@ -51,7 +51,7 @@ feature -- Access
 		do
 			if attached regions [a_tag.retrieve_value ("id").value ("")] as region then
 				a_tag.set_region (region)
-				regions [a_tag.retrieve_value ("id").value("")] := Void
+				regions.remove (a_tag.retrieve_value ("id").value(""))
 			end
 		end
 

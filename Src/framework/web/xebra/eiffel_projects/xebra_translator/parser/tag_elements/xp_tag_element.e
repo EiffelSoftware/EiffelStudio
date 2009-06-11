@@ -222,7 +222,7 @@ feature --Basic Implementation
 			end
 		end
 
-	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR)
+	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING])
 			-- Resolves all the dependencies via include
 		require
 			a_templates_attached: a_templates /= Void
@@ -234,7 +234,7 @@ feature --Basic Implementation
 			until
 				children.after
 			loop
-				children.item.resolve_all_dependencies (a_templates, a_pending, a_servlet_gen)
+				children.item.resolve_all_dependencies (a_templates, a_pending, a_servlet_gen, a_regions)
 				if children.item.date > date then
 					date := children.item.date
 				end

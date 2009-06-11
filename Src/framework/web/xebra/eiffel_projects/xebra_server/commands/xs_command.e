@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XS_COMMAND}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,27 +25,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-feature -- Measurement
-
 feature -- Status report
 
 feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 

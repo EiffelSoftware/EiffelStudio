@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create {ARRAYED_QUEUE [XS_COMMAND]}commands.make (4)
+			create commands.make
 		ensure
 			commands_attached: commands /= Void
 		end
@@ -35,7 +35,7 @@ feature -- Access
 
 	input_server: detachable XS_INPUT_SERVER assign set_input_server
 
-	commands: QUEUE [XS_COMMAND]
+	commands: XS_COMMAND_MANAGER
 
 	stop: BOOLEAN assign set_stop
 		-- Stops the server
@@ -58,9 +58,9 @@ feature -- Operations
 			o.iprint ("Starting Xebra Web Application Server...")
 			o.dprint (config.args.print_configuration, 2)
 			stop := false
-			commands.force (create {XSC_LOAD_CONFIG}.make)
-			commands.force (create {XSC_LAUNCH_HTTPS}.make)
-			commands.force (create {XSC_LAUNCH_INPUTS}.make)
+			commands.put (create {XSC_LOAD_CONFIG}.make)
+			commands.put (create {XSC_LAUNCH_HTTPS}.make)
+			commands.put (create {XSC_LAUNCH_INPUTS}.make)
 			run
 		end
 
@@ -74,11 +74,8 @@ feature -- Operations
 			until
 				stop
 			loop
-				if not commands.is_empty then
-					commands.item.execute (current)
-					commands.item.handle_error (current)
-					commands.remove
-				end
+				commands.execute_next (current)
+
 			end
 
 			o.iprint ("Shutting down...")
@@ -105,7 +102,7 @@ feature -- Operations
 		end
 
 
-feature -- Status setting
+feature {XSC_LAUNCH_HTTPS} -- Status setting
 
 	set_http_connection_server (a_http_connection_server: like http_connection_server)
 			-- Sets http_connection_server.
@@ -117,6 +114,8 @@ feature -- Status setting
 			http_connection_server_set: http_connection_server  = a_http_connection_server
 		end
 
+feature {XSC_STOP_SERVER} -- Status setting
+
 	set_stop (a_stop: like stop)
 			-- Sets stop.
 		require
@@ -126,6 +125,8 @@ feature -- Status setting
 		ensure
 			stop_set: stop  = a_stop
 		end
+
+feature {XSC_LAUNCH_INPUTS} -- Status setting
 
 	set_input_server (a_input_server: like input_server)
 			-- Sets input_server.

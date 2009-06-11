@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XS_INPUT_SERVER}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +41,7 @@ feature -- Inherited Features
 			loop
 				io.read_character
 			end
-			main_server.commands.force (create {XSC_STOP_SERVER}.make)
+			main_server.commands.put (create {XSC_STOP_SERVER}.make)
 		end
 
 feature -- Access

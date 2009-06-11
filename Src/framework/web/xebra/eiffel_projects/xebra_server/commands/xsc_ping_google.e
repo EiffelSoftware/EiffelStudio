@@ -7,15 +7,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
-	XERROR_CONFIG_ERROR
-
-inherit
-	ERROR_ERROR_INFO
-		rename
-			make as make_error
-		end
+	XSC_PING_GOOGLE
 
 create
 	make
@@ -23,19 +16,22 @@ create
 feature {NONE} -- Initialization
 
 	make
+			-- Initialization for `Current'.
 		do
-			make_error ([""])
+			
 		end
 
 feature -- Access
 
+feature -- Status report
 
-feature {NONE} -- Access
+feature -- Status setting
 
-	dollar_description: STRING
-			-- <Precursor>
-		do
-			Result := "Config file cannot be parsed correctly."
-		end
+feature -- Basic operations
+
+feature {NONE} -- Implementation
+
+invariant
 
 end
+

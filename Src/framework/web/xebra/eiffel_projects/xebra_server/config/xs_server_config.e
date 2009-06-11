@@ -28,7 +28,7 @@ feature -- Access
 
 	file: XS_FILE_CONFIG assign set_file
 
-feature -- Status setting
+feature {XSC_LOAD_CONFIG} -- Status setting
 
 	set_args (a_args: like args)
 			-- Sets args.

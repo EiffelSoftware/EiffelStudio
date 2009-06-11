@@ -90,7 +90,7 @@ feature -- Basic functionality
 			a_region_attached: attached a_region
 			a_pending_uids: attached a_pending_uids
 		local
-			l_visitor: XP_REGION_TAG_ELEMENT_VISITOR
+			l_region_visitor: XP_REGION_TAG_ELEMENT_VISITOR
 			l_root_tag: XP_TAG_ELEMENT
 			l_uid: STRING
 		do
@@ -113,10 +113,12 @@ feature -- Basic functionality
 				a_pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?))
 			end
 
-			create l_visitor.make (a_region)
-			l_root_tag.accept (l_visitor)
+			create l_region_visitor.make (a_region)
+			l_root_tag.accept (l_region_visitor)
 
-			l_root_tag.resolve_all_dependencies (a_templates, a_pending_uids, a_servlet_gen)
+				-- l_region_visitor might have unused regions. Pass them over to the next resolve_all_dependencies so it can be used transitively!
+
+			l_root_tag.resolve_all_dependencies (a_templates, a_pending_uids, a_servlet_gen, l_region_visitor.regions)
 			if l_root_tag.date < date then
 				l_root_tag.date := date
 			end

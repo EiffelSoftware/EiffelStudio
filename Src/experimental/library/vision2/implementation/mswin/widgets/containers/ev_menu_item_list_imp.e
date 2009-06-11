@@ -456,12 +456,8 @@ feature {NONE} -- Implementation
 
 	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' of type EV_MENU_SEPARATOR_IMP?
-		local
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
-			sep_imp ?= item_imp
-			check sep_imp /= Void end
-			Result := sep_imp /= Void
+			Result := attached {EV_MENU_SEPARATOR_IMP} item_imp
 		end
 
 	separator_imp_by_index (an_index: INTEGER): detachable EV_MENU_SEPARATOR_IMP

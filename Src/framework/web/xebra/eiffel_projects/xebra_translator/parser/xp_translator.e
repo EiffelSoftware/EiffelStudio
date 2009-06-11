@@ -97,7 +97,7 @@ feature -- Processing
 			l_path: FILE_NAME
 		do
 			l_path := output_path.twin
-			create registry.make (servlet_gen_path)
+			create registry.make (output_path)
 			o.iprint ("************************************************************")
 			o.iprint ("*                  .taglib processing start...             *")
 			o.iprint ("************************************************************")
@@ -122,7 +122,7 @@ feature -- Processing
 			registry.resolve_all_templates
 			create l_generator_app_generator.make
 			l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
-			l_generator_app_generator.generate (servlet_gen_path)
+			l_generator_app_generator.generate (output_path.twin)
 			create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
 			l_webapp_gen.generate
 		end

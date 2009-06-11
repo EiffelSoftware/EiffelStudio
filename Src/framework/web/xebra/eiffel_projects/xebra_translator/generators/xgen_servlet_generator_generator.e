@@ -141,8 +141,19 @@ feature -- Basic functionality
 			servlet_gen_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
+			l_directory: DIRECTORY
 		do
 			l_filename := a_path.twin
+			l_filename.extend (".generated")
+			create l_directory.make (l_filename)
+			if not l_directory.exists then
+				l_directory.create_dir
+			end
+			l_filename.extend ("servlet_gen")
+			create l_directory.make (l_filename)
+			if not l_directory.exists then
+				l_directory.create_dir
+			end
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
 			create file.make (l_filename)
 			if not file.is_creatable then

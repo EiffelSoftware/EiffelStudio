@@ -4,7 +4,7 @@
 # Although it won't create the UI version of the compiler because of the
 # R_PPC_REL24 linking error for large executable we are still building a
 # delivery with only the batch compiler.
-(sh ./make_for_platform lisbon.ise manus linux-ppc) &
+#(sh ./make_for_platform lisbon.ise manus linux-ppc) &
 
 #Let's compile for Solaris Sparc 64-bit on mosis in background
 (sh ./make_for_platform mosis.ise manus solaris-sparc-64) &
@@ -16,7 +16,7 @@
 (sh ./make_for_platform amsterdam.ise manus solaris-x86 ; sh ./make_for_platform amsterdam.ise manus solaris-x86-64) &
 
 #Let's compile for Red Hat Fedora and FreeBSD (done together because they are on the same machine and we don't want to overload the machine
-(sh ./make_for_platform mojo.ise manus linux-x86 ; sh ./make_for_platform freebsd.ise manus freebsd-x86) &
+(sh ./make_for_platform mojo.ise manus linux-x86 ; sh ./make_for_platform freebsd.ise manus freebsd-x86 ; sh ./make_for_platform freebsd_64.ise manus freebsd-x86-64) &
 
 #Let's compile for SGI in background
 (

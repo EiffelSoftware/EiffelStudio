@@ -19,11 +19,10 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_interface: like interface)
+	make
 			-- Redefine
 		do
-			Precursor {EV_WINDOW_IMP} (a_interface)
-
+			Precursor;
 			-- Don't show window tab in system task bar.
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 		end

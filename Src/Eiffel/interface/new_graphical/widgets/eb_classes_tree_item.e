@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			-- Is `Current' already associated to a window?
 
 	pointer_press_action (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64;
-						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; action: PROCEDURE [ANY, TUPLE])
+						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Send a stone corresponding to `Current' to `associated_window'.
 		local
 			l_stone: STONE

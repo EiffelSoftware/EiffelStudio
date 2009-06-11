@@ -21,9 +21,9 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create with default attributes.
 		do
-			Precursor {EV_FIGURE}
 			set_foreground_color (Default_colors.Black)
 			line_width := 1
+			Precursor {EV_FIGURE}
 		end
 
 feature -- Access

@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			default_create
 			set_pixmap (a_pixmap)
+			default_create
 		end
 
 feature -- Access

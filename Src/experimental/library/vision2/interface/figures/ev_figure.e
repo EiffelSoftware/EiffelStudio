@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		local
 			n: INTEGER
 			p: EV_RELATIVE_POINT
+			l_object_id: like object_id
 		do
 			assign_draw_id
 			is_show_requested := True
@@ -44,12 +45,13 @@ feature {NONE} -- Initialization
 			set_accept_cursor (Default_accept_cursor)
 			from
 				n := 1
+				l_object_id := object_id
 			until
 				n > point_count
 			loop
 				create p
 				points.put_i_th (p, n)
-				p.notify_list_ids.extend (eif_current_object_id)
+				p.notify_list_ids.extend (l_object_id)
 				n := n + 1
 			end
 		end

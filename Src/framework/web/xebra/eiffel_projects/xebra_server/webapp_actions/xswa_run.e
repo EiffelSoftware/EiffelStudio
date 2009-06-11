@@ -31,7 +31,7 @@ feature -- Access
 		do
 			l_f := app_dir.twin
 			l_f.set_file_name ("config.ini")
-			Result := l_f.string + " -d " + config.arg_config.debug_level.out
+			Result := l_f.string + " -d " + config.args.debug_level.out
 						--webapp_debug_level.out
 		ensure
 			Result_attached: Result /= Void
@@ -61,7 +61,7 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			if attached {PROCESS} run_process as p  and then p.is_running then
-				o.dprint ("Terminating run_process for " + webapp.config.name.out  + "", 2)
+				o.dprint ("Terminating run_process for " + webapp.app_config.name.out  + "", 2)
 				p.terminate
 				p.wait_for_exit
 			end
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 					is_running := True
 				end
 			end
-			Result := (create {XER_APP_STARTING}.make (webapp.config.name.out)).render_to_response
+			Result := (create {XER_APP_STARTING}.make (webapp.app_config.name.out)).render_to_response
 		end
 
 feature -- Agents
@@ -95,9 +95,9 @@ feature -- Agents
 	run_process_exited
 			-- Sets is_running := False
 		do
-			config_outputter
+--			config_outputter
 			is_running := False
-			o.dprint ("Run process for " + webapp.config.name.out + " has exited.", 3)
+			o.dprint ("Run process for " + webapp.app_config.name.out + " has exited.", 3)
 		end
 
 	run_output_handler (a_ouput: STRING)

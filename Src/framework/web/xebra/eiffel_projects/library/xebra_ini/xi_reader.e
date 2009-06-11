@@ -12,8 +12,7 @@ deferred class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
-	XU_SHARED_OUTPUTTER
-
+	
 
 feature {NONE} -- Initialization
 

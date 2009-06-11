@@ -58,7 +58,7 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t " + config.taglib.out + " -d " + config.arg_config.debug_level.out
+			Result := " -n " + webapp.app_config.name.out + " -i . -o . -s " + servlet_gen_path.string + " -t " + config.file.taglib.out + " -d " + config.args.debug_level.out
 		ensure
 			Result_attached: Result /= void
 		end
@@ -132,7 +132,7 @@ feature -- Status report
 			l_application_file: FILE_NAME
 		do
 			l_application_file := app_dir.twin
-			l_application_file.set_file_name ("g_" + webapp.config.name.out + "_application.e")
+			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
 
 			Result := file_is_newer (l_application_file,
 									app_dir,
@@ -197,17 +197,17 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			if attached {PROCESS} translate_process as p and then p.is_running  then
-				o.dprint ("Terminating translate_process for " + webapp.config.name.out  + "", 2)
+				o.dprint ("Terminating translate_process for " + webapp.app_config.name.out  + "", 2)
 				p.terminate
 				p.wait_for_exit
 			end
 			if attached {PROCESS} generate_process as p and then p.is_running  then
-				o.dprint ("Terminating generate_process for " + webapp.config.name.out  + "", 2)
+				o.dprint ("Terminating generate_process for " + webapp.app_config.name.out  + "", 2)
 				p.terminate
 				p.wait_for_exit
 			end
 			if attached {PROCESS} gen_compile_process as p and then p.is_running  then
-				o.dprint ("Terminating gen_compile_process for " + webapp.config.name.out  + "", 2)
+				o.dprint ("Terminating gen_compile_process for " + webapp.app_config.name.out  + "", 2)
 				p.terminate
 				p.wait_for_exit
 			end
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_running then
 				webapp.shutdown
-				if can_launch_process (config.translator_filename, app_dir) then
+				if can_launch_process (config.file.translator_filename, app_dir) then
 
 					if attached translate_process as p then
 						if p.is_running then
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 					end
 
 					o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 10)
-					translate_process := launch_process (config.translator_filename,
+					translate_process := launch_process (config.file.translator_filename,
 															translator_args,
 															app_dir,
 															agent translate_process_exited,
@@ -240,13 +240,13 @@ feature {NONE} -- Implementation
 					is_running := True
 				end
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.config.name.out)).render_to_response
+			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
 		end
 
 	compile_servlet_gen
 			-- Launches the process to compile the servlet_gen
 		do
-			if can_launch_process (config.compiler_filename, app_dir) and then file_exists (servlet_gen_ecf) then
+			if can_launch_process (config.file.compiler_filename, app_dir) and then file_exists (servlet_gen_ecf) then
 				if attached gen_compile_process as p then
 					if p.is_running then
 						o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 10)
-				gen_compile_process := launch_process (config.compiler_filename,
+				gen_compile_process := launch_process (config.file.compiler_filename,
 														gen_compiler_args,
 														app_dir,
 														agent gen_compile_process_exited,
@@ -288,7 +288,7 @@ feature -- Agents
 	translate_process_exited
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
-			config_outputter
+--			config_outputter
 			if output_handler_translate.has_successfully_terminated then
 				compile_servlet_gen
 			else
@@ -301,7 +301,7 @@ feature -- Agents
 	gen_compile_process_exited
 			-- Launch executing of servlet_gen in genrate_process
 		do
-			config_outputter
+--			config_outputter
 			if output_handler_compile.has_successfully_terminated then
 				generate
 			else
@@ -313,7 +313,7 @@ feature -- Agents
 	generate_process_exited
 			-- Sets is_running := False and executes next action
 		do
-			config_outputter
+--			config_outputter
 			is_running := False
 			if output_handler_gen.has_successfully_terminated then
 				webapp.cleaned := true

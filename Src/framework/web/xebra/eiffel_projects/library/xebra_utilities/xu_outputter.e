@@ -10,8 +10,8 @@ note
 class
 	XU_OUTPUTTER
 
-inherit
-	ANY rename print as any_print end
+--inherit
+--	ANY rename print as any_print end
 
 create
 	make
@@ -102,15 +102,15 @@ feature -- Print
 
 feature {NONE}  -- Impl
 
-	print (a_msg: STRING)
-			-- Engulfs print with mutex
-		require
-			a_msg_attached: a_msg /= Void
-		do
---			print_mutex.lock
-			any_print (a_msg)
---			print_mutex.unlock
-		end
+--	print (a_msg: STRING)
+--			-- Engulfs print with mutex
+--		require
+--			a_msg_attached: a_msg /= Void
+--		do
+----			print_mutex.lock
+--			any_print (a_msg)
+----			print_mutex.unlock
+--		end
 
 invariant
 --	print_mutex_attached: print_mutex /= Void

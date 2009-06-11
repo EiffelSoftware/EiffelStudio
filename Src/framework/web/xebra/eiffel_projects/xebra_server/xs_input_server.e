@@ -1,0 +1,63 @@
+note
+	description: "Summary description for {XS_INPUT_SERVER}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	XS_INPUT_SERVER
+
+inherit
+	THREAD
+	XS_SHARED_SERVER_OUTPUTTER
+
+create make
+
+feature -- Initialization
+
+	make (a_main_server: XS_MAIN_SERVER)
+			-- Initializes current
+		do
+			main_server := a_main_server
+		ensure
+			main_server_set: main_server = a_main_server
+		end
+
+feature -- Inherited Features
+
+	execute
+			-- <Precursor>	
+		do
+
+			o.iprint ("(enter 'x' to shut down)")
+			from
+				io.read_character
+			until
+				io.last_character.is_equal ('x')
+			loop
+				io.read_character
+			end
+			main_server.commands.force (create {XSC_STOP_SERVER}.make)
+		end
+
+feature -- Access
+
+	main_server: XS_MAIN_SERVER
+
+feature -- Status
+
+feature -- Constants
+
+
+feature -- Status setting
+
+	stop
+			-- Stops the thread
+		do
+			exit
+		end
+
+invariant
+	main_server_attached: main_server /= Void
+
+end

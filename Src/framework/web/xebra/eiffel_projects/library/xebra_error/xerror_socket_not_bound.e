@@ -1,15 +1,11 @@
 note
-	description: "[
-		no comment yet
-	]"
-	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	description: "Summary description for {XERROR_SOCKET_NOT_BOUND}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
-	XERROR_CONFIG_ERROR
+	XERROR_SOCKET_NOT_BOUND
 
 inherit
 	ERROR_ERROR_INFO
@@ -35,7 +31,8 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "Config file cannot be parsed correctly."
+			Result := "Socket could not be bound."
 		end
+
 
 end

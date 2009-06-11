@@ -11,7 +11,7 @@ class
 	XS_REQUEST_HANDLER
 
 inherit
-	XU_SHARED_OUTPUTTER
+	XS_SHARED_SERVER_OUTPUTTER
 
 create
 	make
@@ -39,7 +39,7 @@ feature {NONE} -- Constans
 
 feature --Execution
 
-	receive_message (a_http_socket: NETWORK_STREAM_SOCKET; a_server_config: XS_CONFIG)
+	receive_message (a_http_socket: NETWORK_STREAM_SOCKET)
 			-- <Predecessor>
 			-- Waits for one incoming module request and
 		require
@@ -55,7 +55,7 @@ feature --Execution
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_webapp_handler.make (a_server_config)
+				create l_webapp_handler.make 
 				create l_msg.make
 				create l_request_factory.make
 				from

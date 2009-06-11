@@ -1,12 +1,12 @@
 <page:include template="three_column_design">
 	 <page:define_region id="design_title">
-		<page:region id="title" />		
+		<page:declare_region id="title" />		
 	</page:define_region> 
 	<page:define_region id="left_content">
 		   <page:include template="about_nav" />
 	</page:define_region>
 	<page:define_region id="middle_content">
-		<page:region id="about_content" />
+		<page:declare_region id="about_content" />
 	</page:define_region>
 	<page:define_region id="right_content">
 		  <page:include template="doc_float" /> 

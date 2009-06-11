@@ -36,7 +36,7 @@
 </div>
 <div class="column line"></div>
 <div class="column content">
-	<page:region id="content" />
+	<page:declare_region id="content" />
 </div>
 <div id="footer"></div>
 </div>

@@ -19,10 +19,12 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create debug_level.make_empty
-						create clean.make_empty
+			create clean.make_empty
+			create config_filename.make_empty
 		ensure
 			debug_level_attached: debug_level /= Void
 			clean_attached: clean /= Void
+			config_filename_attached: config_filename /= Void
 		end
 
 feature -- Access
@@ -30,7 +32,9 @@ feature -- Access
 	debug_level: SETTABLE_INTEGER
 
 	clean: SETTABLE_BOOLEAN assign set_clean
-			-- Can be used to clean all webapps		
+			-- Can be used to clean all webapps	
+
+	config_filename: SETTABLE_STRING assign set_config_filename
 
 feature -- Status report
 
@@ -65,8 +69,19 @@ feature -- Status setting
 			clean_set: clean  = a_clean
 		end
 
+	set_config_filename (a_config_filename: like config_filename)
+			-- Sets config_filename.
+		require
+			a_config_filename_attached: a_config_filename /= Void
+		do
+			config_filename  := a_config_filename
+		ensure
+			config_filename_set: config_filename  = a_config_filename
+		end
+
 invariant
 	debug_level_attached: debug_level /= Void
 	clean_attached: clean /= Void
+	config_filename_attached: config_filename /= Void
 end
 

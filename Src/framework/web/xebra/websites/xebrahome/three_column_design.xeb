@@ -1,26 +1,26 @@
 <page:include template="master">	
 	<page:define_region id="content">
 	<div class="title">
-		<page:region id="design_title" />	
+		<page:declare_region id="design_title" />	
 	</div>
 		<div class="column15">
 			<div class="box15">
 				<div class="cap top"></div>
-				<div class="text"><page:region id="left_content" /></div>
+				<div class="text"><page:declare_region id="left_content" /></div>
 				<div class="cap bottom"></div>
 			</div>
 		</div>
 		<div class="column35">
 			<div class="box35">
 				<div class="cap top"></div>
-				<div class="text"><page:region id="middle_content" /></div>
+				<div class="text"><page:declare_region id="middle_content" /></div>
 				<div class="cap bottom"></div>
 			</div>
 		</div>
 		<div class="column15">
 			<div class="box15">
 				<div class="cap top"></div>
-				<div class="text"><page:region id="right_content" /></div>
+				<div class="text"><page:declare_region id="right_content" /></div>
 				<div class="cap bottom"></div>
 			</div>
 		</div>

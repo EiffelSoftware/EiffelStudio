@@ -10,12 +10,16 @@ remtrace base
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/base base
 remtrace com
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/com com
+remtrace diff
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/diff diff
 remtrace docking
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/docking docking
 remtrace Eiffel2Java
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/Eiffel2Java Eiffel2Java
 remtrace encoding
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/encoding encoding
+remtrace event
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/event event
 remtrace gobo
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/gobo gobo
 fullrd gobo\svn\work
@@ -47,14 +51,14 @@ remtrace thread
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/thread thread
 remtrace time
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/time time
+remtrace uuid
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/uuid uuid
 remtrace vision2
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/vision2 vision2
 fullrd vision2\implementation\gtk
 fullrd vision2\implementation\carbon
 remtrace vision2_extension
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/vision2_extension vision2_extension
-remtrace uuid
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/uuid uuid
 remtrace web
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/web web
 remtrace wel

@@ -74,7 +74,7 @@ feature -- Status setting
 
 	set_controller_id (a_id: STRING)
 		require
-			a_id_valid: attached a_id and not a_id.is_empty
+			a_id_valid: attached a_id
 		do
 			current_controller_id := a_id
 		ensure
@@ -183,7 +183,7 @@ feature -- Basic implementation
 		require
 			a_servlet_class_attached: attached a_servlet_class
 			a_variable_table_attached: attached a_variable_table
-			current_controller_id_set: attached current_controller_id and not current_controller_id.is_empty
+			current_controller_id_set: attached current_controller_id
 		deferred
 		ensure
 			all_variables_removed: old a_variable_table.count = a_variable_table.count

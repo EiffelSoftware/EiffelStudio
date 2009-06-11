@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XSC_LOAD_CONFIG}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 

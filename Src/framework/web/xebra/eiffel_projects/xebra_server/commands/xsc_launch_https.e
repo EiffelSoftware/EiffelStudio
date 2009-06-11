@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XSC_LANUCH_HTTPS}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +26,7 @@ feature -- Basic operations
 			l_config_reader: XS_CONFIG_READER
 		do
 			o.iprint ("Launching http connection server...")
-			a_server.http_connection_server := create {XS_HTTP_CONN_SERVER}.make
+			a_server.http_connection_server := create {XS_HTTP_CONN_SERVER}.make (a_server.commands)
 			if not a_server.http_connection_server.is_bound then
 					error_manager.add_error (create {XERROR_SOCKET_NOT_BOUND}.make, false)
 			else

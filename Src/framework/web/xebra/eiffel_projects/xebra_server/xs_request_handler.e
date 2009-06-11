@@ -55,7 +55,7 @@ feature --Execution
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_webapp_handler.make 
+				create l_webapp_handler.make
 				create l_msg.make
 				create l_request_factory.make
 				from
@@ -113,6 +113,7 @@ feature {NONE} -- Implementation
 			 l_fragment: BOOLEAN
 			 l_index, l_message_size, l_fragment_size: NATURAL
 		do
+			o.dprint ("Sending response to http",2)
 			l_fragment := false
 			l_message_size := a_message.count.as_natural_32
 			if l_message_size > {XS_MESSAGE}.message_upper_bound then

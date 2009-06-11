@@ -240,7 +240,6 @@ feature {NONE} -- Implementation
 			-- Build `wel_cursor'
 		require
 			valid: a_width > 0 and a_height > 0
-			not_created: wel_cursor = Void
 			not_void: wel_bitmap /= Void
 			not_void: wel_mask_bitmap /= Void
 		local

@@ -33,9 +33,11 @@ feature {NONE} -- Initialization
 			set_title ("Save As")
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FILE_SAVE_DIALOG note option: stable attribute end
+
+feature {NONE} -- Implementation
 
 	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
@@ -54,12 +56,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FILE_SAVE_DIALOG_IMP
-
-
-
-
-

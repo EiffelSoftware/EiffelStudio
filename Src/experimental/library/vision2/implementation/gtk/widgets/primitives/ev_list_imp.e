@@ -318,6 +318,8 @@ feature {EV_ANY_I} -- Implementation
 			Result := tree_view
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_LIST note option: stable attribute end;
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -415,12 +417,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_LIST_IMP
-
-
-
-
-

@@ -36,9 +36,11 @@ feature {NONE} -- Initialization
 			initialize_tab_behavior
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PRIMITIVE note option: stable attribute end;
+
+feature {EV_ANY_I} -- Implementation
 
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
@@ -104,12 +106,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PRIMITIVE_IMP
-
-
-
-
-

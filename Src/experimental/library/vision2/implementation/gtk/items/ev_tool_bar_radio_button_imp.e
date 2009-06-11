@@ -95,6 +95,8 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_get_group (visual_widget)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_TOOL_BAR_RADIO_BUTTON note option: stable attribute end;
 			-- Interface of `Current'
 
@@ -109,12 +111,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
-
-
-
-
-

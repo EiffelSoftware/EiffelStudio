@@ -142,6 +142,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
@@ -155,12 +157,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_MENU_ITEM_IMP
-
-
-
-
-

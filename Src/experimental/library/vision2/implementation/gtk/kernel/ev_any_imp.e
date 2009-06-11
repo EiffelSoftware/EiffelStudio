@@ -248,6 +248,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 			end
 		end
 
+	eif_current_object_id: INTEGER
+			-- New identifier for Current
+		obsolete
+			"Use `eif_object_id (Current)' instead."
+		external
+			"built_in"
+		ensure
+			eif_current_object_id: Result > 0
+		end
+
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	App_implementation: EV_APPLICATION_IMP

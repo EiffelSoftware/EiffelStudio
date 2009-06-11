@@ -100,6 +100,8 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_radio_menu_item_group (menu_item)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_RADIO_MENU_ITEM note option: stable attribute end;
 
 note
@@ -113,12 +115,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RADIO_MENU_ITEM_IMP
-
-
-
-
-

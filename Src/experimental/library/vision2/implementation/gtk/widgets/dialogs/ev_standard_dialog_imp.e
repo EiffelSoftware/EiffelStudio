@@ -124,13 +124,15 @@ feature {NONE} -- Implementation
 	user_clicked_ok: BOOLEAN
 		-- Has the user explicitly cancelled the dialog.
 
-	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end
-
 	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
@@ -160,12 +162,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_STANDARD_DIALOG_IMP
-
-
-
-
-

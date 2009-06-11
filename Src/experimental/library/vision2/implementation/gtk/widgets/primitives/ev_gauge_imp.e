@@ -162,6 +162,10 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_GAUGE note option: stable attribute end
+
 feature {NONE} -- Implementation
 
 	internal_set_upper
@@ -172,8 +176,6 @@ feature {NONE} -- Implementation
 				value_range.upper.to_real
 			)
 		end
-
-	interface: detachable EV_GAUGE note option: stable attribute end
 
 	adjustment: POINTER
 			-- Pointer to GtkAdjustment of gauge.

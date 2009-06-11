@@ -107,6 +107,8 @@ feature {NONE} -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
@@ -120,12 +122,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FILE_OPEN_DIALOG_IMP
-
-
-
-
-

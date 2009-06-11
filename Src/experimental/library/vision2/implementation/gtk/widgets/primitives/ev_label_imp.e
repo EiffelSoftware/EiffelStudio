@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	needs_event_box: BOOLEAN = True
 			-- Does `a_widget' need an event box?
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LABEL note option: stable attribute end;
 
@@ -92,13 +92,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end --class LABEL_IMP
-
-
-
-
-
-

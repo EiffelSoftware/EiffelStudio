@@ -102,6 +102,8 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_RADIO_PEER note option: stable attribute end;
 
 note
@@ -115,12 +117,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RADIO_PEER
-
-
-
-
-

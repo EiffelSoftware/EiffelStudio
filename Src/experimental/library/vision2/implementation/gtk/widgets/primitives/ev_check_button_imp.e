@@ -65,7 +65,7 @@ feature -- Element change
 			end
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECK_BUTTON note option: stable attribute end;
 
@@ -80,12 +80,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_CHECK_BUTTON_IMP
-
-
-
-
-

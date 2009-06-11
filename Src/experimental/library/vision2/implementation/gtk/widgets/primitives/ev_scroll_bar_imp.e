@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
@@ -63,12 +63,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SCROLL_BAR_IMP
-
-
-
-
-

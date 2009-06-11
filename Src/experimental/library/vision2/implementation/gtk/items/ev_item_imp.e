@@ -93,6 +93,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Redefined by descendents.
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
@@ -106,12 +108,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_ITEM_IMP
-
-
-
-
-

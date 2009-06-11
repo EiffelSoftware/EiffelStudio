@@ -41,6 +41,8 @@ feature {EV_ANY_I} -- Implementation
 			"GTK_PROGRESS_BOTTOM_TO_TOP"
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_VERTICAL_PROGRESS_BAR note option: stable attribute end;
 
 note
@@ -54,12 +56,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP
-
-
-
-
-

@@ -76,6 +76,8 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_SENSITIVE note option: stable attribute end;
 			-- Interface object for implementation
 

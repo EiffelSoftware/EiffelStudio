@@ -532,7 +532,7 @@ feature {NONE} -- Constants
 	Monochrome_color_depth: INTEGER = 1
 			-- Black and White color depth (for mask).
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
@@ -547,18 +547,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- EV_PIXMAP_IMP
-
-
-
-
-
-
-
-
-
-
-

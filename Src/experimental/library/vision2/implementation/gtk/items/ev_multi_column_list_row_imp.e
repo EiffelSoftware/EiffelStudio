@@ -365,6 +365,8 @@ feature {EV_ANY_I} -- Implementation
 			Result := l_parent_imp.ev_children.index_of (Current, 1)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
@@ -378,18 +380,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
-
-
-
-
-
-
-
-
-
-
-

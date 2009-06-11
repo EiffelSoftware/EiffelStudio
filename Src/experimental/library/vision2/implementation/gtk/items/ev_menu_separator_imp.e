@@ -124,7 +124,7 @@ feature {EV_ANY_I} -- Implementation
 		attribute
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
@@ -139,18 +139,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_MENU_SEPARATOR_IMP
-
-
-
-
-
-
-
-
-
-
-

@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	ignore_select_actions: BOOLEAN
 			-- Should select actions be ignore, ues if enable_select is called.
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end;
 
@@ -106,12 +106,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_CHECK_MENU_ITEM_IMP
-
-
-
-
-

@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 	viewport: POINTER
 			-- Pointer to viewport, used for reuse of adjustment functions from descendants.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
@@ -252,12 +252,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_VIEWPORT_IMP
-
-
-
-
-

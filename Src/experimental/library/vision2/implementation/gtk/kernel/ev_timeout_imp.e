@@ -39,11 +39,12 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			on_timeout_agent := agent on_timeout
+			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (0)
 			if internal_id = 0 then
-				internal_id := eif_current_object_id
+				internal_id := object_id
 			end
 			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (internal_id)
-			on_timeout_agent := agent on_timeout
 			set_is_initialized (True)
 		end
 
@@ -71,7 +72,7 @@ feature -- Access
 			end
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: detachable EV_TIMEOUT note option: stable attribute end
 		-- Interface object.

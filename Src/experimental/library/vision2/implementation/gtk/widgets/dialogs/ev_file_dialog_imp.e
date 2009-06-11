@@ -310,6 +310,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
@@ -323,12 +325,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FILE_DIALOG_IMP
-
-
-
-
-

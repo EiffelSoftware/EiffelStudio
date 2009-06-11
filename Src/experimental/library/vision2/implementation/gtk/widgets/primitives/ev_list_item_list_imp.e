@@ -359,9 +359,11 @@ feature -- Insertion
 			end
 		end
 
-feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
+
+feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	list_store: POINTER
 		-- Pointer to the model which holds all of the column data

@@ -191,6 +191,8 @@ feature {EV_ANY_I} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, l_parent_box)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_FIXED note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
@@ -206,12 +208,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FIXED
-
-
-
-
-

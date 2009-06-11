@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 	text_buffer: POINTER
 			-- Pointer to the GtkTextBuffer.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT note option: stable attribute end;
 
@@ -646,12 +646,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TEXT_IMP
-
-
-
-
-

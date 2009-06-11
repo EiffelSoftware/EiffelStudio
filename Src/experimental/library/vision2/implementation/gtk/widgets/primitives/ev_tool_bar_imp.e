@@ -271,7 +271,7 @@ feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 	radio_group: POINTER
 		-- GSList containing the radio peers held within `Current'
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
@@ -286,12 +286,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_IMP
-
-
-
-
-

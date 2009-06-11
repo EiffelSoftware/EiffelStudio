@@ -67,6 +67,8 @@ feature {NONE} -- Implementation
 
 	private_font: detachable EV_FONT
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_FONTABLE note option: stable attribute end;
 
 note
@@ -80,12 +82,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FONTABLE_IMP
-
-
-
-
-

@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	internal_alignment_code: INTEGER
 		-- Code used to represent label alignment
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FRAME note option: stable attribute end;
 			-- Provides a common user interface to possibly platform
@@ -194,12 +194,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FRAME_IMP
-
-
-
-
-

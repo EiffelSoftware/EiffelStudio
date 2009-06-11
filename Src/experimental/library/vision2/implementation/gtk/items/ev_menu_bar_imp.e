@@ -114,7 +114,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 
 	parent_imp: detachable EV_WINDOW_IMP
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_BAR note option: stable attribute end;
 
@@ -129,12 +129,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_MENU_BAR_IMP
-
-
-
-
-

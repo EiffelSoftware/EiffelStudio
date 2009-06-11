@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Internal Access
 
-	assume_webapps_are_running_name: STRING = "assume_webapps_are_running"
+--	assume_webapps_are_running_name: STRING = "assume_webapps_are_running"
 	finalize_webapps_name: STRING = "finalize_webapps"
 	compiler_name: STRING = "compiler"
 	translator_name: STRING = "translator"
@@ -57,10 +57,10 @@ feature -- Status report
 				l_ok := False
 			end
 
-			if not a_config.assume_webapps_are_running.is_set then
-				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (assume_webapps_are_running_name), false)
-				l_ok := False
-			end
+--			if not a_config.assume_webapps_are_running.is_set then
+--				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (assume_webapps_are_running_name), false)
+--				l_ok := False
+--			end
 
 			if not a_config.taglib.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (taglib_name), false)
@@ -86,11 +86,12 @@ feature -- Status setting
 			l_name := a_property.name.as_lower
 			l_value := a_property.value
 
-			if l_name.is_equal (assume_webapps_are_running_name) then
-				if l_value.is_boolean then
-					a_config.assume_webapps_are_running := l_value.to_boolean
-				end
-			elseif l_name.is_equal (finalize_webapps_name) then
+--			if l_name.is_equal (assume_webapps_are_running_name) then
+--				if l_value.is_boolean then
+--					a_config.assume_webapps_are_running := l_value.to_boolean
+--				end
+
+			if l_name.is_equal (finalize_webapps_name) then
 				if l_value.is_boolean then
 					a_config.finalize_webapps := l_value.to_boolean
 				end

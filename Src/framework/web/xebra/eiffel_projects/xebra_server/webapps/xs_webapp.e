@@ -101,7 +101,7 @@ feature -- Actions
 	start_action_chain: XH_RESPONSE
 			-- Executes the first action in the chain		
 		do
-			if config.file.assume_webapps_are_running.value then
+			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
 			else
 				Result := translate_action.execute

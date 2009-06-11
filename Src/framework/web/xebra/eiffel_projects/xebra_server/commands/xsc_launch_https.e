@@ -23,7 +23,7 @@ feature -- Basic operations
 			l_config_reader: XS_CONFIG_READER
 		do
 			o.iprint ("Launching http connection server...")
-			a_server.http_connection_server := create {XS_HTTP_CONN_SERVER}.make 
+			a_server.http_connection_server := create {XS_HTTP_CONN_SERVER}.make
 			if not a_server.http_connection_server.is_bound then
 					error_manager.add_error (create {XERROR_SOCKET_NOT_BOUND}.make, false)
 			else

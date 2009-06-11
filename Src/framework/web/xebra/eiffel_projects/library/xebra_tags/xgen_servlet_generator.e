@@ -110,8 +110,17 @@ feature -- Basic Functionality
 			l_filename: FILE_NAME
 			l_current_file: PLAIN_TEXT_FILE
 			l_generate: BOOLEAN
+			l_servlets_directory: DIRECTORY
 		do
+
 			l_filename := path.twin
+			l_filename.extend ("servlets")
+
+			create l_servlets_directory.make (l_filename)
+			if not l_servlets_directory.exists then
+				l_servlets_directory.create_dir
+			end
+
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)
 			create l_file.make (l_filename)

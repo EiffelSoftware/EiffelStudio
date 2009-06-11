@@ -6,25 +6,24 @@ note
 	revision: "$Revision$"
 
 class
-	EV_GRID_ARRAYED_LIST [G]
+	EV_GRID_ARRAYED_LIST [G -> detachable ANY]
 
 inherit
 	ARRAYED_LIST [G]
 		rename
-			make as arrayed_list_make,
 			resize as arrayed_list_resize
 		export
 			{NONE}
-				arrayed_list_make
+				make
 			{ARRAYED_LIST, EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
-				area, subarray, upper
+				area, upper
 		redefine
-			grow,
 			default_create
 		end
 
 create
-	default_create
+	default_create,
+	make
 
 create {EV_GRID_ARRAYED_LIST}
 	make_filled
@@ -34,8 +33,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create EV_GRID arrayed list and initialize to hold zero values.
 		do
-			lower := 1
-			create area.make (0)
+			make_empty_area (0)
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
@@ -66,9 +64,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 
 			index := j - 1
 			if index < a_count then
-				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
+				move_items (index + 1, index + a_duplicate.count + 1, a_count)
 			end
-			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
+			area.copy_data (a_duplicate.area, 0, index, a_duplicate.count)
 
 				-- Restore index
 			index := l_original_index
@@ -106,9 +104,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			end
 
 			if index < a_count then
-				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
+				move_items (index + 1, index + a_duplicate.count + 1, a_count)
 			end
-			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
+			area.copy_data (a_duplicate.area, 0, index, a_duplicate.count)
 
 				-- Restore index.
 			index := l_original_index
@@ -124,37 +122,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 		do
 			l_upper := upper
 			if new_capacity > upper then
-					-- Resize by 50% to prevent the need for resizing continuously
-					-- if `new_capacity' is increased by a small number each time in a loop.
-				conservative_resize (1, new_capacity.max (l_upper + 1 + l_upper // 2))
+					-- Increase capacity
+				area_v2 := area_v2.aliased_resized_area (new_capacity)
 			elseif new_capacity < count then
 					-- Note that we do not reduce the memory footprint, simply
 					-- remove the items and update `count'. This is for speed at the sake of
 					-- memory usage.
-
 					-- Remove all items so that they can be garbage collected.
-				area.fill_with_default (new_capacity, l_upper - 1)
+				area.keep_head (new_capacity)
 			end
-				-- Now always set the `count' to `new_capacity' although
-				-- the actual area allocated may not equal `new_capacity'.
-			count := new_capacity
-
 				-- Ensure index is now valid if it was previously in the
 				-- items that were removed.
 			index := index.min (new_capacity + 1)
 		ensure
 			count_set: count = new_capacity
-		end
-
-feature {NONE} -- Implementation
-
-	grow (i: INTEGER)
-			-- Change the capacity to at least `i'.
-		do
-			if i > count then
-				conservative_resize (lower, upper + i - capacity)
-				set_count (capacity)
-			end
 		end
 
 note

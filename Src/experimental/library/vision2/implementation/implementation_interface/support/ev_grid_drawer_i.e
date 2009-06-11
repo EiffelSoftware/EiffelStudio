@@ -599,7 +599,7 @@ feature -- Basic operations
 			l_x_start, l_x_end: INTEGER
 			current_horizontal_pos: INTEGER
 			loop_current_row, loop_parent_row: detachable EV_GRID_ROW_I
-			loop_parent_row_last_displayed_subrow: detachable EV_GRID_ROW
+			loop_parent_row_last_displayed_subrow: EV_GRID_ROW
 			are_tree_node_connectors_shown: BOOLEAN
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
@@ -614,7 +614,7 @@ feature -- Basic operations
 			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_visible_index, l_next_visible_index, l_subrow_index: INTEGER
-			l_parent_row: detachable EV_GRID_ROW
+			l_parent_row: EV_GRID_ROW
 
 		do
 			if not grid.is_locked then

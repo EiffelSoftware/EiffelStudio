@@ -39,7 +39,7 @@ feature -- Status setting
 			text_cloned: text.is_equal (a_text) and then text /= a_text
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CLIPBOARD note option: stable attribute end;
 		-- Provides a common user interface to possibly dependent

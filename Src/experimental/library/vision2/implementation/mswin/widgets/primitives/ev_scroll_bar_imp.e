@@ -173,6 +173,8 @@ feature {EV_ANY_I} -- Implementation
 			wel_set_range (value_range.lower, value_range.upper + leap - 1)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
 note
@@ -186,17 +188,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RANGE_IMP
-
-
-
-
-
-
-
-
-
-

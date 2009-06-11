@@ -77,7 +77,7 @@ feature -- Status setting
 		deferred
 		end
 
-feature {EV_ANY_I} -- Interface
+feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: detachable EV_TOOL_BAR_ITEM note option: stable attribute end;
 

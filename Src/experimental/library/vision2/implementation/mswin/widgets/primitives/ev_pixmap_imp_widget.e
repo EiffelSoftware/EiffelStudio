@@ -679,6 +679,8 @@ feature {NONE} -- Private Implementation
 				Cs_owndc
  		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
  	interface: detachable EV_PIXMAP note option: stable attribute end;
 			-- Interface for the bridge pattern.
 
@@ -693,18 +695,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PIXMAP_IMP_WIDGET
-
-
-
-
-
-
-
-
-
-
-

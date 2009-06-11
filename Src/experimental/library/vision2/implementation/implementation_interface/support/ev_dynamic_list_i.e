@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			count_decreased: count = old count - 1
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DYNAMIC_LIST [G] note option: stable attribute end;
 

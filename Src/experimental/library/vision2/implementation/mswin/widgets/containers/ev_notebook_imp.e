@@ -1052,7 +1052,7 @@ feature {NONE} -- Font implementation
 			notify_change (nc_minsize, Current)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
@@ -1067,18 +1067,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- EV_NOTEBOOK_IMP
-
-
-
-
-
-
-
-
-
-
-

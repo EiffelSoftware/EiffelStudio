@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	default_pixmaps_height: INTEGER = 16
 		-- Default height for pixmaps.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ITEM_PIXMAP_SCALER note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent

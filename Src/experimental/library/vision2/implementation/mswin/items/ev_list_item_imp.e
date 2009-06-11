@@ -475,7 +475,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 	cb_item: WEL_COMBO_BOX_EX_ITEM
 		-- An internal WEL_COMBO_BOX_EX item
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 

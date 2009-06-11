@@ -45,7 +45,7 @@ feature -- Element change
 			Result := attached pixmap as l_pixmap and then a_pixmap.is_equal (l_pixmap)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

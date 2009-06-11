@@ -103,7 +103,7 @@ feature {EV_ANY_I}
 			go_to (l_cursor)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 

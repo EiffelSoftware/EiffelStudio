@@ -148,14 +148,16 @@ feature {EV_ANY_I} -- Implementation
 			--| Redefine this for each primitive that changes its appearence
 		end
 
-	interface: detachable EV_PRIMITIVE note option: stable attribute end
-
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		do
 			Result := (hwnd_control = wel_item)
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_PRIMITIVE note option: stable attribute end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

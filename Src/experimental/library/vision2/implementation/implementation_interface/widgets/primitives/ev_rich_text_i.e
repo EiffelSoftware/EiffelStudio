@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 		end
 
 
-feature {EV_FONT_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
@@ -640,17 +640,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RICH_TEXT_I
-
-
-
-
-
-
-
-
-
-

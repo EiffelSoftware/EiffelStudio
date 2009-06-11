@@ -14,6 +14,8 @@ deferred class
 
 inherit
 	EV_ANY_I
+		export
+			{EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} attached_interface
 		redefine
 			interface,
 			out
@@ -192,7 +194,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 	bcolor_set: BOOLEAN
 			-- Has `bcolor' been set explicitly via `bcolor_set'?
 
-feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	interface: detachable EV_CHARACTER_FORMAT note option: stable attribute end;
 

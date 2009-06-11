@@ -313,7 +313,7 @@ feature {NONE} -- Implementation, focus event
 			set_message_return_value (to_lresult (1))
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
@@ -328,18 +328,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RADIO_BUTTON_IMP
-
-
-
-
-
-
-
-
-
-
-

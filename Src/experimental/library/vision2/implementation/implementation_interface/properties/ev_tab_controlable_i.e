@@ -58,7 +58,7 @@ feature -- Status setting
 			not_is_tabable_from: not is_tabable_from
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TAB_CONTROLABLE note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

@@ -99,7 +99,7 @@ feature {EV_ANY_I} -- Implementation
 	expose_actions_internal: detachable EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] note option: stable attribute end
 			-- Implementation of once per object `expose_actions'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GRID_DRAWABLE_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

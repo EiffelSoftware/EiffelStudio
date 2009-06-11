@@ -655,7 +655,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-feature {NONE} -- interface
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT note option: stable attribute end;
 
@@ -670,18 +670,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TEXT_IMP
-
-
-
-
-
-
-
-
-
-
-

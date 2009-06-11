@@ -335,7 +335,7 @@ feature {EV_SPIN_BUTTON_IMP} -- Implementation
 			Result := l_widget.wel_item
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
@@ -350,18 +350,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TEXT_FIELD_IMP
-
-
-
-
-
-
-
-
-
-
-

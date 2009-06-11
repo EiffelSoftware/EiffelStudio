@@ -13,6 +13,8 @@ deferred class
 
 inherit
 	EV_ANY_I
+		export
+			{ANY} attached_interface
 		redefine
 			interface
 		end

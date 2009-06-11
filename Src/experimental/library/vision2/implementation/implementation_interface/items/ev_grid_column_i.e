@@ -788,7 +788,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 			Result := l_parent_i
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GRID_COLUMN note option: stable attribute end
 			-- Provides a common user interface to possibly dependent

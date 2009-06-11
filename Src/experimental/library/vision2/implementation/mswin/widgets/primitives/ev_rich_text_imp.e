@@ -1648,7 +1648,7 @@ feature {NONE} -- Implementation
 		-- it as a final check in `wel_text_length' to see if we must recomupte
 		-- the length.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
@@ -1663,19 +1663,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RICH_TEXT_IMP
-
-
-
-
-
-
-
-
-
-
-
-

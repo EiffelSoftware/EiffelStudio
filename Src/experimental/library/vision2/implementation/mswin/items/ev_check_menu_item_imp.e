@@ -65,7 +65,7 @@ feature -- Status setting
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end
 
@@ -95,18 +95,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_CHECK_MENU_ITEM_IMP
-
-
-
-
-
-
-
-
-
-
-

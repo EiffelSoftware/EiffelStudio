@@ -69,7 +69,7 @@ feature {EV_NOTEBOOK_TAB} -- Status Setting
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

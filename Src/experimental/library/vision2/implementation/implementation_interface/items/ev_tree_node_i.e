@@ -132,7 +132,7 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 		deferred
 		end
 
-feature {EV_ANY_I, EV_TREE_NODE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TREE_NODE note option: stable attribute end;
 

@@ -42,6 +42,8 @@ feature {EV_ANY_I} -- implementation
 			go_to (loc_cursor)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 
 note

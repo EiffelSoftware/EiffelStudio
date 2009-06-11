@@ -23,7 +23,7 @@ inherit
 			interface
 		end
 
-feature {EV_ANY_I} -- Implementatio
+feature {EV_ANY, EV_ANY_I} -- Implementatio
 
 	interface: detachable EV_SPIN_BUTTON note option: stable attribute end;
 
@@ -38,16 +38,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPIN_BUTTON_I
-
-
-
-
-
-
-
-
-

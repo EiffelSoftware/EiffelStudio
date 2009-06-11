@@ -79,7 +79,7 @@ feature {EV_MENU} -- Contract support
 			index_not_changed: index = old index
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU note option: stable attribute end;
 

@@ -800,7 +800,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := generator
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SPIN_BUTTON note option: stable attribute end
 
@@ -819,18 +819,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPIN_BUTTON_IMP
-
-
-
-
-
-
-
-
-
-
-

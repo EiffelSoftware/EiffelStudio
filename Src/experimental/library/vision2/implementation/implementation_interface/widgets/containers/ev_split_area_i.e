@@ -296,6 +296,8 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note

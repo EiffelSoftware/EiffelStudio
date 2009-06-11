@@ -496,7 +496,7 @@ feature {NONE} -- WEL Implementation
 		-- Theme currently open for `Current'. May be Void while running on Windows versions that
 		-- do no support theming.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FRAME note option: stable attribute end;
 
@@ -511,16 +511,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FRAME_IMP
-
-
-
-
-
-
-
-
-

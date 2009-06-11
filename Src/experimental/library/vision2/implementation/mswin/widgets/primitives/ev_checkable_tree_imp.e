@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			Result := wm_user + 1
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
@@ -218,8 +218,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_CHECKABLE_TREE_IMP

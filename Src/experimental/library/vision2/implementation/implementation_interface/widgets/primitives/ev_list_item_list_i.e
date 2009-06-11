@@ -55,7 +55,7 @@ feature -- Status setting
 		deferred
 		end
 
-feature {EV_LIST_ITEM_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 

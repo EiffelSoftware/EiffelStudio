@@ -15,7 +15,7 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Initialization
+feature {EV_ANY, EV_ANY_I} -- Initialization
 
 	interface: detachable EV_HORIZONTAL_SEPARATOR note option: stable attribute end
 			-- Provides a common user interface to platform dependent

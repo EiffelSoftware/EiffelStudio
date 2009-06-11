@@ -556,7 +556,7 @@ feature {NONE} -- Implementation, pick and drop
 			Result := parent_imp
 		end
 
-feature {EV_ANY_I} -- Interface
+feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
@@ -571,17 +571,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TOOL_BAR_BUTTON_IMP
-
-
-
-
-
-
-
-
-
-

@@ -189,7 +189,7 @@ feature {EV_ANY_I}
 			end
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 

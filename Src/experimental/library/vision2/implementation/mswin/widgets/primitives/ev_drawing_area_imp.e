@@ -304,7 +304,7 @@ feature -- Commands.
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end
 
@@ -327,16 +327,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DRAWING_AREA_IMP
-
-
-
-
-
-
-
-
-

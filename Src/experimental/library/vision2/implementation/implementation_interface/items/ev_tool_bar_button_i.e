@@ -137,6 +137,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note

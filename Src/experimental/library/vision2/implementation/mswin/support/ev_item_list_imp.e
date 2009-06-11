@@ -97,7 +97,7 @@ feature -- Event handling
 	remove_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed before an item is removed.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 

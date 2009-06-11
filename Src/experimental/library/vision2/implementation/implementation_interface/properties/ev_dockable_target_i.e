@@ -67,7 +67,7 @@ feature -- Status setting
 			veto_function_set: veto_dock_function = a_function
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DOCKABLE_TARGET note option: stable attribute end;
 

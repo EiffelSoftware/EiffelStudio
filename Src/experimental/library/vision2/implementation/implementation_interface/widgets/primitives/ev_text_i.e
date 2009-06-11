@@ -131,7 +131,7 @@ feature -- Assertions
 			Result := i > 0 and i <= line_count
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT note option: stable attribute end;
 

@@ -289,7 +289,7 @@ feature {EV_ANY_I} -- Status Report
 	parent_imp: detachable EV_WINDOW_IMP
 		-- Parent of `Current'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_BAR note option: stable attribute end;
 

@@ -1082,7 +1082,7 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_COMBO_BOX note option: stable attribute end
 

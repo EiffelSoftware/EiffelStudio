@@ -695,9 +695,11 @@ feature {NONE} -- Implementation
 			internal_item_list.go_to (loc_cursor)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TABLE note option: stable attribute end
+
+feature {EV_ANY_I} -- Implementation
 
 	Default_homogeneous: BOOLEAN = False
 		-- `Current' is not homogeneous by default.

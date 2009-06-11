@@ -74,6 +74,8 @@ feature {NONE} -- Implementation
 			Result := ev_ok
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end;
 
 note

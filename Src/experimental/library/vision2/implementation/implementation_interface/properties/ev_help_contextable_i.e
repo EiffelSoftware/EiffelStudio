@@ -68,7 +68,7 @@ feature -- Element change
 			no_help_context: internal_help_context = Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HELP_CONTEXTABLE note option: stable attribute end
 

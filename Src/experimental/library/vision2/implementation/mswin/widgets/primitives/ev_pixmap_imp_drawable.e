@@ -566,14 +566,16 @@ feature -- Navigation
 			internal_tabable_info := internal_tabable_info.set_bit (False, 1)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+ 	interface: detachable EV_PIXMAP note option: stable attribute end
+			-- Interface for the bridge pattern.
+
 feature {
 		EV_PIXMAP_IMP,
 		EV_PIXMAP_IMP_DRAWABLE,
 		EV_PIXMAP_IMP_WIDGET
 		} -- Implementation
-
- 	interface: detachable EV_PIXMAP note option: stable attribute end
-			-- Interface for the bridge pattern.
 
 	internal_bitmap: detachable WEL_BITMAP
 			-- Bitmap mapped onto the current DC and

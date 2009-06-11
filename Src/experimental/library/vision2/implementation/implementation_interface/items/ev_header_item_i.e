@@ -87,7 +87,7 @@ feature -- Status setting
 			not_user_can_resize: not user_can_resize
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

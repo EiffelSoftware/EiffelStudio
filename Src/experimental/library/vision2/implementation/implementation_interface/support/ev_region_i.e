@@ -79,7 +79,7 @@ feature -- Comparison
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_REGION note option: stable attribute end;
 		-- Interface object for `Current'.

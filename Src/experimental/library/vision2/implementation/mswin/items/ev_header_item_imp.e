@@ -291,7 +291,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 

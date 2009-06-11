@@ -111,7 +111,7 @@ feature -- Basic operation
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SCREEN note option: stable attribute end;
 

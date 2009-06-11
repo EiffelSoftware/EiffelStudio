@@ -114,12 +114,19 @@ feature -- Basic Functionality
 		do
 
 			l_filename := path.twin
-			l_filename.extend ("servlets")
-
+			l_filename.extend (".generated")
 			create l_servlets_directory.make (l_filename)
 			if not l_servlets_directory.exists then
 				l_servlets_directory.create_dir
 			end
+			l_filename.extend ("servlets")
+			create l_servlets_directory.make (l_filename)
+			if not l_servlets_directory.exists then
+				l_servlets_directory.create_dir
+			debug
+				end
+			end
+
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)

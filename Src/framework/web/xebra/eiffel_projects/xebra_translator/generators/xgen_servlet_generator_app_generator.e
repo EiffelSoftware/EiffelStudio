@@ -68,6 +68,7 @@ feature -- Basic functionality
 			application_class: XEL_CLASS_ELEMENT
 			file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
+			l_directory: DIRECTORY
 		do
 				-- Generate the servlet generator files
 			from
@@ -82,6 +83,16 @@ feature -- Basic functionality
 
 				-- Generate the {APPLICATION} class
 			l_filename := a_path.twin
+			l_filename.extend (".generated")
+			create l_directory.make (l_filename)
+			if not l_directory.exists then
+				l_directory.create_dir
+			end
+			l_filename.extend ("servlet_gen")
+			create l_directory.make (l_filename)
+			if not l_directory.exists then
+				l_directory.create_dir
+			end
 			l_filename.set_file_name (Application_name.as_lower +  ".e")
 			create file.make (l_filename)
 			if not file.is_creatable then
@@ -102,6 +113,8 @@ feature -- Basic functionality
 
 				-- Generate the .ecf file
 			l_filename := a_path.twin
+			l_filename.extend (".generated")
+			l_filename.extend ("servlet_gen")
 			l_filename.set_file_name ("servlet_gen.ecf")
 			create file.make (l_filename)
 			if not file.is_creatable then

@@ -34,11 +34,11 @@ feature -- Initialization
 			parser_callback := a_parser_callback
 			create {HASH_TABLE [ARRAYED_LIST [STRING], STRING]} allowed_tags.make (5)
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "controller")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "region")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "declare_region")
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "define_region")
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "include")
 			allowed_tags ["controller"].extend ("class")
-			allowed_tags ["region"].extend ("id")
+			allowed_tags ["declare_region"].extend ("id")
 			allowed_tags ["define_region"].extend ("id")
 			allowed_tags ["include"].extend ("template")
 		ensure
@@ -70,7 +70,7 @@ feature -- Access
 			elseif a_local_part.is_equal ("template") then
 				parser_callback.is_template := True
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
-			elseif a_local_part.is_equal ("region") then
+			elseif a_local_part.is_equal ("declare_region") then
 				parser_callback.is_template := True
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("include") then

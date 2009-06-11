@@ -33,6 +33,7 @@ create
 	default_create
 
 create {EV_LITE_ACTION_SEQUENCE}
+	arrayed_list_make,
 	make_filled
 
 feature -- Basic operations

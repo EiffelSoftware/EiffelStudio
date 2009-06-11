@@ -48,9 +48,9 @@ feature {NONE} -- Initialization
 			-- Create a EV_FIGURE_ELLIPTIC at (0,0) with no dimension.
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (2)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
+			create point_array.make_empty (2)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 			is_center_valid := True
 		end
 
@@ -264,6 +264,7 @@ note
 
 
 end -- class EV_MODEL_ELLIPTIC
+
 
 
 

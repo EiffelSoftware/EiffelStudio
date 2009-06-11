@@ -14,7 +14,6 @@ class
 	EV_TABLE
 
 inherit
-
 	EV_CONTAINER
 		undefine
 			prune_all, fill
@@ -23,16 +22,19 @@ inherit
 			create_implementation,
 			is_in_default_state
 		select
-			put, extend
+			extend
 		end
 
 	CHAIN [EV_WIDGET]
+		rename
+			sequence_put as cl_put,
+			prune as cl_prune
 		export
 			{EV_ANY_HANDLER} default_create
 		undefine
-			default_create, copy, is_equal, put,
+			default_create, copy, is_equal, cl_put, put,
 			changeable_comparison_criterion, remove,
-			prune, has
+			cl_prune, has
 		redefine
 			duplicate,
 			move
@@ -621,6 +623,7 @@ note
 
 
 end -- class EV_TABLE
+
 
 
 

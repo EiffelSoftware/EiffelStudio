@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			-- Create a dot at (0,0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (1)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
+			create point_array.make_empty (1)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 		end
 
 feature -- Access
@@ -137,6 +137,7 @@ note
 
 
 end -- class EV_MODEL_DOT
+
 
 
 

@@ -53,20 +53,6 @@ inherit
 			swap
 		end
 
-	SET [G]
-		rename
-			extend as set_extend
-		export
-			{EV_ANY_HANDLER} default_create
-		undefine
-			prune_all, fill,
-			changeable_comparison_criterion,
-			default_create, is_equal, copy
-		select
-			prune,
-			set_extend
-		end
-
 feature -- Access
 
 	item: G
@@ -452,7 +438,7 @@ feature -- Contract support
 			Result := Current = other
 		end
 
-feature {NONE} -- Inapplicable
+feature {EV_DYNAMIC_LIST} -- Inapplicable
 
 	dl_append (s: SEQUENCE [G])
 		do
@@ -524,6 +510,7 @@ note
 
 
 end -- class EV_DYNAMIC_LIST
+
 
 
 

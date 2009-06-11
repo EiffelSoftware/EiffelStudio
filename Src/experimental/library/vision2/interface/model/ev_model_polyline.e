@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Initialize with no points.
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (0)
+			create point_array.make_empty (0)
 			set_arrow_size (10)
 		end
 
@@ -73,13 +73,13 @@ feature -- Status report
 	is_closed: BOOLEAN
 			-- Should this polyline be closed?
 			-- i.e. should first and last point be connected?
-			
+
 	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
-			
+
 	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
-			
+
 	is_transformable: BOOLEAN = True
 			-- Is transformable? (Yes)
 
@@ -189,7 +189,7 @@ feature -- Events
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	start_angle: DOUBLE
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 				Result := line_angle (a_point.x_precise, a_point.y_precise, b_point.x_precise, b_point.y_precise)
 			end
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -239,4 +239,5 @@ note
 
 
 end -- class EV_MODEL_POLYLINE
+
 

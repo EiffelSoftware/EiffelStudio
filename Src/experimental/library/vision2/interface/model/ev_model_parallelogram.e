@@ -14,7 +14,7 @@ note
 							p0.x = point_a.x and p0.y = point_a.y
 							p2.x = point_b.x and p2.y = point_b.y
 							
-						
+
 
 						]"
 	legal: "See notice at end of class."
@@ -49,11 +49,11 @@ feature {NONE} -- Initialization
 			-- Create a EV_FIGURE_PARALELLOGRAM at (0,0) with no dimension.
 		do
 			Precursor {EV_MODEL_CLOSED}
-			create point_array.make (4)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 2)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 3)
+			create point_array.make_empty (4)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 			is_center_valid := True
 		end
 
@@ -606,4 +606,5 @@ note
 
 
 end -- class EV_MODEL_PARALLELOGRAM
+
 

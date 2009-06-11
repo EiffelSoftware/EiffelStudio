@@ -50,7 +50,8 @@ inherit
 	COLLECTION [EV_WIDGET]
 		rename
 			extend as cl_extend,
-			put as cl_put
+			put as cl_put,
+			prune as cl_prune
 		export
 			{NONE}
 				changeable_comparison_criterion,
@@ -229,6 +230,19 @@ feature -- Element change
 			not_has_old_item: not has (old item)
 		end
 
+	prune (v: like item)
+			-- Replace `item' with `v'.
+		require
+			not_destroyed: not is_destroyed
+			writable: prunable
+			v_not_void: v /= Void
+			v_parent_void: v.parent = Current
+			v_not_current: v /= Current
+		deferred
+		ensure
+			has_v: not has (v)
+		end
+
 feature -- Measurement
 
 	client_width: INTEGER
@@ -388,6 +402,11 @@ feature {NONE} -- Implementation
 			extend (v)
 		end
 
+	cl_prune (v: like item)
+		do
+			prune (v)
+		end
+
 invariant
 	client_width_non_negative: is_usable implies client_width >= 0
 	client_width_within_limit: is_usable implies client_width <= width
@@ -413,6 +432,7 @@ note
 
 
 end -- class EV_CONTAINER
+
 
 
 

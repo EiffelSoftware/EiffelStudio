@@ -9,7 +9,7 @@ note
 					 p3
 					 
 					 point.x = p1.x and point.y = p1.y
-					 
+
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 			default_create,
 			point_count
 		end
-		
+
 	EV_SHARED_SCALE_FACTORY
 		undefine
 			default_create
@@ -55,10 +55,10 @@ feature {NONE} -- Initialization
 			id_pixmap := default_pixmap
 			scaled_pixmap := pixmap
 			is_default_pixmap_used := True
-			create point_array.make (3)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 2)
+			create point_array.make_empty (3)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_pixmap (a_pixmap)
 		end
-		
+
 	make_with_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Create with `an_id_pixmap'.
 		require
@@ -86,7 +86,7 @@ feature -- Access
 		do
 			Result := id_pixmap.pixmap
 		end
-			
+
 	angle: DOUBLE = 0.0
 			-- Since not rotatable
 
@@ -95,7 +95,7 @@ feature -- Access
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_y: INTEGER
 			-- y position of `point'.
 		do
@@ -118,13 +118,13 @@ feature -- Status report
 
 	is_default_pixmap_used: BOOLEAN
 			-- Is `Current' using a default pixmap?
-			
+
 	is_rotatable: BOOLEAN = False
 			-- Is rotatable? (No)
-			
+
 	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
-			
+
 	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 
@@ -139,7 +139,7 @@ feature -- Status setting
 		ensure
 			pixmap_assigned: pixmap = a_pixmap
 		end
-		
+
 	set_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Set `id_pixmap' to `an_id_pixmap' and initialize `scaled_pixmap'.
 		require
@@ -156,7 +156,7 @@ feature -- Status setting
 		ensure
 			set: id_pixmap = an_id_pixmap
 		end
-		
+
 	set_point_position (ax, ay: INTEGER)
 			-- Set position of `point' to `a_point'.
 		local
@@ -168,7 +168,7 @@ feature -- Status setting
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			a_delta_x := ax - p0.x_precise
 			a_delta_y := ay - p0.y_precise
 			p0.set_precise (ax, ay)
@@ -193,9 +193,9 @@ feature -- Events
 			ay := p0.y_precise
 			Result := point_on_rectangle (a_x, a_y, ax, ay, l_point_array.item (1).x_precise, l_point_array.item (2).y_precise)
 		end
-		
+
 feature {EV_MODEL_GROUP}
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -204,16 +204,16 @@ feature {EV_MODEL_GROUP}
 			Precursor {EV_MODEL_ATOMIC} (a_transformation)
 			update_scaled_pixmap
 		end
-		
+
 feature {EV_MODEL_DRAWER}
 
 	scaled_pixmap: like pixmap
 			-- Scaled version of `pixmap'.
-			
+
 feature {NONE} -- Implementation
 
 	id_pixmap: EV_IDENTIFIED_PIXMAP
-		
+
 	default_pixmap: EV_IDENTIFIED_PIXMAP
 			-- Pixmap set by `default_create'.
 		once
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			center.set_precise ((p0.x_precise + l_point_array.item (1).x_precise) / 2, (p0.y_precise + l_point_array.item (2).y_precise) / 2)
 			is_center_valid := True
 		end
-		
+
 	update_scaled_pixmap
 			-- Scale `pixmap' store result in `scaled_pixmap'.
 		do
@@ -259,4 +259,5 @@ note
 
 
 end -- class EV_MODEL_PICTURE
+
 

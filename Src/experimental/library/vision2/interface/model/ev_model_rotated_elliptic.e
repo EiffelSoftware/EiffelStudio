@@ -17,7 +17,7 @@ note
 						radius2 is half of the distance between p0 and p3
 						center is in the middle of the line from p0 to p2
 							  
-									
+
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ note
 
 deferred class
 	EV_MODEL_ROTATED_ELLIPTIC
-	
+
 inherit
 	EV_MODEL_ATOMIC
 		export
@@ -48,16 +48,16 @@ feature {NONE} -- Initialization
 			-- Create with no dimension.
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (4)
-			point_array.put (create {EV_COORDINATE}.make (0,0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0,0), 1)
-			point_array.put (create {EV_COORDINATE}.make (0,0), 2)
-			point_array.put (create {EV_COORDINATE}.make (0,0), 3)
+			create point_array.make_empty (4)
+			point_array.extend (create {EV_COORDINATE}.make (0,0))
+			point_array.extend (create {EV_COORDINATE}.make (0,0))
+			point_array.extend (create {EV_COORDINATE}.make (0,0))
+			point_array.extend (create {EV_COORDINATE}.make (0,0))
 		end
-		
+
 feature -- Access
-	
-	angle: DOUBLE 
+
+	angle: DOUBLE
 			-- Rotation angle of `Current'.
 		local
 			pa: like point_array
@@ -86,7 +86,7 @@ feature -- Access
 				Result := line_angle (p0.x_precise, p0y, p1.x_precise, p1y)
 			end
 		end
-			
+
 	radius1: INTEGER
 			-- Major radius.
 		local
@@ -96,7 +96,7 @@ feature -- Access
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			Result := as_integer (distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise) / 2)
 		end
 
@@ -109,45 +109,45 @@ feature -- Access
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 			p3 := l_point_array.item (3)
-			
+
 			Result := as_integer (distance (p0.x_precise, p0.y_precise, p3.x_precise, p3.y_precise) / 2)
 		end
-		
+
 	point_a_x: INTEGER
 			-- x position of `point_a'.
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_a_y: INTEGER
 			-- y position of `point_a'
 		do
 			Result := point_array.item (0).y
 		end
-		
+
 	point_b_x: INTEGER
 			-- x position of `pint_b'.
 		do
 			Result := point_array.item (2).x
 		end
-		
+
 	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (2).y
 		end
-			
+
 feature -- Status Report
 
 	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
-			
+
 	is_scalable: BOOLEAN = False
 			-- Is scalable? (Yes)
-			
+
 	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
-			
+
 feature -- Element change
 
 	set_radius1 (radius: INTEGER)
@@ -166,9 +166,9 @@ feature -- Element change
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			a := distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise)
-			
+
 			if a = 0.0 then
 				-- width was 0
 				p1.set_x_precise (p0.x_precise + a_width)
@@ -176,19 +176,19 @@ feature -- Element change
 			else
 				g1 := p1.y_precise - p0.y_precise
 				g2 := p1.x_precise - p0.x_precise
-				
+
 				h := g1 * a_width / a
-				
+
 				v := h - g1
-				
+
 				p1.set_y_precise (p0.y_precise + h)
-				
+
 				h := g2 * a_width / a
-				
+
 				k := h - g2
-				
+
 				p1.set_x_precise (p0.x_precise + h)
-				
+
 				p2.set_precise (p2.x_precise + k, p2.y_precise + v)
 			end
 			invalidate
@@ -196,7 +196,7 @@ feature -- Element change
 		ensure
 			set: (distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (1).x_precise, point_array.item (1).y_precise) / 2).rounded = radius
 		end
-		
+
 	set_radius2 (radius: INTEGER)
 			-- Set `radius2' to `radius'
 		require
@@ -212,9 +212,9 @@ feature -- Element change
 			p0 := l_point_array.item (0)
 			p3 := l_point_array.item (3)
 			p2 := l_point_array.item (2)
-			
+
 			a := distance (p0.x_precise, p0.y_precise, p3.x_precise, p3.y_precise)
-			
+
 			if a = 0.0 then
 				-- height was 0
 				p3.set_y_precise (p0.y_precise + a_height)
@@ -222,19 +222,19 @@ feature -- Element change
 			else
 				g1 := p3.y_precise - p0.y_precise
 				g2 := p3.x_precise - p0.x_precise
-				
+
 				h := g1 * a_height / a
-				
+
 				v := h - g1
-				
+
 				p3.set_y_precise (p0.y_precise + h)
-				
+
 				h := g2 * a_height / a
-				
+
 				k := h - g2
-				
+
 				p3.set_x_precise (p0.x_precise + h)
-				
+
 				p2.set_precise (p2.x_precise + k, p2.y_precise + v)
 			end
 			invalidate
@@ -242,7 +242,7 @@ feature -- Element change
 		ensure
 			set: (distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (3).x_precise, point_array.item (3).y_precise) / 2).rounded = radius
 		end
-		
+
 	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to (`ax', `ay').
 			-- (See EV_FIGURE_PARALLELOGRAM) for more informations.)
@@ -259,31 +259,31 @@ feature -- Element change
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
 			p3 := l_point_array.item (3)
-			
+
 			p0_p1_dist := p0.x_precise - p1.x_precise
-			
+
 			if p0_p1_dist < 0.1 and p0_p1_dist > -0.1 then
 				-- m1 is infinite (more or less)
 				m1_inv := True
 			else
-				m1 := (p0.y_precise - p1.y_precise) / (p0_p1_dist) 	
+				m1 := (p0.y_precise - p1.y_precise) / (p0_p1_dist)
 			end
 
 			p0_p3_dist := p0.x_precise - p3.x_precise
-			
+
 			if p0_p3_dist < 0.1 and  p0_p3_dist > -0.1 then
 				-- m2 is infinite (more or less)
 				m2_inv := True
 			else
 				m2 := (p0.y_precise - p3.y_precise) / (p0_p3_dist)
 			end
-			
+
 			if m1_inv and m2_inv then
 				-- no dimension
 				p1.set_y_precise (ay)
 				p3.set_x_precise (ax)
 			elseif m1_inv then
-				
+
 				-- calc p1 position
 				new_x := ax
 				new_y := m2 * (new_x - p1.x_precise) + p1.y_precise
@@ -294,30 +294,30 @@ feature -- Element change
 				new_y := m2 * (new_x - ax) + ay
 				p3.set_precise (new_x, new_y)
 			elseif m2_inv then
-				
+
 				-- calc p1 position
 				new_x := p1.x_precise
 				new_y := m1 * (new_x - ax) + ay
 				p1.set_precise (new_x, new_y)
-				
+
 				-- calc p3 position
 				new_x := ax
 				new_y := m1 * (new_x - p3.x_precise) + p3.y_precise
 				p3.set_precise (new_x, new_y)
-				
+
 			elseif m1 = m2 then
 				-- its a (rotated) line
 				-- its completely destroyed now
 				p1.set_precise (p0.x_precise, p0.y_precise)
 				p3.set_precise (p0.x_precise, p0.y_precise)
-				
+
 			else
 				-- calc p3 position
 				-- intersection of line through p2 with m1 and line through (ax, ay) with m2
 				new_x := (ay - p2.y_precise + m1 * p2.x_precise - m2 * ax) / (m1 - m2)
 				new_y := m2 * (new_x - ax) + ay
 				p3.set_precise (new_x, new_y)
-			
+
 				-- calc p1 position
 				-- intersection of line through p2 with m2 and line through (ax, ay) with m1
 				new_x := (ay - p2.y_precise + m2 * p2.x_precise - m1 * ax) / (m2 - m1)
@@ -330,7 +330,7 @@ feature -- Element change
 			invalidate
 			center_invalidate
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 			-- (See EV_FIGURE_PARALLELOGRAM for more informations)
@@ -347,31 +347,31 @@ feature -- Element change
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
 			p3 := l_point_array.item (3)
-			
+
 			p0_p1_dist := p0.x_precise - p1.x_precise
-			
+
 			if p0_p1_dist < 0.1 and p0_p1_dist > -0.1 then
 				-- m1 is infinite
 				m1_inv := True
 			else
-				m1 := (p0.y_precise - p1.y_precise) / (p0_p1_dist) 	
+				m1 := (p0.y_precise - p1.y_precise) / (p0_p1_dist)
 			end
 
 			p0_p3_dist := p0.x_precise - p3.x_precise
-			
+
 			if p0_p3_dist < 0.1 and  p0_p3_dist > -0.1 then
 				-- m2 is infinite
 				m2_inv := True
 			else
 				m2 := (p0.y_precise - p3.y_precise) / (p0_p3_dist)
 			end
-			
+
 			if m1_inv and m2_inv then
 				-- no dimension
 				p1.set_x_precise (ax)
 				p3.set_y_precise (ay)
 			elseif m1_inv then
-				
+
 				-- calc p1 position
 				new_x := p1.x_precise
 				new_y := m2 * (new_x - ax) + ay
@@ -382,30 +382,30 @@ feature -- Element change
 				new_y := m2 * (new_x - p3.x_precise) + p3.y_precise
 				p3.set_precise (new_x, new_y)
 			elseif m2_inv then
-				
+
 				-- calc p1 position
 				new_x := ax
 				new_y := m1 * (new_x - p1.x_precise) + p1.y_precise
 				p1.set_precise (new_x, new_y)
-				
+
 				-- calc p3 position
 				new_x := p3.x_precise
 				new_y := m1 * (new_x - ax) + ay
 				p3.set_precise (new_x, new_y)
-				
+
 			elseif m1 = m2 then
 				-- its a (rotated) line
 				-- its completely destroyed now
 				p1.set_precise (p0.x_precise, p0.y_precise)
 				p3.set_precise (p0.x_precise, p0.y_precise)
-				
+
 			else
 				-- calc p1 position
 				-- intersection of line through p0 with m1 and line through (ax, ay) with m2
 				new_x := (ay - p0.y_precise + m1 * p0.x_precise - m2 * ax) / (m1 - m2)
 				new_y := m2 * (new_x - ax) + ay
 				p1.set_precise (new_x, new_y)
-			
+
 				-- calc p3 position
 				-- intersection of line through p0 with m2 and line through (ax, ay) with m1
 				new_x := (ay - p0.y_precise + m2 * p0.x_precise - m1 * ax) / (m2 - m1)
@@ -433,8 +433,8 @@ feature {NONE} -- Implementation
 
 			center.set_precise ((p0.x_precise + p2.x_precise) / 2, (p0.y_precise + p2.y_precise) / 2)
 			is_center_valid := True
-		end	
-		
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -450,4 +450,5 @@ note
 
 
 end -- class EV_MODEL_ROTATED_ELLIPTIC
+
 

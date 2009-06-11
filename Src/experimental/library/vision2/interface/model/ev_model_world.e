@@ -23,6 +23,7 @@ create
 	default_create
 
 create {EV_MODEL_WORLD}
+	list_make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -242,6 +243,7 @@ note
 
 
 end -- class EV_MODEL_WORLD
+
 
 
 

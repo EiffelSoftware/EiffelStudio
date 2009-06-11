@@ -27,18 +27,21 @@ inherit
 		end
 
 	EV_DYNAMIC_LIST [EV_WIDGET]
+		rename
+			sequence_put as cl_put,
+			dl_extend as cl_extend,
+			dl_prune as cl_prune
 		export
 			{EV_WIDGET_LIST}
 				changeable_comparison_criterion,
 				compare_references,
 				compare_objects,
 				object_comparison
+		undefine
+			cl_put, cl_extend, cl_prune
 		redefine
 			implementation,
 			is_in_default_state
-		select
-			put,
-			set_extend
 		end
 
 feature {NONE} -- Contract support
@@ -69,6 +72,7 @@ note
 
 
 end -- class EV_WIDGET_LIST
+
 
 
 

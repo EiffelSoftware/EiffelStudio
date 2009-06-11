@@ -29,7 +29,7 @@ inherit
 		redefine
 			on_item_added_at,
 			on_item_removed_at,
-			make_filled, array_make
+			make_filled
 		end
 
 	EV_DESELECTABLE
@@ -60,13 +60,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			Precursor (n)
-		end
-
-	array_make (min_index, max_index: INTEGER_32)
-			-- <Precursor>
-		do
-			default_create
-			Precursor (min_index, max_index)
 		end
 
 feature {NONE} -- Contract support
@@ -150,6 +143,7 @@ note
 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
+
 
 
 

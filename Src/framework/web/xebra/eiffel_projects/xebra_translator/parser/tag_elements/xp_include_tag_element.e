@@ -16,6 +16,7 @@ inherit
 			resolve_all_dependencies,
 			copy_self
 		end
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 create
 	make
@@ -34,6 +35,7 @@ feature -- Access
 		local
 			l_child: XP_TAG_ELEMENT
 			l_region: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
+			l_template: XP_TEMPLATE
 		do
 			from
 				children.start
@@ -50,9 +52,15 @@ feature -- Access
 				children.forth
 			end
 				-- Set the child of current to the resolved template (i.e. replace all the regions by the found regions)
-			set_child (a_templates [retrieve_value ("template").value (controller_id)].resolve (a_templates, l_region, a_pending, a_servlet_gen))
-			if date < children [1].date then
-				date := children [1].date
+			l_template := a_templates [retrieve_value ("template").value (controller_id)]
+			if attached l_template then
+				set_child (l_template.resolve (a_templates, l_region, a_pending, a_servlet_gen))
+				if date < children [1].date then
+					date := children [1].date
+				end
+			else
+				error_manager.add_error (create {XERROR_PARSE}.make
+					(["Template '" + retrieve_value ("template").value (controller_id) + "' not found."]), False)
 			end
 		end
 

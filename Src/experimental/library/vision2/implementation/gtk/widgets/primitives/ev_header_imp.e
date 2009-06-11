@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {EV_ANY_I, EV_ITEM_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HEADER note option: stable attribute end;
 
@@ -286,8 +286,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

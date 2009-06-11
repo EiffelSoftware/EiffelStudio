@@ -18,6 +18,8 @@ feature {EV_ANY_I} -- Implementation
 			attached_interface.init_drop_actions (Result)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
@@ -31,12 +33,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-
-
-
-
-

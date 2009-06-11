@@ -118,15 +118,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interface: detachable EV_DIALOG note option: stable attribute end
-			-- Provides a common user interface to platform dependent
-			-- functionality implemented by `Current'
-
 	is_dialog_closeable: BOOLEAN;
 			-- Temporary flag whose only use is to enable functions
 			-- `is_closeable', `enable_closeable' and `disable_closeable'
 			-- to be executed without raising zillions of assertion violations.
 			--| FIXME implement cited function, then remove me.
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_DIALOG note option: stable attribute end
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -139,12 +141,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DIALOG_IMP
-
-
-
-
-

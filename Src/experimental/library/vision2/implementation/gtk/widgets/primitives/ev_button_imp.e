@@ -220,7 +220,7 @@ feature {NONE} -- implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (visual_widget)
 		end
 
-feature {EV_ANY_I} -- implementation
+feature {EV_ANY, EV_ANY_I} -- implementation
 
 	interface: detachable EV_BUTTON note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
@@ -240,12 +240,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_BUTTON_IMP
-
-
-
-
-

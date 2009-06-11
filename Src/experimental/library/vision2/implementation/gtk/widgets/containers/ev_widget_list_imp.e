@@ -83,6 +83,8 @@ feature {NONE} -- Implementation
 			Result := container_widget
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
@@ -98,12 +100,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_WIDGET_LIST_IMP
-
-
-
-
-

@@ -149,10 +149,9 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.set_gtk_paned_struct_child2_resize (container_widget, second_expandable.to_integer)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
-
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -165,12 +164,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPLIT_AREA_IMP
-
-
-
-
-

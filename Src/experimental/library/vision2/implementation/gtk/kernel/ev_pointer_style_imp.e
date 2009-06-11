@@ -12,7 +12,7 @@ class
 inherit
 	EV_POINTER_STYLE_I
 		export
-			{EV_ANY_HANDLER}
+			{EV_ANY, EV_ANY_I, EV_ANY_HANDLER}
 				interface
 		redefine
 			destroy

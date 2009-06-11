@@ -85,6 +85,8 @@ feature {EV_ANY_I} -- Implementation
 
 	gtk_progress_bar: POINTER
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
@@ -98,12 +100,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PROGRESS_BAR_IMP
-
-
-
-
-

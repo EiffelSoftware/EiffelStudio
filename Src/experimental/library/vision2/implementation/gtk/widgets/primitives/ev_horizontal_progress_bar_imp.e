@@ -42,6 +42,8 @@ feature {EV_ANY_I} -- Implementation
 			"GTK_PROGRESS_LEFT_TO_RIGHT"
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;
 
 note
@@ -55,12 +57,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
-
-
-
-
-

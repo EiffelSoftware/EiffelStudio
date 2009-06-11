@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_entry_set_visibility (entry_widget, False)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 
@@ -50,12 +50,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PASSWORD_FIELD_IMP
-
-
-
-
-

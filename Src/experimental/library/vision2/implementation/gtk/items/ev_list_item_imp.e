@@ -389,7 +389,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 			parent_imp := a_parent_imp
 		end
 
-feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
@@ -404,12 +404,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_LIST_ITEM_IMP
-
-
-
-
-

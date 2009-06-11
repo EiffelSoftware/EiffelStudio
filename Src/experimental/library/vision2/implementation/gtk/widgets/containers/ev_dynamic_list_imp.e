@@ -60,6 +60,8 @@ feature {NONE} -- Implementation
 
 	child_array: ARRAYED_LIST [G]
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_DYNAMIC_LIST [G] note option: stable attribute end
 
 invariant
@@ -77,12 +79,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DYNAMIC_LIST_IMP
-
-
-
-
-

@@ -1179,7 +1179,6 @@ feature {NONE} -- Implementation
 		attribute
 		end
 
-	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 	gdk_gc_unref (a_gc: POINTER)
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
@@ -1195,6 +1194,10 @@ feature {NONE} -- Implementation
 			"gdk_gc_set_dashes ((GdkGC*) $a_gc, 0, (gint8*) $dash_pattern, 2)"
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_DRAWABLE note option: stable attribute end;
+
 invariant
 	gc_not_void: is_usable implies gc /= default_pointer
 
@@ -1209,18 +1212,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DRAWABLE_IMP
-
-
-
-
-
-
-
-
-
-
-

@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	client_area: POINTER
 		-- Container area of `Current'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_POPUP_WINDOW note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
@@ -214,12 +214,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_POPUP_WINDOW_IMP
-
-
-
-
-

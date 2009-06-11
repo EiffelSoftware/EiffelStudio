@@ -629,7 +629,7 @@ feature {EV_CLIPBOARD_IMP} -- Implementation
 	container_widget: POINTER
 			-- Horizontal box container for the child.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_WINDOW note option: stable attribute end;
 		-- Interface object of `Current'
@@ -645,14 +645,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_WINDOW_IMP
-
-
-
-
-
-
-

@@ -769,6 +769,8 @@ feature {EV_ANY_I} -- Implementation
 	scrollable_area: POINTER
 		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
@@ -782,12 +784,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TREE_IMP
-
-
-
-
-

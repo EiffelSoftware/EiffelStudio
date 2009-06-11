@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 	Highlight_scale: REAL = 0.90912397
 		-- Highlight color is this much darker than `background_color'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 

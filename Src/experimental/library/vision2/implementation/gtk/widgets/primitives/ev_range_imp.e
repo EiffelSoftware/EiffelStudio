@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_scale_set_draw_value (c_object, False)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RANGE note option: stable attribute end;
 
@@ -45,12 +45,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_RANGE_IMP
-
-
-
-
-

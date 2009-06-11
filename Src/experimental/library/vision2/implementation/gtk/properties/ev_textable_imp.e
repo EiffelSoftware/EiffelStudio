@@ -160,7 +160,7 @@ feature {EV_ANY_IMP} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXTABLE note option: stable attribute end;
 
@@ -178,12 +178,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TEXTABLE_IMP
-
-
-
-
-

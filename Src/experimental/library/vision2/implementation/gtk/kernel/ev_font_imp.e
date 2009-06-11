@@ -467,10 +467,12 @@ feature {NONE} -- Implementation
 			Result := l_result
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FONT note option: stable attribute end
 		-- Interface coupling object for `Current'
+
+feature {EV_ANY_I} -- Implementation
 
 	destroy
 			-- Flag `Current' as destroyed

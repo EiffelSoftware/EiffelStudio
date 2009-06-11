@@ -93,7 +93,7 @@ feature -- Element change
 			control_required := False
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ACCELERATOR note option: stable attribute end
 		-- Interface object of `Current'

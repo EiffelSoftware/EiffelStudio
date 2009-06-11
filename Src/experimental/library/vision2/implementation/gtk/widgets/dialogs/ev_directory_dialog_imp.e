@@ -110,7 +110,7 @@ feature -- Element change
 			)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
@@ -125,12 +125,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DIRECTORY_DIALOG_IMP
-
-
-
-
-

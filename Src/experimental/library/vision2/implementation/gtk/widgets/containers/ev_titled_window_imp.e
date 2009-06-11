@@ -207,6 +207,8 @@ feature {EV_ANY_I} -- Implementation
 	icon_name_holder: detachable STRING_32
 			-- Name holder for applications icon name
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
@@ -220,12 +222,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_TITLED_WINDOW_IMP
-
-
-
-
-

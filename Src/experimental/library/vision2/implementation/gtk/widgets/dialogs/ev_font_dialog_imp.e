@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			"cancel_button"
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
@@ -180,12 +180,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_FONT_DIALOG_IMP
-
-
-
-
-

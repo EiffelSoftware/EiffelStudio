@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	pixmap_box: POINTER
 			-- GtkHBox to hold the GtkPixmap.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 
@@ -123,12 +123,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- EV_PIXMAPABLE_IMP
-
-
-
-
-

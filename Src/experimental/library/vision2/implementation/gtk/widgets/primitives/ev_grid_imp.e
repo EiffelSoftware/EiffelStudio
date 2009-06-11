@@ -184,7 +184,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 	bg_style: INTEGER = 4;
 		-- Different coloring styles used in gtk.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GRID note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
@@ -201,12 +201,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-
-
-
-
-

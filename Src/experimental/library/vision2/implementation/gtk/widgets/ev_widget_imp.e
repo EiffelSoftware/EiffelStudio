@@ -473,7 +473,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	previous_width, previous_height: INTEGER_16
 			-- Dimensions during last "size-allocate".
 
-feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
@@ -488,18 +488,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_WIDGET_IMP
-
-
-
-
-
-
-
-
-
-
-

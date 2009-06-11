@@ -538,6 +538,8 @@ feature {NONE} -- Implementation
 	B5: STRING = "B5"
 	C5: STRING = "C5"
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_PRINT_DIALOG note option: stable attribute end;
 
 note
@@ -551,12 +553,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_PRINT_DIALOG_IMP
-
-
-
-
-

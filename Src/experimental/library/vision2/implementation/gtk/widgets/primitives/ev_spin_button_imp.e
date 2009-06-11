@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_spin_button_update (entry_widget)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SPIN_BUTTON note option: stable attribute end;
 
@@ -93,12 +93,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPIN_BUTTON_IMP
-
-
-
-
-

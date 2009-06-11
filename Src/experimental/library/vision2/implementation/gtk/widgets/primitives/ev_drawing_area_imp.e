@@ -361,9 +361,6 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	interface: detachable EV_DRAWING_AREA note option: stable attribute end
-		-- Interface object of Current.
-
 	destroy
 			-- Destroy implementation.
 		do
@@ -385,6 +382,11 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_DRAWING_AREA note option: stable attribute end
+		-- Interface object of Current.
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -396,12 +398,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_DRAWING_AREA_IMP
-
-
-
-
-

@@ -449,6 +449,8 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_HEADER_ITEM note option: stable attribute end;
 		-- Interface object of `Current'.
 
@@ -462,8 +464,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

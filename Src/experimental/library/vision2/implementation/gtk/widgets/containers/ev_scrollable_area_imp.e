@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			vertical_policy := vscrollpol
 		end
 
-feature {EV_ANY_I} -- Implementation		
+feature {EV_ANY, EV_ANY_I} -- Implementation		
 
 	interface: detachable EV_SCROLLABLE_AREA note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
@@ -265,12 +265,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SCROLLABLE_AREA_IMP
-
-
-
-
-

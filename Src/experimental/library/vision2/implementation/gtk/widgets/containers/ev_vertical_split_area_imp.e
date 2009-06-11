@@ -43,7 +43,7 @@ feature -- initialization
 			Precursor
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
@@ -60,12 +60,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_VERTICAL_SPLIT_AREA_IMP
-
-
-
-
-

@@ -1550,7 +1550,7 @@ feature -- Status setting
 				temp_column_count = a_column_count
 			loop
 				if add_columns then
-					add_column_at (temp_column_count + 1, True)
+					add_column_at (temp_column_count + 1)
 					temp_column_count := temp_column_count + 1
 				else
 					remove_column (temp_column_count)
@@ -2144,7 +2144,8 @@ feature -- Status report
 			perform_vertical_computation
 			l_visible_row_count := visible_row_count
 			if uses_row_offsets and then l_visible_row_count > 0 and then attached visible_indexes_to_row_indexes as l_visible_indexes_to_row_indexes then
-				create Result.make_from_array (l_visible_indexes_to_row_indexes.subarray (1, l_visible_row_count))
+				create Result.make (l_visible_row_count)
+				Result.area.copy_data (l_visible_indexes_to_row_indexes.area, 0, 0, l_visible_row_count)
 			else
 				create Result.make (0)
 			end
@@ -2295,7 +2296,7 @@ feature -- Element change
 		require
 			a_index_within_range: a_index > 0 and a_index <= column_count + 1
 		do
-			add_column_at (a_index, False)
+			add_column_at (a_index)
 		ensure
 			column_count_set: column_count = old column_count + 1
 		end
@@ -2771,7 +2772,7 @@ feature -- Removal
 			recompute_vertical_scroll_bar
 			recompute_horizontal_scroll_bar
 			redraw_client_area
-			create physical_column_indexes_internal.make (0)
+			create physical_column_indexes_internal.make_empty (0)
 			last_vertical_scroll_bar_value := 0
 			last_horizontal_scroll_bar_value := 0
 			last_selected_item := Void
@@ -2842,15 +2843,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if physical_column_indexes_dirty then
 					-- `Result' needs to be recalculated
 				col_count := columns.count
-				create Result.make (col_count)
+				create Result.make_empty (col_count)
 				from
 					i := 1
 				until
 					i > col_count
 				loop
 					a_col := columns @ i
-					Result.put (a_col.physical_index, i - 1)
-							-- SPECIAL is zero based
+					Result.extend (a_col.physical_index)
 					i := i + 1
 				end
 				physical_column_indexes_internal := Result
@@ -3183,6 +3183,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_index > l_row_count
 				loop
 					current_item := l_rows.i_th (row_index)
+					l_row_offsets.go_i_th (row_index - 1)
+					l_row_indexes_to_visible_indexes.go_i_th (row_index - 1)
+					l_visible_indexes_to_row_indexes.go_i_th (visible_count)
 					if current_item /= Void and then ((current_item.subrow_count > 0 and not current_item.is_expanded) or not current_item.is_show_requested) then
 						from
 							j := row_index
@@ -3190,18 +3193,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						until
 							j = k
 						loop
-							l_row_offsets.put_i_th (current_row_offset, j)
+							l_row_offsets.put_right (current_row_offset)
 							j := j + 1
 						end
 						if current_item.is_show_requested then
-							l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
-							l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+							l_row_indexes_to_visible_indexes.put_right (visible_count)
+							l_visible_indexes_to_row_indexes.put_right (row_index)
 						end
 						row_index := k
 					else
-						l_row_offsets.put_i_th (current_row_offset, row_index)
-						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
-						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						l_row_offsets.put_right (current_row_offset)
+						l_row_indexes_to_visible_indexes.put_right (visible_count)
+						l_visible_indexes_to_row_indexes.put_right (row_index)
 						row_index := row_index + 1
 					end
 					if current_item = Void or else current_item.is_show_requested then
@@ -3222,7 +3225,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 					-- A final position is always stored in `row_offsets' which may be
 					-- queried to determine the total height of all rows.
-				l_row_offsets.put_i_th (current_row_offset, row_index)
+				l_row_offsets.go_i_th (row_index - 1)
+				l_row_offsets.put_right (current_row_offset)
 			else
 				row_offsets := Void
 			end
@@ -4069,7 +4073,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			create locked_indexes.make (1)
 
 			create column_offsets
-			create physical_column_indexes_internal.make (0)
+			create physical_column_indexes_internal.make_empty (0)
 
 			is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width := True
 			is_horizontal_scrolling_per_item := False
@@ -5748,7 +5752,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 		require
 			i_positive: a_index > 0
 		local
-			row_i, replaced_row: EV_GRID_ROW_I
+			row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
 			if interface /= Void then
@@ -5757,24 +5761,20 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 				row_i := (create {EV_GRID_ROW}).implementation
 			end
 
-			create a_row_data.make (0)
+			create a_row_data.make_empty (0)
 			if a_index > row_count then
 				resize_row_lists (a_index)
 			end
 
-			rows.go_i_th (a_index)
-			internal_row_data.go_i_th (a_index)
+			rows.go_i_th (a_index - 1)
+			internal_row_data.go_i_th (a_index - 1)
 
 				-- Set grid of `grid_row' to `Current'
 			row_i.set_parent_i (Current, row_counter)
 			row_counter := row_counter + 1
 
-			internal_row_data.replace (a_row_data)
-			replaced_row := rows.item
-			if replaced_row /= Void then
-				replaced_row.update_for_removal
-			end
-			rows.replace (row_i)
+			internal_row_data.put_right (a_row_data)
+			rows.put_right (row_i)
 			row_i.set_index (a_index)
 			set_vertical_computation_required (a_index)
 		end
@@ -5785,39 +5785,45 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			i_positive: a_index > 0
 		local
 			row_i: EV_GRID_ROW_I
-			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+			a_row_data: SPECIAL [detachable EV_GRID_ITEM_I]
 			old_count: INTEGER
-			i, j: INTEGER
+			i: INTEGER
 			l_interface: like interface
+			l_rows_data_to_insert: like internal_row_data
+			l_rows_to_insert: like rows
 		do
 			l_interface := interface
-
 			old_count := internal_row_data.count
-			resize_row_lists ((internal_row_data.count).max (a_index - 1) + rows_to_insert)
-
-			internal_row_data.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
-			rows.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
 
 			from
+				create l_rows_data_to_insert.make (rows_to_insert)
+				create l_rows_to_insert.make (rows_to_insert)
 				i := 1
-				j := a_index - 1
 			until
 				i > rows_to_insert
 			loop
-				create a_row_data.make (0)
-				internal_row_data.put_i_th (a_row_data, i + j)
+				create a_row_data.make_empty (0)
+				l_rows_data_to_insert.extend (a_row_data)
+
 				if l_interface /= Void then
 					row_i := l_interface.new_row.implementation
 				else
 					row_i := (create {EV_GRID_ROW}).implementation
 				end
-
 				row_i.set_parent_i (Current, row_counter)
 				row_counter := row_counter + 1
+				l_rows_to_insert.extend (row_i)
 
-				rows.put_i_th (row_i, i + j)
 				i := i + 1
 			end
+
+			resize_row_lists ((internal_row_data.count).max (a_index - 1) + rows_to_insert)
+
+			rows.go_i_th (a_index - 1)
+			rows.merge_right (l_rows_to_insert)
+
+			internal_row_data.go_i_th (a_index - 1)
+			internal_row_data.merge_right (l_rows_data_to_insert)
 
 				-- Update the index of `row_i' and subsequent rows in `rows'
 			update_grid_row_indices (a_index)
@@ -5863,14 +5869,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN)
+	add_column_at (a_index: INTEGER)
 			-- Add a new column at index `a_index'.
 			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
 		require
 			i_positive: a_index > 0
 		local
 			a_column_i: EV_GRID_COLUMN_I
-			replaced_column: detachable EV_GRID_COLUMN_I
 		do
 			if interface /= Void then
 				a_column_i := attached_interface.new_column.implementation
@@ -5879,12 +5884,7 @@ feature {NONE} -- Implementation
 			end
 
 			if a_index > columns.count then
-				if replace_existing_item then
-					columns.resize (a_index)
-				else
-						-- Resize to new count minus 1 as we are inserting a new item, when item is inserted then count will be increased
-					columns.resize (a_index - 1)
-				end
+				columns.resize (a_index)
 			end
 
 				-- Set column's internal data
@@ -5893,16 +5893,11 @@ feature {NONE} -- Implementation
 
 			a_column_i.set_parent_i (Current)
 
-			columns.go_i_th (a_index)
-			if replace_existing_item then
-				replaced_column := columns.item
-				if replaced_column /= Void then
-					replaced_column.update_for_removal
-				end
-				columns.replace (a_column_i)
+			columns.go_i_th (a_index - 1)
+			columns.put_right (a_column_i)
+			if a_index = columns.count then
 				a_column_i.set_index (a_index)
 			else
-				columns.put_left (a_column_i)
 				update_grid_column_indices (a_index)
 			end
 
@@ -5914,7 +5909,7 @@ feature {NONE} -- Implementation
 			show_column (a_index)
 			header_item_resize_ended (header.last)
 		ensure
-			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
+			column_count_set: (a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index
 		end
 
 	update_index_of_first_item_dirty_row_flags (a_index: INTEGER)
@@ -6019,7 +6014,7 @@ feature {NONE} -- Implementation
 			a_row: SPECIAL [detachable EV_GRID_ITEM_I]
 		do
 			a_row := internal_row_data @ a_index
-			a_row := a_row.aliased_resized_area (new_count)
+			a_row := a_row.aliased_resized_area_with_default (Void, new_count)
 			internal_row_data.put_i_th (a_row, a_index)
 		end
 
@@ -6311,7 +6306,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			non_displayed_row_count_not_negative: non_displayed_row_count >= 0
 		end
 
-feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GRID note option: stable attribute end
 			-- Provides a common user interface to possibly dependent
@@ -6347,6 +6342,7 @@ note
 
 
 end
+
 
 
 

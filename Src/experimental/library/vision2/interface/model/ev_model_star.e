@@ -60,14 +60,14 @@ feature {NONE} -- Initialization
 		do
 			line_count := 6
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (line_count + 1)
+			create point_array.make_empty (line_count + 1)
 			from
 				i := 0
 				nb := line_count
 			until
 				i > nb
 			loop
-				point_array.put (create {EV_COORDINATE}.make (0, 0), i)
+				point_array.extend (create {EV_COORDINATE}.make (0, 0))
 				i := i + 1
 			end
 		end
@@ -135,26 +135,26 @@ feature -- Element change
 			old_count := line_count
 			line_count := n
 			if n > old_count then
-				point_array := point_array.resized_area (n + 1)
+				point_array := point_array.aliased_resized_area (n + 1)
 				from
 					i := old_count + 1
 					nb := n
 				until
 					i > nb
 				loop
-					point_array.put (create {EV_COORDINATE}, i)
+					point_array.extend (create {EV_COORDINATE})
 					i := i + 1
 				end
 				set_corner_points
 				invalidate
 			elseif n < old_count then
-				create new_array.make (n + 1)
+				create new_array.make_empty (n + 1)
 				from
 					i := 0
 				until
 					i > n
 				loop
-					new_array.put (point_array.item (i), i)
+					new_array.extend (point_array.item (i))
 					i := i + 1
 				end
 				point_array := new_array
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_point_array: like point_array
 		do
-			create Result.make (line_count)
+			create Result.make_empty (line_count)
 			from
 				i := 1
 				nb := line_count
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			until
 				i > nb
 			loop
-				Result.put (l_point_array.item (i), i - 1)
+				Result.extend (l_point_array.item (i))
 				i := i + 1
 			end
 		end
@@ -304,6 +304,7 @@ note
 
 
 end -- class EV_MODEL_STAR
+
 
 
 

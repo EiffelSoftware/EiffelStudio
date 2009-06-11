@@ -43,7 +43,8 @@ inherit
 			merge_right,
 			make_from_array,
 			default_create,
-			make_filled
+			make_filled,
+			list_make
 		end
 
 	EV_SINGLE_POINTED_FIGURE
@@ -56,6 +57,7 @@ create
 	make_with_point
 
 create {EV_FIGURE_GROUP}
+	list_make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -67,11 +69,19 @@ feature {NONE} -- Initialization
 			Precursor (n)
 		end
 
+	list_make (n: INTEGER)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (n)
+		end
+
 	default_create
 			-- Create without point.
 		do
+			index := 0
+			make_empty_area (5)
 			Precursor {EV_FIGURE}
-			list_make (5)
 		end
 
 feature -- Status setting
@@ -369,6 +379,7 @@ note
 
 
 end -- class EV_FIGURE_GROUP
+
 
 
 

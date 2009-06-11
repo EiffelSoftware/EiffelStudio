@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM}
 			radius := 10
-			point_array := point_array.resized_area (16)
+			point_array := point_array.aliased_resized_area (16)
 			from
 				i := 4
 			until
 				i > 15
 			loop
-				point_array.put (create {EV_COORDINATE}, i)
+				point_array.extend (create {EV_COORDINATE})
 				i := i + 1
 			end
 		end
@@ -119,14 +119,14 @@ feature -- Status report
 			i, nb: INTEGER
 		do
 			from
-				create poly.make (12)
+				create poly.make_empty (12)
 				i := 0
 				l_point_array := point_array
 				nb := 11
 			until
 				i > nb
 			loop
-				poly.put (l_point_array.item (i + 4), i)
+				poly.extend (l_point_array.item (i + 4))
 				i := i + 1
 			end
 			Result := point_on_polygon (ax, ay, poly)
@@ -330,4 +330,5 @@ note
 
 
 end -- class EV_MODEL_ROUNDED_PARALLELOGRAM
+
 

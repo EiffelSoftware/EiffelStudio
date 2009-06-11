@@ -56,7 +56,8 @@ inherit
 			default_create,
 			swap,
 			has,
-			make_filled
+			make_filled,
+			list_make
 		end
 
 	EV_MODEL_SINGLE_POINTED
@@ -70,6 +71,7 @@ create
 	make_with_position
 
 create {EV_MODEL_GROUP}
+	list_make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -78,11 +80,11 @@ feature {NONE} -- Initialization
 			-- Create an empty EV_MODEL_GROUP.
 		do
 			create lookup_table.make (initiale_size)
-			create point_array.make (1)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
+			create point_array.make_empty (1)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 			Precursor {EV_MODEL}
-			list_make (initiale_size)
-
+			index := 0
+			make_empty_area (initiale_size)
 			is_grouped := True
 		ensure then
 			is_grouped: is_grouped
@@ -90,6 +92,13 @@ feature {NONE} -- Initialization
 		end
 
 	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			default_create
+			Precursor (n)
+		end
+
+	list_make (n: INTEGER)
 			-- <Precursor>
 		do
 			default_create
@@ -929,6 +938,7 @@ note
 
 
 end -- class EV_MODEL_GROUP
+
 
 
 

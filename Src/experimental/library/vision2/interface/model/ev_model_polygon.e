@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 	default_create
 			-- Polygon with no points.
 		do
-			create point_array.make (0)
+			create point_array.make_empty (0)
 			Precursor {EV_MODEL_CLOSED}
 		end
-		
+
 	make_with_coordinates (coords: ARRAY [EV_COORDINATE])
 			-- Initialize with points in `coords'.
 		require
@@ -69,10 +69,10 @@ feature -- Status report
 
 	is_rotatable: BOOLEAN = True
 			-- Is rotatable? Yes.
-			
+
 	is_scalable: BOOLEAN = True
 			-- Is scalable? Yes.
-			
+
 	is_transformable: BOOLEAN = True
 			-- Is transformable? Yes.
 
@@ -107,4 +107,5 @@ note
 
 
 end -- class EV_MODEL_POLYGON
+
 

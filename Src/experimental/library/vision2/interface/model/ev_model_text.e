@@ -71,14 +71,14 @@ feature {NONE} -- Initialization
 			-- Create in (0, 0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (4)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 2)
+			create point_array.make_empty (4)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 			create {STRING_32} text.make_empty
 			id_font := default_font
 			scaled_font := font
-			point_array.put (create {EV_COORDINATE}.make (font.width, font.height), 3)
+			point_array.extend (create {EV_COORDINATE}.make (font.width, font.height))
 			is_default_font_used := True
 			is_center_valid := True
 		ensure then
@@ -350,4 +350,5 @@ note
 
 
 end -- class EV_MODEL_TEXT
+
 

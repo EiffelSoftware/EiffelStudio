@@ -20,6 +20,7 @@ create
 	default_create
 
 create {EV_PND_ACTION_SEQUENCE}
+	arrayed_list_make,
 	make_filled
 
 feature -- Basic operations
@@ -152,6 +153,7 @@ note
 
 
 end
+
 
 
 

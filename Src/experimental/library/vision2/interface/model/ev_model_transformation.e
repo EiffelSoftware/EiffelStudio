@@ -68,13 +68,13 @@ feature {NONE} -- Initialization
 	make_zero
 			-- Create a transformation matrix with all elements 0.0
 		do
-			create area.make (9)
+			create area.make_filled (0.0, 9)
 		end
 
 	make_id
 			-- Create an identity transformation matrix
 		do
-			create area.make (9)
+			create area.make_filled (0.0, 9)
 			area.put (1.0, 0)
 			area.put (1.0, 4)
 			area.put (1.0, 8)
@@ -256,4 +256,5 @@ note
 
 
 end -- class EV_MODEL_TRANSFORMATION
+
 

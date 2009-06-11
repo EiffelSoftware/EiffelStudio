@@ -16,7 +16,7 @@ inherit
 
 	EV_TREE_NODE
 		export
-			{EV_DYNAMIC_TREE_ITEM} fill, dl_force, put, writable, prunable, prune_all, append,
+			{EV_DYNAMIC_TREE_ITEM} fill, dl_force, dl_replace, put, writable, prunable, prune_all, append,
 			extend, force, merge_left, merge_right, move, prune, put_front, put_i_th, put_left,
 			put_right, remove, remove_left, remove_right, replace, swap, wipe_out
 		redefine
@@ -244,6 +244,7 @@ note
 
 
 end -- class EV_DYNAMIC_TREE_ITEM
+
 
 
 

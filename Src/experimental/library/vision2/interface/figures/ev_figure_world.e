@@ -25,6 +25,7 @@ create
 	default_create
 
 create {EV_FIGURE_WORLD}
+	list_make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -244,6 +245,7 @@ note
 
 
 end -- class EV_FIGURE_WORLD
+
 
 
 

@@ -9,7 +9,7 @@ note
 
 deferred class
 	EV_MODEL_MULTI_POINTED
-	
+
 inherit
 	EV_MODEL
 
@@ -24,7 +24,7 @@ feature -- Access
 		ensure
 			correct_entry: Result = point_array.item (i - 1).x
 		end
-		
+
 	i_th_point_y (i: INTEGER): INTEGER
 			-- `i'-th points y position.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 		ensure
 			correct_entry: Result = point_array.item (i - 1).y
 		end
-		
+
 	i_th_point (i: INTEGER): EV_COORDINATE
 			-- `i'-th point of `Current'.
 		obsolete
@@ -60,7 +60,7 @@ feature -- Status setting
 		ensure
 			assigned: i_th_point_x (i) = a_x
 		end
-		
+
 	set_i_th_point_y (i: INTEGER; a_y: INTEGER)
 			-- Assign `a_y' to `i'-ths point `y' position.
 		require
@@ -72,7 +72,7 @@ feature -- Status setting
 		ensure
 			assigned: i_th_point_y (i) = a_y
 		end
-		
+
 	set_i_th_point (i: INTEGER; a_point: EV_COORDINATE)
 			-- Set position of `i'-th point to position of `a_point'.
 		obsolete
@@ -85,7 +85,7 @@ feature -- Status setting
 		ensure
 			assigned: i_th_point_x (i) = a_point.x and i_th_point_y (i) = a_point.y
 		end
-		
+
 	set_i_th_point_position (i: INTEGER; ax, ay: INTEGER)
 			-- Set position of `i'-th point to (`ax', `ay').
 		require
@@ -108,25 +108,25 @@ feature -- Status setting
 		do
 			old_count := point_array.count
 			if a_count > old_count then
-				point_array := point_array.resized_area (a_count)
+				point_array := point_array.aliased_resized_area (a_count)
 				from
 					i := old_count
 					nb := a_count - 1
 				until
 					i > nb
 				loop
-					point_array.put (create {EV_COORDINATE}, i)
+					point_array.extend (create {EV_COORDINATE})
 					i := i + 1
 				end
 			elseif a_count < point_count then
-				create new_array.make (a_count)
+				create new_array.make_empty (a_count)
 				from
 					i := 0
 					nb := a_count - 1
 				until
 					i > nb
 				loop
-					new_array.put (point_array.item (i), i)
+					new_array.extend (point_array.item (i))
 					i := i + 1
 				end
 				point_array := new_array
@@ -142,8 +142,8 @@ feature -- Status setting
 		require
 			a_point_not_void: a_point /= Void
 		do
-			point_array := point_array.resized_area (point_array.count + 1)
-			point_array.put (a_point.twin, point_array.count - 1)
+			point_array := point_array.aliased_resized_area (point_array.count + 1)
+			point_array.extend (a_point.twin)
 			center_invalidate
 			invalidate
 		ensure
@@ -151,7 +151,7 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-		
+
 	set_center
 			-- Set `x' and `y' to the center of the figure.
 		local
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 					min_y := min_y.min (val)
 					i := i + 1
 				end
-				
+
 				center.set_precise ((max_x + min_x) / 2, (max_y + min_y) / 2)
 			end
 			is_center_valid := True
@@ -205,4 +205,5 @@ note
 
 
 end -- class EV_MODEL_MULTI_POINTED
+
 

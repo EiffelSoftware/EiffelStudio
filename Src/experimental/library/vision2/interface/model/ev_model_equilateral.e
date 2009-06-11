@@ -56,9 +56,9 @@ feature {NONE} -- Initialization
 		do
 			side_count := 8
 			Precursor {EV_MODEL_CLOSED}
-			create point_array.make (2)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
+			create point_array.make_empty (2)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 		end
 
 feature -- Access
@@ -201,7 +201,7 @@ feature -- Implementation
 				radius := distance (cex, cey, cox, coy)
 				i := 0
 				nb := side_count - 1
-				create poly.make (side_count)
+				create poly.make_empty (side_count)
 				ang_step := pi_times_two / side_count
 				ang := line_angle (cex, cey, cox, coy)
 
@@ -209,7 +209,7 @@ feature -- Implementation
 			until
 				i > nb
 			loop
-				poly.put (create {EV_COORDINATE}.make_precise (cex + delta_x (ang, radius), cey + delta_y (ang, radius)), i)
+				poly.extend (create {EV_COORDINATE}.make_precise (cex + delta_x (ang, radius), cey + delta_y (ang, radius)))
 				ang := ang + ang_step
 				i := i + 1
 			end
@@ -287,6 +287,7 @@ note
 
 
 end -- class EV_MODEL_EQUILATERAL
+
 
 
 

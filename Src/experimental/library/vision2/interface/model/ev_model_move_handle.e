@@ -21,6 +21,7 @@ create
 	default_create
 
 create {EV_MODEL_MOVE_HANDLE}
+	list_make,
 	make_filled
 
 feature {NONE} -- Initialization
@@ -522,6 +523,7 @@ note
 
 
 end -- class EV_MODEL_MOVE_HANDLE
+
 
 
 

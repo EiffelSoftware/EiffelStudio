@@ -28,7 +28,7 @@ create
 	make_with_points,
 	make_rectangle,
 	make_with_positions
-	
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -38,26 +38,26 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MODEL_RECTANGLE}
 			radius := 20
-			point_array := point_array.resized_area (8)
+			point_array := point_array.aliased_resized_area (8)
 			from
 				i := 2
 			until
 				i > 7
 			loop
-				point_array.put (create {EV_COORDINATE}, i)
+				point_array.extend (create {EV_COORDINATE})
 				i := i + 1
 			end
 		end
-		
+
 	make_rectangle (a_x, a_y, a_width, a_height: INTEGER)
-			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y') 
+			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y')
 			-- and `width' `a_width' and `height' `a_height'
 		do
 			default_create
 			Precursor {EV_MODEL_RECTANGLE} (a_x, a_y, a_width, a_height)
-			set_rounded_points 
+			set_rounded_points
 		end
-		
+
 feature -- Access
 
 	radius: INTEGER
@@ -76,14 +76,14 @@ feature -- Element change
 		ensure
 			radius_assigned: radius = a_radius
 		end
-		
+
 	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			Precursor {EV_MODEL_RECTANGLE} (a_width)
 			set_rounded_points
 		end
-	
+
 	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		do
@@ -97,42 +97,42 @@ feature -- Element change
 			Precursor {EV_MODEL_RECTANGLE} (ax, ay)
 			set_rounded_points
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_RECTANGLE} (ax, ay)
 			set_rounded_points
 		end
-		
+
 feature -- Events
 
 	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
-			
+
 			l_point_array: like point_array
 			p0, p1, p2, p3, p4, p5: EV_COORDINATE
 			p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, p5x, p5y: INTEGER
 			a_radius: INTEGER
-		do	
+		do
 			l_point_array := point_array
 			p0 := l_point_array.item (2)
 			p1 := l_point_array.item (3)
 			p2 := l_point_array.item (4)
 			p3 := l_point_array.item (5)
-			
+
 			p2x := p2.x
 			p0y := p0.y
 			p3x := p3.x - 1
 			p1y := p1.y - 1
 
 			Result := point_on_rectangle (ax, ay, p2x, p0y, p3x, p1y)
-			if not Result then		
+			if not Result then
 				p5 := l_point_array.item (7)
-			
+
 				p0x := p0.x
-				p2y := p2.y		
+				p2y := p2.y
 				p1x := p1.x - 1
 				p5y := p5.y - 1
 				Result := point_on_rectangle (ax, ay, p0x, p2y, p1x, p5y)
@@ -158,7 +158,7 @@ feature -- Events
 		end
 
 feature {EV_MODEL_GROUP} -- Transformation
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -167,7 +167,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 			Precursor {EV_MODEL_RECTANGLE} (a_transformation)
 			set_rounded_points
 		end
-		
+
 feature {NONE} -- Implementation
 
 	radius_offset: DOUBLE = 0.2928932188134
@@ -184,12 +184,12 @@ feature {NONE} -- Implementation
 			l_point_array := point_array
 			pa := l_point_array.item (0)
 			pb := l_point_array.item (1)
-	
+
 			v1 := pa.x_precise
 			v2 := pb.x_precise
 			ax := v1.min (v2)
 			bx := v1.max (v2)
-			
+
 			v1 := pa.y_precise
 			v2 := pb.y_precise
 			ay := v1.min (v2)

@@ -51,9 +51,9 @@ feature {NONE} -- Initialization
 			-- Create a line from (0,0) to (0,0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
-			create point_array.make (2)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
+			create point_array.make_empty (2)
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
+			point_array.extend (create {EV_COORDINATE}.make (0, 0))
 			disable_start_arrow
 			disable_end_arrow
 			is_center_valid := True
@@ -243,6 +243,7 @@ note
 
 
 end -- class EV_MODEL_LINE
+
 
 
 

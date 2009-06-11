@@ -21,9 +21,7 @@ inherit
 			title_area
 		select
 			implementation,
-			count,
-			put,
-			set_extend
+			count
 		end
 
 	SD_UPPER_ZONE

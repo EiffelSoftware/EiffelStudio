@@ -40,9 +40,6 @@ inherit
 			first,
 			last,
 			is_in_default_state
-		select
-			put,
-			cl_extend
 		end
 
 feature {NONE} -- Initlization

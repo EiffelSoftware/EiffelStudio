@@ -243,7 +243,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	insert_arrayed_list_to_group_info_sub_level (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_sub_group_index: INTEGER; a_widths: ARRAY [INTEGER])
+	insert_arrayed_list_to_group_info_sub_level (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_sub_group_index: INTEGER; a_widths: ARRAYED_LIST [INTEGER])
 			-- Insert `a_list' to `internal_refined_grouping'.
 		require
 			not_void: internal_refined_grouping /= Void
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			internal_refined_grouping.set_sub_group_info (l_sub_group_info, a_sub_group_index)
 		end
 
-	list_and_width_equal (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_items_width: ARRAY [INTEGER]): BOOLEAN
+	list_and_width_equal (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_items_width: ARRAYED_LIST [INTEGER]): BOOLEAN
 			-- Is items count in `a_list' equal to `a_items_width''s count?
 		require
 			not_void: a_list /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			Result := l_count = a_items_width.count
 		end
 
-	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAY [INTEGER]): SD_TOOL_BAR_GROUP_INFO
+	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAYED_LIST [INTEGER]): SD_TOOL_BAR_GROUP_INFO
 			-- Only covert first level. Item is one group which has several items.
 		require
 			not_void: a_list /= Void
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				until
 					l_one_group.after
 				loop
-					l_item.force_new (a_items_width.item (l_one_group.item), l_item_count)
+					l_item.force_new (a_items_width.i_th (l_one_group.item), l_item_count)
 					l_group_width := l_one_group.item + l_group_width
 
 					l_item_count := l_item_count + 1

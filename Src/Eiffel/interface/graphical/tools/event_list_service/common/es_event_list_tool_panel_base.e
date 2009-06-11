@@ -217,7 +217,7 @@ feature {NONE} -- Query
 			l_grid := grid_events
 			l_column_count := l_grid.column_count
 			l_row_count := l_grid.row_count
-			create l_states.make (l_column_count + 1)
+			create l_states.make_filled (0, l_column_count + 1)
 			create l_text.make (100)
 			from
 				i := 1

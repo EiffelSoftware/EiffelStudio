@@ -41,8 +41,8 @@ feature {OBJC_CLASS} -- Eiffel interaction
 			object_table: HASH_TABLE [ROUTINE [ANY, TUPLE], POINTER]
 		do
 			map.search (a_class)
-			if map.found then
-				map.found_item.extend (a_agent, a_selector)
+			if map.found and then attached map.found_item as l_item then
+				l_item.extend (a_agent, a_selector)
 			else
 				create object_table.make (1000)
 				object_table.extend (a_agent, a_selector)
@@ -50,10 +50,10 @@ feature {OBJC_CLASS} -- Eiffel interaction
 			end
 		end
 
-	get_agent (a_object: POINTER; a_selector: POINTER): ROUTINE [ANY, TUPLE]
+	get_agent (a_object: POINTER; a_selector: POINTER): detachable ROUTINE [ANY, TUPLE]
 		local
 			l_object: NS_OBJECT
-			l_class: OBJC_CLASS
+			l_class: detachable OBJC_CLASS
 		do
 			create l_object.share_from_pointer (a_object)
 			from
@@ -62,10 +62,10 @@ feature {OBJC_CLASS} -- Eiffel interaction
 				l_class = void or Result /= void
 			loop
 				map.search (l_class.item)
-				if map.found then
-					map.found_item.search (a_selector)
-					if map.found_item.found then
-						Result := map.found_item.found_item
+				if map.found and then attached map.found_item as l_item then
+					l_item.search (a_selector)
+					if l_item.found then
+						Result := l_item.found_item
 					end
 				end
 				l_class := l_class.superclass
@@ -82,24 +82,23 @@ feature {NONE}
 	callback_bool (a_object: POINTER; a_selector: POINTER): BOOLEAN
 		local
 			c_string: C_STRING
-			l_agent: FUNCTION [ANY, TUPLE [], BOOLEAN]
 		do
 			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 			io.put_string ("B Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
-			l_agent ?= get_agent (a_object, a_selector)
-			l_agent.call ([])
-			Result := l_agent.last_result
+			if attached {FUNCTION [ANY, TUPLE [], BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+				Result := l_agent.item (Void)
+			end
 		end
 
 	callback_void_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
 		local
 			c_string: C_STRING
-			l_agent: ROUTINE [ANY, TUPLE [POINTER]]
 		do
 			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 			io.put_string ("VP Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
-			l_agent ?= get_agent (a_object, a_selector)
-			l_agent.call ([arg1])
+			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+				l_agent.call ([arg1])
+			end
 		end
 
 feature -- Contract Support

@@ -129,7 +129,7 @@ feature -- Access
 			Result := {NS_OBJC_RUNTIME}.class_get_method_implementation (item, a_sel)
 		end
 
-	superclass: OBJC_CLASS
+	superclass: detachable OBJC_CLASS
 			-- Returns the superclass of a class. Void if Current is a root class.
 		local
 			l_super: POINTER

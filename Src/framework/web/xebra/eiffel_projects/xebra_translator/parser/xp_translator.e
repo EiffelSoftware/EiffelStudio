@@ -25,12 +25,10 @@ feature {NONE} -- Initialization
 			create output_path.make_from_string ("./generated/")
 			output_path.extend (a_name)
 			name := a_name
-			create servlet_gen_path.make
 			create registry.make (output_path)
 		ensure
 			output_path_attached: attached output_path
 			name_attached: attached name
-			servlet_gen_path_attached: attached servlet_gen_path
 			registry_attached: attached registry
 		end
 
@@ -40,9 +38,6 @@ feature -- Access
 
 	output_path: FILE_NAME assign set_output_path
 			-- Defines where the files should be written
-
-	servlet_gen_path: FILE_NAME assign set_servlet_gen_path
-			-- Defines where the servlets should be generated
 
 	name: STRING assign set_name
 			-- Name of the system
@@ -60,16 +55,6 @@ feature -- Status setting
 			output_path := a_path
 		ensure
 			output_path_set: output_path = a_path
-		end
-
-	set_servlet_gen_path (a_path: like servlet_gen_path)
-			-- Sets the servlet_gen_path
-		require
-			a_path_is_valid: attached a_path and not a_path.is_empty
-		do
-			servlet_gen_path := a_path
-		ensure
-			path_set: servlet_gen_path = a_path
 		end
 
 	set_name (a_name: like name)
@@ -286,7 +271,6 @@ feature -- Processing
 invariant
 	output_path_attached: attached output_path
 	name_attached: attached name
-	servlet_gen_path_attached: attached servlet_gen_path
 	registry_attached: attached registry
 
 note

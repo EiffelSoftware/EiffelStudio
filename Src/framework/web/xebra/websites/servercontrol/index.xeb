@@ -1,0 +1,6 @@
+<html>
+<page:controller class="MAIN_CONTROLLER"/>
+<body>
+servercontrol works!
+</body>
+</html>

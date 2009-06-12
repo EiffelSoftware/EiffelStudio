@@ -46,7 +46,6 @@ feature -- Operation
 			create l_dir.make (a_arg_parser.input_path)
 
 			l_translator.set_output_path (a_arg_parser.output_path)
-			l_translator.set_servlet_gen_path (a_arg_parser.servlet_gen_path)
 
 			l_translator.process_with_files (l_dir.linear_representation, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
 
@@ -59,7 +58,6 @@ feature -- Operation
 				error_manager.trace_errors (l_printer)
 			else
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
-				o.iprint ("Servlets generated to '" + l_translator.servlet_gen_path + "'")
 				o.iprint ("System translated.")
 			end
 		end

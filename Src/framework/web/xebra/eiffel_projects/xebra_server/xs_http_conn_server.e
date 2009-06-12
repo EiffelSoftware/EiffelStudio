@@ -13,6 +13,7 @@ class
 inherit
 	THREAD
 	XS_SHARED_SERVER_OUTPUTTER
+	XS_SHARED_SERVER_CONFIG
 
 create make
 
@@ -41,22 +42,42 @@ feature -- Inherited Features
 			-- <Precursor>
 		local
 			l_response: XH_RESPONSE
-			l_webapp_handler: XS_WEBAPP_HANDLER
+			l_commands: XS_COMMANDS
+			l_request_factory: XH_REQUEST_FACTORY
+			l_uri_webapp_name: STRING
 		do
 			launched := True
-			create l_webapp_handler.make
 
 			from
                 http_socket.listen (max_tcp_clients.as_integer_32)
             until
             	stop
             loop
-                http_socket.accept
-                if not stop then
+                create l_request_factory.make
 
+                http_socket.accept
+
+                if not stop then
 		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
 		            	if receive_message (thread_http_socket) then
-		            		l_response := l_webapp_handler.forward_request_to_app (current_request_message)
+
+		            		 if attached {XH_REQUEST} l_request_factory.get_request (current_request_message) as l_request then
+								l_uri_webapp_name := l_request.target_uri.substring (2, l_request.target_uri.index_of ('/', 2))
+								l_uri_webapp_name.remove_tail (1)
+
+								if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then
+									webapp.set_request_message (current_request_message)
+									l_commands := webapp.start_action_chain
+									command_manager.put_multiple (l_commands)
+									l_response := filter_response (l_commands)
+
+								else
+									l_response := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_response
+								end
+				            else
+				            	l_response := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
+				            end
+
 		            	else
 							l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
 						end
@@ -72,8 +93,8 @@ feature -- Inherited Features
             http_socket.cleanup
         	check
         		http_socket.is_closed
-        	end
-		end
+       		end
+       	end
 
 feature -- Access
 
@@ -129,6 +150,28 @@ feature -- Status setting
 
 
 feature {NONE} -- Implementation
+
+	filter_response (a_commands: XS_COMMANDS): XH_RESPONSE
+			-- Filters a list of commands for a XSC_DISPLAY_RESPONSE
+		require
+			a_commands_attached: a_commands /= Void
+		do
+			Result := (create {XER_NO_RESPONSE}.make ("")).render_to_response
+
+			from
+				a_commands.list.start
+			until
+				a_commands.list.after
+			loop
+				if attached {XSC_DISPLAY_RESPONSE} a_commands.list.item as l_command then
+					Result := l_command.response
+				end
+				a_commands.list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.

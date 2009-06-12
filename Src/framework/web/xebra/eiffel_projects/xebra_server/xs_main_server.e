@@ -11,6 +11,7 @@ class
     XS_MAIN_SERVER
 
 inherit
+	XSC_SERVER_INTERFACE
 	XS_SHARED_SERVER_OUTPUTTER
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XS_SHARED_SERVER_CONFIG
@@ -30,20 +31,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	http_connection_server: detachable XS_HTTP_CONN_SERVER assign set_http_connection_server
+	http_connection_server: detachable XS_HTTP_CONN_SERVER
 			-- Handles connections to http server requests
 
-	input_server: detachable XS_INPUT_SERVER assign set_input_server
+	input_server: detachable XS_INPUT_SERVER
 
 	commands: XS_COMMAND_MANAGER
 
-	stop: BOOLEAN assign set_stop
+	stop: BOOLEAN
 		-- Stops the server
+
 feature -- Constants
 
 	Name: STRING = "XEBSRV"
 
-feature -- Operations
+
+feature {XS_APPLICATION} -- Setup
 
 	setup (a_arg_parser: XS_ARGUMENT_PARSER)
 			--
@@ -60,9 +63,12 @@ feature -- Operations
 			stop := false
 			commands.put (create {XSC_LOAD_CONFIG}.make)
 			commands.put (create {XSC_LAUNCH_HTTPS}.make)
-			commands.put (create {XSC_LAUNCH_INPUTS}.make)
+
+			launch_input_server
 			run
 		end
+
+feature {NONE} -- Operations
 
 	run
 				-- Executes commands in the queue until stopped
@@ -75,14 +81,35 @@ feature -- Operations
 				stop
 			loop
 				commands.execute_next (current)
-
 			end
 
 			o.iprint ("Shutting down...")
+			shutdown_webapps
+			shutdown_http_server
+			if input_server.running then
+				o.iprint ("Remote Shutdown. Bye!")
+				(create {EXCEPTIONS}).die (1)
+			else
+				o.iprint ("Shutdown complete. Bye!")
+			end
+		end
+
+
+feature {XS_COMMAND} -- Status setting
+
+	shutdown_webapps
+			-- <Precursor>
+		local
+			l_webapp_handler: XS_WEBAPP_HANDLER
+		do
 			o.dprint ("Terminating Web Applications...",3)
 			create l_webapp_handler.make
 			l_webapp_handler.stop_apps
+		end
 
+	shutdown_http_server
+			-- <Precursor>
+		do
 			if attached http_connection_server as https then
 				if https.launched then
 					o.dprint ("Waiting for http_connection_server to shutdown...", 3)
@@ -90,53 +117,118 @@ feature -- Operations
 					https.join
 				end
 			end
+		end
 
-			if attached input_server as inputs then
-				if inputs.launched then
-					o.dprint ("Waiting for input_server to shutdown...", 3)
-					inputs.join
-				end
+
+
+	launch_http_server
+			-- <Precursor>
+		local
+			l_webapp_handler: XS_WEBAPP_HANDLER
+			l_webapp_finder: XS_WEBAPP_FINDER
+			l_config_reader: XS_CONFIG_READER
+		do
+			shutdown_http_server
+
+			o.iprint ("Launching http connection server...")
+			http_connection_server := create {XS_HTTP_CONN_SERVER}.make (commands)
+			if not http_connection_server.is_bound then
+					error_manager.add_error (create {XERROR_SOCKET_NOT_BOUND}.make, false)
+			else
+				http_connection_server.launch
+				print ("Done.")
+			end
+		end
+
+	launch_input_Server
+			-- <Precursor>	
+		do
+			o.iprint ("Launching input server...")
+			input_server := create {XS_INPUT_SERVER}.make (current)
+			input_server.launch
+			print ("Done.")
+		end
+
+
+	display_response
+			-- <Precursor>
+		do
+		end
+
+	load_config
+			-- <Precursor>
+		local
+			l_webapp_handler: XS_WEBAPP_HANDLER
+			l_webapp_finder: XS_WEBAPP_FINDER
+			l_config_reader: XS_CONFIG_READER
+		do
+			o.iprint ("Reading config...")
+			create l_config_reader.make
+			if attached l_config_reader.process_file (config.args.config_filename) as l_config then
+				config.file := l_config
+				create l_webapp_finder.make
+				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
+				o.dprint (config.file.print_configuration, 2)
+				o.iprint ("Done.")
+			end
+		end
+
+	stop_server
+			-- <Precursor>
+		do
+			stop := True
+		end
+
+	handle_errors
+			-- <Precursor>
+		local
+			l_printer: XS_ERROR_PRINTER
+		do
+			create l_printer.default_create
+			if error_manager.has_warnings then
+				error_manager.trace_warnings (l_printer)
 			end
 
-			o.iprint ("Shutdown complete. Bye!")
+			if not error_manager.is_successful then
+				error_manager.trace_errors (l_printer)
+				stop := True
+			end
+
 		end
 
+--	set_http_connection_server (a_http_connection_server: like http_connection_server)
+--			-- Sets http_connection_server.
+--		require
+--			a_http_connection_server_attached: a_http_connection_server /= Void
+--		do
+--			http_connection_server  := a_http_connection_server
+--		ensure
+--			http_connection_server_set: http_connection_server  = a_http_connection_server
+--		end
 
-feature {XSC_LAUNCH_HTTPS} -- Status setting
+--	set_stop (a_stop: like stop)
+--			-- Sets stop.
+--		require
+--			a_stop_attached: a_stop /= Void
+--		do
+--			stop  := a_stop
+--		ensure
+--			stop_set: stop  = a_stop
+--		end
 
-	set_http_connection_server (a_http_connection_server: like http_connection_server)
-			-- Sets http_connection_server.
-		require
-			a_http_connection_server_attached: a_http_connection_server /= Void
-		do
-			http_connection_server  := a_http_connection_server
-		ensure
-			http_connection_server_set: http_connection_server  = a_http_connection_server
-		end
 
-feature {XSC_STOP_SERVER} -- Status setting
+--	set_input_server (a_input_server: like input_server)
+--			-- Sets input_server.
+--		require
+--			a_input_server_attached: a_input_server /= Void
+--		do
+--			input_server  := a_input_server
+--		ensure
+--			input_server_set: input_server  = a_input_server
+--		end
 
-	set_stop (a_stop: like stop)
-			-- Sets stop.
-		require
-			a_stop_attached: a_stop /= Void
-		do
-			stop  := a_stop
-		ensure
-			stop_set: stop  = a_stop
-		end
 
-feature {XSC_LAUNCH_INPUTS} -- Status setting
 
-	set_input_server (a_input_server: like input_server)
-			-- Sets input_server.
-		require
-			a_input_server_attached: a_input_server /= Void
-		do
-			input_server  := a_input_server
-		ensure
-			input_server_set: input_server  = a_input_server
-		end
 
 invariant
 		commands_attached: commands /= Void

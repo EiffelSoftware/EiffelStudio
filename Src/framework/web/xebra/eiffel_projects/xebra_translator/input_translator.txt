@@ -1,6 +1,0 @@
-i
-a
-demoapplication ../../websites/demoapplication/ ../../websites/demoapplication/ ../../websites/demoapplication/servlet_gen/ ../../eiffel_projects/xebra_translator/
-r
-q
-

@@ -23,7 +23,7 @@ class TRANSFER_MANAGER inherit
 			go_i_th as select_transaction
 		export
 			{ANY} valid_index, valid_cursor_index
-			{TRANSFER_MANAGER} area, i_th, cursor, go_to, valid_cursor, upper, lower
+			{TRANSFER_MANAGER} area, area_v2, i_th, cursor, go_to, valid_cursor, upper, lower
 			{NONE} all
 		end
 
@@ -38,7 +38,7 @@ create
 	make
 
 create {TRANSFER_MANAGER}
-	make_filled
+	list_make
 
 feature {NONE} -- Initialization
 

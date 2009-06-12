@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
 			compile_project := True
+			freeze_required := False
 			ace_location := ""
 
 			project_location := eiffel_layout.user_projects_path
@@ -75,6 +76,14 @@ feature -- Setting
 			compile_project := enable_compilation
 		end
 
+	set_freeze_required (v: BOOLEAN)
+			-- Enable or disable the freeze of the project depending on `v'.
+		do
+			freeze_required := v
+		ensure
+			freeze_required_set: freeze_required = v
+		end
+
 	set_ace_location (an_ace_location: STRING)
 			-- Set the location of the ace file to `an_ace_location'.
 		do
@@ -94,6 +103,9 @@ feature -- Access
 
 	compile_project: BOOLEAN
 			-- Should the project be compiled upon generation?
+
+	freeze_required: BOOLEAN
+			-- Should we freeze the project if compiled?
 
 feature {NONE} -- Implementation
 

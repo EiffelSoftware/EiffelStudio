@@ -9,7 +9,7 @@
 # Let's create an enterprise package for Unix
 rm -rf PorterPackage
 
-# Let's create all packages
+# Let's create the PorterPackage (use 'all' as argument to also generate the enterprise version).
 echo "\n" | /bin/sh make_delivery $1
 
 # Let's keep an archive of this package

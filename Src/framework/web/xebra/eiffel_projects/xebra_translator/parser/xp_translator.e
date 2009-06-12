@@ -84,7 +84,58 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_files (a_files: LIST [STRING]; a_taglib_folder: FILE_NAME)
+	process_with_dir (a_xeb_directory: FILE_NAME; a_tag_lib_directory: FILE_NAME)
+			--`a_xeb_directory': Where are the xeb files located?
+			--`a_tag_lib_directory': Where are the taglibs located?
+			-- Translates xeb files to servlet generators
+		require
+			a_xeb_directory_attached: attached a_xeb_directory
+			a_tag_lib_directory_attached: attached a_tag_lib_directory
+		local
+			l_directory: DIRECTORY
+		do
+			create l_directory.make (a_xeb_directory)
+			process_with_files (search_rec_for_xeb (l_directory), a_tag_lib_directory)
+		end
+
+	search_rec_for_xeb (a_directory: DIRECTORY): LIST [XP_FILE_NAME]
+			-- `l_directory': In which directory to search
+			-- `already_found': All the files already found
+			-- Searches recursively over the directory to find all xeb files
+		require
+			a_directory_attached: attached a_directory
+		local
+			l_files: LIST [STRING]
+			l_file: RAW_FILE
+			l_file_name: XP_FILE_NAME
+			l_directory_name: XP_FILE_NAME
+		do
+			create {ARRAYED_LIST [XP_FILE_NAME]}Result.make (5)
+			create l_directory_name.make_from_string (a_directory.name)
+			from
+				l_files := a_directory.linear_representation
+				l_files.start
+			until
+				l_files.after
+			loop
+				l_file_name := l_directory_name.twin
+				l_file_name.set_file_name (l_files.item)
+				create l_file.make_open_read (l_file_name)
+				if not l_file.is_symlink and then not l_files.item.is_equal (".") and not l_files.item.is_equal ("..") then
+					if l_file.is_directory and then not l_files.item.is_equal ("EIFGENs") then
+						l_file_name := l_directory_name.twin
+						l_file_name.extend (l_files.item)
+						Result.append (search_rec_for_xeb (create {DIRECTORY}.make (l_file_name)))
+					elseif l_file.name.ends_with (".xeb") then
+						Result.extend (l_file_name)
+					end
+				end
+				l_file.close
+				l_files.forth
+			end
+		end
+
+	process_with_files (a_files: LIST [XP_FILE_NAME]; a_taglib_folder: FILE_NAME)
 			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
@@ -94,9 +145,7 @@ feature -- Processing
 		local
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
-			l_path: FILE_NAME
 		do
-			l_path := output_path.twin
 			create registry.make (output_path)
 			o.iprint ("************************************************************")
 			o.iprint ("*                  .taglib processing start...             *")
@@ -111,11 +160,7 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-				if a_files.item.ends_with (".xeb") then
-					l_path := output_path.twin
-					l_path.set_file_name (a_files.item)
-					process_file (l_path, agent process_xeb_file (?, l_path, a_files.item))
-				end
+				process_file (a_files.item, agent process_xeb_file (?, a_files.item, a_files.item.file_name))
 				a_files.forth
 			end
 			o.iprint ("Processing done.")
@@ -127,15 +172,35 @@ feature -- Processing
 			l_webapp_gen.generate
 		end
 
-	process_xeb_file (a_file: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_file_name: STRING)
+	process_xeb_file (a_file: KL_TEXT_INPUT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING)
 		require
 			a_file_attached: attached a_file
 			a_file_open: a_file.is_open_read
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
-			o.iprint ("Processing '" + a_file.name + "'...")
-			add_template_to_registry (a_file_name.substring (1, a_file_name.index_of ('.', 1)-1), a_file, a_path, registry)
+			o.iprint ("Processing '" + a_path + "'...")
+			add_template_to_registry (generate_name_from_file_name (a_path), a_file, a_path, registry)
+		end
+
+	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
+		local
+			l_output_path, l_file_name: STRING
+			l_i: INTEGER
+
+		do
+			l_output_path := output_path.out
+			l_file_name := a_file_name.out
+			from
+				l_i := 1
+			until
+				l_i > l_output_path.count and not (l_output_path [l_i] = l_file_name [l_i])
+			loop
+				l_i := l_i + 1
+			end
+			Result := l_file_name.substring (l_i+1, l_file_name.count - (".xeb").count) -- Magic number
+			Result.replace_substring_all ("/", "_") -- UNIX
+			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end
 
 	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)

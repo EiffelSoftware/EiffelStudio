@@ -81,9 +81,16 @@ feature -- Basic Functionality
 			l_application_class: XEL_CLASS_ELEMENT
 			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
+			l_directory: DIRECTORY
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			l_filename := path.twin
+			l_filename.extend (".generated")
+			create l_directory.make (l_filename)
+			if not l_directory.exists then
+				l_directory.create_dir
+			end
+
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_" + Server_con_handler_class.as_lower + ".e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
@@ -105,6 +112,7 @@ feature -- Basic Functionality
 
 				-- Generate the {APPLICATION} class
 			l_filename := path.twin
+			l_filename.extend (".generated")
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
@@ -125,6 +133,7 @@ feature -- Basic Functionality
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
 			l_filename := path.twin
+			l_filename.extend (".generated")
 			l_filename.set_file_name (Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 			create l_file.make (l_filename)
 			if not l_file.is_creatable then
@@ -179,11 +188,18 @@ feature {NONE} -- Implementation
 			loop
 				l_servlet := some_servlets.item
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + l_servlet.servlet_name.as_lower + ".xeb%")")
+					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + transform_to_url (l_servlet.servlet_name.as_lower) + ".xeb%")")
 				some_servlets.forth
 			end
 		ensure
 			result_attached: attached Result
+		end
+
+	transform_to_url (a_servlet_name: STRING): STRING
+			-- Replaces all underscores by slashes
+		do
+			Result := a_servlet_name.twin
+			Result.replace_substring_all ("_", "/")
 		end
 
 feature {NONE} -- Constants

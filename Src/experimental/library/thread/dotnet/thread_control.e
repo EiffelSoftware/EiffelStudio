@@ -92,15 +92,24 @@ feature {NONE} -- Implementation
 feature {THREAD_CONTROL} -- Threads id
 
 	thread_imp: SYSTEM_THREAD
-			-- .NET thread object.			
+			-- .NET thread object.
+		local
+			l_thread: detachable SYSTEM_THREAD
 		do
-			Result := {SYSTEM_THREAD}.current_thread
+			l_thread := {SYSTEM_THREAD}.current_thread
+			check l_thread_attached: l_thread /= Void end
+			Result := l_thread
 		end
 
 	current_thread_id: INTEGER
 			-- Id of current .NET thread.
 		do
-			Result := {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
+			if
+				attached {SYSTEM_THREAD}.current_thread as l_thread and then
+				attached l_thread.get_domain as l_domain
+			then
+				Result := l_domain.get_current_thread_id
+			end
 		end
 
 feature {NONE} -- Threads management
@@ -155,8 +164,10 @@ feature {NONE} -- Threads management
 			childrens_mutex.lock
 			l_curr_th_id := current_thread_id
 
-			if childrens_by_thread_id.has (l_curr_th_id) then
-				Result := childrens_by_thread_id.item (l_curr_th_id)
+			childrens_by_thread_id.search (l_curr_th_id)
+
+			if childrens_by_thread_id.found and then attached childrens_by_thread_id.found_item as l_item then
+				Result := l_item
 			else
 				debug ("EIFFEL_THREAD")
 					print ("New childrens list for " + l_curr_th_id.out + "%N")
@@ -181,14 +192,14 @@ invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

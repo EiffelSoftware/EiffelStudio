@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create mutex_imp.make
+			is_set := True
 		ensure
 			is_set: is_set
 		end
@@ -49,9 +50,6 @@ feature -- Access
 
 	is_set: BOOLEAN
 			-- Is mutex initialized?
-		do
-			Result := (mutex_imp /= Void)
-		end
 
 feature -- Status setting
 
@@ -87,7 +85,7 @@ feature -- Status setting
 			is_set: is_set
 		do
 			mutex_imp.close
-			mutex_imp := Void
+			is_set := False
 		end
 
 feature -- Obsolete

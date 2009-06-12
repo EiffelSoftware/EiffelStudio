@@ -36,8 +36,8 @@ feature -- Initialization
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
-			thread_imp.start
+			create internal_thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
+			internal_thread_imp.start
 			add_children (Current)
 		end
 
@@ -48,11 +48,11 @@ feature -- Initialization
 		local
 			l_priority: THREAD_PRIORITY
 		do
-			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
+			create internal_thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
 				-- Set attributes
-			thread_imp.set_priority (l_priority.from_integer (attr.priority))
-			thread_imp.set_is_background (attr.detached)
-			thread_imp.start
+			internal_thread_imp.set_priority (l_priority.from_integer (attr.priority))
+			internal_thread_imp.set_is_background (attr.detached)
+			internal_thread_imp.start
 			add_children (Current)
 		end
 
@@ -65,21 +65,31 @@ feature {NONE} -- Implementation
 			execute
 		end
 
-	thread_imp: SYSTEM_THREAD;
-		-- .NET thread object.
+	thread_imp: SYSTEM_THREAD
+			-- .NET thread object.
+		do
+			if attached internal_thread_imp as l_thread_imp then
+				Result := l_thread_imp
+			else
+				Result := Precursor
+			end
+		end
+
+	internal_thread_imp: detachable SYSTEM_THREAD note option: stable attribute end
+			-- Actual storage for current thread.
 
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

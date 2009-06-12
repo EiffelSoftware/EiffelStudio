@@ -31,4 +31,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="thread_dotnet" extends="thread">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

@@ -53,4 +53,7 @@
 		</cluster>
 		<cluster name="process" location=".\"/>
 	</target>
+	<target name="process_dotnet" extends="process">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

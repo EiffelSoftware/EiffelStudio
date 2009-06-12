@@ -36,4 +36,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="time_dotnet" extends="time">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

@@ -52,4 +52,7 @@
 			</option>
 		</cluster>
 	</target>
+	<target name="vision2_extension_dotnet" extends="vision2_extension">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

@@ -85,4 +85,7 @@
 			</cluster>
 		</cluster>
 	</target>
+	<target name="vision2_dotnet" extends="vision2">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

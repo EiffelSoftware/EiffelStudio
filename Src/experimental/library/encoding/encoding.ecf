@@ -58,4 +58,7 @@
 			<cluster name="encoding_detector" location=".\encoding_detector\"/>
 		</cluster>
 	</target>
+	<target name="encoding_dotnet" extends="encoding">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

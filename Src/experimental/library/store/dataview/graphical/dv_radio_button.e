@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {DV_RADIO_BUTTON_IMP} implementation.make (Current)
+			create {DV_RADIO_BUTTON_IMP} implementation.make
 		end
 
 note

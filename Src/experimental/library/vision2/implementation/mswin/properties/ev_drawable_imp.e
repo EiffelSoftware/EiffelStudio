@@ -657,7 +657,7 @@ feature -- Drawing operations
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
 					end
-					check source_bitmap /= Void end
+					check source_bitmap_dc /= Void end
 					check source_mask_bitmap /= Void end
 
 					dest_dc.mask_blt (x, y, source_width, source_height, source_bitmap_dc, 0, 0, source_mask_bitmap, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)

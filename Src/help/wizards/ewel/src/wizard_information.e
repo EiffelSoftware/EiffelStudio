@@ -26,6 +26,7 @@ feature  -- Initialization
 			icon_path: FILE_NAME
 		do
 			Precursor
+			freeze_required := True
 
 			create icon_path.make_from_string (wizard_resources_path)
 			icon_path.set_file_name ("eiffel")
@@ -51,7 +52,7 @@ feature -- Access
 
 	icon_location: STRING
 			-- Location of the icon choose by the user
-	
+
 	dialog_application: BOOLEAN
 			-- Does the user want to generate a dialog application
 
@@ -62,6 +63,9 @@ feature {NONE} -- Implementation
 		do
 			Result := "my_wel_application"
 		end
+
+invariant
+	freeze_required: freeze_required
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

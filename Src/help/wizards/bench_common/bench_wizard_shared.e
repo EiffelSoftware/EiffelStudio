@@ -92,6 +92,11 @@ feature -- Shared variables
 					else
 						callback_content.replace_substring_all ("<COMPILATION>", "no")
 					end
+					if wizard_information.freeze_required then
+						callback_content.replace_substring_all ("<COMPILATION_TYPE>", "freeze")
+					else
+						callback_content.replace_substring_all ("<COMPILATION_TYPE>", "melt")
+					end
 
 					if callback_filename /= Void then
 						create file.make_open_write (callback_filename)

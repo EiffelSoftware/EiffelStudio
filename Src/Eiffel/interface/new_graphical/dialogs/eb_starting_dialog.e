@@ -374,8 +374,8 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	compile_project: BOOLEAN
-			-- Should a compilation be launched upon completion of this dialog?
+	compile_project, freeze_project: BOOLEAN
+			-- Should a compilation be launched upon completion of this dialog and possible frozen?
 
 	update_preferences
 			-- Update user preferences
@@ -536,7 +536,11 @@ feature {NONE} -- Implementation
 				l_loader.open_project_file (ace_file_name, Void, directory_name, True)
 				if not l_loader.has_error and then compile_project then
 					l_loader.set_is_compilation_requested (compile_project)
-					l_loader.compile_project
+					if freeze_project then
+						l_loader.freeze_project (False)
+					else
+						l_loader.melt_project (False)
+					end
 				end
 			else
 				ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
@@ -554,7 +558,11 @@ feature {NONE} -- Implementation
 				ebench_name.append (" -config %"")
 				ebench_name.append (ace_name)
 				if compile_project then
-					ebench_name.append ("%" -melt")
+					if freeze_project then
+						ebench_name.append ("%" -freeze")
+					else
+						ebench_name.append ("%" -melt")
+					end
 					compile_project := False
 				else
 					ebench_name.append ("%"")
@@ -576,6 +584,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				compile_project := False
+				freeze_project := False
 
 					-- Disable all controls
 				disable_sensitive
@@ -600,6 +609,9 @@ feature {NONE} -- Implementation
 						elseif (result_parameters.item @ 1).is_equal ("compilation") then
 							(result_parameters.item @ 2).to_lower
 							compile_project := (result_parameters.item @ 2).is_equal ("yes")
+						elseif (result_parameters.item @ 1).is_equal ("compilation_type") then
+							(result_parameters.item @ 2).to_lower
+							freeze_project := (result_parameters.item @ 2).is_equal ("freeze")
 						elseif (result_parameters.item @ 1).is_equal ("success") then
 							-- Do nothing
 						else

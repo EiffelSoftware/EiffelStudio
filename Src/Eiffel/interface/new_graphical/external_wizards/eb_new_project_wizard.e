@@ -119,7 +119,7 @@ feature {NONE} -- Constants
 
 	Additional_parameters: STRING
 		do
-			Result := "Ace=%"<ACE>%"%NDirectory=%"<DIRECTORY>%"%NCompilation=%"<COMPILATION>%""
+			Result := "Ace=%"<ACE>%"%NDirectory=%"<DIRECTORY>%"%NCompilation=%"<COMPILATION>%"%NCompilation_type=%"<COMPILATION_TYPE>%""
 		end
 
 note

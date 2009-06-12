@@ -376,8 +376,8 @@ feature -- Status setting
 		local
 			item_counter: INTEGER
 			parent_row_count: INTEGER
-			row_data: SPECIAL [detachable EV_GRID_ITEM_I]
-			internal_row_data: EV_GRID_ARRAYED_LIST [SPECIAL [detachable EV_GRID_ITEM_I]]
+			row_data: detachable SPECIAL [detachable EV_GRID_ITEM_I]
+			internal_row_data: EV_GRID_ARRAYED_LIST [detachable SPECIAL [detachable EV_GRID_ITEM_I]]
 			grid_item_i: detachable EV_GRID_ITEM_I
 			row: EV_GRID_ROW_I
 			l_parent_i: like parent_i

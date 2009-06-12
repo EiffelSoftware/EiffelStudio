@@ -121,8 +121,12 @@ feature -- Access
 			is_parented: parent /= Void
 			i_positive: i > 0
 			i_less_than_subrow_count: i <= subrow_count
+		local
+			l_row: detachable EV_GRID_ROW_I
 		do
-			Result := subrows.i_th (i).attached_interface
+			l_row := subrows.i_th (i)
+			check l_row /= Void end
+			Result := l_row.attached_interface
 		ensure
 			subrow_not_void: Result /= Void
 			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = attached_interface
@@ -445,10 +449,11 @@ feature -- Status report
 			-- or 0 if none.
 		local
 			counter: INTEGER
-			current_row_list: SPECIAL [detachable EV_GRID_ITEM_I]
+			current_row_list: detachable SPECIAL [detachable EV_GRID_ITEM_I]
 			current_row_list_count: INTEGER
 			a_item: detachable EV_GRID_ITEM_I
-			column_list_area: SPECIAL [EV_GRID_COLUMN_I]
+			column_list_area: SPECIAL [detachable EV_GRID_COLUMN_I]
+			a_column: detachable EV_GRID_COLUMN_I
 			a_physical_index: INTEGER
 			row_count: INTEGER
 			l_parent_i: like parent_i
@@ -456,6 +461,7 @@ feature -- Status report
 			l_parent_i := parent_i
 			check l_parent_i /= Void end
 			current_row_list := l_parent_i.internal_row_data @ index
+			check current_row_list /= Void end
 			column_list_area := l_parent_i.columns.area
 			current_row_list_count := current_row_list.count
 			row_count := count
@@ -464,7 +470,9 @@ feature -- Status report
 			until
 				a_item /= Void or else counter = row_count
 			loop
-				a_physical_index := (column_list_area @ counter).physical_index
+				a_column := (column_list_area @ counter)
+				check a_column /= Void end
+				a_physical_index := a_column.physical_index
 				if a_physical_index < current_row_list_count then
 					a_item := current_row_list @ a_physical_index
 				end
@@ -894,7 +902,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			rows_to_insert_positive: rows_to_insert >= 1
 			valid_subrow_index: a_subrow_index >= 1 and a_subrow_index <= subrow_count + 1
 		local
-			l_subrow: EV_GRID_ROW_I
+			l_subrow: detachable EV_GRID_ROW_I
 			l_index: INTEGER
 		do
 			if a_subrow_index = 1 then
@@ -904,6 +912,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					-- add at a position in `parent_i' based on the item before the insert
 					-- As this item may have rows of it's own the subrow count recursive must also be added.
 				l_subrow := subrows.i_th (a_subrow_index - 1)
+				check l_subrow /= Void end
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
 			end
 			if attached parent as l_parent_i then
@@ -911,7 +920,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			end
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + rows_to_insert
-			parent_row_count_increased: attached parent as l_parent and then attached old parent as l_old_parent and then l_parent.row_count = l_old_parent.row_count + rows_to_insert
+			parent_row_count_increased: attached parent as l_parent and then l_parent.row_count = old attached_parent.row_count + rows_to_insert
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW)
@@ -929,6 +938,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				(a_row.index + a_row.subrow_count_recursive = l_parent_row_root.index + l_parent_row_root.subrow_count_recursive)
 		local
 			row_imp: EV_GRID_ROW_I
+			l_row_i: detachable EV_GRID_ROW_I
 			i, last_changed_subrow_index: INTEGER
 			l_parent_i: like parent_i
 		do
@@ -941,7 +951,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			l_parent_i := parent_i
 			check l_parent_i /= Void end
 
-
 			if row_imp.subrow_count > 0 then
 					-- Now update the depth properties for each subrow of `a_row' (if any).
 					-- `a_row' was already handled by the call to `internal_set_parent_row'.
@@ -951,7 +960,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				until
 					i > last_changed_subrow_index
 				loop
-					l_parent_i.rows.i_th (i).update_depths_in_tree
+					l_row_i := l_parent_i.rows.i_th (i)
+					check l_row_i /= Void end
+					l_row_i.update_depths_in_tree
 					i := i + 1
 				end
 			end
@@ -1196,7 +1207,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			valid_index: a_index > 0 and then a_index <= subrow_count + 1
 		local
 			i, a_subrow_count: INTEGER
-			row_i: EV_GRID_ROW_I
+			row_i: detachable EV_GRID_ROW_I
 			temp_rows: like subrows
 		do
 				-- Set subsequent indexes to their new values
@@ -1244,7 +1255,7 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 
 feature {EV_GRID_ITEM_I, EV_GRID_ROW_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
-	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+	subrows: EV_GRID_ARRAYED_LIST [detachable EV_GRID_ROW_I]
 		-- All subrows of `Current'.
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
@@ -1390,6 +1401,7 @@ feature {NONE} -- Implementation
 			-- or collapsing items to determine how many nodes are now visible or hidden.
 		local
 			a_subrow_index: INTEGER
+			l_row: detachable EV_GRID_ROW_I
 		do
 			from
 				a_subrow_index := 1
@@ -1399,8 +1411,9 @@ feature {NONE} -- Implementation
 			loop
 				Result := Result + 1
 					-- Add one for the current row which is now hidden.
-
-				Result := Result + subrows.i_th (a_subrow_index).expanded_subrow_count_recursive
+				l_row := subrows.i_th (a_subrow_index)
+				check l_row /= Void end
+				Result := Result + l_row.expanded_subrow_count_recursive
 					-- Add the number of expanded items for that row.
 
 				a_subrow_index := a_subrow_index + 1
@@ -1436,6 +1449,21 @@ feature {NONE} -- Implementation
 			Result := (create {EV_LABEL}).minimum_height + 3
 		ensure
 			result_positive: result > 0
+		end
+
+feature -- Contract Support
+
+	attached_parent: EV_GRID
+			-- Grid to which current row belongs.
+			-- Used for old evaluation
+		require
+			parent_i_attached: attached parent
+		local
+			l_parent: like parent
+		do
+			l_parent := parent
+			check l_parent /= Void end
+			Result := l_parent
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation

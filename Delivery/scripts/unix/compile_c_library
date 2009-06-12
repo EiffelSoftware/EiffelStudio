@@ -1,8 +1,20 @@
 #!/bin/sh
 
-remtrace Compile the C libraries C code
+INIT_DIR=`pwd`
+
+if [ $# -le 1 ]; then 
+	echo Usage: compile_c_library platform location
+	exit 1
+fi
+
+ISE_PLATFORM=$1; export ISE_PLATFORM
+
+. $INIT_DIR/set_aliases
+
+
+remtrace Compile the C libraries C code for $ISE_PLATFORM in $2
 remtrace libpng
-cd $1/C_library/libpng
+cd $2/C_library/libpng
 if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
 	cp scripts/makefile.linux .
 	make -f makefile.linux
@@ -43,6 +55,6 @@ else
 fi
 
 remtrace zlib
-cd $1/C_library/zlib
+cd $2/C_library/zlib
 make -f Makefile.unix                                                 
-cd $1
+cd $2

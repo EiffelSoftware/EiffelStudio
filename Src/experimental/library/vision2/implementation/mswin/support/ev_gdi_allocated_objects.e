@@ -9,7 +9,7 @@ note
 	revision: "$Revision:"
 
 class
-	EV_GDI_ALLOCATED_OBJECTS [G -> EV_GDI_OBJECT]
+	EV_GDI_ALLOCATED_OBJECTS [G -> detachable EV_GDI_OBJECT]
 
 inherit
 	ANY
@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 				found_object_index /= 0 or else i > allocated_objects_number
 			loop
 				curr_item := allocated_objects.item(i)
+				check curr_item /= Void end
 				if (object_hash_code = curr_item.hash_code) and then
 					an_object.is_equal (curr_item)
 				then
@@ -111,14 +112,17 @@ feature {NONE} -- Implementation
 			-- Add `new_object' to the array of allocated objects.
 		local
 			index_new_item: INTEGER
+			l_item: G
 		do
 			check
 				not (allocated_objects_number > Max_allocated_objects)
 			end
 			if allocated_objects_number = Max_allocated_objects then
 				index_new_item := index_lightest_object
-					-- Free the object that will be replaced...				
-				allocated_objects.item (index_new_item).delete
+					-- Free the object that will be replaced...	
+				l_item := allocated_objects.item (index_new_item)
+				check l_item /= Void end
+				l_item.delete
 			else
 				allocated_objects_number := allocated_objects_number + 1
 				index_new_item := allocated_objects_number
@@ -141,6 +145,7 @@ feature {NONE} -- Implementation
 				-- Requested pen has been already allocated. We return the
 				-- item found in our table.
 			real_object := allocated_objects.item (real_object_index)
+			check real_object /= Void end
 			real_object.update (cache_time)
 
 			l_result ?= real_object.item

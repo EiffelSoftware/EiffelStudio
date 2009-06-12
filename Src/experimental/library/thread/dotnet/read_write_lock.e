@@ -28,7 +28,7 @@ feature -- Initialization
 		require else
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			create item.make
+			make
 		ensure then
 			item_set: is_set
 		end
@@ -39,6 +39,7 @@ feature -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create item.make
+			is_set := True
 		ensure
 			item_set: is_set
 		end
@@ -47,9 +48,6 @@ feature -- Access
 
 	is_set: BOOLEAN
 			-- Is read/write lock initialized?
-		do
-			Result := (item /= Void)
-		end
 
 feature -- Status setting
 
@@ -92,7 +90,7 @@ feature -- Status setting
 		require
 			exists: is_set
 		do
-			item := Void
+			is_set := False
 		end
 
 feature {NONE} -- Implementation

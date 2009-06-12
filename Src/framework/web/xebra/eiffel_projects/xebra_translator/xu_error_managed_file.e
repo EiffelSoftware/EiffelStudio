@@ -15,7 +15,7 @@ feature -- Initialization
 
 feature -- Access
 
-	process_file (a_file_name: READABLE_STRING_8; a_action: PROCEDURE [ANY, TUPLE [file: KI_CHARACTER_INPUT_STREAM]])
+	process_file (a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [file: KI_CHARACTER_INPUT_STREAM]])
 			-- Manages error handling of a file and processes `a_action' with it
 			-- `a_file_name': The filename/path
 			-- `a_action': The action which should be executed with the file
@@ -25,7 +25,7 @@ feature -- Access
 			a_action_attached: attached a_action
 		local
 			l_file: KL_TEXT_INPUT_FILE
-			l_generic_file_name: FILE_NAME
+			l_generic_file_name: XP_FILE_NAME
 		do
 			create l_generic_file_name.make_from_string (a_file_name)
 			create l_file.make (l_generic_file_name)

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 remtrace Compiling additional libraries
-cd $EIFFEL_SRC/library
+cd $EIFFEL_SRC/$1
 cd cURL/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
 cd ../../vision2/Clib
@@ -9,9 +9,9 @@ $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_L
 cd ../implementation/gtk/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
 
-if [ "$1" = "gtk" ]; then
+if [ "$2" = "gtk" ]; then
 	# Copy GTK 1.2 implementation over gtk directory
-	cd $EIFFEL_SRC/library/vision2/implementation/
+	cd $EIFFEL_SRC/$1/vision2/implementation/
 	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/vision2_for_gtk12 gtk --force 
 fi
 

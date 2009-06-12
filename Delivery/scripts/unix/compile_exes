@@ -103,6 +103,7 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 move $INSTALL_DIR/studio/config/unix/* $INSTALL_DIR/studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 mv $INSTALL_DIR/precomp/spec/platform $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
+mv $INSTALL_DIR/experimental/precomp/spec/platform $INSTALL_DIR/experimental/precomp/spec/$ISE_PLATFORM
 fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 
@@ -171,11 +172,19 @@ if [ ! -d C_library ]; then
 fi
 
 cd $EXPORT_DIR
-. ./compile_libraries
+. ./compile_c_library $EXPORT_DIR
+cd $EXPORT_DIR
+. ./compile_c_library $INSTALL_DIR
 
-cd $INSTALL_DIR
-. $EXPORT_DIR/compile_libraries
+cd $EXPORT_DIR
+. ./compile_libraries $EXPORT_DIR
+cd $EXPORT_DIR
+. ./compile_libraries $INSTALL_DIR
 
+# Commented for now since we do not checkout experimental to compile EiffelStudio
+# it is only available in the delivery
+#. ./compile_libraries $EXPORT_DIR/experimental
+. $EXPORT_DIR/compile_libraries $INSTALL_DIR/experimental
 
 remtrace eweasel
 move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM

@@ -99,7 +99,49 @@ remtrace esbuilder
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder 
 remtrace vision2_demo
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo 
+remtrace examples
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
+cd examples
+fullrd obsolete
+fullrd eiffeltest
+fullrd math
+fullrd matisse
+fullrd store/matisse
+fullrd old_com
+fullrd old_matisse
+fullrd vision
+fullrd build
+fullrd dotnet
+fullrd thread/fancy
+fullrd vision2/Boxes
+fullrd vision2/drawing_area
+fullrd vision2/ev_list
+fullrd vision2/fake_event
+fullrd vision2/figure
+fullrd vision2/hello_world
+fullrd vision2/menu
+fullrd vision2/multicolumn_list
+fullrd vision2/pixmap
+fullrd vision2/split_area
+fullrd vision2/test_all_widgets
+fullrd vision2/test_events
+fullrd vision2/tests
+fullrd vision2/tutorial
+fullrd vision2/widget_test
+
 remtrace precomp
+safe_md $INSTALL_DIR/experimental/precomp
+safe_md $INSTALL_DIR/experimental/precomp/spec
+cd $INSTALL_DIR/experimental/precomp/spec
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
+cd platform
+fullrd lex
+fullrd mel
+fullrd net
+fullrd net-mt
+fullrd parse
+fullrd vision
+
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
@@ -111,6 +153,7 @@ fullrd net
 fullrd net-mt
 fullrd parse
 fullrd vision
+
 remtrace C_library
 safe_md $INSTALL_DIR/C_library
 cd $INSTALL_DIR/C_library
@@ -195,10 +238,12 @@ if [ ! "$NO_COMPILE" ]; then
 	cd tools
 	exprt $DEFAULT_ISE_SVN/Src/tools/activation activation
 	exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
-	cd $INIT_DIR
 
 	remtrace Update all libraries
-	. ./update_libraries $GTK_DIR
+	cd $INIT_DIR
+	. ./update_libraries library $GTK_DIR
+	cd $INIT_DIR
+	. ./update_libraries experimental/library $GTK_DIR
 
 	remtrace Generate needed executables of the bin directory
 	cd $INIT_DIR
@@ -230,7 +275,9 @@ fi
 cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
-. ./make_libraries $GTK_DIR
+. ./make_libraries $INSTALL_DIR library $GTK_DIR
+safe_md $INSTALL_DIR/experimental
+. ./make_libraries $INSTALL_DIR/experimental experimental/library $GTK_DIR
 cd $INIT_DIR
 
 if [ ! "$NO_INSTALL" ]; then

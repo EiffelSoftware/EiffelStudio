@@ -47,6 +47,9 @@ feature {NONE} -- Implementation
 			-- Window's icon
 		once
 			create Result.make_by_id (Idr_mainframe)
+			if not Result.exists then
+				create Result.make_by_predefined_id ({WEL_IDI_CONSTANTS}.idi_application)
+			end
 		end
 
 end

@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	strip_leading_ev (tree_item: EV_TREE_ITEM)
+	strip_leading_ev (tree_item: EV_TREE_NODE)
 			-- If `tree_item' starts with "EV_", strip
 			-- this.
 		require

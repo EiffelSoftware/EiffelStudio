@@ -129,7 +129,9 @@ feature -- Basic operations
 			if attached {WEL_MAIN_DIALOG} l_window as l_dialog then
 				l_dialog.activate
 			end
-			l_window.show_with_option (default_show_command)
+			if l_window.exists then
+				l_window.show_with_option (default_show_command)
+			end
 			message_loop
 		end
 

@@ -353,8 +353,8 @@ feature {NONE} -- Implementation
 		local
 			other_menu_bar: detachable EV_MENU_BAR
 		do
-			internal_class_name := other_imp.class_name
-			create wnd_class.make (other_imp.class_name)
+			internal_class_name := other_imp.internal_class_name
+			create wnd_class.make (internal_class_name)
 			accel_list := other_imp.accel_list
 			if attached other_imp.accelerators_internal as l_event then
 				accelerators_internal := l_event

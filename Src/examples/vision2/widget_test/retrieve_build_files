@@ -7,9 +7,6 @@ else
 	svntag=$*
 fi
 
-# Check out Build source.
-until svn co $svntag/Src/build Src/build; do echo "svn failure, retrying..."; done
-
 # Check out bitmaps from Build delivery
 until svn co $svntag/Delivery/esbuilder/bitmaps Delivery/esbuilder/bitmaps; do echo "svn failure, retrying..."; done
 
@@ -18,17 +15,6 @@ until svn co $svntag/Delivery/vision2_demo Delivery/vision2_demo; do echo "svn f
 
 # Copy template files
 cp -r Delivery/vision2_demo/templates ./
-
-
-# Copy constants and eiffel environment to interface.
-cp ./Src/build/Constants/gb_constants.e ./interface/
-cp ./Src/build/utilities/gb_general_utilities.e ./interface/
-cp ./Src/build/utilities/gb_widget_utilities.e ./interface/
-cp ./Src/build/utilities/ordered_string_handler.e ./interface/
-cp ./Src/build/main/gb_supported_events.e ./interface/
-cp ./Src/build/utilities/default_object_state_checker.e ./interface/
-cp ./Src/build/utilities/gb_color_stone.e ./interface/
-
 
 # Copy icons for different widget types across.
 cp -r Delivery/esbuilder/bitmaps ./
@@ -42,36 +28,5 @@ cp Delivery/vision2_demo/bitmaps/png/size_up.png ./bitmaps/png/
 cp Delivery/vision2_demo/bitmaps/png/image1.png ./bitmaps/png/
 cp Delivery/vision2_demo/bitmaps/png/image2.png ./bitmaps/png/
 
-
-# Copy any required dialogs
-cp -r ./Src/build/dialogs/gb_fixed_positioner/gb_fixed_positioner.e ./interface/
-cp -r ./Src/build/dialogs/gb_fixed_positioner/gb_fixed_positioner_imp.e ./interface/
-cp -r ./Src/build/dialogs/gb_table_positioner/gb_table_positioner.e ./interface/
-cp -r ./Src/build/dialogs/gb_table_positioner/gb_table_positioner_imp.e ./interface/
-
-
-# Copy all the editor constructor classes into interface.
-cp ./Src/build/interface/gb_ev_pixmap_handler.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_box_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_container_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_fixed_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_frame_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_notebook_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_table_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/containers/gb_ev_viewport_editor_constructor.e ./interface/
-
-cp -r ./Src/build/interface/events ./interface/
-
-
-cp ./Src/build/interface/widgets/primitives/gb_ev_gauge_editor_constructor.e ./interface/
-cp ./Src/build/interface/widgets/primitives/gb_ev_text_component_editor_constructor.e ./interface/
-
-cp ./Src/build/interface/properties/gb_ev_deselectable_editor_constructor.e ./interface/
-cp ./Src/build/interface/properties/gb_ev_sensitive_editor_constructor.e ./interface/
-cp ./Src/build/interface/properties/gb_ev_text_alignable_editor_constructor.e ./interface/
-cp ./Src/build/interface/properties/gb_ev_textable_editor_constructor.e ./interface/
-cp ./Src/build/interface/properties/gb_ev_tooltipable_editor_constructor.e ./interface/
-
 # Remove all temporary checked out files.
-rm -rf Src
 rm -rf Delivery

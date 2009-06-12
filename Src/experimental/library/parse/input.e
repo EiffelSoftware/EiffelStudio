@@ -20,7 +20,7 @@ create
 	make
 
 create {INPUT}
-	make_filled
+	arrayed_list_make
 
 feature -- Initialisation
 

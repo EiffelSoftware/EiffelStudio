@@ -17,11 +17,15 @@ feature -- Initialization
 			-- Initializes current
 		do
 			create {XH_GET_REQUEST} current_request.make_empty
+			create server_control.make
 		ensure
 			current_request_attached: current_request /= Void
+			server_control_attached: server_control /= Void
 		end
 
 feature -- Access
+
+	server_control: XWA_SERVER_CONTROL
 
 	current_request: XH_REQUEST
 		-- Represents the current request that was sent by the user
@@ -53,4 +57,5 @@ feature -- Status Change
 
 invariant
 	current_request_attached: attached current_request
+	server_control_attached: server_control /= Void
 end

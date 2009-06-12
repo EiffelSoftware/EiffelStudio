@@ -26,6 +26,8 @@ feature -- Constants
 
 	Webapp_config_filename: STRING = "config.ini"
 
+	Search_exclude: STRING = ".svn|EIFGENs"
+
 feature -- Status report
 
 feature -- Operations
@@ -46,7 +48,7 @@ feature -- Operations
 			create l_include.make
 			create l_exclude.make
 			l_include.compile (Webapp_config_filename)
-			l_exclude.compile (".svn")
+			l_exclude.compile (Search_exclude)
 			l_files := (create {FILE_UTILITIES}).scan_for_files (a_path, -1, l_include, l_exclude)
 
 			from

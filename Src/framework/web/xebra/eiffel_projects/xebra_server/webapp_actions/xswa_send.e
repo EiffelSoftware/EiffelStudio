@@ -33,7 +33,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XH_RESPONSE
+	internal_execute: XS_COMMANDS
 			-- <Precursor>
 		local
 			l_webapp_socket: NETWORK_STREAM_SOCKET
@@ -46,14 +46,14 @@ feature {NONE} -- Implementation
 				o.dprint ("Forwarding request", 2)
 	            l_webapp_socket.independent_store (webapp.request_message)
 	            o.dprint ("Waiting for response", 2)
-				if attached {XH_RESPONSE} l_webapp_socket.retrieved as l_response then
-					o.dprint ("Response retrieved", 2)
+				if attached {XS_COMMANDS} l_webapp_socket.retrieved as l_response then
+					o.dprint ("Commands retrieved", 2)
 	            	Result := l_response
 	            else
-	            	Result := (create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_response
+	            	Result := create {XS_COMMANDS}.make_with_response((create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_response)
 	            end
 	        else
-	        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_response
+	        	Result := create {XS_COMMANDS}.make_with_response((create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_response)
 	        end
 		end
 

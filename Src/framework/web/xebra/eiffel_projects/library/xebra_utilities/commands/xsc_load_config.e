@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XSC_LAUNCH_INPUTS
+	XSC_LOAD_CONFIG
 
 inherit
 	XS_COMMAND
@@ -18,12 +18,10 @@ create
 
 feature -- Basic operations
 
-	execute (a_server: XS_MAIN_SERVER)
+	execute (a_server: XSC_SERVER_INTERFACE)
 			-- <Precursor>	
 		do
-			o.iprint ("Launching input server...")
-			a_server.input_server := create {XS_INPUT_SERVER}.make (a_server)
-			a_server.input_server.launch
-			o.iprint ("Done.")
+			a_server.load_config
 		end
+
 end

@@ -33,7 +33,7 @@ feature -- Status Change
 			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
 				l_user := global_state.db.valid_login (name, password)
 				if attached l_user as user then
---				if attached {USER} global_state.db.valid_login (name, password) as user then
+				--if attached {USER} global_state.db.valid_login (name, password) as user then
 					if attached current_session as session  then
 						session.put (user, "auth")
 						Result := "Successfully logged in."
@@ -60,7 +60,6 @@ feature -- Status Change
 			--else
 			--	Result := "/demoapplication/login.xeb"
 			end
-
 		end
 
 end

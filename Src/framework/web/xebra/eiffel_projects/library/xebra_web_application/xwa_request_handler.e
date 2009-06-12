@@ -26,27 +26,24 @@ feature -- Access
 
 feature -- Processing
 
-	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING;
-					 a_socket: NETWORK_STREAM_SOCKET;  a_server_conn_handler: XWA_SERVER_CONN_HANDLER)
+	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XS_COMMANDS
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
-
-			-- TODO was ist hier genau der witz, dass man einen XWA_SERVER_CONN_HANDLER mitgibt? das kann sicher besser geloest werden. ist auch heike wegen thread!
 		require
 			a_session_manager_attached: a_session_manager /= Void
 			not_a_request_message_is_detached_or_empty: a_request_message /= Void and then not a_request_message.is_empty
-			a_socket_attached: a_socket /= Void
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		local
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
 			l_request_factory: XH_REQUEST_FACTORY
+			l_commands: XS_COMMANDS
 
 		do
 			create l_request_factory.make
 			l_new_request := l_request_factory.get_request (a_request_message)
-			create l_response.make_empty
+			create l_commands.make
 
 			from
 
@@ -58,7 +55,7 @@ feature -- Processing
 				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
 				if attached l_servlet then
 					o.dprint ("Handing over to matching servlet...",2)
-					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
+					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response, l_commands)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
 					o.dprint ("No matching servlet found.",2)
@@ -66,8 +63,10 @@ feature -- Processing
 					l_new_request := Void
 				end
 			end
-			o.dprint ("Sending back response...", 2)
-		   	a_socket.independent_store (l_response)
+
+				-- Add response to commands
+			l_commands.list.force (create {XSC_DISPLAY_RESPONSE}.make_with_response(l_response))
+			Result := l_commands
 		end
 
 feature {NONE} -- Internal Processing

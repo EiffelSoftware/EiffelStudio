@@ -18,9 +18,9 @@ create
 
 feature -- Basic operations
 
-	execute (a_server: XS_MAIN_SERVER)
+	execute (a_server: XSC_SERVER_INTERFACE)
 			-- <Precursor>	
 		do
-			a_server.stop := True
+			a_server.stop_server
 		end
 end

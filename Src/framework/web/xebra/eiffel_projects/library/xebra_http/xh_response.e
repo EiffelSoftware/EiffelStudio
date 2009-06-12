@@ -106,7 +106,6 @@ feature -- Element change
 				Result := Result +  cookie_orders.item.render_to_string
 				cookie_orders.forth
 			end
-
 			Result := Result + Html_start + html_stream.get_text
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty

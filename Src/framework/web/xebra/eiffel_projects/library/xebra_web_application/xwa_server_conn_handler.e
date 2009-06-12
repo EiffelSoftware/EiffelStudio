@@ -65,6 +65,7 @@ feature -- Implementation
 			-- Waits for connections from the Xebra Server
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
+			l_commands:  detachable XS_COMMANDS
 		do
 			o.set_name (config.name.out)
 			o.set_debug_level (config.arg_config.debug_level)
@@ -80,14 +81,21 @@ feature -- Implementation
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
 		                o.dprint ("Connection to Xebra Server accepted",1)
 			             if attached {STRING} socket.retrieved as l_request_message then
-			 	        --	request_pool.add_work (agent {XWA_REQUEST_HANDLER}.process_servlet (session_manager, l_request_message, socket, Current))
-			 	        		--singleusermode
 			 	        	if not handle_shutdown_signal (l_request_message) then
-			 	        		l_request_handler.process_servlet (session_manager, l_request_message, socket, Current)
+			 	        		l_commands := l_request_handler.process_servlet (session_manager, l_request_message, Current)
+			 	        	else
+			 	        		-- Don't send back a response on shutdownsignal
 			 	        	end
 			            else
-							socket.independent_store ((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
+							l_commands := create {XS_COMMANDS}.make_with_response((create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_response)
 			            end
+
+
+						if attached l_commands then
+				            o.dprint ("Sending back commands...", 2)
+						   	socket.independent_store (l_commands)
+					   	end
+					   	l_commands := Void
 			            socket.cleanup
 			            check
 				        	socket.is_closed

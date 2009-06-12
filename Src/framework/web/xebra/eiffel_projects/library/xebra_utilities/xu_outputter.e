@@ -66,18 +66,18 @@ feature -- Print
 			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 		do
-			dprintn (a_msg + "%N", a_debug_level)
+			dprintn (a_msg , a_debug_level)
 		end
 
 	dprintn (a_msg: STRING; a_debug_level: INTEGER)
-			-- Prints a debug message (with no %N)  only if debug level is >= a_debug_level
+			-- Prints a debug message  only if debug level is >= a_debug_level
 		require
 			name_set: name.is_set
 			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 		do
 			if a_debug_level <= debug_level then
-				print ("[" + name.out + "][DEBUG] " + a_msg )
+				print ("%N" + "[" + name.out + "][DEBUG] " + a_msg )
 			end
 		end
 
@@ -88,7 +88,7 @@ feature -- Print
 			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
 		do
-			print ("[" + name.out + "][ERROR in " + a_generating_type.out + "] " + a_msg + "%N")
+			print ("%N" + "[" + name.out + "][ERROR in " + a_generating_type.out + "] " + a_msg)
 		end
 
 	iprint (a_msg: STRING)
@@ -97,7 +97,7 @@ feature -- Print
 			name_set: name.is_set
 			a_msg_attached: a_msg /= Void
 		do
-			print ("[" + name.out + "][INFO] " + a_msg + "%N")
+			print ("%N" + "[" + name.out + "][INFO] " + a_msg )
 		end
 
 feature {NONE}  -- Impl

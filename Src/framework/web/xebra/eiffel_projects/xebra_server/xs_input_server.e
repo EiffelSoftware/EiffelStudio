@@ -21,7 +21,7 @@ feature -- Initialization
 	make (a_main_server: XS_MAIN_SERVER)
 			-- Initializes current
 		do
-			launched := False
+			running := False
 			main_server := a_main_server
 		ensure
 			main_server_set: main_server = a_main_server
@@ -32,7 +32,7 @@ feature -- Inherited Features
 	execute
 			-- <Precursor>	
 		do
-			launched := True
+			running := True
 			o.iprint ("(enter 'x' to shut down)")
 			from
 				io.read_character
@@ -41,6 +41,7 @@ feature -- Inherited Features
 			loop
 				io.read_character
 			end
+			running := False
 			main_server.commands.put (create {XSC_STOP_SERVER}.make)
 		end
 
@@ -48,7 +49,7 @@ feature -- Access
 
 	main_server: XS_MAIN_SERVER
 
-	launched: BOOLEAN
+	running: BOOLEAN
 
 feature -- Status
 

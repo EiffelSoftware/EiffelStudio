@@ -47,7 +47,6 @@ cd $3;
 echo "Creating folderss..."
 mkdir $1;
 cd $1;
-mkdir servlet_gen;
 mkdir $APACHE2/htdocs/$1
 
 
@@ -91,7 +90,7 @@ echo "Creating xeb files and controller..."
 echo '<html>
 <page:controller class="MAIN_CONTROLLER"/>
 <body>
-Hello World!
+'$1' works!
 </body>
 </html>' > index.xeb
 echo 'note

@@ -26,7 +26,7 @@ inherit
 
 feature -- Status report
 
-	pixmap_filename: STRING
+	pixmap_filename: detachable STRING
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -47,17 +47,20 @@ feature {NONE} -- Implementation
 		local
 			l_c_string: C_STRING
 			load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE
+			l_pixmap_filename: like pixmap_filename
 		do
 				-- Disable invariant checking.
 			disable_initialized
-			last_pixmap_loading_had_error := False
+			l_pixmap_filename := pixmap_filename
 
+			last_pixmap_loading_had_error := False
 			create load_pixmap_delegate.make (Current, $update_fields)
 
-			if pixmap_filename.is_empty then
+			check l_pixmap_filename /= Void end
+			if l_pixmap_filename.is_empty then
 				c_ev_load_pixmap (Default_pointer, load_pixmap_delegate)
 			else
-				create l_c_string.make (pixmap_filename)
+				create l_c_string.make (l_pixmap_filename)
 				c_ev_load_pixmap (l_c_string.item, load_pixmap_delegate)
 			end
 			if last_pixmap_loading_had_error then
@@ -74,7 +77,7 @@ feature {NONE} -- Implementation
 		rgb_data		: POINTER -- Pointer on a C memory zone
 		alpha_data		: POINTER -- Pointer on a C memory zone
 		)
-		
+
 		deferred
 		end
 

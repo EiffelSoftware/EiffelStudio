@@ -38,16 +38,16 @@ feature -- Operation
 		local
 			l_printer: ERROR_CUI_PRINTER
 			l_translator: XP_TRANSLATOR
-			l_dir: DIRECTORY
+			l_dir: FILE_NAME
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
 			create l_translator.make (a_arg_parser.project_name)
-			create l_dir.make (a_arg_parser.input_path)
+			create l_dir.make_from_string (a_arg_parser.input_path)
 
 			l_translator.set_output_path (a_arg_parser.output_path)
 
-			l_translator.process_with_files (l_dir.linear_representation, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
+			l_translator.process_with_dir (l_dir, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
 
 			create l_printer.default_create
 			if error_manager.has_warnings then

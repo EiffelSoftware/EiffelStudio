@@ -49,4 +49,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="editor_dotnet" extends="editor">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

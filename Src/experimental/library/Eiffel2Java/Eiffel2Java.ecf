@@ -22,4 +22,7 @@
 		<cluster name="eiffel2java" location=".\"/>
 		<cluster name="structures" location="structures\" recursive="true"/>
 	</target>
+	<target name="eiffel2java_dotnet" extends="eiffel2java">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

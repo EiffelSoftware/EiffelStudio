@@ -87,4 +87,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="curl_dotnet" extends="curl">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

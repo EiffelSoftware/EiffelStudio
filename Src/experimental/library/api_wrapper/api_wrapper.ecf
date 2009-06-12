@@ -46,4 +46,7 @@
 			</option>
 		</cluster>
 	</target>
+	<target name="api_wrapper_dotnet" extends="api_wrapper">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

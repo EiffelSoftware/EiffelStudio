@@ -557,7 +557,7 @@ feature -- Basic operations
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
 
-			current_row_list: SPECIAL [detachable EV_GRID_ITEM_I]
+			current_row_list: detachable SPECIAL [detachable EV_GRID_ITEM_I]
 			current_row: detachable EV_GRID_ROW_I
 
 			physical_column_indexes: SPECIAL [INTEGER]
@@ -604,8 +604,8 @@ feature -- Basic operations
 			current_physical_column_index: INTEGER
 			translated_parent_x_indent_position: INTEGER
 			tree_node_connector_color: EV_COLOR
-			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [detachable EV_GRID_ITEM_I]]
-			current_column: EV_GRID_COLUMN_I
+			grid_rows_data_list: EV_GRID_ARRAYED_LIST [detachable SPECIAL [detachable EV_GRID_ITEM_I]]
+			current_column: detachable EV_GRID_COLUMN_I
 			row_count, row_height: INTEGER
 			is_tree_enabled, is_content_partially_dynamic : BOOLEAN
 			first_item_in_row_drawn: BOOLEAN
@@ -722,6 +722,7 @@ feature -- Basic operations
 									-- Retrieve information regarding the rows that we must draw.
 								current_row := grid.row_internal (current_row_index)
 								current_row_list := grid_rows_data_list @ (current_row_index)
+								check current_row_list /= Void end
 
 								if not grid.uses_row_offsets then
 									current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
@@ -799,6 +800,7 @@ feature -- Basic operations
 									end
 									current_column_index := visible_column_indexes.item
 									current_column := grid.columns @ current_column_index
+									check current_column /= Void end
 									current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 
 										-- If the current column has a width of 0, then there is no need to

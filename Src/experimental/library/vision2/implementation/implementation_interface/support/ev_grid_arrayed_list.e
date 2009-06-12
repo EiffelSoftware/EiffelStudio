@@ -123,14 +123,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			l_upper := upper
 			if new_capacity > upper then
 					-- Increase capacity
-				area_v2 := area_v2.aliased_resized_area (new_capacity)
-			elseif new_capacity < count then
-					-- Note that we do not reduce the memory footprint, simply
-					-- remove the items and update `count'. This is for speed at the sake of
-					-- memory usage.
-					-- Remove all items so that they can be garbage collected.
-				area.keep_head (new_capacity)
+				area_v2 := area_v2.aliased_resized_area_with_default (({G}).default, new_capacity)
 			end
+			area.keep_head (new_capacity)
 				-- Ensure index is now valid if it was previously in the
 				-- items that were removed.
 			index := index.min (new_capacity + 1)

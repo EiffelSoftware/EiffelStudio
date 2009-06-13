@@ -13,7 +13,7 @@ feature -- Working with Classes
 		external
 			"C inline use <objc/objc-class.h>"
 		alias
-			"return class_getName((Class)$a_class);"
+			"return (EIF_POINTER) class_getName((Class)$a_class);"
 		end
 
 	frozen class_get_method_implementation (a_class, a_sel: POINTER): POINTER
@@ -89,7 +89,7 @@ feature -- Working with Instances
 		external
 			"C inline use <objc/objc-class.h>"
 		alias
-			"return object_getClassName((id)$a_object);"
+			"return (EIF_POINTER) object_getClassName((id)$a_object);"
 		end
 
 feature -- Obtaining Class Definitions
@@ -119,4 +119,5 @@ feature -- Working with Selectors
 		alias
 			"return sel_registerName($a_name);"
 		end
+
 end

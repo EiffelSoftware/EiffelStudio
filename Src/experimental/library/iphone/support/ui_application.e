@@ -22,9 +22,8 @@ inherit
 			default_create
 		end
 
-create {UI_ENVIRONMENT}
-	default_create,
-	share_from_pointer
+create
+	default_create
 
 feature {NONE} -- Initialization
 
@@ -69,6 +68,7 @@ feature {NONE} -- Dispatching
 		do
 			inspect a_msg
 			when {UI_DISPATCHER_CONST}.ui_application_did_finish_launching then
+				share_from_pointer (a_data)
 				post_launch_actions.call (Void)
 			else
 			end

@@ -15,6 +15,7 @@
 			<description>iPhone Helper</description>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base-safe.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="iphone" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>

@@ -16,7 +16,8 @@ feature {NONE} -- Initialization
 
 	make (a_rect: CG_RECT)
 		do
-			make_from_pointer (c_new_window (a_rect.item))
+			allocate_object
+			init_with_frame (a_rect)
 			c_set_color (item)
 		end
 
@@ -39,6 +40,14 @@ feature -- Element change
 			a_label_exists: a_label.exists
 		do
 			c_add_subview (item, a_label.item)
+		end
+
+feature {NONE} -- Implementation
+
+	iphone_class_name: IMMUTABLE_STRING_8
+			-- <Precursor>
+		once
+			create Result.make_from_string ("UIWindow")
 		end
 
 feature {NONE} -- Externals

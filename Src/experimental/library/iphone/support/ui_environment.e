@@ -4,33 +4,22 @@ note
 	revision: "$Revision$"
 
 class
-	SHARED_UI_APPLICATION
+	UI_ENVIRONMENT
 
 feature -- Access
 
-	application: UI_APPLICATION
-			-- Shared application
-		require
-			has_application: has_application
-		once
-			create Result.share_from_pointer (c_application)
-		end
-
-feature -- Status report
-
-	has_application: BOOLEAN
+	application: detachable UI_APPLICATION
+			-- Singleton for UI_APPLICATION
 		do
-			Result := c_application /= default_pointer
+			Result := application_cell.item
 		end
 
 feature {NONE} -- Implementation
 
-	c_application: POINTER
-			-- Access to UIApplication shared object.
-		external
-			"C inline use <UIKit/UIKit.h>"
-		alias
-			"return [UIApplication sharedApplication];"
+	application_cell: CELL [detachable UI_APPLICATION]
+			-- Shared application
+		once
+			create Result.put (Void)
 		end
 
 note

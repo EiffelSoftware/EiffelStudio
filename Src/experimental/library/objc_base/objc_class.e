@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 			exists := true
 		end
 
-	make_with_name (a_class_name: STRING_GENERAL)
+	make_with_name (a_class_name: READABLE_STRING_GENERAL)
 			-- Returns the class definition of a specified class.
 			-- If a class with the
 		require
@@ -135,7 +135,7 @@ feature -- Access
 			l_super: POINTER
 		do
 			l_super := {NS_OBJC_RUNTIME}.class_get_superclass (item)
-			if l_super /= {NS_OBJECT}.nil then
+			if l_super /= default_pointer then
 				create Result.make_from_pointer (l_super)
 			end
 		end

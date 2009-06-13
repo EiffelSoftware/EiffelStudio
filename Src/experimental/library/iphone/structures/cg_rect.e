@@ -165,7 +165,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <UIKit/UIKit.h>"
 		alias
-			"return ((CGRect *) $a_ptr)->size.width"
+			"return ((CGRect *) $a_ptr)->size.height"
 		end
 
 	c_rect_set_x (a_ptr: POINTER; a_x: REAL)

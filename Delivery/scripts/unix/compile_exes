@@ -33,7 +33,7 @@ if [ ! -d $EXPORT_DIR/bin ]; then
 	remtrace Couldnt find the bin directory with the compressed files.
 	CANCEL
 fi
-if [ -f ec_ent.tar.bz2 ]; then
+if [ -f bin/ec_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -179,16 +179,16 @@ cd $EXPORT_DIR
 ./compile_c_library $ISE_PLATFORM $INSTALL_DIR
 
 cd $EXPORT_DIR
-./compile_libraries $ISE_PLATFORM $EXPORT_DIR
+./compile_libraries $ISE_PLATFORM $EXPORT_DIR $GTK_DIR
 cd $EXPORT_DIR
-./compile_libraries $ISE_PLATFORM $INSTALL_DIR
+./compile_libraries $ISE_PLATFORM $INSTALL_DIR $GTK_DIR
 
 # Commented for now since we do not checkout experimental to compile EiffelStudio
 # it is only available in the delivery
 #cd $EXPORT_DIR
-#./compile_libraries $ISE_PLATFORM $EXPORT_DIR/experimental
+#./compile_libraries $ISE_PLATFORM $EXPORT_DIR/experimental $GTK_DIR
 cd $EXPORT_DIR
-./compile_libraries $ISE_PLATFORM $INSTALL_DIR/experimental
+./compile_libraries $ISE_PLATFORM $INSTALL_DIR/experimental $GTK_DIR
 
 remtrace eweasel
 move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM

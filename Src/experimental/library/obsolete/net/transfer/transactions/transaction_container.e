@@ -10,8 +10,10 @@ note
 deferred class TRANSACTION_CONTAINER [G -> TRANSACTION] inherit
 
 	SEQUENCE[G]
+		rename
+			put as sequence_put
 		undefine
-			has, index_of, occurrences, off, put, prune, prune_all, readable
+			has, index_of, occurrences, off, sequence_put, prune, prune_all, readable
 		end
 
 feature -- Access
@@ -20,12 +22,12 @@ feature -- Access
 			-- Current transaction
 		deferred
 		end
-	 
+
 	index: INTEGER
 			-- Current index
 		deferred
 		end
-	
+
 feature -- Measurement
 
 	count: INTEGER
@@ -41,10 +43,10 @@ feature -- Status report
 			transaction_exists: t /= Void
 		deferred
 		end
-	 
+
 	 error_stops: BOOLEAN
 	 		-- Is transfer stopped on error?
-			
+
 feature -- Status setting
 
 	select_transaction (n: INTEGER)
@@ -116,7 +118,7 @@ feature {NONE} -- Implementation
 		ensure
 			index_unchanged: index = old index
 		end
-	 
+
 	execute_command (cmd: PROCEDURE[TRANSACTION_CONTAINER[G], TUPLE])
 			-- Execute command `cmd' for all transactions.
 		require
@@ -140,7 +142,7 @@ feature {NONE} -- Implementation
 		ensure
 			index_unchanged: index = old index
 		end
-	 
+
 invariant
 
 	empty_definition: is_empty = (count = 0)

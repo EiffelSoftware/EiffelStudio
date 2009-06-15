@@ -40,12 +40,12 @@ feature -- Docking query
 
 feature -- Access
 
-	first: EV_WIDGET
+	first: detachable EV_WIDGET
 			-- First child.
 		deferred
 		end
 
-	second: EV_WIDGET
+	second: detachable EV_WIDGET
 			-- Second child.
 		deferred
 		end

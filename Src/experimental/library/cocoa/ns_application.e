@@ -13,22 +13,32 @@ inherit
 create
 	make
 create {NS_OBJECT}
-	make_shared
+	make_from_pointer
 
 feature {NONE} -- Creation
 
 	make
 		do
 			{NS_APPLICATION_API}.init
-			make_shared ({NS_APPLICATION_API}.get)
+			make_from_pointer ({NS_APPLICATION_API}.get)
 			{NS_APPLICATION_API}.finish_launching (item)
 		end
 
 feature -- Access
 
-	next_event (a_matching_mask: INTEGER; a_until_date: POINTER; a_in_mode: INTEGER; a_dequeue: BOOLEAN): POINTER
+	next_event (a_matching_mask: INTEGER; a_until_date: POINTER; a_in_mode: INTEGER; a_dequeue: BOOLEAN): detachable NS_EVENT
+			-- Returns the next event matching a given mask, or `Void' if no such event is found before a specified expiration date.
+			-- You can use this method to short circuit normal event dispatching and get your own events. For example, you may want
+			-- to do this in response to a mouse-down event in order to track the mouse while its button is down. (In such an example,
+			-- you would pass the appropriate event types for mouse-dragged and mouse-up events to the mask parameter and specify the
+			-- NSEventTrackingRunLoopMode run loop mode.) Events that do not match one of the specified event types are left in the queue.
+		local
+			l_event: POINTER
 		do
-			Result := {NS_APPLICATION_API}.next_event (item, a_matching_mask, a_until_date, a_in_mode, a_dequeue)
+			l_event := {NS_APPLICATION_API}.next_event (item, a_matching_mask, a_until_date, a_in_mode, a_dequeue)
+			if l_event /= default_pointer then
+				create Result.make_from_pointer (l_event)
+			end
 		end
 
 	update_windows
@@ -36,9 +46,14 @@ feature -- Access
 			{NS_APPLICATION_API}.update_windows (item)
 		end
 
-	send_event (a_event: POINTER)
+	send_event (a_event: NS_EVENT)
+			-- Dispatches an event to other objects.
+			-- You rarely invoke sendEvent: directly, although you might want to override this method to perform some action on every event.
+			-- sendEvent: messages are sent from the main event loop (the run method). sendEvent: is the method that dispatches events to the
+			-- appropriate responders-NSApp handles application events, the NSWindow object indicated in the event record handles window-related
+			-- events, and mouse and key events are forwarded to the appropriate NSWindow object for further dispatching.
 		do
-			{NS_APPLICATION_API}.send_event (item, a_event)
+			{NS_APPLICATION_API}.send_event (item, a_event.item)
 		end
 
 	set_main_menu (a_menu: NS_MENU)
@@ -56,12 +71,23 @@ feature -- Access
 			{NS_APPLICATION_API}.terminate (item, item)
 		end
 
+feature -- Managing the Event Loop
+
 	run_modal_for_window (a_window: NS_WINDOW): INTEGER
+			-- Starts a modal event loop for a given window.
 		do
 			Result := {NS_APPLICATION_API}.run_modal_for_window (item, a_window.item)
 		end
 
+	abort_modal
+		do
+			{NS_APPLICATION_API}.abort_modal (item)
+		end
+
+feature -- Other
+
 	fix_apple_menu
+			-- Doesn't seem to work yet
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

@@ -22,7 +22,7 @@ feature -- Managing Animations for Properties
 
 	animations: NS_DICTIONARY
 		do
-			create Result.make_shared (animation_animations (item))
+			create Result.make_from_pointer (animation_animations (item))
 		ensure
 			Result /= void
 		end
@@ -34,7 +34,7 @@ feature -- Managing Animations for Properties
 
 	animation_for_key (a_key: NS_STRING): NS_OBJECT
 		do
-			create Result.make_shared (animation_animation_for_key (item, a_key.item))
+			create Result.share_from_pointer (animation_animation_for_key (item, a_key.item))
 		end
 
 feature {NONE} -- Implementation

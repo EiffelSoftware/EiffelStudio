@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 	make
 			-- Create a new NSBox.
 		do
-			make_shared (box_new)
+			make_from_pointer (box_new)
 		end
 
 feature -- Box
@@ -32,7 +32,7 @@ feature -- Box
 			-- (you should never send frame-altering messages directly to a box's content view). You can replace it
 			-- with an NSView of your own through the set_content_view method.
 		do
-			create Result.make_shared (box_content_view (item))
+			create Result.share_from_pointer (box_content_view (item))
 		ensure
 			result_not_void: Result /= void
 		end
@@ -170,7 +170,7 @@ feature {NONE} -- Objective-C implementation
 		alias
 			"return [(NSBox*)$a_box contentView];"
 		ensure
-			Result /= nil
+			Result /= default_pointer
 		end
 
 	frozen box_set_border_type (a_box: POINTER; a_border_type: INTEGER)
@@ -312,7 +312,7 @@ feature -- NSTitlePosition constants
 feature -- NSBorderType constants
 
 	frozen no_border : INTEGER
-			-- Sets the position of the box's title
+			-- No border.
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -320,7 +320,7 @@ feature -- NSBorderType constants
 		end
 
 	frozen line_border : INTEGER
-			-- Sets the position of the box's title
+			-- A black line border around the view.
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -328,7 +328,7 @@ feature -- NSBorderType constants
 		end
 
 	frozen bezel_border : INTEGER
-			-- Sets the position of the box's title
+			-- A concave border that makes the view look sunken.
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -336,7 +336,7 @@ feature -- NSBorderType constants
 		end
 
 	frozen groove_border : INTEGER
-			-- Sets the position of the box's title
+			-- A thin border that looks etched around the image.
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

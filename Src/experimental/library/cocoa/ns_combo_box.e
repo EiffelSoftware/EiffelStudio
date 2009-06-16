@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (combo_box_new)
+			make_from_pointer (combo_box_new)
 		end
 
 feature
@@ -138,7 +138,7 @@ feature
 
 	data_source: NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_data_source (item))
+			Result := create {NS_OBJECT}.share_from_pointer (combo_box_data_source (item))
 		end
 
 	set_data_source (a_a_source: NS_OBJECT)
@@ -184,12 +184,12 @@ feature
 
 	item_object_value_at_index (a_index: INTEGER): NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_item_object_value_at_index (item, a_index))
+			Result := create {NS_OBJECT}.share_from_pointer (combo_box_item_object_value_at_index (item, a_index))
 		end
 
 	object_value_of_selected_item: NS_OBJECT
 		do
-			Result := create {NS_OBJECT}.make_shared (combo_box_object_value_of_selected_item (item))
+			Result := create {NS_OBJECT}.share_from_pointer (combo_box_object_value_of_selected_item (item))
 		end
 
 	index_of_item_with_object_value (a_object: NS_OBJECT): INTEGER

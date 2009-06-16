@@ -11,7 +11,7 @@ feature -- Access
 
 	image_name_info: NS_STRING
 		once
-			create Result.make_shared ({NS_IMAGE}.image_name_info)
+			create Result.make_from_pointer ({NS_IMAGE}.image_name_info)
 		end
 
 end

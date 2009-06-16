@@ -17,7 +17,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (menu_new)
+			make_from_pointer (menu_new)
 		end
 
 feature -- Access

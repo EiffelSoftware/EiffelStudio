@@ -4,11 +4,34 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	NS_TEXT_DELEGATE
 
 inherit
-	NS_OBJECT
+	DELEGATE
+
+feature -- Class
+
+	delegate_class: OBJC_CLASS
+		once
+			create Result.make_with_name ("TextDelegate")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name("NSObject"))
+			Result.add_method ("textDidChange:", agent (a_notification: POINTER) do text_did_change_actions.call([]) end)
+			Result.register
+		end
+
+	init_delegate
+		local
+			delegate: NS_OBJECT
+		do
+			delegate := delegate_class.create_instance
+ 			{NS_VIEW_API}.init (delegate.item)
+
+			{NS_OUTLINE_VIEW_API}.set_delegate (item, delegate.item)
+			create text_did_change_actions
+		end
+
+	text_did_change_actions: ACTION_SEQUENCE [TUPLE[]]
 
 feature -- Delegate Methods
 

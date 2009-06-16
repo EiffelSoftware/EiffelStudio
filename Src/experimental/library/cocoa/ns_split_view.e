@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (split_view_new)
+			make_from_pointer (split_view_new)
 		end
 
 feature -- Access

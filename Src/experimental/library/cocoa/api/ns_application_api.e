@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_APPLICATION_API}."
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -62,23 +62,6 @@ feature -- Terminating Applications
 			"[(NSApplication*)$a_application updateWindows];"
 		end
 
-	frozen next_event (a_application : POINTER; matching_mask: INTEGER; until_date: POINTER; in_mode: INTEGER; dequeue: BOOLEAN): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[
-				{
-					return [(NSApplication*)$a_application
-								nextEventMatchingMask: NSAnyEventMask
-								untilDate: [NSDate distantFuture]
-								inMode: NSDefaultRunLoopMode
-								dequeue: YES];
-				}
-			]"
-		end
-
-
-
 	frozen send_event (a_application, an_event: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -113,14 +96,7 @@ feature -- Terminating Applications
 			"[(NSApplication*)$a_application finishLaunching];"
 		end
 
---- (void)run;
-	frozen run_modal_for_window (a_application: POINTER; a_window: POINTER): INTEGER
-			--- (NSInteger)runModalForWindow:(NSWindow *)theWindow;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSApplication*)$a_application runModalForWindow: $a_window];"
-		end
+
 --- (void)stop:(id)sender;
 --- (void)stopModal;
 --- (void)stopModalWithCode:(NSInteger)returnCode;
@@ -328,5 +304,42 @@ feature -- Terminating Applications
 --@"ApplicationVersion": NSString displayed as the marketing version  ("1.0", "Mac OS X", "3", "WebObjects 3.5", ...), before the build version.
 --If not specified, obtain from CFBundleShortVersionString key in infoDictionary. Prefixed with word "Version" if it looks like a number.
 --*/
+
+feature -- Managing the Event Loop
+
+--- (void)run;
+
+	frozen run_modal_for_window (a_application: POINTER; a_window: POINTER): INTEGER
+			-- - (NSInteger)runModalForWindow:(NSWindow *)theWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSApplication*)$a_application runModalForWindow: $a_window];"
+		end
+
+	frozen abort_modal (a_application: POINTER)
+			-- - (void)abortModal
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSApplication*)$a_application abortModal];"
+		end
+
+feature -- Handling Events
+
+	frozen next_event (a_application : POINTER; matching_mask: INTEGER; until_date: POINTER; in_mode: INTEGER; dequeue: BOOLEAN): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[
+				{
+					return [(NSApplication*)$a_application
+								nextEventMatchingMask: NSAnyEventMask
+								untilDate: [NSDate distantFuture]
+								inMode: NSDefaultRunLoopMode
+								dequeue: YES];
+				}
+			]"
+		end
 
 end

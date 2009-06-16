@@ -7,7 +7,7 @@ note
 class
 	NS_VIEW_API
 
-feature -- Access
+feature -- Creating Instances
 
 	frozen new: POINTER
 		external
@@ -30,12 +30,59 @@ feature -- Access
 			"[(NSView*)$a_view init];"
 		end
 
+feature -- Managing the View Hierarchy
+
 	frozen superview (a_view: POINTER): POINTER
+			-- - (NSView *)superview
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [(NSView*)$a_view superview];"
 		end
+
+	frozen add_subview (a_view: POINTER; a_subview: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view addSubview: $a_subview];"
+		end
+
+	frozen window (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view window];"
+		end
+
+	frozen subviews (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view subviews];"
+		end
+
+	frozen is_descendant_of (a_target: POINTER; a_view: POINTER): BOOLEAN
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_target isDescendantOf: $a_view];"
+		end
+
+	frozen ancestor_shared_with_view (a_target: POINTER; a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_target ancestorSharedWithView: $a_view];"
+		end
+
+	frozen opaque_ancestor (a_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view opaqueAncestor];"
+		end
+
+feature -- Modifying the Frame Rectangle
 
 	frozen set_frame (a_view: POINTER; a_res: POINTER)
 		external
@@ -54,13 +101,6 @@ feature -- Access
 					memcpy($a_res, &frame, sizeof(NSRect));
 				}
 			]"
-		end
-
-	frozen add_subview (a_view: POINTER; a_subview: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSView*)$a_view addSubview: $a_subview];"
 		end
 
 	frozen set_autoresize (a_view: POINTER)
@@ -120,6 +160,7 @@ feature -- Access
 		end
 
 	frozen convert_point_to_view (a_view: POINTER; a_point: POINTER; a_to_view: POINTER; res: POINTER)
+			-- - (NSPoint)convertPoint:(NSPoint)aPoint toView:(NSView *)aView
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -127,6 +168,7 @@ feature -- Access
 		end
 
 	frozen set_bounds_origin (a_view: POINTER; a_new_origin: POINTER)
+			-- - (void)setBoundsOrigin:(NSPoint)newOrigin
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -168,38 +210,14 @@ feature -- Access
 			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
 		end
 
-	frozen window (a_view: POINTER): POINTER
+feature -- Event Handling
+
+	frozen hit_test (a_view: POINTER; a_point: POINTER): POINTER
+			-- - (NSView *)hitTest:(NSPoint)aPoint
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSView*)$a_view window];"
+			"return [(NSView*)$a_view hitTest: *(NSPoint*)$a_point];"
 		end
 
-	frozen subviews (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view subviews];"
-		end
-
-	frozen is_descendant_of (a_target: POINTER; a_view: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_target isDescendantOf: $a_view];"
-		end
-
-	frozen ancestor_shared_with_view (a_target: POINTER; a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_target ancestorSharedWithView: $a_view];"
-		end
-
-	frozen opaque_ancestor (a_view: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSView*)$a_view opaqueAncestor];"
-		end
 end

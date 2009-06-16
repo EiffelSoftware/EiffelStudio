@@ -22,7 +22,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared ({NS_CONTROL_API}.new)
+			make_from_pointer ({NS_CONTROL_API}.new)
 		end
 
 feature -- Access
@@ -74,12 +74,19 @@ feature -- Access
 			-- If the cell does not inherit from NSActionCell, the method marks the cell's interior as needing to be redisplayed; NSActionCell performs its own updating of cells.
 		do
 			{NS_CONTROL_API}.set_string_value (item, (create {NS_STRING}.make_with_string (a_string)).item)
+		ensure
+			string_value_set:
+		end
+
+	string_value: NS_STRING -- assign set_string_value
+		do
+			create Result.share_from_pointer ({NS_CONTROL_API}.string_value (item))
 		end
 
 	font: NS_FONT
 			-- Returns the font used to draw text in the receiver's cell.
 		do
-			create Result.make_shared ({NS_CONTROL_API}.font (item))
+			create Result.make_from_pointer ({NS_CONTROL_API}.font (item))
 		ensure
 			result_not_void: Result /= void
 		end
@@ -99,9 +106,78 @@ feature -- Access
 	cell: NS_CELL
 			-- Returns the receiver's cell object.
 		do
-			create Result.make_shared ({NS_CONTROL_API}.cell (item))
+			create Result.make_from_pointer ({NS_CONTROL_API}.cell (item))
 		ensure
 			result_not_void: Result /= void
+		end
+
+feature -- Formatting Text
+
+	alignment: INTEGER
+			-- Returns the alignment mode of the text in the receiver's cell.
+			-- The default value is NSNaturalTextAlignment
+		do
+			Result := {NS_CONTROL_API}.alignment (item)
+		ensure
+			valid_alignment:
+		end
+
+	set_alignment (a_alignment: INTEGER)
+		require
+			valid_alignment:
+		do
+			{NS_CONTROL_API}.set_alignment (item, a_alignment)
+		ensure
+			alignment_set: alignment = a_alignment
+		end
+
+feature -- Contract support
+
+	valid_alignment (a_int: INTEGER): BOOLEAN
+		do
+
+		end
+
+feature -- NSTextAlignment Constants -- FIXME: move to NS_TEXT
+
+	frozen left_text_alignment: INTEGER
+			-- NSLeftTextAlignment
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSLeftTextAlignment"
+		end
+
+	frozen right_text_alignment: INTEGER
+			-- NSRightTextAlignment
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSRightTextAlignment"
+		end
+
+	frozen center_text_alignment: INTEGER
+			-- NSCenterTextAlignment
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCenterTextAlignment"
+		end
+
+	frozen justified_text_alignment: INTEGER
+			-- NSJustifiedTextAlignment
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSJustifiedTextAlignment"
+		end
+
+	frozen natural_text_alignment: INTEGER
+			-- NSNaturalTextAlignment
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSNaturalTextAlignment"
 		end
 
 end

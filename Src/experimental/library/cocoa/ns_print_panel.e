@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (print_panel_print_panel)
+			make_from_pointer (print_panel_print_panel)
 		end
 
 feature -- Customizing the Panel

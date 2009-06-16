@@ -20,14 +20,14 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (open_panel_open_panel)
+			make_from_pointer (open_panel_open_panel)
 		end
 
 feature -- Access
 
 	filenames : NS_ARRAY [NS_STRING]
 		do
-			Result := create {NS_ARRAY[NS_STRING]}.make_shared (open_panel_filenames(item))
+			Result := create {NS_ARRAY[NS_STRING]}.share_from_pointer (open_panel_filenames(item))
 		end
 
 	resolves_aliases : BOOLEAN
@@ -87,7 +87,7 @@ feature -- Access
 			if a_name /= void then
 				l_name := a_name.item
 			else
-				l_name := nil
+				l_name := default_pointer
 			end
 			Result := open_panel_run_modal_for_directory_file_types (item, a_path.item, l_name, a_file_types.item)
 		end

@@ -17,7 +17,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (table_column_new)
+			make_from_pointer (table_column_new)
 		end
 
 	make_with_identifier (a_identifier: NS_OBJECT)
@@ -34,7 +34,7 @@ feature -- ...
 
 	identifier: NS_OBJECT
 		do
-			create Result.make_shared (table_column_identifier (item))
+			create Result.share_from_pointer (table_column_identifier (item))
 		end
 
 	set_table_view (a_table_view: NS_TABLE_VIEW)
@@ -44,7 +44,7 @@ feature -- ...
 
 	table_view: NS_TABLE_VIEW
 		do
-			create Result.make_shared (table_column_table_view (item))
+			--create Result.share_from_pointer (table_column_table_view (item))
 		end
 
 	set_width (a_width: REAL)
@@ -84,7 +84,7 @@ feature -- ...
 
 	header_cell: NS_CELL
 		do
-			create Result.make_shared (table_column_header_cell (item))
+			create Result.make_from_pointer (table_column_header_cell (item))
 		end
 
 	set_data_cell (a_cell: NS_CELL)
@@ -95,7 +95,7 @@ feature -- ...
 	data_cell: NS_CELL
 			-- Note: Original signature returns NS_OBJECT
 		do
-			create Result.make_shared (table_column_data_cell (item))
+			create Result.make_from_pointer (table_column_data_cell (item))
 		end
 
 --	data_cell_for_row (a_row: INTEGER): NS_OBJECT
@@ -145,7 +145,7 @@ feature -- ...
 
 	header_tool_tip: NS_STRING
 		do
-			create Result.make_shared (table_column_header_tool_tip (item))
+			create Result.make_from_pointer (table_column_header_tool_tip (item))
 		end
 
 	is_hidden: BOOLEAN

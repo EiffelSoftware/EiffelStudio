@@ -15,8 +15,10 @@ feature -- Access
 	initialize
 		local
 			oldmethod: PROCEDURE [ANY, TUPLE]
+			c: OBJC_CLASS
 		do
-			oldmethod := class_.replace_method ("mouseDown:", agent mouse_down_z)
+			create c.make_with_name ("NSButton")
+			oldmethod := c.replace_method ("mouseDown:", agent mouse_down_z)
 		end
 
 	mouse_down_z (a_event: POINTER)

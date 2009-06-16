@@ -22,7 +22,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (table_header_cell_new)
+			make_from_pointer (table_header_cell_new)
 		end
 
 feature {NONE} -- Objective-C interface

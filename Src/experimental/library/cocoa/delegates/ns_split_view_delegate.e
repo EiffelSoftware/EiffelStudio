@@ -14,7 +14,7 @@ feature
 
 	make
 		do
-			make_shared (split_view_delegate_new ($current, $split_view_did_resize_subviews))
+			make_from_pointer (split_view_delegate_new ($current, $split_view_did_resize_subviews))
 		end
 
 	split_view_can_collapse_subview (a_split_view: NS_SPLIT_VIEW; a_subview: NS_VIEW): BOOLEAN

@@ -7,9 +7,6 @@ note
 deferred class
 	TARGET_ACTION_SUPPORT
 
-inherit
-	NS_OBJECT
-
 feature --
 
 	set_action (an_action: PROCEDURE [ANY, TUPLE])
@@ -22,16 +19,22 @@ feature --
 			c_set_action (item)
 		end
 
-feature {NONE} -- callback
+feature {NONE} -- Callback
 
 	target
 		do
-			action.call([])
+			if attached {PROCEDURE [ANY, TUPLE]} action as l_action then
+				l_action.call([])
+			end
 		end
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: detachable PROCEDURE [ANY, TUPLE]
 
-feature -- Externals
+	item: POINTER
+		deferred
+		end
+
+feature {NONE} -- Externals
 
 	frozen target_new (a_object: POINTER; a_method: POINTER): POINTER
 		external

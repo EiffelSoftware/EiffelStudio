@@ -17,19 +17,19 @@ create
 	make,
 	make_with_frame
 create {NS_OBJECT}
-	make_shared
+	make_from_pointer
 
 feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (scroller_new)
+			make_from_pointer (scroller_new)
 		end
 
 	make_with_frame (x, y, w, h: INTEGER)
 			-- Note the dimensions with which the NSScroller gets initialized define its orientation (vertical/horizontal)
 		do
-			make_shared (scroller_init_with_frame (x, y, w, h))
+			make_from_pointer (scroller_init_with_frame (x, y, w, h))
 		end
 
 feature {NONE} -- Objective-C implementation

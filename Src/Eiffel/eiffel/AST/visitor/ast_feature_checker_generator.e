@@ -7161,13 +7161,15 @@ feature {NONE} -- Implementation
 				context.clear_local_context
 				set_is_inherited (True)
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
+				if context.local_scope = Void then
+						-- Initialize structures to record and access scopes in assertions.
+						-- This is required for result in postcondition, but also to make sure there is no call on void target
+						-- because local scopes are processed together with attribute scopes.
+					context.init_local_scopes
+				end
 				if not process_preconditions then
 					t := a_feature.type
 					if not t.is_void then
-						if context.local_scope = Void then
-								-- Initialize structures to record and access result scope.
-							context.init_local_scopes
-						end
 							-- Mark that result is initialized and attached if required.
 						if t.is_initialization_required and then not context.local_initialization.is_result_set then
 							context.set_result

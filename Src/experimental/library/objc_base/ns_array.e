@@ -7,19 +7,23 @@ note
 -- FIXME NSUInteger has been replaced by INTEGER. may cause problems
 
 class
-	NS_ARRAY [T -> NS_OBJECT create share_from_pointer end]
+	NS_ARRAY [T -> detachable NS_OBJECT create share_from_pointer end]
 
 inherit
 	NS_OBJECT
+		rename
+			item as object_item
+		end
 
 create
 	make_with_objects
+
 create {NS_OBJECT}
 	share_from_pointer
 
 feature {NONE} -- Creation
 
-	make_with_objects (a_objects: LIST[T])
+	make_with_objects (a_objects: LIST [T])
 		local
 			l_objects: MANAGED_POINTER
 			i: INTEGER
@@ -31,29 +35,34 @@ feature {NONE} -- Creation
 			until
 				a_objects.after
 			loop
-				l_objects.put_pointer (a_objects.item.item, i*4)
+				if attached a_objects.item as l_object  then
+					l_objects.put_pointer (l_object.item, i * {PLATFORM}.pointer_bytes )
+				end
 				i := i + 1
 				a_objects.forth
 			end
-			item := {NS_ARRAY_API}.array_with_objects_count (l_objects.item, a_objects.count)
+			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_objects.count)))
 		end
 
 feature
 
-	count: INTEGER
+	count: like ns_uinteger
 		do
-			Result := {NS_ARRAY_API}.count (item)
+			Result := {NS_ARRAY_API}.count (object_item)
 		ensure
 			count_positive: Result >= 0
 		end
 
-	object_at_index (a_index: INTEGER): T
+	item alias "[]" (a_index: like ns_uinteger): detachable T
 		require
 			index_in_range: 0 <= a_index and a_index < count
+		local
+			l_object: POINTER
 		do
-			create Result.share_from_pointer ({NS_ARRAY_API}.object_at_index (item, a_index))
-		ensure
-			result_not_void: Result /= void
+			l_object := {NS_ARRAY_API}.object_at_index (object_item, a_index)
+			if l_object /= default_pointer then
+				create Result.share_from_pointer (l_object)
+			end
 		end
 
 --	array_by_adding_object (a_an_object: T): NS_ARRAY [T]

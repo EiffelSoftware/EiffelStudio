@@ -30,13 +30,6 @@ feature -- Working with Classes
 			"return class_getSuperclass((Class)$a_class);"
 		end
 
-	frozen class_set_superclass (a_class: POINTER; a_superclass: POINTER): POINTER
-		external
-			"C inline use <objc/runtime.h>"
-		alias
-			"return class_setSuperclass((Class)$a_class, $a_superclass);"
-		end
-
 	frozen class_add_protocol (a_class: POINTER; a_protocol: POINTER): BOOLEAN
 		external
 			"C inline use <objc/runtime.h>"

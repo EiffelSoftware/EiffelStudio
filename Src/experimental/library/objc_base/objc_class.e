@@ -160,6 +160,8 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	type_encoding_for_agent (a_agent: ROUTINE [ANY, TUPLE]): STRING
+		local
+			pointer: POINTER
 		do
 			create Result.make_from_string ("@:")
 			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} a_agent as l_function then
@@ -167,11 +169,17 @@ feature {NONE} -- Implementation
 			elseif attached {ROUTINE [ANY, TUPLE]} a_agent as l_routine then
 				-- Command / No return type
 				Result.prepend ("v")
+				if l_routine.empty_operands.conforms_to ([POINTER]) then
+					Result.append ("*")
+				else
+					io.error.put_string ("ERROR: No callback for your argument types: '" + l_routine.empty_operands.generating_type + "'%N")
+				end
 			else
 				-- ERROR: The type a_agent is not supported
 				check
 					bridging_not_supported_for_method_signature: False
 				end
+				io.error.put_string ("ERROR: No callback for your function type. " + a_agent.generator + "%N")
 			end
 		end
 
@@ -185,6 +193,7 @@ feature {NONE} -- Implementation
 				check
 					not_implemented: False
 				end
+				io.error.put_string ("ERROR: No callback for your function type%N")
 			end
 		end
 

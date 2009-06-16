@@ -85,7 +85,7 @@ feature {NONE} -- Operations
 
 			o.iprint ("Shutting down...")
 			shutdown_webapps
-			shutdown_http_server
+			shutdown_https
 			if input_server.running then
 				o.iprint ("Remote Shutdown. Bye!")
 				(create {EXCEPTIONS}).die (1)
@@ -107,7 +107,7 @@ feature {XS_COMMAND} -- Status setting
 			l_webapp_handler.stop_apps
 		end
 
-	shutdown_http_server
+	shutdown_https
 			-- <Precursor>
 		do
 			if attached http_connection_server as https then
@@ -121,14 +121,14 @@ feature {XS_COMMAND} -- Status setting
 
 
 
-	launch_http_server
+	launch_https
 			-- <Precursor>
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 			l_webapp_finder: XS_WEBAPP_FINDER
 			l_config_reader: XS_CONFIG_READER
 		do
-			shutdown_http_server
+			shutdown_https
 
 			o.iprint ("Launching http connection server...")
 			http_connection_server := create {XS_HTTP_CONN_SERVER}.make (commands)
@@ -150,11 +150,6 @@ feature {XS_COMMAND} -- Status setting
 		end
 
 
-	display_response
-			-- <Precursor>
-		do
-		end
-
 	load_config
 			-- <Precursor>
 		local
@@ -173,7 +168,7 @@ feature {XS_COMMAND} -- Status setting
 			end
 		end
 
-	stop_server
+	shutdown_server
 			-- <Precursor>
 		do
 			stop := True

@@ -1,0 +1,79 @@
+@charset "utf-8";
+/* CSS Document */
+
+body, td, th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+	background-color: #999999;
+}
+body {
+	background-color: #FFFFFF;
+	margin: 20px;
+
+}
+h1 {
+	font-size: 15px;
+	font-weight: normal;
+}
+h2 {
+	font-size: 14px;
+	font-weight: normal;
+}
+#main {
+}
+#header {
+	color: #FFFFFF;
+	background-color: #F15922;
+	font-size: 16px;
+}
+#header #title {
+	padding: 4px;
+}
+#footer {
+	clear: both;
+	color: #FFFFFF;
+	background-color: #F15922;
+	margin-top: 20px
+}
+
+#footer #footertext{
+	padding: 2px;
+}
+#content {
+}
+a:link {
+	color: #ffffff;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #ffffff;
+}
+a:hover {
+	text-decoration: underline;
+	color: #ffffff;
+}
+a:active {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+
+.button {
+	height: 15pxm;
+	width: auto;
+	margin: 3px;
+	/*float: left;*/
+	background-color: #666666;
+	border-color: #000000;
+	border-width: 2px;
+}
+.buttontext {
+	margin-left:4px;
+	margin-right:4px;
+	margin-top:2px;
+	margin-bottom:2px;
+	color:#FFFFFF;
+	font-weight: bold;	
+}

@@ -22,4 +22,38 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 		end
+
+feature -- Server Control
+
+	reload_config (a: ANY)
+			--
+		do
+			server_control.load_config
+		end
+
+	shutdown_server (a: ANY)
+			--
+		do
+			server_control.shutdown_server
+		end
+
+	shutdown_https (a: ANY)
+			--
+		do
+			server_control.shutdown_https
+		end
+
+	launch_https (a: ANY)
+			--
+		do
+			server_control.launch_https
+		end
+
+	shutdown_webapps (a: ANY)
+			--
+		do
+			server_control.shutdown_webapps
+		end
+
+
 end

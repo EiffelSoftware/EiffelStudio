@@ -50,38 +50,33 @@ feature -- Inherited from XSC_SERVER_INTERFACE
 			-- <Precursor>
 
 		do
-
+			commands.list.force (create {XSC_SHUTDOWN_WEBAPPS}.make)
 		end
 
-	shutdown_http_server
+	shutdown_https
 			-- <Precursor>
 		do
-
+			commands.list.force (create {XSC_SHUTDOWN_HTTPS}.make)
 		end
 
 
-	launch_http_server
+	launch_https
 			-- <Precursor>
 		do
-
+			commands.list.force (create {XSC_LAUNCH_HTTPS}.make)
 		end
 
-
-	display_response
-			-- <Precursor>
-		do
-		end
 
 	load_config
 			-- <Precursor>
 		do
-
+			commands.list.force (create {XSC_LOAD_CONFIG}.make)
 		end
 
-	stop_server
+	shutdown_server
 			-- <Precursor>
 		do
-			commands.list.force (create {XSC_STOP_SERVER}.make)
+			commands.list.force (create {XSC_SHUTDOWN_SERVER}.make)
 		end
 
 	handle_errors

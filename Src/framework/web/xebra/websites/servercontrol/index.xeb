@@ -1,6 +1,40 @@
 <html>
+<head>
+<title>Xebra Server Control</title>
 <page:controller class="MAIN_CONTROLLER"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="base.css" rel="stylesheet" type="text/css" />
+</head>
 <body>
-servercontrol works!
+<div id="main">
+  <div id="header">
+    <div id="title"> Xebra Server Control</div>
+  </div>
+  <div id="content">
+    <f:form variable="var" class="MAIN_CONTROLLER">
+    <h1>Main Server</h1>
+    <div class="button"> <span class="buttontext">
+      <f:command_link label="Reload Configuration File" action="reload_config" variable="var"/>
+      </span> </div>
+    <div class="button"> <span class="buttontext">
+      <f:command_link label="Shutdown Server" action="shutdown_server" variable="var"/>
+      </span> </div>
+    <h1>HTTP Connection Server</h1>
+    <div class="button"> <span class="buttontext">
+      <f:command_link label="Relaunch HTTP Connection Server" action="launch_https" variable="var"/>
+      </span> </div>
+    <div class="button"> <span class="buttontext">
+      <f:command_link label="Shutdown HTTP Connection Server" action="shutdown_https" variable="var"/>
+      </span> </div>
+    <h1>Webapplications</h1>
+    <div class="button"> <span class="buttontext">
+      <f:command_link label="Shutdown Webapplications" action="shutdown_webapps" variable="var"/>
+      </span> </div>
+     </f:form> 
+  </div>
+  <div id="footer">
+    <div id="footertext">Xebra Server Control</div>
+  </div>
+</div>
 </body>
 </html>

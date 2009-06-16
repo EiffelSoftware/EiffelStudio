@@ -42,7 +42,7 @@ feature -- Inherited Features
 				io.read_character
 			end
 			running := False
-			main_server.commands.put (create {XSC_STOP_SERVER}.make)
+			main_server.commands.put (create {XSC_SHUTDOWN_SERVER}.make)
 		end
 
 feature -- Access

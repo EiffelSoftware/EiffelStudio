@@ -168,7 +168,7 @@ if [ -n "$CFLAGS" ]; then
 else
 	ccflags='-march=armv6 -mcpu=arm1176jzf-s -pipe -std=c99 -miphoneos-version-min=2.0 -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.2.1.sdk'
 fi
-ccldflags=''
+ccldflags='-L/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.2.1.sdk/usr/lib'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else

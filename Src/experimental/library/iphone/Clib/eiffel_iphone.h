@@ -8,6 +8,7 @@
 typedef void (* EIF_NOTIFY_PROC) (EIF_REFERENCE, EIF_INTEGER, EIF_POINTER);
 typedef struct eif_touches_event_tags
 {
+	void *obj;
 	NSSet *touches;
 	UIEvent *event;
 } eif_touches_event_t;
@@ -21,5 +22,12 @@ typedef struct eif_touches_event_tags
 
 /* Routines */
 extern void eiffel_iphone_set_dispatcher (EIF_OBJECT, EIF_NOTIFY_PROC);
+
+/* Objective C stuff */
+@protocol EiffelIdentified
+- (int) eiffel_object_id;
+@end
+
+
 
 #endif

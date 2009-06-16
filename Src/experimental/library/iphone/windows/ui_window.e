@@ -8,9 +8,15 @@ class
 
 inherit
 	UI_VIEW
+		redefine
+			iphone_class_name
+		end
 
 create
 	make
+
+create
+	share_from_pointer
 
 feature {NONE} -- Initialization
 

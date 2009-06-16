@@ -12,7 +12,7 @@
 
 set target = "batch"
 set ec_name = "ecb"
-set options = "-gc_stats"
+set options = "-gc_stats $*"
 #set target = "bench"
 #set ec_name = "ec"
 

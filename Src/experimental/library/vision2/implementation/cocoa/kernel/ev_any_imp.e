@@ -32,7 +32,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 			-- Destroy the cocoa_item
 			-- Render `Current' unusable.
 		do
-
+			set_is_destroyed (True)
 		end
 
 feature --dispose

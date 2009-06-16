@@ -1,6 +1,5 @@
 note
-	description:
-		"EiffelVision Tree, Cocoa implementation"
+	description: "EiffelVision Tree, Cocoa implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -13,14 +12,14 @@ inherit
 	EV_TREE_I
 		redefine
 			interface,
-			initialize,
+			make,
 			call_pebble_function
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			set_to_drag_and_drop,
 			able_to_transport,
 			ready_for_pnd_menu,
@@ -33,7 +32,7 @@ inherit
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -57,12 +56,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty Tree.
+		do
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Connect action sequences to signals.
 		local
 			table_column: NS_TABLE_COLUMN
 		do
-			base_make (an_interface)
 			create scroll_view.make
 			cocoa_item := scroll_view
 			create outline_view.make
@@ -82,11 +86,7 @@ feature {NONE} -- Initialization
 
 			create_delegate
 			outline_view.set_delegate (current)
-		end
 
-	initialize
-			-- Connect action sequences to signals.
-		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TREE;
+	interface: detachable EV_TREE note option: stable attribute end;
 
 feature {EV_ANY_I, EV_TREE_NODE_IMP} -- Implementation
 

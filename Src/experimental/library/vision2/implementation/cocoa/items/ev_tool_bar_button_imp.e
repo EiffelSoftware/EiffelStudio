@@ -21,7 +21,7 @@ inherit
 			update_for_pick_and_drop
 		redefine
 			interface,
-			initialize,
+			make,
 			set_pixmap
 		end
 
@@ -56,20 +56,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a Cocoa toggle button.
-		do
-			base_make (an_interface)
-			set_vertical_button_style
-			create button.make
-			cocoa_item := button
-			button.set_action (agent select_actions.call ([]))
-		end
-
-	initialize
+	make
 			-- Initialization of button box and events.
 		do
+			set_vertical_button_style
+			create button.make
+			--button.set_bezel_style ({NS_BUTTON}.rectangular_square_bezel_style)
+			cocoa_item := button
 			pixmapable_imp_initialize
+			button.set_action (agent select_actions.call ([]))
 			set_is_initialized (True)
 		end
 
@@ -204,7 +199,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_BUTTON;
+	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 	char_length: INTEGER = 5;
 	char_height: INTEGER = 15;

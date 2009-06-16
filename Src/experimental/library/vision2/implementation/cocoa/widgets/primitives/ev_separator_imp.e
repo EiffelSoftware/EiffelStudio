@@ -24,12 +24,11 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create the separator control.
 		local
 			box: NS_BOX
 		do
-			base_make (an_interface)
 			create {NS_BOX}cocoa_item.make
 			box ?= cocoa_item
 			box.set_box_type ({NS_BOX}.box_separator)
@@ -45,9 +44,8 @@ feature -- Layout handling
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SEPARATOR;
+	interface: detachable EV_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SEPARATOR_IMP
-

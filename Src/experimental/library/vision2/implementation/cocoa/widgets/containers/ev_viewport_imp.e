@@ -21,6 +21,7 @@ inherit
 		redefine
 			interface,
 			make,
+			old_make,
 			replace,
 			compute_minimum_width,
 			compute_minimum_height,
@@ -33,10 +34,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Initialize.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create scroll_view.make
 			scroll_view.set_has_horizontal_scroller (False)
 			scroll_view.set_has_vertical_scroller (False)
@@ -67,14 +72,16 @@ feature -- Element change
 			v_imp: like item_imp
 		do
 			if item_imp /= void then
-				on_removed_item (item_imp)
+				v_imp.set_parent_imp (Void)
+				notify_change (Nc_minsize, Current)
 			end
 			if v /= Void then
 				v_imp ?= v.implementation
 				v_imp.set_parent_imp (current)
 				scroll_view.set_document_view (v_imp.cocoa_view)
 				v_imp.ev_apply_new_size (0, 0, v_imp.width, v_imp.height, True)
-				on_new_item (v_imp)
+				v_imp.set_parent_imp (Current)
+				notify_change (Nc_minsize, Current)
 			end
 			item := v
 			ev_apply_new_size (x_position, y_position, width, height, False)
@@ -123,16 +130,16 @@ feature -- Layout
 --			end
 		end
 
-	on_size (a_width, a_height: INTEGER)
-		do
-			if resize_actions_internal /= Void then
-				resize_actions_internal.call ([screen_x, screen_y, a_width, a_height])
-			end
-		end
+--	on_size (a_width, a_height: INTEGER)
+--		do
+--			if resize_actions_internal /= Void then
+--				resize_actions_internal.call ([screen_x, screen_y, a_width, a_height])
+--			end
+--		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VIEWPORT;
+	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 	scroll_view: NS_SCROLL_VIEW;
 

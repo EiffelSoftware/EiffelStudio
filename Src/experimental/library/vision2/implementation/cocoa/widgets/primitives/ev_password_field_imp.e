@@ -19,9 +19,8 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		redefine
-			initialize,
-			interface,
-			make
+			make,
+			interface
 		end
 
 create
@@ -30,26 +29,16 @@ create
 feature {NONE} -- Initialization
 
 
-		make (an_interface: like interface)
+	make
 			-- Create Textfield on a user_pane
 		do
-			base_make (an_interface)
 			create {NS_SECURE_TEXT_FIELD}text_field.make
 			cocoa_item := text_field
 		end
 
-
-feature -- Access
-
-	initialize
-			-- Create password field with `*'.
-		do
-		end
-
-
 feature {NONE} -- Implementation
 
-	interface: EV_PASSWORD_FIELD;
+	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

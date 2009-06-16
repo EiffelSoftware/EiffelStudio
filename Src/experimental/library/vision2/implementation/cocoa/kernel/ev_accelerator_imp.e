@@ -6,24 +6,19 @@ class
 
 inherit
 	EV_ACCELERATOR_I
-		export
-			{EV_INTERMEDIARY_ROUTINES} actions_internal
-		redefine
-			interface
-		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Setup `Current'
 		do
 			set_is_initialized (True)
@@ -110,11 +105,6 @@ feature -- Element change
 		do
 			control_required := False
 		end
-
-feature {NONE} -- Implementation
-
-	interface: EV_ACCELERATOR
-		-- Interface object of `Current'
 
 feature {NONE} -- Implementation
 

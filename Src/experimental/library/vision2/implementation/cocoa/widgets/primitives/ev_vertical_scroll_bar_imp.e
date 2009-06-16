@@ -17,7 +17,8 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
-			cocoa_set_size
+			cocoa_set_size,
+			make
 		end
 
 create
@@ -25,10 +26,14 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the separator control.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create scroller.make_with_frame (0, 0, 5, 10)
 			cocoa_item := scroller
 			scroller.set_enabled (True)
@@ -68,7 +73,7 @@ feature -- Minimum size
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SCROLL_BAR;
+	interface: detachable EV_VERTICAL_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

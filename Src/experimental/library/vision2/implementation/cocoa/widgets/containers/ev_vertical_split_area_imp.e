@@ -22,7 +22,8 @@ inherit
 		redefine
 			interface,
 			client_height,
-			client_width
+			client_width,
+			make
 		end
 
 create
@@ -30,10 +31,15 @@ create
 
 feature
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make( an_interface )
+			assign_interface ( an_interface )
+		end
+
+	make
+		do
+			Precursor
 			create {NS_SPLIT_VIEW}cocoa_item.make
 			split_view.set_vertical (False)
 		end
@@ -140,7 +146,7 @@ feature -- access
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SPLIT_AREA;
+	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

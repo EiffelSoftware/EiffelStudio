@@ -44,10 +44,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create the tree item.
 		do
-			base_make (an_interface)
 			internal_text := ""
 		end
 
@@ -238,37 +237,39 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	width: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.width: Not implemented%N")
+			-- rect_of_column.size.width
+--			io.put_string ("EV_TREE_NODE_IMP.width: Not implemented%N")
 		end
 
 	height: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.height: Not implemented%N")
+			-- rect_of_row.size.height
+--			io.put_string ("EV_TREE_NODE_IMP.height: Not implemented%N")
 		end
 
 	screen_x: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.screen_x: Not implemented%N")
+--			io.put_string ("EV_TREE_NODE_IMP.screen_x: Not implemented%N")
 		end
 
 	screen_y: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.screen_y: Not implemented%N")
+--			io.put_string ("EV_TREE_NODE_IMP.screen_y: Not implemented%N")
 		end
 
 	x_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+--			io.put_string ("EV_TREE_NODE_IMP.x_position: Not implemented%N")
 		end
 
 	y_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
+--			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_NODE;
+	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

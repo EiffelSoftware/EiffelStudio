@@ -18,20 +18,20 @@ inherit
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			set_default_minimum_size
 		end
 
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_HEADER_ACTION_SEQUENCES_IMP
@@ -47,10 +47,15 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty Tree.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		do
 --			create w.new
 --			w.set_frame (create {NS_RECT}.make_rect (0, 0, 0, 18))
 --			create h.new
@@ -67,11 +72,7 @@ feature -- Initialization
 			cocoa_item := container
 
 			initialize_pixmaps
-		end
 
-	initialize
-			-- Initialize `Current'
-		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
@@ -141,7 +142,7 @@ feature {NONE} -- Implementation
 
 	container: NS_SCROLL_VIEW
 
-	interface: EV_HEADER;
+	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

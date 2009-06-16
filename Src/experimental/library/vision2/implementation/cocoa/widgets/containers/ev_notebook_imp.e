@@ -44,18 +44,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a fixed widget.
 		do
-			base_make (an_interface)
-			tab_position := interface.tab_top
-			create tabs.make (5)
-			create {NS_TAB_VIEW}cocoa_item.make
+			assign_interface (an_interface)
 		end
 
 	initialize
 			-- Initialize the notebook.
 		do
+			tab_position := interface.tab_top
+			create tabs.make (5)
+			create {NS_TAB_VIEW}cocoa_item.make
+
 			Precursor {EV_WIDGET_LIST_IMP}
 			initialize_pixmaps
 
@@ -266,7 +267,7 @@ feature -- Element change
 
 			v_imp ?= i_th (i).implementation
 			v_imp.on_orphaned
-			on_removed_item (v_imp)
+			v_imp.set_parent_imp (Void)
 
 			ev_children.go_i_th (i)
 			ev_children.remove
@@ -281,11 +282,6 @@ feature -- Element change
 			l_tab: EV_NOTEBOOK_TAB
 			l_tab_imp: EV_NOTEBOOK_TAB_IMP
 		do
-			create l_tab.make_with_widgets (current.interface, v)
-			l_tab_imp ?= l_tab.implementation
-			tabs.go_i_th (i)
-			tabs.put_left (l_tab)
-
 			v_imp ?= v.implementation
 			check
 				not_void : v_imp /=  Void
@@ -293,13 +289,25 @@ feature -- Element change
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
 			v.implementation.on_parented
-			on_new_item (v_imp)
+			v_imp.set_parent_imp (Current)
+			notify_change (Nc_minsize, Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
+			if last_selected = 0 then
+				last_selected := 1
+			end
+
+			create l_tab.make_with_widgets (current.interface, v)
+			l_tab_imp ?= l_tab.implementation
+			tabs.go_i_th (i)
+			tabs.put_left (l_tab)
 
 			tab_view.add_tab_view_item (l_tab_imp.tab_view_item)
 			--l_tab_imp.tab_view_item.set_view (v_imp.cocoa_view)
 
 			notify_change (Nc_minsize, v_imp)
+
+			-- Call `new_item_actions' on `Current'.
+			new_item_actions.call ([v])
 		end
 
 	replace (v: like item)
@@ -358,7 +366,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
-	interface: EV_NOTEBOOK;
+	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 

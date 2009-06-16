@@ -1,5 +1,6 @@
 note
 	description: "Eiffel Vision menu. Cocoa implementation."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,18 +19,13 @@ inherit
 		redefine
 			make,
 			interface,
-			initialize,
-			destroy,
 			show,
 			menu_item
 		end
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
-			make,
-			interface,
-			initialize,
-			destroy
+			interface
 		end
 
 create
@@ -37,18 +33,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			--
+	make
 		do
-			base_make (an_interface)
 			create menu_item.make
 			create menu.make
 			menu_item.set_submenu (menu)
-		end
-
-	initialize
-		do
-			Precursor {EV_MENU_ITEM_LIST_IMP}
 			Precursor {EV_MENU_ITEM_IMP}
 		end
 
@@ -67,22 +56,10 @@ feature -- Basic operations
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU
+	interface: detachable EV_MENU note option: stable attribute end;
 
 	menu: NS_MENU
 
 	menu_item: NS_MENU_ITEM
 
-feature {NONE} -- Implementation
-
-	destroy
-			-- Destroy the menu
-		do
-			Precursor {EV_MENU_ITEM_IMP}
-			Precursor {EV_MENU_ITEM_LIST_IMP}
-		end
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_IMP
-

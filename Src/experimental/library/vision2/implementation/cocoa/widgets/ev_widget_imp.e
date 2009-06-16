@@ -2,8 +2,7 @@ note
 	description:
 		"Eiffel Vision widget. Cocoa implementation.%N%
 		%See ev_widget.e"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,7 @@ inherit
 			top_level_window_imp
 		redefine
 			interface,
-			initialize,
+			make,
 			destroy
 		end
 
@@ -67,7 +66,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 		do
@@ -266,9 +265,6 @@ feature {EV_BOX_IMP, LAYOUT_INSPECTOR} -- expandable
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_WIDGET;
+	interface: detachable EV_WIDGET note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_WIDGET_IMP
-

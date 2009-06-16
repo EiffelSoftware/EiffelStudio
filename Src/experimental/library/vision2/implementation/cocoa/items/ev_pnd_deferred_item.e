@@ -17,8 +17,8 @@ feature {EV_ANY_I} -- Implementation
 			create Result
 			interface.init_drop_actions (Result)
 		end
-		
-	interface: EV_PICK_AND_DROPABLE;
+
+	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -30,9 +30,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end
-

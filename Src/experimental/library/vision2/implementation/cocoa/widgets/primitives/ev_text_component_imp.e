@@ -17,7 +17,7 @@ inherit
 		redefine
 			interface,
 			default_key_processing_blocked,
-			initialize,
+			make,
 			set_default_minimum_size
 		end
 
@@ -28,7 +28,7 @@ inherit
 
 feature -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_minimum_width_in_characters (4)
@@ -84,7 +84,7 @@ feature {EV_WINDOW_IMP}
 
 feature {EV_ANY_I} -- Implementation		
 
-	interface: EV_TEXT_COMPONENT;
+	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision titled window. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision titled window. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +21,7 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -33,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 		do
 			Precursor {EV_WINDOW_IMP}
 			create icon_name.make_empty
@@ -122,9 +120,6 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TITLED_WINDOW;
+	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TITLED_WINDOW_IMP
-

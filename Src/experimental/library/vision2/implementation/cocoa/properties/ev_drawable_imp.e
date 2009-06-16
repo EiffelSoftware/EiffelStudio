@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision drawable. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	keywords: "figures, primitives, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,15 +30,25 @@ inherit
 
 	MATH_CONST
 
+	NS_STRING_CONSTANTS
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Set default values. Call during initialization.
 		do
 			create image.make_with_size (create {NS_SIZE}.make_size (1000, 1000))
-        	create internal_background_color.make_with_rgb (1, 1, 1)
-        	create internal_foreground_color.make_with_rgb (0, 0, 0)
+
+			if internal_background_color = void then
+				create internal_background_color.make_with_rgb (1, 1, 1)
+			end
+			if internal_foreground_color = void then
+	        	create internal_foreground_color.make_with_rgb (0, 0, 0)
+			end
+
+			set_line_width (1)
+
+			set_is_initialized (True)
 		end
 
 feature {EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
@@ -66,13 +75,13 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: EV_COLOR
 			-- Color used to draw primitives.
 		do
 			Result := internal_foreground_color
 		end
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 		do
@@ -258,7 +267,7 @@ feature -- Drawing operations
 		do
 			create l_string.make_with_string (a_text)
 			l_font ?= font.implementation
-			create l_attributes.make_with_object_for_key (l_font.font, l_font.font.font_attribute_name)
+			create l_attributes.make_with_object_for_key (l_font.font, font_attribute_name)
 			image.lock_focus
 			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
 			image.unlock_focus
@@ -303,7 +312,7 @@ feature -- Drawing operations
 		do
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
-			pixmap_imp.image.draw_at_point_from_rect_operation_fraction (
+			pixmap_imp.image.draw (
 				create {NS_POINT}.make_point (x, y),
 				create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height),
 				{NS_IMAGE}.composite_source_over, 1)
@@ -325,7 +334,7 @@ feature -- Drawing operations
 		do
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
-			pixmap_imp.image.draw_at_point_from_rect_operation_fraction (
+			pixmap_imp.image.draw (
 				create {NS_POINT}.make_point (x, y),
 				create {NS_RECT}.make_rect (0, 0, area.width, area.height),
 				{NS_IMAGE}.composite_source_over, 1)
@@ -520,7 +529,7 @@ feature {NONE} -- Implementation
 
 	internal_font_imp: EV_FONT_IMP
 
-	interface: EV_DRAWABLE;
+	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

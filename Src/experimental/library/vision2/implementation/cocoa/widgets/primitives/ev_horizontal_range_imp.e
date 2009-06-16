@@ -39,7 +39,7 @@ feature {NONE} -- Layout
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_RANGE;
+	interface: detachable EV_HORIZONTAL_RANGE note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

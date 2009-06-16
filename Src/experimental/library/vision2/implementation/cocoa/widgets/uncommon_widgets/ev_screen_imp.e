@@ -1,8 +1,6 @@
 note
-	description:
-		"EiffelVision screen. Cococa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision screen. Cococa implementation."
+	author: "Daniel Furrer"
 	keywords: "screen, root, window, visual, top"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +17,13 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface,
+			make
+		end
+
+	NS_SCREEN
+		rename
+			main_screen as make_main_screen_cocoa
 		end
 
 create
@@ -27,18 +31,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
-			create screen.main_screen
+			assign_interface (an_interface)
+		end
+
+	make
+		do
+			make_main_screen_cocoa
 		end
 
 feature -- Status report
 
 	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer.
+		local
+			point: NS_POINT
 		do
+			create point.make_from_mouse_location
+			create Result.make (point.x, point.y)
 		end
 
 	widget_at_position (x, y: INTEGER): EV_WIDGET
@@ -132,13 +144,13 @@ feature -- Measurement
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			Result := screen.frame.size.height
+			Result := frame.size.height
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			Result := screen.frame.size.width
+			Result := frame.size.width
 		end
 
 feature {NONE} -- Implementation
@@ -159,16 +171,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	dispose
-			-- Cleanup
-		do
-		end
+	interface: detachable EV_SCREEN note option: stable attribute end;
 
-	screen: NS_SCREEN
-
-	interface: EV_SCREEN;
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SCREEN_IMP
-

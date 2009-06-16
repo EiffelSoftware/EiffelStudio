@@ -1,6 +1,5 @@
 note
-	description:
-		"EiffelVision primitive, Cocoa implementation."
+	description: "EiffelVision primitive, Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "primitive, base, widget"
@@ -19,7 +18,7 @@ inherit
 	EV_WIDGET_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -29,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WIDGET_IMP}
@@ -37,7 +36,9 @@ feature {NONE} -- Initialization
 			enable_tabable_from
 		end
 
-	interface: EV_PRIMITIVE;
+feature {EV_ANY_I} -- Implementation
+
+	interface: detachable EV_PRIMITIVE note option: stable attribute end;
 
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of

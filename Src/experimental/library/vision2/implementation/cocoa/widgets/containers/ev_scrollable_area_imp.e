@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision scrollable area. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,8 @@ inherit
 	EV_VIEWPORT_IMP
 		redefine
 			interface,
-			make
+			make,
+			old_make
 		end
 
 create
@@ -30,11 +30,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create scrollable area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
 
+	make
+		do
 			create scroll_view.make_with_flipped_content_view
 			scroll_view.set_has_horizontal_scroller (True)
 			scroll_view.set_has_vertical_scroller (True)
@@ -42,8 +45,8 @@ feature {NONE} -- Initialization
 			scroll_view.set_draws_background (False)
 			cocoa_item := scroll_view
 
-			set_horizontal_step (20)
-			set_vertical_step (20)
+			set_horizontal_step (10)
+			set_vertical_step (10)
 		end
 
 feature -- Access
@@ -104,11 +107,8 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation		
 
-	interface: EV_SCROLLABLE_AREA;
+	interface: detachable EV_SCROLLABLE_AREA note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SCROLLABLE_AREA_IMP
-

@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 			height := a_height
 		end
 
-	make (an_interface: EV_PIXEL_BUFFER)
+	old_make (an_interface: EV_PIXEL_BUFFER)
 			-- Creation method.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 			make_with_size (1, 1)
 		end
 
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)

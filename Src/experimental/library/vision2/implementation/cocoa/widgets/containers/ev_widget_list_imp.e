@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision widget list. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	authors: "Daniel Furrer"
 	keywords: "widget list, container"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,24 +20,23 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
 		redefine
 			interface,
-			initialize,
 			insert_i_th,
 			remove_i_th
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
 			Precursor {EV_CONTAINER_IMP}
-			Precursor {EV_DYNAMIC_LIST_IMP}
+			initialize
 		end
 
 feature -- Widget relationships
@@ -74,12 +72,16 @@ feature {NONE} -- Implementation
 			v_imp: EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
-
-			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
-			new_item_actions.call ([v])
 			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			ev_children.go_i_th (i)
+			ev_children.put_left (v_imp)
+			v_imp.set_parent_imp (Current)
+			new_item_actions.call ([v])
+			notify_change (Nc_minsize, Current)
 			cocoa_view.add_subview (v_imp.cocoa_view)
-			on_new_item (v_imp)
 		end
 
 	remove_i_th (i: INTEGER)
@@ -88,21 +90,25 @@ feature {NONE} -- Implementation
 			v_imp: EV_WIDGET_IMP
 		do
 			v_imp ?= i_th (i).implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			remove_item_actions.call ([v_imp.interface])
+			ev_children.go_i_th (i)
+			ev_children.remove
+			notify_change (Nc_minsize, Current)
+			-- Unlink the widget from its parent and
+			-- signal it.
+			v_imp.set_parent_imp (Void)
 			v_imp.on_orphaned
-			on_removed_item (v_imp)
 
 			v_imp.cocoa_view.remove_from_superview
-
-			Precursor {EV_DYNAMIC_LIST_IMP} (i)
 		end
 
 feature {NONE} -- Implementation
 
-	interface: EV_WIDGET_LIST;
+	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_WIDGET_LIST_IMP
-

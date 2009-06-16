@@ -22,7 +22,7 @@ inherit
 		redefine
 			interface,
 			insert_i_th,
-			initialize,
+			make,
 			notify_change
 		end
 
@@ -36,16 +36,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
-			cocoa_item := create {NS_VIEW}.make_flipped
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			cocoa_item := create {NS_VIEW}.make_flipped
 			Precursor
 		end
 
@@ -187,7 +187,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Implementation
 
-	interface: EV_FIXED;
+	interface: detachable EV_FIXED note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 

@@ -25,15 +25,20 @@ inherit
 			client_width,
 			client_height,
 			set_background_color,
-			initialize
+			make
 		end
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a vertical box.
 		do
-			base_make( an_interface )
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		do
 			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_title_position ({NS_BOX}.no_title)
@@ -43,11 +48,7 @@ feature -- Initialization
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
 			border_width := Default_border_width
-		end
 
-	initialize
-			-- Initialize `Current'
-		do
 			Precursor
 			set_is_initialized (True)
 		end
@@ -192,7 +193,7 @@ feature {EV_ANY_I}
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
-	interface: EV_BOX;
+	interface: detachable EV_BOX note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 

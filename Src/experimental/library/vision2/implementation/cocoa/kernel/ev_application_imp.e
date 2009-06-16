@@ -1,7 +1,6 @@
 note
-	description:
-		"EiffelVision application, Cocoa implementation."
-	legal: "See notice at end of class."
+	description: "EiffelVision application, Cocoa implementation."
+	author: "Daniel Furrer"
 
 class
 	EV_APPLICATION_IMP
@@ -16,6 +15,8 @@ inherit
 				pointer_button_press_actions_internal,
 				pointer_double_press_actions_internal,
 				pointer_button_release_actions_internal
+		redefine
+			make
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
@@ -35,10 +36,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Set up the callback marshalL
+	make
+			-- Set up the callback marshalL.... TODO
 		do
-			base_make (an_interface)
+			create pool.make
 			create windows.make
 			create application.make
 		end
@@ -70,25 +71,65 @@ feature -- Access
 
 feature -- Basic operation
 
+	pool: NS_AUTORELEASE_POOL
+
 	process_underlying_toolkit_event_queue
 			-- Process Cocoa events
 		local
-			event: POINTER
-			l_event: NS_EVENT
+			event: NS_EVENT
+			view: NS_VIEW
+			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+			point: NS_POINT
 		do
 			from
-				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)
+				event := application.next_event(0, default_pointer, 0, true)
 			until
-				event = {EV_ANY_IMP}.NULL
+				event = void
 			loop
-				create l_event.make_shared (event)
-				if l_event.type = {NS_EVENT}.left_mouse_down then
-					io.output.put_string ("Event: " + l_event.location_in_window.out + "%N")
+				pool.release
+				create pool.make
+
+				if event.type = {NS_EVENT}.left_mouse_down or event.type = {NS_EVENT}.right_mouse_down or event.type = {NS_EVENT}.other_mouse_down
+					or event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
+					view := event.window.content_view.hit_test (event.location_in_window)
+					--io.output.put_string ("MouseDown event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
+
+					if attached {EV_WIDGET_IMP} view as widget then
+						create pointer_button_action
+						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
+						pointer_button_action.x := point.x
+						pointer_button_action.y := point.y
+						if event.type = {NS_EVENT}.left_mouse_down or event.type = {NS_EVENT}.left_mouse_up then
+							pointer_button_action.button :=	1
+						elseif event.type = {NS_EVENT}.right_mouse_down or event.type = {NS_EVENT}.right_mouse_up then
+							pointer_button_action.button :=	2
+						else
+							pointer_button_action.button :=	3
+						end
+						if event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
+							widget.pointer_button_release_actions.call (pointer_button_action)
+						else
+							widget.pointer_button_press_actions.call (pointer_button_action)
+						end
+					end
+				elseif event.type = {NS_EVENT}.mouse_moved then
+					view := event.window.content_view.hit_test (event.location_in_window)
+					--io.output.put_string ("Move event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
+
+					if attached {EV_WIDGET_IMP} view as widget then
+						create pointer_motion_action
+						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
+						pointer_motion_action.x := point.x
+						pointer_motion_action.y := point.y
+						widget.pointer_motion_actions.call (pointer_motion_action)
+					end
 				end
 				application.send_event (event)
 				application.update_windows
-				event := application.next_event(0, {NS_OBJECT}.nil, 0, true)
+				event := application.next_event(0, default_pointer, 0, true)
 			end
+			pool.release
 		end
 
 	process_graphical_events
@@ -99,11 +140,6 @@ feature -- Basic operation
 	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			-- Tuple optimizations
 		once
-		end
-
-	handle_dnd (a_event: POINTER)
-			-- Handle drag and drop event.
-		do
 		end
 
 	sleep (msec: INTEGER)
@@ -223,19 +259,9 @@ feature -- Thread Handling.
 		do
 		end
 
-feature {NONE} -- Idle handling
-
-	on_idle (a_intimer: POINTER; a_instate: INTEGER; a_inuserdata: POINTER)
-			-- Callback target. This feature gets called when the application idles
-		do
-				idle_actions_internal.call (Void)
-		end
-
 feature {EV_ANY_I}
 
 	application: NS_APPLICATION;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_APPLICATION_IMP
 

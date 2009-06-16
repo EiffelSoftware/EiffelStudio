@@ -39,16 +39,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
-			base_make (an_interface)
-			create {NS_TAB_VIEW_ITEM}cocoa_item.make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
+			create {NS_TAB_VIEW_ITEM}cocoa_item.make
 			set_is_initialized (True)
 		end
 
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_NOTEBOOK_TAB;
+	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 	tab_view_item: NS_TAB_VIEW_ITEM
 		do

@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision font. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +12,6 @@ inherit
  	EV_FONT_I
 		redefine
 			interface,
-			set_values,
 			string_size
 		end
 
@@ -22,25 +20,28 @@ inherit
 			interface
 		end
 
+	NS_STRING_CONSTANTS
+
 create
 	make
 
 feature {NONE} -- Initialization
 
- 	make (an_interface: like interface)
+ 	old_make (an_interface: like interface)
  			-- Create the default font.
 		do
-			base_make (an_interface)
-			create font.system_font_of_size (0)
-			cocoa_item := font
+			assign_interface (an_interface)
 		end
 
 
-	initialize
+	make
 			-- Set up `Current'
 		local
 			--l_app_imp: like app_implementation
 		do
+			create font.system_font_of_size (0)
+			cocoa_item := font
+
 			--l_app_imp := app_implementation
 			create preferred_families
 			--set_height_in_points (l_app_imp.default_font_point_height_internal)
@@ -114,20 +115,15 @@ feature -- Element change
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height := a_height
+			height_in_points := a_height
 			calculate_font_metrics
 		end
 
 	set_height_in_points (a_height: INTEGER)
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			calculate_font_metrics
-		end
-
-	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_families: like preferred_families)
-			-- Set `a_family', `a_weight', `a_shape' `a_height' and
-			-- `a_preferred_face' at the same time for speed.
-		do
+			height_in_points := a_height
+			height := a_height
 			calculate_font_metrics
 		end
 
@@ -182,7 +178,7 @@ feature -- Status report
 			l_size: NS_SIZE
 		do
 			create l_string.make_with_string (a_string)
-			create l_attributes.make_with_object_for_key (cocoa_item, cocoa_item.font_attribute_name)
+			create l_attributes.make_with_object_for_key (cocoa_item, font_attribute_name)
 			l_size := l_string.size_with_attributes (l_attributes)
 
 			create Result.default_create
@@ -224,12 +220,10 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FONT;
-		-- Interface coupling object for `Current'
-
 	font: NS_FONT;
+
+	interface: detachable EV_FONT note option: stable attribute end
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FONT_IMP
-

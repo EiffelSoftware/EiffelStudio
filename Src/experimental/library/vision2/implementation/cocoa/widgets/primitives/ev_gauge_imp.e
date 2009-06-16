@@ -17,14 +17,14 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_GAUGE_ACTION_SEQUENCES_IMP
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
@@ -125,7 +125,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	interface: EV_GAUGE
+	interface: detachable EV_GAUGE note option: stable attribute end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

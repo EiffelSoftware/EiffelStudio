@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision drawing area. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,21 +16,21 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			make,
-			initialize
+			make
 		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			foreground_color,
-			background_color,
+			foreground_color_internal,
+			background_color_internal,
 			set_foreground_color,
 			set_background_color
 		redefine
 			interface,
 			default_key_processing_blocked,
-			initialize,
-			set_focus
+			make,
+			set_focus,
+			dispose
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -39,22 +38,31 @@ inherit
 			interface
 		end
 
+	NS_VIEW
+		rename
+			make as make_cocoa,
+			make_custom as make_custom_cocoa,
+			initialize as initialize_cocoa
+		redefine
+			dispose
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			create view.make_custom (agent cocoa_draw_rect)
-			cocoa_item := view
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		do
+			make_custom_cocoa (agent cocoa_draw_rect)
+			cocoa_item := current
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_DRAWABLE_IMP}
 			initialize_events
@@ -97,7 +105,7 @@ feature -- Status setting
 	update_if_needed
 			-- Update `Current' if needed.
 		do
-			view.set_needs_display (True)
+			set_needs_display (True)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -118,8 +126,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			create invalid_rect.make_rect (0, 0, width, height)
 
+			image.draw (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1.0)
 
-			image.draw_at_point_from_rect_operation_fraction (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1)
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([
 					invalid_rect.origin.x,
@@ -132,10 +140,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	view: NS_VIEW
+	dispose
+		do
+			Precursor {NS_VIEW}
+			Precursor {EV_PRIMITIVE_IMP}
+		end
 
-	interface: EV_DRAWING_AREA;
+	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DRAWING_AREA_IMP

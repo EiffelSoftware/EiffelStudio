@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision dynamic list. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision dynamic list. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,9 +9,6 @@ deferred class
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
-		redefine
-			interface
-		end
 
 feature -- Initialization
 
@@ -70,13 +65,6 @@ feature {NONE} -- Implementation
 
 	ev_children: ARRAYED_LIST [G_IMP]
 
-	interface: EV_DYNAMIC_LIST [G]
-
 invariant
-
 	ev_children_not_void: is_usable implies ev_children /= Void
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DYNAMIC_LIST_IMP
-

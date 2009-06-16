@@ -18,14 +18,16 @@ inherit
 			interface
 		end
 
-	EV_CONTAINER_IMP
+	EV_SINGLE_CHILD_CONTAINER_IMP
 		redefine
 			interface,
-			replace,
+			compute_minimum_width,
+			compute_minimum_height,
+			compute_minimum_size,
 			set_background_color,
 			client_height,
 			client_width,
-			ev_apply_new_size
+			make
 		end
 
 	EV_DOCKABLE_TARGET_IMP
@@ -38,45 +40,44 @@ create
 
 feature -- initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
+			Precursor
 		end
 
 feature -- Access
 
-	item: EV_WIDGET
-			-- Current item.
+	has (v: like item): BOOLEAN
+			-- Does `Current' include `v'?	
+		do
+			Result := not is_destroyed and (v /= Void and then item = v)
+		end
+
+	count: INTEGER_32
+			-- Number of elements in `Current'.	
+		do
+			if item /= Void then
+				Result := 1
+			end
+		end
 
 feature -- Element change
-
-	replace (v: like item)
-			-- Replace `item' with `v'.
-		local
-			v_imp: like item_imp
-		do
-			if item_imp /= void then
-				item_imp.cocoa_view.remove_from_superview
-				on_removed_item (item_imp)
-			end
-			if v /= Void then
-				v_imp ?= v.implementation
-				cocoa_view.add_subview (v_imp.cocoa_view)
-				on_new_item (v_imp)
-			end
-			item := v
-		end
 
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'
 		local
 			color: NS_COLOR
 		do
-			Precursor {EV_CONTAINER_IMP} (a_color)
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_color)
 			if box /= void then -- TODO: get rid of this when redefining in children
 				create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
 				--create color.white_color
@@ -98,14 +99,6 @@ feature -- Element change
 		end
 
 feature -- Layout
-
-	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
-		do
-			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			if item /= Void then
-				item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
-			end
-		end
 
 	client_height: INTEGER
 			-- Height of the client area of `Current'
@@ -171,7 +164,7 @@ feature {NONE}
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CELL;
+	interface: detachable EV_CELL note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

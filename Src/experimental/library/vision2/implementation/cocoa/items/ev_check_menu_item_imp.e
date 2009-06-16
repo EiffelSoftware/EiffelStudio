@@ -25,10 +25,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create a menu.
 		do
-			base_make (an_interface)
 			create {NS_MENU_ITEM}cocoa_item.make
 		end
 
@@ -55,7 +54,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	interface: EV_CHECK_MENU_ITEM;
+	interface: detachable EV_CHECK_MENU_ITEM note option: stable attribute end
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

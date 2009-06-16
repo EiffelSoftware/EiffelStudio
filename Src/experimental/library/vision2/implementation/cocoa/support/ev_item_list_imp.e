@@ -1,11 +1,8 @@
 note
-	description:
-		"Eiffel Vision item list. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision item list. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 deferred class
 	EV_ITEM_LIST_IMP [reference G -> EV_ITEM, reference G_IMP -> EV_ITEM_IMP]
@@ -20,8 +17,8 @@ inherit
 		redefine
 			insert_i_th,
 			remove_i_th,
-			interface,
-			initialize
+			initialize,
+			interface
 		end
 
 	DISPOSABLE
@@ -98,11 +95,8 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_ITEM_LIST [G];
+	interface: detachable EV_ITEM_LIST [G] note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ITEM_LIST_IMP
-

@@ -4,8 +4,6 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
--- FIXME NSUInteger has been replaced by INTEGER. may cause problems
-
 class
 	NS_ARRAY [T -> detachable NS_OBJECT create share_from_pointer end]
 

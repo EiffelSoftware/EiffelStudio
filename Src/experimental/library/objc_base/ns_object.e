@@ -87,6 +87,4 @@ feature -- Removal
 			end
 		end
 
-feature {NS_OBJECT} -- Should be used by classes in native only
-
 end

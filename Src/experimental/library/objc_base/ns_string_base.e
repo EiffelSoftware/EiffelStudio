@@ -31,6 +31,14 @@ feature {NONE} -- Creation
 			make_with_cstring (cstring)
 		end
 
+	make_empty
+		local
+			cstring: C_STRING
+		do
+			create cstring.make_empty (0)
+			make_with_cstring (cstring)
+		end
+
 feature -- Access
 
 	to_string: STRING

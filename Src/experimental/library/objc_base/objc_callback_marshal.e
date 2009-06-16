@@ -84,7 +84,7 @@ feature {NONE}
 			c_string: C_STRING
 		do
 			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
-			io.put_string ("B Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
+			--io.put_string ("B Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
 			if attached {FUNCTION [ANY, TUPLE [], BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
 				Result := l_agent.item (Void)
 			end
@@ -95,7 +95,18 @@ feature {NONE}
 			c_string: C_STRING
 		do
 			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
-			io.put_string ("VP Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
+			--io.put_string ("VP Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
+			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+				l_agent.call ([arg1])
+			end
+		end
+
+	callback_void_rect (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
+			-- FIXME: how should a NSRect be transfered/copied?
+		local
+			c_string: C_STRING
+		do
+			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
 				l_agent.call ([arg1])
 			end
@@ -143,6 +154,13 @@ feature {OBJC_CLASS} -- Externals, Get addresses of the C bridge functions
 		alias
 			"bridge_void_ptr"
 		end
+
+--	frozen bridge_void_rect_address: POINTER
+--		external
+--			"C inline use %"objc_callback_marshal.h%""
+--		alias
+--			"bridge_void_rect"
+--		end
 
 feature {OBJC_CLASS} -- Externals, to be able to call the superclass or previous definition
 

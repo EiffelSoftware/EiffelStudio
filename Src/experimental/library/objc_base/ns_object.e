@@ -8,6 +8,8 @@ class
 	NS_OBJECT
 
 inherit
+	NS_OBJECT_BASIC_TYPE
+
 	DISPOSABLE
 
 create
@@ -55,6 +57,14 @@ feature -- Access
 
 	item: POINTER
 			-- Underlying objective-C object
+
+	null: POINTER
+			-- Default NULL pointer to be used in assertions in place of `default_pointer'
+		external
+			"C inline"
+		alias
+			"return NULL;"
+		end
 
 feature -- Status report
 

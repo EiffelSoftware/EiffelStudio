@@ -48,7 +48,48 @@ feature -- Actions
 			l_label.set_foreground_color (create {UI_COLOR}.make_rgba (1, 0, 1, 1))
 			l_label.align_text_center
 			window.extend (l_label)
+			window.touches_began_actions.extend (agent touch_began_action (l_label, ?))
+			window.touches_moved_actions.extend (agent touch_moved_action (l_label, ?))
+			window.touches_ended_actions.extend (agent touch_ended_action (l_label, ?))
 			window.show
 		end
+
+	touch_began_action (a_label: UI_LABEL; a_event: UI_EVENT)
+		local
+			l_point: CG_POINT
+		do
+			if attached {UI_TOUCH} a_event.all_touches.item as l_touch then
+				l_point := l_touch.location
+				a_label.set_text ("Starting touch " + i.out + " ...")
+				a_label.set_center (l_point)
+				i := i + 1
+			end
+		end
+
+	touch_moved_action (a_label: UI_LABEL; a_event: UI_EVENT)
+		local
+			l_point: CG_POINT
+		do
+			if attached {UI_TOUCH} a_event.all_touches.item as l_touch then
+				l_point := l_touch.location
+				a_label.set_text ("Moving touch " + i.out + " ...")
+				a_label.set_center (l_point)
+				i := i + 1
+			end
+		end
+
+	touch_ended_action (a_label: UI_LABEL; a_event: UI_EVENT)
+		local
+			l_point: CG_POINT
+		do
+			if attached {UI_TOUCH} a_event.all_touches.item as l_touch then
+				l_point := l_touch.location
+				a_label.set_text ("Ending touch " + i.out + " ...")
+				a_label.set_center (l_point)
+				i := i + 1
+			end
+		end
+
+	i: NATURAL_64
 
 end

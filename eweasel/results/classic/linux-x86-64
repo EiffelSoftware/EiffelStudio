@@ -377,6 +377,7 @@ Test invalid-manifest-type-char-constant (syntax054): failed
 Test note-syntax (syntax055): passed
 Test attached-syntax (syntax056): passed
 Test external-with-invalid-use (syntax057): passed
+Test bracket-expression-on-manifest-type (syntax058): passed
 Test bad-class-end-comment (valid001): passed
 Test bad-infix-feature (valid002): passed
 Test class-not-in-universe (valid003): passed
@@ -878,19 +879,7 @@ Test creation-constraint-like-current-deferred2 (valid209): passed
 Test vtcg-expanded (valid210): passed
 Test vtcg-generic (valid211): passed
 Test wrong-vgcc (valid212): passed
-Test named-tuple-convert-conformance (valid213): failed
-	Description: A named TUPLE should conform to a matching unamed TUPLE even through conversion.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid213/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VJAR
-		Validity error in class TEST code VUAR(2)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test named-tuple-convert-conformance (valid213): passed
 Test nested-generics-creation-readiness (valid214): passed
 Test static-comparison-test (valid215): passed
 Test generic-creation-constraint (valid216): failed
@@ -1014,18 +1003,7 @@ Test selecting-renamed-feature (valid238): failed
 		Final status:  paused 
 
 Test diamond-pattern-vmrc (valid239): passed
-Test explicit-attachment-mark-convert-fail (valid240): failed
-	Description: A convert clause that uses explicit attachment marks (? or !) should be applicable to a type which gets its attachment status from the default but the compiler incorrectly reports a VJAR error
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid240/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VJAR
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test explicit-attachment-mark-convert-fail (valid240): passed
 Test indirect-type-evaluation (valid241): passed
 Test undetected-vycp-vycq-with-generic (valid242): failed
 	Description: A system with two types which convert to each other via both a conversion procedure and a conversion query should be a VYCQ or VYCP error but the compiler does not issue any errors.  The generic class has a conversion procedure and conversion query that convert to or from the generic parameter G.
@@ -1128,6 +1106,7 @@ Test undetected-vuot-error (valid252): failed
 		Validity error in class TEST code VUOT(1)
 		Final status:  paused 
 
+Test equality-of-conforming-classes (valid253): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -1885,17 +1864,7 @@ Test add-then-remove-vlec-via-generic (incr305): failed
 	Expected result:
 		Final status:  completed 
 
-Test attempt-on-expanded-then-reference (incr306): failed
-	Description: After initial compilation where TEST2 is a reference class , a call to `{TEST2} #? Void' returns Void.  Then TEST2 is changed to an expanded class, system recompiled and TEST2 is then changed back to a reference class.  Executing the system then results in a seg fault instead of correct output, even though the classes are the same as the original classes.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr306/tcf at line 34
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test attempt-on-expanded-then-reference (incr306): passed
 Test formal-generic-constraint-rename-crash (incr307): failed
 	Description: A sequence of changes possibly involving the rename clause of formal generic constraint causes the compiler to crash
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr307/tcf at line 39
@@ -2085,6 +2054,64 @@ Test add-class-then-make-expanded (incr329): failed
 Test dead-code-removal-crash (incr330): failed
 	Description: Melting a system whose config file specifies a root class but no root feature where the root class inherits from ANY and redefines `default_create' works fine but a subsequent finalize crashes the compiler during dead code removal
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr330/tcf at line 18
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (Segmentation fault) 
+	Expected result:
+		Final status:  completed 
+
+Test return-value-type-mismatch (incr331): failed
+	Description: A sequence of changes ending with system finalization produces C code that won't compile due to a return value type mismatch and other errors
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr331/tcf at line 30
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test generate-wrapper-crash (incr332): failed
+	Description: A sequence of changes crashes the compiler in {ROUT_TABLE}.generate_wrapper while finalizing when trying to generate auxiliary files
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr332/tcf at line 25
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (Segmentation fault) 
+	Expected result:
+		Final status:  completed 
+
+Test ececil-undefined-symbol-2 (incr333): failed
+	Description: A routine that is referenced via $routine in the class invariant is changed to a constant and the invariant is removed.  Finalizing the system and keeping assertions then generates C code that won't link due to an undefined symbol in ececil.c
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr333/tcf at line 15
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test efrozen-undefined-symbol (incr334): failed
+	Description: A class inherits a routine from two parents, undefining the version from one parent.  Then the undefine is removed and the routine that was being undefined is changed to a deferred routine.  When the system is frozen, the resulting C code won't link due to an undefined symbol in efrozen.c
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr334/tcf at line 18
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test ececil-undefined-symbol-3 (incr335): failed
+	Description: After initial compilation, a generic class is changed to non-generic and the inheritance clause of its only descendant is adjusted according.  When the system is frozen, it won't link due to an undefined symbol in ececil.c
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr335/tcf at line 24
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test can-be-inlined-crash (incr336): failed
+	Description: Removing the specification of the root creation procedure in the config file and letting it default to `default_create' and recompiling works fine.  Then changing the root class to a different class that also has `default_create' as a creation procedure and finalizing with inlining crashes the compiler with a call on Void target in {INLINER}.can_be_inlined
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr336/tcf at line 21
 	Original text:    compile_result ok
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
@@ -2289,7 +2316,7 @@ Test melted-object-test-with-anchored-none (melt090): failed
 	Expected result:
 		Final status:  completed 
 
-Test melted-string-crash (melt091): passed
+Test melted-creation-crash (melt091): passed
 Test melted-agent-exception-crash (melt092): passed
 Test raise-exception-inspect-branch (melt093): passed
 Test dollar-with-expanded-attribute-in-generic (melt094): failed
@@ -2525,6 +2552,31 @@ Test finalize-inline-precursor-2 (final078): failed
 		Final status:  completed 
 
 Test finalize-attribute-access-crash (final079): passed
+Test finalize-inline-attribute-body-2 (final080): failed
+	Description: Finalizing a system with a call to an attribute with a body that is redefined in a descendant to an attribute with a different body causes incorrect system execution output if inlining is enabled
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/final080/tcf at line 31
+	Original text:    compare exec_output2 output
+	Substituted text: compare exec_output2 output
+	Reason: files being compared do not have identical contents
+
+Test finalize-inline-external-redef-constant (final081): failed
+	Description: Finalizing a system where an external INTEGER function is redefined to a constant in a descendant crashes the compiler if inlining is enabled
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/final081/tcf at line 27
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (Segmentation fault) 
+	Expected result:
+		Final status:  completed 
+
+Test finalize-inherited-agent-redef-routine (final082): failed
+	Description: A routine in an expanded class has an invocation of an agent that is constructed from a function call, where the function is redefined in a descendant class.  When the system is executed, the ancestor function is called instead of the descendant, but only if the system is finalized (with or without inlining)
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/final082/tcf at line 34
+	Original text:    compare exec_output2 output
+	Substituted text: compare exec_output2 output
+	Reason: files being compared do not have identical contents
+
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2563,6 +2615,7 @@ Test panic-when-too-many-allocation (thread006): passed
 Test join-with-no-children-leaks (thread007): passed
 Test memory-referers-not-thread-safe (thread008): passed
 Test exception-in-thread-failure (thread009): passed
+Test nested-thread-exit-failure-2 (thread010): passed
 Test print-double (exec001): passed
 Test bit-out-wrong (exec002): passed
 Test real-conform-double (exec003): passed
@@ -3122,7 +3175,17 @@ Test special-base-address (exec279): passed
 Test default-create-not-called (exec280): passed
 Test not-equal-operator-failure (exec281): passed
 Test all-defaults-failure (exec282): passed
-Test clear-all-on-special (exec283): passed
+Test clear-all-on-special (exec283): failed
+	Description: Verify that `clear_all' on various kind of special works as indicated.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec283/tcf at line 66
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed 
+	Expected result:
+		Final status:  completed 
+
 Test wrong-expanded-generic-type (exec284): passed
 Test wrong-polymorphic-call-with-select (exec285): failed
 	Description: A routine called polymorphically calls the wrong version. And the called version depends on the order in which the parent clauses are written.
@@ -3233,6 +3296,13 @@ Test small-eif-memory-scavenge (exec312): passed
 Test static-access-on-like-current (exec313): failed
 	Description: A static access of a feature on {like Current} should be dynamically bound but is currently staticly bound
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec313/tcf at line 17
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
+Test manifest-type-expr-generating-type (exec314): failed
+	Description: The generating type of a  manifest type expression is displayed incorrectly, with a "!" mark
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec314/tcf at line 13
 	Original text:    compare exec_output1 output
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
@@ -3526,6 +3596,19 @@ Test config-class-file-name-mismatch-2 (config013): passed
 Test config-class-file-name-update (config014): passed
 Test config-library-options-redefinition (config015): passed
 Test config-library-options-setting (config016): passed
+Test config-nonstandard-source-extension (config017): failed
+	Description: Source files with nonstandard extension should either be processed as normal source files or be reported as incorrectly specified ones.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/config017/tcf at line 9
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error code VD20
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test config-keyword-root-class (config018): passed
 Test lace-no-cluster-props (lace003): passed
 Test lace-no-creation-proc (lace007): passed
 Test lace-empty-include-exclude (lace011): passed
@@ -3821,6 +3904,7 @@ Test wrong-label-in-inheritance (tuple012): passed
 Test wrong-label-in-generics (tuple013): passed
 Test wrong-manifest-tuple-type (tuple014): passed
 Test attached-tuple-element-validity (tuple015): passed
+Test tuple-basic-to-reference (tuple016): passed
 Test tilde-on-basic-type (tilde001): passed
 Test tilde-on-expanded-type (tilde002): passed
 Test tilde-on-formal-type (tilde003): passed
@@ -4179,18 +4263,7 @@ Test object-test-invariant-any-to-expanded (attach019): failed
 	Expected result:
 		Final status:  completed 
 
-Test detached-type-target-conversion (attach020): failed
-	Description: Ensures conversion is accepted when using explict detached mark on the target type.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/attach020/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VUAR(2)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test detached-type-target-conversion (attach020): passed
 Test explicit-attached-formal-conformance (attach021): passed
 Test attached-external-check (attach022): passed
 Test attached-wrong-initialization (attach023): passed
@@ -4277,6 +4350,7 @@ Test void-assigned-to-object-test-with-create (attach064): passed
 Test object-test-code-generation (attach065): passed
 Test detachable-for-attached-constraint (attach066): passed
 Test call-on-detachable-generic (attach067): passed
+Test conversion-from-cap-attached (attach068): passed
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -4314,8 +4388,8 @@ Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test dotnet-special-handling-crash (dotnet112): passed
 
-Passed:  1823 / 2076  (88%)
-Failed:  231 / 2076  (12%)
-Manual:  17 / 2076  (1%)
-Skipped:  5 / 2076  (1%)
+Passed:  1832 / 2093  (88%)
+Failed:  239 / 2093  (12%)
+Manual:  17 / 2093  (1%)
+Skipped:  5 / 2093  (1%)
 

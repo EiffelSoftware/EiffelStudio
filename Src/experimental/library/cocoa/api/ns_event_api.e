@@ -9,7 +9,6 @@ class
 
 feature -- Getting General Event Information
 
-
 	frozen location_in_window (a_event: POINTER; res: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -22,6 +21,23 @@ feature -- Getting General Event Information
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [(NSEvent*)$a_event type];"
+		end
+
+	frozen window (a_event: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSEvent*)$a_event window];"
+		end
+
+feature -- Getting Mouse Event Information
+
+	frozen mouse_location (res: POINTER)
+			-- + (NSPoint)mouseLocation
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSPoint point = [NSEvent mouseLocation]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
 end

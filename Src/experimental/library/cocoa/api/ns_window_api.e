@@ -9,13 +9,22 @@ class
 
 feature -- Creating Windows
 
-	frozen init_with_control_rect_style_mask_backing_defer (a_rect: POINTER; a_style_mask: INTEGER; a_defer: BOOLEAN): POINTER
+	frozen alloc: POINTER
+			-- + (id)alloc
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSWindow alloc];"
+		end
+
+
+	frozen init_with_control_rect_style_mask_backing_defer (target: POINTER; a_rect: POINTER; a_style_mask: INTEGER; a_defer: BOOLEAN): POINTER
 			-- - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag;
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[
-				return [[NSWindow alloc] initWithContentRect: *(NSRect*)$a_rect
+				return [$target initWithContentRect: *(NSRect*)$a_rect
 				                        styleMask: $a_style_mask
 				                        backing: NSBackingStoreBuffered
 				                        defer: $a_defer];
@@ -88,7 +97,7 @@ feature -- Sizing Content
 		alias
 			"[(NSWindow*)$a_window setContentMinSize: NSMakeSize($a_width, $a_height)];"
 		end
-		
+
 feature -- Managing Window Layers
 
 	frozen is_visible (a_window: POINTER): BOOLEAN
@@ -113,6 +122,14 @@ feature -- Managing Window Buffers
 
 feature -- Managing Default Buttons
 
+	frozen default_button_cell (a_window: POINTER): POINTER
+			--- (NSButtonCell *)defaultButtonCell
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_window defaultButtonCell];"
+		end
+
 	frozen set_default_button_cell (a_window: POINTER; a_button_cell: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -128,6 +145,14 @@ feature -- Managing Cursor Rectangles
 
 feature -- Managing Title Bars
 
+	frozen standdard_window_button (a_window: POINTER; a_window_button_kind: INTEGER): POINTER
+			-- - (NSButton *)standardWindowButton:(NSWindowButton)windowButtonKind
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_window standardWindowButton: $a_window_button_kind];"
+		end
+
 feature -- Managing Tooltips
 
 feature -- Handling Events
@@ -139,6 +164,22 @@ feature -- Managing the Key View Loop
 feature -- Handling Keyboard Events
 
 feature -- Handling Mouse Events
+
+	frozen set_accepts_mouse_moved_events (a_application: POINTER; a_flag: BOOLEAN)
+			-- - (void)setAcceptsMouseMovedEvents:(BOOL)acceptMouseMovedEvents
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_application setAcceptsMouseMovedEvents: $a_flag];"
+		end
+
+	frozen accepts_mouse_moved_events (a_application: POINTER): BOOLEAN
+			-- - (BOOL)acceptsMouseMovedEvents
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_application acceptsMouseMovedEvents];"
+		end
 
 feature -- Bracketing Drawing Operations
 
@@ -164,6 +205,22 @@ feature -- Getting the Undo Manager
 feature -- Accessing Edited Status
 
 feature -- Managing Titles
+
+	frozen title (a_window: POINTER): POINTER
+			-- - (NSString *)title
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_window title];"
+		end
+
+	frozen set_title (a_window: POINTER; a_nsstring: POINTER)
+			-- - (void)setTitle:(NSString *)title
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window setTitle: $a_nsstring];"
+		end
 
 feature -- Accessing Screen Information
 
@@ -200,20 +257,6 @@ feature -- Working with Carbon
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSWindow*)$a_window setDelegate: $a_delegate];"
-		end
-
-	frozen title (a_window: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSWindow*)$a_window title];"
-		end
-
-	frozen set_title (a_window: POINTER; a_nsstring: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setTitle: $a_nsstring];"
 		end
 
 	frozen set_frame (a_window: POINTER; a_rect: POINTER)

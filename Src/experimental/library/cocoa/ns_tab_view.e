@@ -19,7 +19,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (tab_view_new)
+			make_from_pointer (tab_view_new)
 		end
 
 feature -- Access

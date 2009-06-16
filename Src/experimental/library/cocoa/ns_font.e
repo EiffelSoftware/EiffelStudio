@@ -15,7 +15,7 @@ create
 	bold_system_font_of_size,
 	label_font_of_size
 create {NS_OBJECT}
-	make_shared
+	make_from_pointer
 
 feature -- Factory
 
@@ -45,7 +45,7 @@ feature -- Access
 
 	font_name: STRING
 		do
-			Result := (create {NS_STRING}.make_shared (font_font_name (item))).to_string
+			Result := (create {NS_STRING}.make_from_pointer (font_font_name (item))).to_string
 		ensure
 			result_not_void: Result /= void
 		end

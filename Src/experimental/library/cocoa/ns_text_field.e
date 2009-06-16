@@ -13,6 +13,8 @@ inherit
 			make
 		end
 
+	NS_TEXT_DELEGATE
+
 create
 	make
 
@@ -20,7 +22,8 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (text_field_new)
+			make_from_pointer (text_field_new)
+			init_delegate
 		end
 
 feature
@@ -32,7 +35,7 @@ feature
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (text_field_background_color (item))
+			create Result.make_from_pointer (text_field_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
@@ -52,7 +55,7 @@ feature
 
 	text_color: NS_COLOR
 		do
-			create Result.make_shared (text_field_text_color (item))
+			create Result.make_from_pointer (text_field_text_color (item))
 		end
 
 	is_bordered: BOOLEAN

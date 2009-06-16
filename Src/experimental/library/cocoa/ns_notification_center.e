@@ -17,7 +17,7 @@ feature -- Getting the Notification Center
 
 	default_center
 		do
-			make_shared (notification_center_default_center)
+			make_from_pointer (notification_center_default_center)
 		end
 
 feature {NONE} -- Objective-C interface

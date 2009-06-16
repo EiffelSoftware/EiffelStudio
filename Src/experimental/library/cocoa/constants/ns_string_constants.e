@@ -11,7 +11,7 @@ feature -- Access
 
 	font_attribute_name: NS_STRING
 		once
-			create Result.make_shared (ns_font_attribute_name)
+			create Result.make_from_pointer (ns_font_attribute_name)
 		ensure
 			Result /= void
 		end

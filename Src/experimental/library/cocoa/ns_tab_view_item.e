@@ -17,7 +17,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (tab_view_item_new)
+			make_from_pointer (tab_view_item_new)
 		end
 
 	init_with_identifier (a_identifier: NS_OBJECT): NS_OBJECT
@@ -27,27 +27,27 @@ feature {NONE} -- Creation
 
 feature
 
-	identifier : NS_OBJECT
+	identifier: NS_OBJECT
 		do
 --			Result := tab_view_item_identifier(cocoa_object)
 		end
 
-	view : NS_VIEW
+	view: NS_VIEW
 		do
-			Result := (create {NS_VIEW}.make_shared (tab_view_item_view(item)))
+			Result := (create {NS_VIEW}.share_from_pointer (tab_view_item_view(item)))
 		end
 
-	initial_first_responder : NS_OBJECT
+	initial_first_responder: NS_OBJECT
 		do
 --			Result := tab_view_item_initial_first_responder(cocoa_object)
 		end
 
-	label : NS_STRING
+	label: NS_STRING
 		do
 --			Result := tab_view_item_label(cocoa_object)
 		end
 
-	color : NS_COLOR
+	color: NS_COLOR
 		do
 --			Result := tab_view_item_color(cocoa_object)
 		end

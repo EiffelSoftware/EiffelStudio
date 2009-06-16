@@ -9,11 +9,11 @@ class
 
 feature -- Creating Buttons
 
-	frozen new (a_object: POINTER; a_mouse_down: POINTER): POINTER
+	frozen new: POINTER
 		external
 			"C inline use %"ns_button.h%""
 		alias
-			"return [[MyButton alloc] initWithCallbackObject: $a_object andMethod: $a_mouse_down];"
+			"return [NSButton new];"
 		end
 
 feature -- Configuring Buttons
@@ -66,6 +66,22 @@ feature -- Configuring Button Images
 		end
 
 feature -- Managing Button State
+
+	frozen set_state (a_button: POINTER; a_state: INTEGER)
+			-- - (void)setState:(NSInteger)value
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_button setState: $a_state];"
+		end
+
+	frozen state (a_button: POINTER): INTEGER
+			-- - (NSInteger)state
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_button state];"
+		end
 
 feature -- Accessing Key Equivalents
 

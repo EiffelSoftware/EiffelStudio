@@ -21,7 +21,7 @@ create
 	color_with_calibrated_red_green_blue_alpha,
 	color_with_pattern_image
 create {NS_OBJECT}
-	make_shared
+	make_from_pointer
 
 feature {NONE} -- Creation
 
@@ -118,12 +118,12 @@ feature -- Components
 
 	color_using_color_space (a_color_space: NS_COLOR_SPACE): NS_COLOR
 		do
-			Result := create {NS_COLOR}.make_shared (color_color_using_color_space (item, a_color_space.item))
+			Result := create {NS_COLOR}.make_from_pointer (color_color_using_color_space (item, a_color_space.item))
 		end
 
 	color_using_color_space_name (a_color_space: NS_STRING): NS_COLOR
 		do
-			Result := create {NS_COLOR}.make_shared (color_color_using_color_space_name (item, a_color_space.item))
+			Result := create {NS_COLOR}.make_from_pointer (color_color_using_color_space_name (item, a_color_space.item))
 		end
 
 feature {NONE} -- Objective-C implementation

@@ -20,28 +20,29 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_shared (save_panel_save_panel)
+			make_from_pointer (save_panel_save_panel)
 		end
 
 feature -- Access
+
 --	url : NS_URL
 --		do
 --			Result := save_panel_url(cocoa_object)
 --		end
 
-	filename : NS_STRING
+	filename: NS_STRING
 		do
-			create Result.make_shared (save_panel_filename (item))
+			create Result.share_from_pointer (save_panel_filename (item))
 		end
 
-	directory : NS_STRING
+	directory: NS_STRING
 		do
-			create Result.make_shared (save_panel_directory (item))
+			create Result.share_from_pointer (save_panel_directory (item))
 		end
 
 	set_directory (a_path: NS_STRING)
 		do
-			save_panel_set_directory(item, a_path.item)
+			save_panel_set_directory (item, a_path.item)
 		end
 
 	required_file_type : NS_STRING

@@ -15,19 +15,16 @@ inherit
 
 create
 	make
+create {NS_OBJECT}
+	share_from_pointer
 
 feature {NONE} -- Creation
 
 	make
 			-- Create a new NSButton
 		do
-			make_shared ({NS_BUTTON_API}.new ($Current, $mouse_down_y))
-		end
-
-	mouse_down_y (a_event: POINTER)
-		do
-			--io.put_string ("Mouse down on button " + title.to_string + "%N")
-			mouse_down (create {NS_EVENT}.make_shared (a_event))
+			make_from_pointer ({NS_BUTTON_API}.new)
+			insert_in_table
 		end
 
 feature -- Access
@@ -70,7 +67,7 @@ feature -- Access
 			-- This title is always displayed if the button doesn't use its alternate contents for highlighting or displaying the alternate state.
 			-- By default, a button's title is "Button."
 		do
-			create Result.make_shared ({NS_BUTTON_API}.title (item))
+			create Result.make_from_pointer ({NS_BUTTON_API}.title (item))
 		ensure
 			result_not_void: Result /= void
 		end
@@ -84,8 +81,8 @@ feature -- Access
 			l_image: POINTER
 		do
 			l_image := {NS_BUTTON_API}.image (item)
-			if l_image /= nil then
-				create Result.make_shared (l_image)
+			if l_image /= default_pointer then
+				create Result.make_from_pointer (l_image)
 			end
 		end
 
@@ -96,7 +93,7 @@ feature -- Access
 		do
 			{NS_BUTTON_API}.set_image (item, a_image.item)
 		ensure
-			image_set: a_image = image
+			--image_set: a_image = image -- not true for every button type it seems
 		end
 
 	set_bezel_style (a_style: INTEGER)
@@ -112,6 +109,33 @@ feature -- Access
 			bezel_style_set: -- TODO
 		end
 
+feature -- Managing the button state
+
+	state: INTEGER
+			-- Returns the receiver's state.
+			-- The button's state. A button can have two or three states. If it has two, this value is either NSOffState (the normal or unpressed state) or NSOnState (the alternate or pressed state). If it has three, this value can be NSOnState (the feature is in effect everywhere), NSOffState (the feature is in effect nowhere), or NSMixedState (the feature is in effect somewhere).
+			-- To check whether the button uses the mixed state, use the method allowsMixedState.
+		do
+			Result := {NS_BUTTON_API}.state (item)
+		end
+
+	set_state (a_state: INTEGER)
+			-- Sets the cell's state to the specified value. This can be NSOnState, NSOffState,NSMixedState. See the discussion for a more detailed explanation.
+			-- If necessary, this method also redraws the receiver.
+			-- The cell can have two or three states. If it has two, value can be NSOffState (the normal or unpressed state) and NSOnState (the alternate or pressed state).
+			-- If it has three, value can be NSOnState (the feature is in effect everywhere), NSOffState (the feature is in effect nowhere), or NSMixedState (the feature is in effect somewhere).
+			-- Note that if the cell has only two states and value is NSMixedState, this method sets the cell's state to NSOnState.
+			-- Although using the enumerated constants is preferred, value can also be an integer. If the cell has two states, 0 is treated as NSOffState, and a nonzero value is treated as NSOnState.
+			-- If the cell has three states, 0 is treated as NSOffState; a negative value, as NSMixedState; and a positive value, as NSOnState.
+			-- To check whether the button uses the mixed state, use the method allowsMixedState.
+		require
+			valid_state:
+		do
+			{NS_BUTTON_API}.set_state (item, a_state)
+		ensure
+			state_set: state = a_state
+		end
+
 feature -- Contract support
 
 	valid_button_type (a_integer: INTEGER): BOOLEAN
@@ -121,7 +145,10 @@ feature -- Contract support
 
 	valid_bezel_style (a_integer: INTEGER): BOOLEAN
 		do
-			Result := (<<rounded_bezel_style>>).has (a_integer)
+			Result := (<<rounded_bezel_style, rectangular_square_bezel_style, thick_square_bezel_style, thicker_square_bezel_style,
+				disclosure_bezel_style, shadowless_square_bezel_style, circular_bezel_style, textured_square_bezel_style,
+				help_button_bezel_style, small_square_bezel_style, textured_rounded_bezel_style, rounded_rect_bezel_style,
+				recessed_bezel_style, rounded_disclosure_bezel_style>>).has (a_integer)
 		end
 
 feature -- NSButtonType Constants
@@ -129,7 +156,7 @@ feature -- NSButtonType Constants
 --    NSMomentaryLightButton		= 0,	// was NSMomentaryPushButton
 
 	frozen push_on_push_off_button: INTEGER
-			--    NSPushOnPushOffButton		= 1,
+			--    NSPushOnPushOffButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
@@ -137,7 +164,7 @@ feature -- NSButtonType Constants
 		end
 
 	frozen toggle_button: INTEGER
-    		-- NSToggleButton			= 2
+    		-- NSToggleButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
@@ -145,7 +172,7 @@ feature -- NSButtonType Constants
 		end
 
 	frozen switch_button: INTEGER
-			-- NSSwitchButton			= 3
+			-- NSSwitchButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
@@ -153,7 +180,7 @@ feature -- NSButtonType Constants
 		end
 
 	frozen radio_button: INTEGER
-			-- NSRadioButton			= 4,
+			-- NSRadioButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias

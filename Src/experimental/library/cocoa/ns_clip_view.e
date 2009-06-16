@@ -11,7 +11,7 @@ inherit
 	NS_VIEW
 
 create {NS_OBJECT}
-	make_shared
+	share_from_pointer
 
 feature -- Working with Background Color
 
@@ -22,7 +22,7 @@ feature -- Working with Background Color
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared (clip_view_background_color (item))
+			create Result.make_from_pointer (clip_view_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
@@ -45,7 +45,7 @@ feature -- Setting the Document View
 	document_view: NS_VIEW
 			-- FIXME according to the header this may return type NS_OBJECT
 		do
-			create Result.make_shared (clip_view_document_view (item))
+			create Result.share_from_pointer (clip_view_document_view (item))
 		end
 
 feature -- Getting the Visible Portion

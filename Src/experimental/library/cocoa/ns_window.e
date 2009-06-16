@@ -15,14 +15,15 @@ inherit
 create
 	make
 create {NS_OBJECT}
-	make_shared
+	share_from_pointer
 
 feature -- Creating Windows
 
 	make (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
 			-- Create a new window
 		do
-			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (a_rect.item, a_style_mask, a_defer)
+			item := {NS_WINDOW_API}.alloc
+			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (item, a_rect.item, a_style_mask, a_defer)
 		end
 
 feature -- Configuring Windows
@@ -54,7 +55,7 @@ feature -- Configuring Windows
 	content_view: NS_VIEW
 			-- Returns the window's content view, the highest accessible NS_VIEW object in the window's view hierarchy.
 		do
-			create Result.make_shared ({NS_WINDOW_API}.content_view (item))
+			create Result.share_from_pointer ({NS_WINDOW_API}.content_view (item))
 		end
 
 feature -- Sizing
@@ -64,6 +65,16 @@ feature -- Sizing
 		do
 			create Result.make
 			{NS_WINDOW_API}.frame (item, Result.item)
+		end
+
+feature -- Managing Title Bars
+
+	standdard_window_button (a_window_button_kind: INTEGER): NS_BUTTON
+			-- Returns the window button of a given window button kind in the window's view hierarchy.
+			-- `Void' when such a button is not in the window's view hierarchy.			
+
+		do
+			create Result.share_from_pointer ({NS_WINDOW_API}.standdard_window_button (item, a_window_button_kind))
 		end
 
 feature -- ..
@@ -81,39 +92,71 @@ feature -- ..
 			content_min_size_set: --
 		end
 
-	set_default_button_cell (a_button_cell: NS_CELL)
-			-- void => no default button
-		do
-			if a_button_cell = void then
-				{NS_WINDOW_API}.set_default_button_cell (item, nil)
-			else
-				{NS_WINDOW_API}.set_default_button_cell (item, a_button_cell.item)
-			end
-		end
-
 	set_frame (a_rect: NS_RECT)
 		do
 			{NS_WINDOW_API}.set_frame (item, a_rect.item)
 		end
 
-	title: STRING_32
+feature -- Handling Mouse Events
+
+	set_accepts_mouse_moved_events (a_flag: BOOLEAN)
+			-- Specifies whether the window is to accept mouse-moved events.
+		do
+			{NS_WINDOW_API}.set_accepts_mouse_moved_events (item, a_flag)
+		end
+
+feature -- Managing Default Buttons
+
+	set_default_button_cell (a_button_cell: detachable NS_CELL)
+			-- Makes the key equivalent of button cell the Return (or Enter) key, so when the user presses Return that button performs as if clicked.
+			-- void => no default button
+		do
+			if a_button_cell = void then
+				{NS_WINDOW_API}.set_default_button_cell (item, default_pointer)
+			else
+				{NS_WINDOW_API}.set_default_button_cell (item, a_button_cell.item)
+			end
+		ensure
+			default_button_cell_set: equal (a_button_cell, default_button_cell)
+		end
+
+	default_button_cell: detachable NS_CELL
+			-- Returns the button cell that performs as if clicked when the window receives a Return (or Enter) key event.
+			-- This cell draws itself as the focal element for keyboard interface control, unless another button cell is focused on,
+			-- in which case the default button cell temporarily draws itself as normal and disables its key equivalent.
+			-- The window receives a Return key event if no responder in its responder chain claims it, or if the user presses the Control key along with the Return key.
+		local
+			l_button_cell: POINTER
+		do
+			l_button_cell := {NS_WINDOW_API}.default_button_cell (item)
+			if l_button_cell /= default_pointer then
+				create Result.make_from_pointer (l_button_cell)
+			end
+		end
+
+feature -- Managing Titles
+
+	title: NS_STRING
+			-- Returns either the string that appears in the title bar of the window, or the path to the represented file.
+			-- If the title has been set using setTitleWithRepresentedFilename:, this method returns the file's path.
 		local
 			c_title: POINTER
 		do
 			c_title := {NS_WINDOW_API}.title (item)
-			if c_title /= nil then
-				Result := (create {NS_STRING}.make_shared (c_title)).to_string
+			if c_title /= default_pointer then
+				create Result.make_from_pointer (c_title)
 			else
 				create Result.make_empty
 			end
 		end
 
-	set_title (a_title: STRING_GENERAL)
-			--
+	set_title (a_title: NS_STRING)
+			-- Sets the string that appears in the window's title bar (if it has one) to a given string and displays the title.
+			-- Also sets the title of the window's miniaturized window.
 		do
-			{NS_WINDOW_API}.set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
+			{NS_WINDOW_API}.set_title (item, a_title.item)
 		ensure
-			title_set: title = a_title
+		--	title_set: title.is_equal (a_title.to_string_32) -- Does not hold in all cases! (why?)
 		end
 
 	set_min_size (a_width, a_height: INTEGER)
@@ -166,7 +209,7 @@ feature -- ..
 
 	background_color: NS_COLOR
 		do
-			create Result.make_shared ({NS_WINDOW_API}.background_color (item))
+			create Result.make_from_pointer ({NS_WINDOW_API}.background_color (item))
 		end
 
 	set_ignores_mouse_events (a_flag: BOOLEAN)
@@ -189,29 +232,30 @@ feature -- ..
 			Result := {NS_WINDOW_API}.level (item)
 		end
 
-	screen: NS_SCREEN
+	screen: detachable NS_SCREEN
+			-- Returns the screen the window is on. Void if the window is offscreen.
 		local
 			res: POINTER
 		do
 			res := {NS_WINDOW_API}.screen (item)
-			if res /= nil then
-				create Result.make_shared (res)
+			if res /= default_pointer then
+				create Result.make_from_pointer (res)
 			end
 		end
 
 	deepest_screen: NS_SCREEN
 		do
-			create Result.make_shared ({NS_WINDOW_API}.deepest_screen (item))
+			create Result.make_from_pointer ({NS_WINDOW_API}.deepest_screen (item))
 		end
 
 	miniaturize
 		do
-			{NS_WINDOW_API}.miniaturize (item, nil)
+			{NS_WINDOW_API}.miniaturize (item, default_pointer)
 		end
 
 	deminiaturize
 		do
-			{NS_WINDOW_API}.deminiaturize (item, nil)
+			{NS_WINDOW_API}.deminiaturize (item, default_pointer)
 		end
 
 	is_zoomed: BOOLEAN
@@ -221,7 +265,7 @@ feature -- ..
 
 	zoom
 		do
-			{NS_WINDOW_API}.zoom (item, nil)
+			{NS_WINDOW_API}.zoom (item, default_pointer)
 		end
 
 	is_miniaturized: BOOLEAN
@@ -231,22 +275,22 @@ feature -- ..
 
 	make_key_and_order_front
 		do
-			{NS_WINDOW_API}.make_key_and_order_front (item, nil)
+			{NS_WINDOW_API}.make_key_and_order_front (item, default_pointer)
 		end
 
 	order_front
 		do
-			{NS_WINDOW_API}.order_front (item, nil)
+			{NS_WINDOW_API}.order_front (item, default_pointer)
 		end
 
 	order_back
 		do
-			{NS_WINDOW_API}.order_back (item, nil)
+			{NS_WINDOW_API}.order_back (item, default_pointer)
 		end
 
 	order_out
 		do
-			{NS_WINDOW_API}.order_out (item, nil)
+			{NS_WINDOW_API}.order_out (item, default_pointer)
 		end
 
 	order_window_relative_to (a_place: INTEGER; a_other_win: INTEGER)
@@ -273,12 +317,12 @@ feature -- Managing Attached Windows
 
 	child_windows: NS_ARRAY [NS_WINDOW]
 		do
-			create Result.make_shared ({NS_WINDOW_API}.child_windows (item))
+			create Result.share_from_pointer ({NS_WINDOW_API}.child_windows (item))
 		end
 
 	parent_window: NS_WINDOW
 		do
-			create Result.make_shared ({NS_WINDOW_API}.parent_window (item))
+			create Result.share_from_pointer ({NS_WINDOW_API}.parent_window (item))
 		end
 
 	set_parent_window (a_window: NS_WINDOW)
@@ -290,7 +334,7 @@ feature -- Animation
 
 	animator: NS_WINDOW
 		do
-			create Result.make_shared (animation_animator (item))
+			create Result.share_from_pointer (animation_animator (item))
 		end
 
 feature -- Style Mask Constants
@@ -313,7 +357,7 @@ feature -- Style Mask Constants
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSTitledWindowMask;"
+			"NSClosableWindowMask;"
 		end
 
 	frozen miniaturizable_window_mask: INTEGER
@@ -371,4 +415,46 @@ feature -- Display Device Descriptions
 			"NSDeviceResolution"
 		end
 
+feature -- NSWindowButton - Accessing Standard Title Bar Buttons
+
+	frozen window_close_button: INTEGER
+			-- The close button.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowCloseButton"
+		end
+
+	frozen window_minimize_button: INTEGER
+			-- The minimize button.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowMiniaturizeButton"
+		end
+
+	frozen window_zoom_button: INTEGER
+			-- The zoom button.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowZoomButton"
+		end
+
+	frozen window_toolbar_button: INTEGER
+			-- The toolbar button.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowToolbarButton"
+		end
+
+
+	frozen window_document_icon_button: INTEGER
+			-- The document icon button.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSWindowDocumentIconButton"
+		end
 end

@@ -13,6 +13,8 @@ inherit
 			make
 		end
 
+	TARGET_ACTION_SUPPORT
+
 create
 	make
 
@@ -24,14 +26,6 @@ feature {NONE} -- Creation
 		end
 
 feature -- Access
-
-	set_action (an_action: PROCEDURE [ANY, TUPLE])
-			-- Sets the receiver's action method to call the given eiffel agent.
-		do
-			action := an_action
-			{NS_CONTROL_API}.set_target (item, target_new ($current, $target))
-			{NS_CONTROL_API}.set_action (item)
-		end
 
 	set_double_value (a_double: DOUBLE)
 			-- Sets the value of the receiver's cell using a double-precision floating-point number.
@@ -110,12 +104,4 @@ feature -- Access
 			result_not_void: Result /= void
 		end
 
-feature {NONE} -- Callback Handling
-
-	target
-		do
-			action.call([])
-		end
-
-	action: PROCEDURE [ANY, TUPLE]
 end

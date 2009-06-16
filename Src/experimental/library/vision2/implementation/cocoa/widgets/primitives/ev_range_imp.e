@@ -24,10 +24,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the range control.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create {NS_SLIDER}cocoa_item.make
 			change_actions_internal := create_change_actions
 			slider.set_action (agent
@@ -56,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_RANGE;
+	interface: detachable EV_RANGE note option: stable attribute end;
 
 	slider: NS_SLIDER
 		do

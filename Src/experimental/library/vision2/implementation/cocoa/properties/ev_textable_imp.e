@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision textable. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision textable. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,16 +9,6 @@ deferred class
 
 inherit
 	EV_TEXTABLE_I
-		redefine
-			interface
-		end
-
-	EV_ANY_IMP
-		undefine
-			destroy
-		redefine
-			interface
-		end
 
 feature -- Access
 
@@ -121,10 +109,4 @@ feature {EV_ANY_IMP} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_TEXTABLE;
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXTABLE_IMP

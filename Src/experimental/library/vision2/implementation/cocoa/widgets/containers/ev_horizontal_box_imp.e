@@ -274,7 +274,7 @@ feature {NONE} -- Implementation for automatic size compute
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_BOX;
+	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

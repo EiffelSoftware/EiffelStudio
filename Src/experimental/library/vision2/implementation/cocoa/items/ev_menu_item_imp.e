@@ -13,7 +13,7 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			width,
 			height,
 			set_pixmap
@@ -42,17 +42,11 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface)
-			-- Create a menu.
-		do
-			base_make (an_interface)
-			pixmapable_imp_initialize
-			create {NS_MENU_ITEM}cocoa_item.make
-		end
-
-	initialize
+	make
 			-- Initialize `Current'
 		do
+			pixmapable_imp_initialize
+			create {NS_MENU_ITEM}cocoa_item.make
 			menu_item.set_action (agent
 				do
 					select_actions.call ([])
@@ -146,32 +140,34 @@ feature -- Measurement
 
 	width: INTEGER
 		do
-			io.put_string ("EV_MENU_ITEM_IMP.width: Not implemented%N")
+--			io.put_string ("EV_MENU_ITEM_IMP.width: Not implemented%N")
 		end
 
 	height: INTEGER
 		do
-			io.put_string ("EV_MENU_ITEM_IMP.height: Not implemented%N")
+--			io.put_string ("EV_MENU_ITEM_IMP.height: Not implemented%N")
 		end
 
 	screen_x: INTEGER
 		do
-			io.put_string ("EV_MENU_ITEM_IMP.screen_x: Not implemented%N")
+--			io.put_string ("EV_MENU_ITEM_IMP.screen_x: Not implemented%N")
 		end
 
 	screen_y: INTEGER
 		do
-			io.put_string ("EV_MENU_ITEM_IMP.screen_y: Not implemented%N")
+--			io.put_string ("EV_MENU_ITEM_IMP.screen_y: Not implemented%N")
 		end
 
 	x_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+			-- Functionality may not be fully available in OS X
+			-- see NSMenu locationForSubmenu, menuBarHeight
+--			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
 		end
 
 	y_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
+--			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
 		end
 
 	minimum_width: INTEGER = 10
@@ -182,10 +178,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
 		local
-			l_pixmap_imp: EV_PIXMAP_IMP
+--			l_pixmap_imp: EV_PIXMAP_IMP
 		do
-		--	l_pixmap_imp ?= a_pixmap.implementation
-		--	menu_item.set_image (l_pixmap_imp.image)
+--			l_pixmap_imp ?= a_pixmap.implementation
+--			menu_item.set_image (l_pixmap_imp.image)
 		end
 
 	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
@@ -200,7 +196,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	accelerators_enabled: BOOLEAN = True
 
-	interface: EV_MENU_ITEM;
+	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 	menu_item: NS_MENU_ITEM
 		do

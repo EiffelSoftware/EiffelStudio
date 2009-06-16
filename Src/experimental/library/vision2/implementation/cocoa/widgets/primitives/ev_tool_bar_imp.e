@@ -20,7 +20,7 @@ inherit
 			internal_set_minimum_height, internal_set_minimum_width, internal_set_minimum_size
 		redefine
 			interface,
-			initialize,
+			make,
 			set_parent_imp,
 			ev_apply_new_size
 		end
@@ -30,7 +30,7 @@ inherit
 			item_by_data
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -43,20 +43,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the tool-bar.
 		do
-			base_make (an_interface)
-			create {NS_BOX}cocoa_item.make
-			box.set_title_position ({NS_BOX}.no_title)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		do
-			Precursor {EV_ITEM_LIST_IMP}
+			create {NS_BOX}cocoa_item.make
+			box.set_title_position ({NS_BOX}.no_title)
+			box.set_box_type ({NS_BOX}.box_custom)
+			box.set_content_view_margins (0, 0)
+
+			initialize
 			Precursor {EV_PRIMITIVE_IMP}
+			disable_tabable_from
 			has_vertical_button_style := True
+
+			create radio_group.make
+			new_item_actions.extend (agent add_radio_button)
+			remove_item_actions.extend (agent remove_radio_button)
 		end
 
 	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
@@ -129,8 +137,18 @@ feature -- Implementation
 
 	compute_minimum_height
 			-- Update the minimum-size of `Current'.
+		local
+			l_height: INTEGER
 		do
-			internal_set_minimum_height (30)
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				l_height := l_height.max (ev_children.item.minimum_height)
+				ev_children.forth
+			end
+			internal_set_minimum_height (l_height)
 		end
 
 	compute_minimum_size
@@ -164,17 +182,6 @@ feature -- Implementation
 			end
 		end
 
-feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Radio button handling
-
-	add_radio_button (w: EV_RADIO_PEER_IMP)
-			-- Connect radio button to tool bar group.
-		require
-			w_not_void: w /= Void
-		do
-		end
-
-	radio_group: POINTER
-
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation (obsolete?)
 
 	block_selection_for_docking
@@ -189,9 +196,84 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation (obsolete?)
 		do
 		end
 
+
+feature {EV_TOOL_BAR_IMP} -- Implementation
+	-- TODO: is this the same for all radio-containers? (menu, toolbar, widget container)
+	-- if so, share the code.
+
+	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
+			-- Radio items in `Current'.
+			-- `Current' shares reference with merged containers.
+
+	is_merged (other: EV_TOOL_BAR): BOOLEAN
+			-- Is `Current' merged with `other'?
+		require
+			other_not_void: other /= Void
+		local
+			t_imp: EV_TOOL_BAR_IMP
+		do
+			t_imp ?= other.implementation
+			Result := t_imp.radio_group = radio_group
+		end
+
+	set_radio_group (rg: like radio_group)
+			-- Set `radio_group' by reference. (Merge)
+		do
+			radio_group := rg
+		end
+
+	add_radio_button (w: EV_ITEM)
+			-- Called when `w' has been added to `Current'.
+		require
+			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				if not radio_group.is_empty then
+					r.disable_select
+				end
+				r.set_radio_group (radio_group)
+			end
+		end
+
+	add_button (w: EV_ITEM)
+			-- Called when `w' has been added to `Current'.
+		require
+			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+		local
+			button_imp: EV_TOOL_BAR_BUTTON_IMP -- was: EV_TOOL_BAR_ITEM_IMP
+		do
+			button_imp ?= w.implementation
+			check
+				implementation_not_void: button_imp /= Void
+			end
+			if not button_imp.is_sensitive then
+				--disable_button (button_imp.id)
+			end
+		end
+
+	remove_radio_button (w: EV_ITEM)
+			-- Called when `w' has been removed from `Current'.
+		require
+			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				r.remove_from_radio_group
+				r.enable_select
+			end
+		end
+
 feature {EV_ANY_I} -- Interface
 
-	interface: EV_TOOL_BAR;
+	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 	box: NS_BOX
 		do

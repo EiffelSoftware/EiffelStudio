@@ -17,7 +17,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			initialize,
+			make,
 			default_key_processing_blocked,
 			set_default_minimum_size
 		redefine
@@ -31,7 +31,7 @@ inherit
 			create_change_actions,
 			on_key_event,
 			set_minimum_width_in_characters,
-			initialize
+			make
 		end
 
 	EV_FONTABLE_IMP
@@ -52,20 +52,21 @@ create
 
 feature {NONE} -- Initialization
 
-		make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create Cocoa textfield
 		do
-			base_make (an_interface)
-			create {NS_TEXT_FIELD}cocoa_item.make
-			text_field ?= cocoa_item
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		local
 			a_font: EV_FONT
 		do
+			create {NS_TEXT_FIELD}cocoa_item.make
+			text_field ?= cocoa_item
+
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			align_text_left
@@ -73,12 +74,17 @@ feature {NONE} -- Initialization
 			create text.make_empty
 			a_font.set_height (12)
 			set_font (a_font)
+
+			text_field.text_did_change_actions.extend (agent do change_actions.call ([]) end)
 		end
 
 feature -- Access
 
 	text: STRING_32
 			-- Text displayed in field.
+		do
+			Result := text_field.string_value.to_string.to_string_32
+		end
 
 feature -- Status setting
 
@@ -90,22 +96,19 @@ feature -- Status setting
 	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
-			text := a_text.twin
 			text_field.set_string_value (a_text)
 		end
 
 	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		do
-			text := text + a_text
-			text_field.set_string_value (text)
+			text_field.set_string_value (text + a_text)
 		end
 
 	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		do
-			text := a_text + text
-			text_field.set_string_value (text)
+			text_field.set_string_value (a_text + text)
 		end
 
 	set_capacity (len: INTEGER)
@@ -314,7 +317,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 
-	interface: EV_TEXT_FIELD;
+	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 

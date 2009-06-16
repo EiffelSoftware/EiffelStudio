@@ -25,16 +25,15 @@ inherit
 			width,
 			height,
 			on_key_event,
-			initialize,
+			make,
 			destroy,
 			client_height,
 			client_width,
 			show
 		redefine
 			interface,
-			initialize,
-			is_sensitive,
 			make,
+			is_sensitive,
 			on_key_event,
 			hide,
 			destroy,
@@ -44,7 +43,8 @@ inherit
 			set_minimum_height,
 			set_top_level_window_imp,
 			ev_apply_new_size,
-			cocoa_set_size
+			cocoa_set_size,
+			dispose
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -58,7 +58,11 @@ inherit
 			background_color as cocoa_background_color,
 			make as cocoa_make,
 			screen as cocoa_screen,
-			item as window_item
+			item as window_item,
+			title as cocoa_title,
+			set_title as cocoa_set_title
+		redefine
+			dispose
 		end
 
 	NS_WINDOW_DELEGATE
@@ -68,15 +72,25 @@ inherit
 		redefine
 			window_did_resize
 		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the window.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Create the vertical box `vbox' and horizontal box `hbox'
+			-- to put in the window.
+			-- The `vbox' will be able to contain the menu bar, the `hbox'
+			-- and the status bar.
+			-- The `hbox' will contain the child of the window.
+		do
 			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
 			cocoa_item := current
@@ -85,15 +99,9 @@ feature {NONE} -- Initialization
 			allow_resize
 			create_delegate
 			set_delegate (current)
-		end
 
-	initialize
-			-- Create the vertical box `vbox' and horizontal box `hbox'
-			-- to put in the window.
-			-- The `vbox' will be able to contain the menu bar, the `hbox'
-			-- and the status bar.
-			-- The `hbox' will contain the child of the window.
-		do
+			set_accepts_mouse_moved_events (True)
+
 			init_bars
 
 			maximum_width := interface.maximum_dimension
@@ -483,6 +491,14 @@ feature  -- Access
 	item: EV_WIDGET
 			-- Current item.
 
+	count: INTEGER_32
+			-- Number of elements in `Current'.	
+		do
+			if item /= Void then
+				Result := 1
+			end
+		end
+
 	menu_bar: EV_MENU_BAR
 			-- FIXME Mac Issue: Menu-Bars are Application-wide
 			-- Horizontal bar at top of client area that contains menu's.
@@ -541,12 +557,14 @@ feature -- Status setting
 			-- Forbid the resize of `Current'.
 		do
 			set_shows_resize_indicator (False)
+			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (False)
 		end
 
 	allow_resize
 			-- Allow the resize of `Current'.
 		do
 			set_shows_resize_indicator (True)
+			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (True)
 		end
 
 	show
@@ -567,6 +585,25 @@ feature -- Status setting
 			--is_show_requested := False
 		end
 
+	set_title (a_title: STRING_GENERAL)
+			-- <Precursor>
+		do
+			cocoa_set_title (create {NS_STRING}.make_with_string (a_title))
+			internal_title := a_title.as_string_32
+		end
+
+	title: STRING_32
+			-- <Precursor>-
+		do
+			if internal_title = void then
+				create Result.make_empty
+			else
+				Result := internal_title.twin
+			end
+		end
+
+	internal_title: STRING_32
+
 feature -- Element change
 
 	on_attach: ACTION_SEQUENCE [TUPLE]
@@ -574,25 +611,26 @@ feature -- Element change
 	replace (v: like item)
 			-- Replace `item' with `v'.
 		local
-			w_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 		do
 			-- Remove current item, if any
 			if item /= Void then
-				w_imp ?= item.implementation
+				v_imp ?= item.implementation
 				check
-					item_has_implementation: w_imp /= Void
+					item_has_implementation: v_imp /= Void
 				end
-				on_removed_item ( w_imp )
+				v_imp.set_parent_imp (Void)
+				notify_change (Nc_minsize, Current)
 			end
 			-- Insert new item, if any
 			if v /= Void then
-				w_imp ?= v.implementation
+				v_imp ?= v.implementation
 				check
-					v_has_implementation: w_imp /= Void
+					v_has_implementation: v_imp /= Void
 				end
-				content_view.add_subview (w_imp.cocoa_view)
-				on_new_item ( w_imp )
-				notify_change (nc_minsize, Current)
+				content_view.add_subview (v_imp.cocoa_view)
+				v_imp.set_parent_imp (Current)
+				notify_change (Nc_minsize, Current)
 			end
 			item := v
 		end
@@ -634,6 +672,12 @@ feature {EV_ANY_IMP} -- Implementation
 			Precursor {EV_CONTAINER_IMP}
 		end
 
+	dispose
+		do
+			Precursor {EV_CONTAINER_IMP}
+			Precursor {NS_WINDOW}
+		end
+
 feature {NONE} -- Implementation
 
 	set_focused_widget (a_widget: EV_WIDGET_IMP)
@@ -656,7 +700,7 @@ feature {EV_INTERMEDIARY_ROUTINES}
 
 feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 
-	interface: EV_WINDOW;
+	interface: detachable EV_WINDOW note option: stable attribute end;
 		-- Interface object of `Current'
 
 	window: NS_WINDOW

@@ -20,7 +20,8 @@ inherit
 			make,
 			interface,
 			set_pixmap,
-			remove_pixmap
+			remove_pixmap,
+			old_make
 		end
 
 create
@@ -28,14 +29,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a Cocoa toggle button.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			cocoa_make
 			cocoa_item := current
 			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			set_button_type ({NS_BUTTON}.push_on_push_off_button)
+			align_text_left
 		end
 
 feature -- Status setting
@@ -43,19 +49,21 @@ feature -- Status setting
 	enable_select
 			-- Set `is_selected' `True'.
 		do
+			set_state_flag (on_state)
+			is_selected := True
 		end
 
 	disable_select
 				-- Set `is_selected' `False'.
 		do
+			set_state_flag (off_state)
+			is_selected := False
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
-		do
-		end
 
 feature -- Element change
 
@@ -92,7 +100,7 @@ feature -- Element change
 
 feature {EV_ANY_I}
 
-	interface: EV_TOGGLE_BUTTON;
+	interface: detachable EV_TOGGLE_BUTTON note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

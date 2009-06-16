@@ -39,19 +39,12 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface)
-			-- Create a separator .
+	make
+			--
 		do
-			base_make (an_interface)
 			create box.make
 			box.set_box_type ({NS_BOX}.box_separator)
 			cocoa_item := box
-		end
-
-	initialize
-			--
-		do
-
 		end
 
 
@@ -76,7 +69,7 @@ feature -- Statur Report
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_SEPARATOR;
+	interface: detachable EV_TOOL_BAR_SEPARATOR note option: stable attribute end;
 
 	box: NS_BOX;
 

@@ -1,6 +1,5 @@
 note
-	description:
-		"EiffelVision multi-column-list, Cocoa implementation."
+	description: "EiffelVision multi-column-list, Cocoa implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,7 +12,7 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
 			interface,
-			initialize,
+			make,
 			call_pebble_function,
 			pixmaps_size_changed,
 			remove_row_pixmap,
@@ -27,7 +26,7 @@ inherit
 			call_pebble_function,
 			post_drop_steps,
 			on_mouse_button_event,
-			initialize,
+			make,
 			interface,
 			destroy,
 			able_to_transport,
@@ -42,7 +41,7 @@ inherit
 		redefine
 			destroy,
 			interface,
-			initialize,
+			make,
 			ev_children
 		end
 
@@ -55,20 +54,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
 		do
-			create ev_children.make (0)
-			create {NS_OUTLINE_VIEW}cocoa_item.make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 		local
 			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
+			create ev_children.make (0)
+			create {NS_OUTLINE_VIEW}cocoa_item.make
+
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
@@ -623,9 +624,8 @@ feature {EV_ANY_I} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 
-	interface: EV_MULTI_COLUMN_LIST;
+	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MULTI_COLUMN_LIST_IMP
-

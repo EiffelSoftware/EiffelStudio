@@ -17,7 +17,7 @@ inherit
 		redefine
 			interface,
 			clear_rectangle,
-			initialize
+			make
 		end
 
 create
@@ -25,13 +25,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Set up action sequence connections and create graphics context.
 		do
 			set_default_colors
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	interface: EV_BITMAP;
+	interface: detachable EV_BITMAP note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

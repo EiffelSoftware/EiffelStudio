@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision radio button. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,12 +22,15 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize
+			old_make
 		end
 
 	EV_RADIO_PEER_IMP
 		redefine
-			interface
+			interface,
+			make,
+			enable_select,
+			disable_select
 		end
 
 create
@@ -36,47 +38,47 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create radio button.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		do
+			Precursor {EV_RADIO_PEER_IMP}
 			cocoa_make
 			cocoa_item := current
 			set_button_type ({NS_BUTTON}.radio_button)
 		end
 
-	initialize
-			-- Initialize `Current'
+feature -- Status setting
+
+	enable_select
+			-- Select `Current'.
 		do
+			Precursor
+			set_state ({NS_CELL}.on_state)
+		end
+
+	disable_select
+			-- Unselect 'Current'
+		do
+			Precursor
+			set_state ({NS_CELL}.off_state)
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN
-			-- Is toggle button pressed?
+			-- Is `Current' selected.
 		do
-		end
-
-feature -- Status setting
-
-	enable_select
-			-- Set `is_selected' `True'.
-		do
+			Result := state = {NS_CELL}.on_state
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	radio_group: LINKED_LIST [like current]
-			-- List of all radio item implementations
-		do
-		end
+	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
-
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_RADIO_BUTTON;
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_RADIO_BUTTON_IMP
-

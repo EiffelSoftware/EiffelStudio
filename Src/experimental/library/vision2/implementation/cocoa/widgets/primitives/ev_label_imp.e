@@ -20,7 +20,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			set_default_minimum_size,
 			set_background_color
 		end
@@ -43,10 +43,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create {NS_TEXT_FIELD}cocoa_item.make
 			text_field.set_editable (false)
 			--text_field.set_draws_background (false)
@@ -54,10 +58,7 @@ feature {NONE} -- Initialization
 			text_field.set_background_color (create {NS_COLOR}.control_color)
 
 			align_text_center
-		end
 
-	initialize
-		do
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			disable_tabable_to
@@ -131,7 +132,7 @@ feature -- Minimum size
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_LABEL;
+	interface: detachable EV_LABEL note option: stable attribute end;
 
 	text_field: NS_TEXT_FIELD
 			--

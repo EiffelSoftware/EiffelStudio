@@ -28,7 +28,6 @@ inherit
 			enable_transport,
 			hide_border
 		redefine
-			initialize,
 			make,
 			interface,
 			has_focus,
@@ -47,7 +46,6 @@ inherit
 			dispose,
 			set_default_minimum_size
 		redefine
-			initialize,
 			make,
 			interface,
 			cocoa_set_size
@@ -62,10 +60,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create a Cocoa combo-box.
 		do
-			base_make (an_interface)
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+			Precursor {EV_TEXT_FIELD_IMP}
 			create combo_box.make
 			text_field := combo_box
 			cocoa_item := combo_box
@@ -77,13 +76,6 @@ feature {NONE} -- Initialization
 			-- Call the appropriate selection action sequences
 		do
 			select_actions.call ([])
-		end
-
-	initialize
-			-- Connect action sequences to signals.
-		do
-			Precursor {EV_LIST_ITEM_LIST_IMP}
-			Precursor {EV_TEXT_FIELD_IMP}
 		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; pos: INTEGER)
@@ -191,7 +183,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_COMBO_BOX;
+	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 	combo_box: NS_COMBO_BOX;
 

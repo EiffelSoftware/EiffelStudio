@@ -19,11 +19,10 @@ inherit
 		end
 
 	EV_CELL_IMP
-		undefine
-			make
 		redefine
 			interface,
-			initialize,
+			make,
+			old_make,
 			compute_minimum_height,
 			compute_minimum_width,
 			compute_minimum_size
@@ -32,13 +31,13 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			set_text
 		end
 
@@ -47,19 +46,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create frame.
 		do
-			base_make (an_interface)
-			create {NS_BOX}cocoa_item.make
-			box.set_title_position ({NS_BOX}.no_title)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'.
 		local
 			a_font: EV_FONT
 		do
+			create {NS_BOX}cocoa_item.make
+			box.set_title_position ({NS_BOX}.no_title)
+
 			align_text_left
 			create a_font.default_create
 			a_font.set_height (10)
@@ -71,15 +71,18 @@ feature -- Access
 
 	style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
-		do
-			Result := {EV_FRAME_CONSTANTS}.Ev_frame_etched_in
-		end
 
 feature -- Element change
 
 	set_style (a_style: INTEGER)
 			-- Assign `a_style' to `style'.
 		do
+			if a_style = {EV_FRAME_CONSTANTS}.Ev_frame_lowered or a_style = {EV_FRAME_CONSTANTS}.Ev_frame_etched_in then
+				box.set_border_type ({NS_BOX}.bezel_border)
+			else
+				box.set_border_type ({NS_BOX}.groove_border)
+			end
+			style := a_style
 		end
 
 	set_text (a_text: STRING_GENERAL)
@@ -150,7 +153,7 @@ feature -- Layout
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FRAME;
+	interface: detachable EV_FRAME note option: stable attribute end;
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 

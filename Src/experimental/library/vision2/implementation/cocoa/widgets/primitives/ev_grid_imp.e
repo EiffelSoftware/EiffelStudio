@@ -18,7 +18,7 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_CELL_IMP
@@ -47,29 +47,31 @@ inherit
 			set_configurable_target_menu_handler
 		redefine
 			interface,
-			initialize,
 			make,
+			old_make,
 			set_background_color,
 			set_foreground_color
 		end
+
+	NS_STRING_CONSTANTS
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create grid
 		do
-			base_make (an_interface)
-			create {NS_VIEW}cocoa_item.make
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize `Current'
 --		local
 --			color_imp: EV_COLOR_IMP
 		do
+			create {NS_VIEW}cocoa_item.make
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 
@@ -125,7 +127,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			else
 				l_font_imp ?= a_font.implementation
 				create l_string.make_with_string (a_string)
-				create l_attributes.make_with_object_for_key (l_font_imp.cocoa_item, l_font_imp.cocoa_item.font_attribute_name)
+				create l_attributes.make_with_object_for_key (l_font_imp.cocoa_item, font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)
 
 				tuple.put_integer (l_size.width, 1)
@@ -147,7 +149,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID;
+	interface: detachable EV_GRID note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 

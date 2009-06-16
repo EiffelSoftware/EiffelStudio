@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision colorizable. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision colorizable. Cocoa implementation."
+	author: "Daniel Furrer"
 	keywords: "colorizible"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,23 +9,14 @@ deferred class
 	EV_COLORIZABLE_IMP
 
 inherit
-
 	EV_COLORIZABLE_I
 		redefine
-			interface,
 			set_default_colors
-		end
-
-	EV_ANY_IMP
-		undefine
-			destroy
-		redefine
-			interface
 		end
 
 feature -- Access
 
-	background_color: EV_COLOR
+	background_color_internal: EV_COLOR
 			-- Color of face.
 		do
 			if background_color_imp /= Void then
@@ -37,7 +26,7 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR
+	foreground_color_internal: EV_COLOR
 			-- Color of foreground features like text.
 		do
 			if foreground_color_imp /= Void then
@@ -97,11 +86,4 @@ feature {NONE} -- Implementation
 	Highlight_scale: REAL = 0.90912397
 		-- Highlight color is this much darker than `background_color'.
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_COLORIZABLE;
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_COLORIZABLE_IMP
-

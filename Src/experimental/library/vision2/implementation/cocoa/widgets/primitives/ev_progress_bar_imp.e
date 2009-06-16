@@ -24,10 +24,14 @@ inherit
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create the progress bar.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+		do
 			create progress_indicator.make
 			--progress_indicator.start_animation
 			progress_indicator.set_indeterminate (False)
@@ -52,26 +56,28 @@ feature -- Status report
 
 	is_segmented: BOOLEAN
 			-- Is display animated ?
-		do
-		end
 
 feature -- Status setting
 
 	enable_segmentation
 			-- Display bar is animated
 		do
+			progress_indicator.start_animation
+			is_segmented := True
 		end
 
 	disable_segmentation
 			-- Display bar is not animated
 		do
+			progress_indicator.stop_animation
+			is_segmented := False
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	progress_indicator: NS_PROGRESS_INDICATOR
 
-	interface: EV_PROGRESS_BAR;
+	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

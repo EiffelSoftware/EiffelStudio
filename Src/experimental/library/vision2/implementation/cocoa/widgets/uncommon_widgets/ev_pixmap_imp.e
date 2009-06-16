@@ -20,21 +20,20 @@ inherit
 			interface,
 			make,
 			width,
-			height,
-			initialize
+			height
 		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			foreground_color,
-			background_color,
+			foreground_color_internal,
+			background_color_internal,
 			set_foreground_color,
 			set_background_color
 		redefine
 			interface,
 			width,
 			height,
-			initialize,
+			make,
 			minimum_width,
 			minimum_height
 		end
@@ -49,19 +48,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- Initialize `Current'
+		do
 			internal_height := 10
 			internal_width := 10
 			create {NS_IMAGE_VIEW}cocoa_item.make
 			image_view.set_image_scaling ({NS_IMAGE_VIEW}.image_scaling_none)
-		end
 
-	initialize
-			-- Initialize `Current'
-		do
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_DRAWABLE_IMP}
 			disable_tabable_from
@@ -123,10 +123,13 @@ feature -- Element change
 		do
 			create l_image.make_with_referencing_file (a_path)
 			image_view.set_image (l_image)
-			l_image_rep := l_image.representations.object_at_index (0)
-			internal_width := l_image_rep.pixels_wide
-			internal_height := l_image_rep.pixels_high
-			image := l_image
+			if l_image.representations.count > 0 then
+				-- File found, representation loaded
+				l_image_rep := l_image.representations.object_at_index (0)
+				internal_width := l_image_rep.pixels_wide
+				internal_height := l_image_rep.pixels_high
+				image := l_image
+			end
 		end
 
 	load_system_image (a_name: STRING_GENERAL)
@@ -239,7 +242,7 @@ feature {NONE} -- Constants
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PIXMAP;
+	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 	image_view: NS_IMAGE_VIEW
 		do

@@ -22,7 +22,8 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			initialize
+			make,
+			dispose
 		end
 
 	NS_SPLIT_VIEW_DELEGATE
@@ -30,12 +31,13 @@ inherit
 			make as create_split_view_delegate,
 			item as delegate_item
 		redefine
-			split_view_did_resize_subviews
+			split_view_did_resize_subviews,
+			dispose
 		end
 
 feature -- Access
 
-	initialize
+	make
 		do
 			Precursor
 			create_split_view_delegate
@@ -74,14 +76,15 @@ feature -- Access
 	set_second (v: like item)
 			-- Make `an_item' `second'.
 		local
-			l_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
-			l_imp ?= v.implementation
-			check l_imp_not_void: l_imp /= Void end
-			on_new_item (l_imp)
+			v_imp ?= v.implementation
+			check l_imp_not_void: v_imp /= Void end
+			v_imp.set_parent_imp (Current)
+			notify_change (Nc_minsize, Current)
 			second := v
-			cocoa_view.add_subview (l_imp.cocoa_view)
+			cocoa_view.add_subview (v_imp.cocoa_view)
 
 			notify_change (Nc_minsize, Current)
 			if first_visible then
@@ -241,7 +244,14 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_SPLIT_AREA;
+	dispose
+			-- <Precursor>
+		do
+			Precursor {EV_CONTAINER_IMP}
+			Precursor {NS_SPLIT_VIEW_DELEGATE}
+		end
+		
+	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 	split_view: NS_SPLIT_VIEW
 		do

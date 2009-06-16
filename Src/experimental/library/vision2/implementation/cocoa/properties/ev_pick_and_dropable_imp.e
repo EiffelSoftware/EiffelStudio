@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision pick and drop source, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision pick and drop source, Cocoa implementation."
+	author: "Daniel Furrer"
 	keywords: "pick and drop, drag and drop, source, PND, DND"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +18,10 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+
+	EV_ANY_IMP
 		redefine
-			create_drop_actions
+			interface
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -223,17 +223,11 @@ feature -- Implementation
 			-- Create and initialize `drop_actions' for `Current'
 		do
 			create Result
+			attached_interface.init_drop_actions (Result)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_PICK_AND_DROPABLE;
+	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
-	cocoa_item: NS_OBJECT
-		deferred
-		end
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_PICK_AND_DROPABLE_IMP
-

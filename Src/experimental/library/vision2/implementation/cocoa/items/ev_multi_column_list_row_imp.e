@@ -1,9 +1,6 @@
 note
-
-	description:
-		"EiffelVision multi-column list row, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	description: "EiffelVision multi-column list row, Cocoa implementation."
+	author: "Daniel Furrer."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -42,13 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a row with one empty column.
-		do
-			base_make (an_interface)
-		end
-
-	initialize
+	make
 			-- Create the linked lists.
 		do
 			tooltip := ""
@@ -99,32 +90,32 @@ feature -- Measurement
 
 	width: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.width: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.width: Not implemented%N")
 		end
 
 	height: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.height: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.height: Not implemented%N")
 		end
 
 	screen_x: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.screen_x: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.screen_x: Not implemented%N")
 		end
 
 	screen_y: INTEGER
 		do
-			io.put_string ("EV_TREE_NODE_IMP.screen_y: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.screen_y: Not implemented%N")
 		end
 
 	x_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.x_position: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.x_position: Not implemented%N")
 		end
 
 	y_position: INTEGER
 		do
-			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
+--			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.y_position: Not implemented%N")
 		end
 
 	minimum_width: INTEGER
@@ -181,9 +172,6 @@ feature {EV_ANY_I} -- Implementation
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
-	interface: EV_MULTI_COLUMN_LIST_ROW;
+	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
-

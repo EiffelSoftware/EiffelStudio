@@ -16,7 +16,8 @@ inherit
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
-			interface
+			interface,
+			destroy
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -27,6 +28,12 @@ inherit
 	EV_ITEM_ACTION_SEQUENCES_IMP
 
 feature -- Status settings
+
+	old_make (an_interface: like interface)
+			-- Connect interface and initialize `c_object'.
+		do
+			assign_interface (an_interface)
+		end
 
 	destroy
 			-- Destroy the current item.
@@ -70,7 +77,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Redefined by descendents.
 		end
 
-	interface: EV_ITEM;
+	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer and others"

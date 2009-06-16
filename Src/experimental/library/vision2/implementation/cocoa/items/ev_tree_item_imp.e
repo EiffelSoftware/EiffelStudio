@@ -24,7 +24,7 @@ create
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TREE_ITEM;
+	interface: detachable EV_TREE_ITEM note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

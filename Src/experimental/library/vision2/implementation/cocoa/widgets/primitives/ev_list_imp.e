@@ -22,7 +22,7 @@ inherit
 	EV_LIST_ITEM_LIST_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			row_from_y_coord,
 			on_mouse_button_event,
 			row_height,
@@ -35,18 +35,18 @@ create
 
 feature -- Initialize
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
-			base_make (an_interface)
-			create {NS_OUTLINE_VIEW}cocoa_item.make
-			-- FIXME: Change to TableView
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize the list.
 		do
+			create {NS_OUTLINE_VIEW}cocoa_item.make
+			-- FIXME: Change to TableView
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 		end
 
@@ -73,8 +73,6 @@ feature -- Status Report
 	multiple_selection_enabled: BOOLEAN
 			-- True if the user can choose several items
 			-- False otherwise.
-		do
-		end
 
 feature -- Status setting
 
@@ -87,12 +85,14 @@ feature -- Status setting
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		do
+			multiple_selection_enabled := True
 		end
 
 	disable_multiple_selection
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 		do
+			multiple_selection_enabled := False
 		end
 
 	select_item (an_index: INTEGER)
@@ -139,7 +139,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 		end
 
-	interface: EV_LIST
+	interface: detachable EV_LIST note option: stable attribute end;
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

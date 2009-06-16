@@ -24,7 +24,6 @@ inherit
 			set_range
 		redefine
 			interface,
-			initialize,
 			make,
 			dispose,
 			set_default_minimum_size,
@@ -39,7 +38,6 @@ inherit
 		redefine
 			make,
 			interface,
-			initialize,
 			set_text,
 			dispose,
 			on_change_actions,
@@ -52,10 +50,8 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface)
-			-- Create the spin button.
+	make
 		do
-			base_make (an_interface)
 			create {NS_VIEW}cocoa_item.make
 			create text_field.make
 			create stepper.make
@@ -68,12 +64,8 @@ feature {NONE} -- Implementation
 					set_value (stepper.double_value.floor)
 					change_actions_internal.call ([value])
 				end)
-			create text.make_empty
 			align_text_left
-		end
 
-	initialize
-		do
 			Precursor {EV_TEXT_FIELD_IMP}
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
 		end
@@ -160,7 +152,7 @@ feature {EV_ANY_I} -- Implementation
 
 	stepper_width: INTEGER = 15
 
-	interface: EV_SPIN_BUTTON;
+	interface: detachable EV_SPIN_BUTTON note option: stable attribute end;
 
 	stepper: NS_STEPPER;
 

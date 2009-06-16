@@ -23,9 +23,17 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	old_make (an_interface: like interface)
+			-- Create a Cocoa check button.
+		do
+			assign_interface (an_interface)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_VERTICAL_SEPARATOR;
+	interface: detachable EV_VERTICAL_SEPARATOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

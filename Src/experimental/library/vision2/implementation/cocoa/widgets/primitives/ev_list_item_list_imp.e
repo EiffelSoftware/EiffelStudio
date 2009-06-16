@@ -18,7 +18,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			call_pebble_function,
-			initialize,
+			make,
 			interface,
 			pre_pick_steps
 		end
@@ -26,7 +26,7 @@ inherit
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM, EV_LIST_ITEM_IMP]
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
@@ -37,7 +37,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Set up `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -133,7 +133,7 @@ feature -- Insertion
 
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
-	interface: EV_LIST_ITEM_LIST;
+	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

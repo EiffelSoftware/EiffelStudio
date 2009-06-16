@@ -27,13 +27,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE)
+	old_make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
 		end
 
-	initialize
+	make
 			-- Initialize
 		do
 			set_is_initialized (True)

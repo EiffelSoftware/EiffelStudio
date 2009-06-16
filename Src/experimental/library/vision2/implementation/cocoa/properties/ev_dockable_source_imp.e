@@ -1,7 +1,6 @@
 note
 	description: "Cocoa implementation of dockable source."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,16 +9,6 @@ deferred class
 
 inherit
 	EV_DOCKABLE_SOURCE_I
-		redefine
-			interface
-		end
-
-	EV_ANY_IMP
-		undefine
-			destroy
-		redefine
-			interface
-		end
 
 feature -- Status setting
 
@@ -109,9 +98,5 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	interface: EV_DOCKABLE_SOURCE;
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DOCKABLE_IMP
 

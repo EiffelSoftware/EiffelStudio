@@ -20,12 +20,12 @@ inherit
 			set_value
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 feature {NONE} -- Implementation
 
-	initialize
+	make
 		do
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
@@ -45,7 +45,7 @@ feature {EV_ANY_I} -- Implementation
 
 	scroller: NS_SCROLLER
 
-	interface: EV_SCROLL_BAR;
+	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"

@@ -19,31 +19,35 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
 			make,
 			set_default_minimum_size,
 			is_sensitive,
 			enable_sensitive,
-			disable_sensitive
+			disable_sensitive,
+			dispose
 		end
 
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface,
-			initialize
+			make,
+			set_pixmap
 		end
 
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
-			initialize,
-			set_text
+			make,
+			set_text,
+			align_text_left,
+			align_text_center,
+			align_text_right
 		end
 
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
@@ -57,9 +61,11 @@ inherit
 		rename
 			make as cocoa_make,
 			initialize as cocoa_initialize,
-			font as cocoa_font
+			font as cocoa_font,
+			alignment as cocoa_alignment
 		redefine
-			mouse_down
+			mouse_down,
+			dispose
 		end
 
 create
@@ -67,20 +73,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	old_make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)
+			assign_interface (an_interface)
+		end
+
+	make
+			-- `Precursor' initialization,
+			-- create button box to hold label and pixmap.
+		do
 			cocoa_make
 			cocoa_item := current
 			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			align_text_center
-		end
 
-	initialize
-			-- `Precursor' initialization,
-			-- create button box to hold label and pixmap.
-		do
 			pixmapable_imp_initialize
 			Precursor {EV_PRIMITIVE_IMP}
 			enable_tabable_to
@@ -96,10 +103,31 @@ feature -- Access
 			-- Is this button currently a default push button
 			-- for a particular container?
 		do
+			Result := top_level_window_imp.default_button_cell /= void and then top_level_window_imp.default_button_cell.is_equal (cell)
 		end
 
 feature -- Status Setting
 
+	align_text_left
+			-- <Precursor>
+		do
+			Precursor
+			set_alignment ({NS_CONTROL}.left_text_alignment)
+		end
+
+	align_text_center
+			-- <Precursor>
+		do
+			Precursor
+			set_alignment ({NS_CONTROL}.center_text_alignment)
+		end
+
+	align_text_right
+			-- <Precursor>
+		do
+			Precursor
+			set_alignment ({NS_CONTROL}.right_text_alignment)
+		end
 
 	enable_default_push_button
 			-- Set the style of the button corresponding
@@ -203,9 +231,23 @@ feature {NONE} -- implementation
 			pointer_button_press_actions.call ([x, y, 0, 0.0, 0.0, 0.0, l_screen_x, l_screen_y])
 		end
 
+	set_pixmap (a_pixmap: EV_PIXMAP)
+		do
+			if attached {EV_PIXMAP_IMP} a_pixmap.implementation as pixmap_imp then
+--				set_bezel_style ({NS_BUTTON}.rectangular_square_bezel_style)
+--				set_image (pixmap_imp.image)
+			end
+		end
+
 feature {EV_ANY_I} -- implementation
 
-	interface: EV_BUTTON;
+	dispose
+		do
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {NS_BUTTON}
+		end
+
+	interface: detachable EV_BUTTON note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 

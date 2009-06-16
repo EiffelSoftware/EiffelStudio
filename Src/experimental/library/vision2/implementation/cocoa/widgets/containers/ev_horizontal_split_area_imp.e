@@ -20,7 +20,8 @@ inherit
 
 	EV_SPLIT_AREA_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 create
@@ -28,13 +29,18 @@ create
 
 feature {NONE} -- Creation
 
-	make (an_interface: like interface)
-		-- Connect interface and initialize `c_object'.
-	do
-		base_make (an_interface)
-		create {NS_SPLIT_VIEW}cocoa_item.make
-		split_view.set_vertical (True)
-	end
+	old_make (an_interface: like interface)
+			-- Connect interface and initialize `c_object'.
+		do
+			assign_interface ( an_interface )
+		end
+
+	make
+		do
+			base_make (an_interface)
+			create {NS_SPLIT_VIEW}cocoa_item.make
+			split_view.set_vertical (True)
+		end
 
 feature {NONE} -- Implementation
 
@@ -123,7 +129,7 @@ feature {NONE} -- Implementation
 
  feature {EV_ANY_I} -- Implementation
 
-	interface: EV_HORIZONTAL_SPLIT_AREA;
+	interface: detachable EV_HORIZONTAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

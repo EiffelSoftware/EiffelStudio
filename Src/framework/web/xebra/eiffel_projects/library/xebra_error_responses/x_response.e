@@ -116,7 +116,7 @@ feature -- Constants
 			<hr/>
 			<h3>
 			]" + producer +	"[
-			$Revision$</h3>
+			</h3>
 			</body>
 			</html>
 			]"

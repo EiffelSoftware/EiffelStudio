@@ -1,14 +1,11 @@
 note
-	description: "[
-		no comment yet
-	]"
-	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	description: "Summary description for {XSC_SHUTDOWN_WEBAPPS}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XSC_STOP_SERVER
+	XSC_SHUTDOWN_WEBAPPS
 
 inherit
 	XS_COMMAND
@@ -21,6 +18,6 @@ feature -- Basic operations
 	execute (a_server: XSC_SERVER_INTERFACE)
 			-- <Precursor>	
 		do
-			a_server.stop_server
+			a_server.shutdown_webapps
 		end
 end

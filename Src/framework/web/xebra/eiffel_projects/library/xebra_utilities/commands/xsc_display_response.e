@@ -35,7 +35,7 @@ feature -- Basic operations
 	execute (a_server: XSC_SERVER_INTERFACE)
 			-- <Precursor>	
 		do
-			a_server.display_response
+			
 		end
 
 invariant

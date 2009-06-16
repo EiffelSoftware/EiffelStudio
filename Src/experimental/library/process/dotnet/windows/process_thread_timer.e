@@ -72,18 +72,18 @@ feature {NONE} -- Implementation
 
 	execute
 		local
-			prc_imp: PROCESS_IMP
 			l_sleep_time: INTEGER_64
 		do
-			prc_imp ?= process_launcher
-			from
-				l_sleep_time := sleep_time.to_integer_64 * 1000000
-			until
-				should_destroy
-			loop
-				prc_imp.check_exit
-				if not should_destroy then
-					sleep (l_sleep_time)
+			if attached {PROCESS_IMP} process_launcher as prc_imp then
+				from
+					l_sleep_time := sleep_time.to_integer_64 * 1000000
+				until
+					should_destroy
+				loop
+					prc_imp.check_exit
+					if not should_destroy then
+						sleep (l_sleep_time)
+					end
 				end
 			end
 		end
@@ -103,10 +103,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

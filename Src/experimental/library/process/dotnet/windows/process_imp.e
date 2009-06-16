@@ -23,10 +23,15 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
+	make (a_exec_name: STRING; args: detachable LIST [STRING]; a_working_directory: detachable STRING)
 		local
 			l_arg: STRING
 		do
+			create child_process.make
+			create input_buffer.make_empty
+			create exit_mutex
+			create input_mutex
+
 			create arguments.make
 			create command_line.make_from_string (a_exec_name)
 			create argument_line.make (128)
@@ -55,17 +60,21 @@ feature{NONE} -- Initialization
 			end
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
-			create exit_mutex.default_create
 		ensure then
 			executable_set: executable.is_equal (a_exec_name)
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
+	make_with_command_line (cmd_line: STRING; a_working_directory: detachable STRING)
 			-- If directory name or file name in `cmd_line' includes space, use double quotes around
 			-- those names.
 		local
 			cmd_arg: LIST [STRING]
 		do
+			create child_process.make
+			create input_buffer.make_empty
+			create exit_mutex
+			create input_mutex
+
 			create command_line.make_from_string (cmd_line)
 			cmd_arg := separated_words (cmd_line)
 			check not cmd_arg.is_empty end
@@ -78,7 +87,6 @@ feature{NONE} -- Initialization
 			end
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
-			create exit_mutex.default_create
 		end
 
 feature -- Control
@@ -93,7 +101,6 @@ feature -- Control
 				if timer.has_started then
 					l_timeout := timer.wait (0)
 				end
-				create child_process.make
 				child_process.set_start_info (start_info)
 				launched := child_process.start
 				if launched then
@@ -183,33 +190,37 @@ feature{PROCESS_TIMER} -- Process status checking
 			-- Check if process has exited.
 		local
 			l_threads_exited: BOOLEAN
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			exit_mutex.lock
 			if not has_exited then
+				l_in_thread := in_thread
+				l_out_thread := out_thread
+				l_err_thread := err_thread
 				if not process_has_exited then
 					process_has_exited := child_process.has_exited
 					if process_has_exited then
 						internal_exit_code := child_process.exit_code
-						if in_thread /= Void then
-							in_thread.set_exit_signal
+						if l_in_thread /= Void then
+							l_in_thread.set_exit_signal
 						end
-						if out_thread /= Void then
-							out_thread.set_exit_signal
+						if l_out_thread /= Void then
+							l_out_thread.set_exit_signal
 						end
-						if err_thread /= Void then
-							err_thread.set_exit_signal
+						if l_err_thread /= Void then
+							l_err_thread.set_exit_signal
 						end
 					end
 				else
-					l_threads_exited := ((in_thread /= Void) implies in_thread.terminated) and
-							  ((out_thread /= Void) implies out_thread.terminated) and
-							  ((err_thread /= Void) implies err_thread.terminated)
+					l_threads_exited := ((l_in_thread /= Void) implies l_in_thread.terminated) and
+							  ((l_out_thread /= Void) implies l_out_thread.terminated) and
+							  ((l_err_thread /= Void) implies l_err_thread.terminated)
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							if input_buffer /= Void then
-								input_buffer.clear_all
-							end
+							input_buffer.clear_all
 							child_process.close
 							has_cleaned_up := True
 							if force_terminated then
@@ -279,7 +290,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: STRING
+			l_str: detachable STRING
 		do
 			check
 				input_buffer_set:
@@ -301,6 +312,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 				end
 				input_mutex.unlock
 			elseif input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
+				check input_file /= Void end
 				if not input_file.end_of_file then
 					input_file.read_stream (buffer_size)
 					l_str := input_file.last_string
@@ -310,8 +322,8 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					l_str := Void
 				end
 			end
-			if l_str /= Void then
-				child_process.standard_input.write_string (l_str)
+			if l_str /= Void and then attached child_process.standard_input as l_writer then
+				l_writer.write_string (l_str)
 			end
 		end
 
@@ -326,6 +338,8 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 		local
 			i: INTEGER
 			l_output: STRING
+			l_reader: detachable STREAM_READER
+			l_output_handler: like output_handler
 		do
 			check
 				output_handler_set:
@@ -334,7 +348,9 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file implies output_file /= Void and then output_file.is_open_write
 				output_buffer_set: output_buffer /= Void
 			end
-			last_output_bytes := child_process.standard_output.read_block (output_buffer, 0, buffer_size)
+			l_reader := child_process.standard_output
+			check l_reader_attached: l_reader /= Void end
+			last_output_bytes := l_reader.read_block (output_buffer, 0, buffer_size)
 			if last_output_bytes > 0 then
 				create l_output.make (last_output_bytes)
 				from
@@ -346,8 +362,11 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					i := i + 1
 				end
 				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					output_handler.call ([l_output])
-				elseif  output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
+					l_output_handler := output_handler
+					check l_output_handler_attached: l_output_handler /= Void end
+					l_output_handler.call ([l_output])
+				elseif output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
+					check output_file_attached: output_file /= Void end
 					output_file.put_string (l_output)
 				end
 			end
@@ -364,6 +383,8 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 		local
 			i: INTEGER
 			l_error: STRING
+			l_reader: detachable STREAM_READER
+			l_error_handler: like error_handler
 		do
 			check
 				error_handler_set:
@@ -372,7 +393,9 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file implies error_file /= Void and then error_file.is_open_write
 				error_buffer_set: error_buffer /= Void
 			end
-			last_error_bytes := child_process.standard_error.read_block (error_buffer, 0, buffer_size)
+			l_reader := child_process.standard_error
+			check l_reader_attached: l_reader /= Void end
+			last_error_bytes := l_reader.read_block (error_buffer, 0, buffer_size)
 			if last_error_bytes > 0 then
 				create l_error.make (last_error_bytes)
 				from
@@ -384,8 +407,11 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					i := i + 1
 				end
 				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					error_handler.call ([l_error])
+					l_error_handler := error_handler
+					check l_error_handler_attached: l_error_handler /= Void end
+					l_error_handler.call ([l_error])
 				elseif  error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
+					check error_file_attached: error_file /= Void end
 					error_file.put_string (l_error)
 				end
 			end
@@ -410,7 +436,6 @@ feature{NONE} -- Implementation
 		local
 			l_environ_tbl: like environment_variable_table
 			l_key, l_value: SYSTEM_STRING
-			l_environ_dic: SYSTEM_DLL_STRING_DICTIONARY
 		do
 			create Result.make_from_file_name_and_arguments (executable, argument_line)
 			if working_directory /= Void then
@@ -436,9 +461,8 @@ feature{NONE} -- Implementation
 				Result.set_redirect_standard_output (output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 				Result.set_redirect_standard_error (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 			end
-			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty then
+			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty and then attached Result.environment_variables as l_environ_dic then
 				from
-					l_environ_dic := Result.environment_variables
 					l_environ_tbl.start
 				until
 					l_environ_tbl.after
@@ -472,39 +496,54 @@ feature{NONE} -- Implementation
 
 	start_listening_threads
 			-- Start listening threads.
+		local
+			l_input_file_name: like input_file_name
+			l_output_file_name: like output_file_name
+			l_error_file_name: like error_file_name
+			l_in_thread: like in_thread
+			l_out_thread: like out_thread
+			l_err_thread: like err_thread
 		do
 			if input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-				create input_mutex.default_create
 				create input_buffer.make (4096)
 				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					create input_file.make (input_file_name)
+					l_input_file_name := input_file_name
+					check l_input_file_name_attached: l_input_file_name /= Void end
+					create input_file.make (l_input_file_name)
 					check
 						input_file_exists: input_file.exists
 					end
 					input_file.open_read
 				end
-				create in_thread.make (Current)
-				in_thread.launch
+				create l_in_thread.make (Current)
+				in_thread := l_in_thread
+				l_in_thread.launch
 			else
 				in_thread := Void
 			end
 			if output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
 				create output_buffer.make (0, buffer_size)
 				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-			  		create output_file.make_create_read_write (output_file_name)
+					l_output_file_name := output_file_name
+					check l_output_file_name_attached: l_output_file_name /= Void end
+			  		create output_file.make_create_read_write (l_output_file_name)
 				end
-				create out_thread.make (Current)
-				out_thread.launch
+				create l_out_thread.make (Current)
+				out_thread := l_out_thread
+				l_out_thread.launch
 			else
 				out_thread := Void
 			end
 			if error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
 				create error_buffer.make (0, buffer_size)
 				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					create error_file.make_create_read_write (error_file_name)
+					l_error_file_name := error_file_name
+					check l_error_file_name_attached: l_error_file_name /= Void end
+					create error_file.make_create_read_write (l_error_file_name)
 				end
-				create err_thread.make (Current)
-				err_thread.launch
+				create l_err_thread.make (Current)
+				err_thread := l_err_thread
+				l_err_thread.launch
 			else
 				err_thread := Void
 			end
@@ -545,7 +584,7 @@ feature{NONE} -- Implementation
 			child_prc_list2: LIST [INTEGER]
 			l_success: BOOLEAN
 			done: BOOLEAN
-			l_prc: SYSTEM_DLL_PROCESS
+			l_prc: detachable SYSTEM_DLL_PROCESS
 		do
 			l_success := True
 			child_prc_list := direct_subprocess_list (pid)
@@ -604,7 +643,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_by_id (pid: INTEGER): SYSTEM_DLL_PROCESS
+	process_by_id (pid: INTEGER): detachable SYSTEM_DLL_PROCESS
 			-- Process instance whose id is `pid'
 		local
 			retried: BOOLEAN
@@ -645,35 +684,37 @@ feature{NONE} -- Implementation
 			--
 		local
 			l_cat: SYSTEM_DLL_PERFORMANCE_COUNTER_CATEGORY
-			l_process_list: NATIVE_ARRAY [SYSTEM_STRING]
+			l_process_list: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			i, l_upper: INTEGER
-			l_prc_name: STRING
 			l_prc_name_id_tbl: HASH_TABLE [INTEGER, STRING]
 			l_performance_counter: SYSTEM_DLL_PERFORMANCE_COUNTER
 		do
+			create Result.make
+
 				-- Get process snapshot and store process instance name and its process id in `l_prc_name_id_tbl'.
 			create l_cat.make_from_category_name (once "Process")
 			l_process_list := l_cat.get_instance_names
-			create l_prc_name_id_tbl.make (l_process_list.count)
-			from
-				i := l_process_list.lower
-				l_upper := l_process_list.upper
-			until
-				i > l_upper
-			loop
-				create l_performance_counter.make_with_category_name (once "Process", once "ID Process", l_process_list.item (i), True)
-				l_prc_name_id_tbl.force (l_performance_counter.raw_value.as_integer_32, l_process_list.item (i))
-				i := i + 1
-			end
-				-- Find out parent process id for each process in `l_prc_name_id_tbl'.
-			create Result.make
-			from
-				l_prc_name_id_tbl.start
-			until
-				l_prc_name_id_tbl.after
-			loop
-				Result.extend ([parent_process_id (l_prc_name_id_tbl.key_for_iteration), l_prc_name_id_tbl.item_for_iteration])
-				l_prc_name_id_tbl.forth
+			if l_process_list /= Void then
+				create l_prc_name_id_tbl.make (l_process_list.count)
+				from
+					i := l_process_list.lower
+					l_upper := l_process_list.upper
+				until
+					i > l_upper
+				loop
+					create l_performance_counter.make_with_category_name (once "Process", once "ID Process", l_process_list.item (i), True)
+					l_prc_name_id_tbl.force (l_performance_counter.raw_value.as_integer_32, l_process_list.item (i))
+					i := i + 1
+				end
+					-- Find out parent process id for each process in `l_prc_name_id_tbl'.
+				from
+					l_prc_name_id_tbl.start
+				until
+					l_prc_name_id_tbl.after
+				loop
+					Result.extend ([parent_process_id (l_prc_name_id_tbl.key_for_iteration), l_prc_name_id_tbl.item_for_iteration])
+					l_prc_name_id_tbl.forth
+				end
 			end
 		end
 
@@ -688,7 +729,7 @@ feature{NONE} -- Implementation
 			Result := l_performance_counter.raw_value.as_integer_32
 		end
 
-	process_instance_name (a_pid: INTEGER; a_process_list: NATIVE_ARRAY [SYSTEM_STRING]): STRING
+	process_instance_name (a_pid: INTEGER; a_process_list: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]): detachable STRING
 			-- Process instance name of process id `a_pid' in `a_process_list'		
 		require
 			a_process_list_attached: a_process_list /= Void
@@ -736,23 +777,23 @@ feature{NONE} -- Implementation
 	argument_line: STRING
 			-- Argument list of `executable'
 
-	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: PROCESS_ERROR_LISTENER_THREAD
-	in_thread: PROCESS_INPUT_LISTENER_THREAD
+	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: detachable PROCESS_ERROR_LISTENER_THREAD
+	in_thread: detachable PROCESS_INPUT_LISTENER_THREAD
 			-- Threads to listen to output and error from child process.
 
 	input_mutex: MUTEX
 	exit_mutex: MUTEX
 		-- Mutex used to synchorinze listening threads			
 
-	input_file: RAW_FILE
-	output_file: RAW_FILE
-	error_file: RAW_FILE
+	input_file: detachable RAW_FILE note option: stable attribute end
+	output_file: detachable RAW_FILE note option: stable attribute end
+	error_file: detachable RAW_FILE note option: stable attribute end
 
-	output_buffer: ARRAY [CHARACTER]
+	output_buffer: detachable ARRAY [CHARACTER] note option: stable attribute end
 			-- Buffer used to read output from process
 
-	error_buffer: ARRAY [CHARACTER]
+	error_buffer: detachable ARRAY [CHARACTER] note option: stable attribute end
 			-- Buffer used to read error from process	
 
 	process_has_exited: BOOLEAN
@@ -781,10 +822,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

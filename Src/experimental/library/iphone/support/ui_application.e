@@ -65,13 +65,55 @@ feature {NONE} -- Implementation
 feature {NONE} -- Dispatching
 
 	dispatcher (a_msg: NATURAL; a_data: POINTER)
+		local
+			l_obj: POINTER
+			l_event: UI_EVENT
 		do
 			inspect a_msg
 			when {UI_DISPATCHER_CONST}.ui_application_did_finish_launching then
 				share_from_pointer (a_data)
 				post_launch_actions.call (Void)
+
+			when {UI_DISPATCHER_CONST}.ui_responder_touches_began then
+				l_obj := c_touch_obj (a_data)
+				check l_obj_not_null: l_obj /= default_pointer end
+				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
+					create l_event.share_from_pointer (c_event_data (a_data))
+					l_view.touches_began_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_touches_moved then
+				l_obj := c_touch_obj (a_data)
+				check l_obj_not_null: l_obj /= default_pointer end
+				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
+					create l_event.share_from_pointer (c_event_data (a_data))
+					l_view.touches_moved_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_touches_cancelled then
+				l_obj := c_touch_obj (a_data)
+				check l_obj_not_null: l_obj /= default_pointer end
+				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
+					create l_event.share_from_pointer (c_event_data (a_data))
+					l_view.touches_cancelled_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_touches_ended then
+				l_obj := c_touch_obj (a_data)
+				check l_obj_not_null: l_obj /= default_pointer end
+				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
+					create l_event.share_from_pointer (c_event_data (a_data))
+					l_view.touches_ended_actions.call ([l_event]);
+				end
+
 			else
 			end
+		end
+
+	mapping: UI_ROUTINES
+			-- Mapping between objective C object and Eiffel UI_VIEWs
+		once
+			create Result
 		end
 
 feature {NONE} -- Externals
@@ -97,6 +139,20 @@ feature {NONE} -- Externals
     			
     			return retVal;
 			]"
+		end
+
+	c_touch_obj (a_data: POINTER): POINTER
+		external
+			"C inline use %"eiffel_iphone.h%""
+		alias
+			"return ((eif_touches_event_t *) $a_data)->obj;"
+		end
+
+	c_event_data (a_data: POINTER): POINTER
+		external
+			"C inline use %"eiffel_iphone.h%""
+		alias
+			"return ((eif_touches_event_t *) $a_data)->event;"
 		end
 
 note

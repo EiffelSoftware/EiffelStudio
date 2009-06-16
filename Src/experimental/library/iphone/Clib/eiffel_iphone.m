@@ -23,6 +23,15 @@ rt_public void eiffel_iphone_set_dispatcher (EIF_OBJECT disp, EIF_NOTIFY_PROC pr
 	eiffel_dispatcher_proc = proc;
 }
 
+rt_public EIF_INTEGER eiffel_object_id (EIF_POINTER obj) {
+	if ([(id)obj conformsToProtocol:@protocol(EiffelIdentified)]) {
+		int *m = (int *) object_getIndexedIvars((id)obj);
+		return (EIF_INTEGER) *m;
+	} else {
+		return -1;
+	}
+}
+
 /*********************************************************************************/
 /*********************************************************************************/
 /* Cocoa Interfaces used for wrapper                                             */
@@ -52,9 +61,16 @@ rt_public void eiffel_iphone_set_dispatcher (EIF_OBJECT disp, EIF_NOTIFY_PROC pr
 @end
 
 @implementation EiffelUIResponder
+- (int) eiffel_object_id
+{
+	int *m = (int *) object_getIndexedIvars(self);
+	return *m;
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	eif_touches_event_t data;
+	data.obj = self;
 	data.touches = touches;
 	data.event = event;
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_TOUCHES_BEGAN, &data);
@@ -63,6 +79,7 @@ rt_public void eiffel_iphone_set_dispatcher (EIF_OBJECT disp, EIF_NOTIFY_PROC pr
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	eif_touches_event_t data;
+	data.obj = self;
 	data.touches = touches;
 	data.event = event;
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_TOUCHES_MOVED, &data);
@@ -71,6 +88,7 @@ rt_public void eiffel_iphone_set_dispatcher (EIF_OBJECT disp, EIF_NOTIFY_PROC pr
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	eif_touches_event_t data;
+	data.obj = self;
 	data.touches = touches;
 	data.event = event;
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_TOUCHES_CANCELLED, &data);
@@ -80,6 +98,7 @@ rt_public void eiffel_iphone_set_dispatcher (EIF_OBJECT disp, EIF_NOTIFY_PROC pr
 {
 
 	eif_touches_event_t data;
+	data.obj = self;
 	data.touches = touches;
 	data.event = event;
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_TOUCHES_ENDED, &data);

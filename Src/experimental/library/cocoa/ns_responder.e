@@ -13,8 +13,15 @@ inherit
 feature -- Access
 
 	initialize
+		local
+			oldmethod: PROCEDURE [ANY, TUPLE]
 		do
-			set_responder_callback ($current, $responder_callback)
+			oldmethod := class_.replace_method ("mouseDown:", agent mouse_down_z)
+		end
+
+	mouse_down_z (a_event: POINTER)
+		do
+			io.put_string ("Mouse down in NSRESPONDER%N")
 		end
 
 feature -- Responding to Mouse Events
@@ -35,17 +42,5 @@ feature -- Responding to Mouse Events
 		end
 
 feature {NONE} -- Implementation
-
-	responder_callback (a_object: POINTER; a_data: POINTER)
-		do
-
-		end
-
-	frozen set_responder_callback (a_object: POINTER; a_method: POINTER)
-		external
-			"C inline use %"ns_responder_category.h%""
-		alias
-			"setResponderCallback ($a_object, $a_method);"
-		end
 
 end

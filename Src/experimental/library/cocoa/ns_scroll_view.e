@@ -13,11 +13,6 @@ inherit
 			make
 		end
 
-	OBJECTIVE_C
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_with_flipped_content_view
@@ -41,21 +36,21 @@ feature {NONE} -- Creation
 			l_ret: BOOLEAN
 		do
 			make
-			l_class := objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
+			l_class := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("MyClipView")).item)
 			if l_class = {NS_OBJECT}.nil then
 				-- If MyClipView doesn't exist yet create it as a new child class of NSClipView and override isFlipped
-				l_superclass := objc_get_class ((create {C_STRING}.make ("NSClipView")).item)
+				l_superclass := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("NSClipView")).item)
 				l_name := (create {C_STRING}.make ("MyClipView")).item
-				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
+				l_class := {NS_OBJC_RUNTIME}.objc_allocate_class_pair (l_superclass, l_name, 0)
 
 				l_types := (create {C_STRING}.make ("b@:")).item
-				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
-				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
-				l_ret := class_add_method (l_class, l_sel, l_imp, l_types)
+				l_sel := {NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
+				l_imp := {NS_OBJC_RUNTIME}.class_get_method_implementation ({NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
+				l_ret := {NS_OBJC_RUNTIME}.class_add_method (l_class, l_sel, l_imp, l_types)
 
-				objc_register_class_pair (l_class)
+				{NS_OBJC_RUNTIME}.objc_register_class_pair (l_class)
 			end
-			create l_new_clip_view.make_shared (class_create_instance (l_class, 0))
+			create l_new_clip_view.make_shared ({NS_OBJC_RUNTIME}.class_create_instance (l_class, 0))
 			{NS_VIEW_API}.init (l_new_clip_view.item)
 			set_content_view (l_new_clip_view)
 		end

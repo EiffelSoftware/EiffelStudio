@@ -10,11 +10,6 @@ class
 inherit
 	NS_RESPONDER
 
-	OBJECTIVE_C
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_custom,
@@ -32,9 +27,18 @@ feature {NONE} -- Creation and Initialization
 	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
 			-- Create an NSView which calls the passed draw_action when drawRect: is invoked
 			-- require: target has been set up
+		local
+			oldmethod: PROCEDURE [ANY, TUPLE]
 		do
 			draw_action := a_draw_action
 			make_shared ({NS_VIEW_API}.custom_new ($current, $draw))
+
+			oldmethod := class_.replace_method ("mouseDown:", agent mouse_down_x)
+		end
+
+	mouse_down_x (a_event: POINTER)
+		do
+			io.put_string ("Mouse down in NSVIEW%N")
 		end
 
 	make_flipped
@@ -48,21 +52,21 @@ feature {NONE} -- Creation and Initialization
 			l_imp: POINTER
 			l_ret: BOOLEAN
 		do
-			l_class := objc_get_class ((create {C_STRING}.make ("FlippedView")).item)
+			l_class := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("FlippedView")).item)
 			if l_class = {NS_OBJECT}.nil then
 				-- If FlippedView doesn't exist yet create it as a new child class of NSView and override isFlipped
-				l_superclass := objc_get_class ((create {C_STRING}.make ("NSView")).item)
+				l_superclass := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("NSView")).item)
 				l_name := (create {C_STRING}.make ("FlippedView")).item
-				l_class := objc_allocate_class_pair (l_superclass, l_name, 0)
+				l_class := {NS_OBJC_RUNTIME}.objc_allocate_class_pair (l_superclass, l_name, 0)
 
 				l_types := (create {C_STRING}.make ("b@:")).item
-				l_sel := sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
-				l_imp := class_get_method_implementation(objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
-				l_ret := class_add_method (l_class, l_sel, l_imp, l_types)
+				l_sel := {NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make ("isFlipped")).item)
+				l_imp := {NS_OBJC_RUNTIME}.class_get_method_implementation({NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
+				l_ret := {NS_OBJC_RUNTIME}.class_add_method (l_class, l_sel, l_imp, l_types)
 
-				objc_register_class_pair (l_class)
+				{NS_OBJC_RUNTIME}.objc_register_class_pair (l_class)
 			end
-			make_shared (class_create_instance (l_class, 0))
+			make_shared ({NS_OBJC_RUNTIME}.class_create_instance (l_class, 0))
 			{NS_VIEW_API}.init (item)
 
 --			redefine_method ("NSClipView", "isFlipped", agent: BOOLEAN do Result := True end)

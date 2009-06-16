@@ -13,8 +13,6 @@ inherit
 			make
 		end
 
-	OBJECTIVE_C
-
 create
 	make
 
@@ -135,7 +133,7 @@ feature -- NSButtonType Constants
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSPushOnPushOffButton;"
+			"NSPushOnPushOffButton"
 		end
 
 	frozen toggle_button: INTEGER
@@ -143,7 +141,7 @@ feature -- NSButtonType Constants
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSToggleButton;"
+			"NSToggleButton"
 		end
 
 	frozen switch_button: INTEGER
@@ -151,7 +149,7 @@ feature -- NSButtonType Constants
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSSwitchButton;"
+			"NSSwitchButton"
 		end
 
 	frozen radio_button: INTEGER
@@ -159,7 +157,7 @@ feature -- NSButtonType Constants
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSRadioButton;"
+			"NSRadioButton"
 		end
 --    NSMomentaryChangeButton		= 5,
 --    NSOnOffButton			= 6,
@@ -175,25 +173,133 @@ feature -- NSButtonType Constants
 feature -- NSBezelStyle Constants
 
 	frozen rounded_bezel_style: INTEGER
-			-- NSRoundedBezelStyle          = 1,
+			-- NSRoundedBezelStyle
+			-- A rounded rectangle button, designed for text.
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"NSRoundedBezelStyle;"
+			"NSRoundedBezelStyle"
 		end
 
---    NSRegularSquareBezelStyle    = 2,
---    NSThickSquareBezelStyle      = 3,
---    NSThickerSquareBezelStyle    = 4,
---    NSDisclosureBezelStyle       = 5,
---    NSShadowlessSquareBezelStyle = 6,
---    NSCircularBezelStyle         = 7,
---    NSTexturedSquareBezelStyle   = 8,
---    NSHelpButtonBezelStyle       = 9,
---    NSSmallSquareBezelStyle       = 10,
---    NSTexturedRoundedBezelStyle   = 11,
---    NSRoundRectBezelStyle         = 12,
---    NSRecessedBezelStyle          = 13,
---    NSRoundedDisclosureBezelStyle = 14,
+	frozen rectangular_square_bezel_style: INTEGER
+			-- NSRegularSquareBezelStyle
+			-- A rectangular button with a 2 point border, designed for icons.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSRegularSquareBezelStyle"
+		end
+
+	frozen thick_square_bezel_style: INTEGER
+			-- NSThickSquareBezelStyle
+			-- A rectangular button with a 3 point border, designed for icons.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSThickSquareBezelStyle"
+		end
+
+	frozen thicker_square_bezel_style: INTEGER
+			-- NSThickerSquareBezelStyle
+			-- A rectangular button with a 4 point border, designed for icons.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSThickerSquareBezelStyle"
+		end
+
+	frozen disclosure_bezel_style: INTEGER
+			-- NSDisclosureBezelStyle
+			-- A bezel style for use with a disclosure triangle.
+			-- To create the disclosure triangle, set the button bezel style to NSDisclosureBezelStyle and the button type to NSOnOffButton.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSDisclosureBezelStyle"
+		end
+
+	frozen shadowless_square_bezel_style: INTEGER
+			-- NSShadowlessSquareBezelStyle
+			-- Similar to NSRegularSquareBezelStyle, but has no shadow so you can abut the cells without overlapping shadows.
+			-- This style would be used in a tool palette, for example.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSShadowlessSquareBezelStyle"
+		end
+
+	frozen circular_bezel_style: INTEGER
+			-- NSCircularBezelStyle
+			-- A round button with room for a small icon or a single character.
+			-- This style has both regular and small variants, but the large variant is available only in gray at this time.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCircularBezelStyle"
+		end
+
+	frozen textured_square_bezel_style: INTEGER
+			-- NSTexturedSquareBezelStyle
+			-- A bezel style appropriate for use with textured (metal) windows.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSTexturedSquareBezelStyle"
+		end
+
+	frozen help_button_bezel_style: INTEGER
+			-- NSHelpButtonBezelStyle
+			-- A round button with a question mark providing the standard help button look.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSHelpButtonBezelStyle"
+		end
+
+	frozen small_square_bezel_style: INTEGER
+			-- NSSmallSquareBezelStyle
+			-- A simple square bezel style. Buttons using this style can be scaled to any size.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSmallSquareBezelStyle"
+		end
+
+	frozen textured_rounded_bezel_style: INTEGER
+			-- NSTexturedRoundedBezelStyle
+			-- A textured (metal) bezel style similar in appearance to the Finder's action (gear) button.
+			-- The height of this button is fixed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSTexturedRoundedBezelStyle"
+		end
+
+	frozen rounded_rect_bezel_style: INTEGER
+			-- NSRoundRectBezelStyle
+			-- A bezel style that matches the search buttons in Finder and Mail.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSRoundRectBezelStyle"
+		end
+
+	frozen recessed_bezel_style: INTEGER
+			-- NSRecessedBezelStyle
+			-- A bezel style that matches the recessed buttons in Mail, Finder and Safari.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSRecessedBezelStyle"
+		end
+
+	frozen rounded_disclosure_bezel_style: INTEGER
+			-- NSRoundedDisclosureBezelStyle
+			-- A bezel style that matches the disclosure style used in the standard Save panel.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSRoundedDisclosureBezelStyle"
+		end
 
 end

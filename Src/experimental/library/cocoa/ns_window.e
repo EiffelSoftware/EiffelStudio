@@ -112,6 +112,8 @@ feature -- ..
 			--
 		do
 			{NS_WINDOW_API}.set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
+		ensure
+			title_set: title = a_title
 		end
 
 	set_min_size (a_width, a_height: INTEGER)

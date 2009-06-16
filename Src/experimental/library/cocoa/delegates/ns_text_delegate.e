@@ -14,27 +14,27 @@ feature -- Delegate Methods
 
 	text_should_begin_editing (a_text_object: NS_TEXT): BOOLEAN
 		do
-			Result := text_field_text_should_begin_editing (cocoa_object, a_text_object.cocoa_object)
+			Result := text_field_text_should_begin_editing (item, a_text_object.item)
 		end
 
 	text_should_end_editing (a_text_object: NS_TEXT): BOOLEAN
 		do
-			Result := text_field_text_should_end_editing (cocoa_object, a_text_object.cocoa_object)
+			Result := text_field_text_should_end_editing (item, a_text_object.item)
 		end
 
 	text_did_begin_editing (a_notification: NS_NOTIFICATION)
 		do
-			text_field_text_did_begin_editing (cocoa_object, a_notification.cocoa_object)
+			text_field_text_did_begin_editing (item, a_notification.item)
 		end
 
 	text_did_end_editing (a_notification: NS_NOTIFICATION)
 		do
-			text_field_text_did_end_editing (cocoa_object, a_notification.cocoa_object)
+			text_field_text_did_end_editing (item, a_notification.item)
 		end
 
 	text_did_change (a_notification: NS_NOTIFICATION)
 		do
-			text_field_text_did_change (cocoa_object, a_notification.cocoa_object)
+			text_field_text_did_change (item, a_notification.item)
 		end
 
 feature -- Objective-C implementation

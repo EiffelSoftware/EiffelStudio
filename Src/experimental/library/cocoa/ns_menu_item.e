@@ -10,6 +10,8 @@ class
 inherit
 	NS_OBJECT
 
+	TARGET_ACTION_SUPPORT
+
 create
 	make,
 	separator_item
@@ -38,15 +40,6 @@ feature -- Access
 			menu_item_set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
 		end
 
-	set_action (an_action: PROCEDURE [ANY, TUPLE])
-		require
-			an_action /= void
-		do
-			action := an_action
-			menu_item_set_target (item, target_new ($current, $target))
-			menu_item_set_action (item)
-		end
-
 	set_key_equivalent (a_string: STRING_GENERAL)
 		do
 			menu_item_set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
@@ -70,15 +63,6 @@ feature -- Managing the State
 		do
 			menu_item_set_state (item, a_state)
 		end
-
-feature {NONE} -- callback
-
-	target
-		do
-			action.call([])
-		end
-
-	action: PROCEDURE [ANY, TUPLE]
 
 feature {NONE} -- Implementation
 

@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XS_COMMANDS
+	internal_execute: XH_RESPONSE
 			-- <Precursor>
 		do
 			if not is_running then
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 					is_running := True
 				end
 			end
-			Result := create {XS_COMMANDS}.make_with_response((create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response)
+			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
 		end
 
 feature -- Agent

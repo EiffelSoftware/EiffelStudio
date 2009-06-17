@@ -8,7 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XS_COMMANDS
+	XSCR_GET_MODULES
+
+inherit
+	XS_COMMAND_RESPONSE
 
 create
 	make
@@ -18,18 +21,16 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create {LINKED_LIST [XS_COMMAND]}list.make
+			create modules.make
 		ensure
-			list_attached: list /= Void
+			modules_attached: modules /= Void
 		end
-
 
 feature -- Access
 
-	list: LIST [XS_COMMAND]
-
+	modules: LINKED_LIST [TUPLE[ name: STRING; launched: BOOLEAN; running: BOOLEAN]]
 
 invariant
-	list_attached: list /= Void
+	modules_attached: modules /= Void
 end
 

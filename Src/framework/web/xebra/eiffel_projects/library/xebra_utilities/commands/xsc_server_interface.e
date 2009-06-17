@@ -12,29 +12,51 @@ deferred class
 
 feature -- Basic operations
 
-	shutdown_webapps
+	get_modules: XS_COMMAND_RESPONSE
+			-- Gets the available modules.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+
+	shutdown_webapps: XS_COMMAND_RESPONSE
 			-- Shutdown all webapps.
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	shutdown_https
+	shutdown_module (a_name: STRING): XS_COMMAND_RESPONSE
 			-- Shutdown the http server.
+		require
+			a_name_attached: a_name /= Void
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	launch_https
-		-- (re) launches the http server.
+	relaunch_module (a_name: STRING): XS_COMMAND_RESPONSE
+		-- (re) launches a module
+		require
+			a_name_attached: a_name /= Void
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	load_config
+	load_config: XS_COMMAND_RESPONSE
 			-- (re) load the file config.
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
-	shutdown_server
+	shutdown_server: XS_COMMAND_RESPONSE
 			-- Shutdown the server.
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 	handle_errors

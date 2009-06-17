@@ -86,9 +86,9 @@ feature -- Operations
 --			o.set_debug_level (args.debug_level)
 --		end
 
-	execute: XS_COMMANDS
+	execute: XH_RESPONSE
 			-- Executes the action if necessary and stops the stop_action if attached.
-			-- Returns a list of commands
+			-- Returns a 
 		do
 			if is_necessary then
 				Result := internal_execute
@@ -184,7 +184,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XS_COMMANDS
+	internal_execute: XH_RESPONSE
 			-- The actual implementation of an action
 		deferred
 		ensure

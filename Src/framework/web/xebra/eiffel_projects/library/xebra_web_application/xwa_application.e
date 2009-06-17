@@ -89,14 +89,10 @@ feature {NONE} -- Operations Internal
 					if config.is_interactive.value then
 						o.iprint ("(enter 'x' to shut down)")
 						from
-							stop := False
 						until
-							stop
+							io.last_character.is_equal ('x')
 						loop
 							io.read_character
-							if io.last_character.is_equal ('x') then
-								stop := True
-							end
 						end
 						o.iprint ("Shutting down...")
 						server.shutdown
@@ -112,20 +108,9 @@ feature -- Access
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
 
-	stop: BOOLEAN
-			-- Is used to stop the application
-
 	config: XWA_CONFIG
 			-- Configuration for the webapp
 
 feature -- Setter
-
-	set_stop (a_stop: BOOLEAN)
-			-- Setter
-		do
-			stop := a_stop
-		ensure
-			stop_set: stop = a_stop
-		end
 
 end

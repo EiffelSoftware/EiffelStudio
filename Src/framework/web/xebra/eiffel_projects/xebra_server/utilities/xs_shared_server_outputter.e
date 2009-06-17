@@ -7,6 +7,7 @@ note
 class
 	XS_SHARED_SERVER_OUTPUTTER
 
+
 feature {NONE} -- Access
 
 	o: XS_SERVER_OUTPUTTER

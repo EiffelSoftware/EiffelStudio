@@ -16,11 +16,19 @@ inherit
 create
 	make
 
+feature -- Access
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "Shuts the server down."
+		end
+
 feature -- Basic operations
 
-	execute (a_server: XSC_SERVER_INTERFACE)
+	execute (a_server: XSC_SERVER_INTERFACE): XS_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			a_server.shutdown_server
+			Result := a_server.shutdown_server
 		end
 end

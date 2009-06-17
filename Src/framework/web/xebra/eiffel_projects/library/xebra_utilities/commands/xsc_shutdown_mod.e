@@ -7,10 +7,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 class
-	XSC_SHUTDOWN_WEBAPPS
+	XSC_SHUTDOWN_MOD
 
 inherit
-	XS_COMMAND
+	XS_PARAMETER_COMMAND
 
 create
 	make
@@ -20,14 +20,25 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Shuts down all webapps."
+			Result := "Shuts down a server module."
 		end
+
+	parameter_description: STRING
+			-- <Precursor>
+		do
+			Result := "name"
+		end
+
+feature -- Status Change
+
 
 feature -- Basic operations
 
 	execute (a_server: XSC_SERVER_INTERFACE): XS_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.shutdown_webapps
+			Result := a_server.shutdown_module (parameter.value)
 		end
+
 end
+

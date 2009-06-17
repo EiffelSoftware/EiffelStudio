@@ -7,22 +7,20 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XSC_PING_GOOGLE
+deferred class
+	XS_COMMAND_RESPONSE
 
-inherit
-	XS_COMMAND
+feature -- Access
 
-create
-	make
+feature -- Status report
+
+feature -- Status setting
 
 feature -- Basic operations
 
-	execute (a_server: XSC_SERVER_INTERFACE)
-			-- <Precursor>	
-		do
-			a_server.ping_google
-		end
+feature {NONE} -- Implementation
+
+invariant
 
 end
 

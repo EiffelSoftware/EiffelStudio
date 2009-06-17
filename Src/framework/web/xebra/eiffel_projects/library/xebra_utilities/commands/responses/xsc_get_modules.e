@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XSC_LAUNCH_HTTPS
+	XSC_GET_MODULES
 
 inherit
 	XS_COMMAND
@@ -16,11 +16,22 @@ inherit
 create
 	make
 
+feature -- Access
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "Displays the available modules."
+		end
+
+
 feature -- Basic operations
 
-	execute (a_server: XSC_SERVER_INTERFACE)
+	execute (a_server: XSC_SERVER_INTERFACE): XS_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			a_server.launch_https
+			Result := a_server.get_modules
 		end
+
 end
+

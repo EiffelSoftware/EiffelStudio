@@ -12,7 +12,9 @@ inherit
 		redefine
 			make
 		end
+
 	XS_SHARED_SERVER_CONFIG
+
 
 create
 	make

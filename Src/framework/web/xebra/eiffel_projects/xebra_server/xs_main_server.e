@@ -24,19 +24,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create commands.make
+			create modules.make (1)
 		ensure
-			commands_attached: commands /= Void
+			modules_attached: modules /= Void
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
-	http_connection_server: detachable XS_HTTP_CONN_SERVER
-			-- Handles connections to http server requests
-
-	input_server: detachable XS_INPUT_SERVER
-
-	commands: XS_COMMAND_MANAGER
+	modules: XS_SERVER_MODULES
 
 	stop: BOOLEAN
 		-- Stops the server
@@ -44,7 +39,6 @@ feature -- Access
 feature -- Constants
 
 	Name: STRING = "XEBSRV"
-
 
 feature {XS_APPLICATION} -- Setup
 
@@ -61,17 +55,19 @@ feature {XS_APPLICATION} -- Setup
 			o.iprint ("Starting Xebra Web Application Server...")
 			o.dprint (config.args.print_configuration, 2)
 			stop := false
-			commands.put (create {XSC_LOAD_CONFIG}.make)
-			commands.put (create {XSC_LAUNCH_HTTPS}.make)
-
-			launch_input_server
+			load_config.do_nothing
+			modules.force (create {XS_CONSOLE_MODULE}.make (current), "mod_console")
+			modules.force (create {XS_HTTP_CONN_MODULE}.make (current), "mod_http")
+			modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current), "mod_cmd")
+			o.dprint("Launching modules...",2)
+			modules.run_all
 			run
 		end
 
 feature {NONE} -- Operations
 
 	run
-				-- Executes commands in the queue until stopped
+			--  until stopped
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
@@ -80,77 +76,77 @@ feature {NONE} -- Operations
 			until
 				stop
 			loop
-				commands.execute_next (current)
+				do_nothing
 			end
 
 			o.iprint ("Shutting down...")
-			shutdown_webapps
-			shutdown_https
-			if input_server.running then
-				o.iprint ("Remote Shutdown. Bye!")
-				(create {EXCEPTIONS}).die (1)
-			else
-				o.iprint ("Shutdown complete. Bye!")
-			end
-		end
-
-
-feature {XS_COMMAND} -- Status setting
-
-	shutdown_webapps
-			-- <Precursor>
-		local
-			l_webapp_handler: XS_WEBAPP_HANDLER
-		do
-			o.dprint ("Terminating Web Applications...",3)
-			create l_webapp_handler.make
-			l_webapp_handler.stop_apps
-		end
-
-	shutdown_https
-			-- <Precursor>
-		do
-			if attached http_connection_server as https then
-				if https.launched then
-					o.dprint ("Waiting for http_connection_server to shutdown...", 3)
-					https.shutdown
-					https.join
+			shutdown_webapps.do_nothing
+			shutdown_all_modules
+			if attached modules ["mod_input"] as mod_input then
+				if mod_input.running then
+					o.iprint ("Remote Shutdown. Bye!");
+					(create {EXCEPTIONS}).die (1)
 				end
 			end
+			o.iprint ("Shutdown complete. Bye!")
 		end
 
 
-
-	launch_https
-			-- <Precursor>
-		local
-			l_webapp_handler: XS_WEBAPP_HANDLER
-			l_webapp_finder: XS_WEBAPP_FINDER
-			l_config_reader: XS_CONFIG_READER
+	shutdown_all_modules
+			-- Shuts all modules down
 		do
-			shutdown_https
-
-			o.iprint ("Launching http connection server...")
-			http_connection_server := create {XS_HTTP_CONN_SERVER}.make (commands)
-			if not http_connection_server.is_bound then
-					error_manager.add_error (create {XERROR_SOCKET_NOT_BOUND}.make, false)
-			else
-				http_connection_server.launch
-				print ("Done.")
+			from
+				modules.start
+			until
+				modules.after
+			loop
+				shutdown_module (modules.key_for_iteration).do_nothing
+				modules.forth
 			end
 		end
 
-	launch_input_Server
-			-- <Precursor>	
+
+feature {XS_SERVER_MODULE} -- Status setting
+
+
+	shutdown_webapps: XS_COMMAND_RESPONSE
+			-- <Precursor>
+		local
+			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
-			o.iprint ("Launching input server...")
-			input_server := create {XS_INPUT_SERVER}.make (current)
-			input_server.launch
-			print ("Done.")
+			o.iprint ("Terminating Web Applications...")
+			create l_webapp_handler.make
+			l_webapp_handler.stop_apps
+			Result := create {XSCR_OK}.make
 		end
 
+	shutdown_module (a_name: STRING): XS_COMMAND_RESPONSE
+			-- <Precursor>
+		do
+			o.iprint ("Shutting down module '" + a_name + "'...")
+			if attached modules [a_name] as l_mod then
+				l_mod.shutdown
+				l_mod.join
+			else
+				o.iprint ("No module '" + a_name + "' found.")
+			end
+			Result := create {XSCR_OK}.make
+		end
 
-	load_config
+	relaunch_module (a_name: STRING): XS_COMMAND_RESPONSE
+			-- <Precursor>
+		do
+			o.iprint ("Launching module '" + a_name + "'...")
+			if attached modules [a_name] as l_mod then
+				shutdown_module (a_name).do_nothing
+				l_mod.launch
+			else
+				o.iprint ("No module '" + a_name + "' found.")
+			end
+			Result := create {XSCR_OK}.make
+		end
+
+	load_config: XS_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
@@ -164,15 +160,34 @@ feature {XS_COMMAND} -- Status setting
 				create l_webapp_finder.make
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
-				o.iprint ("Done.")
 			end
+			Result := create {XSCR_OK}.make
 		end
 
-	shutdown_server
+	shutdown_server: XS_COMMAND_RESPONSE
 			-- <Precursor>
 		do
 			stop := True
+			Result := create {XSCR_OK}.make
 		end
+
+	get_modules: XS_COMMAND_RESPONSE
+			-- <Precursor>
+		local
+			l_response: XSCR_GET_MODULES
+		do
+			create l_response.make
+			from
+				modules.start
+			until
+				modules.after
+			loop
+				l_response.modules.force ( [modules.key_for_iteration, modules.item_for_iteration.launched, modules.item_for_iteration.running])
+				modules.forth
+			end
+			Result := l_response
+		end
+
 
 	handle_errors
 			-- <Precursor>
@@ -191,41 +206,6 @@ feature {XS_COMMAND} -- Status setting
 
 		end
 
---	set_http_connection_server (a_http_connection_server: like http_connection_server)
---			-- Sets http_connection_server.
---		require
---			a_http_connection_server_attached: a_http_connection_server /= Void
---		do
---			http_connection_server  := a_http_connection_server
---		ensure
---			http_connection_server_set: http_connection_server  = a_http_connection_server
---		end
-
---	set_stop (a_stop: like stop)
---			-- Sets stop.
---		require
---			a_stop_attached: a_stop /= Void
---		do
---			stop  := a_stop
---		ensure
---			stop_set: stop  = a_stop
---		end
-
-
---	set_input_server (a_input_server: like input_server)
---			-- Sets input_server.
---		require
---			a_input_server_attached: a_input_server /= Void
---		do
---			input_server  := a_input_server
---		ensure
---			input_server_set: input_server  = a_input_server
---		end
-
-
-
-
 invariant
-		commands_attached: commands /= Void
-
+		modules_attached: modules /= Void
 end

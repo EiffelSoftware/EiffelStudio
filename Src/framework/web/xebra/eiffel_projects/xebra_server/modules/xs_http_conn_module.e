@@ -8,32 +8,24 @@ note
 	revision: "$Revision$"
 
 class
-	XS_HTTP_CONN_SERVER
+	XS_HTTP_CONN_MODULE
 
 inherit
-	THREAD
-	XS_SHARED_SERVER_OUTPUTTER
-	XS_SHARED_SERVER_CONFIG
+	XS_SERVER_MODULE
+		redefine
+			make
+		end
 
 create make
 
 feature -- Initialization
 
-	make (a_command_manager: XS_COMMAND_MANAGER)
+	make (a_main_server: XS_MAIN_SERVER)
 			-- Initializes current
-		require
-			a_command_manager_attached: a_command_manager /= Void
 		do
-			command_manager := a_command_manager
-            create http_socket.make_server_by_port (default_http_server_port)
-         --	create thread_pool.make (max_thread_number, agent request_handler_spawner)
-	       	http_socket.set_accept_timeout (500)
+			Precursor (a_main_server)
+	       	current_request_message := ""
             stop := False
-            launched := False
-            current_request_message := ""
-		ensure
-			command_manager_set: equal (a_command_manager, command_manager)
-			http_socket_attached: http_socket /= Void
 		end
 
 feature -- Inherited Features
@@ -42,75 +34,62 @@ feature -- Inherited Features
 			-- <Precursor>
 		local
 			l_response: XH_RESPONSE
-			l_commands: XS_COMMANDS
-			l_request_factory: XH_REQUEST_FACTORY
-			l_uri_webapp_name: STRING
+			l_http_socket: NETWORK_STREAM_SOCKET
+			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
+			stop := False
 			launched := True
+			running := True
 
-			from
-                http_socket.listen (max_tcp_clients.as_integer_32)
-            until
-            	stop
-            loop
-                create l_request_factory.make
 
-                http_socket.accept
+			create l_http_socket.make_server_by_port (default_http_server_port)
 
-                if not stop then
-		            if attached {NETWORK_STREAM_SOCKET} http_socket.accepted as thread_http_socket then
-		            	if receive_message (thread_http_socket) then
+			if not l_http_socket.is_bound then
+				o.eprint ("Socket could not be bound on port " + default_http_server_port.out , generating_type)
+			else
+				create l_webapp_handler.make
+	 	       	l_http_socket.set_accept_timeout (500)
+				from
+	                l_http_socket.listen (max_tcp_clients.as_integer_32)
+	                o.dprint("HTTP Connection Server ready on port " + default_http_server_port.out,2)
+	            until
+	            	stop
+	            loop
+	                l_http_socket.accept
+	                if not stop then
+			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
+			            	if receive_message (thread_http_socket) then
 
-		            		 if attached {XH_REQUEST} l_request_factory.get_request (current_request_message) as l_request then
-								l_uri_webapp_name := l_request.target_uri.substring (2, l_request.target_uri.index_of ('/', 2))
-								l_uri_webapp_name.remove_tail (1)
+								l_response := l_webapp_handler.request_message_to_response (current_request_message)
 
-								if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then
-									webapp.set_request_message (current_request_message)
-									l_commands := webapp.start_action_chain
-									command_manager.put_multiple (l_commands)
-									l_response := filter_response (l_commands)
+			            	else
+								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
+							end
 
-								else
-									l_response := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_response
-								end
-				            else
-				            	l_response := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
+							send_message_to_http (l_response.render_to_string, thread_http_socket)
+				         	thread_http_socket.cleanup
+				            check
+				            	thread_http_socket.is_closed
 				            end
-
-		            	else
-							l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
 						end
-
-						send_message_to_http (l_response.render_to_string, thread_http_socket)
-			         	thread_http_socket.cleanup
-			            check
-			            	thread_http_socket.is_closed
-			            end
 					end
-				end
-            end
-            http_socket.cleanup
-        	check
-        		http_socket.is_closed
+	            end
+	            l_http_socket.cleanup
+	        	check
+	        		l_http_socket.is_closed
+	       		end
        		end
+       		running := False
+       		o.dprint("HTTP Connection Server ends.",2)
+       		rescue
+       			o.eprint ("Exception occured.", generating_type)
+       			retry
        	end
 
 feature -- Access
 
---	thread_pool: DATA_THREAD_POOL [XS_REQUEST_HANDLER]
-
-	http_socket: NETWORK_STREAM_SOCKET
-			-- The socket
-
 	stop: BOOLEAN
 			-- Set true to stop accept loop
-
-	command_manager: XS_COMMAND_MANAGER
-
-
-	launched: BOOLEAN
-
 
 feature {NONE} -- Access
 
@@ -120,11 +99,11 @@ feature {NONE} -- Access
 
 feature -- Status
 
-	is_bound: BOOLEAN
-			-- Checks if the socket could be bound
-		do
-			Result := http_socket.is_bound
-		end
+--	is_bound: BOOLEAN
+--			-- Checks if the socket could be bound
+--		do
+--			Result := http_socket.is_bound
+--		end
 
 
 feature -- Constants
@@ -150,27 +129,6 @@ feature -- Status setting
 
 
 feature {NONE} -- Implementation
-
-	filter_response (a_commands: XS_COMMANDS): XH_RESPONSE
-			-- Filters a list of commands for a XSC_DISPLAY_RESPONSE
-		require
-			a_commands_attached: a_commands /= Void
-		do
-			Result := (create {XER_NO_RESPONSE}.make ("")).render_to_response
-
-			from
-				a_commands.list.start
-			until
-				a_commands.list.after
-			loop
-				if attached {XSC_DISPLAY_RESPONSE} a_commands.list.item as l_command then
-					Result := l_command.response
-				end
-				a_commands.list.forth
-			end
-		ensure
-			result_attached: Result /= Void
-		end
 
 
 	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
@@ -323,21 +281,4 @@ feature {NONE} -- Implementation
             	retry
 		end
 
-
---feature {POOLED_THREAD} -- Implementation
-
---	request_handler_spawner: XS_REQUEST_HANDLER
---			-- Instantiates a new {XS_REQUEST_HANDLER}.
---			-- Used for the thread_manager.
---		do
---			create Result.make
---		ensure
---			Result_attached: Result /= Void
---		end
-
-
-
-
-invariant
-	http_socket_attached: http_socket /= Void
 end

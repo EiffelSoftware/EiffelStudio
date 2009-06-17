@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Processing
 
-	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XS_COMMANDS
+	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XH_RESPONSE
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		require
@@ -38,12 +38,12 @@ feature -- Processing
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
 			l_request_factory: XH_REQUEST_FACTORY
-			l_commands: XS_COMMANDS
+
 
 		do
 			create l_request_factory.make
 			l_new_request := l_request_factory.get_request (a_request_message)
-			create l_commands.make
+
 
 			from
 
@@ -53,9 +53,19 @@ feature -- Processing
 				create l_response.make_empty
 				o.dprint ("Searching matching servlet...",2)
 				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+
+				if not attached l_servlet then
+					-- The case if someone entered .../webapp/ and it was forwarded to ../webapp/index.xeb by apache
+					if not l_new_request.target_uri.ends_with (".xeb") then
+						l_new_request.set_target_uri (l_new_request.target_uri + "index.xeb")
+						l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+					end
+				end
+
+
 				if attached l_servlet then
 					o.dprint ("Handing over to matching servlet...",2)
-					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response, l_commands)
+					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
 					o.dprint ("No matching servlet found.",2)
@@ -64,9 +74,7 @@ feature -- Processing
 				end
 			end
 
-				-- Add response to commands
-			l_commands.list.force (create {XSC_DISPLAY_RESPONSE}.make_with_response(l_response))
-			Result := l_commands
+			Result := l_response
 		end
 
 feature {NONE} -- Internal Processing
@@ -92,6 +100,7 @@ feature {NONE} -- Internal Processing
 			a_request_attached: a_request /= Void
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		do
+
 			o.dprint ("Looking up servlet for '" + a_request.target_uri + "'",6)
 			if attached a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
 				Result := l_servlet

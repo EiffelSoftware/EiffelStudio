@@ -16,12 +16,21 @@ inherit
 create
 	make
 
+feature -- Access
+
+	description: STRING
+			-- <Precursor>
+		do
+			Result := "Reloads the server configuration file."
+		end
+
+
 feature -- Basic operations
 
-	execute (a_server: XSC_SERVER_INTERFACE)
+	execute (a_server: XSC_SERVER_INTERFACE): XS_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			a_server.load_config
+			Result := a_server.load_config
 		end
 
 end

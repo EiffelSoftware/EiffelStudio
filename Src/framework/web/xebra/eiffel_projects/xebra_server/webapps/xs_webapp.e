@@ -98,7 +98,7 @@ feature -- Constans
 
 feature -- Actions
 
-	start_action_chain: XS_COMMANDS
+	start_action_chain: XH_RESPONSE
 			-- Executes the first action in the chain		
 		do
 			if config.args.assume_webapps_are_running.value then

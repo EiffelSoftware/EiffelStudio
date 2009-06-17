@@ -36,7 +36,6 @@ sudo apache2ctl stop
 cd $XEBRA_DEV
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/websites
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd
 
@@ -61,6 +60,16 @@ echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "XebraServer_port \"55000\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "DirectoryIndex index.xeb>>" $XEBRA_DEV/httpd/conf/httpd.conf 
+echo '<Files ~ "\.(ini|e|ecf)$">' >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "</Files>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo '<Directory ~ "EIFGENs">' >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+
 sudo $XEBRA_DEV/httpd/bin/apachectl start
 
 #Copy files for demoapp

@@ -8,7 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XS_COMMANDS
+	XSCR_OK
+
+inherit
+	XS_COMMAND_RESPONSE
 
 create
 	make
@@ -18,18 +21,18 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create {LINKED_LIST [XS_COMMAND]}list.make
-		ensure
-			list_attached: list /= Void
 		end
-
-
 feature -- Access
 
-	list: LIST [XS_COMMAND]
+feature -- Status report
 
+feature -- Status setting
+
+feature -- Basic operations
+
+feature {NONE} -- Implementation
 
 invariant
-	list_attached: list /= Void
+
 end
 

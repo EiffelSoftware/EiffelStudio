@@ -24,7 +24,7 @@ feature -- Implementation
 			if Result.success then
 				Result := build_result (Result)
 			else
-				create Result.make (a_string, True, a_string)
+				create Result.make (a_string, True)
 			end
 		end
 

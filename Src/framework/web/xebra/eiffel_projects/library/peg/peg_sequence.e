@@ -24,8 +24,8 @@ feature -- Implementation
 			l_parse_result : PEG_PARSER_RESULT
 			l_i: INTEGER
 		do
-			create Result.make (a_string, True, a_string)
-			create l_parse_result.make (a_string, True, a_string)
+			create Result.make (a_string, True)
+			create l_parse_result.make (a_string, True)
 			from
 				l_i := 1
 			until
@@ -40,7 +40,7 @@ feature -- Implementation
 			if l_parse_result.success then
 				Result := build_result (Result)
 			else
-				create Result.make (a_string, False, a_string)
+				create Result.make (a_string, False)
 			end
 		end
 

@@ -20,7 +20,7 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			Result := child.parse (a_string)
-			create Result.make (a_string, not Result.success, a_string)
+			create Result.make (a_string, not Result.success)
 		end
 
 	serialize: STRING

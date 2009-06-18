@@ -18,15 +18,13 @@ create
 
 feature -- Initialize
 
-	make (a_left_to_parse: STRING; a_success: BOOLEAN; a_longest_match: STRING)
+	make (a_left_to_parse: STRING; a_success: BOOLEAN)
 		require
 			a_left_to_parse_attached: attached a_left_to_parse
-			a_longest_match_attached: attached a_longest_match
 		do
 			left_to_parse := a_left_to_parse
 			success := a_success
 			create {ARRAYED_LIST [ANY]} internal_result.make (1)
-			longest_match := a_longest_match
 		ensure
 			internal_result_attached: attached internal_result
 			success_set: attached success and success = a_success
@@ -35,8 +33,6 @@ feature -- Initialize
 
 feature -- Access
 
-	longest_match: STRING
-			-- The "left_to_parse" of the longest match
 
 	internal_result: LIST [ANY] assign set_result
 			-- Result of parsing. Is at least an empty list
@@ -82,9 +78,6 @@ feature -- Access
 			-- Sets the string which has been left to parse.
 		do
 			left_to_parse := a_string
-			if left_to_parse.count < longest_match.count then
-				longest_match := left_to_parse
-			end
 		end
 
 feature -- Element change

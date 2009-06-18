@@ -51,6 +51,7 @@ feature {NONE} -- Implementation
 			l_int: like internal
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
+			l_type_str: STRING
 		do
 			l_int := internal
 			l_deser := deserializer
@@ -67,9 +68,10 @@ feature {NONE} -- Implementation
 				i = nb
 			loop
 				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
-				l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
+				l_type_str := l_deser.read_string_8
+				l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
 				if l_new_dtype = -1 then
-					set_has_error
+					set_error (error_factory.new_missing_type_error (l_type_str))
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then

@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 				l_type_str := l_deser.read_string_8
 				l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
 				if l_new_dtype = -1 then
-					set_has_error
+					set_error (error_factory.new_missing_type_error (l_type_str))
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 					l_type_str := l_deser.read_string_8
 					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
 					if l_new_dtype = -1 then
-						set_has_error
+						set_error (error_factory.new_missing_type_error (l_type_str))
 						i := nb - 1 -- Jump out of loop
 					else
 						if not l_table.valid_index (l_old_dtype) then
@@ -176,6 +176,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			a: like attributes_mapping
 			l_item: detachable TUPLE [INTEGER, INTEGER]
+			l_attribute_type: INTEGER
 		do
 			l_deser := deserializer
 
@@ -186,7 +187,7 @@ feature {NONE} -- Implementation
 			if nb /= l_field_count then
 					-- Stored type has a different number of attributes than the type
 					-- from the retrieving system.
-				set_has_error
+				set_error (error_factory.new_attribute_count_mismatch (a_dtype, nb))
 			else
 				from
 					i := 1
@@ -207,15 +208,16 @@ feature {NONE} -- Implementation
 					if l_map.found then
 						l_item := l_map.found_item
 						if l_item /= Void then
-							if l_item.integer_32_item (2) /= l_dtype then
-								set_has_error
+							l_attribute_type := l_item.integer_32_item (2)
+							if l_attribute_type /= l_dtype then
+								set_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
 								i := nb - 1 -- Jump out of loop
 							else
 								l_mapping.extend (l_item.integer_32_item (1))
 							end
 						end
 					else
-						set_has_error
+						set_error (error_factory.new_missing_attribute_error (a_dtype, l_name))
 						i := nb	- 1 -- Jump out of loop
 					end
 					i := i + 1

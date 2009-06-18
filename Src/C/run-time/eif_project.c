@@ -302,6 +302,17 @@ doc:	</attribute>
 */
 rt_public int egc_has_old_special_semantic = 1;
 
+/*
+doc:	<attribute name="egc_has_old_copy_semantic" return_type="int" export="public">
+doc:		<summary>Is the runtime using the old semantic for copy, that is to say, create a blank object rather than creating a shallow copy of the object being twined?.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe set once in initialization.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+
+rt_public int egc_has_old_copy_semantic = 1;
+
 rt_public EIF_TYPE_INDEX egc_str_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;

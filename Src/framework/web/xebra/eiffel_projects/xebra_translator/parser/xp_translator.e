@@ -194,37 +194,6 @@ feature -- Processing
 			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end
 
---	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
---			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
---		require
---			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
---			a_stream_attached: attached a_stream
---			a_path_attached: attached a_path
---			a_registry_attached: attached a_registry
---		local
---			l_root_tag: XP_TAG_ELEMENT
---			l_controller_class: STRING
---			l_parser: XM_PARSER
---			l_p_callback: XP_XML_PARSER_CALLBACKS
---			l_external_resolver: XP_EXTERNAL_RESOLVER
---			l_template: XP_TEMPLATE
---		do
---			create l_external_resolver
---			create {XM_EIFFEL_PARSER} l_parser.make
---			l_parser.set_dtd_resolver (l_external_resolver)
---			l_parser.set_entity_resolver (l_external_resolver)
---			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
---			l_p_callback.put_registry (a_registry)
---			l_parser.set_callbacks (l_p_callback)
---			l_parser.parse_from_stream (a_stream)
-
---			l_root_tag := l_p_callback.root_tag
---			l_controller_class := l_p_callback.controller_class
---			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
---			l_template.date := a_stream.time_stamp
---			a_registry.put_template (a_servlet_name, l_template)
---		end
-
 	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
@@ -235,6 +204,7 @@ feature -- Processing
 		local
 			l_template: XP_TEMPLATE
 		do
+			xeb_parser.set_source_path (a_path)
 			if xeb_parser.parse (a_source) then
 				l_template := xeb_parser.template
 				l_template.template_name := a_servlet_name
@@ -288,7 +258,7 @@ feature -- Processing
 				o.iprint ("Successfully parsed taglib: " + l_taglib.id)
 				a_registry.put_tag_lib (l_taglib.id, l_taglib)
 			else
-				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing: " + "TODONAME"]), False)
+				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + "TODO NAME"]), False)
 			end
 		end
 

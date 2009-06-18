@@ -16,21 +16,23 @@ create
 
 feature -- Initialization
 
-	make
-		do
-		end
-
 	make_with_registry (a_registry: XP_SERVLET_GG_REGISTRY)
 		require
 			a_registry_attached: attached a_registry
 		do
 			registry := a_registry
+			source_path := "No source path specified."
+		ensure
+			registry_set: registry = a_registry
 		end
 
 feature {NONE} -- Access
 
 	registry: XP_SERVLET_GG_REGISTRY
 			-- The registry for the taglibs
+
+	source_path: STRING
+			-- The path to the original file
 
 feature -- Access
 
@@ -47,6 +49,16 @@ feature -- Access
 			-- Sets the class name of the template
 		do
 			template.controller_class := a_class_name
+		end
+
+	set_source_path (a_source_path: STRING)
+			-- Sets the source path.
+		require
+			a_source_path_attached: attached a_source_path
+		do
+			source_path := a_source_path
+		ensure
+			source_path_set: source_path = a_source_path
 		end
 
 feature {NONE} -- Implementation
@@ -179,7 +191,7 @@ feature {NONE} -- Implementation
 		do
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_id then
-				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", "debug_infoTODO")
+				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
 				from
 					l_i := 2
 				until
@@ -224,7 +236,7 @@ feature {NONE} -- Implementation
 					if registry.contains_tag_lib (l_namespace) then
 						l_taglib := registry.retrieve_taglib (l_namespace)
 						if l_taglib.contains (l_id) then
-							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), "debug_infoTODO")
+							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug(a_result.left_to_parse.debug_information))
 							from
 								l_i := 3
 							until
@@ -265,7 +277,7 @@ feature {NONE} -- Implementation
 		do
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_id then
-				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", "debug to do")
+				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
 				from
 					Result.internal_result.start
 					Result.internal_result.forth -- Begin with the second
@@ -299,7 +311,7 @@ feature {NONE} -- Implementation
 					if registry.contains_tag_lib (l_namespace) then
 						l_taglib := registry.retrieve_taglib (l_namespace)
 						if l_taglib.contains (l_id) then
-							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), "debug_infoTODO")
+							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug(a_result.left_to_parse.debug_information))
 							from
 								Result.internal_result.start
 								Result.internal_result.forth -- Begin with the second
@@ -331,10 +343,18 @@ feature {NONE} -- Implementation
 		do
 			Result := concatenate_results (a_result)
 			if attached {STRING} a_result.internal_result [1] as l_content then
-				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", "debuginfo TODO")
+				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug(a_result.left_to_parse.debug_information))
 				l_tag.put_attribute ("text", create {XP_TAG_ARGUMENT}.make (l_content))
 				Result.replace_result (l_tag)
 			end
+		end
+
+	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
+			-- Formats the line/row information
+		require
+			a_line_row_attached: attached a_line_row
+		do
+			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out + " of file: " + source_path
 		end
 
 	build_root_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
@@ -343,7 +363,7 @@ feature {NONE} -- Implementation
 			l_tag: XP_TAG_ELEMENT
 		do
 			Result := a_result
-			create l_tag.make ("", "html", "XTAG_PAGE_NOOP_TAG", "debuginfo TODO")
+			create l_tag.make ("", "html", "XTAG_XEB_CONTAINER_TAG", format_debug(a_result.left_to_parse.debug_information))
 			from
 				Result.internal_result.start
 			until

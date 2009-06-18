@@ -43,6 +43,7 @@ feature -- Implementation
 		local
 			l_unique_id,
 			l_unique_var: STRING
+			l_attached_var: STRING
 		do
 			if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.form_id] as l_unique_form_id then
 				if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
@@ -66,8 +67,11 @@ feature -- Implementation
 					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")
 					a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_TAG")
 
-					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_unique_var + "%"] then")
-					l_form_expressions.extend ("agent_table [a_request.arguments [%"" + l_unique_var + "%"]].call ([a_request])")
+					l_attached_var := a_servlet_class.render_html_page.new_uid
+					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_unique_var + "%"] as " + l_attached_var +" then")
+					l_form_expressions.extend ("if attached agent_table [" + l_attached_var + "] then")
+					l_form_expressions.extend ("agent_table [" + l_attached_var + "].call ([a_request])")
+					l_form_expressions.extend ("end")
 					l_form_expressions.extend ("end")
 				else
 					a_servlet_class.render_html_page.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")

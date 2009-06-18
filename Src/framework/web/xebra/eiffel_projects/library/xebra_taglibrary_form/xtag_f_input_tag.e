@@ -14,7 +14,8 @@ inherit
 	XTAG_TAG_SERIALIZER
 		redefine
 			make_base,
-			generates_render
+			generates_render,
+			generates_wrap
 		end
 
 feature -- Initialization
@@ -118,5 +119,6 @@ feature -- Implementation
 		end
 
 	generates_render: BOOLEAN = True
+	generates_wrap: BOOLEAN = True
 
 end

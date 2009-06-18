@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+obsolete class
 	XTAG_XEB_OUTPUT_CALL_TAG
 
 inherit

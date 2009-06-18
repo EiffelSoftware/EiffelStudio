@@ -7,7 +7,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+obsolete class
 	XTAG_XEB_VARIABLE_TAG
 
 inherit

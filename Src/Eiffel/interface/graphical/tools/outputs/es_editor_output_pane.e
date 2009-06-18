@@ -228,7 +228,7 @@ feature {NONE} -- Event handlers
 				l_cursor := l_table.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if attached l_cursor.item as l_widget then
-						l_widget.editor.handle_before_processing (False)
+						l_widget.editor.handle_before_processing (True)
 					end
 					l_cursor.forth
 				end

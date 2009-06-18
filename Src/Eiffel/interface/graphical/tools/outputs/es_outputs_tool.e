@@ -73,7 +73,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_tool_title: STRING = "Testing Output"--"Outputs"
+	t_tool_title: STRING = "Outputs"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

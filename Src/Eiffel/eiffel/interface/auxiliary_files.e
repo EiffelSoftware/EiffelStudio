@@ -933,6 +933,7 @@ feature -- Plug and Makefile file
 
 			if is_experimental_mode then
 				buffer.put_string (";%N%Tegc_has_old_special_semantic = 0")
+				buffer.put_string (";%N%Tegc_has_old_copy_semantic = 0")
 			end
 
 				-- Generate the number of dynamic types.

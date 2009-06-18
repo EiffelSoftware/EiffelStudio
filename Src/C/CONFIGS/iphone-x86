@@ -161,18 +161,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc'
+	cc='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -miphoneos-version-min=2.0 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.2.1.sdk'
+	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -miphoneos-version-min=2.0 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.0.sdk'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++'
+	cpp='/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++-4.2'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS

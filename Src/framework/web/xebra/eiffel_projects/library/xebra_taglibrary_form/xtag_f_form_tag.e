@@ -65,13 +65,17 @@ feature -- Implementation
 			create {ARRAYED_LIST [STRING]} l_agent_expressions.make (2)
 			a_variable_table.put (l_id, Form_id)
 			a_variable_table.put (l_agent_expressions, Form_agent_var)
-			a_variable_table.put (variable.plain_value (current_controller_id), Form_var_key)
+			if l_variable_exists then
+				a_variable_table.put (variable.plain_value (current_controller_id), Form_var_key)
+			end
 
 			generate_children (a_servlet_class, a_variable_table)
 
 			a_variable_table.remove (Form_agent_var)
 			a_variable_table.remove (Form_id)
-			a_variable_table.remove (Form_var_key)
+			if l_variable_exists then
+				a_variable_table.remove (Form_var_key)
+			end
 
 			a_servlet_class.render_html_page.append_expression ("agent_table [" + l_id + "] := agent (a_request: XH_REQUEST) do -- FORM_TAG")
 

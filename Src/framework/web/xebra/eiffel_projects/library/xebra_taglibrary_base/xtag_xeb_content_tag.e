@@ -10,9 +10,9 @@ class
 
 inherit
 	XTAG_PLAINTEXT_TAG
---		redefine
---			generates_render
---		end
+		redefine
+			generates_render
+		end
 
 create
 	make
@@ -54,6 +54,6 @@ feature -- Implementation
 
 feature -- Debug Configuration
 
-	--generates_render: BOOLEAN = True
+	generates_render: BOOLEAN = True
 
 end

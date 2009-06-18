@@ -10,6 +10,9 @@ class
 
 inherit
 	XTAG_TAG_SERIALIZER
+		redefine
+			generates_render
+		end
 
 create
 	make
@@ -33,4 +36,7 @@ feature -- Basic implementation
 			-- <Precursor>
 		do
 		end
+
+	generates_render: BOOLEAN = True
+	
 end

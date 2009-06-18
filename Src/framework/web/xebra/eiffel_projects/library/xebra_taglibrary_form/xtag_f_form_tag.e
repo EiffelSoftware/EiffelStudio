@@ -14,7 +14,9 @@ class
 inherit
 	XTAG_TAG_SERIALIZER
 		redefine
-			generates_render
+			generates_render,
+			generates_handle_form,
+			generates_clean_up
 		end
 
 create
@@ -114,6 +116,8 @@ feature -- Implementation
 		end
 
 	generates_render: BOOLEAN = True
+	generates_handle_form: BOOLEAN = True
+	generates_clean_up: BOOLEAN = True
 
 feature -- Constants
 
@@ -123,6 +127,7 @@ feature -- Constants
 	Form_validation_booleans: STRING = "Form_validation_booleans"
 	Form_agent_var: STRING = "Form_agent_var"
 	Form_lazy_validation_table: STRING = "Form_lazy_validation_table"
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

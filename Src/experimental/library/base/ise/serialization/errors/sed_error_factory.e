@@ -23,7 +23,7 @@ feature -- Access
 	new_missing_attribute_error (a_type_id: INTEGER; a_attribute_name: STRING): SED_ERROR
 			-- Return a error representing a missing attribute named `a_attribute_name' in type `a_type'.
 		require
-			a_type_id_positive: a_type_id >= 0
+			a_type_id_non_negative: a_type_id >= 0
 			a_attribute_name_not_void: a_attribute_name /= Void
 		local
 			l_type: STRING
@@ -37,7 +37,7 @@ feature -- Access
 	new_attribute_count_mismatch (a_type_id: INTEGER; a_received_attribute_count: INTEGER): SED_ERROR
 			-- Return an error representing an attribute count mismatch for type `a_type' with a received attribute count of `a_received_attribute_count'.
 		require
-			a_type_id_positive: a_type_id >= 0
+			a_type_id_non_negative: a_type_id >= 0
 		local
 			l_type: STRING
 		do
@@ -50,7 +50,7 @@ feature -- Access
 	new_attribute_mismatch (a_type_id: INTEGER; a_attribute_name: STRING; a_attribute_type_id, a_received_attribute_type_id: INTEGER): SED_ERROR
 			-- Return an error representing an attribute mismatch for attribute `a_attribute_name' of type `a_type' with
 		require
-			a_type_id_positive: a_type_id >= 0
+			a_type_id_non_negative: a_type_id >= 0
 			a_attribute_name_not_void: a_attribute_name /= Void
 			a_attribute_type_id_non_negative: a_attribute_type_id >= 0
 			a_received_attribute_type_id_non_negative: a_received_attribute_type_id >= 0

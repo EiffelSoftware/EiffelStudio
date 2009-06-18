@@ -11,6 +11,9 @@ class
 
 inherit
 	XU_STRING_MANIPULATION
+		redefine
+			out
+		end
 
 create
 	make, make_empty
@@ -297,6 +300,19 @@ feature {XP_TAG_ELEMENT} -- Implementation
 						+ "%"" + escape_string(a_attributes.item_for_iteration.value (controller_id)) + "%")"
 					)
 				a_attributes.forth
+			end
+		end
+
+	out: STRING
+		do
+			Result := "(TAG: " + namespace + ":" + id + ")"
+			from
+				parameters.start
+			until
+				parameters.after
+			loop
+				Result := Result + " " + parameters.item_for_iteration.value ("")
+				parameters.forth
 			end
 		end
 

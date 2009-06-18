@@ -16,5 +16,6 @@
 		<attribute id="variable" />
 		<attribute id="type" />
 	</tag>
-	<tag id="container" class="XTAG_XEB_CONTAINER_TAG" />
+	<tag id="container" class="XTAG_XEB_CONTAINER_TAG">
+	</tag>
 </taglib>

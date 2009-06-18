@@ -22,16 +22,14 @@ create
 
 feature -- Initialization
 
-	make_with_arguments (a_id: STRING; a_parser_callback: XP_XML_PARSER_CALLBACKS)
+	make_with_arguments (a_id: STRING)
 			-- `a_id': The id of the tag lib (namespace)
 			-- `a_parser_callback': The parser_callback using Current
 		require
 			a_id_attached: a_id /= Void
-			a_parser_callback_attached: a_parser_callback /= Void
 		do
 			make
 			id := a_id
-			parser_callback := a_parser_callback
 			create {HASH_TABLE [ARRAYED_LIST [STRING], STRING]} allowed_tags.make (5)
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "controller")
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "declare_region")
@@ -43,16 +41,15 @@ feature -- Initialization
 			allowed_tags ["include"].extend ("template")
 		ensure
 			id_attached: attached id
-			parser_callback_attached: attached parser_callback
 		end
 
 feature {NONE} -- Access
 
-	parser_callback: XP_XML_PARSER_CALLBACKS
-			-- The parser_callback using Current
-
 	allowed_tags: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- All the tag names which are allowed
+
+	xeb_parser: XT_XEB_PARSER assign set_parser
+			-- The xeb parser.
 
 feature -- Access
 
@@ -68,16 +65,26 @@ feature -- Access
 			if a_local_part.is_equal ("controller") then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
 			elseif a_local_part.is_equal ("template") then
-				parser_callback.is_template := True
+				xeb_parser.deactivate_render
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("declare_region") then
-				parser_callback.is_template := True
+				xeb_parser.deactivate_render
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("include") then
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			else
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			end
+		end
+
+	set_parser  (a_xeb_parser: XT_XEB_PARSER)
+			-- Sets the xeb parser.
+		require
+			a_xeb_parser_attached: attached a_xeb_parser
+		do
+			xeb_parser := a_xeb_parser
+		ensure
+			xeb_parser_set: xeb_parser = a_xeb_parser
 		end
 
 	get_class_for_name (a_name: STRING): STRING
@@ -115,12 +122,11 @@ feature -- Access
 			-- Handles attribute reading while parsing
 		do
 			if a_id.is_equal ("class") then
-				parser_callback.put_class_name (a_value.value (""))
+				xeb_parser.put_class_name (a_value.value (""))
 			end
 		end
 
 invariant
 	id_attached: attached id
-	parser_callback_attached: attached parser_callback
 
 end

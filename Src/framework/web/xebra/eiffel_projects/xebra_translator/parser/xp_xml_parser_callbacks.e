@@ -325,7 +325,7 @@ feature {XP_CALLBACK_STATE} -- Implementation
 	generate_configuration_taglib: XTL_TAG_LIBRARY
 			-- Generates the tablig with the page configurations
 		do
-			create {XTL_PAGE_CONF_TAG_LIB} Result.make_with_arguments (Configuration_tag, Current)
+			--create {XTL_PAGE_CONF_TAG_LIB} Result.make_with_arguments (Configuration_tag, Current)
 		ensure
 			result_attached: attached Result
 		end

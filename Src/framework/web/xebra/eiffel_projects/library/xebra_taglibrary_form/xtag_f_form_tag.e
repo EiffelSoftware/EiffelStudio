@@ -88,15 +88,15 @@ feature -- Implementation
 			write_string_to_result ("</form>", a_servlet_class.render_html_page)
 
 			a_servlet_class.handle_form_internal.append_expression ("if attached a_request.arguments [%"" + l_id + "%"] as form_argument then")
-
-				a_servlet_class.handle_form_internal.append_expression ("agent_table [form_argument].call ([a_request])")
+			a_servlet_class.handle_form_internal.append_expression ("if attached agent_table [form_argument] then")
+			a_servlet_class.handle_form_internal.append_expression ("agent_table [form_argument].call ([a_request])")
 
 			if l_variable_exists then
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("if validation_errors.empty then")
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("create " + variable.plain_value (current_controller_id) + ".make")
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("end")
 			end
-
+			a_servlet_class.handle_form_internal.append_expression ("end")
 			a_servlet_class.handle_form_internal.append_expression ("end")
 		ensure then
 			a_variable_table_immuted: a_variable_table.count = old a_variable_table.count

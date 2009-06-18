@@ -32,13 +32,13 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	parse (a_string: STRING): PEG_PARSER_RESULT
+	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			if a_string.is_empty then
 				create Result.make (a_string, False)
 			else
-				if a_string.starts_with (character.out) then
+				if a_string.starts_with (character) then
 					create Result.make (a_string.substring (2, a_string.count), True)
 					Result := build_result (Result)
 				else

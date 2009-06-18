@@ -406,10 +406,10 @@ feature -- Basic Functionality
 			l_result: PEG_PARSER_RESULT
 		do
 			create template.make_empty
-			l_result := xml_parser.parse (a_string)
+			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result [1] as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing was not complete: %"" + l_result.left_to_parse+ "%"")
+					add_parse_error ("Parsing was not complete: %"" + l_result.left_to_parse.out + "%"")
 				else
 					template.put_root_tag (l_root_tag)
 					Result := True

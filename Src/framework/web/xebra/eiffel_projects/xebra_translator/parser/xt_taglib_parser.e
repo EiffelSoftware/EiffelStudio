@@ -84,10 +84,10 @@ feature -- Initialization
 		local
 			l_result: PEG_PARSER_RESULT
 		do
-			l_result := tag_lib_parser.parse (a_string)
+			l_result := tag_lib_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XTL_TAG_LIBRARY} l_result.internal_result.first as l_taglib then
-				if l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing of taglib was incomplete: %"" + l_result.left_to_parse+ "%"")
+				if not l_result.left_to_parse.is_empty then
+					add_parse_error ("Parsing of taglib was incomplete: %"" + l_result.left_to_parse.out + "%"")
 				else
 					Result := l_taglib
 				end

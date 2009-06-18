@@ -18,7 +18,7 @@ create
 
 feature -- Initialize
 
-	make (a_left_to_parse: STRING; a_success: BOOLEAN)
+	make (a_left_to_parse: PEG_PARSER_STRING; a_success: BOOLEAN)
 		require
 			a_left_to_parse_attached: attached a_left_to_parse
 		do
@@ -71,10 +71,10 @@ feature -- Access
 	success: BOOLEAN
 		-- Has the parsing been a success?
 
-	left_to_parse: STRING assign set_left_to_parse
+	left_to_parse: PEG_PARSER_STRING assign set_left_to_parse
 		-- The string that has still to be parsed
 
-	set_left_to_parse (a_string: STRING)
+	set_left_to_parse (a_string: PEG_PARSER_STRING)
 			-- Sets the string which has been left to parse.
 		do
 			left_to_parse := a_string
@@ -101,7 +101,7 @@ feature -- Element change
 	out: STRING
 			-- <Precursor>
 		do
-			Result := left_to_parse + "," + success.out + " results(" + internal_result.count.out + "): "
+			Result := left_to_parse.out + "," + success.out + " results(" + internal_result.count.out + "): "
 			from
 				internal_result.start
 			until

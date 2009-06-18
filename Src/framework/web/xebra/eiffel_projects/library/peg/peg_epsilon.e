@@ -8,7 +8,7 @@ class
 	PEG_EPSILON
 
 inherit
-	PARSING_EXPRESSION_GRAMMAR
+	PEG_ABSTRACT_PEG
 
 create
 	make
@@ -21,7 +21,7 @@ feature -- Initialization
 
 feature -- Implementation
 
-	parse (a_string: STRING): PEG_PARSER_RESULT
+	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			create Result.make (a_string.twin, True)

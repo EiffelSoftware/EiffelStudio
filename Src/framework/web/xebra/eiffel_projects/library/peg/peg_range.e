@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	parse (a_string: STRING): PEG_PARSER_RESULT
+	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			if not a_string.is_empty and then (a_string [1] >= lower and a_string [1] <= upper) then

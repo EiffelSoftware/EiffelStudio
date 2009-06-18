@@ -185,10 +185,10 @@ feature -- Basic Operations
 			Result := cookies.valid_key (a_name)
 		end
 
-	call_pre_handler (a_servlet: XWA_SERVLET; a_response: XH_RESPONSE)
+	call_pre_handler (a_form_handler: XH_FORM_HANDLER; a_response: XH_RESPONSE)
 			-- Calls the right pre_handler on the servlet
 		require
-			a_servlet_attached: a_servlet /= Void
+			a_form_handler_attached: a_form_handler /= Void
 			a_response_attached: a_response /= Void
 		deferred
 		end

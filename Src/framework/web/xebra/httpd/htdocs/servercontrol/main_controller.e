@@ -23,37 +23,53 @@ feature {NONE} -- Initialization
 			Precursor
 		end
 
+feature -- Access
+
+	modules: LIST [TUPLE[ name: STRING; launched: BOOLEAN; running: BOOLEAN]]
+
 feature -- Server Control
 
---	reload_config (a: ANY)
---			--
---		do
---			server_control.load_config
---		end
 
---	shutdown_server (a: ANY)
---			--
---		do
---			server_control.shutdown_server
---		end
+	get_modules
+			-- Retreive modules from server
+		do
+			if attached {XCCR_GET_MODULES} server_control.send (create {XCC_GET_MODULES}.make) as l_modules then
+				modules := l_modules.twin
+			end
+		end
 
---	shutdown_https (a: ANY)
---			--
---		do
---			server_control.shutdown_https
---		end
+	reload_config: STRING
+			--
+		do
+			if attached  {XCCR_OK} server_control.send (create {XCC_LOAD_CONFIG}.make) then
+				Result := "OK"
+			else
+				Result := "Error"
+			end
+		end
 
---	launch_https (a: ANY)
---			--
---		do
---			server_control.launch_https
---		end
+	shutdown_server (a: ANY)
+			--
+		do
 
---	shutdown_webapps (a: ANY)
---			--
---		do
---			server_control.shutdown_webapps
---		end
+		end
+
+	shutdown_https (a: ANY)
+			--
+		do
+
+		end
+
+	launch_https (a: ANY)
+			--
+		do
+
+		end
+
+	shutdown_webapps (a: ANY)
+			--
+		do
+		end
 
 
 end

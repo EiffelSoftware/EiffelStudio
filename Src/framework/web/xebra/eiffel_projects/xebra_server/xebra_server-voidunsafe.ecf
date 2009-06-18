@@ -38,8 +38,17 @@
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
+		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>	
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>

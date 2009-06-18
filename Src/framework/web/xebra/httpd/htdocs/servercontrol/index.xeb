@@ -11,7 +11,11 @@
     <div id="title"> Xebra Server Control</div>
   </div>
   <div id="content">
-    <f:form variable="var" class="MAIN_CONTROLLER">
+ <h1>Server Modules</h1>
+ <p><a href="reload_config.xeb">Reload Configuration</a>
+ </p>
+ <!--
+  <f:form variable="var" class="MAIN_CONTROLLER">
     <h1>Main Server</h1>
     <div class="button"> <span class="buttontext">
       <f:command_link label="Reload Configuration File" action="reload_config" variable="var"/>
@@ -31,6 +35,7 @@
       <f:command_link label="Shutdown Webapplications" action="shutdown_webapps" variable="var"/>
       </span> </div>
      </f:form> 
+     -->
   </div>
   <div id="footer">
     <div id="footertext">Xebra Server Control</div>
@@ -38,3 +43,4 @@
 </div>
 </body>
 </html>
+

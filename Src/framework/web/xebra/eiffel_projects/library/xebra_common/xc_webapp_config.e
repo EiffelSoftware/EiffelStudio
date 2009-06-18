@@ -11,10 +11,10 @@ class
 	XC_WEBAPP_CONFIG
 
 inherit
---	XI_CONFIG
---		redefine
---			make_empty
---		end
+	XI_CONFIG
+		redefine
+			make_empty
+		end
 
 create
 	 make_empty

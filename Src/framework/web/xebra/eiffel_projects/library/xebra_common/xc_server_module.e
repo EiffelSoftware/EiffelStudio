@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XS_SERVER_MODULE
+	XC_SERVER_MODULE
 
 feature {NONE} -- Initialization
 
@@ -39,7 +39,17 @@ feature -- Status report
 feature -- Status setting
 
 	shutdown
-			-- Launches the module.
+			-- Shutds down the module.
+		deferred
+		end
+
+	launch
+			-- Launches the module.	
+		deferred
+		end
+
+	join
+			-- Joins the thread.	
 		deferred
 		end
 

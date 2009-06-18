@@ -46,7 +46,7 @@ feature -- Access
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
 --			end
-			if not webapp.cleaned then
+			if webapp.needs_cleaning then
 				Result.append (" -clean")
 			end
 			if not file_exists (webapp_exe) then
@@ -66,7 +66,7 @@ feature -- Status report
 											".e",
 											".ecf")
 					or not file_exists (webapp_exe)
-					or not webapp.cleaned
+					or webapp.needs_cleaning
 			if Result then
 				o.dprint ("Compiling is necessary", 5)
 			else
@@ -118,11 +118,11 @@ feature {NONE} -- Implementation
 feature -- Agent
 
 	compile_process_exited
-			-- Sets is_running := False
+			-- Sets
 		do
---			config_outputter
 			is_running := False
 			if output_handler.has_successfully_terminated then
+				webapp.needs_cleaning := False
 				next_action.execute.do_nothing
 			else
 				o.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)

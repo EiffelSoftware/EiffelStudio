@@ -21,14 +21,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create modules.make
+			create modules.make (1)
 		ensure
 			modules_attached: modules /= Void
 		end
 
 feature -- Access
 
-	modules: LINKED_LIST [XCCR_MODULE_BEAN]
+	modules: HASH_TABLE [XC_SERVER_MODULE, STRING]
 
 invariant
 	modules_attached: modules /= Void

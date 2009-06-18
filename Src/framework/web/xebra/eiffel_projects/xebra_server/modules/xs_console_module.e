@@ -11,27 +11,36 @@ class
 	XS_CONSOLE_MODULE
 
 inherit
-	XS_SERVER_MODULE
+	XC_SERVER_MODULE
 		redefine
 			make
 		end
+	THREAD
+	XS_SHARED_SERVER_CONFIG
+	XS_SHARED_SERVER_OUTPUTTER
+
 
 create
 	make
 
 feature -- Initialization
 
-	make (a_main_server: XS_MAIN_SERVER)
+	make (a_main_server: like main_server)
 			-- Initializes current
 		do
 			Precursor (a_main_server)
             create commands.make (1)
-			commands.force (create {XSC_SHUTDOWN_SERVER}.make, "exit")
-			commands.force (create {XSC_LOAD_CONFIG}.make, "reload_config")
-			commands.force (create {XSC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
-			commands.force (create {XSC_RELAUNCH_MOD}.make, "relaunch_mod")
-			commands.force (create {XSC_SHUTDOWN_MOD}.make, "shutdown_mod")
-			commands.force (create {XSC_GET_MODULES}.make, "get_modules")
+			commands.force (create {XCC_SHUTDOWN_SERVER}.make, "exit")
+			commands.force (create {XCC_LOAD_CONFIG}.make, "reload")
+			commands.force (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
+			commands.force (create {XCC_RELAUNCH_MOD}.make, "mlaunch")
+			commands.force (create {XCC_SHUTDOWN_MOD}.make, "mshutdown")
+			commands.force (create {XCC_GET_MODULES}.make, "modules")
+			commands.force (create {XCC_CLEAN_WEBAPP}.make, "clean")
+			commands.force (create {XCC_SHUTDOWN_WEBAPP}.make, "shutdown")
+			commands.force (create {XCC_ENABLE_WEBAPP}.make, "enable")
+			commands.force (create {XCC_DISABLE_WEBAPP}.make, "disable")
+			commands.force (create {XCC_GET_WEBAPPS}.make, "webapps")
 			-- help command is hardcoded
         ensure then
         	commands_attached: commands /= Void
@@ -39,7 +48,7 @@ feature -- Initialization
 
 feature -- Acces
 
-	commands: HASH_TABLE [XS_COMMAND, STRING]
+	commands: HASH_TABLE [XC_COMMAND, STRING]
 
 feature -- Inherited Features
 
@@ -78,7 +87,7 @@ feature {NONE} -- Operations
 		local
 			l_command: STRING
 			l_parameter: STRING
-			l_response: XS_COMMAND_RESPONSE
+			l_response: XC_COMMAND_RESPONSE
 		do
 				-- help command is hardcoded
 			if a_string.is_equal ("help") then
@@ -92,7 +101,7 @@ feature {NONE} -- Operations
 					l_parameter  := ""
 				end
 
-				if  attached {XS_COMMAND} commands[l_command] as cmd then
+				if  attached {XC_COMMAND} commands[l_command] as cmd then
 						if  attached {XS_PARAMETER_COMMAND} cmd as param_cmd then
 							param_cmd.set_parameter (l_parameter)
 							l_response := param_cmd.execute (main_server)
@@ -100,7 +109,7 @@ feature {NONE} -- Operations
 							l_response := cmd.execute (main_server)
 						end
 
-						if attached {XSC_SHUTDOWN_SERVER} cmd then
+						if attached {XCC_SHUTDOWN_SERVER} cmd then
 							stop := True
 						end
 
@@ -111,12 +120,12 @@ feature {NONE} -- Operations
 			end
 		end
 
-	handle_response (a_response: XS_COMMAND_RESPONSE)
+	handle_response (a_response: XC_COMMAND_RESPONSE)
 			-- Handles it.
 		require
 			a_response_attached: a_response /= Void
 		do
-			if attached {XSCR_GET_MODULES} a_response as get_mod_response then
+			if attached {XCCR_GET_MODULES} a_response as get_mod_response then
 				o.iprint (display_modules (get_mod_response))
 			end
 
@@ -127,7 +136,7 @@ feature {NONE} -- Operations
 
 feature -- Status Report
 
-	display_modules (a_response: XSCR_GET_MODULES): STRING
+	display_modules (a_response: XCCR_GET_MODULES): STRING
 			-- Display them.
 		require
 			a_response_attached: a_response /= Void
@@ -138,12 +147,10 @@ feature -- Status Report
 			until
 				a_response.modules.after
 			loop
-				if attached {STRING} a_response.modules.item_for_iteration.item (1) as l_name and then
-					attached {BOOLEAN} a_response.modules.item_for_iteration.item (2) as l_launched and then
-					attached {BOOLEAN} a_response.modules.item_for_iteration.item (3) as l_running then
-						Result.append (" - name: '" + l_name + "', launched: '"+l_launched.out+"', running: '"+l_running.out+"'%N")
-				end
-
+				Result.append (" - name: '" + a_response.modules.key_for_iteration +
+				"',%Tlaunched: '" + a_response.modules.item_for_iteration.launched.out +
+				"',%Trunning: '" + a_response.modules.item_for_iteration.running.out +
+				"'%N")
 				a_response.modules.forth
 			end
 			Result.append   ("-----------------------------------------------------------%N")

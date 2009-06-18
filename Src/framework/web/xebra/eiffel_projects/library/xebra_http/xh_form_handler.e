@@ -7,26 +7,24 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XSCR_ERROR
+deferred class
+	XH_FORM_HANDLER
 
-inherit
-	XS_COMMAND_RESPONSE
+feature -- Access
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
 feature -- Status report
 
 feature -- Status setting
 
 feature -- Basic operations
+
+	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
+			-- Calls the right pre_handler on the servlet
+		require
+			a_request_attached: a_request /= Void
+			a_response_attached: a_response /= Void
+		deferred
+		end
 
 feature {NONE} -- Implementation
 

@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCCR_WEBAPP_BEAN
+	XC_WEBAPP_BASE
 
 create
 	make

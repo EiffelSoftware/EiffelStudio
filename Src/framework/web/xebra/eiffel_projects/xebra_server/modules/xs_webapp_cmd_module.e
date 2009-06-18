@@ -11,17 +11,20 @@ class
 	XS_WEBAPP_CMD_MODULE
 
 inherit
-	XS_SERVER_MODULE
+	XC_SERVER_MODULE
 		redefine
 			make
 		end
+	THREAD
+	XS_SHARED_SERVER_CONFIG
+	XS_SHARED_SERVER_OUTPUTTER
 
 create
 	make
 
 feature -- Initialization
 
-	make (a_main_server: XS_MAIN_SERVER)
+	make (a_main_server: like main_server)
 			-- Initializes current
 		do
 			Precursor (a_main_server)
@@ -33,7 +36,7 @@ feature -- Inherited Features
 	execute
 			-- <Precursor>
 		local
-			l_command_response: XS_COMMAND_RESPONSE
+			l_command_response: XC_COMMAND_RESPONSE
 			l_cmd_socket: NETWORK_STREAM_SOCKET
 
 		do
@@ -58,14 +61,17 @@ feature -- Inherited Features
 
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_cmd_socket.accepted as thread_cmd_socket then
-	 					 	o.dprint ("Command Connection to Webapp accepted",2)
-				            if attached {XS_COMMAND} thread_cmd_socket.retrieved as l_command then
+	 					 	o.dprint ("Command connection to Webapp accepted",2)
+	 					 	thread_cmd_socket.read_natural
+				            if attached {XC_COMMAND} thread_cmd_socket.retrieved as l_command then
+				            	o.dprint ("Command retreived...",2)
 								l_command_response := l_command.execute (main_server)
 				 	       	else
-				 	       		l_command_response := create {XSCR_ERROR}.make
+				 	       		l_command_response := create {XCCR_CANNOT_SEND}.make
 				 	       	end
 
 							o.dprint ("Sending back command_response...", 2)
+							thread_cmd_socket.put_natural (0)
 							thread_cmd_socket.independent_store (l_command_response)
 
 				         	thread_cmd_socket.cleanup

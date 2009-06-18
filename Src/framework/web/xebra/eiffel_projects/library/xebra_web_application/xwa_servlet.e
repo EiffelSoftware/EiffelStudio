@@ -12,6 +12,7 @@ deferred class
 
 inherit
 	XU_SHARED_OUTPUTTER
+	XH_FORM_HANDLER
 
 feature {XWA_SERVLET} -- Initialization
 
@@ -106,7 +107,7 @@ feature -- Basic Operations
 		end
 
 	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
-			-- Handles a form
+			-- <Precursor>
 		require
 			a_request_attached: attached a_request
 			a_response_attached: attached a_response

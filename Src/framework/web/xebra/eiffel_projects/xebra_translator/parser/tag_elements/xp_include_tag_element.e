@@ -17,6 +17,9 @@ inherit
 			copy_self
 		end
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+		undefine
+			out
+		end
 
 create
 	make

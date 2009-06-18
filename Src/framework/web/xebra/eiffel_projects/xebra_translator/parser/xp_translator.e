@@ -21,23 +21,32 @@ feature {NONE} -- Initialization
 			-- Initialization for {XP_TRANSLATOR}.
 		require
 			a_name_valid: attached a_name and then not a_name.is_empty
+		local
+			l_page_taglib: XTL_PAGE_CONF_TAG_LIB
 		do
 			create output_path.make_from_string ("./generated/")
 			output_path.extend (a_name)
 			name := a_name
 			create registry.make (output_path)
+			create xeb_parser.make_with_registry (registry)
+			create l_page_taglib.make_with_arguments ("page")
+			registry.put_tag_lib (l_page_taglib.id, l_page_taglib)
+			l_page_taglib.set_parser (xeb_parser)
 		ensure
 			output_path_attached: attached output_path
 			name_attached: attached name
 			registry_attached: attached registry
 		end
 
-feature {NONE} -- Access
-
 feature -- Access
 
 	output_path: FILE_NAME assign set_output_path
 			-- Defines where the files should be written
+
+feature {NONE} -- Access
+
+	xeb_parser: XT_XEB_PARSER
+			-- The xeb file parser
 
 	name: STRING assign set_name
 			-- Name of the system
@@ -131,7 +140,6 @@ feature -- Processing
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
 		do
-			create registry.make (output_path)
 			o.iprint ("************************************************************")
 			o.iprint ("*                  .taglib processing start...             *")
 			o.iprint ("************************************************************")
@@ -157,22 +165,20 @@ feature -- Processing
 			l_webapp_gen.generate
 		end
 
-	process_xeb_file (a_file: KL_TEXT_INPUT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING)
+	process_xeb_file (a_source: STRING; a_path: XP_FILE_NAME; a_file_name: STRING)
 		require
-			a_file_attached: attached a_file
-			a_file_open: a_file.is_open_read
+			a_source_attached: attached a_source
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
 			o.iprint ("Processing '" + a_path + "'...")
-			add_template_to_registry (generate_name_from_file_name (a_path), a_file, a_path, registry)
+			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry)
 		end
 
 	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
 		local
 			l_output_path, l_file_name: STRING
 			l_i: INTEGER
-
 		do
 			l_output_path := output_path.out
 			l_file_name := a_file_name.out
@@ -188,35 +194,54 @@ feature -- Processing
 			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end
 
-	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+--	add_template_to_registry (a_servlet_name: STRING; a_stream: KL_TEXT_INPUT_FILE; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+--			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
+--		require
+--			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+--			a_stream_attached: attached a_stream
+--			a_path_attached: attached a_path
+--			a_registry_attached: attached a_registry
+--		local
+--			l_root_tag: XP_TAG_ELEMENT
+--			l_controller_class: STRING
+--			l_parser: XM_PARSER
+--			l_p_callback: XP_XML_PARSER_CALLBACKS
+--			l_external_resolver: XP_EXTERNAL_RESOLVER
+--			l_template: XP_TEMPLATE
+--		do
+--			create l_external_resolver
+--			create {XM_EIFFEL_PARSER} l_parser.make
+--			l_parser.set_dtd_resolver (l_external_resolver)
+--			l_parser.set_entity_resolver (l_external_resolver)
+--			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
+--			l_p_callback.put_registry (a_registry)
+--			l_parser.set_callbacks (l_p_callback)
+--			l_parser.parse_from_stream (a_stream)
+
+--			l_root_tag := l_p_callback.root_tag
+--			l_controller_class := l_p_callback.controller_class
+--			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
+--			l_template.date := a_stream.time_stamp
+--			a_registry.put_template (a_servlet_name, l_template)
+--		end
+
+	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
 			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
-			a_stream_attached: attached a_stream
+			a_source_attached: attached a_source
 			a_path_attached: attached a_path
 			a_registry_attached: attached a_registry
 		local
-			l_root_tag: XP_TAG_ELEMENT
-			l_controller_class: STRING
-			l_parser: XM_PARSER
-			l_p_callback: XP_XML_PARSER_CALLBACKS
-			l_external_resolver: XP_EXTERNAL_RESOLVER
 			l_template: XP_TEMPLATE
 		do
-			create l_external_resolver
-			create {XM_EIFFEL_PARSER} l_parser.make
-			l_parser.set_dtd_resolver (l_external_resolver)
-			l_parser.set_entity_resolver (l_external_resolver)
-			create {XP_XML_PARSER_CALLBACKS} l_p_callback.make (l_parser, a_path)
-			l_p_callback.put_registry (a_registry)
-			l_parser.set_callbacks (l_p_callback)
-			l_parser.parse_from_stream (a_stream)
-
-			l_root_tag := l_p_callback.root_tag
-			l_controller_class := l_p_callback.controller_class
-			create l_template.make (l_root_tag, l_p_callback.is_template, l_controller_class, a_servlet_name)
-			l_template.date := a_stream.time_stamp
-			a_registry.put_template (a_servlet_name, l_template)
+			if xeb_parser.parse (a_source) then
+				l_template := xeb_parser.template
+				l_template.template_name := a_servlet_name
+				a_registry.put_template (a_servlet_name, xeb_parser.template)
+			else
+				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)
+			end
 		end
 
 	parse_taglibs (taglib_folder: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
@@ -247,24 +272,23 @@ feature -- Processing
 			end
 		end
 
-	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_stream: KI_CHARACTER_INPUT_STREAM)
+	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_source: STRING)
 			-- Trasforms stream to tag library and adds it to `a_taglibs'
 		require
 			a_registry_attached: attached a_registry
-			a_stream_attached: attached a_stream
+			a_source_attached: attached a_source
 		local
-			l_parser: XM_PARSER
-			l_p_callback: XP_TAGLIB_PARSER_CALLBACKS
+			l_parser: XT_TAGLIB_PARSER
+			l_taglib: XTL_TAG_LIBRARY
 		do
-			create {XM_EIFFEL_PARSER} l_parser.make
-			create l_p_callback.make
-			l_parser.set_callbacks (l_p_callback)
-			l_parser.parse_from_stream (a_stream)
-			if l_p_callback.taglib.id.is_empty then
-				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing: " + a_stream.name]), False)
+			create l_parser.make
+			l_taglib := l_parser.parse (a_source)
+
+			if attached l_taglib then
+				o.iprint ("Successfully parsed taglib: " + l_taglib.id)
+				a_registry.put_tag_lib (l_taglib.id, l_taglib)
 			else
-				o.iprint ("Successfully parsed taglib: " + l_p_callback.taglib.id)
-				a_registry.put_tag_lib (l_p_callback.taglib.id, l_p_callback.taglib)
+				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing: " + "TODONAME"]), False)
 			end
 		end
 

@@ -16,10 +16,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_id, a_class_name: STRING)
+		require
+			a_id_valid: attached a_id and not a_id.is_empty
+			a_class_name_valid: attached a_class_name and not a_class_name.is_empty
 		do
-			class_name := ""
-			id := ""
+			class_name := a_class_name
+			id := a_id
 			create {HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]} attributes.make (2)
 		ensure
 			class_name_attached: attached class_name
@@ -45,6 +48,13 @@ feature -- Access
 			end
 		ensure then
 			child_has_been_added: attributes.count = old attributes.count + 1
+		end
+
+	put_attribute_description (a_description: XTL_TAG_DESCRIPTION_ATTRIBUTE)
+		require
+			a_description_attached: attached a_description
+		do
+			attributes.put (a_description, a_description.id)
 		end
 
 	set_attribute (a_id: STRING; a_value: STRING)

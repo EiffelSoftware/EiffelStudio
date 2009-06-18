@@ -33,7 +33,6 @@ feature {XTL_TAG_LIBRARY} -- Access
 
 feature -- Access
 
-
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
 		require else
@@ -44,6 +43,21 @@ feature -- Access
 			end
 		ensure then
 			child_has_been_added: tags.count = old tags.count + 1
+		end
+
+	put_tag (a_tag: XTL_TAG_DESCRIPTION)
+			--
+		do
+			tags.put (a_tag, a_tag.id)
+		end
+
+	set_id (a_id: STRING)
+		require
+			a_id_valid: attached a_id and not a_id.is_empty
+		do
+			id := a_id
+		ensure
+			id_set: id = a_id
 		end
 
 	set_attribute (a_id: STRING; a_value: STRING)

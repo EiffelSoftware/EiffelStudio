@@ -85,7 +85,13 @@ feature -- Element change
 	put_error_message (a_message: STRING)
 			-- Add an error message to the output
 		do
-			error_messages.extend (a_message)
+			error_messages.extend (a_message + "%N" + format_debug (left_to_parse.debug_information))
+		end
+
+	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
+			-- Formats the debug information
+		do
+			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out
 		end
 
 	set_result (a_result: like internal_result)

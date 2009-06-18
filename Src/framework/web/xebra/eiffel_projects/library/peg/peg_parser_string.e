@@ -27,19 +27,26 @@ feature {NONE} -- Initialization
 			base_string := a_string
 			start_pivot := 1
 			end_pivot := a_string.count
+			longest_match := 1
 		ensure
 			base_string_set: base_string = a_string
 		end
 
-	make_from_string_and_index (a_string: STRING; a_start, a_end: INTEGER)
+	make_from_string_and_index (a_string: STRING; a_start, a_end: INTEGER; a_longest_match: INTEGER)
 			-- <Precursor>
 		require
 			a_string_attached: attached a_string
+			a_longest_match_valid: a_longest_match >= 0 and a_longest_match <= a_string.count
 		do
 			base_string := a_string
 			start_pivot := a_start
 			end_pivot := a_end
 		end
+
+feature -- Access
+
+	longest_match: INTEGER
+		-- Captures the farthest index the parser could get to
 
 feature {NONE} -- Access
 
@@ -86,12 +93,16 @@ feature -- Basic functionality
 			-- <Precursor>
 		do
 			if (1 <= a_start_index) and (a_start_index <= a_end_index) and (a_end_index <= count) then
+				if longest_match < a_start_index then
+					longest_match := a_start_index
+				end
 				create Result.make_from_string_and_index (
 					base_string,
 					start_pivot + a_start_index - 1,
-					start_pivot + a_end_index)
+					start_pivot + a_end_index,
+					longest_match)
 			else
-				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot) -- Empty string
+				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot, longest_match) -- Empty string
 			end
 		end
 
@@ -99,12 +110,16 @@ feature -- Basic functionality
 			-- <Precursor>
 		do
 			if (1 <= a_start_index) then
+				if longest_match < a_start_index then
+					longest_match := a_start_index
+				end
 				create Result.make_from_string_and_index (
 					base_string,
 					start_pivot + a_start_index - 1,
-					end_pivot+1)
+					end_pivot+1,
+					longest_match)
 			else
-				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot) -- Empty string
+				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot, longest_match) -- Empty string
 			end
 		end
 

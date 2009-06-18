@@ -31,10 +31,11 @@ feature -- Initialization
 			make
 			id := a_id
 			create {HASH_TABLE [ARRAYED_LIST [STRING], STRING]} allowed_tags.make (5)
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "controller")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "declare_region")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "define_region")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (2), "include")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "controller")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "declare_region")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "define_region")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "include")
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (0), "fragment")
 			allowed_tags ["controller"].extend ("class")
 			allowed_tags ["declare_region"].extend ("id")
 			allowed_tags ["define_region"].extend ("id")
@@ -72,6 +73,8 @@ feature -- Access
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("include") then
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
+			elseif a_local_part.is_equal ("fragment") then
+				xeb_parser.deactivate_render
 			else
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			end

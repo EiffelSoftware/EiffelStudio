@@ -36,13 +36,13 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			if a_string.is_empty then
-				create Result.make (a_string, False, a_string)
+				create Result.make (a_string, False)
 			else
 				if a_string.starts_with (character.out) then
-					create Result.make (a_string.substring (2, a_string.count), True, a_string.substring (2, a_string.count))
+					create Result.make (a_string.substring (2, a_string.count), True)
 					Result := build_result (Result)
 				else
-					create Result.make (a_string, False, a_string)
+					create Result.make (a_string, False)
 				end
 			end
 		end

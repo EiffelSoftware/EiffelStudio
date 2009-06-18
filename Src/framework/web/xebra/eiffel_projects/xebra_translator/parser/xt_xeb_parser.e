@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			exclamation := char ('!')
 
 			underscore := create {PEG_CHARACTER}.make_with_character ('_') -- don't ommit
-			hyphen := create {PEG_CHARACTER}.make_with_character ('-') -- don't ommit, so don't use char
+			hyphen := create {PEG_CHARACTER}.make_with_character ('-') -- don't ommit, so don't use `char' feature
 
 			ws := (-(newline | tab | space | return)) --whitespace
 
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 
 			xml := create {PEG_CHOICE}.make
 
-			comment := chars ("<!--") + (-(chars("-->").negate + any_char)) + chars ("-->")
+			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
 			comment.set_behaviour (agent build_content_tag)
 
 			composite_xml := open + identifier + (-l_attribute) + close + (+xml).optional + open + slash + identifier + close
@@ -151,6 +151,22 @@ feature {NONE} -- Implementation
 				l_i > a_string.count
 			loop
 				Result := Result + char (a_string [l_i])
+				l_i := l_i + 1
+			end
+		end
+
+	chars_without_ommit (a_string: STRING): PEG_SEQUENCE
+			-- Creates a parser which parses the `a_string'
+		local
+			l_i: INTEGER
+		do
+			create Result.make
+			from
+				l_i := 1
+			until
+				l_i > a_string.count
+			loop
+				Result := Result + create {PEG_CHARACTER}.make_with_character (a_string [l_i])
 				l_i := l_i + 1
 			end
 		end
@@ -399,7 +415,7 @@ feature -- Basic Functionality
 					Result := True
 				end
 			else
-				add_parse_error ("Parsing was not successfull! And the error is here: ")
+				add_parse_error ("Parsing was not successfull!")
 			end
 			from
 				l_result.error_messages.start

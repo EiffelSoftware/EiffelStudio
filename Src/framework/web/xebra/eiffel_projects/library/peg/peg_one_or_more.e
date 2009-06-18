@@ -38,7 +38,7 @@ feature -- Implementation
 				end
 				Result := build_result (Result)
 			else
-				create Result.make (a_string, False, a_string)
+				create Result.make (a_string, False)
 			end
 		end
 

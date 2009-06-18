@@ -26,9 +26,9 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			if a_string.is_empty then
-				create Result.make (a_string, False, a_string)
+				create Result.make (a_string, False)
 			else
-				create Result.make (a_string.substring (2, a_string.count), True, a_string.substring (2, a_string.count))
+				create Result.make (a_string.substring (2, a_string.count), True)
 				Result.append_result (a_string [1])
 				if not ommit then
 					Result := build_result (Result)

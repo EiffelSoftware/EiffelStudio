@@ -20,9 +20,9 @@ feature -- Implementation
 		local
 			temp: PEG_PARSER_RESULT
 		do
-			create temp.make (a_string, True, a_string)
+			create temp.make (a_string, True)
 			from
-				create Result.make (a_string, True, a_string)
+				create Result.make (a_string, True)
 			until
 				not temp.success
 			loop

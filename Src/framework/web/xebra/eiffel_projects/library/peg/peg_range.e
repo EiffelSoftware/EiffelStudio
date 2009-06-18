@@ -42,10 +42,10 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			if not a_string.is_empty and then (a_string [1] >= lower and a_string [1] <= upper) then
-				create Result.make (a_string.substring (2, a_string.count), True, a_string.substring (2, a_string.count))
+				create Result.make (a_string.substring (2, a_string.count), True)
 				Result.append_result (a_string [1])
 			else
-				create Result.make (a_string, False, a_string)
+				create Result.make (a_string, False)
 			end
 		end
 

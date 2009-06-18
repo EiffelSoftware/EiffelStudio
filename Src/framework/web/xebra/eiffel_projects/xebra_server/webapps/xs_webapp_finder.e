@@ -40,7 +40,7 @@ feature -- Operations
 			l_include: RX_PCRE_MATCHER
 			l_exclude: RX_PCRE_MATCHER
 			l_files: DS_ARRAYED_LIST [STRING]
-			l_webapp_config: XS_WEBAPP_CONFIG
+			l_webapp_config: XC_WEBAPP_CONFIG
 			l_webapp_config_reader: XS_WEBAPP_CONFIG_READER
 		do
 			create Result.make (1)

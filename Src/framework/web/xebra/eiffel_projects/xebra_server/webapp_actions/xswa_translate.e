@@ -75,7 +75,7 @@ feature -- Access
 			-- The arguments that are passed to compile the servlet_gen	
 		do
 			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
-			if not webapp.cleaned then
+			if webapp.needs_cleaning then
 				Result.append (" -clean")
 			end
 			if not file_exists (servlet_gen_exe) then
@@ -141,7 +141,7 @@ feature -- Status report
 									".xeb")
 						or not file_exists (servlet_gen_exe)
 						or not file_exists (servlet_gen_ecf)
-						or not webapp.cleaned
+						or webapp.needs_cleaning
 			if Result then
 				o.dprint ("Translating is necessary", 5)
 			else
@@ -317,7 +317,6 @@ feature -- Agents
 --			config_outputter
 			is_running := False
 			if output_handler_gen.has_successfully_terminated then
-				webapp.cleaned := true
 				next_action.execute.do_nothing
 			else
 				o.eprint ("GENERATION FAILED", generating_type)

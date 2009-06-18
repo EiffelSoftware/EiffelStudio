@@ -35,7 +35,7 @@ feature -- Status Change
 
 feature -- Basic operations
 
-	execute (a_server: XCC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
+	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
 			Result := a_server.disable_webapp (parameter.value)

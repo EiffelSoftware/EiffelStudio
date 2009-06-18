@@ -9,6 +9,10 @@ class
 	XS_WEBAPP
 
 inherit
+	XC_WEBAPP_BASE
+		redefine
+			make
+		end
 	XS_SHARED_SERVER_OUTPUTTER
 	XS_SHARED_SERVER_CONFIG
 
@@ -17,12 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapp_config: XS_WEBAPP_CONFIG)
+	make (a_webapp_config: XC_WEBAPP_CONFIG)
 			-- Initialization for `Current'.
-		require
-			a_webapp_config_attached: a_webapp_config /= Void
 		do
-			app_config := a_webapp_config
+			Precursor (a_webapp_config)
 
 			create translate_action.make (current)
 			create compile_action.make (current)
@@ -34,9 +36,9 @@ feature {NONE} -- Initialization
 			compile_action.set_next_action (run_action)
 			run_action.set_next_action (send_action)
 
-			cleaned := true
+			needs_cleaning := false
 
-		ensure
+		ensure then
 			config_attached: config /= Void
 			translate_action_attached: translate_action /= Void
 			compile_action_attached: compile_action /= Void
@@ -47,8 +49,6 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
-	app_config: XS_WEBAPP_CONFIG
-		-- Contains info about the webapp
 
 	translate_action: XSWA_TRANSLATE
 		-- The action to translate the webapp
@@ -68,8 +68,8 @@ feature  -- Access
 	request_message: detachable STRING
 		-- The current request_message
 
-	cleaned: BOOLEAN assign set_cleaned
-		-- Can be used to force a clean on the first translation/compilation	
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+		-- Can be used to force a clean on the next translation/compilation	
 
 feature -- Constans
 
@@ -113,23 +113,23 @@ feature -- Actions
 feature -- Status Setting
 
 	set_request_message (a_request_message: like request_message)
-			-- Sets a_request_message
+			-- Sets a_request_message.
 		do
 			request_message := a_request_message
 		ensure
 			request_message_set: request_message = a_request_message
 		end
 
-	set_cleaned (a_cleaned: like cleaned)
-			-- Sets
+	set_needs_cleaning (a_cleaned: like needs_cleaning)
+			-- Sets needs_cleaning.
 		do
-			cleaned := a_cleaned
+			needs_cleaning := a_cleaned
 		ensure
-			cleaned_set: cleaned = a_cleaned
+			cleaned_set: needs_cleaning = a_cleaned
 		end
 
 	shutdown
-			-- Initiates shutdown and waits for termination
+			-- Initiates shutdown and waits for termination.
 		do
 			if run_action.is_running then
 				shutdown_action.execute.do_nothing;
@@ -139,7 +139,7 @@ feature -- Status Setting
 
 
 	shutdown_all
-			-- Shuts the application down and all process (compile and translate)
+			-- Shuts the application down and all process (compile and translate).
 		do
 			shutdown
 			compile_action.stop

@@ -13,7 +13,7 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XS_SHARED_SERVER_OUTPUTTER
-	XI_READER [XS_WEBAPP_CONFIG]
+	XI_READER [XC_WEBAPP_CONFIG]
 
 create
 	make
@@ -27,7 +27,7 @@ feature {NONE} -- Internal Access
 feature -- Status report
 
 
-	check_attributes (a_config: XS_WEBAPP_CONFIG): detachable XS_WEBAPP_CONFIG
+	check_attributes (a_config: XC_WEBAPP_CONFIG): detachable XC_WEBAPP_CONFIG
 			-- Checks if all attributes have been set
 		local
 			l_ok: BOOLEAN
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	process_property (a_property: INI_PROPERTY; a_config: XS_WEBAPP_CONFIG)
+	process_property (a_property: INI_PROPERTY; a_config: XC_WEBAPP_CONFIG)
 			-- Process document properties
 		local
 			l_name: STRING

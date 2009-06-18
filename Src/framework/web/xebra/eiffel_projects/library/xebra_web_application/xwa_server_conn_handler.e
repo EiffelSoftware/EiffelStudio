@@ -80,6 +80,7 @@ feature -- Implementation
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
 		                o.dprint ("Connection to Xebra Server accepted",1)
+		                socket.read_natural
 			             if attached {STRING} socket.retrieved as l_request_message then
 			 	        	if not handle_shutdown_signal (l_request_message) then
 			 	        		l_response := l_request_handler.process_servlet (session_manager, l_request_message, Current)
@@ -93,6 +94,7 @@ feature -- Implementation
 
 						if attached l_response then
 				            o.dprint ("Sending back l_response...", 2)
+				            socket.put_natural (0)
 						   	socket.independent_store (l_response)
 					   	end
 					   	l_response := Void

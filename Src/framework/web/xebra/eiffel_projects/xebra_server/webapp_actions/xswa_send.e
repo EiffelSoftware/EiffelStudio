@@ -44,8 +44,10 @@ feature {NONE} -- Implementation
 			l_webapp_socket.connect
             if  l_webapp_socket.is_connected then
 				o.dprint ("Forwarding request", 2)
+				l_webapp_socket.put_natural (0)
 	            l_webapp_socket.independent_store (webapp.request_message)
 	            o.dprint ("Waiting for response", 2)
+	            l_webapp_socket.read_natural
 				if attached {XH_RESPONSE} l_webapp_socket.retrieved as l_response then
 					o.dprint ("Response retrieved", 2)
 	            	Result := l_response

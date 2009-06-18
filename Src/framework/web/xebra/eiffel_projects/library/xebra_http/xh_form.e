@@ -46,14 +46,14 @@ feature	-- Basic Functionality
 			-- FIXME TODO
 		end
 
-	add_validator (a_key: STRING; a_validator: XWA_VALIDATOR)
-			-- Adds a validator to the list of validators for a specific key
-		require
-			a_key_valid: attached a_key and then not a_key.is_empty
-			a_validator_attached: attached a_validator
-		do
-			-- FIXME TODO
-		end
+--	add_validator (a_key: STRING; a_validator: XWA_VALIDATOR)
+--			-- Adds a validator to the list of validators for a specific key
+--		require
+--			a_key_valid: attached a_key and then not a_key.is_empty
+--			a_validator_attached: attached a_validator
+--		do
+--			-- FIXME TODO
+--		end
 
 	add_attribute_setter (a_key: STRING; a_setter: PROCEDURE [ANY, TUPLE [ANY]])
 			-- Sets the bean attribute setter for a specific key

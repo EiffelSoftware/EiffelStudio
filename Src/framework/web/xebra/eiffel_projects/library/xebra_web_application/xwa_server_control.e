@@ -10,10 +10,10 @@ note
 class
 	XWA_SERVER_CONTROL
 
---inherit
---	XSC_SERVER_INTERFACE
+inherit
+	XU_SHARED_OUTPUTTER
 
-  create
+ create
 	make
 
 feature {NONE} -- Initialization
@@ -21,71 +21,54 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
---			create commands.make
---		ensure
---			commands_attached: commands /= Void
 		end
 
---feature -- Access
+feature {NONE} -- Constants
 
---	commands: XS_COMMANDS
+	default_cmd_server_port: INTEGER = 55001
 
---feature -- Status report
-
---feature -- Status setting
-
---	set_commands (a_commands: like commands)
---			-- Sets commands.
---		require
---			a_commands_attached: a_commands /= Void
---		do
---			commands  := a_commands
---		ensure
---			commands_set: commands  = a_commands
---		end
-
---feature -- Inherited from XSC_SERVER_INTERFACE
-
---	shutdown_webapps
---			-- <Precursor>
-
---		do
---			commands.list.force (create {XSC_SHUTDOWN_WEBAPPS}.make)
---		end
-
---	shutdown_https
---			-- <Precursor>
---		do
---			commands.list.force (create {XSC_SHUTDOWN_HTTPS}.make)
---		end
+	default_cmd_server_host: STRING = "localhost" -- add this to config file
 
 
---	launch_https
---			-- <Precursor>
---		do
---			commands.list.force (create {XSC_LAUNCH_HTTPS}.make)
---		end
+feature -- Access
+
+feature -- Status report
+
+feature -- Status setting
+
+feature -- Operations
+
+	send (a_command: XC_COMMAND): XC_COMMAND_RESPONSE
+			-- Sends a command to the server and waits for the response
+		require
+			a_command_attached: a_command /= Void
+		local
+			l_socket: NETWORK_STREAM_SOCKET
+		do
+			Result := create {XCCR_UNKNOWN_ERROR}.make
+
+			create l_socket.make_client_by_port (default_cmd_server_port, default_cmd_server_host)
+			o.dprint ("Connecting...", 3)
+			l_socket.connect
+            if  l_socket.is_connected then
+            	o.dprint("Sending command...", 3)
+            	l_socket.put_natural (0)
+		        l_socket.independent_store (a_command)
+	            o.dprint ("Waiting for response", 2)
+	            l_socket.read_natural
+				if attached {XC_COMMAND_RESPONSE} l_socket.retrieved as l_response then
+					o.dprint ("Response retrieved", 2)
+	            	Result := l_response
+	            else
+	            	Result := create {XCCR_CANNOT_SEND}.make
+	            end
+	        else
+	        	Result := create {XCCR_CANNOT_SEND}.make
+	        end
+		ensure
+			result_attached: Result /= Void
+		end
 
 
---	load_config
---			-- <Precursor>
---		do
---			commands.list.force (create {XSC_LOAD_CONFIG}.make)
---		end
-
---	shutdown_server
---			-- <Precursor>
---		do
---			commands.list.force (create {XSC_SHUTDOWN_SERVER}.make)
---		end
-
---	handle_errors
---			-- <Precursor>
---		do
---		end
-
-
---invariant
---	commands_attached: commands /= Void
 end
 

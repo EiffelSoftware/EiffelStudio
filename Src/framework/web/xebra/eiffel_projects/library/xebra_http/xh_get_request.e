@@ -41,7 +41,7 @@ feature -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	call_pre_handler (a_servlet: XWA_SERVLET; a_response: XH_RESPONSE)
+	call_pre_handler (a_form_handler: XH_FORM_HANDLER; a_response: XH_RESPONSE)
 			-- <Precursor>
 			-- Calls prehandle_get_request
 		do

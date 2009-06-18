@@ -11,16 +11,19 @@ class
 	XS_HTTP_CONN_MODULE
 
 inherit
-	XS_SERVER_MODULE
+	XC_SERVER_MODULE
 		redefine
 			make
 		end
+	THREAD
+	XS_SHARED_SERVER_CONFIG
+	XS_SHARED_SERVER_OUTPUTTER
 
 create make
 
 feature -- Initialization
 
-	make (a_main_server: XS_MAIN_SERVER)
+	make (a_main_server: like main_server)
 			-- Initializes current
 		do
 			Precursor (a_main_server)

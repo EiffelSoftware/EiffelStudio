@@ -7,7 +7,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
-		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
+		<!-- <library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>  -->
 		<cluster name="xebra_http" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

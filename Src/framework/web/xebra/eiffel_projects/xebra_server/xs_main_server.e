@@ -11,7 +11,7 @@ class
     XS_MAIN_SERVER
 
 inherit
-	XSC_SERVER_INTERFACE
+	XC_SERVER_INTERFACE
 	XS_SHARED_SERVER_OUTPUTTER
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XS_SHARED_SERVER_CONFIG
@@ -108,8 +108,44 @@ feature {NONE} -- Operations
 
 feature {XS_SERVER_MODULE} -- Status setting
 
+	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- (Re)-translates, compiles and launches a webapp.
+		do
+		end
 
-	shutdown_webapps: XS_COMMAND_RESPONSE
+	shutdown_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Shuts down a webapp.
+		do
+		end
+
+	get_webapps: XC_COMMAND_RESPONSE
+			-- Retrieves the available webapps.
+		do
+		end
+
+	enable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Enables a webapp.
+		do
+		end
+
+	disable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Disables a webapp.
+		do
+		end
+
+	clean_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
+				l_webapp.needs_cleaning := True
+				l_webapp.start_action_chain.do_nothing
+				Result := create {XCCR_OK}.make
+			else
+				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)
+			end
+		end
+
+	shutdown_webapps: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
@@ -117,10 +153,10 @@ feature {XS_SERVER_MODULE} -- Status setting
 			o.iprint ("Terminating Web Applications...")
 			create l_webapp_handler.make
 			l_webapp_handler.stop_apps
-			Result := create {XSCR_OK}.make
+			Result := create {XCCR_OK}.make
 		end
 
-	shutdown_module (a_name: STRING): XS_COMMAND_RESPONSE
+	shutdown_module (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
 			o.iprint ("Shutting down module '" + a_name + "'...")
@@ -130,10 +166,10 @@ feature {XS_SERVER_MODULE} -- Status setting
 			else
 				o.iprint ("No module '" + a_name + "' found.")
 			end
-			Result := create {XSCR_OK}.make
+			Result := create {XCCR_OK}.make
 		end
 
-	relaunch_module (a_name: STRING): XS_COMMAND_RESPONSE
+	relaunch_module (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
 			o.iprint ("Launching module '" + a_name + "'...")
@@ -143,10 +179,10 @@ feature {XS_SERVER_MODULE} -- Status setting
 			else
 				o.iprint ("No module '" + a_name + "' found.")
 			end
-			Result := create {XSCR_OK}.make
+			Result := create {XCCR_OK}.make
 		end
 
-	load_config: XS_COMMAND_RESPONSE
+	load_config: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
@@ -161,20 +197,20 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
 			end
-			Result := create {XSCR_OK}.make
+			Result := create {XCCR_OK}.make
 		end
 
-	shutdown_server: XS_COMMAND_RESPONSE
+	shutdown_server: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
 			stop := True
-			Result := create {XSCR_OK}.make
+			Result := create {XCCR_OK}.make
 		end
 
-	get_modules: XS_COMMAND_RESPONSE
+	get_modules: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
-			l_response: XSCR_GET_MODULES
+			l_response: XCCR_GET_MODULES
 		do
 			create l_response.make
 			from
@@ -182,7 +218,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			until
 				modules.after
 			loop
-				l_response.modules.force ( [modules.key_for_iteration, modules.item_for_iteration.launched, modules.item_for_iteration.running])
+				l_response.modules.force (modules.item_for_iteration, modules.key_for_iteration)
 				modules.forth
 			end
 			Result := l_response

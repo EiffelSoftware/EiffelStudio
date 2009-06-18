@@ -107,9 +107,12 @@ feature -- Basic Operations
 
 	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 			-- Handles a form
+		require
+			a_request_attached: attached a_request
+			a_response_attached: attached a_response
 		local
 			l_wrapped_form: XH_FORM
-			l_real_bean: ANY -- FIXME: Use correct type?
+			l_real_bean: ANY
 		do
 			handle_form_internal (a_request, a_response)
 		end

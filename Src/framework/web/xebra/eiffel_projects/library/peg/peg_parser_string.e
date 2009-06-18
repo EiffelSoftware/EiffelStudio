@@ -49,6 +49,31 @@ feature {NONE} -- Access
 	base_string: STRING
 			-- The base string
 
+feature -- Debugging
+
+	debug_information: TUPLE [line: INTEGER; row: INTEGER]
+			-- Retrieves line and row
+		local
+			l_i, l_line, l_row: INTEGER
+		do
+			from
+				l_i := 1
+				l_line := 1
+				l_row := 1
+			until
+				l_i > start_pivot
+			loop
+				if base_string [l_i].is_equal ('%N') then
+					l_line := l_line + 1
+					l_row := 1
+				else
+					l_row := l_row + 1
+				end
+				l_i := l_i + 1
+			end
+			Result := [l_line, l_row]
+		end
+
 feature -- Basic functionality
 
 	item alias "[]" (a_index: INTEGER): CHARACTER

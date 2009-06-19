@@ -7,6 +7,12 @@ note
 deferred class
 	TARGET_ACTION_SUPPORT
 
+inherit
+	ANY
+		undefine
+			copy
+		end
+
 feature --
 
 	set_action (an_action: PROCEDURE [ANY, TUPLE])

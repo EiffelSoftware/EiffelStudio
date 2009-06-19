@@ -53,14 +53,6 @@ feature -- Access
 			valid_length: 0 <= Result.length -- and Result.length <= string.length - Result.location
 		end
 
-feature -- Accessing Text System Objects
-
-	text_storage: NS_TEXT_STORAGE
-			-- Returns the receiver's text storage object.
-		do
-			create Result.share_from_pointer ({NS_TEXT_API}.text_storage (item))
-		end
-
 feature -- Replacing Text
 
 	replace_characters_in_range_with_string (a_range: NS_RANGE; a_string: NS_STRING)

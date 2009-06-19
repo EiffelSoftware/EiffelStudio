@@ -83,20 +83,10 @@ feature -- Access
 			create Result.share_from_pointer ({NS_CONTROL_API}.string_value (item))
 		end
 
-	font: NS_FONT
-			-- Returns the font used to draw text in the receiver's cell.
-		do
-			create Result.make_from_pointer ({NS_CONTROL_API}.font (item))
-		ensure
-			result_not_void: Result /= void
-		end
-
 	set_cell (a_cell: NS_CELL)
 			-- Sets the receiver's cell
 			-- Use this method with great care as it can irrevocably damage the affected control;
 			-- specifically, you should only use this method in initializers for subclasses of NS_CONTROL.
-		require
-			cell_not_void: a_cell /= void
 		do
 			{NS_CONTROL_API}.set_cell (item, a_cell.item)
 		ensure
@@ -119,16 +109,32 @@ feature -- Formatting Text
 		do
 			Result := {NS_CONTROL_API}.alignment (item)
 		ensure
-			valid_alignment:
+			valid_alignment: valid_alignment (Result)
 		end
 
 	set_alignment (a_alignment: INTEGER)
 		require
-			valid_alignment:
+			valid_alignment: valid_alignment (a_alignment)
 		do
 			{NS_CONTROL_API}.set_alignment (item, a_alignment)
 		ensure
 			alignment_set: alignment = a_alignment
+		end
+
+	font: NS_FONT
+			-- Returns the font used to draw text in the receiver's cell.
+		do
+			create Result.make_from_pointer ({NS_CONTROL_API}.font (item))
+		end
+
+	set_font (a_font: NS_FONT)
+			-- Sets the font used to draw text in the receiver's cell.
+			-- If the cell is being edited, the text in the cell is redrawn in the new font, and the cell's editor
+			-- (the NSText object used globally for editing) is updated with the new font object.
+		do
+			{NS_CONTROL_API}.set_font (item, a_font.item)
+		ensure
+			font_set: a_font.is_equal (font)
 		end
 
 feature -- Contract support

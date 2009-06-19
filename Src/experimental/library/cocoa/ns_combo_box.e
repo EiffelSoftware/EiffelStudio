@@ -153,7 +153,7 @@ feature
 
 	add_items_with_object_values (a_objects: NS_ARRAY[NS_OBJECT])
 		do
-			combo_box_add_items_with_object_values (item, a_objects.item)
+			combo_box_add_items_with_object_values (item, a_objects.object_item)
 		end
 
 	insert_item_with_object_value_at_index (a_object: NS_OBJECT; a_index: INTEGER)

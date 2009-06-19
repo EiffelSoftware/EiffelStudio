@@ -9,6 +9,9 @@ class
 
 inherit
 	NS_OBJECT
+		redefine
+			make_from_pointer
+		end
 
 create
 	make
@@ -19,10 +22,40 @@ feature {NONE} -- Creation
 
 	make
 		do
+			create pool.make
 			{NS_APPLICATION_API}.init
 			make_from_pointer ({NS_APPLICATION_API}.get)
 			{NS_APPLICATION_API}.finish_launching (item)
 		end
+
+	make_from_pointer (a_ptr: POINTER)
+		do
+			Precursor {NS_OBJECT} (a_ptr)
+			create pool.make
+		end
+
+feature -- Eiffel Extensions
+
+	launch
+			-- Run the event loop
+		local
+			l_event: detachable NS_EVENT
+		do
+			from
+				l_event := next_event (0, default_pointer, 0, true)
+			until
+				l_event = void
+			loop
+				pool.release
+				create pool.make
+				send_event (l_event)
+				update_windows
+				l_event := next_event(0, default_pointer, 0, true)
+			end
+			pool.release
+		end
+
+	pool: NS_AUTORELEASE_POOL
 
 feature -- Access
 

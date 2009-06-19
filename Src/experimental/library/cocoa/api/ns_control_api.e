@@ -107,11 +107,19 @@ feature -- Formatting Text
 		end
 
 	frozen font (a_control: POINTER): POINTER
-			--- (void)setStringValue:(NSString *)aString;
+			-- - (NSFont *)font
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [(NSControl*)$a_control font];"
+		end
+
+	frozen set_font (a_control: POINTER; a_font: POINTER)
+			-- - (void)setFont:(NSFont *)fontObject
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSControl*)$a_control setFont: $a_font];"
 		end
 
 feature -- Managing the Field Editor

@@ -37,12 +37,14 @@ feature -- Implementation
 		do
 			if a_string.is_empty then
 				create Result.make (a_string, False)
+				Result := fix_result (Result)
 			else
 				if a_string.starts_with (character) then
 					create Result.make (a_string.substring (2, a_string.count), True)
 					Result := build_result (Result)
 				else
 					create Result.make (a_string, False)
+					Result := fix_result (Result)
 				end
 			end
 		end

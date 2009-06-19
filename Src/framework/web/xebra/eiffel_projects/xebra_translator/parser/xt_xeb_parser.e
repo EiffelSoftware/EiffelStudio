@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			xeb_file, xml, leaf_xml, composite_xml, namespace_xml, namespace_leaf_xml, doctype,
 			identifier, l_attribute, dynamic_attribute, variable_attribute,
 			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
-			open, close, slash, hyphen, underscore, quote, exclamation,
+			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
 			tab, newline, space, return: PEG_ABSTRACT_PEG
 		once
@@ -84,6 +84,8 @@ feature {NONE} -- Implementation
 			equals := char ('=')
 			open :=   char ('<')
 			close :=  char ('>')
+			close_fixed := char ('>')
+			close_fixed.set_error_strategy (agent handle_close_error)
 			slash :=  char ('/')
 			colon :=  char (':')
 			dot := char ('.')
@@ -120,10 +122,10 @@ feature {NONE} -- Implementation
 			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
 			comment.set_behaviour (agent build_content_tag)
 
-			composite_xml := open + identifier + (-l_attribute) + close + (+xml).optional + open + slash + identifier + close
-			namespace_xml := open + identifier + colon + identifier + (-l_attribute) + close + (+xml) + open +slash + identifier + colon + identifier + close
-			leaf_xml := open + identifier + (-l_attribute) + ws + slash + close
-			namespace_leaf_xml := open + identifier + colon + identifier + (-l_attribute) + ws + slash + close
+			composite_xml := open + identifier + (-l_attribute) + close_fixed + (+xml).optional + open + slash + identifier + close_fixed
+			namespace_xml := open + identifier + colon + identifier + (-l_attribute) + close_fixed + (+xml) + open +slash + identifier + colon + identifier + close_fixed
+			leaf_xml := open + identifier + (-l_attribute) + ws + slash + close_fixed
+			namespace_leaf_xml := open + identifier + colon + identifier + (-l_attribute) + ws + slash + close_fixed
 
 			composite_xml.set_behaviour (agent build_html_tag)
 			namespace_xml.set_behaviour (agent build_tag)
@@ -143,7 +145,7 @@ feature {NONE} -- Implementation
 		end
 
 	char (a_character: CHARACTER): PEG_CHARACTER
-			-- Builds an ommiter {PEG_CHARACTER}
+			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
 		require
 			a_character_attached: attached a_character
 		do
@@ -181,6 +183,14 @@ feature {NONE} -- Implementation
 				Result := Result + create {PEG_CHARACTER}.make_with_character (a_string [l_i])
 				l_i := l_i + 1
 			end
+		end
+
+	handle_close_error (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Fixes the missing '>' by assuming it is there
+		do
+			Result := a_result
+			Result.put_error_message ("Missing '>'")
+			Result.success := True
 		end
 
 	build_html_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT

@@ -21,8 +21,8 @@ feature -- Access
 	run_process: detachable PROCESS
 		-- Used to run the webapp
 
-	webapp_debug_level: INTEGER = 10
-			-- Sets the debug level when launching the webapp
+--	webapp_debug_level: INTEGER = 10
+--			 Sets the debug level when launching the webapp
 
 	run_args: STRING
 			-- The arguments for running the webapp
@@ -65,7 +65,7 @@ feature -- Status setting
 				p.terminate
 				p.wait_for_exit
 			end
-			is_running := False
+			set_running (False)
 		end
 
 
@@ -83,10 +83,22 @@ feature {NONE} -- Implementation
 												agent run_process_exited,
 												agent run_output_handler,
 												agent run_output_handler)
-					is_running := True
+					set_running (True)
 				end
 			end
 			Result := (create {XER_APP_STARTING}.make (webapp.app_config.name.out)).render_to_response
+		end
+
+feature {NONE} -- Internal Status Setting
+
+	set_running (a_running: BOOLEAN)
+			-- Sets is_running
+		do
+			is_running := a_running
+			webapp.is_running := a_running
+		ensure
+			set: equal (is_running, a_running)
+			set: equal (is_running, webapp.is_running)
 		end
 
 feature -- Agents
@@ -96,7 +108,7 @@ feature -- Agents
 			-- Sets is_running := False
 		do
 --			config_outputter
-			is_running := False
+			set_running (False)
 			o.dprint ("Run process for " + webapp.app_config.name.out + " has exited.", 3)
 		end
 

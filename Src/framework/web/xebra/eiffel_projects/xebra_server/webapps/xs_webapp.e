@@ -104,7 +104,11 @@ feature -- Actions
 			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
 			else
-				Result := translate_action.execute
+				if is_disabled then
+					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_response
+				else
+					Result := translate_action.execute
+				end
 			end
 		ensure
 			Result_attached: Result /= Void

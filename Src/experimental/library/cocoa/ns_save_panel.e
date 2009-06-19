@@ -62,7 +62,7 @@ feature -- Access
 
 	set_allowed_file_types (a_types: NS_ARRAY [NS_STRING])
 		do
-			save_panel_set_allowed_file_types (item, a_types.item)
+			save_panel_set_allowed_file_types (item, a_types.object_item)
 		end
 
 	allows_other_file_types : BOOLEAN

@@ -25,6 +25,8 @@ feature -- Initialization
 			{NS_CELL_API}.init_image_cell (item, a_image.item)
 		end
 
+feature -- Managing Cell Values
+
 --	object_value: NS_OBJECT
 --		do
 --			Result := {NS_CELL_API}.object_value (cocoa_object)
@@ -49,11 +51,6 @@ feature -- Initialization
 		do
 			{NS_CELL_API}.set_string_value (item, a_string.item)
 		end
-
---	compare (a_other_cell: NS_OBJECT): NS_COMPARISON_RESULT
---		do
---			Result := {NS_CELL_API}.compare (cocoa_object, a_other_cell)
---		end
 
 	int_value: INTEGER
 		do
@@ -84,6 +81,83 @@ feature -- Initialization
 		do
 			{NS_CELL_API}.set_double_value (item, a_double)
 		end
+
+feature -- Managing Cell Attributes
+
+feature -- Managing Display Attributes
+
+feature -- Managing Cell State
+
+feature -- Modifying Textual Attributes
+
+	set_line_break_mode (a_mode: INTEGER)
+			-- Sets the line break mode to use when drawing text
+			-- The line break mode can also be modified by calling the setWraps: method.
+		require
+			valid_mode:
+		do
+			{NS_CELL_API}.set_line_break_mode (item, a_mode)
+		end
+
+	set_wraps (a_flag: BOOLEAN)
+			-- Sets whether text in the receiver wraps when its length exceeds the frame of the cell.
+			-- If the text of the receiver is an attributed string value you must explicitly set the paragraph style line break mode.
+			-- Calling this method with the value YES is equivalent to calling the setLineBreakMode: method with the value NSLineBreakByWordWrapping
+		do
+			{NS_CELL_API}.set_wraps (item, a_flag)
+		ensure
+			wraps_set: wraps = a_flag
+		end
+
+	wraps: BOOLEAN
+			-- Returns a Boolean value that indicates whether the receiver wraps its text when the text exceeds the borders of the cell.
+		do
+			Result := {NS_CELL_API}.wraps (item)
+		end
+
+feature -- Managing the Target and Action
+
+feature -- Managing the Image
+
+feature -- Managing the Tag
+
+feature -- Formatting and Validating Data
+
+feature -- Managing Menus
+
+feature -- Comparing Cells
+
+feature -- Respond to Keyboard Events
+
+feature -- Deriving Values
+
+feature -- Representing an Object
+
+feature -- Tracking the Mouse
+
+feature -- Hit Testing
+
+feature -- Managing the Cursor
+
+feature -- Handling Keyboard Alternatives
+
+feature -- Managing Focus Rings
+
+feature -- Determining Cell Size
+
+feature -- Drawing and Highlighting
+
+feature -- Editing and Selecting Text
+
+feature -- Managing Expansion Frames
+
+
+--	compare (a_other_cell: NS_OBJECT): NS_COMPARISON_RESULT
+--		do
+--			Result := {NS_CELL_API}.compare (cocoa_object, a_other_cell)
+--		end
+
+
 
 	title: NS_STRING
 		do

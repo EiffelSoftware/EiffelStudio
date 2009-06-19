@@ -37,22 +37,25 @@ feature {NONE} -- Creation
 feature -- Access
 
 	size: NS_SIZE
+			-- Returns the size of the receiver.
+			-- The size of the receiver or (0.0, 0.0) if no size has been set and the size cannot be determined from any of the receiver's image representations.
 		do
 			create Result.make
 			{NS_IMAGE_API}.size (item, Result.item)
 		ensure
-			result_not_void: Result /= void
 			Result.width >= 0
 			Result.height >= 0
+		end
+
+	set_size (a_size: NS_SIZE)
+		do
+			{NS_IMAGE_API}.set_size (item, a_size.item)
 		end
 
 	representations: NS_ARRAY [NS_IMAGE_REP]
 			-- Returns an array containing all of the receiver's image representations.
 		do
 			create Result.share_from_pointer ({NS_IMAGE_API}.representations (item))
-		ensure
-			result_not_void: Result /= void
-			count_at_least_1: Result.count >= 1
 		end
 
 	draw (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
@@ -77,6 +80,20 @@ feature -- Access
 			-- Removes the focus from the receiver.
 		do
 			{NS_IMAGE_API}.unlock_focus (item)
+		end
+
+	set_flipped (a_flag: BOOLEAN)
+			-- Sets whether the polarity of the y axis is inverted when drawing an image.
+		do
+			{NS_IMAGE_API}.set_flipped (item, a_flag)
+		ensure
+			flipped_set: a_flag = is_flipped
+		end
+
+	is_flipped: BOOLEAN
+			-- Returns a Boolean value indicating whether the image uses a flipped coordinate system.
+		do
+			Result := {NS_IMAGE_API}.is_flipped (item)
 		end
 
 feature -- Contract Support

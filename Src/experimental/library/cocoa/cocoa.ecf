@@ -23,7 +23,7 @@
 				<exclude>/\Clib$</exclude>
 				<exclude>spec</exclude>
 			</file_rule>
-			<cluster name="objc_base" location="\Users\danielfurrer\Eiffel_source\trunk\Src\library\objc_base\" recursive="true"/>
+			<cluster name="objc_base" location="../objc_base/" recursive="true"/>
 		</cluster>
 	</target>
 </system>

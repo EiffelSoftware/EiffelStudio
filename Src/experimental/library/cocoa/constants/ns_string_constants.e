@@ -18,11 +18,10 @@ feature -- Access
 
 	frozen ns_font_attribute_name: POINTER
 			-- NSFontAttributeName
-			-- TODO Not sure where this should go
 		external
-			"C inline use <Cocoa/Cocoa.h>"
+			"C macro use <Cocoa/Cocoa.h>"
 		alias
-			"return NSFontAttributeName;"
+			"NSFontAttributeName"
 		end
 
 end

@@ -2903,7 +2903,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				i = 0
 			loop
 				l_column_i := (l_columns @ i)
-				if l_column_i /= Void and then l_column_i.is_show_requested then
+				if l_column_i /= Void and then not l_column_i.is_show_requested then
 						-- If the column is not visible then neither is its associating header item.
 					Result := Result - 1
 				end

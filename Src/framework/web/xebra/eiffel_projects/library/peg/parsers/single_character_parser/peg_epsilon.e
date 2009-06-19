@@ -25,9 +25,10 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			create Result.make (a_string.twin, True)
+			Result := build_result (Result)
 		end
 
-	serialize: STRING
+	internal_serialize: STRING
 			-- <Precursor>
 		do
 			Result := "e"

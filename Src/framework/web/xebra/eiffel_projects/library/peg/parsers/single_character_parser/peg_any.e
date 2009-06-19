@@ -9,7 +9,7 @@ class
 	PEG_ANY
 
 inherit
-	PEG_SINGLE_CHARACTER_PARSER
+	PEG_ABSTRACT_PEG
 
 create
 	make
@@ -27,6 +27,7 @@ feature -- Implementation
 		do
 			if a_string.is_empty then
 				create Result.make (a_string, False)
+				Result := fix_result (Result)
 			else
 				create Result.make (a_string.substring (2, a_string.count), True)
 				Result.append_result (a_string [1])
@@ -36,7 +37,9 @@ feature -- Implementation
 			end
 		end
 
-	serialize: STRING
+feature {PEG_ABSTRACT_PEG} -- Serialization
+
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		do
 			Result := "."

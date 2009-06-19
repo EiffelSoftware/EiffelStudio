@@ -14,11 +14,13 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
 		end
+
+feature {NONE} -- Access
 
 	tag_lib_parser: PEG_ABSTRACT_PEG
 			--
@@ -77,6 +79,16 @@ feature -- Initialization
 			Result := taglib
 		end
 
+feature -- Access
+
+	template: XP_TEMPLATE
+			-- The resulting template
+
+	xeb_file: PEG_ABSTRACT_PEG
+			-- The xeb parsing grammar
+
+feature -- Basic functionality
+
 	parse (a_string: STRING): XTL_TAG_LIBRARY
 			-- Parses a_string and generates a template
 		require
@@ -96,7 +108,10 @@ feature -- Initialization
 			end
 		end
 
+feature {NONE} -- Convenience
+
 	char (a_character: CHARACTER): PEG_CHARACTER
+			-- Creates a Character parser with the character `a_character' and sets it to ommit
 		do
 			create Result.make_with_character (a_character)
 			Result.ommit_result
@@ -118,7 +133,19 @@ feature -- Initialization
 			end
 		end
 
+	add_parse_error (a_message: STRING)
+			-- Adds a parse error to the error maanager
+		do
+			error_manager.add_error (create {XERROR_PARSE}.make
+				([a_message]), False)
+		end
+
+feature {NONE} -- Parser behaviours
+
 	build_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Builds a {XTL_TAG_DESCRIPTION_ATTRIBUTE}
+		require
+			a_result_attached: attached a_result
 		local
 			l_attribute: XTL_TAG_DESCRIPTION_ATTRIBUTE
 		do
@@ -130,9 +157,14 @@ feature -- Initialization
 			else
 				add_parse_error ("Attribute not valid!")
 			end
+		ensure
+			Result_attached: attached Result
 		end
 
 	build_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Bulds a {XTL_TAG_DESCRIPTION} and adds {XTL_TAG_DESCRIPTION_ATTRIBUTE}s to it
+		require
+			a_result_attached: attached a_result
 		local
 			l_tag: XTL_TAG_DESCRIPTION
 		do
@@ -160,9 +192,14 @@ feature -- Initialization
 			if attached l_tag then
 				Result.replace_result (l_tag)
 			end
+		ensure
+			Result_attached: attached Result
 		end
 
 	build_taglib (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Bulds a {XTL_TAG_LIBRARY} and adds {XTL_TAG_DESCRIPTION}s to it
+		require
+			a_result_attached: attached a_result
 		local
 			l_taglib: XTL_TAG_LIBRARY
 		do
@@ -181,9 +218,14 @@ feature -- Initialization
 				Result.internal_result.forth
 			end
 			Result.replace_result (l_taglib)
+		ensure
+			Result_attached: attached Result
 		end
 
 	concatenate_results (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Concatenates all result's 'out'-output to a single {String}
+		require
+			a_result_attached: attached a_result
 		local
 			l_product: STRING
 		do
@@ -199,21 +241,8 @@ feature -- Initialization
 			Result := a_result
 			Result.internal_result.wipe_out
 			Result.append_result (l_product)
+		ensure
+			Result_attached: attached Result
 		end
-
-	add_parse_error (a_message: STRING)
-			-- Adds a parse error to the error maanager
-		do
-			error_manager.add_error (create {XERROR_PARSE}.make
-				([a_message]), False)
-		end
-
-feature -- Access
-
-	template: XP_TEMPLATE
-			-- The resulting template
-
-	xeb_file: PEG_ABSTRACT_PEG
-			-- The xeb parsing grammar
 
 end

@@ -1,34 +1,30 @@
 note
-	description: "Summary description for {PEG_CHARACTER}."
-	author: "sandro"
+	description: "[
+		{PEG_WHITE_SPACE_CHARACTER}.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PEG_CHARACTER
+	PEG_WHITE_SPACE_CHARACTER
 
 inherit
-	PEG_SINGLE_CHARACTER_PARSER
-
+	PEG_ABSTRACT_PEG
 create
-	make_with_character
+	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make_with_character (a_character: CHARACTER)
-			-- `a_character' The character which is matched
-		require
-			a_character_attached: attached a_character
+	make
+			--
 		do
 			behaviour := agent build
-			character := a_character
-		ensure
-			character_set: attached character and then character = a_character
 		end
 
 feature {NONE} -- Access
 
 	character: CHARACTER
+			-- The representing character
 
 feature -- Implementation
 
@@ -39,8 +35,11 @@ feature -- Implementation
 				create Result.make (a_string, False)
 				Result := fix_result (Result)
 			else
-				if a_string.starts_with (character) then
+				if is_whitespace (a_string [1]) then
 					create Result.make (a_string.substring (2, a_string.count), True)
+					if not ommit then
+						Result.append_result (a_string [1])
+					end
 					Result := build_result (Result)
 				else
 					create Result.make (a_string, False)
@@ -49,10 +48,20 @@ feature -- Implementation
 			end
 		end
 
-	serialize: STRING
+feature {NONE} -- Implementation
+
+	is_whitespace (a_character: CHARACTER): BOOLEAN
+			-- Checks wether the character is a whitespace or not
+		do
+			Result := (a_character.code >= 0) and (a_character.code <= 32)
+		end
+
+feature {PEG_ABSTRACT_PEG} -- Serialization
+
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		do
-			Result := "'" + character.out + "'"
+			Result := "whitespace"
 		end
 
 	build (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
@@ -65,4 +74,5 @@ feature -- Implementation
 			end
 			Result := a_result;
 		end
+
 end

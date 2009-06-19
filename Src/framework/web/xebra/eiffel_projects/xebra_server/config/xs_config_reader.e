@@ -35,7 +35,7 @@ feature -- Status report
 			a_config_attached: a_config /= Void
 		local
 			l_ok: BOOLEAN
-			l_validator: XU_FILE_VALIDATOR
+			l_validator: XU_FILE_UTILITIES
 		do
 			create l_validator.make
 			l_ok := True

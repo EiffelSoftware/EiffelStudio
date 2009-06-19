@@ -14,6 +14,11 @@
  <h1>Server Modules</h1>
  <p><a href="reload_config.xeb">Reload Configuration</a>
  </p>
+
+ <xeb:iterate list="global_state.modules" variable="module" type="XC_SERVER_MODULE">
+<p> <xeb:display feature="#{module.name}" /> </p>
+</xeb:iterate>
+
  <!--
   <f:form variable="var" class="MAIN_CONTROLLER">
     <h1>Main Server</h1>

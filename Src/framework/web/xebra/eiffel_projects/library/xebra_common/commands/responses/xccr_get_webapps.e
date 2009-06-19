@@ -8,10 +8,9 @@ note
 	revision: "$Revision$"
 
 class
-	XCCR_UNKNOWN_ERROR
-
+	XCCR_GET_WEBAPPS
 inherit
-	XCCR_ERROR
+	XC_COMMAND_RESPONSE
 
 create
 	make
@@ -21,26 +20,15 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-
+			create webapps.make
+		ensure
+			webapps_attached: webapps /= Void
 		end
 
 feature -- Access
 
-	description: STRING
-			-- <Precursor>
-		do
-			Result := "Unknown error."
-		end
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
+	webapps: LINKED_LIST [XC_WEBAPP_BASE]
 
 invariant
-
+	webapps_attached: webapps /= Void
 end
-

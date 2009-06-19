@@ -129,8 +129,12 @@ feature {NONE} -- Operations
 				o.iprint (l_error.description)
 			end
 
-			if attached {XCCR_GET_MODULES} a_response as get_mod_response then
-				o.iprint (display_modules (get_mod_response))
+			if attached {XCCR_GET_MODULES} a_response as l_response then
+				o.iprint (print_modules (l_response))
+			end
+
+			if attached {XCCR_GET_WEBAPPS} a_response as l_response then
+				o.iprint (print_webapps (l_response))
 			end
 
 
@@ -140,7 +144,7 @@ feature {NONE} -- Operations
 
 feature -- Status Report
 
-	display_modules (a_response: XCCR_GET_MODULES): STRING
+	print_modules (a_response: XCCR_GET_MODULES): STRING
 			-- Display them.
 		require
 			a_response_attached: a_response /= Void
@@ -160,6 +164,46 @@ feature -- Status Report
 			Result.append   ("-----------------------------------------------------------%N")
 		end
 
+	print_webapps (a_response: XCCR_GET_WEBAPPS): STRING
+			-- Display them.
+		require
+			a_response_attached: a_response /= Void
+		local
+			l_status: STRING
+		do
+			Result :=      "%N------------------------ Webapps --------------------------"
+			from
+				a_response.webapps.start
+			until
+				a_response.webapps.after
+			loop
+				if a_response.webapps.item_for_iteration.is_disabled then
+					l_status := "Disabled"
+				elseif a_response.webapps.item_for_iteration.is_running then
+					l_status := "Running"
+				elseif a_response.webapps.item_for_iteration.is_compiling then
+					l_status := "Compiling"
+				elseif a_response.webapps.item_for_iteration.is_running then
+					l_status := "Running"
+				else
+					l_status := "Stopped"
+				end
+
+
+				Result.append ("%N- " + a_response.webapps.item_for_iteration.app_config.name.out +
+				"%N%THost: '" + a_response.webapps.item_for_iteration.app_config.host.out + "'" +
+				"%N%TPort: '" + a_response.webapps.item_for_iteration.app_config.port.out + "'" +
+				"%N%TStatus: '" + l_status + "'" +
+				"%N%TDisabled: '" + a_response.webapps.item_for_iteration.is_disabled.out + "'" +
+				"%N%TTranslating: '" + a_response.webapps.item_for_iteration.is_translating.out + "'" +
+				"%N%TCompiling: '" + a_response.webapps.item_for_iteration.is_compiling.out + "'" +
+				"%N%TRunning: '" + a_response.webapps.item_for_iteration.is_running.out + "'" +
+				"")
+				a_response.webapps.forth
+			end
+			Result.append   ("%N-----------------------------------------------------------%N")
+		end
+
 
 	print_command_list: STRING
 			-- Prints a list of the listed commands
@@ -167,7 +211,7 @@ feature -- Status Report
 			l_par: STRING
 			l_count: INTEGER
 		do
-			l_count := count_nice_space
+			l_count := count_nice_space_commands
 			Result :=      "%N------------------------ Commands -------------------------%N"
 				-- help is hardcoded
 			Result.append (" - 'help':" + nice_space (l_count - 4 ) + "Displays a list of commands%N")
@@ -187,8 +231,8 @@ feature -- Status Report
 			Result.append   ("-----------------------------------------------------------%N")
 		end
 
-	count_nice_space: INTEGER
-			--
+	count_nice_space_commands: INTEGER
+			-- Counts how many spaces are needed to format nicely
 		local
 			l_current: INTEGER
 		do
@@ -212,7 +256,7 @@ feature -- Status Report
 
 
 	nice_space (a_count: INTEGER): STRING
-			--
+			-- Returns count many spaces in a string
 		local
 			l_i: INTEGER
 		do
@@ -227,8 +271,6 @@ feature -- Status Report
 			end
 
 		end
-
-feature -- Constants
 
 feature -- Status setting
 

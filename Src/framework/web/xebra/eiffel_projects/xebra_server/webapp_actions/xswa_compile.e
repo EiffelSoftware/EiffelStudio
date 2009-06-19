@@ -41,7 +41,10 @@ feature -- Access
 
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
+		local
+			l_f_utils: XU_FILE_UTILITIES
 		do
+			create l_f_utils.make
 			Result  := " -config " + webapp.app_config.name.out + ".ecf -target " + webapp.app_config.name.out + " -c_compile -stop"
 --			if config.finalize_webapps then
 --				Result := Result + " -finalize"
@@ -49,7 +52,7 @@ feature -- Access
 			if webapp.needs_cleaning then
 				Result.append (" -clean")
 			end
-			if not file_exists (webapp_exe) then
+			if not l_f_utils.is_readable_file (webapp_exe) then
 				Result.append (" -clean")
 			end
 		ensure
@@ -60,12 +63,15 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
+		local
+			l_f_util: XU_FILE_UTILITIES
+
 		do
-			Result := file_is_newer (melted_file_path,
+			create l_f_util.make
+			Result := l_f_util.file_is_newer (melted_file_path,
 											app_dir,
-											".e",
-											".ecf")
-					or not file_exists (webapp_exe)
+											"\w+\.(e|ecf)")
+					or not l_f_util.is_executable_file (webapp_exe)
 					or webapp.needs_cleaning
 			if Result then
 				o.dprint ("Compiling is necessary", 5)
@@ -85,7 +91,7 @@ feature -- Status setting
 				p.terminate
 				p.wait_for_exit
 			end
-			is_running := False
+			set_running (False)
 		end
 
 feature {NONE} -- Implementation
@@ -109,18 +115,31 @@ feature {NONE} -- Implementation
 													agent compile_process_exited,
 													agent output_handler.handle_output,
 													agent output_handler.handle_output)
-					is_running := True
+					set_running (True)
 				end
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
 		end
+
+feature {NONE} -- Internal Status Setting
+
+	set_running (a_running: BOOLEAN)
+			-- Sets is_running
+		do
+			is_running := a_running
+			webapp.is_compiling := a_running
+		ensure
+			set: equal (is_running, a_running)
+			set: equal (is_running, webapp.is_compiling)
+		end
+
 
 feature -- Agent
 
 	compile_process_exited
 			-- Sets
 		do
-			is_running := False
+			set_running (False)
 			if output_handler.has_successfully_terminated then
 				webapp.needs_cleaning := False
 				next_action.execute.do_nothing
@@ -132,9 +151,9 @@ feature -- Agent
 	compiler_output_handler (a_ouput: STRING)
 			-- Forwards output to console
 		do
-			o.set_name ("COMPILER")
+			--o.set_name ("COMPILER")
 			o.dprintn (a_ouput, 3)
-			o.set_name ({XS_MAIN_SERVER}.name)
+			--o.set_name ({XS_MAIN_SERVER}.name)
 		end
 
 invariant

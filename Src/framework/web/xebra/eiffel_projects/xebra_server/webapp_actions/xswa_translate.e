@@ -73,12 +73,15 @@ feature -- Access
 
 	gen_compiler_args: STRING
 			-- The arguments that are passed to compile the servlet_gen	
+		local
+			l_f_utils: XU_FILE_UTILITIES
 		do
+			create l_f_utils.make
 			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
 			if webapp.needs_cleaning then
 				Result.append (" -clean")
 			end
-			if not file_exists (servlet_gen_exe) then
+			if not l_f_utils.is_readable_file (servlet_gen_exe) then
 				Result.append (" -clean")
 			end
 		ensure
@@ -131,16 +134,18 @@ feature -- Status report
 			-- Returns True iff there is a *.xeb file in app_dir which is newer than app_dir/g_name_application.e
 		local
 			l_application_file: FILE_NAME
+			l_f_utils: XU_FILE_UTILITIES
 		do
+			create l_f_utils.make
 			l_application_file := app_dir.twin
+			l_application_file.extend (".generated")
 			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
 
-			Result := file_is_newer (l_application_file,
+			Result := l_f_utils.file_is_newer (l_application_file,
 									app_dir,
-									".xeb",
-									".xeb")
-						or not file_exists (servlet_gen_exe)
-						or not file_exists (servlet_gen_ecf)
+									"\w+\.xeb")
+						or not l_f_utils.is_readable_file (servlet_gen_exe)
+						or not l_f_utils.is_readable_file (servlet_gen_ecf)
 						or webapp.needs_cleaning
 			if Result then
 				o.dprint ("Translating is necessary", 5)
@@ -212,7 +217,19 @@ feature -- Status setting
 				p.terminate
 				p.wait_for_exit
 			end
-			is_running := False
+			set_running (False)
+		end
+
+feature {NONE} -- Internal Status Setting
+
+	set_running (a_running: BOOLEAN)
+			-- Sets is_running
+		do
+			is_running := a_running
+			webapp.is_translating := a_running
+		ensure
+			set: equal (is_running, a_running)
+			set: equal (is_running, webapp.is_translating)
 		end
 
 feature {NONE} -- Implementation
@@ -238,7 +255,7 @@ feature {NONE} -- Implementation
 															agent translate_process_exited,
 															agent output_handler_translate.handle_output,
 															agent output_handler_translate.handle_output)
-					is_running := True
+					set_running (True)
 				end
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
@@ -246,8 +263,11 @@ feature {NONE} -- Implementation
 
 	compile_servlet_gen
 			-- Launches the process to compile the servlet_gen
+		local
+			l_f_utils: XU_FILE_UTILITIES
 		do
-			if can_launch_process (config.file.compiler_filename, app_dir) and then file_exists (servlet_gen_ecf) then
+			create l_f_utils.make
+			if can_launch_process (config.file.compiler_filename, app_dir) and then l_f_utils.is_readable_file (servlet_gen_ecf) then
 				if attached gen_compile_process as p then
 					if p.is_running then
 						o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
@@ -294,7 +314,7 @@ feature -- Agents
 				compile_servlet_gen
 			else
 				o.eprint ("TRANSLATION FAILED", generating_type)
-				is_running := False
+				set_running (False)
 			end
 
 		end
@@ -307,15 +327,14 @@ feature -- Agents
 				generate
 			else
 				o.eprint ("COMPILATION OF SERVLET_GEN FAILED", generating_type)
-				is_running := False
+				set_running (False)
 			end
 		end
 
 	generate_process_exited
 			-- Sets is_running := False and executes next action
 		do
---			config_outputter
-			is_running := False
+			set_running (False)
 			if output_handler_gen.has_successfully_terminated then
 				next_action.execute.do_nothing
 			else

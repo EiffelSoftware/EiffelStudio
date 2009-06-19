@@ -107,10 +107,7 @@ feature -- Basic Operations
 		end
 
 	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
-			-- <Precursor>
-		require
-			a_request_attached: attached a_request
-			a_response_attached: attached a_response
+			-- <Precursor>		
 		local
 			l_wrapped_form: XH_FORM
 			l_real_bean: ANY

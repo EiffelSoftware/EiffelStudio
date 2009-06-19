@@ -1,6 +1,6 @@
 note
 	description: "[
-			The main component of the Server. ...
+			The main component of the Server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -125,23 +125,44 @@ feature {XS_SERVER_MODULE} -- Status setting
 
 	get_webapps: XC_COMMAND_RESPONSE
 			-- Retrieves the available webapps.
+		local
+			l_response: XCCR_GET_WEBAPPS
 		do
-			o.iprint ("Not implemented.")
-			create {XCCR_OK}Result.make
+			create l_response.make
+			if attached {HASH_TABLE [XS_WEBAPP, STRING]}config.file.webapps as l_webapps then
+				from
+					l_webapps.start
+				until
+					l_webapps.after
+				loop
+					l_response.webapps.force (l_webapps.item_for_iteration.twin)
+					l_webapps.forth
+				end
+			end
+			Result := l_response
 		end
 
 	enable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Enables a webapp.
 		do
-			o.iprint ("Not implemented.")
-			create {XCCR_OK}Result.make
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
+				l_webapp.is_disabled := False
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
+
 		end
 
 	disable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Disables a webapp.
 		do
-			o.iprint ("Not implemented.")
-			create {XCCR_OK}Result.make
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
+				l_webapp.is_disabled := True
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
 		end
 
 	clean_webapp (a_name: STRING): XC_COMMAND_RESPONSE

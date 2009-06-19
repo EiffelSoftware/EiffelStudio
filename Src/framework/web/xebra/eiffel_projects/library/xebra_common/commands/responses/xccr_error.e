@@ -16,6 +16,16 @@ inherit
 
 feature {NONE} -- Initialization
 
+feature -- Access
+
+	description: STRING
+			-- Describes the error
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 
 feature -- Status report
 

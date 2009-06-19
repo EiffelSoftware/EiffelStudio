@@ -15,7 +15,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make
@@ -23,7 +23,14 @@ feature {NONE} -- Initialization
 		do
 
 		end
+
 feature -- Access
+
+	description: STRING
+			-- Describes the error
+		do
+			Result := "There was a problem transmitting the command to the server."
+		end
 
 feature -- Status report
 

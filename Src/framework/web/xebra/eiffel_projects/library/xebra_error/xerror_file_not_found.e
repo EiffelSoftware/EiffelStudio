@@ -37,7 +37,7 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "File not found {1}"
+			Result := "Invalid file {1}"
 		end
 
 

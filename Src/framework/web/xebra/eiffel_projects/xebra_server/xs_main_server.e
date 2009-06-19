@@ -55,13 +55,14 @@ feature {XS_APPLICATION} -- Setup
 			o.iprint ("Starting Xebra Web Application Server...")
 			o.dprint (config.args.print_configuration, 2)
 			stop := false
-			load_config.do_nothing
-			modules.force (create {XS_CONSOLE_MODULE}.make (current), "mod_console")
-			modules.force (create {XS_HTTP_CONN_MODULE}.make (current), "mod_http")
-			modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current), "mod_cmd")
-			o.dprint("Launching modules...",2)
-			modules.run_all
-			run
+			if attached {XCCR_OK} load_config then
+				modules.force (create {XS_CONSOLE_MODULE}.make (current), "mod_console")
+				modules.force (create {XS_HTTP_CONN_MODULE}.make (current), "mod_http")
+				modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current), "mod_cmd")
+				o.dprint("Launching modules...",2)
+				modules.run_all
+				run
+			end
 		end
 
 feature {NONE} -- Operations
@@ -111,26 +112,36 @@ feature {XS_SERVER_MODULE} -- Status setting
 	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- (Re)-translates, compiles and launches a webapp.
 		do
+			o.iprint ("Not implemented.")
+			create {XCCR_OK}Result.make
 		end
 
 	shutdown_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Shuts down a webapp.
 		do
+			o.iprint ("Not implemented.")
+			create {XCCR_OK}Result.make
 		end
 
 	get_webapps: XC_COMMAND_RESPONSE
 			-- Retrieves the available webapps.
 		do
+			o.iprint ("Not implemented.")
+			create {XCCR_OK}Result.make
 		end
 
 	enable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Enables a webapp.
 		do
+			o.iprint ("Not implemented.")
+			create {XCCR_OK}Result.make
 		end
 
 	disable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Disables a webapp.
 		do
+			o.iprint ("Not implemented.")
+			create {XCCR_OK}Result.make
 		end
 
 	clean_webapp (a_name: STRING): XC_COMMAND_RESPONSE
@@ -197,7 +208,11 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
 			end
-			Result := create {XCCR_OK}.make
+			if handle_errors then
+				Result := create {XCCR_OK}.make
+			else
+				Result := create {XCCR_CONFIG_ERROR}.make
+			end
 		end
 
 	shutdown_server: XC_COMMAND_RESPONSE
@@ -225,11 +240,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 		end
 
 
-	handle_errors
+	handle_errors: BOOLEAN
 			-- <Precursor>
 		local
 			l_printer: XS_ERROR_PRINTER
 		do
+			Result := True
 			create l_printer.default_create
 			if error_manager.has_warnings then
 				error_manager.trace_warnings (l_printer)
@@ -237,9 +253,8 @@ feature {XS_SERVER_MODULE} -- Status setting
 
 			if not error_manager.is_successful then
 				error_manager.trace_errors (l_printer)
-				stop := True
+				Result := False
 			end
-
 		end
 
 invariant

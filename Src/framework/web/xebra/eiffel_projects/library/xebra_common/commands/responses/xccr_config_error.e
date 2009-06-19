@@ -7,25 +7,30 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XC_COMMAND
+class
+	XCCR_CONFIG_ERROR
 
+inherit
+	XCCR_ERROR
+
+create
+	make
 
 feature {NONE} -- Initialization
 
 	make
 			-- Initialization for `Current'.
 		do
-
 		end
 
 feature -- Access
 
+	name: STRING
+
 	description: STRING
-			-- Describes the command
-		deferred
-		ensure
-			result_attached: Result /= Void
+			-- Describes the error
+		do
+			Result := "There was an error while loading the configuration file."
 		end
 
 feature -- Status report
@@ -34,15 +39,6 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
-			-- Executes the command.
-		require
-			a_server_attached: a_server /= Void
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
-
+feature {NONE} -- Implementation
 
 end

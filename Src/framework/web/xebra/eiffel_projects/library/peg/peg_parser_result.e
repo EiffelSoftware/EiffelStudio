@@ -68,8 +68,16 @@ feature -- Access
 			only_new_result_in_list: internal_result.count = 1 and internal_result [1] = a_result
 		end
 
-	success: BOOLEAN
+	success: BOOLEAN assign set_success
 		-- Has the parsing been a success?
+
+	set_success (is_success: BOOLEAN)
+			-- Sets the success.
+		do
+			success := is_success
+		ensure
+			success_set: success = is_success
+		end
 
 	left_to_parse: PEG_PARSER_STRING assign set_left_to_parse
 		-- The string that has still to be parsed

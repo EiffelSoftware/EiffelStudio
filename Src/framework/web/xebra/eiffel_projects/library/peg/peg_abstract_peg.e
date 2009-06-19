@@ -12,6 +12,9 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
 			-- Optional behaviour which transforms a result of the children to a new one
 
+	error_strategy: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
+			-- Optional error strategy which tries to handle failures of a parser
+
 feature -- Access
 
 	set_behaviour (a_behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT])
@@ -22,6 +25,16 @@ feature -- Access
 			behaviour := a_behaviour
 		ensure
 			behaviour_set: behaviour = a_behaviour
+		end
+
+	set_error_strategy (a_error_strategy: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT])
+			-- Sets the error strategy
+		require
+			a_error_strategy_attached: attached a_error_strategy
+		do
+			error_strategy := a_error_strategy
+		ensure
+			error_strategy_set: error_strategy = a_error_strategy
 		end
 
 	ommit: BOOLEAN
@@ -59,6 +72,7 @@ feature -- Implementation
 			-- If a behaviour is set the result is processed to a new one
 		require
 			a_result_attached: attached a_result
+			a_result_successfull: a_result.success
 		do
 			Result := a_result
 			if not ommit then
@@ -67,6 +81,21 @@ feature -- Implementation
 						Result := behaviour.item ([a_result])
 					end
 				end
+			end
+		ensure
+			result_attached: attached Result
+		end
+
+	fix_result (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The results of the children
+			-- If a error strategy is set the result is processed to a new one
+		require
+			a_result_attached: attached a_result
+			a_result_unsuccessfull: not a_result.success
+		do
+			Result := a_result
+			if attached error_strategy then
+				Result := error_strategy.item ([a_result])
 			end
 		ensure
 			result_attached: attached Result

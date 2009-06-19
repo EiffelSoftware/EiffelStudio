@@ -35,36 +35,55 @@ feature -- Status report
 			a_config_attached: a_config /= Void
 		local
 			l_ok: BOOLEAN
+			l_validator: XU_FILE_VALIDATOR
 		do
+			create l_validator.make
 			l_ok := True
 			if not a_config.webapps_root.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (webapps_root_name), false)
 				l_ok := False
+			else
+				if not l_validator.is_dir(a_config.webapps_root) then
+					error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (webapps_root_name + ":'" + a_config.webapps_root.value + "'"), false)
+					l_ok := False
+				end
 			end
+
 
 			if not a_config.finalize_webapps.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (finalize_webapps_name), false)
 				l_ok := False
 			end
 
+
 			if not a_config.translator.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (translator_name), false)
 				l_ok := False
+			else
+				if not l_validator.is_executable_file (a_config.translator) then
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (translator_name + ":'" + a_config.translator.value + "'" ), false)
+					l_ok := False
+				end
 			end
 
 			if not a_config.compiler.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (compiler_name), false)
 				l_ok := False
+			else
+				if not l_validator.is_executable_file (a_config.compiler) then
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (compiler_name + ":'"  + a_config.compiler.value + "'"), false)
+					l_ok := False
+				end
 			end
-
---			if not a_config.assume_webapps_are_running.is_set then
---				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (assume_webapps_are_running_name), false)
---				l_ok := False
---			end
 
 			if not a_config.taglib.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (taglib_name), false)
 				l_ok := False
+			else
+				if not  l_validator.is_dir(a_config.taglib) then
+					error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (taglib_name+ ":'"  +  a_config.taglib.value + "'"), false)
+					l_ok := False
+				end
 			end
 
 			if l_ok then
@@ -107,6 +126,9 @@ feature -- Status setting
 				error_manager.add_error (create {XERROR_UNKNOWN_CONFIG_PROPERTY}.make (l_name), false)
 			end
 		end
+
+feature {NONE} -- Validation
+
 
 end
 

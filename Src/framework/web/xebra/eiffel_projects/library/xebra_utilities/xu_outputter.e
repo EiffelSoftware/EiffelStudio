@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	add_input_line: BOOLEAN assign set_add_input_line
+
 	name: SETTABLE_STRING
 		-- The name of the application
 
@@ -41,7 +43,7 @@ feature -- Access
 feature -- Status Change
 
 	set_name (a_name: STRING)
-			-- Setts name.
+			-- Sets name.
 		require
 			a_name_attached: a_name /= Void
 		do
@@ -50,8 +52,16 @@ feature -- Status Change
 			name_set: equal (name.value, a_name)
 		end
 
+	set_add_input_line (a_add_input_line: BOOLEAN)
+			-- Sets add_input_line.
+		do
+			add_input_line := a_add_input_line
+		ensure
+			add_input_line_set: equal (add_input_line, a_add_input_line)
+		end
+
 	set_debug_level (a_debug_level: INTEGER)
-			-- Setts name.
+			-- Sets name.
 		do
 			debug_level := a_debug_level
 		ensure
@@ -129,7 +139,11 @@ feature {NONE}  -- Impl
 		require
 			a_msg_attached: a_msg /= Void
 		do
-			print ("%N" + a_msg + "%N$> ")
+			if add_input_line then
+				print ("%N" + a_msg + "%N$> ")
+			else
+				print ("%N" + a_msg)
+			end
 		end
 
 

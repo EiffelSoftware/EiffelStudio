@@ -114,11 +114,11 @@ feature -- Server
 			result_attached: Result /= Void
 		end
 
-feature -- Other
+--feature -- Other
 
-	handle_errors
-			-- Handles errors that occured in the current command
-		deferred
-		end
+--	handle_errors
+--			-- Handles errors that occured in the current command
+--		deferred
+--		end
 end
 

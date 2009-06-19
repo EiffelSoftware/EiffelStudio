@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			set_debug_level (config.args.debug_level)
 			set_name ({XS_MAIN_SERVER}.Name)
+			set_add_input_line (True)
 		end
 
 end

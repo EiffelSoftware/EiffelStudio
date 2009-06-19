@@ -125,6 +125,10 @@ feature {NONE} -- Operations
 		require
 			a_response_attached: a_response /= Void
 		do
+			if attached {XCCR_ERROR} a_response as l_error then
+				o.iprint (l_error.description)
+			end
+
 			if attached {XCCR_GET_MODULES} a_response as get_mod_response then
 				o.iprint (display_modules (get_mod_response))
 			end
@@ -161,10 +165,12 @@ feature -- Status Report
 			-- Prints a list of the listed commands
 		local
 			l_par: STRING
+			l_count: INTEGER
 		do
+			l_count := count_nice_space
 			Result :=      "%N------------------------ Commands -------------------------%N"
 				-- help is hardcoded
-			Result.append (" - 'help': Displays a list of commands%N")
+			Result.append (" - 'help':" + nice_space (l_count - 4 ) + "Displays a list of commands%N")
 			from
 				commands.start
 			until
@@ -175,13 +181,52 @@ feature -- Status Report
 				else
 					l_par := ""
 				end
-				Result.append (" - '" + commands.key_for_iteration.out +  l_par + "': " + commands.item_for_iteration.description + "%N")
+				Result.append (" - '" + commands.key_for_iteration.out +  l_par + "':" + nice_space (l_count - commands.key_for_iteration.out.count - l_par.count ) + commands.item_for_iteration.description + "%N")
 				commands.forth
 			end
 			Result.append   ("-----------------------------------------------------------%N")
 		end
 
+	count_nice_space: INTEGER
+			--
+		local
+			l_current: INTEGER
+		do
+			from
+				commands.start
+				Result := 0
+			until
+				commands.after
+			loop
+				l_current := commands.key_for_iteration.count + 3
+				if attached {XS_PARAMETER_COMMAND} commands.item_for_iteration as p_c then
+					l_current := l_current +  p_c.parameter_description.count + 4
+				end
 
+				if Result < l_current then
+					Result := l_current
+				end
+				commands.forth
+			end
+		end
+
+
+	nice_space (a_count: INTEGER): STRING
+			--
+		local
+			l_i: INTEGER
+		do
+			from
+				l_i := 0
+				Result := ""
+			until
+				l_i >= a_count
+			loop
+				Result := Result + " "
+				l_i := l_i + 1
+			end
+
+		end
 
 feature -- Constants
 

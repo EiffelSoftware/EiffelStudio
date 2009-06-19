@@ -14,6 +14,11 @@ inherit
 			out
 		end
 
+	PEG_SHARED_LONGEST_MATCH
+		undefine
+			out
+		end
+
 create
 	make_from_string, make_from_string_and_index
 
@@ -27,26 +32,24 @@ feature {NONE} -- Initialization
 			base_string := a_string
 			start_pivot := 1
 			end_pivot := a_string.count
-			longest_match := 1
+			longest_match.reset
 		ensure
 			base_string_set: base_string = a_string
 		end
 
-	make_from_string_and_index (a_string: STRING; a_start, a_end: INTEGER; a_longest_match: INTEGER)
+	make_from_string_and_index (a_string: STRING; a_start, a_end: INTEGER)
 			-- <Precursor>
 		require
 			a_string_attached: attached a_string
-			a_longest_match_valid: a_longest_match >= 0 and a_longest_match <= a_string.count
 		do
 			base_string := a_string
 			start_pivot := a_start
 			end_pivot := a_end
+		ensure
+			base_string_set: base_string = a_string
+			start_pivot_set: start_pivot = a_start
+			end_pivot_set: end_pivot = a_end
 		end
-
-feature -- Access
-
-	longest_match: INTEGER
-		-- Captures the farthest index the parser could get to
 
 feature {NONE} -- Access
 
@@ -63,12 +66,20 @@ feature -- Debugging
 		local
 			l_i, l_line, l_row: INTEGER
 		do
+			Result := debug_information_with_index (start_pivot)
+		end
+
+	debug_information_with_index (a_index: INTEGER): TUPLE [line: INTEGER; row: INTEGER]
+				-- Retrieves line and row
+		local
+			l_i, l_line, l_row: INTEGER
+		do
 			from
 				l_i := 1
 				l_line := 1
 				l_row := 1
 			until
-				l_i > start_pivot
+				l_i > a_index
 			loop
 				if base_string [l_i].is_equal ('%N') then
 					l_line := l_line + 1
@@ -93,16 +104,13 @@ feature -- Basic functionality
 			-- <Precursor>
 		do
 			if (1 <= a_start_index) and (a_start_index <= a_end_index) and (a_end_index <= count) then
-				if longest_match < a_start_index then
-					longest_match := a_start_index
-				end
+				longest_match.update_length (start_pivot)
 				create Result.make_from_string_and_index (
 					base_string,
 					start_pivot + a_start_index - 1,
-					start_pivot + a_end_index,
-					longest_match)
+					start_pivot + a_end_index)
 			else
-				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot, longest_match) -- Empty string
+				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot) -- Empty string
 			end
 		end
 
@@ -110,16 +118,13 @@ feature -- Basic functionality
 			-- <Precursor>
 		do
 			if (1 <= a_start_index) then
-				if longest_match < a_start_index then
-					longest_match := a_start_index
-				end
+				longest_match.update_length (start_pivot)
 				create Result.make_from_string_and_index (
 					base_string,
 					start_pivot + a_start_index - 1,
-					end_pivot+1,
-					longest_match)
+					end_pivot+1)
 			else
-				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot, longest_match) -- Empty string
+				create Result.make_from_string_and_index (base_string, start_pivot, start_pivot) -- Empty string
 			end
 		end
 

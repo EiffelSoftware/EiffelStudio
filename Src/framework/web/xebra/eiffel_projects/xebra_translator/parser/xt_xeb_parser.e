@@ -211,8 +211,6 @@ feature {NONE} -- Implementation
 				if not a_result.internal_result.last.is_equal (a_result.internal_result.first) then
 					Result.put_error_message ("Non-matching end tag: " + a_result.internal_result.last.out +
 										" for start tag: " + a_result.internal_result.first.out)
-				else
-				--	Result.replace_result (l_tag)
 				end
 			end
 			if attached l_tag then
@@ -435,7 +433,9 @@ feature -- Basic Functionality
 					Result := True
 				end
 			else
-				add_parse_error ("Parsing was not successfull!")
+
+				add_parse_error ("Parsing was not successfull! Error location: " +
+					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 			end
 			from
 				l_result.error_messages.start

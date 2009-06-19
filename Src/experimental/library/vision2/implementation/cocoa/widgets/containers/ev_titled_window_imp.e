@@ -115,7 +115,7 @@ feature -- Element change
 			-- FIXME Mac Issue: This is problematic because on the Mac there is a application icon in the dock, but usually no window icon (there may be one for document windows... should probably go with that)
 			icon_pixmap := a_icon
 			l_pix_imp ?= a_icon.implementation
-			app_implementation.application.set_application_icon_image (l_pix_imp.image)
+			app_implementation.set_application_icon_image (l_pix_imp.image)
 		end
 
 feature {EV_ANY_I} -- Implementation

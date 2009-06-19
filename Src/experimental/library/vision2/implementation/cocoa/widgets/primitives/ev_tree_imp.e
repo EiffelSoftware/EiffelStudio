@@ -56,14 +56,8 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create an empty Tree.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
-			-- Connect action sequences to signals.
+			-- Create an empty Tree.
 		local
 			table_column: NS_TABLE_COLUMN
 		do
@@ -78,7 +72,7 @@ feature {NONE} -- Initialization
 			table_column.set_editable (False)
 			outline_view.add_table_column (table_column)
 			outline_view.set_outline_table_column (table_column)
-			outline_view.set_header_view (NULL)
+			outline_view.set_header_view (default_pointer)
 			table_column.set_width (1000.0)
 
 			create_data_source
@@ -87,7 +81,7 @@ feature {NONE} -- Initialization
 			create_delegate
 			outline_view.set_delegate (current)
 
-			Precursor {EV_ITEM_LIST_IMP}
+			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
 			enable_tabable_from
@@ -232,14 +226,14 @@ feature {NONE} -- Implementation
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			-- TODO: optimization potential?
-			outline_view.reload_item_reload_children (NULL, True)
+			outline_view.reload_item_reload_children (default_pointer, True)
 		end
 
 	remove_item (item_imp: EV_TREE_NODE_IMP)
 			-- Remove `item_imp' from `Current'.
 		do
 			-- TODO: optimization potential?
-			outline_view.reload_item_reload_children (NULL, True)
+			outline_view.reload_item_reload_children (default_pointer, True)
 		end
 
 

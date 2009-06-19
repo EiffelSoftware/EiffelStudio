@@ -16,6 +16,7 @@ feature -- Initialization
 		do
 			create radio_group.make
 			radio_group.put_front (current)
+			set_is_initialized (True)
 		end
 
 feature -- Status setting
@@ -45,7 +46,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	peers: LINKED_LIST [like interface]
+	peers: LINKED_LIST [attached like interface]
 			-- List of all radio items in the group `Current' is in.
 		local
 			cur: CURSOR
@@ -73,7 +74,7 @@ feature -- Status report
 			end
 		end
 
-	selected_peer: like interface
+	selected_peer: attached like interface
 			-- Radio item that is currently selected.
 		local
 			cur: CURSOR

@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision standard dialog. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,14 +28,13 @@ inherit
 			interface as w_interface,
 			make as w_make
 		redefine
-			initialize,
 			destroy,
 			call_close_request_actions
 		end
 
 feature {NONE} -- Implementation
 
-	initialize
+	make
 			-- Initialize dialog
 		do
 			create selected_button.make_empty
@@ -54,7 +52,7 @@ feature -- Status setting
 		local
 			button: INTEGER
 		do
-			button := app_implementation.application.run_modal_for_window (current)
+			button := app_implementation.run_modal_for_window (current)
 
 			if button =  {NS_PANEL}.ok_button then
 				selected_button := internal_accept
@@ -112,8 +110,4 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			selected_button := ev_cancel
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-
 end -- class EV_STANDARD_DIALOG_IMP
-

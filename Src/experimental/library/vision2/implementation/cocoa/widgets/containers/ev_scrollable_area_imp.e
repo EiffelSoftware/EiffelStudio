@@ -21,20 +21,13 @@ inherit
 	EV_VIEWPORT_IMP
 		redefine
 			interface,
-			make,
-			old_make
+			make
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create scrollable area.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 		do
@@ -47,6 +40,8 @@ feature {NONE} -- Initialization
 
 			set_horizontal_step (10)
 			set_vertical_step (10)
+			initialize
+			set_is_initialized (True)
 		end
 
 feature -- Access

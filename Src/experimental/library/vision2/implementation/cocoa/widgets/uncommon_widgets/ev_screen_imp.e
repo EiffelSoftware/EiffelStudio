@@ -13,6 +13,8 @@ inherit
 	EV_SCREEN_I
 		redefine
 			interface
+		select
+			copy
 		end
 
 	EV_DRAWABLE_IMP
@@ -23,19 +25,14 @@ inherit
 
 	NS_SCREEN
 		rename
-			main_screen as make_main_screen_cocoa
+			main_screen as make_main_screen_cocoa,
+			copy as copy_cocoa
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create an empty drawing area.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 		do

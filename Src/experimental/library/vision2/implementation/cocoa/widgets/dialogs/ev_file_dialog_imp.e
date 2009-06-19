@@ -1,5 +1,6 @@
 note
 	description: "Eiffel Vision file dialog. Cocoa implementation."
+	author:	"Daniel Furrer"
 
 deferred class
 	EV_FILE_DIALOG_IMP
@@ -132,7 +133,4 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_DIALOG;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FILE_DIALOG_IMP
-

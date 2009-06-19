@@ -27,13 +27,6 @@ create
 
 feature {NONE} -- Initialization
 
- 	old_make (an_interface: like interface)
- 			-- Create the default font.
-		do
-			assign_interface (an_interface)
-		end
-
-
 	make
 			-- Set up `Current'
 		local
@@ -53,13 +46,6 @@ feature {NONE} -- Initialization
 			height := 10
 			height_in_points := 10
 			set_is_initialized (True)
-		end
-
-feature {EV_FONTABLE_IMP} -- Implementation
-
-	font_is_default: BOOLEAN
-			-- Does `Current' have the characteristics of the default application font?
-		do
 		end
 
 feature -- Access
@@ -143,6 +129,7 @@ feature -- Status report
 		do
 			ascent := 1
 			descent := 1
+			update_font_face
 		end
 
 	ascent: INTEGER
@@ -178,7 +165,7 @@ feature -- Status report
 			l_size: NS_SIZE
 		do
 			create l_string.make_with_string (a_string)
-			create l_attributes.make_with_object_for_key (cocoa_item, font_attribute_name)
+			create l_attributes.make_with_object_for_key (font, font_attribute_name)
 			l_size := l_string.size_with_attributes (l_attributes)
 
 			create Result.default_create
@@ -211,7 +198,15 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	update_font_face
+		local
+			font_descriptor: NS_FONT_DESCRIPTOR
 		do
+			create font_descriptor.make
+			font_descriptor.set_size (height)
+			if weight > weight_regular then
+				font_descriptor.set_trait ({NS_FONT_DESCRIPTOR}.bold_trait)
+			end
+			create font.font_with_descriptor (font_descriptor, height)
 		end
 
 	update_preferred_faces (a_face: STRING_32)
@@ -224,6 +219,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FONT note option: stable attribute end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FONT_IMP

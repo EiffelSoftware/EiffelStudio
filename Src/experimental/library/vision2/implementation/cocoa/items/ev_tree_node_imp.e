@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 			-- Create the tree item.
 		do
 			internal_text := ""
+			initialize_item_list
+			set_is_initialized (True)
 		end
 
 feature -- Status report
@@ -218,7 +220,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			-- TODO: optimization potential, only reload under the current item
 			if parent_tree_imp /= void then
-				parent_tree_imp.outline_view.reload_item_reload_children ({EV_ANY_IMP}.NULL, True)
+				parent_tree_imp.outline_view.reload_item_reload_children (default_pointer, True)
 			end
 		end
 
@@ -227,7 +229,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			-- TODO: optimization potential, only reload under the current item
 			if parent_tree_imp /= void then
-				parent_tree_imp.outline_view.reload_item_reload_children ({EV_ANY_IMP}.NULL, True)
+				parent_tree_imp.outline_view.reload_item_reload_children (default_pointer, True)
 			end
 		end
 

@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision separator. Cocoa implementation"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision separator. Cocoa implementation"
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,9 +27,12 @@ feature {NONE} -- Initialization
 		local
 			box: NS_BOX
 		do
+			Precursor {EV_PRIMITIVE_IMP}
+			disable_tabable_from
 			create {NS_BOX}cocoa_item.make
 			box ?= cocoa_item
 			box.set_box_type ({NS_BOX}.box_separator)
+			set_is_initialized (True)
 		end
 
 feature -- Layout handling
@@ -46,6 +47,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SEPARATOR note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SEPARATOR_IMP

@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision pixmap, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +15,8 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
+		undefine
+			old_make
 		redefine
 			interface,
 			make,
@@ -47,12 +48,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 			-- Initialize `Current'
@@ -125,10 +120,12 @@ feature -- Element change
 			image_view.set_image (l_image)
 			if l_image.representations.count > 0 then
 				-- File found, representation loaded
-				l_image_rep := l_image.representations.object_at_index (0)
+				l_image_rep := l_image.representations.item (0)
 				internal_width := l_image_rep.pixels_wide
 				internal_height := l_image_rep.pixels_high
 				image := l_image
+			else
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
 		end
 
@@ -140,7 +137,7 @@ feature -- Element change
 		do
 			create l_image.make_named (a_name)
 			image_view.set_image (l_image)
-			l_image_rep := l_image.representations.object_at_index (0)
+			l_image_rep := l_image.representations.item (0)
 			internal_width := l_image_rep.pixels_wide
 			internal_height := l_image_rep.pixels_high
 			image := l_image
@@ -163,6 +160,7 @@ feature -- Element change
 		do
 			internal_width := a_width
 			internal_height := a_height
+			image.set_size (create {NS_SIZE}.make_size (a_width, a_height))
 		end
 
 	reset_for_buffering (a_width, a_height: INTEGER)
@@ -205,7 +203,8 @@ feature -- Duplication
 --			end
 			internal_width := other_imp.internal_width
 			internal_height := other_imp.internal_height
-			image := other_imp.image
+			image := other_imp.image.twin
+			image_view.set_image (image)
 
 --			private_mask_bitmap := other_simple_imp.private_mask_bitmap
 --			private_palette := other_simple_imp.private_palette
@@ -249,7 +248,4 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- EV_PIXMAP_IMP
-

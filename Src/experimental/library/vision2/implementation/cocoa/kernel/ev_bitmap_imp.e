@@ -25,12 +25,6 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create an empty drawing area.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Set up action sequence connections and create graphics context.
 		do

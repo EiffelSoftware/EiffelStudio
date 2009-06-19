@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision horizontal range. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +40,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_RANGE note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_RANGE_IMP
-

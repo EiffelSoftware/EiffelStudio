@@ -24,7 +24,7 @@ inherit
 			minimum_width,
 			minimum_height
 		redefine
-			make,
+			initialize,
 			interface,
 			destroy
 		end
@@ -40,16 +40,16 @@ inherit
 
 feature {NONE}
 
-	make
+	initialize
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 		do
-			Precursor
 			initialize_sizeable
 			new_item_actions.extend (agent add_radio_button)
 			create remove_item_actions
 			remove_item_actions.extend (agent remove_radio_button)
 			create radio_group.make
+			Precursor {EV_WIDGET_IMP}
 		end
 
 feature -- Access

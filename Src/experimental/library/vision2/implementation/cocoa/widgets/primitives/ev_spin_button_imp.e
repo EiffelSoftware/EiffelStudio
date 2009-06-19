@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			align_text_left
 
 			Precursor {EV_TEXT_FIELD_IMP}
-			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
+			Precursor {EV_GAUGE_IMP}
 		end
 
 feature -- Element change

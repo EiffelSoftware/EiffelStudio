@@ -1,9 +1,6 @@
 note
-
-	description:
-		"EiffelVision label, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision label, Cocoa implementation."
+	author:	"Daniel Furrer"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +30,8 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_font
 		end
 
 	SINGLE_MATH
@@ -42,12 +40,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 		do
@@ -105,6 +97,8 @@ feature -- Minimum size
 			internal_set_minimum_size (a_width.abs + 5, a_height.abs + 5)
 		end
 
+feature -- Status setting
+
 	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
@@ -130,6 +124,17 @@ feature -- Minimum size
 			text_field.set_background_color (color)
 		end
 
+	set_font (a_font: EV_FONT)
+			-- <Precursor>
+		do
+			Precursor {EV_FONTABLE_IMP} (a_font)
+			if attached {EV_FONT_IMP} a_font.implementation as font_imp then
+				text_field.set_font (font_imp.font)
+			else
+				check False end
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LABEL note option: stable attribute end;
@@ -140,7 +145,4 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= cocoa_item
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end --class LABEL_IMP
-

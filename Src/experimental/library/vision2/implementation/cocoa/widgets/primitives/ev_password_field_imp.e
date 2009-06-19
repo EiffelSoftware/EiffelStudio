@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision password field. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision password field. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,13 +32,12 @@ feature {NONE} -- Initialization
 		do
 			create {NS_SECURE_TEXT_FIELD}text_field.make
 			cocoa_item := text_field
+			Precursor {EV_TEXT_FIELD_IMP}
+			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation
 
 	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_PASSWORD_FIELD_IMP
-

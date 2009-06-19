@@ -41,7 +41,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := parent /= Void
 		end
 
-	parent: EV_ANY
+	parent: detachable EV_ANY
 		deferred
 		end
 

@@ -14,10 +14,12 @@ inherit
 		end
 
 	EV_DYNAMIC_LIST_IMP [G, G_IMP]
+		rename
+			initialize as initialize_item_list
 		redefine
 			insert_i_th,
 			remove_i_th,
-			initialize,
+			initialize_item_list,
 			interface
 		end
 
@@ -25,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	initialize_item_list
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DYNAMIC_LIST_IMP}
@@ -36,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: G_IMP

@@ -11,9 +11,13 @@ inherit
 	EV_DRAWING_AREA_I
 		redefine
 			interface
+		select
+			copy
 		end
 
 	EV_DRAWABLE_IMP
+		undefine
+			old_make
 		redefine
 			interface,
 			make
@@ -42,7 +46,8 @@ inherit
 		rename
 			make as make_cocoa,
 			make_custom as make_custom_cocoa,
-			initialize as initialize_cocoa
+			initialize as initialize_cocoa,
+			copy as copy_cocoa
 		redefine
 			dispose
 		end
@@ -51,12 +56,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			base_make (an_interface)
-		end
 
 	make
 			-- Initialize `Current'

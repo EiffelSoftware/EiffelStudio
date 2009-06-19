@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision Split Area, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision Split Area, Cocoa implementation."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,17 +27,11 @@ create
 
 feature {NONE} -- Creation
 
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface ( an_interface )
-		end
-
 	make
 		do
-			base_make (an_interface)
 			create {NS_SPLIT_VIEW}cocoa_item.make
 			split_view.set_vertical (True)
+			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation
@@ -133,7 +125,4 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_SPLIT_AREA_IMP
-

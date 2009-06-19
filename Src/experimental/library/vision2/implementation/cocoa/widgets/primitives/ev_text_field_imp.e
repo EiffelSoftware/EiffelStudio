@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision text field. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,6 +30,7 @@ inherit
 			create_change_actions,
 			on_key_event,
 			set_minimum_width_in_characters,
+			set_default_minimum_size,
 			make
 		end
 
@@ -52,12 +52,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create Cocoa textfield
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
@@ -66,12 +60,12 @@ feature {NONE} -- Initialization
 		do
 			create {NS_TEXT_FIELD}cocoa_item.make
 			text_field ?= cocoa_item
+			text_field.cell.set_wraps (False)
 
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			align_text_left
 			create a_font.default_create
-			create text.make_empty
 			a_font.set_height (12)
 			set_font (a_font)
 
@@ -159,6 +153,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Create an initialize return actions for `Current'.
 		do
 			create Result
+		end
+
+	set_default_minimum_size
+			-- Called after creation. Set current size and notify parent.
+		do
+			internal_set_minimum_size (maximum_character_width * 4, 22)
 		end
 
 feature -- Status report
@@ -326,7 +326,4 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 invariant
 	text_field /= void
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TEXT_FIELD_IMP
-

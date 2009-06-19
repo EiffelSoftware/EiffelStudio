@@ -104,7 +104,7 @@ feature -- Measurement
 			end
 		end
 
-	parent: EV_ANY
+	parent: detachable EV_ANY
 		deferred
 		end
 

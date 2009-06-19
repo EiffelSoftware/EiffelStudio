@@ -20,12 +20,14 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
+			initialize,
 			make
 		end
 
-	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
+	EV_DYNAMIC_LIST_IMP [detachable EV_WIDGET, EV_WIDGET_IMP]
 		redefine
 			interface,
+			initialize,
 			insert_i_th,
 			remove_i_th
 		end
@@ -35,8 +37,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			Precursor {EV_CONTAINER_IMP}
 			initialize
+		end
+
+	initialize
+		do
+			Precursor {EV_CONTAINER_IMP}
+			Precursor {EV_DYNAMIC_LIST_IMP}
 		end
 
 feature -- Widget relationships
@@ -66,7 +73,7 @@ feature -- Widget relationships
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -87,7 +94,7 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			v_imp ?= i_th (i).implementation
 			check

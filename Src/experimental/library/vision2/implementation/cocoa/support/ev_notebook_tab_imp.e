@@ -39,12 +39,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'.
 		do

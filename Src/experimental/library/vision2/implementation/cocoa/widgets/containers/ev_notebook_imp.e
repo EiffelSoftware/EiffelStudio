@@ -44,16 +44,10 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create a fixed widget.
-		do
-			assign_interface (an_interface)
-		end
-
 	initialize
 			-- Initialize the notebook.
 		do
-			tab_position := interface.tab_top
+			tab_position := {EV_NOTEBOOK}.tab_top
 			create tabs.make (5)
 			create {NS_TAB_VIEW}cocoa_item.make
 
@@ -275,7 +269,7 @@ feature -- Element change
 			notify_change (Nc_minsize, v_imp)
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp : EV_WIDGET_IMP

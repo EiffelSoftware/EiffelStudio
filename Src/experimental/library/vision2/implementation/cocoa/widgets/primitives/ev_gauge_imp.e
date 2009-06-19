@@ -27,22 +27,12 @@ feature {NONE} -- Initialization
 	make
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			ev_gauge_imp_initialize
-		end
-
-	ev_gauge_imp_initialize
-			-- Initialize without calling precursor.
-			--| Separate function so it can be called from
-			--| widgets that inherit twice from EV_WIDGET_IMP,
-			--| so initialize does not have to be called again.
-		do
 			create value_range.make (0, 100)
 			set_leap (10)
 			set_step (1)
 			value_range.change_actions.extend (agent set_range)
 			set_range
 		end
-
 
 feature -- Access
 

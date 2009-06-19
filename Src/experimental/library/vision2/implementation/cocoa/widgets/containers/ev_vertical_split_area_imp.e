@@ -29,19 +29,13 @@ inherit
 create
 	make
 
-feature
-
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface ( an_interface )
-		end
+feature -- Creation
 
 	make
 		do
-			Precursor
 			create {NS_SPLIT_VIEW}cocoa_item.make
 			split_view.set_vertical (False)
+			Precursor {EV_SPLIT_AREA_IMP}
 		end
 
 feature {NONE} -- Implementation

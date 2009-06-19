@@ -14,6 +14,8 @@ inherit
 			propagate_background_color
 		redefine
 			interface
+		select
+			copy
 		end
 
 	EV_CONTAINER_IMP
@@ -25,7 +27,6 @@ inherit
 			width,
 			height,
 			on_key_event,
-			make,
 			destroy,
 			client_height,
 			client_width,
@@ -60,7 +61,8 @@ inherit
 			screen as cocoa_screen,
 			item as window_item,
 			title as cocoa_title,
-			set_title as cocoa_set_title
+			set_title as cocoa_set_title,
+			copy as cocoa_copy
 		redefine
 			dispose
 		end
@@ -77,12 +79,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create the window.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 			-- Create the vertical box `vbox' and horizontal box `hbox'
@@ -104,12 +100,11 @@ feature {NONE} -- Initialization
 
 			init_bars
 
-			maximum_width := interface.maximum_dimension
-			maximum_height := interface.maximum_dimension
+			set_maximum_width (32000)
+			set_maximum_height (32000)
+			app_implementation.windows_imp.extend (current)
 
-			app_implementation.windows.extend (interface)
-
-			Precursor {EV_CONTAINER_IMP}
+			initialize
 
 			internal_is_border_enabled := True
 			user_can_resize := True
@@ -645,8 +640,8 @@ feature -- Element change
 			mb_imp.set_parent_window_imp (Current)
 
 			-- TODO attach the menubar to the current window / application in cocoa and switch on window switch
-			app_implementation.application.set_main_menu (mb_imp.menu)
-			app_implementation.application.fix_apple_menu
+			app_implementation.set_main_menu (mb_imp.menu)
+			app_implementation.fix_apple_menu
 		end
 
 	remove_menu_bar

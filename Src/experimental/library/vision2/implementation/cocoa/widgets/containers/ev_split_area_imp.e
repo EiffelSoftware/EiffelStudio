@@ -17,6 +17,8 @@ inherit
 			propagate_background_color
 		redefine
 			interface
+		select
+			copy
 		end
 
 	EV_CONTAINER_IMP
@@ -29,7 +31,8 @@ inherit
 	NS_SPLIT_VIEW_DELEGATE
 		rename
 			make as create_split_view_delegate,
-			item as delegate_item
+			item as delegate_item,
+			copy as copy_cocoa
 		redefine
 			split_view_did_resize_subviews,
 			dispose
@@ -39,11 +42,11 @@ feature -- Access
 
 	make
 		do
-			Precursor
 			create_split_view_delegate
 			split_view.set_delegate (current)
 			first_expandable := True
 			second_expandable := True
+			initialize
 		end
 
 	split_view_did_resize_subviews
@@ -131,13 +134,13 @@ feature -- Access
 			end
 		end
 
-	enable_item_expand (an_item: like item)
+	enable_item_expand (an_item: attached like item)
 			-- Let `an_item' expand when `Current' is resized.
 		do
 			set_item_resize (an_item, True)
 		end
 
-	disable_item_expand (an_item: like item)
+	disable_item_expand (an_item: attached like item)
 			-- Make `an_item' non-expandable on `Current' resize.
 		do
 			set_item_resize (an_item, False)
@@ -250,7 +253,7 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {EV_CONTAINER_IMP}
 			Precursor {NS_SPLIT_VIEW_DELEGATE}
 		end
-		
+
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 	split_view: NS_SPLIT_VIEW

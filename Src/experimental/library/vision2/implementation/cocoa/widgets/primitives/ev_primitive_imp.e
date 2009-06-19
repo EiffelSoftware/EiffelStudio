@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			Precursor {EV_WIDGET_IMP}
+			initialize
 			set_default_minimum_size
 			enable_tabable_from
 		end

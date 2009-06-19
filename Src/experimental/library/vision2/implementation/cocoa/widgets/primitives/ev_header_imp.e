@@ -47,12 +47,6 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create an empty Tree.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'
 		do
@@ -73,7 +67,7 @@ feature -- Initialization
 
 			initialize_pixmaps
 
-			Precursor {EV_ITEM_LIST_IMP}
+			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			disable_tabable_to

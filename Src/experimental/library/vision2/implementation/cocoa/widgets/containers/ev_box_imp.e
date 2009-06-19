@@ -30,15 +30,10 @@ inherit
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create a vertical box.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'
 		do
+			Precursor {EV_WIDGET_LIST_IMP}
 			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_title_position ({NS_BOX}.no_title)
@@ -49,7 +44,6 @@ feature -- Initialization
 			padding := Default_spacing
 			border_width := Default_border_width
 
-			Precursor
 			set_is_initialized (True)
 		end
 

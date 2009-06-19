@@ -60,12 +60,32 @@ feature -- Basic Functionality
 
 	serialize: STRING
 			-- Serializes the parser recursively
+		do
+			Result := internal_serialize (create {ARRAYED_LIST [PEG_ABSTRACT_PEG]}.make (20))
+		ensure
+			result_attached: attached Result
+		end
+
+feature {PEG_ABSTRACT_PEG} -- Serialization
+
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
+			-- Serializes the parser recursively. Endless recursions are taken care of.
 		deferred
 		ensure
 			result_attached: attached Result
 		end
 
-feature -- Implementation
+	already_serialized (a_already_visited: LIST [PEG_ABSTRACT_PEG]; a_parser: PEG_ABSTRACT_PEG): BOOLEAN
+			-- Checks if the parser was already serialized. If not it adds it to the table
+		do
+			if a_already_visited.has (Current) then
+				Result := True
+			else
+				a_already_visited.extend (a_parser)
+			end
+		end
+
+feature {PEG_ABSTRACT_PEG} -- Implementation
 
 	build_result (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- `a_result': The results of the children
@@ -75,11 +95,9 @@ feature -- Implementation
 			a_result_successfull: a_result.success
 		do
 			Result := a_result
-			if not ommit then
-				if attached behaviour then
-					if attached a_result then
-						Result := behaviour.item ([a_result])
-					end
+			if attached behaviour then
+				if attached a_result then
+					Result := behaviour.item ([a_result])
 				end
 			end
 		ensure

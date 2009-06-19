@@ -39,12 +39,19 @@ feature -- Implementation
 				Result := build_result (Result)
 			else
 				create Result.make (a_string, False)
+				Result := fix_result (Result)
 			end
 		end
 
-	serialize: STRING
+feature {PEG_ABSTRACT_PEG} -- Serialization
+
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		do
-			Result := "(" + child.serialize + ")+"
+			if not already_serialized (a_already_visited, Current) then
+				Result := "(" + child.internal_serialize (a_already_visited) + ")+"
+			else
+				Result := "recursion"
+			end
 		end
 end

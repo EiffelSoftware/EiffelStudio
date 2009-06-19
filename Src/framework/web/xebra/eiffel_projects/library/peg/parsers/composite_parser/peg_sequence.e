@@ -41,6 +41,7 @@ feature -- Implementation
 				Result := build_result (Result)
 			else
 				create Result.make (a_string, False)
+				Result := fix_result (Result)
 			end
 		end
 

@@ -9,7 +9,7 @@ class
 	PEG_RANGE
 
 inherit
-	PEG_SINGLE_CHARACTER_PARSER
+	PEG_ABSTRACT_PEG
 
 create
 	make_with_range
@@ -46,13 +46,20 @@ feature -- Implementation
 				Result.append_result (a_string [1])
 			else
 				create Result.make (a_string, False)
+				Result := fix_result (Result)
 			end
 		end
 
-	serialize: STRING
+feature {PEG_ABSTRACT_PEG} -- Serialization
+
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		do
-			Result := "[" + lower.out + "-" + upper.out + "]"
+			if not already_serialized (a_already_visited, Current) then
+				Result := "[" + lower.out + "-" + upper.out + "]"
+			else
+				Result := "recursion"
+			end
 		end
 
 end

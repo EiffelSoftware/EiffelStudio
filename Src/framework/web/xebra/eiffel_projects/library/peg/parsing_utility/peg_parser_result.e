@@ -33,7 +33,6 @@ feature -- Initialize
 
 feature -- Access
 
-
 	internal_result: LIST [ANY] assign set_result
 			-- Result of parsing. Is at least an empty list
 

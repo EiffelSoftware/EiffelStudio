@@ -16,7 +16,7 @@ feature -- Utility features
 			a_string_attached: attached a_string
 		do
 			Result := ""
-			escape_substring (Result, a_string, 1 , a_string.count)
+			escape_substring (Result, a_string, 1, a_string.count)
 		end
 
 	escape_substring (buffer: STRING; s: STRING; start_index, end_index: INTEGER)
@@ -51,7 +51,8 @@ feature -- Utility features
 							-- Assume ASCII set, sorry--RAM.
 						buffer.append_character ('%%')
 						buffer.append_character ('/')
-						put_octal (buffer, c.code)
+						--put_octal (buffer, c.code)
+						buffer.append_string (c.code.out)
 						buffer.append_character ('/')
 					else
 						buffer.append_character (c)

@@ -9,8 +9,14 @@ class
 
 inherit
 	NS_OBJECT_BASIC_TYPE
+		redefine
+			copy
+		end
 
 	DISPOSABLE
+		redefine
+			copy
+		end
 
 create
 	share_from_pointer
@@ -72,6 +78,14 @@ feature -- Status report
 			-- Does current still have its underlying object and thus is usable?
 		do
 			Result := item /= default_pointer
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+				-- Make a copy of the underlying Objective-C object
+		do
+			make_from_pointer ({NS_OBJECT_API}.copy (other.item))
 		end
 
 feature -- Removal

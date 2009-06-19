@@ -7,6 +7,21 @@ note
 class
 	NS_OBJECT_API
 
+inherit
+	ANY
+		rename
+			copy as any_copy
+		end
+
+feature -- Creating, Copying, and Deallocating Objects
+
+	frozen copy (a_object: POINTER): POINTER
+		external
+			"C inline use <Foundation/NSObject.h>"
+		alias
+			"return [(NSObject*)$a_object copy];"
+		end
+
 feature -- Identifying classes
 
 	frozen class_ (a_object: POINTER): POINTER

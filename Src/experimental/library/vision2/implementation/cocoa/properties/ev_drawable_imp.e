@@ -34,6 +34,12 @@ inherit
 
 feature {NONE} -- Initialization
 
+	old_make (an_interface: like interface)
+			-- Create an empty drawing area.
+		do
+			assign_interface (an_interface)
+		end
+
 	make
 			-- Set default values. Call during initialization.
 		do
@@ -68,7 +74,7 @@ feature -- Access
 	font: EV_FONT
 			-- Font used for drawing text.
 		do
-			if internal_font_imp /= Void then
+			if attached internal_font_imp then
 				Result := internal_font_imp.interface.twin
 			else
 				create Result
@@ -312,6 +318,7 @@ feature -- Drawing operations
 		do
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
+			pixmap_imp.image.set_flipped (True)
 			pixmap_imp.image.draw (
 				create {NS_POINT}.make_point (x, y),
 				create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height),
@@ -500,8 +507,13 @@ feature {NONE} -- Implementation
 	prepare_drawing
 		local
 			l_color: EV_COLOR_IMP
+			trans: NS_AFFINE_TRANSFORM
 		do
 			image.lock_focus
+			create trans.make
+			trans.translate_by_xy (0.0, image.size.height)
+			trans.scale_by_xy (1.0, -1.0)
+			trans.concat
 			l_color ?= foreground_color.implementation
 			l_color.color.set
 		end
@@ -531,7 +543,4 @@ feature {NONE} -- Implementation
 
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DRAWABLE_IMP
-

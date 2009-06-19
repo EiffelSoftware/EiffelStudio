@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make
 			-- Set up `Current'
 		do
-			Precursor {EV_ITEM_LIST_IMP}
+			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			initialize_pixmaps
 		end

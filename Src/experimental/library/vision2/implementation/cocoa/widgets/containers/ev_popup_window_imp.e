@@ -25,7 +25,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	initialize_with_shadow
 
 feature -- Implementation
 

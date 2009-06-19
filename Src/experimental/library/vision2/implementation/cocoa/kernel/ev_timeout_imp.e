@@ -26,13 +26,7 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
-			-- Call base make only.
-		do
-			base_make (an_interface)
-		end
-
-	initialize
+	make
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)

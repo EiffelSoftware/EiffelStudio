@@ -1,5 +1,6 @@
 note
 	description: "EiffelVision accelerator. Cocoa implementation."
+	author:	"Daniel Furrer"
 
 class
 	EV_ACCELERATOR_IMP
@@ -13,7 +14,7 @@ create
 feature {NONE} -- Initialization
 
 	old_make (an_interface: like interface)
-			-- Connect interface.
+			-- Create the window.
 		do
 			assign_interface (an_interface)
 		end
@@ -113,7 +114,4 @@ feature {NONE} -- Implementation
 		do
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ACCELERATOR_IMP
-

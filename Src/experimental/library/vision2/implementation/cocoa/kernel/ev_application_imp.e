@@ -16,7 +16,10 @@ inherit
 				pointer_double_press_actions_internal,
 				pointer_button_release_actions_internal
 		redefine
-			make
+			make,
+			dispose
+		select
+			copy
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
@@ -31,6 +34,15 @@ inherit
 
 	EXCEPTIONS
 
+	NS_APPLICATION
+		rename
+			make as make_application_cocoa,
+			launch as launch_cocoa,
+			copy as copy_cocoa
+		redefine
+			dispose
+		end
+
 create
 	make
 
@@ -39,9 +51,10 @@ feature {NONE} -- Initialization
 	make
 			-- Set up the callback marshalL.... TODO
 		do
-			create pool.make
-			create windows.make
-			create application.make
+			Precursor
+			create windows_imp.make
+			make_application_cocoa
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -49,29 +62,44 @@ feature -- Access
 	ctrl_pressed: BOOLEAN
 			-- Is ctrl key currently pressed?
 		do
+			-- This is low-level, not trivial in Cocoa (see HID manager)
 		end
 
 	alt_pressed: BOOLEAN
 			-- Is alt key currently pressed?
 		do
+			-- This is low-level, not trivial in Cocoa (see HID manager)
 		end
 
 	shift_pressed: BOOLEAN
 			-- Is shift key currently pressed?
 		do
+			-- This is low-level, not trivial in Cocoa (see HID manager)
 		end
 
 	caps_lock_on: BOOLEAN
 			-- Is the Caps or Shift Lock key currently on?
 		do
+			-- This is low-level, not trivial in Cocoa (see HID manager)
 		end
 
-	windows: LINKED_LIST [EV_WINDOW]
+	windows_imp: LINKED_LIST [EV_WINDOW_IMP]
 			-- Global list of windows.
 
-feature -- Basic operation
+	windows: LINKED_LIST [EV_WINDOW]
+		do
+			create Result.make
+			from
+				windows_imp.start
+			until
+				windows_imp.after
+			loop
+				Result.extend (windows_imp.item.interface)
+				windows_imp.forth
+			end
+		end
 
-	pool: NS_AUTORELEASE_POOL
+feature -- Basic operation
 
 	process_underlying_toolkit_event_queue
 			-- Process Cocoa events
@@ -83,7 +111,7 @@ feature -- Basic operation
 			point: NS_POINT
 		do
 			from
-				event := application.next_event(0, default_pointer, 0, true)
+				event := next_event (0, default_pointer, 0, true)
 			until
 				event = void
 			loop
@@ -125,9 +153,9 @@ feature -- Basic operation
 						widget.pointer_motion_actions.call (pointer_motion_action)
 					end
 				end
-				application.send_event (event)
-				application.update_windows
-				event := application.next_event(0, default_pointer, 0, true)
+				send_event (event)
+				update_windows
+				event := next_event (0, default_pointer, 0, true)
 			end
 			pool.release
 		end
@@ -135,11 +163,6 @@ feature -- Basic operation
 	process_graphical_events
 			-- Process all pending graphical events and redraws.
 		do
-		end
-
-	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
-			-- Tuple optimizations
-		once
 		end
 
 	sleep (msec: INTEGER)
@@ -155,7 +178,7 @@ feature -- Basic operation
 				set_is_destroyed (True)
 				destroy_actions.call (Void)
 			end
-			application.terminate
+			terminate
 		end
 
 feature -- Status report
@@ -170,7 +193,6 @@ feature -- Status setting
 		do
 			tooltip_delay := a_delay
 		end
-
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
@@ -220,27 +242,7 @@ feature -- Implementation
 		do
 		end
 
-	keyboard_modifier_mask: INTEGER
-			-- Mask representing current keyboard modifiers state.
-		do
-		end
-
-	enable_debugger
-			-- Enable the Eiffel debugger.
-		do
-		end
-
-	disable_debugger
-			-- Disable the Eiffel debugger.
-		do
-		end
-
 feature -- Thread Handling.
-
-	initialize_threading
-			-- Initialize thread support.
-		do
-		end
 
 	lock
 			-- Lock the Mutex.
@@ -259,9 +261,12 @@ feature -- Thread Handling.
 		do
 		end
 
-feature {EV_ANY_I}
+feature {NONE} -- Implementation
 
-	application: NS_APPLICATION;
+	dispose
+		do
+			Precursor {EV_APPLICATION_I}
+			Precursor {NS_APPLICATION}
+		end
 
 end -- class EV_APPLICATION_IMP
-

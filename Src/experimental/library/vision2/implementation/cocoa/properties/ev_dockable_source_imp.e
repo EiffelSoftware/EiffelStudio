@@ -61,6 +61,9 @@ feature {NONE} -- Implementation
 		end
 
 	orig_cursor: EV_POINTER_STYLE
+		do
+			create Result
+		end
 
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)

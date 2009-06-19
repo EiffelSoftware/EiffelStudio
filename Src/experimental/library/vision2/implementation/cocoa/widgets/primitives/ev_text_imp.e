@@ -31,12 +31,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create a cocoa text view.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'
 		do

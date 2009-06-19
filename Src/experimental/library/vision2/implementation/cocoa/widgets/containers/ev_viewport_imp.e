@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision viewport. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,6 @@ inherit
 		redefine
 			interface,
 			make,
-			old_make,
 			replace,
 			compute_minimum_width,
 			compute_minimum_height,
@@ -34,12 +32,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Initialize.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 		do
 			create scroll_view.make
@@ -48,6 +40,7 @@ feature {NONE} -- Initialization
 			scroll_view.set_draws_background (False)
 
 			cocoa_item := scroll_view
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -143,7 +136,4 @@ feature {EV_ANY_I} -- Implementation
 
 	scroll_view: NS_SCROLL_VIEW;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_VIEWPORT_IMP
-

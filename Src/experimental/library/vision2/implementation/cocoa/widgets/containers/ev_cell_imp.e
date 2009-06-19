@@ -40,18 +40,14 @@ create
 
 feature -- initialization
 
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 		do
 			create {NS_BOX}cocoa_item.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
-			Precursor
+			set_expandable (True) -- Check: is this correct??
+			is_show_requested := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

@@ -26,16 +26,13 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create the separator control.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 		do
 			create scroller.make_with_frame (0, 0, 10, 5)
 			cocoa_item := scroller
+			Precursor {EV_SCROLL_BAR_IMP}
+			disable_tabable_from
+			disable_tabable_to
 			scroller.set_enabled (True)
 
 			change_actions_internal := create_change_actions

@@ -36,12 +36,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create the fixed container.
-		do
-			base_make (an_interface)
-		end
-
 	make
 			-- Initialize `Current'.
 		do
@@ -156,7 +150,7 @@ feature {EV_ANY_I} -- Implementation
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 		end
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			Precursor ( v, i )

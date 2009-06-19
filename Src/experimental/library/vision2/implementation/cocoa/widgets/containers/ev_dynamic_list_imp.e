@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST_IMP [reference G -> EV_CONTAINABLE, reference G_IMP -> EV_ANY_I]
+	EV_DYNAMIC_LIST_IMP [reference G -> detachable EV_CONTAINABLE, reference G_IMP -> EV_ANY_I]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -44,7 +44,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER)
+	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			l_item: G_IMP

@@ -2,6 +2,7 @@ note
 	description:
 		"Base class for Cocoa implementation (_IMP) classes. %N%
 		%Handles interaction between Eiffel objects and Cocoa objects"
+	author: "Daniel Furrer"
 
 
 deferred class
@@ -23,6 +24,12 @@ inherit
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Access
+
+	old_make (an_interface: like interface)
+			-- Create the window.
+		do
+			assign_interface (an_interface)
+		end
 
 	cocoa_item: NS_OBJECT
 
@@ -49,10 +56,9 @@ feature --dispose
 			end
 		end
 
-
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
-		App_implementation: EV_APPLICATION_IMP
+	app_implementation: EV_APPLICATION_IMP
 			--
 		local
 			env: EV_ENVIRONMENT
@@ -64,18 +70,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			end
 		end
 
-feature -- Measurement
-
-	frozen NULL: POINTER
-		external
-			"C macro use <stdio.h>"
-		alias
-			"NULL"
-		end
-
 invariant
 --	cocoa_view_set: cocoa_item /= void
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ANY_IMP
-

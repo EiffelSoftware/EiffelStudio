@@ -18,7 +18,7 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize,
+			make,
 			show_modal_to_window,
 			window
 		end
@@ -29,16 +29,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Connect `interface' and initialize `c_object'.
-		do
-			base_make (an_interface)
-			create font_panel.shared_font_panel
-		end
-
-	initialize
+	make
 			-- Initialize the dialog.
 		do
+			Precursor {EV_STANDARD_DIALOG_IMP}
+			create font_panel.shared_font_panel
 		end
 
 feature -- Access

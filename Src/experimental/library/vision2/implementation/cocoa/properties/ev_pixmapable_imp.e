@@ -18,7 +18,7 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Pixmap shown in `Current'
 		do
 		end

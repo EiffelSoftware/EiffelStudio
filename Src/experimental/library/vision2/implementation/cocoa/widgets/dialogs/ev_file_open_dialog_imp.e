@@ -17,7 +17,6 @@ inherit
 		redefine
 			make,
 			interface,
-			initialize,
 			show_modal_to_window,
 			window
 		end
@@ -27,16 +26,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create a window with a parent.
+	make
 		do
-			base_make (an_interface)
 			create open_panel.make
 			save_panel := open_panel
-		end
-
-	initialize
-		do
 			Precursor
 			--set_title ("Open")
 		end
@@ -85,16 +78,16 @@ feature {NONE} -- Access
 			-- List of filenames selected by user
 		local
 			l_filenames: NS_ARRAY [NS_STRING]
-			i: INTEGER
+			i: like ns_uinteger
 		do
 			l_filenames := open_panel.filenames
-			create Result.make (l_filenames.count)
+			create Result.make (l_filenames.count.to_integer_32)
 			from
 				i := 0
 			until
 				i > l_filenames.count
 			loop
-				Result.extend (l_filenames.object_at_index (i).to_string)
+				Result.extend (l_filenames.item (i).to_string)
 				i := i + 1
 			end
 		end

@@ -14,6 +14,8 @@ inherit
 	EV_BUTTON_I
 		redefine
 			interface
+		select
+			copy
 		end
 
 	EV_PRIMITIVE_IMP
@@ -62,7 +64,9 @@ inherit
 			make as cocoa_make,
 			initialize as cocoa_initialize,
 			font as cocoa_font,
-			alignment as cocoa_alignment
+			alignment as cocoa_alignment,
+			set_font as cocoa_set_font,
+			copy as cocoa_copy
 		redefine
 			mouse_down,
 			dispose
@@ -73,26 +77,21 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Connect interface and initialize `c_object'.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		do
+			Precursor {EV_PRIMITIVE_IMP}
+
 			cocoa_make
 			cocoa_item := current
 			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			align_text_center
 
-			pixmapable_imp_initialize
-			Precursor {EV_PRIMITIVE_IMP}
 			enable_tabable_to
 			enable_tabable_from
 			initialize_events
+			pixmapable_imp_initialize
 
 			set_action (agent select_actions.call ([]))
 		end
@@ -133,18 +132,21 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			top_level_window_imp.window.set_default_button_cell (cell)
+			set_key_equivalent ("%R")
+			--top_level_window_imp.window.set_default_button_cell (cell)
 		end
 
 	disable_default_push_button
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		do
-			top_level_window_imp.window.set_default_button_cell (void)
+			if attached top_level_window_imp then
+				top_level_window_imp.window.set_default_button_cell (void)
+			end
 		end
 
 	enable_can_default
-			-- Not necessary in Cocoa
+			-- Not necessary in Cocoa ??
 		do
 		end
 

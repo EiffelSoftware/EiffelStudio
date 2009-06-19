@@ -1,6 +1,6 @@
 note
 	description: "Objects that creates a window that lets the user inspect the vision layout of current application"
-	author: ""
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -298,6 +298,16 @@ feature {NONE} -- Graphical view
 					node := add_element (wlist.item, a_node)
 					add_recursive (node, wlist.item)
 					wlist.forth
+				end
+			elseif attached {EV_TABLE} a_widget as table then
+				from
+					table.start
+				until
+					table.after
+				loop
+					node := add_element (table.item_for_iteration, a_node)
+					add_recursive (node, table.item_for_iteration)
+					table.forth
 				end
 			elseif attached {EV_CELL} a_widget as l_cell then
 				-- We have a container with a single child

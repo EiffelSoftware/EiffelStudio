@@ -26,11 +26,10 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create a Cocoa toggle button.
 		do
-			base_make (an_interface)
-			create button.make
+			Precursor {EV_TOOL_BAR_BUTTON_IMP}
 			button.set_button_type ({NS_BUTTON}.push_on_push_off_button)
 			cocoa_item := button
 		end

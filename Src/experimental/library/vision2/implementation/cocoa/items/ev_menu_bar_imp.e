@@ -1,7 +1,7 @@
 note
 	description: "Eiffel Vision menu bar. Cocoa implementation."
 	author: "Daniel Furrer"
-	
+
 class
 	EV_MENU_BAR_IMP
 
@@ -26,15 +26,11 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Create and initialize `Current'.
 		do
 			create {NS_MENU}cocoa_item.make
+			initialize_item_list
 		end
 
 feature -- Measurement

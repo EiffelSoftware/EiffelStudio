@@ -73,7 +73,7 @@ feature -- Status Report
 			ret: INTEGER
 		do
 			show
-			ret := app_implementation.application.run_modal_for_window (window)
+			ret := app_implementation.run_modal_for_window (window)
 		end
 
 feature -- Status Setting
@@ -118,4 +118,3 @@ feature {NONE} -- Implementation
 note
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_DIALOG_IMP
-

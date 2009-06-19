@@ -43,12 +43,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create the tool-bar.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'.
 		do
@@ -57,7 +51,7 @@ feature {NONE} -- Initialization
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_content_view_margins (0, 0)
 
-			initialize
+			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			has_vertical_button_style := True

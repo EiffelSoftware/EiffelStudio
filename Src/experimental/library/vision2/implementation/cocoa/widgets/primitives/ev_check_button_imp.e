@@ -19,7 +19,6 @@ inherit
 			default_alignment
 		redefine
 			make,
-			old_make,
 			interface,
 			accomodate_text
 		end
@@ -29,22 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create a Cocoa check button.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize 'Current'
 		do
-			cocoa_make
-			cocoa_item := current
+			Precursor {EV_TOGGLE_BUTTON_IMP}
 			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			set_button_type ({NS_BUTTON}.switch_button)
 
 			align_text_left
-			Precursor {EV_TOGGLE_BUTTON_IMP}
 		end
 
 	accomodate_text (a_text: STRING_GENERAL)

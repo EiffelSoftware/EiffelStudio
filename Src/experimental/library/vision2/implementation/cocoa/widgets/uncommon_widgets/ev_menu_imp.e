@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			create menu.make
 			menu_item.set_submenu (menu)
 			Precursor {EV_MENU_ITEM_IMP}
+			initialize_item_list
 		end
 
 feature -- Basic operations

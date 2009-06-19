@@ -1,6 +1,5 @@
 note
-	description:
-		"Action sequences for EV_CONTAINER_IMP."
+	description: "Action sequences for EV_CONTAINER_IMP."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "event, action, sequence"
@@ -20,6 +19,7 @@ feature -- Event handling
 			-- Create a new_item action sequence.
 		do
 			create Result
+			Result.resize (20)
 		end
 
 note

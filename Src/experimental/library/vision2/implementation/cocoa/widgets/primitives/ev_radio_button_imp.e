@@ -48,9 +48,13 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_RADIO_PEER_IMP}
+			Precursor {EV_BUTTON_IMP}
 			cocoa_make
 			cocoa_item := current
 			set_button_type ({NS_BUTTON}.radio_button)
+			align_text_left
+			set_state ({NS_CELL}.on_state)
+			select_actions.extend (agent enable_select)
 		end
 
 feature -- Status setting

@@ -1,6 +1,5 @@
 note
-	description:
-		"Projection to a Printer."
+	description: "Projection to a Printer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "printer, output, projector"
@@ -30,26 +29,25 @@ inherit
 	EXECUTION_ENVIRONMENT
 
 create
-	make
+	make_with_context
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make_with_context (a_world: EV_MODEL_WORLD; a_context: EV_PRINT_CONTEXT)
+			-- Create with `a_world' and `a_context'.
 		do
-			base_make (an_interface)
-
 			if interface.context.output_to_file then
 				create filename.make_from_string (interface.context.file_name.as_string_8)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
 				create filename.make_from_string (tmp_print_job_name)
 			end
-			make_with_filename (an_interface.world, filename)
+			make_with_filename (a_world, filename)
 				-- World needs resetting on project
+			make
 		end
 
-	initialize
-			-- Initialize `Current'.
+	make
 		do
 			set_is_initialized (True)
 		end
@@ -116,9 +114,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end -- class EV_MODEL_PRINT_PROJECTOR_IMP
-

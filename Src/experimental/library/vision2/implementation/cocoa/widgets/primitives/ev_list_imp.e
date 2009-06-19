@@ -35,19 +35,13 @@ create
 
 feature -- Initialize
 
-	old_make (an_interface: like interface)
-			-- Create a list widget with `par' as parent.
-			-- By default, a list allow only one selection.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize the list.
 		do
 			create {NS_OUTLINE_VIEW}cocoa_item.make
 			-- FIXME: Change to TableView
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			enable_tabable_to
 		end
 
 feature -- Access

@@ -54,14 +54,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create a list widget with `par' as
-			-- parent and `col_nb' columns.
-			-- By default, a list allow only one selection.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'
 		local
@@ -70,9 +62,10 @@ feature {NONE} -- Initialization
 			create ev_children.make (0)
 			create {NS_OUTLINE_VIEW}cocoa_item.make
 
-			Precursor {EV_ITEM_LIST_IMP}
+			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
+			enable_tabable_to
 			resize_model_if_needed (25)
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
 

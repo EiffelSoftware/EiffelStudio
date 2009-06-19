@@ -22,7 +22,6 @@ inherit
 		redefine
 			interface,
 			make,
-			old_make,
 			compute_minimum_height,
 			compute_minimum_width,
 			compute_minimum_size
@@ -46,12 +45,6 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create frame.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Initialize `Current'.
 		local
@@ -64,7 +57,9 @@ feature {NONE} -- Initialization
 			create a_font.default_create
 			a_font.set_height (10)
 			set_font (a_font)
-			Precursor {EV_CELL_IMP}
+			set_is_initialized (True)
+			style := {EV_FRAME_CONSTANTS}.Ev_frame_etched_in
+			initialize
 		end
 
 feature -- Access

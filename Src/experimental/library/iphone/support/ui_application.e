@@ -19,6 +19,8 @@ inherit
 		export
 			{NONE} all
 		undefine
+			copy
+		redefine
 			default_create
 		end
 
@@ -44,6 +46,17 @@ feature -- Basic operations
 			l_res := c_run
 		end
 
+feature -- Access
+
+	accelerometer: UI_ACCELEROMETER
+			-- Shared object to access accelerometer data
+		require
+			exists: exists
+		once
+			create Result.make (c_delegate (item))
+			Result.set_update_interval (2)
+		end
+
 feature -- Action sequences
 
 	post_launch_actions: ACTION_SEQUENCE [TUPLE]
@@ -57,10 +70,52 @@ feature -- Action sequences
 			end
 		end
 
+	shake_began_actions: ACTION_SEQUENCE [TUPLE [UI_EVENT]]
+			-- Actions executed when shake starts
+		do
+			if attached shake_began_actions_internal as l_actions then
+				Result := l_actions
+			else
+				create Result
+				shake_began_actions_internal := Result
+			end
+		end
+
+	shake_cancelled_actions: ACTION_SEQUENCE [TUPLE [UI_EVENT]]
+			-- Actions executed when shake is cancelled
+		do
+			if attached shake_cancelled_actions_internal as l_actions then
+				Result := l_actions
+			else
+				create Result
+				shake_cancelled_actions_internal := Result
+			end
+		end
+
+	shake_ended_actions: ACTION_SEQUENCE [TUPLE [UI_EVENT]]
+			-- Actions executed when shake finishes
+		do
+			if attached shake_ended_actions_internal as l_actions then
+				Result := l_actions
+			else
+				create Result
+				shake_ended_actions_internal := Result
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	post_launch_actions_internal: detachable like post_launch_actions note option: stable attribute end
 			-- Storage for `launch_actions'
+
+	shake_began_actions_internal: detachable like shake_began_actions note option: stable attribute end
+			-- Storage for `shake_began_actions'
+
+	shake_cancelled_actions_internal: detachable like shake_cancelled_actions note option: stable attribute end
+			-- Storage for `shake_cancelled_actions'
+
+	shake_ended_actions_internal: detachable like shake_ended_actions note option: stable attribute end
+			-- Storage for `shake_ended_actions'
 
 feature {NONE} -- Dispatching
 
@@ -78,7 +133,7 @@ feature {NONE} -- Dispatching
 				l_obj := c_touch_obj (a_data)
 				check l_obj_not_null: l_obj /= default_pointer end
 				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
-					create l_event.share_from_pointer (c_event_data (a_data))
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
 					l_view.touches_began_actions.call ([l_event]);
 				end
 
@@ -86,7 +141,7 @@ feature {NONE} -- Dispatching
 				l_obj := c_touch_obj (a_data)
 				check l_obj_not_null: l_obj /= default_pointer end
 				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
-					create l_event.share_from_pointer (c_event_data (a_data))
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
 					l_view.touches_moved_actions.call ([l_event]);
 				end
 
@@ -94,7 +149,7 @@ feature {NONE} -- Dispatching
 				l_obj := c_touch_obj (a_data)
 				check l_obj_not_null: l_obj /= default_pointer end
 				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
-					create l_event.share_from_pointer (c_event_data (a_data))
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
 					l_view.touches_cancelled_actions.call ([l_event]);
 				end
 
@@ -102,9 +157,30 @@ feature {NONE} -- Dispatching
 				l_obj := c_touch_obj (a_data)
 				check l_obj_not_null: l_obj /= default_pointer end
 				if attached mapping.eiffel_object_from_c (l_obj) as l_view then
-					create l_event.share_from_pointer (c_event_data (a_data))
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
 					l_view.touches_ended_actions.call ([l_event]);
 				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_motion_began then
+				if c_is_motion_shake (a_data) then
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
+					shake_began_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_motion_cancelled then
+				if c_is_motion_shake (a_data) then
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
+					shake_cancelled_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_responder_motion_ended then
+				if c_is_motion_shake (a_data) then
+					create l_event.share_from_pointer (c_touch_event_data (a_data))
+					shake_ended_actions.call ([l_event]);
+				end
+
+			when {UI_DISPATCHER_CONST}.ui_accelerometer_msg then
+				accelerometer.acceleration_actions.call ([create {UI_ACCELERATION}.share_from_pointer (a_data)])
 
 			else
 			end
@@ -119,6 +195,9 @@ feature {NONE} -- Dispatching
 feature {NONE} -- Externals
 
 	c_set_dispatcher (a_disp: ANY; a_proc: POINTER)
+		require
+			a_proc_not_null: a_proc /= default_pointer
+			a_proc_valid: True
 		external
 			"C inline use %"eiffel_iphone.h%""
 		alias
@@ -134,25 +213,57 @@ feature {NONE} -- Externals
 			    NSAutoreleasePool *pool;
 			    
 			    pool = [[NSAutoreleasePool alloc] init];
-    			retVal = UIApplicationMain(eif_argc, eif_argv, @"UIApplication", @"EiffeliPhoneAppDelegate");
+    			retVal = UIApplicationMain(eif_argc, eif_argv, @"EiffelUIApplication", @"EiffeliPhoneDelegate");
     			[pool release];
     			
     			return retVal;
 			]"
 		end
 
+	c_delegate (a_item_ptr: POINTER): POINTER
+			-- Delegate of Current UIApplication object
+		require
+			a_item_ptr_not_null: a_item_ptr /= default_pointer
+		external
+			"C inline use <UIKit/UIKit.h>"
+		alias
+			"return ((UIApplication *) $a_item_ptr).delegate;"
+		end
+
 	c_touch_obj (a_data: POINTER): POINTER
+		require
+			a_data_not_null: a_data /= default_pointer
 		external
 			"C inline use %"eiffel_iphone.h%""
 		alias
 			"return ((eif_touches_event_t *) $a_data)->obj;"
 		end
 
-	c_event_data (a_data: POINTER): POINTER
+	c_touch_event_data (a_data: POINTER): POINTER
+		require
+			a_data_not_null: a_data /= default_pointer
 		external
 			"C inline use %"eiffel_iphone.h%""
 		alias
 			"return ((eif_touches_event_t *) $a_data)->event;"
+		end
+
+	c_motion_event_data (a_data: POINTER): POINTER
+		require
+			a_data_not_null: a_data /= default_pointer
+		external
+			"C inline use %"eiffel_iphone.h%""
+		alias
+			"return ((eif_motion_event_t *) $a_data)->event;"
+		end
+
+	c_is_motion_shake (a_data: POINTER): BOOLEAN
+		require
+			a_data_not_null: a_data /= default_pointer
+		external
+			"C inline use %"eiffel_iphone.h%""
+		alias
+			"return EIF_TEST(((eif_motion_event_t *) $a_data)->motion == UIEventSubtypeMotionShake);"
 		end
 
 note

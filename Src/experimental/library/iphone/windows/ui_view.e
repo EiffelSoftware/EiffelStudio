@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			l_class: POINTER
 		do
 				-- Get the associated class that has the actual imlementation for `a_routine_name'.
-			l_class := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("EiffelUIResponder")).item)
+			l_class := {NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("EiffelUIApplication")).item)
 			check l_class_exists: l_class /= default_pointer end
 
 				-- Create a selector for `a_routine_name'.

@@ -10,6 +10,9 @@ inherit
 	NS_OBJECT
 
 	UI_ROUTINES
+		undefine
+			copy
+		end
 
 create
 	share_from_pointer

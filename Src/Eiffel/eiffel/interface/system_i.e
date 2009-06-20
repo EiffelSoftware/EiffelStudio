@@ -3086,7 +3086,7 @@ feature -- Final mode generation
 			l_old_type_id_counter: INTEGER
 		do
 			eiffel_project.terminate_c_compilation
-			if not retried and True then --is_finalization_needed then
+			if not retried and then is_finalization_needed then
 				create skeleton_table.make (400)
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void

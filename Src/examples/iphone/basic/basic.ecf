@@ -13,9 +13,7 @@
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
+			<visible class="APPLICATION" feature="make"/>
 		</cluster>
-	</target>
-	<target name="basic_dotnet" extends="basic">
-		<setting name="msil_generation" value="true"/>
 	</target>
 </system>

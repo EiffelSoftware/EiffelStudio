@@ -18,6 +18,11 @@ feature -- Basic types
 		do
 		end
 
+	ns_time_interval: REAL_64
+			-- Type of `NsTimeInterval' for Current compilation
+		do
+		end
+
 feature -- Conversion
 
 	to_ns_integer (a_int: INTEGER): like ns_integer

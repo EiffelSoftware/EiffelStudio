@@ -38,11 +38,11 @@ rt_public EIF_INTEGER eiffel_object_id (EIF_POINTER obj) {
 /*********************************************************************************/
 /*********************************************************************************/
 
-@interface EiffeliPhoneAppDelegate : NSObject <UIApplicationDelegate> {
+@interface EiffeliPhoneDelegate : NSObject <UIApplicationDelegate,UIAccelerometerDelegate> {
 }
 @end
 
-@interface EiffelUIResponder : NSObject {
+@interface EiffelUIApplication : UIApplication {
 }
 @end
 
@@ -52,15 +52,20 @@ rt_public EIF_INTEGER eiffel_object_id (EIF_POINTER obj) {
 /*********************************************************************************/
 /*********************************************************************************/
 
-@implementation EiffeliPhoneAppDelegate
+@implementation EiffeliPhoneDelegate
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_APPLICATION_DID_FINISH_LAUNCHING, application);
 }
 
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_ACCELEROMETER_MSG, acceleration);
+}
+
 @end
 
-@implementation EiffelUIResponder
+@implementation EiffelUIApplication
 - (int) eiffel_object_id
 {
 	int *m = (int *) object_getIndexedIvars(self);
@@ -96,12 +101,38 @@ rt_public EIF_INTEGER eiffel_object_id (EIF_POINTER obj) {
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
 {
-
 	eif_touches_event_t data;
 	data.obj = self;
 	data.touches = touches;
 	data.event = event;
 	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_TOUCHES_ENDED, &data);
+}
+
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+	eif_motion_event_t data;
+	data.obj = self;
+	data.motion = motion;
+	data.event = event;
+	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_MOTION_BEGAN, &data);
+}
+
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+	eif_motion_event_t data;
+	data.obj = self;
+	data.motion = motion;
+	data.event = event;
+	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_MOTION_CANCELLED, &data);
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+	eif_motion_event_t data;
+	data.obj = self;
+	data.motion = motion;
+	data.event = event;
+	eiffel_dispatcher_proc (eif_access(eiffel_dispatcher_obj), EIF_UI_RESPONDER_MOTION_ENDED, &data);
 }
 
 @end

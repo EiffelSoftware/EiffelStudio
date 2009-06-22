@@ -50,12 +50,12 @@ feature -- Access
 				l_child := children.item
 				if l_child.id.is_equal ("define_region") then
 						-- We have found a region so we can put the tag tree at the appropriate position
-					l_region [l_child.retrieve_value ("id").value (controller_id)] := l_child.children
+					l_region [l_child.retrieve_value ("id").value] := l_child.children
 				end
 				children.forth
 			end
 				-- Set the child of current to the resolved template (i.e. replace all the regions by the found regions)
-			l_template := a_templates [retrieve_value ("template").value (controller_id)]
+			l_template := a_templates [retrieve_value ("template").value]
 			if attached l_template then
 				set_child (l_template.resolve (a_templates, l_region, a_pending, a_servlet_gen))
 				if date < children [1].date then
@@ -63,7 +63,7 @@ feature -- Access
 				end
 			else
 				error_manager.add_error (create {XERROR_PARSE}.make
-					(["Template '" + retrieve_value ("template").value (controller_id) + "' not found."]), False)
+					(["Template '" + retrieve_value ("template").value + "' not found."]), False)
 			end
 		end
 

@@ -153,7 +153,7 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-				process_file (a_files.item, agent process_xeb_file (?, a_files.item, a_files.item.file_name))
+				process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name))
 				a_files.forth
 			end
 			o.iprint ("Processing done.")
@@ -165,14 +165,14 @@ feature -- Processing
 			l_webapp_gen.generate
 		end
 
-	process_xeb_file (a_source: STRING; a_path: XP_FILE_NAME; a_file_name: STRING)
+	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING)
 		require
 			a_source_attached: attached a_source
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
 			o.iprint ("Processing '" + a_path + "'...")
-			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry)
+			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date)
 		end
 
 	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
@@ -194,7 +194,7 @@ feature -- Processing
 			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end
 
-	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
 			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
@@ -208,6 +208,7 @@ feature -- Processing
 			if xeb_parser.parse (a_source) then
 				l_template := xeb_parser.template
 				l_template.template_name := a_servlet_name
+				xeb_parser.template.date := a_date
 				a_registry.put_template (a_servlet_name, xeb_parser.template)
 			else
 				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)
@@ -236,13 +237,13 @@ feature -- Processing
 					o.dprint ("Processing file: " + files.item, 10)
 					create file.make_from_string (taglib_folder)
 					file.set_file_name (files.item)
-					process_file (file, agent process_taglib_with_stream (a_registry, ?))
+					process_file (file, agent process_taglib_with_stream (a_registry, ?, ?))
 				end
 				files.forth
 			end
 		end
 
-	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_source: STRING)
+	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_source: STRING; a_file: PLAIN_TEXT_FILE)
 			-- Trasforms stream to tag library and adds it to `a_taglibs'
 		require
 			a_registry_attached: attached a_registry

@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			xeb_file, xml, leaf_xml, composite_xml, namespace_xml, namespace_leaf_xml, doctype,
-			identifier, l_attribute, dynamic_attribute, variable_attribute,
+			identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
 			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
 			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
@@ -112,7 +112,6 @@ feature {NONE} -- Implementation
 			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
 			ws.ommit_result
 			ws := -ws
---			ws := (-(tab | newline | return | space))
 
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
 				-- tag (with the parsed text as input) on the result list
@@ -124,12 +123,16 @@ feature {NONE} -- Implementation
 			identifier.set_behaviour (agent concatenate_results)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}"
+			value_attribute := (-(quote.negate + any_char))
+			value_attribute.set_behaviour (agent build_value_attribute)
 			dynamic_attribute := percent + equals + identifier + percent
+			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
 			variable_attribute := sharp + open_curly + identifier + (+(dot + identifier)) + close_curly
+			variable_attribute.set_behaviour (agent build_variable_attribute)
 
 				-- All possible values which can occur in quotes after a tag attribute
-			value := variable_attribute | dynamic_attribute | (-(quote.negate + any_char))
-			value.set_behaviour (agent concatenate_results)
+			value := variable_attribute | dynamic_attribute | value_attribute
+		--	value.set_behaviour (agent concatenate_results)
 
 				-- Tag attributes
 			l_attribute := (ws + identifier + ws + equals + ws + quote + value + quote)
@@ -186,6 +189,48 @@ feature -- Parser error strategies
 
 feature -- Parser Behaviours
 
+	build_dynamic_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Builds a dynamic attribute
+		require
+			a_result_attached: attached a_result
+		do
+			Result := concatenate_results (a_result)
+			if attached {STRING} Result.internal_result.first as l_argument then
+				Result.internal_result.wipe_out
+				Result.append_result (create {XP_TAG_DYNAMIC_ARGUMENT}.make (l_argument))
+			end
+		ensure
+			Result_attached: attached Result
+		end
+
+	build_variable_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- builds a variable attribute
+		require
+			a_result_attached: attached a_result
+		do
+			Result := concatenate_results (a_result)
+			if attached {STRING} Result.internal_result.first as l_argument then
+				Result.internal_result.wipe_out
+				Result.append_result (create {XP_TAG_VARIABLE_ARGUMENT}.make (l_argument))
+			end
+		ensure
+			Result_attached: attached Result
+		end
+
+	build_value_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- builds a value attribute
+		require
+			a_result_attached: attached a_result
+		do
+			Result := concatenate_results (a_result)
+			if attached {STRING} Result.internal_result.first as l_argument then
+				Result.internal_result.wipe_out
+				Result.append_result (create {XP_TAG_VALUE_ARGUMENT}.make (l_argument))
+			end
+		ensure
+			Result_attached: attached Result
+		end
+
 	build_html_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Builds a html tag
 		require
@@ -202,11 +247,11 @@ feature -- Parser Behaviours
 				until
 					l_i > a_result.internal_result.count-2
 				loop
-					if attached {TUPLE [id: STRING; value: STRING]} a_result.internal_result [l_i] as l_attribute then
+					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 						if l_tag.has_attribute (l_attribute.id) then
-							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value)
+							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
 						else
-							l_tag.put_attribute (l_attribute.id, create {XP_TAG_ARGUMENT}.make (l_attribute.value))
+							l_tag.put_attribute (l_attribute.id, l_attribute.value)
 						end
 					elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
 						l_tag.put_subtag (l_subtag)
@@ -247,11 +292,11 @@ feature -- Parser Behaviours
 							until
 								l_i > a_result.internal_result.count-2
 							loop
-								if attached {TUPLE [id: STRING; value: STRING]} a_result.internal_result [l_i] as l_attribute then
+								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 									if l_tag.has_attribute (l_attribute.id) then
-										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value)
+										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
 									else
-										l_tag.put_attribute (l_attribute.id, create {XP_TAG_ARGUMENT}.make (l_attribute.value))
+										l_tag.put_attribute (l_attribute.id, l_attribute.value)
 									end
 								elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
 									l_tag.put_subtag (l_subtag)
@@ -293,11 +338,11 @@ feature -- Parser Behaviours
 				until
 					Result.internal_result.after
 				loop
-					if attached {TUPLE [id: STRING; value: STRING]} a_result.internal_result.item as l_attribute then
+					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result.item as l_attribute then
 						if l_tag.has_attribute (l_attribute.id) then
-							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value)
+							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
 						else
-							l_tag.put_attribute (l_attribute.id, create {XP_TAG_ARGUMENT}.make (l_attribute.value))
+							l_tag.put_attribute (l_attribute.id, l_attribute.value)
 						end
 					end
 					Result.internal_result.forth
@@ -331,11 +376,11 @@ feature -- Parser Behaviours
 							until
 								Result.internal_result.after
 							loop
-								if attached {TUPLE [id: STRING; value: STRING]} a_result.internal_result.item as l_attribute then
+								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result.item as l_attribute then
 									if l_tag.has_attribute (l_attribute.id) then
-										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value)
+										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
 									else
-										l_tag.put_attribute (l_attribute.id, create {XP_TAG_ARGUMENT}.make (l_attribute.value))
+										l_tag.put_attribute (l_attribute.id, l_attribute.value)
 									end
 								end
 								Result.internal_result.forth
@@ -361,7 +406,7 @@ feature -- Parser Behaviours
 			Result := concatenate_results (a_result)
 			if attached {STRING} a_result.internal_result [1] as l_content then
 				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug(a_result.left_to_parse.debug_information))
-				l_tag.put_attribute ("text", create {XP_TAG_ARGUMENT}.make (l_content))
+				l_tag.put_attribute ("text", create {XP_TAG_VALUE_ARGUMENT}.make (l_content))
 				Result.replace_result (l_tag)
 			end
 		ensure
@@ -397,16 +442,15 @@ feature -- Parser Behaviours
 		require
 			a_result_attached: attached a_result
 		local
-			l_attribute: TUPLE [STRING, STRING]
+			l_attribute: TUPLE [STRING, XP_TAG_ARGUMENT]
 		do
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_id then
-				if attached {STRING} a_result.internal_result [2] as l_value then
+				if attached {XP_TAG_ARGUMENT} a_result.internal_result [2] as l_value then
 					l_attribute := [l_id, l_value]
+					Result.replace_result (l_attribute)
 				end
 			end
-
-			Result.replace_result (l_attribute)
 		ensure
 			Result_attached: attached a_result
 		end

@@ -15,7 +15,7 @@ feature -- Initialization
 
 feature -- Access
 
-	process_file (a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [file: STRING]])
+	process_file (a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [source: STRING; file: PLAIN_TEXT_FILE]])
 			-- Manages error handling of a file and processes `a_action' with it
 			-- `a_file_name': The filename/path
 			-- `a_action': The action which should be executed with the file
@@ -46,9 +46,8 @@ feature -- Access
 						l_source := l_source + l_file.last_string + "%N"
 						l_file.read_line
 					end
+					a_action.call ([l_source, l_file])
 					l_file.close
-					a_action.call ([l_source])
-
 				end
 			end
 		rescue

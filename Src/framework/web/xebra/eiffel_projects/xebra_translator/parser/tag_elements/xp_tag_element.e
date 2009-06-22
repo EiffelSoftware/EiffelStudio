@@ -297,7 +297,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			loop
 				a_feature.append_expression ("temp.put_attribute(%""
 						+ a_attributes.key_for_iteration + "%", "
-						+ "%"" + escape_string(a_attributes.item_for_iteration.value (controller_id)) + "%")"
+						+ "%"" + escape_string(a_attributes.item_for_iteration.value) + "%")"
 					)
 				a_attributes.forth
 			end
@@ -311,7 +311,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			until
 				parameters.after
 			loop
-				Result := Result + " " + parameters.item_for_iteration.value ("")
+				Result := Result + " " + parameters.item_for_iteration.value
 				parameters.forth
 			end
 		end

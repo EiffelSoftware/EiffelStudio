@@ -107,7 +107,7 @@ feature -- Basic Operations
 		end
 
 	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
-			-- <Precursor>		
+			-- <Precursor>
 		local
 			l_wrapped_form: XH_FORM
 			l_real_bean: ANY

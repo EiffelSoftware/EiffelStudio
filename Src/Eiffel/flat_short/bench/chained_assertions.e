@@ -149,7 +149,6 @@ feature -- Output
 							-- Only postconditions inherited from definition of routine
 							-- are activated, the other one coming from the other branches are not
 							-- taken into account.
-						("").item (10).do_nothing
 						item.format_postcondition (ctxt,
 							inherited_body and then not l_feature_written_class.simple_conform_to (item.origin.written_class))
 						l_begin_count := l_begin_count - 1

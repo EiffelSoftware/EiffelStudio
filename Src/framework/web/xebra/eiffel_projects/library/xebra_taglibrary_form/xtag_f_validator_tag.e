@@ -19,7 +19,7 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create validator_class.make ("")
+			create {XTAG_TAG_VARIABLE_ARGUMENT}validator_class.make ("")
 		end
 
 feature -- Access

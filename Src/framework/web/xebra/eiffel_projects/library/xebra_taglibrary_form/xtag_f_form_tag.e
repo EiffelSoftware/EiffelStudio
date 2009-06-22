@@ -27,8 +27,8 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create data_class.make ("")
-			create variable.make ("")
+			create {XTAG_TAG_VALUE_ARGUMENT}data_class.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT}variable.make_default
 		ensure
 			data_class_attached: attached data_class
 			variable_attached: attached variable

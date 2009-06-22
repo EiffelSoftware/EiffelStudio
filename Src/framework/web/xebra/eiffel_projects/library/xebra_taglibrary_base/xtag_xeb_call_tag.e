@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create feature_name.make ("####wrong_feature####")
+			create {XTAG_TAG_VALUE_ARGUMENT} feature_name.make ("####wrong_feature####")
 		ensure
 			feature_name_attached: attached feature_name
 		end

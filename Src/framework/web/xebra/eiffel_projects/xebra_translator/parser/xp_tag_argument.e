@@ -34,6 +34,15 @@ feature -- Access
 			-- The value it represents
 		do
 			Result := internal_value
+		ensure
+			Result_attached: attached Result
+		end
+
+	put_attribute_type: STRING
+			-- Returns the type of attribute should be added via the appropriate feature name
+		deferred
+		ensure
+			Result_attached: attached Result
 		end
 
 invariant

@@ -24,7 +24,7 @@ feature -- Initialization
 			-- Call this constructor, if you inherit
 		do
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
-			create render.make ("")
+			create {XTAG_TAG_VALUE_ARGUMENT}render.make ("")
 			current_controller_id := ""
 			tag_id := ""
 		ensure
@@ -93,17 +93,53 @@ feature -- Status setting
 
 feature -- Basic implementation
 
-	put_attribute (id: STRING; a_attribute: STRING)
-			-- Adds an attribute to the tag
+	put_value_attribute (id: STRING; a_attribute: STRING)
+			-- Adds a value attribute to the tag
 		require
 			id_attached: attached id
 			a_attribute_attached: attached a_attribute
 			id_is_not_empty: not id.is_empty
+		local
+			l_argument: XTAG_TAG_VALUE_ARGUMENT
 		do
+			create l_argument.make (a_attribute)
 			if id.is_equal (Render_attribute_name) then
-				create render.make (a_attribute)
+				render := l_argument
 			else
-				internal_put_attribute (id, create {XTAG_TAG_ARGUMENT}.make (a_attribute))
+				internal_put_attribute (id, l_argument)
+			end
+		end
+
+	put_dynamic_attribute (id: STRING; a_attribute: STRING)
+				-- Adds an attribute to the tag
+		require
+			id_attached: attached id
+			a_attribute_attached: attached a_attribute
+			id_is_not_empty: not id.is_empty
+		local
+			l_argument: XTAG_TAG_DYNAMIC_ARGUMENT
+		do
+			create l_argument.make (a_attribute)
+			if id.is_equal (Render_attribute_name) then
+				render := l_argument
+			else
+				internal_put_attribute (id, l_argument)
+			end
+		end
+
+	put_variable_attribute (id: STRING; a_attribute: STRING)
+		require
+			id_attached: attached id
+			a_attribute_attached: attached a_attribute
+			id_is_not_empty: not id.is_empty
+		local
+			l_argument: XTAG_TAG_VARIABLE_ARGUMENT
+		do
+			create l_argument.make (a_attribute)
+			if id.is_equal (Render_attribute_name) then
+				render := l_argument
+			else
+				internal_put_attribute (id, l_argument)
 			end
 		end
 

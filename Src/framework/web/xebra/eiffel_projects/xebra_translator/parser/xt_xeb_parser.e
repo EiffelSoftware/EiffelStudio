@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 			--
 		local
 			xeb_file, xml, leaf_xml, composite_xml, namespace_xml, namespace_leaf_xml, doctype,
+			xml_header, xml_namespace_header,
 			identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
 			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
 			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
@@ -123,7 +124,8 @@ feature {NONE} -- Implementation
 			plain_text := +((open + (identifier | slash)).negate + any_char)
 			plain_text.set_behaviour (agent build_content_tag)
 
-				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}"
+				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
+				-- as normal xml values (plain text)
 			value_attribute := (-(quote.negate + any_char))
 			value_attribute.set_behaviour (agent build_value_attribute)
 			dynamic_attribute := percent + equals + identifier + percent
@@ -142,15 +144,22 @@ feature {NONE} -- Implementation
 			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
 			comment.set_behaviour (agent build_content_tag)
 
-			xml := create {PEG_CHOICE}.make
+			create {PEG_CHOICE} xml.make
+			create {PEG_SEQUENCE} composite_xml.make
+			create {PEG_SEQUENCE} namespace_xml.make
+			create {PEG_SEQUENCE} leaf_xml.make
+			create {PEG_SEQUENCE} namespace_leaf_xml.make
+			xml_header := open + identifier + (-l_attribute)
+			xml_namespace_header := open + identifier + colon + identifier + (-l_attribute)
+
 				-- Normal xml without namespaces. With children tags (or text)
-			composite_xml := open + identifier + (-l_attribute) + close_fixed + (-xml) + open + slash + identifier + ws.optional + close_fixed
+			composite_xml := composite_xml + xml_header + close_fixed + (-xml) + open + slash + identifier + ws.optional + close_fixed
 				-- Normal xml with namespaces. With children tags (or text)
-			namespace_xml := open + identifier + colon + identifier + (-l_attribute) + close_fixed + (-xml) + open + slash + identifier + colon + identifier + ws.optional + close_fixed
+			namespace_xml := namespace_xml + xml_namespace_header + close_fixed + (-xml) + open + slash + identifier + colon + identifier + ws.optional + close_fixed
 				-- Normal xml without namespaces and without children
-			leaf_xml := open + identifier + (-l_attribute) + ws + slash + close_fixed
+			leaf_xml := leaf_xml + xml_header + ws + slash + close_fixed
 				-- Normal xml with namespaces and without children
-			namespace_leaf_xml := open + identifier + colon + identifier + (-l_attribute) + ws + slash + close_fixed
+			namespace_leaf_xml := namespace_leaf_xml + xml_namespace_header + ws + slash + close_fixed
 
 			composite_xml.set_behaviour (agent build_html_tag)
 			namespace_xml.set_behaviour (agent build_tag)
@@ -236,7 +245,6 @@ feature -- Parser Behaviours
 			l_tag: XP_TAG_ELEMENT
 			l_i: INTEGER
 		do
-			print ("%Nbuild_html_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_id then
 				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information))
@@ -278,7 +286,6 @@ feature -- Parser Behaviours
 			l_i: INTEGER
 			l_end_tag: STRING
 		do
-			print ("%Nbuild_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then
@@ -328,7 +335,6 @@ feature -- Parser Behaviours
 		local
 			l_tag: XP_TAG_ELEMENT
 		do
-			print ("%Nbuild_leaf_html_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_id then
 				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
@@ -363,7 +369,6 @@ feature -- Parser Behaviours
 			l_tag: XP_TAG_ELEMENT
 			l_taglib: XTL_TAG_LIBRARY
 		do
-			print ("%Nbuild_leaf_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then

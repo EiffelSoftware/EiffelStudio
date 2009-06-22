@@ -7,7 +7,7 @@ note
 deferred class
 	PEG_ABSTRACT_PEG
 
-feature {PEG_ABSTRACT_PEG} -- Access
+feature {PEG_ABSTRACT_PEG} -- Behaviours
 
 	behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
 			-- Optional behaviour which transforms a result of the children to a new one
@@ -16,6 +16,17 @@ feature {PEG_ABSTRACT_PEG} -- Access
 			-- Optional error strategy which tries to handle failures of a parser
 
 feature -- Access
+
+	is_cached: BOOLEAN assign set_is_cached
+			-- Is the result of this parser cached (True) or is it recomputed on every parse (False)
+
+	set_is_cached (a_is_cached: BOOLEAN)
+			-- Sets the is_cached feature
+		do
+			is_cached := a_is_cached
+		ensure
+			is_cached_set: is_cached = a_is_cached
+		end
 
 	set_behaviour (a_behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT])
 			-- Sets the behaviour.

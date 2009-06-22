@@ -173,8 +173,7 @@ feature {NONE} -- Modifiable shortcuts
 			create l_hash.make (22)
 			l_hash.put ([True, True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_r).twin.as_string_8], "show_search_report_tool")
-			l_hash.put ([True, True, False, key_strings.item (Key_o).twin.as_string_8], "show_output_tool")
-			l_hash.put ([True, True, False, key_strings.item (Key_0).twin.as_string_8], "show_c_output_tool")
+			l_hash.put ([True, True, False, key_strings.item (Key_o).twin.as_string_8], "show_outputs_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_x).twin.as_string_8], "show_external_output_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_e).twin.as_string_8], "show_errors_and_warnings_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_l).twin.as_string_8], "show_logger_tool")
@@ -260,7 +259,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -284,11 +283,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

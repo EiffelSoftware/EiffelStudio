@@ -224,7 +224,7 @@ feature {NONE} -- Query
 						end
 					else
 							-- Use the Eiffel feature source
-						Result := [l_class_c.group.location.evaluated_directory, l_feature.line_number]
+						Result := [l_class_c.file_name, l_feature.line_number]
 					end
 				else
 						-- Not a feature

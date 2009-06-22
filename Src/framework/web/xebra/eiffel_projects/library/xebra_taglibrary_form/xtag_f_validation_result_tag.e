@@ -23,7 +23,7 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create name.make ("")
+			create {XTAG_TAG_VALUE_ARGUMENT} name.make_default
 		end
 
 feature -- Access

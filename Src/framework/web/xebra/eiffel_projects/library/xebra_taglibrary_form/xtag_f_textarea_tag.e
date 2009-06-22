@@ -23,11 +23,11 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create value.make ("")
-			create name.make ("")
-			create text.make ("")
-			create cols.make ("45")
-			create rows.make ("5")
+			create {XTAG_TAG_VALUE_ARGUMENT} value.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} name.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} cols.make ("45")
+			create {XTAG_TAG_VALUE_ARGUMENT} rows.make ("5")
 		ensure then
 			value_attached: attached value
 			name_attached: attached name

@@ -27,8 +27,8 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create value.make ("")
-			create action.make ("")
+			create {XTAG_TAG_VALUE_ARGUMENT} value.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} action.make_default
 		ensure
 			value_attached: attached value
 			action_attached: attached action

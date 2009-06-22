@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create url.make ("")
+			create {XTAG_TAG_VARIABLE_ARGUMENT} url.make ("")
 		end
 
 feature {NONE} -- Access

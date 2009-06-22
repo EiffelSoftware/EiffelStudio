@@ -23,9 +23,9 @@ feature -- Initialization
 	make_base
 		do
 			Precursor
-			create value.make ("")
-			create name.make ("")
-			create text.make ("")
+			create {XTAG_TAG_VALUE_ARGUMENT}value.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT}name.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT}text.make_default
 		ensure then
 			value_attached: attached value
 			name_attached: attached name

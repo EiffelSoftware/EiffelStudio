@@ -289,15 +289,18 @@ feature {XP_TAG_ELEMENT} -- Implementation
 		require
 			a_feature_attached: a_feature /= Void
 			attributes_attached: a_attributes /= Void
+		local
+			l_attribute_value: XP_TAG_ARGUMENT
 		do
 			from
 				a_attributes.start
 			until
 				a_attributes.after
 			loop
-				a_feature.append_expression ("temp.put_attribute(%""
+				l_attribute_value := a_attributes.item_for_iteration
+				a_feature.append_expression ("temp." + l_attribute_value.put_attribute_type + "(%""
 						+ a_attributes.key_for_iteration + "%", "
-						+ "%"" + escape_string(a_attributes.item_for_iteration.value) + "%")"
+						+ "%"" + escape_string(l_attribute_value.value) + "%")"
 					)
 				a_attributes.forth
 			end

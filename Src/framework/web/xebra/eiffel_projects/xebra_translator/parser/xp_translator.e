@@ -189,7 +189,7 @@ feature -- Processing
 			loop
 				l_i := l_i + 1
 			end
-			Result := l_file_name.substring (l_i+1, l_file_name.count - (".xeb").count) -- Magic number
+			Result := l_file_name.substring (l_i+1, l_file_name.count - (".xeb").count)
 			Result.replace_substring_all ("/", "_") -- UNIX
 			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end

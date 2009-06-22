@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create text.make ("no content")
+			create {XTAG_TAG_VALUE_ARGUMENT} text.make ("no content")
 		end
 
 feature -- Access

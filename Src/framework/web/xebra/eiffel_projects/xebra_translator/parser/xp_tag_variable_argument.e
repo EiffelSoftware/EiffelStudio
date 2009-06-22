@@ -14,7 +14,12 @@ inherit
 create
 	make
 
-feature -- Initialization
-feature -- Access
+feature -- Implementation
+
+	put_attribute_type: STRING
+			-- <Precursor>
+		do
+			Result := "put_variable_attribute"
+		end
 
 end

@@ -1047,7 +1047,7 @@ feature {NONE} -- Actions
 					i := i + 1
 				end
 
-				if not l_has_file then
+				if not l_has_file and then is_file_readable (l_filename) then
 						-- It is not in the list, we insert it at the top of the list
 						-- and show it.
 					insert_new_project (l_filename, 1)

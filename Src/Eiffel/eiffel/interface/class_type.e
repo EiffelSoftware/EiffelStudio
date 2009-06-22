@@ -286,11 +286,13 @@ feature -- Access
 			Result := type_number_int
 		end
 
-feature {NONE} -- Implementation: Access
-
 	basic_type: BASIC_A
 			-- If `type' is originally a basic type, we keep the BASIC_A instance
 			-- as it is used for certain queries (e.g. tuple_code).
+		attribute
+		ensure
+			is_basic_implies_attached: is_basic implies basic_type /= Void
+		end
 
 feature -- Status report
 

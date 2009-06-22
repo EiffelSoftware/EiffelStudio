@@ -157,6 +157,7 @@ feature {NONE} -- Compilation implementation
 			-- Display status of eiffel compilation.
 		do
 			if Workbench.successful then
+				degree_output.put_new_line
 				degree_output.put_string (Interface_names.ee_compilation_succeeded)
 				degree_output.put_new_line
 			else

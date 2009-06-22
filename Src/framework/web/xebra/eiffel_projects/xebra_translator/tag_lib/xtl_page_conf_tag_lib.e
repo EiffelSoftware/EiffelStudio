@@ -125,7 +125,7 @@ feature -- Access
 			-- Handles attribute reading while parsing
 		do
 			if a_id.is_equal ("class") then
-				xeb_parser.put_class_name (a_value.value (""))
+				xeb_parser.put_class_name (a_value.value)
 			end
 		end
 

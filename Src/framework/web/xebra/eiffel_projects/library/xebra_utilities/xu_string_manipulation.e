@@ -64,7 +64,6 @@ feature -- Utility features
 			end
 		end
 
-
 	put_octal (buffer: STRING; i: INTEGER)
 			-- Print octal representation of `i' into `buffer'
 			--| always generate 3 digits

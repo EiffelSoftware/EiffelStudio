@@ -38,7 +38,7 @@ feature -- Basic implementation
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			add_controller_call (feature_name.value (current_controller_id), a_servlet_class.render_feature)
+			add_controller_call (feature_name.value (current_controller_id), a_servlet_class.render_html_page)
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

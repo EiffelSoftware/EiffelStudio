@@ -14,7 +14,7 @@ inherit
 		rename
 			make as p_d_make
 		redefine
-			function, copy, int_function
+			function, int_function
 		end
 
 create
@@ -27,19 +27,6 @@ feature -- Creation feature
 		do
 			p_d_make(num_calls, time, self_s, descen);
 			int_function := new_function;
-		end;
-
-feature -- Copy features
-
-	copy (other: like Current)
-			-- Reinitialize by copying features of `other'.
-			-- (This is also used by `clone'.)
-		do
-			calls := other.calls;
-			self := other.self;
-			descendants := other.descendants;
-			percentage := other.percentage;
-			int_function.copy (other.int_function);
 		end;
 
 feature -- Status report

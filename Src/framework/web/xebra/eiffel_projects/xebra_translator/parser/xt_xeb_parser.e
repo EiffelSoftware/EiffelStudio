@@ -119,9 +119,13 @@ feature {NONE} -- Implementation
 			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
 			identifier.set_behaviour (agent concatenate_results)
 
+				-- XML comments
+			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
+			comment.set_behaviour (agent concatenate_results)
+
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
-				-- tag (with the parsed text as input) on the result list
-			plain_text := +((open + (identifier | slash)).negate + any_char)
+				-- tag (with the parsed text as input) on the result list. Comments are handled separately.
+			plain_text := +((open + (identifier | slash)).negate + (comment | any_char))
 			plain_text.set_behaviour (agent build_content_tag)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
@@ -139,10 +143,6 @@ feature {NONE} -- Implementation
 				-- Tag attributes
 			l_attribute := (ws + identifier + ws + equals + ws + quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
-
-				-- XML comments
-			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
-			comment.set_behaviour (agent build_content_tag)
 
 			create {PEG_CHOICE} xml.make
 			create {PEG_SEQUENCE} composite_xml.make
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			namespace_leaf_xml.set_behaviour (agent build_leaf_tag)
 
 				-- XML tree
-			xml := xml | namespace_leaf_xml | leaf_xml | namespace_xml | composite_xml | comment | plain_text
+			xml := xml | namespace_leaf_xml | leaf_xml | namespace_xml | composite_xml | plain_text
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
 			plain_text_without_behaviour := +((open + any_char).negate + any_char)

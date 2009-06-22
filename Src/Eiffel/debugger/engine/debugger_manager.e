@@ -105,11 +105,10 @@ feature -- Application execution
 			end
 			if is_dotnet_project then
 				create {APPLICATION_EXECUTION_DOTNET} app.make_with_debugger (Current)
-				set_shared_application (app)
 			else
 				create {APPLICATION_EXECUTION_CLASSIC} app.make_with_debugger (Current)
-				set_shared_application (app)
 			end
+			set_shared_application (app)
 		end
 
 	init_application

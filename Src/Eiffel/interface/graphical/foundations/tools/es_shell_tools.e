@@ -233,7 +233,6 @@ feature {NONE} -- Access
 				-- Common tools
 			l_tools.put_last ({ES_CLASS_TOOL})
 			l_tools.put_last ({ES_CONSOLE_TOOL})
-			l_tools.put_last ({ES_C_OUTPUT_TOOL})
 			l_tools.put_last ({ES_DEPENDENCY_TOOL})
 			l_tools.put_last ({ES_DIAGRAM_TOOL})
 			l_tools.put_last ({ES_ERROR_LIST_TOOL})
@@ -242,7 +241,7 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_FEATURE_RELATION_TOOL})
 			l_tools.put_last ({ES_GROUPS_TOOL})
 			l_tools.put_last ({ES_METRICS_TOOL})
-			l_tools.put_last ({ES_OUTPUT_TOOL})
+			l_tools.put_last ({ES_OUTPUTS_TOOL})
 			l_tools.put_last ({ES_PROPERTIES_TOOL})
 			l_tools.put_last ({ES_SEARCH_REPORT_TOOL})
 			l_tools.put_last ({ES_SEARCH_TOOL})

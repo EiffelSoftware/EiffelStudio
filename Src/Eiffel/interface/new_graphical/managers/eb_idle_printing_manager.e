@@ -14,6 +14,13 @@ inherit
 
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
+	ES_SHARED_OUTPUTS
+
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -80,14 +87,23 @@ feature -- Printing
 	print_freezing
 			-- Print freezing output.
 		local
-			gm: EB_C_COMPILATION_OUTPUT_MANAGER
-			data_block:	EB_PROCESS_IO_DATA_BLOCK
+			l_encoding: detachable ENCODING
+			l_data_block: EB_PROCESS_IO_DATA_BLOCK
 		do
 			if not is_printing_finalizing and freezing_storage.has_new_block then
-				gm := c_compilation_output_manager
-				data_block := freezing_storage.all_blocks (True)
-				gm.process_block_text (data_block)
-				gm.scroll_to_end
+				if
+					attached {ES_OUTPUT_PANE_I} c_compiler_output as l_output and then
+					attached window_manager.last_focused_development_window as l_window and then
+					attached {ES_LOCALE_EDITOR_WIDGET} l_output.widget_from_window (l_window) as l_locale_widget
+				then
+						-- Fetch the encoding of the widget.
+					l_encoding := l_locale_widget.encoding
+				end
+
+					-- Process a block of text using a selected encoding.
+				l_data_block := freezing_storage.all_blocks (True)
+				process_block_text (l_data_block, c_compiler_formatter, l_encoding)
+
 				if process_manager.is_freezing_running then
 					is_printing_freezing := True
 				else
@@ -96,7 +112,6 @@ feature -- Printing
 					else
 						is_printing_freezing := False
 						remove_printer (freezing_printer)
-						gm.notify_c_compilation_output_finished
 					end
 				end
 			end
@@ -105,14 +120,23 @@ feature -- Printing
 	print_finalizing
 			-- Print finaizing output.
 		local
-			gm: EB_C_COMPILATION_OUTPUT_MANAGER
-			data_block:	EB_PROCESS_IO_DATA_BLOCK
+			l_encoding: detachable ENCODING
+			l_data_block: EB_PROCESS_IO_DATA_BLOCK
 		do
 			if not is_printing_freezing and finalizing_storage.has_new_block then
-				gm := c_compilation_output_manager
-				data_block := finalizing_storage.all_blocks (True)
-				gm.process_block_text (data_block)
-				gm.scroll_to_end
+				if
+					attached {ES_OUTPUT_PANE_I} c_compiler_output as l_output and then
+					attached window_manager.last_focused_development_window as l_window and then
+					attached {ES_LOCALE_EDITOR_WIDGET} l_output.widget_from_window (l_window) as l_locale_widget
+				then
+						-- Fetch the encoding of the widget.
+					l_encoding := l_locale_widget.encoding
+				end
+
+					-- Process a block of text using a selected encoding.
+				l_data_block := finalizing_storage.all_blocks (True)
+				process_block_text (l_data_block, c_compiler_formatter, l_encoding)
+
 				if process_manager.is_finalizing_running then
 					is_printing_finalizing := True
 				else
@@ -121,7 +145,6 @@ feature -- Printing
 					else
 						is_printing_finalizing := False
 						remove_printer (finalizing_printer)
-						gm.notify_c_compilation_output_finished
 					end
 				end
 			end
@@ -138,6 +161,36 @@ feature -- Printing
 				if b.is_end then
 					external_launcher.on_ouput_print_session_over
 					remove_printer (external_printer)
+				end
+			end
+		end
+
+feature -- Process
+
+	process_block_text (a_block: EB_PROCESS_IO_DATA_BLOCK; a_formatter: TEXT_FORMATTER; a_encoding: detachable ENCODING)
+			-- Print `text_block' on `console'.
+		require
+			a_block_attached: a_block /= Void
+			a_formatter_attached: a_formatter /= Void
+		local
+			l_lines: LIST [STRING_32]
+		do
+			if attached {READABLE_STRING_GENERAL} a_block.data as l_str then
+				l_lines := l_str.as_string_32.split ('%N')
+				from l_lines.start until l_lines.after loop
+					if attached l_lines.item as l_line then
+						if not l_line.is_empty then
+							if a_encoding /= Void then
+								a_formatter.process_basic_text (console_encoding_to_utf32 (a_encoding, l_line))
+							else
+								a_formatter.process_basic_text (l_line)
+							end
+						end
+						if not l_lines.islast then
+							a_formatter.process_new_line
+						end
+					end
+					l_lines.forth
 				end
 			end
 		end
@@ -159,7 +212,7 @@ feature{NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -172,22 +225,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

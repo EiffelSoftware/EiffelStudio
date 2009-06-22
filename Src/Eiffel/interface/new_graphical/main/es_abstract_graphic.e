@@ -69,9 +69,7 @@ feature {NONE} -- Initialization
 			fn: FILE_NAME
 			new_resources: TTY_RESOURCES
 			eifgen_init: INIT_SERVERS
-			l_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
 			l_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
-			l_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
 			l_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			l_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
 			preference_access: PREFERENCES
@@ -117,19 +115,15 @@ feature {NONE} -- Initialization
 			l_compiler_setting.set_preferences (l_studio_preferences)
 
 				-- Create and setup the output manager / Error displayer
-			create l_output_manager
-			set_output_manager (l_output_manager)
 			create l_external_output_manager
 			set_external_output_manager (l_external_output_manager)
-			create l_c_compilation_output_manager
-			set_c_compilation_output_manager (l_c_compilation_output_manager)
 
 				-- Set the error display for graphical output
 			eiffel_project.set_error_displayer (create_error_displayer)
 
 				-- Create and setup the degree output window.
 			if not preferences.development_window_data.graphical_output_disabled then
-				create l_graphical_degree_output.make_with_output_manager (output_manager)
+				create l_graphical_degree_output
 				Eiffel_project.set_degree_output (l_graphical_degree_output)
 			end
 

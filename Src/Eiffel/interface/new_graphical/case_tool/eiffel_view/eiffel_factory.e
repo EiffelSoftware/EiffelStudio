@@ -38,6 +38,13 @@ inherit
 			default_create
 		end
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 	SHARED_BENCH_NAMES
 		export
 			{NONE} all
@@ -48,17 +55,6 @@ inherit
 feature -- Access
 
 	world: EIFFEL_WORLD
-
-	name_string: STRING = "NAME"
-	cluster_name_string: STRING = "CLUSTER_NAME"
-	source_string: STRING = "SOURCE"
-	target_string: STRING = "TARGET"
-	source_cluster_string: STRING = "SOURCE_CLUSTER"
-	target_cluster_string: STRING = "TARGET_CLUSTER"
-	class_id_string: STRING = "CLASS_FIGURE_ID"
-	group_id_string: STRING = "GROUP_ID"
-	cluster_id_string: STRING = "CLUSTER_ID"
-		-- Xml string constants
 
 	model_from_xml (node: XM_ELEMENT): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
@@ -164,35 +160,56 @@ feature {NONE} -- Implementation
 	put_class_not_exist_warning (class_name: STRING; group_id: STRING)
 			-- Put a waring on the screen that class with `class_name' does not exist in the system.
 		local
-			l_output_manager: EB_OUTPUT_MANAGER
+			l_formatter: like general_formatter
 		do
-			if world /= Void and then world.context_editor /= Void then
-				l_output_manager := world.context_editor.develop_window.output_manager
-				l_output_manager.add_indexing_string (names.l_Loading_diagram)
-				l_output_manager.add_new_line
-				l_output_manager.add_indent
-				l_output_manager.add_string (names.l_class_is_not_in_anymore (class_name, group_id))
-				l_output_manager.add_new_line
+			if attached general_output as l_output then
+				l_output.lock
+
+				l_formatter := general_formatter
+				l_formatter.add_indexing_string (names.l_loading_diagram)
+				l_formatter.add_new_line
+				l_formatter.add_indent
+				l_formatter.add_string (names.l_class_is_not_in_anymore (class_name, group_id))
+				l_formatter.add_new_line
+
+				l_output.unlock
 			end
 		end
 
 	put_cluster_not_exist_warning (cluster_name: STRING)
 			-- Put a warning on the screen saying that class with `cluster_name'
 		local
-			l_output_manager: EB_OUTPUT_MANAGER
+			l_formatter: like general_formatter
 		do
-			if world /= Void and then world.context_editor /= Void then
-				l_output_manager := world.context_editor.develop_window.output_manager
-				l_output_manager.add_indexing_string (names.l_Loading_diagram)
-				l_output_manager.add_new_line
-				l_output_manager.add_indent
-				l_output_manager.add_string (names.l_cluster_is_not_in_the_system_anymore (cluster_name))
-				l_output_manager.add_new_line
+			if attached general_output as l_output then
+				l_output.lock
+
+				l_formatter := general_formatter
+				l_formatter.add_indexing_string (names.l_Loading_diagram)
+				l_formatter.add_new_line
+				l_formatter.add_indent
+				l_formatter.add_string (names.l_cluster_is_not_in_the_system_anymore (cluster_name))
+				l_formatter.add_new_line
+
+				l_output.unlock
 			end
 		end
 
+feature {NONE} -- Constants
+
+	name_string: STRING = "NAME"
+	cluster_name_string: STRING = "CLUSTER_NAME"
+	source_string: STRING = "SOURCE"
+	target_string: STRING = "TARGET"
+	source_cluster_string: STRING = "SOURCE_CLUSTER"
+	target_cluster_string: STRING = "TARGET_CLUSTER"
+	class_id_string: STRING = "CLASS_FIGURE_ID"
+	group_id_string: STRING = "GROUP_ID"
+	cluster_id_string: STRING = "CLUSTER_ID"
+		-- Xml string constants
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -205,22 +222,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_FACTORY

@@ -39,8 +39,7 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).testing, "Testing")
-			--Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general, "General")
+			Result := output_or_default ((create {OUTPUT_MANAGER_KINDS}).general, "General")
 		ensure
 			result_attached: Result /= Void
 			is_interface_usable: (attached {USABLE_I} Result as l_usable) implies l_usable.is_interface_usable

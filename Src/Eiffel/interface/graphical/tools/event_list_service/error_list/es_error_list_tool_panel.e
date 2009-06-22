@@ -39,6 +39,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		end
+
 	SESSION_EVENT_OBSERVER
 		export
 			{NONE} all
@@ -414,25 +419,21 @@ feature {NONE} -- Basic operations
 
 	do_default_action (a_row: EV_GRID_ROW)
 			-- <Precursor>
-		local
-			l_event_item: EVENT_LIST_ITEM_I
-			l_stone: STONE
-			l_error: C_COMPILER_ERROR
-			l_tool: ES_C_OUTPUT_TOOL_PANEL
 		do
-			l_event_item ?= a_row.data
-			if l_event_item /= Void then
-				l_error ?= l_event_item.data
-				if l_error /= Void then
+			if attached {EVENT_LIST_ITEM_I} a_row.data as l_event_item then
+				if attached {C_COMPILER_ERROR} l_event_item.data as l_error then
 						-- Show the C/C++ compiler output
-					l_tool ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).panel
-					if l_tool /= Void then
-						l_tool.scroll_to_end
-						l_tool.force_display
+					if attached c_compiler_output as l_output then
+						l_output.activate
+						if attached develop_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
+							l_tool.show (True)
+						end
 					end
 				else
-					l_stone := event_context_stone_from_row (a_row)
-					if l_stone /= Void and then l_stone.is_valid then
+					if
+						attached event_context_stone_from_row (a_row) as l_stone and then
+						l_stone.is_valid
+					then
 						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 					end
 				end

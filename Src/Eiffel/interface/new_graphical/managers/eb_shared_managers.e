@@ -58,24 +58,6 @@ feature -- Status report
 			Result := external_output_manager_cell.item
 		end
 
-	c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
-			-- Manager for output from C compiler
-		do
-			Result := c_compilation_output_manager_cell.item
-		end
-
-	output_manager: EB_OUTPUT_MANAGER
-			-- Output manager for all output messages.
-		do
-			Result := output_manager_cell.item
-		end
-
-	graphical_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
-			-- Output manager for all output tool in Development windows.
-		do
-			Result ?= output_manager_cell.item
-		end
-
 	recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			-- Manager for the recently opened projects.
 		do
@@ -127,20 +109,8 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	Output_manager_cell: CELL [EB_OUTPUT_MANAGER]
-			-- Output manager for development windows	
-		once
-			create Result.put (Void)
-		end
-
 	External_output_manager_cell: CELL [EB_EXTERNAL_OUTPUT_MANAGER]
 			-- External output manager
-		once
-			create Result.put (Void)
-		end
-
-	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER]
-			-- C compiler output manager
 		once
 			create Result.put (Void)
 		end

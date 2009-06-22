@@ -46,17 +46,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	c_output_tool: ES_C_OUTPUT_TOOL_PANEL
-			-- C output tool
-			-- This tool was orignal belong to context_tool
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).panel
-		ensure
-			result_attached: Result /= Void
-		end
-
 	dependency_tool: ES_DEPENDENCY_TOOL_PANEL
 			-- Dependency tool
 		require
@@ -117,17 +106,6 @@ feature -- Access
 			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).panel
-		ensure
-			result_attached: Result /= Void
-		end
-
-	output_tool: ES_OUTPUT_TOOL_PANEL
-			-- Output tool.
-			-- This tool was orignal belong to context_tool
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_OUTPUT_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end

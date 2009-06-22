@@ -66,6 +66,8 @@ inherit
 		end
 
 	EB_SHARED_MANAGERS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -81,6 +83,13 @@ inherit
 		end
 
 	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	ES_SHARED_OUTPUTS
 		export
 			{NONE} all
 		undefine
@@ -1324,8 +1333,8 @@ feature {NONE} -- Implementation
 			-- Inform user, that class was modified outside diagram.
 		do
 			if not context_editor.history.is_empty then
-				output_manager.add_multiline_string (warning_messages.w_class_modified_outside_diagram, 0)
-				output_manager.add_new_line
+				general_formatter.add_multiline_string (warning_messages.w_class_modified_outside_diagram, 0)
+				general_formatter.add_new_line
 				context_editor.reset_history
 			end
 		end

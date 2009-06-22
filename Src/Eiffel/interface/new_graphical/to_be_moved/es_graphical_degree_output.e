@@ -1,8 +1,7 @@
 note
-	description: "Objects that ..."
+	description: "EiffelStudio graphical degree output to send output to the outputs tool ({ES_OUTPUTS_TOOL})."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,19 +11,36 @@ class
 inherit
 	DEGREE_OUTPUT
 		redefine
-			put_new_compilation,
-			display_message,
-			display_new_line,
-			display_degree,
-			display_degree_output,
+			translate,
+			put_start_output,
+			put_end_output,
+			put_message,
+			put_new_line,
+			put_degree,
+			put_degree_output,
 			put_dead_code_removal_message,
 			put_start_degree,
 			put_end_degree,
-			finish_degree_output,
 			flush_output
 		end
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -39,89 +55,60 @@ inherit
 			default_create
 		end
 
-create
-	make_with_output_manager
+feature {NONE} -- Query: Internationalization
 
-feature {NONE} -- Initialization
-
-	make_with_output_manager (a_output_manager: EB_OUTPUT_MANAGER)
-			-- Initialize degree output with `a_output_manager'.
-		require
-			a_output_manager_not_void: a_output_manager /= Void
+	translate (a_string: STRING; a_args: detachable TUPLE): STRING_32
+			-- <Precursor>
 		do
-			output_manager := a_output_manager
-			is_output_quiet := True
-		end
-
-feature {NONE} -- Implementation
-
-	output_manager: EB_OUTPUT_MANAGER
-			-- Output manager used to display messages of `Current'.
-
-	flush_output
-			-- Flush any pending messages to the display.
-		do
-			if not ev_application.is_destroyed and then ev_application.is_launched then
-				ev_application.process_events
+			if a_args /= Void then
+				Result := locale_formatter.formatted_translation (a_string, a_args)
+			else
+				Result := locale_formatter.translation (a_string)
 			end
 		end
 
-	put_new_compilation
-			-- A new compilation has begun.
+feature -- Basic operation
+
+	put_start_output
+			-- <Precursor>
 		do
+			Precursor
+			compiler_output.lock
+			compiler_output.clear
+		end
+
+	put_end_output
+			-- <Precursor>
+		do
+			Precursor
+			compiler_output.unlock
 			window_manager.display_percentage (0)
 		end
 
-	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING)
-			-- Display degree `deg_nbr' with entity `a_class'.
+feature {NONE} -- Basic operations
+
+	put_start_degree (a_degree: INTEGER; a_total: INTEGER)
+			-- <Precursor>
 		local
-			l_desc: STRING
+			l_degree_str: STRING_8
 		do
-			Precursor (deg_nbr, to_go, a_name)
-			if current_degree = 0 then
-				l_desc := deg_nbr
-			else
-				l_desc := degree_description (current_degree)
+			total_number := a_total
+			degree := a_degree
+			last_degree := a_degree
+			processed := 0
+			compiler_formatter.start_processing (True)
+			l_degree_str := degree_short_description (a_degree)
+			if a_degree /= 0 then
+				compiler_formatter.process_string_text (translate (lb_degree, Void), Void)
+				compiler_formatter.process_basic_text (" ")
+				compiler_formatter.process_string_text (a_degree.out, Void)
+				compiler_formatter.process_basic_text (": ")
 			end
+			compiler_formatter.process_basic_text (l_degree_str)
+			compiler_formatter.process_basic_text (once "...")
+			compiler_formatter.process_new_line
+			compiler_formatter.end_processing
 
-			if total_number > 1 then
-				window_manager.display_message_and_percentage (l_desc  +
-					" (" + (total_number - to_go + 1).out + "/" + total_number.out + "): " + a_name,
-					percentage_calculation (to_go))
-			else
-				window_manager.display_message_and_percentage (l_desc +
-					": " + a_name, percentage_calculation (to_go))
-			end
-
-			flush_output
-		end
-
-	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER)
-			-- Display degree `deg_nbr' with entity `a_class'.
-		do
-			Precursor (deg_nbr, to_go, total)
-			window_manager.display_message_and_percentage (deg_nbr, percentage_calculation (to_go))
-			flush_output
-		end
-
-	put_dead_code_removal_message (a_processed, to_go: INTEGER)
-			-- Put message progress the start of dead code removal.
-		local
-			l_processed: INTEGER
-		do
-			Precursor (a_processed, to_go)
-			l_processed := processed
-			total_number := l_processed + to_go
-			window_manager.display_message_and_percentage (
-				"Removing Dead Features (" + l_processed.out + "/" + total_number.out + ")",  percentage_calculation (to_go))
-			flush_output
-		end
-
-	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER)
-			-- Put message indicating the start of a degree
-			-- with `total_nbr' passes to be done.
-		do
-			Precursor (degree_nbr, total_nbr)
 			window_manager.display_percentage (0)
 			if is_compilation_cancellable then
 				project_cancel_cmd.enable_sensitive
@@ -131,34 +118,89 @@ feature {NONE} -- Implementation
 		end
 
 	put_end_degree
-			-- Put message indicating the end of a degree.
+			-- <Precursor>
 		do
 			window_manager.display_percentage (100)
 		end
 
-	finish_degree_output
-			-- Procedd end degree output.
+	put_degree (a_degree: STRING; a_to_go: INTEGER; a_name: STRING)
+			-- <Precursor>
+		local
+			l_desc: STRING_32
 		do
-			Precursor
-			window_manager.display_percentage (0)
+			Precursor (a_degree, a_to_go, a_name)
+			if degree = 0 then
+				l_desc := a_degree
+			else
+				l_desc := degree_description (degree)
+			end
+
+			if total_number > 1 then
+				window_manager.display_message_and_percentage (
+					l_desc  + " (" + (total_number - a_to_go + 1).out + "/" + total_number.out + "): " + a_name,
+					calculate_percentage (a_to_go))
+			else
+				window_manager.display_message_and_percentage (
+					l_desc + ": " + a_name, calculate_percentage (a_to_go))
+			end
+
+			flush_output
 		end
 
-	display_message (a_message: STRING)
-			-- Display `a_message' to output.
+
+	put_dead_code_removal_message (a_processed: INTEGER; a_to_go: INTEGER)
+			-- <Precursor>
+		local
+			l_processed: INTEGER
 		do
-			output_manager.start_processing (true)
-			output_manager.add_string (a_message)
-			output_manager.end_processing
+			Precursor (a_processed, a_to_go)
+			l_processed := processed
+			total_number := l_processed + a_to_go
+
+			window_manager.display_message_and_percentage (locale_formatter.formatted_translation (lb_removing_dead_features_2, [l_processed, total_number]),  calculate_percentage (a_to_go))
 		end
 
-	display_new_line
-			-- Display a new line on output.
+feature {NONE} -- Implementation
+
+	flush_output
+			-- Flush any pending messages to the display.
 		do
-			output_manager.add_new_line
+			if not ev_application.is_destroyed and then ev_application.is_launched then
+				ev_application.process_events
+			end
 		end
+
+	put_degree_output (a_degree: STRING; a_to_go: INTEGER; a_total: INTEGER)
+			-- <Precursor>
+		do
+			Precursor (a_degree, a_to_go, a_total)
+			window_manager.display_message_and_percentage (a_degree, calculate_percentage (a_to_go))
+			flush_output
+		end
+
+feature -- Basic operations
+
+	put_message (a_message: STRING)
+			-- <Precursor>
+		do
+			compiler_formatter.start_processing (True)
+			compiler_formatter.add (a_message.as_string_32)
+			compiler_formatter.end_processing
+		end
+
+	put_new_line
+			-- <Precursor>
+		do
+			compiler_formatter.add_new_line
+		end
+
+feature {NONE} -- Internationalization
+
+	lb_compilation_failed: STRING = "Compilation failed"
+	lb_removing_dead_features_2: STRING = "Removing unused (dead) code ($1/$2)"
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -171,22 +213,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

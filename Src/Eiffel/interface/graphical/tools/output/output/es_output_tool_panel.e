@@ -9,6 +9,9 @@ note
 class
 	ES_OUTPUT_TOOL_PANEL
 
+obsolete
+	"Please migrate tools. ES_OUTPUTS_TOOL_PANEL replaces this tool but you might be looking for a new tool using the ES_EDITOR_WIDGET or ES_EDITOR_OUTPUT_PANE."
+
 inherit
 	EB_TOOL
 		redefine
@@ -43,7 +46,9 @@ feature {NONE} -- Initialization
 			text_area.disable_line_numbers
 			l_f.extend (text_area.widget)
 			widget := l_f
-			graphical_output_manager.extend (Current)
+
+			check should_not_be_called: False end
+			--graphical_output_manager.extend (Current)
 
 				-- Output text is not editable
 			text_area.set_read_only (True)
@@ -82,7 +87,8 @@ feature -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			graphical_output_manager.prune (Current)
+				-- See `make_with_tool' for matching commentted code.
+			--graphical_output_manager.prune (Current)
 			Precursor
 		end
 

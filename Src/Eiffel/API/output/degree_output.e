@@ -556,8 +556,8 @@ feature -- Basic operations: Eiffel compiler
 		require
 			not_is_abort_requested: not is_abort_requested
 		do
-			put_string (translate (lb_freezing_system_message, Void))
 			put_new_line
+			put_string (translate (lb_freezing_system_message, Void))
 		end
 
 	put_resynchronizing_breakpoints_message

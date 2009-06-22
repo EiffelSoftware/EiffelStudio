@@ -18,6 +18,11 @@ inherit
 			copy
 		end
 
+	DEBUG_OUTPUT
+		redefine
+			copy
+		end
+
 create
 	share_from_pointer
 
@@ -78,6 +83,14 @@ feature -- Status report
 			-- Does current still have its underlying object and thus is usable?
 		do
 			Result := item /= default_pointer
+		end
+
+	debug_output: STRING
+		local
+			l_string: NS_STRING
+		do
+			create l_string.make_from_pointer ({NS_OBJECT_API}.description (item))
+			Result := l_string.to_string
 		end
 
 feature -- Duplication

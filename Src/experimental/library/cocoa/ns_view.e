@@ -217,7 +217,7 @@ feature -- Base Coordinate Conversion
 			{NS_VIEW_API}.convert_point_to_base (item, a_point.item, Result.item)
 		end
 
-	convert_point_to_view (a_point: NS_POINT; a_view: NS_VIEW): NS_POINT
+	convert_point_to_view (a_point: NS_POINT; a_view: detachable NS_VIEW): NS_POINT
 			-- Converts a point from the receiver's coordinate system to that of a given view.
 			-- If `a_view' is `Void', this method instead converts to window base coordinates. Otherwise, both `a_view' and the receiver must belong to the same NS_WINDOW object.
 		local

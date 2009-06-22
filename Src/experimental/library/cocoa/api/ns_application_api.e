@@ -46,11 +46,22 @@ feature -- Configuring Applications
 
 feature -- Launching Applications
 
+feature -- Accessing the Main Menu
+
 	frozen set_main_menu (a_application, a_menu: POINTER)
+			-- - (void)setMainMenu:(NSMenu *)aMenu
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[NSApp setMainMenu: $a_menu];"
+			"[(NSApplication*)$a_application setMainMenu: $a_menu];"
+		end
+
+	frozen main_menu (a_application: POINTER): POINTER
+			-- - (NSMenu *)mainMenu
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSApplication*)$a_application mainMenu];"
 		end
 
 feature -- Terminating Applications
@@ -97,7 +108,14 @@ feature -- Terminating Applications
 		end
 
 
---- (void)stop:(id)sender;
+	frozen stop (a_application: POINTER; a_sender: POINTER)
+			--- (void)stop:(id)sender;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSApplication*)$a_application stop: $a_sender];"
+		end
+
 --- (void)stopModal;
 --- (void)stopModalWithCode:(NSInteger)returnCode;
 --- (void)abortModal;

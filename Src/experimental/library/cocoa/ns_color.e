@@ -21,7 +21,8 @@ create
 	color_with_calibrated_red_green_blue_alpha,
 	color_with_pattern_image
 create {NS_OBJECT}
-	make_from_pointer
+	make_from_pointer,
+	share_from_pointer
 
 feature {NONE} -- Creation
 

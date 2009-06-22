@@ -50,21 +50,20 @@ feature -- Access
 			split_view_set_autosave_name (item, a_autosave_name.item)
 		end
 
---	autosave_name : NS_STRING
---		do
---			Result := split_view_autosave_name (cocoa_object)
---		end
+	autosave_name: NS_STRING
+		do
+			create Result.make_from_pointer (split_view_autosave_name (item))
+		end
 
 	set_delegate (a_delegate: NS_SPLIT_VIEW_DELEGATE)
 		do
 			split_view_set_delegate (item, a_delegate.item)
 		end
 
-	delegate: NS_SPLIT_VIEW_DELEGATE
-		do
---			Result := split_view_delegate (cocoa_object)
-			check implement: FALSE end
-		end
+--	delegate: NS_SPLIT_VIEW_DELEGATE
+--		do
+--			create Result.share_from_pointer (split_view_delegate (item))
+--		end
 
 --	draw_divider_in_rect (a_rect: NS_RECT)
 --		do
@@ -73,8 +72,7 @@ feature -- Access
 
 	divider_color: NS_COLOR
 		do
---			Result := split_view_divider_color (cocoa_object)
-			check implement: FALSE end
+			create Result.share_from_pointer (split_view_divider_color (item))
 		end
 
 	divider_thickness: REAL

@@ -19,8 +19,8 @@ feature -- Access
 	background_color_internal: EV_COLOR
 			-- Color of face.
 		do
-			if background_color_imp /= Void then
-				Result := background_color_imp.interface
+			if attached background_color_imp as imp and then attached imp.interface as color then
+				Result := color
 			else
 				create Result
 			end
@@ -29,8 +29,8 @@ feature -- Access
 	foreground_color_internal: EV_COLOR
 			-- Color of foreground features like text.
 		do
-			if foreground_color_imp /= Void then
-				Result := foreground_color_imp.interface
+			if attached foreground_color_imp as imp and then attached imp.interface as color then
+				Result := color
 			else
 				create Result
 			end
@@ -43,6 +43,9 @@ feature -- Status setting
 			-- Assign `a_color' to `background_color'
 		do
 			background_color_imp ?= a_color.implementation
+			check
+				background_color_imp /= Void
+			end
 		end
 
 	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR)
@@ -57,6 +60,9 @@ feature -- Status setting
 			-- Assign `a_color' to `foreground_color'
 		do
 			foreground_color_imp ?= a_color.implementation
+			check
+				foreground_color_imp /= Void
+			end
 		end
 
 	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR)
@@ -74,10 +80,10 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	background_color_imp: EV_COLOR_IMP
+	background_color_imp: detachable EV_COLOR_IMP
 		-- Color used for the background of `Current'
 
-	foreground_color_imp: EV_COLOR_IMP
+	foreground_color_imp: detachable EV_COLOR_IMP
 		-- Color used for the foreground of `Current'
 
 	Prelight_scale: REAL = 1.0909488

@@ -94,7 +94,9 @@ feature -- Access
 			until
 				windows_imp.after
 			loop
-				Result.extend (windows_imp.item.interface)
+				if attached windows_imp.item.interface as window then
+					Result.extend (window)
+				end
 				windows_imp.forth
 			end
 		end
@@ -104,12 +106,15 @@ feature -- Basic operation
 	process_underlying_toolkit_event_queue
 			-- Process Cocoa events
 		local
-			event: NS_EVENT
+			event: detachable NS_EVENT
 			view: NS_VIEW
 			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
 		do
+			-- Fix the menu because we are not loading from a nib
+			--main_menu.insert_item_at_index (default_application_menu, 0)
+
 			from
 				event := next_event (0, default_pointer, 0, true)
 			until
@@ -178,7 +183,7 @@ feature -- Basic operation
 				set_is_destroyed (True)
 				destroy_actions.call (Void)
 			end
-			terminate
+			stop
 		end
 
 feature -- Status report
@@ -222,10 +227,9 @@ feature -- Implementation
 	is_in_transport: BOOLEAN
 		-- Is application currently in transport (either PND or docking)?
 
-	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
+	pick_and_drop_source: detachable EV_PICK_AND_DROPABLE_IMP
 			-- Source of pick and drop if any.
 		do
-			--Result := internal_pick_and_drop_source
 		end
 
 	enable_is_in_transport

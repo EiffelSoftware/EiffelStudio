@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision file open dialog. Cocoa implementation."
-
+	author:	"Daniel Furrer"
 
 class
 	EV_FILE_OPEN_DIALOG_IMP
@@ -17,8 +17,7 @@ inherit
 		redefine
 			make,
 			interface,
-			show_modal_to_window,
-			window
+			show_modal_to_window
 		end
 
 create
@@ -30,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			create open_panel.make
 			save_panel := open_panel
+			window := open_panel
 			Precursor
 			--set_title ("Open")
 		end
@@ -110,14 +110,6 @@ feature {NONE} -- Implementation
 
 	open_panel: NS_OPEN_PANEL
 
-	window: NS_WINDOW
-		do
-			Result ?= open_panel
-		end
-
 	interface: EV_FILE_OPEN_DIALOG;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FILE_OPEN_DIALOG_IMP
-

@@ -29,7 +29,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			create {NS_MENU}cocoa_item.make
+			create menu.make
+			cocoa_item := menu
 			initialize_item_list
 		end
 
@@ -88,11 +89,11 @@ feature {EV_WINDOW_IMP} -- Implementation
 			parent_imp := a_wind
 		end
 
-	parent: EV_WINDOW
+	parent: detachable EV_WINDOW
 			-- Parent window of Current.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
+			if attached parent_imp as p_imp then
+				Result := p_imp.attached_interface
 			end
 		end
 
@@ -102,15 +103,14 @@ feature {EV_WINDOW_IMP} -- Implementation
 			parent_imp := Void
 		end
 
-	parent_imp: EV_WINDOW_IMP
+	parent_imp: detachable EV_WINDOW_IMP
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_MENU_BAR note option: stable attribute end;
-
 	menu: NS_MENU
-		do
-			Result ?= cocoa_item
-		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_MENU_BAR note option: stable attribute end;
 
 end -- class EV_MENU_BAR_IMP

@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision item, Cocoa implementation"
-	legal: "See notice at end of class.";
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -62,7 +61,7 @@ feature {EV_ITEM_LIST_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
+	parent_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
 
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
@@ -73,7 +72,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ITEM note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer and others"
 end -- class EV_ITEM_IMP
-

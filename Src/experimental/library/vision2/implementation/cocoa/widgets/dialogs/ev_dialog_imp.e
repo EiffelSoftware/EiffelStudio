@@ -31,9 +31,10 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize 'Current'
 		do
-			create {NS_WINDOW}cocoa_item.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
+			create window.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask, True)
 			window.make_key_and_order_front
+			cocoa_item := window
 			allow_resize
 			create_delegate
 			window.set_delegate (current)
@@ -59,11 +60,14 @@ feature -- Status Report
 		do
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 
 		do
+			Result := Void
+			-- `Result' is Void as `Current' cannot be shown modally or
+			-- relative, otherwise its implementation would not be EV_DIALOG_IMP.
 		end
 
 	show_modal_to_window (a_window: EV_WINDOW)

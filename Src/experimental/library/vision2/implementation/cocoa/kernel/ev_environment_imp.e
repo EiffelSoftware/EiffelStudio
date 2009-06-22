@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision Environment. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision Environment. Cocoa implementation."
+	author: "Daniel Furrer"
 	keywords: "environment, global, system"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,18 +71,11 @@ feature -- Access
 
 	font_families: LINEAR [STRING_32]
 			-- List of fonts available on the system
-		local
-			app_imp: EV_APPLICATION_IMP
 		once
 			check
 				not_implemented: False
 			end
-			app_imp ?= application.implementation
-			--Result := app_imp.font_names_on_system.linear_representation
-			Result.compare_objects
+			create {LINKED_LIST [STRING_32]}Result.make
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_ENVIRONMENT_IMP
-

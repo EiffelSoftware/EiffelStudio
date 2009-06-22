@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Setup `Current'
 		do
 			set_is_initialized (True)
+			create key
 		end
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation

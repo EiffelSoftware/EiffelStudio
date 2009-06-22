@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision frame. Cocoa implementation"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision frame. Cocoa implementation"
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,8 +48,9 @@ feature {NONE} -- Initialization
 		local
 			a_font: EV_FONT
 		do
-			create {NS_BOX}cocoa_item.make
+			create box.make
 			box.set_title_position ({NS_BOX}.no_title)
+			cocoa_item := box
 
 			align_text_left
 			create a_font.default_create
@@ -99,8 +98,8 @@ feature -- Layout
 		local
 			mw: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
 			end
 			mw := mw + client_x --+ border_width
 			--mw := mw.max (text_width + 2 * Text_padding)			
@@ -112,8 +111,8 @@ feature -- Layout
 		local
 			mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mh := l_item_imp.minimum_height
 			end
 			mh := mh + client_y
 			internal_set_minimum_height (mh)
@@ -125,9 +124,9 @@ feature -- Layout
 		local
 			mw, mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
+				mh := l_item_imp.minimum_height
 			end
 			mh := mh + client_y
 			mw := mw + client_x --+ border_width
@@ -146,13 +145,10 @@ feature -- Layout
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FRAME note option: stable attribute end;
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FRAME_IMP
-

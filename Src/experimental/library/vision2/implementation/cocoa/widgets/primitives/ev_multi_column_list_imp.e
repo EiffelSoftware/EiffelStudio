@@ -13,7 +13,6 @@ inherit
 		redefine
 			interface,
 			make,
-			call_pebble_function,
 			pixmaps_size_changed,
 			remove_row_pixmap,
 			ev_children
@@ -22,9 +21,6 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			disable_transport,
-			pre_pick_steps,
-			call_pebble_function,
-			post_drop_steps,
 			on_mouse_button_event,
 			make,
 			interface,
@@ -32,7 +28,6 @@ inherit
 			able_to_transport,
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
-			create_pointer_motion_actions,
 			minimum_height,
 			minimum_width
 		end
@@ -88,22 +83,16 @@ feature {NONE} -- Implementation
 	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		-- Previous selection of `Current'
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
-		end
-
 feature {NONE} -- Implementation
 
 	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call the selections actions for `clicked_row'
 		do
 			if not previous_selection.has (clicked_row.interface) then
-					if clicked_row.select_actions_internal /= Void then
+					if attached clicked_row.select_actions_internal then
 						clicked_row.select_actions_internal.call (void)
 					end
-					if select_actions_internal /= Void then
+					if attached select_actions_internal then
 						select_actions_internal.call ([clicked_row.interface])
 					end
 			end
@@ -112,10 +101,10 @@ feature {NONE} -- Implementation
 	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call deselect actions for `deselected_row'
 		do
-				if deselected_row.deselect_actions_internal /= Void then
+				if attached deselected_row.deselect_actions_internal then
 					deselected_row.deselect_actions_internal.call (Void)
 				end
-				if deselect_actions_internal /= Void then
+				if attached deselect_actions_internal then
 					deselect_actions_internal.call ([deselected_row.interface])
 				end
 		end
@@ -403,108 +392,6 @@ feature -- Implementation
 
 	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Implementation object of the current row if in PND transport.
-
-	temp_pebble: ANY
-
-	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
-			-- Returns data to be transported by PND mechanism.
-
-	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
-
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- Set `pebble' using `pebble_function' if present.
-		do
-			temp_pebble := pebble
-			temp_pebble_function := pebble_function
-			if pnd_row_imp /= Void then
-				pebble := pnd_row_imp.pebble
-				pebble_function := pnd_row_imp.pebble_function
-			end
-
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y]);
-				pebble := pebble_function.last_result
-			end
-		end
-
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- Steps to perform before transport initiated.
-		do
-			temp_accept_cursor := accept_cursor
-			temp_deny_cursor := deny_cursor
-			app_implementation.on_pick (pebble)
-
-			if pnd_row_imp /= Void then
-				if pnd_row_imp.pick_actions_internal /= Void then
-					pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
-				end
-				accept_cursor := pnd_row_imp.accept_cursor
-				deny_cursor := pnd_row_imp.deny_cursor
-			else
-				if pick_actions_internal /= Void then
-					pick_actions_internal.call ([a_x, a_y])
-				end
-			end
-
-			pointer_x := a_screen_x.to_integer_16
-			pointer_y := a_screen_y.to_integer_16
-
-			if pnd_row_imp = Void then
-				if (pick_x = 0 and then pick_y = 0) then
-					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
-				else
-					if pick_x > width then
-						pick_x := width.to_integer_16
-					end
-					if pick_y > height then
-						pick_y := height.to_integer_16
-					end
-					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
-				end
-			else
-				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
-				else
-					if pick_x > width then
-						pick_x := width.to_integer_16
-					end
-					if pick_y > row_height then
-						pick_y := row_height.to_integer_16
-					end
-					App_implementation.set_x_y_origin (
-						pnd_row_imp.pick_x + (a_screen_x - a_x),
-						pnd_row_imp.pick_y +
-						(a_screen_y - a_y) +
-						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
-					)
-				end
-			end
-		end
-
-	post_drop_steps (a_button: INTEGER)
-			-- Steps to perform once an attempted drop has happened.
-		do
-			App_implementation.set_x_y_origin (0, 0)
-
-			if pebble_function /= Void then
-				if pnd_row_imp /= Void then
-				else
-					temp_pebble := Void
-				end
-			end
-
-			accept_cursor := temp_accept_cursor
-			deny_cursor := temp_deny_cursor
-			pebble := temp_pebble
-			pebble_function := temp_pebble_function
-
-			temp_pebble := Void
-			temp_pebble_function := Void
-			temp_accept_cursor := Void
-			temp_deny_cursor := Void
-
-			pnd_row_imp := Void
-		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 

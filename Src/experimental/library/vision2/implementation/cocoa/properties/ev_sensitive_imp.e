@@ -47,11 +47,8 @@ feature {EV_ANY_I} -- Implementation
 
 	parent_is_sensitive: BOOLEAN
 			-- (export status {NONE})
-		local
-			sensitive_parent: EV_SENSITIVE
 		do
-			sensitive_parent ?= parent
-			if sensitive_parent /= Void then
+			if attached {EV_SENSITIVE} parent as sensitive_parent then
 				Result := sensitive_parent.is_sensitive
 			end
 		end

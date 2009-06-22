@@ -11,7 +11,8 @@ inherit
 	EV_TITLED_WINDOW
 		redefine
 			initialize,
-			is_in_default_state
+			is_in_default_state,
+			create_interface_objects
 		end
 
 create
@@ -26,16 +27,18 @@ feature -- Console View
 			window_list: LINEAR [EV_WINDOW]
 		do
 			create env
-			window_list := env.application.windows
-			from
-				window_list.start
-			until
-				window_list.after
-			loop
-				io.output.put_string(window_list.item.title + "%N")
-				output_info_rec (window_list.item, 1)
-				io.output.put_string("----------%N")
-				window_list.forth
+			if attached env.application as l_app then
+				window_list := l_app.windows
+				from
+					window_list.start
+				until
+					window_list.after
+				loop
+					io.output.put_string(window_list.item.title + "%N")
+					output_info_rec (window_list.item, 1)
+					io.output.put_string("----------%N")
+					window_list.forth
+				end
 			end
 		end
 
@@ -43,49 +46,54 @@ feature -- Console View
 			--
 		local
 			p: POINTER
-			box: EV_BOX_IMP
 			str, ident_str: STRING
-			w: EV_WIDGET_IMP
-			wlist: EV_WIDGET_LIST
-			container: EV_CONTAINER
 		do
-			w ?= a_widget.implementation
-			p := $a_widget
-			create ident_str.make_filled (' ', ident*2)
-			str :=
-				"Type: " + w.generating_type + "%N" + ident_str +
-				"Address: " + p.out + "%N" + ident_str +
-				"Relative Position: " + a_widget.x_position.out + "x" + a_widget.y_position.out + "%N" + ident_str +
-				"Screen Position: " + a_widget.screen_x.out + "x" + a_widget.screen_y.out + "%N" + ident_str +
-				"Minimum Size: " + a_widget.minimum_width.out + "x" + a_widget.minimum_height.out + "%N" + ident_str +
-				"Actual Size: "+ a_widget.width.out + "x" + a_widget.height.out + "%N" + ident_str +
-				"Expandable: " + w.is_expandable.out + "%N"
-			box ?= w
-			if  box /= void then
-				str.append ("%N" + ident_str +
-				"Padding: " + box.padding.out + "%N"+ ident_str +
-				"homogenous: " + box.is_homogeneous.out + "%N")
-			end
-			io.output.put_string (str)
-
-			wlist ?= a_widget
-			container ?= a_widget
-			if wlist /= Void then
-				from
-					wlist.start
-				until
-					wlist.after
-				loop
-					output_info_rec (wlist.item, ident + 1)
-					wlist.forth
+			if attached {EV_WIDGET_IMP} a_widget.implementation as w then
+				p := $a_widget
+				create ident_str.make_filled (' ', ident*2)
+				str :=
+					"Type: " + w.generating_type + "%N" + ident_str +
+					"Address: " + p.out + "%N" + ident_str +
+					"Relative Position: " + a_widget.x_position.out + "x" + a_widget.y_position.out + "%N" + ident_str +
+					"Screen Position: " + a_widget.screen_x.out + "x" + a_widget.screen_y.out + "%N" + ident_str +
+					"Minimum Size: " + a_widget.minimum_width.out + "x" + a_widget.minimum_height.out + "%N" + ident_str +
+					"Actual Size: "+ a_widget.width.out + "x" + a_widget.height.out + "%N" + ident_str +
+					"Expandable: " + w.is_expandable.out + "%N"
+				if attached {EV_BOX_IMP} w as box then
+					str.append ("%N" + ident_str +
+					"Padding: " + box.padding.out + "%N"+ ident_str +
+					"homogenous: " + box.is_homogeneous.out + "%N")
 				end
-			elseif container /= Void then
-				output_info_rec (container.item, ident + 1)
+				io.output.put_string (str)
+
+				if attached {EV_WIDGET_LIST} a_widget as wlist then
+					from
+						wlist.start
+					until
+						wlist.after
+					loop
+						output_info_rec (wlist.item, ident + 1)
+						wlist.forth
+					end
+				elseif attached {EV_CONTAINER} a_widget as container then
+					output_info_rec (container.item, ident + 1)
+				end
 			end
 		end
 
 
 feature {NONE} -- Graphical view
+
+	create_interface_objects
+		do
+			create horizontal_box
+			create tree
+			create vertical_box
+			create hide_button.make_with_text_and_action ("hide", agent hide_widget)
+			create show_button.make_with_text_and_action ("show", agent show_widget)
+			create debug_button.make_with_text_and_action ("debug", agent debug_widget)
+			create info_label.default_create
+		end
 
 	initialize
 			-- Initialize `Current' to set up tests.
@@ -94,17 +102,10 @@ feature {NONE} -- Graphical view
 		do
 			Precursor {EV_TITLED_WINDOW}
 
-			create horizontal_box
-			create tree
-			create vertical_box
 			create refresh_button.make_with_text_and_action ("refresh", agent update_tree)
-			create hide_button.make_with_text_and_action ("hide", agent hide_widget)
 			--hide_button.disable_sensitive
-			create show_button.make_with_text_and_action ("show", agent show_widget)
 			--show_button.disable_sensitive
-			create debug_button.make_with_text_and_action ("debug", agent debug_widget)
 			debug_button.disable_sensitive
-			create info_label.default_create
 			info_label.align_text_left
 			info_label.set_minimum_height (100)
 			horizontal_box.extend (tree)
@@ -133,64 +134,69 @@ feature {NONE} -- Graphical view
 	update_tree
 			-- Go through the items in the tree view, remove items already removed in the container structure and add the new children.
 		local
-			n: EV_TREE_NODE
+			n: detachable EV_TREE_NODE
 			env: EV_ENVIRONMENT
 			window_list: LINEAR [EV_WINDOW]
 		do
 			tree.do_all (agent check_removal)
 
 			create env
-			window_list := env.application.windows
-			from
-				window_list.start
-			until
-				window_list.after
-			loop
-				n := tree.retrieve_item_recursively_by_data (window_list.item, false)
-				if n /= Void then
-					n.set_text (window_list.item.title)
-					update_recursive (n, window_list.item)
-				else
-					n := create {EV_TREE_ITEM}.make_with_text (window_list.item.title)
-					n.select_actions.extend (agent show_info (window_list.item))
-					n.set_data (window_list.item)
-					tree.extend (n)
-					add_recursive (n, window_list.item)
+			if attached env.application as l_app then
+				window_list := l_app.windows
+				from
+					window_list.start
+				until
+					window_list.after
+				loop
+					n := tree.retrieve_item_recursively_by_data (window_list.item, false)
+					if attached n then
+						n.set_text (window_list.item.title)
+						update_recursive (n, window_list.item)
+					else
+						n := create {EV_TREE_ITEM}.make_with_text (window_list.item.title)
+						n.select_actions.extend (agent show_info (window_list.item))
+						n.set_data (window_list.item)
+						tree.extend (n)
+						add_recursive (n, window_list.item)
+					end
+					window_list.forth
 				end
-				window_list.forth
 			end
 		end
 
 	check_removal (a_node: EV_TREE_NODE)
 			-- Removes widgets that were children of the container represented by 'a_node' from the tree if they are not there anymore.
-		local
-			widget: EV_WIDGET
 		do
 			from
 				a_node.start
 			until
 				a_node.after
 			loop
-				widget ?= a_node.item.data
-				if widget.parent = void then
-					a_node.remove
-				else
-					check_removal (a_node.item)
-					a_node.forth
+				if attached {EV_WIDGET} a_node.item.data as widget then
+					if widget.parent = void then
+						a_node.remove
+					else
+						check_removal (a_node.item)
+						a_node.forth
+					end
 				end
 			end
 		end
 
 
-	add_element (a_element: EV_WIDGET; a_parent: EV_TREE_NODE): EV_TREE_NODE
+	add_element (a_element: detachable EV_WIDGET; a_parent: EV_TREE_NODE): EV_TREE_NODE
 			-- Add the widget `a_element' in the tree under node `a_parent'
 		local
-			node: EV_TREE_NODE
+			node: EV_TREE_ITEM
 		do
-			node := create {EV_TREE_ITEM}.make_with_text (a_element.generating_type)
-			node.set_data (a_element)
-			a_parent.extend (node)
-			node.select_actions.extend (agent show_info (a_element))
+			if attached a_element then
+				create node.make_with_text (a_element.generating_type)
+				node.set_data (a_element)
+				a_parent.extend (node)
+				node.select_actions.extend (agent show_info (a_element))
+			else
+				create node.make_with_text ("VOID")
+			end
 			Result := node
 		end
 
@@ -198,31 +204,38 @@ feature {NONE} -- Graphical view
 	update_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER)
 			-- If the item is already in the view just continue. If not add it.
 		local
-			node: EV_TREE_NODE
-			container: EV_CONTAINER
+			node: detachable EV_TREE_NODE
 		do
 			if a_container = Void then
 				-- Do nothing. no children to add to a_node
 			elseif attached {EV_SPLIT_AREA} a_container as l_splitarea then
 				-- The split area needs special treatment
-				node := tree.retrieve_item_recursively_by_data (l_splitarea.first, false)
-				if node /= Void then
-					container ?= node.data
-					update_recursive(node, container)
-				else
-					node := add_element (l_splitarea.first, a_node)
-					container ?= l_splitarea.first
-					add_recursive (node, container)
+				if attached l_splitarea.first as child then
+					node := tree.retrieve_item_recursively_by_data (child, false)
+					if attached node then
+						if attached {EV_CONTAINER} node.data as l_container then
+							update_recursive (node, l_container)
+						end
+					else
+						node := add_element (child, a_node)
+						if attached {EV_CONTAINER} child as l_container then
+							add_recursive (node, l_container)
+						end
+					end
 				end
 
-				node := tree.retrieve_item_recursively_by_data (l_splitarea.second, false)
-				if node /= Void then
-					container ?= node.data
-					update_recursive(node, container)
-				else
-					node := add_element (l_splitarea.second, a_node)
-					container ?= l_splitarea.second
-					add_recursive (node, container)
+				if attached l_splitarea.second as child then
+					node := tree.retrieve_item_recursively_by_data (child, false)
+					if attached node then
+						if attached {EV_CONTAINER} node.data as l_container then
+							update_recursive (node, l_container)
+						end
+					else
+						node := add_element (child, a_node)
+						if attached {EV_CONTAINER} child as l_container then
+							add_recursive (node, l_container)
+						end
+					end
 				end
 			elseif attached {EV_WIDGET_LIST} a_container as wlist then
 				-- Okay, we have a widget which can have several children
@@ -231,33 +244,40 @@ feature {NONE} -- Graphical view
 				until
 					wlist.index > wlist.count
 				loop
-					node := tree.retrieve_item_recursively_by_data (wlist.item, false)
-					if node /= Void then
-						container ?= node.data
-						update_recursive(node, container)
-					else
-						node := add_element(wlist.item, a_node)
-						container ?= wlist.item
-						add_recursive(node, container)
+
+					if attached wlist.item then
+						node := tree.retrieve_item_recursively_by_data (wlist.item, false)
+						if attached node then
+							if attached {EV_CONTAINER} node.data as l_container then
+								update_recursive (node, l_container)
+							end
+						else
+							node := add_element (wlist.item, a_node)
+							if attached {EV_CONTAINER} wlist.item as l_container then
+								add_recursive (node, l_container)
+							end
+						end
 					end
 					wlist.forth
 				end
-			elseif a_container.readable and then a_container.item /= Void then
+			elseif a_container.readable and then attached a_container.item then
 				-- We have a container with a single child
 				node := tree.retrieve_item_recursively_by_data (a_container.item, false)
-				if node /= Void then
-					container ?= node.data
-					update_recursive (node, container)
+				if attached node then
+					if attached {EV_CONTAINER} node.data as l_container then
+						update_recursive (node, l_container)
+					end
 				else
 					node := add_element(a_container.item, a_node)
-					container ?= a_container.item
-					add_recursive(node, container)
+					if attached {EV_CONTAINER} a_container.item as l_container then
+						add_recursive (node, l_container)
+					end
 				end
 			end
 		end
 
 
-	add_recursive (a_node: EV_TREE_NODE; a_widget: EV_WIDGET)
+	add_recursive (a_node: EV_TREE_NODE; a_widget: detachable EV_WIDGET)
 			-- Add all the children of a_container to a_node (and then the children of the children, etc.)
 		local
 			node: EV_TREE_NODE
@@ -279,12 +299,12 @@ feature {NONE} -- Graphical view
 				add_recursive (node, l_grid.implementation.cell_item)
 			elseif attached {EV_SPLIT_AREA} a_widget as l_splitarea then
 				-- The split area needs special treatment
-				if l_splitarea.first /= void then
+				if attached l_splitarea.first then
 					node := add_element (l_splitarea.first, a_node)
 					add_recursive (node, l_splitarea.second)
 				end
 
-				if l_splitarea.first /= void then
+				if attached l_splitarea.second then
 					node := add_element (l_splitarea.second, a_node)
 					add_recursive (node, l_splitarea.second)
 				end
@@ -311,7 +331,7 @@ feature {NONE} -- Graphical view
 				end
 			elseif attached {EV_CELL} a_widget as l_cell then
 				-- We have a container with a single child
-				if l_cell.readable and then l_cell.item /= Void  then
+				if l_cell.readable and then attached l_cell.item then
 					node := add_element (l_cell.item, a_node)
 					add_recursive (node, l_cell.item)
 				end
@@ -323,12 +343,12 @@ feature {NONE} -- Graphical view
 		local
 			ptr, parent_ptr: POINTER
 			str: STRING
-			c: EV_CONTAINER
 		do
 			selected_widget := a_widget
 			ptr := $a_widget
-			c := a_widget.parent
-			parent_ptr := $c
+			if attached a_widget.parent as c then
+				parent_ptr := $c
+			end
 			str :=
 				a_widget.generating_type + "%N" +
 				"Address: " + ptr.out + "%N" +
@@ -376,28 +396,26 @@ feature {NONE} -- Graphical view
 
 	show_overlay (a_widget: EV_WIDGET)
 		local
-			w_imp: EV_WIDGET_IMP
-			l_screen: NS_SCREEN
 			x1, y1, x2, y2: INTEGER
 		do
-			w_imp ?= a_widget.implementation
-			if attached w_imp.top_level_window_imp then
-				l_screen := w_imp.top_level_window_imp.screen
-				x1 := selected_widget.screen_x - 1
-				y1 := (l_screen.frame.size.height - selected_widget.screen_y - selected_widget.height) - 1
-				x2 := selected_widget.screen_x + selected_widget.width + 1
-				y2 := (l_screen.frame.size.height - selected_widget.screen_y) + 1
+			if attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
+				if attached w_imp.top_level_window_imp as w and then attached w.screen as l_screen then
+					x1 := a_widget.screen_x - 1
+					y1 := (l_screen.frame.size.height - a_widget.screen_y - a_widget.height) - 1
+					x2 := a_widget.screen_x + a_widget.width + 1
+					y2 := (l_screen.frame.size.height - a_widget.screen_y) + 1
 
-				x1 := x1.min(l_screen.frame.size.width).max(0)
-				y1 := y1.min(l_screen.frame.size.height).max(0)
-				x2 := x2.min(l_screen.frame.size.width).max(0)
-				y2 := y2.min(l_screen.frame.size.height).max(0)
-				overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs))
-				if attached {EV_WINDOW_IMP} implementation as win_imp then
-					overlay.set_parent_window (win_imp.window)
-					-- Not working as expected :(
-				else
-					check False end
+					x1 := x1.min(l_screen.frame.size.width).max(0)
+					y1 := y1.min(l_screen.frame.size.height).max(0)
+					x2 := x2.min(l_screen.frame.size.width).max(0)
+					y2 := y2.min(l_screen.frame.size.height).max(0)
+					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs))
+					if attached {EV_WINDOW_IMP} implementation as win_imp then
+						overlay.set_parent_window (win_imp.window)
+						-- Not working as expected :(
+					else
+						check False end
+					end
 				end
 			end
 		end
@@ -414,21 +432,21 @@ feature {NONE} -- Graphical view
 			Result.set_level ({NS_WINDOW}.floating_window_level)
 		end
 
-	selected_widget: EV_WIDGET
+	selected_widget: detachable EV_WIDGET
 
 	show_widget
 			--
 		do
-			if selected_widget /= Void then
-				selected_widget.show
+			if attached selected_widget as widget then
+				widget.show
 			end
 		end
 
 	hide_widget
 			--
 		do
-			if selected_widget /= Void then
-				selected_widget.hide
+			if attached selected_widget as widget then
+				widget.hide
 			end
 		end
 
@@ -436,11 +454,9 @@ feature {NONE} -- Graphical view
 		local
 			rescued: BOOLEAN
 			fail: INTEGER
-			widget: EV_WIDGET
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
-			if selected_widget /= Void and not rescued then
-				widget := selected_widget
+			if attached selected_widget as widget and not rescued then
 				widget_imp ?= widget.implementation
 				fail := 1 // 0
 			end

@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision cell, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision cell, Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,11 +40,13 @@ feature -- initialization
 
 	make
 		do
-			create {NS_BOX}cocoa_item.make
+			create box.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
+			cocoa_item := box
 			set_expandable (True) -- Check: is this correct??
 			is_show_requested := True
+			initialize -- Precursor {EV_CONTAINER_IMP}
 			set_is_initialized (True)
 		end
 
@@ -74,23 +74,23 @@ feature -- Element change
 			color: NS_COLOR
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_color)
-			if box /= void then -- TODO: get rid of this when redefining in children
+			if attached box as l_box then -- TODO: get rid of this when redefining in children
 				create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
 				--create color.white_color
-				box.set_fill_color (color);
+				l_box.set_fill_color (color);
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
 			top_level_window_imp := a_window
-			if item_imp /= Void then
-				item_imp.set_top_level_window_imp (a_window)
+			if attached item_imp as l_item_imp then
+				l_item_imp.set_top_level_window_imp (a_window)
 			end
 		end
 
@@ -99,8 +99,8 @@ feature -- Layout
 	client_height: INTEGER
 			-- Height of the client area of `Current'
 		do
-			if box /= void then
-				Result := box.content_view.frame.size.height.max (0)
+			if attached box as l_box then
+				Result := l_box.content_view.frame.size.height.max (0)
 			else
 				Result := height
 			end
@@ -109,8 +109,8 @@ feature -- Layout
 	client_width: INTEGER
 			-- Height of the client area of `Current'.
 		do
-			if box /= void then
-				Result := box.content_view.frame.size.width.max (0)
+			if attached box as l_box then
+				Result := l_box.content_view.frame.size.width.max (0)
 			else
 				Result := width
 			end
@@ -121,8 +121,8 @@ feature -- Layout
 		local
 			mw: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
 			end
 			internal_set_minimum_width (mw)
 		end
@@ -132,8 +132,8 @@ feature -- Layout
 		local
 			mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mh := l_item_imp.minimum_height
 			end
 			internal_set_minimum_height (mh)
 		end
@@ -144,27 +144,21 @@ feature -- Layout
 		local
 			mw, mh: INTEGER
 		do
-			if item_imp /= Void and item_imp.is_show_requested then
-				mw := item_imp.minimum_width
-				mh := item_imp.minimum_height
+			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
+				mw := l_item_imp.minimum_width
+				mh := l_item_imp.minimum_height
 			end
 			internal_set_minimum_size (mw, mh)
 		end
 
-feature {NONE}
+feature {EV_ANY_I}
 
 	box: NS_BOX
-		do
-			Result ?= cocoa_item
-		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CELL note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_CELL_IMP
-

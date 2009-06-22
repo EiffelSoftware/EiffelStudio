@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision fixed. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision fixed. Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			cocoa_item := create {NS_VIEW}.make_flipped
-			Precursor
+			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
 feature -- Status setting
@@ -49,7 +47,7 @@ feature -- Status setting
 			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
-			w_imp : EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
 			check
@@ -63,7 +61,7 @@ feature -- Status setting
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			w_imp : EV_WIDGET_IMP
+			w_imp: detachable EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
 			check
@@ -185,7 +183,4 @@ feature -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_FIXED
-

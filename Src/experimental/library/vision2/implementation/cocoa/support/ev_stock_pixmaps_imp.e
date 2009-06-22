@@ -96,12 +96,11 @@ feature -- Access
 		end
 
 	load_named (a_name: NS_STRING): EV_PIXMAP
-		local
-			l_imp: EV_PIXMAP_IMP
 		do
 			create Result
-			l_imp ?= Result.implementation
-			l_imp.load_system_image (a_name.to_string)
+			if attached {EV_PIXMAP_IMP} Result.implementation as l_imp then
+				l_imp.load_system_image (a_name.to_string)
+			end
 		end
 
 feature -- Default cursors

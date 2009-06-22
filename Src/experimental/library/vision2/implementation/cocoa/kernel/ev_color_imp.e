@@ -180,19 +180,19 @@ feature -- Conversion
 
 	set_with_other (other: EV_COLOR)
 			-- Take on the appearance of `other'.
-		local
-			imp: EV_COLOR_IMP
 		do
-			imp ?= other.implementation
-			check
-				imp_not_void: imp /= Void
+			if attached {EV_COLOR_IMP} other.implementation as imp then
+				red_16_bit := imp.red_16_bit
+				green_16_bit := imp.green_16_bit
+				blue_16_bit := imp.blue_16_bit
+				red := imp.red
+				green := imp.green
+				blue := imp.blue
+			else
+				check
+					imp_void: False
+				end
 			end
-			red_16_bit := imp.red_16_bit
-			green_16_bit := imp.green_16_bit
-			blue_16_bit := imp.blue_16_bit
-			red := imp.red
-			green := imp.green
-			blue := imp.blue
 		end
 
 feature {EV_ANY_I} -- Command

@@ -44,7 +44,7 @@ feature -- ...
 
 	table_view: NS_TABLE_VIEW
 		do
-			--create Result.share_from_pointer (table_column_table_view (item))
+			create Result.share_from_pointer (table_column_table_view (item))
 		end
 
 	set_width (a_width: REAL)

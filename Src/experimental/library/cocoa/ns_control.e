@@ -141,7 +141,7 @@ feature -- Contract support
 
 	valid_alignment (a_int: INTEGER): BOOLEAN
 		do
-
+			Result := (<<left_text_alignment, right_text_alignment, center_text_alignment, justified_text_alignment>>).has (a_int)
 		end
 
 feature -- NSTextAlignment Constants -- FIXME: move to NS_TEXT

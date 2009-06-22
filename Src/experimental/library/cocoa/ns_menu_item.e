@@ -14,6 +14,7 @@ inherit
 
 create
 	make,
+	make_with_title,
 	separator_item
 
 feature {NONE} -- Creation
@@ -21,6 +22,21 @@ feature {NONE} -- Creation
 	make
 		do
 			make_from_pointer ({NS_MENU_ITEM_API}.new)
+		end
+
+	make_with_title (a_title: NS_STRING; a_keycode: detachable NS_STRING)
+			-- Returns an initialized instance of an NSMenuItem.
+			-- For instances of the NSMenuItem class, the default initial state is NSOffState, the default on-state image is a check mark, and the default mixed-state image is a dash.
+		local
+			l_keycode: POINTER
+		do
+			make_from_pointer ({NS_MENU_ITEM_API}.alloc)
+			if attached a_keycode then
+				l_keycode := a_keycode.item
+			else
+				l_keycode := (create {NS_STRING}.make_empty).item
+			end
+			{NS_MENU_ITEM_API}.init_with_title (item, a_title.item, default_pointer, l_keycode)
 		end
 
 	separator_item
@@ -35,9 +51,9 @@ feature -- Access
 			{NS_MENU_ITEM_API}.set_submenu (item, a_menu.item)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: NS_STRING)
 		do
-			{NS_MENU_ITEM_API}.set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
+			{NS_MENU_ITEM_API}.set_title (item, a_title.item)
 		end
 
 	set_key_equivalent (a_string: STRING_GENERAL)

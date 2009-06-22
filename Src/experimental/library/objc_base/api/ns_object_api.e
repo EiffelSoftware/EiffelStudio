@@ -60,4 +60,13 @@ feature -- Managing Reference Counts
 			"[(NSObject *) $a_item_ptr retain];"
 		end
 
+feature -- Describing Objects
+
+	frozen description (a_item_ptr: POINTER): POINTER
+		external
+			"C inline use <Foundation/NSObject.h>"
+		alias
+			"return [(NSObject *) $a_item_ptr description];"
+		end
+
 end

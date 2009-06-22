@@ -131,8 +131,10 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Clone
 		do
-			Precursor {ARRAYED_LIST} (other)
-			argument_names := other.argument_names.twin
+			if other /= Current then
+				Precursor {ARRAYED_LIST} (other)
+				argument_names := other.argument_names.twin
+			end
 		end
 
 feature -- Element change

@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
 			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
-			tab, newline, space, return, feed: PEG_ABSTRACT_PEG
+			tab, newline, space, return, feed, epsilon: PEG_ABSTRACT_PEG
 		once
 				-- Basic parsers (single character parsers)
 			digit := create {PEG_RANGE}.make_with_range ('0', '9')
@@ -98,6 +98,7 @@ feature {NONE} -- Implementation
 			percent := char ('%%')
 			sharp := char ('#')
 			exclamation := char ('!')
+			epsilon := create {PEG_EPSILON}.make
 			any_char := create {PEG_ANY}.make
 
 				-- For graceful recovery of silly mistake of missing '>' we add a error strategy
@@ -113,26 +114,25 @@ feature {NONE} -- Implementation
 			ws.ommit_result
 			ws := -ws
 
-				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
-				-- tag (with the parsed text as input) on the result list
-			plain_text := +((open + any_char).negate + any_char)
-			plain_text.set_behaviour (agent build_content_tag)
-
 				-- A common identifier. Will put the identifier {STRING} on the stack
 			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
 			identifier.set_behaviour (agent concatenate_results)
+
+				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
+				-- tag (with the parsed text as input) on the result list
+			plain_text := +((open + (identifier | slash)).negate + any_char)
+			plain_text.set_behaviour (agent build_content_tag)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}"
 			value_attribute := (-(quote.negate + any_char))
 			value_attribute.set_behaviour (agent build_value_attribute)
 			dynamic_attribute := percent + equals + identifier + percent
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
-			variable_attribute := sharp + open_curly + identifier + (+(dot + identifier)) + close_curly
+			variable_attribute := sharp + open_curly + identifier + (+(rchar ('.') + identifier)) + close_curly
 			variable_attribute.set_behaviour (agent build_variable_attribute)
 
 				-- All possible values which can occur in quotes after a tag attribute
 			value := variable_attribute | dynamic_attribute | value_attribute
-		--	value.set_behaviour (agent concatenate_results)
 
 				-- Tag attributes
 			l_attribute := (ws + identifier + ws + equals + ws + quote + value + quote)
@@ -144,9 +144,9 @@ feature {NONE} -- Implementation
 
 			xml := create {PEG_CHOICE}.make
 				-- Normal xml without namespaces. With children tags (or text)
-			composite_xml := open + identifier + (-l_attribute) + close_fixed + (+xml).optional + open + slash + identifier + close_fixed
+			composite_xml := open + identifier + (-l_attribute) + close_fixed + (-xml) + open + slash + identifier + ws.optional + close_fixed
 				-- Normal xml with namespaces. With children tags (or text)
-			namespace_xml := open + identifier + colon + identifier + (-l_attribute) + close_fixed + (+xml) + open +slash + identifier + colon + identifier + close_fixed
+			namespace_xml := open + identifier + colon + identifier + (-l_attribute) + close_fixed + (-xml) + open + slash + identifier + colon + identifier + ws.optional + close_fixed
 				-- Normal xml without namespaces and without children
 			leaf_xml := open + identifier + (-l_attribute) + ws + slash + close_fixed
 				-- Normal xml with namespaces and without children
@@ -196,8 +196,7 @@ feature -- Parser Behaviours
 		do
 			Result := concatenate_results (a_result)
 			if attached {STRING} Result.internal_result.first as l_argument then
-				Result.internal_result.wipe_out
-				Result.append_result (create {XP_TAG_DYNAMIC_ARGUMENT}.make (l_argument))
+				Result.replace_result (create {XP_TAG_DYNAMIC_ARGUMENT}.make (l_argument))
 			end
 		ensure
 			Result_attached: attached Result
@@ -210,8 +209,7 @@ feature -- Parser Behaviours
 		do
 			Result := concatenate_results (a_result)
 			if attached {STRING} Result.internal_result.first as l_argument then
-				Result.internal_result.wipe_out
-				Result.append_result (create {XP_TAG_VARIABLE_ARGUMENT}.make (l_argument))
+				Result.replace_result (create {XP_TAG_VARIABLE_ARGUMENT}.make (l_argument))
 			end
 		ensure
 			Result_attached: attached Result
@@ -224,8 +222,7 @@ feature -- Parser Behaviours
 		do
 			Result := concatenate_results (a_result)
 			if attached {STRING} Result.internal_result.first as l_argument then
-				Result.internal_result.wipe_out
-				Result.append_result (create {XP_TAG_VALUE_ARGUMENT}.make (l_argument))
+				Result.replace_result (create {XP_TAG_VALUE_ARGUMENT}.make (l_argument))
 			end
 		ensure
 			Result_attached: attached Result
@@ -239,13 +236,14 @@ feature -- Parser Behaviours
 			l_tag: XP_TAG_ELEMENT
 			l_i: INTEGER
 		do
+			print ("%Nbuild_html_tag " + a_result.out)
 			Result := a_result
-			if attached {STRING} a_result.internal_result [1] as l_id then
-				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
+			if attached {STRING} a_result.internal_result.first as l_id then
+				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information))
 				from
 					l_i := 2
 				until
-					l_i > a_result.internal_result.count-2
+					l_i > a_result.internal_result.count-1
 				loop
 					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 						if l_tag.has_attribute (l_attribute.id) then
@@ -280,6 +278,7 @@ feature -- Parser Behaviours
 			l_i: INTEGER
 			l_end_tag: STRING
 		do
+			print ("%Nbuild_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then
@@ -290,7 +289,7 @@ feature -- Parser Behaviours
 							from
 								l_i := 3
 							until
-								l_i > a_result.internal_result.count-2
+								l_i > a_result.internal_result.count-1
 							loop
 								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 									if l_tag.has_attribute (l_attribute.id) then
@@ -329,6 +328,7 @@ feature -- Parser Behaviours
 		local
 			l_tag: XP_TAG_ELEMENT
 		do
+			print ("%Nbuild_leaf_html_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_id then
 				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
@@ -363,6 +363,7 @@ feature -- Parser Behaviours
 			l_tag: XP_TAG_ELEMENT
 			l_taglib: XTL_TAG_LIBRARY
 		do
+			print ("%Nbuild_leaf_tag " + a_result.out)
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then

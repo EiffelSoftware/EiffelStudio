@@ -28,7 +28,7 @@ feature -- Implementation
 			Result := build_result (Result)
 		end
 
-	internal_serialize: STRING
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		do
 			Result := "e"

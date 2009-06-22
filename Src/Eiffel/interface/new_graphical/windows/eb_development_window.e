@@ -852,26 +852,62 @@ feature -- Stone process
 
 	quick_refresh_editors
 			-- Redraw editors' drawing area.
+		local
+			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_outputs: DS_LINEAR [OUTPUT_I]
 		do
+				-- Refresh main editor.
 			if editors_manager.current_editor /= Void then
 				editors_manager.current_editor.refresh
 			end
-			tools.output_tool.quick_refresh_editor
+
+				-- Refresh margins from all outputs.
+			create l_service
+			if l_service.is_service_available then
+				l_outputs := l_service.service.active_outputs
+				from l_outputs.start until l_outputs.after loop
+					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
+						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
+							l_editor_widget.editor.refresh
+						end
+					end
+					l_outputs.forth
+				end
+			end
+
+				-- Refresh other tools
 			tools.external_output_tool.quick_refresh_editor
-			tools.c_output_tool.quick_refresh_editor
 			tools.class_tool.quick_refresh_editor
 			tools.features_relation_tool.quick_refresh_editor
 		end
 
 	quick_refresh_margins
 			-- Redraw the main editor's drawing area.
+		local
+			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_outputs: DS_LINEAR [OUTPUT_I]
 		do
+				-- Refresh main editor.
 			if editors_manager.current_editor /= Void then
 				editors_manager.current_editor.margin.refresh
 			end
-			tools.output_tool.quick_refresh_margin
+
+				-- Refresh margins from all outputs.
+			create l_service
+			if l_service.is_service_available then
+				l_outputs := l_service.service.active_outputs
+				from l_outputs.start until l_outputs.after loop
+					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
+						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
+							l_editor_widget.editor.margin.refresh
+						end
+					end
+					l_outputs.forth
+				end
+			end
+
+				-- Refresh other tools.
 			tools.external_output_tool.quick_refresh_margin
-			tools.c_output_tool.quick_refresh_margin
 			tools.class_tool.quick_refresh_margin
 			tools.features_relation_tool.quick_refresh_margin
 		end

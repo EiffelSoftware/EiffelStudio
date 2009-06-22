@@ -54,7 +54,8 @@ feature {NONE} -- Initialization
 		do
 			internal_height := 10
 			internal_width := 10
-			create {NS_IMAGE_VIEW}cocoa_item.make
+			create image_view.make
+			cocoa_item := image_view
 			image_view.set_image_scaling ({NS_IMAGE_VIEW}.image_scaling_none)
 
 			Precursor {EV_PRIMITIVE_IMP}
@@ -114,13 +115,14 @@ feature -- Element change
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
 			l_image: NS_IMAGE
-			l_image_rep: NS_IMAGE_REP
+			l_image_rep: detachable NS_IMAGE_REP
 		do
 			create l_image.make_with_referencing_file (a_path)
 			image_view.set_image (l_image)
 			if l_image.representations.count > 0 then
 				-- File found, representation loaded
 				l_image_rep := l_image.representations.item (0)
+				check l_image_rep /= void end
 				internal_width := l_image_rep.pixels_wide
 				internal_height := l_image_rep.pixels_high
 				image := l_image
@@ -133,11 +135,12 @@ feature -- Element change
 			-- Load a OS X default system image
 		local
 			l_image: NS_IMAGE
-			l_image_rep: NS_IMAGE_REP
+			l_image_rep: detachable NS_IMAGE_REP
 		do
 			create l_image.make_named (a_name)
 			image_view.set_image (l_image)
 			l_image_rep := l_image.representations.item (0)
+			check l_image_rep /= void end
 			internal_width := l_image_rep.pixels_wide
 			internal_height := l_image_rep.pixels_high
 			image := l_image
@@ -174,7 +177,7 @@ feature -- Element change
 	set_mask (a_mask: EV_BITMAP)
 			-- Set the Bitmap used for masking `Current'.
 		local
-			a_mask_imp: EV_BITMAP_IMP
+			a_mask_imp: detachable EV_BITMAP_IMP
 		do
 			a_mask_imp ?= a_mask.implementation
 		end
@@ -244,8 +247,5 @@ feature {EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 	image_view: NS_IMAGE_VIEW
-		do
-			Result ?= cocoa_item
-		end
 
 end -- EV_PIXMAP_IMP

@@ -32,12 +32,9 @@ feature -- Positions
 
 	screen_x: INTEGER
 			-- Horizontal position of the client area on screen,
-		local
-			l_window: NS_WINDOW
 		do
-			l_window := cocoa_view.window
-			if l_window /= void then
-				Result := cocoa_view.window.convert_base_to_screen (
+			if attached {NS_WINDOW} cocoa_view.window as l_window then
+				Result := l_window.convert_base_to_screen (
 					cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
 				).x
 			end
@@ -46,14 +43,12 @@ feature -- Positions
 	screen_y: INTEGER
 			-- Horizontal position of the client area on screen,
 		local
-			l_window: NS_WINDOW
 			screen_height: INTEGER
-			position_in_window, position_on_screen: NS_POINT
+			position_in_window, position_on_screen: detachable NS_POINT
 		do
 			-- Translate the coordinate to a top-left coordinate system
-			l_window := cocoa_view.window
-			if l_window /= void then
-				screen_height := l_window.screen.frame.size.height
+			if attached cocoa_view.window as l_window and then attached l_window.screen as l_screen then
+				screen_height := l_screen.frame.size.height
 				if cocoa_view.is_flipped then
 					position_in_window := cocoa_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
 				else
@@ -146,8 +141,14 @@ feature -- Measurement
 feature -- Implementation
 
 	cocoa_view: NS_VIEW
+		local
+			l_result: detachable NS_VIEW
 		do
-			Result ?= cocoa_item
+			l_result ?= cocoa_item
+			check
+				l_result /= Void
+			end
+			Result := l_result
 		end
 
 	cocoa_item: NS_OBJECT

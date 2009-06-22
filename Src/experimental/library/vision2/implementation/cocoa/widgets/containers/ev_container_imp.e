@@ -44,11 +44,11 @@ feature {NONE}
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 		do
+			create radio_group.make
 			initialize_sizeable
 			new_item_actions.extend (agent add_radio_button)
 			create remove_item_actions
 			remove_item_actions.extend (agent remove_radio_button)
-			create radio_group.make
 			Precursor {EV_WIDGET_IMP}
 		end
 
@@ -68,14 +68,14 @@ feature -- Access
 			Result := height
 		end
 
-	background_pixmap: EV_PIXMAP
+	background_pixmap: detachable EV_PIXMAP
 			-- the background pixmap
 
-	item_imp: EV_WIDGET_IMP
+	item_imp: detachable EV_WIDGET_IMP
 			-- `item'.`implementation'.
 		do
-			if item /= Void then
-				Result ?= item.implementation
+			if attached item as l_item then
+				Result ?= l_item.implementation
 			end
 		end
 
@@ -93,72 +93,63 @@ feature -- Status Setting
 			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: like radio_group
-			peer: EV_CONTAINER_IMP
+			peer: detachable EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			if peer = Void then
-				check
-					False
+			check peer /= Void end
+			l := peer.radio_group
+			if l /= radio_group then
+				from
+					l.start
+				until
+					l.is_empty
+				loop
+					add_radio_button (l.item.attached_interface)
 				end
-			else
-				l := peer.radio_group
-				if l /= radio_group then
-					from
-						l.start
-					until
-						l.is_empty
-					loop
-						add_radio_button (l.item.interface)
-					end
-					peer.set_radio_group (radio_group)
-				end
+				peer.set_radio_group (radio_group)
 			end
 		end
 
 	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Removed radio grouping of `a_container' from `Current'.
 		local
-			l: like radio_group
-			peer: EV_CONTAINER_IMP
-			r: EV_RADIO_BUTTON_IMP
-			original_selected_button: EV_RADIO_BUTTON_IMP
+			l: detachable like radio_group
+			peer: detachable EV_CONTAINER_IMP
+			r: detachable EV_RADIO_BUTTON_IMP
+			original_selected_button: detachable EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
-			if peer = Void then
-				check
-					False
+			check peer /= Void end
+			l := radio_group
+			from
+				l.start
+			until
+				l.off
+			loop
+				r ?= l.item
+				check r /= Void end
+				if r.is_selected then
+						-- Store originally selected button,
+						-- for selection of necessary button at
+						-- end of unmerge, as a button has to
+						-- be selected in all groups.
+					original_selected_button := r
 				end
-			else
-				l := radio_group
-				from
-					l.start
-				until
-					l.off
-				loop
-					r ?= l.item
-					if r.is_selected then
-							-- Store originally selected button,
-							-- for selection of necessary button at
-							-- end of unmerge, as a button has to
-							-- be selected in all groups.
-						original_selected_button := r
+				if r.parent = a_container then
+					if peer.radio_group = radio_group then
+							-- Reset radio group, back to
+							-- empty.
+						peer.reset_radio_group
 					end
-					if r.parent = a_container then
-						if peer.radio_group = radio_group then
-								-- Reset radio group, back to
-								-- empty.
-							peer.reset_radio_group
-						end
-							-- Remove radio button from radio group
-							-- of `Current'.
-						l.remove
-							-- Link radio group of `r' to match that of `a_container'.
-						r.internal_set_radio_group (peer.radio_group)
-							-- Add `r' to radio group of `container'.
-						peer.radio_group.extend (r)
-					else
-						l.forth
-					end
+						-- Remove radio button from radio group
+						-- of `Current'.
+					l.remove
+						-- Link radio group of `r' to match that of `a_container'.
+					r.internal_set_radio_group (peer.radio_group)
+						-- Add `r' to radio group of `container'.
+					peer.radio_group.extend (r)
+				else
+					l.forth
 				end
 			end
 			if not l.is_empty then
@@ -244,9 +235,10 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		require
 			other_not_void: other /= Void
 		local
-			c_imp: EV_CONTAINER_IMP
+			c_imp: detachable EV_CONTAINER_IMP
 		do
 			c_imp ?= other.implementation
+			check c_imp /= Void end
 			Result := c_imp.radio_group = radio_group
 		end
 
@@ -275,11 +267,8 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			--| radio buttons as necessary.
 		require
 			w_not_void: w /= Void
-		local
-			r: EV_RADIO_BUTTON_IMP
 		do
-			r ?= w.implementation
-			if r /= Void then
+			if attached {EV_RADIO_BUTTON_IMP} w.implementation as r then
 				if not radio_group.is_empty then
 					r.set_state ({NS_CELL}.off_state)
 				end
@@ -293,17 +282,14 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			--| radio buttons as necessary.
 		require
 			w_not_void: w /= Void
-		local
-			r: EV_RADIO_BUTTON_IMP
 		do
-			r ?= w.implementation
-			if r /= Void then
+			if attached {EV_RADIO_BUTTON_IMP} w.implementation as r then
 				r.remove_from_radio_group
 				r.set_state ({NS_CELL}.on_state)
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_CONTAINER note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

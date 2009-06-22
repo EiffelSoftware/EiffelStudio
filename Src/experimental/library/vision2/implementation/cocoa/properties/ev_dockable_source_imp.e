@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			--
 		deferred
 		end

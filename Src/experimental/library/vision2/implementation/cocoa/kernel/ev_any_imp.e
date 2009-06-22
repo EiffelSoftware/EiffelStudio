@@ -47,12 +47,9 @@ feature --dispose
 	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
-		local
-			a_widget: EV_WIDGET_IMP
 		do
-			a_widget ?= current
-			if  a_widget /= void then
-				a_widget.destroy
+			if attached {EV_WIDGET_IMP} Current as l_widget then
+				l_widget.destroy
 			end
 		end
 
@@ -62,12 +59,14 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			--
 		local
 			env: EV_ENVIRONMENT
+			l_app_imp: detachable EV_APPLICATION_IMP
 		once
 			create env
-			Result ?= env.application.implementation
+			l_app_imp ?= env.implementation.application_i
 			check
-				Result_not_void: Result /= Void
+				Result_not_void: l_app_imp /= Void
 			end
+			Result := l_app_imp
 		end
 
 invariant

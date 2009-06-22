@@ -1,8 +1,6 @@
 note
-	description:
-		"EiffelVision box. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision box. Cocoa implementation."
+	author: "Daniel Furrer"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,11 +32,12 @@ feature -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
-			create {NS_BOX}cocoa_item.make
+			create box.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_border_type ({NS_BOX}.no_border)
 			box.set_content_view_margins (0, 0)
+			cocoa_item := box
 
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
@@ -74,7 +73,7 @@ feature -- Access
 			-- Compute number of visible children which are expanded
 			-- and assign to `child_expand_number'.
 		local
-			w: EV_WIDGET_IMP
+			w: detachable EV_WIDGET_IMP
 			i: INTEGER
 		do
 			from
@@ -84,6 +83,9 @@ feature -- Access
 				i > ev_children.count
 			loop
 				w ?= ev_children.i_th (i)
+				check
+					w /= void
+				end
 				if w.is_show_requested and w.is_expandable then
 					childexpand_nb := childexpand_nb + 1
 				end
@@ -99,22 +101,20 @@ feature {EV_ANY, EV_ANY_I} -- expandable
 	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is the `child' expandable. ie: does it
 			-- allow the parent to resize or move it.
-		local
-			w: EV_WIDGET_IMP
 		do
-			w ?= child.implementation
-			Result := w.is_expandable
+			if attached {EV_WIDGET_IMP} child.implementation as w then
+				Result := w.is_expandable
+			end
 		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Make `child' expandable if `flag',
 			-- not expandable otherwise.
-		local
-			w: EV_WIDGET_IMP
 		do
-			w ?= child.implementation
-			w.set_expandable(flag)
-			notify_change (Nc_minsize, Current)
+			if attached {EV_WIDGET_IMP} child.implementation as w then
+				w.set_expandable (flag)
+				notify_change (Nc_minsize, Current)
+			end
 		end
 
 feature {NONE} -- Basic operation
@@ -181,9 +181,6 @@ feature {EV_ANY_I}
 
 	box: NS_BOX
 			-- Convenience function
-		do
-			Result ?= cocoa_item
-		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
@@ -191,7 +188,4 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BOX_IMP
-

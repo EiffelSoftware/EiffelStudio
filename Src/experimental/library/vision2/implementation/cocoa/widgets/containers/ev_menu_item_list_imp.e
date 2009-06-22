@@ -20,16 +20,16 @@ inherit
 
 feature {NONE} -- Implementation
 
-	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+	radio_group: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radios groups
 
 
 	insert_item (item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Insert `item_imp' on `pos' in `ev_children'.
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			menu_imp: EV_MENU_IMP
-			menu_item_imp: EV_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			menu_imp: detachable EV_MENU_IMP
+			menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			ev_children.go_i_th (pos)
 			menu.insert_item_at_index (item_imp.menu_item, pos - 1)
@@ -39,6 +39,7 @@ feature {NONE} -- Implementation
 				insert_separator_item (sep_imp, pos)
 			else
 				menu_item_imp ?= item_imp
+				check menu_item_imp /= Void end
 				menu_imp ?= menu_item_imp
 				if menu_imp /= Void then
 --					insert_menu (menu_imp, pos)
@@ -58,9 +59,9 @@ feature {NONE} -- Implementation
 	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
-			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			chk_imp: EV_CHECK_MENU_ITEM_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
+			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
+			chk_imp: detachable EV_CHECK_MENU_ITEM_IMP
 		do
 			radio_imp ?= menu_item_imp
 			if radio_imp /= Void then
@@ -117,8 +118,8 @@ feature {NONE} -- Implementation
 	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER)
 			-- Insert `sep_imp' on `pos' in `ev_children'.
 		local
-			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			rgroup: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
+			rgroup: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 		do
 			from
 				ev_children.go_i_th (pos + 1)
@@ -143,14 +144,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP
+	separator_imp_by_index (an_index: INTEGER): detachable EV_MENU_SEPARATOR_IMP
 			-- Separator before item with `an_index'.
 		require
 			an_index_within_bounds:
 				an_index > 0 and then an_index <= ev_children.count
 		local
 			cur_item: INTEGER
-			sep_imp: EV_MENU_SEPARATOR_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
 			from
 				ev_children.start
@@ -170,7 +171,7 @@ feature {NONE} -- Implementation
 	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' of type EV_MENU_SEPARATOR_IMP?
 		local
-			sep_imp: EV_MENU_SEPARATOR_IMP
+			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
 			sep_imp ?= item_imp
 			Result := sep_imp /= Void
@@ -187,6 +188,8 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
-	
+
 end -- class EV_MENU_ITEM_LIST_IMP

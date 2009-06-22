@@ -110,11 +110,12 @@ feature -- Element change
 	set_icon_pixmap (a_icon: EV_PIXMAP)
 			-- Assign `a_icon' to `icon'.
 		local
-			l_pix_imp: EV_PIXMAP_IMP
+			l_pix_imp: detachable EV_PIXMAP_IMP
 		do
 			-- FIXME Mac Issue: This is problematic because on the Mac there is a application icon in the dock, but usually no window icon (there may be one for document windows... should probably go with that)
 			icon_pixmap := a_icon
 			l_pix_imp ?= a_icon.implementation
+			check l_pix_imp /= Void end
 			app_implementation.set_application_icon_image (l_pix_imp.image)
 		end
 

@@ -217,6 +217,8 @@ feature {EV_ANY_I} -- Implementation
 
 	font: NS_FONT;
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_FONT note option: stable attribute end
 
 end -- class EV_FONT_IMP

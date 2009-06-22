@@ -31,8 +31,8 @@ feature -- Status setting
 	enable_sensitive
 			-- Set `item' sensitive to user actions.
 		do
-			if item_imp /= Void and not item_imp.internal_non_sensitive then
-				item_imp.enable_sensitive
+			if attached item_imp as l_item_imp and then not l_item_imp.internal_non_sensitive then
+				l_item_imp.enable_sensitive
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
@@ -40,8 +40,8 @@ feature -- Status setting
 	disable_sensitive
 			-- Set `item' insensitive to user actions.
 		do
-			if item_imp /= Void then
-				item_imp.disable_sensitive
+			if attached item_imp as l_item_imp then
+				l_item_imp.disable_sensitive
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
@@ -51,10 +51,10 @@ feature -- Element change
 	remove
 			-- Remove `item' from `Current' if present.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
-			if item /= Void then
-				remove_item_actions.call ([item])
+			if attached item as l_item then
+				remove_item_actions.call ([l_item])
 				v_imp ?= item_imp
 				check
 					v_imp_not_void: v_imp /= Void
@@ -70,9 +70,9 @@ feature -- Element change
 	insert (v: like item)
 			-- Assign `v' to `item'.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
-			if v /= Void then
+			if attached v then
 				check
 					has_no_item: item = Void
 				end
@@ -84,7 +84,7 @@ feature -- Element change
 				v_imp.set_parent_imp (current)
 				item := v
 				notify_change (nc_minsize, Current)
-				new_item_actions.call ([item])
+				new_item_actions.call ([v])
 				cocoa_view.add_subview (v_imp.cocoa_view)
 			end
 		end
@@ -103,13 +103,10 @@ feature -- Basic operations
 	propagate_background_color
 			-- Propagate the current background color of `Current'
 			-- to the children.
-		local
-			c: EV_CONTAINER
 		do
-			if item /= Void then
-				item.set_background_color (background_color)
-				c ?= item
-				if c /= Void then
+			if attached item as l_item then
+				l_item.set_background_color (background_color)
+				if attached {EV_CONTAINER} l_item as c then
 					c.propagate_background_color
 				end
 			end
@@ -118,13 +115,10 @@ feature -- Basic operations
 	propagate_foreground_color
 			-- Propagate the current foreground color of `Current'
 			-- to the children.
-		local
-			c: EV_CONTAINER
 		do
-			if item /= Void then
-				item.set_foreground_color (foreground_color)
-				c ?= item
-				if c /= Void then
+			if attached item as l_item then
+				l_item.set_foreground_color (foreground_color)
+				if attached {EV_CONTAINER} l_item as c then
 					c.propagate_foreground_color
 				end
 			end
@@ -191,8 +185,8 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- Called when `Current' is resized.
 		do
 --			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
-				if item /= Void then
-					item_imp.set_move_and_size (0, 0, client_width, client_height)
+				if attached item_imp as l_item_imp then
+					l_item_imp.set_move_and_size (0, 0, client_width, client_height)
 				end
 --				Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
 --			end
@@ -201,8 +195,8 @@ feature {EV_ANY_I} -- WEL Implementation
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			if item /= Void then
-				item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
+			if attached item_imp as l_item_imp then
+				l_item_imp.ev_apply_new_size (0, 0, client_width, client_height, True)
 				-- was: client_x, client_y
 			end
 		end
@@ -212,7 +206,7 @@ feature {NONE} -- Implementation
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of the container?
 		do
-			Result := a_child = item.implementation
+			Result := a_child.interface = item
 		end
 
 note

@@ -90,6 +90,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			l_text: STRING_32
+			ns_text: NS_STRING
 			l_split_list: LIST [STRING_32]
 			i: INTEGER
 			a_menu_imp: EV_MENU_ITEM_LIST_IMP
@@ -110,10 +111,11 @@ feature -- Element change
 				l_text := l_text.substring (1, i - 1) + l_text.substring (i + 1, l_text.count)
 			end
 
-			menu_item.set_title (l_text)
+			create ns_text.make_with_string (l_text)
+			menu_item.set_title (ns_text)
 			a_menu_imp ?= current
 			if a_menu_imp /= void then
-				a_menu_imp.menu.set_title (l_text)
+				a_menu_imp.menu.set_title (ns_text)
 			end
 		end
 

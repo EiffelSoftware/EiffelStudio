@@ -4,6 +4,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
+-- TODO: Refactor radio_group to be attached??
+
 deferred class
 	EV_RADIO_PEER_IMP
 
@@ -13,9 +15,13 @@ inherit
 feature -- Initialization
 
 	make
+		local
+			l_radio_group: like radio_group
 		do
 			create radio_group.make
-			radio_group.put_front (current)
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
+			l_radio_group.put_front (current)
 			set_is_initialized (True)
 		end
 
@@ -24,24 +30,34 @@ feature -- Status setting
 	enable_select
 			-- Select `Current'.
 		local
-			button_imp: like Current
+			button_imp: detachable like Current
+			l_radio_group: like radio_group
 		do
-			if not radio_group.is_empty then
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
+			if not l_radio_group.is_empty then
 				button_imp ?= peers.first.implementation
+				check
+					button_imp /= Void
+				end
 				button_imp.disable_select
-				radio_group.start
-				radio_group.prune (current)
-				radio_group.put_front (current)
+				l_radio_group.start
+				l_radio_group.prune (current)
+				l_radio_group.put_front (current)
 				-- First element of 'radio_group' is the one that is selected
 			end
 		end
 
 	disable_select
 			-- Unselect 'Current'
+		local
+			l_radio_group: like radio_group
 		do
-			radio_group.start
-			radio_group.prune (current)
-			radio_group.extend (current)
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
+			l_radio_group.start
+			l_radio_group.prune (current)
+			l_radio_group.extend (current)
 		end
 
 feature -- Status report
@@ -52,17 +68,17 @@ feature -- Status report
 			cur: CURSOR
 		do
 			create Result.make
-			if radio_group /= Void then
-				cur := radio_group.cursor
+			if attached radio_group as l_radio_group then
+				cur := l_radio_group.cursor
 				from
-					radio_group.start
+					l_radio_group.start
 				until
-					radio_group.off
+					l_radio_group.off
 				loop
-					Result.extend (radio_group.item.interface)
-					radio_group.forth
+					Result.extend (l_radio_group.item.attached_interface)
+					l_radio_group.forth
 				end
-				radio_group.go_to (cur)
+				l_radio_group.go_to (cur)
 			else
 					--| `radio_group' is void when `Current' is not parented in a container.
 				check
@@ -70,7 +86,7 @@ feature -- Status report
 					-- other contracts.
 					is_selected: is_selected
 				end
-				Result.extend (interface)
+				Result.extend (attached_interface)
 			end
 		end
 
@@ -78,20 +94,21 @@ feature -- Status report
 			-- Radio item that is currently selected.
 		local
 			cur: CURSOR
+			l_result: detachable like interface
 		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
+			if attached radio_group as l_radio_group then
+				cur := l_radio_group.cursor
 				from
-					radio_group.start
+					l_radio_group.start
 				until
-					radio_group.off or else Result /= Void
+					l_radio_group.off or else l_result /= Void
 				loop
-					if radio_group.item.is_selected then
-						Result := radio_group.item.interface
+					if l_radio_group.item.is_selected then
+						l_result := l_radio_group.item.interface
 					end
-					radio_group.forth
+					l_radio_group.forth
 				end
-				radio_group.go_to (cur)
+				l_radio_group.go_to (cur)
 			else
 					--| `radio_group' is void when `Current' is not parented in a container.
 				check
@@ -99,13 +116,15 @@ feature -- Status report
 					-- other contracts.
 					is_selected: is_selected
 				end
-				Result := interface
+				l_result := interface
 			end
+			check l_result /= Void end
+			Result := l_result
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	radio_group: LINKED_LIST [like Current]
+	radio_group: detachable LINKED_LIST [like Current]
 			-- List this radio peer is in.
 			-- This reference is shared with the other peers in the group.
 
@@ -116,18 +135,22 @@ feature {EV_ANY_I} -- Implementation
 		require
 			a_list_not_void: a_list /= Void
 			a_list_not_has_current: not a_list.has (Current)
+		local
+			l_radio_group: like radio_group
 		do
 			if radio_group /= Void then
 				remove_from_radio_group
 			end
 			internal_set_radio_group (a_list)
-			if radio_group.is_empty then
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
+			if l_radio_group.is_empty then
 				enable_select
 			end
-			radio_group.extend (Current)
+			l_radio_group.extend (Current)
 		ensure
 			assigned: radio_group = a_list
-			in_it: radio_group.has (Current)
+			in_it: attached radio_group as l_group and then l_group.has (Current)
 		end
 
 	remove_from_radio_group
@@ -135,14 +158,18 @@ feature {EV_ANY_I} -- Implementation
 			-- Set `radio_group' to `Void'.
 		require
 			radio_group_not_void: radio_group /= Void
+		local
+			l_radio_group: like radio_group
 		do
-			radio_group.start
-			radio_group.prune (Current)
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
+			l_radio_group.start
+			l_radio_group.prune (Current)
 			check
-				removed: not radio_group.has (Current)
+				removed: not l_radio_group.has (Current)
 			end
-			if is_selected and then not radio_group.is_empty then
-				radio_group.first.enable_select
+			if is_selected and then not l_radio_group.is_empty then
+				l_radio_group.first.enable_select
 			end
 			radio_group := Void
 		ensure
@@ -159,18 +186,19 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 	has_duplicated_items: BOOLEAN
 		local
-			l: like radio_group
+			l_radio_group: like radio_group
 		do
-			l := radio_group
+			l_radio_group := radio_group
+			check l_radio_group /= Void end
 			from
-				l.start
+				l_radio_group.start
 			until
-				l.off or Result
+				l_radio_group.off or Result
 			loop
-				if radio_group.occurrences (l.item) > 1 then
+				if l_radio_group.occurrences (l_radio_group.item) > 1 then
 					Result := True
 				end
-				l.forth
+				l_radio_group.forth
 			end
 		end
 

@@ -71,15 +71,15 @@ feature {NONE} -- Initialization
 --		local
 --			color_imp: EV_COLOR_IMP
 		do
-			create {NS_VIEW}cocoa_item.make
-			Precursor {EV_CELL_IMP}
-			initialize_grid
-
 			create focused_selection_color.make_with_rgb (1, 0, 0)
 			create non_focused_selection_color.make_with_rgb (1, 1, 0)
 			create focused_selection_text_color.make_with_rgb (0, 1, 0)
 			create non_focused_selection_text_color.make_with_rgb (0, 0, 1)
---			color_imp ?= non_focused_selection_text_color.implementation
+
+			create {NS_VIEW}cocoa_item.make
+			Precursor {EV_CELL_IMP}
+			initialize_grid
+
 
 			set_is_initialized (True)
 		end
@@ -116,7 +116,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- not include the horizontal overhang or underhang. This can
 			-- make quite a difference on certain platforms.
 		local
-			l_font_imp: EV_FONT_IMP
+			l_font_imp: detachable EV_FONT_IMP
 			l_string: NS_STRING
 			l_attributes: NS_DICTIONARY
 			l_size: NS_SIZE
@@ -126,6 +126,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				tuple.put_integer (0, 2)
 			else
 				l_font_imp ?= a_font.implementation
+				check l_font_imp /= void end
 				create l_string.make_with_string (a_string)
 				create l_attributes.make_with_object_for_key (l_font_imp.cocoa_item, font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)

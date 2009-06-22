@@ -21,7 +21,9 @@ inherit
 	EV_VIEWPORT_IMP
 		redefine
 			interface,
-			make
+			make,
+			replace,
+			ev_apply_new_size
 		end
 
 create
@@ -64,6 +66,24 @@ feature -- Access
 
 feature -- Element change
 
+	replace (v: like item)
+			-- Replace `item' with `v'.
+		do
+			if attached item_imp as l_item_imp then
+				l_item_imp.set_parent_imp (Void)
+				notify_change (Nc_minsize, Current)
+			end
+			if attached v and then attached {like item_imp} v.implementation as v_imp then
+				v_imp.set_parent_imp (current)
+				scroll_view.set_document_view (v_imp.cocoa_view)
+				v_imp.ev_apply_new_size (0, 0, v_imp.width, v_imp.height, True)
+				v_imp.set_parent_imp (Current)
+				notify_change (Nc_minsize, Current)
+			end
+			item := v
+			ev_apply_new_size (x_position, y_position, width, height, False)
+		end
+
 	set_horizontal_step (a_step: INTEGER)
 			-- Set `horizontal_step' to `a_step'.
 		do
@@ -100,7 +120,19 @@ feature -- Element change
 			scroll_view.set_has_vertical_scroller (False)
 		end
 
-feature {EV_ANY_I} -- Implementation		
+feature {NONE} -- Implementation
+
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
+		do
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			if attached item_imp as l_item_imp then
+				scroll_view.set_document_view (l_item_imp.cocoa_view)
+				l_item_imp.ev_apply_new_size (0, 0, item_imp.width, item_imp.height, True)
+			end
+		end
+
+
+feature {EV_ANY, EV_ANY_I} -- Implementation		
 
 	interface: detachable EV_SCROLLABLE_AREA note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

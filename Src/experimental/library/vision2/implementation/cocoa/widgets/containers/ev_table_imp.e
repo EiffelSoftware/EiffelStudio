@@ -48,10 +48,10 @@ feature {NONE} -- Implementation
 			create ev_children.make (2)
 			create internal_array.make (1, 1)
 			rebuild_internal_item_list
-			initialize
 
 			create_columns
 			create_rows
+			initialize
 			disable_homogeneous
 		end
 
@@ -94,10 +94,10 @@ feature -- Status report
 
 feature -- Widget relationships
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -160,7 +160,7 @@ feature -- Status settings
 			-- with size `a_width', `a_height' in cells.
 		local
 			table_child: EV_TABLE_CHILD_IMP
-			child_imp: EV_WIDGET_IMP
+			child_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_TABLE_I} (child, a_x, a_y, a_width, a_height)
 			child.implementation.on_parented
@@ -199,34 +199,40 @@ feature -- Status settings
 	item_column_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is column coordinate of `widget'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			l_widget_child: detachable EV_TABLE_CHILD_IMP
 		do
 			-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			Result := find_widget_child (widget_imp).left_attachment + 1
+			l_widget_child := find_widget_child (widget_imp)
+			check l_widget_child /= Void end
+			Result := l_widget_child.left_attachment + 1
 		end
 
 	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
+			l_widget_child: detachable EV_TABLE_CHILD_IMP
 		do
 			-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			Result := find_widget_child (widget_imp).top_attachment + 1
+			l_widget_child := find_widget_child (widget_imp)
+			check l_widget_child /= Void end
+			Result := l_widget_child.top_attachment + 1
 		end
 
 	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		local
-			widget_child: EV_TABLE_CHILD_IMP
-			widget_imp: EV_WIDGET_IMP
+			widget_child: detachable EV_TABLE_CHILD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 			-- Retrieve implementation of `widget'.
 			widget_imp ?= widget.implementation
@@ -234,14 +240,15 @@ feature -- Status settings
 				implementation_not_void: widget_imp /= Void
 			end
 			widget_child := find_widget_child (widget_imp)
+			check widget_child /= Void end
 			Result := widget_child.right_attachment - widget_child.left_attachment
 		end
 
 	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		local
-			widget_child: EV_TABLE_CHILD_IMP
-			widget_imp: EV_WIDGET_IMP
+			widget_child: detachable EV_TABLE_CHILD_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 			-- Retrieve implementation of `widget'.	
 			widget_imp ?= widget.implementation
@@ -249,6 +256,7 @@ feature -- Status settings
 				implementation_not_void: widget_imp /= Void
 			end
 			widget_child := find_widget_child (widget_imp)
+			check widget_child /= Void end
 			Result := widget_child.bottom_attachment - widget_child.top_attachment
 		end
 
@@ -637,7 +645,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP
+	find_widget_child (a_child: EV_WIDGET_IMP): detachable EV_TABLE_CHILD_IMP
 			-- `Result' is the table child containing `a_child'.
 		require
 			valid_child: a_child /= Void
@@ -861,7 +869,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TABLE note option: stable attribute end;
 

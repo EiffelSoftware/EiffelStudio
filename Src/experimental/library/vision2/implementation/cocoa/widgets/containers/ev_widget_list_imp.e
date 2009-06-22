@@ -48,10 +48,10 @@ feature {NONE} -- Initialization
 
 feature -- Widget relationships
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
 			v_imp ?= v.implementation
@@ -94,13 +94,14 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
+			v: detachable EV_WIDGET
 			v_imp: detachable EV_WIDGET_IMP
 		do
-			v_imp ?= i_th (i).implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-			remove_item_actions.call ([v_imp.interface])
+			v := i_th (i)
+			check v /= Void end
+			v_imp ?= v.implementation
+			check v_imp_not_void: v_imp /= Void	end
+			remove_item_actions.call ([v_imp.attached_interface])
 			ev_children.go_i_th (i)
 			ev_children.remove
 			notify_change (Nc_minsize, Current)

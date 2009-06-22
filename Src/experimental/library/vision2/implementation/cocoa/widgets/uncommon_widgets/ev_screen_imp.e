@@ -50,12 +50,12 @@ feature -- Status report
 			create Result.make (point.x, point.y)
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET
+	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
 			-- Widget at position ('x', 'y') if any.
 		do
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP
+	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		do
 		end

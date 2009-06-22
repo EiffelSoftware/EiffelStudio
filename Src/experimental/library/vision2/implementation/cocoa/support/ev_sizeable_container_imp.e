@@ -222,14 +222,14 @@ feature -- Basic Operations
 		deferred
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top window of Current.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
+	notify_change (type: INTEGER; child: detachable EV_SIZEABLE_IMP)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -239,12 +239,10 @@ feature -- Basic Operations
 		local
 			p_imp: like parent_imp
 			top_imp: like top_level_window_imp
-			t: EV_SIZEABLE_CONTAINER_IMP
 		do
 			if not is_in_min_height and not is_in_min_width then
 				if is_in_notify.item then
-					t ?= child
-					if t /= Void and then t.is_notify_originator then
+					if attached {EV_SIZEABLE_CONTAINER_IMP} child as t and then t.is_notify_originator then
 							-- `notify_change' call has finished its work on descendants,
 							-- we go up to parents.
 						is_in_notify.put (False)

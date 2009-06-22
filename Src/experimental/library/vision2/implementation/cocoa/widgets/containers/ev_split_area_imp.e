@@ -1,8 +1,6 @@
 note
-	description:
-		"EiffelVision Split Area. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision Split Area. Cocoa implementation."
+	author: "Daniel Furrer"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,17 +52,17 @@ feature -- Access
 			split_view.adjust_subviews
 		end
 
-	set_first (v: like item)
+	set_first (v: attached like item)
 			-- Make `an_item' `first'.
 		local
-			l_imp: EV_WIDGET_IMP
+			l_imp: detachable EV_WIDGET_IMP
 		do
 			l_imp ?= v.implementation
 			check l_imp_not_void: l_imp /= Void end
 			first := v
 --			on_new_item (l_imp)
 			l_imp.set_parent_imp (current)
-			disable_item_expand (first)
+			disable_item_expand (v)
 			cocoa_view.add_subview (l_imp.cocoa_view)
 			--notify_change (nc_minsize, Current)
 			if second_visible then
@@ -76,10 +74,10 @@ feature -- Access
 			new_item_actions.call ([v])
 		end
 
-	set_second (v: like item)
+	set_second (v: attached like item)
 			-- Make `an_item' `second'.
 		local
-			v_imp: EV_WIDGET_IMP
+			v_imp: detachable EV_WIDGET_IMP
 		do
 			v.implementation.on_parented
 			v_imp ?= v.implementation
@@ -91,7 +89,10 @@ feature -- Access
 
 			notify_change (Nc_minsize, Current)
 			if first_visible then
-				set_split_position (height - splitter_width - second.minimum_height.min
+				check
+					second /= Void
+				end
+				set_split_position (height - splitter_width - v.minimum_height.min
 					(height - minimum_split_position - splitter_width))
 			else
 				set_split_position (0)
@@ -109,12 +110,12 @@ feature -- Access
 	prune (an_item: like item)
 			-- Remove `an_item' if present from `Current'.
 		local
-			an_item_imp: EV_WIDGET_IMP
+			an_item_imp: detachable EV_WIDGET_IMP
 		do
 			if has (an_item) and then an_item /= Void then
 				an_item_imp ?= an_item.implementation
-				an_item_imp.set_parent_imp (Void)
 				check an_item_imp_not_void: an_item_imp /= Void end
+				an_item_imp.set_parent_imp (Void)
 				if an_item = first then
 					first_expandable := False
 					first := Void
@@ -174,25 +175,25 @@ feature -- Access
 
 feature -- Widget relationships
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
-			widget_imp: EV_WIDGET_IMP
+			widget_imp: detachable EV_WIDGET_IMP
 		do
 			top_level_window_imp := a_window
-			if first /= Void then
-				widget_imp ?= first.implementation
+			if attached first as l_first then
+				widget_imp ?= l_first.implementation
 				check
 					widget_implementation_not_void: widget_imp /= Void
 				end
 				widget_imp.set_top_level_window_imp (a_window)
 			end
-			if second /= Void then
-				widget_imp ?= second.implementation
+			if attached second as l_second then
+				widget_imp ?= l_second.implementation
 				check
 					widget_implementation_not_void: widget_imp /= Void
 				end
@@ -202,22 +203,22 @@ feature -- Widget relationships
 
 feature {NONE} -- Implementation
 
-	first_imp: EV_WIDGET_IMP
+	first_imp: detachable EV_WIDGET_IMP
 			-- `Result' is implementation of first.
 		do
-			if first /= Void then
-				Result ?= first.implementation
+			if attached first as l_first then
+				Result ?= l_first.implementation
 				check
 					implementation_of_first_not_void: Result /= Void
 				end
 			end
 		end
 
-	second_imp: EV_WIDGET_IMP
+	second_imp: detachable EV_WIDGET_IMP
 			-- `Result' is implementation of second.
 		do
-			if second /= Void then
-				Result ?= second.implementation
+			if attached second as l_second then
+				Result ?= l_second.implementation
 				check
 					implementation_of_second_not_void: Result /= Void
 				end
@@ -254,16 +255,10 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {NS_SPLIT_VIEW_DELEGATE}
 		end
 
+	split_view: NS_SPLIT_VIEW
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
-	split_view: NS_SPLIT_VIEW
-		do
-			Result ?= cocoa_item
-		ensure
-			split_view_not_void: Result /= Void
-		end
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SPLIT_AREA_IMP
-

@@ -10,6 +10,13 @@ deferred class
 inherit
 	EV_TEXTABLE_I
 
+feature --
+
+	initialize_textable
+		do
+			create internal_text.make_empty
+		end
+
 feature -- Access
 
 	text: STRING_32

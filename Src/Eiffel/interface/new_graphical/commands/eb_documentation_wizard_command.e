@@ -11,10 +11,20 @@ class
 inherit
 	EB_MENUABLE_COMMAND
 
-	EB_SHARED_INTERFACE_TOOLS
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		end
+
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
 
 	SHARED_ERROR_HANDLER
-
+		export
+			{NONE} all
+		end
 create
 	make
 
@@ -54,6 +64,7 @@ feature {NONE} -- Implementation
 			doc: DOCUMENTATION
 			retried, l_dir_created: BOOLEAN
 			l_str: STRING
+			l_formatter: like compiler_formatter
 		do
 			if not retried then
 				create doc.make
@@ -74,15 +85,24 @@ feature {NONE} -- Implementation
 				if wizard.cluster_diagrams_selected then
 					doc.set_diagram_views (wizard.diagram_views)
 				end
-				output_manager.clear_general
+				
+				if attached compiler_output as l_output then
+					l_output.lock
+					l_output.clear
+					l_output.activate
+				end
+				l_formatter := compiler_formatter
+
 				window_manager.display_message ("")
 				l_str := "Documentation Generated in " + wizard.directory.name
-				output_manager.start_processing (True)
 				doc.generate (Degree_output)
-				output_manager.add_string (l_str)
-				output_manager.add_new_line
-				output_manager.end_processing
+				l_formatter.add_string (l_str)
+				l_formatter.add_new_line
 				window_manager.display_message (l_str)
+
+				if attached compiler_output as l_output then
+					l_output.unlock
+				end
 			end
 		rescue
 			if not l_dir_created then
@@ -99,7 +119,7 @@ feature {NONE} -- Implementation
 		-- Documentation option dialog.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,22 +132,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

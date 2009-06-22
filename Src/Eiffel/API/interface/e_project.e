@@ -412,7 +412,8 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			set_error_status (ok_status)
-			degree_output.put_new_compilation
+			degree_output.put_start_output
+			degree_output.put_start_compilation
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.put (True)
 				workbench.start_compilation
@@ -442,6 +443,7 @@ feature -- Update
 				Compilation_modes.reset_modes
 				precompile (False)
 			end
+			degree_output.put_end_output
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved

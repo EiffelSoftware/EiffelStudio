@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		end
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -121,6 +126,8 @@ feature {NONE} -- Compilation implementation
 			-- Compile, in the one way or the other.
 		do
 			if not Eiffel_project.is_compiling then
+				degree_output.put_start_output
+
 				reset_debugger
 				Window_manager.on_compile
 				perform_compilation
@@ -129,22 +136,20 @@ feature {NONE} -- Compilation implementation
 						-- If a freezing already occurred (due to a new external
 						-- or new derivation of SPECIAL), no need to freeze again.
 					if Eiffel_project.save_error then
-						output_manager.add_string ("Could not write to ")
-						output_manager.add_string (project_location.location)
-						output_manager.add_new_line
-						output_manager.add_string ("Please check permissions / disk space")
-						output_manager.add_new_line
-						output_manager.add_string ("and retry")
-						output_manager.add_new_line
+						degree_output.put_message ("Could not write to ")
+						degree_output.put_message (project_location.location)
+						degree_output.put_new_line
+						degree_output.put_message ("Please check permissions/disk space and retry")
+						degree_output.put_new_line
 					else
 						if not finalization_error then
 							launch_c_compilation
 						end
 					end
 				end
-				Degree_output.finish_degree_output
 				tool_resynchronization
-				output_manager.end_processing
+
+				degree_output.put_end_output
 			end
 		end
 
@@ -152,11 +157,13 @@ feature {NONE} -- Compilation implementation
 			-- Display status of eiffel compilation.
 		do
 			if Workbench.successful then
-				output_manager.add_string (Interface_names.ee_compilation_succeeded)
-				output_manager.add_new_line
+				degree_output.put_string (Interface_names.ee_compilation_succeeded)
+				degree_output.put_new_line
 			else
-				output_manager.add_string (Interface_names.ee_compilation_failed)
-				output_manager.add_new_line
+					-- Need extra break because failure is unexpected.
+				degree_output.put_new_line
+				degree_output.put_string (Interface_names.ee_compilation_failed)
+				degree_output.put_new_line
 			end
 		end
 
@@ -178,16 +185,16 @@ feature {NONE} -- Compilation implementation
 
 				-- Clear the format_context buffers.
 			clear_format_tables
+
 			window_manager.display_message_and_percentage (Interface_names.d_Resynchronizing_tools, 0)
 			window_manager.synchronize_all
 			if Workbench.successful then
 				if not process_manager.is_c_compilation_running then
-					window_manager.display_message (Interface_names.E_compilation_succeeded)
+					window_manager.display_message (Interface_names.e_compilation_succeeded)
 				end
 			else
-				window_manager.display_message (Interface_names.E_compilation_failed)
+				window_manager.display_message (Interface_names.e_compilation_failed)
 			end
-			output_manager.scroll_to_end
 			Eb_debugger_manager.on_compile_stop
 			metric_manager.on_compile_stop
 
@@ -201,8 +208,14 @@ feature {NONE} -- Compilation implementation
 		do
 			if start_c_compilation and then Eiffel_project.freezing_occurred and then not lace.compile_all_classes then
 				if Eiffel_project.freezing_occurred then
-					output_manager.add_string ("Eiffel System is being frozen to include new or modified externals.")
-					output_manager.add_new_line
+					if attached compiler_output as l_output then
+						l_output.lock
+					end
+					c_compiler_formatter.add_string ("Eiffel System is being frozen to include new or modified externals.")
+					c_compiler_formatter.add_new_line
+					if attached compiler_output as l_output then
+						l_output.unlock
+					end
 				end
 				Eiffel_project.call_finish_freezing (True)
 			end
@@ -258,7 +271,8 @@ feature -- Execution
 			-- Recompile the project, start C compilation if necessarry.
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
-			l_tool: ES_TOOL [EB_TOOL]
+			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_output: OUTPUT_I
 		do
 			if is_sensitive then
 				if process_manager.is_c_compilation_running then
@@ -269,13 +283,15 @@ feature -- Execution
 						l_window_attached: l_window /= Void
 						l_window_is_interface_usable: l_window.is_interface_usable
 					end
-					l_tool := l_window.shell_tools.tool ({ES_OUTPUT_TOOL})
-					check
-						l_tool_attached: l_tool /= Void
-						l_tool_is_interface_usable: l_tool.is_interface_usable
-					end
 					if preferences.development_window_data.output_tool_prompted then
-						l_tool.show (True)
+							-- Activate the compiler output on the outputs tools.
+						create l_service
+						if l_service.is_service_available then
+							l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+							l_output.activate
+						end
+							-- Request tool be shown.
+						l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)
 					end
 					go_on_compile
 				end
@@ -296,15 +312,8 @@ feature -- Execution
 
 	go_on_compile
 			-- Go on running Eiffel compilation.
-		local
-			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			output_manager.clear
 			execute_with_c_compilation_flag (True)
-			l_dev_window := window_manager.last_focused_development_window
-			if l_dev_window /= Void and then not l_dev_window.tools.is_recycled then
-				l_dev_window.tools.output_tool.update_pixmap
-			end
 		end
 
 feature {NONE} -- Execution

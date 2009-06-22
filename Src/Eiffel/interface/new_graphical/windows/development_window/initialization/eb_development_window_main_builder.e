@@ -728,14 +728,6 @@ feature -- Command
 			l_dev_commands.toolbarable_commands.extend (develop_window.refactoring_manager.undo_command)
 			l_dev_commands.toolbarable_commands.extend (develop_window.refactoring_manager.redo_command)
 
-				-- Force build
-				-- FIXME: We force the tools to be built completely here in order to perform
-				--        the necessary registration with parts of ES. This is only to preserve
-				--        backwards compatibility with the older model until the tools have been
-				--        fully converted to the dynamic model.
-				-- Note:  Fetching the tool panel will cause it to be created.
-			develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).panel.do_nothing
-
 				-- Set the flag "Tools initialized"
 			develop_window.set_tools_initialized (True)
 

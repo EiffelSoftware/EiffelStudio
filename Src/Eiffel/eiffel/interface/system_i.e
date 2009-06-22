@@ -964,7 +964,7 @@ end
 				-- set observers
 			l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
 			l_vis_build.process_group_observer.extend (agent degree_output.put_process_group)
-			l_vis_build.process_directory.extend (agent degree_output.put_process_directory)
+			l_vis_build.process_directory.extend (agent degree_output.put_degree_6)
 
 			l_target.process (l_vis_build)
 			if l_vis_build.is_error then
@@ -1200,6 +1200,7 @@ end
 
 		end
 
+
 	init_recompilation
 			-- Initialization before a recompilation.
 		local
@@ -1210,7 +1211,7 @@ end
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
 		do
-			degree_output.put_start_degree_6
+			degree_output.put_start_degree (6, 0)
 
 				-- reset the compiler side removed classes and readd the configuration side removed classes
 			removed_classes := Void
@@ -3022,41 +3023,41 @@ end
 			degree_message := "Generating Auxiliary Files"
 			deg_output := Degree_output
 
-			deg_output.display_degree_output (degree_message, 10, 10)
+			deg_output.put_degree_output (degree_message, 10, 10)
 			generate_cecil
 
-			deg_output.display_degree_output (degree_message, 9, 10)
+			deg_output.put_degree_output (degree_message, 9, 10)
 			generate_skeletons
 			generate_expanded_structures
 
-			deg_output.display_degree_output (degree_message, 8, 10)
+			deg_output.put_degree_output (degree_message, 8, 10)
 			generate_parent_tables
 			is_conformance_table_melted := False
 			melted_parent_table      := Void
 
-			deg_output.display_degree_output (degree_message, 7, 10)
+			deg_output.put_degree_output (degree_message, 7, 10)
 			t.generate_plug
 
-			deg_output.display_degree_output (degree_message, 6, 10)
+			deg_output.put_degree_output (degree_message, 6, 10)
 			t.generate_dynamic_lib_file
 
-			deg_output.display_degree_output (degree_message, 5, 10)
+			deg_output.put_degree_output (degree_message, 5, 10)
 			generate_init_file
 
-			deg_output.display_degree_output (degree_message, 4, 10)
+			deg_output.put_degree_output (degree_message, 4, 10)
 			generate_option_file (True)
 			address_table.generate (False)
 
-			deg_output.display_degree_output (degree_message, 3, 10)
+			deg_output.put_degree_output (degree_message, 3, 10)
 			generate_rout_info_table
 
-			deg_output.display_degree_output (degree_message, 2, 10)
+			deg_output.put_degree_output (degree_message, 2, 10)
 			generate_pattern_table
 
-			deg_output.display_degree_output (degree_message, 1, 10)
+			deg_output.put_degree_output (degree_message, 1, 10)
 			execution_table.generate
 
-			deg_output.display_degree_output (degree_message, 0, 10)
+			deg_output.put_degree_output (degree_message, 0, 10)
 			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
@@ -3815,43 +3816,43 @@ feature -- Generation
 			deg_output := Degree_output
 
 				-- Address table
-			deg_output.display_degree_output (degree_message, 10, 10)
+			deg_output.put_degree_output (degree_message, 10, 10)
 			address_table.generate (True)
 
 				-- Generation of the reference number table
-			deg_output.display_degree_output (degree_message, 9, 10)
+			deg_output.put_degree_output (degree_message, 9, 10)
 			generate_reference_table
 
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 8, 10)
+			deg_output.put_degree_output (degree_message, 8, 10)
 			generate_cecil
 
 				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 7, 10)
+			deg_output.put_degree_output (degree_message, 7, 10)
 			generate_skeletons
 			generate_expanded_structures
 
 				-- Generation of the parent table
-			deg_output.display_degree_output (degree_message, 6, 10)
+			deg_output.put_degree_output (degree_message, 6, 10)
 			generate_parent_tables
 
 				-- Generate plug with run-time.
 				-- Has to be done before `generate_routine_table' because
 				-- this is were we mark `used' the attribute table of `lower' and
 				-- `area' used with `array_optimization'.
-			deg_output.display_degree_output (degree_message, 5, 10)
+			deg_output.put_degree_output (degree_message, 5, 10)
 			t.generate_plug
 
 				-- Routine table generation
-			deg_output.display_degree_output (degree_message, 4, 10)
+			deg_output.put_degree_output (degree_message, 4, 10)
 			generate_routine_table
 
 				-- Generate edynlib with run-time.
-			deg_output.display_degree_output (degree_message, 3, 10)
+			deg_output.put_degree_output (degree_message, 3, 10)
 			t.generate_dynamic_lib_file
 
 				-- Generate init file
-			deg_output.display_degree_output (degree_message, 2, 10)
+			deg_output.put_degree_output (degree_message, 2, 10)
 			generate_init_file
 
 				-- Generate option file
@@ -3860,11 +3861,11 @@ feature -- Generation
 			end
 
 				-- Generation of type size table
-			deg_output.display_degree_output (degree_message, 1, 10)
+			deg_output.put_degree_output (degree_message, 1, 10)
 			generate_size_table
 
 				-- Generate makefile
-			deg_output.display_degree_output (degree_message, 0, 10)
+			deg_output.put_degree_output (degree_message, 0, 10)
 			t.generate_make_file
 		end
 

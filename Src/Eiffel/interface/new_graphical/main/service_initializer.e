@@ -112,15 +112,13 @@ feature {NONE} -- Registration: Output
 			l_kinds: OUTPUT_MANAGER_KINDS
 		do
 			create l_kinds
-			a_service.register (create {OUTPUT_TTY}, l_kinds.testing)
---			a_service.register (create {OUTPUT_TTY}, l_kinds.general)
---			a_service.register (create {OUTPUT_TTY}, l_kinds.eiffel_compiler)
---			a_service.register (create {OUTPUT_TTY}, l_kinds.c_compiler)
+			a_service.register (create {OUTPUT_TTY}, l_kinds.general)
+			a_service.register (create {OUTPUT_TTY}, l_kinds.eiffel_compiler)
+			a_service.register (create {OUTPUT_TTY}, l_kinds.c_compiler)
 		ensure
-			testing_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).testing)
---			general_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).general)
---			eiffel_compiler_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
---			c_compilerl_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
+			general_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).general)
+			eiffel_compiler_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+			c_compilerl_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
 		end
 
 feature {NONE} -- Registrations: Testing

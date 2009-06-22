@@ -61,6 +61,11 @@ inherit
 			on_window_removed
 		end
 
+	ES_SHARED_DEBUGGER_OUTPUTS
+		rename
+			output_manager as output_manager_service
+		end
+
 create
 	make
 
@@ -1001,15 +1006,23 @@ feature -- Status report
 feature -- Output
 
 	debugger_output_message (m: STRING_GENERAL)
+			-- <Precursor>
+		local
+			l_formatter: like debugger_formatter
 		do
-			check output_manager /= Void end
-			output_manager.start_processing (True)
-			output_manager.add_string (m)
-			output_manager.add_new_line
-			output_manager.end_processing
+			l_formatter := debugger_formatter
+			if attached debugger_output as l_output then
+				l_output.lock
+			end
+			l_formatter.add_string (m)
+			l_formatter.add_new_line
+			if attached debugger_output as l_output then
+				l_output.unlock
+			end
 		end
 
 	debugger_warning_message (m: STRING_GENERAL)
+			-- <Precursor>
 		do
 			if ev_application = Void then
 				Precursor (m)
@@ -1019,6 +1032,7 @@ feature -- Output
 		end
 
 	debugger_error_message (m: STRING_GENERAL)
+			-- <Precursor>
 		do
 			if ev_application = Void then
 				Precursor (m)
@@ -1028,33 +1042,113 @@ feature -- Output
 		end
 
 	debugger_status_message (m: STRING_GENERAL)
+			-- <Precursor>
 		do
 			if m.index_of_code (('%N').natural_32_code, 1) = 0 then
 				window_manager.display_message (m)
 			end
 		end
 
-	display_application_status
+	display_system_info
+			-- <Precursor>
+		local
+			l_formatter: like general_formatter
+			l_auto_scrolled_changed: BOOLEAN
 		do
-			output_manager.display_application_status
+			if attached general_output as l_output then
+				l_formatter := general_formatter
+				l_output.activate
+
+				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					if l_output_pane.is_auto_scrolled then
+						l_output_pane.is_auto_scrolled := False
+						l_auto_scrolled_changed := True
+					end
+				end
+
+				l_output.lock
+				l_output.clear;
+				(create {ES_OUTPUT_ROUTINES}).append_system_info (l_formatter)
+				l_output.unlock
+
+				if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					l_output_pane.is_auto_scrolled := True
+				end
+			else
+				check False end
+			end
 		end
 
-	display_system_info
+	display_application_status
+			-- <Precursor>
+		local
+			l_formatter: like debugger_formatter
+			l_auto_scrolled_changed: BOOLEAN
 		do
-			output_manager.display_system_info
+			if attached debugger_output as l_output then
+				l_formatter := debugger_formatter
+				l_output.activate
+
+				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					if not l_output_pane.is_auto_scrolled then
+						l_output_pane.is_auto_scrolled := True
+						l_auto_scrolled_changed := True
+					end
+				end
+
+					-- Build the text
+				if application_is_executing then
+					text_formatter_visitor.append_status (application_status, l_formatter)
+				else
+					l_formatter.add ("No debugger information because the system has not be launched.")
+					l_formatter.add_new_line
+				end
+
+				if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					l_output_pane.is_auto_scrolled := True
+				end
+			else
+				check False end
+			end
 		end
 
 	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
+			-- <Precursor>
+		local
+			l_formatter: like debugger_formatter
+			l_auto_scrolled_changed: BOOLEAN
 		do
-			text_formatter_visitor.append_debugger_information (Current, param, output_manager)
+			if attached debugger_output as l_output then
+				l_formatter := debugger_formatter
+
+				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					if not l_output_pane.is_auto_scrolled then
+						l_output_pane.is_auto_scrolled := True
+						l_auto_scrolled_changed := True
+					end
+				end
+
+				l_output.activate
+				l_output.lock
+				text_formatter_visitor.append_debugger_information (Current, param, l_formatter)
+				l_output.unlock
+
+				if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+					l_output_pane.is_auto_scrolled := False
+				end
+			else
+				check False end
+			end
 		end
 
 	display_system_status
+			-- <Precursor>
 		do
-			if
-				debugging_window /= Void
-			then
-				debugging_window.shell_tools.tool ({ES_OUTPUT_TOOL}).show (False)
+			if attached debugger_output as l_output then
+				l_output.activate
+				if attached debugging_window as l_window then
+					l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)
+				end
 			end
 			display_system_info
 			if application_is_executing then

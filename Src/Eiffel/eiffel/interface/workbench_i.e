@@ -183,7 +183,7 @@ feature -- Additional properties
 			-- Warning: it might not have been completed!
 		do
 			if not successful then
-				Result := Eiffel_project.degree_output.last_reached_degree
+				Result := Eiffel_project.degree_output.last_degree
 			else
 				Result := -4
 			end

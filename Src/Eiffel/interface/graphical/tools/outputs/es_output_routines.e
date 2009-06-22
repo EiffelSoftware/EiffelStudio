@@ -16,11 +16,6 @@ inherit
 			{NONE} all
 		end
 
-	ES_SHARED_OUTPUTS
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -34,7 +29,7 @@ inherit
 feature -- Output
 
 	append_system_info (a_formatter: TEXT_FORMATTER)
-			-- Append to `text' information about `e_system'.
+			-- Appends the system information
 		local
 			creation_name: STRING
 			root_cluster: CONF_GROUP

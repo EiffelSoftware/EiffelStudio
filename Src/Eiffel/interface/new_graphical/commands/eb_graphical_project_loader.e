@@ -72,6 +72,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -383,7 +388,12 @@ feature {NONE} -- Error reporting
 				-- We print text in the project_tool text concerning the system
 				-- because we were successful retrieving the project without
 				-- errors or conversion.
-			output_manager.display_system_info
+			if attached general_output as l_output then
+				l_output.lock
+				l_output.clear;
+				(create {ES_OUTPUT_ROUTINES}).append_system_info (l_output.formatter)
+				l_output.unlock
+			end
 
 			if window_manager.development_windows_count = 1 then
 				-- We only do this for frist window (not `last_focused_development_window') since

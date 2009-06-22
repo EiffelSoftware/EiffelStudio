@@ -398,10 +398,6 @@ feature {NONE} -- Implementation
 			end
 			develop_window.menus.update_menu_lock_items
 			develop_window.menus.update_show_tool_bar_items
-
-				-- Activate the output and c output windows now to ensure the output is updated
-			develop_window.tools.output_tool.do_nothing
-			develop_window.tools.c_output_tool.do_nothing
 		end
 
 	construct_standard_layout_by_code_imp
@@ -422,15 +418,11 @@ feature {NONE} -- Implementation
 			develop_window.close_all_tools
 
 				-- Right bottom tools
-			l_tool := l_shell_tools.tool ({ES_C_OUTPUT_TOOL})
+			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 			l_last_tool := l_tool
 
-			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
-			l_tool.content.set_tab_with (l_last_tool.content, True)
-			l_last_tool := l_tool
-
-			l_tool := l_shell_tools.tool ({ES_OUTPUT_TOOL})
+			l_tool := l_shell_tools.tool ({ES_OUTPUTS_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 			l_last_tool := l_tool
 

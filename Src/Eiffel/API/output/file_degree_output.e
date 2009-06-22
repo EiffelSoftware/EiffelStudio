@@ -11,65 +11,90 @@ class
 inherit
 	DEGREE_OUTPUT
 		redefine
-			display_degree_output,
-			display_degree,
+			percentage_prefix,
 			put_melting_changes_message,
 			put_freezing_message,
 			put_start_dead_code_removal_message,
 			put_string,
 			put_dead_code_removal_message,
-			percentage_output,
 			degree_message,
 			put_system_compiled,
-			put_header
+			put_header,
+			put_degree_output,
+			put_degree
 		end
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_file_name: STRING)
-			-- Initialize
+	make (a_file_name: like output_file_name)
+			--
 		do
 			output_file_name := a_file_name
+		ensure
+			output_file_name_set: output_file_name ~ a_file_name
+		end
+
+feature {NONE} -- Access
+
+	output_file: detachable PLAIN_TEXT_FILE
+			-- Output file.
+
+	output_file_name: STRING
+			-- Output file name
+
+feature {NONE} -- Query
+
+	degree_message (a_degree: INTEGER): STRING_32
+			-- <Precursor>
+		do
+			create Result.make (2)
+			Result.append_integer (a_degree)
+		end
+
+	percentage_prefix (a_to_go: INTEGER): STRING_32
+			-- <Precursor>
+		do
+			create Result.make (4)
+			Result.append_integer (calculate_percentage (a_to_go))
+			Result.append_string ("%%")
 		end
 
 feature -- Basic operations
 
+
+
+feature -- Basic operations: Eiffel compiler
+
+	put_header
+			-- <Precursor>
+		do
+		end
+
 	put_melting_changes_message
-			-- Put message indicating that melting changes is ocurring.
+			-- <Precursor>
 		do
 		end
 
 	put_freezing_message
-			-- Put message indicating that freezing is occurring.
+			-- <Precursor>
 		do
 		end
 
 	put_start_dead_code_removal_message
-			-- Put message indicating the start of dead code removal.
+			-- <Precursor>
 		do
 		end
 
-	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER)
-			-- Put message progress the start of dead code removal.
+	put_dead_code_removal_message (a_total: INTEGER; a_to_go: INTEGER)
+			-- <Precursor>
 		do
-		end
-
-	put_string (a_message: STRING)
-			-- Put `a_message' to output window.
-		do
-			open_file
-			if not output_file.is_closed then
-				output_file.put_string (a_message)
-				output_file.put_new_line
-				close_file
-			end
 		end
 
 	put_system_compiled
-			-- Put message indicating that the system has been compiled.
+			-- <Precursor>
 		do
 				-- Wait for the file to be writable.
 			from
@@ -84,18 +109,41 @@ feature -- Basic operations
 			close_file
 		end
 
-	put_header (displayed_version_number: STRING)
-		do
-		end
+feature {NONE} -- Basic operations
 
-	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING)
-			-- Display degree `deg_nbr' with entity `a_class'.
+	put_degree (a_degree: STRING; a_to_go: INTEGER; a_name: STRING)
+			-- <Precursor>
 		do
 			open_file
 			if not output_file.is_closed then
-				output_file.put_string (deg_nbr)
+				output_file.put_string (a_degree)
 				output_file.put_string ("%T")
-				output_file.put_string (percentage_output (to_go))
+				output_file.put_string (percentage_prefix (a_to_go))
+				output_file.put_new_line
+				close_file
+			end
+		end
+
+	put_degree_output (a_degree: STRING; a_to_go: INTEGER; a_total: INTEGER)
+			-- <Precursor>
+		do
+			total_number := a_total
+			open_file
+			if not output_file.is_closed then
+				output_file.put_string (a_degree)
+				output_file.put_string ("%T")
+				output_file.put_string (percentage_prefix (a_to_go))
+				output_file.put_new_line
+				close_file
+			end
+		end
+
+	put_string (a_message: STRING)
+			-- <Precursor>
+		do
+			open_file
+			if not output_file.is_closed then
+				output_file.put_string (a_message.as_string_32)
 				output_file.put_new_line
 				close_file
 			end
@@ -103,18 +151,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	output_file: PLAIN_TEXT_FILE
-			-- Output file.
 
-	output_file_name: STRING
-			-- Output file name
 
-	degree_message (a_degree: INTEGER): STRING
-			-- Display the message corresponding to degree `a_degree'.
-		do
-			create Result.make (2)
-			Result.append_integer (a_degree)
-		end
+
 
 	open_file
 			-- Open the output file
@@ -142,28 +181,9 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER)
-			-- Display degree `deg_nbr' with entity `a_class'.
-		do
-			total_number := total
-			open_file
-			if not output_file.is_closed then
-				output_file.put_integer (-2)
-				output_file.put_string ("%T")
-				output_file.put_string (percentage_output (to_go))
-				output_file.put_new_line
-				close_file
-			end
-		end
 
-	percentage_output (nbr_to_go: INTEGER): STRING
-			-- Return percentage based on `nbr_to_go' and
-			-- `total_number'
-		do
-			create Result.make (4)
-			Result.append_integer (percentage_calculation (nbr_to_go))
-			Result.append_string ("%%")
-		end
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

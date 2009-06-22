@@ -158,11 +158,7 @@ feature -- Initialization
 							create file_degree_output.make (output_file_name)
 							Eiffel_project.set_degree_output (file_degree_output)
 						end
-						if verbose_option then
-							degree_output.disable_quiet_output
-						else
-							-- By default degree output is quiet.
-						end
+						degree_output.is_verbose := verbose_option
 
 							-- Load project
 						create l_loader

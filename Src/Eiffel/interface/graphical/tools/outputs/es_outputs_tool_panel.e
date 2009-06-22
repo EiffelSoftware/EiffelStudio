@@ -16,8 +16,6 @@ class
 
 inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
-		rename
-			output_manager as deprecated_output_manager
 		redefine
 			internal_recycle,
 			on_before_initialize,

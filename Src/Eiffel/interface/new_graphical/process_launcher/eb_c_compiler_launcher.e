@@ -30,6 +30,11 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	ES_SHARED_OUTPUTS
+		export
+			{NONE} all
+		end
+
 feature{NONE}	-- Initialization
 
 	make
@@ -53,10 +58,33 @@ feature{NONE}	-- Initialization
 
 feature {NONE} -- Access
 
-	c_compiiled_context: UUID
+	c_compiler_context: UUID
 			-- Event list service context id
 		once
 			create Result.make_from_string ("E1FFE1CC-D45B-4A56-87C5-B64535BAFE1B")
+		end
+
+	switched_output: detachable OUTPUT_I
+			-- The output object the C compiler launcher switched from when launching.
+
+feature {NONE} -- Status report
+
+	has_output_switched: BOOLEAN
+			-- Indicates if the output was switched to the C compiler output.
+		do
+			Result := attached switched_output
+		ensure
+			switched_output_attached: Result implies attached switched_output
+		end
+
+feature {NONE} -- Helpers
+
+	event_list: SERVICE_CONSUMER [EVENT_LIST_S]
+			-- Access to the event list service
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Setting
@@ -114,17 +142,41 @@ feature{NONE}  -- Actions
 	synchronize_on_c_compilation_start
 			-- Synchronize before launch c compiler.
 		do
+			if attached c_compiler_output as l_output_pane then
+					-- Lock the output to prevent others from accessing it.
+				l_output_pane.lock
+				l_output_pane.clear
+			end
+
 			data_storage.reset_output_byte_count
 			data_storage.reset_error_byte_count
 			Eb_debugger_manager.on_compile_start
 			window_manager.on_c_compilation_start
-			c_compilation_output_manager.clear
-			if preferences.development_window_data.c_output_panel_prompted then
-				c_compilation_output_manager.force_display
+
+			if
+				attached {ES_OUTPUT_PANE_I} c_compiler_output as l_output_pane and then
+				attached window_manager.last_focused_development_window as l_window and then
+				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool
+			then
+					-- Attempts to show the C compiler output, which is only done so when the associated preference
+					-- is set, or if the Eiffel compiler output and the outputs tool is shown.
+				if
+					preferences.development_window_data.c_output_panel_prompted or else
+					(l_tool.is_shown and then
+					 l_tool.output = compiler_output)
+				then
+						-- Activate the output pane if the preference to show the C compiler output is set, or
+						-- if the Eiffel compiler output is shown on the Current window.
+					switched_output := l_tool.output
+					l_output_pane.activate
+
+						-- Force showing of the tool.
+					l_tool.show (False)
+				end
 			end
+
 			if state_message_timer.interval = 0 then
 				state_message_timer.set_interval (initial_time_interval)
-				window_manager.for_all_development_windows (agent start_pixmap_animation_timer (?))
 			end
 			display_message_on_main_output (c_compilation_launched_msg, True)
 		end
@@ -138,31 +190,43 @@ feature{NONE}  -- Actions
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
 			if not process_manager.is_c_compilation_running then
 				state_message_timer.set_interval (0)
-				window_manager.for_all_development_windows (agent stop_pixmap_animation_timer (?))
 			end
-		end
 
-	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW)
-			-- Start pixmap animation on `a_dev_window'.
-		do
-			a_dev_window.tools.c_output_tool.start_c_output_pixmap_timer
-		end
+			if attached c_compiler_output as l_output_pane then
+					-- Unlock the output to prevent allowing others to access it.
+				l_output_pane.unlock
+			end
 
-	stop_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW)
-			-- Stop pixmap animation on `a_dev_window'.
-		do
-			a_dev_window.tools.c_output_tool.stop_c_output_pixmap_timer
+				-- Switch back to the previous output that was activated prior to the c compilation
+			if
+				is_last_c_compilation_successful and then
+				has_output_switched and then
+				attached window_manager.last_focused_development_window as l_window and then
+				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool and then
+				attached switched_output as l_switched_output and then
+				l_tool.output = c_compiler_output and then
+				l_tool.is_shown
+			then
+					-- The output was switched when starting the C compilation so now switch it back, if possible.
+					-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
+				l_switched_output.activate
+			end
+			switched_output := Void
+		ensure
+			switched_output_detached: not attached switched_output
 		end
 
 	on_start
 			-- Handler called before c compiler starts
-		local
-			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
-			create l_consumer
-			if l_consumer.is_service_available then
-				l_consumer.service.prune_event_items (c_compiiled_context)
+				-- Remove any event list error items.
+			if event_list.is_service_available then
+				event_list.service.prune_event_items (c_compiler_context)
 			end
+
+				-- Rest the switched from output
+			switched_output := Void
+
 			synchronize_on_c_compilation_start
 			start_actions.call (Void)
 		end
@@ -171,7 +235,6 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler exits
 		local
 			l_error: C_COMPILER_ERROR
-			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
 			if launched then
 				if exit_code /= 0 then
@@ -185,10 +248,9 @@ feature{NONE}  -- Actions
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
-					create l_consumer
-					if l_consumer.is_service_available then
+					if event_list.is_service_available then
 						create l_error.make ("Please review the C Output Pane.")
-						l_consumer.service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+						event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
@@ -209,16 +271,14 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler launch failed
 		local
 			l_error: C_COMPILER_ERROR
-			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
 			c_compilation_successful_cell.put (False)
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
-			create l_consumer
-			if l_consumer.is_service_available then
+			if event_list.is_service_available then
 				create l_error.make ("Could not launch C/C++ compiler.")
-				l_consumer.service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+				event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)
@@ -270,15 +330,29 @@ feature{NONE} -- Implementation
 		require
 			a_msg_not_void: a_msg /= Void
 			a_msg_not_emtpy: not a_msg.is_empty
+		local
+			l_formatter: like general_formatter
+			l_locked: BOOLEAN
 		do
-			output_manager.start_processing (True)
-			output_manager.add_string (a_msg)
-			if a_suffix then
-				output_manager.add_char ('.')
-				output_manager.add_new_line
+			if (attached compiler_output as l_output) then
+				l_output.lock
+				l_locked := True
 			end
-			output_manager.scroll_to_end
-			output_manager.end_processing
+
+			l_formatter := compiler_formatter
+			l_formatter.process_basic_text (a_msg)
+			if a_suffix then
+				l_formatter.process_character_text (".")
+				l_formatter.process_new_line
+			end
+			if l_locked and then (attached compiler_output as l_output) then
+				l_locked := False
+				l_output.unlock
+			end
+		rescue
+			if l_locked and then (attached compiler_output as l_output) then
+				l_output.unlock
+			end
 		end
 
 	open_console
@@ -301,7 +375,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -314,22 +388,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

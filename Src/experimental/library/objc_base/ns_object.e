@@ -83,7 +83,7 @@ feature -- Status report
 feature -- Duplication
 
 	copy (other: like Current)
-				-- Make a copy of the underlying Objective-C object
+			-- Make a copy of the underlying Objective-C object
 		do
 			make_from_pointer ({NS_OBJECT_API}.copy (other.item))
 		end

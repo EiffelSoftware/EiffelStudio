@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Re-launches a server module.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

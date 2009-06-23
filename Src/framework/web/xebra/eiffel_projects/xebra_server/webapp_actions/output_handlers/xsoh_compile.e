@@ -41,11 +41,10 @@ feature -- Status report
 	has_successfully_terminated: BOOLEAN
 			-- <Precursor>
 		do
-			Result := False
-			--print ("TESSSSSTING output!!! output is '" + output + "'")
-
 			if output.has_substring ("C compilation completed") or output.has_substring ("System Recompiled.") then
 				Result := True
+			else
+				Result := False
 			end
 		end
 end

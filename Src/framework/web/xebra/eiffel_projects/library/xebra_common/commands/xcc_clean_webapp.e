@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Cleans, re-translates, compiles and launches a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -27,7 +27,7 @@ feature -- Access
 	parameter_description: STRING
 			-- <Precursor>
 		do
-			Result := "webapp_name"
+			Result := "name"
 		end
 
 feature -- Status Change

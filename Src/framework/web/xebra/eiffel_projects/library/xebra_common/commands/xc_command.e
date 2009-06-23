@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Interface for commands.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -10,13 +10,11 @@ note
 deferred class
 	XC_COMMAND
 
-
 feature {NONE} -- Initialization
 
 	make
 			-- Initialization for `Current'.
 		do
-
 		end
 
 feature -- Access
@@ -28,10 +26,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-feature -- Status report
-
-feature -- Status setting
-
 feature -- Basic operations
 
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
@@ -42,7 +36,4 @@ feature -- Basic operations
 		ensure
 			result_attached: Result /= Void
 		end
-
-
-
 end

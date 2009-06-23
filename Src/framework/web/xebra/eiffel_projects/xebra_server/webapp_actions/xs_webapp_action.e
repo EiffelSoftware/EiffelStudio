@@ -106,7 +106,7 @@ feature  -- Status report internal
 		deferred
 		end
 
-	
+
 
 feature -- Status setting
 
@@ -171,7 +171,6 @@ feature {NONE} -- Implementation
 					 a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];
 					 a_output_handler: PROCEDURE [ANY, detachable TUPLE [detachable STRING]];
 					 a_error_output_handler: PROCEDURE [ANY, detachable TUPLE [detachable STRING]]): detachable PROCESS
-	--launch_process (a_exe: FILE_NAME; a_args: STRING; a_dir: FILE_NAME; a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE]): detachable PROCESS
 			-- Launches a process
 		local
 			l_process_factory: PROCESS_FACTORY

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Retrieves a list of webapp beans from the server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

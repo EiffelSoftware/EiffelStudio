@@ -1,5 +1,7 @@
 note
-	description: "Provides features to encode and decode messages"
+	description: "[
+		Provides features to encode and decode messages
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

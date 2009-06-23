@@ -20,14 +20,14 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create webapps.make
+			create webapps.make (1)
 		ensure
 			webapps_attached: webapps /= Void
 		end
 
 feature -- Access
 
-	webapps: LINKED_LIST [XC_WEBAPP_BASE]
+	webapps: ARRAYED_LIST [XC_WEBAPP_BEAN]
 
 invariant
 	webapps_attached: webapps /= Void

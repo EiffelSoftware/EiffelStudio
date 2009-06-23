@@ -1,6 +1,6 @@
 note
 	description: "[
-		Listens for commands from webapps
+		A server module that reads commands on a socket.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,8 +12,8 @@ class
 
 inherit
 	XC_SERVER_MODULE
-		redefine
-			make
+		rename
+			make as base_make
 		end
 	THREAD
 	XS_SHARED_SERVER_CONFIG
@@ -24,12 +24,26 @@ create
 
 feature -- Initialization
 
-	make (a_main_server: like main_server)
+--	make (a_main_server: like main_server)
+--			-- Initializes current
+--		do
+--			Precursor (a_main_server)
+--            stop := False
+--		end
+
+	make (a_main_server: like main_server; a_name: STRING)
 			-- Initializes current
+		require
+			a_main_server_attached: a_main_server /= Void
+			a_name_attached: a_name /= Void
 		do
-			Precursor (a_main_server)
-            stop := False
+			base_make (a_name)
+			main_server := a_main_server
+ 		ensure
+			main_server_set: equal (a_main_server, main_server)
+			name_set: equal (name, a_name)
 		end
+
 
 feature -- Inherited Features
 
@@ -102,6 +116,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	main_server: XC_SERVER_INTERFACE
 
 feature -- Status
 
@@ -124,8 +139,7 @@ feature -- Status setting
 		end
 
 
-feature {NONE} -- Implementation
-
-
+invariant
+	main_server_attached: main_server /= Void
 end
 

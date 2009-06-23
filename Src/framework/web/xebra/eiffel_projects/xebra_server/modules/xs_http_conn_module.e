@@ -1,6 +1,7 @@
 note
 	description: "[
-		no comment yet
+		A server module that listens to requests from http server plugin and forwards them to the webapp.
+		The response from the webapp is then sent back to the http server plugin.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,8 +13,8 @@ class
 
 inherit
 	XC_SERVER_MODULE
-		redefine
-			make
+		rename
+			make as base_make
 		end
 	THREAD
 	XS_SHARED_SERVER_CONFIG
@@ -23,12 +24,19 @@ create make
 
 feature -- Initialization
 
-	make (a_main_server: like main_server)
+	make (a_main_server: like main_server; a_name: STRING)
 			-- Initializes current
+		require
+			a_main_server_attached: a_main_server /= Void
+			a_name_attached: a_name /= Void
 		do
-			Precursor (a_main_server)
+			base_make (a_name)
+			main_server := a_main_server
 	       	current_request_message := ""
             stop := False
+         ensure
+           main_server_set: equal (a_main_server, main_server)
+           name_set: equal (name, a_name)
 		end
 
 feature -- Inherited Features
@@ -95,6 +103,8 @@ feature -- Access
 			-- Set true to stop accept loop
 
 feature {NONE} -- Access
+
+	main_server: XC_SERVER_INTERFACE
 
 	current_request_message: STRING
 
@@ -284,4 +294,6 @@ feature {NONE} -- Implementation
             	retry
 		end
 
+invariant
+	main_server_attached: main_server /= Void
 end

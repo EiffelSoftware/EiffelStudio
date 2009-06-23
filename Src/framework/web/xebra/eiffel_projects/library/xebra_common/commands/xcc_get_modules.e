@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Rerieves a list of module beans from the server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

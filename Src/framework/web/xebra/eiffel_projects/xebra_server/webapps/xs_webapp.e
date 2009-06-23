@@ -9,7 +9,7 @@ class
 	XS_WEBAPP
 
 inherit
-	XC_WEBAPP_BASE
+	XC_WEBAPP_BEAN
 		redefine
 			make
 		end
@@ -77,25 +77,6 @@ feature -- Constans
 	fourbillionnanoseconds: INTEGER_64 = 4000000000
 	sixbillionnanoseconds: INTEGER_64 = 6000000000
 
---feature {NONE} -- Access internal
-
---	server_config: XS_FILE_CONFIG
---			-- The attached server_config
---		require
---			internal_server_config_attached: internal_server_config /= Void
---		do
---			if attached  internal_server_config as c then
---				Result := c
---			else
---				Result := create {XS_FILE_CONFIG}.make_empty
---			end
---		ensure
---			Result_attached: Result /= Void
---		end
-
---	internal_server_config: detachable XS_FILE_CONFIG
---		-- Internal detachable server_config
-
 feature -- Actions
 
 	start_action_chain: XH_RESPONSE
@@ -149,18 +130,6 @@ feature -- Status Setting
 			compile_action.stop
 			translate_action.stop
 		end
-
-
---	set_server_config (a_config: XS_FILE_CONFIG)
---			-- Setter
---		do
---			internal_server_config := a_config
---			translate_action.set_config (a_config)
---			compile_action.set_config (a_config)
---			run_action.set_config (a_config)
---			send_action.set_config (a_config)
---			shutdown_action.set_config (a_config)
---		end
 
 invariant
 	config_attached: config /= Void

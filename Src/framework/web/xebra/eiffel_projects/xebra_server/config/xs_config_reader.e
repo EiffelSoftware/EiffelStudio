@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Reads a server configuration file.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

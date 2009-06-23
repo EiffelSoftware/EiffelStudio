@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Used to create a hash_table of webapps by searching config files in folders.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -40,7 +40,7 @@ feature -- Operations
 			l_files: LIST [STRING]
 			l_f_utils: XU_FILE_UTILITIES
 			l_webapp_config: XC_WEBAPP_CONFIG
-			l_webapp_config_reader: XS_WEBAPP_CONFIG_READER
+			l_webapp_config_reader: XC_WEBAPP_CONFIG_READER
 		do
 			create Result.make (1)
 			create l_f_utils.make

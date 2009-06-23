@@ -131,69 +131,57 @@ feature -- Status report
 			-- <Precursor>
 			-- Check if the webapps has to be (re)translated
 			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
-			-- Returns True iff there is a *.xeb file in app_dir which is newer than app_dir/g_name_application.e
+			-- Returns True iff:
+			--		- There is a *.xeb file in app_dir (recursively) which is newer than app_dir/.generated/g_name_application.e
+			--		- The servlet_gen exe does not exist
+			--		- The servlet_gen ecf does not exist
+			--		- The webapp has set to need cleaning
+			--		- If execute_file from servlet_gen is older than ... (not yet implemented)
 		local
 			l_application_file: FILE_NAME
 			l_f_utils: XU_FILE_UTILITIES
+			l_g_application_is_old: BOOLEAN
+			l_servlet_gen_exe_not_exist: BOOLEAN
+			l_servet_gen_ecf_not_exist: BOOLEAN
 		do
 			create l_f_utils.make
 			l_application_file := app_dir.twin
 			l_application_file.extend (".generated")
 			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
 
-			Result := l_f_utils.file_is_newer (l_application_file,
+			l_g_application_is_old := l_f_utils.file_is_newer (l_application_file,
 									app_dir,
 									"\w+\.xeb")
-						or not l_f_utils.is_readable_file (servlet_gen_exe)
-						or not l_f_utils.is_readable_file (servlet_gen_ecf)
-						or webapp.needs_cleaning
+
+			l_servlet_gen_exe_not_exist := not l_f_utils.is_readable_file (servlet_gen_exe)
+
+			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf)
+
+			Result := l_g_application_is_old or
+						l_servlet_gen_exe_not_exist or
+						l_servet_gen_ecf_not_exist or
+					 	webapp.needs_cleaning
+
+
 			if Result then
-				o.dprint ("Translating is necessary", 5)
-			else
-				o.dprint ("Translating is not necessary", 5)
-			end
-		end
-
-
-	is_necessary_obsolete: BOOLEAN
-			-- <Precursor>
-			-- Check if the webapps has to be (re)translated
-			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
-			-- Returns True iff for every *.xeb in app_dir a corresponding g_* is older or does not exist.
-		local
-			l_dir: DIRECTORY
-			l_files: LIST [STRING]
-			l_xeb_file: RAW_FILE
-			l_e_file: RAW_FILE
-			l_s_name: STRING
-		do
-			Result := False
-			create l_dir.make (app_dir)
-			l_files := l_dir.linear_representation
-			from
-				l_files.start
-			until
-				l_files.after or Result
-			loop
-				if l_files.item_for_iteration.ends_with (".xeb") then
-					create l_xeb_file.make (app_dir + "/" + l_files.item_for_iteration)
-					l_files.item_for_iteration.remove_tail (4)
-					l_s_name := "g_" + l_files.item_for_iteration + "_servlet.e"
-					create l_e_file.make (app_dir + "/" + l_s_name)
-					if l_e_file.exists then
-						if (l_e_file.date < l_xeb_file.date) then
-							Result := True
-						end
-					else
-						Result := True
-					end
+				o.dprint ("Translating is necessary", 3)
+				if l_g_application_is_old then
+					o.dprint ("Translating is necessary because: g_" + webapp.app_config.name.out + "_application.e is old", 5)
 				end
-				l_files.forth
-			end
-			if Result then
-				o.dprint ("Translating is necessary", 5)
+
+				if l_servlet_gen_exe_not_exist then
+					o.dprint ("Translating is necessary because: servlet_gen exe does not exist.", 5)
+				end
+
+				if l_servet_gen_ecf_not_exist then
+					o.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", 5)
+				end
+
+				if webapp.needs_cleaning then
+					o.dprint ("Translating is necessary because: webapp needs cleaning.", 5)
+				end
 			else
-				o.dprint ("Translating is not necessary", 5)
+				o.dprint ("Translating is not necessary", 3)
 			end
 		end
 
@@ -309,7 +297,6 @@ feature -- Agents
 	translate_process_exited
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
---			config_outputter
 			if output_handler_translate.has_successfully_terminated then
 				compile_servlet_gen
 			else
@@ -322,7 +309,6 @@ feature -- Agents
 	gen_compile_process_exited
 			-- Launch executing of servlet_gen in genrate_process
 		do
---			config_outputter
 			if output_handler_compile.has_successfully_terminated then
 				generate
 			else

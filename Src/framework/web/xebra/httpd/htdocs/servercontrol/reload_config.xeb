@@ -11,7 +11,7 @@
     <div id="title"> Xebra Server Control</div>
   </div>
   <div id="content">
-	<xeb:display feature="%=reload_config%"/>
+	
   </div>
   <div id="footer">
     <div id="footertext">Xebra Server Control</div>

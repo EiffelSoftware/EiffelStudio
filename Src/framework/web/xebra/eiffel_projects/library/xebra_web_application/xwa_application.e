@@ -35,7 +35,7 @@ feature {NONE} -- Operations Internal
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		local
-			l_config_reader: XWA_CONFIG_READER
+			l_config_reader: XC_WEBAPP_CONFIG_READER
 			l_printer: ERROR_CUI_PRINTER
 		do
 			create l_config_reader.make
@@ -108,7 +108,7 @@ feature -- Access
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
 
-	config: XWA_CONFIG
+	config: XC_WEBAPP_CONFIG
 			-- Configuration for the webapp
 
 feature -- Setter

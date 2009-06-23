@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		(Re)-Translates, compiles and launches a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

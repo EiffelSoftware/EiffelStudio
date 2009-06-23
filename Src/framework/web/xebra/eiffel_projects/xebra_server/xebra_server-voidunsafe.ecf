@@ -10,7 +10,6 @@
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
-		<!--  <library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/> -->
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>

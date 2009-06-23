@@ -103,6 +103,7 @@ feature {NONE} -- Graphical view
 			Precursor {EV_TITLED_WINDOW}
 
 			create refresh_button.make_with_text_and_action ("refresh", agent update_tree)
+			refresh_button.set_tooltip ("Testing tooltips")
 			--hide_button.disable_sensitive
 			--show_button.disable_sensitive
 			debug_button.disable_sensitive
@@ -335,6 +336,16 @@ feature {NONE} -- Graphical view
 					node := add_element (l_cell.item, a_node)
 					add_recursive (node, l_cell.item)
 				end
+--			elseif attached {SD_TOOL_BAR} a_widget as toolbar and then attached toolbar.items as items then
+--				from
+--					items.start
+--				until
+--					items.start
+--				loop
+--					node := add_element (items.item, a_node)
+--					add_recursive (node, items.item)
+--					table.forth
+--				end
 			end
 		end
 
@@ -409,7 +420,7 @@ feature {NONE} -- Graphical view
 					y1 := y1.min(l_screen.frame.size.height).max(0)
 					x2 := x2.min(l_screen.frame.size.width).max(0)
 					y2 := y2.min(l_screen.frame.size.height).max(0)
-					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs))
+					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs), True)
 					if attached {EV_WINDOW_IMP} implementation as win_imp then
 						overlay.set_parent_window (win_imp.window)
 						-- Not working as expected :(

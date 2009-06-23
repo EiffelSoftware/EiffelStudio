@@ -31,14 +31,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize 'Current'
 		do
-			create window.make (create {NS_RECT}.make_rect (100, 100, 100, 100),
-				{NS_WINDOW}.closable_window_mask, True)
-			window.make_key_and_order_front
-			cocoa_item := window
 			allow_resize
-			create_delegate
-			window.set_delegate (current)
---			Precursor {EV_TITLED_WINDOW_IMP}
+			Precursor {EV_TITLED_WINDOW_IMP}
 		end
 
 feature -- Status Report

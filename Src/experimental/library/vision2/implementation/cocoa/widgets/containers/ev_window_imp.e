@@ -313,13 +313,8 @@ feature -- Measurement
 	set_position (a_x, a_y: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
-		local
-			l_frame: NS_RECT
 		do
-			l_frame := frame
-			l_frame.origin.x := a_x
-			l_frame.origin.y := screen.frame.size.height - l_frame.size.height - a_y
-			set_frame (l_frame)
+			set_frame_top_left_point (create {NS_POINT}.make_point (a_x, a_y))
 		end
 
 	screen: NS_SCREEN
@@ -385,7 +380,7 @@ feature -- Measurement
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 		do
 
-			set_frame (create {NS_RECT}.make_rect(a_x_position, a_y_position, a_width, a_height))
+			set_frame (create {NS_RECT}.make_rect (a_x_position, a_y_position, a_width, a_height), True)
 		end
 
 feature -- Layout implementation
@@ -514,12 +509,26 @@ feature -- Status setting
 
 	internal_disable_border
 			-- Ensure no border is displayed around `Current'.
+		local
+			l_content_view: NS_VIEW
 		do
+			l_content_view := content_view
+			-- Recreate the Cocoa window, because changing the style mask is not supported
+			cocoa_make (frame,
+				{NS_WINDOW}.borderless_window_mask, True)
+			set_content_view (l_content_view)
 		end
 
 	internal_enable_border
 			-- Ensure a border is displayed around `Current'.
+		local
+			l_content_view: NS_VIEW
 		do
+			l_content_view := content_view
+			-- Recreate the Cocoa window, because changing the style mask is not supported
+			cocoa_make (frame,
+				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
+			set_content_view (l_content_view)
 		end
 
 	block

@@ -74,6 +74,7 @@ feature -- Element change
 			-- Set `a_family' as preferred font category.
 		do
 			family := a_family
+			calculate_font_metrics
 		end
 
 	set_face_name (a_face: STRING_GENERAL)
@@ -141,19 +142,19 @@ feature -- Status report
 	width: INTEGER
 			-- Character width of current fixed-width font.
 		do
-			Result := string_width("x")
+			Result := string_width ("x")
 		end
 
 	minimum_width: INTEGER
 			-- Width of the smallest character in the font.
 		do
-			Result := string_width("1")
+			Result := string_width ("1")
 		end
 
 	maximum_width: INTEGER
 			-- Width of the biggest character in the font.
 		do
-			Result := string_width("W")
+			Result := string_width ("W")
 		end
 
 	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
@@ -207,6 +208,7 @@ feature {NONE} -- Implementation
 				font_descriptor.set_trait ({NS_FONT_DESCRIPTOR}.bold_trait)
 			end
 			create font.font_with_descriptor (font_descriptor, height)
+			cocoa_item := font
 		end
 
 	update_preferred_faces (a_face: STRING_32)

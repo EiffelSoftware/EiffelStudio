@@ -510,10 +510,10 @@ feature {NONE} -- Implementation
 			trans: NS_AFFINE_TRANSFORM
 		do
 			image.lock_focus
-			create trans.make
-			trans.translate_by_xy (0.0, image.size.height)
-			trans.scale_by_xy (1.0, -1.0)
-			trans.concat
+--			create trans.make
+--			trans.translate_by_xy (0.0, image.size.height)
+--			trans.scale_by_xy (1.0, -1.0)
+--			trans.concat
 			l_color ?= foreground_color.implementation
 			l_color.color.set
 		end

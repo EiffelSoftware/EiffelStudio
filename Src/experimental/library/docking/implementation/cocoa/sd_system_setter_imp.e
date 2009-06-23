@@ -1,7 +1,6 @@
 note
-	description: "GTK implementation for SD_SYSTEM_SETTER."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Cocoa implementation for SD_SYSTEM_SETTER."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,9 +26,18 @@ feature -- Command
 
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 		do
+			a_widget.set_background_color (background_color)
+			a_widget.clear_rectangle (a_rect.x , a_rect.y, a_rect.width, a_rect.height)
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-end
+feature -- Internal
 
+	background_color: EV_COLOR
+		local
+			l_stock_colors: EV_STOCK_COLORS
+		once
+			create l_stock_colors
+			Result := l_stock_colors.default_background_color
+		end
+
+end

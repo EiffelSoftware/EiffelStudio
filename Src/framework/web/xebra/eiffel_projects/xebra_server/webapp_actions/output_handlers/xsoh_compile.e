@@ -41,7 +41,7 @@ feature -- Status report
 	has_successfully_terminated: BOOLEAN
 			-- <Precursor>
 		do
-			if output.has_substring ("C compilation completed") or output.has_substring ("System Recompiled.") then
+			if output.has_substring ("completed") or output.has_substring ("Recompiled") then
 				Result := True
 			else
 				Result := False

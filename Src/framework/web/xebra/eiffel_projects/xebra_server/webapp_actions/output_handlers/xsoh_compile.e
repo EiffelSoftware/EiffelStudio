@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			Precursor
-			max_size := 200
+			max_size := 400
 		end
 
 feature -- Status setting

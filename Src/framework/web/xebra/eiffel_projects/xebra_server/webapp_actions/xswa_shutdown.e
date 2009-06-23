@@ -24,6 +24,8 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
+			-- Necessary if:
+			--	- Always
 		do
 			Result := True
 		end
@@ -53,6 +55,8 @@ feature {NONE} -- Implementation
 	         	o.eprint ("Cannot shutdown connect to '" + webapp.app_config.name.out + "'", generating_type)
 			end
 			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_response
+			rescue
+				o.eprint ("Exception while sending shutdown signal.", generating_type)
 		end
 
 

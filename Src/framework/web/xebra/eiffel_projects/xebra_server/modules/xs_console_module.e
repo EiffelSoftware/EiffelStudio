@@ -33,28 +33,44 @@ feature -- Initialization
 		do
 			base_make (a_name)
 			main_server := a_main_server
-            create commands.make (1)
-			commands.force (create {XCC_SHUTDOWN_SERVER}.make, "exit")
-			commands.force (create {XCC_LOAD_CONFIG}.make, "reload")
-			commands.force (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
-			commands.force (create {XCC_RELAUNCH_MOD}.make, "mlaunch")
-			commands.force (create {XCC_SHUTDOWN_MOD}.make, "mshutdown")
-			commands.force (create {XCC_GET_MODULES}.make, "modules")
-			commands.force (create {XCC_CLEAN_WEBAPP}.make, "clean")
-			commands.force (create {XCC_SHUTDOWN_WEBAPP}.make, "shutdown")
-			commands.force (create {XCC_ENABLE_WEBAPP}.make, "enable")
-			commands.force (create {XCC_DISABLE_WEBAPP}.make, "disable")
-			commands.force (create {XCC_GET_WEBAPPS}.make, "webapps")
+
+			create command_groups.make(1)
+			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Server Control")
+			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Modules")
+			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Webapps")
+
+			command_groups ["Server Control"].force  (create {XCC_SHUTDOWN_SERVER}.make, "exit")
+			command_groups ["Server Control"].force  (create {XCC_LOAD_CONFIG}.make, "reload")
+			command_groups ["Server Control"].force  (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
+
+			command_groups ["Modules"].force (create {XCC_RELAUNCH_MOD}.make, "mlaunch")
+			command_groups ["Modules"].force (create {XCC_SHUTDOWN_MOD}.make, "mshutdown")
+			command_groups ["Modules"].force (create {XCC_GET_MODULES}.make, "modules")
+
+			command_groups ["Webapps"].force (create {XCC_CLEAN_WEBAPP}.make, "clean")
+			command_groups ["Webapps"].force (create {XCC_SHUTDOWN_WEBAPP}.make, "shutdown")
+			command_groups ["Webapps"].force (create {XCC_ENABLE_WEBAPP}.make, "enable")
+			command_groups ["Webapps"].force (create {XCC_DISABLE_WEBAPP}.make, "disable")
+			command_groups ["Webapps"].force (create {XCC_GET_WEBAPPS}.make, "webapps")
+			command_groups ["Webapps"].force (create {XCC_DEV_ON_WEBAPP}.make, "dev_on")
+			command_groups ["Webapps"].force (create {XCC_DEV_OFF_WEBAPP}.make, "dev_off")
+			command_groups ["Webapps"].force (create {XCC_DEV_ON_WEBAPP}.make, "dev")
+			command_groups ["Webapps"].force (create {XCC_DEV_OFF_GLOBAL}.make, "dev_off_all")
+			command_groups ["Webapps"].force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
+			command_groups ["Webapps"].force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
 			-- help command is hardcoded
         ensure
         	main_server_set: equal (a_main_server, main_server)
-        	commands_attached: commands /= Void
+        	command_groups_attached: command_groups /= Void
         	name_set: equal (name, a_name)
 		end
 
 feature -- Acces
 
-	commands: HASH_TABLE [XC_COMMAND, STRING]
+	command_groups: HASH_TABLE [HASH_TABLE [XC_COMMAND, STRING], STRING]
+			-- Groups of commands
+
+
 
 
 feature {NONE} -- Access
@@ -112,7 +128,7 @@ feature {NONE} -- Operations
 					l_parameter  := ""
 				end
 
-				if  attached {XC_COMMAND} commands[l_command] as cmd then
+				if  attached {XC_COMMAND} command (l_command) as cmd then
 						if  attached {XS_PARAMETER_COMMAND} cmd as param_cmd then
 							param_cmd.set_parameter (l_parameter)
 							l_response := param_cmd.execute (main_server)
@@ -148,12 +164,28 @@ feature {NONE} -- Operations
 				o.iprint (print_webapps (l_response))
 			end
 
-
 		end
 
 
 
 feature -- Status Report
+
+	command (a_name: STRING): detachable XC_COMMAND
+			-- Searches all groups for the command
+		require
+			a_name_attached: a_name /= Void
+		do
+			from
+				command_groups.start
+			until
+				command_groups.after
+			loop
+				if attached {XC_COMMAND} command_groups.item_for_iteration[a_name] as l_cmd then
+					Result := l_cmd.twin
+				end
+				command_groups.forth
+			end
+		end
 
 	print_modules (a_response: XCCR_GET_MODULES): STRING
 			-- Display them.
@@ -197,59 +229,86 @@ feature -- Status Report
 				"%N%TTranslating: '" + a_response.webapps.item_for_iteration.is_translating.out + "'" +
 				"%N%TCompiling: '" + a_response.webapps.item_for_iteration.is_compiling.out + "'" +
 				"%N%TRunning: '" + a_response.webapps.item_for_iteration.is_running.out + "'" +
+				"%N%TDev_mode: '" + a_response.webapps.item_for_iteration.dev_mode.out + "'" +
 				"")
 				a_response.webapps.forth
 			end
 			Result.append   ("%N-----------------------------------------------------------%N")
 		end
 
-
 	print_command_list: STRING
 			-- Prints a list of the listed commands
+		do
+			Result :=      "%N------------------------ Commands -------------------------%N"
+				-- help is hardcoded
+			Result.append (" - 'help':%T%TDisplays a list of commands%N")
+			from
+				command_groups.start
+			until
+				command_groups.after
+			loop
+				Result.append (print_command_group (command_groups.item_for_iteration, command_groups.key_for_iteration.out))
+				command_groups.forth
+			end
+
+			Result.append   ("-----------------------------------------------------------%N")
+		ensure
+			result_attached: Result /= Void
+		end
+
+
+	print_command_group (a_cmds: HASH_TABLE [XC_COMMAND, STRING]; a_name: STRING): STRING
+			-- Prints all commands of a group
 		local
 			l_par: STRING
 			l_count: INTEGER
+			l_sorted_keys: SORTED_TWO_WAY_LIST [STRING]
 		do
-			l_count := count_nice_space_commands
-			Result :=      "%N------------------------ Commands -------------------------%N"
-				-- help is hardcoded
-			Result.append (" - 'help':" + nice_space (l_count - 4 ) + "Displays a list of commands%N")
+			create l_sorted_keys.make
+			l_sorted_keys.append (create {ARRAYED_LIST[STRING]}.make_from_array (a_cmds.current_keys))
+			l_sorted_keys.sort
+
+			l_count := count_nice_space_commands (a_cmds)
+			Result :=      "%N----- " + a_name + " -----%N"
 			from
-				commands.start
+				l_sorted_keys.start
 			until
-				commands.after
+				l_sorted_keys.after
 			loop
-				if attached {XS_PARAMETER_COMMAND} commands.item_for_iteration as p_c then
-					l_par := " <" + p_c.parameter_description + ">"
-				else
-					l_par := ""
+				if attached {XC_COMMAND} a_cmds [l_sorted_keys.item_for_iteration] as l_cmd then
+
+					if attached {XS_PARAMETER_COMMAND} l_cmd as p_c then
+						l_par := " <" + p_c.parameter_description + ">"
+					else
+						l_par := ""
+					end
+					Result.append (" - '" + l_sorted_keys.item_for_iteration.out +  l_par + "':" + nice_space (l_count - l_sorted_keys.item_for_iteration.count - l_par.count ) + l_cmd.description + "%N")
 				end
-				Result.append (" - '" + commands.key_for_iteration.out +  l_par + "':" + nice_space (l_count - commands.key_for_iteration.out.count - l_par.count ) + commands.item_for_iteration.description + "%N")
-				commands.forth
+				l_sorted_keys.forth
 			end
-			Result.append   ("-----------------------------------------------------------%N")
+
 		end
 
-	count_nice_space_commands: INTEGER
+	count_nice_space_commands (a_cmds: HASH_TABLE [XC_COMMAND, STRING]): INTEGER
 			-- Counts how many spaces are needed to format nicely
 		local
 			l_current: INTEGER
 		do
 			from
-				commands.start
+				a_cmds.start
 				Result := 0
 			until
-				commands.after
+				a_cmds.after
 			loop
-				l_current := commands.key_for_iteration.count + 3
-				if attached {XS_PARAMETER_COMMAND} commands.item_for_iteration as p_c then
+				l_current := a_cmds.key_for_iteration.count + 3
+				if attached {XS_PARAMETER_COMMAND} a_cmds.item_for_iteration as p_c then
 					l_current := l_current +  p_c.parameter_description.count + 4
 				end
 
 				if Result < l_current then
 					Result := l_current
 				end
-				commands.forth
+				a_cmds.forth
 			end
 		end
 
@@ -280,6 +339,6 @@ feature -- Status setting
 		end
 
 invariant
-		commands_attached: commands /= Void
+		command_groups_attached: command_groups /= Void
 		main_server_attached: main_server /= Void
 end

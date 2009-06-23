@@ -26,8 +26,11 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	args: XS_ARG_CONFIG assign set_args
+			-- Contains info that is read from arguments
 
 	file: XS_FILE_CONFIG assign set_file
+			-- Contains info that is read from config file
+
 
 feature {XCC_LOAD_CONFIG} -- Status setting
 

@@ -80,7 +80,7 @@ feature -- Constans
 feature -- Actions
 
 	start_action_chain: XH_RESPONSE
-			-- Executes the first action in the chain		
+			-- Executes the appropriate action in the chain		
 		do
 			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
@@ -88,7 +88,12 @@ feature -- Actions
 				if is_disabled then
 					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_response
 				else
-					Result := translate_action.execute
+					if dev_mode then
+						Result := translate_action.execute
+					else
+						Result := run_action.execute
+					end
+
 				end
 			end
 		ensure
@@ -117,9 +122,15 @@ feature -- Status Setting
 			-- Initiates shutdown and waits for termination.
 		do
 			if run_action.is_running then
-				shutdown_action.execute.do_nothing;
+				shutdown_action.execute.do_nothing
 				run_action.wait_for_exit
 			end
+		end
+
+	fire_off
+			-- Sends shutdown signal even if the webapp process is not owned by the server
+		do
+			shutdown_action.execute.do_nothing;
 		end
 
 

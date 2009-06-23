@@ -71,20 +71,18 @@ feature {NONE} -- Operations
 			--  until stopped
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
+			l_thread: EXECUTION_ENVIRONMENT
 		do
-			from
-
-			until
-				stop
-			loop
-				(create {EXECUTION_ENVIRONMENT}).sleep (1000000)
+			create l_thread
+			from until stop	loop
+				l_thread.sleep (1000000)
 			end
 
 			o.iprint ("Shutting down...")
 			shutdown_webapps.do_nothing
 			shutdown_all_modules
-			if attached modules ["mod_input"] as mod_input then
-				if mod_input.running then
+			if attached modules ["mod_input"] then
+				if modules ["mod_input"].running then
 					o.iprint ("Remote Shutdown. Bye!");
 					(create {EXCEPTIONS}).die (1)
 				end
@@ -109,22 +107,99 @@ feature {NONE} -- Operations
 
 feature {XS_SERVER_MODULE} -- Status setting
 
-	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
-			-- (Re)-translates, compiles and launches a webapp.
+	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
 		do
-			o.iprint ("Not implemented.")
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Fireing off webapp '" + a_name + "'")
+				l_w.fire_off
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
+		end
+
+	dev_mode_on_global: XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			o.iprint ("Setting dev_mode global on.")
+			from
+				config.file.webapps.start
+			until
+				config.file.webapps.after
+			loop
+				config.file.webapps.item_for_iteration.dev_mode := True
+				config.file.webapps.forth
+			end
 			create {XCCR_OK}Result.make
+		end
+
+	dev_mode_off_global: XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			o.iprint ("Setting dev_mode global off.")
+			from
+				config.file.webapps.start
+			until
+				config.file.webapps.after
+			loop
+				config.file.webapps.item_for_iteration.dev_mode := False
+				config.file.webapps.forth
+			end
+			create {XCCR_OK}Result.make
+		end
+
+	dev_mode_on_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
+				l_w.dev_mode := True
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
+		end
+
+	dev_mode_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+		if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
+				l_w.dev_mode := False
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
+		end
+
+
+	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Launching webapp '" + a_name + "'...")
+				l_w.start_action_chain.do_nothing
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
 		end
 
 	shutdown_webapp (a_name: STRING): XC_COMMAND_RESPONSE
-			-- Shuts down a webapp.
+			-- <Precursor>.
 		do
-			o.iprint ("Not implemented.")
-			create {XCCR_OK}Result.make
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Shutting down webapp '" + a_name + "'...")
+				l_w.shutdown_all
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
 		end
 
 	get_webapps: XC_COMMAND_RESPONSE
-			-- Retrieves the available webapps.
+			-- <Precursor>.
 		local
 			l_response: XCCR_GET_WEBAPPS
 		do
@@ -143,22 +218,23 @@ feature {XS_SERVER_MODULE} -- Status setting
 		end
 
 	enable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
-			-- Enables a webapp.
+			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
-				l_webapp.is_disabled := False
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				l_w.is_disabled := False
+				o.iprint ("Enabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result.make
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
-
 		end
 
 	disable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
-			-- Disables a webapp.
+			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
-				l_webapp.is_disabled := True
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w  then
+				l_w.is_disabled := True
+				o.iprint ("Disabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result.make
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -170,6 +246,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
 				l_webapp.needs_cleaning := True
+				o.iprint ("Cleaning webapp '" + a_name + "'...")
 				l_webapp.start_action_chain.do_nothing
 				Result := create {XCCR_OK}.make
 			else

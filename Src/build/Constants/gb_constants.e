@@ -413,14 +413,14 @@ feature -- Generation constants
 			-- Part 1 of string used to generate inheritance from window in implementation class.
 		once
 			Result := "inherit" + Indent_less_two + Ev_titled_window_string + Indent_less_one + "redefine" + indent +
-			"initialize, is_in_default_state" + Indent_less_one + "end" + indent + indent_less_two
+			"create_interface_objects, initialize, is_in_default_state" + Indent_less_one + "end" + indent + indent_less_two
 		end
 
 	window_inheritance_no_constant: STRING
 			-- Part 1 of string used to generate inheritance from window in implementation class.
 		once
 			Result := "inherit" + Indent_less_two + Ev_titled_window_string + Indent_less_one + "redefine" + indent +
-			"initialize, is_in_default_state" + Indent_less_one + "end"
+			"create_interface_objects, initialize, is_in_default_state" + Indent_less_one + "end"
 		end
 
 	window_inheritance_part2: STRING

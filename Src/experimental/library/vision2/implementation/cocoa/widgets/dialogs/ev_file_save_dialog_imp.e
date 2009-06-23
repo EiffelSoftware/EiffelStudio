@@ -18,8 +18,7 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			make,
-			window
+			make
 		end
 
 create
@@ -30,16 +29,12 @@ feature {NONE} -- Initialization
 	make
 		do
 			create save_panel.make
+			window := save_panel
 			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
 		end
 
 feature {NONE} -- Implementation
-
-	window: NS_WINDOW
-		do
-			Result ?= save_panel
-		end
 
 	interface: EV_FILE_SAVE_DIALOG
 

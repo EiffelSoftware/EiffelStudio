@@ -294,6 +294,7 @@ invariant
 	not_void: zones /= Void
 	not_void: internal_docking_manager /= Void
 	not_void: place_holder_content /= Void
+	not_void: place_holder_widget /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

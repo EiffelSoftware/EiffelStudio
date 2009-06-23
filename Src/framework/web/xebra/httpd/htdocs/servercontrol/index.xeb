@@ -18,13 +18,11 @@
 <table class="default">
 	<tr>
 		<th>Name</th>
-		<th></th>
-		<th></th>
+		<th>Control</th>
 	</tr>
 		<tr>		
 			<td>Main Server</td>			
-			<td><f:command_link label="shutdown" action="shutdown_server" variable="dummy" /></td>						
-			<td><f:command_link label="reload config" action="reload_config" variable="dummy"/></td>
+			<td><f:command_link label="shutdown" action="shutdown_server" variable="dummy" /> | <f:command_link label="reload config file" action="reload_config" variable="dummy"/></td>
 		</tr>		
 
 </table>
@@ -37,8 +35,6 @@
 		<th>Name</th>
 		<th>Launched</th>
 		<th>Running</th>
-		<th></th>
-		<th></th>
 	</tr>
 	<xeb:iterate list="modules" variable="module" type="XC_SERVER_MODULE_BEAN">
 		<tr>		
@@ -46,11 +42,7 @@
 
 			<td><xeb:display feature="#{module.launched.out}" /></td>
 
-			<td><xeb:display feature="#{module.running.out}" /></td>
-			
-			<td><f:command_link label="shutdown" action="shutdown_mod" variable="module.name" /></td>
-						
-			<td><f:command_link label="relaunch" action="relaunch_mod" variable="module.name"/></td>
+			<td><xeb:display feature="#{module.running.out}" /> (<f:command_link label="stop" action="shutdown_mod" variable="module.name" /> | <f:command_link label="restart" action="relaunch_mod" variable="module.name"/>)</td>
 		</tr>		
 	</xeb:iterate>
 </table>
@@ -61,37 +53,31 @@
 <table class="default">
 	<tr>
 		<th>Name</th>
-		<th> Status </th>
+		<th>Host </th>
+		<th>Port</th>
+		<th>Interactive</th>
+		<th>Status </th>
 		<th> Disabled</th>
-		<th> Running</th>
-		<th> Translating</th>
-		<th> Compiling</th>
-		<th> Host </th>
-		<th> Port</th>
-		<th> Interactive</th>
-		<th></th>
-		<th></th>
-		<th></th>
-		<th></th>
-		<th></th>
+		<th>Running</th>
+		<th>Translating</th>
+		<th>Compiling</th>		
+		<th>Development Mode</th>
+		
 		
 	</tr>
 	<xeb:iterate list="webapps" variable="webapp" type="XC_WEBAPP_BEAN">
 		<tr>
 			<td><xeb:display feature="#{webapp.app_config.name.value.out}" /></td>
-			<td><xeb:display feature="#{webapp.status}" /></td>
-			<td><xeb:display feature="#{webapp.is_disabled.out}" /></td>
-			<td><xeb:display feature="#{webapp.is_running.out}" /></td>
-			<td><xeb:display feature="#{webapp.is_translating.out}" /></td>
-			<td><xeb:display feature="#{webapp.is_compiling.out}" /></td>
 			<td><xeb:display feature="#{webapp.app_config.host.value.out}" /></td>
 			<td><xeb:display feature="#{webapp.app_config.port.value.out}" /></td>
 			<td><xeb:display feature="#{webapp.app_config.is_interactive.value.out}" /></td>
-			<td><f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" /></td>
-			<td><f:command_link label="shutdown" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /></td>
-			<td><f:command_link label="relaunch" action="relaunch_webapp" variable="webapp.app_config.name.value.out" /></td>
-			<td><f:command_link label="disable" action="disable_webapp" variable="webapp.app_config.name.value.out" /></td>
-			<td><f:command_link label="enable" action="enable_webapp" variable="webapp.app_config.name.value.out" /></td>
+			<td><xeb:display feature="#{webapp.status}" /></td>
+			<td><xeb:display feature="#{webapp.is_disabled.out}" /> (<f:command_link label="on" action="disable_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="off" action="enable_webapp" variable="webapp.app_config.name.value.out" />)</td>
+			<td><xeb:display feature="#{webapp.is_running.out}" /> (<f:command_link label="stop" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="restart" action="relaunch_webapp" variable="webapp.app_config.name.value.out" />)</td>
+			<td><xeb:display feature="#{webapp.is_translating.out}" /> (<f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>
+			<td><xeb:display feature="#{webapp.is_compiling.out}" /> (<f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>
+			<td><xeb:display feature="#{webapp.dev_mode.out}" /> (<f:command_link label="on" action="dev_mode_on_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="off" action="dev_mode_off_webapp" variable="webapp.app_config.name.value.out" />)</td>
+	
 		</tr>
 	</xeb:iterate>
 </table>

@@ -63,14 +63,18 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
+			-- Necessary if:
+			--	- There is a .e or .ecf file somewhere in app_dir (recursively) that is newer than the melted file
+			--	- The executable is missing
+			--	- The webapp needs cleaning
 		local
 			l_f_util: XU_FILE_UTILITIES
 
 		do
 			create l_f_util.make
 			Result := l_f_util.file_is_newer (melted_file_path,
-											app_dir,
-											"\w+\.(e|ecf)")
+												app_dir,
+												"\w+\.(e|ecf)")
 					or not l_f_util.is_executable_file (webapp_exe)
 					or webapp.needs_cleaning
 			if Result then

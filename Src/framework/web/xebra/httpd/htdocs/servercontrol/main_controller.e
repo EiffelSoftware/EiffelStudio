@@ -94,11 +94,31 @@ feature -- Webapp Control
 			end
 		end
 
-	webapp_status (a_webapp: XC_WEBAPP_BEAN): STRING
-			-- Returns the status in words
-		do
 
+	dev_mode_on_webapp (a_webapp: ANY)
+			-- Sends a dev_mode_on_webapp command to the server.
+		local
+			l_cmd: XCC_DEV_ON_WEBAPP
+		do
+			create l_cmd.make
+			if attached {STRING} a_webapp as l_webapp then
+				l_cmd.set_parameter (l_webapp)
+				server_control.send ( l_cmd ).do_nothing
+			end
 		end
+
+	dev_mode_off_webapp (a_webapp: ANY)
+			-- Sends a dev_mode_off_webapp command to the server.
+		local
+			l_cmd: XCC_DEV_OFF_WEBAPP
+		do
+			create l_cmd.make
+			if attached {STRING} a_webapp as l_webapp then
+				l_cmd.set_parameter (l_webapp)
+				server_control.send ( l_cmd ).do_nothing
+			end
+		end
+
 
 	shutdown_webapp (a_webapp: ANY)
 			-- Sends a shutdown_webapp command to the server.

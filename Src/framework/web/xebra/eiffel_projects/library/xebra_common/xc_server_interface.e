@@ -12,6 +12,47 @@ deferred class
 
 feature -- Webapps
 
+	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Sends shutdown signal even if the webapp process is not owned by the server.
+		require
+			a_name_attached: a_name /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dev_mode_on_global: XC_COMMAND_RESPONSE
+			-- Sets dev_mod to on on all webapps.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dev_mode_off_global: XC_COMMAND_RESPONSE
+			-- Sets dev_mod to off on all webapps.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dev_mode_on_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Sets developing mode of a webapp to on.
+		require
+			a_name_attached: a_name /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dev_mode_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Sets developing mode of a webapp to off.
+		require
+			a_name_attached: a_name /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	get_webapps: XC_COMMAND_RESPONSE
 			-- Retrieves the available webapps.
 		deferred

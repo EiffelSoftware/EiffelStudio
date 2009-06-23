@@ -21,7 +21,8 @@ feature {NONE} -- Initialization
 			a_webapp_config_attached: a_webapp_config /= Void
 		do
 			app_config := a_webapp_config
-			is_disabled := false
+			is_disabled := False
+			dev_mode := False
 		ensure
 			config_attached: app_config /= Void
 		end
@@ -43,6 +44,8 @@ feature -- Access
 	is_compiling: BOOLEAN assign set_is_compiling
 		-- Is compiling
 
+	dev_mode: BOOLEAN assign set_dev_mode
+			-- In developing mode all webapps are translated and compiled bevore run by the server
 
 feature -- Access
 
@@ -100,17 +103,25 @@ feature -- Status setting
 			set: equal (is_disabled, a_is_disabled)
 		end
 
+	set_dev_mode (a_dev_mode: BOOLEAN)
+			-- Sets dev_mode
+		do
+			dev_mode := a_dev_mode
+		ensure
+			set: equal (dev_mode, a_dev_mode)
+		end
+
 feature -- Basic operations
 
 	copy_from_bean : XC_WEBAPP_BEAN
 			-- Creates a copy of an other webapp bean
 		do
 			create Result.make (current.app_config)
-
 			Result.is_compiling := current.is_compiling
 			Result.is_disabled := current.is_disabled
 			Result.is_running := current.is_running
 			Result.is_translating := current.is_translating
+			Result.dev_mode := current.dev_mode
 		ensure
 			result_attached: Result /= Void
 		end

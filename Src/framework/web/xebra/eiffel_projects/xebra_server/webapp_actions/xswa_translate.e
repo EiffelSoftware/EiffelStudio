@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		do
 			create l_f_utils.make
 			if can_launch_process (config.file.compiler_filename, app_dir) and then l_f_utils.is_readable_file (servlet_gen_ecf) then
-				if attached gen_compile_process as p then
+				if attached gen_compile_process  then
 					if p.is_running then
 						o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
 						p.terminate
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			-- Launches the process to execute servlet_gen
 		do
 			if can_launch_process (servlet_gen_exe, app_dir) then
-				if attached generate_process as p then
+				if attached generate_process then
 					if p.is_running then
 						o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
 						p.terminate

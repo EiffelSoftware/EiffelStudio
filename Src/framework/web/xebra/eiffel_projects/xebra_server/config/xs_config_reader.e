@@ -20,7 +20,6 @@ create
 
 feature {NONE} -- Internal Access
 
---	assume_webapps_are_running_name: STRING = "assume_webapps_are_running"
 	finalize_webapps_name: STRING = "finalize_webapps"
 	compiler_name: STRING = "compiler"
 	translator_name: STRING = "translator"
@@ -49,12 +48,10 @@ feature -- Status report
 				end
 			end
 
-
 			if not a_config.finalize_webapps.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (finalize_webapps_name), false)
 				l_ok := False
 			end
-
 
 			if not a_config.translator.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (translator_name), false)
@@ -105,11 +102,6 @@ feature -- Status setting
 			l_name := a_property.name.as_lower
 			l_value := a_property.value
 
---			if l_name.is_equal (assume_webapps_are_running_name) then
---				if l_value.is_boolean then
---					a_config.assume_webapps_are_running := l_value.to_boolean
---				end
-
 			if l_name.is_equal (finalize_webapps_name) then
 				if l_value.is_boolean then
 					a_config.finalize_webapps := l_value.to_boolean
@@ -126,9 +118,6 @@ feature -- Status setting
 				error_manager.add_error (create {XERROR_UNKNOWN_CONFIG_PROPERTY}.make (l_name), false)
 			end
 		end
-
-feature {NONE} -- Validation
-
 
 end
 

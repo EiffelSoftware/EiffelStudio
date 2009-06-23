@@ -42,6 +42,8 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
+			-- Necessary if:
+			--	- The action is not running
 		do
 			Result := not is_running
 		end

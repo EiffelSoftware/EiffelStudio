@@ -20,6 +20,8 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
+			-- Necessary if:
+			--	- always
 		do
 			Result := True
 		end

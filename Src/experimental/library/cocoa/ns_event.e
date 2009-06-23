@@ -43,6 +43,15 @@ feature -- Getting General Event Information
 			result_not_void: Result /= void
 		end
 
+feature -- Getting Mouse Event Information
+
+	button_number: INTEGER
+			-- Returns the button number for the mouse button that generated an NSOtherMouse... event.
+			-- This method is intended for use with the NSOtherMouseDown, NSOtherMouseUp, and NSOtherMouseDragged events, but will return values for NSLeftMouse... and NSRightMouse... events also.
+		do
+			Result := {NS_EVENT_API}.button_number (item)
+		end
+
 feature -- Contract Support
 
 feature -- NSEventType Constants

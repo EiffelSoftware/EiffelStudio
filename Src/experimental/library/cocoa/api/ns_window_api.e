@@ -88,6 +88,22 @@ feature -- Sizing
 			]"
 		end
 
+	frozen set_frame (a_window: POINTER; a_rect: POINTER; a_display: BOOLEAN)
+			-- - (void)setFrame:(NSRect)windowFrame display:(BOOL)displayViews
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window setFrame: *(NSRect*)$a_rect display: $a_display];"
+		end
+
+	frozen set_frame_top_left_point (a_window: POINTER; a_point: POINTER)
+			-- - (void)setFrameTopLeftPoint:(NSPoint)point
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window setFrameTopLeftPoint: *(NSPoint*)$a_point];"
+		end
+
 feature -- Sizing Content
 
 	frozen set_content_min_size (a_window: POINTER; a_width, a_height: INTEGER)
@@ -257,13 +273,6 @@ feature -- Working with Carbon
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSWindow*)$a_window setDelegate: $a_delegate];"
-		end
-
-	frozen set_frame (a_window: POINTER; a_rect: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setFrame: *(NSRect*)$a_rect display: YES];"
 		end
 
 	frozen set_min_size (a_window: POINTER; a_width, a_height: INTEGER)

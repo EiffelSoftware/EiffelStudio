@@ -12,8 +12,6 @@ feature -- Access
 	font_attribute_name: NS_STRING
 		once
 			create Result.make_from_pointer (ns_font_attribute_name)
-		ensure
-			Result /= void
 		end
 
 	frozen ns_font_attribute_name: POINTER

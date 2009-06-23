@@ -23,7 +23,7 @@ feature -- Creation
 	font_with_descriptor (a_font_descriptor: NS_FONT_DESCRIPTOR; a_size: REAL)
 			-- Returns a font object for the specified font descriptor and font size.
 		do
-			make_from_pointer ({NS_FONT_API}.font_with_descriptor (a_font_descriptor.item, a_size))
+			share_from_pointer ({NS_FONT_API}.font_with_descriptor (a_font_descriptor.item, a_size))
 		end
 
 feature -- Factory
@@ -37,17 +37,17 @@ feature -- Factory
 
 	system_font_of_size (a_font_size: REAL)
 		do
-			item := {NS_FONT_API}.system_font_of_size (a_font_size)
+			share_from_pointer ({NS_FONT_API}.system_font_of_size (a_font_size))
 		end
 
 	bold_system_font_of_size (a_font_size: REAL)
 		do
-			item := {NS_FONT_API}.bold_system_font_of_size (a_font_size)
+			share_from_pointer ({NS_FONT_API}.bold_system_font_of_size (a_font_size))
 		end
 
 	label_font_of_size (a_font_size: REAL)
 		do
-			item := {NS_FONT_API}.label_font_of_size (a_font_size)
+			share_from_pointer ({NS_FONT_API}.label_font_of_size (a_font_size))
 		end
 
 feature -- Access

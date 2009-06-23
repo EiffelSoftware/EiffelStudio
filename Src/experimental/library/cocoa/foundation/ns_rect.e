@@ -13,6 +13,8 @@ inherit
 			make as allocate
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_rect
@@ -47,6 +49,15 @@ feature -- Access
 	origin: NS_POINT
 
 	size: NS_SIZE
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := "(X: " + origin.x.out + ", Y: " + origin.y.out +
+				", Width: " + size.width.out +
+				", Height: " + size.height.out + ")"
+		end
 
 feature {NONE} -- Implementation
 

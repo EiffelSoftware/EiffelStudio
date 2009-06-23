@@ -210,6 +210,48 @@ feature -- Modifying the Frame Rectangle
 			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
 		end
 
+feature -- Tool Tips
+
+	frozen set_tool_tip (a_view: POINTER; a_string: POINTER)
+			-- (void)setToolTip: (NSString *) string
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view setToolTip: $a_string];"
+		end
+
+	frozen tool_tip (a_view: POINTER): POINTER
+			-- (NSString *)toolTip
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view toolTip];"
+		end
+
+	frozen add_tool_tip_rect_owner_user_data (a_view: POINTER; a_rect: POINTER; a_an_object: POINTER; a_data: POINTER): INTEGER
+			-- (NSToolTipTag)addToolTipRect: (NSRect) aRect owner: anObject userData: data
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view addToolTipRect: *(NSRect*)$a_rect owner: $a_an_object userData: $a_data];"
+		end
+
+	frozen remove_tool_tip (a_view: POINTER; a_tag: INTEGER)
+			-- (void)removeToolTip: (NSToolTipTag) tag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view removeToolTip: $a_tag];"
+		end
+
+	frozen remove_all_tool_tips (a_view: POINTER)
+			-- (void)removeAllToolTips
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view removeAllToolTips];"
+		end
+
 feature -- Event Handling
 
 	frozen hit_test (a_view: POINTER; a_point: POINTER): POINTER

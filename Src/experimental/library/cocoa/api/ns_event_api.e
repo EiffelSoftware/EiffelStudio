@@ -40,4 +40,11 @@ feature -- Getting Mouse Event Information
 			"NSPoint point = [NSEvent mouseLocation]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
+	frozen button_number (a_event: POINTER): INTEGER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSEvent*)$a_event buttonNumber];"
+		end
+
 end

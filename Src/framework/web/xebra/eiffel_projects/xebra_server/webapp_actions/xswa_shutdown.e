@@ -49,6 +49,7 @@ feature {NONE} -- Implementation
 			l_webapp_socket.connect
             if  l_webapp_socket.is_connected then
 				o.dprint ("Sending shutdown signal", 2)
+				l_webapp_socket.put_natural (0)
 	            l_webapp_socket.independent_store (Shutdown_message)
 	            l_webapp_socket.cleanup
 	        else

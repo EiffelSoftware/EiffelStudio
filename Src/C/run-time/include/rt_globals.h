@@ -231,7 +231,7 @@ typedef struct tag_rt_globals
 	rt_uint64 init_date_cx;
 #ifdef EIF_WINDOWS
 #elif defined(HAS_GETRUSAGE)
-#elif define(HAS_TIMES)
+#elif defined(HAS_TIMES)
 	rt_uint64 rt_nb_ticks_per_second_cx;
 #else
 	rt_uint64 rt_start_time_cx;

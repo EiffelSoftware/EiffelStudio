@@ -232,26 +232,55 @@ feature -- Base Coordinate Conversion
 			{NS_VIEW_API}.convert_point_to_view (item, a_point.item, l_view, Result.item)
 		end
 
+feature -- Tool Tips
+
+	set_tool_tip (a_string: NS_STRING)
+		do
+			{NS_VIEW_API}.set_tool_tip (item, a_string.item)
+		end
+
+	tool_tip: NS_STRING
+		do
+			create Result.share_from_pointer ({NS_VIEW_API}.tool_tip (item))
+		end
+
+	add_tool_tip_rect_owner_user_data (a_rect: NS_RECT; a_an_object: NS_OBJECT; a_data: POINTER): INTEGER
+		do
+			Result := {NS_VIEW_API}.add_tool_tip_rect_owner_user_data (item, a_rect.item, a_an_object.item, a_data.item)
+		end
+
+	remove_tool_tip (a_tag: INTEGER)
+		do
+			{NS_VIEW_API}.remove_tool_tip (item, a_tag)
+		end
+
+	remove_all_tool_tips
+		do
+			{NS_VIEW_API}.remove_all_tool_tips (item)
+		end
+
 feature -- Event Handling
 
-	hit_test (a_point: NS_POINT): NS_VIEW
+	hit_test (a_point: NS_POINT): detachable NS_VIEW
 			-- Returns the farthest descendant of the receiver in the view hierarchy (including itself) that contains a specified point,
 			-- or Void if that point lies completely outside the receiver.
 		local
 			view_ptr: POINTER
 		do
 			view_ptr := {NS_VIEW_API}.hit_test (item, a_point.item)
-			object_table.search (view_ptr)
-			if object_table.found then
-				if attached {NS_VIEW} id_object (object_table.found_item) as l_view then
-					Result := l_view
+			if view_ptr /= default_pointer then
+				object_table.search (view_ptr)
+				if object_table.found then
+					if attached {NS_VIEW} id_object (object_table.found_item) as l_view then
+						Result := l_view
+					else
+						io.put_string ("View not valid anymore. Returning new.%N")
+						create Result.share_from_pointer (view_ptr)
+					end
 				else
-					io.put_string ("View not valid anymore. Returning new.%N")
 					create Result.share_from_pointer (view_ptr)
+					io.put_string ("View not found: " + view_ptr.out + " (" + Result.class_.name.out + ")" + " Returning new.%N")
 				end
-			else
-				create Result.share_from_pointer (view_ptr)
-				io.put_string ("View not found: " + view_ptr.out + " (" + Result.class_.name.out + ")" + " Returning new.%N")
 			end
 		end
 

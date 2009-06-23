@@ -67,6 +67,19 @@ feature -- Sizing
 			{NS_WINDOW_API}.frame (item, Result.item)
 		end
 
+	set_frame (a_rect: NS_RECT; a_display: BOOLEAN)
+			-- Sets the origin and size of the window's frame rectangle according to a given frame rectangle, thereby setting its position and size onscreen.
+		do
+			{NS_WINDOW_API}.set_frame (item, a_rect.item, a_display)
+		end
+
+	set_frame_top_left_point (a_point: NS_POINT)
+			-- Positions the top-left corner of the window's frame rectangle at a given point in screen coordinates.
+		do
+			{NS_WINDOW_API}.set_frame_top_left_point (item, a_point.item)
+		end
+
+
 feature -- Managing Title Bars
 
 	standdard_window_button (a_window_button_kind: INTEGER): NS_BUTTON
@@ -90,11 +103,6 @@ feature -- ..
 			{NS_WINDOW_API}.set_content_min_size (item, a_width, a_height)
 		ensure
 			content_min_size_set: --
-		end
-
-	set_frame (a_rect: NS_RECT)
-		do
-			{NS_WINDOW_API}.set_frame (item, a_rect.item)
 		end
 
 feature -- Handling Mouse Events

@@ -87,7 +87,7 @@ feature -- Status report
 
 	debug_output: STRING
 		local
-			l_string: NS_STRING
+			l_string: NS_STRING_BASE
 		do
 			create l_string.make_from_pointer ({NS_OBJECT_API}.description (item))
 			Result := l_string.to_string

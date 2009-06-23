@@ -1,6 +1,6 @@
 note
 	description: "[
-		Contains settings that are read from execution arguments
+		Contains settings that are read from execution arguments.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

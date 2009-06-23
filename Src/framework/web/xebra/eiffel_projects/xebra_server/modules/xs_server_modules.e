@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Encapsulates a HASH_TABLE of XC_SERVER_MODULEs
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

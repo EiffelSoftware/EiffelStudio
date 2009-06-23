@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {XS_SHARED_SERVER_CONFIG}."
-	author: ""
+	description: "[
+			Provides shared access to a XS_SERVER_CONFIG
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

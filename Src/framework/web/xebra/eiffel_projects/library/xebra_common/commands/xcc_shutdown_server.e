@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Shuts down the server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

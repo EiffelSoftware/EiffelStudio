@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {XS_SHARED_SERVER_OUTPUTTER}."
-	author: ""
+	description: "[
+			Provides shared access to a XS_SERVER_OUTPUTTER
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

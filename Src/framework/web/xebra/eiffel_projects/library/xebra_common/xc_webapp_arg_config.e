@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XWA_ARG_CONFIG
+	XC_WEBAPP_ARG_CONFIG
 create
 	make_empty
 

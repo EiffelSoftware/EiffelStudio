@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {XS_SERVER_CONFIG}."
-	author: ""
+	description: "[
+			Contains configuration from the arguments and from the config file.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

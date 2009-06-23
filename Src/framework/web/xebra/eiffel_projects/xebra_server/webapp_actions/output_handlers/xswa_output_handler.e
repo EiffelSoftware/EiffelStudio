@@ -72,24 +72,3 @@ invariant
 	max_size_is_positive: max_size > 0
 	output_attached: output /= Void
 end
-
---inherit
---	XS_OUTPUT_HANDLER
-
---create
---	make
-
---feature -- Status setting
-
---	internal_handle_output (a_output: READABLE_STRING_8)
---			-- <Precursor>
-
---		do
---		end
-
---feature -- Status report
-
---	has_successfully_terminated: BOOLEAN
---			-- <Precursor>
---		do
---		end

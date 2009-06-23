@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Interface for commands that have one parameter
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,6 +12,19 @@ deferred class
 
 inherit
 	XC_COMMAND
+	redefine
+		make
+	end
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialization for `Current'.
+		do
+			create parameter.make_empty
+		ensure then
+			parameter_attached: parameter /= Void
+		end
 
 feature -- Access
 
@@ -20,6 +33,8 @@ feature -- Access
 	parameter_description: STRING
 			-- The name of the parameter
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status Change
@@ -34,15 +49,7 @@ feature -- Status Change
 			parameter_set: equal( parameter.value, a_parameter)
 		end
 
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
 invariant
-
+	parameter_attached: parameter /= Void
 end
 

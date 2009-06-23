@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	modules: HASH_TABLE [XC_SERVER_MODULE, STRING]
+	modules: ARRAYED_LIST [XC_SERVER_MODULE_BEAN]
 
 invariant
 	modules_attached: modules /= Void

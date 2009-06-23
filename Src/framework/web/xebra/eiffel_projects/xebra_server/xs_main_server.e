@@ -56,9 +56,9 @@ feature {XS_APPLICATION} -- Setup
 			o.dprint (config.args.print_configuration, 2)
 			stop := false
 			if attached {XCCR_OK} load_config then
-				modules.force (create {XS_CONSOLE_MODULE}.make (current), "mod_console")
-				modules.force (create {XS_HTTP_CONN_MODULE}.make (current), "mod_http")
-				modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current), "mod_cmd")
+				modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
+				modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
+				modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
 				o.dprint("Launching modules...",2)
 				modules.run_all
 				run
@@ -77,7 +77,7 @@ feature {NONE} -- Operations
 			until
 				stop
 			loop
-				do_nothing
+				(create {EXECUTION_ENVIRONMENT}).sleep (1000000)
 			end
 
 			o.iprint ("Shutting down...")
@@ -135,7 +135,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				until
 					l_webapps.after
 				loop
-					l_response.webapps.force (l_webapps.item_for_iteration.twin)
+					l_response.webapps.force ( l_webapps.item_for_iteration.copy_from_bean)
 					l_webapps.forth
 				end
 			end
@@ -254,7 +254,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			until
 				modules.after
 			loop
-				l_response.modules.force (modules.item_for_iteration, modules.key_for_iteration)
+				l_response.modules.force (create {XC_SERVER_MODULE_BEAN}.make_from_module(modules.item_for_iteration))
 				modules.forth
 			end
 			Result := l_response

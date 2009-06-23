@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Contains basic data about webapp that can be sent over sockets.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XC_WEBAPP_BASE
+	XC_WEBAPP_BEAN
 
 create
 	make
@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 		do
 			app_config := a_webapp_config
 			is_disabled := false
-
 		ensure
 			config_attached: app_config /= Void
 		end
@@ -46,6 +45,23 @@ feature -- Access
 
 
 feature -- Access
+
+	status: STRING
+			-- Returns the status in words
+		do
+			if is_disabled then
+				Result := "Disabled"
+			elseif is_translating then
+				Result := "Translating"
+			elseif is_compiling then
+				Result := "Compiling"
+			elseif is_running then
+				Result := "Running"
+			else
+				Result := "Stopped"
+			end
+		end
+
 
 feature -- Status report
 
@@ -85,6 +101,20 @@ feature -- Status setting
 		end
 
 feature -- Basic operations
+
+	copy_from_bean : XC_WEBAPP_BEAN
+			-- Creates a copy of an other webapp bean
+		do
+			create Result.make (current.app_config)
+
+			Result.is_compiling := current.is_compiling
+			Result.is_disabled := current.is_disabled
+			Result.is_running := current.is_running
+			Result.is_translating := current.is_translating
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 feature {NONE} -- Implementation
 

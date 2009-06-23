@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {XU_SERVER_OUTPUTTER}."
-	author: ""
+	description: "[
+			A version of XU_OUTPUTTER that sets all attributes already in the constructor.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

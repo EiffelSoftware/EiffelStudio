@@ -6,12 +6,20 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
+		
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf" readonly="false"/>
 		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
-		</library>	
+		</library>
+		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
+			
 		<cluster name="xebra_common" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

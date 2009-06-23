@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_config: XWA_CONFIG)
+	make (a_config: XC_WEBAPP_CONFIG)
 			-- Initialization of classes.
 		require
 			a_config_attached: a_config /= Void
@@ -53,7 +53,7 @@ feature -- Access
 	stop: BOOLEAN
 			-- Used to stop the thread
 
-	config: XWA_CONFIG
+	config: XC_WEBAPP_CONFIG
 			-- The configuration for the webapp
 
 	xserver_socket: NETWORK_STREAM_SOCKET

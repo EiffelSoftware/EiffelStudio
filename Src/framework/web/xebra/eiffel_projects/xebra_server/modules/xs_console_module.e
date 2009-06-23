@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		A server module that reads commands from the console.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,8 +12,8 @@ class
 
 inherit
 	XC_SERVER_MODULE
-		redefine
-			make
+		rename
+			make as base_make
 		end
 	THREAD
 	XS_SHARED_SERVER_CONFIG
@@ -25,10 +25,14 @@ create
 
 feature -- Initialization
 
-	make (a_main_server: like main_server)
+	make (a_main_server: like main_server; a_name: STRING)
 			-- Initializes current
+		require
+			a_main_server_attached: a_main_server /= Void
+			a_name_attached: a_name /= Void
 		do
-			Precursor (a_main_server)
+			base_make (a_name)
+			main_server := a_main_server
             create commands.make (1)
 			commands.force (create {XCC_SHUTDOWN_SERVER}.make, "exit")
 			commands.force (create {XCC_LOAD_CONFIG}.make, "reload")
@@ -42,13 +46,20 @@ feature -- Initialization
 			commands.force (create {XCC_DISABLE_WEBAPP}.make, "disable")
 			commands.force (create {XCC_GET_WEBAPPS}.make, "webapps")
 			-- help command is hardcoded
-        ensure then
+        ensure
+        	main_server_set: equal (a_main_server, main_server)
         	commands_attached: commands /= Void
+        	name_set: equal (name, a_name)
 		end
 
 feature -- Acces
 
 	commands: HASH_TABLE [XC_COMMAND, STRING]
+
+
+feature {NONE} -- Access
+
+	main_server: XC_SERVER_INTERFACE
 
 feature -- Inherited Features
 
@@ -155,7 +166,7 @@ feature -- Status Report
 			until
 				a_response.modules.after
 			loop
-				Result.append (" - name: '" + a_response.modules.key_for_iteration +
+				Result.append (" - name: '" + a_response.modules.item_for_iteration.name +
 				"',%Tlaunched: '" + a_response.modules.item_for_iteration.launched.out +
 				"',%Trunning: '" + a_response.modules.item_for_iteration.running.out +
 				"'%N")
@@ -177,23 +188,11 @@ feature -- Status Report
 			until
 				a_response.webapps.after
 			loop
-				if a_response.webapps.item_for_iteration.is_disabled then
-					l_status := "Disabled"
-				elseif a_response.webapps.item_for_iteration.is_running then
-					l_status := "Running"
-				elseif a_response.webapps.item_for_iteration.is_compiling then
-					l_status := "Compiling"
-				elseif a_response.webapps.item_for_iteration.is_running then
-					l_status := "Running"
-				else
-					l_status := "Stopped"
-				end
-
 
 				Result.append ("%N- " + a_response.webapps.item_for_iteration.app_config.name.out +
 				"%N%THost: '" + a_response.webapps.item_for_iteration.app_config.host.out + "'" +
 				"%N%TPort: '" + a_response.webapps.item_for_iteration.app_config.port.out + "'" +
-				"%N%TStatus: '" + l_status + "'" +
+				"%N%TStatus: '" + a_response.webapps.item_for_iteration.status + "'" +
 				"%N%TDisabled: '" + a_response.webapps.item_for_iteration.is_disabled.out + "'" +
 				"%N%TTranslating: '" + a_response.webapps.item_for_iteration.is_translating.out + "'" +
 				"%N%TCompiling: '" + a_response.webapps.item_for_iteration.is_compiling.out + "'" +
@@ -282,4 +281,5 @@ feature -- Status setting
 
 invariant
 		commands_attached: commands /= Void
+		main_server_attached: main_server /= Void
 end

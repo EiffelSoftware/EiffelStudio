@@ -1,50 +1,107 @@
 <html>
 <head>
 <title>Xebra Server Control</title>
-<page:controller class="MAIN_CONTROLLER"/>
+<page:controller class="MAIN_CONTROLLER" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="base.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="main">
-  <div id="header">
-    <div id="title"> Xebra Server Control</div>
-  </div>
-  <div id="content">
- <h1>Server Modules</h1>
- <p><a href="reload_config.xeb">Reload Configuration</a>
- </p>
+<div id="header">
+<div id="title">Xebra Server Control</div>
+</div>
+<div id="content">
+<f:form variable="dummy" class="MAIN_CONTROLLER">
 
- <xeb:iterate list="global_state.modules" variable="module" type="XC_SERVER_MODULE">
-<p> <xeb:display feature="#{module.name}" /> </p>
-</xeb:iterate>
+<h1>Server Control</h1>
 
- <!--
-  <f:form variable="var" class="MAIN_CONTROLLER">
-    <h1>Main Server</h1>
-    <div class="button"> <span class="buttontext">
-      <f:command_link label="Reload Configuration File" action="reload_config" variable="var"/>
-      </span> </div>
-    <div class="button"> <span class="buttontext">
-      <f:command_link label="Shutdown Server" action="shutdown_server" variable="var"/>
-      </span> </div>
-    <h1>HTTP Connection Server</h1>
-    <div class="button"> <span class="buttontext">
-      <f:command_link label="Relaunch HTTP Connection Server" action="launch_https" variable="var"/>
-      </span> </div>
-    <div class="button"> <span class="buttontext">
-      <f:command_link label="Shutdown HTTP Connection Server" action="shutdown_https" variable="var"/>
-      </span> </div>
-    <h1>Webapplications</h1>
-    <div class="button"> <span class="buttontext">
-      <f:command_link label="Shutdown Webapplications" action="shutdown_webapps" variable="var"/>
-      </span> </div>
-     </f:form> 
-     -->
-  </div>
-  <div id="footer">
-    <div id="footertext">Xebra Server Control</div>
-  </div>
+<table class="default">
+	<tr>
+		<th>Name</th>
+		<th></th>
+		<th></th>
+	</tr>
+		<tr>		
+			<td>Main Server</td>			
+			<td><f:command_link label="shutdown" action="shutdown_server" variable="dummy" /></td>						
+			<td><f:command_link label="reload config" action="reload_config" variable="dummy"/></td>
+		</tr>		
+
+</table>
+<h1>Modules</h1>
+
+
+<xeb:display feature="%=get_modules%" />
+<table class="default">
+	<tr>
+		<th>Name</th>
+		<th>Launched</th>
+		<th>Running</th>
+		<th></th>
+		<th></th>
+	</tr>
+	<xeb:iterate list="modules" variable="module" type="XC_SERVER_MODULE_BEAN">
+		<tr>		
+			<td><xeb:display feature="#{module.name}" /></td>
+
+			<td><xeb:display feature="#{module.launched.out}" /></td>
+
+			<td><xeb:display feature="#{module.running.out}" /></td>
+			
+			<td><f:command_link label="shutdown" action="shutdown_mod" variable="module.name" /></td>
+						
+			<td><f:command_link label="relaunch" action="relaunch_mod" variable="module.name"/></td>
+		</tr>		
+	</xeb:iterate>
+</table>
+
+<h1>Webapps</h1>
+
+<xeb:display feature="%=get_webapps%" />
+<table class="default">
+	<tr>
+		<th>Name</th>
+		<th> Status </th>
+		<th> Disabled</th>
+		<th> Running</th>
+		<th> Translating</th>
+		<th> Compiling</th>
+		<th> Host </th>
+		<th> Port</th>
+		<th> Interactive</th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		
+	</tr>
+	<xeb:iterate list="webapps" variable="webapp" type="XC_WEBAPP_BEAN">
+		<tr>
+			<td><xeb:display feature="#{webapp.app_config.name.value.out}" /></td>
+			<td><xeb:display feature="#{webapp.status}" /></td>
+			<td><xeb:display feature="#{webapp.is_disabled.out}" /></td>
+			<td><xeb:display feature="#{webapp.is_running.out}" /></td>
+			<td><xeb:display feature="#{webapp.is_translating.out}" /></td>
+			<td><xeb:display feature="#{webapp.is_compiling.out}" /></td>
+			<td><xeb:display feature="#{webapp.app_config.host.value.out}" /></td>
+			<td><xeb:display feature="#{webapp.app_config.port.value.out}" /></td>
+			<td><xeb:display feature="#{webapp.app_config.is_interactive.value.out}" /></td>
+			<td><f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" /></td>
+			<td><f:command_link label="shutdown" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /></td>
+			<td><f:command_link label="relaunch" action="relaunch_webapp" variable="webapp.app_config.name.value.out" /></td>
+			<td><f:command_link label="disable" action="disable_webapp" variable="webapp.app_config.name.value.out" /></td>
+			<td><f:command_link label="enable" action="enable_webapp" variable="webapp.app_config.name.value.out" /></td>
+		</tr>
+	</xeb:iterate>
+</table>
+
+
+</f:form>
+</div>
+<div id="footer">
+<div id="footertext">Xebra Server Control</div>
+</div>
 </div>
 </body>
 </html>

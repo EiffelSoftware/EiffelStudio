@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Interface for command responses.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -9,18 +9,6 @@ note
 
 deferred class
 	XC_COMMAND_RESPONSE
-
-feature -- Access
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
-invariant
 
 end
 

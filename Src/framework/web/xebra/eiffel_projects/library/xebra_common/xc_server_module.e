@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Interface for server modules.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -12,23 +12,39 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_main_server: like main_server)
+	make (a_name: STRING)
 			-- Initializes current
 		require
-			a_main_servera_ttached: a_main_server /= Void
+			a_name_attached: a_name /= Void
 		do
 			launched := False
 			running := False
-			main_server := a_main_server
- 		ensure
-			main_server_set: equal (a_main_server, main_server)
+			name := a_name
+		ensure
+			name_set: equal(name, a_name)
 		end
 
-feature {NONE} -- Access
 
-	main_server: XC_SERVER_INTERFACE
+--	make (a_main_server: like main_server)
+--			-- Initializes current
+--		require
+--			a_main_servera_ttached: a_main_server /= Void
+--		do
+--			launched := False
+--			running := False
+--			main_server := a_main_server
+-- 		ensure
+--			main_server_set: equal (a_main_server, main_server)
+--		end
+
+feature  -- Access
+
+--	main_server: XC_SERVER_INTERFACE
+
+	name: STRING
 
 feature -- Status report
+
 
 	launched: BOOLEAN
 		-- Checks if a module has been launched
@@ -52,12 +68,7 @@ feature -- Status setting
 			-- Joins the thread.	
 		deferred
 		end
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
 invariant
-	main_server_attached: main_server /= Void
+	name_attached: name /= Void
 end
 

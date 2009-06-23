@@ -1366,6 +1366,7 @@ feature -- Label texts
 	l_Once_routines: STRING_32			do Result := locale.translation("Once routines")	end
 	l_Constant_features: STRING_32		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32			do Result := locale.translation("Only classes in same cluster")	end
+	l_only_eiffel_class_file_allowed: STRING_32			do Result := locale.translation("Only Eiffel class file allowed")	end
 	l_open: STRING_32					do Result := locale.translation("Open")	end
 	l_Open_a_project: STRING_32			do Result := locale.translation("Open a project")	end
 	l_Open_project: STRING_32 			do Result := locale.translation("Open project")	end

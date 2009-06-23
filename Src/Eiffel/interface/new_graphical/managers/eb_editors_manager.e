@@ -39,6 +39,8 @@ inherit
 			{NONE} all
 		end
 
+	SD_ACCESS
+
 create
 	make
 
@@ -81,6 +83,7 @@ feature -- Initialization
 			if veto_pebble_function_internal = Void then
 				docking_manager.main_area_drop_action.set_veto_pebble_function (agent default_veto_func)
 			end
+			docking_manager.zones.place_holder_widget.file_drop_actions.extend (agent on_file_drop)
 		ensure
 			editors_internal_not_void: editors_internal /= Void
 			editors_not_empty: not editors_internal.is_empty
@@ -827,7 +830,7 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 	synchronize_with_docking_manager
 			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
 			-- we want to make sure it's synchronized here.
@@ -1135,6 +1138,63 @@ feature {NONE} -- Agents
 			cleared: on_show_imp_agent = Void
 		end
 
+	on_file_drop (a_list: LIST [STRING_32])
+			-- OS file drop actions for editor area
+			-- Open a new tab for the class which file path are included in `a_list'
+		local
+			l_stone: CLASSI_STONE
+			l_item: CLASS_I
+			l_class_name, l_dropped_class_name: STRING_32
+			l_splitted_file_path: LIST [STRING_32]
+			l_classes_founded: LIST [CLASS_I]
+			l_prompt_provider: ES_PROMPT_PROVIDER
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				l_class_name := a_list.item
+				l_splitted_file_path := l_class_name.split (Operating_environment.directory_separator)
+				if l_splitted_file_path.count >= 1 then
+					-- FIXME: file name and class name must be same, problem here?
+					l_dropped_class_name := l_splitted_file_path.last
+					if l_dropped_class_name.ends_with (".e") then
+						l_dropped_class_name.remove_tail (2)
+						l_classes_founded := universe.classes_with_name (l_dropped_class_name.as_upper)
+
+						from
+							l_classes_founded.start
+						until
+							l_classes_founded.after
+						loop
+							l_item := l_classes_founded.item
+							-- FIXME: configuration library doesn't support STRING_32...so non-Enlgish file path not supported here.
+							if l_item.file_name.out.as_string_32 ~ l_class_name.as_lower  then
+
+								create l_stone.make (l_item)
+								if current_editor /= Void then
+									create_editor_beside_content (l_stone, current_editor.docking_content)
+								else
+									create_editor_beside_content (l_stone, void)
+								end
+
+							end
+							l_classes_founded.forth
+						end
+					else
+						-- Should tell users only drop ".e" file here, only tell users ONE time.
+						if l_prompt_provider = void then
+							create l_prompt_provider
+							l_prompt_provider.show_error_prompt (interface_names.l_only_eiffel_class_file_allowed, void, void)
+						end
+
+					end
+				end
+				a_list.forth
+			end
+		end
+
 	on_drop (a_stone: STONE; a_editor: like current_editor)
 			-- Invoke when a stone is dropped on `a_editor'.
 		local
@@ -1268,6 +1328,7 @@ feature {NONE} -- Implementation
 			if editors_internal.off then
 				editors_internal.start
 			end
+			last_created_editor.editor_drawing_area.file_drop_actions.extend (agent on_file_drop)
 		ensure
 			last_created_editor_not_void: last_created_editor /= Void
 			formatting_marks_set: show_formatting_marks = last_created_editor.view_invisible_symbols
@@ -1541,11 +1602,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

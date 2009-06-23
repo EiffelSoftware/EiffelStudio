@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Redefine
 		do
-			create {SD_WINDOW_IMP} implementation.make (Current)
+			create {SD_WINDOW_IMP} implementation.make
 		end
 
 	make_with_shadow

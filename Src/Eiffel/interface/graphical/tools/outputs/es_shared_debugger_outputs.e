@@ -36,7 +36,7 @@ feature {NONE} -- Access: Outputs
 				end
 				if l_output.is_interface_usable then
 					Result := l_output
-					internal_general_output := Result
+					internal_debugger_output := Result
 				end
 			end
 		ensure

@@ -42,8 +42,6 @@ inherit
 	ES_HELP_CONTEXT
 		export
 			{NONE} all
-		redefine
-			help_provider
 		end
 
 	TAG_UTILITIES
@@ -211,16 +209,10 @@ feature {NONE} -- Initialization: widget status
 
 feature -- Access: help
 
-	help_provider: attached UUID
-			-- <Precursor>
-		once
-			Result := (create {HELP_PROVIDER_KINDS}).wiki
-		end
-
 	help_context_id: STRING
 			-- <Precursor>
 		once
-			Result := "Testing Tool (Specification)"
+			Result := "1d8cc843-238e-feaa-cfa6-629f080ffba7"
 		end
 
 feature {NONE} -- Access

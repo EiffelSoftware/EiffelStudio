@@ -498,6 +498,7 @@ rt_public void cnode_updt(void)
 	struct cnode *node;		/* Structure to update */
 	char **names;			/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
+	uint16 *attr_flags;		/* Attribute flags array */
 	EIF_TYPE_INDEX **gtypes;/* Attribute full-type array */
 	int32 *rout_ids;		/* Routine id array */
 	int i;
@@ -524,6 +525,7 @@ rt_public void cnode_updt(void)
 		/* 3. Number of attributes */
 	nbattr = wint32();
 	node->cn_nbattr = nbattr;
+	node->cn_persistent_nbattr = wint32();
 #ifdef DEBUG
 	dprintf(4)("\tattribute number = %ld\n", node->cn_nbattr);
 #endif
@@ -534,29 +536,22 @@ rt_public void cnode_updt(void)
 		node->cn_names = names;
 		SAFE_ALLOC(types, uint32, nbattr);
 		node->cn_types = types;
+		SAFE_ALLOC(attr_flags, uint16, nbattr);
+		node->cn_attr_flags = attr_flags;
 		SAFE_ALLOC(gtypes, EIF_TYPE_INDEX *, nbattr);
 		node->cn_gtypes = gtypes;
-#ifdef DEBUG
-	dprintf(4)("\tattribute names = ");
-#endif
 		for (i=0; i<nbattr; i++) {
 			str_count = wshort();
 			SAFE_ALLOC(str, char, str_count + 1);
 			wread(str, str_count * sizeof(char));
 			str[str_count] = '\0';
 			names[i] = str;
-#ifdef DEBUG
-	dprintf(4)("%s ", str);
-#endif
 		}
-#ifdef DEBUG
-	dprintf(4)("\tattribute types = ");
-#endif
 		for (i=0; i<nbattr; i++) {
 			types[i] = wuint32();
-#ifdef DEBUG
-	dprintf(4)("0x%lx ", types[i]);
-#endif
+		}
+		for (i=0; i<nbattr; i++) {
+			attr_flags[i] = (uint16) wshort();
 		}
 		for (i=0; i<nbattr; i++)
 		{

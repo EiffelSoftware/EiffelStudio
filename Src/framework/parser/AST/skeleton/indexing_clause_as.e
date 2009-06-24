@@ -231,60 +231,22 @@ feature -- Access
 	has_global_once: BOOLEAN
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
-		local
-			i: INDEX_AS
-			s: STRING_AS
-			l_id: ID_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (Once_status_header)
-
-			if i /= Void then
-				list := i.index_list
-				if not list.is_empty then
-					from
-						list.start
-					until
-						list.after or Result
-					loop
-						s ?= list.item
-						Result := s /= Void and then s.value.is_equal (Global_value)
-						if not Result then
-							l_id ?= list.item
-							Result := l_id /= Void and then l_id.name.is_equal (Global_value)
-						end
-						list.forth
-					end
-				end
-			end
+			Result := has_tag_value (once_status_header, global_value)
 		end
 
 	is_stable: BOOLEAN
 			-- Is feature marked as stable?
 			-- (Used to mark stable attributes.)
-		local
-			i: INDEX_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (option_header)
-			if i /= Void then
-				list := i.index_list
-				if not list.is_empty then
-					from
-						list.start
-					until
-						list.after or Result
-					loop
-						if
-							attached {STRING_AS} list.item as s and then s.value.is_equal (stable_option_value) or else
-							attached {ID_AS} list.item as id and then id.name.is_equal (stable_option_value)
-						then
-							Result := True
-						end
-						list.forth
-					end
-				end
-			end
+			Result := has_tag_value (option_header, stable_option_value)
+		end
+
+	is_volatile: BOOLEAN
+			-- Is feature marked as volatile?
+			-- (Used to mark volatile attributes, i.e. not stored on disk.)
+		do
+			Result := has_tag_value (option_header, volatile_option_value)
 		end
 
 	enum_type: STRING
@@ -408,6 +370,9 @@ feature {NONE} -- Constants
 	stable_option_value: STRING = "stable"
 			-- Predefined value of `option_header'.
 
+	volatile_option_value: STRING = "volatile"
+			-- Predefined value of `option_header'.
+
 	obsolete_tags: HASH_TABLE [STRING, STRING]
 			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
 			-- should be used
@@ -482,6 +447,30 @@ feature {NONE} -- Implementation
 					list.forth
 					if not list.after and s /= Void then
 						Result.append (", ")
+					end
+				end
+			end
+		end
+
+	has_tag_value (a_tag, a_value: READABLE_STRING_8): BOOLEAN
+			-- Does current have an indexing clause tag `a_tag' with value `a_value' as either identifier or string.
+		local
+			i: INDEX_AS
+			list: EIFFEL_LIST [ATOMIC_AS]
+		do
+			i := index_as_of_tag_name (a_tag)
+			if i /= Void then
+				list := i.index_list
+				if not list.is_empty then
+					from
+						list.start
+					until
+						list.after or Result
+					loop
+						Result :=
+							(attached {STRING_AS} list.item as s and then s.value.is_case_insensitive_equal (a_value)) or else
+							(attached {ID_AS} list.item as id and then id.name.is_case_insensitive_equal (a_value))
+						list.forth
 					end
 				end
 			end

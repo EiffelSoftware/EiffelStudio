@@ -3428,7 +3428,7 @@ rt_private void map_types (void)
 
 rt_private void check_mismatch (type_descriptor *t)
 {
-	int i;
+	rt_uint_ptr i, count;
 		/* Generate mismatch error when retrieving an old TUPLE specification
 		 * which has attributes in a system with the new TUPLE specification with
 		 * no attributes */
@@ -3438,19 +3438,22 @@ rt_private void check_mismatch (type_descriptor *t)
 	{
 		t->mismatched = 1;
 	}
-	/* Determine if every attribute in new type has match in old type */
-	for (i=0; i<System (t->new_type).cn_nbattr; i++) {
-		int found = 0;
-		uint32 k;
-		for (k = 0; k < t->attribute_count && !found; k++)
-			found = (t->attributes[k].new_index == i);
-		if (!found) {
-			t->mismatched = 1;
+		/* Determine if every attribute in new type has match in old type */
+	count = System (t->new_type).cn_nbattr;
+	for (i=0; i < count; i++) {
+		if (!EIF_IS_VOLATILE_ATTRIBUTE(System(t->new_type),i)) {
+			int found = 0;
+			uint32 k;
+			for (k = 0; k < t->attribute_count && !found; k++)
+				found = (t->attributes[k].new_index == i);
+			if (!found) {
+				t->mismatched = 1;
 #ifdef RECOVERABLE_DEBUG
-			printf ("      + %s: ", System (t->new_type).cn_names[i]);
-			print_attribute_type (System (t->new_type).cn_gtypes[i]+1);
-			printf ("\n");
+				printf ("      + %s: ", System (t->new_type).cn_names[i]);
+				print_attribute_type (System (t->new_type).cn_gtypes[i]+1);
+				printf ("\n");
 #endif
+			}
 		}
 	}
 }
@@ -3812,7 +3815,7 @@ doc:	</routine>
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint16 flags, EIF_TYPE_INDEX dtype)
 {
 	RT_GET_CONTEXT
-	long attrib_offset;
+	rt_uint_ptr attrib_offset;
 	uint32 num_attrib;
 	uint32 store_flags;
 

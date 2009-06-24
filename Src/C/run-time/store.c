@@ -190,8 +190,6 @@ rt_private void object_write (char *object, uint16, EIF_TYPE_INDEX);
 rt_private void gen_object_write (char *object, uint16, EIF_TYPE_INDEX);
 rt_private void st_write_cid (EIF_TYPE_INDEX);
 rt_private void ist_write_cid (EIF_TYPE_INDEX);
-rt_public long get_offset (EIF_TYPE_INDEX dtype, uint32 attrib_num);
-rt_public long get_alpha_offset (EIF_TYPE_INDEX dtype, uint32 attrib_num);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
 rt_shared void buffer_write(char *data, size_t size);
@@ -222,14 +220,14 @@ doc:	</attribute>
 rt_private void (*flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
+doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE, int)" export="private">
 doc:		<summary>Action called to store an Eiffel object.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*st_write_func)(EIF_REFERENCE);
+rt_private void (*st_write_func)(EIF_REFERENCE, int);
 
 /*
 doc:	<attribute name="make_header_func" return_type="void (*)(void)" export="private">
@@ -282,14 +280,14 @@ doc:	</attribute>
 rt_private void (*old_flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
+doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE, int)" export="private">
 doc:		<summary>Store default version of `st_write_func'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*old_st_write_func)(EIF_REFERENCE);
+rt_private void (*old_st_write_func)(EIF_REFERENCE, int);
 
 /*
 doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
@@ -424,7 +422,7 @@ rt_public void rt_init_store(
 	void (*store_function) (size_t),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE),
+	void (*st_write_function) (EIF_REFERENCE, int),
 	void (*make_header_function) (void),
 	int accounting_type)
 {
@@ -878,7 +876,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #endif
 	EIF_EO_STORE_LOCK;
 	obj_nb = 0;
-	traversal(object,accounting);
+	traversal(object, 1, accounting);
 
 	if (accounting) {
 		make_header_func();			/* Make header */
@@ -923,10 +921,10 @@ rt_private void st_store(EIF_REFERENCE object)
 	RT_GET_CONTEXT
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE o_ptr;
-	long nb_references;
+	long i, nb_references;
 	union overhead *zone = HEADER(object);
 	uint16 flags;
-	int is_expanded;
+	int is_expanded, has_volatile_attributes = 0;
 
 	flags = zone->ov_flags;
 	is_expanded = eif_is_nested_expanded(flags);
@@ -977,32 +975,39 @@ rt_private void st_store(EIF_REFERENCE object)
 
 		/* Traversal of references of `object' */
 		for (
-			o_ptr = object; 
-			nb_references > 0;
-			nb_references--, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
+			o_ptr = object, i = 0;
+			i < nb_references;
+			i++, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
 		) {
 			o_ref = *(EIF_REFERENCE *)o_ptr;
-			if (o_ref != (EIF_REFERENCE) 0)
-				st_store(o_ref);
+			if (o_ref) {
+				if (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype), i)) {
+					st_store(o_ref);
+				} else {
+					has_volatile_attributes = 1;
+				}
+			}
 		}
 	}
 
-	if (!is_expanded)
-		st_write_func(object);		/* write the object */
-
+	if (!is_expanded) {
+		st_write_func(object, has_volatile_attributes);		/* write the object */
+	}
 }
 
-rt_public void st_write(EIF_REFERENCE object)
+rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 {
 	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
 	 */
 
 	union overhead *zone;
-	uint32 count, elem_size, capacity;
+	rt_uint_ptr i, count, elem_size, capacity;
+	rt_uint_ptr attrib_offset;
 	uint16 flags;
 	EIF_TYPE_INDEX dtype;
 	rt_uint_ptr nb_char;
+	EIF_VALUE val;
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -1031,13 +1036,56 @@ rt_public void st_write(EIF_REFERENCE object)
 		buffer_write((char *)(&capacity), sizeof(uint32));
 			/* Compute actual number of bytes we need to store. */
 		nb_char = nb_char * (rt_uint_ptr) elem_size;
+		if (nb_char > 0) {
+				/* Write the body of the object */
+			buffer_write(object, (sizeof(char) * nb_char));
+		}
 	} else {
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size(dtype);
-	}
-	if (nb_char > 0) {
-		/* Write the body of the object */
-		buffer_write(object, (sizeof(char) * nb_char));
+		if (nb_char > 0) {
+			if (!has_volatile_attributes) {
+					/* Write the body of the object */
+				buffer_write(object, (sizeof(char) * nb_char));
+			} else {
+					/* Normal object */
+				count = System(dtype).cn_nbattr;
+				memset(&val, 0, sizeof(EIF_VALUE));
+
+				for (i = 0; i < count; i++) {
+					attrib_offset = get_offset(dtype, i);
+					switch (*(System(dtype).cn_types + i) & SK_HEAD) {
+						case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+						case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+						case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+						case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
+						case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+						case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+						case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+						case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+						case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
+						case SK_BOOL:
+						case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
+						case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+						case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
+						case SK_REF:
+						case SK_BIT:
+						case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
+						case SK_EXP:
+								elem_size = HEADER(object + attrib_offset)->ov_size & B_SIZE;
+							break;
+						default:
+							elem_size = 0;
+							eise_io("General store: not an Eiffel object.");
+					}
+					if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), i)) {
+						buffer_write (object + attrib_offset, elem_size);
+					} else {
+						buffer_write ((char*) &val, elem_size);
+					}
+				}
+			}
+		}
 	}
 
 #if DEBUG & 2
@@ -1053,7 +1101,7 @@ rt_public void st_write(EIF_REFERENCE object)
 
 }
 
-rt_public void gst_write(EIF_REFERENCE object)
+rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 {
 	/* Write an object.
 	 * used for general store
@@ -1100,7 +1148,7 @@ rt_public void gst_write(EIF_REFERENCE object)
 
 }
 
-rt_public void ist_write(EIF_REFERENCE object)
+rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
 {
 	/* Write an object.
 	 * used for independent store
@@ -1149,13 +1197,13 @@ rt_public void ist_write(EIF_REFERENCE object)
 
 }
 
-rt_public long get_offset(EIF_TYPE_INDEX dtype, uint32 attrib_num)
+rt_shared rt_uint_ptr get_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib_num)
 {
 #ifndef WORKBENCH
 	return (System(dtype).cn_offsets[attrib_num]);
 #else
 	int32 rout_id;				/* Attribute routine id */
-	long offset;
+	BODY_INDEX offset;
 
 	rout_id = System(dtype).cn_attr[attrib_num];
 	CAttrOffs(offset,rout_id,dtype);
@@ -1163,15 +1211,15 @@ rt_public long get_offset(EIF_TYPE_INDEX dtype, uint32 attrib_num)
 #endif
 }
 
-rt_public long get_alpha_offset(EIF_TYPE_INDEX dtype, uint32 attrib_num)
+rt_shared rt_uint_ptr get_alpha_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib_num)
 {
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
 	RT_GET_CONTEXT
 #ifdef WORKBENCH
 	int32 rout_id;				/* Attribute routine id */
-	long offset;
+	BODY_INDEX offset;
 #endif
-	uint32 alpha_attrib_num;
+	rt_uint_ptr alpha_attrib_num;
 
 	unsigned int *attr_types = sorted_attributes[dtype];
 
@@ -1207,52 +1255,67 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 		 * at the same time.
 		 */
 
-	long attrib_offset;
+	rt_uint_ptr attrib_offset, elem_size;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	EIF_TYPE_INDEX exp_dftype;
-	uint32 num_attrib;
+	rt_uint_ptr num_attrib;
 	uint32 store_flags;
+	EIF_VALUE val;
+	uint32 sk_type;
 
 	num_attrib = System(dtype).cn_nbattr;
 
 	if (num_attrib > 0) {
+		memset(&val, 0, sizeof(EIF_VALUE));
 		for (; num_attrib > 0;) {
 			attrib_offset = get_alpha_offset(dtype, --num_attrib);
-			switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
-				case SK_UINT8: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
-				case SK_UINT16: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
-				case SK_UINT32: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
-				case SK_UINT64: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_64)); break;
-				case SK_INT8: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
-				case SK_INT16: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
-				case SK_INT32: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
-				case SK_INT64: buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
-				case SK_WCHAR: buffer_write(object + attrib_offset, sizeof(EIF_WIDE_CHAR)); break;
+			sk_type = *(System(dtype).cn_types + num_attrib) & SK_HEAD;
+			switch (sk_type) {
+				case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+				case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+				case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+				case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
+				case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+				case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+				case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+				case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+				case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
 				case SK_BOOL:
-				case SK_CHAR: buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER)); break;
-				case SK_REAL32: buffer_write(object + attrib_offset, sizeof(EIF_REAL_32)); break;
-				case SK_REAL64: buffer_write(object + attrib_offset, sizeof(EIF_REAL_64)); break;
-				case SK_EXP: gst_write (object + attrib_offset); break;
+				case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
+				case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+				case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 				case SK_REF:
-				case SK_POINTER: buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE)); break;
+				case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
 				case SK_BIT:
-					{
-						struct bit *bptr = (struct bit *)(object + attrib_offset);
-						store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
-						buffer_write((char *)(&store_flags), sizeof(uint32));
-						st_write_cid (HEADER(bptr)->ov_dftype);
-						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
-						buffer_write((char *) (bptr->b_value), bptr->b_length);
-					}
-					break;
+				case SK_EXP:
+							/* We don't actually need the size because per the validity rules they cannot be volatile. */
+						elem_size = 0; break;
 				default:
+					elem_size = 0;
 					eise_io("General store: not an Eiffel object.");
 			}
-		} 
+			if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), num_attrib)) {
+				if (sk_type == SK_BIT) {
+					struct bit *bptr = (struct bit *)(object + attrib_offset);
+					store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
+					buffer_write((char *)(&store_flags), sizeof(uint32));
+					st_write_cid (HEADER(bptr)->ov_dftype);
+					buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
+					buffer_write((char *) (bptr->b_value), bptr->b_length);
+				} else if (sk_type == SK_EXP) {
+						/* General store does not need a value for the second argument since
+						 * we do a field by field store. */
+					gst_write (object + attrib_offset, 0);
+				} else {
+					buffer_write (object + attrib_offset, elem_size);
+				}
+			} else {
+				buffer_write ((char*) &val, elem_size);
+			}
+		}
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count;
-			rt_uint_ptr elem_size;
 			EIF_REFERENCE ref;
 
 			count = RT_SPECIAL_COUNT(object);
@@ -1415,10 +1478,10 @@ doc:	</routine>
 
 rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 {
-	long attrib_offset;
+	rt_uint_ptr attrib_offset;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	EIF_TYPE_INDEX exp_dftype;
-	uint32 num_attrib;
+	rt_uint_ptr num_attrib;
 	uint32 store_flags;
 
 	num_attrib = System(dtype).cn_nbattr;
@@ -1426,48 +1489,54 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 	if (num_attrib > 0) {
 		for (; num_attrib > 0;) {
 			attrib_offset = get_offset(dtype, --num_attrib);
-			switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
-					/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
-					 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
-					 * unsigned SK_UINTXX too. */
-				case SK_UINT8: widr_multi_uint8 ((EIF_NATURAL_8 *)(object + attrib_offset), 1); break;
-				case SK_UINT16: widr_multi_uint16 ((EIF_NATURAL_16 *)(object + attrib_offset), 1); break;
-				case SK_UINT32: widr_multi_uint32 ((EIF_NATURAL_32 *)(object + attrib_offset), 1); break;
-				case SK_UINT64: widr_multi_uint64 ((EIF_NATURAL_64 *)(object + attrib_offset), 1); break;
-				case SK_INT8: widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1); break;
-				case SK_INT16: widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1); break;
-				case SK_INT32: widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1); break;
-				case SK_INT64: widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1); break;
-				case SK_BOOL:
-				case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
-				case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) (object + attrib_offset), 1); break;
-				case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
-				case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
-				case SK_EXP: ist_write (object + attrib_offset); break;
-				case SK_REF: widr_multi_any (object + attrib_offset, 1); break;
-				case SK_POINTER: widr_multi_ptr (object + attrib_offset, 1); break;
-				case SK_BIT:
-					{
-						struct bit *bptr = (struct bit *)(object + attrib_offset);
+			if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), num_attrib)) {
+				switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
+						/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
+						 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
+						 * unsigned SK_UINTXX too. */
+					case SK_UINT8: widr_multi_uint8 ((EIF_NATURAL_8 *)(object + attrib_offset), 1); break;
+					case SK_UINT16: widr_multi_uint16 ((EIF_NATURAL_16 *)(object + attrib_offset), 1); break;
+					case SK_UINT32: widr_multi_uint32 ((EIF_NATURAL_32 *)(object + attrib_offset), 1); break;
+					case SK_UINT64: widr_multi_uint64 ((EIF_NATURAL_64 *)(object + attrib_offset), 1); break;
+					case SK_INT8: widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1); break;
+					case SK_INT16: widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1); break;
+					case SK_INT32: widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1); break;
+					case SK_INT64: widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1); break;
+					case SK_BOOL:
+					case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
+					case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) (object + attrib_offset), 1); break;
+					case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
+					case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
+					case SK_EXP: 
+							/* Independent store does not need a value for the second argument since
+							 * we do a field by field store. */
+						ist_write (object + attrib_offset, 0);
+						break;
+					case SK_REF: widr_multi_any (object + attrib_offset, 1); break;
+					case SK_POINTER: widr_multi_ptr (object + attrib_offset, 1); break;
+					case SK_BIT:
+						{
+							struct bit *bptr = (struct bit *)(object + attrib_offset);
 #if DEBUG &1
-						int q;
-						printf (" %x", bptr->b_length);
-						printf (" %x", HEADER(bptr)->ov_flags);
-						for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
-							printf (" %lx", *((uint32 *)(bptr->b_value + q)));
-							if (!(q % 40))
-								printf ("\n");
-						}
+							int q;
+							printf (" %x", bptr->b_length);
+							printf (" %x", HEADER(bptr)->ov_flags);
+							for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
+								printf (" %lx", *((uint32 *)(bptr->b_value + q)));
+								if (!(q % 40))
+									printf ("\n");
+							}
 #endif
-						store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
-						widr_norm_int(&store_flags);
-						ist_write_cid (HEADER(bptr)->ov_dftype);
-						widr_multi_bit (bptr, 1, bptr->b_length, 0);
-					}
+							store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
+							widr_norm_int(&store_flags);
+							ist_write_cid (HEADER(bptr)->ov_dftype);
+							widr_multi_bit (bptr, 1, bptr->b_length, 0);
+						}
 
-					break;
-				default:
-					eise_io("Basic store: not an Eiffel object.");
+						break;
+					default:
+						eise_io("Basic store: not an Eiffel object.");
+				}
 			}
 		} 
 	} else {
@@ -1850,7 +1919,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 				 * "num_attributes attib_type +"
 				 */
 
-		num_attrib = System(i).cn_nbattr;
+		num_attrib = System(i).cn_persistent_nbattr;
 		if (0 > sprintf(s_buffer, " %d", num_attrib)) {
 			eise_io("Independent store: unable to write number of attributes.");
 		}
@@ -1975,13 +2044,17 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 rt_private void widr_type_attributes (int16 dtype)
 {
 	int16 num_attrib = (int16) System(dtype).cn_nbattr;
+	int16 persistent_num_attrib = (int16) System(dtype).cn_persistent_nbattr;
 	int16 i;
 #ifdef RECOVERABLE_DEBUG
 	printf ("    %d attribute%s\n", num_attrib, num_attrib != 1 ? "s" : "");
 #endif
-	widr_multi_int16 (&num_attrib, 1);
-	for (i=0; i<num_attrib; i++)
-		widr_type_attribute (dtype, i);
+	widr_multi_int16 (&persistent_num_attrib, 1);
+	for (i=0; i<num_attrib; i++) {
+		if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype),i)) {
+			widr_type_attribute (dtype, i);
+		}
+	}
 }
 
 rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)

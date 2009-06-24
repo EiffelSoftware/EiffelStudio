@@ -162,7 +162,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 #endif
 	/* Do the traversal: mark and count the objects to store */
 	obj_nb = 0;
-	traversal(object,0);
+	traversal(object, 1, 0);
 
 	current_position = 0;
 	end_of_buffer = 0;
@@ -200,10 +200,10 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 
 	char *o_ref;
 	char *o_ptr;
-	long nb_references;
+	long i, nb_references;
 	union overhead *zone = HEADER(object);
 	uint32 flags;
-	int is_expanded;
+	int is_expanded, has_volatile_attributes = 0;
 	EIF_BOOLEAN object_needs_index;
 	long saved_file_pos = 0;
 	long saved_object_count = a_object_count;
@@ -284,18 +284,24 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 
 		/* Traversal of references of `object' */
 		for (
-			o_ptr = object; 
-			nb_references > 0;
-			nb_references--, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
+			o_ptr = object, i = 0;
+			i < nb_references;
+			i++, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
 		) {
 			o_ref = *(EIF_REFERENCE *)o_ptr;
-			if (o_ref != (EIF_REFERENCE) 0)
-				a_object_count = pst_store(o_ref,a_object_count);
+			if (o_ref) {
+				if (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype), i)) {
+					a_object_count = pst_store(o_ref, a_object_count);
+				} else {
+					has_volatile_attributes = 1;
+				}
+			}
 		}
 	}
 
-	if (!is_expanded)
-		st_write(object);		/* Write the object on the disk */
+	if (!is_expanded) {
+		st_write(object, has_volatile_attributes);		/* write the object */
+	}
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index) {

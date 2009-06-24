@@ -203,13 +203,13 @@ typedef struct tag_rt_globals
 	int s_fides_cx;
 	void (*store_write_func_cx)(size_t);
 	void (*flush_buffer_func_cx)(void);
-	void (*st_write_func_cx)(EIF_REFERENCE);
+	void (*st_write_func_cx)(EIF_REFERENCE, int);
 	void (*make_header_func_cx)(void);
 	int (*char_write_func_cx)(char *, int);
 	void (*old_store_write_func_cx)(size_t);
 	int (*old_char_write_func_cx)(char *, int);
 	void (*old_flush_buffer_func_cx)(void);
-	void (*old_st_write_func_cx)(EIF_REFERENCE);
+	void (*old_st_write_func_cx)(EIF_REFERENCE, int);
 	void (*old_make_header_func_cx)(void);
 	int accounting_cx;
 	int old_accounting_cx;

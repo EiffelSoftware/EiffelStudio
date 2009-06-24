@@ -57,9 +57,11 @@ extern "C" {
  */
 struct cnode {
 	long cn_nbattr;				/* Number of attributes */
+	long cn_persistent_nbattr;	/* Number of persistent attributes */
 	char *cn_generator;			/* Class name */
 	char **cn_names;			/* Attribute names */
 	uint32 *cn_types;			/* Attribute types */
+	uint16 *cn_attr_flags;		/* Attribute flags */
 	EIF_TYPE_INDEX **cn_gtypes;	/* Attribute generic types (expanded attributes only) */
 	uint16 cn_flags;			/* Flags of Current type */
 #ifdef WORKBENCH
@@ -133,6 +135,10 @@ struct cnode {
 #define SK_HEAD		0xff000000			/* Mask for header value */
 #define SK_INVALID	0xffffffff			/* Invalid value, may be used as flag */
 
+/* Macros to access `cn_attr_flags'. */
+#define EIF_IS_VOLATILE_ATTRIBUTE_FLAG	0x0001
+
+#define EIF_IS_VOLATILE_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) == EIF_IS_VOLATILE_ATTRIBUTE_FLAG) 
 /*
  * Conformance table
  */

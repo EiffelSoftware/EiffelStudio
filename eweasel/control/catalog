@@ -1828,6 +1828,8 @@ test	validity-vsrp2-bad-then-good	vsrp206	 tcf pass validity vsrp
 test	validity-vsrp2-two-procedures	vsrp207	 tcf pass validity vsrp
 test	validity-vsrp2-multi-procedures	vsrp208	 tcf pass validity vsrp
 
+test	validity-vsrp3-precondition	vsrp301 tcf pass validity vsrp
+
 
 test	validity-vscn-same-cluster	vscn001	 tcf pass validity vscn
 test	validity-vscn-diff-cluster	vscn002	 tcf fail validity vscn

@@ -1,0 +1,2 @@
+Error: volatile attribute has an invalid type.
+What to do: make sure attribute type is neither formal, user-defined expanded or attached.

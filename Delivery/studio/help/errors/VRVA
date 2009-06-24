@@ -1,0 +1,9 @@
+VRVA, not defined in ETL
+
+    An attribute `a' of type `T' in a class `C' marked volatile
+    is valid if and only if it satisfies the following conditions:
+
+      1 `T' is neither a formal, a user defined expanded type, or an
+        attached type.
+		
+      2 `C' is not expanded

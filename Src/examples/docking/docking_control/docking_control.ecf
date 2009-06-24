@@ -12,6 +12,7 @@
 			</option>
 		</library>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

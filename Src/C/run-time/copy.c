@@ -304,7 +304,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 */
 
 	obj_nb = 0;						/* Mark objects */
-	traversal(source, TR_MAP);		/* Object traversal, mark with EO_STORE */
+	traversal(source, 0, TR_MAP);		/* Object traversal, mark with EO_STORE */
 	hash_malloc(&hclone, obj_nb);	/* Hash table allocation */
 	map_start();					/* Restart at bottom of FIFO stack */
 

@@ -977,6 +977,7 @@ feature -- Incrementality
 				and then is_process_relative = other.is_process_relative
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
+				and then is_volatile = other.is_volatile
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
 				and then assigner_name_id = other.assigner_name_id
@@ -1104,6 +1105,9 @@ end
 
 				-- Of the same stability
 			Result := Result and then is_stable = other.is_stable
+
+				-- Of the same volatility
+			Result := Result and then is_volatile = other.is_volatile
 		end
 
 feature -- creation of default rescue clause
@@ -1278,6 +1282,13 @@ feature -- Conveniences
 
 	is_stable: BOOLEAN
 			-- Is feature stable, i.e. never gets Void after returning a non-void value?
+			-- (Usually applies to attributes.)
+		do
+			-- False by default
+		end
+
+	is_volatile: BOOLEAN
+			-- Is feature volatile, i.e. never stored in storables?
 			-- (Usually applies to attributes.)
 		do
 			-- False by default
@@ -2105,6 +2116,16 @@ feature -- Signature checking
 						-- Check types of arguments
 					arguments.check_type_validity (a_context_class, Current, type_a_checker, False)
 				end
+				if
+					is_volatile and then (l_type.is_formal or l_type.is_true_expanded or
+					(not l_type.is_expanded and l_type.is_attached))
+				then
+					error_handler.insert_error (create {VRVA}.make_invalid_type (Current, a_context_class, written_class, l_type))
+				end
+			end
+
+			if is_volatile and then (a_context_class.is_expanded and not a_context_class.is_basic) then
+				error_handler.insert_error (create {VRVA}.make_invalid_context (Current, a_context_class, written_class))
 			end
 		end
 
@@ -3105,32 +3126,33 @@ feature {FEATURE_I} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	is_frozen_mask: NATURAL_32 = 0x0001
-	is_origin_mask: NATURAL_32 = 0x0002
-	is_empty_mask: NATURAL_32 = 0x0004
-	is_infix_mask: NATURAL_32 = 0x0008
-	is_prefix_mask: NATURAL_32 = 0x0010
-	is_require_else_mask: NATURAL_32 = 0x0020
-	is_ensure_then_mask: NATURAL_32 = 0x0040
-	has_precondition_mask: NATURAL_32 = 0x0080
-	has_postcondition_mask: NATURAL_32 = 0x0100
-	is_bracket_mask: NATURAL_32 = 0x0200
-	is_binary_mask: NATURAL_32 = 0x0400
-	is_unary_mask: NATURAL_32 = 0x0800
-	has_convert_mark_mask: NATURAL_32 = 0x1000
-	has_property_mask: NATURAL_32 = 0x2000
-	has_property_getter_mask: NATURAL_32 = 0x4000
-	has_property_setter_mask: NATURAL_32 = 0x8000
-	is_fake_inline_agent_mask: NATURAL_32 = 0x10000
-	has_rescue_clause_mask: NATURAL_32 = 0x20000
-	is_export_status_none_mask: NATURAL_32 = 0x40000
-	has_function_origin_mask: NATURAL_32 = 0x80000 -- Used in ATTRIBUTE_I
-	has_replicated_ast_mask: NATURAL_32 = 0x100000
-	has_body_mask: NATURAL_32 = 0x200000 -- Used in ATTRIBUTE_I
-	is_replicated_directly_mask: NATURAL_32 = 0x400000
-	from_non_conforming_parent_mask: NATURAL_32 = 0x800000
-	is_selected_mask: NATURAL_32 = 0x1000000
-	is_stable_mask: NATURAL_32 = 0x2000000 -- Used in ATTRIBUTE_I
+	is_frozen_mask: NATURAL_32 = 0x0000_0001
+	is_origin_mask: NATURAL_32 = 0x0000_0002
+	is_empty_mask: NATURAL_32 = 0x0000_0004
+	is_infix_mask: NATURAL_32 = 0x0000_0008
+	is_prefix_mask: NATURAL_32 = 0x0000_0010
+	is_require_else_mask: NATURAL_32 = 0x0000_0020
+	is_ensure_then_mask: NATURAL_32 = 0x0000_0040
+	has_precondition_mask: NATURAL_32 = 0x0000_0080
+	has_postcondition_mask: NATURAL_32 = 0x0000_0100
+	is_bracket_mask: NATURAL_32 = 0x0000_0200
+	is_binary_mask: NATURAL_32 = 0x0000_0400
+	is_unary_mask: NATURAL_32 = 0x0000_0800
+	has_convert_mark_mask: NATURAL_32 = 0x0000_1000
+	has_property_mask: NATURAL_32 = 0x0000_2000
+	has_property_getter_mask: NATURAL_32 = 0x0000_4000
+	has_property_setter_mask: NATURAL_32 = 0x0000_8000
+	is_fake_inline_agent_mask: NATURAL_32 = 0x0001_0000
+	has_rescue_clause_mask: NATURAL_32 = 0x0002_0000
+	is_export_status_none_mask: NATURAL_32 = 0x0004_0000
+	has_function_origin_mask: NATURAL_32 = 0x0008_0000 -- Used in ATTRIBUTE_I
+	has_replicated_ast_mask: NATURAL_32 = 0x0010_0000
+	has_body_mask: NATURAL_32 = 0x0020_0000 -- Used in ATTRIBUTE_I
+	is_replicated_directly_mask: NATURAL_32 = 0x0040_0000
+	from_non_conforming_parent_mask: NATURAL_32 = 0x0080_0000
+	is_selected_mask: NATURAL_32 = 0x0100_0000
+	is_stable_mask: NATURAL_32 = 0x0200_0000 -- Used in ATTRIBUTE_I
+	is_volatile_mask: NATURAL_32 = 0x0400_0000 -- Used in ATTRIBUTE_I
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

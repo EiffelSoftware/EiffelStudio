@@ -70,6 +70,29 @@ feature -- Access
 	count: INTEGER
 			-- Number of items in skeleton.
 
+	persistent_count: INTEGER
+			-- Number of persistent item in skeleton
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER_32
+		do
+			from
+				current_area := area
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				if not current_area.item (i).is_volatile then
+					Result := Result + 1
+				end
+				i := i + 1
+			end
+		ensure
+			persitent_count_non_negative: Result >= 0
+			persistent_count_valid: Result <= count
+		end
+
 	position: INTEGER
 			-- Current position in skeleton.
 
@@ -1030,6 +1053,30 @@ feature -- Skeleton byte code
 			end;
 		end;
 
+	make_flags_byte_code (ba: BYTE_ARRAY)
+			-- Generate flags array byte code
+		require
+			good_argument: ba /= Void
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+		do
+			from
+				current_area := area
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				if current_area.item (i).is_volatile then
+					ba.append_natural_16 (1)
+				else
+					ba.append_natural_16 (0)
+				end
+				i := i + 1
+			end;
+		end;
+
 	make_gen_type_byte_code (ba: BYTE_ARRAY)
 			-- Generate full type array byte code
 		require
@@ -1096,6 +1143,36 @@ feature -- Skeleton byte code
 				i := i + 1
 			end
 			buffer.put_string ("};%N%N")
+		end
+
+	generate_flags_array
+			-- Generate static C array of attributes flags codes in the
+			-- skeleton file.
+		require
+			not_empty: not empty
+		local
+			buffer: GENERATION_BUFFER
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+		do
+			buffer := generation_buffer
+			buffer.put_character ('{')
+			from
+				current_area := area
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				if current_area.item (i).is_volatile then
+					buffer.put_natural_32 (1)
+				else
+					buffer.put_natural_32 (0)
+				end
+				buffer.put_character (',')
+				i := i + 1
+			end
+			buffer.put_four_character ('}', ';', '%N', '%N')
 		end
 
 	generate_type_array

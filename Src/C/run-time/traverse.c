@@ -106,7 +106,7 @@ rt_shared uint32 nomark(char *);
 rt_private uint32 chknomark(char *, struct htable *, long);
 #endif
 
-rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int is_first_level);
+rt_private void internal_traversal(EIF_REFERENCE object, int for_persistence, int p_accounting, int is_first_level);
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type);
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
@@ -261,6 +261,7 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 doc:	<routine name="traversal" export="shared">
 doc:		<summary>First pass of the store mechanism consisting in marking objects with the EO_STORE flag.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object from which we start the marking mechanism.</param>
+doc:		<param name="for_persistence" type="int">Is traversal for persistence?.</param>
 doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, INDEPEND_ACCOUNT or RECOVER_ACCOUNT).</param>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
@@ -268,15 +269,15 @@ doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</sync
 doc:	</routine>
 */
 
-rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
+rt_shared void traversal(EIF_REFERENCE object, int for_persistence, int p_accounting)
 {
 	REQUIRE("object not null", object);
 
 		/* Use `internal_traversal' so that if `object' is expanded, we still process it properly. */
-	internal_traversal(object, p_accounting, 1);
+	internal_traversal(object, for_persistence, p_accounting, 1);
 }
 
-rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int is_first_level)
+rt_private void internal_traversal(EIF_REFERENCE object, int for_persistence, int p_accounting, int is_first_level)
 {
 		/* First pass of the store mechanism consisting in marking objects. */
 	EIF_GET_CONTEXT
@@ -367,7 +368,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 				if (eif_item_sk_type(object, i) == SK_REF) {
 					reference = eif_reference_item(object, i);
 					if (reference) {
-						internal_traversal(reference, p_accounting, 0);
+						internal_traversal(reference, for_persistence, p_accounting, 0);
 					}
 				}
 			}
@@ -376,7 +377,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
 				if (reference) {
-					internal_traversal(reference, p_accounting, 0);
+					internal_traversal(reference, for_persistence, p_accounting, 0);
 				}
 			}
 		else {
@@ -385,7 +386,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 			rt_uint_ptr offset = OVERHEAD;
 			elem_size = RT_SPECIAL_ELEM_SIZE(object);
 			for (i = 0; i < count; i++, offset += elem_size) {
-				internal_traversal(object + offset, p_accounting, 0);
+				internal_traversal(object + offset, for_persistence, p_accounting, 0);
 			}
 		}
 	} else {
@@ -395,8 +396,9 @@ rt_private void internal_traversal(EIF_REFERENCE object, int p_accounting, int i
 		/* Traversal of references of `object' */
 		for (i = 0; i < count; i++) {
 			reference = *((char **) object + i);
-			if (reference) {
-				internal_traversal(reference, p_accounting, 0);
+				/* Only account for non-volatile attributes in `for_persistence' mode. */
+			if (reference && (!for_persistence || (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype),i)))) {
+				internal_traversal(reference, for_persistence, p_accounting, 0);
 			}
 		}
 	}

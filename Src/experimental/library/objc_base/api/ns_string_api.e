@@ -79,4 +79,40 @@ feature -- Creating and Initializing Strings
 
  feature -- Working with URLs
 
+	frozen UTF8_string_encoding: INTEGER
+			-- NSUTF8StringEncoding
+			-- An 8-bit representation of Unicode characters, suitable for transmission or storage by ASCII-based systems.
+		external
+			"C inline use <Foundation/NSString.h>"
+		alias
+			"return NSUTF8StringEncoding;"
+		end
+
+	frozen UTF32_string_encoding: INTEGER
+			-- NSUTF32StringEncoding
+			-- 32-bit UTF encoding.
+		external
+			"C inline use <Foundation/NSString.h>"
+		alias
+			"return NSUTF32StringEncoding;"
+		end
+
+	frozen UTF32_big_endian_string_encoding: INTEGER
+			-- NSUTF32BigEndianStringEncoding
+			-- NSUTF32StringEncoding encoding with explicit endianness specified.
+		external
+			"C inline use <Foundation/NSString.h>"
+		alias
+			"return NSUTF32BigEndianStringEncoding;"
+		end
+
+	frozen UTF32_little_endian_string_encoding: INTEGER
+			-- NSUTF32LittleEndianStringEncoding
+			-- NSUTF32StringEncoding encoding with explicit endianness specified.
+		external
+			"C inline use <Foundation/NSString.h>"
+		alias
+			"return NSUTF32LittleEndianStringEncoding;"
+		end
+
 end

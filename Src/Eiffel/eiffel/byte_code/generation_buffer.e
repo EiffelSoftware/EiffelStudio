@@ -277,12 +277,57 @@ feature -- Automatically indented output
 			current_buffer.append_natural_64 (i)
 		end
 
+	put_hex_integer_8 (v: INTEGER_8)
+			-- Write integer `v' as a 16-bit hexadecimal value.
+		do
+			put_hex_natural_8 (v.as_natural_8)
+		end
+
 	put_hex_integer_16 (v: INTEGER)
 			-- Write integer `v' as a 16-bit hexadecimal value.
 		require
 			valid_as_integer_16: v <= {INTEGER_16}.max_value
 		do
 			put_hex_natural_16 (v.as_natural_16)
+		end
+
+	put_hex_natural_8 (v: NATURAL_8)
+			-- Write natural `v' as a 16-bit hexadecimal value.
+		local
+			i, nb: INTEGER
+			val, a_digit: NATURAL
+			l_buffer: like current_buffer
+		do
+			l_buffer := current_buffer
+				-- Complicated part: we estimate the required size depending
+				-- on the size of the integer we are given. If it is too big
+				-- to fit the `current_buffer', we resize it. We write the hex
+				-- numbers by pair.
+			nb := 4
+			i := nb + l_buffer.count
+			if i > l_buffer.capacity then
+				buffers.extend (l_buffer)
+				create l_buffer.make (max_chunk_size.max (nb))
+				current_buffer := l_buffer
+				i := nb
+			end
+			l_buffer.set_count (i)
+				-- Now write the hexa decimal number in reverse order.
+			from
+				val := v
+					-- Remove the extra `0x' from `nb'
+				nb := nb - 2
+			until
+				nb = 0
+			loop
+				a_digit := (val & 0xF)
+				l_buffer.put (a_digit.to_hex_character, i)
+				val := val |>> 4
+				i := i - 1
+				nb := nb - 1
+			end
+			l_buffer.put ('x', i)
+			l_buffer.put ('0', i - 1)
 		end
 
 	put_hex_natural_16 (v: NATURAL)
@@ -859,7 +904,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -872,22 +917,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

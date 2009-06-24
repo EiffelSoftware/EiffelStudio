@@ -116,7 +116,8 @@ feature -- Query
 		require
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
-			Result := a_tool.generating_type.as_lower.as_attached
+			Result := a_tool.generating_type
+			Result := Result.as_lower.as_attached
 			if Result.substring (1, (3).min (Result.count)).is_equal (once "es_") then
 					-- Remove ES_ prefix
 				Result.keep_tail (Result.count - 3)
@@ -178,11 +179,11 @@ feature -- Query
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

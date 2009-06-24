@@ -445,55 +445,28 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
-			if attached other.assertions as a then
-				assertions := a.twin
-			else
-				assertions := Void
-			end
-			if attached other.debugs as d then
-				debugs := d.twin
-			else
-				debugs := Void
-			end
-			if attached other.description as s then
-				description := s.twin
-			else
-				description := Void
-			end
-			is_attached_by_default := other.is_attached_by_default
-			is_attached_by_default_configured := other.is_attached_by_default_configured
-			is_cat_call_detection := other.is_cat_call_detection
-			is_cat_call_detection_configured := other.is_cat_call_detection_configured
-			is_debug := other.is_debug
-			is_debug_configured := other.is_debug_configured
-			is_full_class_checking := other.is_full_class_checking
-			is_full_class_checking_configured := other.is_full_class_checking_configured
-			is_msil_application_optimize := other.is_msil_application_optimize
-			is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
-			is_optimize := other.is_optimize
-			is_optimize_configured := other.is_optimize_configured
-			is_profile := other.is_profile
-			is_profile_configured := other.is_profile_configured
-			is_trace := other.is_trace
-			is_trace_configured := other.is_trace_configured
-			is_warning := other.is_warning
-			is_warning_configured := other.is_warning_configured
-			if attached other.local_namespace as l then
-				local_namespace := l.twin
-			else
-				local_namespace := Void
-			end
-			if attached other.namespace as n then
-				namespace := n.twin
-			else
-				namespace := Void
-			end
-			void_safety := other.void_safety.twin
-			syntax := other.syntax.twin
-			if attached other.warnings as w then
-				warnings := w.twin
-			else
-				warnings := Void
+			if other /= Current then
+				standard_copy (other)
+				if attached other.assertions as a then
+					assertions := a.twin
+				end
+				if attached other.debugs as d then
+					debugs := d.twin
+				end
+				if attached other.description as s then
+					description := s.twin
+				end
+				if attached other.local_namespace as l then
+					local_namespace := l.twin
+				end
+				if attached other.namespace as n then
+					namespace := n.twin
+				end
+				void_safety := other.void_safety.twin
+				syntax := other.syntax.twin
+				if attached other.warnings as w then
+					warnings := w.twin
+				end
 			end
 		end
 

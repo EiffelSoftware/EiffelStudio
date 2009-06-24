@@ -156,7 +156,10 @@ feature -- Access: Help
 			if (attached last_output as l_output) and then (attached {HELP_CONTEXT_I} l_output.widget_from_window (develop_window) as l_context) then
 				Result := l_context.help_context_id
 			else
-				Result := once "BC9B2EF1-B4C4-773A-9BA8-97143FB2727A"
+					-- FIXME: for now the default help context id is the one for the testing tool, once the
+					--        testing tool has it's own output pane, this can be set to some default value
+					--        (Arno 6/24/2009)
+				Result := once "1d8cc843-238e-feaa-cfa6-629f080ffba7"
 			end
 		end
 

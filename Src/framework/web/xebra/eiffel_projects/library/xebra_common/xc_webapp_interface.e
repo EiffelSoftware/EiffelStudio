@@ -12,8 +12,17 @@ deferred class
 
 feature -- Basic operations
 
+
+	shutdown: XC_COMMAND_RESPONSE
+			-- Shuts down a webapp.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 	handle_http_request (a_request: XH_REQUEST): XC_COMMAND_RESPONSE
-			-- .
+			-- Lets the webapp handle a http request.
 		require
 			a_request_attached: a_request /= Void
 		deferred
@@ -22,7 +31,7 @@ feature -- Basic operations
 		end
 
 	get_sessions: XC_COMMAND_RESPONSE
-			-- .
+			-- Retrieves the number of sessions.
 		deferred
 		ensure
 			result_attached: Result /= Void

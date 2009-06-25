@@ -12,6 +12,13 @@ deferred class
 
 feature -- Webapps
 
+	get_sessions: XC_COMMAND_RESPONSE
+			-- Retrieves the number of sessions of all running webapps.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Sends shutdown signal even if the webapp process is not owned by the server.
 		require

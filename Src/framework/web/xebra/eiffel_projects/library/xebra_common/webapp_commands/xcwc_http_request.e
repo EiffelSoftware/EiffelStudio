@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Lets the webapp handle a http request.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

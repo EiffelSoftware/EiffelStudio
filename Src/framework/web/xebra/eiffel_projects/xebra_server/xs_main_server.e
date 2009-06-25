@@ -198,7 +198,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Launching webapp '" + a_name + "'...")
-				l_w.start_action_chain.do_nothing
+				l_w.send.do_nothing
 				create {XCCR_OK}Result.make
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -266,7 +266,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
 				l_webapp.needs_cleaning := True
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
-				l_webapp.start_action_chain.do_nothing
+				l_webapp.send.do_nothing
 				Result := create {XCCR_OK}.make
 			else
 				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)

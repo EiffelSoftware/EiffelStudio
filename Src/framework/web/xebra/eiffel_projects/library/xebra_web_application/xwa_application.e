@@ -149,11 +149,13 @@ feature -- Other
 			if attached {XCC_SHUTDOWN_SERVER} l then end
 			if attached {XCC_SHUTDOWN_WEBAPP} l then end
 			if attached {XCC_SHUTDOWN_WEBAPPS} l then end
+			if attached {XCC_GET_SESSIONS} l then end
 
 				-- Webapp Commands
 			if attached {XCWC_EMPTY} l then end
 			if attached {XCWC_GET_SESSIONS} l then end
 			if attached {XCWC_HTTP_REQUEST} l then end
+			if attached {XCWC_SHUTDOWN} l then end
 		end
 
 end

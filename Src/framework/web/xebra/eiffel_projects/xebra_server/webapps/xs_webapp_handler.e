@@ -62,7 +62,7 @@ feature  -- Basic Operations
 				if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then
 					--webapp.set_request_message (a_request_message)
 					webapp.set_current_request (create {XCWC_HTTP_REQUEST}.make_with_request (l_request))
-					Result := webapp.start_action_chain
+					Result := webapp.send
 
 				else
 					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_command_response

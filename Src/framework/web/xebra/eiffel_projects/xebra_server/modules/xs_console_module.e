@@ -222,6 +222,7 @@ feature -- Status Report
 				"%N%THost: '" + a_response.webapps.item_for_iteration.app_config.host.out + "'" +
 				"%N%TPort: '" + a_response.webapps.item_for_iteration.app_config.port.out + "'" +
 				"%N%TStatus: '" + a_response.webapps.item_for_iteration.status + "'" +
+				"%N%TSessions: '" + a_response.webapps.item_for_iteration.sessions.out + "'" +
 				"%N%TDisabled: '" + a_response.webapps.item_for_iteration.is_disabled.out + "'" +
 				"%N%TTranslating: '" + a_response.webapps.item_for_iteration.is_translating.out + "'" +
 				"%N%TCompiling: '" + a_response.webapps.item_for_iteration.is_compiling.out + "'" +

@@ -195,10 +195,23 @@ feature -- Managing Titles
 		end
 
 	convert_base_to_screen (a_point: NS_POINT): NS_POINT
+			-- Converts a given point from the window's base coordinate system to the screen coordinate system.
 		do
 			create Result.make
 			{NS_WINDOW_API}.convert_base_to_screen (item, a_point.item, Result.item)
 		end
+
+	convert_base_to_screen_top_left (a_point: NS_POINT): NS_POINT
+			-- Same as convert_base_to_screen but using screen-coordinates with origin at the top left and
+		local
+			l_screen: NS_SCREEN
+		do
+			create Result.make
+			{NS_WINDOW_API}.convert_base_to_screen (item, a_point.item, Result.item)
+			create l_screen.root_screen
+			Result.y := l_screen.frame.size.height - Result.y
+		end
+
 
 	set_alpha_value (a_window_alpha: REAL)
 		do

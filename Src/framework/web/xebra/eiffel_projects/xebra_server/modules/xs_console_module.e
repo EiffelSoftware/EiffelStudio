@@ -35,9 +35,9 @@ feature -- Initialization
 			main_server := a_main_server
 
 			create command_groups.make(1)
-			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Server Control")
-			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Modules")
-			command_groups.force (create {HASH_TABLE [XC_COMMAND, STRING]}.make (1), "Webapps")
+			command_groups.force (create {HASH_TABLE [XC_SERVER_COMMAND, STRING]}.make (1), "Server Control")
+			command_groups.force (create {HASH_TABLE [XC_SERVER_COMMAND, STRING]}.make (1), "Modules")
+			command_groups.force (create {HASH_TABLE [XC_SERVER_COMMAND, STRING]}.make (1), "Webapps")
 
 			command_groups ["Server Control"].force  (create {XCC_SHUTDOWN_SERVER}.make, "exit")
 			command_groups ["Server Control"].force  (create {XCC_LOAD_CONFIG}.make, "reload")
@@ -67,7 +67,7 @@ feature -- Initialization
 
 feature -- Acces
 
-	command_groups: HASH_TABLE [HASH_TABLE [XC_COMMAND, STRING], STRING]
+	command_groups: HASH_TABLE [HASH_TABLE [XC_SERVER_COMMAND, STRING], STRING]
 			-- Groups of commands
 
 
@@ -128,14 +128,11 @@ feature {NONE} -- Operations
 					l_parameter  := ""
 				end
 
-				if  attached {XC_COMMAND} command (l_command) as cmd then
-						if  attached {XS_PARAMETER_COMMAND} cmd as param_cmd then
+				if  attached {XC_SERVER_COMMAND} command (l_command) as cmd then
+						if  attached {XC_PARAMETER_CONTAINER} cmd as param_cmd then
 							param_cmd.set_parameter (l_parameter)
-							l_response := param_cmd.execute (main_server)
-						else
-							l_response := cmd.execute (main_server)
 						end
-
+						l_response := cmd.execute (main_server)
 						if attached {XCC_SHUTDOWN_SERVER} cmd then
 							stop := True
 						end
@@ -170,7 +167,7 @@ feature {NONE} -- Operations
 
 feature -- Status Report
 
-	command (a_name: STRING): detachable XC_COMMAND
+	command (a_name: STRING): detachable XC_SERVER_COMMAND
 			-- Searches all groups for the command
 		require
 			a_name_attached: a_name /= Void
@@ -180,7 +177,7 @@ feature -- Status Report
 			until
 				command_groups.after
 			loop
-				if attached {XC_COMMAND} command_groups.item_for_iteration[a_name] as l_cmd then
+				if attached {XC_SERVER_COMMAND} command_groups.item_for_iteration[a_name] as l_cmd then
 					Result := l_cmd.twin
 				end
 				command_groups.forth
@@ -257,7 +254,7 @@ feature -- Status Report
 		end
 
 
-	print_command_group (a_cmds: HASH_TABLE [XC_COMMAND, STRING]; a_name: STRING): STRING
+	print_command_group (a_cmds: HASH_TABLE [XC_SERVER_COMMAND, STRING]; a_name: STRING): STRING
 			-- Prints all commands of a group
 		local
 			l_par: STRING
@@ -275,9 +272,9 @@ feature -- Status Report
 			until
 				l_sorted_keys.after
 			loop
-				if attached {XC_COMMAND} a_cmds [l_sorted_keys.item_for_iteration] as l_cmd then
+				if attached {XC_SERVER_COMMAND} a_cmds [l_sorted_keys.item_for_iteration] as l_cmd then
 
-					if attached {XS_PARAMETER_COMMAND} l_cmd as p_c then
+					if attached {XC_PARAMETER_CONTAINER} l_cmd as p_c then
 						l_par := " <" + p_c.parameter_description + ">"
 					else
 						l_par := ""
@@ -289,7 +286,7 @@ feature -- Status Report
 
 		end
 
-	count_nice_space_commands (a_cmds: HASH_TABLE [XC_COMMAND, STRING]): INTEGER
+	count_nice_space_commands (a_cmds: HASH_TABLE [XC_SERVER_COMMAND, STRING]): INTEGER
 			-- Counts how many spaces are needed to format nicely
 		local
 			l_current: INTEGER
@@ -301,7 +298,7 @@ feature -- Status Report
 				a_cmds.after
 			loop
 				l_current := a_cmds.key_for_iteration.count + 3
-				if attached {XS_PARAMETER_COMMAND} a_cmds.item_for_iteration as p_c then
+				if attached {XC_PARAMETER_CONTAINER} a_cmds.item_for_iteration as p_c then
 					l_current := l_current +  p_c.parameter_description.count + 4
 				end
 

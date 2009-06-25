@@ -38,7 +38,7 @@ feature -- Status setting
 
 feature -- Operations
 
-	send (a_command: XC_COMMAND): XC_COMMAND_RESPONSE
+	send (a_command: XC_SERVER_COMMAND): XC_COMMAND_RESPONSE
 			-- Sends a command to the server and waits for the response
 		require
 			a_command_attached: a_command /= Void

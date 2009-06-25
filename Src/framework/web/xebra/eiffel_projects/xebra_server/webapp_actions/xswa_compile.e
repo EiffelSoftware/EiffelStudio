@@ -100,7 +100,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XH_RESPONSE
+	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
 			if not is_running then
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 					set_running (True)
 				end
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_response
+			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 feature {NONE} -- Internal Status Setting

@@ -19,6 +19,11 @@
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
+			<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
 			
 		<cluster name="xebra_common" location=".\" recursive="true">
 			<file_rule>

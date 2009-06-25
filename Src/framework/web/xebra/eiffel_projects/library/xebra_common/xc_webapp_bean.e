@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			app_config := a_webapp_config
 			is_disabled := False
 			dev_mode := False
+			sessions := 0
 		ensure
 			config_attached: app_config /= Void
 		end
@@ -43,6 +44,9 @@ feature -- Access
 
 	is_compiling: BOOLEAN assign set_is_compiling
 		-- Is compiling
+
+	sessions: NATURAL assign set_sessions
+		-- How many sessions the webapp is currently serving
 
 	dev_mode: BOOLEAN assign set_dev_mode
 			-- In developing mode all webapps are translated and compiled bevore run by the server
@@ -69,6 +73,14 @@ feature -- Access
 feature -- Status report
 
 feature -- Status setting
+
+	set_sessions (a_sessions: NATURAL)
+			-- Sets sessions
+		do
+			sessions := a_sessions
+		ensure
+			set: equal (sessions, a_sessions)
+		end
 
 	set_is_compiling (a_is_compiling: BOOLEAN)
 			-- Sets is_compiling
@@ -122,6 +134,7 @@ feature -- Basic operations
 			Result.is_running := current.is_running
 			Result.is_translating := current.is_translating
 			Result.dev_mode := current.dev_mode
+			Result.sessions := current.sessions
 		ensure
 			result_attached: Result /= Void
 		end

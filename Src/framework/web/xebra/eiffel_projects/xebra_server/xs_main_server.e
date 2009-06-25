@@ -107,6 +107,25 @@ feature {NONE} -- Operations
 
 feature {XS_SERVER_MODULE} -- Status setting
 
+	get_sessions: XC_COMMAND_RESPONSE
+			-- <Precursor>
+		local
+			l_webapp: XS_WEBAPP
+		do
+			from
+				config.file.webapps.start
+			until
+				config.file.webapps.after
+			loop
+				l_webapp := config.file.webapps.item_for_iteration
+				if l_webapp.is_running then
+					l_webapp.set_current_request (create {XCWC_GET_SESSIONS}.make)
+					l_webapp.send_action.execute.do_nothing
+				end
+				config.file.webapps.forth
+			end
+		end
+
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do

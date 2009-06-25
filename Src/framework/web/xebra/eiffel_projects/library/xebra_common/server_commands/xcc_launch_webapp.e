@@ -1,6 +1,6 @@
 note
 	description: "[
-		Shuts down a webapp.
+		(Re)-Translates, compiles and launches a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,10 +8,14 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_SHUTDOWN_WEBAPP
+	XCC_LAUNCH_WEBAPP
 
 inherit
-	XS_PARAMETER_COMMAND
+	XC_SERVER_COMMAND
+		rename
+			make as make_no_parameter
+		end
+	XC_PARAMETER_CONTAINER
 
 create
 	make
@@ -21,13 +25,13 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Shuts down a webapp."
+			Result := "(Re)-Translates, compiles and launches a webapp."
 		end
 
 	parameter_description: STRING
 			-- <Precursor>
 		do
-			Result := "name"
+			Result := "webapp_name"
 		end
 
 feature -- Status Change
@@ -38,8 +42,7 @@ feature -- Basic operations
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.shutdown_webapp (parameter.value)
+			Result := a_server.launch_webapp (parameter.value)
 		end
 
 end
-

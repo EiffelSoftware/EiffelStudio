@@ -43,6 +43,16 @@ feature -- Status report
 		do
 			create Result.make_empty
 			Result.append (html)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	render_to_command_response: XCCR_HTTP_REQUEST
+			-- Converts current into a response
+		do
+			create Result.make (render_to_response)
+		ensure
+			result_attached: Result /= Void
 		end
 
 

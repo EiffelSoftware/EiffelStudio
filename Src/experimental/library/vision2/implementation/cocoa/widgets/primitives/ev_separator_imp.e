@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 		local
 			box: NS_BOX
 		do
+			create box.make
+			cocoa_item := box
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
-			create {NS_BOX}cocoa_item.make
-			box ?= cocoa_item
 			box.set_box_type ({NS_BOX}.box_separator)
 			set_is_initialized (True)
 		end
@@ -43,7 +43,7 @@ feature -- Layout handling
 			internal_set_minimum_size (1, 1) -- Hardcoded value
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SEPARATOR note option: stable attribute end;
 

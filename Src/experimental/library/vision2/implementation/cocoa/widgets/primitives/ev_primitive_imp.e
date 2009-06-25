@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision primitive, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	keywords: "primitive, base, widget"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,8 +37,6 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_PRIMITIVE note option: stable attribute end;
-
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
@@ -49,7 +46,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Element change
 
-	top_level_window_imp: EV_WINDOW_IMP
+	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
 	set_parent (par: EV_CONTAINER)
@@ -57,9 +54,9 @@ feature -- Element change
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: detachable EV_CONTAINER_IMP
 		do
-			if par /= Void then
+			if attached par then
 				par_imp ?= par.implementation
 				check
 					valid_cast: par_imp /= Void
@@ -68,7 +65,7 @@ feature -- Element change
 			end
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -179,6 +176,8 @@ feature -- Status report
 			is_tabable_from := False
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_PRIMITIVE note option: stable attribute end;
+
 end -- class EV_PRIMITIVE_IMP

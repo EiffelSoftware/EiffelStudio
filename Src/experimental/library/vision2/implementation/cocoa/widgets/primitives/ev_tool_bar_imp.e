@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision2 toolbar, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,17 +45,19 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create {NS_BOX}cocoa_item.make
+			initialize_item_list
+			create radio_group.make
+
+			create box.make
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_content_view_margins (0, 0)
+			cocoa_item := box
 
-			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			has_vertical_button_style := True
 
-			create radio_group.make
 			new_item_actions.extend (agent add_radio_button)
 			remove_item_actions.extend (agent remove_radio_button)
 		end
@@ -107,9 +108,10 @@ feature -- Access
 
 	insert_item (v: EV_ITEM_IMP; i: INTEGER_32)
 		local
-			l_view: NS_VIEW
+			l_view: detachable NS_VIEW
 		do
 			l_view ?= v.cocoa_item
+			check l_view /= void end
 			box.add_subview (l_view)
 			notify_change (nc_minsize, Current)
 		end
@@ -156,7 +158,7 @@ feature -- Implementation
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32; repaint: BOOLEAN)
 			-- Precursor		
 		local
-			litem: EV_NS_VIEW
+			litem: detachable EV_NS_VIEW
 			x: INTEGER
 			item_width, item_height: INTEGER
 		do
@@ -169,6 +171,7 @@ feature -- Implementation
 				ev_children.after
 			loop
 				litem ?= ev_children.item
+				check litem /= Void end
 				item_width := litem.minimum_width
 				litem.cocoa_set_size (x, 0, item_width, item_height)
 				x := x + item_width
@@ -204,9 +207,10 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		require
 			other_not_void: other /= Void
 		local
-			t_imp: EV_TOOL_BAR_IMP
+			t_imp: detachable EV_TOOL_BAR_IMP
 		do
 			t_imp ?= other.implementation
+			check t_imp /= Void end
 			Result := t_imp.radio_group = radio_group
 		end
 
@@ -222,7 +226,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -239,7 +243,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			button_imp: EV_TOOL_BAR_BUTTON_IMP -- was: EV_TOOL_BAR_ITEM_IMP
+			button_imp: detachable EV_TOOL_BAR_BUTTON_IMP -- was: EV_TOOL_BAR_ITEM_IMP
 		do
 			button_imp ?= w.implementation
 			check
@@ -256,7 +260,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			w_not_void: w /= Void
 			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
@@ -267,14 +271,10 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Interface
 
+	box: NS_BOX
+
+feature {EV_ANY, EV_ANY_I} -- Interface
+
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
-	box: NS_BOX
-		do
-			Result ?= cocoa_item
-		end
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_IMP
-

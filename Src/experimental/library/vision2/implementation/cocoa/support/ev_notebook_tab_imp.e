@@ -98,8 +98,10 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
-
 	tab_view_item: NS_TAB_VIEW_ITEM
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 end -- class EV_NOTEBOOK_TAB_IMP

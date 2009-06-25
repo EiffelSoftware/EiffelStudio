@@ -1,6 +1,6 @@
 note
-	description:
-		"EiffelVision horizontal box. Cocoa implementation."
+	description: "EiffelVision horizontal box. Cocoa implementation."
+	author: "Daniel Furrer"
 
 class
 	EV_HORIZONTAL_BOX_IMP
@@ -272,11 +272,8 @@ feature {NONE} -- Implementation for automatic size compute
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_BOX_IMP
-

@@ -29,7 +29,7 @@ feature -- Access
 			if attached ev_children then
 				l_item ?= ev_children.i_th (i)
 				check l_item /= Void end
-				Result ?= l_item.interface
+				Result ?= l_item.attached_interface
 			end
 		end
 

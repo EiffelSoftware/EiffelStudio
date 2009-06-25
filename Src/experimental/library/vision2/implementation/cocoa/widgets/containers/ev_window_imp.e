@@ -18,7 +18,7 @@ inherit
 			copy
 		end
 
-	EV_CONTAINER_IMP
+	EV_SINGLE_CHILD_CONTAINER_IMP
 		undefine
 			x_position,
 			y_position,
@@ -45,7 +45,8 @@ inherit
 			set_top_level_window_imp,
 			ev_apply_new_size,
 			cocoa_set_size,
-			dispose
+			dispose,
+			replace
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -149,10 +150,10 @@ feature -- Delegate
 				bar_imp.ev_apply_new_size (0, 0, client_width, client_y, True)
 			end
 
-			if item /= Void then
+			if attached item_imp as l_item_imp then
 --				item_imp.set_move_and_size (0, 0,
 --					client_width, client_height)
-				item_imp.ev_apply_new_size (0, client_y, client_width, client_height, True)
+				l_item_imp.ev_apply_new_size (0, client_y, client_width, client_height, True)
 			end
 
 			if not lower_bar.is_empty then
@@ -327,7 +328,7 @@ feature -- Measurement
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
 			if a_minimum_width > width then
 				set_width (a_minimum_width)
 			end
@@ -340,7 +341,7 @@ feature -- Measurement
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			Precursor {EV_CONTAINER_IMP} (a_minimum_height)
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_minimum_height)
 			if minimum_height > height then
 				set_height (minimum_height)
 			end
@@ -350,7 +351,7 @@ feature -- Measurement
 	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			Precursor {EV_CONTAINER_IMP} (a_minimum_width)
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_minimum_width)
 			if minimum_width > width then
 				set_width (minimum_width)
 			end
@@ -457,7 +458,7 @@ feature -- Widget relations
 			Result := Current
 		end
 
-	set_top_level_window_imp (a_window: detachable EV_TITLED_WINDOW_IMP)
+	set_top_level_window_imp (a_window: detachable EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -479,9 +480,6 @@ feature  -- Access
 			-- Does `Current' have the keyboard focus?
 		do
 		end
-
-	item: EV_WIDGET
-			-- Current item.
 
 	count: INTEGER_32
 			-- Number of elements in `Current'.	
@@ -601,18 +599,16 @@ feature -- Status setting
 	title: STRING_32
 			-- <Precursor>-
 		do
-			if internal_title = void then
-				create Result.make_empty
+			if attached internal_title as l_title then
+				Result := l_title.twin
 			else
-				Result := internal_title.twin
+				create Result.make_empty
 			end
 		end
 
-	internal_title: STRING_32
+	internal_title: detachable STRING_32
 
 feature -- Element change
-
-	on_attach: ACTION_SEQUENCE [TUPLE]
 
 	replace (v: like item)
 			-- Replace `item' with `v'.
@@ -620,8 +616,9 @@ feature -- Element change
 			v_imp: detachable EV_WIDGET_IMP
 		do
 			-- Remove current item, if any
-			if item /= Void then
-				v_imp ?= item.implementation
+			if attached item as l_item then
+				remove_item_actions.call ([l_item])
+				v_imp ?= l_item.implementation
 				check
 					item_has_implementation: v_imp /= Void
 				end
@@ -629,8 +626,8 @@ feature -- Element change
 				notify_change (Nc_minsize, Current)
 			end
 			-- Insert new item, if any
-			if v /= Void then
-				v_imp ?= v.implementation
+			if attached v as l_v then
+				v_imp ?= l_v.implementation
 				check
 					v_has_implementation: v_imp /= Void
 				end
@@ -680,12 +677,12 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			disable_capture
 			hide
-			Precursor {EV_CONTAINER_IMP}
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 		end
 
 	dispose
 		do
-			Precursor {EV_CONTAINER_IMP}
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 			Precursor {NS_WINDOW}
 		end
 
@@ -711,9 +708,11 @@ feature {EV_INTERMEDIARY_ROUTINES}
 
 feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 
+	window: NS_WINDOW;
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_WINDOW note option: stable attribute end;
 		-- Interface object of `Current'
-
-	window: NS_WINDOW;
 
 end -- class EV_WINDOW_IMP

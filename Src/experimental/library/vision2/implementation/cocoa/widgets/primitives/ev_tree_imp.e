@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision Tree, Cocoa implementation"
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -103,14 +102,14 @@ feature -- Delegate
 			-- The selection of the NSOutlineView changed
 		do
 			select_actions.call ([])
-			if selected_item /= Void then
-				selected_item.select_actions.call([])
+			if attached selected_item as item then
+				item.select_actions.call([])
 			end
 		end
 
 feature -- DataSource
 
-	number_of_children_of_item (a_node: EV_TREE_NODE): INTEGER
+	number_of_children_of_item (a_node: detachable EV_TREE_NODE): INTEGER
 		do
 			if a_node = void then
 				Result := count
@@ -119,7 +118,7 @@ feature -- DataSource
 			end
 		end
 
-	is_item_expandable (a_node: EV_TREE_NODE): BOOLEAN
+	is_item_expandable (a_node: detachable EV_TREE_NODE): BOOLEAN
 		do
 			if a_node = void then
 				Result := count > 0
@@ -128,10 +127,14 @@ feature -- DataSource
 			end
 		end
 
-	child_of_item (an_index: INTEGER; a_node: EV_TREE_NODE): EV_TREE_NODE
+	child_of_item (an_index: INTEGER; a_node: detachable EV_TREE_NODE): EV_TREE_NODE
+		local
+			l_result: detachable EV_TREE_NODE
 		do
 			if a_node = void then
-				Result := i_th (an_index + 1)
+				l_result := i_th (an_index + 1)
+				check l_result /= Void end
+				Result ?= l_result
 			else
 				Result := a_node.i_th (an_index + 1)
 			end
@@ -144,7 +147,7 @@ feature -- DataSource
 
 feature -- Status report
 
-	selected_item: EV_TREE_NODE
+	selected_item: detachable EV_TREE_NODE
 			-- Item which is currently selected
 		do
 			Result ?= outline_view.item_at_row (outline_view.selected_row)
@@ -210,16 +213,9 @@ feature -- Implementation
 		do
 		end
 
-feature {EV_TREE_NODE_IMP}
-
-	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP
-			-- Returns the row index at relative coordinate `a_y'.
-		do
-		end
-
 feature {NONE} -- Implementation
 
-	previous_selected_item: EV_TREE_NODE
+	previous_selected_item: detachable EV_TREE_NODE
 			-- Item that was selected previously.
 
 	insert_item (item_imp: EV_TREE_NODE_IMP; an_index: INTEGER)
@@ -238,16 +234,6 @@ feature {NONE} -- Implementation
 
 
 feature {EV_TREE_NODE_IMP} -- Implementation
-
-	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING_32
-			-- Retrieve cell text from `a_tree_node_imp`
-		do
-		end
-
-	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING_GENERAL)
-			-- Set cell text at to `a_text'.
-		do
-		end
 
 	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP)
 			-- Set the pixmap for `a_tree_node_imp'.
@@ -271,17 +257,14 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: detachable EV_TREE note option: stable attribute end;
-
 feature {EV_ANY_I, EV_TREE_NODE_IMP} -- Implementation
 
 	scroll_view: NS_SCROLL_VIEW
 
 	outline_view: NS_OUTLINE_VIEW;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-end -- class EV_TREE_IMP
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
+	interface: detachable EV_TREE note option: stable attribute end;
+
+end -- class EV_TREE_IMP

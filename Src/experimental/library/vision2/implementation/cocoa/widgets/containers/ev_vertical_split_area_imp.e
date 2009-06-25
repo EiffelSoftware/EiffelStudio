@@ -1,8 +1,6 @@
 note
-	description:
-		"Eiffel Vision Split Area, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Eiffel Vision Split Area, Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -149,13 +147,10 @@ feature -- access
 			split_view.adjust_subviews
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_VERTICAL_SPLIT_AREA_IMP
-

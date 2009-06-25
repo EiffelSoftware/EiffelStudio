@@ -107,7 +107,7 @@ feature -- Basic operation
 			-- Process Cocoa events
 		local
 			event: detachable NS_EVENT
-			view: NS_VIEW
+			view: detachable NS_VIEW
 			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
@@ -133,9 +133,9 @@ feature -- Basic operation
 						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
 						pointer_button_action.x := point.x
 						pointer_button_action.y := point.y
-						point := event.window.convert_base_to_screen (event.location_in_window)
+						point := event.window.convert_base_to_screen_top_left (event.location_in_window)
 						pointer_button_action.screen_x := point.x
-						pointer_button_action.screen_y := event.window.screen.frame.size.height - point.y
+						pointer_button_action.screen_y := point.y
 						pointer_button_action.button :=	event.button_number + 1
 						if event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
 							widget.pointer_button_release_actions.call (pointer_button_action)
@@ -152,7 +152,7 @@ feature -- Basic operation
 						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
 						pointer_motion_action.x := point.x
 						pointer_motion_action.y := point.y
---						point := event.window.convert_base_to_screen (event.location_in_window)
+--						point := event.window.convert_base_to_screen_top_left (event.location_in_window)
 --						pointer_button_action.screen_x := point.x
 --						pointer_button_action.screen_y := point.y
 						widget.pointer_motion_actions.call (pointer_motion_action)

@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			v_imp.cocoa_view.remove_from_superview
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 			-- Provides a common user interface to platform dependent

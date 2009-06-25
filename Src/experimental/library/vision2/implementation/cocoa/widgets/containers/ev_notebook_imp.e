@@ -226,7 +226,7 @@ feature {EV_NOTEBOOK} -- Status setting
 	select_item (an_item: like item)
 			-- Display `an_item' above all others.
 		local
-			w_imp, an_item_imp: detachable EV_WIDGET_IMP
+			an_item_imp: detachable EV_WIDGET_IMP
 			item_index : INTEGER
 		do
 			an_item_imp ?= an_item.implementation

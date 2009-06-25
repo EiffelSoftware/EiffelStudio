@@ -1,8 +1,6 @@
 note
-	description:
-		"EiffelVision vertical box. Puts child widgets in a column. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision vertical box. Puts child widgets in a column. Cocoa implementation."
+	author:	"Daniel Furrer"
 	keywords: "container, box, vertical"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -285,11 +283,8 @@ feature {NONE} -- Implementation for automatic size compute
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_VERTICAL_BOX_IMP
-

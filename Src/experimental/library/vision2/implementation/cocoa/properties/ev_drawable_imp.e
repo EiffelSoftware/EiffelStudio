@@ -74,8 +74,8 @@ feature -- Access
 	font: EV_FONT
 			-- Font used for drawing text.
 		do
-			if attached internal_font_imp then
-				Result := internal_font_imp.interface.twin
+			if attached internal_font_imp as l_font then
+				Result := l_font.attached_interface.twin
 			else
 				create Result
 			end
@@ -84,14 +84,22 @@ feature -- Access
 	foreground_color_internal: EV_COLOR
 			-- Color used to draw primitives.
 		do
-			Result := internal_foreground_color
+			if attached internal_foreground_color then
+				Result := internal_foreground_color.twin
+			else
+				create Result
+			end
 		end
 
 	background_color_internal: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 		do
-			Result := internal_background_color
+			if attached internal_background_color then
+				Result := internal_background_color.twin
+			else
+				create Result
+			end
 		end
 
 	line_width: INTEGER
@@ -507,7 +515,7 @@ feature {NONE} -- Implementation
 	prepare_drawing
 		local
 			l_color: EV_COLOR_IMP
-			trans: NS_AFFINE_TRANSFORM
+--			trans: NS_AFFINE_TRANSFORM
 		do
 			image.lock_focus
 --			create trans.make
@@ -522,10 +530,10 @@ feature {NONE} -- Implementation
 
 	internal_dashed_line_style: BOOLEAN
 
-	internal_foreground_color: EV_COLOR
+	internal_foreground_color: detachable EV_COLOR
 			-- Color used to draw primitives.
 
-	internal_background_color: EV_COLOR
+	internal_background_color: detachable EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 
@@ -539,7 +547,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	internal_font_imp: EV_FONT_IMP
+	internal_font_imp: detachable EV_FONT_IMP
 
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 

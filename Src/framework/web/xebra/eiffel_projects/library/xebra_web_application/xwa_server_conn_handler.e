@@ -150,18 +150,17 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
+			Result := create {XCCR_GET_SESSIONS}.make (session_manager.sessions.count.as_natural_32)
 		end
 
 feature -- Basic Operations
 
 	shutdown: XC_COMMAND_RESPONSE
-			-- Stops the thread and closes connections
+			-- <Precursor>
 		do
 			o.dprint ("Shutting down...", 1)
 			stop := True
 			Result := create {XCCR_OK}.make
-		ensure
-			stopping: stop = True
 		end
 
 

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Empty command that does nothing.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

@@ -18,7 +18,6 @@ create
 
 feature -- Constants
 
-	Shutdown_message: STRING = "#KAMIKAZE#"
 
 feature -- Status report
 
@@ -40,24 +39,11 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
-			-- <Precursor>
-		local
-			l_webapp_socket: NETWORK_STREAM_SOCKET
+			-- <Precursor>		
 		do
-			create l_webapp_socket.make_client_by_port (webapp.app_config.port, webapp.app_config.host.out)
-			o.dprint ("Shutdown connect to " + webapp.app_config.name.out + "@" + webapp.app_config.port.out, 4)
-			l_webapp_socket.connect
-            if  l_webapp_socket.is_connected then
-				o.dprint ("Sending shutdown signal", 2)
-				l_webapp_socket.put_natural (0)
-	            l_webapp_socket.independent_store (Shutdown_message)
-	            l_webapp_socket.cleanup
-	        else
-	         	o.eprint ("Cannot shutdown connect to '" + webapp.app_config.name.out + "'", generating_type)
-			end
-			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_command_response
-			rescue
-				o.eprint ("Exception while sending shutdown signal.", generating_type)
+			o.dprint ("Sending shutdown command to '" + webapp.app_config.name.out + "'...", 4)
+			webapp.current_request := create {XCWC_SHUTDOWN}.make
+			Result := next_action.execute
 		end
 
 

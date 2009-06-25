@@ -1,6 +1,6 @@
 note
 	description: "[
-		Retrieves the number of sessions.
+		Shuts down a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,8 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCWC_GET_SESSIONS
-
+	XCWC_SHUTDOWN
 inherit
 	XC_WEBAPP_COMMAND
 
@@ -21,7 +20,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Retrieves the number of sessions of a webapp."
+			Result := "Shuts down a webapp."
 		end
 
 feature -- Basic operations
@@ -29,8 +28,7 @@ feature -- Basic operations
 	execute (a_webapp: XC_WEBAPP_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_webapp.get_sessions
+			Result := a_webapp.shutdown
 		end
-
 end
 

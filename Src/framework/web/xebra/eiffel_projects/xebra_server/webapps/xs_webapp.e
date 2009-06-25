@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 			compile_action.set_next_action (run_action)
 			run_action.set_next_action (send_action)
 
+			shutdown_action.set_next_action (send_action)
+
 			needs_cleaning := False
 
 			dev_mode := True
@@ -83,8 +85,8 @@ feature -- Constans
 
 feature -- Actions
 
-	start_action_chain: XC_COMMAND_RESPONSE
-			-- Executes the appropriate action in the chain		
+	send: XC_COMMAND_RESPONSE
+			-- Executes the the actions chain 		
 		do
 			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
@@ -103,6 +105,7 @@ feature -- Actions
 		ensure
 			Result_attached: Result /= Void
 		end
+
 
 feature -- Status Setting
 

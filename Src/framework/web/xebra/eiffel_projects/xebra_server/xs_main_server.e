@@ -118,11 +118,17 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.webapps.after
 			loop
 				l_webapp := config.file.webapps.item_for_iteration
+
+					-- until multihreading is implemented in webapps this hack has to be here to prevent deadlock
+				if not l_webapp.app_config.name.value.is_equal ("servercontrol") then
+					--
+
 				if l_webapp.get_sessions then
 					create {XCCR_OK}Result.make
 				else
 					--todo: error
 					create {XCCR_OK}Result.make
+				end
 				end
 				config.file.webapps.forth
 			end
@@ -225,6 +231,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 		local
 			l_response: XCCR_GET_WEBAPPS
 		do
+			if attached {XCCR_OK} get_sessions then
+			end
+
 			create l_response.make
 			if attached {HASH_TABLE [XS_WEBAPP, STRING]}config.file.webapps as l_webapps then
 				from

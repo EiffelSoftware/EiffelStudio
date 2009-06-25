@@ -63,7 +63,10 @@ feature {NONE} -- Implementation
 		        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_command_response
 		        end
 		     end
+		    rescue
+		    	o.eprint ("Exception while sending command to webapp", generating_type)
 		end
+
 end
 
 

@@ -57,7 +57,8 @@
 		<th>Port</th>
 		<th>Interactive</th>
 		<th>Status </th>
-		<th> Disabled</th>
+		<th>Sessions </th>
+		<th>Disabled</th>
 		<th>Running</th>
 		<th>Translating</th>
 		<th>Compiling</th>		
@@ -72,6 +73,7 @@
 			<td><xeb:display feature="#{webapp.app_config.port.value.out}" /></td>
 			<td><xeb:display feature="#{webapp.app_config.is_interactive.value.out}" /></td>
 			<td><xeb:display feature="#{webapp.status}" /></td>
+			<td><xeb:display feature="#{webapp.sessions.out}" /></td>
 			<td><xeb:display feature="#{webapp.is_disabled.out}" /> (<f:command_link label="on" action="disable_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="off" action="enable_webapp" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display feature="#{webapp.is_running.out}" /> (<f:command_link label="stop" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="restart" action="relaunch_webapp" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display feature="#{webapp.is_translating.out}" /> (<f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>

@@ -36,7 +36,7 @@ feature -- Implementation
 
 			if parse_result.success then
 				create Result.make (parse_result.left_to_parse, True)
-				Result.append_results (parse_result.internal_result)
+				Result.append_results (parse_result)
 				Result := build_result (Result)
 			else
 				create Result.make (a_string, False)

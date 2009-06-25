@@ -32,7 +32,7 @@ feature -- Implementation
 				l_i > children.count or not l_parse_result.success
 			loop
 				l_parse_result := children [l_i].parse (l_parse_result.left_to_parse)
-				Result.append_results (l_parse_result.internal_result)
+				Result.append_results (l_parse_result)
 				Result.left_to_parse := l_parse_result.left_to_parse
 				l_i := l_i + 1
 			end

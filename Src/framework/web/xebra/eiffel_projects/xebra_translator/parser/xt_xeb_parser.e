@@ -168,6 +168,7 @@ feature {NONE} -- Implementation
 
 				-- XML tree
 			xml := xml | namespace_leaf_xml | leaf_xml | namespace_xml | composite_xml | plain_text
+			xml.set_behaviour (agent go_through)
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
 			plain_text_without_behaviour := +((open + any_char).negate + any_char)
@@ -183,6 +184,12 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Parser error strategies
+
+	go_through (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+		do
+			print ("%Ne:" + a_result.error_messages.count.out + " " + a_result.out)
+			Result := a_result
+		end
 
 	handle_close_error (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Fixes the missing '>' by assuming it is there
@@ -317,7 +324,7 @@ feature -- Parser Behaviours
 							Result.put_error_message ("Unknown tag for taglib: " + l_namespace + ":" + l_id)
 						end
 					else
-						Result.put_error_message ("Unknown tag_lib: " + l_namespace)
+						Result.put_error_message ("Unknown taglib: " + l_namespace)
 					end
 				end
 			end
@@ -462,6 +469,8 @@ feature -- Parser Behaviours
 		end
 
 	concatenate_results (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+		require
+			a_result_attached: attached a_result
 		local
 			l_product: STRING
 		do
@@ -476,6 +485,8 @@ feature -- Parser Behaviours
 			end
 			Result := a_result
 			Result.replace_result (l_product)
+		ensure
+			Result_attached: attached Result
 		end
 
 feature {NONE} -- Convenience
@@ -571,7 +582,7 @@ feature -- Basic Functionality
 		do
 			create template.make_empty
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
-			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result [1] as l_root_tag then
+			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result.first as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
 					add_parse_error ("Parsing was not complete: %"" + l_result.left_to_parse.out + "%"")
 				else
@@ -579,7 +590,6 @@ feature -- Basic Functionality
 					Result := True
 				end
 			else
-
 				add_parse_error ("Parsing was not successfull! Error location: " +
 					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 			end
@@ -591,6 +601,8 @@ feature -- Basic Functionality
 				add_parse_error (l_result.error_messages.index.out + ": " + l_result.error_messages.item)
 				l_result.error_messages.forth
 			end
+		ensure
+			template_generated: Result implies template /= Void
 		end
 
 end

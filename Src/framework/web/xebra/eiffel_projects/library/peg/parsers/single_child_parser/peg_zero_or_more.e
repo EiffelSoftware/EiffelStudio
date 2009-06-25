@@ -29,7 +29,7 @@ feature -- Implementation
 				temp := child.parse (temp.left_to_parse)
 				if (temp.success) then
 					Result.left_to_parse := temp.left_to_parse
-					Result.append_results (temp.internal_result)
+					Result.append_results (temp)
 				end
 			end
 			Result := build_result (Result)

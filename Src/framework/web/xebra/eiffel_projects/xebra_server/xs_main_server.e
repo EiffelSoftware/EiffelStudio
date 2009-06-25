@@ -118,12 +118,15 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.webapps.after
 			loop
 				l_webapp := config.file.webapps.item_for_iteration
-				if l_webapp.is_running then
-					l_webapp.set_current_request (create {XCWC_GET_SESSIONS}.make)
-					l_webapp.send_action.execute.do_nothing
+				if l_webapp.get_sessions then
+					create {XCCR_OK}Result.make
+				else
+					--todo: error
+					create {XCCR_OK}Result.make
 				end
 				config.file.webapps.forth
 			end
+
 		end
 
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
@@ -198,7 +201,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Launching webapp '" + a_name + "'...")
-				l_w.send.do_nothing
+				l_w.send (create {XCWC_EMPTY}.make).do_nothing
 				create {XCCR_OK}Result.make
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -266,7 +269,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
 				l_webapp.needs_cleaning := True
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
-				l_webapp.send.do_nothing
+				l_webapp.send (create {XCWC_EMPTY}.make).do_nothing
 				Result := create {XCCR_OK}.make
 			else
 				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)

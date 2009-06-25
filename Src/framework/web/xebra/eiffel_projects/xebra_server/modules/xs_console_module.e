@@ -58,6 +58,8 @@ feature -- Initialization
 			command_groups ["Webapps"].force (create {XCC_DEV_OFF_GLOBAL}.make, "dev_off_all")
 			command_groups ["Webapps"].force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
 			command_groups ["Webapps"].force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
+			command_groups ["Webapps"].force (create {XCC_GET_SESSIONS}.make, "get_sessions")
+
 			-- help command is hardcoded
         ensure
         	main_server_set: equal (a_main_server, main_server)

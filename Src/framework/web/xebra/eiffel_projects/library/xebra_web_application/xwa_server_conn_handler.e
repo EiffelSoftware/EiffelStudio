@@ -143,13 +143,14 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
 		do
+			o.dprint ("Handling http request...", 4)
 			create l_request_handler.make
 			create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, a_request, Current))
 		end
 
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
-		do
+		do	o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", 4)
 			Result := create {XCCR_GET_SESSIONS}.make (session_manager.sessions.count.as_natural_32)
 		end
 

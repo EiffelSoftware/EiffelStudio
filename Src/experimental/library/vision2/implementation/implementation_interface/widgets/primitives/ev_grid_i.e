@@ -3207,9 +3207,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_index > l_row_count
 				loop
 					current_item := l_rows.i_th (row_index)
-					l_row_offsets.go_i_th (row_index - 1)
-					l_row_indexes_to_visible_indexes.go_i_th (row_index - 1)
-					l_visible_indexes_to_row_indexes.go_i_th (visible_count)
 					if current_item /= Void and then ((current_item.subrow_count > 0 and not current_item.is_expanded) or not current_item.is_show_requested) then
 						from
 							j := row_index
@@ -3217,18 +3214,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						until
 							j = k
 						loop
-							l_row_offsets.put_right (current_row_offset)
+							l_row_offsets.put_i_th (current_row_offset, j)
 							j := j + 1
 						end
 						if current_item.is_show_requested then
-							l_row_indexes_to_visible_indexes.put_right (visible_count)
-							l_visible_indexes_to_row_indexes.put_right (row_index)
+							l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+							l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						end
 						row_index := k
 					else
-						l_row_offsets.put_right (current_row_offset)
-						l_row_indexes_to_visible_indexes.put_right (visible_count)
-						l_visible_indexes_to_row_indexes.put_right (row_index)
+						l_row_offsets.put_i_th (current_row_offset, row_index)
+						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						row_index := row_index + 1
 					end
 					if current_item = Void or else current_item.is_show_requested then
@@ -3249,8 +3246,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 					-- A final position is always stored in `row_offsets' which may be
 					-- queried to determine the total height of all rows.
-				l_row_offsets.go_i_th (row_index - 1)
-				l_row_offsets.put_right (current_row_offset)
+				l_row_offsets.put_i_th (current_row_offset, row_index)
 			else
 				row_offsets := Void
 			end

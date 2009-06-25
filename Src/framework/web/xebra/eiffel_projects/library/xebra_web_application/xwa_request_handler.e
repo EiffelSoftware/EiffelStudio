@@ -26,27 +26,21 @@ feature -- Access
 
 feature -- Processing
 
-	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request_message: STRING; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XH_RESPONSE
+	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XH_RESPONSE
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		require
 			a_session_manager_attached: a_session_manager /= Void
-			not_a_request_message_is_detached_or_empty: a_request_message /= Void and then not a_request_message.is_empty
+			not_a_request_detached: a_request /= Void
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		local
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
 			l_request_factory: XH_REQUEST_FACTORY
-
-
 		do
-			create l_request_factory.make
-			l_new_request := l_request_factory.get_request (a_request_message)
-
-
 			from
-
+				l_new_request := a_request.twin
 			until
 				l_new_request = Void
 			loop

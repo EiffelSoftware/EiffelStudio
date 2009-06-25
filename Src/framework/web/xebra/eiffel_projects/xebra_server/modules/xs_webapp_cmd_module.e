@@ -77,7 +77,7 @@ feature -- Inherited Features
 			            if attached {NETWORK_STREAM_SOCKET} l_cmd_socket.accepted as thread_cmd_socket then
 	 					 	o.dprint ("Command connection to Webapp accepted",2)
 	 					 	thread_cmd_socket.read_natural
-				            if attached {XC_COMMAND} thread_cmd_socket.retrieved as l_command then
+				            if attached {XC_SERVER_COMMAND} thread_cmd_socket.retrieved as l_command then
 				            	o.dprint ("Command retreived...",2)
 								l_command_response := l_command.execute (main_server)
 				 	       	else

@@ -29,7 +29,7 @@
 <div class="column nav">
 <h2>Navigation</h2>
 	<ul>
-        <li><a href="home.xeb">Home</a></li>
+        <li><a href="index.xeb">Home</a></li>
         <li><a href="reservations.xeb">Reservations</a></li>
         <li><a href="contact.xeb">Contact</a></li>
      </ul>

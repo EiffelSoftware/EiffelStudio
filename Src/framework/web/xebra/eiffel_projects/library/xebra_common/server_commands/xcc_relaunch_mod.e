@@ -1,6 +1,6 @@
 note
 	description: "[
-		Sends shutdown signal even if the webapp process is not owned by the server.
+		Re-launches a server module.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,10 +8,14 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_FIREOFF_WEBAPP
+	XCC_RELAUNCH_MOD
 
 inherit
-	XS_PARAMETER_COMMAND
+	XC_SERVER_COMMAND
+		rename
+			make as make_no_parameter
+		end
+	XC_PARAMETER_CONTAINER
 
 create
 	make
@@ -21,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sends shutdown signal even if the webapp process is not owned by the server."
+			Result := "Re-launches a server module."
 		end
 
 	parameter_description: STRING
@@ -30,15 +34,13 @@ feature -- Access
 			Result := "name"
 		end
 
-feature -- Status Change
-
 
 feature -- Basic operations
 
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.fire_off_webapp (parameter.value)
+			Result := a_server.relaunch_module (parameter.value)
 		end
 
 end

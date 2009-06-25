@@ -1,6 +1,6 @@
 note
 	description: "[
-		Sets dev_mod to on on all webapps.
+		no comment yet
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_DEV_ON_GLOBAL
+	XCWC_EMPTY
 
 inherit
-	XC_COMMAND
+	XC_WEBAPP_COMMAND
 
 create
 	make
@@ -21,14 +21,14 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sets dev_mod to on on all webapps."
+			Result := "Does nothing"
 		end
 
 feature -- Basic operations
 
-	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
+	execute (a_webapp: XC_WEBAPP_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.dev_mode_on_global
+			Result := create {XCCR_OK}.make
 		end
 end

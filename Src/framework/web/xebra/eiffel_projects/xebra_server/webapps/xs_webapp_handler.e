@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 	make
 				-- Initialization for `Current'.
 		do
-
 		end
 
 feature -- Constants
@@ -44,17 +43,16 @@ feature -- Status Change
 			end
 		end
 
-feature  -- Implementation
+feature  -- Basic Operations
 
-
-	request_message_to_response (a_request_message: STRING): XH_RESPONSE
+	request_message_to_response (a_request_message: STRING): XC_COMMAND_RESPONSE
 			-- Does the stuff. I don't bother writing much here, it's going to change tomorrow anyway....
 		local
 			l_response: XH_RESPONSE
 			l_request_factory: XH_REQUEST_FACTORY
 			l_uri_webapp_name: STRING
 		do
-			create Result.make_empty
+
 
 			create l_request_factory.make
 	        if attached {XH_REQUEST} l_request_factory.get_request (a_request_message) as l_request then
@@ -62,15 +60,15 @@ feature  -- Implementation
 				l_uri_webapp_name.remove_tail (1)
 
 				if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then
-					webapp.set_request_message (a_request_message)
+					--webapp.set_request_message (a_request_message)
+					webapp.set_current_request (create {XCWC_HTTP_REQUEST}.make_with_request (l_request))
 					Result := webapp.start_action_chain
 
 				else
-					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_response
+					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_command_response
 				end
             else
-            	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_response
+            	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_command_response
             end
 		end
-
 end

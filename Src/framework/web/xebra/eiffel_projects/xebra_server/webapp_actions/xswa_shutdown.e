@@ -39,7 +39,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XH_RESPONSE
+	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_webapp_socket: NETWORK_STREAM_SOCKET
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 	        else
 	         	o.eprint ("Cannot shutdown connect to '" + webapp.app_config.name.out + "'", generating_type)
 			end
-			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_response
+			Result := (create {XER_GENERAL}.make("Shutting down")).render_to_command_response
 			rescue
 				o.eprint ("Exception while sending shutdown signal.", generating_type)
 		end

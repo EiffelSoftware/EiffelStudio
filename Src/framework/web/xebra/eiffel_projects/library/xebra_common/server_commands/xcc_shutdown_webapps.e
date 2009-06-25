@@ -1,17 +1,16 @@
 note
 	description: "[
-		Rerieves a list of module beans from the server.
+		Shuts down all webapps.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
-	XCC_GET_MODULES
+	XCC_SHUTDOWN_WEBAPPS
 
 inherit
-	XC_COMMAND
+	XC_SERVER_COMMAND
 
 create
 	make
@@ -21,17 +20,14 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Displays the available modules."
+			Result := "Shuts down all webapps."
 		end
-
 
 feature -- Basic operations
 
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.get_modules
+			Result := a_server.shutdown_webapps
 		end
-
 end
-

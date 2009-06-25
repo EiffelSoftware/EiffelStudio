@@ -1,6 +1,6 @@
 note
 	description: "[
-		Enables a webapp.
+		Reloads the server configuration file.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_ENABLE_WEBAPP
+	XCC_LOAD_CONFIG
 
 inherit
-	XS_PARAMETER_COMMAND
+	XC_SERVER_COMMAND
 
 create
 	make
@@ -21,16 +21,8 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Enables a webapp."
+			Result := "Reloads the server configuration file."
 		end
-
-	parameter_description: STRING
-			-- <Precursor>
-		do
-			Result := "name"
-		end
-
-feature -- Status Change
 
 
 feature -- Basic operations
@@ -38,8 +30,7 @@ feature -- Basic operations
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.enable_webapp (parameter.value)
+			Result := a_server.load_config
 		end
 
 end
-

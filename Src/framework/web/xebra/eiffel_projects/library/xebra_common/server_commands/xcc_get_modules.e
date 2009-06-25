@@ -1,6 +1,6 @@
 note
 	description: "[
-		Sets dev_mod to off on all webapps.
+		Rerieves a list of module beans from the server.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_DEV_OFF_GLOBAL
+	XCC_GET_MODULES
 
 inherit
-	XC_COMMAND
+	XC_SERVER_COMMAND
 
 create
 	make
@@ -21,14 +21,17 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sets dev_mod to off on all webapps."
+			Result := "Displays the available modules."
 		end
+
 
 feature -- Basic operations
 
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.dev_mode_off_global
+			Result := a_server.get_modules
 		end
+
 end
+

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	description: STRING
-			-- Describes the command
+			-- Describes the command.
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -28,12 +28,15 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
+	execute (a_platform: ANY): XC_COMMAND_RESPONSE
 			-- Executes the command.
 		require
-			a_server_attached: a_server /= Void
+			a_platform_attached: a_platform /= Void
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
+
+
 end
+

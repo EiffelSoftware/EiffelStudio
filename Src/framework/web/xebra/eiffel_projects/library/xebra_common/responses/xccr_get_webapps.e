@@ -9,6 +9,7 @@ note
 
 class
 	XCCR_GET_WEBAPPS
+	
 inherit
 	XC_COMMAND_RESPONSE
 

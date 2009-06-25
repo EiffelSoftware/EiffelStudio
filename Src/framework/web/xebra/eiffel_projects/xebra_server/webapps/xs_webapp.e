@@ -36,7 +36,9 @@ feature {NONE} -- Initialization
 			compile_action.set_next_action (run_action)
 			run_action.set_next_action (send_action)
 
-			needs_cleaning := false
+			needs_cleaning := False
+
+			dev_mode := True
 
 		ensure then
 			config_attached: config /= Void
@@ -65,8 +67,10 @@ feature  -- Access
 	shutdown_Action: XSWA_SHUTDOWN
 		-- The action to shut down a webapp	
 
-	request_message: detachable STRING
+--	request_message: detachable STRING assign set_request_message
 		-- The current request_message
+
+	current_request: detachable XC_WEBAPP_COMMAND assign set_current_request
 
 	needs_cleaning: BOOLEAN assign set_needs_cleaning
 		-- Can be used to force a clean on the next translation/compilation	
@@ -79,14 +83,14 @@ feature -- Constans
 
 feature -- Actions
 
-	start_action_chain: XH_RESPONSE
+	start_action_chain: XC_COMMAND_RESPONSE
 			-- Executes the appropriate action in the chain		
 		do
 			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
 			else
 				if is_disabled then
-					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_response
+					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_command_response
 				else
 					if dev_mode then
 						Result := translate_action.execute
@@ -102,13 +106,23 @@ feature -- Actions
 
 feature -- Status Setting
 
-	set_request_message (a_request_message: like request_message)
-			-- Sets a_request_message.
+	set_current_request (a_current_request: like current_request)
+			-- Sets current_request.
+		require
+			a_current_request_attached: a_current_request /= Void
 		do
-			request_message := a_request_message
+			current_request := a_current_request
 		ensure
-			request_message_set: request_message = a_request_message
+			current_request_set: equal( current_request, a_current_request)
 		end
+
+--	set_request_message (a_request_message: like request_message)
+--			-- Sets a_request_message.
+--		do
+--			request_message := a_request_message
+--		ensure
+--			request_message_set: request_message = a_request_message
+--		end
 
 	set_needs_cleaning (a_cleaned: like needs_cleaning)
 			-- Sets needs_cleaning.
@@ -149,5 +163,4 @@ invariant
 	run_action_attached: run_action /= Void
 	send_action_attached: send_action /= Void
 	shutdown_action_attached: shutdown_action /= Void
-	request_message_not_empty_when_attached: request_message /= Void implies not request_message.is_empty
 end

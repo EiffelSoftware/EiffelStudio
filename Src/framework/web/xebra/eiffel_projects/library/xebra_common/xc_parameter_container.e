@@ -1,6 +1,6 @@
 note
 	description: "[
-		Interface for commands that have one parameter
+		Interface for objects that have one parameter
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,13 +8,8 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XS_PARAMETER_COMMAND
+	XC_PARAMETER_CONTAINER
 
-inherit
-	XC_COMMAND
-	redefine
-		make
-	end
 
 feature {NONE} -- Initialization
 

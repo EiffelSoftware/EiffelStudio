@@ -44,7 +44,7 @@ feature -- Inherited Features
 	execute
 			-- <Precursor>
 		local
-			l_response: XH_RESPONSE
+			l_response: XC_COMMAND_RESPONSE
 			l_http_socket: NETWORK_STREAM_SOCKET
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
@@ -70,14 +70,15 @@ feature -- Inherited Features
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
 			            	if receive_message (thread_http_socket) then
-
 								l_response := l_webapp_handler.request_message_to_response (current_request_message)
-
 			            	else
-								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_response
+								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_command_response
 							end
 
-							send_message_to_http (l_response.render_to_string, thread_http_socket)
+							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
+								send_message_to_http (l_http_response.response.render_to_string, thread_http_socket)
+							end
+
 				         	thread_http_socket.cleanup
 				            check
 				            	thread_http_socket.is_closed

@@ -31,15 +31,25 @@ feature -- Initialize
 			left_to_parse_set: attached left_to_parse and left_to_parse = a_left_to_parse
 		end
 
+feature {NONE} -- Access
+
+	internal_error_messages: LIST [STRING]
+			-- Internal detachable error messages holder
+
 feature -- Access
 
 	internal_result: LIST [ANY] assign set_result
 			-- Result of parsing. Is at least an empty list
 
 	error_messages: LIST [STRING]
-			-- All the results that resulted while parsing
-		once
-			create {ARRAYED_LIST [STRING]} Result.make (0)
+			-- All the errors that resulted while parsing
+		do
+			if not attached internal_error_messages then
+				create {ARRAYED_LIST [STRING]} internal_error_messages.make (0)
+			end
+			Result := internal_error_messages
+		ensure
+			Result_attached: attached Result
 		end
 
 	append_result (a_result: ANY)
@@ -50,10 +60,16 @@ feature -- Access
 			internal_result.extend (a_result)
 		end
 
-	append_results (a_results: LIST [ANY])
-			-- Merges the two lists.
+	append_results (a_result: PEG_PARSER_RESULT)
+			-- Merges the two result lists as well as other global data (like errors)
+		require
+			a_result_attached: attached a_result
 		do
-			internal_result.append (a_results)
+			internal_result.append (a_result.internal_result)
+			error_messages.append (a_result.error_messages)
+		ensure
+			internal_result_appended: internal_result.count = (old internal_result.count) + (old a_result.internal_result.count)
+			error_messages_appended: error_messages.count = (old error_messages.count) + (old a_result.error_messages.count)
 		end
 
 	replace_result (a_result: ANY)
@@ -64,7 +80,15 @@ feature -- Access
 			internal_result.wipe_out
 			append_result (a_result)
 		ensure
-			only_new_result_in_list: internal_result.count = 1 and internal_result [1] = a_result
+			only_new_result_in_list: internal_result.count = 1 and internal_result.first = a_result
+		end
+
+	set_result (a_result: like internal_result)
+			-- Sets the result
+		require
+			a_result_attached: attached a_result
+		do
+			internal_result := a_result
 		end
 
 	success: BOOLEAN assign set_success
@@ -83,6 +107,8 @@ feature -- Access
 
 	set_left_to_parse (a_string: PEG_PARSER_STRING)
 			-- Sets the string which has been left to parse.
+		require
+			a_string_attached: attached a_string
 		do
 			left_to_parse := a_string
 		end
@@ -99,16 +125,6 @@ feature -- Element change
 			-- Formats the debug information
 		do
 			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out
-		end
-
-	set_result (a_result: like internal_result)
-			-- Sets the result
-		require
-			a_result_attached: attached a_result
-		do
-			internal_result := a_result
-		ensure
-			internal_result_set: attached internal_result and then a_result = internal_result
 		end
 
 	out: STRING

@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			scroll_view.set_has_horizontal_scroller (False)
 			scroll_view.set_has_vertical_scroller (False)
 			scroll_view.set_draws_background (False)
-
 			cocoa_item := scroll_view
+			initialize
 			set_is_initialized (True)
 		end
 
@@ -68,6 +68,7 @@ feature -- Element change
 			end
 			if attached v and then attached {like item_imp} v.implementation as v_imp then
 				v_imp.set_parent_imp (current)
+				item := v
 				scroll_view.set_document_view (v_imp.cocoa_view)
 				v_imp.ev_apply_new_size (0, 0, width, height, True)
 				v_imp.set_parent_imp (Current)
@@ -136,8 +137,10 @@ feature -- Layout
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_VIEWPORT note option: stable attribute end;
-
 	scroll_view: NS_SCROLL_VIEW;
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 end -- class EV_VIEWPORT_IMP

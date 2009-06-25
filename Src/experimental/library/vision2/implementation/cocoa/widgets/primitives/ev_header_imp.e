@@ -1,8 +1,6 @@
 note
-	description: "Objects that ..."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
+	description: "Cocoa Implementation for EV_HEADER_IMP."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -102,6 +100,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
 	child_of_item (an_index: INTEGER; an_item: ANY): ANY
 		do
+			Result := 1
 		end
 
 	object_value_for_table_column_by_item (a_table_column: POINTER; an_item: ANY): POINTER
@@ -136,8 +135,8 @@ feature {NONE} -- Implementation
 
 	container: NS_SCROLL_VIEW
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_HEADER note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

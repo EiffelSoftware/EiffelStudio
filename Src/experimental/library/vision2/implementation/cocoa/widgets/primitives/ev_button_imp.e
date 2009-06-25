@@ -102,7 +102,9 @@ feature -- Access
 			-- Is this button currently a default push button
 			-- for a particular container?
 		do
-			Result := top_level_window_imp.default_button_cell /= void and then top_level_window_imp.default_button_cell.is_equal (cell)
+			Result := attached top_level_window_imp as l_window and then
+						attached l_window.default_button_cell as l_cell and then
+							l_cell.is_equal (cell)
 		end
 
 feature -- Status Setting
@@ -140,8 +142,8 @@ feature -- Status Setting
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		do
-			if attached top_level_window_imp then
-				top_level_window_imp.window.set_default_button_cell (void)
+			if attached top_level_window_imp as l_window then
+				l_window.set_default_button_cell (void)
 			end
 		end
 
@@ -183,7 +185,7 @@ feature -- Measurement
 			t: TUPLE [width: INTEGER; height: INTEGER]
 			a_width, a_height: INTEGER
 		do
-			t := internal_font.string_size (a_text)
+			t := font.string_size (a_text)
 			a_width := t.width
 			a_height := t.height
 			internal_set_minimum_size (a_width.abs + 30, a_height.abs + 10)
@@ -241,7 +243,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-feature {EV_ANY_I} -- implementation
+feature {EV_ANY, EV_ANY_I} -- implementation
 
 	dispose
 		do
@@ -253,6 +255,4 @@ feature {EV_ANY_I} -- implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BUTTON_IMP

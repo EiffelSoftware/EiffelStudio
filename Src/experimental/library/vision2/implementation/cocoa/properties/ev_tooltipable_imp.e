@@ -16,10 +16,10 @@ feature -- Initialization
 	tooltip: STRING_32
 			-- Tooltip that has been set.
 		do
-			if internal_tooltip_string = Void then
-				Result := ""
+			if attached internal_tooltip_string as l_tooltip then
+				Result := l_tooltip.twin
 			else
-				Result := internal_tooltip_string.twin
+				create Result.make_empty
 			end
 		end
 
@@ -36,7 +36,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_tooltip_string: STRING_32
+	internal_tooltip_string: detachable STRING_32
 
 	cocoa_item: NS_OBJECT
 	deferred

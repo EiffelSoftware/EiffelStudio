@@ -22,10 +22,10 @@ feature -- Access
 	text: STRING_32
 			-- Text of the label.
 		do
-			if internal_text = void then
-				create Result.make_empty
+			if attached internal_text as l_text then
+				Result := l_text
 			else
-				Result := internal_text
+				create Result.make_empty
 			end
 		end
 
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature -- Internal
 
-	internal_text: STRING
+	internal_text: detachable STRING
 
 feature {EV_ANY_IMP} -- Implementation
 

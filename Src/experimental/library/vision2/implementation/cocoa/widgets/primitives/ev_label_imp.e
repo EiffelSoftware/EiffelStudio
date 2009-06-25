@@ -43,11 +43,12 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create {NS_TEXT_FIELD}cocoa_item.make
+			create text_field.make
 			text_field.set_editable (false)
 			--text_field.set_draws_background (false)
 			text_field.set_bordered (false)
 			text_field.set_background_color (create {NS_COLOR}.control_color)
+			cocoa_item := text_field
 
 			align_text_center
 
@@ -85,7 +86,7 @@ feature -- Minimum size
 			a_width, a_height: INTEGER
 			l_angle: REAL
 		do
-			t := internal_font.string_size (a_text)
+			t := font.string_size (a_text)
 			a_width := t.width
 			a_height := t.height
 
@@ -137,12 +138,10 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_LABEL note option: stable attribute end;
-
 	text_field: NS_TEXT_FIELD
-			--
-		do
-			Result ?= cocoa_item
-		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_LABEL note option: stable attribute end;
 
 end --class LABEL_IMP

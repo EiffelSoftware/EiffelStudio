@@ -65,12 +65,14 @@ feature -- Command
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		do
-			create Result
+			create Result.make_with_size (a_rect.width, a_rect.height)
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Get RGBA value at `a_y', `a_y'.
 		do
+			-- See NSReadPixel on NSImage
+			-- http://lists.apple.com/archives/applescript-studio/2008/Mar/msg00035.html
 		end
 
 	set_pixel (a_x, a_y, rgba: NATURAL_32)

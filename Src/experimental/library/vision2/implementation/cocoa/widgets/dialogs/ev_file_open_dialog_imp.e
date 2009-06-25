@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create open_panel.make
 			save_panel := open_panel
 			window := open_panel
-			Precursor
+			initialize
 			--set_title ("Open")
 		end
 

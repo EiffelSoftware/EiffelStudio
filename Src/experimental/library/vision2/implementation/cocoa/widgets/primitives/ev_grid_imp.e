@@ -3,8 +3,7 @@ note
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		Cocoa implementation.
 			]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -148,13 +147,10 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 	text_style, base_style, fg_style, bg_style: INTEGER = unique
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GRID note option: stable attribute end;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end
-

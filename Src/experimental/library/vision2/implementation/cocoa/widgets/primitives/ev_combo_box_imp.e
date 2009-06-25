@@ -1,9 +1,6 @@
 note
-
-	description:
-		"EiffelVision combo box, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision combo box, Cocoa implementation."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -101,9 +98,8 @@ feature -- Status report
 
 		end
 
-	selected_item: EV_LIST_ITEM
-			-- Item which is currently selected, for a multiple
-			-- selection.
+	selected_item: detachable EV_LIST_ITEM
+			-- Item which is currently selected
 		local
 			l_index: INTEGER
 		do
@@ -187,7 +183,4 @@ feature {EV_ANY_I} -- Implementation
 
 	combo_box: NS_COMBO_BOX;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_COMBO_BOX_IMP
-

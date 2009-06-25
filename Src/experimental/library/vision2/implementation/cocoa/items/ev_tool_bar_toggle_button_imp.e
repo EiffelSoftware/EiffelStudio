@@ -1,8 +1,6 @@
 note
-	description:
-		"EiffelVision toggle tool bar, Cocoa implementations."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "EiffelVision toggle tool bar, Cocoa implementations."
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +38,11 @@ feature -- Status setting
 			-- Unselect `Current'.
 		do
 			if is_selected then
-
+				is_selected := False
+				button.set_state ({NS_CELL}.off_state)
+				if attached select_actions_internal as l_actions then
+					l_actions.call (Void)
+				end
 			end
 		end
 
@@ -48,7 +50,11 @@ feature -- Status setting
 			-- Select `Current'.
 		do
 			if not is_selected then
-
+				is_selected := True
+				button.set_state ({NS_CELL}.on_state)
+				if attached select_actions_internal as l_actions then
+					l_actions.call (Void)
+				end
 			end
 		end
 
@@ -56,15 +62,9 @@ feature -- Status report
 
 	is_selected: BOOLEAN
 			-- Is `Current' selected.
-		do
-
-		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_TOGGLE_BUTTON;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
-

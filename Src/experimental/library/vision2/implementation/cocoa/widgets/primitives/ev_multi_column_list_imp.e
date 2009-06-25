@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision multi-column-list, Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	copyright:	"Copyright (c) 2009, Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,6 +54,10 @@ feature {NONE} -- Initialization
 			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
 			create ev_children.make (0)
+			create previous_selection.make (1)
+			create column_titles.make
+			create column_alignments.make
+
 			create {NS_OUTLINE_VIEW}cocoa_item.make
 
 			initialize_item_list
@@ -88,12 +91,12 @@ feature {NONE} -- Implementation
 	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call the selections actions for `clicked_row'
 		do
-			if not previous_selection.has (clicked_row.interface) then
-					if attached clicked_row.select_actions_internal then
-						clicked_row.select_actions_internal.call (void)
+			if not previous_selection.has (clicked_row.attached_interface) then
+					if attached clicked_row.select_actions_internal as l_actions then
+						l_actions.call (void)
 					end
-					if attached select_actions_internal then
-						select_actions_internal.call ([clicked_row.interface])
+					if attached select_actions_internal as l_actions then
+						l_actions.call ([clicked_row.attached_interface])
 					end
 			end
 		end
@@ -101,11 +104,11 @@ feature {NONE} -- Implementation
 	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call deselect actions for `deselected_row'
 		do
-				if attached deselected_row.deselect_actions_internal then
-					deselected_row.deselect_actions_internal.call (Void)
+				if attached deselected_row.deselect_actions_internal as l_actions then
+					l_actions.call (Void)
 				end
-				if attached deselect_actions_internal then
-					deselect_actions_internal.call ([deselected_row.interface])
+				if attached deselect_actions_internal as l_actions then
+					l_actions.call ([deselected_row.attached_interface])
 				end
 		end
 
@@ -120,16 +123,16 @@ feature {NONE} -- Implementation
 			a_row_number: INTEGER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			--Precursor (a_motion_tuple)
-			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
-				a_row_number := row_index_from_y_coord (a_motion_tuple.integer_item (2))
-				if a_row_number > 0 and then a_row_number <= count then
-					a_row_imp := ev_children @ a_row_number
-					if a_row_imp.pointer_motion_actions_internal /= Void then
-						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
-					end
-				end
-			end
+--			Precursor (a_motion_tuple)
+--			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
+--				a_row_number := row_index_from_y_coord (a_motion_tuple.integer_item (2))
+--				if a_row_number > 0 and then a_row_number <= count then
+--					a_row_imp := ev_children @ a_row_number
+--					if a_row_imp.pointer_motion_actions_internal /= Void then
+--						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
+--					end
+--				end
+--			end
 		end
 
 	pixmaps_size_changed
@@ -150,7 +153,7 @@ feature -- Access
 			Result := count
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW
+	selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 			-- Item which is currently selected
 		do
 		end
@@ -162,7 +165,7 @@ feature -- Access
 			-- should use `selected_item' rather than
 			-- `selected_items' for a single selection list.
 		do
-
+			create Result.make (1)
 		end
 
 feature -- Status report
@@ -287,20 +290,18 @@ feature -- Implementation
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at `an_index'.
 		do
-			io.put_string ("EV_MULTI_COLUMN_LIST_IMP.insert_item: Not implemented")
 		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Remove `item' from the list
 		do
-			io.put_string ("EV_MULTI_COLUMN_LIST_IMP.remove_item: Not implemented")
 		end
 
 	set_to_drag_and_drop: BOOLEAN
 			-- Set transport mode to drag and drop.
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.mode_is_drag_and_drop
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.mode_is_drag_and_drop
 			else
 				Result := mode_is_drag_and_drop
 			end
@@ -309,9 +310,9 @@ feature -- Implementation
 	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
-			if pnd_row_imp /= Void then
-				Result := (pnd_row_imp.mode_is_drag_and_drop and a_button = 1) or
-				(pnd_row_imp.mode_is_pick_and_drop and a_button = 3)
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := (l_pnd_row_imp.mode_is_drag_and_drop and a_button = 1) or
+				(l_pnd_row_imp.mode_is_pick_and_drop and a_button = 3)
 			else
 				Result := (mode_is_drag_and_drop and a_button = 1) or
 				(mode_is_pick_and_drop and a_button = 3)
@@ -321,8 +322,8 @@ feature -- Implementation
 	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.mode_is_target_menu and then a_button = 3
+			if attached pnd_row_imp as l_pnd_row_imp then
+				Result := l_pnd_row_imp.mode_is_target_menu and then a_button = 3
 			else
 				Result := mode_is_target_menu and then a_button = 3
 			end
@@ -370,17 +371,15 @@ feature -- Implementation
 			a_screen_x, a_screen_y: INTEGER)
 
 			-- Initialize a pick and drop transport.
-		local
-			a_row_index: INTEGER
 		do
-			a_row_index := row_index_from_y_coord (a_y)
+--			a_row_index := row_index_from_y_coord (a_y)
 
-			if a_row_index > 0 then
-				pnd_row_imp := ev_children.i_th (a_row_index)
-				if not pnd_row_imp.able_to_transport (a_button) then
-					pnd_row_imp := Void
-				end
-			end
+--			if a_row_index > 0 then
+--				pnd_row_imp := ev_children.i_th (a_row_index)
+--				if not pnd_row_imp.able_to_transport (a_button) then
+--					pnd_row_imp := Void
+--				end
+--			end
 
 			Precursor (
 					a_type,
@@ -390,27 +389,8 @@ feature -- Implementation
 				)
 		end
 
-	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+	pnd_row_imp: detachable EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Implementation object of the current row if in PND transport.
-
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
-
-	row_index_from_y_coord (a_y: INTEGER): INTEGER
-			-- Returns the row index at relative coordinate `a_y'.
-		do
-
-		end
-
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM
-			-- Returns the row at relative coordinate `a_y'
-		local
-			a_row_index: INTEGER
-		do
-			a_row_index := row_index_from_y_coord (a_y)
-			if a_row_index > 0 then
-				Result := ev_children @ a_row_index
-			end
-		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
@@ -423,7 +403,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			pixmap_imp ?= a_pixmap.implementation
 --			a_list_iter := ev_children.i_th (a_row).list_iter.item
@@ -436,55 +416,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 feature {NONE} -- Implementation
 
-	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER)
-			-- Update `child'.
-		require
-			child_exists: child /= Void
-		local
-			cur: CURSOR
-			txt: STRING_32
-			list: EV_MULTI_COLUMN_LIST_ROW
-			column_counter: INTEGER
-		do
-			list := child.interface
-			cur := list.cursor
-
-			if child.pixmap /= Void then
-				set_row_pixmap (a_row, child.pixmap)
-			end
-			from
-				column_counter := 1
-				list.start
-			until
-				column_counter > column_count
-			loop
-					-- Set the text in the cell
-				if list.after then
-					txt := ""
-				else
-					txt := list.item
-					if txt = Void then
-						txt := ""
-					end
-				end
-				set_text_on_position (column_counter, a_row, txt)
-					-- Pixmap gets updated when the text does.
-
-					-- Prepare next iteration
-				if not list.after then
-					list.forth
-				end
-				column_counter := column_counter + 1
-			end
-			list.go_to (cur)
-		end
-
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `a_item' is visible on the screen.
-		local
-			list_item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			list_item_imp ?= a_item.implementation
 		end
 
 	row_height: INTEGER
@@ -504,8 +438,8 @@ feature {EV_ANY_I} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MULTI_COLUMN_LIST_IMP

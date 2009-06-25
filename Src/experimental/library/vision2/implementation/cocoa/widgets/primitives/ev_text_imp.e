@@ -34,7 +34,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			create {NS_SCROLL_VIEW}cocoa_item.make
+			create scroll_view.make
+			cocoa_item := scroll_view
 			create text_view.make
 			text_view.set_horizontally_resizable (True)
 			scroll_view.set_document_view (text_view)
@@ -74,6 +75,7 @@ feature -- Access
 	line (a_line: INTEGER): STRING_32
 			-- Returns the content of line `a_line'.
 		do
+			create Result.make_empty
 		end
 
 	first_position_from_line_number (a_line: INTEGER): INTEGER
@@ -83,11 +85,6 @@ feature -- Access
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the last character on line `a_line'.
-		do
-		end
-
-	clipboard_content: STRING_32
-			-- `Result' is current clipboard content.
 		do
 		end
 
@@ -283,13 +280,12 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_TEXT note option: stable attribute end;
-
 	scroll_view: NS_SCROLL_VIEW
-		do
-			Result ?= cocoa_item
-		end
 
 	text_view: NS_TEXT_VIEW;
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_TEXT note option: stable attribute end;
 
 end -- class EV_TEXT_IMP

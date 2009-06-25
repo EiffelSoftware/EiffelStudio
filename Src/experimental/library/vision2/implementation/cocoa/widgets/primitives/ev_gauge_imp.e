@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision gauge. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -113,10 +112,6 @@ feature -- Element change
 			set_value ( temp_value )
 		end
 
-feature {NONE} -- Implementation
-
-	interface: detachable EV_GAUGE note option: stable attribute end
-
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	value_changed_handler
@@ -127,7 +122,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-end -- class EV_GAUGE_I
+feature {NONE} -- Implementation
 
+	interface: detachable EV_GAUGE note option: stable attribute end
+
+end -- class EV_GAUGE_I

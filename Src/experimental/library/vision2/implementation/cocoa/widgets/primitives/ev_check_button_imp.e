@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			t: TUPLE [width: INTEGER; height: INTEGER]
 			a_width, a_height: INTEGER
 		do
-			t := internal_font.string_size (a_text)
+			t := font.string_size (a_text)
 			a_width := t.width
 			a_height := t.height
 			internal_set_minimum_size (a_width.abs + 25, a_height.abs + 5)

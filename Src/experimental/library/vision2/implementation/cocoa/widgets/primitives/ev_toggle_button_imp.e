@@ -1,7 +1,6 @@
 note
 	description: "EiffelVision toggle button, Cocoa implementation."
-	legal: "See notice at end of class.";
-	status: "See notice at end of class.";
+	author: "Daniel Furrer"
 	id: "$Id$";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -67,17 +66,7 @@ feature -- Element change
 			-- Image may be scaled in some descendents, i.e EV_TREE_ITEM
 			-- See EV_TREE.set_pixmaps_size.
 
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			-- First load the pixmap into the button
-			pixmap_imp ?= a_pixmap.implementation
-
-			if
-				pixmap_imp /= Void
-			then
-			end
-
 			-- Then move the text to the right
 			align_text_right
 
@@ -91,11 +80,8 @@ feature -- Element change
 		end
 
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I}
 
 	interface: detachable EV_TOGGLE_BUTTON note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TOGGLE_BUTTON_IMP
-

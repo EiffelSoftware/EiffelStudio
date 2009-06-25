@@ -184,11 +184,6 @@ feature -- Status report
 		do
 		end
 
-	clipboard_content: STRING_32
-			-- `Result' is current clipboard content.
-		do
-		end
-
 feature -- status settings
 
 	hide_border

@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			split_view.adjust_subviews
 		end
 
- feature {EV_ANY_I} -- Implementation
+ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_SPLIT_AREA note option: stable attribute end;
 			-- Provides a common user interface to possibly dependent

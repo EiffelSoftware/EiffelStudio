@@ -37,7 +37,7 @@ feature -- Status settings
 			set_is_destroyed (True)
 		end
 
-	set_parent_imp (a_parent_imp: like parent_imp)
+	set_parent_imp (a_parent_imp: detachable like parent_imp)
 			-- Assign `a_parent_imp' to `parent_imp'.
 		do
 			parent_imp := a_parent_imp

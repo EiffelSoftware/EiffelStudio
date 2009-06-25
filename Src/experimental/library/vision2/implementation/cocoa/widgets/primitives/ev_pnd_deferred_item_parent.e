@@ -11,9 +11,9 @@ deferred class
 
 feature {EV_ANY_I} -- Implementation
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM
+	row_from_y_coord (a_y: INTEGER): detachable EV_PND_DEFERRED_ITEM
 			-- Retrieve the Current row from `a_y' coordinate
-		deferred
+		do
 		end
 
 feature {NONE} -- Implementation

@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if attached item_imp as l_item_imp then
 				scroll_view.set_document_view (l_item_imp.cocoa_view)
-				l_item_imp.ev_apply_new_size (0, 0, item_imp.width, item_imp.height, True)
+				l_item_imp.ev_apply_new_size (0, 0, l_item_imp.width, l_item_imp.height, True)
 			end
 		end
 

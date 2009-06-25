@@ -17,15 +17,15 @@ feature {NONE}
 
 feature -- Objective-C callbacks
 
-	number_of_children_of_item (an_item: ITEM_TYPE): INTEGER
+	number_of_children_of_item (an_item: detachable ITEM_TYPE): INTEGER
 		deferred
 		end
 
-	is_item_expandable (an_item: ITEM_TYPE): BOOLEAN
+	is_item_expandable (an_item: detachable ITEM_TYPE): BOOLEAN
 		deferred
 		end
 
-	child_of_item (an_index: INTEGER; an_item: ITEM_TYPE): ITEM_TYPE
+	child_of_item (an_index: INTEGER; an_item: detachable ITEM_TYPE): ITEM_TYPE
 		deferred
 		end
 

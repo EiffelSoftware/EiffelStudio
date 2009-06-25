@@ -1411,6 +1411,7 @@ test	profile-with-invariant				exec311 tcf fail execution profile
 test	small-eif-memory-scavenge		exec312	tcf pass execution
 test	static-access-on-like-current		exec313	tcf pass execution
 test	manifest-type-expr-generating-type	exec314	tcf pass execution
+test	manifest-type-singletons		exec315	tcf pass execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			run_action.set_next_action (send_action)
 
 
-
+			current_request := create {XCWC_EMPTY}.make
 			needs_cleaning := False
 
 			dev_mode := True
@@ -70,7 +70,7 @@ feature  -- Access
 --	request_message: detachable STRING assign set_request_message
 		-- The current request_message
 
-	current_request: detachable XC_WEBAPP_COMMAND --assign set_current_request
+	current_request: XC_WEBAPP_COMMAND --assign set_current_request
 
 	needs_cleaning: BOOLEAN assign set_needs_cleaning
 		-- Can be used to force a clean on the next translation/compilation	
@@ -154,7 +154,8 @@ feature  -- Status Setting
 		do
 			if run_action.is_running then
 				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
-				send (create {XCWC_SHUTDOWN}.make).do_nothing
+				current_request := 	create {XCWC_SHUTDOWN}.make
+				send_action.execute.do_nothing
 				run_action.wait_for_exit
 			end
 		end
@@ -162,7 +163,9 @@ feature  -- Status Setting
 	fire_off
 			-- Sends shutdown signal even if the webapp process is not owned by the server
 		do
-			send (create {XCWC_SHUTDOWN}.make).do_nothing
+			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
+			current_request := 	create {XCWC_SHUTDOWN}.make
+			send_action.execute.do_nothing
 		end
 
 

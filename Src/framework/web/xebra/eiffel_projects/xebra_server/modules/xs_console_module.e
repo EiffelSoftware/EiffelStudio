@@ -72,9 +72,6 @@ feature -- Acces
 	command_groups: HASH_TABLE [HASH_TABLE [XC_SERVER_COMMAND, STRING], STRING]
 			-- Groups of commands
 
-
-
-
 feature {NONE} -- Access
 
 	main_server: XC_SERVER_INTERFACE

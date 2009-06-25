@@ -30,13 +30,13 @@ feature {NONE} -- Initialization
 			create compile_action.make (current)
 			create run_action.make (current)
 			create send_action.make (current)
-			create shutdown_action.make (current)
+
 
 			translate_action.set_next_action (compile_action)
 			compile_action.set_next_action (run_action)
 			run_action.set_next_action (send_action)
 
-			shutdown_action.set_next_action (send_action)
+
 
 			needs_cleaning := False
 
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			compile_action_attached: compile_action /= Void
 			run_action_attached: run_action /= Void
 			send_action_attached: send_action /= Void
-			shutdown_action_attached: shutdown_action /= Void
+
 		end
 
 feature  -- Access
@@ -66,13 +66,11 @@ feature  -- Access
 	send_action: XSWA_SEND
 		-- The action to send the request to the webapp
 
-	shutdown_Action: XSWA_SHUTDOWN
-		-- The action to shut down a webapp	
 
 --	request_message: detachable STRING assign set_request_message
 		-- The current request_message
 
-	current_request: detachable XC_WEBAPP_COMMAND assign set_current_request
+	current_request: detachable XC_WEBAPP_COMMAND --assign set_current_request
 
 	needs_cleaning: BOOLEAN assign set_needs_cleaning
 		-- Can be used to force a clean on the next translation/compilation	
@@ -85,9 +83,12 @@ feature -- Constans
 
 feature -- Actions
 
-	send: XC_COMMAND_RESPONSE
+	send (a_request: XC_WEBAPP_COMMAND): XC_COMMAND_RESPONSE
 			-- Executes the the actions chain 		
+		require
+			a_request_attached: a_request /= Void
 		do
+			current_request := a_request
 			if config.args.assume_webapps_are_running.value then
 				Result := send_action.execute
 			else
@@ -106,18 +107,31 @@ feature -- Actions
 			Result_attached: Result /= Void
 		end
 
-
-feature -- Status Setting
-
-	set_current_request (a_current_request: like current_request)
-			-- Sets current_request.
-		require
-			a_current_request_attached: a_current_request /= Void
+	get_sessions: BOOLEAN
+			-- Retrieves the count of sessions from the webapp
 		do
-			current_request := a_current_request
-		ensure
-			current_request_set: equal( current_request, a_current_request)
+			Result := True
+			if is_running then
+				current_request :=  create {XCWC_GET_SESSIONS}.make
+				if attached {XCCR_GET_SESSIONS} send_action.execute as l_response then
+					sessions := l_response.sessions
+				else
+					Result := False
+				end
+			end
 		end
+
+feature  -- Status Setting
+
+--	set_current_request (a_current_request: like current_request)
+--			-- Sets current_request.
+--		require
+--			a_current_request_attached: a_current_request /= Void
+--		do
+--			current_request := a_current_request
+--		ensure
+--			current_request_set: equal( current_request, a_current_request)
+--		end
 
 --	set_request_message (a_request_message: like request_message)
 --			-- Sets a_request_message.
@@ -139,7 +153,8 @@ feature -- Status Setting
 			-- Initiates shutdown and waits for termination.
 		do
 			if run_action.is_running then
-				shutdown_action.execute.do_nothing
+				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
+				send (create {XCWC_SHUTDOWN}.make).do_nothing
 				run_action.wait_for_exit
 			end
 		end
@@ -147,7 +162,7 @@ feature -- Status Setting
 	fire_off
 			-- Sends shutdown signal even if the webapp process is not owned by the server
 		do
-			shutdown_action.execute.do_nothing;
+			send (create {XCWC_SHUTDOWN}.make).do_nothing
 		end
 
 
@@ -165,5 +180,5 @@ invariant
 	compile_action_attached: compile_action /= Void
 	run_action_attached: run_action /= Void
 	send_action_attached: send_action /= Void
-	shutdown_action_attached: shutdown_action /= Void
+
 end

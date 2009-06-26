@@ -57,7 +57,7 @@
 		<th>Port</th>
 		<th>Interactive</th>
 		<th>Status </th>
-		<th>Sessions </th>
+		<th>Sessions </th> 
 		<th>Disabled</th>
 		<th>Running</th>
 		<th>Translating</th>

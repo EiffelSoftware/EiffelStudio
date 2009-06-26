@@ -167,10 +167,11 @@ static int xebra_handler (request_rec* r)
 		return HTTP_METHOD_NOT_ALLOWED;
 	}
 
+	/* Set a default content-type */
+	ap_set_content_type (r, "text/html;charset=ascii");
+
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("Reading input...");
-
-	ap_set_content_type (r, "text/html;charset=ascii");
 
 	message = apr_palloc (r->pool, 1);
 	message[0] = '\0';
@@ -197,22 +198,47 @@ static int xebra_handler (request_rec* r)
 		DEBUG2 ("Reading POST parameters...");
 		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
 
-		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")
-				== 0)) {
+		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
+		{
 			rv = read_from_POST (r, &post_buf);
+
+			if (rv != OK)
+			{
+				ap_rputs ("Error reading POST data from x-www-form-urlencoded", r);
+				return rv;
+			} else {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
+								TABLEEND, NULL);
+			}
 		}
-		if (rv != OK) {
-			ap_rputs ("Error reading from data! See apache error log.", r);
-			return rv;
+		else if (ctype && (strcasecmp (ctype, "text/xml")== 0))
+		{
+			rv = read_from_POST (r, &post_buf);
+
+			if (rv != OK)
+			{
+				ap_rputs ("Error reading POST data from text/xml", r);
+				return rv;
+			} else {
+				message = apr_pstrcat (r->pool, message, ARG, "#TEXT/XML#", post_buf,
+								TABLEEND, NULL);
+			}
 		}
-		message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-				TABLEEND, NULL);
+		else
+		{
+			ap_rputs ("Unsupported POST content type!", r);
+			return APR_EGENERAL;
+		}
+
+
 	} else if (r->args != NULL) {
 		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, TABLEEND,
 				NULL);
 	} else {
 		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
 	}
+
+
 
 	/* set up connection to server */
 	DEBUG ("Setting up connection.");
@@ -274,7 +300,7 @@ static int xebra_handler (request_rec* r)
 
 	if (numbytes < 1) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
-				"error in receive_message_fraged");		
+				"error in receive_message_fraged");
 		PRINT_ERROR("Error receiving message. See apache error log.");
 		return OK;
 	}
@@ -286,7 +312,7 @@ static int xebra_handler (request_rec* r)
 	{
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
-	
+
 
 	/* Close sockets and quit */
 	shutdown (sockfd, 2);
@@ -297,6 +323,7 @@ static int xebra_handler (request_rec* r)
 apr_status_t handle_response_message (request_rec* r, char* message)
 {
 	char* msg_copy;
+	char* content_type;
 	char* cookie_order_start;
 	char* cookie_order_end;
 	char* html;
@@ -325,7 +352,17 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
 	}
 
-	
+	DEBUG2 ("Extracting content-type");
+	content_type = apr_pstrcat (r->pool, message,  NULL);
+	content_type = ap_strstr_c (content_type, CONTENT_TYPE_START);
+	if (content_type != NULL)
+	{
+		content_type += strlen(CONTENT_TYPE_START);
+		html = ap_strstr_c (content_type, HTML_START);
+		content_type[html - content_type] = '\0';
+		ap_set_content_type (r, content_type);
+	}
+
 	DEBUG2 ("Extracting html...");
 	/* Extract html code */
 	html = ap_strstr_c (message, HTML_START);
@@ -341,6 +378,11 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		return APR_EGENERAL;
 	}
 	html += strlen (HTML_START);
+
+	/* Tell browsers not to cache the page */
+	apr_table_addn(r->headers_out, "Cache-Control", "no-cache");
+
+	/* Print html */
 	ap_rputs (html, r);
 	DEBUG2 ("Done.");
 	return APR_SUCCESS;
@@ -404,7 +446,7 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 
 	/* Create fragment */
 	frag_msg = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
-	
+
 	if (frag_msg == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error mallocating!");
 		return 0;
@@ -503,7 +545,7 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 
 	frag_buf = apr_palloc (r->pool, 1);
 	frag_buf[0] = '\0';
-	
+
 	/* loop until we recieve a fragment with flag=0 */
 	do {
 		/* receive first 4 bytes determining length of message */

@@ -41,7 +41,6 @@ feature -- Constants
 		-- The session manager for a wep app. Has to be
 		-- created before threads are spawned
 
-
 feature -- Access
 
 --	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
@@ -67,12 +66,7 @@ feature -- Implementation
 		local
 
 			l_response:  XC_COMMAND_RESPONSE
-			l_dummy: XCCR_HTTP_REQUEST
-			l_dummy1: XCCR_GET_SESSIONS
 		do
-			create l_dummy.make (create {XH_RESPONSE}.make_empty)
-			create l_dummy1.make (1)
-
 			o.set_name (config.name.out)
 			o.set_debug_level (config.arg_config.debug_level)
 
@@ -81,25 +75,19 @@ feature -- Implementation
             until
             	stop
             loop
---            	o.dprint ("Waiting for request from http server...", 2)
                 xserver_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
 		                o.dprint ("Connection to Xebra Server accepted",1)
 		                socket.read_natural
-
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
-
 			            else
-							l_response := (create {XER_GENERAL}.make("Xebra App could not retrieve valid STRING object from Xebra Server")).render_to_command_response
+							l_response := (create {XER_INVALID_COMMAND}.make("")).render_to_command_response
 			            end
-
-
-					    o.dprint ("Sending back l_response...", 2)
+					    o.dprint ("Sending back response...", 2)
 				        socket.put_natural (0)
 						socket.independent_store (l_response)
-
 			            socket.cleanup
 			            check
 				        	socket.is_closed
@@ -111,14 +99,6 @@ feature -- Implementation
         ensure then
         	xserver_socket_closed: xserver_socket.is_closed
 		end
-
-
-
---	servlet_handler_spawner: XWA_REQUEST_HANDLER
---			-- Spawns {SERVLET_HANDLER}s for the `request_pool'.
---		do
---			create Result.make
---		end
 
 feature -- Status report
 
@@ -163,8 +143,6 @@ feature -- Basic Operations
 			stop := True
 			Result := create {XCCR_OK}.make
 		end
-
-
 
 invariant
 	config_attached: config /= Void

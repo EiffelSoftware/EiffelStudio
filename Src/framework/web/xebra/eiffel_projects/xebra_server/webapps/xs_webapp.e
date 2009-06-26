@@ -31,11 +31,9 @@ feature {NONE} -- Initialization
 			create run_action.make (current)
 			create send_action.make (current)
 
-
 			translate_action.set_next_action (compile_action)
 			compile_action.set_next_action (run_action)
 			run_action.set_next_action (send_action)
-
 
 			current_request := create {XCWC_EMPTY}.make
 			needs_cleaning := False
@@ -66,20 +64,10 @@ feature  -- Access
 	send_action: XSWA_SEND
 		-- The action to send the request to the webapp
 
-
---	request_message: detachable STRING assign set_request_message
-		-- The current request_message
-
 	current_request: XC_WEBAPP_COMMAND --assign set_current_request
 
 	needs_cleaning: BOOLEAN assign set_needs_cleaning
 		-- Can be used to force a clean on the next translation/compilation	
-
-feature -- Constans
-
-	onebillionnanoseconds: INTEGER_64 = 1000000000
-	fourbillionnanoseconds: INTEGER_64 = 4000000000
-	sixbillionnanoseconds: INTEGER_64 = 6000000000
 
 feature -- Actions
 

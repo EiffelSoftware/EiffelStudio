@@ -15,6 +15,11 @@ feature {PEG_ABSTRACT_PEG} -- Behaviours
 	error_strategy: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
 			-- Optional error strategy which tries to handle failures of a parser
 
+feature {PEG_ABSTRACT_PEG} -- Access
+
+	fixated: BOOLEAN
+			-- Is the parser fixed, that is, are sequences and choices always newly created?
+
 feature -- Access
 
 	is_cached: BOOLEAN assign set_is_cached
@@ -160,10 +165,25 @@ feature -- Convenience
 			create Result.make (Current)
 		end
 
+	enforce: PEG_ENFORCE
+			-- Returns Current enforced
+		do
+			create Result.make (Current)
+		end
+
 	optional: PEG_OPTIONAL
 			-- Returns Current as optional parser
 		do
 			create Result.make (Current)
+		end
+
+	fixate
+			-- Forces the parser to generate new sequences and choice parsers if built
+			-- with + or | respectively
+		do
+			fixated := True
+		ensure
+			fixated: fixated
 		end
 
 end

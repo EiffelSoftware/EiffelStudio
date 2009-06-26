@@ -45,10 +45,14 @@ feature -- Implementation
 			end
 		end
 
-	add alias "+" (other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+	add alias "+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
 		do
-			children.extend(other)
-			Result := Current
+			if fixated then
+				Result := Precursor (a_other)
+			else
+				children.extend(a_other)
+				Result := Current
+			end
 		end
 
 	serialization_separator: STRING

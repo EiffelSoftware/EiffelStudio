@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			internal_set_minimum_size (a_width.abs + 25, a_height.abs + 5)
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY, EV_ANY_I}
 
 	interface: detachable EV_CHECK_BUTTON note option: stable attribute end;
 

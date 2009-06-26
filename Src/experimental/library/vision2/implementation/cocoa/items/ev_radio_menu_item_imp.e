@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision radio menu item. Cocoa implementation."
-	author:	"Copyright (c) 2009, Daniel Furrer"
+	author:	"Daniel Furrer"
 	-- Note: Cocoa does not support radio-buttons in menus. Use check-buttons and emulate the behaviour.
 
 class
@@ -63,6 +63,8 @@ feature {EV_ANY_I} -- Implementation
 			Precursor
 			menu_item.set_state ({NS_CELL}.off_state)
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RADIO_MENU_ITEM note option: stable attribute end;
 

@@ -63,7 +63,7 @@ feature -- Element change
 				v_imp.set_parent_imp (Void)
 				v_imp.on_orphaned
 				notify_change (nc_minsize, Current)
-				v_imp.cocoa_view.remove_from_superview
+				v_imp.attached_view.remove_from_superview
 			end
 		end
 
@@ -85,7 +85,7 @@ feature -- Element change
 				item := v
 				notify_change (nc_minsize, Current)
 				new_item_actions.call ([v])
-				cocoa_view.add_subview (v_imp.cocoa_view)
+				attached_view.add_subview (v_imp.attached_view)
 			end
 		end
 

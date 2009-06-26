@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_main_screen_cocoa
+			Precursor {EV_DRAWABLE_IMP}
 		end
 
 feature -- Status report
@@ -167,6 +168,8 @@ feature {NONE} -- Implementation
 	destroy
 		do
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_SCREEN note option: stable attribute end;
 

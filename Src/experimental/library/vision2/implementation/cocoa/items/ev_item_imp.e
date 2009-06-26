@@ -31,8 +31,8 @@ feature -- Status settings
 	destroy
 			-- Destroy the current item.
 		do
-			if parent_imp /= Void then
-				parent_imp.prune (interface)
+			if attached parent_imp as p_imp then
+				p_imp.prune (interface)
 			end
 			set_is_destroyed (True)
 		end
@@ -69,6 +69,11 @@ feature {EV_ANY_I} -- Implementation
 		do
 			-- Redefined by descendents.
 		end
+
+	cocoa_view: detachable NS_VIEW
+			-- The visual representation for the view
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ITEM note option: stable attribute end;
 

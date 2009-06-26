@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision horizontal scroll bar. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author:	"Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +28,7 @@ feature -- Initialization
 	make
 		do
 			create scroller.make_with_frame (0, 0, 10, 5)
-			cocoa_item := scroller
+			cocoa_view := scroller
 			Precursor {EV_SCROLL_BAR_IMP}
 			disable_tabable_from
 			disable_tabable_to
@@ -39,7 +38,7 @@ feature -- Initialization
 			scroller.set_action (agent
 				do
 					set_proportion (scroller.double_value)
-					change_actions_internal.call ([value])
+					change_actions.call ([value])
 				end)
 		end
 
@@ -68,11 +67,8 @@ feature -- Minimum size
 			Precursor {EV_SCROLL_BAR_IMP} (a_x_position, l_y_position, a_width, l_height)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_SCROLL_BAR note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
-

@@ -58,8 +58,8 @@ feature {NONE} -- Initialization
 		local
 			a_font: EV_FONT
 		do
-			create {NS_TEXT_FIELD}cocoa_item.make
-			text_field ?= cocoa_item
+			create text_field.make
+			cocoa_view := text_field
 			text_field.cell.set_wraps (False)
 
 			Precursor {EV_TEXT_COMPONENT_IMP}
@@ -269,27 +269,22 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result
 		end
 
-	stored_text: STRING_32
-			-- Value of 'text' prior to a change action, used to compare
-			-- between old and new text.
-
-
 	on_change_actions
 			-- A change action has occurred.
 		local
-			new_text: STRING_32
+--			new_text: STRING_32
 		do
-			new_text := text
-			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
-					-- The text has actually changed
-				in_change_action := True
-				if change_actions_internal /= Void then
+--			new_text := text
+--			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
+--					-- The text has actually changed
+--				in_change_action := True
+--				if change_actions_internal /= Void then
 
-					change_actions_internal.call (Void)
-				end
-				in_change_action := False
-				stored_text := text
-			end
+--					change_actions_internal.call (Void)
+--				end
+--				in_change_action := False
+--				stored_text := text
+--			end
 
 		end
 
@@ -312,13 +307,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 
+	text_field: NS_TEXT_FIELD
+		attribute
+			create Result.make
+		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
-	text_field: NS_TEXT_FIELD;
-
-invariant
-	text_field /= void
 
 end -- class EV_TEXT_FIELD_IMP

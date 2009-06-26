@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_content_view_margins (0, 0)
-			cocoa_item := box
+			cocoa_view := box
 
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
@@ -110,7 +110,7 @@ feature -- Access
 		local
 			l_view: detachable NS_VIEW
 		do
-			l_view ?= v.cocoa_item
+			l_view ?= v.cocoa_view
 			check l_view /= void end
 			box.add_subview (l_view)
 			notify_change (nc_minsize, Current)

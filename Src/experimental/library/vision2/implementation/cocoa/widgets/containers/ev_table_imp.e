@@ -40,8 +40,7 @@ feature {NONE} -- Implementation
 			create box.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
-			cocoa_item := box
-
+			cocoa_view := box
 			-- Initialize internal values
 			rows := 1
 			columns := 1
@@ -179,7 +178,7 @@ feature -- Status settings
 			table_child.set_attachment (a_y - 1, a_x - 1, a_y + a_height - 1, a_x + a_width - 1)
 			-- We show the child and resize the container
 			child_imp.show
-			cocoa_view.add_subview (child_imp.cocoa_view)
+			attached_view.add_subview (child_imp.attached_view)
 			notify_change (Nc_minsize, Current)
 			new_item_actions.call ([child])
 		end

@@ -2,8 +2,7 @@ note
 	description:
 		"EiffelVision2 Toolbar button,%
 		%a specific button that goes in a tool-bar."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,8 @@ inherit
 		redefine
 			interface,
 			make,
-			set_pixmap
+			set_pixmap,
+			cocoa_view
 		end
 
 	EV_DOCKABLE_SOURCE_IMP
@@ -35,11 +35,6 @@ inherit
 			interface
 		end
 
-	EV_TOOLTIPABLE_IMP
-		redefine
-			interface
-		end
-
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
@@ -48,7 +43,8 @@ inherit
 
 	EV_NS_VIEW
 		redefine
-			interface
+			interface,
+			cocoa_view
 		end
 
 create
@@ -62,7 +58,7 @@ feature {NONE} -- Initialization
 			set_vertical_button_style
 			create button.make
 			--button.set_bezel_style ({NS_BUTTON}.rectangular_square_bezel_style)
-			cocoa_item := button
+			cocoa_view := button
 			pixmapable_imp_initialize
 			button.set_action (agent select_actions.call ([]))
 			set_is_initialized (True)
@@ -83,11 +79,8 @@ feature -- Status Report
 
 	is_vertical: BOOLEAN
 			-- Are the buttons in `Current' arranged vertically?
-		local
-			tool_bar_imp: EV_TOOL_BAR_IMP
 		do
-			tool_bar_imp ?= parent
-			if tool_bar_imp /= Void then
+			if attached {EV_TOOL_BAR_IMP} parent as tool_bar_imp then
 				Result := tool_bar_imp.is_vertical
 			end
 		end
@@ -105,11 +98,8 @@ feature -- Status Report
 
 feature -- Access
 
-	gray_pixmap: EV_PIXMAP
+	gray_pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current'.
-
-	internal_tooltip: STRING_32
-		-- Tooltip for `Current'.
 
 feature -- Element change
 
@@ -136,15 +126,13 @@ feature -- Element change
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			-- First load the pixmap into the button
 			pixmap_imp ?= a_pixmap.implementation
-
-			if pixmap_imp /= Void then
-				button.set_image (pixmap_imp.image)
-				-- TODO update minimum width
-			end
+			check pixmap_imp /= void end
+			button.set_image (pixmap_imp.image)
+			-- TODO update minimum width
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -195,19 +183,23 @@ feature {EV_ANY_I} -- Implementation
 	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- 	Create a drop down action sequence.
 		do
+			create Result
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 	char_length: INTEGER = 5;
 	char_height: INTEGER = 15;
 	padding: INTEGER = 10;
 
+feature {LAYOUT_INSPECTOR, EV_ANY_I} -- Implementation
+
 	button: NS_BUTTON;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-end -- class EV_TOOL_BAR_BUTTON_IMP
+	cocoa_view: NS_VIEW
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
+
+end -- class EV_TOOL_BAR_BUTTON_IMP

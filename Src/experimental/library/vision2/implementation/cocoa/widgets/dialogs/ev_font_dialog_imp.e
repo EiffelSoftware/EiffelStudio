@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			create font_panel.shared_font_panel
-			window := font_panel
+--			window := font_panel
 		end
 
 feature -- Access

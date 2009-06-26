@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			tab_position := {EV_NOTEBOOK}.tab_top
 			create tabs.make (5)
 			create tab_view.make
-			cocoa_item := tab_view
+			cocoa_view := tab_view
 
 			Precursor {EV_WIDGET_LIST_IMP}
 			initialize_pixmaps

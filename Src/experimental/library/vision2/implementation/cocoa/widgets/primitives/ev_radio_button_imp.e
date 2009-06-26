@@ -14,9 +14,6 @@ inherit
 		end
 
 	EV_BUTTON_IMP
-		export
-			{NONE}
-				cocoa_item
 		undefine
 			default_alignment
 		redefine
@@ -47,10 +44,10 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
+			cocoa_view := current
 			Precursor {EV_RADIO_PEER_IMP}
 			Precursor {EV_BUTTON_IMP}
 			cocoa_make
-			cocoa_item := current
 			set_button_type ({NS_BUTTON}.radio_button)
 			align_text_left
 			set_state ({NS_CELL}.on_state)
@@ -81,7 +78,7 @@ feature -- Status report
 			Result := state = {NS_CELL}.on_state
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 

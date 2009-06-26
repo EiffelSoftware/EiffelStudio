@@ -54,12 +54,12 @@ feature {NONE} -- Initialization
 		do
 			internal_height := 10
 			internal_width := 10
+			Precursor {EV_DRAWABLE_IMP}
 			create image_view.make
-			cocoa_item := image_view
+			cocoa_view := image_view
 			image_view.set_image_scaling ({NS_IMAGE_VIEW}.image_scaling_none)
 
 			Precursor {EV_PRIMITIVE_IMP}
-			Precursor {EV_DRAWABLE_IMP}
 			disable_tabable_from
 			disable_tabable_to
 		end
@@ -187,7 +187,7 @@ feature -- Access
 	raw_image_data: EV_RAW_IMAGE_DATA
 		do
 			create Result.make_with_alpha_zero (width, height)
-			Result.set_originating_pixmap (interface)
+			Result.set_originating_pixmap (attached_interface)
 			-- TODO: image -> bitmap, read bitmap values and write in Result
 		end
 
@@ -197,9 +197,10 @@ feature -- Duplication
 			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
-			other_imp: EV_PIXMAP_IMP
+			other_imp: detachable EV_PIXMAP_IMP
 		do
 			other_imp ?= other.implementation
+			check other_imp /= void end
 
 --			if other_imp.pixmap_filename /= Void then
 --				pixmap_filename := other_imp.pixmap_filename.twin
@@ -244,8 +245,10 @@ feature {NONE} -- Constants
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_PIXMAP note option: stable attribute end;
-
 	image_view: NS_IMAGE_VIEW
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 end -- EV_PIXMAP_IMP

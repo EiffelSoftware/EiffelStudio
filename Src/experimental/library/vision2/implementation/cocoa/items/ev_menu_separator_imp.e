@@ -34,22 +34,15 @@ feature {NONE} -- Initialization
 	make
 		do
 			pixmapable_imp_initialize
-			create {NS_MENU_ITEM}cocoa_item.separator_item
+			create menu_item.separator_item
 			pixmapable_imp_initialize
 			is_sensitive := True
 			set_is_initialized (True)
 		end
 
-	initialize_menu_sep_box
-			-- Create and initialize menu item box.
-			--| This is just to satisfy pixmapable and textable contracts.
-		do
-
-		end
-
 feature {EV_MENU_ITEM_LIST_IMP} -- Access
 
-	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+	radio_group: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radio items following this separator.
 
 	create_radio_group
@@ -107,14 +100,14 @@ feature {EV_ANY_I} -- Implementation
 			option: stable
 			attribute
 		end
-		
+
 	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 		note
 			option: stable
 			attribute
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 

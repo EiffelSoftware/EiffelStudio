@@ -20,11 +20,6 @@ inherit
 			make
 		end
 
-	EV_TOOLTIPABLE_IMP
-		redefine
-			interface
-		end
-
 feature {NONE} -- Initialization
 
 	make
@@ -114,32 +109,26 @@ feature -- Minimum size
 			-- Make `a_minimum_height' the new `minimum_height' of `Current'.
 			-- Should check if the user didn't set the minimum width
 			-- before setting a new value.
-		local
-			p_imp: like parent_imp
 		do
 			if minimum_height /= a_minimum_height then
 				if not is_user_min_height_set then
 					internal_minimum_height := a_minimum_height
 				end
-				p_imp := parent_imp
-				if p_imp /= Void then
-					p_imp.notify_change (Nc_minheight, Current)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.notify_change (Nc_minheight, Current)
 				end
 			end
 		end
 
 	internal_set_minimum_width (a_minimum_width: INTEGER)
 			-- Abstracted implementation for minimum size setting.
-		local
-			p_imp: like parent_imp
 		do
 			if minimum_width /= a_minimum_width then
 				if not is_user_min_width_set then
 					internal_minimum_width := a_minimum_width
 				end
-				p_imp := parent_imp
-				if p_imp /= Void then
-					p_imp.notify_change (Nc_minwidth, Current)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.notify_change (Nc_minwidth, Current)
 				end
 			end
 		end

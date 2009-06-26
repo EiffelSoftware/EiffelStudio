@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create tab_view_item.make
-			cocoa_item := tab_view_item
 			initialize_textable
 			set_is_initialized (True)
 		end
@@ -60,7 +59,7 @@ feature -- Element change
 		do
 			Precursor {EV_NOTEBOOK_TAB_I} (a_notebook, a_widget)
 			if attached {EV_WIDGET_IMP} a_widget.implementation as v_imp then
-				tab_view_item.set_view (v_imp.cocoa_view)
+				tab_view_item.set_view (v_imp.attached_view)
 			end
 		end
 

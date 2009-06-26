@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 			-- Create Textfield on a user_pane
 		do
 			create {NS_SECURE_TEXT_FIELD}text_field.make
-			cocoa_item := text_field
+			cocoa_view := text_field
 			Precursor {EV_TEXT_FIELD_IMP}
 			set_is_initialized (True)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PASSWORD_FIELD note option: stable attribute end;
 

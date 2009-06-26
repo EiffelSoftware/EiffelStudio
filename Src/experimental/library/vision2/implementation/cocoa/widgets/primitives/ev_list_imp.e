@@ -51,7 +51,7 @@ feature -- Initialize
 			table_column: NS_TABLE_COLUMN
 		do
 			create scroll_view.make
-			cocoa_item := scroll_view
+			cocoa_view := scroll_view
 			create outline_view.make
 			scroll_view.set_document_view (outline_view)
 			scroll_view.set_has_horizontal_scroller (True)
@@ -64,6 +64,8 @@ feature -- Initialize
 			outline_view.set_header_view (default_pointer)
 			table_column.set_width (1000.0)
 
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+
 			create_data_source
 			outline_view.set_data_source (current)
 
@@ -71,7 +73,6 @@ feature -- Initialize
 			outline_view.set_delegate (current)
 
 			-- FIXME: Change to TableView
-			Precursor {EV_LIST_ITEM_LIST_IMP}
 			enable_tabable_to
 		end
 
@@ -90,11 +91,8 @@ feature -- DataSource
 
 	number_of_children_of_item (a_node: detachable EV_LIST_ITEM): INTEGER
 		do
-			if attached a_node then
-				Result := count
-			else
-				Result := 0
-			end
+			check a_node = Void end
+			Result := count
 		end
 
 	is_item_expandable (a_node: detachable EV_LIST_ITEM): BOOLEAN
@@ -133,6 +131,9 @@ feature -- Access
 			-- `selected_items' for a single selection list.
 		do
 			create Result.make (0)
+			if attached selected_item as l_item then
+				Result.extend (l_item)
+			end
 		end
 
 feature -- Status Report
@@ -192,8 +193,6 @@ feature -- PND
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	previous_selection: ARRAYED_LIST [EV_LIST_ITEM]
-		-- List of selected items from last selection change
 
 	call_selection_action_sequences
 			-- Call appropriate selection and deselection action sequences

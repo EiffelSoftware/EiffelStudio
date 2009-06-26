@@ -29,17 +29,10 @@ feature -- Element change
 			-- Set `tooltip' to `a_text'.
 		do
 			internal_tooltip_string := a_tooltip.twin
-			if attached {NS_VIEW} cocoa_item as l_view then
-				l_view.set_tool_tip (create {NS_STRING}.make_with_string (a_tooltip))
-			end
 		end
 
 feature {NONE} -- Implementation
 
 	internal_tooltip_string: detachable STRING_32
-
-	cocoa_item: NS_OBJECT
-	deferred
-	end
 
 end -- EV_TOOLTIPABLE_IMP

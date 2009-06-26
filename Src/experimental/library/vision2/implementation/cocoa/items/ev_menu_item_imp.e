@@ -1,5 +1,6 @@
 note
 	description: "Eiffel Vision menu item. Cocoa implementation."
+	author:	"Daniel Furrer"
 
 class
 	EV_MENU_ITEM_IMP
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			pixmapable_imp_initialize
-			create {NS_MENU_ITEM}cocoa_item.make
+			create menu_item.make
 			menu_item.set_action (agent
 				do
 					select_actions.call ([])
@@ -60,11 +61,9 @@ feature -- Status setting
 			-- Make the menu item avtive
 		local
 			pos: INTEGER
-			a_menu: EV_MENU_IMP
 		do
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
-			a_menu ?= parent_imp
-			if a_menu /= Void then
+			if attached {EV_MENU_IMP} parent_imp as a_menu then
 				pos := a_menu.index_of (interface, 1)
 			end
 			Precursor {EV_SENSITIVE_IMP}
@@ -74,11 +73,9 @@ feature -- Status setting
 			-- Make the menu item grayed out and ignore commands
 		local
 			pos: INTEGER
-			a_menu: EV_MENU_IMP
 		do
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
-			a_menu ?= parent_imp
-			if a_menu /= Void then
+			if attached {EV_MENU_IMP} parent_imp as a_menu then
 				pos := a_menu.index_of (interface, 1)
 			end
 			Precursor {EV_SENSITIVE_IMP}
@@ -93,7 +90,6 @@ feature -- Element change
 			ns_text: NS_STRING
 			l_split_list: LIST [STRING_32]
 			i: INTEGER
-			a_menu_imp: EV_MENU_ITEM_LIST_IMP
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 
@@ -113,8 +109,7 @@ feature -- Element change
 
 			create ns_text.make_with_string (l_text)
 			menu_item.set_title (ns_text)
-			a_menu_imp ?= current
-			if a_menu_imp /= void then
+			if attached {EV_MENU_ITEM_LIST_IMP} current as a_menu_imp then
 				a_menu_imp.menu.set_title (ns_text)
 			end
 		end
@@ -198,14 +193,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	accelerators_enabled: BOOLEAN = True
 
+	menu_item: NS_MENU_ITEM
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
-	menu_item: NS_MENU_ITEM
-		do
-			Result ?= cocoa_item
-		end
-
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_MENU_ITEM_IMP
-

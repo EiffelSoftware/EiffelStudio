@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			--text_field.set_draws_background (false)
 			text_field.set_bordered (false)
 			text_field.set_background_color (create {NS_COLOR}.control_color)
-			cocoa_item := text_field
+			cocoa_view := text_field
 
 			align_text_center
 

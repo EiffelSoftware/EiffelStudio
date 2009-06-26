@@ -24,11 +24,6 @@ inherit
 			notify_change
 		end
 
-	EV_NS_VIEW
-		redefine
-			interface
-		end
-
 create
 	make
 
@@ -37,7 +32,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			cocoa_item := create {NS_VIEW}.make_flipped
+			cocoa_view := create {NS_VIEW}.make_flipped
 			Precursor {EV_WIDGET_LIST_IMP}
 		end
 

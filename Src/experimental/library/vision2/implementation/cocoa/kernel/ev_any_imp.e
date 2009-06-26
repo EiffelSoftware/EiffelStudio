@@ -31,7 +31,7 @@ feature {EV_ANY_I, EV_ANY} -- Access
 			assign_interface (an_interface)
 		end
 
-	cocoa_item: NS_OBJECT
+--	cocoa_item: NS_OBJECT
 
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
 

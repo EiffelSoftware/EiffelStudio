@@ -1,7 +1,6 @@
 note
 	description: "Cocoa implementation of EV_POINTER_STYLE_I."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	keywords: "mouse, pointer, cursor, arrow"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,12 +32,14 @@ feature {NONE} -- Initlization
 	make
 			-- Initialize
 		do
+			-- See NSCursor
 			set_is_initialized (True)
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Initialize from `a_pixel_buffer'
 		do
+			-- initWithImage:hotSpot:
 		end
 
 	init_predefined (a_constant: INTEGER)
@@ -113,6 +114,4 @@ feature {NONE} -- Implementation
 		do
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end

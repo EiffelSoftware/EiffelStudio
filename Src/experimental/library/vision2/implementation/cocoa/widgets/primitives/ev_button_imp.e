@@ -81,10 +81,10 @@ feature {NONE} -- Initialization
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		do
+			cocoa_view := current
+			cocoa_make
 			Precursor {EV_PRIMITIVE_IMP}
 
-			cocoa_make
-			cocoa_item := current
 			set_bezel_style ({NS_BUTTON}.rounded_bezel_style)
 			align_text_center
 
@@ -95,6 +95,11 @@ feature {NONE} -- Initialization
 
 			set_action (agent select_actions.call ([]))
 		end
+
+--	cocoa_view: NS_VIEW
+--		do
+--			Result := current
+--		end
 
 feature -- Access
 

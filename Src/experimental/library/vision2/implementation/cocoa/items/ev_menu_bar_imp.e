@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			-- Create and initialize `Current'.
 		do
 			create menu.make
-			cocoa_item := menu
 			initialize_item_list
 		end
 

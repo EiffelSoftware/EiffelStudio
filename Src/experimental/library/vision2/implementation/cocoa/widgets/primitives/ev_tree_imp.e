@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			table_column: NS_TABLE_COLUMN
 		do
 			create scroll_view.make
-			cocoa_item := scroll_view
+			cocoa_view := scroll_view
 			create outline_view.make
 			scroll_view.set_document_view (outline_view)
 			scroll_view.set_has_horizontal_scroller (True)
@@ -74,13 +74,14 @@ feature {NONE} -- Initialization
 			outline_view.set_header_view (default_pointer)
 			table_column.set_width (1000.0)
 
+			initialize_item_list
+
 			create_data_source
 			outline_view.set_data_source (current)
 
 			create_delegate
 			outline_view.set_delegate (current)
 
-			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
 			enable_tabable_from
@@ -102,8 +103,8 @@ feature -- Delegate
 			-- The selection of the NSOutlineView changed
 		do
 			select_actions.call ([])
-			if attached selected_item as item then
-				item.select_actions.call([])
+			if attached selected_item as l_item then
+				l_item.select_actions.call([])
 			end
 		end
 
@@ -134,7 +135,7 @@ feature -- DataSource
 			if a_node = void then
 				l_result := i_th (an_index + 1)
 				check l_result /= Void end
-				Result ?= l_result
+				Result := l_result
 			else
 				Result := a_node.i_th (an_index + 1)
 			end
@@ -148,9 +149,14 @@ feature -- DataSource
 feature -- Status report
 
 	selected_item: detachable EV_TREE_NODE
-			-- Item which is currently selected
+			-- Item which is currently selected; Void if none
+		local
+			l_row: INTEGER
 		do
-			Result ?= outline_view.item_at_row (outline_view.selected_row)
+			l_row := outline_view.selected_row
+			if l_row /= -1 then
+				Result ?= outline_view.item_at_row (l_row)
+			end
 		end
 
 	selected: BOOLEAN
@@ -194,9 +200,6 @@ feature -- Implementation
 			-- Update the PND connection status for `Current'.
 		do
 		end
-
-	pnd_row_imp: EV_TREE_NODE_IMP
-			-- Implementation object of the current row if in PND transport.
 
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.

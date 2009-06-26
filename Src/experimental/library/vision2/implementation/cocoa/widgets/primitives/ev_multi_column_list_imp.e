@@ -57,8 +57,9 @@ feature {NONE} -- Initialization
 			create previous_selection.make (1)
 			create column_titles.make
 			create column_alignments.make
+			create column_widths.make
 
-			create {NS_OUTLINE_VIEW}cocoa_item.make
+			create {NS_OUTLINE_VIEW}cocoa_view.make
 
 			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
@@ -120,8 +121,8 @@ feature {NONE} -- Implementation
 
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 		local
-			a_row_number: INTEGER
-			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+--			a_row_number: INTEGER
+--			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 --			Precursor (a_motion_tuple)
 --			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then

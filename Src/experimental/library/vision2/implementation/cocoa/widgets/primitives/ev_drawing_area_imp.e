@@ -31,9 +31,7 @@ inherit
 			set_background_color
 		redefine
 			interface,
-			default_key_processing_blocked,
 			make,
-			set_focus,
 			dispose
 		end
 
@@ -60,10 +58,10 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			make_custom_cocoa (agent cocoa_draw_rect)
-			cocoa_item := current
-			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_DRAWABLE_IMP}
+			make_custom_cocoa (agent cocoa_draw_rect)
+			cocoa_view := current
+			Precursor {EV_PRIMITIVE_IMP}
 			initialize_events
 			disable_tabable_from
 		end
@@ -71,19 +69,16 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN
-			-- Should default key processing be allowed for `a_key'.
-		do
-		end
-
 	redraw
 			-- Redraw the entire area.
 		do
+			set_needs_display (True)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
 		do
+--			set_needs_display_in_rect (create {NS_RECT}.make_rect (a_x, a_y, a_width, a_height))
 		end
 
 	clear_and_redraw
@@ -99,27 +94,18 @@ feature -- Status setting
 	flush
 			-- Redraw the screen immediately.
 		do
+--			display
 		end
 
+feature {NONE} -- Implementation
+
 	update_if_needed
-			-- Update `Current' if needed.
 		do
 			set_needs_display (True)
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	lose_focus
-			-- Current has lost keyboard focus.
-		do
-		end
-
-	set_focus
-			-- Grab keyboard focus.
-		do
-		end
-
 	cocoa_draw_rect
+			-- Draw callback
 		local
 			invalid_rect: NS_RECT
 		do
@@ -144,6 +130,8 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {NS_VIEW}
 			Precursor {EV_PRIMITIVE_IMP}
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 

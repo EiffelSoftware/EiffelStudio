@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			box: NS_BOX
 		do
 			create box.make
-			cocoa_item := box
+			cocoa_view := box
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
 			box.set_box_type ({NS_BOX}.box_separator)

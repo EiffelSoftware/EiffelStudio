@@ -37,7 +37,7 @@ feature -- Initialization
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_border_type ({NS_BOX}.no_border)
 			box.set_content_view_margins (0, 0)
-			cocoa_item := box
+			cocoa_view := box
 
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
@@ -151,18 +151,21 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			-- Set whether every child is the same size.
 		do
 			is_homogeneous := flag
+			notify_change (Nc_minheight, Current)
 		end
 
 	set_border_width (value: INTEGER)
 			 -- Assign `value' to `border_width'.
 		do
 			border_width := value
+			notify_change (Nc_minheight, Current)
 		end
 
 	set_padding (value: INTEGER)
 			-- Assign `value' to `padding'.
 		do
 			padding := value
+			notify_change (Nc_minheight, Current)
 		end
 
 feature -- Color

@@ -25,7 +25,8 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create {NS_SLIDER}cocoa_item.make
+			create slider.make
+			cocoa_view := slider
 			Precursor {EV_GAUGE_IMP}
 			enable_tabable_to
 			change_actions_internal := create_change_actions
@@ -35,7 +36,7 @@ feature {NONE} -- Initialization
 				do
 					l_value := slider.double_value.floor
 					value := l_value
-					change_actions_internal.call ([l_value])
+					change_actions.call ([l_value])
 				end)
 			set_is_initialized (True)
 		end
@@ -56,11 +57,10 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_RANGE note option: stable attribute end;
-
 	slider: NS_SLIDER
-		do
-			Result ?= cocoa_view
-		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_RANGE note option: stable attribute end;
 
 end -- class EV_RANGE_IMP

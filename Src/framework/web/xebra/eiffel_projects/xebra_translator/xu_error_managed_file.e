@@ -38,13 +38,10 @@ feature -- Access
 					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_generic_file_name), false)
 				else
 					l_source := ""
-					from
-						l_file.read_line
-					until
-						l_file.end_of_file
-					loop
-						l_source := l_source + l_file.last_string + "%N"
-						l_file.read_line
+					l_file.read_stream (l_file.count)
+					l_source := l_file.last_string
+					if not l_source [l_source.count].is_equal ('%N') then
+						l_source.extend ('%N')
 					end
 					a_action.call ([l_source, l_file])
 					l_file.close

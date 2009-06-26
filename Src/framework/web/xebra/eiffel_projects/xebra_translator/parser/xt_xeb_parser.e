@@ -70,13 +70,12 @@ feature {NONE} -- Implementation
 	xml_parser: PEG_ABSTRACT_PEG
 			--
 		local
-			xeb_file, xml, leaf_xml, composite_xml, namespace_xml, namespace_leaf_xml, doctype,
-			xml_header, xml_namespace_header,
-			identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
+			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
+			identifier, namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
 			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
 			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
-			tab, newline, space, return, feed, epsilon: PEG_ABSTRACT_PEG
+			tab, newline, space, return, feed, eof: PEG_ABSTRACT_PEG
 		once
 				-- Basic parsers (single character parsers)
 			digit := create {PEG_RANGE}.make_with_range ('0', '9')
@@ -99,12 +98,15 @@ feature {NONE} -- Implementation
 			percent := char ('%%')
 			sharp := char ('#')
 			exclamation := char ('!')
-			epsilon := create {PEG_EPSILON}.make
 			any_char := create {PEG_ANY}.make
+
+				-- End of File
+			eof := any_char.negate
 
 				-- For graceful recovery of silly mistake of missing '>' we add a error strategy
 			close_fixed := char ('>')
 			close_fixed.set_error_strategy (agent handle_close_error)
+			close_fixed.fixate
 
 				-- Directly create with constructor because the character should be put onto the result list
 			underscore := create {PEG_CHARACTER}.make_with_character ('_')
@@ -113,11 +115,12 @@ feature {NONE} -- Implementation
 				-- Whitespace: Eats all the whitespace until something else appears
 			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
 			ws.ommit_result
-			ws := -ws
+			ws := +ws
 
 				-- A common identifier. Will put the identifier {STRING} on the stack
 			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
 			identifier.set_behaviour (agent concatenate_results)
+			identifier.fixate
 
 				-- XML comments
 			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
@@ -141,34 +144,35 @@ feature {NONE} -- Implementation
 			value := variable_attribute | dynamic_attribute | value_attribute
 
 				-- Tag attributes
-			l_attribute := (ws + identifier + ws + equals + ws + quote + value + quote)
+			l_attribute := (ws + identifier + ws.optional + equals + ws.optional + quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
+			l_attribute.fixate
+
+			namespace_identifier := identifier + colon + identifier
+			namespace_identifier.fixate
+			plain_html_header := identifier + (-l_attribute)
+			plain_html_header.fixate
+			xeb_tag_header := namespace_identifier + (-l_attribute)
+			xeb_tag_header.fixate
 
 			create {PEG_CHOICE} xml.make
-			create {PEG_SEQUENCE} composite_xml.make
-			create {PEG_SEQUENCE} namespace_xml.make
-			create {PEG_SEQUENCE} leaf_xml.make
-			create {PEG_SEQUENCE} namespace_leaf_xml.make
-			xml_header := open + identifier + (-l_attribute)
-			xml_namespace_header := open + identifier + colon + identifier + (-l_attribute)
 
-				-- Normal xml without namespaces. With children tags (or text)
-			composite_xml := composite_xml + xml_header + close_fixed + (-xml) + open + slash + identifier + ws.optional + close_fixed
-				-- Normal xml with namespaces. With children tags (or text)
-			namespace_xml := namespace_xml + xml_namespace_header + close_fixed + (-xml) + open + slash + identifier + colon + identifier + ws.optional + close_fixed
-				-- Normal xml without namespaces and without children
-			leaf_xml := leaf_xml + xml_header + ws + slash + close_fixed
-				-- Normal xml with namespaces and without children
-			namespace_leaf_xml := namespace_leaf_xml + xml_namespace_header + ws + slash + close_fixed
+			plain_html := identifier.enforce + (
+							plain_html_header + ws.optional + (
+									slash |
+									(close_fixed + (-xml) + open + slash + ws.optional + identifier)
+								)
+						)
+			plain_html.set_behaviour (agent build_plain_html)
+			xeb_tag := namespace_identifier.enforce  + (
+							xeb_tag_header + ws.optional + (
+									slash |
+									(close_fixed + (-xml) + open + slash + ws.optional + namespace_identifier)
+								)
+						)
 
-			composite_xml.set_behaviour (agent build_html_tag)
-			namespace_xml.set_behaviour (agent build_tag)
-			leaf_xml.set_behaviour (agent build_leaf_html_tag)
-			namespace_leaf_xml.set_behaviour (agent build_leaf_tag)
-
-				-- XML tree
-			xml := xml | namespace_leaf_xml | leaf_xml | namespace_xml | composite_xml | plain_text
-			xml.set_behaviour (agent go_through)
+			xeb_tag.set_behaviour (agent build_xeb_tag)
+			xml := xml | (open + (xeb_tag | plain_html) + ws.optional + close_fixed) | plain_text
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
 			plain_text_without_behaviour := +((open + any_char).negate + any_char)
@@ -184,12 +188,6 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Parser error strategies
-
-	go_through (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-		do
-			print ("%Ne:" + a_result.error_messages.count.out + " " + a_result.out)
-			Result := a_result
-		end
 
 	handle_close_error (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Fixes the missing '>' by assuming it is there
@@ -244,7 +242,7 @@ feature -- Parser Behaviours
 			Result_attached: attached Result
 		end
 
-	build_html_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+	build_plain_html (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Builds a html tag
 		require
 			a_result_attached: attached a_result
@@ -258,7 +256,7 @@ feature -- Parser Behaviours
 				from
 					l_i := 2
 				until
-					l_i > a_result.internal_result.count-1
+					l_i > a_result.internal_result.count
 				loop
 					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 						if l_tag.has_attribute (l_attribute.id) then
@@ -271,22 +269,25 @@ feature -- Parser Behaviours
 					end
 					l_i := l_i + 1
 				end
-				if not a_result.internal_result.last.is_equal (a_result.internal_result.first) then
-					Result.put_error_message ("Non-matching end tag: " + a_result.internal_result.last.out +
-										" for start tag: " + a_result.internal_result.first.out)
+				if attached {STRING} a_result.internal_result.last as l_last_tag then
+					if not l_last_tag.is_equal (l_id) then
+						Result.put_error_message ("Non-matching end tag: " + a_result.internal_result.last.out +
+											" for start tag: " + a_result.internal_result.first.out)
+					end
 				end
 			end
 			if attached l_tag then
 				Result.replace_result (l_tag)
 			end
+
 		ensure
 			Result_attached: attached Result
 		end
 
-	build_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Builds a tag (with namespace and hence taglib)
+	build_xeb_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Builds a xebra tag
 		require
-			a_result: attached a_result
+			a_result_attached: attached a_result
 		local
 			l_tag: XP_TAG_ELEMENT
 			l_taglib: XTL_TAG_LIBRARY
@@ -303,7 +304,7 @@ feature -- Parser Behaviours
 							from
 								l_i := 3
 							until
-								l_i > a_result.internal_result.count-1
+								l_i > a_result.internal_result.count
 							loop
 								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 									if l_tag.has_attribute (l_attribute.id) then
@@ -316,89 +317,19 @@ feature -- Parser Behaviours
 								end
 								l_i := l_i + 1
 							end
-							l_end_tag := a_result.internal_result [a_result.internal_result.count-1].out + ":" + a_result.internal_result [a_result.internal_result.count].out
-							if not (l_namespace+":"+l_id).is_equal (l_end_tag) then
-								Result.put_error_message ("Unmatched tags: " + l_namespace+":"+l_id + " expected but found: " + l_end_tag)
+							if attached {STRING} a_result.internal_result [a_result.internal_result.count-1] as l_l_namespace then
+								if attached {STRING} a_result.internal_result.last as l_l_id then
+									l_end_tag := l_namespace + ":" + l_l_id
+									if not (l_namespace+":"+l_id).is_equal (l_end_tag) then
+										Result.put_error_message ("Unmatched tags: " + l_namespace+":"+l_id + " expected but found: " + l_end_tag)
+									end
+								end
 							end
 						else
 							Result.put_error_message ("Unknown tag for taglib: " + l_namespace + ":" + l_id)
 						end
 					else
 						Result.put_error_message ("Unknown taglib: " + l_namespace)
-					end
-				end
-			end
-			if attached l_tag then
-				Result.replace_result (l_tag)
-			end
-		ensure
-			Result_attached: attached Result
-		end
-
-	build_leaf_html_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Builds a html tag
-		require
-			a_result_attached: attached a_result
-		local
-			l_tag: XP_TAG_ELEMENT
-		do
-			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_id then
-				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug(a_result.left_to_parse.debug_information))
-				from
-					Result.internal_result.start
-					Result.internal_result.forth -- Begin with the second
-				until
-					Result.internal_result.after
-				loop
-					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result.item as l_attribute then
-						if l_tag.has_attribute (l_attribute.id) then
-							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
-						else
-							l_tag.put_attribute (l_attribute.id, l_attribute.value)
-						end
-					end
-					Result.internal_result.forth
-				end
-			end
-			if attached l_tag then
-				Result.replace_result (l_tag)
-			end
-		ensure
-			Result_attached: attached Result
-		end
-
-	build_leaf_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Builds a tag
-		require
-			a_result_attached: attached a_result
-		local
-			l_tag: XP_TAG_ELEMENT
-			l_taglib: XTL_TAG_LIBRARY
-		do
-			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_namespace then
-				if attached {STRING} a_result.internal_result [2] as l_id then
-					if registry.contains_tag_lib (l_namespace) then
-						l_taglib := registry.retrieve_taglib (l_namespace)
-						if l_taglib.contains (l_id) then
-							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug(a_result.left_to_parse.debug_information))
-							from
-								Result.internal_result.start
-								Result.internal_result.forth -- Begin with the second
-							until
-								Result.internal_result.after
-							loop
-								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result.item as l_attribute then
-									if l_tag.has_attribute (l_attribute.id) then
-										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
-									else
-										l_tag.put_attribute (l_attribute.id, l_attribute.value)
-									end
-								end
-								Result.internal_result.forth
-							end
-						end
 					end
 				end
 			end
@@ -584,7 +515,7 @@ feature -- Basic Functionality
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result.first as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing was not complete: %"" + l_result.left_to_parse.out + "%"")
+					add_parse_error ("Parsing was not complete in '" + source_path + "': %"" + l_result.left_to_parse.out + "%"")
 				else
 					template.put_root_tag (l_root_tag)
 					Result := True
@@ -598,7 +529,7 @@ feature -- Basic Functionality
 			until
 				l_result.error_messages.after
 			loop
-				add_parse_error (l_result.error_messages.index.out + ": " + l_result.error_messages.item)
+				add_parse_error (source_path + ": " + l_result.error_messages.index.out + ": " + l_result.error_messages.item)
 				l_result.error_messages.forth
 			end
 		ensure

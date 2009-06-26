@@ -46,8 +46,12 @@ feature -- Implementation
 
 	add_choice alias "|" (a_other: PEG_ABSTRACT_PEG): PEG_CHOICE
 		do
-			children.extend(a_other)
-			Result := Current
+			if fixated then
+				Result := Precursor (a_other)
+			else
+				children.extend(a_other)
+				Result := Current
+			end
 		end
 
 	serialization_separator: STRING

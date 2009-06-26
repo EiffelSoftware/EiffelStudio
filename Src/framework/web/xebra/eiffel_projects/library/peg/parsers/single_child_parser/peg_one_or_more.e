@@ -30,10 +30,12 @@ feature -- Implementation
 				loop
 					temp := child.parse (temp.left_to_parse)
 					if (temp.success) then
+						Result.left_to_parse := temp.left_to_parse
 						Result.append_results (temp)
-						l_list := Result.internal_result
-						Result := temp
-						Result.set_result (l_list)
+--						Result.append_results (temp)
+--						l_list := Result.internal_result
+--						Result := temp
+--						Result.set_result (l_list)
 					end
 				end
 				Result := build_result (Result)

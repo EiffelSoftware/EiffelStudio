@@ -26,6 +26,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	has_response: BOOLEAN
+			-- Defines whether this command expects a response
+		do
+			Result := True
+		end
+
 feature -- Basic operations
 
 	execute (a_platform: ANY): XC_COMMAND_RESPONSE

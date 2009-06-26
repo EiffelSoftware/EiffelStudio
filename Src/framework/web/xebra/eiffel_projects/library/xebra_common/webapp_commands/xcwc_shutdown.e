@@ -11,11 +11,20 @@ class
 	XCWC_SHUTDOWN
 inherit
 	XC_WEBAPP_COMMAND
-
+		redefine
+			has_response
+		end
 create
 	make
 
 feature -- Access
+
+	has_response: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
+
 
 	description: STRING
 			-- <Precursor>

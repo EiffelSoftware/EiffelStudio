@@ -51,14 +51,20 @@ feature {NONE} -- Implementation
 					l_webapp_socket.put_natural (0)
 
 		            l_webapp_socket.independent_store (l_current_request)
-		            o.dprint ("Waiting for response", 2)
-		            l_webapp_socket.read_natural
-					if attached {XC_COMMAND_RESPONSE} l_webapp_socket.retrieved as l_response then
-						o.dprint ("Response retrieved", 2)
-		            	Result := l_response
-		            else
-		            	Result := (create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_command_response
-		            end
+
+		            if l_current_request.has_response then
+		            	o.dprint ("Waiting for response", 2)
+			            l_webapp_socket.read_natural
+						if attached {XC_COMMAND_RESPONSE} l_webapp_socket.retrieved as l_response then
+							o.dprint ("Response retrieved", 2)
+			            	Result := l_response
+			            else
+			            	Result := (create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_command_response
+			            end
+				   else
+				   		Result := create {XCCR_NO_RESPONSE}.make
+				   end
+
 		        else
 		        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_command_response
 		        end

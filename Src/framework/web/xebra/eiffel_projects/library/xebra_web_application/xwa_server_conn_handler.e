@@ -82,12 +82,12 @@ feature -- Implementation
 		                socket.read_natural
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
-			            else
-							l_response := (create {XER_INVALID_COMMAND}.make("")).render_to_command_response
+			       			if l_command.has_response then
+							    o.dprint ("Sending back response...", 2)
+						        socket.put_natural (0)
+								socket.independent_store (l_response)
+			       			end
 			            end
-					    o.dprint ("Sending back response...", 2)
-				        socket.put_natural (0)
-						socket.independent_store (l_response)
 			            socket.cleanup
 			            check
 				        	socket.is_closed

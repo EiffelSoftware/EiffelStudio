@@ -80,13 +80,15 @@ feature -- Inherited Features
 				            if attached {XC_SERVER_COMMAND} thread_cmd_socket.retrieved as l_command then
 				            	o.dprint ("Command retreived...",2)
 								l_command_response := l_command.execute (main_server)
-				 	       	else
-				 	       		l_command_response := create {XCCR_CANNOT_SEND}.make
+
+					 	       	if l_command.has_response then
+						 	       	o.dprint ("Sending back command_response...", 2)
+									thread_cmd_socket.put_natural (0)
+									thread_cmd_socket.independent_store (l_command_response)
+					 	       	end
+
 				 	       	end
 
-							o.dprint ("Sending back command_response...", 2)
-							thread_cmd_socket.put_natural (0)
-							thread_cmd_socket.independent_store (l_command_response)
 
 				         	thread_cmd_socket.cleanup
 				            check

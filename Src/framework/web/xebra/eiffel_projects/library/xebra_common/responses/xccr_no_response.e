@@ -1,6 +1,6 @@
 note
 	description: "[
-		Is returned if the command was executed successfully.
+		Is returned if the command doesent expect a response.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCCR_OK
+	XCCR_NO_RESPONSE
 
 inherit
 	XC_COMMAND_RESPONSE
@@ -22,5 +22,6 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 		end
-end
 
+
+end

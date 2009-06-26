@@ -73,6 +73,9 @@ extern EIF_TYPE_INDEX eif_par_table_size;
 extern struct eif_par_types **eif_par_table2;
 extern EIF_TYPE_INDEX eif_par_table2_size;
 
+/* Current maximum number of types. */
+extern EIF_TYPE_INDEX eif_next_gen_id;
+
 #ifdef EIF_THREADS
 extern EIF_LW_MUTEX_TYPE *eif_gen_mutex;
 #endif

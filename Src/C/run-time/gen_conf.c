@@ -169,21 +169,21 @@ typedef struct {
 #endif
 } EIF_CONF_TAB;
 /*
-doc:	<attribute name="first_gen_id" return_type="EIF_TYPE_INDEX" export="private">
-doc:		<summary>base id of first generic type. All values below `first_gen_id' do not represent generic classes.</summary>
+doc:	<attribute name="eif_first_gen_id" return_type="EIF_TYPE_INDEX" export="private">
+doc:		<summary>base id of first generic type. All values below `eif_first_gen_id' do not represent generic classes.</summary>
 doc:		<access>Read</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized during runtime initialization in `eif_gen_conf_init'.</synchronization>
 doc:	</attribute>
-doc:	<attribute name="next_gen_id" return_type="EIF_TYPE_INDEX" export="private">
+doc:	<attribute name="eif_next_gen_id" return_type="EIF_TYPE_INDEX" export="shared">
 doc:		<summary>ID for next new generic derivation encountered during runtime execution.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gen_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private EIF_TYPE_INDEX  first_gen_id = 0;
-rt_private EIF_TYPE_INDEX  next_gen_id  = 0;
+rt_private EIF_TYPE_INDEX  eif_first_gen_id = 0;
+rt_shared EIF_TYPE_INDEX  eif_next_gen_id  = 0;
 
 /*
 doc:	<attribute name="eif_conf_tab" return_type="EIF_CONF_TAB **" export="private">
@@ -243,7 +243,7 @@ doc:	</attribute>
 */
 rt_shared EIF_LW_MUTEX_TYPE *eif_gen_mutex = NULL;
 
-rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
+rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
 rt_public EIF_TYPE_INDEX eifthd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
 rt_shared uint32 eifthd_gen_count_with_dftype (EIF_TYPE_INDEX );
 rt_shared char eifthd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
@@ -293,12 +293,12 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX, EIF_TYPE_INDEX*, EIF_TYPE_INDEX
 /* Public features protected with a MUTEX.                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
 {
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eifthd_compound_id (cache, current_dftype, base_id, types);
+	result = eifthd_compound_id (current_dftype, base_id, types);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -448,7 +448,7 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 #else
 	eif_cid_size = max_dtype + 32;
 #endif
-	first_gen_id = next_gen_id = max_dtype + 1;
+	eif_first_gen_id = eif_next_gen_id = max_dtype + 1;
 
 	/* Set `eif_par_table2' if it is null. */
 
@@ -508,25 +508,25 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 	cid_array [1] = 0;  /* id */
 	cid_array [2] = TERMINATOR; /* Terminator */
 
-		/* Initialize `non_generic_type_names' for root thread now that `first_gen_id' is
+		/* Initialize `non_generic_type_names' for root thread now that `eif_first_gen_id' is
 		 * properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
-		 * before `first_gen_id' is initialized and therefore does not allocate anything
-		 * since `first_gen_id' is zero. The second call will do things properly.
+		 * before `eif_first_gen_id' is initialized and therefore does not allocate anything
+		 * since `eif_first_gen_id' is zero. The second call will do things properly.
 		 */
 	eif_gen_conf_thread_init();
 }
 
 /*
 doc:	<routine name="eif_gen_conf_thread_init" return_type="void" export="shared">
-doc:		<summary>Initialize per thread data used for generic conformance. Root thread initialization is done in `eif_gen_conf_init' as when we are called by the `eif_thr_register' routine, the value `first_gen_id' is still zero.</summary>
+doc:		<summary>Initialize per thread data used for generic conformance. Root thread initialization is done in `eif_gen_conf_init' as when we are called by the `eif_thr_register' routine, the value `eif_first_gen_id' is still zero.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 rt_shared void eif_gen_conf_thread_init (void) {
 	RT_GET_CONTEXT
-	if (first_gen_id > 0) {
-		non_generic_type_names = (char **) eif_rt_xcalloc (first_gen_id, sizeof (char *));
+	if (eif_first_gen_id > 0) {
+		non_generic_type_names = (char **) eif_rt_xcalloc (eif_first_gen_id, sizeof (char *));
 	}
 }
 
@@ -542,7 +542,7 @@ rt_shared void eif_gen_conf_thread_cleanup (void) {
 	char *l_name;
 	int i = 0;
 
-	for (; i < first_gen_id; i++) {
+	for (; i < eif_first_gen_id; i++) {
 		l_name = non_generic_type_names [i];
 		if (l_name) {
 			eif_rt_xfree (l_name);
@@ -664,33 +664,16 @@ rt_shared void eif_gen_conf_cleanup (void)
 /* Result  : Resulting id;                                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX base_id, EIF_TYPE_INDEX *types)
 {
-	EIF_TYPE_INDEX   result, gresult;
-	EIF_TYPE_INDEX   outtab [256], *outtable, *intable;
-
-	result = base_id;
-
 	if ((types != NULL) && (*(types+1) != TERMINATOR)) {
-		/* Check if it's cached - if yes return immediately */
-
-		if ((cache) && (*cache != TERMINATOR)) {
-			return *cache;
-		}
-
+		EIF_TYPE_INDEX   outtab [256], *outtable, *intable;
 		intable  = types+1;
 		outtable = outtab;
-
-		gresult = eif_id_of (&intable, &outtable, current_dftype);
-		
-		if (cache) {
-			*cache = gresult;
-		}
-
-		return gresult;
+		return eif_id_of (&intable, &outtable, current_dftype);
+	} else {
+		return base_id;
 	}
-
-	return result;
 }
 
 /*------------------------------------------------------------------*/
@@ -710,7 +693,7 @@ rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **
 
 		if ((gtp != NULL) && (*(gtp+1) != TERMINATOR)) {
 			*gtp = dtype;
-			return eif_compound_id (NULL, dftype, ttable[table_index], gtp);
+			return eif_compound_id (dftype, ttable[table_index], gtp);
 		}
 	}
 
@@ -727,7 +710,7 @@ rt_public uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype)
 {
 	EIF_GEN_DER *gdp;
 
-	REQUIRE("Valid type", dftype < next_gen_id);
+	REQUIRE("Valid type", dftype < eif_next_gen_id);
 
 	gdp = eif_derivations [dftype];
 
@@ -800,7 +783,7 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 	EIF_GEN_DER *gdp;
 
 		/* Check type validity */
-	REQUIRE ("dftype is less than maximum computed id", dftype < next_gen_id);
+	REQUIRE ("dftype is less than maximum computed id", dftype < eif_next_gen_id);
 	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type < MAX_DTYPE);
 
 	gdp = eif_derivations [dftype];
@@ -840,7 +823,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	dftype = Dftype(obj);
 
-	REQUIRE ("Valid dftype", dftype < next_gen_id);
+	REQUIRE ("Valid dftype", dftype < eif_next_gen_id);
 
 	gdp = eif_derivations [dftype];
 
@@ -854,7 +837,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 		/* Now treat the arguments.  This is necessarily a TUPLE */
 	dftype = gdp->typearr [1];
 
-	CHECK ("Valid dftype", dftype < next_gen_id);
+	CHECK ("Valid dftype", dftype < eif_next_gen_id);
 	CHECK ("Routines implies we have tuples", tuple_static_type < MAX_DTYPE);
 
 	gdp = eif_derivations [dftype];
@@ -905,7 +888,7 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 {
 	EIF_GEN_DER *gdp;
 
-	REQUIRE("Valid type", dftype < next_gen_id);
+	REQUIRE("Valid type", dftype < eif_next_gen_id);
 	REQUIRE("pos positive", pos > 0);
 
 	gdp = eif_derivations [dftype];
@@ -967,7 +950,7 @@ rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 	typearr [2] = dtype;			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
-	result = eif_compound_id (NULL, 0, typearr[1], typearr);
+	result = eif_compound_id (0, typearr[1], typearr);
 	return result;
 }
 /*------------------------------------------------------------------*/
@@ -1000,7 +983,7 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 	uint16 len;
 	EIF_GEN_DER *gdp;
 
-	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
+	if ((dftype == NONE_TYPE) || (dftype < eif_first_gen_id)) {
 		CHECK("valid_cid_array", (cid_array[0] == 1) && (cid_array[2] == TERMINATOR));
 		cid_array [1] = dftype;
 		return cid_array;
@@ -1077,7 +1060,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 	}
 
 	a_cidarr [count+1] = TERMINATOR;
-	dftype  = eif_compound_id (NULL, 0, *(a_cidarr+1), a_cidarr);
+	dftype  = eif_compound_id (0, *(a_cidarr+1), a_cidarr);
 	*a_cidarr = count;
 
 	return dftype;
@@ -1120,7 +1103,7 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 		stab = eif_conf_tab[stype];
 	}
 
-	if (ttype < first_gen_id) {
+	if (ttype < eif_first_gen_id) {
 		/* Lower id */
 
 		if ((ttype >= stab->min_low_id) && (ttype <= stab->max_low_id)) {
@@ -1168,7 +1151,7 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 			goto done;
 		}
 
-		if (stype >= first_gen_id) {
+		if (stype >= eif_first_gen_id) {
 				/* Both ids generated here */
 			if (sgdp->first_id == tgdp->first_id) {
 				/* Both have the same base class */
@@ -1338,7 +1321,7 @@ rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **ou
 		return dftype;
 	}
 
-	if (dftype >= first_gen_id) {
+	if (dftype >= eif_first_gen_id) {
 		/* It's an already created gen. type */
 		(*intab)++;
 		if (RT_IS_ATTACHED_TYPE(type_annotation)) {
@@ -1468,7 +1451,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 		result->typearr     = NULL;
 		result->gen_seq     = NULL;      /* Generated on request only */
 		result->ptypes      = NULL;      /* Generated on request only */
-		result->id          = ((size > 0) ? next_gen_id++ : base_id);
+		result->id          = ((size > 0) ? eif_next_gen_id++ : base_id);
 		result->base_id     = base_id;
 		result->first_id    = INVALID_DTYPE;
 		result->annotation  = annotation;
@@ -1503,7 +1486,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(uint32 size, EIF_TYPE_INDEX *typearr, EI
 	result->typearr     = tp;
 	result->gen_seq     = NULL;      /* Generated on request only */
 	result->ptypes      = NULL;      /* Generated on request only */
-	result->id          = next_gen_id++;
+	result->id          = eif_next_gen_id++;
 	result->base_id     = base_id;
 	result->first_id    = INVALID_DTYPE;
 	result->annotation  = annotation;
@@ -1518,8 +1501,8 @@ finish:
 
 	/* Expand tables if necessary */
 
-	if (next_gen_id >= eif_cid_size)
-		eif_expand_tables (next_gen_id + 32);
+	if (eif_next_gen_id >= eif_cid_size)
+		eif_expand_tables (eif_next_gen_id + 32);
 
 	eif_cid_map [result->id] = base_id;
 
@@ -1630,7 +1613,7 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, EIF_TYPE_INDEX new_id)
 
 	is_low = 0;
 
-	if (new_id < first_gen_id) {
+	if (new_id < eif_first_gen_id) {
 		/* It's a lower id */
 
 		is_low  = 1;
@@ -1774,11 +1757,11 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 	EIF_GEN_DER *gdp;
 	char    *result;
 			
-	REQUIRE("Valid type", (dftype < next_gen_id) || (dftype == NONE_TYPE));
+	REQUIRE("Valid type", (dftype < eif_next_gen_id) || (dftype == NONE_TYPE));
 
 	if (dftype == NONE_TYPE) {
 		result = rt_none_name_type;
-	} else if (dftype < first_gen_id) {
+	} else if (dftype < eif_first_gen_id) {
 		RT_GET_CONTEXT
 		result = non_generic_type_names [dftype];
 		if (result == NULL) {
@@ -1841,7 +1824,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int le
 		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
 		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-		if (dftype < first_gen_id) {
+		if (dftype < eif_first_gen_id) {
 			if (needs_expanded) {
 				strcat (result, "expanded ");
 			} else if (needs_reference) {
@@ -1929,7 +1912,7 @@ rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level)
 		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
 		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
 
-		if (dftype < first_gen_id) {
+		if (dftype < eif_first_gen_id) {
 			if (needs_expanded) {
 				len += 9; /* for expanded followed by space */
 			} else if (needs_reference) {
@@ -2004,7 +1987,7 @@ rt_private uint16 eif_gen_seq_len (EIF_TYPE_INDEX dftype)
 	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
 
 		/* Simple id */
-	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
+	if ((dftype == NONE_TYPE) || (dftype < eif_first_gen_id)) {
 		len = 1;
 	} else {
 			/* It's a generic type or a BIT type */
@@ -2061,7 +2044,7 @@ rt_private void eif_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *typearr,
 
 	/* Simple id */
 
-	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
+	if ((dftype == NONE_TYPE) || (dftype < eif_first_gen_id)) {
 		typearr [*idx] = dftype;
 		(*idx)++;
 	} else {
@@ -2318,13 +2301,13 @@ rt_private void eif_compute_ctab (EIF_TYPE_INDEX dftype)
 	}
 
 				/* Compute the ranges of the bit tables */
-	min_low = next_gen_id;
+	min_low = eif_next_gen_id;
 	max_low = 0;
-	min_high = next_gen_id;
+	min_high = eif_next_gen_id;
 	max_high = 0;
 
 		/* Type conforms to itself */
-	if (dftype < first_gen_id) {
+	if (dftype < eif_first_gen_id) {
 		min_low = max_low = dftype;
 	} else {
 		min_high = max_high = dftype;
@@ -2490,7 +2473,7 @@ non_attached_parents:
 	if (is_expanded)
 		return;
 
-	if (dftype < first_gen_id) {
+	if (dftype < eif_first_gen_id) {
 		offset = (dftype - min_low);
 		mask   = (char) (1 << (offset % 8));
 		CHECK("valid low_tab index", (ctab->low_tab + (offset / 8)) < ctab->low_tab_end);

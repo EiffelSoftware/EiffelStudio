@@ -94,7 +94,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define	BC_CARG				28
 #define BC_CLIKE			29
 #define BC_CCUR				30
-#define BC_NOTUSED_31		31
+#define BC_CREATE_TYPE		31
 #define BC_RANGE			32
 #define BC_INSPECT_EXCEP	33
 #define BC_LREVERSE			34

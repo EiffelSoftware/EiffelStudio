@@ -44,6 +44,7 @@
 #include "eif_gen_conf.h"
 #include "eif_object_id.h"
 #include "eif_traverse.h"
+#include "eif_macros.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -163,6 +164,10 @@ extern "C" {
 
 /* TYPE class */
 #define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param_id(Dftype(obj), 1))
+#define eif_builtin_TYPE_type_id(obj)						eif_gen_param_id(Dftype(obj), 1)
+#define eif_builtin_TYPE_runtime_name(obj)					eif_gen_typename_of_type(eif_gen_param_id(Dftype(obj), 1))
+#define eif_builtin_TYPE_generic_parameter_type(obj,i)		RTLNTY(eif_gen_param_id(Dftype(obj), 1))
+#define eif_builtin_TYPE_generic_parameter_count(obj)		eif_gen_count_with_dftype(eif_gen_param_id(Dftype(obj), 1))
 
 /* TUPLE class */
 #define eif_builtin_TUPLE_count(area)						(RT_SPECIAL_COUNT(area) - 1) /* - 1 because first argument is for object_comparison */

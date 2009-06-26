@@ -759,7 +759,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 				 * before finding out the real type */
 			eif_gen_type_id (&l_cecil_type, a_type, data);
 			if (sdata.has_error == 0) {
-				result = eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
+				result = eif_compound_id (0, sdata.typearr[1], sdata.typearr);
 			}
 			eif_free (sdata.typearr);
 		} else {
@@ -806,7 +806,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 					/* Analyze TUPLE type before finding its real type. */
 				eif_tuple_type_id (a_type, data);
 				if (sdata.has_error == 0) {
-					result = eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
+					result = eif_compound_id (0, sdata.typearr[1], sdata.typearr);
 				}
 				eif_free (sdata.typearr);
 			} else {

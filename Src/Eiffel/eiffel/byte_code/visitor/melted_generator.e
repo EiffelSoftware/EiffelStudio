@@ -1664,7 +1664,7 @@ feature {NONE} -- Visitors
 			l_type_creator: CREATE_INFO
 		do
 			fixme ("Instance should be unique.")
-			ba.append (Bc_create)
+			ba.append (Bc_create_type)
 				-- There is no feature call:
 			ba.append_boolean (False)
 

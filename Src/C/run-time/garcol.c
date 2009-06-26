@@ -232,6 +232,7 @@ rt_public struct stack global_once_set = {			/* Once functions */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
+
 	/* Same as above except that GC keeps track of all thread specific stack to
 	 * perform a GC cycle among all threads */
 #ifdef ISE_GC
@@ -388,6 +389,24 @@ rt_public struct stack memory_set =
 	(EIF_REFERENCE *) 0,	/* st_top */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
+
+/*
+doc:	<attribute name="rt_type_set" return_type="EIF_REFERENCE *" export="public">
+doc:		<summary>Mapping between dynamic type and TYPE instances of size `rt_type_set_count'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE *rt_type_set = NULL;
+
+/*
+doc:	<attribute name="rt_type_set_count" return_type="EIF_REFERENCE *" export="public">
+doc:		<summary>Number of elements in `rt_type_set'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
+doc:	</attribute>
+*/
+rt_public rt_uint_ptr volatile rt_type_set_count = 0;
 
 /*
 doc:	<attribute name="overflow_stack_set" return_type="struct stack" export="private">
@@ -660,6 +679,7 @@ rt_private void unmark_c_stack_objects (void);
 rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move);	/* Marks a collector's stack */
 rt_private void mark_stack(struct stack *stk, MARKER marker, int move);			/* Marks a collector's stack */
 rt_private void mark_overflow_stack(MARKER marker, int move);
+rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER marker, int move);
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void); /* Update the object id stack */
 #endif
@@ -1460,6 +1480,9 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		mark_stack(oms_set_list.threads.sstack[i], MARK_SWITCH, moving);
 #endif
 
+		/* Deal with TYPE instances. */
+	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id : rt_type_set_count), MARK_SWITCH, moving);
+
 	internal_marking (MARK_SWITCH, moving);
 }
 
@@ -2125,6 +2148,36 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 	}
 
 	ENSURE ("Overflow stack empty", overflow_stack_count == 0);
+}
+
+/*
+doc:	<routine name="mark_array" return_type="void" export="private">
+doc:		<summary>Mark all references stored in `arr' from 0 to `arr_count - 1'.</summary>
+doc:		<param name="arr" type="EIF_REFERENCE *">The array to traverse.</param>
+doc:		<param name="arr_count" type="rt_uint_ptr">The number of elements to traverse.</param>
+doc:		<param name="marker" type="MARKER">The GC marker.</param>
+doc:		<param name="move" type="int">Are the objects expected to move?</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER marker, int move)
+{
+	if ((arr) && (arr_count > 0)) {
+		if (move) {
+			for (; arr_count > 0; arr_count--, arr++) {
+				if (*arr) {
+					*arr = mark_expanded(*arr, marker);
+				}
+			}
+		} else {
+			for (; arr_count > 0; arr_count--, arr++) {
+				if (*arr) {
+					(void) mark_expanded(*arr, marker);
+				}
+			}
+		}
+	}
 }
 
 /*

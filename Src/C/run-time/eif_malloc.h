@@ -93,6 +93,7 @@ RT_LNK EIF_REFERENCE emalloc_as_old(EIF_TYPE_INDEX type);			/* Allocate an Eiffe
 RT_LNK EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX dtype, uint32 size);	/* Allocate an Eiffel object */
 RT_LNK EIF_REFERENCE bmalloc(uint16 size);			/* Bit object creation */
 RT_LNK EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic);
+RT_LNK EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype);
 RT_LNK EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype);
@@ -101,10 +102,13 @@ RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_INTE
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 						/* Set the string header. */
-RT_LNK EIF_REFERENCE cmalloc(size_t nbytes);				/* Allocate a C object */
+RT_LNK void *cmalloc(size_t nbytes);				/* Allocate a C object */
 RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems);			/* Reallocate an Eiffel special object */
 
 RT_LNK EIF_REFERENCE eif_box(EIF_TYPED_VALUE v);                  /* Create a boxed version of a basic value */
+
+RT_LNK EIF_REFERENCE *rt_type_set;
+RT_LNK rt_uint_ptr volatile rt_type_set_count;
 
 #ifdef __cplusplus
 }

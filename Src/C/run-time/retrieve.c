@@ -2951,7 +2951,7 @@ rt_private int attribute_types_matched (type_descriptor *context_type, EIF_TYPE_
 		CHECK("valid cound", rt_valid_type_index(i));
 		l_cid [0] = (EIF_TYPE_INDEX) i;
 		l_cid [i + 1] = TERMINATOR;
-		dftype = eif_compound_id (NULL, 0, l_cid[1], l_cid);
+		dftype = eif_compound_id (0, l_cid[1], l_cid);
 		if (l_cid != cidarr) {
 			free(l_cid);
 		}

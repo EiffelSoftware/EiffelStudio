@@ -295,6 +295,7 @@ feature -- Code generation
 			idx_cnt : COUNTER
 			l_buffer: like buffer
 			l_gen_type: GEN_TYPE_A
+			l_cache_name: STRING
 		do
 			l_buffer := buffer
 			if gtype.is_explicit then
@@ -337,8 +338,10 @@ feature -- Code generation
 			l_buffer.put_character (';')
 			if l_can_save_result then
 				l_buffer.put_new_line
-				l_buffer.put_string ("static EIF_TYPE_INDEX typcache")
-				l_buffer.put_natural_32 (a_level)
+				l_cache_name := "typcache";
+				l_cache_name.append_natural_32 (a_level)
+				l_buffer.put_string ("static EIF_TYPE_INDEX ")
+				l_buffer.put_string (l_cache_name)
 				l_buffer.put_string (" = INVALID_DTYPE;")
 			end
 
@@ -353,17 +356,23 @@ feature -- Code generation
 			l_buffer.put_string ("typres")
 			l_buffer.put_natural_32 (a_level)
 			if l_can_save_result then
-				l_buffer.put_string (" = eif_compound_id(&typcache")
-				l_buffer.put_natural_32 (a_level)
-				l_buffer.put_two_character (',', ' ')
-			else
-				l_buffer.put_string (" = eif_compound_id(NULL, ")
+				l_buffer.put_four_character (' ', '=', ' ', '(')
+				l_buffer.put_string (l_cache_name)
+				l_buffer.put_four_character (' ', '!', '=', ' ')
+				l_buffer.put_string ("INVALID_DTYPE ? ")
+				l_buffer.put_string (l_cache_name)
+				l_buffer.put_four_character (' ', ':', ' ', '(')
+				l_buffer.put_string (l_cache_name)
 			end
+			l_buffer.put_string (" = eif_compound_id(")
 			generate_current_dftype
 			l_buffer.put_string (", ")
 			l_buffer.put_integer (l_gen_type.generated_id (final_mode, context_class_type.type))
 			l_buffer.put_string (", typarr")
 			l_buffer.put_natural_32 (a_level)
+			if l_can_save_result then
+				l_buffer.put_two_character (')', ')')
+			end
 			l_buffer.put_two_character (')', ';')
 		end
 
@@ -2831,22 +2840,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

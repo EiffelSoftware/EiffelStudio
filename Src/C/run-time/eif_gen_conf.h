@@ -45,7 +45,7 @@ extern "C" {
 RT_LNK EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset);
 
 /* Converts an array of type ids to a single id */
-RT_LNK EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX dyn_type, EIF_TYPE_INDEX *typearr);
+RT_LNK EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX dyn_type, EIF_TYPE_INDEX *typearr);
 
 /* Number of generic parameters of an object */
 RT_LNK uint32 eif_tuple_count (EIF_REFERENCE tuple);

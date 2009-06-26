@@ -2026,11 +2026,10 @@ rt_private void interpret(int flag, int where)
 	 * Creation instruction.
 	 */
 	case BC_CREATE:
+	case BC_CREATE_TYPE:
 		{
 			char need_push = (char) 0;
-#ifdef DEBUG
-		dprintf(2)("BC_CREATE\n");
-#endif
+			int is_type_creation = (code == BC_CREATE_TYPE);
 		/* Special treatment of BIT types */
 
 		if (*IC == BC_BIT)
@@ -2059,7 +2058,11 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 
 			stagval = tagval;
-			new_obj = RTLNSMART(type);	/* Create new object */
+			if (is_type_creation) {
+				new_obj = RTLNTY(type);		/* Create new TYPE instance. */
+			} else {
+				new_obj = RTLNSMART(type);	/* Create new object */
+			}
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -5231,7 +5234,7 @@ rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX d
 	if (cnt <= 2)
 		return dtype;
 	
-	return eif_compound_id (NULL, Dftype (Current), dtype, gen_types);
+	return eif_compound_id (Dftype (Current), dtype, gen_types);
 }
 
 rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)

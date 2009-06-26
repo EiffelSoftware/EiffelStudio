@@ -288,6 +288,7 @@ rt_private void eif_thr_init_global_mutexes (void)
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, 0, "Couldn't create GC mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, 4000, "Couldn't create GC set mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, 4000, "Couldn't create GSZ mutex");
+	EIF_LW_MUTEX_CREATE(eif_type_set_mutex, 4000, "Couldn't create TYPE set mutex");
 	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, 4000, "Couldn't create free list mutex");
 	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, 4000, "Couldn't create eiffel_usage mutex");
 	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, 4000, "Couldn't create trigger gc mutex");
@@ -377,6 +378,7 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_gc_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_gc_set_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_gc_gsz_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_type_set_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_free_list_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eiffel_usage_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(trigger_gc_mutex, "Could not destroy mutex");

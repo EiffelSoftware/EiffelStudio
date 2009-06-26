@@ -684,7 +684,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			cid = cn_gtypes [i];
 
 			if (cid && (cid [1] != TERMINATOR)) {
-				dftype = eif_compound_id (NULL, Dftype (obj), exp_dtype, cid);
+				dftype = eif_compound_id (Dftype (obj), exp_dtype, cid);
 				exp_dtype = To_dtype(dftype);
 			} else {
 				dftype = exp_dtype;

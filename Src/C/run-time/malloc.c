@@ -631,8 +631,17 @@ doc:	</attribute>
 rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
 #define TRIGGER_GC_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
 #define TRIGGER_GC_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
-#endif
 
+/*
+doc:	<attribute name="eif_type_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to guarantee unique access to `rt_type_set'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_shared EIF_LW_MUTEX_TYPE *eif_type_set_mutex = NULL;
+#define TYPE_SET_MUTEX_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_type_set_mutex, "Could not lock type set mutex");
+#define TYPE_SET_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_type_set_mutex, "Could not unlock type set mutex");
+#endif
 
 
 /*
@@ -1037,6 +1046,68 @@ rt_public EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype)
 	}
 
 	return tuple_malloc_specific(ftype, count, is_atomic);
+}
+
+/*
+doc:	<routine name="eif_type_malloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Create a new TYPE instance for type `ftype' if it was not yet created, otherwise return an already existing one. Objects are created as old object since once allocated they cannot be garbage collected.</summary>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of TYPE to return.</param>
+doc:		<return>A TYPE instance of type `ftype' if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
+{
+	EIF_REFERENCE result;
+
+	if (rt_type_set_count > ftype) {
+			/* Path of best execution. */
+		result = rt_type_set [ftype];
+		if (!result) {
+			RT_GET_CONTEXT;
+			EIF_ENTER_C;
+			GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
+			result = rt_type_set [ftype];
+				/* Double checked locking as two threads could have requested the same TYPE
+				 * instance at the same time. */
+			if (!result) {
+				result = emalloc_as_old(ftype);
+				rt_type_set [ftype] = result;
+			}
+			GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
+			EIF_EXIT_C;
+			RTGC;
+		}
+	} else {
+		RT_GET_CONTEXT;
+		EIF_ENTER_C;
+		GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
+			/* Double checked locking as two threads could have requested resizing at
+			 * the same time. */
+		if (rt_type_set_count > ftype) {
+			result = rt_type_set [ftype];
+				/* The TYPE instance should be created by the other thread in the `else' clause. */
+			CHECK("TYPE created", result);
+		} else {
+			rt_uint_ptr old_count = rt_type_set_count;
+			if (rt_type_set) {
+				rt_type_set = (EIF_REFERENCE *) crealloc(rt_type_set, sizeof(EIF_REFERENCE) * ftype * 2);
+			} else {
+				rt_type_set = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * ftype * 2);
+			}
+			memset(rt_type_set + old_count, 0, sizeof(EIF_REFERENCE) * ((ftype * 2) - old_count));
+			result = emalloc_as_old(ftype);
+			rt_type_set [ftype] = result;
+			rt_type_set_count = ftype * 2;
+		}
+		GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
+		EIF_EXIT_C;
+		RTGC;
+	}
+	return result;
 }
 
 /*
@@ -1497,7 +1568,7 @@ rt_public EIF_REFERENCE bmalloc(uint16 size)
 }
 
 /*
-doc:	<routine name="cmalloc" return_type="EIF_REFERENCE" export="public">
+doc:	<routine name="cmalloc" return_type="void *" export="public">
 doc:		<summary>Memory allocation for a C object. This is the same as the traditional malloc routine, excepted that the memory management is done by the Eiffel run time, so Eiffel keeps a kind of control over this memory. Memory is `zeroed'.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes to allocated.</param>
 doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
@@ -1506,12 +1577,12 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE cmalloc(size_t nbytes)
+rt_public void *cmalloc(size_t nbytes)
 {
 #ifdef ISE_GC
 	return eif_rt_xmalloc(nbytes, C_T, GC_OFF);
 #else
-	return (EIF_REFERENCE) eif_malloc (nbytes);
+	return eif_malloc (nbytes);
 #endif
 }
 
@@ -2639,9 +2710,9 @@ rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 #endif
 
 /*
-doc:	<routine name="crealloc" return_type="EIF_REFERENCE" export="shared">
+doc:	<routine name="crealloc" return_type="void *" export="shared">
 doc:		<summary>This is the C interface with xrealloc, which is fully compatible with the realloc() function in the standard C library (excepted that no storage compaction is done). The function simply calls xrealloc with garbage collection turned on.</summary>
-doc:		<param name="ptr" type="EIF_REFERENCE">Address that will be reallocated.</param>
+doc:		<param name="ptr" type="void *">Address that will be reallocated.</param>
 doc:		<param name="nbytes" type="size_t">New size in bytes of `ptr'.</param>
 doc:		<return>New block of memory of size `nbytes', otherwise null pointer or throw an exception.</return>
 doc:		<exception>"No more memory" exception</exception>
@@ -2650,13 +2721,13 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_shared EIF_REFERENCE crealloc(EIF_REFERENCE ptr, size_t nbytes)
+rt_shared void * crealloc(void * ptr, size_t nbytes)
 {
 	
 #ifdef ISE_GC
-	return xrealloc(ptr, nbytes, GC_ON);
+	return xrealloc((EIF_REFERENCE) ptr, nbytes, GC_ON);
 #else
-	return (EIF_REFERENCE) eif_realloc(ptr, nbytes);
+	return eif_realloc(ptr, nbytes);
 #endif
 }
 

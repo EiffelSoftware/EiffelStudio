@@ -152,6 +152,7 @@ extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;
 extern EIF_LW_MUTEX_TYPE *eif_free_list_mutex;
 extern EIF_LW_MUTEX_TYPE *eiffel_usage_mutex;
 extern EIF_LW_MUTEX_TYPE *trigger_gc_mutex;
+extern EIF_LW_MUTEX_TYPE *eif_type_set_mutex;
 #endif
 
 #endif
@@ -159,7 +160,7 @@ extern EIF_LW_MUTEX_TYPE *trigger_gc_mutex;
 extern EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag);	/* Low level allocation routine */
 extern EIF_REFERENCE eif_rt_xcalloc(size_t nelem, size_t elsize);		/* Calloc */
 extern void eif_rt_xfree(register void * ptr);				/* Free */
-extern char *crealloc(char *ptr, size_t nbytes);			/* Reallocate a C object */
+extern void *crealloc(void *ptr, size_t nbytes);			/* Reallocate a C object */
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 
 #ifdef ISE_GC

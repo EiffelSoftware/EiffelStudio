@@ -77,7 +77,7 @@ static  char    *names [] = {
 "BC_CARG" ,
 "BC_CLIKE" ,
 "BC_CCUR" ,
-"BC_NOTUSED_31" ,
+"BC_CREATE_TYPE" ,
 "BC_RANGE" ,
 "BC_INSPECT_EXCEP" ,
 "BC_LREVERSE" ,
@@ -800,7 +800,8 @@ static  void    print_instructions (void)
 				break;
 				}
 
-			case  BC_CREATE :
+			case BC_CREATE :
+			case BC_CREATE_TYPE:
 				/* Kind of creation */
 
 					/* Do we need to duplicate top object or is it a BIT type creation? */

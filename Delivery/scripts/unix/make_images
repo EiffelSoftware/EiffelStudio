@@ -28,7 +28,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -f ec_ent.tar.bz2 ]; then
+if [ -f bin/ec_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -70,7 +70,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 	remtrace copying CD key validator
-	move setup $INSTALL_DIR/register
+	move bin/setup $INSTALL_DIR/register
 	chmod a+rx $INSTALL_DIR/register
 	mkdir $INSTALL_DIR/setup
 	cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png

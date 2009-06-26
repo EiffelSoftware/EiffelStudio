@@ -9,6 +9,11 @@ class
 
 inherit
 	NS_OBJECT
+		undefine
+			copy
+		end
+
+	NS_COPYING
 
 create
 	make_with_referencing_file,

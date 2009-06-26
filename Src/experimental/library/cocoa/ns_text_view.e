@@ -21,7 +21,6 @@ feature {NONE} -- Creation
 
 	make
 		do
-			create text_did_change_actions
 			make_from_pointer (text_view_new)
 			init_delegate
 		end

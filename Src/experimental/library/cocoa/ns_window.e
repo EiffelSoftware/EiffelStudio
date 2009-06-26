@@ -79,6 +79,16 @@ feature -- Sizing
 			{NS_WINDOW_API}.set_frame_top_left_point (item, a_point.item)
 		end
 
+	set_frame_top_left_point_flipped (a_point: NS_POINT)
+			-- Positions the top-left corner of the window's frame rectangle at a given point in screen coordinates.
+			-- XXX
+		local
+			zero_screen: NS_SCREEN
+		do
+			create zero_screen.root_screen
+			a_point.y := zero_screen.frame.size.height - a_point.y
+			{NS_WINDOW_API}.set_frame_top_left_point (item, a_point.item)
+		end
 
 feature -- Managing Title Bars
 

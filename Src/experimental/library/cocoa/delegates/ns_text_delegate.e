@@ -16,8 +16,15 @@ feature -- Class
 		once
 			create Result.make_with_name ("TextDelegate")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name("NSObject"))
-			Result.add_method ("textDidChange:", agent (a_notification: POINTER) do text_did_change_actions.call([]) end)
+			Result.add_method ("textDidChange:", agent text_did_change_callback)
 			Result.register
+		end
+
+	text_did_change_callback (a_notification: POINTER)
+		do
+			if attached text_did_change_actions_internal as actions then
+				actions.call([])
+			end
 		end
 
 	init_delegate
@@ -28,10 +35,21 @@ feature -- Class
  			{NS_VIEW_API}.init (delegate.item)
 
 			{NS_OUTLINE_VIEW_API}.set_delegate (item, delegate.item)
-			create text_did_change_actions
 		end
 
 	text_did_change_actions: ACTION_SEQUENCE [TUPLE[]]
+		do
+			if attached text_did_change_actions_internal as actions then
+				Result := actions
+			else
+				create Result
+				text_did_change_actions_internal := Result
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	text_did_change_actions_internal: detachable ACTION_SEQUENCE [TUPLE[]]
 
 feature -- Delegate Methods
 

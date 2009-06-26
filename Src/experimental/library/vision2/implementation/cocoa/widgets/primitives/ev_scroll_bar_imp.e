@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision scrollbar. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,9 +44,8 @@ feature {EV_ANY_I} -- Implementation
 
 	scroller: NS_SCROLLER
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_SCROLL_BAR_IMP
-

@@ -47,10 +47,11 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			a_font: EV_FONT
+			l_box: NS_BOX
 		do
-			create box.make
-			box.set_title_position ({NS_BOX}.no_title)
-			cocoa_item := box
+			create l_box.make
+			l_box.set_title_position ({NS_BOX}.no_title)
+			cocoa_view := l_box
 
 			align_text_left
 			create a_font.default_create
@@ -143,6 +144,15 @@ feature -- Layout
 			else
 				Result := 18
 			end
+		end
+
+	box: NS_BOX
+		local
+			l_result: detachable NS_BOX
+		do
+			l_result ?= cocoa_view
+			check l_result /= void end
+			Result := l_result
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

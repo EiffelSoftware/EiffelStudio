@@ -43,7 +43,9 @@ inherit
 			set_drag_and_drop_mode,
 			set_target_menu_mode,
 			set_configurable_target_menu_mode,
-			set_configurable_target_menu_handler
+			set_configurable_target_menu_handler,
+			tooltip,
+			set_tooltip
 		redefine
 			interface,
 			make,
@@ -75,7 +77,7 @@ feature {NONE} -- Initialization
 			create focused_selection_text_color.make_with_rgb (0, 1, 0)
 			create non_focused_selection_text_color.make_with_rgb (0, 0, 1)
 
-			create {NS_VIEW}cocoa_item.make
+			create cocoa_view.make
 			Precursor {EV_CELL_IMP}
 			initialize_grid
 
@@ -127,7 +129,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				l_font_imp ?= a_font.implementation
 				check l_font_imp /= void end
 				create l_string.make_with_string (a_string)
-				create l_attributes.make_with_object_for_key (l_font_imp.cocoa_item, font_attribute_name)
+				create l_attributes.make_with_object_for_key (l_font_imp.font, font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)
 
 				tuple.put_integer (l_size.width, 1)

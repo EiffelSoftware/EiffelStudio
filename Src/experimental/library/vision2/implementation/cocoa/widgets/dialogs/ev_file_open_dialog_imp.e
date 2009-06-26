@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			create open_panel.make
 			save_panel := open_panel
-			window := open_panel
+			window_item := open_panel.item
 			initialize
 			--set_title ("Open")
 		end

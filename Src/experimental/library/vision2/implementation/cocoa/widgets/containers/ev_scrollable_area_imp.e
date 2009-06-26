@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			scroll_view.set_has_vertical_scroller (True)
 --			scroll_view.set_autohides_scrollers (True)
 			scroll_view.set_draws_background (False)
-			cocoa_item := scroll_view
+			cocoa_view := scroll_view
 
 			set_horizontal_step (10)
 			set_vertical_step (10)
@@ -75,7 +75,7 @@ feature -- Element change
 			end
 			if attached v and then attached {like item_imp} v.implementation as v_imp then
 				v_imp.set_parent_imp (current)
-				scroll_view.set_document_view (v_imp.cocoa_view)
+				scroll_view.set_document_view (v_imp.attached_view)
 				v_imp.ev_apply_new_size (0, 0, v_imp.width, v_imp.height, True)
 				v_imp.set_parent_imp (Current)
 				notify_change (Nc_minsize, Current)
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if attached item_imp as l_item_imp then
-				scroll_view.set_document_view (l_item_imp.cocoa_view)
+				scroll_view.set_document_view (l_item_imp.attached_view)
 				l_item_imp.ev_apply_new_size (0, 0, l_item_imp.width, l_item_imp.height, True)
 			end
 		end

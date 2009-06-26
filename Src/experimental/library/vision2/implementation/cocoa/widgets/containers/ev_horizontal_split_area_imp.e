@@ -31,7 +31,7 @@ feature {NONE} -- Creation
 		do
 			create split_view.make
 			split_view.set_vertical (True)
-			cocoa_item := split_view
+			cocoa_view := split_view
 			Precursor {EV_SPLIT_AREA_IMP}
 			set_is_initialized (True)
 		end

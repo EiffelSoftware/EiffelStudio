@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			--l_app_imp: like app_implementation
 		do
 			create font.system_font_of_size (0)
-			cocoa_item := font
 
 			--l_app_imp := app_implementation
 			create preferred_families
@@ -208,7 +207,6 @@ feature {NONE} -- Implementation
 				font_descriptor.set_trait ({NS_FONT_DESCRIPTOR}.bold_trait)
 			end
 			create font.font_with_descriptor (font_descriptor, height)
-			cocoa_item := font
 		end
 
 	update_preferred_faces (a_face: STRING_32)

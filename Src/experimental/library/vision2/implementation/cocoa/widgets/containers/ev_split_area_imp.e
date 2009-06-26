@@ -41,10 +41,10 @@ feature -- Access
 	make
 		do
 			create_split_view_delegate
+			initialize
 			split_view.set_delegate (current)
 			first_expandable := True
 			second_expandable := True
-			initialize
 		end
 
 	split_view_did_resize_subviews
@@ -63,7 +63,7 @@ feature -- Access
 --			on_new_item (l_imp)
 			l_imp.set_parent_imp (current)
 			disable_item_expand (v)
-			cocoa_view.add_subview (l_imp.cocoa_view)
+			attached_view.add_subview (l_imp.attached_view)
 			--notify_change (nc_minsize, Current)
 			if second_visible then
 				set_split_position (minimum_split_position)
@@ -85,7 +85,7 @@ feature -- Access
 			v_imp.set_parent_imp (Current)
 			notify_change (Nc_minsize, Current)
 			second := v
-			cocoa_view.add_subview (v_imp.cocoa_view)
+			attached_view.add_subview (v_imp.attached_view)
 
 			notify_change (Nc_minsize, Current)
 			if first_visible then
@@ -130,7 +130,7 @@ feature -- Access
 						set_item_resize (first, True)
 					end
 				end
-				an_item_imp.cocoa_view.remove_from_superview
+				an_item_imp.attached_view.remove_from_superview
 				notify_change (Nc_minsize, Current)
 			end
 		end

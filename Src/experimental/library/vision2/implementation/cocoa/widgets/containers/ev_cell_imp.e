@@ -39,11 +39,13 @@ create
 feature -- initialization
 
 	make
+		local
+			box: NS_BOX
 		do
 			create box.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
-			cocoa_item := box
+			cocoa_view := box
 			set_expandable (True) -- Check: is this correct??
 			is_show_requested := True
 			initialize -- Precursor {EV_CONTAINER_IMP}
@@ -74,7 +76,7 @@ feature -- Element change
 			color: NS_COLOR
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_color)
-			if attached box as l_box then -- TODO: get rid of this when redefining in children
+			if attached {NS_BOX} cocoa_view as l_box then -- TODO: get rid of this when redefining in children
 				create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
 				--create color.white_color
 				l_box.set_fill_color (color);
@@ -99,7 +101,7 @@ feature -- Layout
 	client_height: INTEGER
 			-- Height of the client area of `Current'
 		do
-			if attached box as l_box then
+			if attached {NS_BOX} cocoa_view as l_box then
 				Result := l_box.content_view.frame.size.height.max (0)
 			else
 				Result := height
@@ -109,7 +111,7 @@ feature -- Layout
 	client_width: INTEGER
 			-- Height of the client area of `Current'.
 		do
-			if attached box as l_box then
+			if attached {NS_BOX} cocoa_view as l_box then
 				Result := l_box.content_view.frame.size.width.max (0)
 			else
 				Result := width
@@ -150,10 +152,6 @@ feature -- Layout
 			end
 			internal_set_minimum_size (mw, mh)
 		end
-
-feature {EV_ANY_I}
-
-	box: NS_BOX
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

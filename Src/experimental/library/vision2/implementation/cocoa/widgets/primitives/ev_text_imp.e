@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			create scroll_view.make
-			cocoa_item := scroll_view
+			cocoa_view := scroll_view
 			create text_view.make
 			text_view.set_horizontally_resizable (True)
 			scroll_view.set_document_view (text_view)

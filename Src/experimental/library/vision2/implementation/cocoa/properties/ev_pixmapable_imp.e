@@ -20,19 +20,19 @@ feature -- Access
 
 	pixmap: detachable EV_PIXMAP
 			-- Pixmap shown in `Current'
-		do
-		end
 
 feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
+			pixmap := a_pixmap
 		end
 
 	remove_pixmap
 			-- Assign Void to `pixmap'.
 		do
+			pixmap := void
 		end
 
 end -- EV_PIXMAPABLE_IMP

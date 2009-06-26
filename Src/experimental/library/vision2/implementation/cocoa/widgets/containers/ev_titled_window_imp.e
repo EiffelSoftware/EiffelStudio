@@ -33,27 +33,30 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			internal_icon_name := ""
+			create icon_pixmap
 			Precursor {EV_WINDOW_IMP}
-			create icon_name.make_empty
 		end
 
 feature -- Access
 
 	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
+			-- FIXME: What is this? There is really no such thing on Mac OS!
+		do
+			Result := internal_icon_name.twin
+		end
 
 	icon_pixmap: EV_PIXMAP
 			-- Window icon.
-
-	icon_mask: EV_PIXMAP
-			-- Transparency mask for `icon_pixmap'.
+			-- FIXME: OS X windows generally do not have icons! (in the same sense as in windows...)
 
 feature -- Status report
 
 	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
 		do
-			Result := window.is_miniaturized
+			Result := is_miniaturized
 		end
 
 	is_maximized: BOOLEAN
@@ -65,27 +68,27 @@ feature -- Status setting
 			-- Request that window be displayed above all other windows.
 		do
 			--show
-			 window.make_key_and_order_front
+			 make_key_and_order_front
 		end
 
 	lower
 			-- Request that window be displayed below all other windows.
 		do
-			window.order_back
+			order_back
 		end
 
 	minimize
 			-- Display iconified/minimised.
 		do
-			window.miniaturize
+			miniaturize
 			is_maximized := False
 		end
 
 	maximize
 			-- Display at maximum size.
 		do
-			if not window.is_zoomed then
-				window.zoom
+			if not is_zoomed then
+				zoom
 			end
 			is_maximized := True
 		end
@@ -93,8 +96,8 @@ feature -- Status setting
 	restore
 			-- Restore to original position when minimized or maximized.
 		do
-			if window.is_zoomed then
-				window.zoom
+			if is_zoomed then
+				zoom
 			end
 			is_maximized := False
 		end
@@ -104,7 +107,7 @@ feature -- Element change
 	set_icon_name (a_icon_name: STRING_GENERAL)
 			-- Assign `a_icon_name' to `icon_name'.
 		do
-			icon_name := a_icon_name.twin
+			internal_icon_name := a_icon_name.twin
 		end
 
 	set_icon_pixmap (a_icon: EV_PIXMAP)
@@ -119,7 +122,12 @@ feature -- Element change
 			app_implementation.set_application_icon_image (l_pix_imp.image)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {NONE} -- Implementation
+
+	internal_icon_name: STRING_32
+		-- Name given by the user. internal representation.
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 

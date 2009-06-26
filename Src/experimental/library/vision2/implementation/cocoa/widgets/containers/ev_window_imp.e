@@ -90,24 +90,24 @@ feature {NONE} -- Initialization
 		do
 			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
-			cocoa_item := current
-			window := current
 			make_key_and_order_front
 			order_out
 			allow_resize
 			create_delegate
-			set_delegate (current)
 
 			set_accepts_mouse_moved_events (True)
 
-			init_bars
-
 			set_maximum_width (32000)
 			set_maximum_height (32000)
-			app_implementation.windows_imp.extend (current)
 			create accel_list.make (10)
 
 			initialize
+
+			cocoa_view := content_view
+			init_bars
+--			window := current
+			set_delegate (current)
+			app_implementation.windows_imp.extend (current)
 
 			internal_is_border_enabled := True
 			user_can_resize := True
@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
   			ub_imp.on_parented
   			lb_imp.on_parented
   			ub_imp.set_parent_imp (Current)
-  			content_view.add_subview (ub_imp.cocoa_view)
+  			content_view.add_subview (ub_imp.attached_view)
   			lb_imp.set_parent_imp (Current)
   			ub_imp.set_top_level_window_imp (Current)
   			lb_imp.set_top_level_window_imp (Current)
@@ -315,7 +315,7 @@ feature -- Measurement
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			set_frame_top_left_point (create {NS_POINT}.make_point (a_x, a_y))
+			set_frame_top_left_point_flipped (create {NS_POINT}.make_point (a_x, a_y))
 		end
 
 	screen: NS_SCREEN
@@ -631,7 +631,7 @@ feature -- Element change
 				check
 					v_has_implementation: v_imp /= Void
 				end
-				content_view.add_subview (v_imp.cocoa_view)
+				content_view.add_subview (v_imp.attached_view)
 				v_imp.set_parent_imp (Current)
 				notify_change (Nc_minsize, Current)
 			end
@@ -677,6 +677,8 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			disable_capture
 			hide
+			app_implementation.windows_imp.start
+			app_implementation.windows_imp.prune (current)
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 		end
 
@@ -708,7 +710,7 @@ feature {EV_INTERMEDIARY_ROUTINES}
 
 feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
 
-	window: NS_WINDOW;
+--	window: NS_WINDOW;
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			v_imp.set_parent_imp (Current)
 			new_item_actions.call ([v])
 			notify_change (Nc_minsize, Current)
-			cocoa_view.add_subview (v_imp.cocoa_view)
+			attached_view.add_subview (v_imp.attached_view)
 		end
 
 	remove_i_th (i: INTEGER)
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			v_imp.set_parent_imp (Void)
 			v_imp.on_orphaned
 
-			v_imp.cocoa_view.remove_from_superview
+			v_imp.attached_view.remove_from_superview
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

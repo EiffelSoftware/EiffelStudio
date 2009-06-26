@@ -35,10 +35,9 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create menu_item.make
+			Precursor {EV_MENU_ITEM_IMP}
 			create menu.make
 			menu_item.set_submenu (menu)
-			Precursor {EV_MENU_ITEM_IMP}
 			initialize_item_list
 		end
 
@@ -57,10 +56,12 @@ feature -- Basic operations
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: detachable EV_MENU note option: stable attribute end;
-
 	menu: NS_MENU
 
 	menu_item: NS_MENU_ITEM
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_MENU note option: stable attribute end;
 
 end -- class EV_MENU_IMP

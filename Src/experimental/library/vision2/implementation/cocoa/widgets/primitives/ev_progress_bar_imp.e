@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			disable_tabable_from
 			enable_segmentation
 			progress_indicator.set_indeterminate (False)
-			cocoa_item := progress_indicator
+			cocoa_view := progress_indicator
 			set_is_initialized (True)
 		end
 
@@ -72,6 +72,8 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	progress_indicator: NS_PROGRESS_INDICATOR
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 

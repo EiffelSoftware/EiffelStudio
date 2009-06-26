@@ -29,7 +29,7 @@ feature -- Initialization
 		do
 			Precursor {EV_TOOL_BAR_BUTTON_IMP}
 			button.set_button_type ({NS_BUTTON}.push_on_push_off_button)
-			cocoa_item := button
+			cocoa_view := button
 		end
 
 feature -- Status setting

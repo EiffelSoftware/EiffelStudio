@@ -31,14 +31,14 @@ feature -- Initialization
 			Precursor {EV_SCROLL_BAR_IMP}
 			disable_tabable_from
 			disable_tabable_to
-			cocoa_item := scroller
+			cocoa_view := scroller
 			scroller.set_enabled (True)
 
 			change_actions_internal := create_change_actions
 			scroller.set_action (agent
 				do
 					set_proportion (scroller.double_value)
-					change_actions_internal.call ([value])
+					change_actions.call ([value])
 				end)
 
 			set_is_initialized (True)
@@ -69,7 +69,7 @@ feature -- Minimum size
 			Precursor {EV_SCROLL_BAR_IMP} (l_x_position, a_y_position, l_width, a_height)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_SCROLL_BAR note option: stable attribute end;
 

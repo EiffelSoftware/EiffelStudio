@@ -1,6 +1,6 @@
 note
-	description: "Objects that .... Cocoa implementation"
-	author: ""
+	description: "EiffelVision Bitmap. Cocoa implementation"
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,11 +57,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP
-			-- Access to application object implementation.
-		once
-		end
-
 	redraw
 			-- Redraw the entire area.
 		do
@@ -92,8 +87,8 @@ feature {NONE} -- Implementation
 		do
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: detachable EV_BITMAP note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_BITMAP_IMP

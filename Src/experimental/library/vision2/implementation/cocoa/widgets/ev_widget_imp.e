@@ -157,21 +157,14 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			is_show_requested := False
-			if attached {NS_VIEW} cocoa_item as view then
-				view.set_hidden (True)
-			end
+			attached_view.set_hidden (True)
 		end
 
 	show
-		local
-			p_imp: like parent_imp
 		do
 			is_show_requested := True
-			if attached {NS_VIEW} cocoa_item as view then
-				view.set_hidden (False)
-			end
-			p_imp := parent_imp
-			if p_imp /= Void then
+			attached_view.set_hidden (False)
+			if attached parent_imp as p_imp then
 				p_imp.notify_change (Nc_minsize, Current)
 			end
 		end

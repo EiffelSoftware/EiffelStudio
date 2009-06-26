@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			create save_panel.make
-			window := save_panel
+			window_item := save_panel.item
 			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
 		end

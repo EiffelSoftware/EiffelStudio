@@ -27,7 +27,6 @@ inherit
 	EV_ITEM_IMP
 		undefine
 			pixmap_equal_to,
-			pixmap,
 			create_drop_actions
 		redefine
 			interface,
@@ -53,8 +52,10 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is the item selected.
 		do
-			Result := (parent_imp.selected_item = interface)
-			 or else (parent_imp.selected_items.has (interface))
+			if attached parent_imp as l_parent_imp then
+				Result := (l_parent_imp.selected_item = interface)
+					or else (l_parent_imp.selected_items.has (attached_interface))
+			end
 		end
 
 feature -- Status setting
@@ -62,16 +63,16 @@ feature -- Status setting
 	enable_select
 			-- Select the row in the list.
 		do
-			if not is_selected then
-				parent_imp.select_item (index)
+			if not is_selected and attached parent_imp as l_parent_imp then
+				l_parent_imp.select_item (index)
 			end
 		end
 
 	disable_select
 			-- Deselect the row from the list.
 		do
-			if is_selected then
-				parent_imp.deselect_item (index)
+			if is_selected and attached parent_imp as l_parent_imp then
+				l_parent_imp.deselect_item (index)
 			end
 		end
 
@@ -121,27 +122,20 @@ feature -- Measurement
 	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.minimum_width
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.minimum_width
 			end
 		end
 
 	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface.row_height
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.attached_interface.row_height
 			end
 		end
 
 feature {ANY} -- Implementation
-
-	text: STRING_32
-			--
-		do
-			Result := interface.i_th (1)
-		end
-
 
 	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
@@ -164,13 +158,14 @@ feature {EV_ANY_I} -- Implementation
 			-- Index of the row in the list
 			-- (starting from 1).
 		do
-			-- The `ev_children' array has to contain
-			-- the same rows in the same order than in the g.t.k.
-			-- part.
-			Result := parent_imp.ev_children.index_of (Current, 1)
+			if attached parent_imp as l_parent_imp then
+				Result := l_parent_imp.ev_children.index_of (Current, 1)
+			end
 		end
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+	parent_imp: detachable EV_MULTI_COLUMN_LIST_IMP
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 

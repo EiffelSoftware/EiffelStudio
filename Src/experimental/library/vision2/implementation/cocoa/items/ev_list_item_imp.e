@@ -1,7 +1,6 @@
 note
 	description: "List Item Cocoa Implementation"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,6 +57,12 @@ feature -- Status report
 
 	is_dockable: BOOLEAN
 
+	text: STRING_32
+			-- <Precursor>
+		do
+			Result := internal_text.twin
+		end
+
 feature -- Status setting
 
 	enable_select
@@ -73,12 +78,6 @@ feature -- Status setting
 			--parent_imp.deselect_item (parent_imp.index_of (interface, 1))
 		end
 
-	text: STRING_32
-			--
-		do
-			Result := internal_text.twin
-		end
-
 feature -- Element change
 
 	set_tooltip (a_tooltip: STRING_GENERAL)
@@ -90,20 +89,17 @@ feature -- Element change
 	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 		do
-			if internal_tooltip /= Void then
-				Result := internal_tooltip.twin
+			if attached internal_tooltip as l_tooltip then
+				Result := l_tooltip.twin
 			else
 				Result := ""
 			end
 		end
 
-	set_text (txt: STRING_GENERAL)
+	set_text (a_text: STRING_GENERAL)
 			-- Set current button text to `txt'.
 		do
-			internal_text := txt.twin
-			if parent_imp /= Void then
-			--	parent_imp.set_text_on_position (parent_imp.index_of (interface, 1) , txt)
-			end
+			internal_text := a_text.twin
 		end
 
 feature {NONE} -- Implementation
@@ -143,14 +139,11 @@ feature {NONE} -- Implementation
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
-	internal_tooltip: STRING_32
+	internal_tooltip: detachable STRING_32
 		-- Tooltip used for `Current'.
 
-feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_LIST_ITEM_IMP
-

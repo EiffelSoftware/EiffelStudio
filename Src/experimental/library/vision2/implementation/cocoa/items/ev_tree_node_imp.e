@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision tree node. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -116,9 +115,9 @@ feature {EV_ANY_I} -- Status setting
 				until
 					i >= count
 				loop
-					if i_th (i).is_expanded then
+--					if i_th (i).is_expanded then
 --TODO						i_th (i).implementation.set_expand (true)
-					end
+--					end
 					i := i + 1
 				end
 			else
@@ -135,10 +134,10 @@ feature {EV_ANY_I} -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	parent_tree_imp: EV_TREE_IMP
+	parent_tree_imp: detachable EV_TREE_IMP
 		do
-			if parent_tree /= Void then
-				Result ?= parent_tree.implementation
+			if attached parent_tree as p then
+				Result ?= p.implementation
 			end
 		end
 
@@ -161,10 +160,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	text: STRING_32
 			-- Text displayed.
 		do
-			if internal_text = Void then
-				create Result.make_empty
+			if attached internal_text as l_text then
+				Result := l_text.twin
 			else
-				Result := internal_text.twin
+				create Result.make_empty
 			end
 		ensure then
 			text_not_void: Result /= Void
@@ -173,10 +172,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	tooltip: STRING_32
 			-- Tooltip if any.
 		do
-			if internal_tooltip = Void then
-				Result := ""
+			if attached internal_tooltip as l_tooltip then
+				Result := l_tooltip.twin
 			else
-				Result := internal_tooltip.twin
+				Result := ""
 			end
 		ensure then
 			tooltip_not_void: Result /= Void
@@ -194,10 +193,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			internal_text := a_text
 		end
 
-	internal_text: STRING_32
+	internal_text: detachable STRING_32
 		-- Internal representation of `text'.
 
-	internal_tooltip: STRING_32
+	internal_tooltip: detachable STRING_32
 		-- Internal representation of `tooltip'.
 
 	set_tooltip (a_text: STRING_GENERAL)
@@ -209,7 +208,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_tooltip
 			-- Remove text of `tooltip'.
 		do
-			internal_tooltip := ""
+			internal_tooltip := void
 		end
 
 	pix_width, pix_height: INTEGER
@@ -219,8 +218,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Insert `item_imp' at the `index' position.
 		do
 			-- TODO: optimization potential, only reload under the current item
-			if parent_tree_imp /= void then
-				parent_tree_imp.outline_view.reload_item_reload_children (default_pointer, True)
+			if attached parent_tree_imp as l_tree then
+				l_tree.outline_view.reload_item_reload_children (default_pointer, True)
 			end
 		end
 
@@ -228,8 +227,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Remove `item_imp' from `Current'.
 		do
 			-- TODO: optimization potential, only reload under the current item
-			if parent_tree_imp /= void then
-				parent_tree_imp.outline_view.reload_item_reload_children (default_pointer, True)
+			if attached parent_tree_imp as l_tree then
+				l_tree.outline_view.reload_item_reload_children (default_pointer, True)
 			end
 		end
 
@@ -269,11 +268,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 --			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_TREE_NODE_IMP
-

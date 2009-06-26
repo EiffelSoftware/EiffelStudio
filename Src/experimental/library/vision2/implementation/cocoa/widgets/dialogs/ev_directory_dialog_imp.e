@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 			set_can_create_directories (True)
 			set_can_choose_files (False)
 			set_prompt (create {NS_STRING}.make_with_string ("Choose"))
-			cocoa_item := current
 		end
 
 feature -- Access

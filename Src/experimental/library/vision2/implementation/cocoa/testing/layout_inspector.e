@@ -126,10 +126,9 @@ feature {NONE} -- Graphical view
 
 			set_title ("Layout Inspector")
 			set_minimum_size (600, 400)
-			set_x_position (700)
+			set_position (700, 100)
 			update_tree
 			show
-			set_y_position (100)
 		end
 
 	update_tree
@@ -387,7 +386,7 @@ feature {NONE} -- Graphical view
 				str.append ("%N" + "offsets: x: " + viewport.x_offset.out + "  y: " + viewport.x_offset.out + "%N")
 			end
 			if attached {EV_WIDGET_IMP} a_widget.implementation as a_widget_imp then
-				if attached {NS_VIEW} a_widget_imp.cocoa_item as a_view then
+				if attached {NS_VIEW} a_widget_imp.cocoa_view as a_view then
 					str.append ("%N" + "isFlipped: " + a_view.is_flipped.out + "%N")
 				end
 			end
@@ -421,8 +420,8 @@ feature {NONE} -- Graphical view
 					x2 := x2.min(l_screen.frame.size.width).max(0)
 					y2 := y2.min(l_screen.frame.size.height).max(0)
 					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs), True)
-					if attached {EV_WINDOW_IMP} implementation as win_imp then
-						overlay.set_parent_window (win_imp.window)
+					if attached {NS_WINDOW} implementation as win_imp then
+						overlay.set_parent_window (win_imp)
 						-- Not working as expected :(
 					else
 						check False end

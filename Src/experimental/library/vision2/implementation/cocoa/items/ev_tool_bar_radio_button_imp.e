@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa toggle button.
 		do
 			create button.make
-			cocoa_item := button
+			cocoa_view := button
 
 			Precursor {EV_TOOL_BAR_BUTTON_IMP}
 			Precursor {EV_RADIO_PEER_IMP}
@@ -68,10 +68,9 @@ feature -- Status report
 --			Result := not radio_group.is_empty and then radio_group.first = current
 --		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TOOL_BAR_RADIO_BUTTON note option: stable attribute end
 			-- Interface of `Current'
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
-

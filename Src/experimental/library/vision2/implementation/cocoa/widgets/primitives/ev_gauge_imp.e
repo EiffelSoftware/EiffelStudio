@@ -25,7 +25,12 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			initialize_gauge_imp
 			Precursor {EV_PRIMITIVE_IMP}
+		end
+
+	initialize_gauge_imp
+		do
 			create value_range.make (0, 100)
 			set_leap (10)
 			set_step (1)
@@ -122,7 +127,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GAUGE note option: stable attribute end
 

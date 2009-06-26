@@ -44,7 +44,6 @@ feature -- Initialization
 			-- Initialize the header item.
 		do
 			create table_column.make
-			cocoa_item := table_column
 			align_text_left
 			set_width (80)
 			set_text ("")

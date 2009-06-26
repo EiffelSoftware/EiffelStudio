@@ -44,13 +44,13 @@ feature {NONE} -- Implementation
 				o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 10)
 				create l_webapp_socket.make_client_by_port (webapp.app_config.port, webapp.app_config.host)
 				o.dprint ("Connecting to " + webapp.app_config.name.out + "@" + webapp.app_config.port.out, 2)
+				l_webapp_socket.set_accept_timeout (3000)
 				l_webapp_socket.connect
 	            if  l_webapp_socket.is_connected then
 					o.dprint ("Forwarding command", 2)
 					l_webapp_socket.put_natural (0)
 
 		            l_webapp_socket.independent_store (l_current_request)
-		            --l_webapp_socket.independent_store (create {XCWC_EMPTY}.make)
 		            o.dprint ("Waiting for response", 2)
 		            l_webapp_socket.read_natural
 					if attached {XC_COMMAND_RESPONSE} l_webapp_socket.retrieved as l_response then

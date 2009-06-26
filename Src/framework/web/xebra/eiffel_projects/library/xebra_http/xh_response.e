@@ -20,11 +20,13 @@ feature {NONE} -- Initialization
 			create html_stream.make
 			create formatter.make (html_stream)
 			goto_request := ""
+			set_html_content_type
 		ensure
 			cookie_orders_attached: cookie_orders /= Void
 			html_stream_attached: html_stream /= Void
 			formatter_attached: formatter /= Void
 			goto_request_attached: goto_request /= Void
+			content_type_attached: content_type /= Void and then not content_type.is_empty
 		end
 
 feature -- Access
@@ -32,8 +34,12 @@ feature -- Access
 feature {NONE} -- Constants
 
 	Html_start: STRING = "#H#"
+	Content_type_start: STRING = "#CT#"
 
 feature -- Access
+
+	content_type: STRING
+			-- Sets the content-type of the outgoing request
 
 	formatter: XU_INDENDATION_FORMATTER
 			-- Formats the html code
@@ -49,6 +55,19 @@ feature -- Access
 			-- Can be used to order the {REQUEST_HANDLER} to generate a new request
 
 feature -- Element change
+
+	set_html_content_type
+			-- Sets the content-type to html
+		do
+			content_type := "text/html;charset=ascii"
+		end
+
+	set_xml_content_type
+			-- Sets the content-type to xml
+		do
+			content_type := "text/xml"
+		end
+
 
 	set_goto_request (a_goto_request: STRING)
 			-- Setter. A_string can be empty! ?
@@ -106,7 +125,7 @@ feature -- Element change
 				Result := Result +  cookie_orders.item.render_to_string
 				cookie_orders.forth
 			end
-			Result := Result + Html_start + html_stream.get_text
+			Result := Result + Content_type_start + content_type + Html_start + html_stream.get_text
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
@@ -116,6 +135,7 @@ invariant
 	html_stream_attached: html_stream /= Void
 	formatter_attached: formatter /= Void
 	goto_request_attached: goto_request /= Void
+	content_type_attached: content_type /= Void and then not content_type.is_empty
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

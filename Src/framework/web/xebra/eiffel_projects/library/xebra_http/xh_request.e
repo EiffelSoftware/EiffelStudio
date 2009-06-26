@@ -92,9 +92,17 @@ feature {NONE} -- Initialization
 			environment_vars := parse_table (l_s, Key_subp_env, Key_t_key, Key_t_value, Key_t_end)
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
-				-- Read POST/GET params
-			arguments := parse_table (l_s, Key_arg, Key_p_key, Key_p_value, Key_t_end)
-
+				-- Read POST/GET params				
+			if l_s.starts_with (Key_arg + Key_textxml) then
+					-- Handle special case for POST 'text/xml' encoding
+				l_s.remove_head (Key_arg.count + Key_textxml.count)
+				l_s.remove_tail (key_t_end.count)
+				create arguments.make (1)
+				arguments.force (l_s.twin, "text/xml")
+			else
+					-- Handle regular case (form encoded)
+				arguments := parse_table (l_s, Key_arg, Key_p_key, Key_p_value, Key_t_end)
+			end
 				-- Read cookies
 			cookies := read_cookies (headers_in)
 		ensure
@@ -119,6 +127,7 @@ feature -- Constants
 	Key_p_value: STRING = "="
 	Key_t_end: STRING = "#E#"
 	Key_arg: STRING = "#A#"
+	Key_textxml: STRING = "#TEXT/XML#"
 
 	Headers_in_set_cookies: STRING = "Set-Cookie"
 	Headers_in_cookie: STRING = "Cookie"
@@ -157,6 +166,12 @@ feature -- Access
 			-- P for POST, G for GET
 		do
 			Result := 'X'
+		end
+
+	is_xmlrpc: BOOLEAN
+			-- Checks if it is an xmlrpc request
+		do
+			Result := target_uri.ends_with ("xmlrpc.xeb")
 		end
 
 feature -- Status setting

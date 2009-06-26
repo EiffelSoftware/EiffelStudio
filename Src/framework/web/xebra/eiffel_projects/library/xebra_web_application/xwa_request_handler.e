@@ -38,37 +38,45 @@ feature -- Processing
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
 			l_request_factory: XH_REQUEST_FACTORY
+			l_xmlrpc_handler: XWA_XMLRPC_HANDLER
 		do
-			from
-				l_new_request := a_request.twin
-			until
-				l_new_request = Void
-			loop
-				create l_response.make_empty
-				o.dprint ("Searching matching servlet...",2)
-				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+			create l_xmlrpc_handler.make
 
-				if not attached l_servlet then
-					-- The case if someone entered .../webapp/ and it was forwarded to ../webapp/index.xeb by apache
-					if not l_new_request.target_uri.ends_with (".xeb") then
-						l_new_request.set_target_uri (l_new_request.target_uri + "index.xeb")
-						l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+				-- Handle xmlrpc call if necessary
+			if a_request.is_xmlrpc then
+					Result := l_xmlrpc_handler.handle (a_request)
+			else
+				-- Else search corresponding servlet and let it handle the request
+				from
+					l_new_request := a_request.twin
+				until
+					l_new_request = Void
+				loop
+					create l_response.make_empty
+
+					o.dprint ("Searching matching servlet...",2)
+					l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+
+					if not attached l_servlet then
+						-- The case if someone entered .../webapp/ and it was forwarded to ../webapp/index.xeb by apache
+						if not l_new_request.target_uri.ends_with (".xeb") then
+							l_new_request.set_target_uri (l_new_request.target_uri + "index.xeb")
+							l_servlet := find_servlet (l_new_request, a_server_conn_handler)
+						end
+					end
+
+					if attached l_servlet then
+						o.dprint ("Handing over to matching servlet...",2)
+						l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
+						l_new_request := post_process_response (l_response, l_new_request)
+					else
+						o.dprint ("No matching servlet found.",2)
+						l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
+						l_new_request := Void
 					end
 				end
-
-
-				if attached l_servlet then
-					o.dprint ("Handing over to matching servlet...",2)
-					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
-					l_new_request := post_process_response (l_response, l_new_request)
-				else
-					o.dprint ("No matching servlet found.",2)
-					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
-					l_new_request := Void
-				end
+				Result := l_response
 			end
-
-			Result := l_response
 		end
 
 feature {NONE} -- Internal Processing

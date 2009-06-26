@@ -54,14 +54,19 @@ feature -- Operations
             	o.dprint("Sending command...", 3)
             	l_socket.put_natural (0)
 		        l_socket.independent_store (a_command)
-	            o.dprint ("Waiting for response", 2)
-	            l_socket.read_natural
-				if attached {XC_COMMAND_RESPONSE} l_socket.retrieved as l_response then
-					o.dprint ("Response retrieved", 2)
-	            	Result := l_response
-	            else
-	            	Result := create {XCCR_CANNOT_SEND}.make
-	            end
+
+		        if a_command.has_response then
+		        	o.dprint ("Waiting for response", 2)
+		            l_socket.read_natural
+					if attached {XC_COMMAND_RESPONSE} l_socket.retrieved as l_response then
+						o.dprint ("Response retrieved", 2)
+		            	Result := l_response
+		            else
+		            	Result := create {XCCR_CANNOT_SEND}.make
+	            	end
+		        else
+		        	Result := create {XCCR_NO_RESPONSE}.make
+		        end
 	        else
 	        	Result := create {XCCR_CANNOT_SEND}.make
 	        end

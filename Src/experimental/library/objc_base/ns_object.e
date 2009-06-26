@@ -97,8 +97,11 @@ feature -- Duplication
 
 	copy (other: like Current)
 			-- Make a copy of the underlying Objective-C object
+			-- NS_OBJECT does not support this in general but some descendants may do so by inheriting from NS_COPYING.
 		do
-			make_from_pointer ({NS_OBJECT_API}.copy (other.item))
+			check
+				cannot_copy_this_class: False
+			end
 		end
 
 feature -- Removal

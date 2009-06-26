@@ -113,7 +113,7 @@ feature {NONE} -- Operations
 		local
 			l_command: STRING
 			l_parameter: STRING
-			l_response: XC_COMMAND_RESPONSE
+			l_response: detachable XC_COMMAND_RESPONSE
 		do
 				-- help command is hardcoded
 			if a_string.is_equal ("help") then
@@ -129,16 +129,25 @@ feature {NONE} -- Operations
 
 				if  attached {XC_SERVER_COMMAND} command (l_command) as cmd then
 						if  attached {XC_PARAMETER_CONTAINER} cmd as param_cmd then
-							param_cmd.set_parameter (l_parameter)
+							if l_parameter.is_empty then
+								o.iprint ("No parameter specified for command '" + l_command + "'. Type 'help' for a list of commands.")
+							else
+								param_cmd.set_parameter (l_parameter)
+								l_response := cmd.execute (main_server)
+							end
+						else
+							l_response := cmd.execute (main_server)
 						end
-						l_response := cmd.execute (main_server)
+
 						if attached {XCC_SHUTDOWN_SERVER} cmd then
 							stop := True
 						end
-
-						handle_response (l_response)
 				else
-					o.iprint ("Invalid command '" + l_command + "'")
+					o.iprint ("Invalid command '" + l_command + "'. Type 'help' for a list of commands.")
+				end
+
+				if attached l_response then
+					handle_response (l_response)
 				end
 			end
 		end

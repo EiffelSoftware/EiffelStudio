@@ -33,7 +33,7 @@ feature {XWA_SERVLET} -- Initialization
 
 feature -- Access
 
-	agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
+	agent_table: HASH_TABLE [HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING], STRING]
 			-- Agent-Table for lazy execution at next request
 
 	current_session: XH_SESSION

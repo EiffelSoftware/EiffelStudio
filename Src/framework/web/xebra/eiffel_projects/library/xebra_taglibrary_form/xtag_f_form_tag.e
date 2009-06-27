@@ -68,7 +68,8 @@ feature -- Implementation
 			if l_variable_exists then
 				a_variable_table.put (variable.plain_value (current_controller_id), Form_var_key)
 			end
-
+				-- Needs to be initialized BEFORE the children are rendered
+			a_servlet_class.render_html_page.append_expression ("agent_table [%"" + l_id + "%"] := create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]}.make (" + children.count.out + ")")
 			generate_children (a_servlet_class, a_variable_table)
 
 			a_variable_table.remove (Form_agent_var)
@@ -77,33 +78,31 @@ feature -- Implementation
 				a_variable_table.remove (Form_var_key)
 			end
 
-			a_servlet_class.render_html_page.append_expression ("agent_table [" + l_id + "] := agent (a_request: XH_REQUEST) do -- FORM_TAG")
-
-			from
-				l_agent_expressions.start
-			until
-				l_agent_expressions.after
-			loop
-				a_servlet_class.render_html_page.append_expression (l_agent_expressions.item)
-				l_agent_expressions.forth
-			end
-
-			a_servlet_class.render_html_page.append_expression ("end")
-
 			a_servlet_class.render_html_page.append_expression (Response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + l_id + "%%%" value=%%%"%"+" + l_id + "+%"%%%" />%")")
 			write_string_to_result ("</form>", a_servlet_class.render_html_page)
 
 			a_servlet_class.handle_form_internal.append_expression ("if attached a_request.arguments [%"" + l_id + "%"] as form_argument then")
-			a_servlet_class.handle_form_internal.append_expression ("if attached agent_table [form_argument] then")
-			a_servlet_class.handle_form_internal.append_expression ("agent_table [form_argument].call ([a_request])")
+			a_servlet_class.handle_form_internal.append_expression ("if attached agent_table [%"" + l_id + "%"] as l_agent_table then")
+			a_servlet_class.handle_form_internal.append_expression ("from")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.start")
+			a_servlet_class.handle_form_internal.append_expression ("until")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.after")
+			a_servlet_class.handle_form_internal.append_expression ("loop")
+			a_servlet_class.handle_form_internal.append_expression ("if attached l_agent_table [a_request.arguments.key_for_iteration] as l_agent " +
+					"and then not a_request.arguments.item_for_iteration.is_empty then")
+			a_servlet_class.handle_form_internal.append_expression ("l_agent.call ([a_request])")
+			a_servlet_class.handle_form_internal.append_expression ("end")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.forth")
+			a_servlet_class.handle_form_internal.append_expression ("end")
+			a_servlet_class.handle_form_internal.append_expression ("end")
+			a_servlet_class.handle_form_internal.append_expression ("end")
 
 			if l_variable_exists then
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("if validation_errors.empty then")
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("create " + variable.plain_value (current_controller_id) + ".make")
 				a_servlet_class.clean_up_after_render.append_expression_to_end ("end")
 			end
-			a_servlet_class.handle_form_internal.append_expression ("end")
-			a_servlet_class.handle_form_internal.append_expression ("end")
+
 		ensure then
 			a_variable_table_immuted: a_variable_table.count = old a_variable_table.count
 		end

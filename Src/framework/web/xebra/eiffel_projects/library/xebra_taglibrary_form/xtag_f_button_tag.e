@@ -49,25 +49,32 @@ feature -- Implementation
 			-- <Precursor>
 		local
 			l_button_id: STRING
+			l_unique_var: STRING
 		do
-			if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
-				if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_wrap_object_name then
-					l_button_id := a_servlet_class.render_html_page.new_uid
+			if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.form_id] as l_unique_form_id then
+				if attached {LIST [STRING]} a_variable_table [{XTAG_F_FORM_TAG}.Form_agent_var] as l_form_expressions then
+					if attached {STRING} a_variable_table [{XTAG_F_FORM_TAG}.Form_var_key] as l_wrap_object_name then
+						l_button_id := a_servlet_class.render_html_page.new_uid
 
-					a_servlet_class.render_html_page.append_expression (
-						response_variable_append + "(%"<button name=%%%"" +
-						l_button_id + "%%%" type=%%%"submit%%%">" +
-						value.value (current_controller_id) + "</button>%")")
+						a_servlet_class.render_html_page.append_expression (
+							response_variable_append + "(%"<button name=%%%"" +
+							l_button_id + "%%%" type=%%%"submit%%%">" +
+							value.value (current_controller_id) + "</button>%")")
 
-					a_servlet_class.render_html_page.append_expression ("agent_table [%"" + l_button_id + "%"] := agent (a_request: XH_REQUEST) do")
-					a_servlet_class.render_html_page.append_expression ("if fill_bean (a_request) then")
-					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (" + l_wrap_object_name + ")")
-					a_servlet_class.render_html_page.append_expression ("end")
-					a_servlet_class.render_html_page.append_expression ("end -- XTAG_F_BUTTON_TAG")
+						l_unique_var :=  a_servlet_class.render_html_page.new_local ("STRING")
+						a_servlet_class.render_html_page.append_expression (l_unique_var + " := get_unique_id")
+						a_servlet_class.render_html_page.append_expression (
+							response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"%"+" + l_unique_var + "+%"%%%""+
+							"value =%%%"%"+" + l_unique_var + "+%"%%%" />%")")
 
-					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_button_id + "%"] then -- XTAG_F_BUTTON_TAG")
-					l_form_expressions.extend ("agent_table [%"" + l_button_id + "%"].call ([a_request])")
-					l_form_expressions.extend ("end")
+						a_servlet_class.render_html_page.append_expression ("if attached agent_table [%"" + l_unique_form_id + "%"] as l_agent_table then")
+						a_servlet_class.render_html_page.append_expression ("l_agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST) do")
+						a_servlet_class.render_html_page.append_expression ("if fill_bean (a_request) then")
+						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (" + l_wrap_object_name + ")")
+						a_servlet_class.render_html_page.append_expression ("end")
+						a_servlet_class.render_html_page.append_expression ("end")
+						a_servlet_class.render_html_page.append_expression ("end -- XTAG_F_BUTTON_TAG")
+					end
 				end
 			end
 		end

@@ -21,9 +21,8 @@ feature {NONE} -- Initialization
 
 	initialize_code_complete
 			-- Initialization
-		require
-			key_press_actions_attached: key_press_actions /= Void
 		do
+			key_press_string_actions.extend (agent on_char)
 			key_press_actions.extend (agent on_key_pressed)
 			create precompletion_actions
 			key_completable := agent can_complete
@@ -52,6 +51,13 @@ feature -- Access
 	key_completable : FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
 			-- EV_KEY can activate text completion?
 
+	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
+			-- Actions to be performed when a char is entered.
+		deferred
+		ensure
+			key_press_string_actions_not_void: Result /= Void
+		end
+
 	key_press_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
 		deferred
@@ -63,11 +69,9 @@ feature -- Access
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
 
-	completion_activator_characters: ARRAYED_LIST [CHARACTER_32]
-			-- List of completion activating keys
-		once
-			create Result.make (1)
-			Result.extend ('.')
+	is_char_activator_character (a_char: CHARACTER_32): BOOLEAN
+		do
+			Result := completion_activator_characters.has (a_char)
 		end
 
 feature -- Element change
@@ -431,6 +435,18 @@ feature {NONE} -- Trigger completion
 		do
 			if not is_completing then
 				if key_completable.item ([a_key, ctrled_key, alt_key, shifted_key]) then
+					complete_code
+				end
+			end
+		end
+
+	on_char (character_string: STRING_32)
+			-- If `a_key' can activate text completion, activate it.
+		require
+			a_key_attached: character_string /= Void
+		do
+			if not is_completing and then character_string.count = 1 then
+				if is_char_activator_character (character_string.item (1)) then
 					trigger_completion
 					debug ("Auto_completion")
 						print ("Completion triggered.%N")
@@ -501,6 +517,13 @@ feature {NONE} -- Implementation
 
 	precompletion_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called before trying to complete
+
+	completion_activator_characters: ARRAYED_LIST [CHARACTER_32]
+			-- List of completion activating keys
+		once
+			create Result.make (1)
+			Result.extend ('.')
+		end
 
 feature {NONE} -- Complete essentials
 

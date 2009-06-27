@@ -293,20 +293,6 @@ feature {NONE} -- Events handling
 						select_row (choice_list.row_count)
 					end
 				else
-					if code_completable.is_completing then
-						l_char_string := ev_key.out
-						if
-							not ev_application.shift_pressed and then
-							l_char_string.count = 1 and then
-							code_completable.completion_activator_characters.has (l_char_string.item (1))
-						then
-								-- Continue completing
-							continue_completion := True
-							close_and_complete
-							code_completable.handle_extended_key (ev_key)
-							exit
-						end
-					end
 				end
 			end
 		end

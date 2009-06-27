@@ -26,7 +26,8 @@ inherit
 			calculate_completion_list_width,
 			possibilities_provider,
 			can_complete,
-			is_focus_back_needed
+			is_focus_back_needed,
+			is_char_activator_character
 		end
 
 	EB_SHARED_PREFERENCES
@@ -61,7 +62,7 @@ feature -- Access
 	possibilities_provider: COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider
 
-	can_complete_agent: FUNCTION [ANY, TUPLE [a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN], BOOLEAN]
+	can_complete_agent: FUNCTION [ANY, TUPLE [CHARACTER_32], BOOLEAN]
 			-- Agent to decide if completion can start
 
 feature -- Setting
@@ -87,9 +88,6 @@ feature -- Status report
 			l_shortcut_pref: SHORTCUT_PREFERENCE
 		do
 			if a_key /= Void then
-				if can_complete_agent /= Void then
-					Result := can_complete_agent.item ([a_key, a_ctrl, a_alt, a_shift])
-				end
 				if not Result then
 					l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
 					check l_shortcut_pref /= Void end
@@ -103,13 +101,6 @@ feature -- Status report
 					else
 						Result := False
 					end
-					if Result then
-							-- We remove the 'key' character on windows platform.
-							-- On linux the key has not been inserted.
-							-- Fix needed.
-						precompletion_actions.wipe_out
-						precompletion_actions.extend_kamikaze (agent remove_keyed_character (a_key))
-					end
 				end
 			end
 		end
@@ -121,6 +112,15 @@ feature -- Status report
 				Result := False
 			else
 				Result := True
+			end
+		end
+
+	is_char_activator_character (a_char: CHARACTER_32): BOOLEAN
+			-- <precursor>
+		do
+			Result := True
+			if can_complete_agent /= Void then
+				Result := can_complete_agent.item ([a_char, ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed])
 			end
 		end
 
@@ -390,35 +390,35 @@ feature{NONE} -- Position calculation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

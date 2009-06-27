@@ -43,7 +43,8 @@ inherit
 	EB_TAB_CODE_COMPLETABLE
 		rename
 			is_word as is_word_token,
-			is_keyword as is_keyword_token
+			is_keyword as is_keyword_token,
+			on_char as on_char_completable
 		export
 			{NONE} all
 		undefine
@@ -61,7 +62,8 @@ inherit
 			complete_feature_call,
 			on_key_pressed,
 			calculate_completion_list_width,
-			prepare_auto_complete
+			prepare_auto_complete,
+			on_char_completable
 		end
 
 	ES_HELP_REQUEST_BINDER
@@ -406,10 +408,33 @@ feature {NONE} -- Text loading
 
 feature -- Process Vision2 events
 
+	on_char_completable (character_string: STRING_32)
+			-- <precursor>
+		do
+			if
+				is_editable and
+				not is_completing and then
+				character_string.count = 1 and then
+				text_displayed.completing_context and then
+				is_char_activator_character (character_string.item (1))
+			then
+				set_completing_feature (True)
+				trigger_completion
+				debug ("Auto_completion")
+					print ("Completion triggered.%N")
+				end
+			else
+				block_completion
+				debug ("auto_completion")
+					print ("Completion blocked.%N")
+				end
+			end
+		end
+
  	on_char (character_string: STRING_32)
    			-- Process displayable character key press event.
    		do
-   			Precursor (character_string)
+   			Precursor {EB_CLICKABLE_EDITOR}(character_string)
 			if not ignore_keyboard_input and then not character_string.is_empty and then not is_empty then
 					-- Perform brace match highlighting/unhighlighting.
 	   			highlight_matched_braces (True)
@@ -510,11 +535,6 @@ feature {NONE} -- Process Vision2 Events
 				handle_tab_action (False)
 			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
 				handle_tab_action (True)
-			elseif is_editable and not is_completing and then text_displayed.completing_context and then key_completable.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
-				trigger_completion
-				debug ("Auto_completion")
-					print ("Completion triggered.%N")
-				end
 			else
 				block_completion
 				debug ("Auto_completion")
@@ -1465,18 +1485,6 @@ feature {NONE} -- Code completable implementation
 			l_shortcut_pref: SHORTCUT_PREFERENCE
 		do
 			if a_key /= Void then
-				if
-					auto_complete_after_dot and then
-					completion_activator_characters.has (a_key.out.item (1)) and
-					not a_ctrl and
-					not a_alt and
-					not a_shift
-				then
-					Result := True
-					set_completing_feature (True)
-					completing_automatically := True
-				end
-
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
 				check l_shortcut_pref /= Void end
 				if
@@ -1713,8 +1721,14 @@ feature {NONE} -- Code completable implementation
 			end
 		end
 
-	key_press_actions: EV_KEY_ACTION_SEQUENCE
+	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
+		do
+			Result := editor_drawing_area.key_press_string_actions
+		end
+
+	key_press_actions: EV_KEY_ACTION_SEQUENCE
+			-- Key pressed action
 		do
 			Result := editor_drawing_area.key_press_actions
 		end
@@ -1876,7 +1890,7 @@ feature {NONE} -- Code completable implementation
 				end
 				if l_tok /= Void and then l_tok.is_text then
 					if not l_tok.wide_image.is_empty then
-						Result := not completion_activator_characters.has (l_tok.wide_image.item (1))
+						Result := not is_char_activator_character (l_tok.wide_image.item (1))
 					else
 						Result := True
 					end

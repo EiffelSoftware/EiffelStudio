@@ -54,25 +54,21 @@ feature -- Implementation
 
 					a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"" +
 						forms1 + l_unique_form_id +
-						forms2 + l_unique_var +
+						forms2 + "%" + "+ l_unique_var + "+ %"" +
 						value + "%" + " + l_unique_var + "+ %"" +
 						submit + l_unique_form_id +
 						stopsubmit + label.value (current_controller_id) +
 						stopahref +
-						inputname + l_unique_var +
+						inputname + "%" + "+ l_unique_var + "+ %"" +
 						stopinput +
 						"%")"
 					)
-					a_servlet_class.render_html_page.append_expression ("agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST; a_object: ANY) do")
+					a_servlet_class.render_html_page.append_expression ("if attached agent_table [%"" + l_unique_form_id + "%"] as l_agent_table then")
+					a_servlet_class.render_html_page.append_expression ("l_agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST; a_object: ANY) do")
 					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")
 					a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_TAG")
+					a_servlet_class.render_html_page.append_expression ("end")
 
-					l_attached_var := a_servlet_class.render_html_page.new_uid
-					l_form_expressions.extend ("if attached a_request.arguments [%"" + l_unique_var + "%"] as " + l_attached_var +" then")
-					l_form_expressions.extend ("if attached agent_table [" + l_attached_var + "] then")
-					l_form_expressions.extend ("agent_table [" + l_attached_var + "].call ([a_request])")
-					l_form_expressions.extend ("end")
-					l_form_expressions.extend ("end")
 				else
 					a_servlet_class.render_html_page.append_comment ("AN ERROR OCCURED WHILE GENERATION OF XTAG_F_COMMAND_LINK_TAG!")
 				end

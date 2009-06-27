@@ -1,6 +1,6 @@
 note
 	description: "[
-		Sends shutdown signal even if the webapp process is not owned by the server.
+		Forces (re)-translattion and compilation of webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_FIREOFF_WEBAPP
+	XCC_TRANSLATE_WEBAPP
 
 inherit
 	XC_SERVER_COMMAND
@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sends shutdown signal to webapp."
+			Result := "Forces re-translation of webapp."
 		end
 
 	parameter_description: STRING
@@ -42,8 +42,7 @@ feature -- Basic operations
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.fire_off_webapp (parameter.value)
+			Result := a_server.force_translate (parameter.value)
 		end
 
 end
-

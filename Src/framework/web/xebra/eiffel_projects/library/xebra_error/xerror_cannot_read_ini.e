@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XERROR_DIR_NOT_FOUND
+	XERROR_CANNOT_READ_INI
 
 inherit
 	ERROR_ERROR_INFO
@@ -37,6 +37,6 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "Invalid directory {1}"
+			Result := "Cannot parse ini file {1}"
 		end
 end

@@ -3,12 +3,12 @@ note
 		no comment yet
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XERROR_FILE_NOT_FOUND
+	XERROR_FILE_NOT_WRITABLE
 
 inherit
 	ERROR_ERROR_INFO
@@ -37,7 +37,7 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "File does not exist {1}"
+			Result := "File not writable {1}"
 		end
 
 

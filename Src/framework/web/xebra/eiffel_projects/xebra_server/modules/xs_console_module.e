@@ -59,6 +59,7 @@ feature -- Initialization
 			command_groups ["Webapps"].force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
 			command_groups ["Webapps"].force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
 			command_groups ["Webapps"].force (create {XCC_GET_SESSIONS}.make, "get_sessions")
+			command_groups ["Webapps"].force (create {XCC_TRANSLATE_WEBAPP}.make, "translate")
 
 			-- help command is hardcoded
         ensure

@@ -10,6 +10,9 @@ note
 class
 	XU_FILE_UTILITIES
 
+inherit
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 
 create
 	make
@@ -22,9 +25,61 @@ feature {NONE} -- Initialization
 
 		end
 
-feature -- Access
+feature {NONE} -- Access
+
+	plain_text_file: detachable PLAIN_TEXT_FILE
 
 feature -- Status report
+
+	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+			-- Opens a plain text file for reading
+		do
+			create plain_text_file.make (a_file_name)
+			if plain_text_file.exists then
+				if plain_text_file.is_readable then
+					plain_text_file.open_read
+					if plain_text_file.is_open_read then
+						Result := plain_text_file
+					else
+						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+					end
+				else
+					error_manager.add_error (create {XERROR_FILE_NOT_READABLE}.make (a_file_name), False)
+				end
+			else
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+			end
+		end
+
+	plain_text_file_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+			-- Opens a plain text file for writing
+		do
+			create plain_text_file.make (a_file_name)
+			if plain_text_file.exists then
+				if plain_text_file.is_writable then
+					plain_text_file.open_write
+					if plain_text_file.is_open_write then
+						Result := plain_text_file
+					else
+						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+					end
+				else
+					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+				end
+			else
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+			end
+		end
+
+	close
+			-- Closes (all) open files
+		do
+			if attached  plain_text_file and then plain_text_file.is_open_read or plain_text_file.is_open_write then
+				plain_text_file.close
+			end
+		end
+
+
 
 	scan_for_files (a_folder: STRING; a_levels: INTEGER; a_include_pattern: STRING; a_exclude_pattern: STRING): ARRAYED_LIST [FILE_NAME]
 		-- See FILE_UTILITIES.scan_for_files

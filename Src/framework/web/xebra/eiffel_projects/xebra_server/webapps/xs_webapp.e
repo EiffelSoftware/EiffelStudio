@@ -95,6 +95,13 @@ feature -- Actions
 			Result_attached: Result /= Void
 		end
 
+	force_translate
+			-- Forces to retranslate the webapp
+		do
+			translate_action.force := True
+			translate_action.execute.do_nothing
+		end
+
 	get_sessions: BOOLEAN
 			-- Retrieves the count of sessions from the webapp
 		do
@@ -155,7 +162,6 @@ feature  -- Status Setting
 			current_request := 	create {XCWC_SHUTDOWN}.make
 			send_action.execute.do_nothing
 		end
-
 
 	shutdown_all
 			-- Shuts the application down and all process (compile and translate).

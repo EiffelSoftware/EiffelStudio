@@ -147,21 +147,20 @@ feature {NONE} -- Implementation
 	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
 			-- Tests if the files and dirs exist
 		local
-			l_file: RAW_FILE
+			l_f_utils: XU_FILE_UTILITIES
 		do
-			Result := False
-			create l_file.make (a_exe)
-			if l_file.exists then
-				l_file.make (a_dir)
-				if l_file.exists and l_file.is_directory then
-					Result := True
-				else
-					o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
-				end
-			else
-				o.eprint ("File does not exist for launching process: '" + a_exe + "'", generating_type)
+			Result := True
+			create l_f_utils.make
+
+			if not l_f_utils.is_dir (a_dir) then
+				o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
+				Result := False
 			end
 
+			if not l_f_utils.is_executable_file (a_exe) then
+				o.eprint ("File does not exist for launching process: '" + a_exe + "'", generating_type)
+				Result := False
+			end
 		end
 
 

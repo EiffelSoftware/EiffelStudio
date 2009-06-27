@@ -82,6 +82,7 @@
 #define COOKIE_START "#C#"
 #define COOKIE_END "#CE"
 #define HTML_START "#H#"
+#define CONTENT_TYPE_START "#CT#"
 
 /* MAX_POST_SIZE:
 *	Defines a max size for reading the POST arguments

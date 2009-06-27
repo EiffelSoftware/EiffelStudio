@@ -1,6 +1,6 @@
 note
 	description: "[
-		Forces (re)-translattion and compilation of webapp.
+		Forces re-translation of webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"

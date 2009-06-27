@@ -29,14 +29,17 @@ feature {NONE} -- Access
 
 	plain_text_file: detachable PLAIN_TEXT_FILE
 
-feature -- Status report
+feature {NONE} -- Internal
+
+
+feature -- Basic Opertaions
 
 	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for reading
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists then
-				if plain_text_file.is_readable then
+				if plain_text_file.is_readable and then plain_text_file.is_access_readable then
 					plain_text_file.open_read
 					if plain_text_file.is_open_read then
 						Result := plain_text_file
@@ -51,12 +54,13 @@ feature -- Status report
 			end
 		end
 
-	plain_text_file_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+
+	plain_text_file_open_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for writing
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists then
-				if plain_text_file.is_writable then
+				if plain_text_file.is_writable and plain_text_file.is_access_writable then
 					plain_text_file.open_write
 					if plain_text_file.is_open_write then
 						Result := plain_text_file
@@ -68,6 +72,26 @@ feature -- Status report
 				end
 			else
 				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+			end
+		end
+
+	plain_text_file_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+			-- Opens a plain text file for writing or creates one
+		do
+			create plain_text_file.make (a_file_name)
+			if plain_text_file.exists or plain_text_file.is_creatable then
+				if plain_text_file.is_writable and plain_text_file.is_access_writable then
+					plain_text_file.open_write
+					if plain_text_file.is_open_write then
+						Result := plain_text_file
+					else
+						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+					end
+				else
+					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+				end
+			else
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
 			end
 		end
 

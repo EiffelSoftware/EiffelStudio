@@ -12,6 +12,16 @@ deferred class
 
 feature -- Webapps
 
+	force_translate (a_name: STRING): XC_COMMAND_RESPONSE
+			-- Forces (re)-translattion and compilation of webapp.
+		require
+			a_name_attached: a_name /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 	get_sessions: XC_COMMAND_RESPONSE
 			-- Retrieves the number of sessions of all running webapps.
 		deferred

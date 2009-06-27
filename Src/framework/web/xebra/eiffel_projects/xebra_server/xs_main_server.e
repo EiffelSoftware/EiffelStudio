@@ -107,6 +107,19 @@ feature {NONE} -- Operations
 
 feature {XS_SERVER_MODULE} -- Status setting
 
+	force_translate (a_name: STRING): XC_COMMAND_RESPONSE
+			-- <Precursor>.
+		do
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+				o.iprint ("Forcing retranslation off webapp '" + a_name + "'")
+				l_w.force_translate
+				create {XCCR_OK}Result.make
+			else
+				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
+			end
+		end
+
+
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local

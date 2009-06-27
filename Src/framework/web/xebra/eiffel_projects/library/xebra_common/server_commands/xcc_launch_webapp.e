@@ -31,7 +31,7 @@ feature -- Access
 	parameter_description: STRING
 			-- <Precursor>
 		do
-			Result := "webapp_name"
+			Result := "name"
 		end
 
 feature -- Status Change

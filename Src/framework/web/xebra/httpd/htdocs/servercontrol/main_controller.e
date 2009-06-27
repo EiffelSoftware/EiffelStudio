@@ -76,6 +76,18 @@ feature -- Modules Control
 
 feature -- Webapp Control
 
+	force_translate (a_mod: ANY)
+			-- Forces translation of a webapp
+		local
+			l_cmd: XCC_TRANSLATE_WEBAPP
+		do
+			create l_cmd.make
+			if attached {STRING} a_mod as l_mod then
+				l_cmd.set_parameter (l_mod)
+				server_control.send ( l_cmd ).do_nothing
+			end
+		end
+
 	get_webapps: STRING
 			-- Retreive webapps from server
 		do

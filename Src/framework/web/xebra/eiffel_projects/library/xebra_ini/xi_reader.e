@@ -12,7 +12,7 @@ deferred class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
-	
+
 
 feature {NONE} -- Initialization
 
@@ -90,27 +90,22 @@ feature {NONE} -- Internal Status setting
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		local
-			l_file: PLAIN_TEXT_FILE
 			l_reader: INI_DOCUMENT_READER
+			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_file.make (a_file_name)
-			if l_file.exists and l_file.is_readable then
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_reader.make
-					l_reader.read_from_file (l_file, True)
-					if l_reader.successful then
-						Result := l_reader.read_document
-					else
-						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
-					end
-					l_file.close
+
+			create l_f_utils.make
+			create l_reader.make
+			if attached l_f_utils.plain_text_file_read (a_file_name) as l_file then
+				l_reader.read_from_file (l_file, True)
+				if l_reader.successful then
+					Result := l_reader.read_document
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_CANNOT_READ_INI}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+				l_f_utils.close
 			end
+
 		end
 end
 

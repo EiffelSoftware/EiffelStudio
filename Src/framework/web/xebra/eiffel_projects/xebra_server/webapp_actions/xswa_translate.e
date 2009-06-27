@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create output_handler_compile.make
 			create output_handler_translate.make
 			create output_handler_gen.make
+			force := False
 		ensure then
 			output_handler_compile_attached: output_handler_compile /= Void
 			output_handler_translate_attached: output_handler_translate /= Void
@@ -36,6 +37,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	force: BOOLEAN assign set_force
+		-- If true, translation is alsways neccesary
 
 	output_handler_compile: XSOH_COMPILE
 			-- Output handler for compilation process
@@ -137,6 +141,7 @@ feature -- Status report
 			--		- The servlet_gen ecf does not exist
 			--		- The webapp has set to need cleaning
 			--		- If execute_file from servlet_gen is older than ... (not yet implemented)
+			--		- If forced
 		local
 			l_application_file: FILE_NAME
 			l_f_utils: XU_FILE_UTILITIES
@@ -160,8 +165,8 @@ feature -- Status report
 			Result := l_g_application_is_old or
 						l_servlet_gen_exe_not_exist or
 						l_servet_gen_ecf_not_exist or
-					 	webapp.needs_cleaning
-
+					 	webapp.needs_cleaning or
+					 	force
 
 			if Result then
 				o.dprint ("Translating is necessary", 3)
@@ -180,9 +185,16 @@ feature -- Status report
 				if webapp.needs_cleaning then
 					o.dprint ("Translating is necessary because: webapp needs cleaning.", 5)
 				end
+
+				if force then
+					o.dprint ("Translating is necessary because: force.", 5)
+				end
 			else
 				o.dprint ("Translating is not necessary", 3)
 			end
+
+				-- Set force back to false (for next time)
+			force := False
 		end
 
 feature -- Status setting
@@ -206,6 +218,14 @@ feature -- Status setting
 				p.wait_for_exit
 			end
 			set_running (False)
+		end
+
+	set_force (a_force: BOOLEAN)
+			-- Sets is_force
+		do
+			force := a_force
+		ensure
+			set: equal (force, a_force)
 		end
 
 feature {NONE} -- Internal Status Setting

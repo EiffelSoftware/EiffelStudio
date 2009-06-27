@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 STRICT//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>
 <title>Xebra Server Control</title>
 <page:controller class="MAIN_CONTROLLER" />
@@ -65,7 +65,6 @@
 		<th>Compiling</th>		
 		<th>Development Mode</th>
 		
-		
 	</tr>
 	<xeb:iterate list="webapps" variable="webapp" type="XC_WEBAPP_BEAN">
 		<tr>
@@ -77,7 +76,7 @@
 			<td><xeb:display feature="#{webapp.sessions.out}" /></td>
 			<td><xeb:display feature="#{webapp.is_disabled.out}" /> (<f:command_link label="on" action="disable_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="off" action="enable_webapp" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display feature="#{webapp.is_running.out}" /> (<f:command_link label="stop" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="restart" action="relaunch_webapp" variable="webapp.app_config.name.value.out" />)</td>
-			<td><xeb:display feature="#{webapp.is_translating.out}" /> (<f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>
+			<td><xeb:display feature="#{webapp.is_translating.out}" /> (<f:command_link label="force" action="force_translate" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display feature="#{webapp.is_compiling.out}" /> (<f:command_link label="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display feature="#{webapp.dev_mode.out}" /> (<f:command_link label="on" action="dev_mode_on_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link label="off" action="dev_mode_off_webapp" variable="webapp.app_config.name.value.out" />)</td>
 	

@@ -100,6 +100,7 @@ feature -- Generation
 					file_system.pathname (a_log_dirname, "proxy_log.txt"),
 					session.error_handler)
 				l_new.add_observer (session.error_handler)
+				l_new.set_timeout (session.options.proxy_time_out)
 			end
 			last_interpreter := l_new
 		end

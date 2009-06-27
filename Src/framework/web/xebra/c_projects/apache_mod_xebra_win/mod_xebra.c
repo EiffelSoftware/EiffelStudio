@@ -160,6 +160,7 @@ static int xebra_handler (request_rec* r)
 	char* srv_port;
 	int srv_port_int;
 	char* cctype;
+	char* ctype;
 	xebra_svr_cfg *srvc;
 	SOCKADDR_IN clientService;
 
@@ -172,6 +173,9 @@ static int xebra_handler (request_rec* r)
 	if ((r->method_number != M_GET) && (r->method_number != M_POST)) {
 		return HTTP_METHOD_NOT_ALLOWED;
 	}
+
+	/* Set a default content-type */
+	ap_set_content_type (r, "text/html;charset=ascii");
 
 
 	/* winsock stuff */
@@ -205,7 +209,7 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("Reading input...");
 
-	ap_set_content_type (r, "text/html;charset=ascii");
+	
 
 
 	message = apr_palloc (r->pool, 1);
@@ -231,21 +235,44 @@ static int xebra_handler (request_rec* r)
 	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
-		cctype = apr_table_get (r->headers_in, "Content-Type");
+		ctype = apr_table_get (r->headers_in, "Content-Type");
 
-		if (cctype && (strcasecmp (cctype, "application/x-www-form-urlencoded")
-			== 0)) {
-				rv = read_from_POST (r, &post_buf);
+		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
+		{
+			rv = read_from_POST (r, &post_buf);
+
+			if (rv != OK)
+			{
+				ap_rputs ("Error reading POST data from x-www-form-urlencoded", r);
+				return rv;
+			} else {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
+								TABLEEND, NULL);
+			}
 		}
-		if (rv != OK) {
-			ap_rputs ("Error reading from data! See apache error log.", r);
-			return rv;
+		else if (ctype && (strcasecmp (ctype, "text/xml")== 0))
+		{
+			rv = read_from_POST (r, &post_buf);
+
+			if (rv != OK)
+			{
+				ap_rputs ("Error reading POST data from text/xml", r);
+				return rv;
+			} else {
+				message = apr_pstrcat (r->pool, message, ARG, "#TEXT/XML#", post_buf,
+								TABLEEND, NULL);
+			}
 		}
-		message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-			TABLEEND, NULL);
+		else
+		{
+			ap_rputs ("Unsupported POST content type!", r);
+			return APR_EGENERAL;
+		}
+
+
 	} else if (r->args != NULL) {
 		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, TABLEEND,
-			NULL);
+				NULL);
 	} else {
 		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
 	}
@@ -257,50 +284,6 @@ static int xebra_handler (request_rec* r)
 	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
 
 	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
-
-	//memset (&hints, 0, sizeof hints);
-	//hints.ai_family = AF_UNSPEC;
-	//hints.ai_socktype = SOCK_STREAM;
-
-	//if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
-	//	ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
-	//			gai_strerror (rv));
-
-	//	//ap_rputs ("Cannot resolve XEbraServer address. See error log.", r);
-	//	return OK;
-	//}
-
-	///* loop through all the results and connect to the first we can */
-	//for (p = servinfo; p != NULL; p = p->ai_next) {
-	//	if ((sockfd = socket (p->ai_family, p->ai_socktype, p->ai_protocol))
-	//			== -1) {
-	//		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error socket");
-	//		//ap_rputs ("Cannot get socket to XEbraServer. See error log.", r);
-	//		continue;
-	//	}
-
-	//	if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-	//		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error connect");
-	//		//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-	//		continue;
-	//	}
-	//	break;
-	//}
-
-	//if (p == NULL) {
-	//	ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
-	//	//ap_rputs ("Cannot connect to XEbraServer. See error log.", r);
-	//	PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
-	//	return OK;
-	//}
-
-	//inet_ntop (p->ai_family, get_in_addr ((struct sockaddr *) p->ai_addr), s,
-	//		sizeof s);
-
-	//freeaddrinfo (servinfo);
-
-
-
 	
 	m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_socket == INVALID_SOCKET)
@@ -352,16 +335,7 @@ static int xebra_handler (request_rec* r)
 		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
-	/* display module revision */
-	/*ap_rputs ("<br/><br/><hr/><i><small>   --xebra_mod ", r);
-	ap_rputs (REVISION, r);
-	ap_rputs ("</small></i>", r);
-
-	ap_rputs ("whole message:('", r);
-	ap_rputs (rmsg_buf, r);
-	ap_rputs ("')", r);*/
-
-
+	
 	/* Close sockets and quit */
 	WSACleanup();
 	return OK;
@@ -373,6 +347,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	char* cookie_order_start;
 	char* cookie_order_end;
 	char* html;
+	char* content_type;
 
 	/* Extract cookie orders */
 	msg_copy = apr_pstrdup (r->pool, message);
@@ -398,8 +373,16 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		cookie_order_start = ap_strstr_c (msg_copy, COOKIE_START);
 	}
 
-	//apr_table_add (r->headers_out, "Set-Cookie", "pingu1=pangu1;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
-	//apr_table_add (r->headers_out, "Set-Cookie", "pingu2=pangu2;Max-Age=1239185729;path=/xebra;HttpOly;Version=1");
+	DEBUG2 ("Extracting content-type");
+	content_type = apr_pstrcat (r->pool, message,  NULL);
+	content_type = ap_strstr_c (content_type, CONTENT_TYPE_START);
+	if (content_type != NULL)
+	{
+		content_type += strlen(CONTENT_TYPE_START);
+		html = ap_strstr_c (content_type, HTML_START);
+		content_type[html - content_type] = '\0';
+		ap_set_content_type (r, content_type);
+	}
 
 	DEBUG2 ("Extracting html...");
 	/* Extract html code */
@@ -416,6 +399,11 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 		return APR_EGENERAL;
 	}
 	html += strlen (HTML_START);
+
+	/* Tell browsers not to cache the page */
+	apr_table_addn(r->headers_out, "Cache-Control", "no-cache");
+
+	/* Print html */ 
 	ap_rputs (html, r);
 	DEBUG2 ("Done.");
 	return APR_SUCCESS;

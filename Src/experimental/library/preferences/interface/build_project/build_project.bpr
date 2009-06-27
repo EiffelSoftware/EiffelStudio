@@ -11,5 +11,4 @@
  <Rebuild_ace_file>True</Rebuild_ace_file>
  <Load_constants_from_file>False</Load_constants_from_file>
  <Constants_class_name>PREFERENCE_CONSTANTS</Constants_class_name>
- <Generation_location>U:\tmp\eg</Generation_location>
 </Project_settings>

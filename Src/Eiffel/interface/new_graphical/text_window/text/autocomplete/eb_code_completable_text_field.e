@@ -203,9 +203,6 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 			-- Handle `a_char'
 		do
 			insert_char (a_char)
-			if a_char = '.' then
-				complete_code
-			end
 		end
 
 	handle_extended_ctrled_key (ev_key: EV_KEY)
@@ -597,19 +594,6 @@ feature {NONE} -- Implementation
 			l_shortcut_pref: SHORTCUT_PREFERENCE
 		do
 			if a_key /= Void then
-				if
-					auto_complete_after_dot and then
-					completion_activator_characters.has (a_key.out.item (1)) and
-					not a_ctrl and
-					not a_alt and
-					not a_shift
-				then
-					Result := true
-					if Result then
-						Result := possibilities_provider /= Void and then possibilities_provider.completing_context
-					end
-				end
-
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
 				check l_shortcut_pref /= Void end
 				if
@@ -715,7 +699,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -728,21 +712,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

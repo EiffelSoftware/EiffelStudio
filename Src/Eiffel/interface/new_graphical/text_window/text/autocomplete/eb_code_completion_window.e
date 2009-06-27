@@ -834,6 +834,21 @@ feature {NONE} -- Implementation
 			l_closed: BOOLEAN
 		do
 			if character_string.count = 1 then
+				if code_completable.is_completing then
+					if
+						code_completable.is_char_activator_character (character_string.item (1))
+					then
+							-- Continue completing
+						if code_completable.completing_feature then
+							continue_completion := True
+						end
+						close_and_complete
+						if code_completable.completing_feature then
+							code_completable.trigger_completion
+						end
+						exit
+					end
+				end
 				c := character_string.item (1).to_character_8
 				if c.is_alpha or c.is_digit or c = '_' or c = '*' or c = '?' then
 					buffered_input.append_character (c)
@@ -842,25 +857,16 @@ feature {NONE} -- Implementation
 				elseif c = ' ' and ev_application.ctrl_pressed then
 						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
 				elseif not code_completable.unwanted_characters.item (c.code) then
-					if not code_completable.completion_activator_characters.has (c) then
+					if not code_completable.is_char_activator_character (c) then
 						close_and_complete
 						l_closed := True
 					elseif code_completable.has_selection then
 						code_completable.go_to_end_of_line
 					end
 					if not code_completable.has_selection then
-							-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
-						if not l_closed and then is_unix then
-							focus_out_actions.block
-							choice_list.focus_out_actions.block
-						end
 						code_completable.handle_character (c)
-							-- |FIXME: Work around on Unix to get the same behavior as Windows. Vision2 GTK issue.
-						if not l_closed and then is_unix then
-							ev_application.do_once_on_idle (agent verify_display)
-						end
 					end
-					if not code_completable.completion_activator_characters.has (c) then
+					if not code_completable.is_char_activator_character (c) then
 						exit
 					end
 				end
@@ -950,20 +956,6 @@ feature {NONE} -- Implementation
 			Precursor
 			if code_completable.is_focus_back_needed then
 				code_completable.post_focus_back
-			end
-		end
-
-	verify_display
-			-- Verify display and focus on current window.
-			-- Resume focus out actions.
-			-- |FIXME: This is a work around on Unix.
-		do
-			if not choice_list.has_focus then
-				show
-				ev_application.do_once_on_idle (agent verify_display)
-			else
-				focus_out_actions.resume
-				choice_list.focus_out_actions.resume
 			end
 		end
 

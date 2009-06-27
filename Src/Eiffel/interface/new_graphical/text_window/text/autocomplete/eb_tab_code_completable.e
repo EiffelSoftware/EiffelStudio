@@ -14,11 +14,12 @@ inherit
 		rename
 			complete_from_window as old_complete_from_window
 		redefine
-			on_key_pressed,
 			show_completion_list,
 			choices,
 			possibilities_provider,
-			initialize_code_complete
+			initialize_code_complete,
+			on_key_pressed,
+			on_char
 		end
 
 	EB_SHARED_PREFERENCES
@@ -405,7 +406,7 @@ feature -- Tab actions
  			end
  		end
 
-feature -- Trigger completion
+feature -- Action handlers
 
 	on_key_pressed (a_key: EV_KEY)
 			-- If `a_key' can activate text completion, activate it.
@@ -415,8 +416,27 @@ feature -- Trigger completion
 					handle_tab_action (false)
 				elseif a_key.code = {EV_KEY_CONSTANTS}.key_tab and allow_tab_selecting and then shifted_key then
 					handle_tab_action (true)
+				else
+					Precursor {CODE_COMPLETABLE}(a_key)
 				end
-				Precursor {CODE_COMPLETABLE} (a_key)
+			end
+		end
+
+	on_char (character_string: STRING_32)
+			-- If `a_key' can activate text completion, activate it.
+		do
+			if not is_completing and then character_string.count = 1 then
+				if is_char_activator_character (character_string.item (1)) and completing_feature then
+					trigger_completion
+					debug ("Auto_completion")
+						print ("Completion triggered.%N")
+					end
+				else
+					block_completion
+					debug ("Auto_completion")
+						print ("Completion blocked.%N")
+					end
+				end
 			end
 		end
 
@@ -733,7 +753,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -746,21 +766,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

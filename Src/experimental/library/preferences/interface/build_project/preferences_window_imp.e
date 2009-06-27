@@ -6,8 +6,7 @@ note
 		You should not modify this code by hand, as it will be re-generated every time
 		 modifications are made to the project.
 		 	]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +16,7 @@ deferred class
 inherit
 	EV_DIALOG
 		redefine
-			initialize, is_in_default_state
+			create_interface_objects, initialize, is_in_default_state
 		end
 
 feature {NONE}-- Initialization
@@ -27,6 +26,66 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 
+			
+				-- Build widget structure.
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
+			l_ev_horizontal_split_area_1.extend (left_list)
+			l_ev_horizontal_split_area_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_frame_1)
+			l_ev_horizontal_box_1.extend (l_ev_horizontal_box_2)
+			l_ev_vertical_box_2.extend (split_area)
+			split_area.extend (grid_container)
+			split_area.extend (description_frame)
+			description_frame.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (description_text)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (restore_button)
+			l_ev_horizontal_box_3.extend (l_ev_cell_1)
+			l_ev_horizontal_box_3.extend (close_button)
+
+			l_ev_vertical_box_1.set_padding (5)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_vertical_box_2)
+			l_ev_horizontal_split_area_1.disable_item_expand (left_list)
+			left_list.set_minimum_width (200)
+			l_ev_vertical_box_2.set_padding (5)
+			l_ev_vertical_box_2.set_border_width (5)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
+			split_area.enable_item_expand (description_frame)
+			split_area.disable_item_expand (grid_container)
+			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (178, 178, 178))
+			grid_container.set_minimum_width (350)
+			grid_container.set_border_width (1)
+			description_frame.set_text ("Details")
+			l_ev_vertical_box_3.set_padding (5)
+			l_ev_vertical_box_3.set_border_width (5)
+			description_text.set_minimum_height (50)
+			description_text.disable_edit
+			l_ev_horizontal_box_3.set_padding (5)
+			l_ev_horizontal_box_3.set_border_width (5)
+			l_ev_horizontal_box_3.disable_item_expand (restore_button)
+			l_ev_horizontal_box_3.disable_item_expand (close_button)
+			restore_button.set_text ("Restore Defaults")
+			close_button.set_text ("Close")
+			close_button.set_minimum_width (80)
+			set_minimum_width (640)
+			set_minimum_height (480)
+			set_title ("Display window")
+
+			set_all_attributes_using_constants
+
+				-- Call `user_initialization'.
+			user_initialization
+		end
+		
+	create_interface_objects
+			-- Create objects
+		do
+			
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_split_area_1
@@ -59,65 +118,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-
-
-				-- Build widget structure.
-			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
-			l_ev_horizontal_split_area_1.extend (left_list)
-			l_ev_horizontal_split_area_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_frame_1)
-			l_ev_horizontal_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_vertical_box_2.extend (split_area)
-			split_area.extend (grid_container)
-			split_area.extend (description_frame)
-			description_frame.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (description_text)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (restore_button)
-			l_ev_horizontal_box_3.extend (l_ev_cell_1)
-			l_ev_horizontal_box_3.extend (close_button)
-
-			l_ev_vertical_box_1.set_padding (5)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
-			l_ev_horizontal_split_area_1.disable_item_expand (left_list)
-			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_vertical_box_2)
-			left_list.set_minimum_width (200)
-			l_ev_vertical_box_2.set_padding (5)
-			l_ev_vertical_box_2.set_border_width (5)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
-			split_area.disable_item_expand (grid_container)
-			split_area.enable_item_expand (description_frame)
-			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (178, 178, 178))
-			grid_container.set_minimum_width (350)
-			grid_container.set_border_width (1)
-			description_frame.set_text ("Details")
-			l_ev_vertical_box_3.set_padding (5)
-			l_ev_vertical_box_3.set_border_width (5)
-			description_text.set_minimum_height (50)
-			description_text.disable_edit
-			l_ev_horizontal_box_3.set_padding (5)
-			l_ev_horizontal_box_3.set_border_width (5)
-			l_ev_horizontal_box_3.disable_item_expand (restore_button)
-			l_ev_horizontal_box_3.disable_item_expand (close_button)
-			restore_button.set_text ("Restore Defaults")
-			close_button.set_text ("Close")
-			close_button.set_minimum_width (80)
-			set_minimum_width (640)
-			set_minimum_height (480)
-			set_title ("Display window")
-
-			set_all_attributes_using_constants
-
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
-
-				-- Call `user_initialization'.
-			user_initialization
 		end
 
 
@@ -251,7 +251,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end
+			end	
 		end
 
 	set_attributes_using_color_constants
@@ -284,7 +284,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-
+	
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -305,15 +305,4 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-end -- class PREFERENCES_WINDOW_IMP
+end

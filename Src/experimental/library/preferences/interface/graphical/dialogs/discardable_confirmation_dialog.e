@@ -15,10 +15,20 @@ inherit
 			initialize,
 			destroy,
 			show_modal_to_window,
-			is_in_default_state
+			is_in_default_state,
+			create_interface_objects
 		end
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+			-- Create objects
+		do
+			create check_button.make_with_text (Check_button_label)
+			ok_button := create_button (ok_button_label)
+			no_button := create_button (no_button_label)
+			cancel_button := create_button (cancel_button_label)
+		end
 
 	initialize
 			-- Initialize to default state.
@@ -34,7 +44,6 @@ feature {NONE} -- Initialization
 			pixmap_box: EV_CELL -- Container to display pixmap in.
 			button_box: EV_HORIZONTAL_BOX -- Bar with all buttons of the dialog.
 		do
-			create check_button.make_with_text (Check_button_label)
 			button_box := build_buttons_box
 
 			Precursor {EV_DIALOG}
@@ -105,10 +114,6 @@ feature {NONE} -- Initialization
 			Result.set_border_width (Layout_constants.Default_border_size)
 			Result.enable_homogeneous
 
-			ok_button := create_button (ok_button_label)
-			no_button := create_button (no_button_label)
-			cancel_button := create_button (cancel_button_label)
-			
 			Result.extend (ok_button)
 			if buttons_count >= 3 then
 				Result.extend (no_button)
@@ -343,14 +348,14 @@ feature {NONE} -- Deferred Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

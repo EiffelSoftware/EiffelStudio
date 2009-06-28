@@ -15,7 +15,12 @@ feature -- Initialization
 			Result := "Hallo Welt"
 		end
 
-	make is
+	make
+		do
+			run_test
+		end
+
+	run_test
 		require
 			(agent: BOOLEAN do Result := True end).item ([])
 		do
@@ -371,5 +376,3 @@ feature -- Initialization
 		end
 
 end -- class TEST
-
-

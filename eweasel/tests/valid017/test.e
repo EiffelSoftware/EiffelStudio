@@ -11,6 +11,11 @@ creation
 feature
 	
 	make is
+		do
+			f
+		end
+
+	f
 		$ROUTINE
-		
+
 end

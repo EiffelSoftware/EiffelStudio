@@ -1385,7 +1385,11 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator := text_formatter_decorator
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.set_without_tabs
-				l_text_formatter_decorator.process_keyword_text (ti_is_keyword, Void)
+				if current_class.lace_class.is_syntax_standard then
+					l_text_formatter_decorator.process_symbol_text (ti_equal)
+				else
+					l_text_formatter_decorator.process_keyword_text (ti_is_keyword, Void)
+				end
 				l_text_formatter_decorator.put_space
 			end
 			l_as.value.process (Current)

@@ -585,6 +585,34 @@ feature -- Debugger access
 
 feature -- Status
 
+	is_precondition_free: BOOLEAN
+			-- Is feature precondition-free?
+		local
+			a: ASSERT_ID_SET
+		do
+			a := assert_id_set
+			if a = Void then
+					-- The feature is immediate, check only immediate precondition.
+				Result := not has_precondition
+			elseif a.has_precondition then
+					-- There are inherited features that are not precondition-free.
+				if has_precondition then
+						-- Current feature has precondition, that might be True.
+					if
+						attached body as fb and then attached fb.body as b and then
+						attached {ROUTINE_AS} b.content as r and then attached {BOOL_AS} r.precondition.assertions.first.expr as v
+					then
+							-- The precondition has the first expression in the form of a boolean constant.
+							-- If it is true, the feature is precondition-free
+						Result := v.value
+					end
+				end
+			else
+					-- There are inherited precondition-free precursors.
+				Result := True
+			end
+		end
+
 	to_melt_in (a_class: CLASS_C): BOOLEAN
 			-- Has current feature to be melted in class `a_class' ?
 		require

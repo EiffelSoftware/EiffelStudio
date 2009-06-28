@@ -48,7 +48,7 @@ compile_result validity_error TEST VWBE
 define		ROUTINE "local c: CHARACTER; do inspect c when Void then end end"
 copy_sub	test.e $CLUSTER test.e
 resume_compile
-compile_result syntax_error TEST 14
+compile_result syntax_error TEST 19
 
 define		ROUTINE "do inspect Void when 3 then end end"
 copy_sub	test.e $CLUSTER test.e

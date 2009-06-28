@@ -7,6 +7,11 @@ create
 feature
 
 	make
+		do
+			f
+		end
+
+	f
 		require
 			precursor
 		local

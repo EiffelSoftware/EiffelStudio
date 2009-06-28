@@ -7,17 +7,17 @@
 deferred class TEST1
 feature
 	
-	make is
+	f is
 		require
 			precondition: show ("Precondition")
 		deferred
 		ensure
 			postcondition: show ("Postcondition")
-		end;
+		end
 			
 	show (s: STRING): BOOLEAN is
 		do
-			io.put_string (s);
+			io.put_string (s)
 			io.new_line
 			Result := True
 		end

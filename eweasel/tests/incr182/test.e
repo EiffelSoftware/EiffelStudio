@@ -13,8 +13,13 @@ feature
 	
 	make is
 		do
-			io.put_string ("Hey you weasel%N")
-		end;
+			f
+		end
 			
+	f
+		do
+			io.put_string ("Hey you weasel%N")
+		end
+
 end
      

@@ -1,21 +1,23 @@
 class
-   TEST
- 
-inherit
-   ARGUMENTS
+	TEST
  
 create
-   make
+	make
  
 feature {NONE} -- Initialization
  
-   make is
-         -- Run application.
-      require
-         x: {lt_ms: STRING}m_s
-      do
-      end
- 
-   m_s: STRING
- 
+	make
+			-- Run application.
+		do
+			f
+		end
+
+	f 
+		require
+			x: {l: STRING} s
+		do
+		end
+
+	s: STRING
+
 end

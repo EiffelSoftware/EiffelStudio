@@ -1546,6 +1546,9 @@ feature -- Supplier checking
 							l_vsrp2.set_creation_feature (l_creation_proc)
 							Error_handler.insert_error (l_vsrp2)
 						end
+						if not l_creation_proc.is_precondition_free then
+							error_handler.insert_error (create {VSRP3}.make (Current, a_type, l_creation_proc.instantiation_in (a_type)))
+						end
 					end
 					creators.forth
 				end

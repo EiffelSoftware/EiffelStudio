@@ -84,8 +84,8 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 				"Undo__visible", "Redo__visible", "Separator", "Editor_cut__visible", "Editor_copy__visible", "Editor_paste__visible", "Separator",
 				"ES_GROUP_TOOL__hidden", "ES_FEATURES_TOOL__hidden", "ES_SEARCH_TOOL__visible", "Separator", "Send_to_context__visible",
 				"New_cluster__hidden", "Remove_class_cluster__hidden", "Toggle_stone__hidden", "Raise_all__hidden", "Minimize_all__hidden",
-				"Print__hidden", "ES_OUTPUT_TOOL__hidden", "ES_DIAGRAM_TOOL__hidden", "ES_CLASS_TOOL__hidden", "ES_FEATURE_RELATION_TOOL__hidden",
-				"ES_DEPENDENCY_TOOL__hidden", "ES_METRICS_TOOL__hidden", "ES_CONSOLE_TOOL__hidden", "ES_C_OUTPUT_TOOL__hidden", "ES_ERROR_LIST_TOOL__hidden",
+				"Print__hidden", "ES_OUTPUTS_TOOL__hidden", "ES_DIAGRAM_TOOL__hidden", "ES_CLASS_TOOL__hidden", "ES_FEATURE_RELATION_TOOL__hidden",
+				"ES_DEPENDENCY_TOOL__hidden", "ES_METRICS_TOOL__hidden", "ES_CONSOLE_TOOL__hidden", "ES_ERROR_LIST_TOOL__hidden",
 				"ES_FAVORITES_TOOL__hidden", "ES_WINDOWS_TOOL__hidden", "ES_PROPERTIES_TOOL__hidden", "ES_DEBUGGER_BREAKPOINTS_TOOL__hidden",
 				"ES_SEARCH_REPORT__hidden", "ES_INFORMATION_TOOL__hidden">>
 		end
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
 			auto_hide_animation_speed_preference := l_manager.new_integer_preference_value (l_manager, auto_hide_animation_speed_string, 50)
 			show_all_applicable_docking_indicators_preference := l_manager.new_boolean_preference_value (l_manager, show_all_applicable_docking_indicators_string, True)
-			output_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, output_tool_prompted_string, False)
+			output_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, output_tool_prompted_string, True)
 
 			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
 			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)

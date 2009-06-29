@@ -78,9 +78,10 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_dir (a_xeb_directory: FILE_NAME; a_tag_lib_directory: FILE_NAME)
+	process_with_dir (a_xeb_directory: FILE_NAME; a_tag_lib_directory: FILE_NAME; a_force: BOOLEAN)
 			--`a_xeb_directory': Where are the xeb files located?
 			--`a_tag_lib_directory': Where are the taglibs located?
+			--`force': Should the servlet_generators be generated regardless if they're outdated or not?
 			-- Translates xeb files to servlet generators
 		require
 			a_xeb_directory_attached: attached a_xeb_directory
@@ -89,7 +90,7 @@ feature -- Processing
 			l_directory: DIRECTORY
 		do
 			create l_directory.make (a_xeb_directory)
-			process_with_files (search_rec_for_xeb (l_directory), a_tag_lib_directory)
+			process_with_files (search_rec_for_xeb (l_directory), a_tag_lib_directory, a_force)
 		end
 
 	search_rec_for_xeb (a_directory: DIRECTORY): LIST [XP_FILE_NAME]
@@ -129,7 +130,7 @@ feature -- Processing
 			end
 		end
 
-	process_with_files (a_files: LIST [XP_FILE_NAME]; a_taglib_folder: FILE_NAME)
+	process_with_files (a_files: LIST [XP_FILE_NAME]; a_taglib_folder: FILE_NAME; a_force: BOOLEAN)
 			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
@@ -153,7 +154,7 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-				process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name))
+				process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name, a_force))
 				a_files.forth
 			end
 			o.iprint ("Processing done.")
@@ -165,14 +166,14 @@ feature -- Processing
 			l_webapp_gen.generate
 		end
 
-	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING)
+	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
 		require
 			a_source_attached: attached a_source
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
 			o.iprint ("Processing '" + a_path + "'...")
-			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date)
+			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
 	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
@@ -194,7 +195,7 @@ feature -- Processing
 			Result.replace_substring_all ("\", "_") -- WINDOWS
 		end
 
-	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER)
+	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER; a_force: BOOLEAN)
 			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
 		require
 			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
@@ -209,6 +210,7 @@ feature -- Processing
 				l_template := xeb_parser.template
 				l_template.template_name := a_servlet_name
 				xeb_parser.template.date := a_date
+				xeb_parser.template.force := a_force
 				a_registry.put_template (a_servlet_name, xeb_parser.template)
 			else
 				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)

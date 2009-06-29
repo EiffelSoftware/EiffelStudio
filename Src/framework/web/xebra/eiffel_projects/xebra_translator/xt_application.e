@@ -12,7 +12,6 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
---	KL_SHARED_ARGUMENTS
 	XU_SHARED_OUTPUTTER
 
 create
@@ -47,7 +46,7 @@ feature -- Operation
 
 			l_translator.set_output_path (a_arg_parser.output_path)
 
-			l_translator.process_with_dir (l_dir, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path))
+			l_translator.process_with_dir (l_dir, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path), a_arg_parser.force)
 
 			create l_printer.default_create
 			if error_manager.has_warnings then

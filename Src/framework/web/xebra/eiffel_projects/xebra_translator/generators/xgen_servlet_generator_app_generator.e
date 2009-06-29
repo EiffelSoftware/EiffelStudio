@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 			servlet_generator_generators_attached: attached servlet_generator_generators
 		end
 
-feature {NONE} -- Access
-
 feature -- Access
 
 	put_servlet_generator_generator (a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)

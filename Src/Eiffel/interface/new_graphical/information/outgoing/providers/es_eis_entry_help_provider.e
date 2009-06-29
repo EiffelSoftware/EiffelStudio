@@ -64,6 +64,10 @@ feature {NONE} -- Variable expansion
 					if attached id_solution.last_feature_name as lt_feature then
 						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
 					end
+
+						-- Add `unique_id'.
+					Result.force (id_solution.url_id (l_id), {ES_EIS_TOKENS}.unique_id_var_name)
+
 						-- Add variables defined in the target.
 					if l_target /= Void then
 						Result.merge (l_target.variables)

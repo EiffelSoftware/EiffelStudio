@@ -57,9 +57,11 @@ feature -- HELP_CONTEXT_I, Access
 	help_context_id: STRING
 			-- <Precursor>
 		local
-			l_eis_entry: EIS_ENTRY
+			l_eis_entry: detachable EIS_ENTRY
 		do
-			l_eis_entry ?= eis_grid.selected_rows.i_th (1).data
+			if eis_grid.selected_rows.count > 0 and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+				l_eis_entry := l_entry
+			end
 			if l_eis_entry /= Void and then attached l_eis_entry.source as l_src and then not l_src.is_empty then
 				Result := l_src
 			else
@@ -71,10 +73,8 @@ feature -- HELP_CONTEXT_I, Access
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
 			-- <Precursor>
 		do
-			if attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
+			if eis_grid.selected_rows.count > 0 and then attached {EIS_ENTRY} eis_grid.selected_rows.i_th (1).data as l_entry then
 				Result := create {HELP_SECTION_EIS_ENTRY}.make (l_entry)
-			else
-				check entry_not_attached: False end
 			end
 		end
 
@@ -255,6 +255,11 @@ feature {NONE} -- Sorting
 				if descend_order then
 					Result := not Result
 				end
+			when column_override then
+				Result := (u.override = True or v.override = False)
+				if descend_order then
+					Result := not Result
+				end
 			when column_others then
 				if attached u.others_as_string as lt_others_u then
 					if attached v.others_as_string as lt_others_v then
@@ -304,6 +309,7 @@ feature {NONE} -- Initialization
 			-- Setup basic attributes of the displaying grid.
 		local
 			l_grid: like eis_grid
+			l_column: EV_GRID_COLUMN
 		do
 			l_grid := eis_grid
 			l_grid.enable_multiple_row_selection
@@ -316,19 +322,35 @@ feature {NONE} -- Initialization
 			l_grid.set_auto_resizing_column (column_location, True)
 			l_grid.set_auto_resizing_column (column_name, True)
 			l_grid.set_auto_resizing_column (column_protocol, True)
+			l_grid.column (column_override).set_width (20)
 
-			l_grid.column (column_location).set_title (interface_names.l_location)
-			register_action (l_grid.column (column_location).header_item.pointer_button_press_actions, agent on_grid_header_click (column_location, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_column := l_grid.column (column_location)
+			l_column.set_title (interface_names.l_location)
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_location, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_name)
 			l_grid.column (column_name).set_title (interface_names.l_name)
 			register_action (l_grid.column (column_name).header_item.pointer_button_press_actions, agent on_grid_header_click (column_name, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_protocol)
 			l_grid.column (column_protocol).set_title (interface_names.l_protocol)
-			register_action (l_grid.column (column_protocol).header_item.pointer_button_press_actions, agent on_grid_header_click (column_protocol, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_protocol, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_source)
 			l_grid.column (column_source).set_title (interface_names.l_source)
-			register_action (l_grid.column (column_source).header_item.pointer_button_press_actions, agent on_grid_header_click (column_source, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_source, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_tags)
 			l_grid.column (column_tags).set_title (interface_names.l_tags)
-			register_action (l_grid.column (column_tags).header_item.pointer_button_press_actions, agent on_grid_header_click (column_tags, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_tags, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_override)
+			l_grid.column (column_override).set_title (interface_names.l_override)
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_override, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			l_column := l_grid.column (column_others)
 			l_grid.column (column_others).set_title (interface_names.l_others)
-			register_action (l_grid.column (column_others).header_item.pointer_button_press_actions, agent on_grid_header_click (column_others, ?, ?, ?, ?, ?, ?, ?, ?))
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_others, ?, ?, ?, ?, ?, ?, ?, ?))
 		end
 
 	setup_grid_from_component
@@ -423,6 +445,7 @@ feature {NONE} -- Events
 		local
 			l_eis_entry: EIS_ENTRY
 			l_entry_row_count: INTEGER
+			l_editable: BOOLEAN
 		do
 			l_entry_row_count := eis_grid.row_count
 			if new_entry_possible then
@@ -436,21 +459,27 @@ feature {NONE} -- Events
 				if not attached {EIS_ENTRY} eis_grid.row (a_row).data as lt_entry then
 					eis_grid.row (a_row).set_data (l_eis_entry)
 				end
+
+				l_editable := entry_editable (l_eis_entry, True)
+
 				inspect a_column
 				when column_location then
-					Result := location_item_from_eis_entry (l_eis_entry)
+					Result := location_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_name then
-					Result := name_item_from_eis_entry (l_eis_entry)
+					Result := name_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_protocol then
-					Result := protocol_item_from_eis_entry (l_eis_entry)
+					Result := protocol_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_source then
-					Result := source_item_from_eis_entry (l_eis_entry)
+					Result := source_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_tags then
 						-- Tags
-					Result := tags_item_from_eis_entry (l_eis_entry)
+					Result := tags_item_from_eis_entry (l_eis_entry, l_editable)
+				when column_override then
+						-- Override
+					Result := override_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_others then
 						-- Others
-					Result := others_item_from_eis_entry (l_eis_entry)
+					Result := others_item_from_eis_entry (l_eis_entry, l_editable)
 				else
 					check no_more_column: False end
 				end
@@ -497,6 +526,11 @@ feature {NONE} -- Item callbacks
 
 	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On source changed
+		do
+		end
+
+	on_override_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
+			-- On override changed
 		do
 		end
 
@@ -585,7 +619,7 @@ feature {NONE} -- Validation
 			-- Can `a_name' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
-				Result := entry_editable (lt_entry)
+				Result := entry_editable (lt_entry, False)
 			end
 		end
 
@@ -593,7 +627,7 @@ feature {NONE} -- Validation
 			-- Can `a_protocol' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
-				Result := entry_editable (lt_entry)
+				Result := entry_editable (lt_entry, False)
 			end
 		end
 
@@ -601,7 +635,7 @@ feature {NONE} -- Validation
 			-- Can `a_source' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
-				Result := entry_editable (lt_entry)
+				Result := entry_editable (lt_entry, False)
 			end
 		end
 
@@ -609,7 +643,7 @@ feature {NONE} -- Validation
 			-- Can `a_tags' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
-				Result := entry_editable (lt_entry)
+				Result := entry_editable (lt_entry, False)
 			end
 		end
 
@@ -617,18 +651,18 @@ feature {NONE} -- Validation
 			-- Can `a_others' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
-				Result := entry_editable (lt_entry)
+				Result := entry_editable (lt_entry, False)
 			end
 		end
 
-	entry_editable (a_entry: attached EIS_ENTRY): BOOLEAN
+	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		do
 		end
 
 feature {NONE} -- Grid items
 
-	name_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	name_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of name from an EIS entry.
 		local
 			l_name: STRING_32
@@ -638,7 +672,7 @@ feature {NONE} -- Grid items
 			if l_name = Void then
 				create l_name.make_empty
 			end
-			if entry_editable (a_entry) then
+			if a_editable then
 				create l_editable_item.make_with_text (l_name)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_name_valid (?, l_editable_item))
@@ -649,7 +683,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	protocol_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	protocol_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of protocol from an EIS entry.
 		local
 			l_protocol: STRING_32
@@ -659,7 +693,7 @@ feature {NONE} -- Grid items
 			if l_protocol = Void then
 				create l_protocol.make_empty
 			end
-			if entry_editable (a_entry) then
+			if a_editable then
 				create l_editable_item.make_with_text (l_protocol)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_protocol_valid (?, l_editable_item))
@@ -670,7 +704,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	source_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	source_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of source from an EIS entry.
 		local
 			l_source: STRING_32
@@ -680,7 +714,7 @@ feature {NONE} -- Grid items
 			if l_source = Void then
 				create l_source.make_empty
 			end
-			if entry_editable (a_entry) then
+			if a_editable then
 				create l_editable_item.make_with_text (l_source)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_source_valid (?, l_editable_item))
@@ -691,14 +725,14 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	tags_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	tags_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of tags from an EIS entry.
 		local
 			l_tags: STRING_32
 			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_tags := eis_output.tags_as_code (a_entry)
-			if entry_editable (a_entry) then
+			if a_editable then
 				create l_editable_item.make_with_text (l_tags)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_tags_valid (?, l_editable_item))
@@ -709,14 +743,20 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	others_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	override_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+			-- Grid item of override from an EIS entry.
+		do
+			create {EV_GRID_LABEL_ITEM} Result.make_with_text ("-")
+		end
+
+	others_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of others from an EIS entry.
 		local
 			l_others: attached STRING_32
 			l_editable_item: attached EV_GRID_EDITABLE_ITEM
 		do
 			l_others := eis_output.others_as_code (a_entry)
-			if entry_editable (a_entry) then
+			if a_editable then
 				create l_editable_item.make_with_text (l_others)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 				l_editable_item.set_text_validation_agent (agent is_others_valid (?, l_editable_item))
@@ -727,7 +767,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	location_item_from_eis_entry (a_entry: attached EIS_ENTRY): attached EV_GRID_ITEM
+	location_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
 			-- Grid item of location from an EIS entry
 		local
 			l_type: NATURAL
@@ -753,10 +793,10 @@ feature {NONE} -- Grid items
 					l_editor_token_item := folder_editor_token_for_location (l_folder)
 				elseif l_type = id_solution.class_type then
 					l_class ?= id_solution.class_of_id (lt_id)
-					l_editor_token_item := class_editor_token_for_location (l_class)
+					l_editor_token_item := class_editor_token_for_location (l_class, not a_entry.is_auto)
 				elseif l_type = id_solution.feature_type then
 					l_feature := id_solution.feature_of_id (lt_id)
-					l_editor_token_item := feature_editor_token_for_location (l_feature, id_solution.last_feature_name)
+					l_editor_token_item := feature_editor_token_for_location (l_feature, id_solution.last_feature_name, not a_entry.is_auto)
 				end
 				if attached {ES_GRID_LIST_ITEM} l_editor_token_item as lt_item then
 					Result := lt_item
@@ -855,7 +895,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	class_editor_token_for_location (a_item: CLASS_I): attached ES_GRID_LIST_ITEM
+	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
@@ -880,7 +920,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): attached ES_GRID_LIST_ITEM
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		require
 			a_item_void_implies_a_name_not_void: a_item = Void implies a_name /= Void
@@ -970,8 +1010,9 @@ feature {NONE} -- Column constants
 	column_protocol: INTEGER = 3
 	column_source: INTEGER = 4
 	column_tags: INTEGER = 5
-	column_others: INTEGER = 6
-	numbers_of_column: INTEGER = 6;
+	column_override: INTEGER = 6
+	column_others: INTEGER = 7
+	numbers_of_column: INTEGER = 7;
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

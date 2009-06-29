@@ -20,6 +20,14 @@ feature -- Access
 
 	tag_string: STRING = "tag"
 
+	override_string: STRING = "override"
+
+	true_string: STRING = "true"
+
+	false_string: STRING = "false"
+
+	auto_string: STRING = "auto"
+
 	value_assignment: STRING = "="
 
 	void_string: STRING = "@@@"
@@ -36,7 +44,8 @@ feature -- Built in variables
 	target_name_var_name: STRING_8 = "target_name"
 	group_name_var_name: STRING_8 = "group_name"
 	class_name_var_name: STRING_8 = "class_name"
-	feature_name_var_name: STRING_8 = "feature_name";
+	feature_name_var_name: STRING_8 = "feature_name"
+	unique_id_var_name: STRING_8 = "unique_id";
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

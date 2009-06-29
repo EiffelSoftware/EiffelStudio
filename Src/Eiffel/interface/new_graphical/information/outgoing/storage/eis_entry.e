@@ -89,6 +89,16 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			others_set: others = a_others
 		end
 
+feature {ES_EIS_NOTE_PICKER} -- Element change
+
+	set_override (a_v: like override)
+			-- Set `override' with `a_v'
+		do
+			override := a_v
+		ensure
+			override_set: override = a_v
+		end
+
 feature -- Access
 
 	name: detachable STRING_32
@@ -108,6 +118,15 @@ feature -- Access
 
 	others: detachable HASH_TABLE [STRING_32, STRING_32]
 			-- Other attributes of the entry
+
+	override: BOOLEAN
+			-- Overriding entry over auto entry?
+
+	is_auto: BOOLEAN
+			-- Is current an auto entry? (No actual written notes)
+		do
+			Result := False
+		end
 
 	tags_as_string: detachable STRING_32
 			-- Tags as a string

@@ -109,6 +109,18 @@ feature {NONE} -- Initialization
 			l_whole_vbox.extend (l_progress_hbox)
 			l_whole_vbox.disable_item_expand (l_progress_hbox)
 			create l_toolbar.make
+
+				-- Edit auto EIS node button
+			create edit_auto_gen_button.make
+			edit_auto_gen_button.set_tooltip (interface_names.t_edit_auto_eis_node)
+			edit_auto_gen_button.set_pixel_buffer (pixmaps.icon_pixmaps.information_edit_auto_node_icon_buffer)
+			edit_auto_gen_button.select_actions.extend (agent on_edit_eis_auto_node)
+			edit_auto_gen_button.disable_sensitive
+			l_toolbar.extend (edit_auto_gen_button)
+
+				-- Separator
+			l_toolbar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
 				-- Auto sweep button
 			create auto_sweep_button.make
 			auto_sweep_button.set_tooltip (interface_names.t_auto_sweeping_the_system)
@@ -182,9 +194,9 @@ feature {NONE} -- Initialization
 			split_area.set_first (l_vbox)
 
 				-- The tree
-			if attached {ES_EIS_TOOL_WIDGET} Current as lt_widget then
-				create l_tree.make_eis_tree (context_menu_factory, lt_widget)
-			end
+
+			create l_tree.make_eis_tree (context_menu_factory, Current)
+			l_tree.select_actions.extend (agent on_tree_selected)
 			tree := l_tree
 			l_vbox.extend (l_tree)
 			l_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
@@ -280,6 +292,9 @@ feature -- Access
 	search_button: EV_BUTTON
 			-- Button to lauch a new search.
 
+	edit_auto_gen_button: SD_TOOL_BAR_BUTTON
+			-- Edit auto EIS node button.
+
 	auto_sweep_button: SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Auto sweep button
 
@@ -341,6 +356,47 @@ feature -- Callbacks
 			l_view := tree.current_view
 			if l_view /= Void then
 				l_view.delete_selected_entries
+			end
+		end
+
+	on_tree_selected
+			-- On tree selected
+		local
+			l_enable: BOOLEAN
+		do
+			if attached {EB_CLASSES_TREE_TARGET_ITEM} tree.selected_item then
+				l_enable := True
+			elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} tree.selected_item as l_item then
+				if attached {CONF_LIBRARY} l_item.stone.group as l_library then
+					l_enable := not l_library.is_readonly
+				end
+			end
+			if l_enable then
+				edit_auto_gen_button.enable_sensitive
+			else
+				edit_auto_gen_button.disable_sensitive
+			end
+		end
+
+	on_edit_eis_auto_node
+			-- On edit EIS auto node property of a target
+		local
+			l_target: detachable CONF_TARGET
+			l_dialog: ES_EIS_AUTO_ENTRY_DIALOG
+		do
+			if attached {EB_CLASSES_TREE_TARGET_ITEM} tree.selected_item as l_item then
+				l_target := l_item.stone.target
+			elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} tree.selected_item as l_folder_item then
+				if l_folder_item.stone.group.is_library then
+					if attached {CONF_LIBRARY} l_folder_item.stone.group as l_library then
+						l_target := l_library.library_target
+					end
+				end
+			end
+			if l_target /= Void then
+				create l_dialog.make_with_target (l_target, agent refresh_list)
+				l_dialog.set_is_modal (True)
+				l_dialog.show_on_active_window
 			end
 		end
 

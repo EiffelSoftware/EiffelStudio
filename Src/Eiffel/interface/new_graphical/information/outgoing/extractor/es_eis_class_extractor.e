@@ -13,6 +13,8 @@ inherit
 
 	ES_EIS_NOTE_PICKER
 
+	ES_SHARED_LOCALE_FORMATTER
+
 create
 	make,
 	make_with_location
@@ -107,6 +109,9 @@ feature {NONE} -- Implementation
 						-- Always extract entries when `location_specialized'
 					real_extract (lt_id)
 				end
+				if not has_override then
+					extend_auto_entry
+				end
 			end
 		end
 
@@ -128,6 +133,22 @@ feature {NONE} -- Access
 			-- Cached full entries
 
 feature {NONE} -- Basic operations
+
+	extend_auto_entry
+			-- Add auto entry if needed.
+		require
+			not_has_override: not has_override
+			eis_class_id_not_void: eis_class_id /= Void
+		local
+			l_entry: EIS_AUTO_ENTRY
+			l_auto_entry: like auto_entry
+		do
+			l_auto_entry := auto_entry (class_i.target)
+			if l_auto_entry /= Void and then l_auto_entry.enabled then
+				create l_entry.make (class_i.name, Void, l_auto_entry.src, Void, eis_class_id, Void)
+				eis_entries.force (l_entry)
+			end
+		end
 
 	real_extract (a_computed_id: attached STRING)
 			-- Perform real extract from the class text.
@@ -257,7 +278,27 @@ feature {NONE} -- Formatting
 			end
 		end
 
-;note
+feature {NONE} -- Implementation
+
+	has_override: BOOLEAN
+			-- Extracted entries has overriding entry?
+		local
+			l_entries: like eis_entries
+		do
+			l_entries := eis_entries
+			if l_entries /= Void then
+				from
+					l_entries.start
+				until
+					l_entries.after or Result
+				loop
+					Result := l_entries.item_for_iteration.override
+					l_entries.forth
+				end
+			end
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

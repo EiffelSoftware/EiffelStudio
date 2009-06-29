@@ -3,7 +3,7 @@ note
 		Automatically generated class for EiffelStudio 16x16 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe \work\64dev\Delivery\studio\bitmaps\png\16x16.ini -f \work\64dev\tools\eiffel_matrix_code_generator\frames\studio.e.frame"
+	command_line: "emcgen.exe E:\64dev\Delivery\studio\bitmaps\png\16x16.ini -f frames\studio.e.frame"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -2423,23 +2423,23 @@ feature -- Icons
 		end
 
 	frozen tool_terminal_icon: EV_PIXMAP
-			-- Access to 'contract editor' pixmap.
+			-- Access to 'terminal' pixmap.
 		require
 			has_named_icon: has_named_icon (tool_terminal_name)
 		once
 			Result := named_icon (tool_terminal_name)
 		ensure
-			tool_contract_editor_icon_attached: Result /= Void
+			tool_terminal_icon_attached: Result /= Void
 		end
 
 	frozen tool_terminal_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'contract editor' pixmap pixel buffer.
+			-- Access to 'terminal' pixmap pixel buffer.
 		require
 			has_named_icon: has_named_icon (tool_terminal_name)
 		once
 			Result := named_icon_buffer (tool_terminal_name)
 		ensure
-			tool_contract_editor_icon_buffer_attached: Result /= Void
+			tool_terminal_icon_buffer_attached: Result /= Void
 		end
 
 	frozen project_melt_icon: EV_PIXMAP
@@ -8122,6 +8122,26 @@ feature -- Icons
 			information_sweep_now_icon_buffer_attached: Result /= Void
 		end
 
+	frozen information_edit_auto_node_icon: EV_PIXMAP
+			-- Access to 'edit auto node' pixmap.
+		require
+			has_named_icon: has_named_icon (information_edit_auto_node_name)
+		once
+			Result := named_icon (information_edit_auto_node_name)
+		ensure
+			information_edit_auto_node_icon_attached: Result /= Void
+		end
+
+	frozen information_edit_auto_node_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'edit auto node' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (information_edit_auto_node_name)
+		once
+			Result := named_icon_buffer (information_edit_auto_node_name)
+		ensure
+			information_edit_auto_node_icon_buffer_attached: Result /= Void
+		end
+
 	frozen testing_new_unit_test_icon: EV_PIXMAP
 			-- Access to 'new_unit_test' pixmap.
 		require
@@ -8303,7 +8323,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-
+	
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
@@ -8768,6 +8788,7 @@ feature -- Constants: Icon names
 	information_affected_items_name: STRING = "information affected items"
 	information_auto_sweeping_name: STRING = "information auto sweeping"
 	information_sweep_now_name: STRING = "information sweep now"
+	information_edit_auto_node_name: STRING = "information edit auto node"
 	testing_new_unit_test_name: STRING = "testing new_unit_test"
 	testing_failure_name: STRING = "testing failure"
 	testing_run_last_tests_name: STRING = "testing run_last_tests"
@@ -9187,6 +9208,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 24], information_affected_items_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 24], information_auto_sweeping_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 24], information_sweep_now_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 24], information_edit_auto_node_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 25], testing_new_unit_test_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 25], testing_failure_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 25], testing_run_last_tests_name)

@@ -196,7 +196,7 @@
 
 	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>20</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_all_applicable_docking_indicators" DESCRIPTION="Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.output_tool_prompted" DESCRIPTION="Should the output tool be shown when a compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.output_tool_prompted" DESCRIPTION="Should the output tool be shown when a compilation is launched?"><BOOLEAN>True</BOOLEAN></PREF>
 
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_tab_editor];new_window;current_editor;context;external</LIST></PREF>

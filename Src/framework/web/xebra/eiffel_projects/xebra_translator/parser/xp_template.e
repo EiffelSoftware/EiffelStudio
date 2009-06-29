@@ -48,6 +48,17 @@ feature {XP_TEMPLATE} -- Access
 
 feature -- Access
 
+	force: BOOLEAN assign set_force
+			-- Should the regeneration be forced?
+
+	set_force (a_force: BOOLEAN)
+			-- May the force be with you
+		do
+			force := a_force
+		ensure
+			force_set: force = a_force
+		end
+
 	template_name: STRING assign set_name
 			-- The name of the servlet
 

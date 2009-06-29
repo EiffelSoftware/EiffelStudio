@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 			not_a_servlet_name_is_empty: not a_servlet_name.is_empty
 			not_a_path_is_empty: not a_path.is_empty
 		do
-			make (a_servlet_name, False, create {XP_TAG_ELEMENT}.make_empty, a_path, False)
+			make (a_servlet_name, False, create {XP_TAG_ELEMENT}.make_empty, a_path, False, False)
 		end
 
-	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: FILE_NAME; a_is_template: BOOLEAN)
+	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: FILE_NAME; a_is_template, a_force: BOOLEAN)
 			-- `a_servlet_name': The name of ther servlet which has to be generated
 			-- `a_stateful': Is the controller stateful?
 			-- `a_root_tag': The root tag of the parsed xeb file
@@ -43,12 +43,14 @@ feature {NONE} -- Initialization
 			create path.make_from_string (a_path)
 			uid_counter := 0
 			create controller_table.make (1)
+			force := a_force
 		ensure
 			servlet_name_attached: attached servlet_name
 			root_tag_attached: attached root_tag
 			controller_table_attached: attached controller_table
 			path_attached: attached path
 			uid_counter_initialized: uid_counter = 0
+			force_set: force = a_force
 		end
 
 	make_empty
@@ -65,6 +67,9 @@ feature {NONE} -- Access
 			-- Internal counter used to generate unique identifiers
 
 feature -- Access
+
+	force: BOOLEAN
+			-- Should the output be forced
 
 	controller_table: HASH_TABLE [STRING, STRING]
 			-- controller instvars of the resulting servlet
@@ -157,7 +162,7 @@ feature -- Basic functionality
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
 			create l_util.make
-			if l_util.file_is_older_than (l_filename, root_tag.date) then
+			if l_util.file_is_older_than (l_filename, root_tag.date) or force then
 				if attached l_util.plain_text_file_write (l_filename) as l_file then
 					create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
 					servlet_gen_class.set_inherit (Servlet_generator_class)

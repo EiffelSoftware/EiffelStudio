@@ -159,12 +159,10 @@ feature {NONE} -- Implementation
 
 				-- Compare the cache with the output file
 			if a_compare_out then
-				if {PLATFORM}.is_windows then
-					--save_cache_to_file (generated_result_file_name (l_locale.info.id.name))
-					if not l_locale.info.id.name.is_empty then
-						assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
-							has_same_content_as_string (result_file_name (l_locale.info.id.name), utf32_to_utf8 (cached_output)))
-					end
+				--save_cache_to_file (generated_result_file_name (l_locale.info.id.name))
+				if not l_locale.info.id.name.is_empty then
+					assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
+						has_same_content_as_string (result_file_name (l_locale.info.id.name), utf32_to_utf8 (cached_output)))
 				end
 			end
 		end
@@ -185,6 +183,12 @@ feature {NONE} -- Implementation
 			Result.append ("locale")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("results")
+			Result.append_character (Operating_environment.directory_separator)
+			if {PLATFORM}.is_windows then
+				Result.append ("windows")
+			else
+				Result.append ("unix")
+			end
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append (a_locale_name)
 		end

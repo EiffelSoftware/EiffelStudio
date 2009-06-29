@@ -111,6 +111,7 @@ feature -- Basic Functionality
 			l_generate: BOOLEAN
 			l_servlets_directory: DIRECTORY
 			l_util: XU_FILE_UTILITIES
+			l_executed_filename: FILE_NAME
 		do
 			l_filename := path.twin
 			l_filename.extend (".generated")
@@ -152,6 +153,13 @@ feature -- Basic Functionality
 				l_util.close
 				o.iprint ("done.")
 			end
+			l_executed_filename := path.twin
+			l_executed_filename.extend (".generated")
+			l_executed_filename.set_file_name (executed_filename)
+			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_executed_filename) as l_file then
+				l_file.put_string ("File generated for server xebra server")
+				l_util.close
+			end
 		end
 
 feature --Constants
@@ -159,6 +167,8 @@ feature --Constants
 	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
 	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
 	servlet_class_name: STRING = "XWA_SERVLET"
+
+	Executed_filename: STRING = "executed_at_time"
 
 	Constructor_name: STRING = "make"
 	Response_name: STRING = "response"

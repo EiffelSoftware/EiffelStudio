@@ -66,7 +66,6 @@ feature -- Basic functionality
 			buf:XU_INDENDATION_FORMATTER
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
-			file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
 			l_directory: DIRECTORY
 			l_util: XU_FILE_UTILITIES
@@ -94,7 +93,7 @@ feature -- Basic functionality
 			if not l_directory.exists then
 				l_directory.create_dir
 			end
-			l_filename.set_file_name (Application_name.as_lower +  ".e")
+			l_filename.set_file_name (Application_name.as_lower + ".e")
 			create l_util.make
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create buf.make (l_file)
@@ -111,16 +110,11 @@ feature -- Basic functionality
 			l_filename.extend (".generated")
 			l_filename.extend ("servlet_gen")
 			l_filename.set_file_name ("servlet_gen.ecf")
-			create file.make (l_filename)
-			if not file.is_creatable then
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
+			create l_util.make
+			if attached l_util.plain_text_file_write (l_filename) as l_file then
+				l_file.put_string (servlet_gen_ecf)
+				l_util.close
 			end
-			file.open_write
-			if not file.is_open_write then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-			end
-			file.put_string (servlet_gen_ecf)
-			file.close
 		end
 
 feature {NONE} -- Implementation

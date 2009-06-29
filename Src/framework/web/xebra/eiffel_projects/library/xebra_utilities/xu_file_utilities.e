@@ -194,6 +194,24 @@ feature -- Basic Opertaions
 			end
 		end
 
+	file_is_older_than (a_file: FILE_NAME; a_date: INTEGER): BOOLEAN
+				-- Returns False iff the file exists and it is newer than `a_date'
+		require
+			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
+			a_date_positive: a_date >= 0
+		local
+			l_dir: DIRECTORY
+			l_files: LIST [STRING]
+			l_file: RAW_FILE
+			l_exec_access_date: INTEGER
+		do
+			Result := True
+			if is_readable_file (a_file) then
+				l_exec_access_date := (create {RAW_FILE}.make (a_file)).date
+				Result := l_exec_access_date < a_date
+			end
+		end
+
 
 feature -- Status setting
 

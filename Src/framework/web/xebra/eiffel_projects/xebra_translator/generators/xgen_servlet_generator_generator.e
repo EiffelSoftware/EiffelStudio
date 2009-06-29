@@ -139,9 +139,9 @@ feature -- Basic functionality
 		local
 			buf:XU_INDENDATION_FORMATTER
 			servlet_gen_class: XEL_CLASS_ELEMENT
-			file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
 			l_directory: DIRECTORY
+			l_util: XU_FILE_UTILITIES
 		do
 			l_filename := a_path.twin
 			l_filename.extend (".generated")
@@ -154,28 +154,22 @@ feature -- Basic functionality
 			if not l_directory.exists then
 				l_directory.create_dir
 			end
-			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
-			create file.make (l_filename)
-			if not file.is_creatable then
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
-			end
-			if not (file.exists and file.date > root_tag.date) then
-					-- We have to regenerate the file, if it does not exist or it is out of date
-				file.open_write
-				if not file.is_open_write then
-					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-				end
 
-				create buf.make (file)
-				create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
-				servlet_gen_class.set_inherit (Servlet_generator_class)
-				servlet_gen_class.set_constructor_name ("make")
-				build_generate_for_servlet_generator (servlet_gen_class)
-				servlet_gen_class.serialize (buf)
-				file.close
-				o.iprint ("Servlet generator generated at: " + file.name)
+			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
+			create l_util.make
+			if l_util.file_is_older_than (l_filename, root_tag.date) then
+				if attached l_util.plain_text_file_write (l_filename) as l_file then
+					create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
+					servlet_gen_class.set_inherit (Servlet_generator_class)
+					servlet_gen_class.set_constructor_name ("make")
+					build_generate_for_servlet_generator (servlet_gen_class)
+					create buf.make (l_file)
+					servlet_gen_class.serialize (buf)
+					l_util.close
+					o.iprint ("Servlet generator generated at: " + l_filename)
+				end
 			else
-				o.iprint ("Already up to date: " + file.name)
+				o.iprint ("Already up to date: " + l_filename)
 			end
 		end
 

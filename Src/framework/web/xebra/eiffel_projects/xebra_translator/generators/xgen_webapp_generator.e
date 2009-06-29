@@ -79,9 +79,9 @@ feature -- Basic Functionality
 			l_buf:XU_INDENDATION_FORMATTER
 			l_request_class: XEL_CLASS_ELEMENT
 			l_application_class: XEL_CLASS_ELEMENT
-			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
 			l_directory: DIRECTORY
+			l_util: XU_FILE_UTILITIES
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			l_filename := path.twin
@@ -92,64 +92,49 @@ feature -- Basic Functionality
 			end
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_" + Server_con_handler_class.as_lower + ".e")
-			create l_file.make (l_filename)
-			if not l_file.is_creatable then
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
-			end
-			l_file.open_write
-			if not l_file.is_open_write then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-			end
 
-			create l_buf.make (l_file)
-			l_buf.set_ind_character ('%T')
-			create l_request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
-			l_request_class.set_inherit ("XWA_" + Server_con_handler_class)
-			l_request_class.set_constructor_name ("make")
-			l_request_class.add_feature (generate_constructor_for_server_conn_handler (servlets))
-			l_request_class.serialize (l_buf)
-			l_file.close
+			create l_util.make
+			if attached l_util.plain_text_file_write (l_filename) as l_file then
+				create l_buf.make (l_file)
+				l_buf.set_ind_character ('%T')
+				create l_request_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class)
+				l_request_class.set_inherit ("XWA_" + Server_con_handler_class)
+				l_request_class.set_constructor_name ("make")
+				l_request_class.add_feature (generate_constructor_for_server_conn_handler (servlets))
+				l_request_class.serialize (l_buf)
+				l_util.close
+			end
 
 				-- Generate the {APPLICATION} class
 			l_filename := path.twin
 			l_filename.extend (".generated")
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
-			create l_file.make (l_filename)
-			if not l_file.is_creatable then
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
-			end
-			l_file.open_write
-			if not l_file.is_open_write then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-			end
 
-			create l_buf.make (l_file)
-			create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
-			l_application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
-			l_application_class.set_constructor_name ("make")
-			l_application_class.add_feature (generate_contructor_for_application)
-			l_application_class.serialize (l_buf)
-			l_file.close
+			create l_util.make
+			if attached l_util.plain_text_file_write (l_filename) as l_file then
+				create l_buf.make (l_file)
+				create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
+				l_application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
+				l_application_class.set_constructor_name ("make")
+				l_application_class.add_feature (generate_contructor_for_application)
+				l_application_class.serialize (l_buf)
+				l_util.close
+			end
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
 			l_filename := path.twin
 			l_filename.extend (".generated")
 			l_filename.set_file_name (Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
-			create l_file.make (l_filename)
-			if not l_file.is_creatable then
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (l_filename), false)
-			end
-			l_file.open_write
-			if not l_file.is_open_write then
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_filename), false)
-			end
 
-			create l_buf.make (l_file)
-			create l_application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
-			l_application_class.set_inherit ("ANY")
-			l_application_class.add_feature (generate_once_feature_for_global_state)
-			l_application_class.serialize (l_buf)
-			l_file.close
+			create l_util.make
+			if attached l_util.plain_text_file_write (l_filename) as l_file then
+				create l_buf.make (l_file)
+				create l_application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")
+				l_application_class.set_inherit ("ANY")
+				l_application_class.add_feature (generate_once_feature_for_global_state)
+				l_application_class.serialize (l_buf)
+				l_util.close
+			end
 		end
 
 feature {NONE} -- Implementation

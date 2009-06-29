@@ -49,7 +49,7 @@ feature -- Access (Target)
 		do
 			create Result.make (40)
 			Result.append (encode (a_target.system.uuid.out))
-			Result.extend (name_sep)
+			Result.append (name_sep)
 			Result.append (encode (a_target.name))
 		ensure
 			result_not_void: Result /= Void
@@ -67,7 +67,7 @@ feature -- Access (Target)
 		do
 			last_target_uuid := Void
 			last_target_name := Void
-			strings := a_id.split (name_sep)
+			strings := split_by_string (a_id, name_sep)
 			if strings.count >= target_id_sections then
 				uuid := decode (strings.i_th (target_id_sections - 1))
 				last_target_uuid := uuid
@@ -109,15 +109,15 @@ feature -- Access (Group)
 					assembly: l_phys_as /= Void
 				end
 				Result.append (encode (assembly_prefix))
-				Result.extend (name_sep)
+				Result.append (name_sep)
 					-- We need a place holder to keep the same section number with other types of group.
 				Result.append (encode (place_holder_string))
-				Result.extend (name_sep)
+				Result.append (name_sep)
 				Result.append (l_phys_as.guid)
 			else
 				create Result.make (50)
 				Result.append (id_of_target (a_group.target))
-				Result.extend (name_sep)
+				Result.append (name_sep)
 				Result.append (encode (a_group.name))
 			end
 		ensure
@@ -134,7 +134,7 @@ feature -- Access (Group)
 			l_ass_id: STRING
 		do
 			last_group_name := Void
-			strings := a_id.split (name_sep)
+			strings := split_by_string (a_id, name_sep)
 			if strings.count >= group_id_sections then
 				if decode (strings.i_th (1)).is_equal (assembly_prefix) then
 					l_ass_id := decode (strings.i_th (group_id_sections))
@@ -168,7 +168,7 @@ feature -- Access (Folder)
 		do
 			l_group := a_folder.cluster
 			Result := id_of_group (l_group)
-			Result.extend (name_sep)
+			Result.append (name_sep)
 			Result.append (encode (a_folder.path))
 		ensure
 			result_not_void: Result /= Void
@@ -209,7 +209,7 @@ feature -- Access (Class)
 		do
 			l_group := a_class.group
 			Result := id_of_group (l_group)
-			Result.extend (name_sep)
+			Result.append (name_sep)
 			Result.append (encode (a_class.name))
 		ensure
 			result_not_void: Result /= Void
@@ -269,7 +269,7 @@ feature -- Access (Feature)
 		do
 			l_class ?= a_feature.associated_class.lace_class
 			Result := id_of_class (l_class)
-			Result.extend (name_sep)
+			Result.append (name_sep)
 			Result.append (encode (a_feature.name))
 		ensure
 			result_not_void: Result /= Void
@@ -283,8 +283,30 @@ feature -- Access (Feature)
 			a_ast_not_void: a_ast /= Void
 		do
 			Result := id_of_class (a_class)
-			Result.extend (name_sep)
+			Result.append (name_sep)
 			Result.append (encode (a_ast.feature_name.name))
+		end
+
+feature  -- Element Change
+
+	set_for_url (a_b: BOOLEAN)
+			-- Encode the separator to url style,
+			-- in order to get url compatible ids.
+		do
+			if a_b then
+				if not is_for_url then
+					internal_name_sep := encode (name_sep)
+				end
+			else
+				if is_for_url then
+					internal_name_sep := decode (name_sep)
+				end
+			end
+			is_for_url := a_b
+		ensure
+			is_for_url_set: is_for_url = a_b
+			name_sep_set: (a_b and (not old is_for_url)) implies (old name_sep) ~ decode (name_sep)
+			name_sep_set: ((not a_b) and old is_for_url) implies (old name_sep) ~ encode (name_sep)
 		end
 
 feature -- ID modification
@@ -299,7 +321,7 @@ feature -- ID modification
 		do
 			if last_id = Void or else not last_id.is_equal (a_id) then
 				last_id := a_id
-				last_split_strings := a_id.split (name_sep)
+				last_split_strings := split_by_string (a_id, name_sep)
 			end
 			check
 				last_split_strings_not_void: last_split_strings /= Void
@@ -314,7 +336,7 @@ feature -- ID modification
 					until
 						l_strings.after
 					loop
-						Result.extend (name_sep)
+						Result.append (name_sep)
 						Result.append (l_strings.item)
 						l_strings.forth
 					end
@@ -332,7 +354,7 @@ feature -- ID modification
 		do
 			if last_id = Void or else not last_id.is_equal (a_id) then
 				last_id := a_id
-				last_split_strings := a_id.split (name_sep)
+				last_split_strings := split_by_string (a_id, name_sep)
 			end
 			check
 				last_split_strings_not_void: last_split_strings /= Void
@@ -347,7 +369,7 @@ feature -- ID modification
 					until
 						l_strings.after
 					loop
-						Result.extend (name_sep)
+						Result.append (name_sep)
 						if l_strings.index = target_id_sections then
 							Result.append (encode (a_target_name))
 						else
@@ -369,7 +391,7 @@ feature -- ID modification
 		do
 			if last_id = Void or else not last_id.is_equal (a_id) then
 				last_id := a_id
-				last_split_strings := a_id.split (name_sep)
+				last_split_strings := split_by_string (a_id, name_sep)
 			end
 			check
 				last_split_strings_not_void: last_split_strings /= Void
@@ -384,7 +406,7 @@ feature -- ID modification
 					until
 						l_strings.after
 					loop
-						Result.extend (name_sep)
+						Result.append (name_sep)
 						if l_strings.index = group_id_sections then
 							Result.append (encode (a_group_name))
 						else
@@ -394,6 +416,16 @@ feature -- ID modification
 					end
 				end
 			end
+		end
+
+	url_id (a_id: STRING): STRING
+			-- URL form of `a_id'.
+		require
+			a_id_not_void: a_id /= Void
+		do
+			Result := encode (a_id)
+		ensure
+			url_id_not_void: Result /= Void
 		end
 
 feature -- UUID generation
@@ -442,7 +474,7 @@ feature -- Querry
 		local
 			l_strings: like strings
 		do
-			l_strings := a_id.split (name_sep)
+			l_strings := split_by_string (a_id, name_sep)
 			if attached {STRING} decode (l_strings.last) as lt_name then
 				Result := lt_name
 			else
@@ -459,7 +491,7 @@ feature -- Querry
 			l_strings: LIST [STRING]
 			l_count: INTEGER
 		do
-			l_strings := a_id.split (name_sep)
+			l_strings := split_by_string (a_id, name_sep)
 			l_count := l_strings.count
 			if l_count = target_id_sections then
 				Result := target_type
@@ -490,6 +522,9 @@ feature -- Querry
 				Result := True
 			end
 		end
+
+	is_for_url: BOOLEAN
+			-- IDs are generated for url?
 
 feature -- ID type
 
@@ -533,21 +568,65 @@ feature {NONE} -- Implementation
 	last_split_strings: LIST [STRING]
 			-- Last split strings from `last_id'
 
+	split_by_string (a_source_string: STRING; a_separator: STRING): LIST [STRING]
+			-- Split a string by a string separator.
+		require
+			a_source_string_attached: a_source_string /= Void
+			a_separator_atatched: a_separator /= Void
+		local
+			l_list: ARRAYED_LIST [STRING]
+			part: STRING
+			i, j, c, sc: INTEGER_32
+		do
+			c := a_source_string.count
+			sc := a_separator.count
+			create l_list.make (c + 1)
+			if c > 0 and c >= sc then
+				from
+					i := 1
+				until
+					i > c
+				loop
+					j := a_source_string.substring_index (a_separator, i)
+					if j = 0 then
+						j := c + 1
+					end
+					part := a_source_string.substring (i, j - 1)
+					l_list.extend (part)
+					i := j + sc
+				end
+				if j + sc - 1 = c then
+					check
+						last_character_is_a_separator: a_source_string.substring (j, c) ~ a_separator
+					end
+					l_list.extend (create {STRING}.make_empty)
+				end
+			else
+				l_list.extend (create {STRING}.make_empty)
+			end
+			Result := l_list
+		ensure
+			split_by_string_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation. Encoding/Decoding
 
-	name_sep: CHARACTER = '@'
+	name_sep: STRING
 			-- Name separator
+		do
+			Result := internal_name_sep
+			if Result = Void then
+				Result := "@"
+			end
+		end
+
+	internal_name_sep: STRING
 
 	escape_char: CHARACTER = '%%'
 
 	place_holder_string: STRING = "ph"
 
 	assembly_prefix: STRING = "assembly"
-
-	name_sep_code: NATURAL_32
-		once
-			Result := name_sep.natural_32_code
-		end
 
 	escape_char_code: NATURAL_32
 		once
@@ -593,7 +672,8 @@ feature {NONE} -- Implementation. Encoding/Decoding
   		end
 
 	encode (a_string: STRING): STRING
-			-- Encode `a_string' so that it does not contain `name_sep'.
+			-- Encode `a_string' so that it does not contain characters rather than
+			-- [%_-a-zA-Z0-9]
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -625,11 +705,11 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			end
 		ensure
 			result_not_void: Result /= Void
-			Result_not_contain_name_sep: not Result.has (name_sep)
 		end
 
 	decode (a_string: STRING): STRING
 			-- Decode `a_string' to be original one.
+			-- Hex presentations are converted back to what it was.
 		require
 			a_string_not_void: a_string /= Void
 		local

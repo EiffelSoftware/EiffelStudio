@@ -499,6 +499,7 @@ feature -- Accelerator, focus label and menu name
 	m_Debug_block: STRING_32				do Result := locale.translation("E&mbed in %"Debug...%"%TCtrl+D")	end
 	m_Execution_parameters: STRING_32	do Result := locale.translation ("Execution &Parameters") end
 	m_Execution_profiles: STRING_32		do Result := locale.translation ("Execution Pro&files") end
+	t_edit_auto_eis_node: STRING_32		do Result := locale.translation ("Edit EIS auto-node generation property.") end
 	m_Editor: STRING_32					do Result := locale.translation("&Editor")	end
 	m_Editor_area: STRING_32				do Result := locale.translation("&Editor Area")	end
 	m_Eiffel_introduction: STRING_32		do Result := locale.translation("&Introduction to Eiffel")	end
@@ -1375,6 +1376,7 @@ feature -- Label texts
 	l_others: STRING_32					do Result := locale.translation ("Others") end
 	l_Output_switches: STRING_32			do Result := locale.translation("Output switches")	end
 	l_Outside_ide: STRING_32 			do Result := locale.translation ("Outside EiffelStudio") end
+	l_override: STRING_32				do Result := locale.translation ("Override") end
 	l_Parent_cluster: STRING_32			do Result := locale.translation("Parent cluster")	end
 	l_parents: STRING_32					do Result := locale.translation("Parents:")	end
 	l_Path: STRING_32					do Result := locale.translation("Path")	end
@@ -1418,6 +1420,7 @@ feature -- Label texts
 
 	l_Query: STRING_32					do Result := locale.translation("Query")	end
 	l_refresh_tools: STRING_32			do Result := locale.translation("Refresh tools")	end
+	l_remove_auto_entry: STRING_32		do Result := locale.translation ("This is an automatic entry. Modify or disable this entry in the its enclosure target or specify an entry in the class to override it.") end
 	l_remove_project: STRING_32			do Result := locale.translation("Remove Project")	end
 	l_Remove_object: STRING_32			do Result := locale.translation("Remove")	end
 	l_Remove_object_desc: STRING_32		do Result := locale.translation("Remove an object from the tree")	end

@@ -68,7 +68,7 @@ feature {CONF_ACCESS} -- Element Change
 	add_attribute (a_name, a_value: STRING)
 			-- Add attribute with `a_name' and `a_value'.
 		do
-			attributes.force (a_name, a_value)
+			attributes.force (a_value, a_name.as_lower)
 		end
 
 feature -- Access

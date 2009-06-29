@@ -1,45 +1,28 @@
 note
-	description: "Objects that ..."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
-	author: ""
+	description: "Auto eis entry"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_EIS_TAG_VIEW
+	EIS_AUTO_ENTRY
 
 inherit
-	ES_EIS_COMPONENT_VIEW [STRING_32]
-		rename
-			component as tag
+	EIS_ENTRY
+		redefine
+			is_auto
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make (a_tag: attached STRING_32; a_eis_grid: attached ES_EIS_ENTRY_GRID)
-			-- Initialized with `a_conf_notable' and `a_eis_grid'.
-		require
-			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
-		do
-			tag := a_tag
-			eis_grid := a_eis_grid
-		end
-
-feature {NONE} -- Implementation
-
-	new_extractor: attached ES_EIS_EXTRACTOR
-			-- Create extractor
-		do
-			create {ES_EIS_TAG_EXTRACTOR}Result.make (tag)
-		end
+	is_auto: BOOLEAN = True
+			-- <precursor>
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -68,8 +51,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end

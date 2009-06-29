@@ -52,6 +52,16 @@ feature -- Operation
 					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
 					l_comma_needed := True
 				end
+
+				if a_entry.override then
+					if l_comma_needed then
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.space)
+					end
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
+					l_comma_needed := True
+				end
+
 				if a_entry.others /= Void and then not a_entry.others.is_empty then
 					if l_comma_needed then
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
@@ -62,16 +72,16 @@ feature -- Operation
 			else
 				create last_output_conf.make ({ES_EIS_TOKENS}.eis_string.as_lower)
 				if a_entry.name /= Void then
-					last_output_conf.add_attribute (a_entry.name, {ES_EIS_TOKENS}.name_string)
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.name_string, a_entry.name)
 				end
 				if a_entry.protocol /= Void then
-					last_output_conf.add_attribute (a_entry.protocol, {ES_EIS_TOKENS}.protocol_string)
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.protocol_string, a_entry.protocol)
 				end
 				if a_entry.source /= Void then
-					last_output_conf.add_attribute (a_entry.source, {ES_EIS_TOKENS}.source_string)
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.source_string, a_entry.source)
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
-					last_output_conf.add_attribute (tags_as_code (a_entry), {ES_EIS_TOKENS}.tag_string)
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.tag_string, tags_as_code (a_entry))
 				end
 				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others and then not a_entry.others.is_empty then
 					from
@@ -81,7 +91,7 @@ feature -- Operation
 					loop
 						if not lt_others.key_for_iteration.is_empty then
 								--|FIXME: Bad conversion to STRING_8
-							last_output_conf.add_attribute (lt_others.item_for_iteration, lt_others.key_for_iteration)
+							last_output_conf.add_attribute (lt_others.key_for_iteration, lt_others.item_for_iteration)
 						end
 						lt_others.forth
 					end

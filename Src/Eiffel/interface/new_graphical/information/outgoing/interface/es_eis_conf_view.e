@@ -136,7 +136,7 @@ feature -- Operation
 						l_selected_rows.after
 					loop
 						if attached {EIS_ENTRY} l_selected_rows.item_for_iteration.data as lt_entry then
-							if entry_editable (lt_entry) and then attached system_of_conf_notable (conf_notable) as lt_system then
+							if entry_editable (lt_entry, False) and then attached system_of_conf_notable (conf_notable) as lt_system then
 								remove_entry (lt_entry, conf_notable, lt_system)
 								extracted_entries.remove (l_selected_rows.item_for_iteration.index)
 								l_removed := True
@@ -163,7 +163,7 @@ feature {NONE} -- Conf modification
 			a_entry_attached: a_entry /= Void
 			a_conf_notable_attached: a_conf_notable /= Void
 			a_system_attached: a_system /= Void
-			a_entry_editable: entry_editable (a_entry)
+			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_for_conf: BOOLEAN
 		do
@@ -181,7 +181,7 @@ feature {NONE} -- Conf modification
 	modify_entry_in_conf (a_old_entry, a_new_entry: attached EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: attached CONF_SYSTEM)
 			-- Modify `a_old_entry' into `a_new_entry' in `a_conf'
 		require
-			a_old_entry_editable: entry_editable (a_old_entry)
+			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_notes: CONF_NOTE_ELEMENT
 			l_found: BOOLEAN
@@ -215,7 +215,7 @@ feature {NONE} -- Conf modification
 	remove_entry (a_entry: attached EIS_ENTRY; a_conf_notable: attached CONF_NOTABLE; a_system: attached CONF_SYSTEM)
 			-- Remove `a_entry' from `a_conf_notable' and save in `a_system'
 		require
-			a_entry_editable: entry_editable (a_entry)
+			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_notes: CONF_NOTE_ELEMENT
 			l_found: BOOLEAN
@@ -241,7 +241,7 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	entry_editable (a_entry: attached EIS_ENTRY): BOOLEAN
+	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
@@ -297,7 +297,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
 						-- Do nothing when the name is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -326,7 +326,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -355,7 +355,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -390,7 +390,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.tags /= Void and then lt_entry.tags.is_equal (l_tags) then
 						-- Do nothing when the tags is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -426,7 +426,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
 						-- Do nothing when the others is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry

@@ -24,7 +24,10 @@ inherit
 			on_protocol_changed,
 			on_source_changed,
 			on_tags_changed,
-			on_others_changed
+			on_others_changed,
+			compute_grid_rows,
+			on_override_changed,
+			override_item_from_eis_entry
 		end
 
 create
@@ -101,7 +104,7 @@ feature -- Operation
 						l_selected_rows.after
 					loop
 						if attached {EIS_ENTRY} l_selected_rows.item_for_iteration.data as lt_entry then
-							if entry_editable (lt_entry) then
+							if entry_editable (lt_entry, False) then
 								remove_entry (lt_entry)
 								extracted_entries.remove (l_selected_rows.item_for_iteration.index)
 								l_removed := True
@@ -126,31 +129,61 @@ feature -- Querry
 			Result := not class_i.is_read_only
 		end
 
+feature {NONE} -- Initialization
+
+	compute_grid_rows
+			-- Compute number of grid rows
+		do
+			Precursor {ES_EIS_COMPONENT_VIEW}
+			rebuild_editable_cache
+		end
+
 feature {NONE} -- Access
 
-	entry_editable (a_entry: attached EIS_ENTRY): BOOLEAN
+	entry_editable (a_entry: attached EIS_ENTRY; a_use_cache: BOOLEAN): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
 			l_feature: E_FEATURE
 			l_modifier: ES_EIS_CLASS_MODIFIER
+			l_editable_cache: like editable_cache
+			l_class_i: like class_i
 		do
-			if attached a_entry.id as lt_id then
+			if not a_entry.is_auto and then attached a_entry.id as lt_id then
+				l_class_i := class_i
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.class_type then
 					if attached {CLASS_I} id_solution.class_of_id (lt_id) as lt_class then
-						Result := (class_i = lt_class)
+						Result := (l_class_i = lt_class)
 					end
 				elseif l_type = id_solution.feature_type then
 					l_feature := id_solution.feature_of_id (lt_id)
 					if l_feature /= Void then
-						Result := l_feature.written_class.lace_class = class_i
+						Result := l_feature.written_class.lace_class = l_class_i
 					end
 				end
 				if Result then
-					create l_modifier.make (class_i)
-					l_modifier.prepare
-					Result := l_modifier.is_modifiable and then l_modifier.is_ast_available
+					if a_use_cache then
+							-- Cache the results of `entry_editable' to improve performance.
+						l_editable_cache := editable_cache
+						if l_editable_cache = Void then
+							rebuild_editable_cache
+							l_editable_cache := editable_cache
+						end
+						l_editable_cache.search (l_class_i)
+						if l_editable_cache.found then
+							Result := l_editable_cache.found_item
+						else
+							create l_modifier.make (l_class_i)
+							l_modifier.prepare
+							Result := l_modifier.is_modifiable and then l_modifier.is_ast_available
+							l_editable_cache.force (Result, l_class_i)
+						end
+					else
+						create l_modifier.make (l_class_i)
+						l_modifier.prepare
+						Result := l_modifier.is_modifiable and then l_modifier.is_ast_available
+					end
 				end
 			end
 		end
@@ -160,7 +193,7 @@ feature {NONE} -- Class modification
 	modify_entry_in_feature (a_old_entry, a_new_entry: attached EIS_ENTRY; a_feature: attached E_FEATURE)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_feature'.
 		require
-			a_old_entry_editable: entry_editable (a_old_entry)
+			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
 		do
@@ -177,7 +210,7 @@ feature {NONE} -- Class modification
 	modify_entry_in_class (a_old_entry, a_new_entry: attached EIS_ENTRY; a_class: attached CLASS_I)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_class'.
 		require
-			a_old_entry_editable: entry_editable (a_old_entry)
+			a_old_entry_editable: entry_editable (a_old_entry, False)
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 		do
@@ -194,7 +227,7 @@ feature {NONE} -- Class modification
 	remove_entry (a_entry: attached EIS_ENTRY)
 			-- Remove entry in component.
 		require
-			a_entry_editable: entry_editable (a_entry)
+			a_entry_editable: entry_editable (a_entry, False)
 		do
 			if attached {E_FEATURE} id_solution.feature_of_id (a_entry.id) as lt_feature then
 				remove_entry_in_feature (a_entry, lt_feature)
@@ -208,7 +241,7 @@ feature {NONE} -- Class modification
 	remove_entry_in_feature (a_entry: attached EIS_ENTRY; a_feature: attached E_FEATURE)
 			-- Remove entry in feature.
 		require
-			a_entry_editable: entry_editable (a_entry)
+			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
 		do
@@ -225,7 +258,7 @@ feature {NONE} -- Class modification
 	remove_entry_in_class (a_entry: attached EIS_ENTRY; a_class: attached CLASS_I)
 			-- Remove entry in class.
 		require
-			a_entry_editable: entry_editable (a_entry)
+			a_entry_editable: entry_editable (a_entry, False)
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 		do
@@ -279,27 +312,27 @@ feature {NONE} -- Class modification
 
 feature {NONE} -- Location token
 
-	class_editor_token_for_location (a_item: CLASS_I): attached ES_GRID_LIST_ITEM
+	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		do
-			if a_item.is_compiled then
-				Result := class_feature_editor_token_for_location (a_item)
+			if a_editable and a_item.is_compiled then
+				Result := class_feature_editor_token_for_location (a_item, a_editable)
 			else
-				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item)
+				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item, a_editable)
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): attached ES_GRID_LIST_ITEM
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		do
-			if a_item /= Void then
-				Result := class_feature_editor_token_for_location (a_item)
+			if a_editable and a_item /= Void then
+				Result := class_feature_editor_token_for_location (a_item, a_editable)
 			elseif a_name /= Void then
-				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item, a_name)
+				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item, a_name, a_editable)
 			end
 		end
 
-	class_feature_editor_token_for_location (a_item: ANY): attached ES_GRID_LIST_ITEM
+	class_feature_editor_token_for_location (a_item: ANY; a_editable: BOOLEAN): attached ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		local
 			l_editable_item: attached EB_GRID_LISTABLE_CHOICE_ITEM
@@ -307,15 +340,12 @@ feature {NONE} -- Location token
 			l_list: ARRAYED_LIST [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM]
 			l_item_item: attached EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
-			l_modifier: ES_EIS_CLASS_MODIFIER
 			l_classc: CLASS_C
 			l_written_in_features: LIST [E_FEATURE]
 			l_class: CLASS_I
 			l_feature: E_FEATURE
 		do
-			create l_modifier.make (class_i)
-			l_modifier.prepare
-			if class_i.is_compiled and then l_modifier.is_modifiable and then l_modifier.is_ast_available then
+			if a_editable then
 				l_classc := class_i.compiled_class
 				l_written_in_features := l_classc.written_in_features
 
@@ -368,6 +398,35 @@ feature {NONE} -- Location token
 			end
 		end
 
+	override_item_from_eis_entry (a_entry: attached EIS_ENTRY; a_editable: BOOLEAN): attached EV_GRID_ITEM
+			-- Grid item of override from an EIS entry.
+		local
+			l_type: NATURAL_32
+			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
+			l_pixmap_item: EV_GRID_LABEL_ITEM
+		do
+			l_type := id_solution.most_possible_type_of_id (a_entry.id)
+
+			create l_item
+			l_item.set_is_checked (a_entry.override)
+			if l_type /= id_solution.class_type then
+				create {EV_GRID_LABEL_ITEM}Result.make_with_text ("-")
+			elseif a_entry.is_auto then
+				create l_pixmap_item
+				l_pixmap_item.set_pixmap (pixmaps.icon_pixmaps.information_edit_auto_node_icon)
+				Result := l_pixmap_item
+				Result.set_tooltip (interface_names.l_remove_auto_entry)
+			else
+				if a_editable then
+					l_item.enable_sensitive
+					l_item.checked_changed_actions.extend (agent on_override_changed)
+				else
+					l_item.disable_sensitive
+				end
+				Result := l_item
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	new_extractor: attached ES_EIS_EXTRACTOR
@@ -412,6 +471,80 @@ feature {NONE} -- Implementation
 	internal_component_id: detachable STRING;
 			-- Buffered component ID
 
+	set_entry_override (a_entry: EIS_ENTRY; a_enable: BOOLEAN)
+			-- Disable `override' of a `a_entry', apply it in the code.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_entry_editable: entry_editable (a_entry, False)
+		local
+			l_done: BOOLEAN
+			l_new_entry: EIS_ENTRY
+		do
+			if a_entry.override /= a_enable then
+				if attached {E_FEATURE} id_solution.feature_of_id (a_entry.id) as lt_feature then
+					if attached a_entry.twin as lt_new_entry then
+						l_new_entry := lt_new_entry
+					end
+					l_new_entry.set_override (a_enable)
+					modify_entry_in_feature (a_entry, l_new_entry, lt_feature)
+					l_done := True
+				elseif attached {CLASS_I} id_solution.class_of_id (a_entry.id) as lt_class then
+					if attached a_entry.twin as lt_new_entry1 then
+						l_new_entry := lt_new_entry1
+					end
+					l_new_entry.set_override (a_enable)
+					modify_entry_in_class (a_entry, l_new_entry, lt_class)
+					l_done := True
+				end
+					-- Modify the source in the entry when the modification is done
+				if l_done then
+					storage.deregister_entry (a_entry, component_id)
+					a_entry.set_override (a_enable)
+					storage.register_entry (a_entry, component_id, class_i.date)
+				end
+			end
+		end
+
+	disable_override_all_else (a_entry: EIS_ENTRY)
+			-- Disable override in all else class entries.
+			-- `a_entry' is the entry to exclude.
+		require
+			a_entry_not_void: a_entry /= Void
+		local
+			i, l_count: INTEGER
+			l_grid: like eis_grid
+		do
+			rebuild_editable_cache
+			from
+				i := 1
+				l_grid := eis_grid
+				l_count := l_grid.row_count
+			until
+				i > l_count
+			loop
+				if attached {EV_GRID_ROW}l_grid.row (i) as l_row then
+					if attached {EIS_ENTRY}l_row.data as l_entry then
+						if a_entry /= l_entry and then entry_editable (l_entry, TRUE) then
+							set_entry_override (l_entry, False)
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Editable cache
+
+	rebuild_editable_cache
+			-- Wipe out editable cache.
+			-- So that `entry_editable' will compute the value freshly.
+		do
+			create editable_cache.make (10)
+		end
+
+	editable_cache: detachable HASH_TABLE [BOOLEAN, HASHABLE]
+			-- Cache for editability of EIS entries.
+
 feature {NONE} -- Callbacks
 
 	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM)
@@ -425,7 +558,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
 						-- Do nothing when the name is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -463,7 +596,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -501,7 +634,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -545,7 +678,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.tags /= Void and then lt_entry.tags.is_equal (l_tags) then
 						-- Do nothing when the tags is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
@@ -576,6 +709,27 @@ feature {NONE} -- Callbacks
 			end
 		end
 
+	on_override_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
+			-- On override changed
+		local
+			l_enabled: BOOLEAN
+		do
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+				l_enabled := a_item.is_checked
+				if lt_entry.override = l_enabled then
+						-- Do nothing when the source is not actually changed
+				else
+					if entry_editable (lt_entry, False) then
+						set_entry_override (lt_entry, l_enabled)
+						if l_enabled then
+							disable_override_all_else (lt_entry)
+						end
+						rebuild_and_refresh_grid
+					end
+				end
+			end
+		end
+
 	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On others changed
 			-- We modify neither the referenced EIS entry when the modification is done.
@@ -590,7 +744,7 @@ feature {NONE} -- Callbacks
 				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
 						-- Do nothing when the others is not actually changed
 				else
-					if entry_editable (lt_entry) then
+					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry

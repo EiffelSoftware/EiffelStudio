@@ -11,6 +11,8 @@ class
 inherit
 	ES_EIS_SHARED
 
+	CONF_ACCESS
+
 feature {NONE} -- Implementation
 
 	fill_from_key_value (a_key: attached STRING;
@@ -21,7 +23,8 @@ feature {NONE} -- Implementation
 											source: STRING_32;
 											tags: ARRAYED_LIST [STRING_32];
 											id: STRING;
-											others: HASH_TABLE [STRING_32, STRING_32]])
+											others: HASH_TABLE [STRING_32, STRING_32];
+											override: BOOLEAN])
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.
 			-- There is still problem of the attached type for tuples.
 		require
@@ -37,6 +40,10 @@ feature {NONE} -- Implementation
 			elseif a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.tag_string) then
 						-- To add more tags support.
 				a_eis_tuple.tags := parse_tags (a_value)
+			elseif a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.override_string) then
+				if a_value.is_case_insensitive_equal ({ES_EIS_TOKENS}.true_string) then
+					a_eis_tuple.override := True
+				end
 			else
 					-- Others
 				a_eis_tuple.others.force (a_value, a_key)
@@ -58,11 +65,12 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							others: HASH_TABLE [STRING_32, STRING_32]]
+							others: HASH_TABLE [STRING_32, STRING_32];
+							override: BOOLEAN]
 		do
 			if a_index.tag /= Void and then a_index.tag.name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
-				l_entry_tuple := [Void, Void, Void, Void, Void, Void]
+				l_entry_tuple := [Void, Void, Void, Void, Void, Void, False]
 				create l_others.make (3)
 				create l_tags.make (2)
 				l_entry_tuple.others := l_others
@@ -109,6 +117,7 @@ feature {NONE} -- Implementation
 					l_entry_tuple.others := Void
 				end
 				create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.others)
+				Result.set_override (l_entry_tuple.override)
 			end
 		end
 
@@ -124,17 +133,21 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							others: HASH_TABLE [STRING_32, STRING_32]]
+							others: HASH_TABLE [STRING_32, STRING_32];
+							override: BOOLEAN]
 		do
 			if a_note /= Void then
-				if a_note.element_name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
+				l_attributes := a_note.attributes
+				if
+					a_note.element_name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) and then
+					not l_attributes.has ({ES_EIS_TOKENS}.auto_string)
+				then
 					create l_entry_tuple
 					l_entry_tuple.id := l_id
 					create l_others.make (3)
 					create l_tags.make (2)
 					l_entry_tuple.others := l_others
 					l_entry_tuple.tags := l_tags
-					l_attributes := a_note.attributes
 					from
 						l_attributes.start
 					until
@@ -227,6 +240,59 @@ feature {NONE} -- Implementation
 			else
 				create Result.make (0)
 			end
+		end
+
+	auto_entry (a_target: CONF_TARGET): detachable TUPLE [enabled: BOOLEAN; src: STRING_32]
+			-- Auto entry in `a_target'.
+			-- Void if not found.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_note, l_notes: detachable CONF_NOTE_ELEMENT
+			l_attributes: HASH_TABLE [STRING, STRING]
+			l_src: STRING_32
+			l_enabled: BOOLEAN
+		do
+			l_notes := a_target.note_node
+			if l_notes /= Void then
+				from
+					l_notes.start
+				until
+					l_notes.after or Result /= Void
+				loop
+					l_note := l_notes.item_for_iteration
+					check l_note /= Void end
+					if l_note.element_name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
+						l_attributes := l_note.attributes
+						l_attributes.search ({ES_EIS_TOKENS}.auto_string)
+						if l_attributes.found then
+							l_enabled := l_attributes.found_item.is_case_insensitive_equal ({ES_EIS_TOKENS}.true_string)
+							l_attributes.search ({ES_EIS_TOKENS}.source_string)
+							if l_attributes.found then
+								l_src := l_attributes.found_item
+							else
+								create l_src.make_empty
+							end
+							Result := [l_enabled, l_src]
+						end
+					end
+					l_notes.forth
+				end
+			end
+		end
+
+	new_auto_entry_note (enabled: BOOLEAN; src: STRING): CONF_NOTE_ELEMENT
+			-- Note for EIS auto setting.
+		require
+			src_not_void: src /= Void
+		do
+			create Result.make ({ES_EIS_TOKENS}.eis_string)
+			if enabled then
+				Result.add_attribute ({ES_EIS_TOKENS}.auto_string, {ES_EIS_TOKENS}.true_string)
+			else
+				Result.add_attribute ({ES_EIS_TOKENS}.auto_string, {ES_EIS_TOKENS}.false_string)
+			end
+			Result.add_attribute ({ES_EIS_TOKENS}.source_string, src)
 		end
 
 feature {NONE} -- Implemetation

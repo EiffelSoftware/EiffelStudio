@@ -19,7 +19,7 @@ feature -- Initialization
 			-- Create and initialize `Current'
 		do
 				-- Use generating type which will be TYPE [like Current] for registration of `Current'
-			(create {EDK_TYPE_REGISTRATION}).register_window (Current)
+			(create {EDK_TYPE_MANAGER}).register_window (Current)
 				-- Fire off EDK_CREATE_WINDOW message
 		end
 
@@ -45,9 +45,9 @@ feature -- Events
 
 		end
 
-feature {EDK_TYPE_REGISTRATION} -- Registration
+feature {EDK_TYPE_MANAGER} -- Registration
 
-	register_messages (type_registration: EDK_TYPE_REGISTRATION)
+	register_messages (type_registration: EDK_TYPE_MANAGER)
 			-- Register events of `Current'
 		require
 			window_type_unregistered: True
@@ -64,23 +64,22 @@ feature {EDK_TYPE_REGISTRATION} -- Registration
 			type_registration.register_message_data (child_remove, {NATURAL_16}, {detachable ANY})
 		end
 
-	register_properties (type_registration: EDK_TYPE_REGISTRATION)
+	register_properties (type_registration: EDK_TYPE_MANAGER)
 			-- Register properties of `Current'.
 		do
-			type_registration.register_property_data ("default_namespace", {STRING_8}, {NONE}, False)
-			type_registration.register_property_data ("full_namespace", {STRING_8}, {NONE}, False)
-			type_registration.register_property_data ("width", {NATURAL_16}, {NONE}, True)
-			type_registration.register_property_data ("height", {NATURAL_16}, {NONE}, True)
-			type_registration.register_property_data ("x_position", {INTEGER_16}, {NONE}, True)
-			type_registration.register_property_data ("y_position", {INTEGER_16}, {NONE}, True)
-			type_registration.register_property_data ("fill_color", {NATURAL_16}, {NONE}, True)
-			type_registration.register_property_data ("text_color", {NATURAL_16}, {NONE}, True)
-			type_registration.register_property_data ("focus", {BOOLEAN}, {NONE}, True)
-			type_registration.register_property_data ("sensitivity", {BOOLEAN}, {NONE}, True)
-			type_registration.register_property_data ("preferred_width", {NATURAL_16}, {NONE}, False)
-			type_registration.register_property_data ("preferred_height", {NATURAL_16}, {NONE}, False)
-			type_registration.register_property_data ("child", {NATURAL_16}, {NATURAL_16}, False)
-			type_registration.register_property_data ("child_count", {NATURAL_16}, {NONE}, False)
+			type_registration.register_property_data (default_namespace, {STRING_8}, {NONE}, False)
+			type_registration.register_property_data (full_namespace, {STRING_8}, {NONE}, False)
+			type_registration.register_property_data (width, {NATURAL_16}, {NONE}, True)
+			type_registration.register_property_data (height, {NATURAL_16}, {NONE}, True)
+			type_registration.register_property_data (x_position, {INTEGER_16}, {NONE}, True)
+			type_registration.register_property_data (y_position, {INTEGER_16}, {NONE}, True)
+			type_registration.register_property_data (alpha, {NATURAL_8}, {NONE}, True)
+			type_registration.register_property_data (focus, {BOOLEAN}, {NONE}, True)
+			type_registration.register_property_data (sensitivity, {BOOLEAN}, {NONE}, True)
+			type_registration.register_property_data (preferred_width, {NATURAL_16}, {NONE}, False)
+			type_registration.register_property_data (preferred_height, {NATURAL_16}, {NONE}, False)
+			type_registration.register_property_data (child, {NATURAL_16}, {NATURAL_16}, False)
+			type_registration.register_property_data (child_count, {NATURAL_16}, {NONE}, False)
 		end
 
 feature {NONE} -- Default Event Strings
@@ -101,8 +100,7 @@ feature {NONE} -- Default Property Strings
 	height: STRING_8 = "height"
 	x_position: STRING_8 = "x_position"
 	y_position: STRING_8 = "y_position"
-	fill_color: STRING_8 = "fill_color"
-	text_color: STRING_8 = "text_color"
+	alpha: STRING_8 = "alpha"
 	focus: STRING_8 = "focus"
 	sensitivity: STRING_8 = "sensitivity"
 	preferred_width: STRING_8 = "preferred_width"

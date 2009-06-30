@@ -118,11 +118,11 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_trans: attached DS_HASH_TABLE [NATURAL_8, STRING]
-		once
+		do
 			create Result.make (8)
 
 				-- XML
@@ -156,9 +156,9 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_user)
 		end
 
-	attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
-		once
+		do
 		end
 
 feature {NONE} -- Tag states

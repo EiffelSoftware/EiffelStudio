@@ -10,38 +10,6 @@ note
 deferred class
 	XRPC_VISITOR
 
---feature -- Processing helpers
-
---	process_value (a_value: XRPC_VALUE)
---			-- Processes a XML-RPC value.
---			--
---			-- `a_value': A value to process.
---		require
---			a_value_attached: attached a_value
---		do
---			if attached {XRPC_INTEGRAL_VALUE [ANY]} a_value then
---				if attached {XRPC_BOOLEAN} a_value as l_boolean then
---					process_boolean (l_boolean)
---				elseif attached {XRPC_DOUBLE} a_value as l_double then
---					process_double (l_double)
---				elseif attached {XRPC_INTEGER} a_value as l_integer then
---					process_integer (l_integer)
---				elseif attached {XRPC_STRING} a_value as l_string then
---					process_string (l_string)
---				else
---					check unsupported_type: False end
---				end
---			else
---				if attached {XRPC_ARRAY} a_value as l_array then
---					process_array (l_array)
---				elseif attached {XRPC_STRUCT} a_value as l_struct then
---					process_struct (l_struct)
---				else
---					check unsupported_type: False end
---				end
---			end
---		end
-
 feature -- Processing operations
 
 	process_array (a_array: XRPC_ARRAY)

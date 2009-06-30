@@ -13,24 +13,6 @@ class
 inherit
 	XRPC_VISITOR
 
---feature -- Processing helpers
-
---	process_response (a_response: XRPC_RESPONSE)
---			-- Processes a XML-RPC fault response.
---			--
---			-- `a_response': A response to process.
---		require
---			a_response_attached: attached a_response
---		do
---			if attached {XRPC_VALUE_RESPONSE} a_response as l_value then
---				process_value_response (l_value)
---			elseif attached {XRPC_FAULT_RESPONSE} a_response as l_fault then
---				process_fault_response (l_fault)
---			else
---				check unsupported_response: False end
---			end
---		end
-
 feature -- Processing operations
 
 	process_fault_response (a_response: XRPC_FAULT_RESPONSE)

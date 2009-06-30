@@ -61,7 +61,7 @@ feature -- Basic operation
 			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
 			Result.put ("http://doc.eiffel.com", "ISE_DOC")
 			Result.put ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
-			Result.put ("http://doc.eiffel.com/isedoc/eis/", "ISE_DOC_REF")
+			Result.put ("http://doc.eiffel.com/isedoc/eis", "ISE_DOC_REF")
 		ensure
 			result_attached: Result /= Void
 		end

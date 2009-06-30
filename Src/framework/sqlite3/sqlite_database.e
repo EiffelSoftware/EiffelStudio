@@ -163,6 +163,39 @@ feature -- Access: Error reporting
 			is_locked_unchanged: is_locked = old is_locked
 		end
 
+feature -- Access: Actions
+
+	commit_action: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_commit_action
+			-- Action called when during the commit transaction.
+			--
+			-- 'Result': Return True to indicate a failure and perform a rollback; False to continue commit.
+		require
+			is_interface_usable: is_interface_usable
+			is_readable: is_readable
+		attribute
+		end
+
+	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
+			-- Action called when during the rollback of a commit.
+		require
+			is_interface_usable: is_interface_usable
+			is_readable: is_readable
+		attribute
+		end
+
+	update_action: detachable PROCEDURE [ANY, TUPLE [type: INTEGER; database_name: STRING; table_name: STRING; row_id: INTEGER_64]] assign set_update_action
+			-- Action called when and INSERT, DELETE or UPDATE statment is executed on the database.
+			--
+			-- 'type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
+			-- 'database_name': The name of the database where the update occurred.
+			-- 'table_name': The name of the table where the update occurred.
+			-- 'row_id': The row identifier of the update, or the new identifier in the case of an insert.
+		require
+			is_interface_usable: is_interface_usable
+			is_readable: is_readable
+		attribute
+		end
+
 feature -- Measurements
 
 	changes_count: NATURAL
@@ -174,6 +207,78 @@ feature -- Measurements
 		do
 			Result := sqlite3_changes (sqlite_api, internal_db).as_natural_32
 		end
+
+feature -- Element change
+
+	set_commit_action (a_function: like commit_action)
+			-- Sets the commit callback action, called when a commit transaction is executed.
+			--
+			-- `a_function': Function to call during a commit phase. See `commit_action' for more info.
+			--               Pass Void to unset.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+			commit_action_detached: attached a_function implies not attached commit_action
+		local
+			l_action: POINTER
+			l_other_action: POINTER
+		do
+			commit_action := a_function
+			if attached a_function then
+				l_action := $commit_callback_internal
+			end
+--			l_other_action := sqlite3_commit_hook (sqlite_api, internal_db, l_action, default_pointer)
+		ensure
+			commit_action_set: commit_action = a_function
+		end
+
+	set_rollback_action (a_action: like rollback_action)
+			-- Sets the rollback callback action, called when a commit/rollback transaction failed or a
+			-- rollback was executed.
+			--
+			-- `a_action': Action to call during a commit-rollback transaction. See `rollback_action' for
+			--             more info. Pass Void to unset.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+			rollback_action_detached: attached a_action implies not attached rollback_action
+		local
+			l_action: POINTER
+			l_other_action: POINTER
+		do
+			rollback_action := a_action
+			if attached a_action then
+				l_action := $rollback_callback_internal
+			end
+--			l_other_action := sqlite3_rollback_hook (sqlite_api, internal_db, l_action, default_pointer)
+		ensure
+			rollback_action_set: rollback_action = a_action
+		end
+
+	set_update_action (a_action: like update_action)
+			-- Sets a database update action, called when an INSERT, DELETE or UPDATE statement is executed.
+			--
+			-- `a_action': Action to call during a database update. See `update_action' for more info.
+			--             Pass Void to unset.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+		local
+			l_action: POINTER
+			l_other_action: POINTER
+		do
+			update_action := a_action
+			if attached a_action then
+				l_action := $update_callback_internal
+			end
+--			l_other_action := sqlite3_update_hook (sqlite_api, internal_db, l_action, $Current)
+		ensure
+			update_action_set: update_action = a_action
+		end
+
 
 feature -- Status report
 
@@ -400,6 +505,15 @@ feature -- Basic operations
 			is_closed: is_closed
 		end
 
+	abort
+			-- Performs an abort of any running operation.
+		require
+			is_interface_usable: is_interface_usable
+			is_readable: is_readable
+		do
+			sqlite3_interrupt (sqlite_api, internal_db)
+		end
+
 feature -- Basic operations: Threading
 
 	lock
@@ -511,6 +625,54 @@ feature {NONE} -- Basic operations
 			internal_flags_set:
 				internal_flags = (a_flags | SQLITE_OPEN_FULLMUTEX) or
 				internal_flags = (a_flags | SQLITE_OPEN_NOMUTEX)
+		end
+
+feature {NONE} -- Basic operations: Callbacks
+
+	frozen commit_callback_internal (a_pointer: POINTER): INTEGER
+			-- Commit action callback associated with `commit_action'.
+			--
+			-- `a_pointer': Ignore.
+			-- `Result': Zero to continue with commit; Non-zero to rollback.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_readable and then attached commit_action as l_function then
+				if l_function.item (Void) then
+					Result := 1
+				end
+			end
+		end
+
+	frozen rollback_callback_internal (a_pointer: POINTER)
+			-- Rollback action callback associated with `rollback_action'.
+			--
+			-- `a_pointer': Ignore.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if is_readable and then attached rollback_action as l_action then
+				l_action.call (Void)
+			end
+		end
+
+	frozen update_callback_internal (a_type: INTEGER; a_db_name: POINTER; a_table: POINTER; a_row_id: INTEGER_64; a_pointer: POINTER)
+			-- Update action callback associated with `update_action'.
+			--
+			-- `a_type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
+			-- `a_db_name': The name of the database where the update occurred.
+			-- `a_table': The name of the table where the update occurred.
+			-- `a_row_id': The row identifier of the update, or the new identifier in the case of an insert.
+			-- `a_pointer': Ignore.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_db_name_is_null: a_db_name /= default_pointer
+			not_a_table_is_null: a_table /= default_pointer
+			a_row_id_positive: a_row_id > 0
+		do
+			if is_readable and then attached rollback_action as l_action then
+				l_action.call ([a_type, create {STRING}.make_from_c (a_db_name), create {STRING}.make_from_c (a_table), a_row_id])
+			end
 		end
 
 feature {SQLITE_INTERNALS} -- Implementation

@@ -26,6 +26,11 @@ inherit
 			{NONE} all
 		end
 
+	SQLITE_DATABASE_EXTERNALS
+		export
+			{NONE} all
+		end
+
 	SQLITE_STATEMENT_EXTERNALS
 		export
 			{NONE} all
@@ -315,10 +320,14 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			reset_all
 			is_executing := True
 
+				-- Notify pre-execute
+			on_before_execute
+
 				-- Note the locking sequencing, to ensure access to the error messages
 				-- are not affected by other threads.
 			l_db.lock -- (+1) 1
 			l_locked := True
+
 			from
 				create l_row.make (Current)
 				l_result := sqlite3_step (l_api, l_stmt)
@@ -343,9 +352,15 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 					l_locked := True
 
 						-- Check abort status
-					l_done := is_abort_requested or l_result = {SQLITE_RESULT_CODES}.sqlite_done
-					if not l_done then
-						l_result := sqlite3_step (l_api, l_stmt)
+					l_done := is_abort_requested
+					if l_done then
+							-- Abort the last operation
+						l_db.abort
+					else
+						l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
+						if not l_done then
+							l_result := sqlite3_step (l_api, l_stmt)
+						end
 					end
 				else
 					l_done := True
@@ -366,6 +381,10 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 					l_exception := sqlite_exception (l_result, Void)
 				end
 				last_exception := l_exception
+
+					-- Notify post execute
+				on_after_execute
+
 				l_exception.raise
 			else
 				if l_locked then
@@ -376,6 +395,9 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 						-- There is another statment to execute, process this before unlocking the database.
 					l_next.execute_internal (a_callback, a_bindings)
 				end
+
+					-- Notify post execute
+				on_after_execute
 			end
 
 				-- Reset the statement for repeated use.
@@ -448,7 +470,7 @@ feature {NONE} -- Basic operations: Compilation
 			l_internal_db := l_db.internal_db
 			l_result := sqlite3_prepare_v2 (sqlite_api, l_internal_db, l_string.item, l_string.count + 1, $l_stmt_handle, $l_tail)
 			if sqlite_success (l_result) then
-				check no_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end
+				check not_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end
 				internal_stmt := l_stmt_handle
 				internal_db := l_internal_db
 				last_exception := Void
@@ -499,6 +521,29 @@ feature {NONE} -- Basic operations: Compilation
 				l_locked := False
 				database.unlock
 			end
+		end
+
+feature {NONE} -- Action handlers
+
+	on_before_execute
+			-- Called before a statement has been executed.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			is_connected: is_connected
+			not_has_error: not has_error
+			database_is_accessible: database.is_accessible
+			database_is_readable: database.is_readable
+		do
+		end
+
+	on_after_execute
+			-- Called after a statement has been executed, successfully or not.
+		require
+			is_sqlite_available: is_sqlite_available
+			is_interface_usable: is_interface_usable
+			database_is_accessible: database.is_accessible
+		do
 		end
 
 feature {SQLITE_INTERNALS} -- Implementation

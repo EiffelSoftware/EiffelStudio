@@ -700,7 +700,7 @@ feature {NONE} -- Implementation
 			l_list: like choice_list
 		do
 			l_list := choice_list
-
+			
 			l_list.wipe_out
 			if rebuild_list_during_matching then
 				matches := matches_based_on_name (name)

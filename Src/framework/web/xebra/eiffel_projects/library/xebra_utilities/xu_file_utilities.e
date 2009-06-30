@@ -80,8 +80,8 @@ feature -- Basic Opertaions
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists or plain_text_file.is_creatable then
+			plain_text_file.open_write
 				if plain_text_file.is_writable and plain_text_file.is_access_writable then
-					plain_text_file.open_write
 					if plain_text_file.is_open_write then
 						Result := plain_text_file
 					else

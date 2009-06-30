@@ -60,7 +60,7 @@ echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "XebraServer_port \"55000\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "DirectoryIndex index.xeb>>" $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "DirectoryIndex index.xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo '<Files ~ "\.(ini|e|ecf)$">' >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
@@ -69,16 +69,9 @@ echo '<Directory ~ "EIFGENs">' >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+sed -e 's/Listen 80/Listen 55000/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
 
 sudo $XEBRA_DEV/httpd/bin/apachectl start
-
-#Copy files for demoapp
-mkdir $XEBRA_DEV/httpd/htdocs/demoapplication
-cp -r $XEBRA_DEV/websites/demoapplication/html/images $XEBRA_DEV/httpd/htdocs/demoapplication
-cp $XEBRA_DEV/websites/demoapplication/html/style.css $XEBRA_DEV/httpd/htdocs/demoapplication
-
-#Copy files for xebrawebapp
-mkdir $XEBRA_DEV/httpd/htdocs/xebrawebapp
 
 
 # Compile xebra translator

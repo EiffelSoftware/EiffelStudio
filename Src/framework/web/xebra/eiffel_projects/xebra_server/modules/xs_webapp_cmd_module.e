@@ -86,9 +86,7 @@ feature -- Inherited Features
 									thread_cmd_socket.put_natural (0)
 									thread_cmd_socket.independent_store (l_command_response)
 					 	       	end
-
 				 	       	end
-
 
 				         	thread_cmd_socket.cleanup
 				            check
@@ -125,7 +123,7 @@ feature -- Status
 
 feature -- Constants
 
-	default_cmd_server_port: INTEGER = 55001
+	default_cmd_server_port: INTEGER = 55002
 			-- Port for incoming requests (commands) from webapps
 
 	max_tcp_clients: NATURAL = 100

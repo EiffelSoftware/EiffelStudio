@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	default_cmd_server_port: INTEGER = 55001
+	default_cmd_server_port: INTEGER = 55002
 
 	default_cmd_server_host: STRING = "localhost" -- FIXME: read this from  config file
 

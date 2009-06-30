@@ -320,6 +320,7 @@ feature {NONE} -- Basic operations
 						else
 								-- Make call with no arguments and no result.
 							l_agent.call (Void)
+							check result_detached: not attached Result end
 						end
 						a_delegate.on_after_call (a_name, Void, Result)
 					else
@@ -337,6 +338,7 @@ feature {NONE} -- Basic operations
 							else
 									-- Make call with arguments and no result.
 								l_agent.call (l_open_args)
+								check result_detached: not attached Result end
 							end
 							a_delegate.on_after_call (a_name, l_open_args, Result)
 						end

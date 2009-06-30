@@ -7,43 +7,50 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XRPC_VALUE
+class
+	XRPC_RESPONSE_VISITOR
 
 inherit
-	XRPC_GUESS_I
+	XRPC_VISITOR
 
-feature -- Access
+--feature -- Processing helpers
 
-	type: XRPC_TYPE
-			-- Actual type of the value.
-		deferred
-		end
+--	process_response (a_response: XRPC_RESPONSE)
+--			-- Processes a XML-RPC fault response.
+--			--
+--			-- `a_response': A response to process.
+--		require
+--			a_response_attached: attached a_response
+--		do
+--			if attached {XRPC_VALUE_RESPONSE} a_response as l_value then
+--				process_value_response (l_value)
+--			elseif attached {XRPC_FAULT_RESPONSE} a_response as l_fault then
+--				process_fault_response (l_fault)
+--			else
+--				check unsupported_response: False end
+--			end
+--		end
 
-feature -- Status report
+feature -- Processing operations
 
-	is_valid: BOOLEAN
-			-- Indicates if the set value is valid.
-			-- This is useful in determining if a value was incorrectly defined in the RPC
-		deferred
-		end
-
-	is_integral: BOOLEAN
-			-- Indicates if the value is a integral value.
+	process_fault_response (a_response: XRPC_FAULT_RESPONSE)
+			-- Processes a XML-RPC double.
+			--
+			-- `a_response': A fault response object.
+		require
+			a_response_attached: attached a_response
 		do
-			Result := type.is_integral
-		ensure
-			not_is_complex: Result implies not is_complex
-			type_is_integral: Result implies type.is_integral
+			a_response.value.visit (Current)
 		end
 
-	is_complex: BOOLEAN
-			-- Indicates if the value is a complex (non-integral) value.
+	process_value_response (a_response: XRPC_VALUE_RESPONSE)
+			-- Processes a XML-RPC value response.
+			--
+			-- `a_response': A value response object.
+		require
+			a_response_attached: attached a_response
 		do
-			Result := type.is_complex
-		ensure
-			not_is_integral: Result implies not is_integral
-			type_is_complex: Result implies type.is_complex
+			a_response.value.visit (Current)
 		end
 
 ;note

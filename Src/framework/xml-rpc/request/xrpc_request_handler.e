@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-	EXCEPTION_MANAGER
+	EXCEPTION_MANAGER_FACTORY
 		export
 			{NONE} all
 		end
@@ -26,7 +26,7 @@ inherit
 feature {NONE} -- Access
 
 	parser: XM_EIFFEL_PARSER
-			-- Parser used to parse XML-RPC requests
+			-- Parser used to parse XML-RPC requests.
 		once
 			create Result.make
 			Result.set_callbacks (create {XRPC_REQUEST_LOAD_CALLBACKS}.make (Result))
@@ -34,10 +34,16 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	process (a_xml: READABLE_STRING_8; a_server: XRPC_SERVER_DISPATCHER): XRPC_RESPONSE
+	process (a_xml: READABLE_STRING_8; a_dispatcher: XRPC_SERVER_DISPATCHER): detachable XRPC_RESPONSE
+			-- Processes a XML-RPC request.
+			--
+			-- `a_xml': The XML string to parse.
+			-- `a_dispatcher': A dispatch server to process parsed requests on.
+			-- `Result': A response object.
 		require
 			a_xml_attached: attached a_xml
 			not_a_xml_is_empty: not a_xml.is_empty
+			a_dispatcher_attached: attached a_dispatcher
 		local
 			l_parser: like parser
 			l_name: STRING
@@ -51,70 +57,84 @@ feature -- Basic operations
 					if attached {XRPC_REQUEST_LOAD_CALLBACKS} l_parser.callbacks as l_callbacks then
 						if not l_callbacks.has_error then
 							l_name := l_callbacks.method_name
-							if l_callbacks.has_parameters then
-								l_params := l_callbacks.method_parameters
+							if not l_name.is_empty then
+								if l_callbacks.has_parameters then
+									l_params := l_callbacks.method_parameters
+								end
+								Result := dispatch_call (a_dispatcher, l_name, l_params)
+							else
+								Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_request_no_method_name)
 							end
-							Result := process_request (l_name, l_params, a_server)
 						else
-							Result :=
-							create {XRPC_FAULT_RESPONSE} Result.make (1, l_callbacks.last_error_message)
+							Result := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_request_invalid, l_callbacks.last_error_message)
 						end
 					else
 						check should_never_happen: False end
-						create {XRPC_FAULT_RESPONSE} Result.make (1, {XRPC_ERROR_CODES}.e_internal_error)
+						Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
 					end
 				else
-					if attached l_parser.last_error_description as l_error then
-						create {XRPC_FAULT_RESPONSE} Result.make (1, l_error)
+					if attached l_parser.last_error_description as l_error and then not l_error.is_empty then
+						Result := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_request_invalid, l_error)
 					else
-						create {XRPC_FAULT_RESPONSE} Result.make (1, {XRPC_ERROR_CODES}.e_syntax_error)
+						Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_request_invalid)
 					end
 				end
 			else
-				create {XRPC_FAULT_RESPONSE} Result.make (1, "Error!")
+				if attached exception_manager.last_exception as l_exception then
+					Result := response_factory.new_response_from_exception (l_exception)
+				else
+					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
+					check exception_occurred_with_no_exception_object: False end
+				end
 			end
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 feature {NONE} -- Basic operations
 
-	process_request (a_server: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_8; a_params: detachable DS_LINEAR [XRPC_VALUE]): XRPC_RESPONSE
-			--
+	dispatch_call (a_dispatcher: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_8; a_params: detachable DS_LINEAR [XRPC_VALUE]): detachable XRPC_RESPONSE
+			-- Dispatches a call to a server and traps any other erronous conditions prior to execution.
+			---
+			-- `a_dispatcher': The dispatch server to perform the call on.
+			-- `a_name': The name of the method to call.
+			-- `a_params': Requested list of parameters.
+			-- `Result': A response object.
 		require
-			a_server_attached: attached a_server
+			a_dispatcher_attached: attached a_dispatcher
 			a_name_attached: attached a_name
+			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_args: detachable ARRAY [XRPC_VALUE]
 			l_response: detachable XRPC_RESPONSE
 			i: INTEGER
 		do
-			if not a_name.is_empty then
-				if attached a_params then
-						-- Build argument list.
-					create l_args.make_filled (create {XRPC_DEFAULT_VALUE}, 1, a_params.count)
-					from a_params.start until a_params.after or attached l_response loop
-						i := i + 1
-						if attached a_params.item_for_iteration as l_value and then l_value.is_valid then
-							l_args.put (l_value, i)
-						else
-							create {XRPC_FAULT_RESPONSE} l_response.make (1, {XRPC_ERROR_CODES}.e_invalid_parameter_1)
-						end
-						a_params.forth
+			if attached a_params then
+					-- Build argument list.
+				create l_args.make_filled (create {XRPC_DEFAULT_VALUE}, 1, a_params.count)
+				from a_params.start until a_params.after or attached l_response loop
+					i := i + 1
+					if attached a_params.item_for_iteration as l_value and then l_value.is_valid then
+						l_args.put (l_value, i)
+					else
+						l_response := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_argument_invalid)
 					end
-					check l_args_are_valid: not attached l_response implies l_args.for_all (agent {XRPC_VALUE}.is_valid) end
+					a_params.forth
 				end
-
-					-- Perform the call
-				if not attached l_response then
-					Result := a_server.call (a_name, l_args)
-				else
-					Result := l_response
-				end
-			else
-				create {XRPC_FAULT_RESPONSE} Result.make (1, {XRPC_ERROR_CODES}.e_request_no_method_name)
+				check l_args_are_valid: not attached l_response implies l_args.for_all (agent {XRPC_VALUE}.is_valid) end
 			end
+
+			if not attached l_response then
+					-- Perform the call
+				Result := a_dispatcher.call (a_name, l_args)
+			else
+				Result := l_response
+			end
+		ensure
+			result_attached: attached Result
 		end
 
 ;note

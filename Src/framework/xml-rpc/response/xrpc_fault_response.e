@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 
 				-- Create `value' struct using the names from the XML-RPC spec.
 			create l_struct.make
-			l_struct.put (create {XRPC_INTEGER}.make (a_code), {XRPC_CONSTANTS}.fault_code_value_name)
-			l_struct.put (create {XRPC_STRING}.make (a_message), {XRPC_CONSTANTS}.fault_string_value_name)
+			l_struct.put (create {XRPC_INTEGER}.make (a_code), {XRPC_CONSTANTS}.fault_code_value)
+			l_struct.put (create {XRPC_STRING}.make (a_message), {XRPC_CONSTANTS}.fault_string_value)
 			value := l_struct
 		ensure
 			code_set: code = a_code
@@ -54,6 +54,14 @@ feature -- Status report
 
 	is_fault: BOOLEAN = True
 			-- <Precursor>
+
+feature -- Basic operations: Visitor
+
+	visit (a_visitor: XRPC_RESPONSE_VISITOR)
+			-- <Precursor>
+		do
+			a_visitor.process_fault_response (Current)
+		end
 
 invariant
 	is_fault: is_fault

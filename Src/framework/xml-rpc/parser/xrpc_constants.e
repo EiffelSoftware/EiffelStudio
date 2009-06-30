@@ -12,8 +12,10 @@ class
 
 feature -- Constants: Values
 
-	fault_code_value_name: STRING = "faultCode"
-	fault_string_value_name: STRING = "faultString"
+	fault_code_value: STRING = "faultCode"
+	fault_string_value: STRING = "faultString"
+	boolean_true_value: STRING = "1"
+	boolean_false_value: STRING = "0"
 
 feature -- Constants: Tag names
 

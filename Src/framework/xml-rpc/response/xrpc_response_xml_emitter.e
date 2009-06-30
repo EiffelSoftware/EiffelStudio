@@ -1,49 +1,58 @@
 note
 	description: "[
-
+		Emits an XML-RPC XML from the core set of XML-RPC data types and values, as well as XML-RPC
+		responses.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	XRPC_VALUE
+class
+	XRPC_RESPONSE_XML_EMITTER
 
 inherit
-	XRPC_GUESS_I
-
-feature -- Access
-
-	type: XRPC_TYPE
-			-- Actual type of the value.
-		deferred
+	XRPC_RESPONSE_VISITOR
+		undefine
+			process_array,
+			process_boolean,
+			process_double,
+			process_integer,
+			process_member,
+			process_string,
+			process_struct
+		redefine
+			process_fault_response,
+			process_value_response
 		end
 
-feature -- Status report
+	XRPC_XML_EMITTER
 
-	is_valid: BOOLEAN
-			-- Indicates if the set value is valid.
-			-- This is useful in determining if a value was incorrectly defined in the RPC
-		deferred
-		end
+create
+	make
 
-	is_integral: BOOLEAN
-			-- Indicates if the value is a integral value.
+feature -- Processing operations
+
+	process_fault_response (a_response: XRPC_FAULT_RESPONSE)
+			-- <Precursor>
 		do
-			Result := type.is_integral
-		ensure
-			not_is_complex: Result implies not is_complex
-			type_is_integral: Result implies type.is_integral
+			append_opening_tag ({XRPC_CONSTANTS}.method_response_name, buffer, True)
+			append_opening_tag ({XRPC_CONSTANTS}.fault_name, buffer, True)
+			Precursor (a_response)
+			append_closing_tag ({XRPC_CONSTANTS}.fault_name, buffer, True)
+			append_closing_tag ({XRPC_CONSTANTS}.method_response_name, buffer, True)
 		end
 
-	is_complex: BOOLEAN
-			-- Indicates if the value is a complex (non-integral) value.
+	process_value_response (a_response: XRPC_VALUE_RESPONSE)
+			-- <Precursor>
 		do
-			Result := type.is_complex
-		ensure
-			not_is_integral: Result implies not is_integral
-			type_is_complex: Result implies type.is_complex
+			append_opening_tag ({XRPC_CONSTANTS}.method_response_name, buffer, True)
+			append_opening_tag ({XRPC_CONSTANTS}.params_name, buffer, True)
+			append_opening_tag ({XRPC_CONSTANTS}.param_name, buffer, True)
+			Precursor (a_response)
+			append_closing_tag ({XRPC_CONSTANTS}.param_name, buffer, True)
+			append_closing_tag ({XRPC_CONSTANTS}.params_name, buffer, True)
+			append_closing_tag ({XRPC_CONSTANTS}.method_response_name, buffer, True)
 		end
 
 ;note

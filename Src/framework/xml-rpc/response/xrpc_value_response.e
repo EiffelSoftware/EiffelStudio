@@ -41,6 +41,14 @@ feature -- Status report
 	is_fault: BOOLEAN = False
 			-- <Precursor>
 
+feature -- Basic operations: Visitor
+
+	visit (a_visitor: XRPC_RESPONSE_VISITOR)
+			-- <Precursor>
+		do
+			a_visitor.process_value_response (Current)
+		end
+
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

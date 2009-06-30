@@ -27,10 +27,18 @@ feature {NONE} -- Initailization
 
 feature -- Access
 
-	members: ARRAY [READABLE_STRING_8]
+	names: ARRAY [READABLE_STRING_8]
 			-- Names of all the members in the struct.
 		do
 			Result := internal_members.current_keys
+		ensure
+			result_attached: attached Result
+		end
+
+	members: LINEAR [XRPC_MEMBER]
+			-- All the members in the struct.
+		do
+			Result := internal_members.linear_representation
 		ensure
 			result_attached: attached Result
 		end
@@ -75,11 +83,11 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			has_member_a_name: has_member (a_name)
 		local
-			l_result: detachable XRPC_VALUE
+			l_member: detachable XRPC_MEMBER
 		do
-			l_result := internal_members.item (a_name)
-			check l_result_attached: attached l_result end
-			Result := l_result
+			l_member := internal_members.item (a_name)
+			check l_member_attached: attached l_member end
+			Result := l_member.value
 		end
 
 feature -- Status report
@@ -101,13 +109,29 @@ feature -- Status report
 feature -- Extension
 
 	put (a_value: XRPC_VALUE; a_name: READABLE_STRING_8)
+			-- Sets a new value in the struct.
 			--
+			-- `a_value': The new member value.
+			-- `a_name': Name of the member to set the value to.
 		require
 			a_value_attached: attached a_value
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_members: like internal_members
+			l_member: detachable XRPC_MEMBER
+			l_name: STRING
 		do
-			internal_members.force (a_value, a_name.string)
+			l_members := internal_members
+			if l_members.has (a_name) then
+				l_member := l_members[a_name]
+				check l_member_attached: attached l_member end
+				l_member.set_value (a_value)
+			else
+				l_name := a_name.string
+				create l_member.make (l_name, a_value)
+				internal_members.force (l_member, l_name)
+			end
 		ensure
 			has_member_a_name: has_member (a_name)
 			item_set: item (a_name) = a_value
@@ -123,7 +147,7 @@ feature -- Basic operations: Visitor
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_members: HASH_TABLE [XRPC_VALUE, READABLE_STRING_8]
+	internal_members: HASH_TABLE [XRPC_MEMBER, READABLE_STRING_8]
 			-- Mutable version of `members'
 
 invariant

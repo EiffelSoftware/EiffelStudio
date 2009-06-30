@@ -60,6 +60,7 @@
 #include "eif_logfile.h"
 #include "rqst_idrs.h"
 #include "child.h"
+#include "ecdbgd.h"
 #include <stdio.h>		/* For BUFSIZ */
 #include <string.h>
 #include <signal.h>
@@ -108,8 +109,6 @@ rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initializ
 rt_private int interrupted;			/* Has application been asked to be interrupted */
 rt_private char *current_directory = NULL;	/* Directory where application is launched */
 rt_private char *current_app_env = NULL;	/* Environment in which application is launched */
-
-extern void dexit(int code);				/* Daemon exiting procedure */
 
 /*
  * IDR protocol initialization.

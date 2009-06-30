@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parser: like xml_parser)
+	frozen make (a_parser: like xml_parser)
 			-- Initializes callbacks using an existing XML parser.
 			-- Note: Initialization will set the parser's callbacks to Current.
 			--
@@ -56,9 +56,16 @@ feature {NONE} -- Initialization
 			xml_parser := a_parser
 
 			make_callbacks
+
+			initialize
 		ensure
 			xml_parser_set: xml_parser = a_parser
 			xml_parser_callbacks_set: a_parser.callbacks = Current
+		end
+
+	initialize
+			-- Initializes the default for the callbacks, creating any necessary objects.
+		do
 		end
 
 feature -- Access
@@ -134,6 +141,14 @@ feature -- Status report
 		end
 
 feature {NONE} -- Status report
+
+	can_continue_parsing: BOOLEAN
+			-- Indicates if processing can continue
+		do
+			Result := not has_error or not is_strict
+		ensure
+			not_has_error: (Result and is_strict) implies not has_error
+		end
 
 	is_strict: BOOLEAN
 			-- Is call back strict about checking well formed XML?
@@ -735,6 +750,8 @@ feature {NONE} -- State transistions
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+			result_has_t_none: Result.has (t_none)
+			result_t_none_item_attached: attached Result.item (t_none)
 			result_consistent: Result = tag_state_transitions
 		end
 

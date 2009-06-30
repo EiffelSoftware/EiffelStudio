@@ -333,9 +333,9 @@ feature {NONE} -- Process
 			end
 		end
 
-feature {NONE} -- State transistions
+feature {NONE} -- Factory
 
-	tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
+	new_tag_state_transitions: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_trans: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
@@ -363,11 +363,11 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_zone)
 		end
 
-	attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
+	new_attribute_states: attached DS_HASH_TABLE [attached DS_HASH_TABLE [NATURAL_8, attached STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_attr: attached DS_HASH_TABLE [NATURAL_8, attached STRING]
-		once
+		do
 			create Result.make_default
 
 				-- layout

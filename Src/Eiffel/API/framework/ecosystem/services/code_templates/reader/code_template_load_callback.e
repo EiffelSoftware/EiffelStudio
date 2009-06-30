@@ -484,13 +484,13 @@ feature {NONE} -- Action handlers
 			xml_parser.abort
 		end
 
-feature {NONE} -- State transistions
+feature {NONE} -- Factory
 
-	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_trans: DS_HASH_TABLE [NATURAL_8, STRING]
-		once
+		do
 			create Result.make (8)
 
 				-- XML
@@ -559,11 +559,11 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_templates)
 		end
 
-	attribute_states: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_attr: DS_HASH_TABLE [NATURAL_8, STRING]
-		once
+		do
 			create Result.make (4)
 
 				-- code_template

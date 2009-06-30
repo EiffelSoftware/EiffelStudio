@@ -63,7 +63,7 @@ feature -- Extension
 			l_array: like internal_array
 		do
 			l_array := internal_array
-			l_array.force (a_item, l_array.count)
+			l_array.force (a_item, l_array.count + 1)
 
 				-- The content has changed as so must the linear representation.
 			internal_linear_representation := Void

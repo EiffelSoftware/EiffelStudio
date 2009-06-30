@@ -10,17 +10,66 @@ note
 deferred class
 	XRPC_VISITOR
 
+--feature -- Processing helpers
+
+--	process_value (a_value: XRPC_VALUE)
+--			-- Processes a XML-RPC value.
+--			--
+--			-- `a_value': A value to process.
+--		require
+--			a_value_attached: attached a_value
+--		do
+--			if attached {XRPC_INTEGRAL_VALUE [ANY]} a_value then
+--				if attached {XRPC_BOOLEAN} a_value as l_boolean then
+--					process_boolean (l_boolean)
+--				elseif attached {XRPC_DOUBLE} a_value as l_double then
+--					process_double (l_double)
+--				elseif attached {XRPC_INTEGER} a_value as l_integer then
+--					process_integer (l_integer)
+--				elseif attached {XRPC_STRING} a_value as l_string then
+--					process_string (l_string)
+--				else
+--					check unsupported_type: False end
+--				end
+--			else
+--				if attached {XRPC_ARRAY} a_value as l_array then
+--					process_array (l_array)
+--				elseif attached {XRPC_STRUCT} a_value as l_struct then
+--					process_struct (l_struct)
+--				else
+--					check unsupported_type: False end
+--				end
+--			end
+--		end
+
 feature -- Processing operations
 
 	process_array (a_array: XRPC_ARRAY)
 			-- Processes a XML-RPC array.
+			--
+			-- `a_array': An array to process.
 		require
 			a_array_attached: attached a_array
+		local
+			i, nb: NATURAL
 		do
+			from
+				i := 1
+				nb := a_array.count
+			until
+				i > nb
+			loop
+				if attached a_array[i] as l_item then
+					l_item.visit (Current)
+				end
+				i := i +1
+			end
 		end
 
 	process_boolean (a_boolean: XRPC_BOOLEAN)
 			-- Processes a XML-RPC boolean.
+			--
+			-- `a_boolean': A boolean to process.
 		require
 			a_boolean_attached: attached a_boolean
 		do
@@ -28,6 +77,8 @@ feature -- Processing operations
 
 	process_double (a_double: XRPC_DOUBLE)
 			-- Processes a XML-RPC double.
+			--
+			-- `a_double': A double to process.
 		require
 			a_double_attached: attached a_double
 		do
@@ -35,13 +86,27 @@ feature -- Processing operations
 
 	process_integer (a_integer: XRPC_INTEGER)
 			-- Processes a XML-RPC integer.
+			--
+			-- `a_integer': An integer to process.
 		require
 			a_integer_attached: attached a_integer
 		do
 		end
 
+	process_member (a_member: XRPC_MEMBER)
+			-- Processes a XML-RPC struct member.
+			--
+			-- `a_member': A member to process.
+		require
+			a_member_attached: attached a_member
+		do
+			a_member.value.visit (Current)
+		end
+
 	process_string (a_string: XRPC_STRING)
 			-- Processes a XML-RPC string.
+			--
+			-- `a_string': A string to process.
 		require
 			a_string_attached: attached a_string
 		do
@@ -49,9 +114,20 @@ feature -- Processing operations
 
 	process_struct (a_struct: XRPC_STRUCT)
 			-- Processes a XML-RPC struct.
+			--
+			-- `a_struct': A struct to process.
 		require
 			a_struct_attached: attached a_struct
+		local
+			l_members: LINEAR [XRPC_MEMBER]
 		do
+			l_members := a_struct.members
+			from l_members.start until l_members.after loop
+				if attached l_members.item as l_member then
+					l_member.visit (Current)
+				end
+				l_members.forth
+			end
 		end
 
 ;note

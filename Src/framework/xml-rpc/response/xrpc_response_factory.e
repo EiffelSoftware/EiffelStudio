@@ -91,6 +91,32 @@ feature -- Factory
 			create Result.make (a_code, error_codes.message (a_code))
 		end
 
+	new_response_from_error_code_and_message (a_code: INTEGER; a_message: READABLE_STRING_8): XRPC_FAULT_RESPONSE
+			-- Creates a new response object from a XML-RPC error code (specific to this library) and a
+			-- human readable error message.
+			--
+			-- `a_code': The error code to generate a response object for,
+			-- `a_message': An error message.
+			-- `Result': A response object.
+		require
+			a_code_is_valid_error_code: is_valid_error_code (a_code)
+			a_message_attached: attached a_message
+			not_a_message_is_empty: not a_message.is_empty
+		local
+			l_stock_message: STRING
+			l_message: STRING
+		do
+			l_stock_message := error_codes.message (a_code)
+			create l_message.make (l_stock_message.count + a_message.count + 2)
+			l_message.append (l_stock_message)
+			if not l_message[l_message.count].is_punctuation then
+				l_message.append_character ('.')
+			end
+			l_message.append_character (' ')
+			l_message.append (a_message)
+			create Result.make (a_code, l_message)
+		end
+
 	new_response_from_exception (a_exception: EXCEPTION): XRPC_FAULT_RESPONSE
 			-- Creates a new response object from an Eiffel {EXCEPTION} object.
 			--

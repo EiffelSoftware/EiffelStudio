@@ -1,19 +1,25 @@
 note
 	description: "[
-		An XML-RPC request.
+		XML-RPC guess interface for classes supporting visitation from {XRPC_VISITOR}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XRPC_REQUEST
+deferred class
+	XRPC_GUESS_I
 
---create
---	make
+feature -- Basic operations: Visitor
 
---feature {NONE} -- Initialization
+	visit (a_visitor: XRPC_VISITOR)
+			-- Process Current, via the visitor.
+			--
+			-- `a_visitor': Visitor object to visit Current with.
+		require
+			a_vistor_attached: attached a_visitor
+		deferred
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

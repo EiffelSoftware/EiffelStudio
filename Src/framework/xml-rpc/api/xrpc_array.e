@@ -137,7 +137,7 @@ feature -- Basic operations: Visitor
 	visit (a_visitor: XRPC_VISITOR)
 			-- <Precursor>
 		do
-
+			a_visitor.process_array (Current)
 		end
 
 feature -- Conversion
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 
 invariant
 	internal_array_attached: attached internal_array
-	internal_array_lower_is_default: internal_array.lower = 1
+	internal_array_lower_is_default: not internal_array.is_empty implies internal_array.lower = 1
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

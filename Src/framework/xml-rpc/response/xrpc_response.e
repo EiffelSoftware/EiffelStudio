@@ -10,6 +10,12 @@ note
 deferred class
 	XRPC_RESPONSE
 
+inherit
+	XRPC_GUESS_I
+		redefine
+			visit
+		end
+
 feature -- Access
 
 	value: XRPC_VALUE
@@ -23,6 +29,13 @@ feature -- Status report
 
 	is_fault: BOOLEAN
 			-- Indicates if the response is a fault response.
+		deferred
+		end
+
+feature -- Basic operations: Visitor
+
+	visit (a_visitor: XRPC_RESPONSE_VISITOR)
+			-- <Precursor>
 		deferred
 		end
 

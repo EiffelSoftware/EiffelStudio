@@ -14,7 +14,18 @@ feature {NONE} -- Initialization
 			l_delegate: MY_XMLRPC
 			l_args: ARRAY [XRPC_VALUE]
 			l_result: detachable XRPC_RESPONSE
+			l_visitor: XRPC_RESPONSE_XML_EMITTER
+			l_array: XRPC_MUTABLE_ARRAY
 		do
+			create l_visitor.make
+			--create {XRPC_FAULT_RESPONSE} l_result.make (1, "Hello")
+			create l_array.make_empty
+			l_array.extend (create {XRPC_INTEGER}.make (10))
+			l_array.extend (create {XRPC_STRING}.make ("Hello"))
+			l_array.extend (create {XRPC_STRING}.make ("World"))
+			create  {XRPC_VALUE_RESPONSE} l_result.make (l_array)
+			l_result.visit (l_visitor)
+
 			create l_delegate
 			dispatcher.extend (l_delegate)
 			check has_dispatcher: l_delegate.has_dispatcher end

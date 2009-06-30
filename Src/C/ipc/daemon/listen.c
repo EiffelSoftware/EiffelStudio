@@ -42,6 +42,7 @@
 #include "timehdr.h"
 #include "stream.h"
 #include "listen.h"
+#include "ecdbgd.h"
 #include "eif_logfile.h"
 #include <string.h>
 #include <signal.h>
@@ -97,7 +98,7 @@ rt_public void dwide_listen(void)
 #ifdef USE_ADD_LOG
 		add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif
-		dexit(1);
+		daemon_exit(1);
 	}
 
 #ifndef EOFPIPE
@@ -183,7 +184,7 @@ rt_public void dwide_listen(void)
 		if (nfd == 0) {				/* Select timed out */
 			if (0 != active_check(daemon_data.d_cs, daemon_data.d_ewb)) {
 				/* FIXME jfiat: maybe we should kill the d_app process too ?  */
-				/* The 'cleaning' will be done during the 'dexit(..)' call 
+				/* The 'cleaning' will be done during the 'daemon_exit(..)' call 
 				 * daemon_data.d_ewb = 0;
 				 */
 #ifdef USE_ADD_LOG

@@ -82,7 +82,7 @@
 
 rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
-#define SPAWN_CHILD_FAILED(i) dexit(i);
+#define SPAWN_CHILD_FAILED(i) daemon_exit(i);
 
 #ifndef EIF_WINDOWS
 /* To fight SIGPIPE signals */

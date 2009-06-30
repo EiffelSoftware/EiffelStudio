@@ -312,7 +312,7 @@ feature {NONE} -- Action handlers
 					-- Set new state
 				l_next_state := t_none
 
-				l_name := a_local_part.as_lower
+				l_name := a_local_part--.as_lower
 
 	--				-- check version
 	--			check_version (a_namespace)
@@ -370,7 +370,7 @@ feature {NONE} -- Action handlers
 
 					-- Only process if there is no error
 				if not is_xml_attribute (a_local_part) then
-					l_name := a_local_part.as_lower
+					l_name := a_local_part--.as_lower
 
 						-- Check if the attribute is valid for the current state
 					l_tag_state := current_transition_stack.item
@@ -434,7 +434,7 @@ feature {NONE} -- Action handlers
 					-- Set new state
 				l_next_state := t_none
 
-				l_name := a_local_part.as_lower
+				l_name := a_local_part--.as_lower
 
 					-- Check if it is a valid tag state transition
 				l_tag_transitions := tag_state_transitions
@@ -746,7 +746,13 @@ feature {NONE} -- State transistions
 
 	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
-		deferred
+		do
+			if attached internal_tag_state_transitions as l_result then
+				Result := l_result
+			else
+				Result := new_tag_state_transitions
+				internal_tag_state_transitions := Result
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -757,10 +763,35 @@ feature {NONE} -- State transistions
 
 	attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- Mapping of possible attributes of tags.
-		deferred
+		do
+			if attached internal_attribute_states as l_result then
+				Result := l_result.item
+			else
+				Result := new_attribute_states
+				create internal_attribute_states.put (Result)
+			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 			result_consistent: Result = attribute_states
+		end
+
+feature {NONE} -- Factory
+
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
+		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_has_t_none: Result.has (t_none)
+			result_t_none_item_attached: attached Result.item (t_none)
+		end
+
+	new_attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+			-- Mapping of possible attributes of tags.
+		deferred
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 feature {NONE} -- Implementation: Internal cache
@@ -776,6 +807,14 @@ feature {NONE} -- Implementation: Internal cache
 	internal_warning_reported_actions: detachable like warning_reported_actions
 			-- Cached version of `warning_reported_actions'
 			-- Note: Do not use directly!
+
+	internal_tag_state_transitions: detachable like tag_state_transitions
+			-- Cached version of `tag_state_transitions'
+			-- Note: Do not use directly!
+
+	internal_attribute_states: detachable CELL [like attribute_states]
+			-- Cached version of `attribute_states'
+			-- Note: Do not use directly!	
 
 feature {NONE} -- Tag states
 

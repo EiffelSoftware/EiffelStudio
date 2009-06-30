@@ -4,6 +4,8 @@ class
 inherit
 	XRPC_SHARED_SERVER_DISPATCHER
 
+	XRPC_SHARED_REQUEST_HANDLER
+
 create
 	make
 
@@ -11,47 +13,40 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			l_delegate: MY_XMLRPC
-			l_args: ARRAY [XRPC_VALUE]
-			l_result: detachable XRPC_RESPONSE
-			l_visitor: XRPC_RESPONSE_XML_EMITTER
-			l_array: XRPC_MUTABLE_ARRAY
+			l_rpcs: MY_XMLRPC
+			l_response: STRING
 		do
-			create l_visitor.make
-			--create {XRPC_FAULT_RESPONSE} l_result.make (1, "Hello")
-			create l_array.make_empty
-			l_array.extend (create {XRPC_INTEGER}.make (10))
-			l_array.extend (create {XRPC_STRING}.make ("Hello"))
-			l_array.extend (create {XRPC_STRING}.make ("World"))
-			create  {XRPC_VALUE_RESPONSE} l_result.make (l_array)
-			l_result.visit (l_visitor)
-
-			create l_delegate
-			dispatcher.extend (l_delegate)
-			check has_dispatcher: l_delegate.has_dispatcher end
-
-				-- Build arg list (because compiler is broken!)
-			create l_args.make_filled (create {XRPC_INTEGER}.make (0), 1, 2)
-			l_args[1] := create {XRPC_INTEGER}.make (200)
-			l_args[2] := create {XRPC_INTEGER}.make (33)
+				-- Create out RPCS
+			create l_rpcs
+				-- Extend the dispatch server with our own delegate
+			dispatcher.extend (l_rpcs)
+				-- The {MY_XMLRPC} object should now be assigned to a dispatcher.
+			check has_dispatcher: l_rpcs.has_dispatcher end
 
 				-- Perform call
 			print ("%N-- Performing Call --%N")
-			print ("math.sum: ")
-				-- Change to math.sumx to use the XML-RPC argument types instead.
-			l_result := dispatcher.call ("math.sum", l_args)--<<create {XRPC_INTEGER}.make (200), create {XRPC_DOUBLE}.make (1.22323)>>)
-			if attached l_result then
-				if l_result.is_fault and then attached {XRPC_FAULT_RESPONSE} l_result as l_fault then
-					print (l_fault.message)
-				else
-					check not_is_fault: not l_result.is_fault end
-					if attached {XRPC_INTEGRAL_VALUE [ANY]} l_result.value as l_value then
-						print (l_value.value)
-					end
-				end
-				print ("%N")
-			end
-			print ("-- Done --%N")
+			print ("Calling math.sum:%N%N")
+			l_response := request_handler.response_string (sum_request_xml, dispatcher)
+			print (l_response)
+			print ("%N-- Done --%N")
 		end
+
+feature {NONE} -- Constants
+
+	sum_request_xml: STRING =
+"[
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>math.sum</methodName>
+  <params>
+    <param>
+      <value><int>200</int></value>
+    </param>
+    <param>
+      <value><int>33</int></value>
+    </param>
+  </params>
+</methodCall>
+]"
 
 end

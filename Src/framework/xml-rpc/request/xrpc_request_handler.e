@@ -1,6 +1,8 @@
 note
 	description: "[
-		Handles an incoming XML-RPC request.
+		Handles parsing and extraction of an inbound XML-RPC method call request. The handler does not
+		handle any form of transport, only parsing and delegation of the method call request, and
+		generation of a sound response.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,14 +34,51 @@ feature {NONE} -- Access
 			Result.set_callbacks (create {XRPC_REQUEST_LOAD_CALLBACKS}.make (Result))
 		end
 
+feature {NONE} -- Helpers
+
+	xml_emitter: XRPC_RESPONSE_XML_EMITTER
+			-- Shared access to an XML emitter for responses.
+		once
+			create Result.make
+		ensure
+			result_attached: attached Result
+		end
+
 feature -- Basic operations
 
-	process (a_xml: READABLE_STRING_8; a_dispatcher: XRPC_SERVER_DISPATCHER): detachable XRPC_RESPONSE
+	response_string (a_xml: READABLE_STRING_8; a_dispatcher: XRPC_SERVER_DISPATCHER): STRING
+			-- Processes a XML-RPC request and returns a response string.
+			--
+			-- `a_xml': The XML string to parse.
+			-- `a_dispatcher': A dispatch server to process parsed requests on.
+			-- `Result': A response string, which may be empty if there was no response by all went well.
+		require
+			a_xml_attached: attached a_xml
+			not_a_xml_is_empty: not a_xml.is_empty
+			a_dispatcher_attached: attached a_dispatcher
+		local
+			l_response: like response
+			l_emitter: like xml_emitter
+		do
+			l_response := response (a_xml, a_dispatcher)
+			if attached l_response then
+				l_emitter := xml_emitter
+				l_emitter.reset
+				l_response.visit (l_emitter)
+				Result :=  l_emitter.xml
+			else
+				create Result.make_empty
+			end
+		ensure
+			result_attached: attached Result
+		end
+
+	response (a_xml: READABLE_STRING_8; a_dispatcher: XRPC_SERVER_DISPATCHER): detachable XRPC_RESPONSE
 			-- Processes a XML-RPC request.
 			--
 			-- `a_xml': The XML string to parse.
 			-- `a_dispatcher': A dispatch server to process parsed requests on.
-			-- `Result': A response object.
+			-- `Result': A response object, which may be Void if there was no response by all went well.
 		require
 			a_xml_attached: attached a_xml
 			not_a_xml_is_empty: not a_xml.is_empty
@@ -53,31 +92,23 @@ feature -- Basic operations
 			if not retried then
 				l_parser := parser
 				l_parser.parse_from_string (a_xml.as_string_8)
-				if not l_parser.syntax_error then
-					if attached {XRPC_REQUEST_LOAD_CALLBACKS} l_parser.callbacks as l_callbacks then
-						if not l_callbacks.has_error then
-							l_name := l_callbacks.method_name
-							if not l_name.is_empty then
-								if l_callbacks.has_parameters then
-									l_params := l_callbacks.method_parameters
-								end
-								Result := dispatch_call (a_dispatcher, l_name, l_params)
-							else
-								Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_request_no_method_name)
+				if attached {XRPC_REQUEST_LOAD_CALLBACKS} l_parser.callbacks as l_callbacks then
+					if not l_callbacks.has_error then
+						l_name := l_callbacks.method_name
+						if not l_name.is_empty then
+							if l_callbacks.has_parameters then
+								l_params := l_callbacks.method_parameters
 							end
+							Result := dispatch_call (a_dispatcher, l_name, l_params)
 						else
-							Result := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_request_invalid, l_callbacks.last_error_message)
+							Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_request_no_method_name)
 						end
 					else
-						check should_never_happen: False end
-						Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
+						Result := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_request_invalid, l_callbacks.last_error_message)
 					end
 				else
-					if attached l_parser.last_error_description as l_error and then not l_error.is_empty then
-						Result := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_request_invalid, l_error)
-					else
-						Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_request_invalid)
-					end
+					check should_never_happen: False end
+					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
 				end
 			else
 				if attached exception_manager.last_exception as l_exception then

@@ -21,7 +21,7 @@ inherit
 			reset,
 			process_tag_state,
 			process_end_tag_state,
-			tag_state_transitions
+			new_tag_state_transitions
 		end
 
 create
@@ -47,12 +47,10 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		do
 			create method_name.make_empty
-			method_parameters.wipe_out
 			Precursor
 		ensure then
 			method_name_is_empty: method_name.is_empty
 			method_name_different_object: method_name /= old method_name
-			method_parameters_is_empty: method_parameters.is_empty
 		end
 
 feature {NONE} -- Process
@@ -88,19 +86,19 @@ feature {NONE} -- Process
 			end
 		end
 
-feature {NONE} -- State transistions
+feature {NONE} -- Factory
 
-	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
-		once
-			Result := Precursor.twin
+		do
+			Result := Precursor
 
 				-- Override the initial state
 			create l_table.make (1)
 			l_table.put (t_method_call, {XRPC_CONSTANTS}.method_call_name)
-			Result.force (l_table, t_none)
+			Result.force_last (l_table, t_none)
 
 				-- methodCall
 				-- => methodName
@@ -108,7 +106,7 @@ feature {NONE} -- State transistions
 			create l_table.make (3)
 			l_table.put (t_method_name, {XRPC_CONSTANTS}.method_name_name)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
-			Result.put_last (l_table, t_method_call)
+			Result.force_last (l_table, t_method_call)
 		end
 
 feature {NONE} -- Constants: States

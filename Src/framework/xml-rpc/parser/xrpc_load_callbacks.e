@@ -192,12 +192,12 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
-		once
-			create Result.make (7)
+		do
+			create Result.make (8)
 
 			create l_table.make (2)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
@@ -265,9 +265,9 @@ feature {NONE} -- State transistions
 			Result.put_last (l_table, t_member)
 		end
 
-	attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
-		once
+		do
 		end
 
 feature {NONE} -- Constants: States

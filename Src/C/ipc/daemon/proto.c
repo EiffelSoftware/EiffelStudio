@@ -168,7 +168,7 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 
 	switch (rqst->rq_type) {
 	case CLOSE_DBG:
-		dexit(0);
+		daemon_exit(0);
 		break;
 	case KPALIVE:			/* Dummy request for connection checks */
 		break;
@@ -412,7 +412,7 @@ rt_public void dbg_send_packet(EIF_PSTREAM sp, Request *dans)
 #endif
 		if (sp == daemon_data.d_cs)	/* Talking to the workbench? */
 		{
-			dexit(1);					/* Can't allow this stream to break */
+			daemon_exit(1);					/* Can't allow this stream to break */
 		}
 		(void) rem_input(sp);	/* Stop listening to that channel */
 	}
@@ -517,7 +517,7 @@ rt_private void run_command(EIF_PSTREAM sp)
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-		dexit (1);
+		daemon_exit (1);
 	}
 
 #ifdef EIF_VMS_V6_ONLY
@@ -538,7 +538,7 @@ rt_private void run_command(EIF_PSTREAM sp)
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-		dexit (1);
+		daemon_exit (1);
 	 }
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
@@ -709,7 +709,7 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-		dexit (1);
+		daemon_exit (1);
 	}
 
 #ifdef EIF_VMS_V6_ONLY
@@ -736,7 +736,7 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-		dexit (1);
+		daemon_exit (1);
 	}
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);

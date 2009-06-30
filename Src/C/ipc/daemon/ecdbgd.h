@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-extern void dexit (int);
+extern void daemon_exit (int);
 
 #ifdef __cplusplus
 }

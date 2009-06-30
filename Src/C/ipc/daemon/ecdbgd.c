@@ -75,7 +75,7 @@
 
 
 /* Function declaration */
-rt_public void dexit(int code);		/* Daemon's exit */
+rt_public void daemon_exit(int code);		/* Daemon's exit */
 rt_private Signal_t handler(int sig);	/* Signal handler */
 rt_private void set_signal(void);	/* Set up the signal handler */
 
@@ -193,7 +193,7 @@ rt_private void init_dbg(int argc, char **argv)
 
 	dbg_prt_init();				/* Initialize IDR filters */
 	dwide_listen();					/* Enter server mode... */
-	dexit(0);		/* Workbench died, so do we */
+	daemon_exit(0);		/* Workbench died, so do we */
 }
 	
 rt_private void set_signal(void)
@@ -230,10 +230,15 @@ rt_private Signal_t handler(int sig)
 #ifdef USE_ADD_LOG
 	add_log(12, "caught signal #%d", sig);
 #endif
-	dexit(0);
+	daemon_exit(0);
 }
 
-rt_public void dexit(int code)
+	/* Implement `dexit' which is used by `ipc/shared' for reporting failure. */
+rt_public void dexit(int code) {
+	daemon_exit(code);
+}
+
+rt_public void daemon_exit(int code)
 {
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", code);

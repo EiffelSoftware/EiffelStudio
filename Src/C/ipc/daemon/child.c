@@ -45,6 +45,7 @@
 #include "stream.h"
 #include "timehdr.h"
 #include "ewbio.h"
+#include "ecdbgd.h"
 #include "child.h"
 
 #ifdef EIF_WINDOWS
@@ -81,7 +82,6 @@
 
 rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
-extern void dexit (int);
 #define SPAWN_CHILD_FAILED(i) dexit(i);
 
 #ifndef EIF_WINDOWS

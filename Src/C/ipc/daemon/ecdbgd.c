@@ -57,6 +57,7 @@
 #include "identify.h"
 #include "com.h"
 #include "dbg_proto.h"
+#include "ecdbgd.h"
 #include "child.h"
 
 #include <stdlib.h>

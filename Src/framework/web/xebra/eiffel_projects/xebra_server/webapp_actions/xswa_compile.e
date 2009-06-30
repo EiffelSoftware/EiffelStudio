@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 													compiler_args,
 													app_dir,
 													agent compile_process_exited,
-													agent output_handler.handle_output,
+													agent asd ,
 													agent output_handler.handle_output)
 					set_running (True)
 				end
@@ -125,6 +125,11 @@ feature {NONE} -- Implementation
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
+	asd (a: STRING)
+
+	do
+
+	end
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)

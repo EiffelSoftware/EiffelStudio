@@ -41,7 +41,7 @@
 #define REVISION "$Revision$"
 
 /*======= Choose debug level here ======= */
-/* #define DO_DEBUG */
+ #define DO_DEBUG
 /* #define DO_DEBUG2 */
 
 /*======= DEBUG MACRO ======= */
@@ -78,6 +78,8 @@
 #define TABLECSEP "#$#"
 #define TABLERSEP "#%#"
 #define TABLEEND "#E#"
+#define CONTENT_TYPE_START "#CT#"
+#define CONTENT_TYPE_END "#CTE#"
 
 /* Return message */
 #define COOKIE_START "#C#"

@@ -51,8 +51,6 @@ feature -- Inherited Features
 			stop := False
 			launched := True
 			running := True
-
-
 			create l_http_socket.make_server_by_port (default_http_server_port)
 
 			if not l_http_socket.is_bound then
@@ -122,7 +120,7 @@ feature -- Status
 
 feature -- Constants
 
-	default_http_server_port: INTEGER = 55000
+	default_http_server_port: INTEGER = 55001
 			-- Port for communication between http server and xebra server
 
 	max_tcp_clients: NATURAL = 100

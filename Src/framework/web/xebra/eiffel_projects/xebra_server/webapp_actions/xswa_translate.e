@@ -62,7 +62,14 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.app_config.name.out + " -i . -o .  -t " + config.file.taglib.out + " -d " + config.args.debug_level.out
+			Result := " -n " + webapp.app_config.name.out
+			Result.append ( " -i . ")
+			Result.append (" -o . ")
+			Result.append (" -t " + config.file.taglib.out)
+			Result.append (" -d " + config.args.debug_level.out)
+			if force then
+				Result.append (" -f ")
+			end
 		ensure
 			Result_attached: Result /= void
 		end

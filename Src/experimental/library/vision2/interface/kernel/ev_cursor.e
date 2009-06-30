@@ -10,6 +10,9 @@ note
 class
 	EV_CURSOR
 
+obsolete
+	"Use EV_POINTER_STYLE instead"
+	
 inherit
 	EV_PIXMAP
 		redefine

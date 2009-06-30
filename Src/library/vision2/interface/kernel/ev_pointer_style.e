@@ -1,6 +1,11 @@
 note
-	description:
-		"Apearance of a screen pointer cursor, typically moved by a mouse."
+	description:"[
+			Apearance of a screen pointer cursor, typically moved by a mouse.
+			
+			EV_POINTER_STYLE works better than EV_CURSOR on Windows platforms. 
+			It support high-depth color cursor (such as when using remote desktop),
+			but EV_CURSOR can't. For Unix platforms, they are almost the same.
+																					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "mouse, pointer, cursor, arrow"

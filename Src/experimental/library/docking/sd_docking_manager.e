@@ -1,5 +1,15 @@
 note
-	description: "Manager which communicate between client programmer and whole docking library."
+	description: "[
+				Manager which communicate between client programmer and whole docking library.
+				
+				The SD_DOCKING_MANAGER is the key (and the most important one) for client
+				programmers to comunicate with docking library. Almost all importantant features
+				are listed in SD_DOCKING_MANAGER, such as extend/remove a docking content 
+				(which is a docking unit)
+				
+				Internally, docking manger create left, right, top, bottom areas for toolbars 
+				and docking panels.
+																								]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -17,7 +27,14 @@ create
 feature {NONE} -- Initialization
 
 	make (a_container: EV_CONTAINER; a_window: EV_WINDOW)
-			-- Creation method.
+			-- Creation method
+			-- Between `a_container' and `a_window', there can be other non-dockable widget
+			--
+			-- `a_container' is the top level container which hold all docking widgets
+   			-- `a_window' is the main window which hold `a_container'
+			-- `a_window' is used for register global shortcuts (such as `esc' key used for cancel a dragging),
+			-- also used for showing a parented floating docking panel, also used for set global cursor icon
+			-- when dragging, and ...
 		require
 			a_container_not_void: a_container /= Void
 			a_container_not_destroy: not a_container.is_destroyed

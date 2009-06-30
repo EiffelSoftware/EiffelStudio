@@ -11,7 +11,7 @@ class
 	EV_CURSOR
 
 obsolete
-	"Use EV_POINTER_STYLE instead"
+	"[090630] Use EV_POINTER_STYLE instead"
 
 inherit
 	EV_PIXMAP
@@ -19,7 +19,7 @@ inherit
 			make_with_pointer_style,
 			copy
 		end
-		
+
 create
 	default_create,
 	make_with_size,

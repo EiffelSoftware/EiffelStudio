@@ -385,7 +385,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 	handle_errors: BOOLEAN
 			-- <Precursor>
 		local
-			l_printer: XS_ERROR_PRINTER
+			l_printer: XU_ERROR_PRINTER
 		do
 			Result := True
 			create l_printer.default_create

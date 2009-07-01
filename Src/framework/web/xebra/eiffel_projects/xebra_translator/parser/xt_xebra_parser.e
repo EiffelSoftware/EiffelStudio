@@ -8,31 +8,10 @@ note
 class
 	XT_XEBRA_PARSER
 
-feature -- Access
+inherit
+	ERROR_SHARED_MULTI_ERROR_MANAGER
 
-	digit: PEG_ABSTRACT_PEG
-	upper_case: PEG_ABSTRACT_PEG
-	lower_case: PEG_ABSTRACT_PEG
-	space: PEG_ABSTRACT_PEG
-	tab: PEG_ABSTRACT_PEG
-	newline: PEG_ABSTRACT_PEG
-	return: PEG_ABSTRACT_PEG
-	feed: PEG_ABSTRACT_PEG
-	quote: PEG_ABSTRACT_PEG
-	equals: PEG_ABSTRACT_PEG
-	open: PEG_ABSTRACT_PEG
-	close: PEG_ABSTRACT_PEG
-	slash: PEG_ABSTRACT_PEG
-	colon: PEG_ABSTRACT_PEG
-	dot: PEG_ABSTRACT_PEG
-	open_curly: PEG_ABSTRACT_PEG
-	close_curly: PEG_ABSTRACT_PEG
-	percent: PEG_ABSTRACT_PEG
-	sharp: PEG_ABSTRACT_PEG
-	exclamation: PEG_ABSTRACT_PEG
-	any_char: PEG_ABSTRACT_PEG
-	eof: PEG_ABSTRACT_PEG
-	underscore, hyphen, identifier, comment, ws: PEG_ABSTRACT_PEG
+feature -- Initialization
 
 	make
 			-- Initialize parsers
@@ -75,12 +54,55 @@ feature -- Access
 			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
 			ws.ommit_result
 			ws := +ws
+
+			source_path := "No source path specified"
+		end
+
+feature {XT_XEBRA_PARSER} -- Access
+
+	digit: PEG_ABSTRACT_PEG
+	upper_case: PEG_ABSTRACT_PEG
+	lower_case: PEG_ABSTRACT_PEG
+	space: PEG_ABSTRACT_PEG
+	tab: PEG_ABSTRACT_PEG
+	newline: PEG_ABSTRACT_PEG
+	return: PEG_ABSTRACT_PEG
+	feed: PEG_ABSTRACT_PEG
+	quote: PEG_ABSTRACT_PEG
+	equals: PEG_ABSTRACT_PEG
+	open: PEG_ABSTRACT_PEG
+	close: PEG_ABSTRACT_PEG
+	slash: PEG_ABSTRACT_PEG
+	colon: PEG_ABSTRACT_PEG
+	dot: PEG_ABSTRACT_PEG
+	open_curly: PEG_ABSTRACT_PEG
+	close_curly: PEG_ABSTRACT_PEG
+	percent: PEG_ABSTRACT_PEG
+	sharp: PEG_ABSTRACT_PEG
+	exclamation: PEG_ABSTRACT_PEG
+	any_char: PEG_ABSTRACT_PEG
+	eof: PEG_ABSTRACT_PEG
+	underscore, hyphen, identifier, comment, ws: PEG_ABSTRACT_PEG
+
+	source_path: STRING
+			-- The path to the original file
+
+feature -- Access
+
+	set_source_path (a_source_path: STRING)
+			-- Sets the source path.
+		require
+			a_source_path_attached: attached a_source_path
+		do
+			source_path := a_source_path
+		ensure
+			source_path_set: source_path = a_source_path
 		end
 
 feature {NONE} -- Convenience
 
 	range (a_first_char, a_last_char: CHARACTER): PEG_RANGE
-				-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
+			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
 		require
 			a_first_char_attached: attached a_first_char
 			a_last_char_attached: attached a_last_char
@@ -152,6 +174,23 @@ feature {NONE} -- Convenience
 			end
 		ensure
 			Result_attached: attached Result
+		end
+
+	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
+			-- Formats the line/row information
+		require
+			a_line_row_attached: attached a_line_row
+		do
+			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out + " of file: " + source_path
+		ensure
+			Result_attached_and_not_empty: attached Result and then not Result.is_empty
+		end
+
+	add_parse_error (a_message: STRING)
+			-- Adds a parse error to the error maanager
+		do
+			error_manager.add_error (create {XERROR_PARSE}.make
+				([a_message]), False)
 		end
 
 feature {XT_XEBRA_PARSER} -- Behaviours

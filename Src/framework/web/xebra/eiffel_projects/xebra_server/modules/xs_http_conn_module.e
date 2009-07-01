@@ -93,6 +93,10 @@ feature -- Inherited Features
        		o.dprint("HTTP Connection Server ends.",2)
        		rescue
        			o.eprint ("Exception occured.", generating_type)
+       			l_http_socket.cleanup
+	        	check
+	        		l_http_socket.is_closed
+	       		end
        			retry
        	end
 

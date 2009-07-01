@@ -28,7 +28,31 @@ feature -- Access
 
 	method: CHARACTER = 'P'
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+
+		--						-- Read POST/GET params				
+--			if l_s.starts_with (Key_arg + Key_textxml) then
+--					-- Handle special case for POST 'text/xml' encoding
+--				l_s.remove_head (Key_arg.count + Key_textxml.count)
+--				l_s.remove_tail (key_t_end.count)
+--				create arguments.make (1)
+--				arguments.force (l_s.twin, "text/xml")
+--			else
+--					-- Handle regular case (form encoded)
+--				
+
+	read_arguments (a_string: STRING)
+			-- <Precursor>
+		do
+			if attached {STRING} current.headers_in ["Content-Type"] as l_content_type then
+					if l_content_type.is_equal (Content_type_form_urlencoded) then
+					arguments := parse_table (a_string, Key_arg, Key_p_key, Key_p_value, Key_t_end)
+				else
+					arguments.force (l_content_type, "content")
+				end
+			end
+		end
 
 	read_uri (a_the_request: STRING): STRING
 		local

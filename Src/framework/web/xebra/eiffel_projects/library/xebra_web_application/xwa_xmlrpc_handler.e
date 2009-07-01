@@ -35,7 +35,7 @@ feature -- Basic operations
 			a_request_attached: a_request /= Void
 		do
 			create Result.make_empty
-			if attached {XH_POST_REQUEST} a_request  as l_req then
+			if attached {XH_POST_REQUEST} a_request as l_req then
 				Result.set_xml_content_type
 				Result.append ("<?xml version=%"1.0%"?><methodResponse><params><param><value><string>South Dakota</string></value></param></params></methodResponse>")
 			else

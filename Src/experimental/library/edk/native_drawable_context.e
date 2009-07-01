@@ -180,12 +180,11 @@ feature {NONE} -- Implementation
 		end
 
 	dispose
-			-- Clean up graphics context handle
+			-- <Precursor>
 		do
 			if native_handle_internal /= default_pointer then
 				native_handle_internal.memory_free
 			end
-			Precursor
 		end
 
 

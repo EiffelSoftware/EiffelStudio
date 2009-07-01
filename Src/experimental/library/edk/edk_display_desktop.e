@@ -12,7 +12,7 @@ inherit
 
 
 create
-	{EDK_APPLICATION} default_create
+	{EDK_APPLICATION} make_for_application
 
 feature
 
@@ -27,4 +27,5 @@ feature
 				#endif
 			]"
 		end
+
 end

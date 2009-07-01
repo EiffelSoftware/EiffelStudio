@@ -56,7 +56,6 @@ feature {NONE} -- Implementation
 	dispose
 			-- Cleanup `Current'
 		do
-			Precursor
 			c_native_dispose (native_pen)
 		end
 

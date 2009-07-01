@@ -8,30 +8,21 @@ deferred class
 	EDK_DISPLAY
 
 inherit
-	EDK_OBJECT_I
-		redefine
-			default_create
+	EDK_SESSION_ID_OBJECT_I
+		export {ANY}
+			message_manager
 		end
 
 feature {NONE} -- Creation
 
-	default_create
+	make_for_application (a_application: EDK_APPLICATION)
 			-- Create display object for default display.
 		do
-			create event_manager_internal.make_for_display (Current)
+			application := a_application
+			message_manager_cell.put (create {EDK_DESKTOP_EVENT_MANAGER}.make_for_display (Current))
 		end
 
-feature -- Message Handling
-
-	event_manager: EDK_DESKTOP_EVENT_MANAGER
-			-- Manager for handling all EDK events.
-		do
-			check event_manager_internal /= Void end
-			Result := event_manager_internal
-		end
-
-feature {NONE} -- Implementation
-
-	event_manager_internal: detachable EDK_DESKTOP_EVENT_MANAGER note option: stable attribute end
+	application: EDK_APPLICATION
+		-- Application object associated with `Current'.
 
 end

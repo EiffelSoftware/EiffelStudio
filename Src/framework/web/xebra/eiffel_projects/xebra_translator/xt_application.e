@@ -35,7 +35,7 @@ feature -- Operation
 		require
 			a_arg_parser_attached: attached a_arg_parser
 		local
-			l_printer: ERROR_CUI_PRINTER
+			l_printer: XU_ERROR_PRINTER
 			l_translator: XP_TRANSLATOR
 			l_dir: FILE_NAME
 		do

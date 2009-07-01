@@ -10,6 +10,10 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+	XT_XEBRA_PARSER
+		redefine
+			make
+		end
 
 create
 	make
@@ -17,7 +21,9 @@ create
 feature {NONE} -- Initialization
 
 	make
+			-- <Precursor>
 		do
+			Precursor
 		end
 
 feature {NONE} -- Access
@@ -25,48 +31,12 @@ feature {NONE} -- Access
 	tag_lib_parser: PEG_ABSTRACT_PEG
 			--
 		local
-			l_taglib, l_tag, l_tags, l_attribute, identifier,
-			digit, upper_case, lower_case, ws, value, any_char, plain_text,
-			open, close, slash, hyphen, underscore, quote, exclamation,
-			open_curly, close_curly, sharp, percent, dot, equals, colon,
-			tab, newline, space: PEG_ABSTRACT_PEG
+			l_taglib, l_tag, l_tags, l_attribute,
+			value, plain_text: PEG_ABSTRACT_PEG
 		once
-			digit := create {PEG_RANGE}.make_with_range ('0', '9')
-			upper_case := create {PEG_RANGE}.make_with_range ('A', 'Z')
-			lower_case := create {PEG_RANGE}.make_with_range ('a', 'z')
-			space :=  char (' ')
-			tab := char ('%T')
-			newline := char ('%N')
-			quote :=  char ('%"')
-			equals := char ('=')
-			open :=   char ('<')
-			close :=  char ('>')
-			slash :=  char ('/')
-			colon :=  char (':')
-			dot := char ('.')
-			open_curly := char ('{')
-			close_curly := char ('}')
-			percent := char ('%%')
-			sharp := char ('#')
-			exclamation := char ('!')
-
-			underscore := create {PEG_CHARACTER}.make_with_character ('_') -- don't ommit
-			hyphen := create {PEG_CHARACTER}.make_with_character ('-') -- don't ommit, so don't use char
-
-			ws := create {PEG_WHITE_SPACE_CHARACTER}.make --whitespace
-			ws.ommit_result
-			ws := +ws
-
-			any_char := create {PEG_ANY}.make
-			--any_char.ommit_result
-
 			plain_text := + (open.negate + any_char)
 
-			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
-			identifier.fixate
-			identifier.set_behaviour (agent concatenate_results)
-
-			value := quote + (-(quote.negate + any_char)) + quote
+			value := quote + (-(quote.negate + any_char)).consumer + quote
 			value.set_behaviour (agent concatenate_results)
 
 				-- Taglib specific
@@ -114,29 +84,6 @@ feature -- Basic functionality
 		end
 
 feature {NONE} -- Convenience
-
-	char (a_character: CHARACTER): PEG_CHARACTER
-			-- Creates a Character parser with the character `a_character' and sets it to ommit
-		do
-			create Result.make_with_character (a_character)
-			Result.ommit_result
-		end
-
-	chars (a_string: STRING): PEG_SEQUENCE
-			-- Creates a parser which parses the `a_string'
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + char (a_string [l_i])
-				l_i := l_i + 1
-			end
-		end
 
 	add_parse_error (a_message: STRING)
 			-- Adds a parse error to the error maanager
@@ -223,29 +170,6 @@ feature {NONE} -- Parser behaviours
 				Result.internal_result.forth
 			end
 			Result.replace_result (l_taglib)
-		ensure
-			Result_attached: attached Result
-		end
-
-	concatenate_results (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Concatenates all result's 'out'-output to a single {String}
-		require
-			a_result_attached: attached a_result
-		local
-			l_product: STRING
-		do
-			l_product := ""
-			from
-				a_result.internal_result.start
-			until
-				a_result.internal_result.after
-			loop
-				l_product := l_product + a_result.internal_result.item.out
-				a_result.internal_result.forth
-			end
-			Result := a_result
-			Result.internal_result.wipe_out
-			Result.append_result (l_product)
 		ensure
 			Result_attached: attached Result
 		end

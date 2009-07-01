@@ -10,6 +10,7 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+	XT_XEBRA_PARSER
 
 create
 	make_with_registry
@@ -20,6 +21,7 @@ feature -- Initialization
 		require
 			a_registry_attached: attached a_registry
 		do
+			make
 			registry := a_registry
 			source_path := "No source path specified."
 		ensure
@@ -71,75 +73,23 @@ feature {NONE} -- Implementation
 			--
 		local
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
-			identifier, namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
-			digit, upper_case, lower_case, ws, value, any_char, any_char_o, plain_text, plain_text_without_behaviour,
-			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
-			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
-			tab, newline, space, return, feed, eof: PEG_ABSTRACT_PEG
+			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
+			plain_text, plain_text_without_behaviour, close_fixed, value: PEG_ABSTRACT_PEG
 		once
-				-- Basic parsers (single character parsers)
-			digit := create {PEG_RANGE}.make_with_range ('0', '9')
-			digit.ommit_result
-			upper_case := create {PEG_RANGE}.make_with_range ('A', 'Z')
-			upper_case.ommit_result
-			lower_case := create {PEG_RANGE}.make_with_range ('a', 'z')
-			lower_case.ommit_result
-			space := char (' ')
-			tab := char ('%T')
-			newline := char ('%N')
-			return := char ('%R')
-			feed := char ('%F')
-			quote :=  char ('%"')
-			equals := char ('=')
-			open :=   char ('<')
-			close :=  char ('>')
-			slash :=  char ('/')
-			colon :=  char (':')
-			dot := char ('.')
-			open_curly := char ('{')
-			close_curly := char ('}')
-			percent := char ('%%')
-			sharp := char ('#')
-			exclamation := char ('!')
-			any_char := create {PEG_ANY}.make
-
-				-- End of File
-			eof := any_char.negate
-
 				-- For graceful recovery of silly mistake of missing '>' we add a error strategy
 			close_fixed := char ('>')
 			close_fixed.set_error_strategy (agent handle_close_error)
 			close_fixed.fixate
 
-				-- Directly create with constructor because the character should be put onto the result list
-			underscore := char ('_')--create {PEG_CHARACTER}.make_with_character ('_')
-			hyphen := char ('-')--create {PEG_CHARACTER}.make_with_character ('-')
-
-				-- Whitespace: Eats all the whitespace until something else appears
-			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
-			ws.ommit_result
-			ws := +ws
-
-				-- A common identifier. Will put the identifier {STRING} on the stack
-			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
-			identifier := identifier.consumer
-			identifier.fixate
-
-				-- XML comments
---			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
---			comment.set_behaviour (agent concatenate_results)
-
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
-				-- tag (with the parsed text as input) on the result list.
-			create {PEG_ANY} any_char_o.make
-			any_char_o.ommit_result
-			plain_text := +((open + (identifier | slash)).negate + any_char_o)
+				-- tag (with the parsed text as input) on the result list.		
+			plain_text := +((open + (identifier | slash)).negate + any_char)
 			plain_text := plain_text.consumer
 			plain_text.set_behaviour (agent build_content_tag)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
-			value_attribute := (-(quote.negate + any_char_o))
+			value_attribute := (-(quote.negate + any_char))
 			value_attribute := value_attribute.consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
 			dynamic_attribute := percent + equals + identifier + percent
@@ -182,7 +132,7 @@ feature {NONE} -- Implementation
 			xml := xml | (open + (xeb_tag | plain_html) + ws.optional + close_fixed) | plain_text
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
-			plain_text_without_behaviour := +((open + any_char_o).negate + any_char_o)
+			plain_text_without_behaviour := +((open + any_char).negate + any_char)
 
 				-- Doctype
 			doctype := char ('<') + char ('!') + plain_text_without_behaviour
@@ -407,91 +357,7 @@ feature -- Parser Behaviours
 			Result_attached: attached a_result
 		end
 
-	concatenate_results (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-		require
-			a_result_attached: attached a_result
-		local
-			l_product: STRING
-		do
-			l_product := ""
-			from
-				a_result.internal_result.start
-			until
-				a_result.internal_result.after
-			loop
-				l_product := l_product + a_result.internal_result.item.out
-				a_result.internal_result.forth
-			end
-			Result := a_result
-			Result.replace_result (l_product)
-		ensure
-			Result_attached: attached Result
-		end
-
-feature {NONE} -- Convenience
-
-	char (a_character: CHARACTER): PEG_CHARACTER
-			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
-		require
-			a_character_attached: attached a_character
-		do
-			create Result.make_with_character (a_character)
-			Result.ommit_result
-		ensure
-			Result_attached: attached result
-		end
-
-	rchar (a_character: CHARACTER): PEG_CHARACTER
-			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
-		require
-			a_character_attached: attached a_character
-		do
-			create Result.make_with_character (a_character)
-		ensure
-			Result_attached: attached result
-		end
-
-	chars (a_string: STRING): PEG_SEQUENCE
-			-- Creates a parser which parses the `a_string'
-		require
-			a_string_attached: attached a_string
-			a_string_not_empty: not a_string.is_empty
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + char (a_string [l_i])
-				l_i := l_i + 1
-			end
-		ensure
-			Result_attached: attached Result
-		end
-
-	chars_without_ommit (a_string: STRING): PEG_SEQUENCE
-			-- Creates a parser which parses the `a_string'
-		require
-			a_string_attached: attached a_string
-			a_string_not_empty: not a_string.is_empty
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + create {PEG_CHARACTER}.make_with_character (a_string [l_i])
-				l_i := l_i + 1
-			end
-		ensure
-			Result_attached: attached Result
-		end
+feature -- Convenience
 
 	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
 			-- Formats the line/row information

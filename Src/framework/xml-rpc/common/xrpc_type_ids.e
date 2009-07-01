@@ -12,6 +12,16 @@ class
 
 feature -- Access: Boolean
 
+	array_type_id: INTEGER
+			-- {ARRAY [ANY]} runtime type id.
+		once
+			Result := type_of ({ARRAY [ANY]})
+		ensure
+			result_positive: Result > 0
+		end
+
+feature -- Access: Boolean
+
 	boolean_type_id: INTEGER
 			-- {BOOLEAN} runtime type id.
 		once
@@ -203,6 +213,19 @@ feature -- Access: XML-RPC object type ids
 		end
 
 feature -- Status report
+
+	is_array (a_type: INTEGER): BOOLEAN
+			-- Indicates if the dynamic type id represents a boolean, XML-RPC or otherwise.
+			--
+			-- `a_type': Type id to check for boolean types against.
+			-- `Result': True if the supplied type ID represents a boolean; False otherwise.
+		local
+			l_internal: like internal
+		do
+			l_internal := internal
+			Result := l_internal.type_conforms_to (a_type, xrpc_array_type_id) or else
+				l_internal.type_conforms_to (a_type, array_type_id)
+		end
 
 	is_boolean (a_type: INTEGER): BOOLEAN
 			-- Indicates if the dynamic type id represents a boolean, XML-RPC or otherwise.

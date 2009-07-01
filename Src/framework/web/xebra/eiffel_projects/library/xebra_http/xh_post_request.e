@@ -49,7 +49,9 @@ feature {NONE} -- Implementation
 					if l_content_type.is_equal (Content_type_form_urlencoded) then
 					arguments := parse_table (a_string, Key_arg, Key_p_key, Key_p_value, Key_t_end)
 				else
-					arguments.force (l_content_type, "content")
+					a_string.remove_head (key_arg.count)
+					a_String.remove_tail (key_t_end.count)
+					arguments.force (a_string, "content")
 				end
 			end
 		end

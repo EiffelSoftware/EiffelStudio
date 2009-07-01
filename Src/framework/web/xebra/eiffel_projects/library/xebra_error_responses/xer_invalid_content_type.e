@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XER_APP_COMPILING
+	XER_INVALID_CONTENT_TYPE
 
 inherit
-	X_INFO_RESPONSE
+	X_ERROR_RESPONSE
 	XER_SERVER
 
 create
@@ -22,12 +22,9 @@ feature -- Access
 	message: STRING
 			-- <Precursor>
 		do
-			if arg.is_empty then
-				arg := " "
-			end
-			has_refresh := True
-			Result := "Application '" + arg + "' is compiling..."
+			Result := "Invalid content-type."
 		end
 
 end
+
 

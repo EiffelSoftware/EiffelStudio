@@ -38,9 +38,10 @@ feature -- Properties
 			Precursor (a_property_data)
 		end
 
-	register_properties (type_registration: EDK_TYPE_MANAGER)
+	register_properties (type_registration: EDK_TYPE_REGISTRATION)
 		do
-			type_registration.register_property_data (title, {STRING_32}, {NONE}, True)
+			Precursor (type_registration)
+			type_registration.register_property_data (title, {detachable STRING_32}, {NONE}, True)
 			type_registration.register_property_data (mouse_position_x, {INTEGER_16}, {NONE}, False)
 			type_registration.register_property_data (mouse_position_y, {INTEGER_16}, {NONE}, False)
 			type_registration.register_property_data (window_frame_x, {INTEGER_16}, {NONE}, False)

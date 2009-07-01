@@ -19,59 +19,43 @@ feature {NONE} -- Initialization
 			-- Create and initialize type registration helper
 		do
 			create registered_window_types.make (10)
+			registered_window_types.compare_objects
 		end
 
-feature
-
-	registered_window_types: ARRAYED_LIST [TYPE [EDK_WINDOW]]
-		-- Search table for registered types.
+feature {EDK_WINDOW}
 
 	register_window (a_window_type: EDK_WINDOW)
 			-- Register type of `Current'
 		local
-			l_current_type_id, l_current_field_type_id: INTEGER
-			i, l_field_count: INTEGER
+			l_current_type_id: INTEGER
 			l_window_type: detachable TYPE [EDK_WINDOW]
 			l_namespace: STRING
+			l_type_registration: EDK_TYPE_REGISTRATION
 		do
 			l_window_type ?= type_of (a_window_type)
 			check l_window_type /= Void end
+			l_current_type_id := dynamic_type (a_window_type)
 			if not registered_window_types.has (l_window_type) then
 				registered_window_types.extend (l_window_type)
 
 					-- Create namespace from type
 				l_namespace := a_window_type.generating_type.as_lower
 
-				a_window_type.register_messages (Current)
-				a_window_type.register_properties (Current)
+				create l_type_registration.make (l_window_type)
+				a_window_type.register_messages (l_type_registration)
+				a_window_type.register_properties (l_type_registration)
+
+				a_window_type.set_property_structure (l_type_registration.default_data_structure)
 			end
-
-			l_current_type_id := dynamic_type (a_window_type)
-			l_field_count := field_count_of_type (l_current_type_id)
 		end
 
-	register_message_with_window (a_event: EDK_MESSAGE; a_window: EDK_WINDOW)
-		do
+feature {NONE} -- Implementation
 
-		end
+	registered_window_types: ARRAYED_LIST [TYPE [EDK_WINDOW]]
+		-- Search table for registered types.
+		--| FIXME IEK Change to hash/search table when TYPE is hashable and access is reentrant.
 
-	register_message_data (message_name: STRING_8; data_type: TYPE [ANY]; meta_data_type: TYPE [detachable ANY])
-		local
-			l_edk_string: EDK_LOW_LEVEL_STRING
-			l_message_code: NATURAL_32
-		do
-			create l_edk_string.make (message_name)
-				-- Register interprocess message value.
-			l_message_code := c_native_register_message_type (l_edk_string.item)
-			print ("Received a message code of " + l_message_code.out + "%N")
-		end
-
-	register_property_data (property_name: STRING_8; data_type: TYPE [ANY]; meta_data_type: TYPE [detachable ANY]; a_writable: BOOLEAN)
-		do
-
-		end
-
-feature {NONE} -- External
+feature {EDK_TYPE_REGISTRATION, EDK_PROPERTY_ATTRIBUTES} -- External
 
 	frozen c_native_register_message_type (a_str_pointer: POINTER): NATURAL_32
 		external

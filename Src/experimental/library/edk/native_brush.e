@@ -41,9 +41,8 @@ feature {NONE} -- Implementation
 		end
 
 	dispose
-			-- Clean up `Current'.
+			-- <Precursor>
 		do
-			Precursor
 		end
 
 end

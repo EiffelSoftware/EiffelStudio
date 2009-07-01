@@ -66,9 +66,8 @@ feature {NONE} -- Implementation
 		end
 
 	dispose
-			-- Clean up `Current'.
+			-- <Precursor>
 		do
-			Precursor
 			native_rectangle_handle.memory_free
 		end
 

@@ -8,7 +8,7 @@ frozen class
 	EDK_MESSAGE
 
 inherit
-	EDK_OBJECT_I
+	EDK_MESSAGE_SENDER
 		redefine
 			dispose
 		end
@@ -49,10 +49,14 @@ feature -- Access
 			-- Window for which message is associated with.
 		local
 			l_native_window: POINTER
+			l_desktop_message_manager: detachable EDK_DESKTOP_EVENT_MANAGER
 		do
 			l_native_window := c_native_window_handle (native_message_handle)
 			if l_native_window /= default_pointer then
-				Result := display.event_manager.window_from_window_handle (l_native_window)
+				l_desktop_message_manager ?= message_manager_cell.item
+				if l_desktop_message_manager /= Void then
+					Result := l_desktop_message_manager.window_from_window_handle (l_native_window)
+				end
 			end
 		end
 
@@ -72,16 +76,6 @@ feature -- Access
 			-- 2nd parameter for `Current'.
 		do
 
-		end
-
-	frozen display: EDK_DISPLAY
-			-- Display to which `Current' is associated with.
-		external
-			"C inline use <edk.h>"
-		alias
-			"[
-				return 	eif_access (callback_marshal);
-			]"
 		end
 
 feature -- Status Setting

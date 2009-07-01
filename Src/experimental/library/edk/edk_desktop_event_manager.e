@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Make `Current' for use with display `a_display'.
 		do
 			display := a_display
+			create type_manager
 			create window_list.make (10)
 			initialize
 		end
@@ -40,6 +41,9 @@ feature -- Initialization
 
 	display: EDK_DISPLAY
 		-- Display to which `Current' is associated with.
+
+	type_manager: EDK_TYPE_MANAGER
+		-- Type manager used for registering events and properties.
 
 	native_handle: POINTER
 		-- Handle for the message queue.
@@ -87,14 +91,10 @@ feature -- Message Handling
 					a_message.set_native_message_parameter_1 (default_pointer)
 				end
 			end
-		ensure
-			a_message_not_native: not a_message.native
 		end
 
 	process_message_from_queue (a_message: EDK_MESSAGE)
 			-- Process message `a_message'.
-		require
-			a_message_not_native: not a_message.native
 		do
 			if a_message.native_id /= 0 then
 				native_process_message (a_message.native_message_handle)
@@ -106,9 +106,6 @@ feature -- Message Handling
 	put_message_on_queue (a_message: EDK_MESSAGE)
 			-- Put EDK message to the message queue
 			-- For native messages use `put_native_message'.
-		require
-			a_message_not_native: not a_message.native
-			a_message_user_generated: a_message.user_generated
 		local
 			l_success: BOOLEAN
 		do

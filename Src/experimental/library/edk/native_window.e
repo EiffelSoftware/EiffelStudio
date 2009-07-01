@@ -8,11 +8,7 @@ class
 	NATIVE_WINDOW
 
 inherit
-	EDK_OBJECT_I
-		rename
-			property_1_mask as is_displayed_mask,
-			property_2_mask as has_focus_mask,
-			property_3_mask as has_capture
+	EDK_SESSION_ID_OBJECT_I
 		undefine
 			is_equal, copy
 		end

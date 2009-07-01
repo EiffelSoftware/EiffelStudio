@@ -9,7 +9,6 @@ class
 	XT_TAGLIB_PARSER
 
 inherit
-	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XT_XEBRA_PARSER
 		redefine
 			make
@@ -74,22 +73,15 @@ feature -- Basic functionality
 			l_result := tag_lib_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XTL_TAG_LIBRARY} l_result.internal_result.first as l_taglib then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing of taglib was incomplete: %"" + l_result.left_to_parse.out + "%"")
+					add_parse_error ("Parsing of taglib was incomplete. " +
+						format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 				else
 					Result := l_taglib
 				end
 			else
-				add_parse_error ("Parsing of taglib was not successfull!")
+				add_parse_error ("Parsing of taglib was not successfull! Error location: " +
+					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 			end
-		end
-
-feature {NONE} -- Convenience
-
-	add_parse_error (a_message: STRING)
-			-- Adds a parse error to the error maanager
-		do
-			error_manager.add_error (create {XERROR_PARSE}.make
-				([a_message]), False)
 		end
 
 feature {NONE} -- Parser behaviours

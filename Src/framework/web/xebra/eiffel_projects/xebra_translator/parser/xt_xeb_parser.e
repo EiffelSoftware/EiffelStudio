@@ -9,7 +9,6 @@ class
 	XT_XEB_PARSER
 
 inherit
-	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XT_XEBRA_PARSER
 
 create
@@ -33,9 +32,6 @@ feature {NONE} -- Access
 	registry: XP_SERVLET_GG_REGISTRY
 			-- The registry for the taglibs
 
-	source_path: STRING
-			-- The path to the original file
-
 feature -- Access
 
 	template: XP_TEMPLATE
@@ -57,16 +53,6 @@ feature -- Access
 			class_set: template.controller_class = a_class_name
 		end
 
-	set_source_path (a_source_path: STRING)
-			-- Sets the source path.
-		require
-			a_source_path_attached: attached a_source_path
-		do
-			source_path := a_source_path
-		ensure
-			source_path_set: source_path = a_source_path
-		end
-
 feature {NONE} -- Implementation
 
 	xml_parser: PEG_ABSTRACT_PEG
@@ -76,7 +62,7 @@ feature {NONE} -- Implementation
 			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
 			plain_text, plain_text_without_behaviour, close_fixed, value: PEG_ABSTRACT_PEG
 		once
-				-- For graceful recovery of silly mistake of missing '>' we add a error strategy
+				-- For graceful recovery of silly mistake: on missing '>' we assume it was there all along
 			close_fixed := char ('>')
 			close_fixed.set_error_strategy (agent handle_close_error)
 			close_fixed.fixate
@@ -137,10 +123,10 @@ feature {NONE} -- Implementation
 				-- Doctype
 			doctype := char ('<') + char ('!') + plain_text_without_behaviour
 			doctype := doctype.consumer
-			--doctype.set_behaviour (agent build_content_tag)
+			doctype.set_behaviour (agent build_content_tag)
 
 				-- Xml with pre- and post-context
-			xeb_file := ws.optional + doctype.optional + xml + ws.optional
+			xeb_file := ws.optional + doctype.optional + ws.optional + xml + ws.optional
 			xeb_file.set_behaviour (agent build_root_tag)
 			Result := xeb_file
 		end
@@ -357,25 +343,6 @@ feature -- Parser Behaviours
 			Result_attached: attached a_result
 		end
 
-feature -- Convenience
-
-	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
-			-- Formats the line/row information
-		require
-			a_line_row_attached: attached a_line_row
-		do
-			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out + " of file: " + source_path
-		ensure
-			Result_attached_and_not_empty: attached Result and then not Result.is_empty
-		end
-
-	add_parse_error (a_message: STRING)
-			-- Adds a parse error to the error maanager
-		do
-			error_manager.add_error (create {XERROR_PARSE}.make
-				([a_message]), False)
-		end
-
 feature -- Basic Functionality
 
 	parse (a_string: STRING): BOOLEAN
@@ -389,7 +356,8 @@ feature -- Basic Functionality
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result.first as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing was not complete in '" + source_path + "': %"" + l_result.left_to_parse.out + "%"")
+					add_parse_error ("Parsing was incomplete. " +
+						format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 				else
 					template.put_root_tag (l_root_tag)
 					Result := True

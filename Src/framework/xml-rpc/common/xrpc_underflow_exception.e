@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Exception to raise when a marshalled object conversion would result in an overflow.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,54 +8,26 @@ note
 	revision: "$Revision$"
 
 class
-	MY_XMLRPC
+	XRPC_UNDERFLOW_EXCEPTION
 
 inherit
-	XRPC_DELEGATE
-		redefine
-			namespace
+	XRPC_MARSHAL_EXCEPTION
+		rename
+			make as make_marshal_exception
 		end
 
-feature -- Access
+create
+	make
 
-	namespace: IMMUTABLE_STRING_8
-			-- <Precursor>
-		once
-			Result := "math"
-		end
+feature {NONE} -- Initialization
 
-feature -- Basic operations
-
-	sum (i, j: NATURAL_16): INTEGER
-			-- XML-RPC using Eiffel types.
-		note
-			--options: "xml-rpc"
+	make (a_min: READABLE_STRING_8)
+			-- Initialize the underflow exception with a maximum possible value to prevent an overflow.
+		require
+			a_min_attached: attached a_min
+			not_a_min_is_empty: not a_min.is_empty
 		do
-			Result := (i + j).as_integer_32
-		end
-
-	string_sum (i, j: READABLE_STRING_8): ARRAY [STRING]
-			-- XML-RPC using Eiffel types.
-		note
-			--options: "xml-rpc"
-		do
-			create Result.make_filled ((i.to_integer_32 + j.to_integer_32).out, 1, 1)
-		end
-
-	sum_x (a_int1: XRPC_INTEGER; a_int2: XRPC_INTEGER): XRPC_INTEGER
-			-- XML-RPC using XRPC types.
-		do
-			create Result.make (a_int1.value + a_int2.value)
-		end
-
-feature {NONE} -- Factory
-
-	new_method_agents: HASH_TABLE [ROUTINE [ANY, TUPLE], READABLE_STRING_8]
-			-- <Precursor>
-		do
-			create Result.make (2)
-			Result.put (agent sum, "sum")
-			Result.put (agent string_sum, "string_sum")
+			make_marshal_exception ("Marshalling numeric under. Minimum accepted value is " + a_min.string)
 		end
 
 ;note

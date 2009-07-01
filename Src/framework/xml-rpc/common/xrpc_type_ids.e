@@ -10,12 +10,30 @@ note
 class
 	XRPC_TYPE_IDS
 
-feature -- Access: Boolean
+feature -- Access: Basic
 
-	array_type_id: INTEGER
+	any_type_id: INTEGER
+			-- {ARRAY [ANY]} runtime type id.
+		once
+			Result := type_of ({ANY})
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+feature -- Access: Array
+
+	array_any_type_id: INTEGER
 			-- {ARRAY [ANY]} runtime type id.
 		once
 			Result := type_of ({ARRAY [ANY]})
+		ensure
+			result_positive: Result > 0
+		end
+
+	array_none_type_id: INTEGER
+			-- {ARRAY [ANY]} runtime type id.
+		once
+			Result := type_of ({ARRAY [NONE]})
 		ensure
 			result_positive: Result > 0
 		end
@@ -214,17 +232,33 @@ feature -- Access: XML-RPC object type ids
 
 feature -- Status report
 
-	is_array (a_type: INTEGER): BOOLEAN
-			-- Indicates if the dynamic type id represents a boolean, XML-RPC or otherwise.
+	is_array_conform_to (a_type: INTEGER): BOOLEAN
+			-- Indicates if the dynamic type id represents an array, XML-RPC or otherwise, and that
+			-- the array types conforms to the type. (XML-RPC -> Eiffel)
 			--
-			-- `a_type': Type id to check for boolean types against.
-			-- `Result': True if the supplied type ID represents a boolean; False otherwise.
+			-- `a_type': Type id to check for array types against.
+			-- `Result': True if the supplied type ID represents a array; False otherwise.
+		local
+			l_internal: like internal
+		do
+			l_internal := internal
+			Result := a_type /= array_none_type_id and then
+				(l_internal.type_conforms_to (xrpc_array_type_id, a_type) or else
+				l_internal.type_conforms_to (array_none_type_id, a_type))
+		end
+
+	is_array_conform_from (a_type: INTEGER): BOOLEAN
+			-- Indicates if the dynamic type id represents an array, XML-RPC or otherwise, and that
+			-- the type conforms to an array.
+			--
+			-- `a_type': Type id to check for array types against.
+			-- `Result': True if the supplied type ID represents a array; False otherwise.
 		local
 			l_internal: like internal
 		do
 			l_internal := internal
 			Result := l_internal.type_conforms_to (a_type, xrpc_array_type_id) or else
-				l_internal.type_conforms_to (a_type, array_type_id)
+				l_internal.type_conforms_to (a_type, array_any_type_id)
 		end
 
 	is_boolean (a_type: INTEGER): BOOLEAN
@@ -233,8 +267,9 @@ feature -- Status report
 			-- `a_type': Type id to check for boolean types against.
 			-- `Result': True if the supplied type ID represents a boolean; False otherwise.
 		do
-			Result := a_type = xrpc_boolean_type_id or else
-				a_type = boolean_type_id
+			Result := a_type /= array_none_type_id and then
+				(a_type = xrpc_boolean_type_id or else
+				a_type = boolean_type_id)
 		end
 
 	is_double (a_type: INTEGER): BOOLEAN
@@ -289,7 +324,7 @@ feature {NONE} -- Query
 		do
 			Result := internal.generic_dynamic_type (a_type, 1)
 		ensure
-			result_positive: Result > 0
+			result_non_negative: Result >= 0
 		end
 
 feature {NONE} -- Helpers

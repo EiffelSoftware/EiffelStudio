@@ -1,6 +1,6 @@
 note
 	description: "[
-
+			Exception to raise when a marshalled source object is incompatible with the target type.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,54 +8,35 @@ note
 	revision: "$Revision$"
 
 class
-	MY_XMLRPC
+	XRPC_MARSHAL_TYPE_EXCEPTION
 
 inherit
-	XRPC_DELEGATE
-		redefine
-			namespace
+	XRPC_MARSHAL_EXCEPTION
+		rename
+			make as make_xrpc_exception
 		end
 
-feature -- Access
+create
+	make
 
-	namespace: IMMUTABLE_STRING_8
-			-- <Precursor>
-		once
-			Result := "math"
-		end
+feature {NONE} -- Initialization
 
-feature -- Basic operations
-
-	sum (i, j: NATURAL_16): INTEGER
-			-- XML-RPC using Eiffel types.
-		note
-			--options: "xml-rpc"
+	make (a_from: INTEGER; a_to: INTEGER)
+			-- Initialize an exception using the attempted marshalled type ids.
+			--
+			-- `a_from': Source object type id.
+			-- `a_to': Attempted marshalling to type id.
+		local
+			l_message: STRING
 		do
-			Result := (i + j).as_integer_32
-		end
+			create l_message.make (50)
+			l_message.append ("Unable to marshal ")
+			l_message.append (type_simple_name (a_from))
+			l_message.append (" to a ")
+			l_message.append (type_simple_name (a_to))
+			l_message.append (" object!")
 
-	string_sum (i, j: READABLE_STRING_8): ARRAY [STRING]
-			-- XML-RPC using Eiffel types.
-		note
-			--options: "xml-rpc"
-		do
-			create Result.make_filled ((i.to_integer_32 + j.to_integer_32).out, 1, 1)
-		end
-
-	sum_x (a_int1: XRPC_INTEGER; a_int2: XRPC_INTEGER): XRPC_INTEGER
-			-- XML-RPC using XRPC types.
-		do
-			create Result.make (a_int1.value + a_int2.value)
-		end
-
-feature {NONE} -- Factory
-
-	new_method_agents: HASH_TABLE [ROUTINE [ANY, TUPLE], READABLE_STRING_8]
-			-- <Precursor>
-		do
-			create Result.make (2)
-			Result.put (agent sum, "sum")
-			Result.put (agent string_sum, "string_sum")
+			make_xrpc_exception (l_message)
 		end
 
 ;note

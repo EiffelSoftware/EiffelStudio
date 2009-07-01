@@ -91,6 +91,7 @@ feature {NONE} -- Basic operations
 		do
 			current_value_stack.wipe_out
 			currrent_parameters.wipe_out
+			has_parameters := False
 			Precursor
 		ensure then
 			not_has_parameters: not has_parameters

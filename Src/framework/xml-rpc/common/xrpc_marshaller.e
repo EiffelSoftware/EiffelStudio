@@ -29,8 +29,11 @@ feature -- Status report
 			-- `a_type': A type identifier of a method argument type.
 			-- `Result': True if the type is marshallable; False otherwise.
 		do
-			Result := is_boolean (a_type) or is_double (a_type) or is_integer (a_type) or else
-				a_type = xrpc_array_type_id
+			Result := is_boolean (a_type) or else
+				is_double (a_type) or else
+				is_integer (a_type) or else
+				is_string (a_type) or else
+				is_array (a_type)
 		end
 
 	is_marshallable_result_type (a_type: INTEGER): BOOLEAN
@@ -97,7 +100,8 @@ feature -- Status report
 			l_type_id: INTEGER
 		do
 			l_type_id := internal.dynamic_type (a_object)
-			Result := is_boolean (l_type_id) or
+			Result := is_array (l_type_id) or
+				is_boolean (l_type_id) or
 				is_double (l_type_id) or
 				is_integer (l_type_id) or
 				is_string (l_type_id)
@@ -136,7 +140,6 @@ feature -- Basic operations: To Eiffel
 				else
 					-- Error: Incompatible type.
 				end
-
 			else
 				if internal.dynamic_type (a_value) = a_type then
 					Result := a_value
@@ -308,12 +311,59 @@ feature -- Basic operations: From Eiffel
 				elseif is_integer (l_type) then
 					Result := marshal_from_integer (a_value)
 				elseif is_string (l_type) then
-					create {XRPC_DEFAULT_VALUE} Result
+					Result := marshal_from_string (a_value)
+				elseif is_array (l_type) then
+					Result := marshal_from_array (a_value)
 				else
 						-- Error
 					create {XRPC_DEFAULT_VALUE} Result
 				end
 			end
+		end
+
+	marshal_from_array (a_value: ANY): XRPC_ARRAY
+			-- Marshals an Eiffel array to a XML-RPC array object.
+			--
+			-- `a_value': A array to marshal.
+			-- `Result': A marshaled XML-RPC array object.
+		require
+			a_value_attached: attached a_value
+			a_value_is_marshallable_object: is_marshallable_object (a_value)
+		local
+			l_mutable_array: XRPC_MUTABLE_ARRAY
+			i, i_upper: INTEGER
+		do
+			check a_value_is_array: is_array (internal.dynamic_type (a_value)) end
+
+			if internal.dynamic_type (a_value) = xrpc_array_type_id and then attached {XRPC_ARRAY} a_value as l_result then
+					-- No marshalling needed.
+				Result := l_result
+			else
+				create l_mutable_array.make_empty
+				if attached {ARRAY [ANY]} a_value as l_array then
+					from
+						i := l_array.lower
+						i_upper := l_array.upper
+					until
+						i > i_upper
+					loop
+						if attached l_array[i] as l_item and then is_marshallable_object (l_item) then
+							l_mutable_array.extend (marshal_from (l_item))
+						else
+-- Error: Incompatible type
+						end
+						i := i + 1
+					end
+					check same_count: l_array.count.as_natural_32  = l_mutable_array.count end
+				else
+					check should_never_happen: False end
+				end
+				Result := l_mutable_array
+			end
+		ensure
+			result_attached: attached Result
+			result_is_valid: Result.is_valid
+			result_is_array: is_array (internal.dynamic_type (Result))
 		end
 
 	marshal_from_boolean (a_value: ANY): XRPC_BOOLEAN
@@ -485,6 +535,36 @@ feature -- Basic operations: From Eiffel
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
 			result_is_integer: is_integer (internal.dynamic_type (Result))
+		end
+
+	marshal_from_string (a_value: ANY): XRPC_STRING
+			-- Marshals an Eiffel string value to a XML-RPC string object.
+			--
+			-- `a_value': A string value to marshal.
+			-- `Result': A marshaled XML-RPC string object.
+		require
+			a_value_attached: attached a_value
+			a_value_is_marshallable_object: is_marshallable_object (a_value)
+		do
+			check a_value_is_string: is_string (internal.dynamic_type (a_value)) end
+
+			if internal.dynamic_type (a_value) = xrpc_string_type_id and then attached {XRPC_STRING} a_value as l_result then
+					-- No marshalling needed.
+				Result := l_result
+			else
+				if attached {READABLE_STRING_8} a_value as l_string then
+					create Result.make (l_string)
+				elseif attached {READABLE_STRING_32} a_value as l_string and then l_string.is_string_8 then
+					create Result.make (l_string.to_string_8)
+				else
+-- Incompatible string
+					create Result.make ("")
+				end
+			end
+		ensure
+			result_attached: attached Result
+			result_is_valid: Result.is_valid
+			result_is_string: is_string (internal.dynamic_type (Result))
 		end
 
 ;note

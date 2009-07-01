@@ -315,7 +315,7 @@ feature -- Processing operations
 	process_double (a_double: XRPC_DOUBLE)
 			-- <Precursor>
 		do
-			append_value ({XRPC_CONSTANTS}.boolean_name, a_double.value.out, buffer)
+			append_value ({XRPC_CONSTANTS}.double_name, a_double.value.out, buffer)
 		ensure then
 			indents_unchanged: indents = old indents
 		end
@@ -323,7 +323,7 @@ feature -- Processing operations
 	process_integer (a_integer: XRPC_INTEGER)
 			-- <Precursor>
 		do
-			append_value ({XRPC_CONSTANTS}.boolean_name, a_integer.value.out, buffer)
+			append_value ({XRPC_CONSTANTS}.int_name, a_integer.value.out, buffer)
 		ensure then
 			indents_unchanged: indents = old indents
 		end
@@ -347,7 +347,7 @@ feature -- Processing operations
 	process_string (a_string: XRPC_STRING)
 			-- <Precursor>
 		do
-			append_value ({XRPC_CONSTANTS}.boolean_name, a_string.value, buffer)
+			append_value ({XRPC_CONSTANTS}.string_name, a_string.value, buffer)
 		ensure then
 			indents_unchanged: indents = old indents
 		end

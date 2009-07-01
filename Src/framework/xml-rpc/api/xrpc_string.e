@@ -28,7 +28,7 @@ feature -- Access
 	type: XRPC_TYPE
 			-- Actual type of the value.
 		once
-			Result := {XRPC_TYPE}.boolean
+			Result := {XRPC_TYPE}.string
 		end
 
 feature {NONE} -- Element change

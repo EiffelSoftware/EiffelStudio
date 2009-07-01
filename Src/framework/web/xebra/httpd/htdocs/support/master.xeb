@@ -4,38 +4,35 @@
 	<noscript>
 		<meta runat="server" http-equiv="refresh" id="refresh" />
 	</noscript>
-	<link rel="stylesheet" type="text/css" id="stylesheet"/>
+	<link rel="stylesheet" type="text/css" id="stylesheet" href="default.css"/>
 </head>
+<title>
+</title>
 <body>
 	<div id="shadow_top">
 		<div id="shadow_bottom">
 			<div id="wrap">
-				<div id="header"><img src="<%=images_path%>support/banner.jpg" alt="login"/></div>
+				<div id="header"><img src="images/support/banner.jpg" alt="login"/></div>
 				<div id="navbars">
 					<div id="general_links">
 						<a runat="server" href="http://www.eiffel.com">Eiffel</a> |
-						<a runat="server" id="home_link">Home</a>
-						<asp:Label runat="server" ID="support_links_label" />
+						<a runat="server" id="home_link">Home</a>						
 					</div>
 					<div id="nav_bar">
 						<div id="nav_bar_links">
-							<asp:Label runat="server" ID="login_links_label"/>
+							<page:declare_region id="login_links_label"/>
 						</div>
 					</div>
 					<div class="spacer"></div>
 					<div runat="server" id="responsibles_link"></div>
 				</div>
-				<form runat="server" id="main_form">
-
-					<asp:ContentPlaceHolder runat="server" ID="default_main_content" />
-
-				</form>
+				<page:declare_region id="default_main_content" />
 				<div id="footer">
 					<a href="http://www.eiffel.com/general/contact_details.html">Questions? Comments? Let us know!</a><br/>
 					&copy; 1993-2006 Eiffel Software inc. All rights reserved. --
 					<a href="http://www.eiffel.com/general/privacy_policy.html">Privacy Policy</a>
 					<div id="logo">
-						<img src="<%=images_path%>eiffel_for_asp_net2.png" alt="Eiffel for ASP.NET"/>
+						<img src="images/support/eiffel_for_asp_net2.png" alt="Eiffel for ASP.NET"/>
 					</div>
 				</div>
 			</div>
@@ -46,16 +43,6 @@
 			<div id="shadow_horizontal_right"></div>
 		</div>
 	</div>
-<!-- The Following is for Google Analytics -->
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-1289714-2");
-pageTracker._initData();
-pageTracker._trackPageview();
-</script>
 </body>
 </html>
 

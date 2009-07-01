@@ -59,6 +59,32 @@ feature {NONE} -- Access
 	base_string: STRING
 			-- The base string
 
+feature -- Internal Access
+
+	substring_internal (a_start_index, a_end_index: INTEGER): STRING
+			-- Extracts the string at the *absolute* coordinates. Use substring if you're not sure
+			-- what this means
+		require
+			a_start_index_valid: a_start_index > 0 and a_start_index <= a_end_index+1
+			a_end_index_valid: a_end_index < internal_count
+		do
+			Result := base_string.substring (a_start_index, a_end_index)
+		ensure
+			Result_attached: attached Result
+		end
+
+	current_internal_position: INTEGER
+			-- Returns the absolute position at which the string currently is
+		do
+			Result := start_pivot
+		end
+
+	internal_count: INTEGER
+			-- The internal count of the whole string
+		do
+			Result := base_string.count
+		end
+
 feature -- Debugging
 
 	debug_information: TUPLE [line: INTEGER; row: INTEGER]

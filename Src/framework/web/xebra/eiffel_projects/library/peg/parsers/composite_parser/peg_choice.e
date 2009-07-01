@@ -24,9 +24,9 @@ feature -- Implementation
 			parse_result : PEG_PARSER_RESULT
 			l_i: INTEGER
 		do
-			create parse_result.make (a_string, False)
 			from
-				l_i := 1
+				parse_result := children.first.parse (a_string)
+				l_i := 2
 			until
 				l_i > children.count or parse_result.success
 			loop
@@ -35,16 +35,14 @@ feature -- Implementation
 			end
 
 			if parse_result.success then
-				create Result.make (parse_result.left_to_parse, True)
-				Result.append_results (parse_result)
-				Result := build_result (Result)
+				Result := build_result (parse_result)
 			else
-				create Result.make (a_string, False)
-				Result := fix_result (Result)
+				Result := fix_result (parse_result)
 			end
 		end
 
 	add_choice alias "|" (a_other: PEG_ABSTRACT_PEG): PEG_CHOICE
+			-- <Precursor>
 		do
 			if fixated then
 				Result := Precursor (a_other)

@@ -43,7 +43,10 @@ feature -- Implementation
 		do
 			if not a_string.is_empty and then (a_string [1] >= lower and a_string [1] <= upper) then
 				create Result.make (a_string.substring (2, a_string.count), True)
-				Result.append_result (a_string [1])
+				if not ommit then
+					Result.append_result (a_string [1])
+				end
+				Result := build_result (Result)
 			else
 				create Result.make (a_string, False)
 				Result := fix_result (Result)

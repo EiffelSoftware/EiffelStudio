@@ -72,15 +72,18 @@ feature {NONE} -- Implementation
 		local
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
 			identifier, namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
-			digit, upper_case, lower_case, ws, value, any_char, plain_text, plain_text_without_behaviour,
+			digit, upper_case, lower_case, ws, value, any_char, any_char_o, plain_text, plain_text_without_behaviour,
 			open, close, close_fixed, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon, comment,
 			tab, newline, space, return, feed, eof: PEG_ABSTRACT_PEG
 		once
 				-- Basic parsers (single character parsers)
 			digit := create {PEG_RANGE}.make_with_range ('0', '9')
+			digit.ommit_result
 			upper_case := create {PEG_RANGE}.make_with_range ('A', 'Z')
+			upper_case.ommit_result
 			lower_case := create {PEG_RANGE}.make_with_range ('a', 'z')
+			lower_case.ommit_result
 			space := char (' ')
 			tab := char ('%T')
 			newline := char ('%N')
@@ -109,8 +112,8 @@ feature {NONE} -- Implementation
 			close_fixed.fixate
 
 				-- Directly create with constructor because the character should be put onto the result list
-			underscore := create {PEG_CHARACTER}.make_with_character ('_')
-			hyphen := create {PEG_CHARACTER}.make_with_character ('-')
+			underscore := char ('_')--create {PEG_CHARACTER}.make_with_character ('_')
+			hyphen := char ('-')--create {PEG_CHARACTER}.make_with_character ('-')
 
 				-- Whitespace: Eats all the whitespace until something else appears
 			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
@@ -119,21 +122,25 @@ feature {NONE} -- Implementation
 
 				-- A common identifier. Will put the identifier {STRING} on the stack
 			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
-			identifier.set_behaviour (agent concatenate_results)
+			identifier := identifier.consumer
 			identifier.fixate
 
 				-- XML comments
-			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
-			comment.set_behaviour (agent concatenate_results)
+--			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
+--			comment.set_behaviour (agent concatenate_results)
 
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
-				-- tag (with the parsed text as input) on the result list. Comments are handled separately.
-			plain_text := +((open + (identifier | slash)).negate + (comment | any_char))
+				-- tag (with the parsed text as input) on the result list.
+			create {PEG_ANY} any_char_o.make
+			any_char_o.ommit_result
+			plain_text := +((open + (identifier | slash)).negate + any_char_o)
+			plain_text := plain_text.consumer
 			plain_text.set_behaviour (agent build_content_tag)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
-			value_attribute := (-(quote.negate + any_char))
+			value_attribute := (-(quote.negate + any_char_o))
+			value_attribute := value_attribute.consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
 			dynamic_attribute := percent + equals + identifier + percent
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
@@ -175,11 +182,12 @@ feature {NONE} -- Implementation
 			xml := xml | (open + (xeb_tag | plain_html) + ws.optional + close_fixed) | plain_text
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
-			plain_text_without_behaviour := +((open + any_char).negate + any_char)
+			plain_text_without_behaviour := +((open + any_char_o).negate + any_char_o)
 
 				-- Doctype
-			doctype := rchar ('<') + rchar ('!') + plain_text_without_behaviour
-			doctype.set_behaviour (agent build_content_tag)
+			doctype := char ('<') + char ('!') + plain_text_without_behaviour
+			doctype := doctype.consumer
+			--doctype.set_behaviour (agent build_content_tag)
 
 				-- Xml with pre- and post-context
 			xeb_file := ws.optional + doctype.optional + xml + ws.optional
@@ -260,7 +268,7 @@ feature -- Parser Behaviours
 				loop
 					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 						if l_tag.has_attribute (l_attribute.id) then
-							Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
+							Result.put_error_message ("Invalid argument detected for " + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 						else
 							l_tag.put_attribute (l_attribute.id, l_attribute.value)
 						end
@@ -308,7 +316,7 @@ feature -- Parser Behaviours
 							loop
 								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
 									if l_tag.has_attribute (l_attribute.id) then
-										Result.put_error_message ("Double occurence of attribute detected: " + l_attribute.id + "=" + l_attribute.value.value)
+										Result.put_error_message ("Invalid argument detected for " + l_namespace + ":" + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 									else
 										l_tag.put_attribute (l_attribute.id, l_attribute.value)
 									end

@@ -35,6 +35,5 @@
 	</tag>
 	<tag id="validation_result" class="XTAG_F_VALIDATION_RESULT_TAG">
 		<attribute id="name" />
-		<attribute id="decorator" />
 	</tag>
 </taglib>

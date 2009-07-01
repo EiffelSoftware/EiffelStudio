@@ -25,7 +25,7 @@ feature {NONE} -- Access
 	tag_lib_parser: PEG_ABSTRACT_PEG
 			--
 		local
-			taglib, tag, tags, l_attribute, identifier,
+			l_taglib, l_tag, l_tags, l_attribute, identifier,
 			digit, upper_case, lower_case, ws, value, any_char, plain_text,
 			open, close, slash, hyphen, underscore, quote, exclamation,
 			open_curly, close_curly, sharp, percent, dot, equals, colon,
@@ -53,30 +53,35 @@ feature {NONE} -- Access
 			underscore := create {PEG_CHARACTER}.make_with_character ('_') -- don't ommit
 			hyphen := create {PEG_CHARACTER}.make_with_character ('-') -- don't ommit, so don't use char
 
-			ws := (-(newline | tab | space)) --whitespace
+			ws := create {PEG_WHITE_SPACE_CHARACTER}.make --whitespace
+			ws.ommit_result
+			ws := +ws
 
 			any_char := create {PEG_ANY}.make
-			any_char.ommit_result
+			--any_char.ommit_result
 
 			plain_text := + (open.negate + any_char)
 
 			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
+			identifier.fixate
 			identifier.set_behaviour (agent concatenate_results)
 
-			value := ws + quote + (-(quote.negate + any_char)) + quote + ws
+			value := quote + (-(quote.negate + any_char)) + quote
 			value.set_behaviour (agent concatenate_results)
 
 				-- Taglib specific
-			l_attribute := open + chars ("attribute") + ws + chars ("id") + ws + equals + value + slash + close
+			l_attribute := open + chars ("attribute") + ws + chars ("id") + ws.optional + equals + ws.optional + value + ws.optional + slash + close
+			l_attribute.fixate
 			l_attribute.set_behaviour (agent build_attribute)
-			tag := open + chars ("tag") + ws + chars ("id") + ws + equals + value + chars("class") +
-					ws + equals + value + close + (-(l_attribute | plain_text)) + open + slash + chars ("tag") + close
-			tag.set_behaviour (agent build_tag)
-			tags := (tag | plain_text)
-			taglib := open + chars("taglib") + ws + chars("id") + ws + equals + value + close
-							+ (-tags) + open + slash + ws + chars("taglib") + ws + close
-			taglib.set_behaviour (agent build_taglib)
-			Result := taglib
+			l_tag := open + chars ("tag") + ws + chars ("id") + ws.optional + equals + ws.optional + value + ws.optional + chars("class") +
+					ws.optional + equals + ws.optional + value + ws.optional + close + (-(l_attribute | plain_text)) + open + slash + ws.optional + chars ("tag") + ws.optional + close
+			l_tag.fixate
+			l_tag.set_behaviour (agent build_tag)
+			l_tags := (l_tag | plain_text)
+			l_taglib := ws.optional + open + chars("taglib") + ws + chars("id") + ws.optional + equals + ws.optional + value + ws.optional + close
+							+ (-l_tags) + open + slash + ws.optional + chars("taglib") + ws.optional + close + ws.optional
+			l_taglib.set_behaviour (agent build_taglib)
+			Result := l_taglib
 		end
 
 feature -- Access

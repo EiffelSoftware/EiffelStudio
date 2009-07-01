@@ -69,18 +69,36 @@ feature -- Status report
 			--	- The webapp needs cleaning
 		local
 			l_f_util: XU_FILE_UTILITIES
-
+			l_melted_file_is_old: BOOLEAN
+			l_executable_does_not_exist: BOOLEAN
 		do
 			create l_f_util.make
-			Result := l_f_util.file_is_newer (melted_file_path,
+			l_melted_file_is_old := l_f_util.file_is_newer (melted_file_path,
 												app_dir,
 												"\w+\.(e|ecf)")
-					or not l_f_util.is_executable_file (webapp_exe)
-					or webapp.needs_cleaning
+			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe)
+
+
+
+			Result := l_melted_file_is_old or l_executable_does_not_exist or webapp.needs_cleaning
+
+
 			if Result then
-				o.dprint ("Compiling is necessary", 5)
+				o.dprint ("Compiling is necessary", 3)
+				if l_melted_file_is_old then
+					o.dprint ("Compiling is necessary because: " + melted_file_path + " is older than .e files or .ecf file.", 5)
+				end
+
+				if l_executable_does_not_exist then
+					o.dprint ("Compiling is necessary because: " + webapp_exe + " does not exist or is not executable", 5)
+				end
+
+					if webapp.needs_cleaning then
+					o.dprint ("Compiling is necessary because: webapp needs cleaning.", 5)
+				end
+
 			else
-				o.dprint ("Compiling is not necessary", 5)
+				o.dprint ("Compiling is not necessary", 3)
 			end
 		end
 
@@ -117,7 +135,7 @@ feature {NONE} -- Implementation
 													compiler_args,
 													app_dir,
 													agent compile_process_exited,
-													agent asd ,
+													agent output_handler.handle_output ,
 													agent output_handler.handle_output)
 					set_running (True)
 				end
@@ -125,11 +143,6 @@ feature {NONE} -- Implementation
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
-	asd (a: STRING)
-
-	do
-
-	end
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)

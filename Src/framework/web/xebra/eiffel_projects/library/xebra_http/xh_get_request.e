@@ -23,7 +23,14 @@ feature -- Access
 
 	method: CHARACTER = 'G'
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	read_arguments (a_string: STRING)
+			-- <Precursor>
+		do
+			arguments := parse_table (a_string, Key_arg, Key_p_key, Key_p_value, Key_t_end)
+	--	content_type := ""
+		end
 
 	read_uri (a_the_request: STRING): STRING
 			-- <Precursor>

@@ -203,7 +203,6 @@ static int xebra_handler (request_rec* r)
 		DEBUG2 ("Reading POST parameters...");
 		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
 
-
 		rv = read_from_POST (r, &post_buf);
 
 		if (rv != OK)
@@ -214,13 +213,13 @@ static int xebra_handler (request_rec* r)
 			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
 			{
 				/* If the post arguments are formattet as a table add the & to the beginning */
-				message = apr_pstrcat (r->pool, message, ARG, CONTENT_TYPE_START, ctype, CONTENT_TYPE_END, "&", post_buf,
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
 							TABLEEND, NULL);
 			}
 			else
 			{
 				/* Else add the plain content */
-				message = apr_pstrcat (r->pool, message, ARG, CONTENT_TYPE_START, ctype, CONTENT_TYPE_END, post_buf,
+				message = apr_pstrcat (r->pool, message, ARG, post_buf,
 							TABLEEND, NULL);
 			}
 		}

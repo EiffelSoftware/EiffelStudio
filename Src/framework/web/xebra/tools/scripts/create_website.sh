@@ -27,14 +27,6 @@ else
  	exit;
 fi;
 
-if [ -x "$APACHE2" ]; then
-	:
-else
- 	echo "APACHE2 is not defined. Please define before running script.";
- 	exit;
-fi;
-
-
 
 if [ ! $# = 3 ]; then
 	echo "Wrong number of arguments. Usage: $0 <name> <port> <install_path>";
@@ -42,12 +34,11 @@ if [ ! $# = 3 ]; then
 fi;
 
 cd $3;
-
 # Create folders
 echo "Creating folderss..."
 mkdir $1;
 cd $1;
-mkdir $APACHE2/htdocs/$1
+
 
 
 # Create ecf project file

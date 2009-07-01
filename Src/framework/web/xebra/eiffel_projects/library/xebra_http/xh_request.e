@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 			the_request := ""
 			target_uri := ""
 			request_message := ""
+		--	content_type := ""
 			create {HASH_TABLE [STRING, STRING]} arguments.make (1)
 			create {HASH_TABLE [XH_COOKIE, STRING]} cookies.make (1)
 			create {HASH_TABLE [STRING, STRING]} environment_vars.make (1)
@@ -28,7 +29,7 @@ feature {NONE} -- Initialization
 			cookies_attached: cookies/= Void
 			environment_vars_attached: environment_vars /= Void
 			arguments_attached: arguments /= Void
-			arguments_attached: arguments /= Void
+	--		content_type_attached: content_type /= Void
 		end
 
 	make_goto_request (a_uri: STRING; a_previous_request: XH_REQUEST)
@@ -39,6 +40,7 @@ feature {NONE} -- Initialization
 		local
 			l_i: INTEGER
 		do
+			make_empty
 			l_i := a_previous_request.request_message.substring_index (Key_headers_in, 1)
 			make_from_message ("GET " + escape_bad_chars (a_uri) + " HTTP/1.1"
 					 + a_previous_request.request_message.substring (l_i, a_previous_request.request_message.count))
@@ -50,7 +52,7 @@ feature {NONE} -- Initialization
 			cookies_attached: cookies/= Void
 			environment_vars_attached: environment_vars /= Void
 			arguments_attached: arguments /= Void
-			arguments_attached: arguments /= Void
+	--		content_type_attached: content_type /= Void
 		end
 
 	make_from_message (a_message: STRING)
@@ -69,6 +71,7 @@ feature {NONE} -- Initialization
 			l_i: INTEGER
 			l_s: STRING
 		do
+			make_empty
 			request_message := a_message.twin
 			l_s := a_message.twin
 
@@ -92,17 +95,11 @@ feature {NONE} -- Initialization
 			environment_vars := parse_table (l_s, Key_subp_env, Key_t_key, Key_t_value, Key_t_end)
 			l_s.remove_head (l_s.substring_index (Key_t_end, 1) + key_t_end.count-1)
 
-				-- Read POST/GET params				
-			if l_s.starts_with (Key_arg + Key_textxml) then
-					-- Handle special case for POST 'text/xml' encoding
-				l_s.remove_head (Key_arg.count + Key_textxml.count)
-				l_s.remove_tail (key_t_end.count)
-				create arguments.make (1)
-				arguments.force (l_s.twin, "text/xml")
-			else
-					-- Handle regular case (form encoded)
-				arguments := parse_table (l_s, Key_arg, Key_p_key, Key_p_value, Key_t_end)
-			end
+				-- Read arguments
+--			content_type := ""
+			create arguments.make (1)
+			read_arguments (l_s)
+
 				-- Read cookies
 			cookies := read_cookies (headers_in)
 		ensure
@@ -114,6 +111,7 @@ feature {NONE} -- Initialization
 			environment_vars_attached: environment_vars /= Void
 			arguments_attached: arguments /= Void
 			arguments_attached: arguments /= Void
+	--		content_type_attached: content_type /= Void
 		end
 
 feature -- Constants
@@ -127,7 +125,12 @@ feature -- Constants
 	Key_p_value: STRING = "="
 	Key_t_end: STRING = "#E#"
 	Key_arg: STRING = "#A#"
-	Key_textxml: STRING = "#TEXT/XML#"
+--	Key_content_type_start: STRING = "#CT#"
+--	Key_content_type_end: STRING = "#CTE#"
+
+	Key_xmlrpc_uri: STRING = "xmlrpc.xeb"
+
+	Content_type_form_urlencoded: STRING = "application/x-www-form-urlencoded"
 
 	Headers_in_set_cookies: STRING = "Set-Cookie"
 	Headers_in_cookie: STRING = "Cookie"
@@ -137,6 +140,9 @@ feature -- Constants
 feature {NONE} -- Access
 
 feature -- Access
+
+--	content_type: STRING
+			-- The content type of the post data
 
 	the_request: STRING
 			-- The actual request
@@ -171,8 +177,21 @@ feature -- Access
 	is_xmlrpc: BOOLEAN
 			-- Checks if it is an xmlrpc request
 		do
-			Result := target_uri.ends_with ("xmlrpc.xeb")
+			Result := target_uri.ends_with (Key_xmlrpc_uri)
 		end
+
+feature {NONE} -- Internal
+
+	read_arguments (a_string: STRING)
+			-- Reads arguments from string
+		require
+			a_string_attached: a_string /= Void
+		deferred
+		ensure
+			arguments_attached: arguments /= Void
+	--		content_type_attached: content_type /= Void
+		end
+
 
 feature -- Status setting
 
@@ -340,4 +359,5 @@ invariant
 			environment_vars_attached: environment_vars /= Void
 			arguments_attached: arguments /= Void
 			arguments_attached: arguments /= Void
+	--		content_type_attached: content_type /= Void
 end

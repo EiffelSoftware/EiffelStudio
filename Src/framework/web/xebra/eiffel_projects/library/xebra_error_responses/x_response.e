@@ -17,6 +17,7 @@ feature -- Initialization
 			-- a_arg can be empty
 		do
 			arg := a_arg
+			has_refresh := False
 		ensure
 			arg_set: arg = a_arg
 		end
@@ -35,6 +36,9 @@ feature -- Access
 			-- Who produced this error message
 		deferred
 		end
+
+	has_refresh: BOOLEAN
+
 
 feature -- Status report
 
@@ -56,7 +60,16 @@ feature -- Status report
 		end
 
 
-feature -- Constants
+feature -- Html code generation
+
+	head: STRING
+			-- Use this to add items to the head
+		do
+			Result := ""
+			if has_refresh then
+				Result.append ("<meta http-equiv=%"refresh%" content=%"5%">")
+			end
+		end
 
 	title: STRING
 			-- The type (title) of the Response
@@ -75,6 +88,7 @@ feature -- Constants
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 			<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
+			]" + head +	"[
 			<title>
 			]" + producer +	"[
 			- 

@@ -25,6 +25,7 @@ feature -- Access
 			if arg.is_empty then
 				arg := " "
 			end
+			has_refresh := True
 			Result := "Application '" + arg + "' is starting..."
 		end
 end

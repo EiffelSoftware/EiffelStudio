@@ -34,10 +34,10 @@ sudo apache2ctl stop
 
 # Checkout xebra
 cd $XEBRA_DEV
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects -r 79545
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects -r 79545
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools -r 79545
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd -r 79545
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects -r 79550
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects -r 79550
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools -r 79550
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd -r 79550
 
 # Install apache
 # mkdir httpd

@@ -101,45 +101,91 @@ feature -- Status setting
 		end
 
 feature -- Measurement
-
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
+		local
+			l_info: WEL_SCROLL_BAR_INFO
+			l_result: INTEGER
 		do
+			if attached parent_imp as l_parent then
+				Result := 0
+
+				create l_info.make
+				l_info.set_mask ({WEL_SCROLL_BAR_CONSTANTS}.sif_pos)
+				l_result := {WEL_API}.get_scroll_info (l_parent.wel_item, {WEL_SB_CONSTANTS}.Sb_horz, l_info.item)
+				Result := Result - l_info.position
+			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
+		local
+			l_info: WEL_SCROLL_BAR_INFO
+			l_result: INTEGER
 		do
+			if attached parent_imp as l_parent then
+				if attached l_parent.interface as l_interface then
+					Result := (index - 1) * l_interface.row_height
+
+					create l_info.make
+					l_info.set_mask ({WEL_SCROLL_BAR_CONSTANTS}.sif_pos)
+					l_result := {WEL_API}.get_scroll_info (l_parent.wel_item, {WEL_SB_CONSTANTS}.Sb_vert, l_info.item)
+
+					Result := Result - (l_info.position * l_interface.row_height)
+				end
+			end
 		end
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
+			if attached parent_imp as l_parent then
+				Result := l_parent.screen_x + x_position
+			end
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
+			if attached parent_imp as l_parent then
+				Result := l_parent.screen_y + y_position
+			end
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
+			if attached parent_imp as l_parent then
+				Result := l_parent.width
+			end
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
+			if attached parent_imp as l_parent then
+				if attached l_parent.interface as l_interface then
+					Result := l_interface.row_height
+				end
+			end
 		end
 
 	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
+			if attached parent_imp as l_parent then
+				Result := l_parent.minimal_width
+			end
 		end
 
 	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
+			if attached parent_imp as l_parent then
+				if attached l_parent.interface as l_interface then
+					Result := l_interface.row_height
+				end
+			end
 		end
 
 feature {EV_ANY_I} -- Access

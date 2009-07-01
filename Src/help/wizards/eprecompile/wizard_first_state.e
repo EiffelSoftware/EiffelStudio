@@ -41,6 +41,10 @@ feature -- Basic Operation
 		do
 			create to_precompile_libraries
 			create precompilable_libraries
+
+			to_precompile_libraries.pointer_motion_actions.extend (agent on_precompilable_libraries_pointer_motion (?, ?, ?, ?, ?, ?, ?, to_precompile_libraries))
+			precompilable_libraries.pointer_motion_actions.extend (agent on_precompilable_libraries_pointer_motion (?, ?, ?, ?, ?, ?, ?, precompilable_libraries))
+
 			to_precompile_libraries.set_column_titles (<<Interface_names.l_Library_name, Interface_names.l_Done>>)
 			to_precompile_libraries.set_column_widths (<<96, 40>>)
 			precompilable_libraries.set_column_titles (<<Interface_names.l_Library_name, Interface_names.l_Done>>)
@@ -493,6 +497,45 @@ feature {NONE} -- Implementation
 			title.set_text (interface_names.t_choose_libraries)
 			subtitle.set_text (interface_names.t_choose_libraries_subtitle)
 			message.remove_text
+		end
+
+	on_precompilable_libraries_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; a_list: like precompilable_libraries)
+			-- Handle pointer motion of `precompilable_libraries'
+		require
+			not_void: a_list /= Void
+		local
+			l_item: EV_MULTI_COLUMN_LIST_ROW
+			l_found: BOOLEAN
+			l_head: EV_HEADER
+			l_header_height: INTEGER
+		do
+			from
+				a_list.start
+				create l_head
+				l_header_height := l_head.height -- FIXME: Cannot query header from {EV_MULTI_COLUMN_LIST} directly
+			until
+				a_list.after or l_found
+			loop
+				l_item := a_list.item_for_iteration
+				if l_item.x_position <= a_x and l_item.y_position <= (a_y - l_header_height) and
+					 (l_item.x_position + l_item.width) > a_x and
+					 (l_item.y_position + l_item.height) > (a_y - l_header_height) then
+					if attached {TUPLE [STRING, BOOLEAN]} l_item.data as l_info_lib then
+						if attached {FILE_NAME} l_info_lib.at (1) as l_path_name then
+							a_list.set_tooltip (l_path_name)
+						else
+							check False end -- Implied by string set by `fill_ev_list_items' should not void
+						end
+
+					else
+						check False end -- Implied by data set by `fill_ev_list_items' should not void
+					end
+
+					l_found := True
+				end
+
+				a_list.forth
+			end
 		end
 
 	error_no_ace: BOOLEAN

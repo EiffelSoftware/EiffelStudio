@@ -13,12 +13,12 @@
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
@@ -74,6 +74,12 @@
 			</option>
 			<file_rule>
 				<exclude>/registry_implementation$</exclude>
+			</file_rule>
+			<file_rule>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+				<exclude>/registry$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

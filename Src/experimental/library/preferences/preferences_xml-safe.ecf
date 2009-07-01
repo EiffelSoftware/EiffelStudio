@@ -71,6 +71,12 @@
 			<file_rule>
 				<exclude>/registry_implementation$</exclude>
 			</file_rule>
+			<file_rule>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+				<exclude>/registry$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 </system>

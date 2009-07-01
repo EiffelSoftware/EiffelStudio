@@ -43,6 +43,13 @@ feature -- Tests
 			end
 		end
 
+	test_difference_on_platforms
+			-- Test indicates that formatting results are different on different platforms.
+		do
+			assert ("Formatting resuls are different on platforms.",
+					has_same_content_as_path (result_file_name ("zh_CN", True), result_file_name ("zh_CN", False)))
+		end
+
 feature {NONE} -- Result generation
 
 	generate_locale_results
@@ -162,12 +169,12 @@ feature {NONE} -- Implementation
 				--save_cache_to_file (generated_result_file_name (l_locale.info.id.name))
 				if not l_locale.info.id.name.is_empty then
 					assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
-						has_same_content_as_string (result_file_name (l_locale.info.id.name), utf32_to_utf8 (cached_output)))
+						has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), utf32_to_utf8 (cached_output)))
 				end
 			end
 		end
 
-	result_file_name (a_locale_name: STRING): STRING
+	result_file_name (a_locale_name: STRING; a_windows: BOOLEAN): STRING
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
 			Result := environment.get ("ISE_LIBRARY").twin
@@ -184,7 +191,7 @@ feature {NONE} -- Implementation
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("results")
 			Result.append_character (Operating_environment.directory_separator)
-			if {PLATFORM}.is_windows then
+			if a_windows then
 				Result.append ("windows")
 			else
 				Result.append ("unix")

@@ -12,6 +12,9 @@ class
 
 inherit
 	X_INFO_RESPONSE
+		redefine
+			has_refresh
+		end
 	XER_SERVER
 
 create
@@ -25,9 +28,13 @@ feature -- Access
 			if arg.is_empty then
 				arg := " "
 			end
-			has_refresh := True
 			Result := "Application '" + arg + "' is compiling..."
 		end
 
+		has_refresh: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
 end
 

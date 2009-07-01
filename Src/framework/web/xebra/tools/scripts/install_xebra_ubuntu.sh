@@ -34,10 +34,10 @@ sudo apache2ctl stop
 
 # Checkout xebra
 cd $XEBRA_DEV
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects -r 79545
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects -r 79545
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools -r 79545
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd -r 79545
 
 # Install apache
 # mkdir httpd
@@ -57,6 +57,7 @@ $XEBRA_DEV/httpd/bin/apxs -c -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include mod
 $XEBRA_DEV/httpd/bin/apxs -i mod_xebra.la
 echo "LoadModule xebra_module modules/mod_xebra.so" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "AddHandler mod_xebra .xrpc" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_port \"55000\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 

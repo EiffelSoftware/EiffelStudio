@@ -1201,7 +1201,7 @@ feature -- To do messages
 
 	metric_name_empty_to_do: STRING_32
 		do
-			Result := metric_name_info.as_string_32 + locale.translation ("Make sure metric name is not empty and contains valid charactors.")
+			Result := metric_name_info.as_string_32 + locale.translation ("Make sure metric name is not empty and contains valid characters.")
 		ensure
 			result_attached: Result /= Void
 		end

@@ -25,9 +25,10 @@ feature -- Implementation
 			l_i: INTEGER
 		do
 			create Result.make (a_string, True)
-			create l_parse_result.make (a_string, True)
 			from
-				l_i := 1
+				Result := children.first.parse (a_string)
+				l_parse_result := Result
+				l_i := 2
 			until
 				l_i > children.count or not l_parse_result.success
 			loop

@@ -137,44 +137,62 @@ feature {PEG_ABSTRACT_PEG} -- Implementation
 
 feature -- Convenience
 
-	add alias "+" (other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+	add alias "+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+		require
+			a_other_attached: attached a_other
 		do
 			create Result.make
-			Result := (Result + Current) + other
+			Result := (Result + Current) + a_other
+		ensure
+			Result_attached: attached Result
 		end
 
-	add_choice alias "|" (other: PEG_ABSTRACT_PEG): PEG_CHOICE
+	add_choice alias "|" (a_other: PEG_ABSTRACT_PEG): PEG_CHOICE
+		require
+			a_other_attached: attached a_other
 		do
 			create Result.make
-			Result := (Result | Current) | other
+			Result := (Result | Current) | a_other
+		ensure
+			Result_attached: attached Result
 		end
 
 	add_zero_or_more alias "-": PEG_ABSTRACT_PEG
 		do
 			create {PEG_ZERO_OR_MORE} Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 	add_one_or_more alias "+": PEG_ABSTRACT_PEG
 		do
 			create {PEG_ONE_OR_MORE} Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 	negate: PEG_NEGATE
 			-- Returns Current negated
 		do
 			create Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 	enforce: PEG_ENFORCE
 			-- Returns Current enforced
 		do
 			create Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 	optional: PEG_OPTIONAL
 			-- Returns Current as optional parser
 		do
 			create Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 	fixate
@@ -184,6 +202,14 @@ feature -- Convenience
 			fixated := True
 		ensure
 			fixated: fixated
+		end
+
+	consumer: PEG_CONSUMER
+			-- Transforms Current a consumer parser
+		do
+			create Result.make (Current)
+		ensure
+			Result_attached: attached Result
 		end
 
 end

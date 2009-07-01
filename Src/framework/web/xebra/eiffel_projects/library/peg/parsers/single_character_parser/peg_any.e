@@ -30,10 +30,10 @@ feature -- Implementation
 				Result := fix_result (Result)
 			else
 				create Result.make (a_string.substring (2, a_string.count), True)
-				Result.append_result (a_string [1])
 				if not ommit then
-					Result := build_result (Result)
+					Result.append_result (a_string [1])
 				end
+				Result := build_result (Result)
 			end
 		end
 

@@ -103,8 +103,8 @@ feature -- Access
 			-- The path to the servlet_gen
 		do
 			Result := app_dir.twin
-			Result.extend (".generated")
-			Result.extend ("servlet_gen")
+			Result.extend ({XC_CONSTANTS}.generated_folder_name)
+			Result.extend ({XC_CONSTANTS}.servlet_gen_name)
 		ensure
 			Result_attached: Result /= void
 		end
@@ -114,12 +114,12 @@ feature -- Access
 		do
 			Result := servlet_gen_path.twin
 			Result.extend ("EIFGENs")
-			Result.extend ("servlet_gen")
+			Result.extend ({XC_CONSTANTS}.servlet_gen_name)
 			Result.extend ("W_code")
 			if {PLATFORM}.is_windows then
-				Result.set_file_name ("servlet_gen.exe")
+				Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name + " .exe")
 			else
-					Result.set_file_name ("servlet_gen")
+					Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name)
 			end
 
 		ensure
@@ -130,10 +130,21 @@ feature -- Access
 			-- The path to the servlet_gen executable
 		do
 			Result := servlet_gen_path.twin
-			Result.set_file_name ("servlet_gen.ecf")
+			Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name + ".ecf")
 		ensure
 			Result_attached: Result /= void
 		end
+
+	servlet_gen_executed_file: FILE_NAME
+				-- The path to the servlet_gen executed_at_time-file
+		do
+			Result := app_dir.twin
+			Result.extend ({XC_CONSTANTS}.Generated_folder_name)
+			Result.set_file_name ({XC_CONSTANTS}.Servlet_gen_executed_file)
+		ensure
+			Result_attached: Result /= void
+		end
+
 
 
 feature -- Status report
@@ -148,17 +159,19 @@ feature -- Status report
 			--		- The servlet_gen ecf does not exist
 			--		- The webapp has set to need cleaning
 			--		- If execute_file from servlet_gen is older than ... (not yet implemented)
-			--		- If forced
+			--		- If forced			
+			--		- servlet_gen has not been executed (recently enough)
 		local
 			l_application_file: FILE_NAME
 			l_f_utils: XU_FILE_UTILITIES
 			l_g_application_is_old: BOOLEAN
 			l_servlet_gen_exe_not_exist: BOOLEAN
 			l_servet_gen_ecf_not_exist: BOOLEAN
+			l_servlet_gen_not_executed: BOOLEAN
 		do
 			create l_f_utils.make
 			l_application_file := app_dir.twin
-			l_application_file.extend (".generated")
+			l_application_file.extend ({XC_CONSTANTS}.Generated_folder_name)
 			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
 
 			l_g_application_is_old := l_f_utils.file_is_newer (l_application_file,
@@ -169,11 +182,16 @@ feature -- Status report
 
 			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf)
 
+			l_servlet_gen_not_executed := l_f_utils.file_is_newer (servlet_gen_executed_file,
+									app_dir,
+									"\w+\.xeb")
+
 			Result := l_g_application_is_old or
 						l_servlet_gen_exe_not_exist or
 						l_servet_gen_ecf_not_exist or
 					 	webapp.needs_cleaning or
-					 	force
+					 	force or
+					 	l_servlet_gen_not_executed
 
 			if Result then
 				o.dprint ("Translating is necessary", 3)
@@ -195,6 +213,10 @@ feature -- Status report
 
 				if force then
 					o.dprint ("Translating is necessary because: force.", 5)
+				end
+
+				if l_servlet_gen_not_executed then
+					o.dprint ("Translating is necessary because: Servlet_gen has not been executed (recently enough).", 5)
 				end
 			else
 				o.dprint ("Translating is not necessary", 3)

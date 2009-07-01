@@ -16,7 +16,12 @@ inherit
 	XRPC_TYPE_IDS
 		export
 			{NONE} all
-			{ANY} is_boolean, is_double, is_integer, is_string
+			{ANY} is_array_conform_from,
+			      is_array_conform_to,
+			      is_boolean,
+			      is_double,
+			      is_integer,
+			      is_string
 		end
 
 feature -- Status report
@@ -33,7 +38,8 @@ feature -- Status report
 				is_double (a_type) or else
 				is_integer (a_type) or else
 				is_string (a_type) or else
-				is_array (a_type)
+				is_array_conform_from (a_type) or else
+				is_array_conform_to (a_type)
 		end
 
 	is_marshallable_result_type (a_type: INTEGER): BOOLEAN
@@ -100,10 +106,11 @@ feature -- Status report
 			l_type_id: INTEGER
 		do
 			l_type_id := internal.dynamic_type (a_object)
-			Result := is_array (l_type_id) or
-				is_boolean (l_type_id) or
-				is_double (l_type_id) or
-				is_integer (l_type_id) or
+			Result := is_array_conform_from (l_type_id) or else
+				--is_array_conform_to (l_type_id) or else
+				is_boolean (l_type_id) or else
+				is_double (l_type_id) or else
+				is_integer (l_type_id) or else
 				is_string (l_type_id)
 		end
 
@@ -111,46 +118,151 @@ feature -- Basic operations: To Eiffel
 
 	marshal_to (a_type: INTEGER; a_value: XRPC_VALUE): detachable ANY
 			-- Marshals an XML-RPC value object into an object of the supplied type.
+			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
+			--
+			-- `a_type': The type to marshal to.
+			-- `a_value': A XML-RPC value object.
+			-- `Result': A marshalled value or Void if nothing could be marshalled.
 		require
+			a_type_is_marshallable_type: is_marshallable_type (a_type)
 			a_value_attached: attached a_value
 			a_value_is_valid: a_value.is_valid
+		local
+			l_exception: detachable XRPC_MARSHAL_TYPE_EXCEPTION
 		do
 			inspect a_value.type.item
+			when {XRPC_TYPE}.array then
+				if is_array_conform_to (a_type) and then attached {XRPC_ARRAY} a_value as l_value then
+					Result := marshal_to_array (a_type, l_value)
+				else
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_array_type_id, a_type)
+				end
 			when {XRPC_TYPE}.boolean then
 				if is_boolean (a_type) and then attached {XRPC_BOOLEAN} a_value as l_value then
 					Result := marshal_to_boolean (a_type, l_value)
 				else
-					-- Error: Incompatible type.
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_boolean_type_id, a_type)
 				end
 			when {XRPC_TYPE}.double then
 				if is_double (a_type) and then attached {XRPC_DOUBLE} a_value as l_value then
 					Result := marshal_to_double (a_type, l_value)
 				else
-					-- Error: Incompatible type.
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_double_type_id, a_type)
 				end
 			when {XRPC_TYPE}.integer then
 				if is_integer (a_type) and then attached {XRPC_INTEGER} a_value as l_value then
 					Result := marshal_to_integer (a_type, l_value)
 				else
-					-- Error: Incompatible type.
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_integer_type_id, a_type)
 				end
 			when {XRPC_TYPE}.string then
 				if is_string (a_type) and then attached {XRPC_STRING} a_value as l_value then
 					Result := marshal_to_string (a_type, l_value)
 				else
-					-- Error: Incompatible type.
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_string_type_id, a_type)
 				end
 			else
 				if internal.dynamic_type (a_value) = a_type then
 					Result := a_value
 				else
-					-- Error: Incompatbile type.
+						-- Error: Incompatbile type.
+					create l_exception.make (internal.dynamic_type (a_value), a_type)
 				end
 			end
+
+			if attached l_exception then
+					-- There was a problem, raise an exception.
+				l_exception.raise
+			end
+		end
+
+	marshal_to_array (a_type: INTEGER; a_value: XRPC_ARRAY): ANY
+			-- Marshals an XML-RPC value to an array object.
+			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
+			--
+			-- `a_type': The array type to marshal to.
+			-- `a_value': A XML-RPC array object.
+			-- `Result': A marshalled array or Void if nothing could be marshalled.
+		require
+			a_type_is_array: is_array_conform_to (a_type)
+			a_value_attached: attached a_value
+			a_value_is_valid: a_value.is_valid
+		local
+			l_internal: like internal
+			l_generic_type_id: INTEGER
+			l_value: XRPC_VALUE
+			l_value_type_id: INTEGER
+			l_array: detachable ARRAY [detachable ANY]
+			l_default: detachable ANY
+			i, i_count: NATURAL
+			l_exception: XRPC_MARSHAL_TYPE_EXCEPTION
+		do
+			l_internal := internal
+			if l_internal.type_conforms_to (xrpc_array_type_id, a_type) then
+					-- No marshalling needed.
+				Result := a_value
+			elseif l_internal.generic_count_of_type (a_type) = 1 then
+					-- Determine the array generic parameter
+				l_generic_type_id := l_internal.generic_dynamic_type_of_type (a_type, 1)
+				if is_marshallable_type (l_generic_type_id) then
+					Result := l_internal.new_instance_of (a_type)
+					if attached {ARRAY[ANY]} Result as l_result  then
+						l_array := l_result
+					end
+					check l_array_attached: attached l_array end
+					l_default := l_internal.new_instance_of (l_generic_type_id)
+
+					i := 1
+					i_count := a_value.count
+					l_array.make_filled (l_default, i.as_integer_32, i_count.as_integer_32)
+					from until i > i_count loop
+							-- Marshalling will raise an exception if the types to not conform.
+						l_value_type_id := l_generic_type_id
+						if l_value_type_id = any_type_id then
+								-- ARRAY [ANY] was used, but we need to marshal to a known type.
+								-- Use the type of the XML-RPC value object to determine the best type.
+							l_value := a_value[i]
+							inspect l_value.type.item
+							when {XRPC_TYPE}.array then
+								l_value_type_id := array_any_type_id
+							when {XRPC_TYPE}.boolean then
+								l_value_type_id := boolean_type_id
+							when {XRPC_TYPE}.double then
+								l_value_type_id := real_64_type_id
+							when {XRPC_TYPE}.integer then
+								l_value_type_id := integer_32_type_id
+							when {XRPC_TYPE}.string then
+								l_value_type_id := string_8_type_id
+							else
+								check unsupported_type: False end
+							end
+						end
+
+						l_array.put (marshal_to (l_value_type_id, l_value), i.as_integer_32)
+						i := i + 1
+					end
+				else
+						-- Error: Incompatbile type.
+					create l_exception.make (xrpc_array_type_id, a_type)
+					l_exception.raise
+				end
+			end
+		ensure
+			result_attached: attached Result
 		end
 
 	marshal_to_boolean (a_type: INTEGER; a_value: XRPC_BOOLEAN): ANY
 			-- Marshals an XML-RPC value to an boolean object.
+			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
+			--
+			-- `a_type': The boolean type to marshal to.
+			-- `a_value': A XML-RPC boolean object.
+			-- `Result': A marshalled boolean.
 		require
 			a_type_is_boolean: is_boolean (a_type)
 			a_value_attached: attached a_value
@@ -168,6 +280,11 @@ feature -- Basic operations: To Eiffel
 
 	marshal_to_double (a_type: INTEGER; a_value: XRPC_DOUBLE): ANY
 			-- Marshals an XML-RPC value to an double object.
+			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
+			--
+			-- `a_type': The double type to marshal to.
+			-- `a_value': A XML-RPC double object.
+			-- `Result': A marshalled double.
 		require
 			a_type_is_double: is_double (a_type)
 			a_value_attached: attached a_value
@@ -192,12 +309,18 @@ feature -- Basic operations: To Eiffel
 
 	marshal_to_integer (a_type: INTEGER; a_value: XRPC_INTEGER): ANY
 			-- Marshals an XML-RPC value to an integer object.
+			-- If any incompatibilities are found and exception of {XRPC_MARSHAL_EXCEPTION} will be rasied.
+			--
+			-- `a_type': The integer type to marshal to.
+			-- `a_value': A XML-RPC integer object.
+			-- `Result': A marshalled integer.
 		require
 			a_type_is_integer: is_integer (a_type)
 			a_value_attached: attached a_value
 			a_value_is_valid: a_value.is_valid
 		local
 			l_integer: INTEGER_32
+			l_exception: detachable XRPC_MARSHAL_EXCEPTION
 		do
 			if a_type = xrpc_integer_type_id then
 					-- No marshalling needed.
@@ -211,6 +334,7 @@ feature -- Basic operations: To Eiffel
 						Result := l_integer.as_integer_16
 					else
 							-- Overflow.
+						create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({INTEGER_16}.max_value.out)
 						Result := {INTEGER_16}0
 					end
 				elseif a_type = integer_8_type_id then
@@ -218,6 +342,7 @@ feature -- Basic operations: To Eiffel
 						Result := l_integer.as_integer_8
 					else
 							-- Overflow.
+						create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({INTEGER_8}.max_value.out)
 						Result := {INTEGER_8}0
 					end
 				else
@@ -229,6 +354,7 @@ feature -- Basic operations: To Eiffel
 								Result := l_integer.as_natural_16
 							else
 									-- Overflow.
+								create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({NATURAL_16}.max_value.out)
 								Result := {NATURAL_16}0
 							end
 						elseif a_type = natural_8_type_id then
@@ -236,15 +362,24 @@ feature -- Basic operations: To Eiffel
 								Result := l_integer.as_natural_8
 							else
 									-- Overflow.
+								create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({NATURAL_8}.max_value.out)
 								Result := {NATURAL_8}0
 							end
 						else
+								-- Overflow
+							create {XRPC_OVERFLOW_EXCEPTION} l_exception.make ({NATURAL_32}.max_value.out)
 							Result := {NATURAL_8}0
 						end
 					else
 							-- Underflow.
+						create {XRPC_UNDERFLOW_EXCEPTION} l_exception.make ({NATURAL_8}.min_value.out)
 						Result := {NATURAL_8}0
 					end
+				end
+
+				if attached l_exception then
+						-- There was a problem, raise an exception.
+					l_exception.raise
 				end
 			end
 		ensure
@@ -253,6 +388,10 @@ feature -- Basic operations: To Eiffel
 
 	marshal_to_string (a_type: INTEGER; a_value: XRPC_STRING): ANY
 			-- Marshals an XML-RPC value to an string object.
+			--
+			-- `a_type': The string type to marshal to.
+			-- `a_value': A XML-RPC string object.
+			-- `Result': A marshalled string.
 		require
 			a_type_is_string: is_string (a_type)
 			a_value_attached: attached a_value
@@ -282,6 +421,7 @@ feature -- Basic operations: To Eiffel
 					create {IMMUTABLE_STRING_32} Result.make_from_string_8 (l_string)
 				else
 						-- Unknown string
+					check should_never_happen: False end
 					Result := ""
 				end
 			end
@@ -312,10 +452,11 @@ feature -- Basic operations: From Eiffel
 					Result := marshal_from_integer (a_value)
 				elseif is_string (l_type) then
 					Result := marshal_from_string (a_value)
-				elseif is_array (l_type) then
+				elseif is_array_conform_from (l_type) then
 					Result := marshal_from_array (a_value)
 				else
-						-- Error
+						-- Unknown XML-RPC type
+					check should_never_happen: False end
 					create {XRPC_DEFAULT_VALUE} Result
 				end
 			end
@@ -332,8 +473,9 @@ feature -- Basic operations: From Eiffel
 		local
 			l_mutable_array: XRPC_MUTABLE_ARRAY
 			i, i_upper: INTEGER
+			l_exception: XRPC_MARSHAL_TYPE_EXCEPTION
 		do
-			check a_value_is_array: is_array (internal.dynamic_type (a_value)) end
+			check a_value_is_array: is_array_conform_from (internal.dynamic_type (a_value)) end
 
 			if internal.dynamic_type (a_value) = xrpc_array_type_id and then attached {XRPC_ARRAY} a_value as l_result then
 					-- No marshalling needed.
@@ -350,7 +492,8 @@ feature -- Basic operations: From Eiffel
 						if attached l_array[i] as l_item and then is_marshallable_object (l_item) then
 							l_mutable_array.extend (marshal_from (l_item))
 						else
--- Error: Incompatible type
+							create l_exception.make (internal.dynamic_type (l_array[i]), 0)
+							l_exception.raise
 						end
 						i := i + 1
 					end
@@ -363,7 +506,7 @@ feature -- Basic operations: From Eiffel
 		ensure
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
-			result_is_array: is_array (internal.dynamic_type (Result))
+			result_is_array: is_array_conform_to (internal.dynamic_type (Result))
 		end
 
 	marshal_from_boolean (a_value: ANY): XRPC_BOOLEAN
@@ -434,6 +577,7 @@ feature -- Basic operations: From Eiffel
 			a_value_is_marshallable_object: is_marshallable_object (a_value)
 		local
 			l_type: INTEGER
+			l_exception: detachable XRPC_MARSHAL_EXCEPTION
 		do
 			check a_value_is_integer: is_integer (internal.dynamic_type (a_value)) end
 
@@ -448,11 +592,13 @@ feature -- Basic operations: From Eiffel
 							if l_int.item >= {INTEGER_32}.min_value then
 								create Result.make (l_int.item.as_integer_32)
 							else
--- Error too small
+									-- Underflow
+								create {XRPC_UNDERFLOW_EXCEPTION} l_exception.make ({INTEGER_32}.min_value.out)
 								create Result.make (0)
 							end
 						else
--- Error too big
+								-- Overflow
+							create {XRPC_UNDERFLOW_EXCEPTION} l_exception.make ({INTEGER_32}.max_value.out)
 							create Result.make (0)
 						end
 					else
@@ -489,7 +635,8 @@ feature -- Basic operations: From Eiffel
 						if l_natural.item <= {INTEGER_32}.max_value.as_natural_64 then
 							create Result.make (l_natural.item.as_integer_32)
 						else
--- Error too big
+								-- Overflow
+							create {XRPC_UNDERFLOW_EXCEPTION} l_exception.make ({INTEGER_32}.max_value.out)
 							create Result.make (0)
 						end
 					else
@@ -502,7 +649,8 @@ feature -- Basic operations: From Eiffel
 						if l_natural.item <= {INTEGER_32}.max_value.as_natural_32 then
 							create Result.make (l_natural.item.as_integer_32)
 						else
--- Error too big
+								-- Overflow
+							create {XRPC_UNDERFLOW_EXCEPTION} l_exception.make ({INTEGER_32}.max_value.out)
 							create Result.make (0)
 						end
 					else
@@ -557,7 +705,7 @@ feature -- Basic operations: From Eiffel
 				elseif attached {READABLE_STRING_32} a_value as l_string and then l_string.is_string_8 then
 					create Result.make (l_string.to_string_8)
 				else
--- Incompatible string
+					check should_never_happen: False end
 					create Result.make ("")
 				end
 			end

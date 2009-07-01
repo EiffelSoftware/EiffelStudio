@@ -6,6 +6,8 @@ inherit
 
 	XRPC_SHARED_REQUEST_HANDLER
 
+	XRPC_SHARED_MARSHALLER
+
 create
 	make
 
@@ -37,13 +39,13 @@ feature {NONE} -- Constants
 "[
 <?xml version="1.0"?>
 <methodCall>
-  <methodName>math.sum</methodName>
+  <methodName>math.string_sum</methodName>
   <params>
     <param>
-      <value><int>200</int></value>
+      <value><string>200</string></value>
     </param>
     <param>
-      <value><int>33</int></value>
+      <value><string>33</string></value>
     </param>
   </params>
 </methodCall>

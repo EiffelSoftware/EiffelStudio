@@ -38,7 +38,7 @@ feature -- Access
 	preference: SHORTCUT_PREFERENCE
 			-- Actual preference associated to the widget.	
 
-	change_item_widget: EV_GRID_EDITABLE_ITEM
+	change_item_widget: SHORTCUT_PREFERENCE_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this preference.
 
 	graphical_type: STRING

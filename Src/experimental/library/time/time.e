@@ -5,6 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	access: time
+	EIS: "name=Obtaining a DATE from a DATE_TIME and vice versa", "src=$(ISE_DOC_UUID)/195849fc-1a9c-d734-2d2b-acae78133886#Obtaining_a_DATE_from_a_DATE_TIME_and_vice_versa", "tag=EiffelTime"
 
 class TIME inherit
 

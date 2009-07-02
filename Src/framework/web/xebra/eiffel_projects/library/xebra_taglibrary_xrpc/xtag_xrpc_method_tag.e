@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	XTAG_F_XRPC_METHOD_TAG
+	XTAG_XRPC_METHOD_TAG
 
 inherit
 	XTAG_TAG_SERIALIZER
@@ -28,13 +28,15 @@ feature -- Access
 	name: XTAG_TAG_ARGUMENT
 			-- The name of the method
 
-
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			-- TODO
+			if attached {XEL_FEATURE_ELEMENT} a_variable_table [{XTAG_XRPC_API_TAG}.new_method_agents_feature] as l_new_method_agents_feature then
+				l_new_method_agents_feature.append_expression ("Result.put (agent api." + name.value (current_controller_id)
+					+ ", %"" + name.value (current_controller_id) + "%")")
+			end
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

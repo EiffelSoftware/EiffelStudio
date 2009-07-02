@@ -121,7 +121,7 @@ feature -- Processing
 						l_file_name := l_directory_name.twin
 						l_file_name.extend (l_files.item)
 						Result.append (search_rec_for_xeb (create {DIRECTORY}.make (l_file_name)))
-					elseif l_file.name.ends_with (".xeb") then
+					elseif l_file.name.ends_with (".xeb") or l_file.name.ends_with (".xrpc") then
 						Result.extend (l_file_name)
 					end
 				end
@@ -154,7 +154,11 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-				process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name, a_force))
+				if a_files.item.file_name.ends_with (".xeb") then
+					process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name, a_force))
+				else
+					process_file (a_files.item, agent process_xrpc_file (?, ?, a_files.item, a_files.item.file_name, a_force))
+				end
 				a_files.forth
 			end
 			o.iprint ("Processing done.")
@@ -176,6 +180,16 @@ feature -- Processing
 			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
+	process_xrpc_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
+		require
+			a_source_attached: attached a_source
+			a_path: attached a_path
+			a_file_name: attached a_file_name
+		do
+			o.iprint ("Processing '" + a_path + "'...")
+			add_xrpc_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
+		end
+
 	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
 		local
 			l_output_path, l_file_name: STRING
@@ -190,9 +204,31 @@ feature -- Processing
 			loop
 				l_i := l_i + 1
 			end
-			Result := l_file_name.substring (l_i+1, l_file_name.count - (".xeb").count)
+			Result := l_file_name.substring (l_i+1, l_file_name.last_index_of ('.', l_file_name.count)-1)
 			Result.replace_substring_all ("/", "_") -- UNIX
 			Result.replace_substring_all ("\", "_") -- WINDOWS
+		end
+
+	add_xrpc_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER; a_force: BOOLEAN)
+			-- Transforms `a_stream' to a {XGEN_SERVLET_GENERATOR_GENERATOR}
+		require
+			servlet_name_valid: attached a_servlet_name and not a_servlet_name.is_empty
+			a_source_attached: attached a_source
+			a_path_attached: attached a_path
+			a_registry_attached: attached a_registry
+		local
+			l_template: XP_TEMPLATE
+		do
+			xeb_parser.set_source_path (a_path)
+			if xeb_parser.parse (a_source) then
+				l_template := xeb_parser.template
+				l_template.template_name := a_servlet_name
+				xeb_parser.template.date := a_date
+				xeb_parser.template.force := a_force
+				a_registry.put_xrpc (a_servlet_name, xeb_parser.template)
+			else
+				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)
+			end
 		end
 
 	add_template_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER; a_force: BOOLEAN)

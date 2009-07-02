@@ -164,6 +164,7 @@ feature {NONE} -- Implementation
 			some_servlets_attached: attached some_servlets
 		local
 			l_servlet: XGEN_SERVLET_GENERATOR_GENERATOR
+			l_postfix: STRING
 		do
 			create Result.make ("add_servlets")
 			from
@@ -172,8 +173,13 @@ feature {NONE} -- Implementation
 				some_servlets.after
 			loop
 				l_servlet := some_servlets.item
+				if l_servlet.is_xrpc then
+					l_postfix := ".xrpc"
+				else
+					l_postfix := ".xeb"
+				end
 				Result.append_expression ("stateless_servlets.put (create {"
-					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + transform_to_url (l_servlet.servlet_name.as_lower) + ".xeb%")")
+					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + transform_to_url (l_servlet.servlet_name.as_lower) + l_postfix + "%")")
 				some_servlets.forth
 			end
 		ensure

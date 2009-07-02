@@ -45,6 +45,7 @@ feature {NONE} -- Basic operations
 	reset
 			-- <Precursor>
 		do
+			Precursor
 			is_fault := False
 			response := Void
 		ensure then
@@ -147,13 +148,13 @@ feature {NONE} -- State transistions
 			create l_table.make (3)
 			l_table.put (t_params, {XRPC_CONSTANTS}.params_name)
 			l_table.put (t_fault, {XRPC_CONSTANTS}.fault_name)
-			Result.put_last (l_table, t_method_response)
+			Result.force_last (l_table, t_method_response)
 
 				-- fault
 				-- => value
 			create l_table.make (1)
 			l_table.put (t_value, {XRPC_CONSTANTS}.value_name)
-			Result.put_last (l_table, t_fault)
+			Result.force_last (l_table, t_fault)
 		end
 
 feature {NONE} -- Constants: States

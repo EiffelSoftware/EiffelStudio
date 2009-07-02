@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	print_hello (a_name: STRING): STRING
+	hello (a_name: STRING): STRING
 		require
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty

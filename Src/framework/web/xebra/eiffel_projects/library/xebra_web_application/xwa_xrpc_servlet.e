@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 
 				-- Create the API object, where the XML-RPC routines will be called.
-			create xrpc_api
+			create api
 
 				-- Extend the dispatch server with our own delegate
 			server_dispatcher.extend (Current)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			Precursor
 
 				-- Initialize the XML-RPC api class for first use.
-			xrpc_api.initialize
+			api.initialize
 		end
 
 feature-- Access
@@ -104,7 +104,7 @@ feature-- Implementation
 
 feature {NONE} -- Access
 
-	frozen xrpc_api: G
+	frozen api: G
 			-- XML-RPC api
 
 feature {XRPC_SERVER_DISPATCHER} -- Action handlers
@@ -114,7 +114,7 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 		do
 			Precursor (a_name, a_args)
 				-- Notify the XML-RPC that a call is about to take place.
-			xrpc_api.on_before_call (a_name, a_args)
+			api.on_before_call (a_name, a_args)
 		end
 
 	on_after_call (a_name: READABLE_STRING_8; a_args: detachable TUPLE; a_response: detachable XRPC_RESPONSE)
@@ -123,11 +123,11 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 		do
 			Precursor (a_name, a_args, a_response)
 				-- Notify the XML-RPC that a call is about to take place.
-			xrpc_api.on_after_call (a_name, a_args, a_response)
+			api.on_after_call (a_name, a_args, a_response)
 		end
 
 invariant
-	xrpc_api_attached: attached xrpc_api
+	xrpc_api_attached: attached api
 
 end
 

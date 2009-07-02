@@ -52,14 +52,22 @@ feature -- Paths
 			Result := app_dir.twin
 			Result.extend ("EIFGENs")
 			Result.extend (webapp.app_config.name.out)
-			Result.extend ("W_code")
+			if config.file.finalize_webapps.value then
+				Result.extend ("F_code")
+			else
+				Result.extend ("W_code")
+			end
 		end
 
-	melted_file_path: FILE_NAME
+	webapp_melted_file_path: FILE_NAME
 			-- Returns the path to the melted file
 		do
-			Result := run_workdir.twin
-			Result.set_file_name (webapp.app_config.name.out + ".melted")
+			if config.file.finalize_webapps.value then
+				Result := webapp_exe
+			else
+				Result := run_workdir.twin
+				Result.set_file_name (webapp.app_config.name.out + ".melted")
+			end
 		ensure
 			Result_attached: Result /= Void
 		end

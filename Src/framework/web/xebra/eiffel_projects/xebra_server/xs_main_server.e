@@ -132,7 +132,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			loop
 				l_webapp := config.file.webapps.item_for_iteration
 
-					-- until multihreading is implemented in webapps this hack has to be here to prevent deadlock
+					-- until multihreading is implemented in webapps, this hack has to be here to prevent deadlock
 				if not l_webapp.app_config.name.value.is_equal ("servercontrol") then
 					--
 

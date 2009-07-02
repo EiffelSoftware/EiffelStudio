@@ -10,6 +10,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="web" location="$ISE_LIBRARY\library\web\web.ecf"/>
 		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf" readonly="false">
 			<option>

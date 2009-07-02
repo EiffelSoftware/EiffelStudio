@@ -30,10 +30,14 @@ feature -- Basic operations
 
 	sum (i, j: NATURAL_16): INTEGER
 			-- XML-RPC using Eiffel types.
-		note
-			--options: "xml-rpc"
 		do
 			Result := (i + j).as_integer_32
+		end
+
+	product(i, j: DOUBLE): DOUBLE
+			-- XML-RPC using Eiffel types.
+		do
+			Result := i * j
 		end
 
 	sum_x (a_int1: XRPC_INTEGER; a_int2: XRPC_INTEGER): XRPC_INTEGER

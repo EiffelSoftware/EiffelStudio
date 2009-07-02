@@ -2,4 +2,6 @@
   <page:controller class="MY_XMLRPC_API" />
   <xrpc:method name="sum" />
   <xrpc:method name="hello" />
+  <xrpc:method name="product" />
 </xrpc:api>
+

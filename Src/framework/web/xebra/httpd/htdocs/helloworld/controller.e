@@ -22,4 +22,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 		end
+
+feature -- Basic Operations
+
+	world: STRING
+			-- Displays 'WORLD' or world depending on the current time
+		local
+			l_time: TIME
+		do
+			create l_time.make_now
+
+			if l_time.second \\ 2 = 0 then
+				Result := "WORLD"
+			else
+				Result := "world"
+			end
+		end
+
+
 end

@@ -46,9 +46,9 @@ feature -- Access
 		do
 			create l_f_utils.make
 			Result  := " -config " + webapp.app_config.name.out + ".ecf -target " + webapp.app_config.name.out + " -c_compile -stop"
---			if config.finalize_webapps then
---				Result := Result + " -finalize"
---			end
+			if config.file.finalize_webapps.value then
+				Result := Result + " -finalize"
+			end
 			if webapp.needs_cleaning then
 				Result.append (" -clean")
 			end
@@ -73,7 +73,7 @@ feature -- Status report
 			l_executable_does_not_exist: BOOLEAN
 		do
 			create l_f_util.make
-			l_melted_file_is_old := l_f_util.file_is_newer (melted_file_path,
+			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file_path,
 												app_dir,
 												"\w+\.(e|ecf)")
 			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe)
@@ -86,7 +86,7 @@ feature -- Status report
 			if Result then
 				o.dprint ("Compiling is necessary", 3)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling is necessary because: " + melted_file_path + " is older than .e files or .ecf file.", 5)
+					o.dprint ("Compiling is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file.", 5)
 				end
 
 				if l_executable_does_not_exist then

@@ -54,6 +54,9 @@ feature -- High Level Eiffel Interface
 		end
 
 	add_method (a_method_selector: STRING; a_agent: ROUTINE [ANY, TUPLE])
+			--
+		require
+			-- The method is not already implemented in the current class (though it may be in a superclass)
 		local
 			callback_marshal: OBJC_CALLBACK_MARSHAL
 			l_sel, l_imp, l_types: POINTER
@@ -187,6 +190,8 @@ feature {NONE} -- Implementation
 		do
 			if a_type_enc.is_equal ("b@:") then
 				Result := {OBJC_CALLBACK_MARSHAL}.bridge_bool_address
+			elseif a_type_enc.is_equal ("v@:") then
+				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_address
 			elseif a_type_enc.is_equal ("v@:*") then
 				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_ptr_address
 			else

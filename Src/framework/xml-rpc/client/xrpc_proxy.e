@@ -95,7 +95,7 @@ feature -- Basic operations
 			not_is_processing_request: not is_processing_request
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
-			a_args_contains_valid_items: attached a_args implies is_valid_arguments (a_args)
+			--a_args_contains_valid_items: attached a_args implies is_valid_arguments (a_args)
 		local
 			l_marshaller: like marshaller
 			l_args: detachable ARRAY [XRPC_VALUE]

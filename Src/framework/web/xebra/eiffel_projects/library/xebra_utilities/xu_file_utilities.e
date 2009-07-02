@@ -36,6 +36,8 @@ feature -- Basic Opertaions
 
 	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for reading
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists then
@@ -57,6 +59,8 @@ feature -- Basic Opertaions
 
 	plain_text_file_open_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for writing
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists then
@@ -77,10 +81,56 @@ feature -- Basic Opertaions
 
 	plain_text_file_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for writing or creates one
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
 			if plain_text_file.exists or plain_text_file.is_creatable then
 				plain_text_file.open_write
+				if plain_text_file.is_writable and plain_text_file.is_access_writable then
+					if plain_text_file.is_open_write then
+						Result := plain_text_file
+					else
+						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+					end
+				else
+					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+				end
+			else
+				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
+			end
+		end
+
+	plain_text_file_append (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+			-- Opens a plain text file for appending
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
+		do
+			create plain_text_file.make (a_file_name)
+			if plain_text_file.exists then
+				if plain_text_file.is_writable and plain_text_file.is_access_writable then
+					plain_text_file.open_append
+					if plain_text_file.is_open_write then
+						Result := plain_text_file
+					else
+						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+					end
+				else
+					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+				end
+			else
+				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
+			end
+		end
+
+	plain_text_file_append_create (a_file_name: STRING): detachable PLAIN_TEXT_FILE
+			-- Opens a plain text file for appending or creates one
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
+		do
+			create plain_text_file.make (a_file_name)
+			if plain_text_file.exists or plain_text_file.is_creatable then
+				plain_text_file.open_append
 				if plain_text_file.is_writable and plain_text_file.is_access_writable then
 					if plain_text_file.is_open_write then
 						Result := plain_text_file

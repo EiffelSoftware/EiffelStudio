@@ -1,6 +1,7 @@
 note
 	description: "[
-		XML-RPC known constant XML names and values, for method calls and responses.
+		Emits an XML-RPC XML from the core set of XML-RPC data types and values, as well as XML-RPC
+		responses.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,40 +9,58 @@ note
 	revision: "$Revision$"
 
 class
-	XRPC_CONSTANTS
+	XRPC_REQUEST_XML_EMITTER
 
-feature -- Constants: Version
+inherit
+	XRPC_REQUEST_VISITOR
+		undefine
+			process_array,
+			process_boolean,
+			process_double,
+			process_integer,
+			process_member,
+			process_string,
+			process_struct
+		redefine
+			process_method_call_request
+		end
 
-	library_version_string: STRING = "0.9"
+	XRPC_XML_EMITTER
 
-feature -- Constants: Values
+create
+	make
 
-	fault_code_value: STRING = "faultCode"
-	fault_string_value: STRING = "faultString"
-	boolean_true_value: STRING = "1"
-	boolean_false_value: STRING = "0"
+feature -- Processing operations
 
-feature -- Constants: Tag names
-
-	array_name: STRING = "array"
-	base64_name: STRING = "base64"
-	boolean_name: STRING = "boolean"
-	data_name: STRING = "data"
-	date_time_iso_name: STRING = "dateTime.iso8601"
-	double_name: STRING = "double"
-	fault_name: STRING = "fault"
-	i4_name: STRING = "i4"
-	int_name: STRING = "int"
-	member_name: STRING = "member"
-	method_call_name: STRING = "methodCall"
-	method_name_name: STRING = "methodName"
-	method_response_name: STRING = "methodResponse"
-	name_name: STRING = "name"
-	param_name: STRING = "param"
-	params_name: STRING = "params"
-	string_name: STRING = "string"
-	struct_name: STRING = "struct"
-	value_name: STRING = "value"
+	process_method_call_request (a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE])
+			-- <Precursor>
+		local
+			l_buffer: like buffer
+			i, i_upper: INTEGER
+		do
+			l_buffer := buffer
+			append_opening_tag ({XRPC_CONSTANTS}.method_call_name, l_buffer, True)
+			append_opening_tag ({XRPC_CONSTANTS}.method_name_name, l_buffer, False)
+			append_indents (l_buffer)
+			l_buffer.append (a_name)
+			append_closing_tag ({XRPC_CONSTANTS}.method_name_name, l_buffer, True)
+			if attached a_args and not a_args.is_empty then
+				append_opening_tag ({XRPC_CONSTANTS}.params_name, l_buffer, True)
+				from
+					i := a_args.lower
+					i_upper := a_args.upper
+				until
+					i > i_upper
+				loop
+					append_opening_tag ({XRPC_CONSTANTS}.param_name, l_buffer, True)
+					a_args[i].visit (Current)
+					append_closing_tag ({XRPC_CONSTANTS}.param_name, l_buffer, True)
+					i := i + 1
+				end
+				append_closing_tag ({XRPC_CONSTANTS}.params_name, l_buffer, True)
+			end
+			append_closing_tag ({XRPC_CONSTANTS}.method_call_name, l_buffer, True)
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

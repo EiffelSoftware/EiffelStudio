@@ -1,0 +1,26 @@
+test_name 	missing-vhpr-with-different-generic-derivation
+test_description A class that inherits twice from the same generic class directly with two different generic derivations will be flagged with an ECMA-VHPR(5) error, but the same scenario with an indirection won't be properly detected.
+
+define PARENT	"TEST1 [INTEGER]"
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST ECMA-VHPR(5)
+
+define PARENT "TEST2"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENT ""
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+test_end

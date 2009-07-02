@@ -96,7 +96,11 @@ feature -- Access
 			-- the empty string is returned
 			-- Yeah, right...
 		do
-			Result := "XTAG_PAGE_NOOP_TAG"
+			if a_name.is_equal ("controller") then
+				Result := "XTAG_XEB_CONTAINER_TAG"
+			else
+				Result := "XTAG_PAGE_NOOP_TAG"
+			end
 		end
 
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN

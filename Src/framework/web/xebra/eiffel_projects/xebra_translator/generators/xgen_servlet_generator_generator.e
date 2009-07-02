@@ -68,6 +68,9 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	is_xrpc: BOOLEAN
+			-- Is the servlet_gen_gen a xrpc generator?
+
 	force: BOOLEAN
 			-- Should the output be forced
 
@@ -133,6 +136,14 @@ feature -- Access
 			root_tag_set: root_tag = a_root_tag
 		end
 
+	transform_to_xrpc
+			-- Transforms the servlet_gen_gen to a xrpc servlet gen gen
+		do
+			is_xrpc := True
+		ensure
+			is_xrpc: is_xrpc
+		end
+
 feature -- Basic functionality
 
 	generate (a_path: FILE_NAME)
@@ -165,8 +176,14 @@ feature -- Basic functionality
 			if l_util.file_is_older_than (l_filename, root_tag.date) or force then
 				if attached l_util.plain_text_file_write (l_filename) as l_file then
 					create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
-					servlet_gen_class.set_inherit (Servlet_generator_class)
-					servlet_gen_class.set_constructor_name ("make")
+					if is_xrpc then
+						servlet_gen_class.set_inherit (Servlet_xrpc_generator_class)
+						servlet_gen_class.set_constructor_name ("make_xrpc")
+					else
+						servlet_gen_class.set_inherit (Servlet_generator_class)
+						servlet_gen_class.set_constructor_name ("make")
+					end
+
 					build_generate_for_servlet_generator (servlet_gen_class)
 					create buf.make (l_file)
 					servlet_gen_class.serialize (buf)
@@ -201,6 +218,7 @@ feature -- Constants
 
 	Tag_serializer_class: STRING = "XTAG_TAG_SERIALIZER"
 	Servlet_generator_class: STRING = "XGEN_SERVLET_GENERATOR"
+	Servlet_xrpc_generator_class: STRING = "XGEN_XRPC_SERVLET_GENERATOR"
 	Generator_Prefix: STRING = "g_"
 
 invariant

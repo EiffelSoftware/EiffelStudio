@@ -141,11 +141,20 @@ feature {NONE} -- Implementation
 			loop
 				l_servlet_gg := servlet_generator_generators.item
 				build_controller_table (Result, l_servlet_gg)
-				Result.append_expression ("(create {"
+				if l_servlet_gg.is_xrpc then
+					Result.append_expression ("(create {"
+					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make_xrpc ("
+					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
+				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
+				    + "l_const_class, %"" + retrieve_controller_class (l_servlet_gg) + "%")).generate;")
+				else
+					Result.append_expression ("(create {"
 					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
 					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
 				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
 				    + "l_const_class)).generate;")
+				end
+
 				servlet_generator_generators.forth
 			end
 			Result.append_local ("buf", "XU_INDENDATION_FORMATTER")
@@ -162,6 +171,24 @@ feature {NONE} -- Implementation
 			Result.append_expression ("o.iprint (%"System generated.%")")
 		ensure
 			result_attached: attached Result
+		end
+
+	retrieve_controller_class (a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR): STRING
+			-- Retrieves the first controlller (only use in combination with xrpc)
+		require
+			a_servlet_gg_attached: a_servlet_gg /= Void
+		do
+			Result := ""
+			from
+				a_servlet_gg.controller_table.start
+			until
+				a_servlet_gg.controller_table.after
+			loop
+				Result := Result + a_servlet_gg.controller_table.key_for_iteration
+				a_servlet_gg.controller_table.forth
+			end
+		ensure
+			Result_attached: attached Result
 		end
 
 	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
@@ -201,6 +228,7 @@ feature -- Constants
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
 		<library name="xebra_taglibrary_form" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form-voidunsafe.ecf"/>
+		<library name="xebra_taglibrary_xrpc" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_xrpc\xebra_taglibrary_xrpc-voidunsafe.ecf"/>
 		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>

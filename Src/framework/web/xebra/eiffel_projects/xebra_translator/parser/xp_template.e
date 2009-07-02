@@ -43,10 +43,12 @@ feature -- Initialization
 
 feature {XP_TEMPLATE} -- Access
 
+
+feature -- Access
+
 	root_tag: XP_TAG_ELEMENT
 			-- The root tag of the tag tree
 
-feature -- Access
 
 	force: BOOLEAN assign set_force
 			-- Should the regeneration be forced?

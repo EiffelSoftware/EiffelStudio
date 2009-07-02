@@ -20,6 +20,7 @@ feature -- Initialization
 			path := a_path
 			has_resolved := False
 			create template_registry.make (10)
+			create xrpc_registry.make (10)
 			create taglib_registry.make (10)
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_g_generators.make (10)
 		ensure
@@ -34,6 +35,9 @@ feature {NONE} -- Access
 
 	template_registry: HASH_TABLE [XP_TEMPLATE, STRING]
 			-- Registry for the templates
+
+	xrpc_registry: HASH_TABLE [XP_TEMPLATE, STRING]
+			-- Registry for xrpc templates
 
 	servlet_g_generators: LIST [XGEN_SERVLET_GENERATOR_GENERATOR]
 			-- Resolved servlet_generator_generators
@@ -74,6 +78,13 @@ feature -- Access
 			has_resolved := False
 		end
 
+	put_xrpc (a_name: STRING; a_xrpc_template: XP_TEMPLATE)
+		require
+			a_name_valid: not a_name.is_empty
+		do
+			xrpc_registry [a_name] := a_xrpc_template
+		end
+
 	put_tag_lib (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)
 			-- Sets the taglib with the name `a_id'
 		require
@@ -87,8 +98,10 @@ feature -- Access
 	resolve_all_templates
 			-- Retrieves all the templates which should become servlets.
 			-- Resolves dependencies to other templates
+			-- Generates all xrpc servlet_gen_gens
 		local
 			l_template: XP_TEMPLATE
+			l_xrpc: XP_TEMPLATE
 			l_root_tag: XP_TAG_ELEMENT
 			l_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
@@ -107,6 +120,19 @@ feature -- Access
 				template_registry.forth
 			end
 			has_resolved := True
+			from
+				xrpc_registry.start
+			until
+				xrpc_registry.after
+			loop
+				l_xrpc := xrpc_registry.item_for_iteration
+				create l_servlet_gen.make_minimal (l_xrpc.template_name, path)
+				l_servlet_gen.set_root_tag (l_xrpc.root_tag)
+				l_servlet_gen.add_controller (l_xrpc.controller_class, "api")
+				l_servlet_gen.transform_to_xrpc
+				servlet_g_generators.extend (l_servlet_gen)
+				xrpc_registry.forth
+			end
 		ensure
 			has_resolved_true: has_resolved
 		end

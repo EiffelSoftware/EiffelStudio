@@ -1,6 +1,6 @@
 note
 	description: "[
-		XML-RPC known constant XML names and values, for method calls and responses.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,40 +8,24 @@ note
 	revision: "$Revision$"
 
 class
-	XRPC_CONSTANTS
+	XRPC_REQUEST_VISITOR
 
-feature -- Constants: Version
+inherit
+	XRPC_VISITOR
 
-	library_version_string: STRING = "0.9"
+feature -- Processing operations
 
-feature -- Constants: Values
-
-	fault_code_value: STRING = "faultCode"
-	fault_string_value: STRING = "faultString"
-	boolean_true_value: STRING = "1"
-	boolean_false_value: STRING = "0"
-
-feature -- Constants: Tag names
-
-	array_name: STRING = "array"
-	base64_name: STRING = "base64"
-	boolean_name: STRING = "boolean"
-	data_name: STRING = "data"
-	date_time_iso_name: STRING = "dateTime.iso8601"
-	double_name: STRING = "double"
-	fault_name: STRING = "fault"
-	i4_name: STRING = "i4"
-	int_name: STRING = "int"
-	member_name: STRING = "member"
-	method_call_name: STRING = "methodCall"
-	method_name_name: STRING = "methodName"
-	method_response_name: STRING = "methodResponse"
-	name_name: STRING = "name"
-	param_name: STRING = "param"
-	params_name: STRING = "params"
-	string_name: STRING = "string"
-	struct_name: STRING = "struct"
-	value_name: STRING = "value"
+	process_method_call_request (a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE])
+			-- Processes a XML-RPC method call.
+			--
+			-- `a_name': Name of the method to call.
+			-- `a_args': Routine arguments or Void if there are not arguments.
+		require
+			a_name_attached: attached a_name
+			--a_args_contains_valid_items: attached a_args.for_all (agent {XRPC_VALUE}.is_valid)
+			a_args_one_based: attached a_args implies a_args.lower = 1
+		do
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

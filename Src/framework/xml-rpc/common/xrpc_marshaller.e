@@ -21,7 +21,8 @@ inherit
 			      is_boolean,
 			      is_double,
 			      is_integer,
-			      is_string
+			      is_string,
+			      is_struct
 		end
 
 feature -- Status report
@@ -39,7 +40,8 @@ feature -- Status report
 				is_integer (a_type) or else
 				is_string (a_type) or else
 				is_array_conform_from (a_type) or else
-				is_array_conform_to (a_type)
+				is_array_conform_to (a_type) or else
+				is_struct (a_type)
 		end
 
 	is_marshallable_result_type (a_type: INTEGER): BOOLEAN
@@ -111,7 +113,8 @@ feature -- Status report
 				is_boolean (l_type_id) or else
 				is_double (l_type_id) or else
 				is_integer (l_type_id) or else
-				is_string (l_type_id)
+				is_string (l_type_id) or else
+				is_struct (l_type_id)
 		end
 
 feature -- Basic operations: To Eiffel
@@ -165,6 +168,13 @@ feature -- Basic operations: To Eiffel
 				else
 						-- Error: Incompatible type.
 					create l_exception.make (xrpc_string_type_id, a_type)
+				end
+			when {XRPC_TYPE}.struct then
+				if is_struct (a_type) and then attached {XRPC_STRUCT} a_value as l_value then
+					Result := marshal_to_struct (a_type, l_value)
+				else
+						-- Error: Incompatible type.
+					create l_exception.make (xrpc_struct_type_id, a_type)
 				end
 			else
 				if internal.dynamic_type (a_value) = a_type then
@@ -429,6 +439,29 @@ feature -- Basic operations: To Eiffel
 			result_attached: attached Result
 		end
 
+	marshal_to_struct (a_type: INTEGER; a_value: XRPC_STRUCT): ANY
+			-- Marshals an XML-RPC value to an string object.
+			--
+			-- `a_type': The struct type to marshal to.
+			-- `a_value': A XML-RPC struct object.
+			-- `Result': A marshalled struct.
+		require
+			a_type_is_struct: is_struct (a_type)
+			a_value_attached: attached a_value
+			a_value_is_valid: a_value.is_valid
+		do
+			if a_type = xrpc_string_type_id then
+					-- No marshalling needed.
+				Result := a_value
+			else
+					-- Unknown string
+				check should_never_happen: False end
+				create {XRPC_STRUCT}Result.make
+			end
+		ensure
+			result_attached: attached Result
+		end
+
 feature -- Basic operations: From Eiffel
 
 	marshal_from (a_value: ANY): XRPC_VALUE
@@ -444,7 +477,9 @@ feature -- Basic operations: From Eiffel
 				Result := l_result
 			else
 				l_type := internal.dynamic_type (a_value)
-				if is_boolean (l_type) then
+				if is_array_conform_from (l_type) then
+					Result := marshal_from_array (a_value)
+				elseif is_boolean (l_type) then
 					Result := marshal_from_boolean (a_value)
 				elseif is_double (l_type) then
 					Result := marshal_from_double (a_value)
@@ -452,8 +487,8 @@ feature -- Basic operations: From Eiffel
 					Result := marshal_from_integer (a_value)
 				elseif is_string (l_type) then
 					Result := marshal_from_string (a_value)
-				elseif is_array_conform_from (l_type) then
-					Result := marshal_from_array (a_value)
+				elseif is_struct (l_type) then
+					Result := marshal_from_struct (a_value)
 				else
 						-- Unknown XML-RPC type
 					check should_never_happen: False end
@@ -713,6 +748,30 @@ feature -- Basic operations: From Eiffel
 			result_attached: attached Result
 			result_is_valid: Result.is_valid
 			result_is_string: is_string (internal.dynamic_type (Result))
+		end
+
+	marshal_from_struct (a_value: ANY): XRPC_STRUCT
+			-- Marshals an Eiffel struct value to a XML-RPC string object.
+			--
+			-- `a_value': A struct value to marshal.
+			-- `Result': A marshaled XML-RPC struct object.
+		require
+			a_value_attached: attached a_value
+			a_value_is_marshallable_object: is_marshallable_object (a_value)
+		do
+			check a_value_is_struct: is_struct (internal.dynamic_type (a_value)) end
+
+			if internal.dynamic_type (a_value) = xrpc_struct_type_id and then attached {XRPC_STRUCT} a_value as l_result then
+					-- No marshalling needed.
+				Result := l_result
+			else
+				check should_never_happen: False end
+				create Result.make
+			end
+		ensure
+			result_attached: attached Result
+			result_is_valid: Result.is_valid
+			result_is_struct: is_struct (internal.dynamic_type (Result))
 		end
 
 ;note

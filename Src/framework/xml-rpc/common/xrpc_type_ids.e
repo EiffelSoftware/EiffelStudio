@@ -224,6 +224,12 @@ feature -- Access: XML-RPC object type ids
 			Result := type_of ({XRPC_STRING})
 		end
 
+	xrpc_struct_type_id: INTEGER
+			-- XML-RPC string type id, defined by {XRPC_STRUCT}.
+		once
+			Result := type_of ({XRPC_STRUCT})
+		end
+
 	xrpc_response_type_id: INTEGER
 			-- XML-RPC response type id, defined by {XRPC_RESPONSE}.
 		once
@@ -312,6 +318,15 @@ feature -- Status report
 				a_type = string_32_type_id or else
 				a_type = readable_string_32_type_id or else
 				a_type = immutable_string_32_type_id
+		end
+
+	is_struct (a_type: INTEGER): BOOLEAN
+			-- Indicates if the dynamic type id represents a struct, XML-RPC or otherwise.
+			--
+			-- `a_type': Type id to check for struct types against.
+			-- `Result': True if the supplied type ID represents a struct; False otherwise.
+		do
+			Result := a_type = xrpc_struct_type_id
 		end
 
 feature {NONE} -- Query

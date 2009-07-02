@@ -112,7 +112,7 @@ feature -- Removal
 			l_null: POINTER
 		do
 			if item /= l_null then
-				{NS_OBJECT_API}.release (item)
+--				{NS_OBJECT_API}.release (item)
 				item := l_null
 			end
 		end

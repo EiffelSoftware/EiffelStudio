@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		note
 			once_status: global
 		once
-			connect_callbacks (Current, $callback_bool, $callback_void_ptr)
+			connect_callbacks (Current, $callback_void, $callback_bool, $callback_void_ptr, $callback_void_ptr_ptr)
 		end
 
 feature {OBJC_CLASS} -- Eiffel interaction
@@ -79,6 +79,16 @@ feature {OBJC_CLASS} -- Eiffel interaction
 
 feature {NONE}
 
+	callback_void (a_object: POINTER; a_selector: POINTER): BOOLEAN
+		local
+			c_string: C_STRING
+		do
+			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
+			if attached {FUNCTION [ANY, TUPLE [], BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+				Result := l_agent.item (Void)
+			end
+		end
+
 	callback_bool (a_object: POINTER; a_selector: POINTER): BOOLEAN
 		local
 			c_string: C_STRING
@@ -98,6 +108,16 @@ feature {NONE}
 			--io.put_string ("VP Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
 			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
 				l_agent.call ([arg1])
+			end
+		end
+
+	callback_void_ptr_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER; arg2: POINTER): BOOLEAN
+		local
+			c_string: C_STRING
+		do
+			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
+			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+				l_agent.call ([arg1, arg2])
 			end
 		end
 
@@ -132,11 +152,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals, Initialization
 
-	frozen connect_callbacks (a_object: like Current; a_callback_bool: POINTER; a_callback_void_ptr: POINTER)
+	frozen connect_callbacks (a_object: like Current; a_callback_void: POINTER; a_callback_bool: POINTER;
+					a_callback_void_ptr: POINTER; a_callback_void_ptr_ptr: POINTER)
 		external
 			"C inline use %"objc_callback_marshal.h%""
 		alias
-			"connect_callbacks ($a_object, $a_callback_bool, $a_callback_void_ptr);"
+			"connect_callbacks ($a_object, $a_callback_void, $a_callback_bool, $a_callback_void_ptr, $a_callback_void_ptr_ptr);"
 		end
 
 feature {OBJC_CLASS} -- Externals, Get addresses of the C bridge functions
@@ -148,11 +169,25 @@ feature {OBJC_CLASS} -- Externals, Get addresses of the C bridge functions
 			"bridge_bool"
 		end
 
+	frozen bridge_void_address: POINTER
+		external
+			"C inline use %"objc_callback_marshal.h%""
+		alias
+			"bridge_void"
+		end
+
 	frozen bridge_void_ptr_address: POINTER
 		external
 			"C inline use %"objc_callback_marshal.h%""
 		alias
 			"bridge_void_ptr"
+		end
+
+	frozen bridge_void_ptr_ptr_address: POINTER
+		external
+			"C inline use %"objc_callback_marshal.h%""
+		alias
+			"bridge_void_ptr_ptr"
 		end
 
 --	frozen bridge_void_rect_address: POINTER

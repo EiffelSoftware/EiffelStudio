@@ -138,6 +138,34 @@ feature -- Modifying the Frame Rectangle
 			"[(NSView*)$a_view removeFromSuperview];"
 		end
 
+feature -- Focusing
+
+	frozen lock_focus (a_view: POINTER)
+			-- - (void)lockFocus
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view lockFocus];"
+		end
+
+	frozen lock_focus_if_can_draw (a_view: POINTER): BOOLEAN
+			-- - (BOOL)lockFocusIfCanDraw
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view lockFocusIfCanDraw];"
+		end
+
+	frozen unlock_focus (a_view: POINTER)
+			-- - (void)unlockFocus
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view unlockFocus];"
+		end
+
+feature -- Displaying
+
 	frozen display (a_view: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -207,13 +235,23 @@ feature -- Modifying the Frame Rectangle
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"NSRect frame = [(NSView*)$a_view bounds];   memcpy($a_res, &frame, sizeof(NSRect));"
+			"NSRect frame = [(NSView*)$a_view bounds]; memcpy($a_res, &frame, sizeof(NSRect));"
+		end
+
+feature -- Drawing
+
+	frozen visible_rect (a_view: POINTER; a_res: POINTER)
+			-- - (NSRect)visibleRect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect frame = [(NSView*)$a_view visibleRect]; memcpy($a_res, &frame, sizeof(NSRect));"
 		end
 
 feature -- Tool Tips
 
 	frozen set_tool_tip (a_view: POINTER; a_string: POINTER)
-			-- (void)setToolTip: (NSString *) string
+			-- - (void)setToolTip: (NSString *) string
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -221,7 +259,7 @@ feature -- Tool Tips
 		end
 
 	frozen tool_tip (a_view: POINTER): POINTER
-			-- (NSString *)toolTip
+			-- - (NSString *)toolTip
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -229,7 +267,7 @@ feature -- Tool Tips
 		end
 
 	frozen add_tool_tip_rect_owner_user_data (a_view: POINTER; a_rect: POINTER; a_an_object: POINTER; a_data: POINTER): INTEGER
-			-- (NSToolTipTag)addToolTipRect: (NSRect) aRect owner: anObject userData: data
+			-- - (NSToolTipTag)addToolTipRect: (NSRect) aRect owner: anObject userData: data
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -237,7 +275,7 @@ feature -- Tool Tips
 		end
 
 	frozen remove_tool_tip (a_view: POINTER; a_tag: INTEGER)
-			-- (void)removeToolTip: (NSToolTipTag) tag
+			-- - (void)removeToolTip: (NSToolTipTag) tag
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -245,11 +283,45 @@ feature -- Tool Tips
 		end
 
 	frozen remove_all_tool_tips (a_view: POINTER)
-			-- (void)removeAllToolTips
+			-- - (void)removeAllToolTips
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSView*)$a_view removeAllToolTips];"
+		end
+
+feature -- Managing Cursor Tracking
+
+	frozen add_cursor_rect_cursor (a_view: POINTER; a_rect: POINTER; a_an_obj: POINTER)
+			-- - (void)addCursorRect: (NSRect) aRect cursor: anObj
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view addCursorRect: *(NSRect*)$a_rect cursor: (NSCursor *)$a_an_obj];"
+		end
+
+	frozen remove_cursor_rect_cursor (a_view: POINTER; a_rect: POINTER; a_an_obj: POINTER)
+			-- - (void)removeCursorRect: (NSRect) aRect cursor: anObj
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view removeCursorRect: *(NSRect*)$a_rect cursor: (NSCursor*)$a_an_obj];"
+		end
+
+	frozen discard_cursor_rects (a_view: POINTER)
+			-- - (void)discardCursorRects
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view discardCursorRects];"
+		end
+
+	frozen reset_cursor_rects (a_view: POINTER)
+			-- - (void)resetCursorRects
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view resetCursorRects];"
 		end
 
 feature -- Event Handling

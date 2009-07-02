@@ -10,6 +10,8 @@ class
 inherit
 	NS_OBJECT
 
+create {NS_OBJECT}
+	share_from_pointer
 create
 	make
 

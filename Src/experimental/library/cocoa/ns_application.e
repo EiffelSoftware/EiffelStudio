@@ -70,7 +70,7 @@ feature -- Access
 		do
 			l_event := {NS_APPLICATION_API}.next_event (item, a_matching_mask, a_until_date, a_in_mode, a_dequeue)
 			if l_event /= default_pointer then
-				create Result.make_from_pointer (l_event)
+				create Result.share_from_pointer (l_event)
 			end
 		end
 

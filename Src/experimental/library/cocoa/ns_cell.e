@@ -88,6 +88,12 @@ feature -- Managing Display Attributes
 
 feature -- Managing Cell State
 
+	set_state (a_state: INTEGER)
+			-- Sets the receiver's state to the specified value.
+		do
+			{NS_CELL_API}.set_state (item, a_state)
+		end
+
 feature -- Modifying Textual Attributes
 
 	set_line_break_mode (a_mode: INTEGER)
@@ -147,6 +153,12 @@ feature -- Determining Cell Size
 
 feature -- Drawing and Highlighting
 
+	set_highlighted (a_flag: BOOLEAN)
+			-- Sets whether the receiver has a highlighted appearance.
+		do
+			{NS_CELL_API}.set_highlighted (item, a_flag)
+		end
+
 feature -- Editing and Selecting Text
 
 feature -- Managing Expansion Frames
@@ -157,14 +169,14 @@ feature -- Managing Expansion Frames
 --			Result := {NS_CELL_API}.compare (cocoa_object, a_other_cell)
 --		end
 
-
-
 	title: NS_STRING
+			-- Returns the receiver's title.
 		do
 			create Result.make_from_pointer ({NS_CELL_API}.title (item))
 		end
 
 	set_title (a_string: NS_STRING)
+			-- Sets the title of the receiver.
 		do
 			{NS_CELL_API}.set_title (item, a_string.item)
 		end

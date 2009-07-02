@@ -32,7 +32,9 @@ feature {NONE} -- Creation and Initialization
 
 	make
 		do
-			make_from_pointer ({NS_VIEW_API}.new)
+--			make_from_pointer ({NS_VIEW_API}.new)
+			make_from_pointer (view_class.create_instance.item)
+ 			{NS_VIEW_API}.init (item)
 			--insert_in_table
 		end
 
@@ -58,6 +60,15 @@ feature {NONE} -- Creation and Initialization
 			create Result.make_with_name ("FlippedView")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
 			Result.add_method ("isFlipped", agent : BOOLEAN do Result := True end)
+			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("%NXXX%N") end)
+			Result.register
+		end
+
+	view_class: OBJC_CLASS
+		once
+			create Result.make_with_name ("EiffelWrapperView")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
+			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("XXX") end)
 			Result.register
 		end
 
@@ -182,16 +193,6 @@ feature -- Modifying the Bounds Rectangle
 
 feature -- Modifying the Coordinate System
 
-	display
-		do
-			{NS_VIEW_API}.display (item)
-		end
-
-	set_needs_display (a_flag: BOOLEAN)
-		do
-			{NS_VIEW_API}.set_needs_display (item, a_flag)
-		end
-
 	set_hidden (a_flag: BOOLEAN)
 		do
 			{NS_VIEW_API}.set_hidden (item, a_flag)
@@ -202,9 +203,53 @@ feature -- Modifying the Coordinate System
 			Result := {NS_VIEW_API}.is_hidden (item)
 		end
 
+feature -- Focusing
+
+	lock_focus
+			-- Locks the focus on the receiver, so subsequent commands take effect in the receiver's window and coordinate system.
+		do
+			{NS_VIEW_API}.lock_focus (item)
+		end
+
+	lock_focus_if_can_draw: BOOLEAN
+			-- Locks the focus to the receiver atomically if the `can_draw' method returns True and returns the value of `can_draw'.
+		do
+			Result := {NS_VIEW_API}.lock_focus_if_can_draw (item)
+		end
+
+	unlock_focus
+			-- Balances an earlier `lock_focus' or `lock_focus_if_can_draw' message; restoring the focus to the previously focused view is necessary.
+		do
+			{NS_VIEW_API}.unlock_focus (item)
+		end
+
+feature -- Drawing
+
+	visible_rect: NS_RECT
+			-- Returns the portion of the receiver not clipped by its superviews.
+		do
+			create Result.make
+			{NS_VIEW_API}.visible_rect (item, Result.item)
+		end
+
+feature -- Displaying
+
+	display
+			-- Displays the receiver and all its subviews if possible, invoking each the NSView methods lockFocus, drawRect:, and unlockFocus as necessary.
+		do
+			{NS_VIEW_API}.display (item)
+		end
+
+	set_needs_display (a_flag: BOOLEAN)
+			-- Controls whether the receiver's entire bounds is marked as needing display.
+		do
+			{NS_VIEW_API}.set_needs_display (item, a_flag)
+		end
+
 feature -- Examining Coordinate System Modifications
 
 	is_flipped: BOOLEAN
+			-- Returns `True' if the receiver uses flipped drawing coordinates or `False' if it uses native coordinates.
 		do
 			Result := {NS_VIEW_API}.is_flipped (item)
 		end
@@ -235,28 +280,58 @@ feature -- Base Coordinate Conversion
 feature -- Tool Tips
 
 	set_tool_tip (a_string: NS_STRING)
+			-- Sets the tool tip text for the view to `a_string'.
 		do
 			{NS_VIEW_API}.set_tool_tip (item, a_string.item)
 		end
 
-	tool_tip: NS_STRING
+	tool_tip: detachable NS_STRING
+			-- The text for the view's tool tip or `Void' if the view doesn't currently display a tool tip.
+		local
+			l_tooltip: POINTER
 		do
-			create Result.share_from_pointer ({NS_VIEW_API}.tool_tip (item))
+			l_tooltip := {NS_VIEW_API}.tool_tip (item)
+			if l_tooltip /= default_pointer then
+				create Result.share_from_pointer (l_tooltip)
+			end
 		end
 
 	add_tool_tip_rect_owner_user_data (a_rect: NS_RECT; a_an_object: NS_OBJECT; a_data: POINTER): INTEGER
+			-- Creates a tool tip for a defined area and returns a tag that identifies the tool tip rectangle.
 		do
 			Result := {NS_VIEW_API}.add_tool_tip_rect_owner_user_data (item, a_rect.item, a_an_object.item, a_data.item)
 		end
 
 	remove_tool_tip (a_tag: INTEGER)
+			-- Removes the tool tip identified by `a_tag'.
 		do
 			{NS_VIEW_API}.remove_tool_tip (item, a_tag)
 		end
 
 	remove_all_tool_tips
+			-- Removes all assigned tool tips.
 		do
 			{NS_VIEW_API}.remove_all_tool_tips (item)
+		end
+
+feature -- Managing Cursor Tracking
+
+	add_cursor_rect (a_rect: NS_RECT; a_an_obj: NS_CURSOR)
+			-- Establishes the cursor to be used when the mouse pointer lies within a specified region.
+		do
+			{NS_VIEW_API}.add_cursor_rect_cursor (item, a_rect.item, a_an_obj.item)
+		end
+
+	remove_cursor_rect (a_rect: NS_RECT; a_an_obj: NS_CURSOR)
+			-- Completely removes a cursor rectangle from the receiver.
+		do
+			{NS_VIEW_API}.remove_cursor_rect_cursor (item, a_rect.item, a_an_obj.item)
+		end
+
+	discard_cursor_rects
+			-- Invalidates all cursor rectangles set up using add_cursor_rect.
+		do
+			{NS_VIEW_API}.discard_cursor_rects (item)
 		end
 
 feature -- Event Handling
@@ -282,6 +357,16 @@ feature -- Event Handling
 					io.put_string ("View not found: " + view_ptr.out + " (" + Result.class_.name.out + ")" + " Returning new.%N")
 				end
 			end
+		end
+
+feature --
+
+	frozen view_frame_did_change_notification: POINTER
+			-- Posted whenever the view's frame rectangle changes, if the view is configured using setPostsFrameChangedNotifications: to post such notifications.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSViewFrameDidChangeNotification"
 		end
 
 feature {NONE} -- Callback

@@ -109,8 +109,12 @@ feature {NONE} -- Process
 					-- Create a new (mutable - as it needs items) array.
 				process_value (create {XRPC_MUTABLE_ARRAY}.make_empty)
 			when t_params then
-					-- There is a parameter list.
-				has_parameters := True
+				if has_parameters then
+					on_report_xml_error (e_schema_error)
+				else
+						-- There is a parameter list.
+					has_parameters := True
+				end
 			when t_param then
 					-- Just for sanity!
 				check has_parameters: has_parameters end

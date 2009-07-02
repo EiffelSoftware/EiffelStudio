@@ -111,6 +111,40 @@ feature -- Access: Response
 	e_code_response_invalid: INTEGER = -0x11001
 	e_response_invalid: STRING = "Invalid XML-RPC response."
 
+feature -- Access: Connection
+
+	e_code_connection_mask: INTEGER = 0x12000
+
+	e_code_connection_file_not_found: INTEGER = 0x12001
+	e_connection_file_not_found: STRING = "File not found."
+
+	e_code_connection_write_error: INTEGER = 0x12002
+	e_connection_write_error: STRING = "Write error."
+
+	e_code_connection_refused: INTEGER = 0x12003
+	e_connection_refused: STRING = "Connection refused."
+
+	e_code_connection_no_such_user: INTEGER = 0x12004
+	e_connection_no_such_user: STRING = "No such user."
+
+	e_code_connection_access_denied: INTEGER = 0x12005
+	e_connection_access_denied: STRING = "Access denied."
+
+	e_code_connection_wrong_command: INTEGER = 0x12006
+	e_connection_wrong_command: STRING = "Wrong command."
+
+	e_code_connection_permission_denied: INTEGER = 0x12007
+	e_connection_permission_denied: STRING = "Permission denied."
+
+	e_code_connection_transfer_failed: INTEGER = 0x12008
+	e_connection_transfer_failed: STRING = "Transfer failed."
+
+	e_code_connection_transmission_error: INTEGER = 0x12009
+	e_connection_transmission_error: STRING = "Transmission error."
+
+	e_code_connection_connection_timeout: INTEGER = 0x1200A
+	e_connection_connection_timeout: STRING = "Connection timed out."
+
 feature -- Access
 
 	e_code_internal_error: INTEGER = -0x10000
@@ -145,6 +179,17 @@ feature {NONE} -- Access
 			Result.put (e_request_invalid, e_code_request_invalid)
 			Result.put (e_request_no_method_name, e_code_request_no_method_name)
 			Result.put (e_response_invalid, e_code_response_invalid)
+
+			Result.put (e_connection_file_not_found, e_code_connection_file_not_found)
+			Result.put (e_connection_write_error, e_code_connection_write_error)
+			Result.put (e_connection_refused, e_code_connection_refused)
+			Result.put (e_connection_no_such_user, e_code_connection_no_such_user)
+			Result.put (e_connection_access_denied, e_code_connection_access_denied)
+			Result.put (e_connection_wrong_command, e_code_connection_wrong_command)
+			Result.put (e_connection_permission_denied, e_code_connection_permission_denied)
+			Result.put (e_connection_transfer_failed, e_code_connection_transfer_failed)
+			Result.put (e_connection_transmission_error, e_code_connection_transmission_error)
+			Result.put (e_connection_connection_timeout, e_code_connection_connection_timeout)
 		end
 
 ;note

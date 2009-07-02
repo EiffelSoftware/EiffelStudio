@@ -51,18 +51,6 @@ feature -- Query
 
 feature -- Factory
 
-	new_response_from_xml (a_xml: READABLE_STRING_8): detachable XRPC_RESPONSE
-			-- Creates a new response object from an XML response string.
-			--
-			-- `a_xml': The XML response string to create an object for.
-			-- `Result': A response object of Void if the XML was invalid.
-		require
-			a_xml_attached: attached a_xml
-			not_a_xml_is_empty: not a_xml.is_empty
-		do
-			check not_implemented: False end
-		end
-
 	new_response_from_value (a_value: ANY): detachable XRPC_RESPONSE
 			-- Creates a new response object from an Eiffel object.
 			--
@@ -123,7 +111,7 @@ feature -- Factory
 			-- `a_exception': The exception to create a response object for.
 			-- `Result': The fault response object.
 		do
-			create Result.make (-a_exception.code.abs, a_exception.meaning)
+			create Result.make ({XRPC_ERROR_CODES}.e_code_internal_error & a_exception.code, a_exception.meaning)
 		ensure
 			result_attached: attached Result
 		end

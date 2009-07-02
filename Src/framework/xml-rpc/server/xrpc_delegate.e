@@ -172,6 +172,9 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 
 	on_before_call (a_name: READABLE_STRING_8; a_args: detachable TUPLE)
 			-- Called prior to executing one of the registered methods in the API.
+			--
+			-- `a_name': The name of the method to be called.
+			-- `a_args': Arguments that will be passed to the method.
 		require
 			has_dispatcher: has_dispatcher
 			a_name_attached: attached a_name
@@ -187,6 +190,10 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 
 	on_after_call (a_name: READABLE_STRING_8; a_args: detachable TUPLE; a_response: detachable XRPC_RESPONSE)
 			-- Called after executing one of the registered methods in the API.
+			--
+			-- `a_name': The name of the method that was just called.
+			-- `a_args': Arguments that were passed to the method.
+			-- `a_response': A response object, if any.
 		require
 			has_dispatcher: has_dispatcher
 			a_name_attached: attached a_name

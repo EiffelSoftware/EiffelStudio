@@ -19,7 +19,6 @@ inherit
 		redefine
 			initialize,
 			reset,
-			process_tag_state,
 			process_end_tag_state,
 			new_tag_state_transitions
 		end
@@ -54,24 +53,6 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Process
-
-	process_tag_state (a_state: NATURAL_8)
-			-- <Precursor>
-		do
---			inspect a_state
---			when t_params then
---					-- Start of method parmaters, there should be a message name.
---				if not attached method_name then
---						-- No request can be complete without the method to call.
---					on_report_xml_error ({XRPC_ERROR_CODES}.e_request_no_method_name)
---				end
---				if can_continue_parsing then
---					Precursor (a_state)
---				end
---			else
-				Precursor (a_state)
---			end
-		end
 
 	process_end_tag_state (a_state: NATURAL_8)
 			-- <Precursor>

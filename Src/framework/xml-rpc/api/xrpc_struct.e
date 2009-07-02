@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Query
 
-	item (a_name: READABLE_STRING_8): XRPC_VALUE
+	item alias "[]" (a_name: READABLE_STRING_8): XRPC_VALUE
 			-- Retrieve a value from a member name.
 			--
 			-- `a_name': The name of member to retrieve the value for.

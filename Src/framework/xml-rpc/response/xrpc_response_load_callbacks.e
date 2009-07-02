@@ -8,23 +8,49 @@ note
 	revision: "$Revision$"
 
 class
-	XRPC_RESPONSE_LOAD_CALLBACK
+	XRPC_RESPONSE_LOAD_CALLBACKS
 
 inherit
 	XRPC_LOAD_CALLBACKS
 		redefine
+			reset,
 			process_tag_state,
 			process_end_tag_state,
-			tag_state_transitions
+			on_finish,
+			on_error,
+			new_tag_state_transitions
+		end
+
+	XRPC_SHARED_RESPONSE_FACTORY
+		export
+			{NONE} all
 		end
 
 create
 	make
 
-feature -- Status report
+feature -- Access
+
+	response: detachable XRPC_RESPONSE
+			-- Response generated from last parse.
+			-- If the parse was unsuccessful then a response will be available, indicating the error.
+
+feature {NONE} -- Status report
 
 	is_fault: BOOLEAN
 			-- Indicates if the response is a fault response
+
+feature {NONE} -- Basic operations
+
+	reset
+			-- <Precursor>
+		do
+			is_fault := False
+			response := Void
+		ensure then
+			not_is_fault: not is_fault
+			response_detached: not attached response
+		end
 
 feature {NONE} -- Process
 
@@ -34,6 +60,18 @@ feature {NONE} -- Process
 			inspect a_state
 			when t_fault then
 				is_fault := True
+			when t_params then
+				if is_fault then
+					on_report_xml_error (e_schema_error)
+				else
+					Precursor (a_state)
+				end
+			when t_param then
+				if has_parameters and then currrent_parameters.count = 1 then
+					on_report_xml_error (e_schema_error)
+				else
+					Precursor (a_state)
+				end
 			else
 				Precursor (a_state)
 			end
@@ -46,13 +84,56 @@ feature {NONE} -- Process
 			Precursor (a_state)
 		end
 
+	on_finish
+			-- <Precursor>
+		do
+			Precursor
+			if not has_error then
+				if is_fault then
+					if not has_parameters and then not current_value_stack.is_empty then
+						if
+							attached {XRPC_STRUCT} current_value as l_struct and then
+							l_struct.has_member ({XRPC_CONSTANTS}.fault_code_value) and then
+							attached {XRPC_INTEGER} l_struct[{XRPC_CONSTANTS}.fault_code_value] as l_code and then
+							l_struct.has_member ({XRPC_CONSTANTS}.fault_string_value) and then
+							attached {XRPC_STRING} l_struct[{XRPC_CONSTANTS}.fault_code_value] as l_message
+						then
+							response := response_factory.new_response_from_error_code_and_message (l_code.value, l_message.value)
+						else
+							on_report_xml_error (e_schema_error)
+						end
+					else
+						on_report_xml_error (e_schema_error)
+					end
+				else
+					if has_parameters then
+						if attached parameters.first as l_value then
+							response := response_factory.new_response_from_value (l_value)
+						else
+							on_report_xml_error (e_schema_error)
+						end
+					else
+						on_report_xml_error (e_schema_error)
+					end
+				end
+			end
+		end
+
+	on_error (a_msg: READABLE_STRING_GENERAL; a_line: NATURAL_32; a_index: NATURAL_32)
+			-- <Precursor>
+		do
+			Precursor (a_msg, a_line, a_index)
+			is_fault := True
+			response := response_factory.new_response_from_error_code_and_message ({XRPC_ERROR_CODES}.e_code_response_invalid, a_msg.as_string_8)
+		end
+
 feature {NONE} -- State transistions
 
-	tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: DS_HASH_TABLE [DS_HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
 			-- <Precursor>
 		local
 			l_table: DS_HASH_TABLE [NATURAL_8, STRING]
-		once
+		do
 			Result := Precursor.twin
 
 				-- Override the initial state

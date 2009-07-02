@@ -1,6 +1,7 @@
 note
 	description: "[
-
+		An XML-RPC proxy for server communcation.
+		Clients should make all calls through a proxy or a specialized descendent.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,6 +29,8 @@ feature {NONE} -- Initialization
 
 	make (a_url: READABLE_STRING_8)
 			-- Initializes the proxy using an XML-RPC HTTP url.
+			--
+			-- `a_url': The URL pointing to the XML-RPC service.
 		require
 			a_url_attached: attached a_url
 			not_a_url_is_empty: not a_url.is_empty
@@ -66,7 +69,10 @@ feature {NONE} -- Helpers
 			-- Parser used to parse XML-RPC requests.
 		once
 			create Result.make
-			Result.set_callbacks (create {XRPC_RESPONSE_LOAD_CALLBACK}.make (Result))
+			Result.set_callbacks (create {XRPC_RESPONSE_LOAD_CALLBACKS}.make (Result))
+		ensure
+			result_attached: attached Result
+			result_callbacks_set: attached {XRPC_RESPONSE_LOAD_CALLBACKS} Result.callbacks
 		end
 
 	xml_emitter: XRPC_REQUEST_XML_EMITTER
@@ -111,7 +117,9 @@ feature -- Basic operations
 			end
 
 				-- Make the call
+			on_before_call (a_name, l_args)
 			Result := call_internal (a_name, l_args)
+			on_after_call (a_name, l_args, Result)
 		end
 
 feature {NONE} -- Basic operations
@@ -131,45 +139,99 @@ feature {NONE} -- Basic operations
 		local
 			l_parser: like parser
 			l_emitter: like xml_emitter
-			l_call_string: STRING
-			l_uri: STRING
 			l_protocol: XRPC_PROTOCOL
 			l_response: STRING
+			retried: BOOLEAN
 		do
-				-- Construct a method call string
-			l_emitter := xml_emitter
-			l_emitter.reset
-			l_emitter.process_method_call_request (a_name, a_args)
+			if not retried then
+					-- Construct a method call string
+				l_emitter := xml_emitter
+				l_emitter.reset
+				l_emitter.process_method_call_request (a_name, a_args)
 
-				-- Make request.
-			create l_protocol.make (url, l_emitter.xml)
-			l_protocol.open
-			if l_protocol.is_open then
-				l_protocol.initiate_transfer
-				if not l_protocol.error then
-					create l_response.make (256)
-					from until not l_protocol.is_packet_pending or l_protocol.error loop
-						l_protocol.read
-						if l_protocol.has_packet and then attached l_protocol.last_packet as l_packet then
-							l_response.append (l_packet)
+					-- Make request.
+				create l_protocol.make (url, l_emitter.xml)
+				l_protocol.open
+				if l_protocol.is_open then
+					l_protocol.initiate_transfer
+					if not l_protocol.error then
+						create l_response.make (256)
+						from until not l_protocol.is_packet_pending or l_protocol.error loop
+							l_protocol.read
+							if l_protocol.has_packet and then attached l_protocol.last_packet as l_packet then
+								l_response.append (l_packet)
+							end
+						end
+
+						if not l_response.is_empty and not l_protocol.error then
+							l_parser := parser
+							l_parser.parse_from_string (l_response)
+							if attached {XRPC_RESPONSE_LOAD_CALLBACKS} l_parser.callbacks as l_callbacks then
+								Result := l_callbacks.response
+
+									-- There should always be a response, even if there was a parse error.
+								check result_attached: attached Result end
+							else
+									-- For some reason, the right callbacks are not being used.
+								Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
+							end
+						else
+								-- An empty response is not valid.
+							Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_response_invalid)
 						end
 					end
-
-					l_parser := parser
-					l_parser.parse_from_string (l_response)
---					if attached {XRPC_RESPONSE_LOAD_CALLBACK} l_parser.callbacks as l_callbacks then
---						Result := l_callbacks.
---					end
+					l_protocol.close
 				end
-				l_protocol.close
+				if l_protocol.error and not attached Result then
+						-- The connection failed for some reason, report it.
+					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_connection_mask & l_protocol.error_code)
+				end
 			else
-				--Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_connection_unable_to_connect)
+					-- Unexpected failure, report it.
+				if attached (create {EXCEPTION_MANAGER}).last_exception as l_exception then
+					Result := response_factory.new_response_from_exception (l_exception)
+				else
+					Result := response_factory.new_response_from_error_code ({XRPC_ERROR_CODES}.e_code_internal_error)
+				end
 			end
+		rescue
+			retried := True
+			if attached l_protocol and then l_protocol.is_open then
+				l_protocol.close
+			end
+			retry
 		end
 
---feature {NONE} -- Action handlers
+feature {NONE} -- Actions handlers
 
---	on_default_handle_error (a
+	on_before_call (a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE])
+			-- Called prior to calling an XML-RPC method.
+			--
+			-- `a_name': The name of the method to be called.
+			-- `a_args': Arguments that will be passed to the method on the server.
+		require
+			a_name_attached: attached a_name
+			not_a_name_is_empty: not a_name.is_empty
+			not_a_args_is_empty: not a_args.is_empty
+		do
+		end
+
+	on_after_call (a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE]; a_response: detachable XRPC_RESPONSE)
+			-- Called after calling an XML-RPC method.
+			--
+			-- `a_name': The name of the method that was just called.
+			-- `a_args': Arguments that were passed to the method on the server.
+			-- `a_response': A response object, if any.
+		require
+			a_name_attached: attached a_name
+			not_a_name_is_empty: not a_name.is_empty
+			not_a_args_is_empty: attached a_args implies not a_args.is_empty
+		do
+		end
+
+invariant
+	url_attached: attached url
+	url_is_correct: url.is_correct
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

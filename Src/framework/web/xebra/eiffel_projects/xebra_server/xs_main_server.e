@@ -79,8 +79,8 @@ feature {NONE} -- Operations
 			end
 
 			o.iprint ("Shutting down...")
-			shutdown_webapps.do_nothing
 			shutdown_all_modules
+			shutdown_webapps.do_nothing
 			if attached modules ["mod_input"] then
 				if modules ["mod_input"].running then
 					o.iprint ("Remote Shutdown. Bye!");

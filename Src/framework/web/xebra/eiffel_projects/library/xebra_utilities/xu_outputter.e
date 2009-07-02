@@ -101,7 +101,7 @@ feature -- Print
 			a_msg_attached: a_msg /= Void
 		do
 			if a_debug_level <= debug_level then
-				print_with_name ("[DEBUG] " + a_msg)
+				print_with_name ("[DEBUG" + a_debug_level.out + "] " + a_msg)
 			end
 		end
 
@@ -138,9 +138,19 @@ feature {NONE}  -- Impl
 			-- Adds a new line at the start and the end and the command symbol(s)
 		require
 			a_msg_attached: a_msg /= Void
+ 		local
+			l_f_utils: XU_FILE_UTILITIES
 		do
+			create l_f_utils.make
+
+			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name.value + ".log") as l_file then
+				l_file.put_string ("%N" + a_msg)
+				l_f_utils.close
+			end
+
 			if add_input_line then
 				print ("%N" + a_msg + "%N$> ")
+
 			else
 				print ("%N" + a_msg)
 			end

@@ -108,6 +108,14 @@ feature -- Managing Display Attributes
 
 feature -- Managing Cell State
 
+	frozen set_state (a_cell: POINTER; a_state: INTEGER)
+			-- - (void)setState:(NSInteger)value
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSCell*)$a_cell setState: $a_state];"
+		end
+
 feature -- Modifying Textual Attributes
 
 	frozen set_line_break_mode (a_cell: POINTER; a_mode: INTEGER)
@@ -165,6 +173,14 @@ feature -- Managing Focus Rings
 feature -- Determining Cell Size
 
 feature -- Drawing and Highlighting
+
+	frozen set_highlighted (a_cell: POINTER; a_flag: BOOLEAN)
+			-- - (void)setHighlighted:(BOOL)flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSCell*)$a_cell setHighlighted: $a_flag];"
+		end
 
 feature -- Editing and Selecting Text
 

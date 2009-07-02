@@ -10,7 +10,7 @@ class
 inherit
 	NS_OBJECT
 
-	NS_ANIMATION
+	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
 
 create
 	make
@@ -361,13 +361,6 @@ feature -- Managing Attached Windows
 			{NS_WINDOW_API}.set_parent_window (item, a_window.item)
 		end
 
-feature -- Animation
-
-	animator: NS_WINDOW
-		do
-			create Result.share_from_pointer (animation_animator (item))
-		end
-
 feature -- Style Mask Constants
 
 	frozen borderless_window_mask: INTEGER
@@ -479,7 +472,6 @@ feature -- NSWindowButton - Accessing Standard Title Bar Buttons
 		alias
 			"NSWindowToolbarButton"
 		end
-
 
 	frozen window_document_icon_button: INTEGER
 			-- The document icon button.

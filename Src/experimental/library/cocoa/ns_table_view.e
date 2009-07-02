@@ -30,42 +30,29 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	add_table_column (a_table_column: NS_TABLE_COLUMN)
-		do
-			table_view_add_table_column (item, a_table_column.item)
-		end
-
 	selected_row: INTEGER
 		do
-			Result := table_view_selected_row (item)
+			Result := {NS_TABLE_VIEW_API}.selected_row (item)
 		end
 
 	set_header_view (a_view: POINTER)
 			--
 		do
-			table_view_set_header_view (item, a_view)
+			{NS_TABLE_VIEW_API}.set_header_view (item, a_view)
 		end
 
-feature {NONE} -- Objective-C Implementation
+feature -- Column Management
 
-	frozen table_view_add_table_column (a_table_view: POINTER; a_table_column: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSTableView*) $a_table_view addTableColumn: $a_table_column];"
+	add_table_column (a_table_column: NS_TABLE_COLUMN)
+			-- Adds a given column as the last column of the receiver.
+		do
+			{NS_TABLE_VIEW_API}.add_table_column (item, a_table_column.item)
 		end
 
-	frozen table_view_selected_row (a_table_view: POINTER) : INTEGER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSTableView*) $a_table_view selectedRow];"
+	table_columns: NS_ARRAY [NS_TABLE_COLUMN]
+			-- An array containing the NS_TABLE_COLUMN objects.
+		do
+			create Result.share_from_pointer ({NS_TABLE_VIEW_API}.table_columns (item))
 		end
 
-	frozen table_view_set_header_view (a_table_view: POINTER; a_header_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSTableView*) $a_table_view setHeaderView: $a_header_view];"
-		end
 end

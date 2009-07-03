@@ -15,7 +15,7 @@ class FIXED_DFA inherit
 			copy, is_equal
 		end;
 
-	FIXED_AUTOMATON [STATE_OF_DFA]
+	FIXED_AUTOMATON [detachable STATE_OF_DFA]
 		rename
 			make as fixed_make,
 			set_final as f_set_final
@@ -46,8 +46,12 @@ feature -- Access
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
+		local
+			l_item: like item
 		do
-			Result := item (source).successor (input_doc)
+			l_item := item (source)
+			check l_item /= Void end
+			Result := l_item.successor (input_doc)
 		end;
 
 feature -- Status setting
@@ -67,8 +71,12 @@ feature -- Status setting
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
+		local
+			l_item: like item
 		do
-			item (source).append_transition (input_doc, item (target))
+			l_item := item (source)
+			check l_item /= Void end
+			l_item.append_transition (input_doc, item (target))
 		end;
 
 	set_final (state, f: INTEGER)
@@ -83,7 +91,7 @@ feature -- Output
 			-- Print information about the automaton's states.
 		local
 			i,j, index: INTEGER;
-			value: STATE_OF_DFA
+			value: detachable STATE_OF_DFA
 			l_array: detachable ARRAY [INTEGER]
 		do
 			io.put_string (" FIXED_DFA%N");
@@ -95,6 +103,7 @@ feature -- Output
 				io.put_string (" State #");
 				io.put_integer (j);
 				value := item (j);
+				check value /= Void end
 				if value.final /= 0 then
 					l_array := value.final_array
 					check l_array_attached: l_array /= Void end
@@ -147,7 +156,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	start_state: STATE_OF_DFA
+	start_state: detachable STATE_OF_DFA
 			-- Start_number-th state
 			-- (used for the beginning of the course
 			-- through the automaton)
@@ -159,11 +168,11 @@ note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FIXED_DFA

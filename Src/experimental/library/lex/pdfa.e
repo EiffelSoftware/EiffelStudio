@@ -12,7 +12,7 @@ note
 
 class PDFA inherit
 
-	ARRAY [LINKED_LIST [INTEGER]]
+	ARRAY [detachable LINKED_LIST [INTEGER]]
 		rename
 			make as array_make
 		export
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Access
 
-	input_array: ARRAY [FIXED_INTEGER_SET];
+	input_array: ARRAY [detachable FIXED_INTEGER_SET];
 			-- For each input, set of the states which have
 			-- a transition on this input to the following state
 
@@ -84,26 +84,29 @@ feature -- Status setting
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input;
 			good_successor: target = source + 1
 		local
-			set: FIXED_INTEGER_SET
+			l_set: FIXED_INTEGER_SET
 		do
-			if input_array.item (input_doc) = Void then
-				create set.make (nb_states);
-				input_array.put (set, input_doc)
-			end;
-			input_array.item (input_doc).put (source)
+			if attached input_array.item (input_doc) as l_input_array_item then
+				l_input_array_item.put (source)
+			else
+				create l_set.make (nb_states)
+				input_array.put (l_set, input_doc)
+				l_set.put (source)
+			end
 		end;
 
 	set_e_transition (source, target: INTEGER)
 			-- Set epsilon transition from `source' to `target'.
 		local
-			list: LINKED_LIST [INTEGER]
+			list: detachable LINKED_LIST [INTEGER]
 		do
-			if item (source) = Void then
+			list := item (source)
+			if list = Void then
 				create list.make;
 				put (list, source)
 			end;
-			item (source).put_right (target);
-			item (source).forth
+			list.put_right (target);
+			list.forth
 		end;
 
 feature -- Element change
@@ -125,7 +128,7 @@ feature -- Element change
 		local
 			index, last_index: INTEGER;
 			input_doc: INTEGER;
-			set: FIXED_INTEGER_SET
+			set: detachable FIXED_INTEGER_SET
 		do
 			e_include (fa, shift);
 			from
@@ -158,7 +161,7 @@ feature -- Element change
 			z_possible: greatest_input >= Lower_z
 		local
 			input_doc: INTEGER;
-			upper_set, lower_set: FIXED_INTEGER_SET
+			upper_set, lower_set: detachable FIXED_INTEGER_SET
 		do
 			if has_letters then
 				from
@@ -194,8 +197,8 @@ feature -- Removal
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input;
 			good_successor: target = source + 1
 		do
-			if input_array.item (input_doc) /= Void then
-				input_array.item (input_doc).remove (source)
+			if attached input_array.item (input_doc) as l_input_array_item then
+				l_input_array_item.remove (source)
 			end
 		end;
 
@@ -206,8 +209,8 @@ feature -- Output
 			-- of the current automaton.
 		local
 			index, input_doc: INTEGER;
-			set: FIXED_INTEGER_SET;
-			epsilon_list: LINKED_LIST[INTEGER]
+			set: detachable FIXED_INTEGER_SET;
+			epsilon_list: detachable LINKED_LIST [INTEGER]
 		do
 			debug ("lex_output")
 				from
@@ -264,7 +267,7 @@ feature {NONE} -- Implementation
 		local
 			stack: LINKED_STACK [INTEGER];
 			top, int: INTEGER;
-			e_successors_list: LINKED_LIST [INTEGER]
+			e_successors_list: detachable LINKED_LIST [INTEGER]
 		do
 			create stack.make;
 			create Result.make (nb_states);
@@ -279,6 +282,7 @@ feature {NONE} -- Implementation
 				if item (top) /= Void then
 					from
 						e_successors_list := item (top);
+						check e_successors_list /= Void end
 						e_successors_list.start
 					until
 						e_successors_list.after or e_successors_list.is_empty
@@ -305,8 +309,8 @@ feature {NONE} -- Implementation
 			possible_input: i >= 0 and i <= greatest_input;
 			set_not_void: initial_set /= Void
 		do
-			if input_array.item (i) /= Void then
-				Result := initial_set and (input_array.item (i));
+			if attached input_array.item (i) as l_input_array_item then
+				Result := initial_set and (l_input_array_item);
 				if not Result.is_empty then
 					Result := Result.right_shifted (1)
 				else
@@ -360,10 +364,13 @@ feature {NONE} -- Implementation
 			dfa_attached: dfa /= Void
 		local
 			l_dfa: like dfa
+			l_state_of_dfa: detachable STATE_OF_DFA
 		do
 			l_dfa := dfa
 			check l_dfa_attached: l_dfa /= Void end
-			l_dfa.item (s).set_final (final_array.item (f))
+			l_state_of_dfa := l_dfa.item (s)
+			check l_state_of_dfa /= Void end
+			l_state_of_dfa.set_final (final_array.item (f))
 		end;
 
 	e_include (fa: PDFA; shift: INTEGER)
@@ -374,7 +381,7 @@ feature {NONE} -- Implementation
 			nb_states_large_enough: nb_states >= fa.nb_states + shift
 		local
 			index, last_index: INTEGER;
-			list: LINKED_LIST [INTEGER]
+			list: detachable LINKED_LIST [INTEGER]
 		do
 			last_index := fa.nb_states;
 			from
@@ -384,6 +391,7 @@ feature {NONE} -- Implementation
 				index := index + 1;
 				if fa.item (index) /= Void then
 					list := fa.item (index);
+					check list /= Void end
 					from
 						list.start
 					until
@@ -403,7 +411,7 @@ feature {NONE} -- Implementation
 			source_in_automaton: source >= 1 and source <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		do
-			if input_array.item (input_doc).has (source) then
+			if attached input_array.item (input_doc) as l_fixed_integer_set and then l_fixed_integer_set.has (source) then
 				create Result.make;
 				Result.put_right (source + 1)
 			end
@@ -442,15 +450,16 @@ note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
 
 
 end -- class PDFA
+
 

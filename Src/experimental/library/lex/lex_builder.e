@@ -722,7 +722,7 @@ feature -- Element change
 		local
 			new: PDFA;
 			length, a_length, b_length: INTEGER;
-			a_transitions, b_transitions: LINKED_LIST [INTEGER];
+			a_transitions, b_transitions: detachable LINKED_LIST [INTEGER];
 			c_name: STRING
 			l_tools: like tool_list
 			l_tool_names: like tool_names
@@ -1359,7 +1359,7 @@ feature {NONE} -- Implementation
 		require
 			categories_table: categories_table /= Void
 		local
-			new_input_array: ARRAY [FIXED_INTEGER_SET];
+			new_input_array: ARRAY [detachable FIXED_INTEGER_SET];
 			category, in_put: INTEGER
 			l_categories: like categories_table
 		do
@@ -1373,8 +1373,8 @@ feature {NONE} -- Implementation
 			loop
 				in_put := in_put + 1;
 				category := l_categories.item (in_put);
-				if new_input_array.item (category) = Void then
-					new_input_array.put (input_array.item (in_put), category)
+				if new_input_array.item (category) = Void and then attached input_array.item (in_put) as l_input_array_item then
+					new_input_array.put (l_input_array_item, category)
 				end
 			end;
 			input_array := new_input_array
@@ -1478,15 +1478,18 @@ feature {NONE} -- Implementation
 		local
 			old_final: INTEGER;
 			l_dfa: like dfa
+			l_state_of_dfa: detachable STATE_OF_DFA
 		do
 			l_dfa := dfa
 			check l_dfa_attached: l_dfa /= Void end
-			old_final := l_dfa.item (s).final;
+			l_state_of_dfa := l_dfa.item (s)
+			check l_state_of_dfa /= Void end
+			old_final := l_state_of_dfa.final;
 			if old_final = 0 then
-				l_dfa.item (s).set_final (new_final)
+				l_state_of_dfa.set_final (new_final)
 			elseif old_final /= new_final then
 				error_common_part (old_final, new_final);
-				l_dfa.item (s).set_final (new_final)
+				l_state_of_dfa.set_final (new_final)
 			end
 		end;
 
@@ -1560,15 +1563,16 @@ note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
 
 
 end -- class LEX_BUILDER
+
 

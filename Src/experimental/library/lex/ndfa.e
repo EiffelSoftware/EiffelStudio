@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 	set_position: INTEGER;
 			-- Position of the last searched set in sets_list
 
-	closures: detachable ARRAY [FIXED_INTEGER_SET];
+	closures: detachable ARRAY [detachable FIXED_INTEGER_SET];
 			-- Each element of this array represents the
 			-- epsilon closure of one NDFA state
 
@@ -192,6 +192,7 @@ feature {NONE} -- Implementation
 			closures_exists: closures /= Void
 		local
 			l_closures: like closures
+			l_fixed_integer_set: detachable FIXED_INTEGER_SET
 			index, last_index: INTEGER
 		do
 			l_closures := closures
@@ -205,7 +206,9 @@ feature {NONE} -- Implementation
 			until
 				index > last_index
 			loop
-				Result := Result or (l_closures.item (index));
+				l_fixed_integer_set := l_closures.item (index);
+				check l_fixed_integer_set /= Void end
+				Result := Result or l_fixed_integer_set;
 				index := initial_set.next (index)
 			end
 		end;
@@ -318,15 +321,16 @@ note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
 
 
 end -- class NDFA
+
 

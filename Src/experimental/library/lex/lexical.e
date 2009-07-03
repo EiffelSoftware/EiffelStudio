@@ -236,6 +236,7 @@ feature -- Input
 						l_cat_table_attached: l_cat_table /= Void
 					end
 					state := l_dfa.item (1);
+					check state /= Void end
 					state := state.item (l_cat_table.item
 							(buffer_item_code (read_index)))
 				until
@@ -335,6 +336,7 @@ feature -- Input
 						l_cat_table_attached: l_cat_table /= Void
 					end
 					state := l_dfa.item (1);
+					check state /= Void end
 					state := state.item (l_cat_table.item
 								(buffer_item_code (read_index)));
 				until
@@ -430,6 +432,7 @@ feature -- Input
 						l_cat_table_attached: l_cat_table /= Void
 					end
 					state := l_dfa.item (1);
+					check state /= Void end
 					state := state.item (l_cat_table.item
 								(buffer_item_code (read_index)))
 				until
@@ -650,4 +653,5 @@ note
 
 
 end -- class LEXICAL
+
 

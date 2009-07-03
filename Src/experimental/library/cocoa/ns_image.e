@@ -64,17 +64,28 @@ feature -- Access
 			create Result.share_from_pointer ({NS_IMAGE_API}.representations (item))
 		end
 
-	draw (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+	draw_at_point (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
 			-- Draws all or part of the image at the specified point in the current coordinate system.
 			-- `delta': The opacity of the image, specified as a value from 0.0 to 1.0. Specifying a value of 0.0 draws the image as fully transparent
 			--  while a value of 1.0 draws the image as fully opaque. Values greater than 1.0 are interpreted as 1.0.
+			-- Note: The image is drawn to fill the bounds of the destination. If the size of the destination is different from
+			--  the size of a_from_rect the drawn image will be scaled.
 		require
-			a_point /= void
-			a_from_rect /= void
 			valid_operation: valid_operation (a_op)
 		do
 			{NS_IMAGE_API}.draw_at_point_from_rect_operation_fraction (item, a_point.item, a_from_rect.item, a_op, a_delta)
 		end
+
+	draw_in_rect (a_dst_rect: NS_RECT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+			-- Draws all or part of the image in the specified rectangle in the current coordinate system.
+			-- `delta': The opacity of the image, specified as a value from 0.0 to 1.0. Specifying a value of 0.0 draws the image as fully transparent
+			--  while a value of 1.0 draws the image as fully opaque. Values greater than 1.0 are interpreted as 1.0.
+		require
+			valid_operation: valid_operation (a_op)
+		do
+			{NS_IMAGE_API}.draw_in_rect_from_rect_operation_fraction (item, a_dst_rect.item, a_from_rect.item, a_op, a_delta)
+		end
+
 
 	lock_focus
 			-- Prepares the image to receive drawing commands.

@@ -10,6 +10,8 @@ class
 inherit
 	MEMORY_STRUCTURE
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_size
@@ -45,6 +47,14 @@ feature -- Measurement
 	set_height (a_height: INTEGER)
 		do
 			internal_set_height (item, a_height)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := "(Width: " + width.out +
+				", Height: " + height.out + ")"
 		end
 
 feature {NONE} -- Implementation

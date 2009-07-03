@@ -79,12 +79,21 @@ feature -- Managing the Focus
 feature -- Drawing the Image
 
 	frozen draw_at_point_from_rect_operation_fraction (a_image: POINTER; a_point: POINTER; a_from_rect: POINTER; a_op: INTEGER; a_delta: REAL)
-			--- (void)drawAtPoint:(NSPoint)point fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
+			-- - (void)drawAtPoint:(NSPoint)point fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSImage*) $a_image drawAtPoint: *(NSPoint*)$a_point fromRect: *(NSRect*)$a_from_rect operation: $a_op fraction: $a_delta];"
 		end
+
+	frozen draw_in_rect_from_rect_operation_fraction (a_image: POINTER; a_dst_rect: POINTER; a_from_rect: POINTER; a_op: INTEGER; a_delta: REAL)
+			-- - (void)drawInRect:(NSRect)dstRect fromRect:(NSRect)srcRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSImage*) $a_image drawInRect: *(NSRect*)$a_dst_rect fromRect: *(NSRect*)$a_from_rect operation: $a_op fraction: $a_delta];"
+		end
+
 
 feature -- Working With Alignment Metadata
 

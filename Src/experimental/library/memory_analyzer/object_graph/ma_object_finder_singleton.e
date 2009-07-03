@@ -106,7 +106,7 @@ feature
 					until
 						l_list.after or Result /= Void
 					loop
-						if l_list.item /= Void and then l_list.item.generating_type.is_equal (a_type_name) then
+						if l_list.item /= Void and then a_type_name.is_equal (l_list.item.generating_type) then
 							Result := l_list.item
 						end
 	

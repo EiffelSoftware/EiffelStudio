@@ -148,13 +148,12 @@ feature -- Basic operations
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "New Eiffel test wizard"
+	t_title: STRING = "New Eiffel Test wizard"
 	t_subtitle: STRING = "Select type of test you would like to create:"
 
 	b_new_class: STRING = "Manual test case"
-	b_existing_class: STRING = "Use existing test class"
-	b_extraction: STRING = "Extract tests from running application"
-	b_generation: STRING = "Synthesized tests using AutoTest%N(experimental)"
+	b_extraction: STRING = "Extract tests"
+	b_generation: STRING = "Generated tests"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -181,10 +180,10 @@ feature {NONE} -- Internationalization
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

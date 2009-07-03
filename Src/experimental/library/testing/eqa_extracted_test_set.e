@@ -275,17 +275,11 @@ feature {NONE} -- Object initialization
 				if attached {TYPE [SPECIAL [ANY]]} l_type as l_stype then
 					l_object := create_special_object (l_stype, context.item (i).attributes.count)
 				else
-					if attached {TYPE [STRING]} l_type as l_s8type then
-						if attached {STRING} context.item (i).attributes.item (1) as l_string8_object then
-							l_object := l_string8_object
+					if attached {TYPE [STRING]} l_type or attached {TYPE [STRING_32]} l_type then
+						if attached {STRING} context.item (i).attributes.item (1) as l_string_object then
+							l_object := l_string_object
 						else
-							assert ("first attribute of a STRING_8 object must be a string", False)
-						end
-					elseif attached {TYPE [STRING_32]} l_type as l_s32type then
-						if attached {STRING_32} context.item (i).attributes.item (1) as l_string32_object then
-							l_object := l_string32_object
-						else
-							assert ("first attribute of a STRING_32 object must be a string", False)
+							assert ("first attribute of a STRING_8 or STRING_32 object must be a manifest string", False)
 						end
 					else
 						l_gtype := generic_dynamic_type (context.item (i).type, 1)

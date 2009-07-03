@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {EQA_SYNTHESIZED_TEST_SET}."
+	description: "[
+		Set of tests which have been created using test generation.
+		
+		This class is obsolete, please use EQA_GENERATED_TEST_SET.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

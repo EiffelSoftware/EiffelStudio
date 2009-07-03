@@ -57,7 +57,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_tool_title: STRING = "Testing"
+	t_tool_title: STRING = "AutoTest"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

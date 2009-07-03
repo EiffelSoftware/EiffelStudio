@@ -449,7 +449,7 @@ feature -- Reporting messages
 			report_info_message ("Executing automatically generated tests")
 		end
 
-	report_test_synthesis (a_class: CLASS_I)
+	report_test_generation (a_class: CLASS_I)
 			-- Report that AutoTest has created a bug reproducing test case.
 		require
 			a_class_attached: a_class /= Void

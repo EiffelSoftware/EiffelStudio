@@ -22,7 +22,7 @@ feature -- Access
 	ancestor_names: attached ARRAY [attached STRING]
 			-- <Precursor>
 		do
-			Result := << synthesized_ancestor_name >>
+			Result := << generated_ancestor_name >>
 		end
 
 	root_feature_name: attached STRING = ""
@@ -75,7 +75,7 @@ feature {NONE} -- Output
 		do
 			put_indexing_keyword
 			stream.indent
-			stream.put_line ("description: %"Synthesized test created by AutoTest.%"")
+			stream.put_line ("description: %"Generated tests created by AutoTest.%"")
 			stream.put_line ("author: %"Testing tool%"")
 			stream.dedent
 			stream.put_line ("")
@@ -83,7 +83,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Constants
 
-	synthesized_ancestor_name: attached STRING = "EQA_SYNTHESIZED_TEST_SET"
+	generated_ancestor_name: attached STRING = "EQA_GENERATED_TEST_SET"
 
 invariant
 	writing_implies_writer_attached: is_writing implies test_writer /= Void

@@ -264,7 +264,7 @@ feature {NONE} -- Basic operations
 										attached l_project_helper.last_added_class as l_new_class and then
 										l_last_class /= l_new_class
 									then
-										session.error_handler.report_test_synthesis (l_new_class)
+										session.error_handler.report_test_generation (l_new_class)
 									end
 									current_results := Void
 								end

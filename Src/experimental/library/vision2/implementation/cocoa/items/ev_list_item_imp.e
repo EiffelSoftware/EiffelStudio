@@ -102,21 +102,34 @@ feature -- Element change
 			internal_text := a_text.twin
 		end
 
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
+		do
+			debug
+				io.put_string ("EV_LIST_ITEM_IMP.set_pointer_style: Not implemented%N")
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	width: INTEGER
 		do
---			io.put_string ("EV_LIST_ITEM.width: Not implemented%N")
+			debug
+				io.put_string ("EV_LIST_ITEM_IMP.width: Not implemented%N")
+			end
 		end
 
 	height: INTEGER
 		do
---			io.put_string ("EV_LIST_ITEM.height: Not implemented%N")
+			debug
+				io.put_string ("EV_LIST_ITEM_IMP.height: Not implemented%N")
+			end
 		end
 
 	screen_x: INTEGER
 		do
---			io.put_string ("EV_LIST_ITEM.screen_x: Not implemented%N")
+			debug
+				io.put_string ("EV_LIST_ITEM_IMP.screen_x: Not implemented%N")
+			end
 		end
 
 	screen_y: INTEGER

@@ -14,6 +14,8 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
+		undefine
+			set_pointer_style
 		redefine
 			interface,
 			destroy

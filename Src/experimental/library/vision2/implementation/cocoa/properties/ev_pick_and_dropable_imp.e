@@ -64,13 +64,18 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES,  LAYOUT_INSPECTOR} -- Implementatio
 			--create Result
 		end
 
-	set_pointer_style (a_cursor: EV_POINTER_STYLE)
-			-- Assign `a_cursor' to `pointer_style'.
+	set_focus
+			-- Grab keyboard focus.
 		do
 		end
 
-	set_focus
-			-- Grab keyboard focus.
+	has_focus: BOOLEAN
+			-- Does widget have the keyboard focus?
+		do
+		end
+
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
+			-- Assign `a_cursor' to `pointer_style'.
 		do
 		end
 
@@ -82,11 +87,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES,  LAYOUT_INSPECTOR} -- Implementatio
 	pointer_style: detachable EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
-
-	has_focus: BOOLEAN
-			-- Does widget have the keyboard focus?
-		do
-		end
 
 	width: INTEGER
 			-- Horizontal size measured in pixels.
@@ -119,18 +119,23 @@ feature {NONE} -- Implementation
 	enable_capture
 			-- Grab all the mouse and keyboard events.
 		do
+			internal_has_capture := True
 		end
 
 	disable_capture
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
+			internal_has_capture := False
 		end
 
 	has_capture: BOOLEAN
 			-- Does Current have the keyboard and mouse event capture?
 		do
+			Result := internal_has_capture
 		end
+
+	internal_has_capture: BOOLEAN
 
 feature -- Implementation
 

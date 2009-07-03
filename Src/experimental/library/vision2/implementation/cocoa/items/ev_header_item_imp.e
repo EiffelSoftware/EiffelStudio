@@ -159,6 +159,11 @@ feature -- Status setting
 			table_column.size_to_fit
 		end
 
+	set_pointer_style (c: EV_POINTER_STYLE)
+			-- Assign `c' to `pointer_style'
+		do
+		end
+
 feature {EV_HEADER_IMP} -- Implementation
 
 	table_column: NS_TABLE_COLUMN

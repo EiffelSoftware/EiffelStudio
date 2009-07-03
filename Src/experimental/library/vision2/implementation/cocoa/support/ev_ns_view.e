@@ -161,7 +161,18 @@ feature -- Element change
 			end
 		end
 
-feature {LAYOUT_INSPECTOR, EV_ANY_I} -- Implementation
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
+			-- Assign `a_cursor' to `pointer_style'.
+		local
+			pointer_style_imp: detachable EV_POINTER_STYLE_IMP
+		do
+			pointer_style_imp ?= a_cursor.implementation
+			check pointer_style_imp /= void end
+			attached_view.discard_cursor_rects
+			attached_view.add_cursor_rect (attached_view.visible_rect, pointer_style_imp.cursor)
+		end
+
+feature -- Implementation
 
 	internal_tooltip_string: detachable STRING_32
 

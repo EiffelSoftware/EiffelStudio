@@ -126,6 +126,7 @@ feature -- Layout
 --			if a_width > 0 then -- Hack because I want to get EV_GAUGE working. TODO How/where/when should the resize actions be called?
 --				on_size (a_width, a_height)
 --			end
+--			resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
 
 --	on_size (a_width, a_height: INTEGER)

@@ -54,8 +54,9 @@ feature {NONE} -- Implementation
 			cocoa_view := view
 			create stepper.make
 
-			initialize_gauge_imp
+			create value_range.make (0, 100)
 			Precursor {EV_TEXT_FIELD_IMP}
+			initialize_gauge_imp
 
 			view.add_subview (text_field)
 			view.add_subview (stepper)

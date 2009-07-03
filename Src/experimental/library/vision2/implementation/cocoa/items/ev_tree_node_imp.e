@@ -268,6 +268,11 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 --			io.put_string ("EV_HEADER_ITEM_IMP.y_position: Not implemented%N")
 		end
 
+	set_pointer_style (c: EV_POINTER_STYLE)
+			-- Assign `c' to `pointer_style'
+		do
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TREE_NODE note option: stable attribute end;

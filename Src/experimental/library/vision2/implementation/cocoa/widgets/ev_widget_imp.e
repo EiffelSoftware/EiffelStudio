@@ -18,7 +18,8 @@ inherit
 	EV_PICK_AND_DROPABLE_IMP
 		undefine
 			show,
-			top_level_window_imp
+			top_level_window_imp,
+			set_pointer_style
 		redefine
 			interface,
 			make,
@@ -69,13 +70,23 @@ feature {NONE} -- Initialization
 	initialize
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
+		local
+			l_notification_center: NS_NOTIFICATION_CENTER
 		do
 			is_show_requested := True
 			set_expandable (True)
 			set_is_initialized (True)
+
+--			create l_notification_center.default_center
+--			l_notification_center.add_observer (agent on_size_change, void, cocoa_view)
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+
+	on_size_change (a_sender: NS_OBJECT)
+		do
+			--io.put_string ("Size change: " + a_sender.debug_output + "%N")
+		end
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.

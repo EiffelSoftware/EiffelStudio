@@ -6,7 +6,6 @@ note
 	revision	: "$Revision$"
 
 -- TODO find the icons by tag instead of using fixed icon paths (probably by using NS_WORKSPACE and constants from IconsCore)
--- TODO Load cursors
 
 class
 	EV_STOCK_PIXMAPS_IMP
@@ -46,7 +45,7 @@ feature -- Access
 			-- Pixmap symbolizing a piece of information.
 		do
 			create Result
-			Result.set_with_named_file ("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/ToolbarInfoIcon.icns")
+			Result.set_with_named_file ("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/ToolbarInfo.icns")
 			Result.stretch (32, 32)
 		end
 
@@ -103,86 +102,6 @@ feature -- Access
 		do
 			create Result
 			Result.set_with_named_file ("/System/Library/Frameworks/AppKit.framework/Resources/NSDefaultApplicationIcon.tiff")
-		end
-
-feature -- Default cursors
-
-	Busy_cursor: EV_CURSOR
-			-- Standard arrow and small hourglass
-		do
-			create Result
-		end
-
-	Standard_cursor: EV_CURSOR
-			-- Standard arrow
-		do
-			create Result
-		end
-
-	Crosshair_cursor: EV_CURSOR
-			-- Crosshair
-		do
-			create Result
-		end
-
-	Help_cursor: EV_CURSOR
-			-- Arrow and question mark
-		do
-			create Result
-		end
-
-	Ibeam_cursor: EV_CURSOR
-			-- I-beam
-		do
-			create Result
-		end
-
-	No_cursor: EV_CURSOR
-			-- Slashed_circle
-		do
-			create Result
-		end
-
-	Sizeall_cursor: EV_CURSOR
-			-- Four-pointed arrow pointing north, south, east and west
-		do
-			create Result
-		end
-
-	Sizens_cursor: EV_CURSOR
-			-- Double-pointed arrow pointing north and south
-		do
-			create Result
-		end
-
-	Sizenwse_cursor: EV_CURSOR
-			-- Double-pointed arrow pointing north-west and south-east
-		do
-			create Result
-		end
-
-	Sizenesw_cursor: EV_CURSOR
-			-- Double-pointed arrow pointing north-east and south-west
-		do
-			create Result
-		end
-
-	Sizewe_cursor: EV_CURSOR
-			-- Double-pointed arrow pointing west and east
-		do
-			create Result
-		end
-
-	Uparrow_cursor: EV_CURSOR
-			-- Vertical arrow
-		do
-			create Result
-		end
-
-	Wait_cursor: EV_CURSOR
-			-- Hourglass
-		do
-			create Result
 		end
 
 end -- class EV_STOCK_PIXMAPS_IMP

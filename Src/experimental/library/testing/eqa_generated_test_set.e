@@ -1,6 +1,6 @@
 note
 	description: "[
-		Set of tests which have been creating using AutoTest.
+		Set of tests which have been created using test generation.
 		
 		To reproduce failure each instruction will be called in a safe environment, allowing the
 		execution to continue even if a exception has been raised.
@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_SYNTHESIZED_TEST_SET
+	EQA_GENERATED_TEST_SET
 
 inherit
 	EQA_TEST_SET

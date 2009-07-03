@@ -1,0 +1,15 @@
+test_name 	boolean-class-invariant
+test_description Class invariant in BOOLEAN_REF should work not only for BOOLEAN, but also for BOOLEAN_REF.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output
+execute_result 	ok
+
+compare 	exec_output output
+
+test_end

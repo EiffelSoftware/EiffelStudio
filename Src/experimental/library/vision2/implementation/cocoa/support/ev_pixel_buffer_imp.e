@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
 		do
+			create image.make_with_size (create {NS_SIZE}.make_size (1000, 1000))
 			width := a_width
 			height := a_height
 		end
@@ -45,33 +46,71 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			create image.make_with_size (create {NS_SIZE}.make_size (1000, 1000))
 			set_is_initialized (True)
 		end
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING)
+	set_with_named_file (a_path: STRING)
 			-- Load pixel data file `a_file_name'.
+		local
+			l_image: NS_IMAGE
+			l_image_rep: detachable NS_IMAGE_REP
 		do
+			create l_image.make_with_referencing_file (a_path)
+			if l_image.representations.count > 0 then
+				-- File found, representation loaded
+				l_image_rep := l_image.representations.item (0)
+				check l_image_rep /= void end
+				width := l_image_rep.pixels_wide
+				height := l_image_rep.pixels_high
+				image := l_image
+			else
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			end
 		end
 
 	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
 		do
+			io.put_string ("EV_PIXEL_BUFFER_IMP: Not implemented")
 		end
 
-
-	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
+	sub_pixmap (a_area: EV_RECTANGLE): EV_PIXMAP
 			-- Draw Current to `a_drawable'
+		local
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
+			l_area_y: INTEGER
 		do
-			-- TODO!
-			create Result
+			create Result.make_with_size (a_area.width, a_area.height)
+			l_pixmap_imp ?= Result.implementation
+			check l_pixmap_imp /= Void end
+			l_pixmap_imp.image.lock_focus
+			l_area_y := height - a_area.height - a_area.y -- Flipped y coordinate
+			image.draw_in_rect (
+				create {NS_RECT}.make_rect (0, 0, a_area.width, a_area.height),
+				create {NS_RECT}.make_rect (a_area.x, l_area_y, a_area.width, a_area.height),
+				{NS_IMAGE}.composite_source_over, 1)
+			l_pixmap_imp.image.unlock_focus
+--			Result.set_background_color (create {EV_COLOR}.make_with_rgb (0.0, 1.0, 0.0))
+--			Result.clear
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
+		local
+			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
+			l_pixel_buffer_imp ?= Result.implementation
+			check l_pixel_buffer_imp /= Void end
+			l_pixel_buffer_imp.image.lock_focus
+			image.draw_at_point (
+				create {NS_POINT}.make_point (0, 0),
+				create {NS_RECT}.make,-- .make_rect (a_rect.x, a_rect.y, a_rect.width, a_rect.height),
+				{NS_IMAGE}.composite_source_over, 1)
+			l_pixel_buffer_imp.image.unlock_focus
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32

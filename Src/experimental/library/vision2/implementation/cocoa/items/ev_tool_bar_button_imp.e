@@ -192,7 +192,7 @@ feature {EV_ANY_I} -- Implementation
 	char_height: INTEGER = 15;
 	padding: INTEGER = 10;
 
-feature {LAYOUT_INSPECTOR, EV_ANY_I} -- Implementation
+feature -- Implementation
 
 	button: NS_BUTTON;
 

@@ -283,7 +283,7 @@ feature -- Drawing operations
 			l_font ?= font.implementation
 			check l_font /= void end
 			create l_attributes.make_with_object_for_key (l_font.font, font_attribute_name)
-			image.lock_focus
+			prepare_drawing
 			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
 			finish_drawing
 		end
@@ -326,19 +326,28 @@ feature -- Drawing operations
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
-			pixmap_imp.image.set_flipped (True)
-			pixmap_imp.image.draw (
-				create {NS_POINT}.make_point (x, y),
+			--pixmap_imp.image.set_flipped (True)
+			pixmap_imp.image.draw_at_point (
+				create {NS_POINT}.make_point (x, height - y - a_pixmap.height),
 				create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height),
 				{NS_IMAGE}.composite_source_over, 1)
 			finish_drawing
 		end
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
+	sub_pixmap (a_area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
+		local
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			-- TODO
-			create Result
+			create Result.make_with_size (a_area.width, a_area.height)
+			l_pixmap_imp ?= Result.implementation
+			check l_pixmap_imp /= Void end
+			l_pixmap_imp.image.lock_focus
+			image.draw_in_rect (
+				create {NS_RECT}.make_rect (0, 0, a_area.width, a_area.height),
+				create {NS_RECT}.make_rect (a_area.x, height - a_area.height - a_area.y, a_area.width, a_area.height),
+				{NS_IMAGE}.composite_source_over, 1)
+			l_pixmap_imp.image.unlock_focus
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
@@ -349,7 +358,7 @@ feature -- Drawing operations
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= void end
-			pixmap_imp.image.draw (
+			pixmap_imp.image.draw_at_point (
 				create {NS_POINT}.make_point (x, y),
 				create {NS_RECT}.make_rect (0, 0, area.width, area.height),
 				{NS_IMAGE}.composite_source_over, 1)
@@ -499,11 +508,11 @@ feature -- filling operations
 		do
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature -- Implementation
 
 	image: NS_IMAGE
 
-feature {NONE} -- Implementation
+feature {EV_ANY_HANDLER} -- Implementation
 
 	prepare_drawing
 		local

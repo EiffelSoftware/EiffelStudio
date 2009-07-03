@@ -16,7 +16,6 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			clear_rectangle,
 			make
 		end
 
@@ -40,11 +39,6 @@ feature -- Status Setting
 		do
 			width := a_width
 			height := a_height
-		end
-
-	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
-			-- Erase rectangle specified with `background_color'.
-		do
 		end
 
 feature -- Access

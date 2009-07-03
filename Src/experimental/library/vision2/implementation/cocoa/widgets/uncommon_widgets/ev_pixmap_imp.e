@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			internal_width := 10
 			Precursor {EV_DRAWABLE_IMP}
 			create image_view.make
+			image_view.set_image (image)
 			cocoa_view := image_view
 			image_view.set_image_scaling ({NS_IMAGE_VIEW}.image_scaling_none)
 
@@ -66,12 +67,34 @@ feature {NONE} -- Initialization
 
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
+		local
+			pointer_style_imp: detachable EV_POINTER_STYLE_IMP
 		do
+			make
+
+			pointer_style_imp ?= a_pointer_style.implementation
+			check pointer_style_imp /= Void end
+			if attached pointer_style_imp.cursor.image as l_image then
+				image := l_image
+			else
+				debug
+					io.put_string ("Can't get image of Cursor")
+				end
+			end
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
+		local
+			pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
+			make
+
+			pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check pixel_buffer_imp /= Void end
+			image := pixel_buffer_imp.image
+			internal_width := pixel_buffer_imp.width
+			internal_height := pixel_buffer_imp.height
 		end
 
 feature -- Drawing operations

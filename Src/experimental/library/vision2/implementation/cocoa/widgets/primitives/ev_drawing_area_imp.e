@@ -20,7 +20,9 @@ inherit
 			old_make
 		redefine
 			interface,
-			make
+			make,
+			prepare_drawing,
+			finish_drawing
 		end
 
 	EV_PRIMITIVE_IMP
@@ -97,7 +99,38 @@ feature -- Status setting
 --			display
 		end
 
+	prepare_drawing
+		local
+			l_color: detachable EV_COLOR_IMP
+		do
+			if not lock_focus_if_can_draw then
+				image.lock_focus
+				is_drawing_buffered := True
+			else
+				is_drawing_buffered := False
+			end
+			l_color ?= foreground_color.implementation
+			check l_color /= void end
+			l_color.color.set
+		end
+
+
+	finish_drawing
+		do
+			if is_drawing_buffered then
+				image.unlock_focus
+			else
+				unlock_focus
+			end
+			-- update the view
+			update_if_needed
+		end
+
 feature {NONE} -- Implementation
+
+
+
+	is_drawing_buffered: BOOLEAN
 
 	update_if_needed
 		do
@@ -111,7 +144,7 @@ feature {NONE} -- Implementation
 		do
 			create invalid_rect.make_rect (0, 0, width, height)
 
-			image.draw (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1.0)
+--			image.draw (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1.0)
 
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([

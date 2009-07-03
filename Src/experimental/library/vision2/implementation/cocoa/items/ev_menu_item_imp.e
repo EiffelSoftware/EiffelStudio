@@ -81,6 +81,11 @@ feature -- Status setting
 			Precursor {EV_SENSITIVE_IMP}
 		end
 
+	set_pointer_style (c: EV_POINTER_STYLE)
+			-- Assign `c' to `pointer_style'
+		do
+		end
+
 feature -- Element change
 
 	set_text (a_text: STRING_GENERAL)

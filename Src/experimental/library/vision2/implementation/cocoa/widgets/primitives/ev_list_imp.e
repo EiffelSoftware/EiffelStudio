@@ -130,7 +130,7 @@ feature -- Access
 			-- should use `selected_item' rather than
 			-- `selected_items' for a single selection list.
 		do
-			create Result.make (0)
+			create Result.make (1)
 			if attached selected_item as l_item then
 				Result.extend (l_item)
 			end

@@ -4,8 +4,7 @@ note
 			A tree which displays a check box to left
 			hand side of each item contained. Cocoa implementation.
 		]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +14,7 @@ class
 inherit
 	EV_CHECKABLE_TREE_I
 		undefine
-			initialize,
+			make,
 			call_pebble_function,
 			wipe_out,
 			append
@@ -26,8 +25,7 @@ inherit
 	EV_TREE_IMP
 		redefine
 			interface,
-			make,
-			initialize
+			make
 		end
 
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
@@ -37,16 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
-		do
-			Precursor {EV_TREE_IMP} (an_interface)
-		end
-
-	initialize
+	make
 			-- Setup `Current'
 		do
---			Precursor {EV_TREE_IMP}
+			Precursor {EV_TREE_IMP}
 		end
 
 	boolean_tree_model_column: INTEGER = 2
@@ -55,7 +47,6 @@ feature {NONE} -- Initialization
 			--
 		do
 		end
-
 
 	initialize_model
 			-- Create our data model for `Current'
@@ -88,14 +79,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 end -- class EV_CHECKABLE_TREE_IMP

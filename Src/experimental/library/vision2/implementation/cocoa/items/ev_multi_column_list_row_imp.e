@@ -76,6 +76,11 @@ feature -- Status setting
 			end
 		end
 
+	set_pointer_style (c: EV_POINTER_STYLE)
+			-- Assign `c' to `pointer_style'
+		do
+		end
+
 feature -- Element Change
 
 	set_tooltip (a_tooltip: STRING_GENERAL)
@@ -91,7 +96,9 @@ feature -- Measurement
 
 	width: INTEGER
 		do
---			io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.width: Not implemented%N")
+			debug
+				io.put_string ("EV_MULTI_COLUMN_LIST_ROW_IMP.width: Not implemented%N")
+			end
 		end
 
 	height: INTEGER

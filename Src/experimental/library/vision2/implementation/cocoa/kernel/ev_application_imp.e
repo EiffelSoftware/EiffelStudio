@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	make
 			-- Set up the callback marshalL.... TODO
 		do
-			Precursor
+			Precursor {EV_APPLICATION_I}
 			create windows_imp.make
 			make_application_cocoa
 			set_is_initialized (True)

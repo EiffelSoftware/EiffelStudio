@@ -43,38 +43,121 @@ inherit
 
 	EV_PND_DEFERRED_ITEM_PARENT
 
+	NS_OUTLINE_VIEW_DATA_SOURCE [EV_MULTI_COLUMN_LIST_ROW] -- TODO: should probably be TABLE_VIEW
+		rename
+			make as create_data_source,
+			item as data_source
+		end
+
+	NS_OUTLINE_VIEW_DELEGATE
+		rename
+			make as create_delegate,
+			item as delegate
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initialize `Current'
-		local
-			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-		do
-			create ev_children.make (0)
-			create previous_selection.make (1)
-			create column_titles.make
-			create column_alignments.make
-			create column_widths.make
 
-			create {NS_OUTLINE_VIEW}cocoa_view.make
+	make
+			-- Initialize the list.
+		local
+			table_column: NS_TABLE_COLUMN
+		do
+			create previous_selection.make (1)
+
+			Precursor {EV_MULTI_COLUMN_LIST_I}
+
+			create scroll_view.make
+			cocoa_view := scroll_view
+			create outline_view.make
+			scroll_view.set_document_view (outline_view)
+			scroll_view.set_has_horizontal_scroller (True)
+			scroll_view.set_has_vertical_scroller (True)
+			scroll_view.set_autohides_scrollers (True)
+			create table_column.make
+			table_column.set_editable (False)
+			table_column.set_data_cell (create {NS_IMAGE_CELL}.make)
+			table_column.set_width (20.0)
+			outline_view.add_table_column (table_column)
+			create table_column.make
+			table_column.set_editable (False)
+			table_column.set_width (1000.0)
+			outline_view.add_table_column (table_column)
+
+			outline_view.set_header_view (default_pointer)
 
 			initialize_item_list
 			Precursor {EV_PRIMITIVE_IMP}
-			Precursor {EV_MULTI_COLUMN_LIST_I}
+
+			create_data_source
+			outline_view.set_data_source (current)
+
+			create_delegate
+			outline_view.set_delegate (current)
+
+			-- FIXME: Change to TableView
 			enable_tabable_to
 			resize_model_if_needed (25)
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
-
-
 			previous_selection := selected_items
 			initialize_pixmaps
 			disable_multiple_selection
+		end
 
-				-- Needed so that we can query if the mouse button is down for column resize actions
-			l_release_actions := pointer_button_release_actions
+feature -- Delegate
+
+	selection_did_change
+			-- The selection of the NSOutlineView changed
+		do
+			if attached selected_item as l_item then
+				select_actions.call ([l_item])
+				l_item.select_actions.call ([l_item])
+			else
+				select_actions.call (void)
+			end
+		end
+
+feature -- DataSource
+
+	number_of_children_of_item (a_node: detachable EV_MULTI_COLUMN_LIST_ROW): INTEGER
+		do
+			check a_node = Void end
+			Result := count
+		end
+
+	is_item_expandable (a_node: detachable EV_MULTI_COLUMN_LIST_ROW): BOOLEAN
+		do
+			Result := False
+		end
+
+	child_of_item (an_index: INTEGER; a_node: detachable EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW
+		local
+			l_result: detachable EV_MULTI_COLUMN_LIST_ROW
+		do
+			l_result := i_th (an_index + 1)
+			check l_result /= Void end
+			Result := l_result
+		end
+
+	object_value_for_table_column_by_item (a_table_column: POINTER; a_node: EV_MULTI_COLUMN_LIST_ROW): POINTER
+		local
+			l_column: STRING
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
+		do
+			-- FIXME: do proper reverse mapping from the a_table_column pointer to the eiffel object
+			if attached outline_view.table_columns.item (0) as l_item and then l_item.item = a_table_column then
+				if attached a_node.pixmap as l_pixmap then
+					l_pixmap_imp ?= l_pixmap.implementation
+					check l_pixmap_imp /= Void end
+					Result := l_pixmap_imp.image.item
+				end
+			else
+				l_column := a_node.i_th (1)
+				Result := (create {NS_STRING}.make_with_string (l_column)).item
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -156,7 +239,13 @@ feature -- Access
 
 	selected_item: detachable EV_MULTI_COLUMN_LIST_ROW
 			-- Item which is currently selected
+		local
+			l_row: INTEGER
 		do
+			l_row := outline_view.selected_row
+			if l_row /= -1 then
+				Result ?= outline_view.item_at_row (l_row)
+			end
 		end
 
 	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
@@ -167,6 +256,9 @@ feature -- Access
 			-- `selected_items' for a single selection list.
 		do
 			create Result.make (1)
+			if attached selected_item as l_item then
+				Result.extend (l_item)
+			end
 		end
 
 feature -- Status report
@@ -291,11 +383,15 @@ feature -- Implementation
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at `an_index'.
 		do
+			-- TODO: optimization potential?
+			outline_view.reload_item_reload_children (default_pointer, True)
 		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Remove `item' from the list
 		do
+			-- TODO: optimization potential?
+			outline_view.reload_item_reload_children (default_pointer, True)
 		end
 
 	set_to_drag_and_drop: BOOLEAN
@@ -436,6 +532,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	scroll_view: NS_SCROLL_VIEW
+
+	outline_view: NS_OUTLINE_VIEW;
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 

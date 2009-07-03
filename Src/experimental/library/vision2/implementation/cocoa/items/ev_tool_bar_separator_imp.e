@@ -64,7 +64,7 @@ feature -- Statur Report
 			end
 		end
 
-feature {LAYOUT_INSPECTOR, EV_ANY_I} -- Implementation
+feature -- Implementation
 
 	box: NS_BOX;
 

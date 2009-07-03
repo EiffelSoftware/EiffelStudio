@@ -379,9 +379,9 @@ feature -- Measurement
 		end
 
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
+			-- The given y-coordinate is in the vision-coordinate system
 		do
-
-			set_frame (create {NS_RECT}.make_rect (a_x_position, a_y_position, a_width, a_height), True)
+			set_frame (create {NS_RECT}.make_rect (a_x_position, screen.frame.size.height - a_y_position - a_height, a_width, a_height), True)
 		end
 
 feature -- Layout implementation
@@ -707,10 +707,6 @@ feature {EV_INTERMEDIARY_ROUTINES}
 		do
 			close_request_actions.call ([])
 		end
-
-feature {EV_ANY_I, LAYOUT_INSPECTOR} -- Implementation
-
---	window: NS_WINDOW;
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			-- Replaces all underscores by slashes
 		do
 			Result := a_servlet_name.twin
-			Result.replace_substring_all ("_", "/")
+			Result.replace_substring_all ("___", "/")
 		end
 
 feature {NONE} -- Constants

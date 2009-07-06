@@ -59,8 +59,8 @@ feature -- Access
 	rout_id: INTEGER
 			-- Attribute routine id
 
-	is_volatile: BOOLEAN
-			-- Is Current attribute volatile, i.e. not persisted via storable?
+	is_transient: BOOLEAN
+			-- Is Current attribute transient, i.e. not persisted via storable?
 
 feature -- Settings
 
@@ -86,12 +86,12 @@ feature -- Settings
 			rout_id := i
 		end
 
-	set_is_volatile (v: BOOLEAN)
-			-- Assign `v' to `is_volatile'.
+	set_is_transient (v: BOOLEAN)
+			-- Assign `v' to `is_transient'.
 		do
-			is_volatile := v
+			is_transient := v
 		ensure
-			is_volatile_set: is_volatile = v
+			is_transient_set: is_transient = v
 		end
 
 feature -- Status report

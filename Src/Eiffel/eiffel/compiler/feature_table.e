@@ -904,7 +904,7 @@ end
 							desc.set_feature_id (feature_i.feature_id)
 							desc.set_attribute_name_id (feature_i.feature_name_id)
 							desc.set_rout_id (feature_i.rout_id_set.first)
-							desc.set_is_volatile (feature_i.is_transient)
+							desc.set_is_transient (feature_i.is_transient)
 							Result.extend (desc)
 						end
 					end

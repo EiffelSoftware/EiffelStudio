@@ -83,7 +83,7 @@ feature -- Access
 			until
 				i > nb
 			loop
-				if not current_area.item (i).is_volatile then
+				if not current_area.item (i).is_transient then
 					Result := Result + 1
 				end
 				i := i + 1
@@ -1068,7 +1068,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				if current_area.item (i).is_volatile then
+				if current_area.item (i).is_transient then
 					ba.append_natural_16 (1)
 				else
 					ba.append_natural_16 (0)
@@ -1164,7 +1164,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				if current_area.item (i).is_volatile then
+				if current_area.item (i).is_transient then
 					buffer.put_natural_32 (1)
 				else
 					buffer.put_natural_32 (0)

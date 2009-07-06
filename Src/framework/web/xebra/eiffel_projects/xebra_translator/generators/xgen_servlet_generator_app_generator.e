@@ -81,12 +81,12 @@ feature -- Basic functionality
 
 				-- Generate the {APPLICATION} class
 			l_filename := a_path.twin
-			l_filename.extend (".generated")
+			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
 			create l_directory.make (l_filename)
 			if not l_directory.exists then
 				l_directory.create_dir
 			end
-			l_filename.extend ("servlet_gen")
+			l_filename.extend ({XC_CONSTANTS}.servlet_gen_name)
 			create l_directory.make (l_filename)
 			if not l_directory.exists then
 				l_directory.create_dir
@@ -105,8 +105,8 @@ feature -- Basic functionality
 
 				-- Generate the .ecf file
 			l_filename := a_path.twin
-			l_filename.extend (".generated")
-			l_filename.extend ("servlet_gen")
+			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
+			l_filename.extend ({XC_CONSTANTS}.servlet_gen_name)
 			l_filename.set_file_name ("servlet_gen.ecf")
 			create l_util.make
 			if attached l_util.plain_text_file_write (l_filename) as l_file then

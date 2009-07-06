@@ -23,7 +23,7 @@ feature {NONE}-- Initialization
 			prepare
 			launch
 		end
-		
+
 feature {NONE} -- Implementation
 
 	prepare
@@ -53,27 +53,31 @@ feature {NONE} -- Implementation
 			button.set_pixmap (pixmap)
 			viewport.extend (button)
 			viewport.set_offset (0, 0)
-			
-			
+
+
 			viewport.set_minimum_size (200, 200)
 			create horizontal_box
 			vertical_box.extend (horizontal_box)
 			horizontal_box.extend (spin_button_x)
 			horizontal_box.extend (spin_button_y)
 			vertical_box.disable_item_expand (horizontal_box)
-			
+
 			first_window.close_request_actions.extend (agent destroy)
 			first_window.show
 		end
 
 	on_spin_button_x_changed (new_value: INTEGER)
 			-- Horizontal value changed.
+		require
+			viewport_attached: attached viewport
 		do
 			viewport.set_x_offset (new_value)
 		end
 
 	on_spin_button_y_changed (new_value: INTEGER)
 			-- Vertical value changed.
+		require
+			viewport_attached: attached viewport
 		do
 			viewport.set_y_offset (new_value)
 		end
@@ -83,11 +87,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_with_title ("Viewport example")
 		end
-		
-	spin_button_x, spin_button_y: EV_SPIN_BUTTON
+
+	spin_button_x, spin_button_y: detachable EV_SPIN_BUTTON
+		note option: stable attribute end
 			-- Gauges that control offset of `viewport'.
 
-	viewport: EV_VIEWPORT;
+	viewport: detachable EV_VIEWPORT
+		note option: stable attribute end;
 			-- EV_VIEWPORT to be demonstrated in test.
 
 note

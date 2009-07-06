@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_APPLICATION
-		redefine
-			create_interface_objects
-		end
 
 create
 	make_and_launch
@@ -27,15 +24,6 @@ feature -- Initialization
 			launch
 		end
 
-	create_interface_objects
-		do
-			Precursor {EV_APPLICATION}
-			create my_container
-			create my_label
-			create my_list
-			create my_instructions
-		end
-
 	prepare
 			-- Initialize world.
 		local
@@ -48,6 +36,11 @@ feature -- Initialization
 			a_hb2: EV_HORIZONTAL_BOX
 			a_cell: EV_CELL
 		do
+			create my_container
+			create my_label
+			create my_list
+			create my_instructions
+
 				-- create Menus & menu items
 			create a_menu_bar
 			create a_menu.make_with_text ("File")
@@ -181,14 +174,18 @@ feature -- Initialization
 
 feature {NONE} -- Graphical interface
 
-	my_list: EV_MULTI_COLUMN_LIST
+	my_list: detachable EV_MULTI_COLUMN_LIST
+ 		note option: stable attribute end
 
-	my_label: EV_LABEL
+	my_label: detachable EV_LABEL
+ 		note option: stable attribute end
 
-	my_container: EV_HORIZONTAL_BOX
+	my_container: detachable EV_HORIZONTAL_BOX
+ 		note option: stable attribute end
 			-- Container that groups the da.
 
-	my_instructions: EV_VERTICAL_BOX
+	my_instructions: detachable EV_VERTICAL_BOX
+ 		note option: stable attribute end
 
 feature {NONE} -- Implementation
 
@@ -199,62 +196,64 @@ feature {NONE} -- Implementation
 		end
 
 	on_apply
+			-- Set a cursor
 		local
-			mc_row: detachable EV_MULTI_COLUMN_LIST_ROW
 			cursor_text: STRING
 			ev_pointer_style: EV_POINTER_STYLE
+			l_instructions: like my_instructions
 		do
-			mc_row := my_list.selected_item
-			if attached mc_row as l_row then
-				cursor_text := l_row.first
+			l_instructions := my_instructions
+			check l_instructions /= Void end
+			if attached my_list as l_list and then attached l_list.selected_item as mc_row then
+				cursor_text := mc_row.first
 				if cursor_text.is_equal (Busy_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Busy_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Busy_cursor)
 
 				elseif cursor_text.is_equal (Standard_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Standard_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Standard_cursor)
 
 				elseif cursor_text.is_equal (Crosshair_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Crosshair_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Crosshair_cursor)
 
 				elseif cursor_text.is_equal (Help_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Help_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Help_cursor)
 
 				elseif cursor_text.is_equal (Ibeam_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Ibeam_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Ibeam_cursor)
 
 				elseif cursor_text.is_equal (No_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.No_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.No_cursor)
 
 				elseif cursor_text.is_equal (Sizeall_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Sizeall_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Sizeall_cursor)
 
 				elseif cursor_text.is_equal (Sizens_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Sizens_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Sizens_cursor)
 
 				elseif cursor_text.is_equal (Sizewe_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Sizewe_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Sizewe_cursor)
 
 				elseif cursor_text.is_equal (Uparrow_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Uparrow_cursor)
+					l_instructions.set_pointer_style (Default_pixmaps.Uparrow_cursor)
 
 				elseif cursor_text.is_equal (Wait_cursor_string) then
-					my_instructions.set_pointer_style (Default_pixmaps.Wait_cursor)
-					
+					l_instructions.set_pointer_style (Default_pixmaps.Wait_cursor)
+
 				elseif cursor_text.is_equal (Question_pixmap_string) then
 					create ev_pointer_style.make_with_pixmap (Default_pixmaps.Question_pixmap, 0, 0)
-					my_instructions.set_pointer_style (ev_pointer_style)
+					l_instructions.set_pointer_style (ev_pointer_style)
 
 				elseif cursor_text.is_equal (Information_pixmap_string) then
 					create ev_pointer_style.make_with_pixmap (Default_pixmaps.Information_pixmap, 0, 0)
-					my_instructions.set_pointer_style (ev_pointer_style)
+					l_instructions.set_pointer_style (ev_pointer_style)
 
 				elseif cursor_text.is_equal (Error_pixmap_string) then
 					create ev_pointer_style.make_with_pixmap (Default_pixmaps.Error_pixmap, 0, 0)
-					my_instructions.set_pointer_style (ev_pointer_style)
+					l_instructions.set_pointer_style (ev_pointer_style)
 
 				elseif cursor_text.is_equal (Warning_pixmap_string) then
 					create ev_pointer_style.make_with_pixmap (Default_pixmaps.Warning_pixmap, 0, 0)
-					my_instructions.set_pointer_style (ev_pointer_style)
+					l_instructions.set_pointer_style (ev_pointer_style)
 				end
 			end
 		end
@@ -295,4 +294,3 @@ note
 
 
 end -- class CURSOR_TEST
-

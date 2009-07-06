@@ -205,8 +205,8 @@ feature -- Processing
 				l_i := l_i + 1
 			end
 			Result := l_file_name.substring (l_i+1, l_file_name.last_index_of ('.', l_file_name.count)-1)
-			Result.replace_substring_all ("/", "_") -- UNIX
-			Result.replace_substring_all ("\", "_") -- WINDOWS
+			Result.replace_substring_all ("/", "___") -- UNIX
+			Result.replace_substring_all ("\", "___") -- WINDOWS
 		end
 
 	add_xrpc_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER; a_force: BOOLEAN)

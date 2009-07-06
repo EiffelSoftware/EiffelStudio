@@ -2,8 +2,8 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_translator" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="xebra_translator">
 		<root class="XT_APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="true" syntax="transitional">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option profile="true" warning="true" full_class_checking="true" syntax="transitional">
+			<assertions/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
@@ -15,6 +15,7 @@
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
+		<library name="xebra_common" location="\home\sandrod\workspace\xebra\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf"/>
 		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf" readonly="false">
 			<option full_class_checking="false">
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>

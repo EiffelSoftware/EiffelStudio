@@ -42,7 +42,9 @@ feature -- Initialization
 			underscore := char ('_')
 			hyphen := char ('-')
 				-- A common identifier. Will put the identifier {STRING} on the stack
-			identifier := (hyphen | underscore | upper_case | lower_case) + (-(hyphen | underscore | upper_case | lower_case | digit))
+			identifier_prefix := (hyphen | underscore | upper_case | lower_case)
+			identifier_prefix.fixate
+			identifier := identifier_prefix + (-(identifier_prefix | digit))
 			identifier := identifier.consumer
 			identifier.fixate
 
@@ -82,7 +84,7 @@ feature {XT_XEBRA_PARSER} -- Access
 	exclamation: PEG_ABSTRACT_PEG
 	any_char: PEG_ABSTRACT_PEG
 	eof: PEG_ABSTRACT_PEG
-	underscore, hyphen, identifier, comment, ws: PEG_ABSTRACT_PEG
+	underscore, hyphen, identifier, identifier_prefix, comment, ws: PEG_ABSTRACT_PEG
 
 	source_path: STRING
 			-- The path to the original file

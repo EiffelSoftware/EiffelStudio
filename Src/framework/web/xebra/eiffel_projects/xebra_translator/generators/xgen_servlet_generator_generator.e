@@ -160,12 +160,12 @@ feature -- Basic functionality
 			l_util: XU_FILE_UTILITIES
 		do
 			l_filename := a_path.twin
-			l_filename.extend (".generated")
+			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
 			create l_directory.make (l_filename)
 			if not l_directory.exists then
 				l_directory.create_dir
 			end
-			l_filename.extend ("servlet_gen")
+			l_filename.extend ({XC_CONSTANTS}.servlet_gen_name)
 			create l_directory.make (l_filename)
 			if not l_directory.exists then
 				l_directory.create_dir

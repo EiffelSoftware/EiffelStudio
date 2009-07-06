@@ -69,18 +69,17 @@ feature {NONE} -- Implementation
 
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
 				-- tag (with the parsed text as input) on the result list.		
-			plain_text := +((open + (identifier | slash)).negate + any_char)
+			plain_text := +((open + (identifier_prefix | slash)).negate + any_char)
 			plain_text := plain_text.consumer
 			plain_text.set_behaviour (agent build_content_tag)
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
-			value_attribute := (-(quote.negate + any_char))
-			value_attribute := value_attribute.consumer
+			value_attribute := (-(quote.negate + any_char)).consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
-			dynamic_attribute := percent + equals + identifier + percent
+			dynamic_attribute := (percent + equals + identifier + percent).consumer
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
-			variable_attribute := sharp + open_curly + identifier + (+(rchar ('.') + identifier)) + close_curly
+			variable_attribute := (sharp + open_curly + identifier + (+(dot + identifier)) + close_curly).consumer
 			variable_attribute.set_behaviour (agent build_variable_attribute)
 
 				-- All possible values which can occur in quotes after a tag attribute

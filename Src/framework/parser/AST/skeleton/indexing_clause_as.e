@@ -242,11 +242,11 @@ feature -- Access
 			Result := has_tag_value (option_header, stable_option_value)
 		end
 
-	is_volatile: BOOLEAN
-			-- Is feature marked as volatile?
-			-- (Used to mark volatile attributes, i.e. not stored on disk.)
+	is_transient: BOOLEAN
+			-- Is feature marked as transient?
+			-- (Used to mark transient attributes, i.e. not stored on disk.)
 		do
-			Result := has_tag_value (option_header, volatile_option_value)
+			Result := has_tag_value (option_header, transient_option_value)
 		end
 
 	enum_type: STRING
@@ -370,7 +370,7 @@ feature {NONE} -- Constants
 	stable_option_value: STRING = "stable"
 			-- Predefined value of `option_header'.
 
-	volatile_option_value: STRING = "volatile"
+	transient_option_value: STRING = "transient"
 			-- Predefined value of `option_header'.
 
 	obsolete_tags: HASH_TABLE [STRING, STRING]

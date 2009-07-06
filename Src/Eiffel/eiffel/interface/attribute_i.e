@@ -12,7 +12,7 @@ inherit
 		redefine
 			assigner_name_id, transfer_to, unselected, extension,
 			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			set_type, type, is_attribute, is_stable, is_volatile,
+			set_type, type, is_attribute, is_stable, is_transient,
 			undefinable, check_expanded, transfer_from,
 			assert_id_set, set_assert_id_set
 		end
@@ -117,10 +117,10 @@ feature -- Status report
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
-	is_volatile: BOOLEAN
+	is_transient: BOOLEAN
 			-- <Precursor>
 		do
-			Result := feature_flags & is_volatile_mask = is_volatile_mask
+			Result := feature_flags & is_transient_mask = is_transient_mask
 		end
 
 feature -- Status setting
@@ -149,12 +149,12 @@ feature -- Status setting
 			is_stable_set: is_stable = v
 		end
 
-	set_is_volatile (v: BOOLEAN)
-			-- Set `is_volatile' to `v'.
+	set_is_transient (v: BOOLEAN)
+			-- Set `is_transient' to `v'.
 		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_volatile_mask)
+			feature_flags := feature_flags.set_bit_with_mask (v, is_transient_mask)
 		ensure
-			is_volatile_set: is_volatile = v
+			is_transient_set: is_transient = v
 		end
 
 feature -- Element Change
@@ -502,7 +502,7 @@ feature -- Element Change
 			other.set_has_function_origin (has_function_origin)
 			extension := other.extension
 			other.set_assert_id_set (assert_id_set)
-			other.set_is_volatile (other.is_volatile)
+			other.set_is_transient (other.is_transient)
 			other.set_is_stable (other.is_stable)
 		end
 
@@ -516,7 +516,7 @@ feature -- Element Change
 --			has_function_origin := other.has_function_origin
 			assert_id_set := other.assert_id_set
 			extension := other.extension
-			other.set_is_volatile (other.is_volatile)
+			other.set_is_transient (other.is_transient)
 			other.set_is_stable (other.is_stable)
 		end
 

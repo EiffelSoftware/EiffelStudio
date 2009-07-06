@@ -1005,7 +1005,7 @@ feature -- Incrementality
 				and then is_process_relative = other.is_process_relative
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
-				and then is_volatile = other.is_volatile
+				and then is_transient = other.is_transient
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
 				and then assigner_name_id = other.assigner_name_id
@@ -1135,7 +1135,7 @@ end
 			Result := Result and then is_stable = other.is_stable
 
 				-- Of the same volatility
-			Result := Result and then is_volatile = other.is_volatile
+			Result := Result and then is_transient = other.is_transient
 		end
 
 feature -- creation of default rescue clause
@@ -1315,8 +1315,8 @@ feature -- Conveniences
 			-- False by default
 		end
 
-	is_volatile: BOOLEAN
-			-- Is feature volatile, i.e. never stored in storables?
+	is_transient: BOOLEAN
+			-- Is feature transient, i.e. never stored in storables?
 			-- (Usually applies to attributes.)
 		do
 			-- False by default
@@ -2145,14 +2145,14 @@ feature -- Signature checking
 					arguments.check_type_validity (a_context_class, Current, type_a_checker, False)
 				end
 				if
-					is_volatile and then (l_type.is_formal or l_type.is_true_expanded or
+					is_transient and then (l_type.is_formal or l_type.is_true_expanded or
 					(not l_type.is_expanded and l_type.is_attached))
 				then
 					error_handler.insert_error (create {VRVA}.make_invalid_type (Current, a_context_class, written_class, l_type))
 				end
 			end
 
-			if is_volatile and then (a_context_class.is_expanded and not a_context_class.is_basic) then
+			if is_transient and then (a_context_class.is_expanded and not a_context_class.is_basic) then
 				error_handler.insert_error (create {VRVA}.make_invalid_context (Current, a_context_class, written_class))
 			end
 		end
@@ -3180,7 +3180,7 @@ feature {FEATURE_I} -- Implementation
 	from_non_conforming_parent_mask: NATURAL_32 = 0x0080_0000
 	is_selected_mask: NATURAL_32 = 0x0100_0000
 	is_stable_mask: NATURAL_32 = 0x0200_0000 -- Used in ATTRIBUTE_I
-	is_volatile_mask: NATURAL_32 = 0x0400_0000 -- Used in ATTRIBUTE_I
+	is_transient_mask: NATURAL_32 = 0x0400_0000 -- Used in ATTRIBUTE_I
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

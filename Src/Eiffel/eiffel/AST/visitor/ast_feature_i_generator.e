@@ -66,8 +66,8 @@ feature -- Factory
 				elseif Result.is_attribute then
 					if a_node.indexes.is_stable and then attached {ATTRIBUTE_I} Result as a then
 						a.set_is_stable (True)
-					elseif a_node.indexes.is_volatile and then attached {ATTRIBUTE_I} Result as a then
-						a.set_is_volatile (True)
+					elseif a_node.indexes.is_transient and then attached {ATTRIBUTE_I} Result as a then
+						a.set_is_transient (True)
 					end
 				end
 				if a_node.property_name /= Void then

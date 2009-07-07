@@ -41,7 +41,7 @@ feature -- Implementation
 				Result := fix_result (Result)
 			else
 				if a_string.starts_with (character) then
-					create Result.make (a_string.substring (2, a_string.count), True)
+					create Result.make (a_string.substring_index (2), True)
 					Result := build_result (Result)
 				else
 					create Result.make (a_string, False)

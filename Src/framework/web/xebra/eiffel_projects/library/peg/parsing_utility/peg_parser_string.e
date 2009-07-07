@@ -163,12 +163,12 @@ feature -- Basic functionality
 			if (1 <= a_start_index) then
 				longest_match.update_length (start_pivot)
 				l_new_start := start_pivot + a_start_index - 1
-				l_new_end := end_pivot + 1
+				l_new_end := end_pivot
 				l_new_line_colon := update_line_colon (l_new_start)
 				create Result.make_from_string_and_index (
 					base_string,
-					start_pivot + a_start_index - 1,
-					end_pivot+1,
+					l_new_start,
+					l_new_end,
 					l_new_line_colon.line,
 					l_new_line_colon.colon)
 			else

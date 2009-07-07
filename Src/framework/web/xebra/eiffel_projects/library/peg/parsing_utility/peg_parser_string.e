@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			base_string := a_string
 			start_pivot := 1
-			end_pivot := a_string.count
+			end_pivot := a_string.count+1
 			longest_match.reset
 			line := 1
 			colon := 1

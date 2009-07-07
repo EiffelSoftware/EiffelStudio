@@ -479,8 +479,8 @@ feature {NONE} -- Implementation
 						-- The cursor is in a text token so we complete based upon the previous token.					
 					prev_token := token.previous
 					if prev_token /= Void then
-						if token_image_is_in_array (token, Feature_call_separators) then
-								-- Token is dot or tilda					
+						if token_image_is_in_array (token, Feature_call_separators) or (token_equal (token, "..") and a_pos_in_text = 2) then
+								-- Token is dot, tilda or ".."
 							is_create := create_before_position (a_line, prev_token)
 							if is_create then
 									-- Fetch create token, used later
@@ -1421,9 +1421,14 @@ feature {NONE} -- Implementation
 					elseif current_pos_in_token > 1 then
 							-- Cursor is current in a token at `cursor.pos_in_token'
 						if not token.is_blank then
-								-- Happens when completing 'a.bb|bbbb.c'						
-							insertion.put (token.wide_image.substring (1, current_pos_in_token - 1))
-							insertion_remainder := token.length - (current_pos_in_token - 1)
+							if not (token_equal (token, "..") and current_pos_in_token = 2) then
+									-- Happens when completing 'a.bb|bbbb.c'						
+								insertion.put (token.wide_image.substring (1, current_pos_in_token - 1))
+								insertion_remainder := token.length - (current_pos_in_token - 1)
+							else
+									-- In the case 'a.|.b'
+									-- We leave `insertion' empty and no `insertion_remainder'.
+							end
 						else
 							-- Happens when completing 'if | then'
 						end

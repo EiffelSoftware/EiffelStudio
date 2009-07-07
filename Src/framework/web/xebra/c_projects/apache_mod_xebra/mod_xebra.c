@@ -201,69 +201,25 @@ static int xebra_handler (request_rec* r)
 	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
-		const char* ctype = apr_table_get (r->headers_in, "Content-Type");
-
+	
 		rv = read_from_POST (r, &post_buf);
 
 		if (rv != OK)
 		{
 			PRINT_ERROR ("Error reading POST data");
 			return OK;
-		} else {
-			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
-			{
-				/* If the post arguments are formattet as a table add the & to the beginning */
-				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-							TABLEEND, NULL);
-			}
-			else
-			{
-				/* Else add the plain content */
-				message = apr_pstrcat (r->pool, message, ARG, post_buf,
-							TABLEEND, NULL);
-			}
+		} else {			
+				
+			message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
+							 NULL);			
 		}
-
-		/* old
-		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
-		{
-			rv = read_from_POST (r, &post_buf);
-
-			if (rv != OK)
-			{
-				PRINT_ERROR ("Error reading POST data from x-www-form-urlencoded");
-				return rv;
-			} else {
-				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-								TABLEEND, NULL);
-			}
-		}
-		else if (ctype && (strcasecmp (ctype, "text/xml")== 0))
-		{
-			rv = read_from_POST (r, &post_buf);
-
-			if (rv != OK)
-			{
-				PRINT_ERROR ("Error reading POST data from text/xml");
-				return rv;
-			} else {
-				message = apr_pstrcat (r->pool, message, ARG, "#TEXT/XML#", post_buf,
-								TABLEEND, NULL);
-			}
-		}
-		else
-		{
-			PRINT_ERROR ("Unsupported POST Content-Type");
-			return OK;
-		}
-		*/
-
+	
 
 	} else if (r->args != NULL) {
-		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, TABLEEND,
+		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, 
 				NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
+		message = apr_pstrcat (r->pool, message, ARG,  NULL);
 	}
 
 

@@ -4,7 +4,7 @@ indexing
 	revision    : "$Revision$"
 
 class
-	APPLICATION
+	ST_APPLICATION
 
 create
 	make

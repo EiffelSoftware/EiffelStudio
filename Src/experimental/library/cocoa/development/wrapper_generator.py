@@ -259,7 +259,7 @@ def EiffelType(type):
 	if type.startswith("const"):
 		return EiffelType(type[6:])
 		
-	if type[:2] in ["NS", "CG", "CA", "CI"]:
+	if type[:2] in ["NS", "CG", "CA", "CI", "UI"]:
 		if typeMap.has_key(type):
 			return typeMap[type]
 		else:
@@ -322,7 +322,7 @@ def main():
 		for signature in findall(r"^- (.*);", line):
 			tokens = []
 			for part in split(":", signature):
-				for (type, name) in findall(r"\((.*)\)(.*)", part):
+				for (type, name) in findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
 					tokens.append(type)
 					if name.count(" ") >= 1:
 						tokens.extend(split(" ", name))
@@ -330,6 +330,8 @@ def main():
 						tokens.append(name)
 			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
 				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
+			while tokens.count ("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)") > 0:
+				tokens.remove("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)")
 			sig = Signature (tokens, False)
 			methods.append(sig.EiffelFeature())
 			internal_methods.append(sig.InternalEiffelFeature())
@@ -338,7 +340,7 @@ def main():
 		for signature in findall(r"^\+ (.*);", line):
 			tokens = []
 			for part in split(":", signature):
-				for (type, name) in findall(r"\((.*)\)(.*)", part):
+				for (type, name) in findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
 					tokens.append(type)
 					if name.count(" ") >= 1:
 						tokens.extend(split(" ", name))
@@ -346,6 +348,8 @@ def main():
 						tokens.append(name)
 			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
 				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
+			while tokens.count ("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)") > 0:
+				tokens.remove("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)")
 			sig = Signature (tokens, True)
 			print sig.InternalEiffelFeature()
 			

@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	ARGUMENT_EXTERNALS
 
 feature -- Externals

@@ -17,7 +17,7 @@ import string
 ### Config
 
 dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSTextField"
+classname = "NSSegmentedCell"
 #dirname = "."
 #classname = "NSArray"
 
@@ -59,9 +59,10 @@ class CArgument(Argument):
 		return Argument(eif_arg_name, EiffelType(self.type))
 
 class Signature:
-	def __init__(self, sig):
+	def __init__(self, sig, is_static):
 		self.method_name = []
 		self.arguments = []
+		self.is_static = is_static
 		self.return_type = sig[0]
 		i = 2
 		while i < len(sig):
@@ -80,6 +81,9 @@ class Signature:
 	def isFunction(self):
 		return (self.return_type != "void")
 			
+	def isStatic(self):
+		return self.is_static
+
 	def EiffelArguments(self):
 		e_sig = []
 		for arg in self.arguments:
@@ -96,14 +100,14 @@ class Signature:
 		return EiffelName(name[1:])
 
 	def InternalFeatureName(self):
-		return (EiffelName(classname) + "_" + self.FeatureName())
+		return (self.FeatureName())
 		
 	def EiffelFeature(self):
 		def CallInternalFeature():
-			args = ["cocoa_object"]
+			args = ["item"]
 			for arg in self.EiffelArguments():
 				if canDereference(arg.type):
-					args.append(arg.name + ".cocoa_object")
+					args.append(arg.name + ".item")
 				else:
 					if arg.type in expandedTypes:
 						args.append(arg.name)
@@ -112,7 +116,7 @@ class Signature:
 			if self.isFunction() and (not canDereference(self.EiffelReturnType()) and not self.EiffelReturnType() in expandedTypes):
 				# Special treatment for non expanded types that are passed by value as a return type
 				args.append("Result.item")
-			result = self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
+			result = "{" + EiffelType(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
 
 			if self.isFunction():
 				if canDereference(self.EiffelReturnType()):
@@ -159,33 +163,67 @@ class Signature:
 			string = ""
 			if self.isFunction():
 				string += "return "
-			string += "[(" + classname + "*)" + "$a_" + EiffelName(classname) + " "
+			if self.isStatic():
+				string += "[" + classname + " "
+			else:
+				string += "[(" + classname + "*)" + "$a_" + EiffelName(classname) + " "
 			string += self.method_name[0]
 			if len(self.arguments) > 0:
-				string += ": " + "$" + self.EiffelArguments()[0].name
+				arg = self.arguments[0]
+				eiffelArg = self.EiffelArguments()[0]
+				if canDereference(eiffelArg.type) or eiffelArg.type in expandedTypes:					   
+					string += ": " + "$" + eiffelArg.name
+				else:
+				    string += ": *(" + arg.type + "*)$" + eiffelArg.name
 				i = 1
 				while i < len(self.arguments):
-					string += " " + self.method_name[i] + ": $" + self.EiffelArguments()[i].name
+					arg = self.arguments[i]
+					eiffelArg = self.EiffelArguments()[i]
+					if canDereference(eiffelArg.type) or eiffelArg.type in expandedTypes:					   
+						string += " " + self.method_name[i] + ": $" + eiffelArg.name
+					else:
+					    string += " " + self.method_name[i] + ": *(" + arg.type + "*)$" + eiffelArg.name
 					i = i + 1
 			string += "];"
 			return string
 
 		def InternalEiffelArguments():
-			arguments = "a_" + EiffelName(classname) + ": " + InternalEiffelType(classname) + "; "
+			arguments = []
+			if not self.isStatic():
+				arguments.append ("a_" + EiffelName(classname) + ": " + InternalEiffelType(classname))
 			for i in range(len(self.arguments)):
-				arguments +=  self.EiffelArguments()[i].name + ": " + InternalEiffelType(self.arguments[i].type) + "; "
+				arguments.append (self.EiffelArguments()[i].name + ": " + InternalEiffelType(self.arguments[i].type))
 		
-			arguments = "(" + arguments[0:-2] + ")"
-			return arguments
+			ret = "; ".join(arguments)
+			if len (arguments) > 0:
+				return "(" + ret + ")"
+			else:
+				return ret
 
 		def InternalEiffelReturn():
 			if self.EiffelReturnType() == "":
 				return ""
 			else:
 				return ": " + InternalEiffelType(self.return_type)
+			
+		def CocoaSignature():
+			if self.isStatic():
+				string = "+ "
+			else:
+				string = "- "
+			string += "(" + self.return_type + ")"
+			string += self.method_name[0]
+			if len(self.arguments) > 0:
+				string += ": (" + self.arguments[0].type + ") " + self.arguments[0].name
+				i = 1
+				while i < len(self.arguments):
+					string += " " + self.method_name[i] + ": (" + self.arguments[0].type + ") " + self.arguments[i].name
+					i = i + 1
+			return string
 	
 		return Template('''
 	frozen $name $args$ret
+			-- $comment
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -193,7 +231,8 @@ class Signature:
 		end''').substitute(name = self.InternalFeatureName(),
 						   args = InternalEiffelArguments(),
 						   ret  = InternalEiffelReturn(),
-						   body = CallCocoa())
+						   body = CallCocoa(),
+						   comment = CocoaSignature())
 	
 typeMap = {
 	"void": "",
@@ -279,6 +318,7 @@ def main():
 	for line in lines:
 		if line.find("//") != -1:
 			line = line[:line.find("//")];
+		line = line.replace("\t", " ");
 		for signature in findall(r"^- (.*);", line):
 			tokens = []
 			for part in split(":", signature):
@@ -290,13 +330,25 @@ def main():
 						tokens.append(name)
 			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
 				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
-			sig = Signature (tokens)
+			sig = Signature (tokens, False)
 			methods.append(sig.EiffelFeature())
 			internal_methods.append(sig.InternalEiffelFeature())
 	
 	for line in lines:
 		for signature in findall(r"^\+ (.*);", line):
-			print "--class method: " + signature
+			tokens = []
+			for part in split(":", signature):
+				for (type, name) in findall(r"\((.*)\)(.*)", part):
+					tokens.append(type)
+					if name.count(" ") >= 1:
+						tokens.extend(split(" ", name))
+					else:
+						tokens.append(name)
+			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
+				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
+			sig = Signature (tokens, True)
+			print sig.InternalEiffelFeature()
+			
 	
 	for c in methods:
 		print c

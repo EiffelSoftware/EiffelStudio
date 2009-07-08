@@ -17,8 +17,6 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		do
-			--| Add your code here
-			print ("hello")
 		end
 
 end

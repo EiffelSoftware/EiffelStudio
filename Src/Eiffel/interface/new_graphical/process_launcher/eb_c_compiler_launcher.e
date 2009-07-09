@@ -168,7 +168,7 @@ feature{NONE}  -- Actions
 						-- Activate the output pane if the preference to show the C compiler output is set, or
 						-- if the Eiffel compiler output is shown on the Current window.
 					switched_output := l_tool.output
-					l_output_pane.activate
+					l_output_pane.activate (True)
 
 						-- Force showing of the tool.
 					l_tool.show (False)
@@ -209,7 +209,7 @@ feature{NONE}  -- Actions
 			then
 					-- The output was switched when starting the C compilation so now switch it back, if possible.
 					-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
-				l_switched_output.activate
+				l_switched_output.activate (True)
 			end
 			switched_output := Void
 		ensure

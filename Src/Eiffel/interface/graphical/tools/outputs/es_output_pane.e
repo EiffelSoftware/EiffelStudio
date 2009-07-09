@@ -177,18 +177,29 @@ feature -- Status report
 	is_active: BOOLEAN
 			-- <Precursor>
 		local
-			l_table: like widget_table
-			l_cursor: DS_HASH_TABLE_CURSOR [G, NATURAL]
+--			l_table: like widget_table
+--			l_cursor: DS_HASH_TABLE_CURSOR [G, NATURAL]
 		do
-			l_table := widget_table
-			if not l_table.is_empty then
-				l_cursor := l_table.new_cursor
-				from l_cursor.start until l_cursor.after or Result loop
-					Result := l_cursor.item.is_shown
-					l_cursor.forth
+			if attached window_manager.last_focused_development_window as l_window then
+				if l_window.is_interface_usable then
+						-- Show the output pane on the active window.
+					if attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
+							-- Set the output and show the tool.
+						Result := Current = l_tool.output
+					else
+						check tool_removed: False end
+					end
 				end
-				l_cursor.finish
 			end
+--			l_table := widget_table
+--			if not l_table.is_empty then
+--				l_cursor := l_table.new_cursor
+--				from l_cursor.start until l_cursor.after or Result loop
+--					Result := l_cursor.item.is_shown
+--					l_cursor.forth
+--				end
+--				l_cursor.finish
+--			end
 		end
 
 feature -- Query: User interface
@@ -236,7 +247,7 @@ feature -- Basic operations
 			notifier_formatter_string_is_empty: notifier_formatter.string.is_empty
 		end
 
-	activate
+	activate (a_force: BOOLEAN)
 			-- <Precursor>
 		do
 			if attached window_manager.last_focused_development_window as l_window then
@@ -245,7 +256,9 @@ feature -- Basic operations
 					if attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
 							-- Set the output and show the tool.
 						l_tool.set_output (Current)
-						l_tool.show (False)
+						if a_force then
+							l_tool.show (False)
+						end
 					else
 						check tool_removed: False end
 					end

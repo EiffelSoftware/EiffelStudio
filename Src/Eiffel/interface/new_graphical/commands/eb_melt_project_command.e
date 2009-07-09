@@ -289,7 +289,7 @@ feature -- Execution
 						create l_service
 						if l_service.is_service_available then
 							l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-							l_output.activate
+							l_output.activate (True)
 						end
 							-- Request tool be shown.
 						l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)

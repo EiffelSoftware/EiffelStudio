@@ -37,17 +37,6 @@ feature -- Display
 			c_show (item)
 		end
 
-feature -- Element change
-
-	extend (a_label: UI_LABEL)
-			-- Add `a_label' as a child of Current.
-		require
-			exists: exists
-			a_label_exists: a_label.exists
-		do
-			c_add_subview (item, a_label.item)
-		end
-
 feature {NONE} -- Implementation
 
 	iphone_class_name: IMMUTABLE_STRING_8
@@ -57,15 +46,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Externals
-
-	c_new_window (a_rect_ptr: POINTER): POINTER
-		require
-			a_rect_ptr_not_null: a_rect_ptr /= default_pointer
-		external
-			"C inline use <UIKit/UIKit.h>"
-		alias
-			"return [[UIWindow alloc] initWithFrame:*(CGRect *) $a_rect_ptr];"
-		end
 
 	c_show (a_win_ptr: POINTER)
 		require
@@ -83,16 +63,6 @@ feature {NONE} -- Externals
 			"C inline use <UIKit/UIKit.h>"
 		alias
 			"((UIWindow *) $a_win_ptr).backgroundColor = [UIColor blueColor];"
-		end
-
-	c_add_subview (a_win_ptr, a_view_ptr: POINTER)
-		require
-			a_win_ptr_not_null: a_win_ptr /= default_pointer
-			a_view_ptr_not_null: a_view_ptr /= default_pointer
-		external
-			"C inline use <UIKit/UIKit.h>"
-		alias
-			"[((UIWindow *) $a_win_ptr) addSubview:((UIView *) $a_view_ptr)];"
 		end
 
 note

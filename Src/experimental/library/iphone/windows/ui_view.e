@@ -46,6 +46,26 @@ feature -- Comparison
 			Result := item = other.item
 		end
 
+feature -- Status report
+
+	is_extendible: BOOLEAN
+			-- Can Current have children?
+		do
+			Result := True
+		end
+
+feature -- Element change
+
+	extend (a_label: UI_VIEW)
+			-- Add `a_label' as a child of Current.
+		require
+			exists: exists
+			a_label_exists: a_label.exists
+			is_extendible: is_extendible
+		do
+			c_add_subview (item, a_label.item)
+		end
+
 feature -- Action sequences
 
 	touches_began_actions: ACTION_SEQUENCE [TUPLE [UI_EVENT]]
@@ -222,6 +242,24 @@ feature {NONE} -- Implementation
 				-- Replace the current implementation of `a_routine_name' of `a_class' by the one from
 				-- `EiffelUIResponder'.
 			l_imp := {NS_OBJC_RUNTIME}.class_replace_method (a_class, l_selector, old_imp, l_types)
+		end
+
+	mapping: UI_ROUTINES
+			-- Mapping between objective C object and Eiffel UI_VIEWs
+		once
+			create Result
+		end
+
+feature {NONE} -- Externals
+
+	c_add_subview (a_view_ptr, a_child_view_ptr: POINTER)
+		require
+			a_view_ptr_not_null: a_view_ptr /= default_pointer
+			a_child_view_ptr_not_null: a_child_view_ptr /= default_pointer
+		external
+			"C inline use <UIKit/UIKit.h>"
+		alias
+			"[((UIView *) $a_view_ptr) addSubview:((UIView *) $a_child_view_ptr)];"
 		end
 
 note

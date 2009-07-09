@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="objective_C" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_C">
 	<target name="objective_C">
-		<description>Objective-C Base Library. Wrapper classes for the Mac OS X Foundation framework.
-			Copyright (c) 2009, Daniel Furrer.</description>
+		<description>Objective-C Base Library. Wrapper classes for Objective C .
+			Copyright (c) 2009, Daniel Furrer and others.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>

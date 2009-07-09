@@ -1054,25 +1054,35 @@ feature -- Output
 		local
 			l_formatter: like general_formatter
 			l_auto_scrolled_changed: BOOLEAN
+			l_locked: BOOLEAN
+			retried: BOOLEAN
 		do
 			if attached general_output as l_output then
-				l_formatter := general_formatter
-				l_output.activate
+				if not retried then
+					l_formatter := general_formatter
+					l_output.activate (True)
 
-				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-					if l_output_pane.is_auto_scrolled then
-						l_output_pane.is_auto_scrolled := False
-						l_auto_scrolled_changed := True
+					if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+						if l_output_pane.is_auto_scrolled then
+							l_output_pane.is_auto_scrolled := False
+							l_auto_scrolled_changed := True
+						end
 					end
-				end
 
-				l_output.lock
-				l_output.clear;
-				(create {ES_OUTPUT_ROUTINES}).append_system_info (l_formatter)
-				l_output.unlock
+					l_output.lock
+					l_locked := True
 
-				if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-					l_output_pane.is_auto_scrolled := True
+					l_output.clear;
+					(create {ES_OUTPUT_ROUTINES}).append_system_info (l_formatter)
+
+					l_locked := False
+					l_output.unlock
+
+					if l_auto_scrolled_changed and then attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
+						l_output_pane.is_auto_scrolled := True
+					end
+				elseif l_locked then
+					l_output.unlock
 				end
 			else
 				check False end
@@ -1087,7 +1097,7 @@ feature -- Output
 		do
 			if attached debugger_output as l_output then
 				l_formatter := debugger_formatter
-				l_output.activate
+				l_output.activate (False)
 
 				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
 					if not l_output_pane.is_auto_scrolled then
@@ -1128,7 +1138,7 @@ feature -- Output
 					end
 				end
 
-				l_output.activate
+				l_output.activate (False)
 				l_output.lock
 				text_formatter_visitor.append_debugger_information (Current, param, l_formatter)
 				l_output.unlock
@@ -1144,8 +1154,8 @@ feature -- Output
 	display_system_status
 			-- <Precursor>
 		do
-			if attached debugger_output as l_output then
-				l_output.activate
+			if application_is_executing and then attached debugger_output as l_output then
+				l_output.activate (True)
 				if attached debugging_window as l_window then
 					l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)
 				end

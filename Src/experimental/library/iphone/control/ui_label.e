@@ -9,7 +9,8 @@ class
 inherit
 	UI_VIEW
 		redefine
-			iphone_class_name
+			iphone_class_name,
+			is_extendible
 		end
 
 create
@@ -20,6 +21,8 @@ feature {NONE} -- Initialization
 
 	make (a_rect: CG_RECT)
 			-- New instance of label located at `a_rect' coordinates.
+		require
+			a_rect_exists: a_rect.exists
 		do
 			allocate_object
 			init_with_frame (a_rect)
@@ -27,10 +30,17 @@ feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING_32; a_rect: CG_RECT)
 			-- New instance of label located at `a_rect' coordinates with `a_text' content.
+		require
+			a_rect_exists: a_rect.exists
 		do
 			make (a_rect)
 			set_text (a_text)
 		end
+
+feature -- Status Report
+
+	is_extendible: BOOLEAN = False
+			-- <Precursor>
 
 feature -- Settings
 
@@ -101,15 +111,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- C externals
-
-	c_new_label (a_rect_ptr: POINTER): POINTER
-		require
-			a_rect_ptr_not_null: a_rect_ptr /= default_pointer
-		external
-			"C inline use <UIKit/UIKit.h>"
-		alias
-			"return [[UILabel alloc] initWithFrame:*(CGRect *) $a_rect_ptr];"
-		end
 
 	c_set_text (a_label_ptr, a_text_ptr: POINTER)
 		require

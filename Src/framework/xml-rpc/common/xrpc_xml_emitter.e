@@ -381,7 +381,7 @@ feature -- Processing operations
 
 feature {NONE} -- Constants
 
-	xml_header: STRING = "<?xml version=%"1.0%"?>%N"
+	xml_header: STRING = "<?xml version=%"1.0%"?>"
 
 invariant
 	xml_attached: attached xml

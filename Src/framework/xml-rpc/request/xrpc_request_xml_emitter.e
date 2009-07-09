@@ -39,6 +39,9 @@ feature -- Processing operations
 			i, i_upper: INTEGER
 		do
 			l_buffer := buffer
+			if is_pretty_printed then
+				l_buffer.append_character ('%N')
+			end
 			append_opening_tag ({XRPC_CONSTANTS}.method_call_name, l_buffer, True)
 			append_opening_tag ({XRPC_CONSTANTS}.method_name_name, l_buffer, False)
 			append_indents (l_buffer)

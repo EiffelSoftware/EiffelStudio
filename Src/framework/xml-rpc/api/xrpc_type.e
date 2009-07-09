@@ -52,6 +52,9 @@ feature -- Access: Complex
 	struct: NATURAL_8 = 0x12
 			-- Complex struct type.
 
+	member: NATURAL_8 = 0x13
+			-- Struct member type.
+
 feature {NONE} -- Access: Masks
 
 	complex_type_mask: NATURAL_8 = 0x10

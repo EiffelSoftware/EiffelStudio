@@ -115,12 +115,15 @@ feature {NONE} -- Process
 						-- There is a parameter list.
 					has_parameters := True
 				end
+			when t_member then
+					-- Just for sanity!
+				check current_value_is_struct: attached {XRPC_STRUCT} current_value end
 			when t_param then
 					-- Just for sanity!
 				check has_parameters: has_parameters end
 			when t_struct then
-					-- Extend the new item on the stack.
-				check unsupported: False end
+					-- Create a new (mutable - as it needs items) struc.
+				process_value (create {XRPC_STRUCT}.make)
 			else
 
 			end
@@ -145,6 +148,16 @@ feature {NONE} -- Process
 			when t_i4 then
 				create {XRPC_INTEGER} l_value.make_from_string (current_content)
 				process_value (l_value)
+			when t_name then
+				create {XRPC_MEMBER} l_value.make (current_content)
+				process_value (l_value)
+			when t_member then
+				if current_value_stack.count > 1 then
+						-- Not at the root (parameter) level so popping is ok.
+					process_member
+				else
+					on_report_xml_error (e_schema_error)
+				end
 			when t_string then
 				create {XRPC_STRING} l_value.make_from_string (current_content)
 				process_value (l_value)
@@ -176,7 +189,7 @@ feature {NONE} -- Process
 		local
 			l_current_value: like current_value
 		do
-			if a_value.is_complex or current_value_stack.is_empty then
+			if current_value_stack.is_empty then
 					-- Put a complex type on the stack or any value if it's empty.
 					-- This is so when </param> is matched the value can be popped
 					-- and added as a parameter.
@@ -186,12 +199,33 @@ feature {NONE} -- Process
 				if attached {XRPC_MUTABLE_ARRAY} l_current_value as l_array then
 						-- Add the newly generated item to the array
 					l_array.extend (a_value)
-				elseif attached {XRPC_STRUCT} l_current_value as l_struct then
-						-- Add the newly generated item to the struct
-					check unsupported: False end
+				elseif attached {XRPC_MEMBER} l_current_value as l_member then
+					l_member.value := a_value
 				else
-					check unknown_type: False end
+					current_value_stack.put (a_value)
 				end
+			end
+		end
+
+	process_member
+			-- Processes a member.
+		require
+			current_attributes_stack_big_enough: current_value_stack.count >= 2
+			can_continue_parsing: can_continue_parsing
+		do
+			if attached {XRPC_MEMBER} current_value as l_member then
+				current_value_stack.remove
+				if attached {XRPC_STRUCT} current_value as l_struct then
+					if not l_member.name.is_empty then
+						l_struct.extend (l_member)
+					else
+						on_report_xml_error (e_schema_error)
+					end
+				else
+					on_report_xml_error (e_schema_error)
+				end
+			else
+				on_report_xml_error (e_schema_error)
 			end
 		end
 

@@ -147,6 +147,7 @@ feature {NONE} -- Basic operations
 					-- Construct a method call string
 				l_emitter := xml_emitter
 				l_emitter.reset
+				l_emitter.is_pretty_printed := False
 				l_emitter.process_method_call_request (a_name, a_args)
 
 					-- Make request.

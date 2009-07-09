@@ -11,14 +11,27 @@ class
 	XRPC_MEMBER
 
 inherit
-	XRPC_GUESS_I
+	XRPC_VALUE
 
 create
-	make
+	make,
+	make_with_value
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_8; a_value: like value)
+	make (a_name: READABLE_STRING_8)
+			-- Initializes a struct member with a name.
+			--
+			-- `a_name': Name of the member.
+		require
+			a_name_attached: attached a_name
+		do
+			create name.make_from_string (a_name)
+		ensure
+			name_set: name.same_string (a_name)
+		end
+
+	make_with_value (a_name: READABLE_STRING_8; a_value: like value)
 			-- Initializes a struct member with a name and value.
 			--
 			-- `a_name': Name of the member.
@@ -27,7 +40,7 @@ feature {NONE} -- Initialization
 			a_name_attached: attached a_name
 			a_value_attached: attached a_value
 		do
-			create name.make_from_string (a_name)
+			make (a_name)
 			value := a_value
 		ensure
 			name_set: name.same_string (a_name)
@@ -41,6 +54,15 @@ feature -- Access
 
 	value: XRPC_VALUE assign set_value
 			-- Member value.
+		attribute
+			create {XRPC_DEFAULT_VALUE} Result
+		end
+
+	type: XRPC_TYPE
+			-- <Precursor>
+		do
+			Result := {XRPC_TYPE}.member
+		end
 
 feature -- Element change
 
@@ -59,10 +81,10 @@ feature -- Element change
 feature -- Status report
 
 	is_valid: BOOLEAN
-			-- Indicates if the member is valid.
+			-- <Precursor>
 		do
 			Result := not name.is_empty and then value.is_valid
-		ensure
+		ensure then
 			not_name_is_empty: Result implies not name.is_empty
 			value_is_valid: Result implies value.is_valid
 		end
@@ -77,7 +99,6 @@ feature -- Basic operations: Visitor
 
 invariant
 	name_attached: attached name
-	value_attached: attached value
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

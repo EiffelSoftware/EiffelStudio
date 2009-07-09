@@ -60,7 +60,7 @@ feature -- Implementation
 			l_id := a_servlet_class.render_html_page.new_local ("STRING")
 			a_servlet_class.render_html_page.append_expression (l_id + ":= get_unique_id")
 			a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"<form id=%%%"" + l_id + "%%%" action=%%%"%" +"
-				+ Request_variable + ".target_uri + %"%%%" method=%%%"post%%%">%")")
+				+ Request_variable + ".uri + %"%%%" method=%%%"post%%%">%")")
 
 			create {ARRAYED_LIST [STRING]} l_agent_expressions.make (2)
 			a_variable_table.put (l_id, Form_id)
@@ -81,18 +81,18 @@ feature -- Implementation
 			a_servlet_class.render_html_page.append_expression (Response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"" + l_id + "%%%" value=%%%"%"+" + l_id + "+%"%%%" />%")")
 			write_string_to_result ("</form>", a_servlet_class.render_html_page)
 
-			a_servlet_class.handle_form_internal.append_expression ("if attached a_request.arguments [%"" + l_id + "%"] as form_argument then")
+			a_servlet_class.handle_form_internal.append_expression ("if attached a_request.argument_table [%"" + l_id + "%"] as form_argument then")
 			a_servlet_class.handle_form_internal.append_expression ("if attached agent_table [%"" + l_id + "%"] as l_agent_table then")
 			a_servlet_class.handle_form_internal.append_expression ("from")
-			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.start")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.argument_table.start")
 			a_servlet_class.handle_form_internal.append_expression ("until")
-			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.after")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.argument_table.after")
 			a_servlet_class.handle_form_internal.append_expression ("loop")
-			a_servlet_class.handle_form_internal.append_expression ("if attached l_agent_table [a_request.arguments.key_for_iteration] as l_agent " +
-					"and then not a_request.arguments.item_for_iteration.is_empty then")
+			a_servlet_class.handle_form_internal.append_expression ("if attached l_agent_table [a_request.argument_table.key_for_iteration] as l_agent " +
+					"and then not a_request.argument_table.item_for_iteration.is_empty then")
 			a_servlet_class.handle_form_internal.append_expression ("l_agent.call ([a_request])")
 			a_servlet_class.handle_form_internal.append_expression ("end")
-			a_servlet_class.handle_form_internal.append_expression ("a_request.arguments.forth")
+			a_servlet_class.handle_form_internal.append_expression ("a_request.argument_table.forth")
 			a_servlet_class.handle_form_internal.append_expression ("end")
 			a_servlet_class.handle_form_internal.append_expression ("end")
 			a_servlet_class.handle_form_internal.append_expression ("end")

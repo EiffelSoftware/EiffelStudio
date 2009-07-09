@@ -30,7 +30,7 @@ feature -- Status Change
 			l_user: detachable USER
 		do
 			Result := ""
-			if attached current_request.arguments["name"] as name and then attached current_request.arguments["password"] as password then
+			if attached current_request.argument_table["name"] as name and then attached current_request.argument_table["password"] as password then
 				l_user := global_state.db.valid_login (name, password)
 				if attached l_user as user then
 				--if attached {USER} global_state.db.valid_login (name, password) as user then

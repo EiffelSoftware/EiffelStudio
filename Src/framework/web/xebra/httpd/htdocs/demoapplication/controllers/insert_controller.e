@@ -20,10 +20,10 @@ feature -- Status Change
 		do
 				Result := "Default Error"
 
-				if attached {STRING} current_request.arguments["name"] as name and
-				   attached {STRING} current_request.arguments["date"] as date and
-				   attached {STRING} current_request.arguments["persons"] as persons and
-				   attached {STRING} current_request.arguments["description"] as description then
+				if attached {STRING} current_request.argument_table ["name"] as name and
+				   attached {STRING} current_request.argument_table ["date"] as date and
+				   attached {STRING} current_request.argument_table ["persons"] as persons and
+				   attached {STRING} current_request.argument_table ["description"] as description then
 
 					if global_state.db.insert_reservation (name, date, persons.to_integer_32, description) then
 						Result := "New reservation successfully inserted."

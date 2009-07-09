@@ -24,7 +24,7 @@ feature -- Implementation
 			l_index := a_string.current_internal_position
 			Result := child.parse (a_string)
 			if Result.success then
-				Result.replace_result (a_string.substring_internal (l_index, Result.left_to_parse.current_internal_position-1))
+				Result.replace_result (a_string.substring_internal (l_index, Result.left_to_parse.current_internal_position - 1))
 				Result := build_result (Result)
 			else
 				Result := fix_result (Result)

@@ -16,7 +16,7 @@ feature -- Initialization
 	make
 			-- Initializes current
 		do
-			create {XH_GET_REQUEST} current_request.make_empty
+			create {XH_REQUEST} current_request.make_empty
 			create server_control.make
 		ensure
 			current_request_attached: current_request /= Void

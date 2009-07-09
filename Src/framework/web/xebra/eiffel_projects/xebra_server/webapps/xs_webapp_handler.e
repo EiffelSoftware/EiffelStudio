@@ -49,12 +49,12 @@ feature  -- Basic Operations
 			-- Does the stuff. I don't bother writing much here, it's going to change tomorrow anyway....
 		local
 			l_response: XH_RESPONSE
-			l_request_factory: XH_REQUEST_FACTORY
+			l_request_factory: XH_REQUEST_PARSER
 			l_uri_webapp_name: STRING
 		do
 			create l_request_factory.make
-	        if attached {XH_REQUEST} l_request_factory.get_request (a_request_message) as l_request then
-				l_uri_webapp_name := l_request.target_uri.substring (2, l_request.target_uri.index_of ('/', 2))
+	        if attached {XH_REQUEST} l_request_factory.request (a_request_message) as l_request then
+				l_uri_webapp_name := l_request.uri.substring (2, l_request.uri.index_of ('/', 2))
 				l_uri_webapp_name.remove_tail (1)
 
 				if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then

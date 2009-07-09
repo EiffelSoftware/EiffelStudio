@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			l_response: XH_RESPONSE
 			l_msg: XS_MESSAGE
 			l_frag_counter: INTEGER
-			l_request_factory: XH_REQUEST_FACTORY
+			l_request_factory: XH_REQUEST_PARSER
 			l_buf: STRING
 			l_error: BOOLEAN
 			l_retried: BOOLEAN

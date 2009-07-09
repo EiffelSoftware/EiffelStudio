@@ -13,6 +13,16 @@ class
 inherit
 	DYNAMIC_API_LOADER_I
 
+feature -- Access
+
+	module: POINTER
+			-- Current application's/library's module handle.
+		do
+			Result := c_dlopen (default_pointer, RTLD_GLOBAL)
+		ensure
+			not_result_is_null: Result /= default_pointer
+		end
+
 feature -- Status report
 
 	is_dynamic_library_supported: BOOLEAN
@@ -82,6 +92,65 @@ feature -- Basic operations
 		do
 			l_result := {EV_GTK_EXTERNALS}.g_module_close (a_hnd)
 			check library_freed: l_result end
+		end
+
+feature {NONE} -- Externals
+
+	c_dlopen (a_file_name: POINTER; a_flags: INTEGER): POINTER
+			-- The function dlopen() loads the dynamic library file named by the null-terminated string
+			-- filename and returns an opaque "handle" for the dynamic library. If filename is NULL, then
+			-- the returned handle is for the main program. If filename contains a slash ("/"), then it is
+			-- interpreted as a (relative or absolute) pathname. Otherwise, the dynamic linker searches for
+			-- the library as follows (see ld.so(8) for further details):
+		external
+			"C inline use <dlfcn.h>"
+		alias
+			"return (EIF_POINTER)dlopen((const char*)$a_file_name, (int)$a_flags);"
+		end
+
+	c_dlclose (a_handle: POINTER): INTEGER
+			-- The function dlsym() takes a "handle" of a dynamic library returned by dlopen() and the
+			-- null-terminated symbol name, returning the address where that symbol is loaded into memory.
+			-- If the symbol is not found, in the specified library or any of the libraries that were
+			-- automatically loaded by dlopen() when that library was loaded, dlsym() returns NULL.
+		require
+			not_a_handle_is_null: a_handle /= default_pointer
+		external
+			"C inline use <dlfcn.h>"
+		alias
+			"return (EIF_INTEGER)dlclose((void *)$a_handle);"
+		end
+
+	c_dlsym (a_handle: POINTER; a_symbol: POINTER): POINTER
+			-- The function dlsym() takes a "handle" of a dynamic library returned by dlopen() and the null-
+			-- terminated symbol name, returning the address where that symbol is loaded into memory.
+		require
+			not_a_handle_is_null: a_handle /= default_pointer
+			not_a_symbol_is_null: a_symbol /= default_pointer
+		external
+			"C inline use <dlfcn.h>"
+		alias
+			"return dlsym((void *)$a_handle, (const char *)$a_symbol);"
+		end
+
+feature {NONE} -- External: Flags
+
+	RTLD_LAZY: INTEGER
+			-- Perform lazy binding. Only resolve symbols as the code that references them is executed. If
+			-- the symbol is never referenced, then it is never resolved.
+		external
+			"C macro use <dlfcn.h>"
+		alias
+			"RTLD_LAZY"
+		end
+
+	RTLD_GLOBAL: INTEGER
+			-- The symbols defined by this library will be made available for symbol resolution of
+			-- subsequently loaded libraries.
+		external
+			"C macro use <dlfcn.h>"
+		alias
+			"RTLD_GLOBAL"
 		end
 
 ;note

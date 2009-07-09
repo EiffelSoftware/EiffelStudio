@@ -13,24 +13,12 @@ class
 inherit
 	DYNAMIC_API_LOADER_I
 
-feature -- Access
-
-	module: POINTER
-			-- Current application's/library's module handle.
-		do
-			Result := c_dlopen (default_pointer, RTLD_GLOBAL)
-		ensure
-			not_result_is_null: Result /= default_pointer
-		end
-
 feature -- Status report
 
 	is_dynamic_library_supported: BOOLEAN
 			-- <Precursor>
 		do
-			Result := {EV_GTK_EXTERNALS}.g_module_supported
-		ensure then
-			g_module_supported: Result implies {EV_GTK_EXTERNALS}.g_module_supported
+			Result := True
 		end
 
 feature -- Query
@@ -39,10 +27,9 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_name: C_STRING
-			l_result: BOOLEAN
 		do
 			create l_name.make (a_api_name)
-			l_result := {EV_GTK_EXTERNALS}.g_module_symbol (a_hnd, l_name.item, $Result)
+			Result := c_dlsym (a_hnd, l_name.item)
 		end
 
 feature -- Basic operations
@@ -79,10 +66,10 @@ feature -- Basic operations
 		do
 			create l_path.make (a_path)
 				-- Second parameter specifies to bind symbols only when necessary, instead of doing it all on load.
-				-- Note: Using flag 0x2 (G_MODULE_BIND_LOCAL) may resolve potential issues with symbol name conflicts
-				--       but it is not used because it may cause problems for multi-threaded applications, but if it
-				--       creates a issue with conflicts then this may have to be used.
-			Result := {EV_GTK_EXTERNALS}.g_module_open (l_path.item, 0x1)
+				-- Note: Using flag RTLD_GLOBAL, instead of RTLD_LOCAL may resolve potential issues with symbol name
+				--       conflicts but it is not used because it may cause problems for multi-threaded applications,
+				--       but if it creates a issue with conflicts then this may have to be used.
+			Result := c_dlopen (l_path.item, RTLD_LAZY | RTLD_GLOBAL)
 		end
 
 	unload_library (a_hnd: POINTER)
@@ -90,7 +77,7 @@ feature -- Basic operations
 		local
 			l_result: BOOLEAN
 		do
-			l_result := {EV_GTK_EXTERNALS}.g_module_close (a_hnd)
+			l_result := (c_dlclose (a_hnd) = 0)
 			check library_freed: l_result end
 		end
 
@@ -102,6 +89,8 @@ feature {NONE} -- Externals
 			-- the returned handle is for the main program. If filename contains a slash ("/"), then it is
 			-- interpreted as a (relative or absolute) pathname. Otherwise, the dynamic linker searches for
 			-- the library as follows (see ld.so(8) for further details):
+		require
+			not_a_file_name_is_null: a_file_name /= default_pointer
 		external
 			"C inline use <dlfcn.h>"
 		alias
@@ -186,3 +175,4 @@ feature {NONE} -- External: Flags
 		]"
 
 end
+

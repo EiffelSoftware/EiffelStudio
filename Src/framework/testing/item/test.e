@@ -65,12 +65,6 @@ feature -- Access
 			Result := l_executor
 		end
 
-	hash_code: INTEGER
-			-- <Precursor>
-		do
-			Result := name.hash_code
-		end
-
 	memento: TEST_MEMENTO_I
 			-- <Precursor>
 		do

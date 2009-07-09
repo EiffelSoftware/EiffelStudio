@@ -10,6 +10,11 @@ deferred class
 	TEST_I
 
 inherit
+	TAG_ITEM
+		rename
+			name as tag_name
+		end
+
 	TAGABLE_I
 		redefine
 			memento
@@ -58,6 +63,30 @@ feature -- Access
 			-- <Precursor>
 		deferred
 		end
+
+feature -- Access
+
+	frozen tag_name: STRING
+			-- <Precursor>
+		local
+			l_cache: like tag_name_cache
+		do
+			l_cache := tag_name_cache
+			if l_cache = Void then
+				create l_cache.make (class_name.count + name.count + 1)
+				l_cache.append (class_name)
+				l_cache.append_character ('.')
+				l_cache.append (name)
+				tag_name_cache := l_cache
+			end
+			Result := l_cache
+		end
+
+feature {NONE} -- Access
+
+	tag_name_cache: detachable like tag_name
+			-- Cache for `tag_name'
+
 
 feature -- Status report
 
@@ -173,4 +202,35 @@ feature {TEST_SUITE_S} -- Status setting
 			changed: has_changed
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

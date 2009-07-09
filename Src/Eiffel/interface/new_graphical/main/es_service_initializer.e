@@ -102,6 +102,7 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
+			Result.tag_tree.set_node_factory (create {ES_TAG_TREE_NODE_FACTORY [TEST_I]})
 			register_test_suite_processors (Result)
 		end
 

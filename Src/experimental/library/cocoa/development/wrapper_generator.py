@@ -1,18 +1,22 @@
 #!/usr/bin/python
 from os import *
-from re import findall, split
 from string import Template
 import string
+import re
 
 # Features:
-# - Automatically generates a Eiffel wrapper function for each Objective-C function with type mappings for expanded types
-#
+# - Automatically generates a Eiffel wrapper functions for each Objective-C message
+#   -> Converts CamalCase to underscore_names
+# - Type are mapped:
+#   -> basic C types to the corresponding Eiffel (expanded) type
+#   -> Automatically box/unbox pointers to Objective-C objects with references to an Eiffel wrapper object
+# - Special treatment for handling C arguments which are passed by value in (NSRect, NSSize and NSPoint)
 
 # TODO:
-# - Special treatment for handling C types passed by value in (NSRect, NSSize and NSPoint)
-# - Automatically wrap return types (POINTER -> NS_ ...)
-# - opt. NS_STRING <-> STRING / STRING_GENERAL auto conversion
-# Use consistent function naming
+# - Refactor canDereference to the type class.
+# - Handling of objective C routine returning a struct was not properly handled.
+# - If a .h contains the declaration of different classes/protocols then they are all packed for the same class which is not correct.
+
 
 ### Config
 
@@ -263,7 +267,7 @@ def EiffelType(type):
 		if typeMap.has_key(type):
 			return typeMap[type]
 		else:
-			return type[:2] + EiffelTypeName(type[2:])
+			return EiffelTypeName(type)
 	else:
 		return typeMap[type]
 
@@ -287,18 +291,22 @@ def Dereference(type):
 	raise "Can't dereference type: " + type
 
 def EiffelTypeName(name):
-	for c in string.ascii_uppercase:
-		name = name.replace(c, "_" + c.lower())
-	for c in string.ascii_uppercase:
-		name = name.replace(c.lower(), c)
-	return name
+    return CamelCase2spaced_out(name).upper()
 	
 def EiffelName(name):
-	for c in string.ascii_uppercase:
-		name = name.replace("NS" + c, c.lower())
-	for c in string.ascii_uppercase:
-		name = name.replace(c, "_" + c.lower())
-	return name
+	return CamelCase2spaced_out(name).lower()
+
+def CamelCase2spaced_out(stringAsCamelCase):
+    """Converts a camel case string to an Eiffel-like form.
+    >>> CamelCase2spaced_out('TabViewItem')
+    'TAB_VIEW_ITEM'
+    """
+    
+    if stringAsCamelCase is None:
+        return None
+
+    pattern = re.compile('([A-Z][A-Z][a-z])|([a-z][A-Z])')
+    return pattern.sub(lambda m: m.group()[:1] + "_" + m.group()[1:], stringAsCamelCase)
 
 def CNames2EiffelNames(name):
 	i = 3
@@ -319,13 +327,13 @@ def main():
 		if line.find("//") != -1:
 			line = line[:line.find("//")];
 		line = line.replace("\t", " ");
-		for signature in findall(r"^- (.*);", line):
+		for signature in re.findall(r"^- (.*);", line):
 			tokens = []
-			for part in split(":", signature):
-				for (type, name) in findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
+			for part in re.split(":", signature):
+				for (type, name) in re.findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
 					tokens.append(type)
 					if name.count(" ") >= 1:
-						tokens.extend(split(" ", name))
+						tokens.extend(re.split(" ", name))
 					else:
 						tokens.append(name)
 			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
@@ -337,10 +345,10 @@ def main():
 			internal_methods.append(sig.InternalEiffelFeature())
 	
 	for line in lines:
-		for signature in findall(r"^\+ (.*);", line):
+		for signature in re.findall(r"^\+ (.*);", line):
 			tokens = []
 			for part in split(":", signature):
-				for (type, name) in findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
+				for (type, name) in re.findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
 					tokens.append(type)
 					if name.count(" ") >= 1:
 						tokens.extend(split(" ", name))

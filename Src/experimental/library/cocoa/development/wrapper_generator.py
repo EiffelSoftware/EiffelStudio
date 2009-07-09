@@ -13,7 +13,6 @@ import re
 # - Special treatment for handling C arguments which are passed by value in (NSRect, NSSize and NSPoint)
 
 # TODO:
-# - Refactor canDereference to the type class.
 # - Handling of objective C routine returning a struct was not properly handled.
 # - If a .h contains the declaration of different classes/protocols then they are all packed for the same class which is not correct.
 
@@ -41,15 +40,29 @@ class Type:
 
 class CType(Type):
 	def toEiffelType(self):
-		return EiffelType()
+		return EiffelType(EiffelTypeN(self.name))
 
 class EiffelType(Type):
-	pass
+	def canDereference(self):
+		if self.name.startswith("POINTER[") and self.name.endswith("]"):
+			return True
+		else:
+			return False
+	
+	def Dereference(self):
+		#require: canDereference()
+		if self.canDereference():
+		   return EiffelType(self.name[8:-1])
+		raise "Can't dereference type: " + type
+	
+	def isExpanded(self):
+		 return self.name in expandedTypes
+
 
 # Represents a C or Eiffel argument to a method
 class Argument:
 	name = ""
-	type = ""
+	type = Type("")
 
 	def __init__(self, name, type):
 		self.name = name
@@ -60,7 +73,7 @@ class CArgument(Argument):
 		eif_arg_name = EiffelName(self.name)
 		if not eif_arg_name.startswith("a_"):
 				eif_arg_name = "a_" + eif_arg_name
-		return Argument(eif_arg_name, EiffelType(self.type))
+		return Argument(eif_arg_name, self.type.toEiffelType())
 
 class Signature:
 	def __init__(self, sig, is_static):
@@ -70,7 +83,7 @@ class Signature:
 		self.return_type = sig[0]
 		i = 2
 		while i < len(sig):
-			self.arguments.append( CArgument(sig[i+1], sig[i]) )
+			self.arguments.append( CArgument(sig[i+1], CType(sig[i])) )
 			i += 3
 		self.method_name.append(sig[1])
 		i = 4
@@ -95,7 +108,7 @@ class Signature:
 		return e_sig
 		
 	def EiffelReturnType(self):
-		return EiffelType(self.return_type)
+		return EiffelType(EiffelTypeN(self.return_type))
 	
 	def FeatureName(self):
 		name = ""
@@ -110,23 +123,23 @@ class Signature:
 		def CallInternalFeature():
 			args = ["item"]
 			for arg in self.EiffelArguments():
-				if canDereference(arg.type):
+				if arg.type.canDereference():
 					args.append(arg.name + ".item")
 				else:
 					if arg.type in expandedTypes:
 						args.append(arg.name)
 					else: # A non expanded type that is passed by value
 						args.append(arg.name + ".item")
-			if self.isFunction() and (not canDereference(self.EiffelReturnType()) and not self.EiffelReturnType() in expandedTypes):
+			if self.isFunction() and (not self.EiffelReturnType().canDereference() and not self.EiffelReturnType() in expandedTypes):
 				# Special treatment for non expanded types that are passed by value as a return type
 				args.append("Result.item")
-			result = "{" + EiffelType(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
+			result = "{" + EiffelTypeN(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
 
 			if self.isFunction():
-				if canDereference(self.EiffelReturnType()):
-					result = "create Result.make_shared (" + result + ")"
+				if self.EiffelReturnType().canDereference():
+					result = "create Result.share_from_pointer (" + result + ")"
 				else:
-					if self.EiffelReturnType() in expandedTypes:
+					if self.EiffelReturnType().isExpanded():
 						result = "Result := " + result
 					else:
 						result = "create Result.make\n\t\t\t" + result
@@ -136,22 +149,23 @@ class Signature:
 		def Arguments():
 			arguments = ""
 			for arg in self.EiffelArguments():
-				if canDereference(arg.type):
-					arguments +=  arg.name + ": " + Dereference(arg.type) + "; "
+				if arg.type.canDereference():
+					arguments +=  arg.name + ": " + arg.type.Dereference().name + "; "
 				else:
-					arguments +=  arg.name + ": " + arg.type + "; "
+					arguments +=  arg.name + ": " + arg.type.name + "; "
 			if arguments != "":
 				arguments = " (" + arguments[0:-2] + ")"
 			return arguments
 		
 		def Return():
-			if self.EiffelReturnType() == "":
+			return_type = self.EiffelReturnType()
+			if return_type.name == "":
 				return ""
 			else:
-				if canDereference(self.EiffelReturnType()):
-					return ": " + Dereference(self.EiffelReturnType())
+				if return_type.canDereference():
+					return ": " + return_type.Dereference().name
 				else:
-					return ": " + self.EiffelReturnType()
+					return ": " + return_type.name
 			
 		return Template('''
 	$name$args$ret
@@ -175,18 +189,18 @@ class Signature:
 			if len(self.arguments) > 0:
 				arg = self.arguments[0]
 				eiffelArg = self.EiffelArguments()[0]
-				if canDereference(eiffelArg.type) or eiffelArg.type in expandedTypes:					   
+				if eiffelArg.type.canDereference() or eiffelArg.type.isExpanded():
 					string += ": " + "$" + eiffelArg.name
 				else:
-				    string += ": *(" + arg.type + "*)$" + eiffelArg.name
+				    string += ": *(" + arg.type.name + "*)$" + eiffelArg.name
 				i = 1
 				while i < len(self.arguments):
 					arg = self.arguments[i]
 					eiffelArg = self.EiffelArguments()[i]
-					if canDereference(eiffelArg.type) or eiffelArg.type in expandedTypes:					   
+					if eiffelArg.type.canDereference() or eiffelArg.type.isExpanded():					   
 						string += " " + self.method_name[i] + ": $" + eiffelArg.name
 					else:
-					    string += " " + self.method_name[i] + ": *(" + arg.type + "*)$" + eiffelArg.name
+					    string += " " + self.method_name[i] + ": *(" + arg.type.name + "*)$" + eiffelArg.name
 					i = i + 1
 			string += "];"
 			return string
@@ -194,9 +208,9 @@ class Signature:
 		def InternalEiffelArguments():
 			arguments = []
 			if not self.isStatic():
-				arguments.append ("a_" + EiffelName(classname) + ": " + InternalEiffelType(classname))
+				arguments.append ("a_" + EiffelName(classname) + ": " + InternalEiffelTypeName(classname))
 			for i in range(len(self.arguments)):
-				arguments.append (self.EiffelArguments()[i].name + ": " + InternalEiffelType(self.arguments[i].type))
+				arguments.append (self.EiffelArguments()[i].name + ": " + InternalEiffelTypeName(self.arguments[i].type.name))
 		
 			ret = "; ".join(arguments)
 			if len (arguments) > 0:
@@ -208,7 +222,7 @@ class Signature:
 			if self.EiffelReturnType() == "":
 				return ""
 			else:
-				return ": " + InternalEiffelType(self.return_type)
+				return ": " + InternalEiffelTypeName(self.return_type)
 			
 		def CocoaSignature():
 			if self.isStatic():
@@ -218,10 +232,10 @@ class Signature:
 			string += "(" + self.return_type + ")"
 			string += self.method_name[0]
 			if len(self.arguments) > 0:
-				string += ": (" + self.arguments[0].type + ") " + self.arguments[0].name
+				string += ": (" + self.arguments[0].type.name + ") " + self.arguments[0].name
 				i = 1
 				while i < len(self.arguments):
-					string += " " + self.method_name[i] + ": (" + self.arguments[0].type + ") " + self.arguments[i].name
+					string += " " + self.method_name[i] + ": (" + self.arguments[0].type.name + ") " + self.arguments[i].name
 					i = i + 1
 			return string
 	
@@ -257,38 +271,26 @@ typeMap = {
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER"]
 
-def EiffelType(type):
-	if type.endswith("*"):
-		return "POINTER[" + EiffelType(type[:-1].rstrip()) + "]"
-	if type.startswith("const"):
-		return EiffelType(type[6:])
+def EiffelTypeN(CTypeName):
+	if CTypeName.endswith("*"):
+		return "POINTER[" + EiffelTypeN(CTypeName[:-1].rstrip()) + "]"
+	if CTypeName.startswith("const"):
+		return EiffelTypeN(CTypeName[6:])
 		
-	if type[:2] in ["NS", "CG", "CA", "CI", "UI"]:
-		if typeMap.has_key(type):
-			return typeMap[type]
+	if CTypeName[:2] in ["NS", "CG", "CA", "CI", "UI"]:
+		if typeMap.has_key(CTypeName):
+			return typeMap[CTypeName]
 		else:
-			return EiffelTypeName(type)
+			return EiffelTypeName(CTypeName)
 	else:
-		return typeMap[type]
+		return typeMap[CTypeName]
 
-def InternalEiffelType(type):
-	et = EiffelType(type)
+def InternalEiffelTypeName(CTypeName):
+	et = EiffelTypeN(CTypeName)
 	if et in expandedTypes:
 		return et
 	else:
 		return "POINTER"
-
-def canDereference(type):
-	if type.startswith("POINTER[") and type.endswith("]"):
-		return True
-	else:
-		return False
-
-def Dereference(type):
-	#pre: canDereference(type)
-	if canDereference(type):
-	   return type[8:-1]
-	raise "Can't dereference type: " + type
 
 def EiffelTypeName(name):
     return CamelCase2spaced_out(name).upper()
@@ -297,9 +299,9 @@ def EiffelName(name):
 	return CamelCase2spaced_out(name).lower()
 
 def CamelCase2spaced_out(stringAsCamelCase):
-    """Converts a camel case string to an Eiffel-like form.
+    """Converts a camel case string to a string separated by underscores.
     >>> CamelCase2spaced_out('TabViewItem')
-    'TAB_VIEW_ITEM'
+    'Tab_View_Item'
     """
     
     if stringAsCamelCase is None:

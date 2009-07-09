@@ -1,6 +1,6 @@
 note
 	description: "[
-		Parse request message and generate request.
+		Parses request message and generates a request.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	request (a_request_message: STRING): detachable XH_REQUEST
-			-- Returns the correct REQUEST according to the message
+			-- Returns a XH_REQUEST if the message could be parsed successfully
 		require
 			not_a_request_message_is_detached_or_empty: a_request_message /= Void and then not a_request_message.is_empty
 		local
@@ -86,20 +86,19 @@ feature {NONE} -- Parser
 			any.ommit_result
 
 				-- Constants
-			key_method := (stringp ("GET") | stringp ("POST")).consumer
+			key_method := (stringp ({XU_CONSTANTS}.request_method_get) | stringp ({XU_CONSTANTS}.request_method_post)).consumer
 			key_method.fixate
 
-
-			key_http := stringp ("HTTP/1.1") | stringp ("HTTP/1.0")
+			key_http := stringp ({XU_CONSTANTS}.request_http11) | stringp ({XU_CONSTANTS}.request_http10)
 			key_http.fixate
-			key_space := char (' ')
-			key_hi := stringp ("#HI#")
-			key_ho := stringp ("#HO#")
-			key_end := stringp ("#E#")
-			key_se := stringp ("#SE#")
-			key_t_name := stringp ("#$#")
-			key_t_value := stringp ("#%%#")
-			key_arg := stringp ("#A#")
+			key_space := stringp ({XU_CONSTANTS}.request_space)
+			key_hi := stringp ({XU_CONSTANTS}.request_hi)
+			key_ho := stringp ({XU_CONSTANTS}.request_ho)
+			key_end := stringp ({XU_CONSTANTS}.request_end)
+			key_se := stringp ({XU_CONSTANTS}.request_se)
+			key_t_name := stringp ({XU_CONSTANTS}.request_t_name)
+			key_t_value := stringp ({XU_CONSTANTS}.request_t_value)
+			key_arg := stringp ({XU_CONSTANTS}.request_arg)
 
 				-- User fields
 			args := (-any).consumer
@@ -127,7 +126,6 @@ feature {NONE} -- Parser
 
 			the_request := header + headers_in + headers_out + subprocess_environment_vars + key_arg + args
 			the_request.set_behaviour (agent build_request)
---			print ((key_arg + args).parse (create {PEG_PARSER_STRING}.make_from_string ("#A#&name=admin&password=plain_text&login=true")))
 			Result := the_request
 		ensure
 			result_attached: Result /= Void
@@ -135,9 +133,8 @@ feature {NONE} -- Parser
 
 
 	build_request (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Builds a get request
+			-- Builds a request
 			-- REQUEST = method url HEADERS_IN HEADERS_OUT SUBPROCESS_ENVIRONMENT_VARS ARGS
-
 		require
 			a_result_attached: attached a_result
 		local
@@ -197,8 +194,6 @@ feature {NONE} -- Parser
 		local
 			l_item: TUPLE [name: STRING; value: STRING]
 		do
---			print ("Tableitem1:" + a_result.internal_result.first.out+ "%N")
---			print ("Tableitem2:" + a_result.internal_result[2].out + "%N")
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_name and
 				attached {STRING} a_result.internal_result [2] as l_value then
@@ -216,12 +211,6 @@ feature {NONE} -- Parser
 		local
 			l_table_args: HASH_TABLE [STRING, STRING]
 		do
-			if a_result.internal_result.count > 0 then
-				print ("TABLE:" + a_result.internal_result.count.out  + " items%N")
-			else
-				print ("EMPTY TABLE%N")
-			end
-
 			Result := a_result
 			create l_table_args.make (a_result.internal_result.count)
 			from

@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XU_REQUEST_ARG_TABLE_PARSER}."
-	author: ""
+	description: "[
+		Can be used to parse the headers_in value for "Cookie" to get a table of cookies.
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +23,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	cookie_table (a_args: STRING): detachable HASH_TABLE [XH_COOKIE, STRING]
-			-- Returns the correct REQUEST according to the message
+			-- Returns a table of cookies if the string could be parsed successfully
 		require
 			not_a_args_is_detached: a_args /= Void
 		local
@@ -36,7 +39,6 @@ feature -- Basic Operations
 					print (l_result.error_messages.item)
 					l_result.error_messages.forth
 				end
-
 			else
 				if attached {like cookie_table} l_result.internal_result.first as l_rec then
 					Result := l_rec
@@ -66,16 +68,14 @@ feature {NONE} -- Parser
 			any.ommit_result
 
 				-- Constants
-			key_eq := char ('=')
-			key_sq := stringp ("; ")
-
+			key_eq := stringp ({XU_CONSTANTS}.cookie_eq)
+			key_sq := stringp ({XU_CONSTANTS}.cookie_sqp)
 
 				-- User fields
 			item_name := (-(key_eq.negate + any)).consumer
 			item_name.fixate
 			item_value := (-((key_sq.negate) + any)).consumer
 			item_value.fixate
-
 
 				-- Structure
 			table_item := item_name + key_eq + item_value
@@ -93,17 +93,17 @@ feature {NONE} -- Parser
 
 	build_table_item (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Builds a name value tuple
-			-- TABLE_ENTRY =  item_name  item_value;
-
+			-- TABLE_ENTRY =  item_name  item_value ;
 		require
 			a_result_attached: attached a_result
+		local
+			l_escaper: XU_ESCAPER
 		do
---			print ("Tableitem1:" + a_result.internal_result.first.out+ "%N")
---			print ("Tableitem2:" + a_result.internal_result[2].out + "%N")
+			create l_escaper.make
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_name and
 				attached {STRING} a_result.internal_result [2] as l_value then
-					Result.replace_result (create {XH_COOKIE}.make (l_name, l_value))
+					Result.replace_result (create {XH_COOKIE}.make ( l_escaper.unescape_cookie_text (l_name), l_escaper.unescape_cookie_text (l_value)))
 			end
 		ensure
 			Result_attached: attached Result
@@ -115,15 +115,9 @@ feature {NONE} -- Parser
 		require
 			a_result_attached: attached a_result
 		local
-			l_table_args: like cookie_table -- with cream
+			l_table_args: like cookie_table
 			-- l_cookie_monster: like cookie
 		do
---			if a_result.internal_result.count > 0 then
---				print ("TABLE:" + a_result.internal_result.count.out  + " items%N")
---			else
---				print ("EMPTY TABLE%N")
---			end
-
 			Result := a_result
 			create l_table_args.make (a_result.internal_result.count)
 			from

@@ -103,8 +103,8 @@ feature -- Access
 			-- The path to the servlet_gen
 		do
 			Result := app_dir.twin
-			Result.extend ({XC_CONSTANTS}.generated_folder_name)
-			Result.extend ({XC_CONSTANTS}.servlet_gen_name)
+			Result.extend ({XU_CONSTANTS}.generated_folder_name)
+			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
 		ensure
 			Result_attached: Result /= void
 		end
@@ -114,12 +114,12 @@ feature -- Access
 		do
 			Result := servlet_gen_path.twin
 			Result.extend ("EIFGENs")
-			Result.extend ({XC_CONSTANTS}.servlet_gen_name)
+			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
 			Result.extend ("W_code")
 			if {PLATFORM}.is_windows then
-				Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name + " .exe")
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + " .exe")
 			else
-					Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name)
+					Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name)
 			end
 
 		ensure
@@ -130,7 +130,7 @@ feature -- Access
 			-- The path to the servlet_gen executable
 		do
 			Result := servlet_gen_path.twin
-			Result.set_file_name ({XC_CONSTANTS}.servlet_gen_name + ".ecf")
+			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".ecf")
 		ensure
 			Result_attached: Result /= void
 		end
@@ -139,8 +139,8 @@ feature -- Access
 				-- The path to the servlet_gen executed_at_time-file
 		do
 			Result := app_dir.twin
-			Result.extend ({XC_CONSTANTS}.Generated_folder_name)
-			Result.set_file_name ({XC_CONSTANTS}.Servlet_gen_executed_file)
+			Result.extend ({XU_CONSTANTS}.Generated_folder_name)
+			Result.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
 		ensure
 			Result_attached: Result /= void
 		end
@@ -171,7 +171,7 @@ feature -- Status report
 		do
 			create l_f_utils.make
 			l_application_file := app_dir.twin
-			l_application_file.extend ({XC_CONSTANTS}.Generated_folder_name)
+			l_application_file.extend ({XU_CONSTANTS}.Generated_folder_name)
 			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
 
 			l_g_application_is_old := l_f_utils.file_is_newer (l_application_file,

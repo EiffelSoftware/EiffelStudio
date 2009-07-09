@@ -29,14 +29,13 @@ feature {NONE} -- Initialization
 			not_a_value_is_detached_or_empty: a_value /= Void and then not a_value.is_empty
 		do
 				-- Initialize to default values
-			name := a_name
-			value := a_value
-			max_age := default_max_age
-			path := ""
-			domain := ""
-			comment := ""
-			is_secure := false
-			version := "1"
+			set_name (a_name)
+			set_value (a_value)
+			set_max_age (default_max_age)
+			set_path ("")
+			set_domain ("")
+			set_comment ("")
+			set_secure (False)
 		ensure then
 			name_attached: name /= Void
 			value_attached: value /= Void
@@ -57,7 +56,7 @@ feature -- Access
 		-- should discard the cookie.  A value of zero means the cookie
 		-- should be discarded immediately. Set to < 0 to ignore this parameter.
 
-	version: STRING
+	version: STRING = "1"
 		-- Required.  The Version attribute, a decimal integer, identifies to
 		-- which version of the state management specification the cookie
 		-- conforms.  For this specification, Version=1 applies.
@@ -87,91 +86,79 @@ feature -- Access
 		-- advice from the server to the user agent, indicating that it is in
 		-- the session's interest to protect the cookie contents.
 
-
-
-
-
-feature -- Measurement
-
-feature -- Element change
-
-feature -- Status report
-
 feature -- Status setting
 
-	set_max_age (a_max_age: NATURAL)
-			-- Setter.
+	set_max_age (a_max_age: like max_age)
+			-- Sets max_age.
 		do
 			max_age := a_max_age
 		ensure
-			max_age_set: max_age = a_max_age
+			max_age_set: equal (max_age, a_max_age)
 		end
 
-	set_name (a_name: STRING)
-			-- Setter.
+	set_name (a_name: like name)
+			-- Sets name.
 		require
-			a_name_not_empty: not a_name.is_empty
+			a_name_attached: a_name /= Void and then not a_name.is_empty
 		do
-			name := escape_bad_chars (a_name)
+			name := a_name
 		ensure
-			name_set: name = a_name
+			name_set: equal (name, a_name)
 		end
 
-	set_value (a_value: STRING)
-			-- Setter.
+
+	set_value (a_value: like value)
+			-- Sets value.
 		require
-			a_value_not_empty: not a_value.is_empty
+			a_value_attached: a_value /= Void and then not a_value.is_empty
 		do
-			value := escape_bad_chars (a_value)
-		ensure
-			value_set: value = a_value
+			value := a_value
+			ensure
+			value_set: equal (value, a_value)
 		end
 
-	set_path (a_path : STRING)
-			-- Setter.
+	set_path (a_path: like path)
+			-- Sets path.
+		require
+			a_path_attached: a_path /= Void
 		do
-			path  := escape_bad_chars (a_path)
+			path := a_path
 		ensure
-			path_set: path  = a_path
+			path_set: equal (path, a_path)
 		end
 
-	set_comment (a_comment : STRING)
-			-- Setter.
+
+	set_comment (a_comment: like comment)
+			-- Sets comment.
+		require
+			a_comment_attached: a_comment /= Void
 		do
-			comment  := escape_bad_chars (a_comment)
+			comment := a_comment
 		ensure
-			comment_set: comment  = a_comment
+			comment_set: equal (comment, a_comment)
 		end
 
-	set_domain (a_domain : STRING)
-			-- Setter.
+
+	set_domain (a_domain: like domain)
+			-- Sets domain.
+		require
+			a_domain_attached: a_domain /= Void
 		do
-			domain  := escape_bad_chars (a_domain)
+			domain := a_domain
 		ensure
-			domain_set: domain  = a_domain
+			domain_set: equal (domain, a_domain)
 		end
+
 
 	set_secure (a_secure: BOOLEAN)
-			-- Setter.	
+			-- Sets secure.	
 		do
 			is_secure := a_secure
+		ensure
+			secure_set: equal (is_secure, a_secure)
 		end
 
-feature {NONE} -- Constants
-
-	Cookie_start: STRING = "#C#"
-	Cookie_end: STRING = "#CE#"
-	Key_eq: STRING = "="
-	Key_sq: STRING = ";"
-	Key_max_age: STRING = "Max-Age="
-	Key_path: STRING = "Path="
-	Key_version: STRING = "Version="
-	Key_domain: STRING = "Domain="
-	Key_secure: STRING = "Secure"
-	Key_comment: STRING = "Comment="
-
 feature -- Basic operations
-
 
 	render_to_string: STRING
 			-- Generates the string value for headers_out:
@@ -186,31 +173,35 @@ feature -- Basic operations
 			--                   |       "Path" "=" value
 			--                   |       "Secure"
 			--                   |       "Version" "=" 1*DIGIT
+		local
+			l_escaper: XU_ESCAPER
 		do
+			create l_escaper.make
+
 				-- Name and Value are required
-			Result := Cookie_start + name + Key_eq + value
+			Result := {XU_CONSTANTS}.Cookie_start + l_escaper.escape_cookie_text (name) + {XU_CONSTANTS}.Cookie_eq + l_escaper.escape_cookie_text (value)
 				-- Comment is optional
 			if not comment.is_empty then
-				Result := Result + Key_sq + Key_comment + comment
+				Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_comment + l_escaper.escape_cookie_text (comment)
 			end
 				-- Domain is optional
 			if not domain.is_empty then
-				Result := Result + Key_sq + Key_domain + domain
+				Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_domain + l_escaper.escape_cookie_text (domain)
 			end
 				-- Max-age is optional
 			if max_age >= 0 then
-		 		Result := Result + Key_sq + Key_max_age + max_age.out
+		 		Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_max_age + max_age.out
 		 	end
 				-- Path is optional
 			if not path.is_empty then
-				Result := Result +Key_sq + Key_path + path
+				Result := Result +{XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_path + l_escaper.escape_cookie_text (path)
 			end
 				-- Secure is optional
 			if is_secure then
-				Result := Result + Key_sq + Key_secure
+				Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_secure
 			end
 				-- Version is required
-			Result := Result + Key_sq + Key_version + version + Cookie_end
+			Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_version + version + {XU_CONSTANTS}.Cookie_end
 		ensure
 			Result_not_empty: not Result.is_empty
 		end
@@ -218,23 +209,12 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	escape_bad_chars (a_s: STRING): STRING
-			-- Check for bad characters
-		do
-			--TODO: complete, better mechanism
-			Result := a_s.twin
-
-			Result.replace_substring_all ("=", "#eq#")
-			Result.replace_substring_all (";", "#sq#")
-			Result.replace_substring_all (Cookie_end, "tue nid ae froemde ids fuedli boeggele!")
-		end
-
-
 	default_max_age: NATURAL
 			-- Generates a default max age of 5min
 		do
 			Result := 300;
 		end
+
 
 invariant
 		name_attached: name /= Void

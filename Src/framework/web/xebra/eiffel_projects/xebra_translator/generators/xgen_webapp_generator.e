@@ -85,7 +85,7 @@ feature -- Basic Functionality
 		do
 				-- Generate the {XWA_SERVER_CONNECTION_HANDLER} class
 			l_filename := path.twin
-			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
+			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			create l_directory.make (l_filename)
 			if not l_directory.exists then
 				l_directory.create_dir
@@ -107,7 +107,7 @@ feature -- Basic Functionality
 
 				-- Generate the {APPLICATION} class
 			l_filename := path.twin
-			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
+			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 
 			create l_util.make
@@ -123,7 +123,7 @@ feature -- Basic Functionality
 
 				-- Generate the {G_SHARED_X_GLOBAL_STATE} class
 			l_filename := path.twin
-			l_filename.extend ({XC_CONSTANTS}.generated_folder_name)
+			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.set_file_name (Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 
 			create l_util.make

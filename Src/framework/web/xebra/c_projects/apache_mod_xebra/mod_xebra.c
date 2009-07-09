@@ -157,6 +157,7 @@ static int xebra_handler (request_rec* r)
 	char* post_buf;
 	char* srv_hostname;
 	char* srv_port;
+	char* ctype;
 	xebra_svr_cfg *srvc = ap_get_module_config (r->server->module_config,
 			&xebra_module);
 
@@ -210,8 +211,15 @@ static int xebra_handler (request_rec* r)
 			return OK;
 		} else {			
 				
-			message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-							 NULL);			
+			ctype = apr_table_get (r->headers_in, "Content-Type");
+			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))                               
+                        {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf, NULL);					
+			} else {
+				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);	
+			}
+			
+
 		}
 	
 

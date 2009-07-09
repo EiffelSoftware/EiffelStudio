@@ -19,7 +19,7 @@ feature -- Status Change
 			-- Retrieve reservartion ID from request arguments
 		do
 			Result := ""
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.id.out
 				end
@@ -47,7 +47,7 @@ feature -- Status Change
 			-- Retrieve reservartion name from request arguments
 		do
 			Result := ""
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.name
 				end
@@ -60,7 +60,7 @@ feature -- Status Change
 			-- Retrieve reservartion date from request arguments
 		do
 			Result := ""
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.date
 				end
@@ -73,7 +73,7 @@ feature -- Status Change
 			-- Retrieve reservartion persons from request arguments
 		do
 			Result := ""
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table ["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.persons.out
 				end
@@ -86,7 +86,7 @@ feature -- Status Change
 			-- Retrieve reservartion description from request arguments
 		do
 			Result := ""
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table ["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.description
 				end

@@ -12,6 +12,7 @@
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

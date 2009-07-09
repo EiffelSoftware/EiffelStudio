@@ -37,7 +37,7 @@ feature -- Processing
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
 			l_response: XH_RESPONSE
-			l_request_factory: XH_REQUEST_FACTORY
+			l_request_parser: XH_REQUEST_PARSER
 		do
 				-- Search corresponding servlet and let it handle the request
 			from
@@ -52,8 +52,8 @@ feature -- Processing
 
 				if not attached l_servlet then
 					-- The case if someone entered .../webapp/ and it was forwarded to ../webapp/index.xeb by apache
-					if not l_new_request.target_uri.ends_with (".xeb") then
-						l_new_request.set_target_uri (l_new_request.target_uri + "index.xeb")
+					if not l_new_request.uri.ends_with (".xeb") then
+						l_new_request.set_target_uri (l_new_request.uri + "index.xeb")
 						l_servlet := find_servlet (l_new_request, a_server_conn_handler)
 					end
 				end
@@ -64,7 +64,7 @@ feature -- Processing
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
 					o.dprint ("No matching servlet found.",2)
-					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.target_uri)).render_to_response
+					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.uri)).render_to_response
 					l_new_request := Void
 				end
 
@@ -74,15 +74,18 @@ feature -- Processing
 
 feature {NONE} -- Internal Processing
 
-	post_process_response (a_response: XH_RESPONSE; a_previous_request: XH_REQUEST): detachable XH_GET_REQUEST
+	post_process_response (a_response: XH_RESPONSE; a_previous_request: XH_REQUEST): detachable XH_REQUEST
 			-- If a goto value is specified in a_response a
 			-- new request is generated out of it		
 		require
 			a_response_attached: a_response /= Void
 			a_previous_request_attached: a_previous_request /= Void
+		local
+			l_r_builder: XH_REQUEST_BUILDER
 		do
 			 if not a_response.goto_request.is_empty then
-				create Result.make_goto_request (a_response.goto_request, a_previous_request)
+			 	create l_r_builder.make
+			 	Result := l_r_builder.create_goto_request (a_response.goto_request, a_previous_request)
 			 end
 		end
 
@@ -96,8 +99,8 @@ feature {NONE} -- Internal Processing
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		do
 
-			o.dprint ("Looking up servlet for '" + a_request.target_uri + "'",6)
-			if attached a_server_conn_handler.stateless_servlets [a_request.target_uri] as l_servlet then
+			o.dprint ("Looking up servlet for '" + a_request.uri + "'",6)
+			if attached a_server_conn_handler.stateless_servlets [a_request.uri] as l_servlet then
 				Result := l_servlet
 			else
 			--	Result := request.session.get_stateful_servlet

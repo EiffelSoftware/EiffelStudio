@@ -22,7 +22,7 @@ feature -- Status Change
 		do
 			Result := "ERROR: ID not found"
 
-			if attached {STRING} current_request.arguments["id"] as id then
+			if attached {STRING} current_request.argument_table["id"] as id then
 				global_state.db.delete_reservation (id.to_integer_32)
 				Result := "Reservation successfully deleted."
 			else

@@ -96,7 +96,7 @@ feature -- Implementation
 					a_variable_table.remove ({XTAG_F_VALIDATOR_TAG}.Validator_tag_list_key)
 
 						-- FORM EXPRESSIONS
-					a_servlet_class.fill_bean.append_expression ("if attached a_request.arguments [%"" + l_input_id + "%"] as argument then")
+					a_servlet_class.fill_bean.append_expression ("if attached a_request.argument_table [%"" + l_input_id + "%"] as argument then")
 					l_validation_var := a_servlet_class.fill_bean.new_local ("BOOLEAN")
 					a_servlet_class.fill_bean.append_expression (l_validation_var + " := True")
 					if not l_validator_list.is_empty then

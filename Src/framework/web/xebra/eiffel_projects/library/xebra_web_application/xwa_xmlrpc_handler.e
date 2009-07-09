@@ -39,7 +39,7 @@ feature -- Basic operations
 			if attached {XH_POST_REQUEST} a_request as l_request then
 				if attached l_request.headers_in ["Content-Type"] as l_content_type then
 					if l_content_type.is_equal ("text/xml") then
-						if attached l_request.arguments ["content"] as l_content then
+						if attached l_request.argument_table ["content"] as l_content then
 							a_response.append (request_handler.response_string (l_content, a_dispatcher))
 						end
 					else

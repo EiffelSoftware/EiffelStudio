@@ -73,7 +73,7 @@ feature -- Internal Access
 			-- what this means
 		require
 			a_start_index_valid: a_start_index > 0 and a_start_index <= a_end_index+1
-			a_end_index_valid: a_end_index < internal_count
+			a_end_index_valid: a_end_index <= internal_count
 		do
 			Result := base_string.substring (a_start_index, a_end_index)
 		ensure

@@ -11,12 +11,30 @@ inherit
 	NS_OBJECT
 		rename
 			item as object_item
+		undefine
+			copy
 		end
+
+	LINEAR [T]
+		rename
+			item as item_for_iteration
+		undefine
+			copy
+		redefine
+			item_for_iteration
+		end
+
+	NS_COPYING
+		rename
+			item as object_item
+		end
+
+-- TODO: Would probably be nice if an NS_ARRAY could inherit from CHAIN [T] or even ARRAY [T]
 
 create
 	make_with_objects
 
-create {NS_OBJECT}
+create {NS_OBJECT, NS_ENVIRONEMENT}
 	share_from_pointer
 
 feature {NONE} -- Creation
@@ -42,9 +60,16 @@ feature {NONE} -- Creation
 			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_objects.count)))
 		end
 
-feature
+feature -- Access
+
+	is_empty: BOOLEAN
+			-- Is there no element?
+		do
+			Result := count = 0
+		end
 
 	count: like ns_uinteger
+			-- Number of available indices
 		do
 			Result := {NS_ARRAY_API}.count (object_item)
 		ensure
@@ -52,6 +77,7 @@ feature
 		end
 
 	item alias "[]" (a_index: like ns_uinteger): detachable T
+			-- Entry at index `i', if in index interval
 		require
 			index_in_range: 0 <= a_index and a_index < count
 		local
@@ -61,6 +87,48 @@ feature
 			if l_object /= default_pointer then
 				create Result.share_from_pointer (l_object)
 			end
+		end
+
+	item_for_iteration: T
+			-- Item at current position
+		local
+			res: like item
+		do
+			res := item (to_ns_uinteger(index))
+			check res /= Void end
+			Result := res
+		end
+
+	index: INTEGER
+			-- Index of current position
+
+feature -- Cursor movement
+
+	start
+			-- Move to first position if any.
+		do
+			index := 0
+		end
+
+	finish
+			-- Move to last position.
+		do
+			index := count.to_integer_32 - 1
+		end
+
+	forth
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		do
+			index := index + 1
+		end
+
+feature -- Status report
+
+	after: BOOLEAN
+			-- Is there no valid position to the right of current one?
+		do
+			Result := (index >= count.to_integer_32)
 		end
 
 --	array_by_adding_object (a_an_object: T): NS_ARRAY [T]

@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 
 	make_root (a_tree: like tree)
 			-- Initialize `Current' to be a root node.
+			--
+			-- `a_tree': Tree in which new node will be root.
 		require
 			a_tree_attached: a_tree /= Void
 		local
@@ -42,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' as a inner node.
 			--
 			-- `a_parent': Parent node for `Current'.
-			-- `a_tag': Tag to be represented by `Current' and it's new children.
+			-- `a_tag': Tag suffix to be represented by `Current' and it's new children.
 			-- `an_item': Item to be attached to leaf.
 		require
 			a_parent_attached: a_parent /= Void
@@ -120,7 +122,7 @@ feature -- Access
 			Result := l_token
 		end
 
-	children: DS_ARRAYED_LIST [like new_node]
+	children: DS_ARRAYED_LIST [like child_with_token]
 			-- Arrayed list containing child nodes
 		require
 			active: is_active
@@ -131,7 +133,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	child_with_token (a_token: READABLE_STRING_GENERAL): like new_node
+	child_with_token (a_token: READABLE_STRING_GENERAL): TAG_TREE_NODE [G]
 			-- Child node representing given token
 			--
 			-- `a_token': Token for which corresponding child node should be returned.
@@ -177,7 +179,7 @@ feature -- Access
 			account_for_children: not is_leaf implies Result >= child_table.count
 		end
 
-	parent: like new_node
+	parent: like child_with_token
 			-- Parent node of `Current'
 		require
 			active: is_active
@@ -246,7 +248,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: content
 
-	child_table: DS_HASH_TABLE [like new_node, READABLE_STRING_GENERAL]
+	child_table: DS_HASH_TABLE [like child_with_token, READABLE_STRING_GENERAL]
 			-- Table associating child nodes with their corresponding token
 			--
 			-- keys: token
@@ -324,7 +326,7 @@ feature {TAG_TREE_NODE} -- Status setting
 			if is_leaf then
 				internal_item := Void
 			else
-				child_table.do_all (agent {like new_node}.remove)
+				child_table.do_all (agent {like child_with_token}.remove)
 				child_table.wipe_out
 				internal_child_table := Void
 			end
@@ -379,7 +381,7 @@ feature -- Query
 			result_implies_has_items: Result implies is_leaf
 		end
 
-	is_parent_of (a_node: like new_node): BOOLEAN
+	is_parent_of (a_node: like child_with_token): BOOLEAN
 			-- Is `Current' an indirect parent of given node?
 			--
 			-- `a_node': Some node.
@@ -388,7 +390,7 @@ feature -- Query
 			a_node_attached: a_node /= Void
 			a_node_active: a_node.is_active
 		local
-			l_parent: like new_node
+			l_parent: like child_with_token
 		do
 			if not (Current = a_node or a_node.is_root) then
 				from
@@ -418,9 +420,9 @@ feature {TAG_TREE} -- Element change
 			a_tag_valid: tree.formatter.is_valid_tag (a_tag)
 			a_tokken_not_added: not has_child_with_token (tree.formatter.first_token (a_tag))
 		local
-			l_new: like new_node
+			l_new: like child_with_token
 		do
-			l_new := new_node (a_tag, an_item)
+			l_new := tree.node_factory.create_node (Current, a_tag, an_item)
 			last_added_child := l_new
 			child_table.force (l_new, l_new.token)
 		ensure
@@ -496,25 +498,6 @@ feature -- Basic operations
 			a_visitor_attached: a_visitor /= Void
 		do
 			a_visitor.process_node (Current)
-		end
-
-feature {TAG_TREE_NODE} -- Factory
-
-	new_node (a_tag: READABLE_STRING_GENERAL; an_item: G): TAG_TREE_NODE [G]
-			-- Create new tree node.
-		require
-			a_tag_attached: a_tag /= Void
-			an_item_attached: an_item /= Void
-			active: is_active
-			a_tag_valid: tree.formatter.is_valid_tag (a_tag)
-		do
-			create Result.make_node (Current, a_tag, an_item)
-		ensure
-			result_attached: Result /= Void
-			result_active: Result.is_active
-			result_not_root: not Result.is_root
-			result_has_current_as_parent: Result.parent = Current
-			result_has_valid_token: Result.token.same_string (tree.formatter.first_token (a_tag))
 		end
 
 invariant

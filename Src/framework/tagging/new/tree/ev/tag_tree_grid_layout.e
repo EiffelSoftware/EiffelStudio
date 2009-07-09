@@ -42,18 +42,20 @@ feature -- Status report
 
 feature -- Factory
 
-	new_header_item (a_column: like column_count; a_grid: TAG_TREE_GRID [G]): detachable EV_HEADER_ITEM
-			-- Create new header item for column with given index.
+	populate_header_item (an_item: EV_GRID_HEADER_ITEM; a_grid: TAG_TREE_GRID [G])
+			-- Populate header item.
 			--
-			-- Note: can return Void if empty header should be shown in grid.
+			-- Note: the idea is that `Current' should create the item, however this is not supported for
+			--       {EV_GRID_HEADER_ITEM} so it is passed as an argument. `Current' should must not keep
+			--       any reference of `an_item' or the corresponding {EV_GRID}.
 			--
-			-- `a_column': Index of column for which header item should be created.
+			-- `an_item': Header item to be populated.
 			-- `a_grid': Grid displaying header.
-			-- `Result': New grid header item.
 		require
+			an_item_attached: an_item /= Void
 			a_grid_attached: a_grid /= Void
 			has_header: has_header
-			valid_column: a_column > 0 and a_column <= column_count
+			an_item_column_valid: an_item.column.index <= column_count
 		do
 
 		end

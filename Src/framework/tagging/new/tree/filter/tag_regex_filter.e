@@ -32,6 +32,14 @@ feature {NONE} -- Access
 	negative_matchers: DS_ARRAYED_LIST [like new_matcher]
 			-- List of matchers which nodes are not allowed to match
 
+feature -- Status report
+
+	has_expression: BOOLEAN
+			-- Are nodes currently filtered?
+		do
+			Result := not (positive_matchers.is_empty and negative_matchers.is_empty)
+		end
+
 feature -- Status setting
 
 	set_expression (an_expr: READABLE_STRING_8)
@@ -119,7 +127,7 @@ feature -- Query
 				loop
 					l_matcher := l_matchers.item_for_iteration
 					l_matcher.set_text (l_tag)
-					l_inside := l_matcher.search_for_pattern
+					l_inside := l_matcher.search_for_pattern and (l_matcher.has_leading_wild or l_matcher.found_at = 1)
 
 						-- If pattern starts with a wild string/character, we should check children
 					l_check_children := not l_inside and
@@ -139,7 +147,7 @@ feature -- Query
 				loop
 					l_matcher := l_matchers.item_for_iteration
 					l_matcher.set_text (l_tag)
-					l_inside := not l_matcher.search_for_pattern
+					l_inside := not (l_matcher.search_for_pattern  and (l_matcher.has_leading_wild or l_matcher.found_at = 1))
 
 						-- If pattern starts with a wild, we should check children
 					l_check_children := l_inside and

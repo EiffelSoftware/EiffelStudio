@@ -1,31 +1,46 @@
 note
-	description: "Summary description for {TAG_SPARSE_TREE_FILTER}."
+	description: "[
+		{ES_TAG_TREE_NODE} representing overrides in an Eiffel project.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	TAG_SPARSE_TREE_FILTER [G -> TAG_ITEM]
+class
+	ES_TAG_TREE_OVERRIDE_NODE [G -> TAG_ITEM]
 
-feature {TAG_SPARSE_TREE} -- Query
+inherit
+	ES_TAG_TREE_NODE [G, CONF_OVERRIDE]
 
-	is_node_included (a_sparse_tree: TAG_SPARSE_TREE [G]; a_node: TAG_TREE_NODE [G]): TUPLE [is_inside: BOOLEAN; check_children: BOOLEAN]
-			-- Should node be included in sparse tree?
-			--
-			-- `a_sparse_tree': Sparse tree connected to tree.
-			-- `a_node': A node in tree.
-			-- `Result': Tuple containing two boolean. First boolean indicated whether `a_node' should be
-			--           included in `a_sparse_tree'. Second indicates whether it is possible that `a_nodes'
-			--           children return different results.
-		require
-			a_sparse_tree_attached: a_sparse_tree /= Void
-			a_node_attached: a_node /= Void
-			a_sparse_tree_connected: a_sparse_tree.is_connected
-			a_node_active: a_node.is_active
-			a_node_valid: a_node.tree = a_sparse_tree.tree
-		deferred
+create
+	make
+
+feature {NONE} -- Implementation
+
+	process_ec_node (a_visitor: EC_TAG_TREE_NODE_VISITOR [G])
+			-- <Precursor>
+		do
+			a_visitor.process_override_node (Current)
 		end
 
+	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
+			-- <Precursor>
+		do
+			if attached {ES_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
+				if attached l_parent.item (a_project) as l_cluster then
+					Result := l_cluster.target.overrides.item (name)
+				end
+			elseif attached {ES_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
+				if attached l_parent.item (a_project) as l_library then
+					Result := l_library.library_target.overrides.item (name)
+				end
+			end
+			if Result = Void then
+				if attached {CONF_OVERRIDE} a_project.project.universe.cluster_of_name (name) as l_override then
+					Result := l_override
+				end
+			end
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -57,6 +72,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TAG_SPARSE_TREE_UPDATER
-
-
+end

@@ -68,15 +68,32 @@ feature -- Access
 	formatter: TAG_HIERARCHICAL_FORMATTER
 			-- Formatter used to extract tokens from tags
 
-	root_node: like new_root_node
+	root_node: TAG_TREE_NODE [G]
 			-- Root node of `Current'
 		local
 			l_cache: like root_node_cache
 		do
 			l_cache := root_node_cache
 			if l_cache = Void then
-				l_cache := new_root_node
+				l_cache := node_factory.create_root_node (Current)
 				root_node_cache := l_cache
+			end
+			Result := l_cache
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {TAG_TREE_NODE} -- Access
+
+	node_factory: TAG_TREE_NODE_FACTORY [G]
+			-- Node factory for creating new nodes.
+		local
+			l_cache: like node_factory_cache
+		do
+			l_cache := node_factory_cache
+			if l_cache = Void then
+				create l_cache
+				node_factory_cache := l_cache
 			end
 			Result := l_cache
 		end
@@ -87,6 +104,11 @@ feature {NONE} -- Access
 			-- Cache for `root_node'
 			--
 			-- Note: do not access directly, use `root_node' instead.
+
+	node_factory_cache: detachable like node_factory
+			-- Cache for `node_factory'
+			--
+			-- Note: do not access directly, use `node_factory' instead.
 
 	connection_cache: detachable like connection
 			-- Cache for `connection'
@@ -109,6 +131,22 @@ feature -- Query
 			end
 		ensure then
 			result_implies_valid_token: Result implies formatter.is_valid_token (an_item.name)
+		end
+
+feature -- Status setting
+
+	set_node_factory (a_factory: like node_factory)
+			-- Set `node_factory' to given factory.
+			--
+			-- TODO: move this into creation procedure...
+			--
+			-- `a_factory': Node factory to be used for creating future nodes.
+		require
+			a_factory_attached: a_factory /= Void
+		do
+			node_factory_cache := a_factory
+		ensure
+			node_factory_set: node_factory = a_factory
 		end
 
 feature -- Element change
@@ -238,16 +276,6 @@ feature {NONE} -- Implementation
 			result_valid: a_tag.same_string (formatter.join_tags (Result.node.tag, Result.suffix))
 			result_matches_best: not Result.suffix.is_empty implies (Result.node.is_leaf or not
 				Result.node.has_child_with_token (formatter.first_token (Result.suffix)))
-		end
-
-feature {NONE} -- Factory
-
-	new_root_node: TAG_TREE_NODE [G]
-			-- Create new root node
-			--
-			-- Note: redefine in order to specialize nodes.
-		do
-			create Result.make_root (Current)
 		end
 
 note

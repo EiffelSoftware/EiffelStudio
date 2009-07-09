@@ -91,6 +91,39 @@ feature {NONE} -- Initialization
 			widget := l_widget
 		end
 
+	initialize_layout
+			-- Initialize layout in `grid'
+		local
+			l_layout: like layout
+			l_grid: like grid
+			i, l_count: INTEGER
+			l_header: BOOLEAN
+			l_column: EV_GRID_COLUMN
+		do
+			l_layout := layout
+			l_grid := grid
+			l_grid.wipe_out
+
+			if l_layout.has_header then
+				l_grid.show_header
+				l_header := True
+			else
+				l_grid.hide_header
+			end
+			l_count := l_layout.column_count
+			l_grid.set_column_count_to (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				l_column := l_grid.column (i)
+				l_layout.populate_header_item (l_column.header_item, Current)
+				l_column.set_width (l_layout.column_width (i))
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	widget: EV_BOX
@@ -202,6 +235,9 @@ feature {NONE} -- Access
 			Result := 1
 		end
 
+	timer: detachable EV_TIMEOUT
+			-- Timer for redrawing items in `grid'
+
 feature -- Status report
 
 	hide_outside_nodes: BOOLEAN
@@ -211,36 +247,8 @@ feature -- Status setting
 
 	connect (a_tree: like tree)
 			-- <Precursor>
-		local
-			l_layout: like layout
-			l_grid: like grid
-			i, l_count: INTEGER
-			l_header: BOOLEAN
 		do
-			l_layout := layout
-			l_grid := grid
-			l_grid.wipe_out
-
-			l_count := l_layout.column_count
-			l_grid.set_column_count_to (l_count)
-			if l_layout.has_header then
-				l_grid.show_header
-				l_header := True
-			else
-				l_grid.hide_header
-			end
-			from
-				i := 1
-			until
-				i > l_count
-			loop
-				l_grid.column (i).set_width (l_layout.column_width (i))
-				if l_header and attached l_layout.new_header_item (i, Current) as l_item then
-					l_grid.header.put_i_th (l_item, i)
-				end
-				i := i + 1
-			end
-
+			initialize_layout
 			Precursor (a_tree)
 		end
 
@@ -262,6 +270,23 @@ feature -- Status setting
 			hide_outside_nodes := a_hide_outside_nodes
 		ensure
 			hide_outside_nodes_set: hide_outside_nodes = a_hide_outside_nodes
+		end
+
+	set_update_timer (an_interval: INTEGER_32)
+			-- Define interval (in seconds) on how often the visible items in `grid' should be updated.
+			--
+			-- Note: An internal of 0 disables the update.
+		local
+			l_timer: like timer
+		do
+			if attached timer as l_t then
+				l_timer := l_t
+				l_timer.set_interval (0)
+			else
+				create l_timer
+			end
+			l_timer.actions.extend (agent on_timer_elapse)
+			l_timer.set_interval (an_interval * 1_000)
 		end
 
 feature {TAG_SPARSE_TREE_FILTER} -- Status setting
@@ -445,12 +470,43 @@ feature {NONE} -- Events
 			Precursor (a_tree, a_node)
 		end
 
+	on_timer_elapse
+			-- Called when timer reached timeout.
+		local
+			l_timer: like timer
+		do
+			redraw_items
+			l_timer := timer
+			check timer_attached: l_timer /= Void end
+			l_timer.set_interval (l_timer.interval)
+		end
+
 feature {NONE} -- Implementation
 
 	insert_new_row (a_pos: INTEGER)
 			-- <Precursor>
 		do
 			grid.insert_new_row (a_pos)
+		end
+
+	redraw_items
+			-- Redraw all visible items in `grid'
+		local
+			i: INTEGER
+			l_list: ARRAYED_LIST [INTEGER]
+			l_item: EV_GRID_ITEM
+		do
+			if grid.is_displayed then
+				from
+					l_list := grid.visible_row_indexes
+					i := 1
+				until
+					i > l_list.count
+				loop
+					l_item := computed_grid_item (1, l_list.i_th (i))
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Factory

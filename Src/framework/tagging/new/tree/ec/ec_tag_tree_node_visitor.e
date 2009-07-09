@@ -1,28 +1,74 @@
 note
-	description: "Summary description for {TAG_SPARSE_TREE_FILTER}."
+	description: "Summary description for {EC_TAG_TREE_NODE_VISITOR}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	TAG_SPARSE_TREE_FILTER [G -> TAG_ITEM]
+	EC_TAG_TREE_NODE_VISITOR [G -> TAG_ITEM]
 
-feature {TAG_SPARSE_TREE} -- Query
+inherit
+	TAG_TREE_NODE_VISITOR [G]
 
-	is_node_included (a_sparse_tree: TAG_SPARSE_TREE [G]; a_node: TAG_TREE_NODE [G]): TUPLE [is_inside: BOOLEAN; check_children: BOOLEAN]
-			-- Should node be included in sparse tree?
+feature {ES_TAG_TREE_NODE} -- Basic operations
+
+	process_class_node (a_node: ES_TAG_TREE_CLASS_NODE [G])
+			-- Process class node.
 			--
-			-- `a_sparse_tree': Sparse tree connected to tree.
-			-- `a_node': A node in tree.
-			-- `Result': Tuple containing two boolean. First boolean indicated whether `a_node' should be
-			--           included in `a_sparse_tree'. Second indicates whether it is possible that `a_nodes'
-			--           children return different results.
+			-- `a_node': Node to be processed.
 		require
-			a_sparse_tree_attached: a_sparse_tree /= Void
 			a_node_attached: a_node /= Void
-			a_sparse_tree_connected: a_sparse_tree.is_connected
 			a_node_active: a_node.is_active
-			a_node_valid: a_node.tree = a_sparse_tree.tree
+		deferred
+		end
+
+	process_feature_node (a_node: ES_TAG_TREE_FEATURE_NODE [G])
+			-- Process class node.
+			--
+			-- `a_node': Node to be processed.
+		require
+			a_node_attached: a_node /= Void
+			a_node_active: a_node.is_active
+		deferred
+		end
+
+	process_library_node (a_node: ES_TAG_TREE_LIBRARY_NODE [G])
+			-- Process library node.
+			--
+			-- `a_node': Node to be processed.
+		require
+			a_node_attached: a_node /= Void
+			a_node_active: a_node.is_active
+		deferred
+		end
+
+	process_cluster_node (a_node: ES_TAG_TREE_CLUSTER_NODE [G])
+			-- Process class node.
+			--
+			-- `a_node': Node to be processed.
+		require
+			a_node_attached: a_node /= Void
+			a_node_active: a_node.is_active
+		deferred
+		end
+
+	process_override_node (a_node: ES_TAG_TREE_OVERRIDE_NODE [G])
+			-- Process class node.
+			--
+			-- `a_node': Node to be processed.
+		require
+			a_node_attached: a_node /= Void
+			a_node_active: a_node.is_active
+		deferred
+		end
+
+	process_directory_node (a_node: ES_TAG_TREE_DIRECTORY_NODE [G])
+			-- Process class node.
+			--
+			-- `a_node': Node to be processed.
+		require
+			a_node_attached: a_node /= Void
+			a_node_active: a_node.is_active
 		deferred
 		end
 
@@ -57,6 +103,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TAG_SPARSE_TREE_UPDATER
-
-
+end

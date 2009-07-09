@@ -9,19 +9,6 @@ deferred class
 
 feature {TAG_TREE_NODE} -- Basic operations
 
-	process_item (a_node: TAG_TREE_NODE [G]; an_item: G)
-			-- Process item in corresponding node.
-			--
-			-- `a_node': Node which contain `an_item'.
-			-- `an_item': Item to be processed.
-		require
-			a_node_attached: a_node /= Void
-			a_node_active: a_node.is_active
-			an_item_attached: an_item /= Void
-			a_node_has_item: a_node.has_item (an_item)
-		deferred
-		end
-
 	process_node (a_node: TAG_TREE_NODE [G])
 			-- Process basic node type.
 			--
@@ -59,20 +46,6 @@ feature {NONE} -- Basic operations
 					l_cursor.forth
 				end
 			end
-		end
-
-	frozen process_items (a_node: TAG_TREE_NODE [G])
-			-- Process all items in given node.
-			--
-			-- `a_node': Node for which's items should be processed.
-		require
-			a_node_attached: a_node /= Void
-			a_node_active: a_node.is_active
-		local
-			l_cursor: DS_LINEAR_CURSOR [G]
-			l_item: G
-		do
-			-- TODO: what to do here??
 		end
 
 note

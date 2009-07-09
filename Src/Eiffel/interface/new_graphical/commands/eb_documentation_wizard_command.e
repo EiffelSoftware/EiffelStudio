@@ -25,6 +25,12 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
@@ -85,11 +91,11 @@ feature {NONE} -- Implementation
 				if wizard.cluster_diagrams_selected then
 					doc.set_diagram_views (wizard.diagram_views)
 				end
-				
+
 				if attached compiler_output as l_output then
 					l_output.lock
 					l_output.clear
-					l_output.activate
+					l_output.activate (preferences.development_window_data.output_tool_prompted)
 				end
 				l_formatter := compiler_formatter
 

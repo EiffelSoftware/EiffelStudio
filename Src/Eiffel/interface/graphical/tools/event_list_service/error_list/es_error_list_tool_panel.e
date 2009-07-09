@@ -424,7 +424,7 @@ feature {NONE} -- Basic operations
 				if attached {C_COMPILER_ERROR} l_event_item.data as l_error then
 						-- Show the C/C++ compiler output
 					if attached c_compiler_output as l_output then
-						l_output.activate
+						l_output.activate (True)
 						if attached develop_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
 							l_tool.show (True)
 						end

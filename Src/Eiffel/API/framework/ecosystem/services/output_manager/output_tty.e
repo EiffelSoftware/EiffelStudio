@@ -51,7 +51,7 @@ feature -- Basic operations
 		do
 		end
 
-	activate
+	activate (a_force: BOOLEAN)
 			-- <Precursor>
 		do
 		end

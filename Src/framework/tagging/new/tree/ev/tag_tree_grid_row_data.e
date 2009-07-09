@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			row.set_data (Current)
 			if not node.is_leaf then
 				row.ensure_expandable
-				if sparse_tree.is_node_expanded (node) then
+				if sparse_tree.is_node_expanded (node) or a_node = sparse_tree.common_parent then
 					row.expand
 				end
 			end

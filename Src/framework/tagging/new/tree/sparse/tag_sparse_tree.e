@@ -126,6 +126,12 @@ feature -- Status report
 	is_updating: BOOLEAN
 			-- Is `Current' refreshing `root_nodes'?
 
+	has_root_nodes: BOOLEAN
+			-- Does `root_nodes' contain any nodes?
+		do
+			Result := not internal_root_nodes.is_empty
+		end
+
 feature {NONE} -- Status report
 
 	has_nodes_changed: BOOLEAN
@@ -431,6 +437,7 @@ feature {TAG_TREE} -- Events
 			begin_update
 			set_last_modified_node (a_node)
 			added_node := a_node
+			fill_tree_recursive (a_node)
 			finish_update
 		end
 

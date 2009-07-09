@@ -1,30 +1,27 @@
 note
-	description: "Summary description for {TAG_SPARSE_TREE_FILTER}."
+	description: "[
+		Constants used to map tokens in a TAG_TREE to a corresponding ES_TAG_TREE_NODE.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	TAG_SPARSE_TREE_FILTER [G -> TAG_ITEM]
+class
+	ES_TAG_TREE_CONSTANTS
 
-feature {TAG_SPARSE_TREE} -- Query
+feature -- Access
 
-	is_node_included (a_sparse_tree: TAG_SPARSE_TREE [G]; a_node: TAG_TREE_NODE [G]): TUPLE [is_inside: BOOLEAN; check_children: BOOLEAN]
-			-- Should node be included in sparse tree?
-			--
-			-- `a_sparse_tree': Sparse tree connected to tree.
-			-- `a_node': A node in tree.
-			-- `Result': Tuple containing two boolean. First boolean indicated whether `a_node' should be
-			--           included in `a_sparse_tree'. Second indicates whether it is possible that `a_nodes'
-			--           children return different results.
-		require
-			a_sparse_tree_attached: a_sparse_tree /= Void
-			a_node_attached: a_node /= Void
-			a_sparse_tree_connected: a_sparse_tree.is_connected
-			a_node_active: a_node.is_active
-			a_node_valid: a_node.tree = a_sparse_tree.tree
-		deferred
-		end
+	delimiter_symbol: CHARACTER = ':'
+			-- Character used to separate code from actual token
+
+	class_code: NATURAL = 1
+	feature_code: NATURAL = 2
+	target_code: NATURAL = 3
+	library_code: NATURAL = 4
+	cluster_code: NATURAL = 5
+	override_code: NATURAL = 6
+	directory_code: NATURAL = 7
+			-- Codes used to prefix tokens in order to indicate what the token represents
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -57,6 +54,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TAG_SPARSE_TREE_UPDATER
-
-
+end

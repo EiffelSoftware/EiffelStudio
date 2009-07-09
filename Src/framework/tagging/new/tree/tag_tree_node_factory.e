@@ -1,29 +1,45 @@
 note
-	description: "Summary description for {TAG_SPARSE_TREE_FILTER}."
+	description: "[
+		Factory responsible for creating nodes being used in a TAG_TREE.
+
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	TAG_SPARSE_TREE_FILTER [G -> TAG_ITEM]
+class
+	TAG_TREE_NODE_FACTORY [G -> TAG_ITEM]
 
-feature {TAG_SPARSE_TREE} -- Query
+feature -- Factory
 
-	is_node_included (a_sparse_tree: TAG_SPARSE_TREE [G]; a_node: TAG_TREE_NODE [G]): TUPLE [is_inside: BOOLEAN; check_children: BOOLEAN]
-			-- Should node be included in sparse tree?
+	create_node (a_parent: TAG_TREE_NODE [G]; a_tag: READABLE_STRING_GENERAL; an_item: G): TAG_TREE_NODE [G]
+			-- Create new inner node.
 			--
-			-- `a_sparse_tree': Sparse tree connected to tree.
-			-- `a_node': A node in tree.
-			-- `Result': Tuple containing two boolean. First boolean indicated whether `a_node' should be
-			--           included in `a_sparse_tree'. Second indicates whether it is possible that `a_nodes'
-			--           children return different results.
+			-- `a_parent': Parent of new node.
+			-- `a_tag': Tag suffix to be represented by `Current' and it's new children.
+			-- `an_item': Item to be attached to new leaf.
 		require
-			a_sparse_tree_attached: a_sparse_tree /= Void
-			a_node_attached: a_node /= Void
-			a_sparse_tree_connected: a_sparse_tree.is_connected
-			a_node_active: a_node.is_active
-			a_node_valid: a_node.tree = a_sparse_tree.tree
-		deferred
+			a_parent_attached: a_parent /= Void
+			a_tag_attached: a_tag /= Void
+			an_item_attached: an_item /= Void
+			a_parent_active: a_parent.is_active
+			a_tag_valid: a_parent.tree.formatter.is_valid_tag (a_tag)
+		do
+			create Result.make_node (a_parent, a_tag, an_item)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	create_root_node (a_tree: TAG_TREE [G]): TAG_TREE_NODE [G]
+			-- Create new root node.
+			--
+			-- `a_tree': Tree in which new node will be root.
+		require
+			a_tree_attached: a_tree /= Void
+		do
+			create Result.make_root (a_tree)
+		ensure
+			result_attached: Result /= Void
 		end
 
 note
@@ -57,6 +73,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TAG_SPARSE_TREE_UPDATER
-
-
+end

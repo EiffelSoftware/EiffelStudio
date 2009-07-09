@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 		do
 			make_collection
 
+				-- Create tree
+			create tag_tree.make_with_formatter (create {TAG_DIRECTORY_FORMATTER})
+
 			internal_project := a_project
 			eiffel_project_helper := a_helper
 			l_manager := internal_project.manager
@@ -66,6 +69,14 @@ feature {NONE} -- Clean up
 		end
 
 feature -- Access
+
+	tag_tree: TAG_TREE [like test]
+			-- <Precursor>
+
+	test (an_identifier: READABLE_STRING_GENERAL): TEST_I
+			-- <Precursor>
+		do
+		end
 
 	eiffel_project_helper: TEST_PROJECT_HELPER_I
 			-- <Precursor>
@@ -643,6 +654,19 @@ feature {NONE} -- Element change
 					if l_et.has_changed then
 							-- Note: replace `as_attached' with Current when compiler treats Current as attached
 						test_changed_event.publish ([as_attached, l_et.as_attached])
+
+							-- Add/remove tags to `tag_tree'
+						l_et.memento.added_tags.do_all (
+							agent (an_item: like test; a_tag: STRING)
+								do
+									tag_tree.add_tag (an_item, a_tag)
+								end (l_et, ?))
+						l_et.memento.removed_tags.do_all (
+							agent (an_item: like test; a_tag: STRING)
+								do
+									tag_tree.remove_tag (an_item, a_tag)
+								end (l_et, ?))
+
 						l_et.clear_changes
 					end
 					l_features.remove_found_item
@@ -675,6 +699,14 @@ feature {NONE} -- Element change
 				test_routine_map.force (l_et, test_identifier (a_test_class, l_features.key_for_iteration))
 					-- Note: replace `as_attached' with Current when compiler treats Current as attached
 				test_added_event.publish ([as_attached, l_et.as_attached])
+
+					-- Add tags to `tag_tree'
+				l_et.tags.do_all (
+					agent (an_item: like test; a_tag: STRING)
+						do
+							tag_tree.add_tag (an_item, a_tag)
+						end (l_et, ?))
+
 				l_features.forth
 			end
 		end
@@ -719,6 +751,8 @@ feature {NONE} -- Element change
 			test_routine_map.remove_found_item
 				-- Note: replace `as_attached' with Current when compiler treats Current as attached
 			test_removed_event.publish ([as_attached, l_test.as_attached])
+
+			tag_tree.remove_all_tags (l_test)
 		ensure
 			not_has_test_for_id: not test_routine_map.has (a_id)
 		end
@@ -774,6 +808,14 @@ feature {NONE} -- Implementation: tag retrieval
 			l_feature_name: detachable STRING
 		do
 			create l_final.make (a_tag.count*2)
+			if
+				not (a_tag.starts_with ("class/") or
+				a_tag.starts_with ("covers/") or
+				a_tag.starts_with ("execution/") or
+				a_tag.starts_with ("type/"))
+			then
+				l_final.append ("user/")
+			end
 			from
 				start := 1
 				i := 1
@@ -886,16 +928,18 @@ feature {NONE} -- Implementation: tag retrieval
 				loop
 					l_group := cluster_stack.last
 					if attached {CONF_LIBRARY} l_group as l_lib then
-						a_tag.append (tag_utilities.library_prefix)
+						a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.library_code)
+						a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (cluster_stack.last.name)
-						a_tag.append_character (':')
+						a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (l_lib.library_target.system.uuid.out)
 					else
 						if l_group.is_override then
-							a_tag.append (tag_utilities.override_prefix)
+							a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.override_code)
 						elseif cluster_stack.last.is_cluster then
-							a_tag.append (tag_utilities.cluster_prefix)
+							a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.cluster_code)
 						end
+						a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (l_group.name)
 					end
 					a_tag.append_character (tag_utilities.split_char)
@@ -910,18 +954,21 @@ feature {NONE} -- Implementation: tag retrieval
 				loop
 					l_dir := l_path.item_for_iteration
 					if l_dir /= Void and then not l_dir.is_empty then
-						a_tag.append (tag_utilities.directory_prefix)
+						a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.directory_code)
+						a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (l_dir)
 						a_tag.append_character (tag_utilities.split_char)
 					end
 					l_path.forth
 				end
 			end
-			a_tag.append (tag_utilities.class_prefix)
+			a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.class_code)
+			a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 			a_tag.append (a_class_name)
 			if a_feature_name /= Void then
 				a_tag.append_character (tag_utilities.split_char)
-				a_tag.append (tag_utilities.feature_prefix)
+				a_tag.append_natural_32 ({ES_TAG_TREE_CONSTANTS}.feature_code)
+				a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
 				a_tag.append (a_feature_name)
 			end
 		end

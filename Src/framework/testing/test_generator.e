@@ -205,7 +205,7 @@ feature {NONE} -- Basic operations
 						l_output := l_service.output_or_default (l_key, "Testing Output")
 						if l_output.is_interface_usable then
 							if not l_output.is_locked then
-								l_output.activate
+								l_output.activate (False)
 								l_output.lock
 								l_output.clear
 							end

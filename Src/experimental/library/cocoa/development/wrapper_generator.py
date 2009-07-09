@@ -20,10 +20,10 @@ import re
 
 ### Config
 
-dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSSegmentedCell"
-#dirname = "."
-#classname = "NSArray"
+#dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
+#classname = "NSSegmentedCell"
+dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
+classname = "NSData"
 
 ###
 
@@ -347,11 +347,11 @@ def main():
 	for line in lines:
 		for signature in re.findall(r"^\+ (.*);", line):
 			tokens = []
-			for part in split(":", signature):
+			for part in re.split(":", signature):
 				for (type, name) in re.findall(r"\(([a-zA-Z0-9 \*]*)\)(.*)", part):
 					tokens.append(type)
 					if name.count(" ") >= 1:
-						tokens.extend(split(" ", name))
+						tokens.extend(re.split(" ", name))
 					else:
 						tokens.append(name)
 			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:

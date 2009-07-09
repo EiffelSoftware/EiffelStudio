@@ -10,7 +10,8 @@ inherit
 	NS_OBJECT
 
 create
-	make_rgba
+	make_rgba,
+	share_from_pointer
 
 feature {NONE} -- Initialize
 

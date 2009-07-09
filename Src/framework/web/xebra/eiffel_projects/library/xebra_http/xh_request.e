@@ -2,9 +2,10 @@ note
 	description: "[
 		The {REQUEST} object contains all data from a user request.
 	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
 	XH_REQUEST
 
@@ -30,12 +31,6 @@ feature {NONE} -- Initialization
 			cookies_attached: cookies /= Void
 			argument_table_attached: argument_table /= Void
 		end
-
-feature -- Constants
-
-	Method_post: STRING = "POST"
-	Method_get: STRING = "GET"
-
 
 feature -- Access
 
@@ -105,8 +100,8 @@ feature -- Access
 			-- Checks if the headers_in contain 'application/x-www-form-urlencoded'
 		do
 			Result := False
-			if attached {STRING} headers_in ["Content-Type"] as l_ct then
-				if l_ct.is_equal ("application/x-www-form-urlencoded") then
+			if attached {STRING} headers_in [{XU_CONSTANTS}.Request_content_type] as l_ct then
+				if l_ct.is_equal ({XU_CONSTANTS}.Request_ct_form) then
 					Result := True
 				end
 			end
@@ -197,7 +192,7 @@ feature -- Basic Operations
 			a_form_handler_attached: a_form_handler /= Void
 			a_response_attached: a_response /= Void
 		do
-			if method.is_equal (Method_post) then
+			if method.is_equal ({XU_CONSTANTS}.Request_method_post) then
 				a_form_handler.handle_form (Current, a_response)
 			end
 		end
@@ -238,7 +233,7 @@ feature {NONE} -- Internal
 			l_parser: XH_REQUEST_ARG_TABLE_PARSER
 		do
 			create Result.make (1)
-			if (method.is_equal (Method_get) or is_form_encoded) and not args.is_empty then
+			if (method.is_equal ({XU_CONSTANTS}.Request_method_get) or is_form_encoded) and not args.is_empty then
 				create l_parser.make
 				if attached {like argument_table} l_parser.argument_table (args) as l_arg_table then
 					Result := l_arg_table
@@ -254,5 +249,5 @@ invariant
 		request_message_attached: request_message /= Void
 		environment_vars_attached: environment_vars /= Void
 		method_attached: method /= Void
-		valid_method: (method /= Void and then not method.is_empty) implies (method.is_equal (Method_get) or method.is_equal (Method_post))
+		valid_method: (method /= Void and then not method.is_empty) implies (method.is_equal ({XU_CONSTANTS}.Request_method_get) or method.is_equal ({XU_CONSTANTS}.Request_method_post))
 end

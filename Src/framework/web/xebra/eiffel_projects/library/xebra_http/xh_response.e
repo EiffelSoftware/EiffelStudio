@@ -31,11 +31,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-feature {NONE} -- Constants
-
-	Html_start: STRING = "#H#"
-	Content_type_start: STRING = "#CT#"
-
 feature -- Access
 
 	content_type: STRING
@@ -59,13 +54,13 @@ feature -- Element change
 	set_html_content_type
 			-- Sets the content-type to html
 		do
-			content_type := "text/html;charset=ascii"
+			content_type := {XU_CONSTANTS}.Response_ct_html
 		end
 
 	set_xml_content_type
 			-- Sets the content-type to xml
 		do
-			content_type := "text/xml"
+			content_type := {XU_CONSTANTS}.Response_ct_xml
 		end
 
 
@@ -125,7 +120,7 @@ feature -- Element change
 				Result := Result +  cookie_orders.item.render_to_string
 				cookie_orders.forth
 			end
-			Result := Result + Content_type_start + content_type + Html_start + html_stream.get_text
+			Result := Result + {XU_CONSTANTS}.Response_content_type_start + content_type + {XU_CONSTANTS}.Response_html_start + html_stream.get_text
 		ensure
 			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end

@@ -1,8 +1,12 @@
 note
-	description: "Summary description for {XU_REQUEST_ARG_TABLE_PARSER}."
-	author: ""
+	description: "[
+		Can be used to parse the args of a request to get a table of argument names and values.
+	]"
+	legal: "See notice at end of class."
+	status: "Prototyping phase"
 	date: "$Date$"
 	revision: "$Revision$"
+
 
 class
 	XH_REQUEST_ARG_TABLE_PARSER
@@ -20,7 +24,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	argument_table (a_args: STRING): detachable HASH_TABLE [STRING, STRING]
-			-- Returns the correct REQUEST according to the message
+			-- Returns a table of arguments if the string could be parsed successfully
 		require
 			not_a_args_is_detached: a_args /= Void
 		local
@@ -68,7 +72,6 @@ feature {NONE} -- Parser
 			key_name := stringp ("&")
 			key_value := stringp ("=")
 
-
 				-- User fields
 			item_name := (-(key_value.negate + any)).consumer
 			item_name.fixate
@@ -91,14 +94,11 @@ feature {NONE} -- Parser
 	build_table_item (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Builds a name value tuple
 			-- TABLE_ENTRY =  item_name  item_value;
-
 		require
 			a_result_attached: attached a_result
 		local
 			l_item: TUPLE [name: STRING; value: STRING]
 		do
---			print ("Tableitem1:" + a_result.internal_result.first.out+ "%N")
---			print ("Tableitem2:" + a_result.internal_result[2].out + "%N")
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_name and
 				attached {STRING} a_result.internal_result [2] as l_value then
@@ -116,12 +116,6 @@ feature {NONE} -- Parser
 		local
 			l_table_args: HASH_TABLE [STRING, STRING]
 		do
---			if a_result.internal_result.count > 0 then
---				print ("TABLE:" + a_result.internal_result.count.out  + " items%N")
---			else
---				print ("EMPTY TABLE%N")
---			end
-
 			Result := a_result
 			create l_table_args.make (a_result.internal_result.count)
 			from
@@ -138,7 +132,6 @@ feature {NONE} -- Parser
 		ensure
 			Result_attached: attached Result
 		end
-
 
 	stringp (a_string: STRING): PEG_SEQUENCE
 			-- Generates a parser which parses `a_string'

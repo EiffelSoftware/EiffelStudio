@@ -270,6 +270,49 @@ feature -- Test routines
 				assert ("uri", l_req2.uri.is_equal ("/other_application/home.xeb"))
 			end
 
+		end
+
+
+	test_escaping
+				--
+		local
+			l_parser: XH_REQUEST_PARSER
+			l_req: detachable XH_REQUEST
+			l_req2: detachable XH_REQUEST
+			l_response: XH_RESPONSE
+			l_request_builder: XH_REQUEST_BUILDER
+			l_bad_cookie_name: STRING
+			l_bad_cookie_value: STRING
+			l_temp: STRING
+			l_temp_name: STRING
+			l_temp_value: STRING
+		do
+			create l_response.make_empty
+			l_bad_cookie_name := "name an ; #E# d text #CE# = here"
+			l_bad_cookie_value := "value : so ; and = and #CE# and #E#"
+
+			l_response.put_cookie_order (create {XH_COOKIE_ORDER}.make (l_bad_cookie_name, l_bad_cookie_value))
+
+			l_temp := l_response.render_to_string
+			l_temp.remove_head ({XU_CONSTANTS}.cookie_start.count)
+
+			l_temp := l_temp.split (';').i_th (1)
+			l_temp_name := l_temp.split ('=').i_th (1)
+			l_temp_value := l_temp.split ('=').i_th (2)
+
+			create l_parser.make
+			l_req := l_parser.request("GET /index.xeb HTTP/1.1#HI##$#Cookie#%%#" + l_temp_name + "=" + l_temp_value + "#E##HO##E##SE##E##A#")
+
+			assert ("Parsing ok", attached l_req)
+			if attached {XH_REQUEST} l_req as l_r then
+				if attached {XH_COOKIE} l_r.cookies [l_bad_cookie_name] as l_a then
+					assert ("cookie_wrong_name", l_a.name.is_equal (l_bad_cookie_name))
+					assert ("cookie_wrong", l_a.value.is_equal (l_bad_cookie_value))
+				else
+					assert ("cookie_missing", false)
+				end
+			end
+
 
 		end
 

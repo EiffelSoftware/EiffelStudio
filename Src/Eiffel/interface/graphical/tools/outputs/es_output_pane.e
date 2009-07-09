@@ -177,8 +177,6 @@ feature -- Status report
 	is_active: BOOLEAN
 			-- <Precursor>
 		local
---			l_table: like widget_table
---			l_cursor: DS_HASH_TABLE_CURSOR [G, NATURAL]
 		do
 			if attached window_manager.last_focused_development_window as l_window then
 				if l_window.is_interface_usable then
@@ -191,15 +189,6 @@ feature -- Status report
 					end
 				end
 			end
---			l_table := widget_table
---			if not l_table.is_empty then
---				l_cursor := l_table.new_cursor
---				from l_cursor.start until l_cursor.after or Result loop
---					Result := l_cursor.item.is_shown
---					l_cursor.forth
---				end
---				l_cursor.finish
---			end
 		end
 
 feature -- Query: User interface

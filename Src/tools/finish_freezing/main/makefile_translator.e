@@ -609,15 +609,6 @@ feature {NONE} -- Translation
 				end
 				appl.right_adjust
 
-				if appl.count>4 then
-					extension := appl.twin
-					extension.to_lower
-					extension.keep_tail (4)
-					if extension ~ options.get_string ("executable_file_ext") then
-						appl := appl.substring (1, appl.count -4)
-					end
-				end
-
 				if appl.substring_index (options.get_string_or_default ("driver_text", empty_string),1) > 0 then
 					precompile := True
 					appl_exe := options.get_string_or_default ("driver_filename", empty_string)

@@ -37,6 +37,122 @@ feature -- Working with Classes
 			"return class_addProtocol((Class)$a_class, (Protocol *) $a_protocol);"
 		end
 
+	frozen class_copy_ivar_list (a_class: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"[
+				Ivar *result;
+				unsigned int l_count = 0;
+				
+				result = class_copyIvarList((Class)$a_class, &l_count);
+				*(EIF_NATURAL_32 *) $a_count = l_count;
+				return result;
+			]"
+		end
+
+	frozen class_copy_method_list (a_class: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"[
+				Method *result;
+				unsigned int l_count = 0;
+				
+				result = class_copyMethodList((Class)$a_class, &l_count);
+				*(EIF_NATURAL_32 *) $a_count = l_count;
+				return result;
+			]"
+		end
+
+	frozen class_copy_property_list (a_class: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"[
+				objc_property_t *result;
+				unsigned int l_count = 0;
+				
+				result = class_copyPropertyList((Class)$a_class, &l_count);
+				*(EIF_NATURAL_32 *) $a_count = l_count;
+				return result;
+			]"
+		end
+
+	frozen class_copy_protocol_list (a_class: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"[
+				Protocol **result;
+				unsigned int l_count = 0;
+				
+				result = class_copyProtocolList((Class)$a_class, &l_count);
+				*(EIF_NATURAL_32 *) $a_count = l_count;
+				return result;
+			]"
+		end
+
+feature -- Working with methods
+
+	frozen method_name (a_method: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) sel_getName(method_getName((Method) $a_method));"
+		end
+
+	frozen method_argument_count (a_method: POINTER): NATURAL_32
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return method_getNumberOfArguments((Method) $a_method);"
+		end
+
+	frozen method_return_type (a_method, a_cstr: POINTER; a_length: NATURAL_32)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"method_getReturnType((Method) $a_method, (char *) $a_cstr, (size_t) $a_length);"
+		end
+
+	frozen method_argument_type (a_method: POINTER; a_index: NATURAL_32; a_cstr: POINTER; a_length: NATURAL_32)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"method_getArgumentType((Method) $a_method, (unsigned int) $a_index, (char *) $a_cstr, (size_t) $a_length);"
+		end
+
+	frozen method_type_encoding (a_method: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) method_getTypeEncoding((Method) $a_method);"
+		end
+
+	frozen method_set_implementation(a_method, a_imp: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return method_setImplementation((Method) $a_method, (IMP) $a_imp);"
+		end
+
+feature -- Working with properties
+
+	frozen property_name (a_property: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) property_getName((objc_property_t) $a_property);"
+		end
+
+	frozen property_attributes (a_property: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) property_getAttributes((objc_property_t) $a_property);"
+		end
+
 feature -- Conformance
 
 	frozen class_conformsToProtocol (a_class: POINTER; a_protocol: POINTER): BOOLEAN
@@ -129,4 +245,14 @@ feature -- Working with Selectors
 			"return sel_registerName($a_name);"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

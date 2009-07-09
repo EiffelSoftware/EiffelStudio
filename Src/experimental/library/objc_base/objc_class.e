@@ -120,6 +120,66 @@ feature -- Instantiating Classes
 			-- FIXME - should somehow create the right Eiffel subtype
 		end
 
+feature -- Introspection
+
+	methods: ARRAYED_LIST [OBJC_METHOD]
+			-- List of methods of Current objective C class.
+		local
+			l_ptr: POINTER
+			l_count: NATURAL_32
+			l_method: OBJC_METHOD
+			l_managed_pointer: MANAGED_POINTER
+			i, nb: INTEGER_32
+		do
+			l_ptr := {NS_OBJC_RUNTIME}.class_copy_method_list (item, $l_count)
+			check valid_count: l_count <= {INTEGER_32}.max_value.as_natural_32 end
+			if l_ptr /= default_pointer then
+				nb := l_count.to_integer_32
+				create Result.make (nb)
+				create l_managed_pointer.own_from_pointer (l_ptr, {PLATFORM}.pointer_bytes * nb)
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					create l_method.make_from_pointer (l_managed_pointer.read_pointer (i * {PLATFORM}.pointer_bytes))
+					Result.extend (l_method)
+					i := i + 1
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
+	properties: ARRAYED_LIST [OBJC_PROPERTY]
+			-- List of properties of Current objective C class.
+		local
+			l_ptr: POINTER
+			l_count: NATURAL_32
+			l_property: OBJC_PROPERTY
+			l_managed_pointer: MANAGED_POINTER
+			i, nb: INTEGER_32
+		do
+			l_ptr := {NS_OBJC_RUNTIME}.class_copy_property_list (item, $l_count)
+			check valid_count: l_count <= {INTEGER_32}.max_value.as_natural_32 end
+			if l_ptr /= default_pointer then
+				nb := l_count.to_integer_32
+				create Result.make (nb)
+				create l_managed_pointer.own_from_pointer (l_ptr, {PLATFORM}.pointer_bytes * nb)
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					create l_property.make_from_pointer (l_managed_pointer.read_pointer (i * {PLATFORM}.pointer_bytes))
+					Result.extend (l_property)
+					i := i + 1
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
 feature -- Access
 
 	get_method_implementation (a_sel: POINTER): POINTER
@@ -209,4 +269,14 @@ feature {OBJC_CALLBACK_MARSHAL, OBJC_CLASS, NS_OBJECT} -- C Object
 
 invariant
 	item_not_null: item /= default_pointer
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

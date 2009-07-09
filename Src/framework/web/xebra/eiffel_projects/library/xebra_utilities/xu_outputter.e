@@ -32,13 +32,34 @@ feature -- Access
 
 	add_input_line: BOOLEAN assign set_add_input_line
 
-	name: SETTABLE_STRING
+	name: STRING
+			-- The name of the application
+		do
+			if i_name.is_set then
+				Result := i_name.value
+			else
+				Result := "NO NAME SET"
+			end
+		end
+
+	debug_level: INTEGER
+			-- The current debug level
+		do
+			if i_debug_level.is_set then
+				Result := i_debug_level.value
+			else
+				Result := 0
+			end
+		end
+
+feature {NONE} -- Internal Access
+
+	i_name: SETTABLE_STRING
 		-- The name of the application
 
-	debug_level: SETTABLE_INTEGER
+	i_debug_level: SETTABLE_INTEGER
 		-- The current debug level
 
---	print_mutex: MUTEX
 
 feature -- Status Change
 
@@ -47,9 +68,9 @@ feature -- Status Change
 		require
 			a_name_attached: a_name /= Void
 		do
-			name := a_name
+			i_name := a_name
 		ensure
-			name_set: equal (name.value, a_name)
+			name_set: equal (i_name.value, a_name)
 		end
 
 	set_add_input_line (a_add_input_line: BOOLEAN)
@@ -63,9 +84,9 @@ feature -- Status Change
 	set_debug_level (a_debug_level: INTEGER)
 			-- Sets name.
 		do
-			debug_level := a_debug_level
+			i_debug_level := a_debug_level
 		ensure
-			debug_level_set: equal (debug_level.value, a_debug_level)
+			debug_level_set: equal (i_debug_level.value, a_debug_level)
 		end
 
 feature -- Print
@@ -83,8 +104,8 @@ feature -- Print
 	dprintn (a_msg: STRING; a_debug_level: INTEGER)
 			--Prints a debug message  only if debug level is >= a_debug_level without formatting
 		require
-			name_set: name.is_set
-			debug_level_set: debug_level.is_set
+--			name_set: name.is_set
+--			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 		do
 			if a_debug_level <= debug_level then
@@ -96,8 +117,8 @@ feature -- Print
 	dprint (a_msg: STRING; a_debug_level: INTEGER)
 			-- Prints a debug message  only if debug level is >= a_debug_level
 		require
-			name_set: name.is_set
-			debug_level_set: debug_level.is_set
+--			name_set: name.is_set
+--			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 		do
 			if a_debug_level <= debug_level then
@@ -108,8 +129,8 @@ feature -- Print
 	eprint (a_msg: STRING; a_generating_type: ANY)
 			-- Prints an error message
 		require
-			name_set: name.is_set
-			a_msg_attached: a_msg /= Void
+--			name_set: name.is_set
+--			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
 		do
 			print_with_name ("[ERROR in " + a_generating_type.out + "] " + a_msg)
@@ -118,7 +139,7 @@ feature -- Print
 	iprint (a_msg: STRING)
 			-- Prints an info message
 		require
-			name_set: name.is_set
+--			name_set: name.is_set
 			a_msg_attached: a_msg /= Void
 		do
 			print_with_name ("[INFO] " + a_msg )
@@ -143,7 +164,7 @@ feature {NONE}  -- Impl
 		do
 			create l_f_utils.make
 
-			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name.value + ".log") as l_file then
+			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name + ".log") as l_file then
 				l_file.put_string ("%N" + a_msg)
 				l_f_utils.close
 			end

@@ -834,6 +834,10 @@ feature {NONE} -- Attribute values
 	v_bool_zero: STRING = "0"
 	v_bool_no: STRING = "no"
 
+feature {NONE} -- Constants: Errors
+
+	e_schema_error: STRING = "Schema error"
+
 invariant
 	current_transition_stack_attached: current_transition_stack /= Void
 	current_attributes_stack_attached: current_attributes_stack /= Void

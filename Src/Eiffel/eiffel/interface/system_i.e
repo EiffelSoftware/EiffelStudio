@@ -1211,7 +1211,7 @@ end
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
 		do
-			degree_output.put_start_degree (6, 0)
+			degree_output.put_start_degree (6, 1)
 
 				-- reset the compiler side removed classes and readd the configuration side removed classes
 			removed_classes := Void

@@ -97,9 +97,9 @@ feature {NONE} -- Process
 							l_struct.has_member ({XRPC_CONSTANTS}.fault_code_value) and then
 							attached {XRPC_INTEGER} l_struct[{XRPC_CONSTANTS}.fault_code_value] as l_code and then
 							l_struct.has_member ({XRPC_CONSTANTS}.fault_string_value) and then
-							attached {XRPC_STRING} l_struct[{XRPC_CONSTANTS}.fault_code_value] as l_message
+							attached {XRPC_STRING} l_struct[{XRPC_CONSTANTS}.fault_string_value] as l_message
 						then
-							response := response_factory.new_response_from_error_code_and_message (l_code.value, l_message.value)
+							create {XRPC_FAULT_RESPONSE} response.make (l_code.value, l_message.value)
 						else
 							on_report_xml_error (e_schema_error)
 						end
@@ -109,7 +109,7 @@ feature {NONE} -- Process
 				else
 					if has_parameters then
 						if attached parameters.first as l_value then
-							response := response_factory.new_response_from_value (l_value)
+							create {XRPC_VALUE_RESPONSE} response.make (l_value)
 						else
 							on_report_xml_error (e_schema_error)
 						end

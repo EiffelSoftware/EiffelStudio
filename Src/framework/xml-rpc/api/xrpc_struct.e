@@ -85,7 +85,7 @@ feature -- Query
 		local
 			l_member: detachable XRPC_MEMBER
 		do
-			l_member := internal_members.item (a_name)
+			l_member := internal_members.item (a_name.as_string_8)
 			check l_member_attached: attached l_member end
 			Result := l_member.value
 		end
@@ -101,9 +101,9 @@ feature -- Status report
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			Result := internal_members.has (a_name)
+			Result := internal_members.has (a_name.as_string_8)
 		ensure
-			internal_members_has_a_name: Result implies internal_members.has (a_name)
+			internal_members_has_a_name: Result implies internal_members.has (a_name.as_string_8)
 		end
 
 feature -- Extension
@@ -122,19 +122,35 @@ feature -- Extension
 			l_member: detachable XRPC_MEMBER
 			l_name: STRING
 		do
+			l_name := a_name.string
 			l_members := internal_members
-			if l_members.has (a_name) then
-				l_member := l_members[a_name]
+			if l_members.has (l_name) then
+				l_member := l_members[l_name]
 				check l_member_attached: attached l_member end
 				l_member.set_value (a_value)
 			else
-				l_name := a_name.string
-				create l_member.make (l_name, a_value)
+				create l_member.make_with_value (l_name, a_value)
 				internal_members.force (l_member, l_name)
 			end
 		ensure
 			has_member_a_name: has_member (a_name)
 			item_set: item (a_name) = a_value
+		end
+
+feature {XRPC_LOAD_CALLBACKS} -- Extension
+
+	extend (a_member: XRPC_MEMBER)
+			-- Extends current with an member.
+			--
+			-- `a_member': A new member.
+		require
+			a_member_attached: attached a_member
+			not_a_member_name_is_empty: not a_member.name.is_empty
+		do
+			put (a_member.value, a_member.name)
+		ensure
+			has_member_a_name: has_member (a_member.name)
+			item_set: item (a_member.name) = a_member.value
 		end
 
 feature -- Basic operations: Visitor

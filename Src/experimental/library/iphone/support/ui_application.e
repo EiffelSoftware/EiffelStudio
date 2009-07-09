@@ -46,6 +46,38 @@ feature -- Basic operations
 			l_res := c_run
 		end
 
+	rotate_up (with_animation: BOOLEAN)
+			-- Rotate Application to vertical up position.
+		require
+			exists: exists
+		do
+			c_set_orientation (item, 0, with_animation)
+		end
+
+	rotate_down (with_animation: BOOLEAN)
+			-- Rotate Application to vertical upside-down position.
+		require
+			exists: exists
+		do
+			c_set_orientation (item, 180, with_animation)
+		end
+
+	rotate_right (with_animation: BOOLEAN)
+			-- Rotate Application to the right position.
+		require
+			exists: exists
+		do
+			c_set_orientation (item, -90, with_animation)
+		end
+
+	rotate_left (with_animation: BOOLEAN)
+			-- Rotate Application to left position.
+		require
+			exists: exists
+		do
+			c_set_orientation (item, 90, with_animation)
+		end
+
 feature -- Access
 
 	accelerometer: UI_ACCELEROMETER
@@ -123,11 +155,17 @@ feature {NONE} -- Dispatching
 		local
 			l_obj: POINTER
 			l_event: UI_EVENT
+			l_memory: MEMORY
 		do
 			inspect a_msg
 			when {UI_DISPATCHER_CONST}.ui_application_did_finish_launching then
 				share_from_pointer (a_data)
 				post_launch_actions.call (Void)
+
+			when {UI_DISPATCHER_CONST}.ui_application_did_receive_memory_warning then
+				create l_memory
+				l_memory.full_collect
+				l_memory.full_coalesce
 
 			when {UI_DISPATCHER_CONST}.ui_responder_touches_began then
 				l_obj := c_touch_obj (a_data)
@@ -264,6 +302,27 @@ feature {NONE} -- Externals
 			"C inline use %"eiffel_iphone.h%""
 		alias
 			"return EIF_TEST(((eif_motion_event_t *) $a_data)->motion == UIEventSubtypeMotionShake);"
+		end
+
+	c_set_orientation (a_item_ptr: POINTER; a_angle: INTEGER; animated: BOOLEAN)
+		require
+			a_item_ptr_not_null: a_item_ptr /= default_pointer
+			a_angle_valid: a_angle = 0 or a_angle = 90 or a_angle = 180 or a_angle = -90
+		external
+			"C inline use <UIKit/UIKit.h>"
+		alias
+			"[
+			UIInterfaceOrientation l_orientation;
+			
+			switch ($a_angle) {
+			case 0: l_orientation = UIInterfaceOrientationPortrait; break;
+			case 90: l_orientation = UIInterfaceOrientationLandscapeRight; break;
+			case -90: l_orientation = UIInterfaceOrientationLandscapeLeft; break;
+			case 180: l_orientation = UIInterfaceOrientationPortraitUpsideDown; break;
+			}
+			
+			[(UIApplication *) $a_item_ptr setStatusBarOrientation:(UIInterfaceOrientation)l_orientation animated:(BOOL)$animated];
+			]"
 		end
 
 note

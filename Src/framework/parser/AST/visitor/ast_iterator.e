@@ -265,7 +265,11 @@ feature {NONE} -- Implementation
 			until
 				l_as.after
 			loop
-				l_as.item.process (Current)
+				if attached l_as.item as l_item then
+					l_item.process (Current)
+				else
+					check False end
+				end
 				l_as.forth
 			end
 			l_as.go_i_th (l_cursor)

@@ -19,6 +19,7 @@ inherit
 	THREAD
 	XS_SHARED_SERVER_CONFIG
 	XS_SHARED_SERVER_OUTPUTTER
+	XU_STOPWATCH
 
 create make
 
@@ -67,7 +68,12 @@ feature -- Inherited Features
 	                l_http_socket.accept
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
-			            	if receive_message (thread_http_socket) then
+
+			            	if config.args.debug_level > 9 then
+			            		start_time
+			            	end
+
+			            	 if receive_message (thread_http_socket) then
 								l_response := l_webapp_handler.request_message_to_response (current_request_message)
 			            	else
 								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_command_response
@@ -81,6 +87,9 @@ feature -- Inherited Features
 				            check
 				            	thread_http_socket.is_closed
 				            end
+				            if config.args.debug_level > 9 then
+			            		o.dprint ("Server Request Time: " + stop_time, 10)
+			            	end
 						end
 					end
 	            end
@@ -145,7 +154,6 @@ feature -- Status setting
 
 
 feature {NONE} -- Implementation
-
 
 	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.

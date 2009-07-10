@@ -12,6 +12,7 @@ inherit
 	THREAD
 	XU_SHARED_OUTPUTTER
 	XC_WEBAPP_INTERFACE
+	XU_STOPWATCH
 
 feature {NONE} -- Initialization
 
@@ -78,6 +79,9 @@ feature -- Implementation
                 xserver_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
+	                	if config.arg_config.debug_level > 9 then
+	                		start_time
+	                	end
 		                o.dprint ("Connection to Xebra Server accepted",1)
 		                socket.read_natural
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
@@ -92,6 +96,9 @@ feature -- Implementation
 			            check
 				        	socket.is_closed
 				       	end
+				       	if config.arg_config.debug_level > 9 then
+	                		o.dprint ("Webapp Request Time: " + stop_time, 10)
+	                	end
 			         end
 		         end
             end

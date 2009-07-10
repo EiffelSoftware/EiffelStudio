@@ -30,8 +30,13 @@ feature -- Access
 			Result := Result + second_now.to_natural_32
 		end
 
+	time_stamp_milliseconds: NATURAL
+			-- Compute the milliseconds since EPOC (January 1st 1970)
+		do
+			Result := unix_time_stamp * 1000
+			Result := Result + millisecond_now.to_natural_32
+		end
 
-
-feature {NONE} -- Implementation
+feature -- Basic Operations
 
 end

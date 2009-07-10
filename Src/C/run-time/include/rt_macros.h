@@ -57,7 +57,6 @@ extern "C" {
 		(egc_strmake)((EIF_REFERENCE) (string), u); \
 	}
 #define RT_STRING_SET_COUNT(string,count) \
-	nstcall = 0; \
 	{ \
 		EIF_TYPED_VALUE u; \
 		u.type = SK_INT32; \

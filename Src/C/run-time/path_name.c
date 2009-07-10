@@ -416,6 +416,9 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 
 #endif	/* EIF_VMS */
 
+#ifdef WORKBENCH
+	nstcall = 0;
+#endif
 	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
@@ -442,6 +445,9 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 	if (*((char*)v) != '/' )
 		strcat ((char *)p, "/");
 	strcat ((char *)p, (char *)v);
+#endif
+#ifdef WORKBENCH
+	nstcall = 0;
 #endif
 	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
@@ -477,7 +483,9 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 #endif
 		strcat ((char *)p, (char *)v);
 	}
-
+#ifdef WORKBENCH
+	nstcall = 0;
+#endif
 	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
@@ -555,10 +563,13 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 
 	if (hr == S_OK) {
 		return RTMS(l_path);
-	} else if (getenv ("APPDATA")) {
-		return RTMS(getenv("APPDATA"));
 	} else {
-		return NULL;
+		char *l_env_value = getenv ("APPDATA");
+		if (l_env_value) {
+			return RTMS(l_env_value);
+		} else {
+			return NULL;
+		}
 	}
 #elif defined EIF_VMS_EIF56
 	return RTMS(getenv("SYS$LOGIN"));
@@ -578,8 +589,9 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 	    return RTMS(decc$translate_vms(eif_getenv_native ("SYS$LOGIN")));
 	}
 #else
-	if (getenv("HOME")) {
-		return RTMS(getenv("HOME"));
+	char *l_env_value = getenv("HOME");
+	if (l_env_value) {
+		return RTMS(l_env_value);
 	} else {
 		return RTMS("~");
 	}
@@ -588,9 +600,9 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 
 rt_public EIF_REFERENCE eif_user_directory_name(void)
 {
-	if (getenv("ISE_USER_FILES")) {
-		// Use the defined variable name.
-		return RTMS(getenv("ISE_USER_FILES"));
+	char *l_env_value = getenv ("ISE_USER_FILES");
+	if (l_env_value) {
+		return RTMS(l_env_value);
 	} else {
 #ifdef EIF_WINDOWS
 #if (_WIN32_IE < 0x0500)
@@ -618,7 +630,7 @@ rt_public EIF_REFERENCE eif_user_directory_name(void)
 			return NULL;
 		}
 #else
-		// Default to the user directory name
+		/* Default to the user directory name */
 		return eif_home_directory_name();
 #endif
 	}

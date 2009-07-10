@@ -156,9 +156,17 @@ feature -- Element change
 			l_tree_tag: READABLE_STRING_GENERAL
 			l_found: like find_node
 			l_node, l_remove: detachable TAG_TREE_NODE [G]
+			l_token: STRING
+			l_formatter: like formatter
 		do
 			lock
-			l_tree_tag := formatter.join_tags (a_tag, an_item.name)
+
+			l_formatter := formatter
+			create l_token.make (an_item.name.count + l_formatter.item_prefix.count)
+			l_token.append (l_formatter.item_prefix)
+			l_token.append_string_general (an_item.name)
+			l_tree_tag := formatter.join_tags (a_tag, l_token)
+
 			l_found := find_node (l_tree_tag)
 
 			check

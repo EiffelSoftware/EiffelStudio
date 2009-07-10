@@ -115,10 +115,11 @@ feature -- Query
 			--       an existing tag. This again allows us to have pure leafs only containing the item.
 		do
 			if Precursor (an_item, a_tag) then
-				Result := not a_tag.has_code (('~').natural_32_code) and
+				Result := not a_tag.as_string_8.has_substring (formatter.item_prefix) and
 				          formatter.is_valid_token (an_item.name)
 			end
 		ensure then
+			result_implies_no_item_prefix: Result implies not a_tag.as_string_8.has_substring (formatter.item_prefix)
 			result_implies_valid_token: Result implies formatter.is_valid_token (an_item.name)
 		end
 
@@ -138,8 +139,9 @@ feature -- Element change
 			lock
 			l_found := find_node (a_tag)
 			l_formatter := formatter
-			l_token := validator.string_copy (an_item.name)
-			l_token.append_character ('~')
+			create l_token.make (an_item.name.count + l_formatter.item_prefix.count)
+			l_token.append (l_formatter.item_prefix)
+			l_token.append_string_general (an_item.name)
 			l_tree_tag := l_formatter.join_tags (l_found.suffix, l_token)
 			l_found.node.add_tag_with_item (l_tree_tag, an_item)
 			l_new := l_found.node.last_added_child

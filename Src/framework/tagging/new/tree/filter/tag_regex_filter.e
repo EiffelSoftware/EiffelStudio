@@ -104,6 +104,8 @@ feature -- Query
 
 	is_node_included (a_sparse_tree: TAG_SPARSE_TREE [G]; a_node: TAG_TREE_NODE [G]): TUPLE [BOOLEAN, BOOLEAN]
 			-- <Precursor>
+			--
+			-- Note: this routine could be optimized, setting l_check_children properly.
 		local
 			l_matchers: like positive_matchers
 			l_matcher: like new_matcher
@@ -115,28 +117,21 @@ feature -- Query
 				l_check_children := not (l_inside and negative_matchers.is_empty)
 			else
 				l_tag := a_node.tag
+				l_check_children := True
 
 					-- Check positive matchers
 				from
 					l_inside := True
 					l_matchers := positive_matchers
 					l_matchers.start
-					l_check_children := not l_matchers.is_empty
 				until
 					l_matchers.after or not l_inside
 				loop
 					l_matcher := l_matchers.item_for_iteration
-					l_matcher.set_text (l_tag)
-					l_inside := l_matcher.search_for_pattern and (l_matcher.has_leading_wild or l_matcher.found_at = 1)
 
-						-- If pattern starts with a wild string/character, we should check children
-					l_check_children := not l_inside and
-						(l_matcher.has_leading_wild or l_matcher.pattern.count > l_tag.count)
-
+					l_inside := l_matcher.matches (l_tag)
 					l_matchers.forth
 				end
-
-				check inside_implies_dont_check_children: l_inside implies not l_check_children end
 
 					-- Check negative matchers
 				from
@@ -146,12 +141,7 @@ feature -- Query
 					l_matchers.after or not l_inside
 				loop
 					l_matcher := l_matchers.item_for_iteration
-					l_matcher.set_text (l_tag)
-					l_inside := not (l_matcher.search_for_pattern  and (l_matcher.has_leading_wild or l_matcher.found_at = 1))
-
-						-- If pattern starts with a wild, we should check children
-					l_check_children := l_inside and
-						(l_check_children or l_matcher.has_leading_wild or l_matcher.pattern.count > l_tag.count)
+					l_inside := not l_matcher.matches (l_tag)
 
 					l_matchers.forth
 				end
@@ -161,15 +151,15 @@ feature -- Query
 
 feature {NONE} -- Factory
 
-	new_matcher (a_pattern: STRING): TAG_KMP_WILD
+	new_matcher (a_pattern: STRING): RX_PCRE_REGULAR_EXPRESSION
 			-- Create a new wild string matcher.
 			--
 			-- `a_pattern': Pattern to be used for matching.
 			-- `Result': New matcher.
 		do
-			create Result.make_empty
-			Result.set_pattern (a_pattern)
-			Result.enable_case_sensitive
+			create Result.make
+			Result.set_caseless (True)
+			Result.compile (a_pattern)
 		end
 
 note

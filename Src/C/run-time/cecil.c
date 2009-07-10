@@ -93,7 +93,7 @@ doc:	</attribute>
 */
 rt_shared EIF_LW_MUTEX_TYPE *eif_cecil_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
-rt_shared  void eif_cecil_init ();
+rt_shared void eif_cecil_init ();
 #define EIF_CECIL_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
 #define EIF_CECIL_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
 
@@ -114,26 +114,26 @@ rt_public int eiflocate (EIF_OBJECT object, char *name);
  */
 
 rt_public void eifvisex (void) {
-    /* Enable the visible exception */
+	/* Enable the visible exception */
 
 	RT_GET_CONTEXT
 #ifdef EIF_THREADS
 	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif
 	EIF_CECIL_LOCK;
-    eif_visible_is_off = (unsigned char) 0;
+	eif_visible_is_off = (unsigned char) 0;
 	EIF_CECIL_UNLOCK;
 }
 
-rt_public void eifuvisex (void)  {
-    /* Disable visible exception */
+rt_public void eifuvisex (void) {
+	/* Disable visible exception */
 
 	RT_GET_CONTEXT
 #ifdef EIF_THREADS
 	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif
 	EIF_CECIL_LOCK;
-    eif_visible_is_off = (unsigned char) 1;
+	eif_visible_is_off = (unsigned char) 1;
 	EIF_CECIL_UNLOCK;
 }
 
@@ -142,51 +142,55 @@ rt_public void eifuvisex (void)  {
  */
 
 rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
-    /* Return type of `routine' defined in class of type `cid' */
-   
-    struct cnode *sk;               /* Skeleton entry in system */
-    char **n;                       /* Pointer in cn_names array */
-    int nb_attr;                    /* Number of attributes */
-    int i;
-    uint32 field_type;              /* for scanning type */
-    if (cid == EIF_NO_TYPE)
-        eif_panic ("Unknown dynamic type\n");  /* Check if dynamic exists */
+	/* Return type of `routine' defined in class of type `cid' */
+	
+	struct cnode *sk;	/* Skeleton entry in system */
+	char **n;	/* Pointer in cn_names array */
+	int nb_attr;	/* Number of attributes */
+	int i;
+	uint32 field_type;	/* for scanning type */
+	int l_result = EIF_NO_TYPE;
+
+	REQUIRE("attr_name not null", attr_name);
+
+	if (cid == EIF_NO_TYPE) {
+		eif_panic ("Unknown dynamic type\n");	/* Check if dynamic exists */
+	} else {
+		sk = &System(To_dtype(cid_to_dftype(cid)));	/* Fetch skeleton entry */
+		nb_attr = sk->cn_nbattr;	/* Number of attributes */
 
 
-    sk = &System(To_dtype(cid_to_dftype(cid)));    /* Fetch skeleton entry */
-    nb_attr = sk->cn_nbattr;        /* Number of attributes */
+		for (i = 0, n = sk->cn_names; i < nb_attr; i++, n++)
+			if (0 == strcmp(attr_name, *n))
+				break;	/* Attribute was found */
 
+		if (i < nb_attr) {
+				/* Attribute found */
 
-    for (i = 0, n = sk->cn_names; i < nb_attr; i++, n++)
-        if (0 == strcmp(attr_name, *n))
-            break;                  /* Attribute was found */
-
-    if (i == nb_attr)               /* Attribute not found */
-        return EIF_NO_TYPE;                  /* Will certainly raise a bus error */
-
-    field_type = sk->cn_types[i];
-    switch (field_type & SK_HEAD)   {
-
-        case SK_REF:    return EIF_REFERENCE_TYPE;
-        case SK_CHAR:   return EIF_CHARACTER_TYPE;
-        case SK_WCHAR:   return EIF_WIDE_CHAR_TYPE;
-        case SK_BOOL:   return EIF_BOOLEAN_TYPE;
-        case SK_UINT8:    return EIF_NATURAL_8_TYPE;
-        case SK_UINT16:    return EIF_NATURAL_16_TYPE;
-        case SK_UINT32:    return EIF_NATURAL_32_TYPE;
-        case SK_UINT64:    return EIF_NATURAL_64_TYPE;
-        case SK_INT8:    return EIF_INTEGER_8_TYPE;
-        case SK_INT16:    return EIF_INTEGER_16_TYPE;
-        case SK_INT32:    return EIF_INTEGER_32_TYPE;
-        case SK_INT64:    return EIF_INTEGER_64_TYPE;
-        case SK_REAL32:  return EIF_REAL_32_TYPE;
-        case SK_REAL64: return EIF_REAL_64_TYPE;
-        case SK_EXP:    return EIF_EXPANDED_TYPE;
-        case SK_BIT:    return EIF_BIT_TYPE;
-        case SK_POINTER:    return EIF_POINTER_TYPE;
-        default:        return EIF_NO_TYPE;
-    }
-}  
+			field_type = sk->cn_types[i];
+			switch (field_type & SK_HEAD) {
+				case SK_REF: l_result = EIF_REFERENCE_TYPE;
+				case SK_CHAR: l_result = EIF_CHARACTER_TYPE;
+				case SK_WCHAR: l_result = EIF_WIDE_CHAR_TYPE;
+				case SK_BOOL: l_result = EIF_BOOLEAN_TYPE;
+				case SK_UINT8: l_result = EIF_NATURAL_8_TYPE;
+				case SK_UINT16: l_result = EIF_NATURAL_16_TYPE;
+				case SK_UINT32: l_result = EIF_NATURAL_32_TYPE;
+				case SK_UINT64: l_result = EIF_NATURAL_64_TYPE;
+				case SK_INT8: l_result = EIF_INTEGER_8_TYPE;
+				case SK_INT16: l_result = EIF_INTEGER_16_TYPE;
+				case SK_INT32: l_result = EIF_INTEGER_32_TYPE;
+				case SK_INT64: l_result = EIF_INTEGER_64_TYPE;
+				case SK_REAL32: l_result = EIF_REAL_32_TYPE;
+				case SK_REAL64: l_result = EIF_REAL_64_TYPE;
+				case SK_EXP: l_result = EIF_EXPANDED_TYPE;
+				case SK_BIT: l_result = EIF_BIT_TYPE;
+				case SK_POINTER: l_result = EIF_POINTER_TYPE;
+			}
+		}
+	}
+	return l_result;
+}
 
 /*
  * Object creation
@@ -233,15 +237,15 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	ptr_table = &Cecil(dtype);			/* Get associated H table */
 
 	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
-	if (!ref) {	/* Was function found? */
-		if (!eif_visible_is_off) {	/* Is Visible exception enabled? */
+		/* If function is not found and visible exceptions are enabled, raise an exception. */
+	if (!ref) {
+		if (!eif_visible_is_off) {
 			eraise ("Unknown routine (visible?)", EN_PROG);	
-		} else {
-			return (EIF_REFERENCE_FUNCTION) 0;
 		}
+		return NULL;
+	} else {
+		return *ref;	/* Return address of function. */
 	}
-
-	return *ref;	/* Return address of function. */
 }
 
 /*
@@ -317,7 +321,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	if (tid == EIF_NO_TYPE)	/* No type id? */
 		eif_panic ("Object has no type id.");/* Should not happen. */
 
-	if (eif_attribute_type (name, tid) != type_int)  	/* Do types match. */
+	if (eif_attribute_type (name, tid) != type_int)	/* Do types match. */
 	{
 		*ret = EIF_WRONG_TYPE;	/* Wrong type. */
 		return &eif_default_pointer;
@@ -368,9 +372,9 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 }
 
 rt_public int eiflocate (EIF_OBJECT object, char *name) {
-    /* Return the index of attribute `name' in EIF_OBJECT `object' */
+	/* Return the index of attribute `name' in EIF_OBJECT `object' */
 
-    return locate (eif_access (object), name);
+	return locate (eif_access (object), name);
 }
 
 rt_private int locate(EIF_REFERENCE object, char *name)
@@ -625,14 +629,15 @@ rt_shared void eif_set_thr_context (void) {
 		 * from the others.	*/
 	RT_GET_CONTEXT	
 	if (rt_globals && !eif_thr_context) {
-		eif_thr_context = (rt_thr_context *) eif_malloc (sizeof (rt_thr_context));
-		if (eif_thr_context == NULL) {
+		rt_thr_context *l_context = (rt_thr_context *) eif_malloc (sizeof (rt_thr_context));
+		if (l_context == NULL) {
 			eif_panic ("Couldn't allocate thread context");
 		} else {
-			memset (eif_thr_context, 0, sizeof (rt_thr_context));
-			eif_thr_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
-			eif_thr_context->is_alive = 1;
+			memset (l_context, 0, sizeof (rt_thr_context));
+			l_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+			l_context->is_alive = 1;
 		}
+		eif_thr_context = l_context;
 	}
 }
 #endif	/* EIF_THREADS */

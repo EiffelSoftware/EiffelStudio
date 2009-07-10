@@ -225,11 +225,14 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			-- <Precursor>
 		local
 			l_combo: like selection_combo
+			l_name: STRING_32
+			l_cursor: CURSOR
 			l_actions_running: BOOLEAN
 			l_locked: BOOLEAN
 			l_old_output: like output
 			l_widget: ES_WIDGET [EV_WIDGET]
 			l_window: EB_DEVELOPMENT_WINDOW
+			l_done: BOOLEAN
 		do
 			if not is_initialized then
 					-- Force initialization.
@@ -258,7 +261,17 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 					end
 
 						-- Change label in the combo box.
-					l_combo.set_text (a_output.name.as_string_32)
+					l_name := a_output.name.as_string_32
+					l_cursor := l_combo.cursor
+					from l_combo.start until l_combo.after or l_done loop
+						if l_name ~ l_combo.item.text then
+							l_combo.item.enable_select
+							l_done := True
+						end
+						l_combo.forth
+					end
+					check done: l_done end
+					l_combo.go_to (l_cursor)
 
 					if l_actions_running then
 						l_combo.change_actions.resume
@@ -905,7 +918,9 @@ feature {NONE} -- Factory
 
 				-- Selection list
 			create l_combo
+			l_combo.set_tooltip (locale_formatter.translation (tt_output_list))
 			l_combo.set_minimum_width (220)
+			l_combo.disable_edit
 			l_box.extend (l_combo)
 			selection_combo := l_combo
 
@@ -961,6 +976,7 @@ feature {NONE} -- Internationalization
 
 	lb_output: STRING = "Output"
 
+	tt_output_list: STRING = "Select an alternative the output"
 	tt_save_output: STRING = "Save current output to disk"
 	tt_search_output: STRING = "Search the output"
 	tt_clear_output: STRING = "Clear current output"

@@ -1,16 +1,16 @@
 note
 	description: "[
-		{ES_TAG_TREE_NODE} representing overrides in an Eiffel project.
+		{EC_TAG_TREE_NODE} representing overrides in an Eiffel project.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_OVERRIDE_NODE [G -> TAG_ITEM]
+	EC_TAG_TREE_OVERRIDE_NODE [G -> TAG_ITEM]
 
 inherit
-	ES_TAG_TREE_NODE [G, CONF_OVERRIDE]
+	EC_TAG_TREE_NODE [G, CONF_OVERRIDE]
 
 create
 	make
@@ -26,11 +26,11 @@ feature {NONE} -- Implementation
 	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
 			-- <Precursor>
 		do
-			if attached {ES_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
+			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_cluster then
 					Result := l_cluster.target.overrides.item (name)
 				end
-			elseif attached {ES_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
+			elseif attached {EC_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_library then
 					Result := l_library.library_target.overrides.item (name)
 				end

@@ -131,7 +131,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 				end
 
 				if
-					not (attached {ES_TAG_TREE_CLASS_NODE [TEST_I]} a_node.parent as l_parent and then
+					not (attached {EC_TAG_TREE_CLASS_NODE [TEST_I]} a_node.parent as l_parent and then
 					l_parent.name.same_string (l_test.class_name))
 				then
 					token_writer.process_basic_text (" (")

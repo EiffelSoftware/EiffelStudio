@@ -10,9 +10,9 @@ deferred class
 inherit
 	TAG_TREE_NODE_VISITOR [G]
 
-feature {ES_TAG_TREE_NODE} -- Basic operations
+feature {EC_TAG_TREE_NODE} -- Basic operations
 
-	process_class_node (a_node: ES_TAG_TREE_CLASS_NODE [G])
+	process_class_node (a_node: EC_TAG_TREE_CLASS_NODE [G])
 			-- Process class node.
 			--
 			-- `a_node': Node to be processed.
@@ -22,7 +22,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 		deferred
 		end
 
-	process_feature_node (a_node: ES_TAG_TREE_FEATURE_NODE [G])
+	process_feature_node (a_node: EC_TAG_TREE_FEATURE_NODE [G])
 			-- Process class node.
 			--
 			-- `a_node': Node to be processed.
@@ -32,7 +32,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 		deferred
 		end
 
-	process_library_node (a_node: ES_TAG_TREE_LIBRARY_NODE [G])
+	process_library_node (a_node: EC_TAG_TREE_LIBRARY_NODE [G])
 			-- Process library node.
 			--
 			-- `a_node': Node to be processed.
@@ -42,7 +42,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 		deferred
 		end
 
-	process_cluster_node (a_node: ES_TAG_TREE_CLUSTER_NODE [G])
+	process_cluster_node (a_node: EC_TAG_TREE_CLUSTER_NODE [G])
 			-- Process class node.
 			--
 			-- `a_node': Node to be processed.
@@ -52,7 +52,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 		deferred
 		end
 
-	process_override_node (a_node: ES_TAG_TREE_OVERRIDE_NODE [G])
+	process_override_node (a_node: EC_TAG_TREE_OVERRIDE_NODE [G])
 			-- Process class node.
 			--
 			-- `a_node': Node to be processed.
@@ -62,7 +62,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 		deferred
 		end
 
-	process_directory_node (a_node: ES_TAG_TREE_DIRECTORY_NODE [G])
+	process_directory_node (a_node: EC_TAG_TREE_DIRECTORY_NODE [G])
 			-- Process class node.
 			--
 			-- `a_node': Node to be processed.

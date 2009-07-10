@@ -1,16 +1,16 @@
 note
 	description: "[
-		{ES_TAG_TREE_NODE} representing libraries of an Eiffel system.
+		{EC_TAG_TREE_NODE} representing libraries of an Eiffel system.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_LIBRARY_NODE [G -> TAG_ITEM]
+	EC_TAG_TREE_LIBRARY_NODE [G -> TAG_ITEM]
 
 inherit
-	ES_TAG_TREE_NODE [G, CONF_LIBRARY]
+	EC_TAG_TREE_NODE [G, CONF_LIBRARY]
 		rename
 			make as make_es_node
 		end

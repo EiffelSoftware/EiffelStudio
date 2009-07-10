@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {ES_TAG_TREE_NODE}."
+	description: "Summary description for {EC_TAG_TREE_NODE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	ES_TAG_TREE_NODE [G -> TAG_ITEM, H]
+	EC_TAG_TREE_NODE [G -> TAG_ITEM, H]
 
 inherit
 	TAG_TREE_NODE [G]

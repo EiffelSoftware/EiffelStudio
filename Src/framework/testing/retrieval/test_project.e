@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 				-- Create tree
 			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER},
-			                      create {ES_TAG_TREE_NODE_FACTORY [TEST_I]})
+			                      create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
 
 			internal_project := a_project
 			eiffel_project_helper := a_helper
@@ -929,15 +929,15 @@ feature {NONE} -- Implementation: tag retrieval
 				loop
 					l_group := cluster_stack.last
 					if attached {CONF_LIBRARY} l_group as l_lib then
-						a_tag.append ({ES_TAG_TREE_CONSTANTS}.library_prefix)
+						a_tag.append ({EC_TAG_TREE_CONSTANTS}.library_prefix)
 						a_tag.append (cluster_stack.last.name)
-						a_tag.append_character ({ES_TAG_TREE_CONSTANTS}.delimiter_symbol)
+						a_tag.append_character ({EC_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (l_lib.library_target.system.uuid.out)
 					else
 						if l_group.is_override then
-							a_tag.append ({ES_TAG_TREE_CONSTANTS}.override_prefix)
+							a_tag.append ({EC_TAG_TREE_CONSTANTS}.override_prefix)
 						elseif cluster_stack.last.is_cluster then
-							a_tag.append ({ES_TAG_TREE_CONSTANTS}.cluster_prefix)
+							a_tag.append ({EC_TAG_TREE_CONSTANTS}.cluster_prefix)
 						end
 						a_tag.append (l_group.name)
 					end
@@ -953,18 +953,18 @@ feature {NONE} -- Implementation: tag retrieval
 				loop
 					l_dir := l_path.item_for_iteration
 					if l_dir /= Void and then not l_dir.is_empty then
-						a_tag.append ({ES_TAG_TREE_CONSTANTS}.directory_prefix)
+						a_tag.append ({EC_TAG_TREE_CONSTANTS}.directory_prefix)
 						a_tag.append (l_dir)
 						a_tag.append_character (tag_utilities.split_char)
 					end
 					l_path.forth
 				end
 			end
-			a_tag.append ({ES_TAG_TREE_CONSTANTS}.class_prefix)
+			a_tag.append ({EC_TAG_TREE_CONSTANTS}.class_prefix)
 			a_tag.append (a_class_name)
 			if a_feature_name /= Void then
 				a_tag.append_character (tag_utilities.split_char)
-				a_tag.append ({ES_TAG_TREE_CONSTANTS}.feature_prefix)
+				a_tag.append ({EC_TAG_TREE_CONSTANTS}.feature_prefix)
 				a_tag.append (a_feature_name)
 			end
 		end

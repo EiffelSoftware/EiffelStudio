@@ -1,36 +1,35 @@
 note
-	description: "Summary description for {TAG_KMP_WILD}."
+	description: "Summary description for {EC_TAG_TREE_DIRECTORY_NODE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TAG_KMP_WILD
+	EC_TAG_TREE_DIRECTORY_NODE [G -> TAG_ITEM]
 
 inherit
-	KMP_WILD
+	EC_TAG_TREE_NODE [G, CONF_CLUSTER]
 		redefine
-			set_pattern
+			retrieve_item
 		end
 
 create
-	make,
-	make_empty
+	make
 
-feature -- Status report
+feature {NONE} -- Implementation
 
-	has_leading_wild: BOOLEAN
-			-- Does pattern begin with a wild character?
-
-feature -- Status setting
-
-	set_pattern (a_new_pattern: STRING)
+	process_ec_node (a_visitor: EC_TAG_TREE_NODE_VISITOR [G])
 			-- <Precursor>
 		do
-			has_leading_wild := not a_new_pattern.is_empty and then (
-				a_new_pattern.item (1) = character_representation or
-				a_new_pattern.item (1) = string_representation)
-			Precursor (a_new_pattern)
+			a_visitor.process_directory_node (Current)
+		end
+
+	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
+			-- <Precursor>
+		do
+			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
+				Result := l_parent.item (a_project)
+			end
 		end
 
 note

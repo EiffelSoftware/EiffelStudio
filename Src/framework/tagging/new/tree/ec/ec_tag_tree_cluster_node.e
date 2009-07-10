@@ -1,28 +1,44 @@
 note
 	description: "[
-		Constants used to map tokens in a TAG_TREE to a corresponding ES_TAG_TREE_NODE.
+		{EC_TAG_TREE_NODE} representing clusters in an Eiffel project.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_CONSTANTS
+	EC_TAG_TREE_CLUSTER_NODE [G -> TAG_ITEM]
 
-feature -- Access
+inherit
+	EC_TAG_TREE_NODE [G, CONF_CLUSTER]
 
-	delimiter_symbol: CHARACTER = ':'
-			-- Character used to separate code from actual token
+create
+	make
 
-	class_prefix: STRING = "class:"
-	feature_prefix: STRING = "feature:"
-	target_prefix: STRING = "target:"
-	library_prefix: STRING = "library:"
-	cluster_prefix: STRING = "cluster:"
-	override_prefix: STRING = "override:"
-	directory_prefix: STRING = "directory:"
-			-- Prefix tokens in order to indicate what the token represents
+feature {NONE} -- Implementation
 
+	process_ec_node (a_visitor: EC_TAG_TREE_NODE_VISITOR [G])
+			-- <Precursor>
+		do
+			a_visitor.process_cluster_node (Current)
+		end
+
+	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
+			-- <Precursor>
+		do
+			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
+				if attached l_parent.item (a_project) as l_cluster then
+					Result := l_cluster.target.clusters.item (name)
+				end
+			elseif attached {EC_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
+				if attached l_parent.item (a_project) as l_library then
+					Result := l_library.library_target.clusters.item (name)
+				end
+			end
+			if Result = Void then
+				Result := a_project.project.universe.cluster_of_name (name)
+			end
+		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

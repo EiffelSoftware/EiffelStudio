@@ -1,36 +1,27 @@
 note
-	description: "Summary description for {ES_TAG_TREE_DIRECTORY_NODE}."
+	description: "[
+		Constants used to map tokens in a TAG_TREE to a corresponding ES_TAG_TREE_NODE.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_DIRECTORY_NODE [G -> TAG_ITEM]
+	EC_TAG_TREE_CONSTANTS
 
-inherit
-	ES_TAG_TREE_NODE [G, CONF_CLUSTER]
-		redefine
-			retrieve_item
-		end
+feature -- Access
 
-create
-	make
+	delimiter_symbol: CHARACTER = ':'
+			-- Character used to separate code from actual token
 
-feature {NONE} -- Implementation
-
-	process_ec_node (a_visitor: EC_TAG_TREE_NODE_VISITOR [G])
-			-- <Precursor>
-		do
-			a_visitor.process_directory_node (Current)
-		end
-
-	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
-			-- <Precursor>
-		do
-			if attached {ES_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
-				Result := l_parent.item (a_project)
-			end
-		end
+	class_prefix: STRING = "class:"
+	feature_prefix: STRING = "feature:"
+	target_prefix: STRING = "target:"
+	library_prefix: STRING = "library:"
+	cluster_prefix: STRING = "cluster:"
+	override_prefix: STRING = "override:"
+	directory_prefix: STRING = "directory:"
+			-- Prefix tokens in order to indicate what the token represents
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

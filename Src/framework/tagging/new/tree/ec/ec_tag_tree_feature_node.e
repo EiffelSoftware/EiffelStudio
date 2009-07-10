@@ -1,16 +1,16 @@
 note
 	description: "[
-		{ES_TAG_TREE_NODE} representing Eiffel classes.
+		{EC_TAG_TREE_NODE} representing Eiffel features.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_CLASS_NODE [G -> TAG_ITEM]
+	EC_TAG_TREE_FEATURE_NODE [G -> TAG_ITEM]
 
 inherit
-	ES_TAG_TREE_NODE [G, CLASS_I]
+	EC_TAG_TREE_NODE [G, E_FEATURE]
 
 create
 	make
@@ -20,18 +20,24 @@ feature {NONE} -- Implementation
 	process_ec_node (a_visitor: EC_TAG_TREE_NODE_VISITOR [G])
 			-- <Precursor>
 		do
-			a_visitor.process_class_node (Current)
+			a_visitor.process_feature_node (Current)
 		end
 
 	retrieve_item (a_project: EC_PROJECT_ACCESS): like item
 			-- <Precursor>
 		local
-			l_group: detachable CONF_GROUP
+			l_classc: CLASS_C
 		do
-			if attached {ES_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
-				l_group := l_parent.item (a_project)
+			if attached {EC_TAG_TREE_NODE [G, CLASS_I]} parent as l_parent then
+				if attached l_parent.item (a_project) as l_classi then
+					if l_classi.is_compiled then
+						l_classc := l_classi.compiled_class
+						if l_classc.has_feature_table then
+							Result := l_classc.feature_with_name (name)
+						end
+					end
+				end
 			end
-			Result := a_project.class_from_name (name, l_group)
 		end
 
 note

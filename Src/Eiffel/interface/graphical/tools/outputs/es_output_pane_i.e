@@ -41,10 +41,30 @@ feature -- Access: User interface
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := icon.to_pixmap.as_attached
+			Result := icon.to_pixmap
 		ensure
 			result_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
+		end
+
+	icon_active: EV_PIXEL_BUFFER
+			-- An icon representing the output pane, in a post unlocked state.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := icon
+		ensure
+			not_result_is_destroyed: attached Result implies not Result.is_destroyed
+		end
+
+	icon_active_pixmap: EV_PIXMAP
+			-- A pixmap icon representing the output pane, in a post unlocked state.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := icon_pixmap
+		ensure
+			not_result_is_destroyed: attached Result implies not Result.is_destroyed
 		end
 
 	icon_animations: ARRAY [EV_PIXEL_BUFFER]

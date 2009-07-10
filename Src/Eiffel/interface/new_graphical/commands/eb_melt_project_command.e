@@ -284,13 +284,13 @@ feature -- Execution
 						l_window_attached: l_window /= Void
 						l_window_is_interface_usable: l_window.is_interface_usable
 					end
+						-- Activate the compiler output on the outputs tools.
+					create l_service
+					if l_service.is_service_available then
+						l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+						l_output.activate (False)
+					end
 					if preferences.development_window_data.output_tool_prompted then
-							-- Activate the compiler output on the outputs tools.
-						create l_service
-						if l_service.is_service_available then
-							l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-							l_output.activate (True)
-						end
 							-- Request tool be shown.
 						l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)
 					end

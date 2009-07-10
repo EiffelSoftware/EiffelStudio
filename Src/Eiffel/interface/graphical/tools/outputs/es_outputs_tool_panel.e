@@ -584,8 +584,8 @@ feature {NONE} -- Basic operations
 
 				-- Put back the icon.
 			if attached output as l_output then
-				content.set_pixel_buffer (l_output.icon)
-				content.set_pixmap (l_output.icon_pixmap)
+				content.set_pixel_buffer (l_output.icon_active)
+				content.set_pixmap (l_output.icon_active_pixmap)
 			else
 				content.set_pixel_buffer (tool_descriptor.icon)
 				content.set_pixmap (tool_descriptor.icon_pixmap)
@@ -680,8 +680,8 @@ feature {NONE} -- Action handlers
 		do
 				-- Retrieve active icon
 			if attached output as l_output then
-				l_icon := l_output.icon
-				l_icon_pixmap := l_output.icon_pixmap
+				l_icon := l_output.icon_active
+				l_icon_pixmap := l_output.icon_active_pixmap
 			else
 				l_icon := tool_descriptor.icon
 				l_icon_pixmap := tool_descriptor.icon_pixmap
@@ -866,8 +866,8 @@ feature {NONE} -- Events handlers
 			last_output := a_output
 
 				-- Set the tab icons.
-			content.set_pixel_buffer (a_output.icon)
-			content.set_pixmap (a_output.icon_pixmap)
+			content.set_pixel_buffer (a_output.icon_active)
+			content.set_pixmap (a_output.icon_active_pixmap)
 		ensure
 			last_output_set: last_output = a_output
 			not_modified_outputs_has_a_output: not modified_outputs.has (a_output.name)

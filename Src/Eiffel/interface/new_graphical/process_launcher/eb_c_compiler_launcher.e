@@ -158,21 +158,17 @@ feature{NONE}  -- Actions
 				attached window_manager.last_focused_development_window as l_window and then
 				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool
 			then
-					-- Attempts to show the C compiler output, which is only done so when the associated preference
-					-- is set, or if the Eiffel compiler output and the outputs tool is shown.
 				if
 					preferences.development_window_data.c_output_panel_prompted or else
-					(l_tool.is_shown and then
-					 l_tool.output = compiler_output)
+					l_tool.output = compiler_output
 				then
-						-- Activate the output pane if the preference to show the C compiler output is set, or
-						-- if the Eiffel compiler output is shown on the Current window.
-					switched_output := l_tool.output
-					l_output_pane.activate (True)
-
 						-- Force showing of the tool.
 					l_tool.show (False)
 				end
+
+					-- Activate (not show) the C compiler output.
+				switched_output := l_tool.output
+				l_output_pane.activate (False)
 			end
 
 			if state_message_timer.interval = 0 then
@@ -204,12 +200,11 @@ feature{NONE}  -- Actions
 				attached window_manager.last_focused_development_window as l_window and then
 				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool and then
 				attached switched_output as l_switched_output and then
-				l_tool.output = c_compiler_output and then
-				l_tool.is_shown
+				l_tool.output = c_compiler_output
 			then
 					-- The output was switched when starting the C compilation so now switch it back, if possible.
 					-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
-				l_switched_output.activate (True)
+				l_switched_output.activate (False)
 			end
 			switched_output := Void
 		ensure

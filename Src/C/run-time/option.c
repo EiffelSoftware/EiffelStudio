@@ -343,6 +343,7 @@ rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dty
 			 * the routine name etc.
 			 */
 		vector = extop(&eif_stack);
+		CHECK("vector not null", vector);
 
 			/* User wants tracing. */
 		start_trace(vector->ex_rout, vector->ex_orig, dtype);
@@ -354,6 +355,7 @@ rt_public void check_options(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_INDEX dty
 			 	* the routine name etc.
 			 	*/
 			vector = extop(&eif_stack);
+			CHECK("vector not null", vector);
 		}
 
 			/* User wants profiling. */
@@ -376,6 +378,7 @@ rt_public void check_options_stop(EIF_CONTEXT_NOARG)
 	EIF_TYPE_INDEX dtype;
 
 	vector = extop(&eif_stack);
+	CHECK("vector not null", vector);
 	dtype = Dtype(vector->ex_id);
 	opt = eoption[dtype];
 
@@ -492,50 +495,50 @@ rt_shared void exitprf(void)
 		if (!prof_output) {
 				/* Too bad: no file */
 			eraise("Unable to open to output file for profile", EN_FATAL);
-		}
+		} else {
+			execution_time = execution_time - init_date;
 
-		execution_time = execution_time - init_date;
+			keys = class_table->h_keys;
+			f_values = (struct feat_table *) class_table->h_values;
+			index = 1;
 
-		keys = class_table->h_keys;
-		f_values = (struct feat_table *) class_table->h_values;
-		index = 1;
-
-		for (i = 0; i < class_table->h_size; i++) {
-			if (keys[i] != 0) {
-				for (j = 0; j < f_values[i].htab->h_size; j++) {
-					if (f_values[i].htab->h_keys[j] != 0) {
-						features = (struct prof_info *) f_values[i].htab->h_values;
-						
-						
-						fprintf(prof_output, "[%" EIF_NATURAL_64_DISPLAY "]\t%.6f\t%.6f\t%"
-								EIF_NATURAL_64_DISPLAY "\t%.6f\t%s from %d\n",
-							index,
-	    					(double) features[j].all_total_time / (double) NB_NANO_IN_ONE_SECOND,
-							(double) features[j].descendent_time / (double) NB_NANO_IN_ONE_SECOND,
-	    					features[j].number_of_calls,
-							100.0 * compute_percentage (features[j].all_total_time, execution_time), 
-	    					features[j].featurename,
-							f_values[i].dtype);
-						index++;
+			for (i = 0; i < class_table->h_size; i++) {
+				if (keys[i] != 0) {
+					for (j = 0; j < f_values[i].htab->h_size; j++) {
+						if (f_values[i].htab->h_keys[j] != 0) {
+							features = (struct prof_info *) f_values[i].htab->h_values;
+							
+							
+							fprintf(prof_output, "[%" EIF_NATURAL_64_DISPLAY "]\t%.6f\t%.6f\t%"
+									EIF_NATURAL_64_DISPLAY "\t%.6f\t%s from %d\n",
+								index,
+								(double) features[j].all_total_time / (double) NB_NANO_IN_ONE_SECOND,
+								(double) features[j].descendent_time / (double) NB_NANO_IN_ONE_SECOND,
+								features[j].number_of_calls,
+								100.0 * compute_percentage (features[j].all_total_time, execution_time), 
+								features[j].featurename,
+								f_values[i].dtype);
+							index++;
+						}
 					}
+					ht_free(f_values[i].htab);
 				}
-				ht_free(f_values[i].htab);
 			}
-		}
 
-		fclose(prof_output);		/* Close the file */
-			/* No need to `eif_rt_xfree' the struct: is done by `ht_free()' */
-		ht_free(class_table);		/* Free memory */
-		prof_stack_free();			/* Deallocate stack */
+			fclose(prof_output);		/* Close the file */
+				/* No need to `eif_rt_xfree' the struct: is done by `ht_free()' */
+			ht_free(class_table);		/* Free memory */
+			prof_stack_free();			/* Deallocate stack */
 
 #ifdef EIF_THREADS
-		if (eif_thr_is_root())
+			if (eif_thr_is_root())
 #endif
-		egc_prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
+				egc_prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
 								/* the `full_sweep' from `reclaim' which makes come calls */
 								/* calls to the `dispose' routines and since there are */
 								/* eiffel function, they can be recorded in the profiler */
 								/* which is not what we want */
+		}
 	}
 }
 
@@ -808,12 +811,14 @@ rt_public void prof_stack_init(void)
 		EIF_GET_CONTEXT
 			/* Allocate profile stack */
 		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
-		if(!prof_stack)
+		if(!prof_stack) {
 			enomem(MTC_NOARG);	/* Bad Luck! */
-
-			/* Allocate arena and chunk for memory problem */
-		if(!st_alloc(prof_stack, eif_stack_chunk))
-			enomem(MTC_NOARG);	/* Bad Luck! */
+		} else {
+				/* Allocate arena and chunk for memory problem */
+			if(!st_alloc(prof_stack, eif_stack_chunk)) {
+				enomem(MTC_NOARG);	/* Bad Luck! */
+			}
+		}
 	}
 }
 
@@ -877,23 +882,25 @@ rt_public void update_class_table(struct prof_info *item)
 		
 				/* Create a new Hash table */
 			f_t = (struct feat_table *) cmalloc(sizeof(struct feat_table));
-			if(!f_t)
+			if(!f_t) {
 				enomem(MTC_NOARG);	/* Bad Luck */
-
-				/* Initialize new feature table for dtype */
-			f_t->dtype = item->dtype;
-			f_t->htab = (struct htable *) cmalloc(sizeof(struct htable));
-			if(!f_t->htab)
-				enomem(MTC_NOARG);	/* Bad Luck */
-
-				/* Create H table internal structures */
-			if(ht_create(f_t->htab, 10, sizeof(struct prof_info))) {
-					/* Something is wrotten */
-				eraise("Hashtable creation failure", EN_FATAL);
+			} else {
+					/* Initialize new feature table for dtype */
+				f_t->dtype = item->dtype;
+				f_t->htab = (struct htable *) cmalloc(sizeof(struct htable));
+				if(!f_t->htab) {
+					enomem(MTC_NOARG);	/* Bad Luck */
+				} else {	
+						/* Create H table internal structures */
+					if(ht_create(f_t->htab, 10, sizeof(struct prof_info))) {
+							/* Something is wrotten */
+						eraise("Hashtable creation failure", EN_FATAL);
+					} else {
+							/* Add feature table to `class_table'. */
+						ht_force(class_table, f_t->dtype, (char *) f_t);
+					}
+				}
 			}
-
-				/* Add feature table to `class_table'. */
-			ht_force(class_table, f_t->dtype, (char *) f_t);
 		}
 
 			/* OK. Either the class was known and `f_t' is directly
@@ -930,9 +937,12 @@ rt_public void update_class_table(struct prof_info *item)
 					address = current_chunk->sk_end - 1;
 				}
 				for( ; address >= current_chunk->sk_arena; address--) {
-					if(((struct prof_info *)*address)->dtype == p_i->dtype &&
+					if
+						(*address &&
+					   	((struct prof_info *)*address)->dtype == p_i->dtype &&
 						((struct prof_info *)*address)->origin == p_i->origin &&
-						((struct prof_info *)*address)->feature_hcode == p_i->feature_hcode){
+						((struct prof_info *)*address)->feature_hcode == p_i->feature_hcode)
+					{
 								/* Found item looking for */
 						found = 1;
 						break;

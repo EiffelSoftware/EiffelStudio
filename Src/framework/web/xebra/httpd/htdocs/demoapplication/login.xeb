@@ -28,7 +28,7 @@
 		  </tr>
 		  <tr>
 		    <td></td>
-		    <td><f:button value="Login" action="login_with_bean" type="submit"/></td>
+		    <td><f:button text="Login" action="login_with_bean" type="submit"/></td>
 		  </tr>
 		</table>
     	</f:form>

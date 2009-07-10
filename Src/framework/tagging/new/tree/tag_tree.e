@@ -33,13 +33,12 @@ class
 inherit
 	TAG_SERVER [G]
 		rename
+			make as make_server,
 			connection as server_connection,
 			connection_cache as server_connection_cache
 		export
 			{TAG_SPARSE_TREE} lock, unlock
 		redefine
-			make_with_formatter,
-			formatter,
 			add_tag,
 			remove_tag,
 			is_valid_tag_for_item
@@ -50,14 +49,19 @@ inherit
 	EVENT_CONNECTION_POINT_I [TAG_TREE_OBSERVER [G], TAG_TREE [G]]
 
 create
-	make_with_formatter
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_formatter (a_formatter: like formatter)
-			-- <Precursor>
+	make (a_formatter: like formatter; a_factory: like node_factory)
+			-- Initialize `Current'.
+			--
+			-- `a_formatter': Tag formatter.
 		do
-			Precursor (a_formatter)
+			formatter := a_formatter
+			make_server (formatter.validator)
+
+			node_factory := a_factory
 
 			create node_added_event
 			create node_remove_event
@@ -65,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	formatter: TAG_HIERARCHICAL_FORMATTER
+	formatter: TAG_FORMATTER
 			-- Formatter used to extract tokens from tags
 
 	root_node: TAG_TREE_NODE [G]
@@ -86,17 +90,7 @@ feature -- Access
 feature {TAG_TREE_NODE} -- Access
 
 	node_factory: TAG_TREE_NODE_FACTORY [G]
-			-- Node factory for creating new nodes.
-		local
-			l_cache: like node_factory_cache
-		do
-			l_cache := node_factory_cache
-			if l_cache = Void then
-				create l_cache
-				node_factory_cache := l_cache
-			end
-			Result := l_cache
-		end
+			-- Node factory for creating new nodes
 
 feature {NONE} -- Access
 
@@ -104,11 +98,6 @@ feature {NONE} -- Access
 			-- Cache for `root_node'
 			--
 			-- Note: do not access directly, use `root_node' instead.
-
-	node_factory_cache: detachable like node_factory
-			-- Cache for `node_factory'
-			--
-			-- Note: do not access directly, use `node_factory' instead.
 
 	connection_cache: detachable like connection
 			-- Cache for `connection'
@@ -133,22 +122,6 @@ feature -- Query
 			result_implies_valid_token: Result implies formatter.is_valid_token (an_item.name)
 		end
 
-feature -- Status setting
-
-	set_node_factory (a_factory: like node_factory)
-			-- Set `node_factory' to given factory.
-			--
-			-- TODO: move this into creation procedure...
-			--
-			-- `a_factory': Node factory to be used for creating future nodes.
-		require
-			a_factory_attached: a_factory /= Void
-		do
-			node_factory_cache := a_factory
-		ensure
-			node_factory_set: node_factory = a_factory
-		end
-
 feature -- Element change
 
 	add_tag (an_item: G; a_tag: READABLE_STRING_GENERAL)
@@ -165,7 +138,7 @@ feature -- Element change
 			lock
 			l_found := find_node (a_tag)
 			l_formatter := formatter
-			l_token := l_formatter.string_copy (an_item.name)
+			l_token := validator.string_copy (an_item.name)
 			l_token.append_character ('~')
 			l_tree_tag := l_formatter.join_tags (l_found.suffix, l_token)
 			l_found.node.add_tag_with_item (l_tree_tag, an_item)
@@ -247,7 +220,7 @@ feature {NONE} -- Implementation
 			-- `Result': Tuple containing found node, together with remaining suffix.
 		require
 			a_tag_attached: a_tag /= Void
-			a_tag_valid: formatter.is_valid_tag (a_tag)
+			a_tag_valid: validator.is_valid_tag (a_tag)
 		local
 			l_result: TAG_TREE_NODE [G]
 			l_suffix, l_token: detachable READABLE_STRING_GENERAL
@@ -272,7 +245,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void and then Result.node /= Void and then Result.suffix /= Void
 			result_node_valid: Result.node.is_active and then Result.node.tree = Current
-			result_suffix_valid: Result.suffix.is_empty or else formatter.is_valid_tag (Result.suffix)
+			result_suffix_valid: Result.suffix.is_empty or else validator.is_valid_tag (Result.suffix)
 			result_valid: a_tag.same_string (formatter.join_tags (Result.node.tag, Result.suffix))
 			result_matches_best: not Result.suffix.is_empty implies (Result.node.is_leaf or not
 				Result.node.has_child_with_token (formatter.first_token (Result.suffix)))

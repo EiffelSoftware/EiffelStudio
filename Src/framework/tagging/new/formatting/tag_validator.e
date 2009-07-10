@@ -1,27 +1,52 @@
 note
-	description: "[
-		Constants used to map tokens in a TAG_TREE to a corresponding ES_TAG_TREE_NODE.
-	]"
+	description: "Summary description for {TAG_VALIDATOR}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_CONSTANTS
+	TAG_VALIDATOR
 
-feature -- Access
+feature -- Query
 
-	delimiter_symbol: CHARACTER = ':'
-			-- Character used to separate code from actual token
+	is_valid_tag (a_tag: READABLE_STRING_GENERAL): BOOLEAN
+		require
+			a_tag_attached: a_tag /= Void
+		do
+			Result := not a_tag.is_empty
+		ensure
+			result_implies_not_empty: Result implies not a_tag.is_empty
+		end
 
-	class_prefix: STRING = "class:"
-	feature_prefix: STRING = "feature:"
-	target_prefix: STRING = "target:"
-	library_prefix: STRING = "library:"
-	cluster_prefix: STRING = "cluster:"
-	override_prefix: STRING = "override:"
-	directory_prefix: STRING = "directory:"
-			-- Prefix tokens in order to indicate what the token represents
+feature -- Basic operations
+
+	immutable_string (a_tag: READABLE_STRING_GENERAL): IMMUTABLE_STRING_8
+		require
+			a_tag_attached: a_tag /= Void
+		do
+			if attached {IMMUTABLE_STRING_8} a_tag as l_result then
+				Result := l_result
+			else
+				create Result.make_from_string (a_tag.as_string_8)
+			end
+		ensure
+			result_attached: Result /= Void
+			result_equal: a_tag.same_string (Result)
+		end
+
+	string_copy (a_tag: READABLE_STRING_GENERAL): STRING_8
+		require
+			a_tag_attached: a_tag /= Void
+		do
+			Result := a_tag.as_string_8
+			if Result = a_tag then
+				create Result.make_from_string (Result)
+			end
+		ensure
+			result_attached: Result /= Void
+			result_same_string: a_tag.same_string (Result)
+			result_is_copy: Result /= a_tag
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

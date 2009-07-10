@@ -50,16 +50,18 @@ feature {NONE} -- Initialization
 			a_parent_attached: a_parent /= Void
 			a_tag_attached: a_tag /= Void
 			a_parent_active: a_parent.is_active
-			a_tag_valid: a_parent.tree.formatter.is_valid_tag (a_tag)
+			a_tag_valid: a_parent.tree.validator.is_valid_tag (a_tag)
 		local
-			l_formatter: TAG_HIERARCHICAL_FORMATTER
+			l_validator: TAG_VALIDATOR
+			l_formatter: TAG_FORMATTER
 			l_token: READABLE_STRING_GENERAL
 		do
 			initialize (a_parent.tree)
 			l_formatter := tree.formatter
+			l_validator := tree.validator
 			l_token := l_formatter.first_token (a_tag)
 
-			internal_token := l_formatter.immutable_string (l_formatter.first_token (a_tag))
+			internal_token := l_validator.immutable_string (l_formatter.first_token (a_tag))
 
 			if l_token.count = a_tag.count then
 						-- Current node will become a leaf
@@ -76,7 +78,7 @@ feature {NONE} -- Initialization
 					make_root (tree)
 					add_tag_with_item (l_formatter.suffix (l_token, a_tag), an_item)
 			end
-			internal_token := l_formatter.immutable_string (l_token)
+			internal_token := l_validator.immutable_string (l_token)
 			internal_parent := a_parent
 		ensure
 			active: is_active
@@ -212,7 +214,7 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			result_valid: tree.formatter.is_valid_tag (Result) or Result.is_empty
+			result_valid: tree.validator.is_valid_tag (Result) or Result.is_empty
 			result_empty_equals_root: Result.is_empty = is_root
 		end
 
@@ -417,7 +419,7 @@ feature {TAG_TREE} -- Element change
 			an_item_attached: an_item /= Void
 			active: is_active
 			not_leaf: not is_leaf
-			a_tag_valid: tree.formatter.is_valid_tag (a_tag)
+			a_tag_valid: tree.validator.is_valid_tag (a_tag)
 			a_tokken_not_added: not has_child_with_token (tree.formatter.first_token (a_tag))
 		local
 			l_new: like child_with_token

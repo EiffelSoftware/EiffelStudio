@@ -186,7 +186,7 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Element change
 			end
 			insert_new_row (l_pos)
 			l_new := new_child (a_node, grid.row (l_pos))
-			l_table.force_last (l_new, a_node.tree.formatter.immutable_string (l_token))
+			l_table.force_last (l_new, a_node.tree.validator.immutable_string (l_token))
 		ensure
 			has_child_with_token: has_child_with_token (a_node.token)
 		end

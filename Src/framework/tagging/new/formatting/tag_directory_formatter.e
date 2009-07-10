@@ -8,13 +8,23 @@ class
 	TAG_DIRECTORY_FORMATTER
 
 inherit
-	TAG_HIERARCHICAL_FORMATTER
+	TAG_VALIDATOR
 		redefine
-			is_valid_tag,
+			is_valid_tag
+		end
+
+	TAG_FORMATTER
+		redefine
 			is_valid_token
 		end
 
 feature -- Access
+
+	validator: TAG_VALIDATOR
+			-- <Precursor>
+		do
+			Result := Current
+		end
 
 	valid_token_chars: STRING = "_{}()[]:.-~"
 			-- Valid chars to be used in a token other than alpha numeric

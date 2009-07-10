@@ -23,7 +23,7 @@ feature -- Factory
 			a_tag_attached: a_tag /= Void
 			an_item_attached: an_item /= Void
 			a_parent_active: a_parent.is_active
-			a_tag_valid: a_parent.tree.formatter.is_valid_tag (a_tag)
+			a_tag_valid: a_parent.tree.validator.is_valid_tag (a_tag)
 		do
 			create Result.make_node (a_parent, a_tag, an_item)
 		ensure

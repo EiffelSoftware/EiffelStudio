@@ -41,6 +41,7 @@
 		]"
 */
 
+#include "eif_portable.h"
 #include "rt_macros.h"
 #include "eif_interp.h"
 #include "request.h"
@@ -52,26 +53,26 @@
 #include "stream.h"
 #include "ewb_dumped.h"
 
-rt_private EIF_PROC set_rout;
-rt_private EIF_PROC set_natural_8;
-rt_private EIF_PROC set_natural_16;
-rt_private EIF_PROC set_natural_32;
-rt_private EIF_PROC set_natural_64;
-rt_private EIF_PROC set_integer_8;
-rt_private EIF_PROC set_integer_16;
-rt_private EIF_PROC set_integer_32;
-rt_private EIF_PROC set_integer_64;
-rt_private EIF_PROC set_bool;
-rt_private EIF_PROC set_char;
-rt_private EIF_PROC set_wchar;
-rt_private EIF_PROC set_real;
-rt_private EIF_PROC set_double;
-rt_private EIF_PROC set_ref;
-rt_private EIF_PROC set_pointer;
-rt_private EIF_PROC set_bits;
-rt_private EIF_PROC set_error;
-rt_private EIF_PROC set_exception_ref;
-rt_private EIF_PROC set_void;
+rt_private void (* set_rout) (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);
+rt_private void (* set_natural_8) (EIF_REFERENCE, EIF_NATURAL_8);
+rt_private void (* set_natural_16) (EIF_REFERENCE, EIF_NATURAL_16);
+rt_private void (* set_natural_32) (EIF_REFERENCE, EIF_NATURAL_32);
+rt_private void (* set_natural_64) (EIF_REFERENCE, EIF_NATURAL_64);
+rt_private void (* set_integer_8) (EIF_REFERENCE, EIF_INTEGER_8);
+rt_private void (* set_integer_16) (EIF_REFERENCE, EIF_INTEGER_16);
+rt_private void (* set_integer_32) (EIF_REFERENCE, EIF_INTEGER_32);
+rt_private void (* set_integer_64) (EIF_REFERENCE, EIF_INTEGER_64);
+rt_private void (* set_bool) (EIF_REFERENCE, EIF_BOOLEAN);
+rt_private void (* set_char) (EIF_REFERENCE, EIF_CHARACTER);
+rt_private void (* set_wchar) (EIF_REFERENCE, EIF_WIDE_CHAR);
+rt_private void (* set_real) (EIF_REFERENCE, EIF_REAL_32);
+rt_private void (* set_double) (EIF_REFERENCE, EIF_REAL_64);
+rt_private void (* set_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+rt_private void (* set_pointer) (EIF_REFERENCE, EIF_POINTER);
+rt_private void (* set_bits) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+rt_private void (* set_error) (EIF_REFERENCE);
+rt_private void (* set_exception_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+rt_private void (* set_void) (EIF_REFERENCE);
 
 
 rt_public void c_recv_rout_info (EIF_OBJ target)
@@ -127,9 +128,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 						orig = dump.dmp_vect->ex_orig;
 						dtype = dump.dmp_vect->ex_dtype;
 
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) set_rout)
-							(eif_access (target),
+						set_rout (eif_access (target),
 							(EIF_BOOLEAN) (dump.dmp_type == DMP_MELTED),
 							(EIF_BOOLEAN) 0,
 							obj_addr,
@@ -146,9 +145,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 						break; /* send error */
 				}
 			case ACKNLGE:	/* send exhausted */
-				(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) set_rout)
-					(eif_access (target),
+				set_rout (eif_access (target),
 					(EIF_BOOLEAN) 0,
 					(EIF_BOOLEAN) 1, /* exhausted is true */
 					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0, 0L, 0L);
@@ -157,9 +154,9 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 				request_dispatch (pack); /* treat asynchronous request */
 				break;	/* send error */
 		}
+	} else {
+		set_error (eif_access (target));
 	}
-	else
-		(FUNCTION_CAST(void, (EIF_REFERENCE)) set_error) (eif_access (target));
 	return;
 }
 
@@ -186,37 +183,34 @@ rt_public void c_recv_value (EIF_OBJ target)
 			switch (pack.rq_dump.dmp_type) {
 				case DMP_EXCEPTION_ITEM:
 					item = *pack.rq_dump.dmp_item;
-					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_exception_ref)
-							(eif_access (target), item.it_ref, item.type & SK_DTYPE);
+					set_exception_ref (eif_access (target), item.it_ref, item.type & SK_DTYPE);
 					return;
 				case DMP_ITEM:
 					item = *pack.rq_dump.dmp_item;
 					type_flag = item.type;
 					switch (type_flag & SK_HEAD) {
-						case SK_BOOL: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char); return;
-						case SK_CHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char); return;
-						case SK_WCHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar); return;
-						case SK_UINT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_8)) set_natural_8) (eif_access (target), item.it_uint8); return;
-						case SK_UINT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_16)) set_natural_16) (eif_access (target), item.it_uint16); return;
-						case SK_UINT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_32)) set_natural_32) (eif_access (target), item.it_uint32); return;
-						case SK_UINT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_64)) set_natural_64) (eif_access (target), item.it_uint64); return;
-						case SK_INT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8); return;
-						case SK_INT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16); return;
-						case SK_INT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32); return;
-						case SK_INT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64); return;
-						case SK_REAL32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32); return;
-						case SK_REAL64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64); return;
-						case SK_POINTER: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr); return;
+						case SK_BOOL: set_bool (eif_access (target), item.it_char); return;
+						case SK_CHAR: set_char (eif_access (target), item.it_char); return;
+						case SK_WCHAR: set_wchar (eif_access (target), item.it_wchar); return;
+						case SK_UINT8: set_natural_8 (eif_access (target), item.it_uint8); return;
+						case SK_UINT16: set_natural_16 (eif_access (target), item.it_uint16); return;
+						case SK_UINT32: set_natural_32 (eif_access (target), item.it_uint32); return;
+						case SK_UINT64: set_natural_64 (eif_access (target), item.it_uint64); return;
+						case SK_INT8: set_integer_8 (eif_access (target), item.it_int8); return;
+						case SK_INT16: set_integer_16 (eif_access (target), item.it_int16); return;
+						case SK_INT32: set_integer_32 (eif_access (target), item.it_int32); return;
+						case SK_INT64: set_integer_64 (eif_access (target), item.it_int64); return;
+						case SK_REAL32: set_real (eif_access (target), item.it_real32); return;
+						case SK_REAL64: set_double (eif_access (target), item.it_real64); return;
+						case SK_POINTER: set_pointer (eif_access (target), item.it_ptr); return;
 						case SK_REF:
 						case SK_EXP:
-							(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
-									(eif_access (target), item.it_ref, type_flag & SK_DTYPE);
 								/* reference and dynamic type */
+							set_ref (eif_access (target), item.it_ref, type_flag & SK_DTYPE);
 							return;
 						case SK_BIT:
-							(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_bits) (eif_access (target),
-								item.it_ref, type_flag & SK_BMASK);
 								/* reference and number of bits */
+							set_bits (eif_access (target), item.it_ref, type_flag & SK_BMASK);
 							return;
 						default:
 							break;
@@ -224,7 +218,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 					break;
 				case DMP_VOID:
 					/* No more values to be received */
-					(FUNCTION_CAST(void, (EIF_REFERENCE)) set_void) (eif_access (target));
+					set_void (eif_access (target));
 					return;
 				default:
 					break;
@@ -233,10 +227,12 @@ rt_public void c_recv_value (EIF_OBJ target)
 			request_dispatch (pack);
 		}
 	}
-	(FUNCTION_CAST(void, (EIF_REFERENCE)) set_error) (eif_access (target));
+	set_error (eif_access (target));
 }
 
 
+/* Note Ideally we should use the signature of routines in the argument, but it might also causes
+ * C compilation warnings/errors in the C generated code calling this routine). */
 rt_public void c_pass_recv_routines (
 	EIF_PROC d_nat_8,
 	EIF_PROC d_nat_16,
@@ -261,25 +257,25 @@ rt_public void c_pass_recv_routines (
  *	Register the routines to communicate with a RECV_VALUE
  */
 {
-	set_natural_8 = d_nat_8;
-	set_natural_16 = d_nat_16;
-	set_natural_32 = d_nat_32;
-	set_natural_64 = d_nat_64;
-	set_integer_8 = d_int_8;
-	set_integer_16 = d_int_16;
-	set_integer_32 = d_int_32;
-	set_integer_64 = d_int_64;
-	set_bool = d_bool;
-	set_char = d_char;
-	set_wchar = d_wchar;
-	set_real = d_real;
-	set_double = d_double;
-	set_ref = d_ref;
-	set_pointer = d_point;
-	set_bits = d_bits;
-	set_error = d_error;
-	set_exception_ref = d_exception_ref;
-	set_void = d_void;
+	set_natural_8 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_8)) d_nat_8;
+	set_natural_16 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_16)) d_nat_16;
+	set_natural_32 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_32)) d_nat_32;
+	set_natural_64 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_64)) d_nat_64;
+	set_integer_8 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) d_int_8;
+	set_integer_16 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) d_int_16;
+	set_integer_32 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) d_int_32;
+	set_integer_64 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) d_int_64;
+	set_bool = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) d_bool;
+	set_char = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) d_char;
+	set_wchar = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) d_wchar;
+	set_real = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) d_real;
+	set_double = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) d_double;
+	set_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_ref;
+	set_pointer = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) d_point;
+	set_bits = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_bits;
+	set_error = FUNCTION_CAST(void, (EIF_REFERENCE)) d_error;
+	set_exception_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_exception_ref;
+	set_void = FUNCTION_CAST(void, (EIF_REFERENCE)) d_void;
 }
 
 rt_public void c_pass_set_rout (EIF_PROC d_rout)
@@ -287,5 +283,5 @@ rt_public void c_pass_set_rout (EIF_PROC d_rout)
  *	Register the routine to communicate with a CALL_INFO
  */
 {
-	set_rout = d_rout;
+	set_rout = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) d_rout;
 }

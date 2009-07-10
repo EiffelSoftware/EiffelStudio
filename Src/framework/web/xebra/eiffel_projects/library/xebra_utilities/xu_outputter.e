@@ -32,6 +32,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	configured: BOOLEAN
+			-- Checks if the outputter has been configured and all neccesary attributes set
+		do
+			Result := (i_name /= Void and then i_name.is_set) and (i_debug_level /= Void and then i_debug_level.is_set)
+		end
+
 	add_input_line: BOOLEAN assign set_add_input_line
 
 	name: STRING
@@ -109,6 +115,7 @@ feature -- Print
 --			name_set: name.is_set
 --			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
+			outputter_configured: configured
 		do
 			if a_debug_level <= debug_level then
 				print_with_cmdnl (a_msg)
@@ -122,6 +129,7 @@ feature -- Print
 --			name_set: name.is_set
 --			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
+			outputter_configured: configured
 		do
 			if a_debug_level <= debug_level then
 				print_with_name ("[DEBUG" + a_debug_level.out + "] " + a_msg)
@@ -131,6 +139,7 @@ feature -- Print
 	eprint (a_msg: STRING; a_generating_type: ANY)
 			-- Prints an error message
 		require
+			outputter_configured: configured
 --			name_set: name.is_set
 --			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
@@ -141,6 +150,7 @@ feature -- Print
 	iprint (a_msg: STRING)
 			-- Prints an info message
 		require
+			outputter_configured: configured
 --			name_set: name.is_set
 			a_msg_attached: a_msg /= Void
 		do
@@ -152,6 +162,7 @@ feature {NONE}  -- Impl
 	print_with_name (a_msg: STRING)
 			-- Adds the name
 		require
+			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
 		do
 			print_with_cmdnl ("[" + name.out + "]" + a_msg)
@@ -160,6 +171,7 @@ feature {NONE}  -- Impl
 	print_with_cmdnl (a_msg: STRING)
 			-- Adds a new line at the start and the end and the command symbol(s)
 		require
+			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
  		local
 			l_f_utils: XU_FILE_UTILITIES

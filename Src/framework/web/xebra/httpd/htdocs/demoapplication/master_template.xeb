@@ -12,9 +12,9 @@
 <div class="login_text">
 	
 	<xeb:container render="authenticated"> Welcome
-	          <xeb:display feature="%=username%" />
+	          <xeb:display text="%=username%" />
 	          ,<f:form variable="b" class="login_bean">
-			<f:command_link label="Logout" action="logout" variable="b" />
+			<f:command_link text="Logout" action="logout" variable="b" />
 		</f:form>
 		
 	</xeb:container> 

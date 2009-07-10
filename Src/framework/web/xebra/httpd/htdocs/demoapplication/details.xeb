@@ -13,7 +13,7 @@
 				</th>
 				<td>
 				<div align="left"><xeb:container render="not_authenticated_admin">
-					<xeb:display feature="get_res_id_from_args" />
+					<xeb:display text="get_res_id_from_args" />
 				</xeb:container> <xeb:container render="authenticated_admin">
 					<input name="id" type="text" id="id"
 						value="%=get_res_id_from_args%" />
@@ -26,7 +26,7 @@
 				</th>
 				<td>
 				<div align="left"><xeb:container render="not_authenticated_admin">
-					<xeb:display feature="get_res_name_from_args" />
+					<xeb:display text="get_res_name_from_args" />
 				</xeb:container> <xeb:container render="authenticated_admin">
 					<input name="name" type="text" id="name"
 						value="%=get_res_name_from_args%" />
@@ -39,7 +39,7 @@
 				</th>
 				<td>
 				<div align="left"><xeb:container render="not_authenticated_admin">
-					<xeb:display feature="get_res_date_from_args" />
+					<xeb:display text="get_res_date_from_args" />
 				</xeb:container> <xeb:container render="authenticated_admin">
 					<input name="date" type="text" id="date"
 						value="%=get_res_date_from_args%" />
@@ -52,7 +52,7 @@
 				</th>
 				<td>
 				<div align="left"><xeb:container render="not_authenticated_admin">
-					<xeb:display feature="get_res_persons_from_args" />
+					<xeb:display text="get_res_persons_from_args" />
 				</xeb:container> <xeb:container render="authenticated_admin">
 					<input name="persons" type="text" id="persons"
 						value="%=get_res_persons_from_args%" />
@@ -65,7 +65,7 @@
 				</th>
 				<td>
 				<div align="left"><xeb:container render="not_authenticated_admin">
-					<xeb:display feature="get_res_description_from_args" />
+					<xeb:display text="get_res_description_from_args" />
 				</xeb:container> <xeb:container render="authenticated_admin">
 					<input name="description" type="text" id="description"
 						value="%=get_res_description_from_args%" />

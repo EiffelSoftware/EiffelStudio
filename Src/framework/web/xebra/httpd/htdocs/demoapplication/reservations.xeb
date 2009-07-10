@@ -22,15 +22,15 @@
 				<xeb:iterate list="global_state.db.reservations"
 					variable="reservation" type="RESERVATION">
 					<tr>
-						<td><xeb:display feature="#{reservation.name}"/></td>
-						<td><xeb:display feature="#{reservation.date}"/></td>
+						<td><xeb:display text="#{reservation.name}"/></td>
+						<td><xeb:display text="#{reservation.date}"/></td>
 						
 						
 						
-						<td><xeb:display feature="#{reservation.s_persons}"/></td>
+						<td><xeb:display text="#{reservation.s_persons}"/></td>
 						<xeb:container render="authenticated_admin">
 							<td class="style2">
-							<f:command_link label="Delete" action="delete" variable="reservation" />
+							<f:command_link text="Delete" action="delete" variable="reservation" />
 							</td>					
 						</xeb:container>
 						<xeb:container render="not_authenticated_admin">
@@ -65,7 +65,7 @@
 				<tr>
 					<td colspan="2">
 					<div align="center">
-					<f:button value="Save" action="save" type="submit" /></div>
+					<f:button text="Save" action="save" type="submit" /></div>
 					</td>
 				</tr>
 			</table>

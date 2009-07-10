@@ -6,7 +6,7 @@
     </xeb:container>
     <xeb:container render="authenticated_admin">
       <p>
-        <xeb:display feature="delete"/>
+        <xeb:display text="delete"/>
       </p>
     </xeb:container>
   </page:define_region>

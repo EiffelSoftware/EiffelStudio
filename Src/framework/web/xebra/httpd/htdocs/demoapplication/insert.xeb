@@ -2,7 +2,7 @@
 <page:controller class="insert_controller"/>
   <page:define_region id="content">
     <p>
-      <xeb:display feature="insert"/>
+      <xeb:display text="insert"/>
     </p>
   </page:define_region>
 </page:include>

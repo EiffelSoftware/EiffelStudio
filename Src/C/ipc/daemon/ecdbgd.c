@@ -98,6 +98,7 @@ rt_private void init_dbg(int argc, char **argv)
 {
 	STREAM *s;		/* Stream used for communications with ised */
 	char *eif_timeout;	/* Timeout specified in environment variable */
+	int l_timeout;
 #ifdef EIF_WINDOWS
 	/* HANDLE pid = 0; */
 	HANDLE *p_ewbin, *p_ewbout, *p_event_r, *p_event_w;
@@ -131,10 +132,16 @@ rt_private void init_dbg(int argc, char **argv)
 #endif /* platform */
 #endif /* USE_ADD_LOG */
 
-	if (eif_timeout != (char *) 0)			/* Environment variable set */
-		TIMEOUT = (unsigned int) atoi(eif_timeout);
-	else
+	if (eif_timeout != (char *) 0) {			/* Environment variable set */
+		l_timeout = atoi(eif_timeout);
+		if (l_timeout > 0) {
+			TIMEOUT = (unsigned int) l_timeout;
+		} else {
+			TIMEOUT = 30;
+		}
+	} else {
 		TIMEOUT = 30;
+	}
 
 	set_signal();						/* Set up signal handler */
 	signal (SIGABRT, exit);

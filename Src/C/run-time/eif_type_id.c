@@ -936,7 +936,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 	struct rt_type *l_type;
 	EIF_TYPE_INDEX l_cecil_id;
 	int32 *gtype;			/* Generic information for current type */
-	int32 *itype;			/* Generic information for inspected type */
+	int32 *itype = NULL;			/* Generic information for inspected type */
 	int32 *t;				/* To walk through the patterns array */
 	int matched = 0;		/* Did the inspected type matched our entry? */
 	int l_original_pos, l_previous_pos;

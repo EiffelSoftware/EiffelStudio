@@ -82,18 +82,19 @@ rt_public void arg_init(int eargc, char **eargv)
 
 	/* Allocate memory for array duplication */
 	eif_argv = (char **) cmalloc((eargc + 1) * sizeof(char *));
-	if (eif_argv == (char **)0)
+	if (eif_argv == (char **)0) {
 		fatal_error(ERROR_MSG);
+	} else {
+		/* Duplicate arguments array */
+		for (i = 0; i < eargc; i++) {
+			eif_argv[i] = cmalloc(strlen(eargv[i]) + 1);
+			if (eif_argv[i] == (char *)0)
+				fatal_error(ERROR_MSG);
+			strcpy (eif_argv[i], eargv[i]);
+		}
 
-	/* Duplicate arguments array */
-	for (i = 0; i < eargc; i++) {
-		eif_argv[i] = cmalloc(strlen(eargv[i]) + 1);
-		if (eif_argv[i] == (char *)0)
-			fatal_error(ERROR_MSG);
-		strcpy (eif_argv[i], eargv[i]);
+		eif_argv[eargc] = (char *)0;
 	}
-
-	eif_argv[eargc] = (char *)0;
 }
 
 rt_public EIF_REFERENCE arg_option(EIF_INTEGER num)

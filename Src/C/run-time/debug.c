@@ -390,6 +390,7 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 		db_stack.st_top != db_stack.st_hd->sk_arena		/* Not empty */
 	) {
 		context = dtop();					/* Context from previous routine */
+		CHECK("context not null", context);
 		if (context->dc_status == DX_STEP)	/* Step by step execution? */
 			d_data.db_status = DX_STEP;		/* This one propagates */
 	}
@@ -398,19 +399,20 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	 * control outside of the current routine.
 	 */
 	context = dget();					/* Get new calling context */
-	if (context == (struct dcall *) 0)	/* No more memory */
+	if (context) {
+			/* Initialize the calling context with the current IC value (which is the
+			 * start of the byte code for the current feature), and save the context
+			 * of the operational stack. Leave the control table alone, as there is
+			 * no way to tell this is a debugging byte code at this point.
+			 */
+		context->dc_start = IC;				/* Current interpreter counter */
+		context->dc_cur = (struct stochunk *) 0;
+		context->dc_top = (EIF_TYPED_ADDRESS *) 0;
+		context->dc_exec = (struct ex_vect *) 0;
+	} else {
+			/* No more memory */
 		enomem();						/* Critical exception */
-
-	/* Initialize the calling context with the current IC value (which is the
-	 * start of the byte code for the current feature), and save the context
-	 * of the operational stack. Leave the control table alone, as there is
-	 * no way to tell this is a debugging byte code at this point.
-	 */
-
-	context->dc_start = IC;				/* Current interpreter counter */
-	context->dc_cur = (struct stochunk *) 0;
-	context->dc_top = (EIF_TYPED_ADDRESS *) 0;
-	context->dc_exec = (struct ex_vect *) 0;
+	}
 }
 
 rt_public void dexset(struct ex_vect *exvect)
@@ -423,7 +425,9 @@ rt_public void dexset(struct ex_vect *exvect)
 	 * stack, this will identify melted features.
 	 */
 
-	dtop()->dc_exec = exvect;		/* Associate context with Eiffel stack */
+	struct dcall *context = dtop();
+	CHECK("context not null", context);
+	context->dc_exec = exvect;		/* Associate context with Eiffel stack */
 }
 
 rt_public void drun(BODY_INDEX body_id)
@@ -437,6 +441,7 @@ rt_public void drun(BODY_INDEX body_id)
 	struct dcall *context;			/* The calling context */
 
 	context = dtop();				/* Active execution context */
+	CHECK("context not null", context);
 	context->dc_body_id = body_id;	/* Make sure we know who this is */
 	
 	dsync();						/* Initialize cached data */
@@ -453,6 +458,7 @@ rt_public void dostk(EIF_CONTEXT_NOARG)
 	struct dcall *context;		/* Current calling context */
 	
 	context = dtop();
+	CHECK("context not null", context);
 	context->dc_cur = op_stack.st_cur;	/* Value suitable for sync_registers */
 	context->dc_top = op_stack.st_top;
 }
@@ -474,6 +480,7 @@ rt_public void dsync(void)
 	 */
 
 	context = dtop();
+	CHECK("context not null", context);
 	d_data.db_status = context->dc_status;	/* Execution status */
 	d_data.db_start = context->dc_start;	/* Used to compute offsets in BC */
 }
@@ -880,7 +887,7 @@ rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset)
 /* already set, it do nothing.                                            */
 /**************************************************************************/
 rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
-	{
+{
 	struct offset_list 	*curr_offset;
 	struct db_bpinfo 	*curr_bpinfo;
 	struct offset_list 	*new_offset;
@@ -891,63 +898,67 @@ rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	/* look for the good feature */
 	for (curr_bpinfo = d_globaldata.db_bpinfo[hash_code]; (curr_bpinfo != NULL)&&(curr_bpinfo->body_id != body_id); curr_bpinfo = curr_bpinfo->next) {}
 
-	if (curr_bpinfo != NULL)
-		{
+	if (curr_bpinfo != NULL) {
 		/* we have found the good feature, now look for the good offset */
 		for (curr_offset = curr_bpinfo->first_offset; (curr_offset != NULL)&&(curr_offset->offset < offset); curr_offset = curr_offset->next) {}
 		
-		if (curr_offset!=NULL && curr_offset->offset==offset)
-			{
+		if (curr_offset!=NULL && curr_offset->offset==offset) {
 			/* we have found the good feature & the good offset. seems the breakpoint
 			 * already exists. the job is done !!!
 			 */
 			return;
-			}
-		else
-			{
+		} else {
 			/* the specified offset doesnt exists in the list of breakpoints for
 			 * this feature... we will just add our offset
 			 */
 			new_offset = (struct offset_list *)cmalloc(sizeof(struct offset_list));
-			if (new_offset==NULL)
+			if (new_offset==NULL) {
 				enomem();
-			new_offset->offset = offset;
-			new_offset->next = curr_offset;
-				
-			/* first we go to the previous item in the list, in order to link our */
-			/* new offset to the previous item */
-			old_offset = curr_offset; /* save current offset */
-			for (curr_offset=curr_bpinfo->first_offset; curr_offset!=NULL && curr_offset->next!=old_offset; curr_offset=curr_offset->next) {}
-			if (curr_offset!=NULL && curr_offset->offset<offset)
-				curr_offset->next = new_offset;
-			else 
-				curr_bpinfo->first_offset = new_offset;
+			} else {
+				new_offset->offset = offset;
+				new_offset->next = curr_offset;
+					
+					/* first we go to the previous item in the list, in order to link our */
+					/* new offset to the previous item */
+				old_offset = curr_offset; /* save current offset */
+				for (curr_offset=curr_bpinfo->first_offset; curr_offset!=NULL && curr_offset->next!=old_offset; curr_offset=curr_offset->next) {}
+				if (curr_offset!=NULL && curr_offset->offset<offset) {
+					curr_offset->next = new_offset;
+				} else {
+					curr_bpinfo->first_offset = new_offset;
+				}
 
-			/* reset the offset precalculation about this feature */
-			curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
+				/* reset the offset precalculation about this feature */
+				curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
 			}
 		}
-	else
-		{
+	} else {
 		/* feature doesnt exists in the list.. we have to create a new
 		 * cell for the feature, add information about this breakpoint
 		 * in the new cell, and finally link the new cell with the list
 		 */
 		new_offset = (struct offset_list *)cmalloc(sizeof(struct offset_list));
-		new_bpinfo = (struct db_bpinfo *)cmalloc(sizeof(struct db_bpinfo));
-		if (new_offset==NULL || new_bpinfo==NULL)
+		if (!new_offset) {
 			enomem();
-		new_offset->offset = offset;
-		new_offset->next = NULL;
-		new_bpinfo->body_id = body_id;
-		new_bpinfo->first_offset = new_offset;
-		new_bpinfo->last_offset_list = new_offset;
-		new_bpinfo->last_offset = 0;
-		new_bpinfo->next = d_globaldata.db_bpinfo[hash_code];
+		} else {
+			new_bpinfo = (struct db_bpinfo *)cmalloc(sizeof(struct db_bpinfo));
+			if (new_bpinfo==NULL) {
+				eif_rt_xfree(new_offset);
+				enomem();
+			} else {
+				new_offset->offset = offset;
+				new_offset->next = NULL;
+				new_bpinfo->body_id = body_id;
+				new_bpinfo->first_offset = new_offset;
+				new_bpinfo->last_offset_list = new_offset;
+				new_bpinfo->last_offset = 0;
+				new_bpinfo->next = d_globaldata.db_bpinfo[hash_code];
 
-		d_globaldata.db_bpinfo[hash_code] = new_bpinfo;
+				d_globaldata.db_bpinfo[hash_code] = new_bpinfo;
+			}
 		}
 	}
+}
 
 /**************************************************************************/
 /* NAME: remove_breakpoint_in_table                                       */
@@ -958,7 +969,7 @@ rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 /* exist, it do nothing.                                                  */
 /**************************************************************************/
 rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
-	{
+{
 	struct offset_list 	*curr_offset;
 	struct offset_list 	*old_offset;
 	struct db_bpinfo 	*curr_bpinfo;
@@ -968,68 +979,55 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	/* look for the good feature */
 	for (curr_bpinfo = d_globaldata.db_bpinfo[hash_code]; (curr_bpinfo != NULL)&&(curr_bpinfo->body_id != body_id); curr_bpinfo = curr_bpinfo->next) {}
 
-	if (curr_bpinfo != NULL)
-		{
+	if (curr_bpinfo != NULL) {
 		/* we have found the good feature, now look for the good offset */
 		curr_offset = curr_bpinfo->first_offset;
 		
 		/* is the first offset in the list the good one ? */
-		if (curr_offset->offset == offset)
-			{
+		if (curr_offset->offset == offset) {
 			/* YEP ! it is */
 			curr_bpinfo->first_offset = curr_offset->next; /* remove the offset from the list */
 			eif_rt_xfree((char *)curr_offset);
 
 			/* reset the offset precalculation about this feature */
 			curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
-			}
-		else
-			{
+		} else {
 			/* no, so let's find it */
 			for (curr_offset = curr_bpinfo->first_offset; (curr_offset->next != NULL)&&(curr_offset->next->offset != offset); curr_offset = curr_offset->next) {}
 			
-			if (curr_offset->next != NULL)
-				{
+			if (curr_offset->next != NULL) {
 				old_offset = curr_offset->next; /* that's the one we were looking for */
 				curr_offset->next = old_offset->next; /* remove the offset from the list */
 				eif_rt_xfree((char *)old_offset);
 
 				/* reset the offset precalculation about this feature */
 				curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
-				}
-			else
-				{
+			} else {
 				/* this fearture didn't have a breakpoint set for this offset, so
 				 * the job is already done
 				 */
-				}
 			}
+		}
 
 		/* now, we remove the body_id information if there is no more breakpoint inside this feature */
-		if (curr_bpinfo->first_offset == NULL)
-			{
+		if (curr_bpinfo->first_offset == NULL) {
 			old_bpinfo = curr_bpinfo;
-			if (curr_bpinfo == d_globaldata.db_bpinfo[hash_code])
-				{
+			if (curr_bpinfo == d_globaldata.db_bpinfo[hash_code]) {
 				d_globaldata.db_bpinfo[hash_code] = curr_bpinfo->next;
-				eif_rt_xfree((char *)curr_bpinfo);
+				eif_rt_xfree((char *) curr_bpinfo);
+			} else {
+				for (curr_bpinfo = d_globaldata.db_bpinfo[hash_code]; (curr_bpinfo != NULL) && (curr_bpinfo->next !=NULL)&&(curr_bpinfo->next!=old_bpinfo); curr_bpinfo = curr_bpinfo->next) {
 				}
-			else
-				{
-				for (curr_bpinfo = d_globaldata.db_bpinfo[hash_code]; (curr_bpinfo->next !=NULL)&&(curr_bpinfo->next!=old_bpinfo); curr_bpinfo = curr_bpinfo->next) {}
-				if (curr_bpinfo != NULL)
-					{
+				if (curr_bpinfo != NULL) {
 					curr_bpinfo->next = old_bpinfo->next;
 					eif_rt_xfree((char *)old_bpinfo);
-					}
 				}
 			}
 		}
-	else
-		{
+	} else {
 		/* this feature didn't have any breakpoint set, so the job is already done */
-		}
 	}
+}
 
 /**************************************************************************/
 /* NAME: dbreak_clear_table                                          */
@@ -1092,10 +1090,9 @@ rt_shared void ewhere(struct where *where)
 	 * within a C external function, but most of the time, it will be accurate.
 	 */
 	struct ex_vect 	*ex;		/* Call structure from Eiffel stack */
-	BODY_INDEX		body_id;  	/* body id of current feature */
 
 	ex = last_call();				/* Last call recorded on execution stack */
-	body_id = ex->ex_bodyid;		/* body_id of current feature */
+	CHECK("ex not null", ex);
 	where->wh_name = ex->ex_rout;	/* Feature name */
 	where->wh_obj = ex->ex_id;		/* Current value of Current */
 	where->wh_origin = ex->ex_orig;	/* Where feature was written */
@@ -1215,6 +1212,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 
 	if (db_stack.st_top != db_stack.st_cur->sk_arena) {	/* Stack not empty */
 		context = dtop();
+		CHECK("context not null", context);
 		context->dc_status = d_data.db_status;
 	} else {
 		context = (struct dcall *) 0;
@@ -1458,13 +1456,9 @@ rt_private void npop(register int nb_items)
 			break;						/* We reached the bottom */
 	}
 		
-#ifdef MAY_PANIC
-	/* Consistency check: we cannot have reached the end of the stack */
-	if (s == (struct stdchunk *) 0)
-		eif_panic("debugging stack underflow");
-#endif
+	CHECK("s not null", s);
 
-	/* Update the stack structure */
+		/* Update the stack structure */
 	db_stack.st_cur = s;
 	db_stack.st_top = top;
 	db_stack.st_end = s->sk_end;
@@ -1559,6 +1553,7 @@ rt_public void dmove(int offset)
 		call_down(-offset);
 
 	active = dtop();
+	CHECK("active not null", active);
 	sync_registers(active->dc_cur, active->dc_top);
 }
 
@@ -1632,13 +1627,9 @@ rt_private void call_up(int level)
 			break;				/* We reached the pysical top */
 	}
 
-#ifdef MAY_PANIC
-	/* Consistency check: we cannot have reached the top of the stack */
-	if (s == (struct stdchunk *) 0)
-		eif_panic("debugger stack overflow");
-#endif
+	CHECK("s not null", s);
 
-	/* Update the stack structure */
+		/* Update the stack structure */
 	db_stack.st_cur = s;
 	db_stack.st_top = top;
 	db_stack.st_end = s->sk_end;
@@ -1767,8 +1758,9 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 			/* Frozen feature */
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(egc_frozen[body_id]);		/* Call pattern */
-	} else
+	} else {
 		xinterp(melt[body_id], arg_num);
+	}
 	IC = OLD_IC;				/* Restore IC back-up */
 
 	return opop();				/* Return the result of the once function */
@@ -2011,11 +2003,7 @@ rt_public void c_npop(register int nb_items)
 			break;						/* We reached the bottom */
 	}
 		
-#ifdef MAY_PANIC
-	/* Consistency check: we cannot have reached the end of the stack */
-	if (s == (struct c_stochunk *) 0)
-		eif_panic("operational stack underflow");
-#endif
+	CHECK("s not null", s);
 
 	/* Update the stack structure */
 	cop_stack.st_cur = s;

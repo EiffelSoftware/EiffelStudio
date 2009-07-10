@@ -1,0 +1,242 @@
+<page:include template="support_plain">
+<page:define_region id="main_content">
+	<div>
+	<efa:title_box  title="<h1>Problem Report Edition</h1>" id="title_box" />
+	<f:validation_result header_text="Please correct the following error(s):" id="validation_summary"/>
+	<xeb:display  css_class="error" id="error_label"/>
+	<table>
+		<tr>
+			<td valign="top">
+				<efa:report_selection error_label_id="error_label" on_select="on_report_select" on_change_display="on_change_display" id="report_selection" />
+			</td>
+			<td valign="top">
+				<efa:report_search  columns="40" on_click="on_search" id="report_search" />
+			</td>
+		</tr>
+	</table>
+	<efa:collapsible_table  collapsible="true" title="Problem Reports" div_id="reports_div" id="reports_table" />
+	<div id="reports_div">
+		<table class="filter" id="filter_table">
+			<tr>
+				<td>
+					<table id="responsible_filter">
+						<tr>
+							<td class="field_name" valign="top">
+								<img  alt="" id="submitter_info" />
+								<span  id="submitter">Submitter:</span>
+								<efa:i_frame_tooltip 
+									width="400px" 
+									height="115px" 
+									content_url="re_submitter.htm" 
+									anchor_id="submitter_info" 
+									id="submitter_tooltip" />
+							</td>
+							<td valign="top">
+								<f:input_text
+									auto_post_back="true"
+									max_length="101"
+									columns="15"
+									on_text_changed="on_submitter_change"
+									id="submitter_box" />
+							</td>
+							<td class="field_name" valign="top">
+								Category:
+							</td>
+							<td valign="top">
+								<f:drop_down_list  
+									auto_post_back="true"
+									on_text_changed="on_category_change"
+									id="category_list" />
+							</td>
+						</tr>
+						<tr>
+							<td class="field_name" valign="top">
+								<img  alt="" id="responsible_info" />
+								<f:command_link  text="Responsible:" on_click="on_responsible_filter" id="responsible" />
+								<efa:i_frame_tooltip  width="400px" height="130px" content_url="re_responsible.htm" anchor_id="responsible_info" id="responsible_tooltip" />
+							</td>
+							<td valign="top">
+								<f:input_text  
+									auto_post_back="true"
+									max_length="101"
+									columns="15"
+									on_text_changed="on_responsible_change"
+									id="responsible_box" />
+							</td>
+							<td class="field_name" valign="top">
+								<img  alt="" id="severity_info" />
+								Severity:
+								<efa:i_frame_tooltip 
+									width="135px" 
+									height="80px" 
+									content_url="rp_severity.htm" 
+									anchor_id="severity_info" 
+									id="severity_tooltip" />
+							</td>
+							<td valign="top">
+								<f:drop_down_list 
+									auto_post_back="true"
+									on_text_changed="on_severity_change"
+									id="severity_list" />
+							</td>
+						</tr>
+						<tr>
+							<td class="field_name" valign="top">
+								Page Size:
+							</td>
+							<td valign="top">
+								<f:input_text 
+									max_length="4"
+									columns="3"
+									auto_post_back="True"
+									on_text_changed="on_page_size_changed"
+									id="page_size_text" />
+								<f:validator class="REGULAR_EXPRESSION_VALIDATOR" 
+									control_to_validate="page_size_text"
+									text="*"
+									css_class="error"
+									validation_expression="[0-9]*"
+									id="regular_expression_validator_2" />
+							</td>
+							<td class="field_name" valign="top">
+								<img alt="" id="priority_info" />
+								Priority:
+								<efa:i_frame_tooltip 
+									width="135px" 
+									height="80px" 
+									content_url="rp_priority.htm" 
+									anchor_id="priority_info" 
+									id="priority_tooltip" />
+							</td>
+							<td valign="top">
+								<f:drop_down_list 
+									auto_post_back="true"
+									on_text_changed="on_priority_change"
+									id="priority_list" />
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td id="pr_status_change_title">
+					<img alt="" id="status_info" />
+					Status:
+					<efa:i_frame_tooltip 
+						width="135px" 
+						height="101px" 
+						content_url="rp_status.htm" 
+						anchor_id="status_info" 
+						id="status_tooltip" />
+				</td>
+				<td id="pr_status_change">
+					<f:check_box
+						auto_post_back="true"
+						on_selected_index_changed="on_status_change"
+						css_class="nopadding"
+						id="status_list" />
+				</td>
+				<td class="padding_column"></td>
+				<td class="reset_link">
+					<div>
+						<f:command_link  on_click="on_reset" text="Reset filter" />
+					</div>
+					<div>
+						<f:check_box  auto_post_back="true" text="Auto-submit" on_checked_changed="on_auto_submit_change" id="auto_submit" />
+					</div>
+					<div>
+						<f:button  text="Submit" id="submit_button" />
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<div  id="no_result_div" class="message">
+			<b>The search returned no results.</b><br />
+			Try changing the search text, changing the filters or click the reset button.
+		</div>
+		<div  id="no_pr_div" class="message">
+			<b>There are no problem reports corresponding to the current filter settings.</b><br />
+		</div>
+		<div  id="no_submit_div" class="message">
+			No problem report has been submitted, you can 
+			submit one <a id="A1"  href="~/protected/problem_report_form.aspx">here</a>.
+		</div>
+
+		<div  class="pager_div" id="pager_div">
+			<efa:pager_sorter  grid_id="responsible_reports" id="pager" />
+		</div>
+		<!-- 35 + 16 + 16 + 16 + 333 + 100 + 85 + 105 + 65 + 66 + 10 * (3 + 3)  = 897 -->
+		<xeb:grid_view 
+			width="897"
+			css_class="responsible_grid"
+			auto_generate_columns="False"
+			allow_paging="True"
+			allow_sorting="True"
+			alternating_row_style_back_color="#f0f5fa"
+			grid_lines="none"
+			pager_settings_visible="false"
+			page_size="20"
+			id="responsible_reports">
+			<columns>
+				<xeb:template_field header_text="#" header_style_width="35px" sort_expression="Number">
+					<ItemTemplate>
+						<!--%#report_link ({INTEGER} #? eval ("Number"), window_namer.window_name)%-->
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:template_field header_style_css_class="image_header" sort_expression="StatusID" >
+					<ItemTemplate>
+						<div class="centered">
+							<xeb:image 
+							image_url="<%#status_image_url ({INTEGER} #? eval('StatusID'))%>"
+							id="status_image" />
+						</div>
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:template_field header_style_css_class="image_header" sort_expression="PriorityID" >
+					<ItemTemplate>
+						<div class="centered">
+							<xeb:image 
+							image_url="<%#priority_image_url({INTEGER} #? eval ('PriorityID'))%>"
+							id="priority_image" />
+						</div>
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:template_field header_style_css_class="image_header" sort_expression="SeverityID">
+					<ItemTemplate>
+						<div class="centered">
+							<xeb:image 
+							image_url="<%#severity_image_url({INTEGER} #? eval ('SeverityID'))%>"
+							id="severity_image" />
+						</div>
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:bound_field data_field="Synopsis" html_encode="false" header_text="Synopsis" header_style_width="333px" sort_expression="Synopsis"/>
+				<xeb:template_field header_text="Submitter" header_style_width="100px" sort_expression="Username">
+					<ItemTemplate>
+						<f:command_link text="<%#eval('DisplayName')%>" command_name="<%#eval('Username')%>" enabled="<%#not (eval('Username').is_equal ({DB_NULL}.value))%>" css_class="<%#submitter_css_class (not (eval('Username').is_equal ({DB_NULL}.value))) %>"  on_click="on_filter_submitter" id="submitter_link" />
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:template_field header_style_width="85px" header_text="Responsible" sort_expression="ResponsibleID">
+					<ItemTemplate>
+						<f:drop_down_list  on_selected_index_changed="on_responsible_index_change" id="responsible_drop_down_list" />
+						<xeb:hidden_field  on_data_binding="on_bind_responsible" id="responsible_hidden" />
+					</ItemTemplate>
+				</xeb:template_field>
+				<xeb:bound_field data_field="category_synopsis" header_text="Category" header_style_width="105px" sort_expression="category_synopsis" />
+				<xeb:bound_field data_field="Release" header_text="Release" header_style_width="65px" sort_expression="Release" />
+				<xeb:template_field header_text="Date" header_style_width="66px" sort_expression="SubmissionDate">
+				<ItemTemplate>
+					<xeb:display 
+						text="<%#({SYSTEM_DATE_TIME} #? eval ('SubmissionDate')).to_short_date_string%>"
+						id="date_label" />
+					</ItemTemplate>
+				</xeb:template_field>
+			</columns>
+		</xeb:grid_view>
+		<div  class="pager_div" id="bottom_pager_div">
+			<efa:pager_sorter grid_id="responsible_reports" secondary="true" id="bottom_pager" />
+		</div>
+		<efa:window_namer  id="window_namer" />
+	</div>
+</div>
+</page:define_region>
+</page:include>

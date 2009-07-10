@@ -1,0 +1,23 @@
+<page:include template="support_side">
+<page:define_region id="main_content">
+	<efa:title_box title="<h1>Problem Report Categories Selection</h1>" id="title_box" />
+		<p>
+			Select the categories you would like to subscribe to below. Once subscribed to a category,
+			you will receive a notification each time a problem report is submitted to that category or a 
+			new interaction is added to an existing problem report from that category.
+		</p>
+		<div>
+			<xeb:display css_class="error" id="error_label" />
+		</div>
+		<div>
+			<efa:multiple_selection title="Category Selection"
+				value_field="Categoryid"
+				text_field="CategorySynopsis"
+				selected_field="Subscribed"
+				on_select="on_select"
+				on_deselect="on_deselect"
+				id="category_selection"
+				/>
+		</div>
+</page:define_region>
+</page:include>

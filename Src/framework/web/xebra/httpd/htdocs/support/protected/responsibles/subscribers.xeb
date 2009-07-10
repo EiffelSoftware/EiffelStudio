@@ -1,0 +1,34 @@
+<page:include template="support_side">
+<page:define_region id="main_content">
+	<efa:title_box title="<h1>Categories Subscribers</h1>" id="title_box" />
+	<xeb:display css_class="error" id="error_label"/>
+	<p>
+		<xeb:display id="responsible_label"/>
+	</p>
+	<efa:collapsible_table div_id="main_div" id="main_table" />
+	<div  id="main_div">
+	<!-- 400 + 130 + 2 * (3 + 3) = 542 -->
+		<xeb:grid_view 
+			width="542"
+			pager_settings_visible="false"
+			css_class="grid"
+			border_color="#DDDDDD"
+			border_width="1"
+			grid_lines="vertical"
+			auto_generate_columns="False"
+			header_style_css_class="grid_header"
+			allow_paging="True"
+			allow_sorting="True"
+			row_style_css_class="grid_item"
+			cell_padding="3"
+			alternating_row_style_css_class="alternating"
+			page_size="2000"
+			id="grid_view">
+			 <Columns>
+				 <f:bound_field data_field="Category" html_encode="False" header_text="Category" header_style_width="130px" sort_expression="Category" />
+				 <f:bound_field data_field="Subscribers" html_encode="False" header_text="Subscribers" header_style_width="400px" sort_expression="Responsibles" />
+			</Columns>
+		</xeb:grid_view>
+	</div>
+</page:define_region>
+</page:include>

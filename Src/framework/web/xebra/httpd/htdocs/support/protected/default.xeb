@@ -1,0 +1,87 @@
+<page:include template="support_plain">
+<page:define_region id="main_content">
+	<efa:title_box title="<h1>My Support</h1>" id="title_box" />
+	<f:validation_result header_text="Please correct the following error(s):" id="validation_summary"/>
+	<xeb:display css_class="error" text="error_label"/>
+	<table>
+		<tr>
+			<td>
+				<efa:report_selection  error_label_id="error_label" on_select="on_report_select" on_change_display="on_change_display" id="report_selection" />
+			</td>
+			<td>
+				<efa:report_search  error_label_id="error_label" on_click="on_search" id="report_search" />
+			</td>
+		</tr>
+	</table>
+	<efa:collapsible_table  collapsible="true" title="Problem Reports" div_id="reports_div" id="reports_table" />
+	<div id="reports_div">
+		<table class="filter" id="filter_table">
+			<tr>
+				<td>
+					Category:
+					<f:drop_down_list auto_post_back="true" on_text_changed="on_category_change" id="category_list"/>
+					&nbsp;&nbsp;Status:
+					<f:drop_down_list auto_post_back="true" on_text_changed="on_status_change" id="status_list" />
+					&nbsp;&nbsp;Page size:
+					<f:command_link auto_post_back="true" text="10" on_click="on_size_change" id="small_size_button" />
+					<f:command_link auto_post_back="true" text="20" on_click="on_size_change" id="normal_size_button" />
+					<f:command_link	auto_post_back="true" text="50" on_click="on_size_change" id="large_size_button" />
+				</td>
+			</tr>
+		</table>
+		<div id="no_result_div" class="message">
+			<b>The search returned no results.</b><br />
+			Try changing the search text, changing the filters or click the reset button.
+		</div>
+		<div id="no_pr_div" class="message">
+			<b>There are no problem reports corresponding to the current filter settings.</b><br />
+		</div>
+		<div id="no_submit_div" class="message">
+			No problem report has been submitted, you can submit one
+			<a id="A1"  href="~/protected/problem_report_form.aspx">here</a>.
+		</div>
+		<div id="pager_div">
+			<efa:pager_sorter grid_id="grid_view" id="pager" />
+		</div>
+		<!-- 42 + 16 + 592 + 80 + 130 + 5 * (3 + 3) = 890 -->
+		<xeb:grid_view css_class="grid" auto_generate_columns="False" allow_paging="True" allow_sorting="True" alternating_row_style_back_color="#f0f5fa" grid_lines="none" width="890" pager_settings_visible="false" page_size="20" id="grid_view">'
+			<Columns>
+				 <xeb:template_field header_text="#" header_style_width="42px" sort_expression="Number">
+					 <ItemTemplate>
+							<!--%#report_link ({INTEGER} #? eval ("Number"), window_namer.window_name)%-->
+					 </ItemTemplate>
+				 </xeb:template_field>
+				 <xeb:template_field header_style_css_class="image_header" sort_expression="Statusid" >
+					 <ItemTemplate>
+						<div class="centered">
+							<xeb:image image_url="<%#status_image_url ({INTEGER} #? eval('Statusid'))%>" id="status_image" />
+						</div>
+					 </ItemTemplate>
+				 </xeb:template_field>
+				 <xeb:bound_field data_field="Synopsis" html_encode="false" header_text="Synopsis" header_style_width="592px"  sort_expression="Synopsis"/>
+				 <xeb:template_field header_text="Date" header_style_width="80px" sort_expression="SubmissionDate">
+					 <ItemTemplate>
+						<xeb:display text="<%#({SYSTEM_DATE_TIME} #? eval ('SubmissionDate')).to_short_date_string%>" 	id="date_label" />
+					 </ItemTemplate>
+				 </xeb:template_field>
+				 <xeb:bound_field data_field="CategorySynopsis" header_text="Category" header_style_width="130px" sort_expression="CategorySynopsis" />
+			</Columns>
+		</xeb:grid_view>
+		<table class="top_padding">
+			<tr>
+				<xeb:iterate id="legend_repeater">
+					<ItemTemplate>
+						<td valign="bottom">
+							<img src="<%#status_image_url ({INTEGER} #? eval('Statusid')) %>" alt="" />
+						</td>
+						<td style="padding-right:10px;">
+							<!--%#eval ("StatusSynopsis") %-->
+						</td>
+					</ItemTemplate>
+				</xeb:iterate>
+			</tr>
+		</table>
+		<efa:window_namer id="window_namer" />
+	</div>
+</page:define_region>
+</page:include>

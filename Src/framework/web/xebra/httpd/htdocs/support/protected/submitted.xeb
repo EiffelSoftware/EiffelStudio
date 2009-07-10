@@ -1,0 +1,73 @@
+<page:include template="support_side">
+<page:define_region id="main_content">
+	<efa:title_box  title="<h1>Problem Report Submission Confirmation</h1>" id="title_box" />
+
+	<efa:collapsible_table  div_id="main_div" id="main_table" />
+	<div  id="main_div">
+		<table class="problem_report">
+			<tr>
+				<td>
+					<span class="field_name">Release:</span> <xeb:display  id="release"/>
+				</td>
+				<td>
+					<span class="field_name">Severity:</span> <xeb:display   id="severity" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="field_name">Class:</span> <xeb:display  id="class_label" />
+				</td>
+				<td>
+					<span class="field_name">Priority:</span> <xeb:display  id="priority"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="field_name">Category:</span> <xeb:display  id="category"/>
+				</td>
+				<td>
+					<span class="field_name">Confidential:</span> <xeb:display  id="confidential"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="field_name">Environment:</span><br /><xeb:display  id="environment" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="field_name">Synopsis:</span><br /><xeb:display  id="synopsis"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="field_name">Description:</span><br /><xeb:display  class="report_content" id="description" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="last_row">
+					<span  class="field_name" id="to_reproduce_title">To Reproduce:</span><br /><xeb:display  class="report_content" id="to_reproduce" />
+				</td>
+			</tr>
+			<tr  id="attachments_row">
+				<td colspan="2" class="last_row">
+					<span class="field_name">Attachments:</span><br />
+					<xeb:data_grid 
+						css_class="attachments_grid"
+						alternating_item_style_css_class="alternating"
+						id="attachments_grid">
+						<HeaderStyle Font-Bold="True"/>
+						</xeb:data_grid>
+				</td>
+			</tr>
+			<tr>
+				<td class="submit_column" colspan="2">
+					<f:command_link  text="Submit" action="SubmitLink"/>
+					|
+					<f:command_link text="Edit" action="EditLink"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+</page:define_region>
+</page:include>

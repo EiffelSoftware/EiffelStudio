@@ -330,7 +330,9 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 	EIF_TYPED_VALUE * last;	/* Last pushed value */
 	unsigned long stagval;
 	
-	if ((otop()->type & SK_HEAD) == SK_EXP)
+	last = otop();
+	CHECK("last not null", last);
+	if ((last->type & SK_HEAD) == SK_EXP)
 		return; /* Leave an expanded object as is. */
 	last = opop();
 	stagval = tagval;
@@ -519,8 +521,6 @@ rt_public void xinitint(void)
 		enomem(MTC_NOARG);
 }
 
-#undef EIF_VOLATILE
-#define EIF_VOLATILE volatile
 rt_private void interpret(int flag, int where)
 					/* Flag set to INTERP_INVA or INTERP_CMPD */
 					/* Are we checking invariant before or after compound? */
@@ -533,7 +533,7 @@ rt_private void interpret(int flag, int where)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int volatile code;			/* Current intepreted byte code */
-	EIF_TYPED_VALUE * volatile last;	/* Last pushed value */
+	EIF_TYPED_VALUE *last;	/* Last pushed value */
 	long volatile offset = 0;			/* Offset for jumps and al */
 	long volatile offset_n = 0;		/* Nested Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
@@ -553,12 +553,12 @@ rt_private void interpret(int flag, int where)
 	EIF_TYPED_VALUE * volatile stop = NULL;	/* To save stack context */
 	struct stochunk * volatile scur = NULL;	/* Current chunk (stack context) */
 #ifdef ISE_GC
-	char ** volatile l_top = NULL;			/* Local top */
-	struct stchunk * volatile l_cur = NULL;	/* Current local chunk */
-	char ** volatile ls_top = NULL;			/* loc_stack top */
-	struct stchunk * volatile ls_cur = NULL;/* Current loc_stack chunk */
-	char ** volatile h_top = NULL;			/* Hector stack top */
-	struct stchunk * volatile h_cur = NULL;	/* Current hector stack chunk */
+	char ** l_top = NULL;			/* Local top */
+	struct stchunk * l_cur = NULL;	/* Current local chunk */
+	char ** ls_top = NULL;			/* loc_stack top */
+	struct stchunk * ls_cur = NULL;/* Current loc_stack chunk */
+	char ** h_top = NULL;			/* Hector stack top */
+	struct stchunk * h_cur = NULL;	/* Current hector stack chunk */
 #endif
 	int volatile assert_type = 0;			/* Assertion type */
 	char volatile pre_success = (char) 0;	/* Flag for precondition success */ 
@@ -567,8 +567,7 @@ rt_private void interpret(int flag, int where)
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
 #endif
-	int32 volatile rout_id;					/* Routine id */
-	BODY_INDEX volatile body_id = 0;		/* Body id of routine */
+	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
 	long volatile once_key = 0;				/* Index in once table */
@@ -586,7 +585,6 @@ rt_private void interpret(int flag, int where)
 	{
 	case ONCE_MARK_THREAD_RELATIVE:
 		is_once  = 1;
-		is_process_once = 0;
 		once_key = get_int32(&IC);
 		break;
 #ifdef EIF_THREADS
@@ -615,7 +613,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_START\n");
 #endif
-		rout_id = (int32) get_int32(&IC);	/* Get the routine id */
+	 	(void) get_int32(&IC);	/* Get the routine id, currently not used */
 		body_id = (BODY_INDEX) get_int32(&IC);	/* Get the body id */
 		rtype = get_int32(&IC);				/* Get the result type */
 		argnum = get_int16(&IC);			/* Get the argument number */
@@ -851,6 +849,7 @@ rt_private void interpret(int flag, int where)
 		RESTORE(hec_stack, h_cur, h_top);
 #endif
 		sync_registers(MTC scur, stop);
+		CHECK("exvect not null", exvect);
 		RTEU;
 		break;
 
@@ -923,6 +922,8 @@ rt_private void interpret(int flag, int where)
 			string = get_string8(&IC, get_int32(&IC));
 			l_pos = get_int32(&IC);
 
+			last = otop();
+			CHECK("last not null", last);
 			RTCC(otop()->it_ref, l_written_dtype, (char *) string, l_pos, l_expected_dftype);
 		}
 		break;
@@ -1368,6 +1369,7 @@ rt_private void interpret(int flag, int where)
 		 * feature which is going to call this once feature again.
 		 */
 		if (is_once) {
+			CHECK("OResult not null", OResult);
 			put_once_result (iresult, rtype, OResult);
 		}
 		break;
@@ -1392,6 +1394,7 @@ rt_private void interpret(int flag, int where)
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:	/* See below */ 
+					CHECK("OResult not null", OResult);
 					*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 					break;
 				}
@@ -1567,6 +1570,7 @@ rt_private void interpret(int flag, int where)
 		 * feature which is going to call this once feature again.
 		 */
 		if (is_once) {
+			CHECK("OResult not null", OResult);
 			put_once_result (iresult, rtype, OResult);
 		}
 		break;
@@ -1581,6 +1585,7 @@ rt_private void interpret(int flag, int where)
 		code = get_int16(&IC);			/* Get local number */
 		type = get_creation_type (1);
 		last = otop();
+		CHECK("last not null", last);
 
 		if (!RTRA(type, last->it_ref))
 			last->it_ref = (EIF_REFERENCE) 0;
@@ -1596,15 +1601,19 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			uint32 meta;
+			EIF_REFERENCE l_ref;
 
 			offset = get_int32(&IC);		/* Get the feature id */
 			code = get_int16(&IC);			/* Get the static type */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			type = get_creation_type (1);
 			last = otop();
+			CHECK("last not null", last);
+			l_ref = last->it_ref;
 
-			if (!RTRA(type, last->it_ref))
+			if (!RTRA(type, l_ref)) {
 				last->it_ref = (EIF_REFERENCE) 0;
+			}
 			reverse_attribute (RTWA(code, offset, icur_dtype), meta);
 		}
 		break;
@@ -1625,6 +1634,7 @@ rt_private void interpret(int flag, int where)
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			type = get_creation_type (1);
 			last = otop();
+			CHECK("last not null", last);
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (EIF_REFERENCE) 0;
@@ -1642,6 +1652,7 @@ rt_private void interpret(int flag, int where)
 		code = get_int16(&IC);			/* Get local number */
 		type = get_creation_type (1);
 		last = otop();
+		CHECK("last not null", last);
 
 		if (RTRA(type, last->it_ref)) {
 				/* Perform reattachment. */
@@ -1689,6 +1700,7 @@ rt_private void interpret(int flag, int where)
 		{	EIF_REFERENCE ref;
 
 			last = otop();
+			CHECK("last not null", last);
 			ref = last->it_ref;
 			if (ref) {
 				unsigned long stagval;
@@ -1720,6 +1732,7 @@ rt_private void interpret(int flag, int where)
 	
 			stagval = tagval;
 			last = otop();
+			CHECK("last not null", last);
 			ref = last->it_ref;
 			if (ref && eif_is_boxed_expanded(HEADER(ref)->ov_flags)) {
 				unsigned char *OLD_IC;
@@ -2183,6 +2196,7 @@ rt_private void interpret(int flag, int where)
 			upper = opop();				/* Get the upper bound */
 			lower = opop();				/* Get the lower bound */
 			last = otop();				/* Get the inspect expression value */
+			CHECK("last not null", last);
 			offset = get_int32(&IC);		/* Get the jump value */
 			OLD_IC = IC;
 			switch (last->type) {
@@ -2620,6 +2634,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);
 		last = otop();
+		CHECK("last not null", last);
 		if (!last->it_char)
 			IC += offset;
 		break;
@@ -2633,6 +2648,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);
 		last = otop();
+		CHECK("last not null", last);
 		if (last->it_char)
 			IC += offset;
 		break;
@@ -2687,12 +2703,14 @@ rt_private void interpret(int flag, int where)
 	/* Real operations: ceil and floor */
 	case BC_CEIL:
 		last = otop();
+		CHECK("last not null", last);
 		CHECK("double_type", last->type == SK_REAL64)
 		last->it_double = ceil(last->it_double);
 		break;
 
 	case BC_FLOOR:
 		last = otop();
+		CHECK("last not null", last);
 		CHECK("double_type", last->type == SK_REAL64)
 		last->it_double = floor(last->it_double);
 		break;
@@ -2710,6 +2728,7 @@ rt_private void interpret(int flag, int where)
 
 			ref = opop()->it_ref;
 			last = otop();
+			CHECK("last not null", last);
 			OLD_IC = IC;
 			last->it_char = (char) RTEQ(ref, last->it_ref);
 			IC = OLD_IC;			/* IC back-up */
@@ -2734,6 +2753,7 @@ rt_private void interpret(int flag, int where)
 
 			ref = opop()->it_ref;
 			last = otop();
+			CHECK("last not null", last);
 			OLD_IC = IC;
 			last->it_char = (char) RTCEQ(ref, last->it_ref);
 			IC = OLD_IC;
@@ -2758,6 +2778,7 @@ rt_private void interpret(int flag, int where)
 
 			bit = opop()->it_bit;
 			last = otop();
+			CHECK("last not null", last);
 			last->it_char = (char) RTEB(bit, last->it_bit);
 			last->type = SK_BOOL;
 		}
@@ -2772,6 +2793,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		(void) opop();
 		last = otop();
+		CHECK("last not null", last);
 		last->type = SK_BOOL;
 		last->it_char = '\01';
 		break;
@@ -2785,6 +2807,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		(void) opop();
 		last = otop();
+		CHECK("last not null", last);
 		last->type = SK_BOOL;
 		last->it_char = '\0';
 		break;
@@ -2907,7 +2930,9 @@ rt_private void interpret(int flag, int where)
 		value_pos = get_uint32(&IC);
 
 		pointed_object = oitem(value_pos);
+		CHECK("pointed_object_not_null", pointed_object);
 		last = oitem(ptr_pos);
+		CHECK("last not null", last);
 		last->type = SK_POINTER;
 
 		switch (pointed_object->type & SK_HEAD) {
@@ -3075,6 +3100,7 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *last;
 
 			last = otop();
+			CHECK("last not null", last);
 			(void) RTCV(last->it_ref);	/* Check that TUPLE is not Void. */
 			last->type = type;	/* Stored type of accessed tuple element. */
 			switch (type & SK_HEAD) {
@@ -3526,9 +3552,14 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NHOOK\n");
 #endif
-		offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
-		offset_n = get_int32(&IC);	/* retrieve the 2nd parameter of BC_NHOOK: line number */
-		dstop_nested(dtop()->dc_exec,offset,offset_n);	/* Debugger hook - stop point reached */ /* FIXME */
+		{
+			struct dcall *call;
+			offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
+			offset_n = get_int32(&IC);	/* retrieve the 2nd parameter of BC_NHOOK: line number */
+			call = dtop();
+			CHECK("call not void", call);
+			dstop_nested(call->dc_exec,offset,offset_n);	/* Debugger hook - stop point reached */ /* FIXME */
+		}
 		break;
 
 	/*
@@ -3540,9 +3571,9 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_REF_TO_PTR\n");
 #endif
 		{
-			EIF_TYPED_VALUE *my_last;
-			my_last = otop();
-			my_last->type = SK_POINTER;
+			last = otop();
+			CHECK("last not null", last);
+			last->type = SK_POINTER;
 				/* References and pointers are store as char * so no type
 				 * conversion is necessary. Only the type field has to be
 				 * updated.
@@ -3572,6 +3603,7 @@ rt_private void interpret(int flag, int where)
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 
+		CHECK("exvect not null", exvect);
 		RTDBGLE;
 
 		pop_registers();	/* Pop registers */
@@ -3585,6 +3617,7 @@ rt_private void interpret(int flag, int where)
 #ifdef EIF_THREADS
 			if (is_process_once) {
 					/* Clear field that holds locking thread id. */
+				CHECK("POResult not null", POResult);
 				POResult -> thread_id = NULL;
 					/* Ensure memory is flushed (if required). */
 				RTOPMBW;
@@ -3622,6 +3655,7 @@ rt_private void interpret(int flag, int where)
 		EIF_BOOLEAN was_executed = EIF_FALSE;
 #ifdef EIF_THREADS
 		if (is_process_once) {
+			CHECK("POResult not null", POResult);
 			if (!POResult -> mutex){
 				/* Create the mutex */
 				POResult -> mutex = eif_thr_mutex_create ();
@@ -3653,10 +3687,13 @@ rt_private void interpret(int flag, int where)
 				RTOPW (POResult -> mutex, POResult -> thread_id);
 				was_executed = EIF_TRUE;
 			}
-		}
-		else
+		} else {
 #endif /* EIF_THREADS */
+		CHECK("OResult not null", OResult);
 		was_executed = MTOD(OResult);
+#ifdef EIF_THREADS
+		}
+#endif
 
 			/* Check if once routine was executed earlier. */
 		if (was_executed) {
@@ -3698,12 +3735,12 @@ rt_private void interpret(int flag, int where)
 			MTOM(OResult);
 				/* Record execution vector to catch exception. */
 			exvecto = extre ();
+				/* Set catch address. */
+			exvect->ex_jbuf = &exenvo;
+				/* Update routine exception vector. */
+			exvect = exvecto;
+			dexset(exvect);
 			if (!setjmp(exenvo)) {
-					/* Set catch address. */
-				exvect->ex_jbuf = &exenvo;
-					/* Update routine exception vector. */
-				exvect = exvecto;
-				dexset(exvect);
 				switch (rtype & SK_HEAD)
 				{
 				case SK_BIT:
@@ -3760,13 +3797,12 @@ rt_private void interpret(int flag, int where)
 			create_expanded_locals (scur, stop, create_result);
 		}
 			/* Register rescue handler (if any). */
+		CHECK("exvect not null", exvect);
 		SET_RESCUE;
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */
 }
-#undef EIF_VOLATILE
-#define EIF_VOLATILE
 
 rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)          
 					  		/* Current chunk (stack context) */
@@ -3892,6 +3928,7 @@ rt_private void monadic_op(int code)
 	EIF_TYPED_VALUE *first;			/* First operand */
 
 	first = otop();				/* Item will get modified */
+	CHECK("first not null", first);
 
 	switch (code) {				/* Execute operation */
 
@@ -3961,6 +3998,7 @@ rt_private void diadic_op(int code)
 
 	s = opop();			/* Fetch second operand */
 	f = otop();			/* First operand will be replace by result */
+	CHECK("first not null", f);
 
 	switch (code) {				/* Execute operation */
 
@@ -4259,6 +4297,7 @@ rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALU
 	OLD_IC = IC;
 	
 	first = otop();				/* First operand will be replace by result */
+	CHECK("first not null", first);
 	switch (first->type & SK_HEAD) {
 		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
 		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER_8", 11); break;
@@ -4301,6 +4340,7 @@ rt_private void eif_interp_min_max (int code)
 	
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
+	CHECK("first not null", first);
 
 	switch (code) {				/* Execute operation */
 		case BC_MAX:
@@ -4359,6 +4399,7 @@ rt_private void eif_three_way_comparison (void)
 	
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
+	CHECK("first not null", first);
 
 	REQUIRE("Same type", (first->type & SK_HEAD) == (second->type & SK_HEAD));
 
@@ -4398,6 +4439,7 @@ rt_private void eif_interp_offset(void)
 	
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
+	CHECK("first not null", first);
 	switch(first->type & SK_HEAD) {
 		case SK_CHAR:
 			first->it_char = (EIF_CHARACTER) (((EIF_INTEGER_32) first->it_char) + second->it_int32);
@@ -4443,6 +4485,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			/* Call to `zero' */
 		case BC_ZERO:
 			first = otop();	/* First operand will be replace by result */
+			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 0; break;
 				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) 0; break;
@@ -4461,6 +4504,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			/* Call to `one' */
 		case BC_ONE:
 			first = otop();	/* First operand will be replace by result */
+			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 1; break;
 				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) 1; break;
@@ -4501,6 +4545,7 @@ rt_private void eif_interp_bit_operations (void)
 		second = opop();	/* Fetch second operand if required */
 	}
 	first = otop ();		/* First operand, it will be replaced by result */
+	CHECK("first not null", first);
 
 	switch (code) {
 		case BC_INT_BIT_AND:
@@ -4689,7 +4734,8 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	unsigned char*	OLD_IC = IC;		/* IC back up */
 	uint32 			pid = 0;			/* Pattern id of the frozen feature */
 	int32 			rout_id = 0;		/* routine id of the requested feature */
-	uint32 EIF_VOLATILE db_cstack;
+	uint32 db_cstack;
+	EIF_TYPED_VALUE *last;
 	STACK_PRESERVE;
 	RTYD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
@@ -4727,7 +4773,9 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 					 * the type declaring the inline agent or the type target of the static call. */
 				CBodyId(body_id,rout_id,stype);
 			} else {
-				CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
+				last = otop();
+				CHECK("last not null", last);
+				CBodyId(body_id,rout_id,Dtype(last->it_ref));		
 			}
 		} else {
 			int origin = stype_or_origin;
@@ -4736,7 +4784,9 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 			if (is_static_call) {
 				body_id = desc_tab[origin][dtype][offset].body_index;
 			} else {
-				body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
+				last = otop();
+				CHECK("last not null", last);
+				body_id = desc_tab[origin][Dtype(last->it_ref)][offset].body_index;
 			}
 		}
 		if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
@@ -4779,12 +4829,14 @@ rt_private int icall(int fid, int stype, int ptype)
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
-	
+	EIF_TYPED_VALUE *last;	
 
 	rout_id = Routids(stype)[fid];
 
 	if (ptype == -1) {
-		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+		last = otop();
+		CHECK("last not null", last);
+		CBodyId(body_id,rout_id,Dtype(last->it_ref));
 	} else {
 		CBodyId(body_id,rout_id,ptype);
 	}
@@ -4831,11 +4883,15 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
+	EIF_TYPED_VALUE *last;
 
-	if (ptype == -1)
-		body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
-	else
+	if (ptype == -1) {
+		last = otop();
+		CHECK("last not null", last);
+		body_id = desc_tab[origin][Dtype(last->it_ref)][offset].body_index;
+	} else {
 		body_id = desc_tab[origin][ptype][offset].body_index;
+	}
 
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
@@ -4875,6 +4931,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	long offset;							/* Attribute offset */
 
 	last = otop();
+	CHECK("last not null", last);
 	current = last->it_ref;
 	offset = RTWA(stype, fid, Dtype(current));
 	last->type = type;			/* Store type of accessed attribute */
@@ -4919,6 +4976,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	long offset;							/* Attribute offset */
 
 	last = otop();
+	CHECK("last not null", last);
 	current = last->it_ref;
 	offset = RTWPA(origin, f_offset, Dtype(current));
 	last->type = type;			/* Store type of accessed attribute */
@@ -5332,6 +5390,9 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, long int type, EIF_REFERENCE curr
 
 rt_private void put_once_result (EIF_TYPED_VALUE *ptr, long int rtype, MTOT OResult)
 {
+	REQUIRE("ptr not null", ptr);
+	REQUIRE("OResult not null", OResult);
+
 	switch (rtype & SK_HEAD) 
 	{
 	case SK_BOOL:    MTOP(EIF_BOOLEAN,    OResult, ptr->it_char);   break;
@@ -5357,6 +5418,9 @@ rt_private void put_once_result (EIF_TYPED_VALUE *ptr, long int rtype, MTOT ORes
 
 rt_private void get_once_result (MTOT OResult, long int rtype, EIF_TYPED_VALUE *ptr)
 {
+	REQUIRE("OResult not null", OResult);
+	REQUIRE("ptr not null", ptr);
+
 	switch (rtype & SK_HEAD) 
 	{
 	case SK_BOOL:
@@ -5797,10 +5861,7 @@ rt_public EIF_TYPED_VALUE *opop(void)
 	SIGBLOCK;
 	s = op_stack.st_cur = op_stack.st_cur->sk_prev;
 
-#ifdef MAY_PANIC
-	if (s == (struct stochunk *) 0)
-		eif_panic("operational stack underflow");
-#endif
+	CHECK("s not null", s);
 
 	top = op_stack.st_end = s->sk_end;
 	op_stack.st_top = --top;
@@ -5857,11 +5918,7 @@ rt_private void npop(rt_uint_ptr nb)
 		}
 	}
 		
-#ifdef MAY_PANIC
-	/* Consistency check: we cannot have reached the end of the stack */
-	if (s == (struct stochunk *) 0)
-		eif_panic("operational stack underflow");
-#endif
+	CHECK("s not null", s);
 
 	/* Update the stack structure */
 	op_stack.st_cur = s;
@@ -6095,12 +6152,12 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 				break; 									/* Out of range */
 			}
 			else if (num == clocnum) {					/* Off by one */
-				if (cresult->type != SK_VOID) {			/* If there is a result */
-					result_item = cresult;				/* Then return it */
-					break;
-				} else {
-					break;								/* Else signal out of range */
+				result_item = cresult;
+				CHECK("result_item not null", result_item);
+				if (result_item->type == SK_VOID) {	/* If there is no result */
+					result_item = NULL;				/* Then discard it */
 				}
+				break;								/* Else signal out of range */
 			}
 			result_item = cloc(num + 1);				/* Locals from 1 to ilocnum */
 			break;
@@ -6131,8 +6188,7 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			value -> value.type = SK_VOID;
 			value -> value.it_ptr = NULL;
 			value -> address = NULL;
-		}
-		else {
+		} else {
 			value -> value.type = result_item -> type;
 			value -> address = result_item -> it_addr;
 			switch (value -> value.type & SK_HEAD) {

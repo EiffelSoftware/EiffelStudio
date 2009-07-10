@@ -148,7 +148,6 @@ rt_public void update(char ignore_updt, char *argv0)
 	if (meltpath) {
 		SAFE_ALLOC(filename, char, strlen(meltpath) + strlen (egc_system_name) +10);
 	} else {
-		meltpath = NULL;
 #ifdef EIF_WINDOWS
 		SAFE_ALLOC(filename, char, MAX_PATH);
 #else

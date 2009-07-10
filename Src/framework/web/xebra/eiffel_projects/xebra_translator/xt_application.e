@@ -38,6 +38,7 @@ feature -- Operation
 			l_printer: XU_ERROR_PRINTER
 			l_translator: XP_TRANSLATOR
 			l_dir: FILE_NAME
+			l_error_count: INTEGER
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
@@ -54,11 +55,28 @@ feature -- Operation
 			end
 
 			if not error_manager.is_successful then
+				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
+				o.iprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N")
 			else
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("System translated.")
 			end
+		end
+
+	count_errors (errors: LINEAR [ANY]): INTEGER
+			-- counts the errors
+		do
+			from
+				Result := 0
+				errors.start
+			until
+				errors.after
+			loop
+				Result := Result + 1
+				errors.forth
+			end
+			--Result := errors.index
 		end
 
 ;note

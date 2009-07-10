@@ -50,7 +50,12 @@ feature -- Access
 				l_child := children.item
 				if l_child.id.is_equal ("define_region") then
 						-- We have found a region so we can put the tag tree at the appropriate position
-					l_region [l_child.retrieve_value ("id").value] := l_child.children
+					if attached l_child.retrieve_value ("id") as l_id then
+						l_region [l_id.value] := l_child.children
+					else
+						error_manager.add_error (create {XERROR_PARSE}.make
+								(["Missing id attribute in define_region tag in servlet: " +  a_servlet_gen.servlet_name + "."]), False)
+					end
 				end
 				children.forth
 			end
@@ -63,7 +68,7 @@ feature -- Access
 				end
 			else
 				error_manager.add_error (create {XERROR_PARSE}.make
-					(["Template '" + retrieve_value ("template").value + "' not found."]), False)
+					(["Template '" + retrieve_value ("template").value + "' not found in " +  a_servlet_gen.servlet_name + "."]), False)
 			end
 		end
 

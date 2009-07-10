@@ -1,0 +1,30 @@
+<page:include template="support_side">
+<page:define_region id="main_content">
+	<div>
+	<efa:title_box title="<h1>Eiffel Software Support</h1>" id="title_box" />
+	<p>
+		The Eiffel Software Support web site, your one stop destination for information and 
+		support on Eiffel products and technologies.
+	</p>
+	<h2>Assisted support</h2>
+	<p>
+		<a href="protected/default.xeb">View</a> and 
+		<a href="protected/problem_report_form.xeb">submit</a> 
+		problem and bug reports to the Eiffel Software Team through this web site. Customers with a higher 
+		priority <a href="http://www.eiffel.com/services/support/">Support Plan</a> receive faster 
+		response times and problem resolution.  Additional support options include email, phone, 
+		fax and <a href="http://www.eiffel.com/services/training/index.html">training courses</a> 
+		from an Eiffel Software professional.
+	</p>
+	<h2>Self-support</h2>
+	<p>
+		Learn more about Eiffel Technologies from various online resources. Browse our full 
+		<a href="http://docs.eiffel.com">online documentation</a> and 
+		<a href="http://www.eiffel.com/search/search.html">technical archives</a>, purchase 
+		educational and reference material, or join the
+		<a href="http://groups.yahoo.com/group/eiffel_software/">Eiffel User Group</a> to discuss
+		issues and get help.
+	</p>
+	</div>
+</page:define_region>
+</page:include>

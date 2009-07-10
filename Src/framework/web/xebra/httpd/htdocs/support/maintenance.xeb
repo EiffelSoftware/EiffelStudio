@@ -1,0 +1,10 @@
+<page:include template="maintenance_master">
+<page:define_region id="main_content">
+	<div>
+	<efa:title_box title="<h1>Eiffel Software Support</h1>" id="title_box" />
+	<p>
+		The Eiffel Software Support web site is currently undergoing maintenance. We expect the site to be back online at 11:30 AM PST.
+	</p>
+	</div>
+</page:define_region>
+</page:include>

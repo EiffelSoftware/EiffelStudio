@@ -1,5 +1,0 @@
-<page:include template="master">
-<page:define_region id="login_links_label">
-Home Boy
-</page:define_region>
-</page:include>

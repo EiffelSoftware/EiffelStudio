@@ -453,10 +453,14 @@ feature{NONE} -- Implementation
 					l_data.forth
 				end
 				processed_classes.wipe_out
-				check l_start_class /= Void end
-				create l_row.make (Current, l_start_class, False)
-				l_rows.force_last (l_row)
-				fill_row_tree (l_row, l_data)
+
+				if attached l_start_class then
+						-- Class may have been removed from the system, so we need to check for attachment.
+					check l_start_class /= Void end
+					create l_row.make (Current, l_start_class, False)
+					l_rows.force_last (l_row)
+					fill_row_tree (l_row, l_data)
+				end
 			end
 		end
 

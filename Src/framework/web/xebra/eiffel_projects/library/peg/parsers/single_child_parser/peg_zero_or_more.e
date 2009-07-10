@@ -15,7 +15,7 @@ create
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		local
 			temp: PEG_PARSER_RESULT
@@ -33,6 +33,18 @@ feature -- Implementation
 				end
 			end
 			Result := build_result (Result)
+		end
+
+	default_parse_info: STRING
+				-- <Precursor>	
+			do
+				Result := "zero_or_more (" + child.short_debug_info + ")"
+			end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := "zero_or_more"
 		end
 
 feature {PEG_ABSTRACT_PEG} -- Serialization

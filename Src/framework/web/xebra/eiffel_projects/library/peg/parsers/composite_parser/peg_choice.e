@@ -18,7 +18,7 @@ create
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		local
 			parse_result : PEG_PARSER_RESULT

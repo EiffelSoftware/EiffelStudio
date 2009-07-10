@@ -855,19 +855,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #endif
 	eif_environ = envp;				/* Save pointer to environment variable storage */
 	once_init();
-#ifdef EIF_THREADS
-#ifdef WORKBENCH
+#if defined(EIF_THREADS) && defined(WORKBENCH)
 	notify_root_thread();
-#endif
-#endif
-#ifdef WORKBENCH
-	if (egc_routdisp_wb == NULL) {
-		egc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) egc_routdisp;
-	}
-#else
-	if (egc_routdisp_fl == NULL) {
-		egc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) egc_routdisp;
-	}
 #endif
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
 }

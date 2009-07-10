@@ -65,8 +65,6 @@ extern "C" {
 	RT_LNK uint32 egc_str_hash_offset;
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
 #endif
-	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
-							    EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
 #ifdef WORKBENCH
 	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
 		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp_wb' feature */
@@ -184,7 +182,7 @@ extern "C" {
 	RT_LNK void (**egc_edispose)(void);
 	RT_LNK void (**egc_copy)(EIF_REFERENCE, EIF_REFERENCE);
 	RT_LNK EIF_BOOLEAN (**egc_is_equal)(EIF_REFERENCE, EIF_REFERENCE);
-	RT_LNK char *(**egc_ecreate)(void);
+	RT_LNK void *(**egc_ecreate)(EIF_REFERENCE, EIF_REFERENCE);
 	RT_LNK char *(**egc_exp_create)(void);
 	RT_LNK struct ctable *egc_ce_rname;
 	RT_LNK long *egc_fnbref ;

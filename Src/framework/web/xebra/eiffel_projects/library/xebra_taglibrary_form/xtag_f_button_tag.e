@@ -82,7 +82,7 @@ feature -- Implementation
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precusor>
 		do
-			if a_id.is_equal ("value") then
+			if a_id.is_equal ("text") then
 				value := a_attribute
 			end
 			if a_id.is_equal ("action") then

@@ -12,6 +12,11 @@ inherit
 
 	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
 
+	NS_ENVIRONEMENT
+		undefine
+			copy
+		end
+
 create
 	make
 create {NS_OBJECT}
@@ -82,10 +87,7 @@ feature -- Sizing
 	set_frame_top_left_point_flipped (a_point: NS_POINT)
 			-- Positions the top-left corner of the window's frame rectangle at a given point in screen coordinates.
 			-- XXX
-		local
-			zero_screen: NS_SCREEN
 		do
-			create zero_screen.root_screen
 			a_point.y := zero_screen.frame.size.height - a_point.y
 			{NS_WINDOW_API}.set_frame_top_left_point (item, a_point.item)
 		end
@@ -213,13 +215,10 @@ feature -- Managing Titles
 
 	convert_base_to_screen_top_left (a_point: NS_POINT): NS_POINT
 			-- Same as convert_base_to_screen but using screen-coordinates with origin at the top left and
-		local
-			l_screen: NS_SCREEN
 		do
 			create Result.make
 			{NS_WINDOW_API}.convert_base_to_screen (item, a_point.item, Result.item)
-			create l_screen.root_screen
-			Result.y := l_screen.frame.size.height - Result.y
+			Result.y := zero_screen.frame.size.height - Result.y
 		end
 
 

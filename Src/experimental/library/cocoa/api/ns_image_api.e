@@ -72,9 +72,33 @@ feature -- Determining the Supported Image Types
 
 feature -- Working With Image Representations
 
+	frozen representations (a_image: POINTER) : POINTER
+			--- (NSArray *)representations;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSImage*) $a_image representations];"
+		end
+
 feature -- Setting the Image Representation Selection Criteria
 
 feature -- Managing the Focus
+
+	frozen lock_focus (a_image: POINTER)
+			--- (void)lockFocus;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSImage*) $a_image lockFocus];"
+		end
+
+	frozen unlock_focus (a_image: POINTER)
+			--- (void)unlockFocus;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSImage*) $a_image unlockFocus];"
+		end
 
 feature -- Drawing the Image
 
@@ -121,67 +145,29 @@ feature -- Assigning a Delegate
 
 feature -- Producing TIFF Data for the Image
 
-feature -- Managing Incremental Loads
-
-
---- (NSString *)name;
---- (void)setScalesWhenResized:(BOOL)flag;
---- (BOOL)scalesWhenResized;
---- (void)setDataRetained:(BOOL)flag;
---- (BOOL)isDataRetained;
---- (void)setCachedSeparately:(BOOL)flag;
---- (BOOL)isCachedSeparately;
---- (void)setCacheDepthMatchesImageDepth:(BOOL)flag;
---- (BOOL)cacheDepthMatchesImageDepth;
---- (void)setBackgroundColor:(NSColor *)aColor;
---- (NSColor *)backgroundColor;
---- (void)setUsesEPSOnResolutionMismatch:(BOOL)flag;
---- (BOOL)usesEPSOnResolutionMismatch;
---- (void)setPrefersColorMatch:(BOOL)flag;
---- (BOOL)prefersColorMatch;
---- (void)setMatchesOnMultipleResolution:(BOOL)flag;
---- (BOOL)matchesOnMultipleResolution;
---- (void)dissolveToPoint:(NSPoint)point fraction:(CGFloat)aFloat;
---- (void)dissolveToPoint:(NSPoint)point fromRect:(NSRect)rect fraction:(CGFloat)aFloat;
---- (void)compositeToPoint:(NSPoint)point operation:(NSCompositingOperation)op;
---- (void)compositeToPoint:(NSPoint)point fromRect:(NSRect)rect operation:(NSCompositingOperation)op;
---- (void)compositeToPoint:(NSPoint)point operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
---- (void)compositeToPoint:(NSPoint)point fromRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
---- (void)drawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
-
---- (BOOL)drawRepresentation:(NSImageRep *)imageRep inRect:(NSRect)rect;
---- (void)recache;
---- (NSData *)TIFFRepresentation;
---- (NSData *)TIFFRepresentationUsingCompression:(NSTIFFCompression)comp factor:(float)aFloat;
-
-	frozen representations (a_image: POINTER) : POINTER
-			--- (NSArray *)representations;
+	frozen tiff_representation (a_ns_image: POINTER): POINTER
+			-- - (NSData *)TIFFRepresentation
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSImage*) $a_image representations];"
+			"return [(NSImage*)$a_ns_image TIFFRepresentation];"
 		end
+
+	frozen tiff_representation_using_compression_factor (a_ns_image: POINTER; a_comp: INTEGER; a_float: REAL): POINTER
+			-- - (NSData *)TIFFRepresentationUsingCompression: (NSTIFFCompression) comp factor: (NSTIFFCompression) aFloat
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSImage*)$a_ns_image TIFFRepresentationUsingCompression: $a_comp factor: $a_float];"
+		end
+
+feature -- Managing Incremental Loads
 
 --- (void)addRepresentations:(NSArray *)imageReps;
 --- (void)addRepresentation:(NSImageRep *)imageRep;
 --- (void)removeRepresentation:(NSImageRep *)imageRep;
 
---- (BOOL)isValid;
-	frozen lock_focus (a_image: POINTER)
-			--- (void)lockFocus;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*) $a_image lockFocus];"
-		end
---- (void)lockFocusOnRepresentation:(NSImageRep *)imageRepresentation;
-	frozen unlock_focus (a_image: POINTER)
-			--- (void)unlockFocus;
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*) $a_image unlockFocus];"
-		end
+
 
 --- (NSImageRep *)bestRepresentationForDevice:(NSDictionary *)deviceDescription;
 

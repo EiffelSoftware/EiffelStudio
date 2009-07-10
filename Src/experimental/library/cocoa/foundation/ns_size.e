@@ -15,7 +15,7 @@ inherit
 create
 	make,
 	make_size
-create {NS_RECT}
+create {NS_RECT, NS_OBJECT}
 	make_by_pointer
 
 feature {NONE} -- Creation

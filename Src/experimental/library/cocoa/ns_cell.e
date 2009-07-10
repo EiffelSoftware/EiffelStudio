@@ -153,6 +153,12 @@ feature -- Determining Cell Size
 
 feature -- Drawing and Highlighting
 
+	draw (a_cell_frame: NS_RECT; a_control_view: NS_VIEW)
+			-- Draws the receiver's border and then draws the interior of the cell. 			
+		do
+			{NS_CELL_API}.draw_with_frame_in_view (item, a_cell_frame.item, a_control_view.item)
+		end
+
 	set_highlighted (a_flag: BOOLEAN)
 			-- Sets whether the receiver has a highlighted appearance.
 		do

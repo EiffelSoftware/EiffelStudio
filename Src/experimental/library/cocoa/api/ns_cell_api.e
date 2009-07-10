@@ -174,6 +174,14 @@ feature -- Determining Cell Size
 
 feature -- Drawing and Highlighting
 
+	frozen draw_with_frame_in_view (a_cell: POINTER; a_cell_frame: POINTER; a_control_view: POINTER)
+			-- - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSCell*)$a_cell drawWithFrame: *(NSRect*)$a_cell_frame inView: $a_control_view];"
+		end
+
 	frozen set_highlighted (a_cell: POINTER; a_flag: BOOLEAN)
 			-- - (void)setHighlighted:(BOOL)flag
 		external

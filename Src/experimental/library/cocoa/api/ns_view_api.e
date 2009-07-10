@@ -54,6 +54,14 @@ feature -- Managing the View Hierarchy
 			"return [(NSView*)$a_view window];"
 		end
 
+	frozen set_subviews (a_view: POINTER; a_subviews: POINTER)
+			-- - (void)setSubviews:(NSArray *)newSubviews
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_view setSubviews: $a_subviews];"
+		end
+
 	frozen subviews (a_view: POINTER): POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -239,6 +247,14 @@ feature -- Displaying
 		end
 
 feature -- Drawing
+
+	frozen draw_rect (a_view: POINTER; a_dirty_rect: POINTER)
+			-- - (void)drawRect:(NSRect)dirtyRect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_view drawRect: *(NSRect*)$a_dirty_rect];"
+		end
 
 	frozen visible_rect (a_view: POINTER; a_res: POINTER)
 			-- - (NSRect)visibleRect

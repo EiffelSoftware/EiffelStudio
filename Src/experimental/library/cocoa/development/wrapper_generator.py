@@ -19,10 +19,11 @@ import re
 
 ### Config
 
-#dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-#classname = "NSSegmentedCell"
-dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
-classname = "NSData"
+dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
+classname = "NSSegmentedControl"
+#classname = "NSImage"
+#dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
+#classname = "NSData"
 
 ###
 
@@ -104,7 +105,7 @@ class Signature:
 	def EiffelArguments(self):
 		e_sig = []
 		for arg in self.arguments:
-			e_sig.append( arg.to_eiffel_argument() )
+			e_sig.append (arg.to_eiffel_argument())
 		return e_sig
 		
 	def EiffelReturnType(self):
@@ -130,7 +131,7 @@ class Signature:
 						args.append(arg.name)
 					else: # A non expanded type that is passed by value
 						args.append(arg.name + ".item")
-			if self.isFunction() and (not self.EiffelReturnType().canDereference() and not self.EiffelReturnType() in expandedTypes):
+			if self.isFunction() and (not self.EiffelReturnType().canDereference() and not self.EiffelReturnType().isExpanded()):
 				# Special treatment for non expanded types that are passed by value as a return type
 				args.append("Result.item")
 			result = "{" + EiffelTypeN(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
@@ -266,7 +267,11 @@ typeMap = {
 	"IBAction": "",
 	"CGFloat" : "REAL",
 	"void * /* WindowRef */": "WINDOW_REF",
-	"id <NSCopying>": "NS_COPYING"			
+	"id <NSCopying>": "NS_COPYING",
+	"IconRef": "ICON_REF",
+	"unsigned char": "NATURAL_8",
+	"bitmapFormat": "BITMAP_FORMAT",
+	"bytesPerRow": "BYTES_PER_ROW"
 	}
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER"]
@@ -277,13 +282,13 @@ def EiffelTypeN(CTypeName):
 	if CTypeName.startswith("const"):
 		return EiffelTypeN(CTypeName[6:])
 		
-	if CTypeName[:2] in ["NS", "CG", "CA", "CI", "UI"]:
-		if typeMap.has_key(CTypeName):
-			return typeMap[CTypeName]
-		else:
-			return EiffelTypeName(CTypeName)
-	else:
+	if typeMap.has_key(CTypeName):
 		return typeMap[CTypeName]
+	else:
+		if CTypeName[:2] in ["NS", "CG", "CA", "CI", "UI"]:
+			return EiffelTypeName(CTypeName)
+		else:
+			raise "Type not found: " + CTypeName
 
 def InternalEiffelTypeName(CTypeName):
 	et = EiffelTypeN(CTypeName)
@@ -342,9 +347,12 @@ def main():
 				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
 			while tokens.count ("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)") > 0:
 				tokens.remove("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)")
-			sig = Signature (tokens, False)
-			methods.append(sig.EiffelFeature())
-			internal_methods.append(sig.InternalEiffelFeature())
+			try:
+				sig = Signature (tokens, False)
+				methods.append(sig.EiffelFeature())
+				internal_methods.append(sig.InternalEiffelFeature())
+			except:
+				print "Failed to generate code for " + "|".join(tokens)
 	
 	for line in lines:
 		for signature in re.findall(r"^\+ (.*);", line):

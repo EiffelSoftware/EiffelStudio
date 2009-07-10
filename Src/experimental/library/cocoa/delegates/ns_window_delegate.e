@@ -7,28 +7,39 @@ note
 deferred class
 	NS_WINDOW_DELEGATE
 
-feature
+feature -- Creation
 
 	make
 		do
-			item := window_delegate_new ($current, $window_did_resize)
+			item := window_delegate_class.create_instance.item
 		end
 
+feature -- Delegate Methods
+
 	window_did_resize
+			-- Sent by the default notification center immediately after an NSWindow object has been moved.
 		do
 		end
 
-feature {NONE} -- Objective-C implementation
-
-	frozen window_delegate_new (an_object: POINTER; a_method: POINTER): POINTER
-		external
-			"C inline use %"ns_window_delegate.h%""
-		alias
-			"return [[WindowDelegate new] initWithCallbackObject: $an_object andMethod: $a_method];"
+	window_did_move
+		do
 		end
 
-feature {NS_OBJECT} -- Should be used by classes in native only
+feature {NS_OBJECT} -- Implementation
+
+	window_delegate_class: OBJC_CLASS
+			-- An Objective-C class which has the selectors of the delegate
+		once
+			create Result.make_with_name ("EiffelWrapperWindowDelegate")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
+			Result.add_method ("windowDidResize:", agent (a_ptr: POINTER) do window_did_resize end)
+			Result.add_method ("windowDidMove:", agent (a_ptr: POINTER) do window_did_move end)
+			-- windowDidBecomeKey:
+			-- windowDidResignKey:
+			-- windowShouldClose: / windowWillClose:
+			Result.register
+		end
 
 	item: POINTER
-	 	-- The C-pointer to the Cocoa object
+
 end

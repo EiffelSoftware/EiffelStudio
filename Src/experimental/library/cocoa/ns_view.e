@@ -43,7 +43,7 @@ feature {NONE} -- Creation and Initialization
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
-			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw))
+			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
 			insert_in_table
 		end
 
@@ -107,6 +107,12 @@ feature -- Managing the View Hierarchy
 			-- Return the receiver's immediate subviews.
 		do
 			create Result.share_from_pointer ({NS_VIEW_API}.subviews (item))
+		end
+
+	set_subviews (a_subviews: NS_ARRAY [NS_VIEW])
+			-- Sets the receiver's subviews to the specified subviews.
+		do
+			{NS_VIEW_API}.set_subviews (item, a_subviews.object_item)
 		end
 
 	is_descendant_of (a_view: NS_VIEW): BOOLEAN
@@ -224,6 +230,13 @@ feature -- Focusing
 		end
 
 feature -- Drawing
+
+	draw_rect (a_rect: NS_RECT)
+			-- Overridden by subclasses to draw the receiver's image within the passed-in rectangle.
+		do
+			{NS_VIEW_API}.draw_rect (item, a_rect.item)
+		end
+
 
 	visible_rect: NS_RECT
 			-- Returns the portion of the receiver not clipped by its superviews.
@@ -371,7 +384,7 @@ feature --
 
 feature {NONE} -- Callback
 
-	draw (x, y, w, h: INTEGER)
+	draw_old (x, y, w, h: INTEGER)
 		do
 			if attached {PROCEDURE [ANY, TUPLE]} draw_action as l_draw_action then
 				l_draw_action.call([])

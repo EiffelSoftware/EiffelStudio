@@ -102,7 +102,10 @@ feature -- Query
 			a_tag_is_valid: not a_tag.is_empty
 		do
 			if attached tags [a_tag] as tag then
-				Result := a_attribute.is_equal (Render_attribute_name) or tag.has_argument (a_attribute)
+				Result := a_attribute.is_equal (class_attribute_name) or
+							a_attribute.is_equal (Css_class_attribute_name) or
+							a_attribute.is_equal (Render_attribute_name) or
+							tag.has_argument (a_attribute)
 			end
 		end
 
@@ -132,6 +135,8 @@ feature -- Query
 feature -- Constants
 
 	Render_attribute_name: STRING = "render"
+	Css_class_attribute_name: STRING = "css_class"
+	class_attribute_name: STRING = "class"
 
 invariant
 	id_attached: attached id

@@ -74,7 +74,6 @@ rt_public EIF_REFERENCE b_eout(EIF_REFERENCE bit)
 	c_string = b_out(bit);					/* Build C string */
 	result = makestr(c_string, strlen (c_string));	/* Build Eiffel string */
 	eif_rt_xfree(c_string);						/* Free C string */
-
 	return result;
 }
 	
@@ -89,21 +88,25 @@ rt_public char *b_out(EIF_REFERENCE bit)
 	len = LENGTH(bit);
 	arena = ARENA(bit);
 	result = cmalloc((len + 3) * sizeof(char));
-	ptr = result;
-	last = arena + (BIT_NBPACK(len) - 1);
-	for (; arena < last; arena++) {			/* Print fulled packs */
-		val = *arena;
-		for (i=BIT_UNIT-1; i>=0; i--)
-			*ptr++ = (val & (1 << i)) ? '1':'0'; 
+	if (!result) {
+		enomem();
+	} else {
+		ptr = result;
+		last = arena + (BIT_NBPACK(len) - 1);
+		for (; arena < last; arena++) {			/* Print fulled packs */
+			val = *arena;
+			for (i=BIT_UNIT-1; i>=0; i--)
+				*ptr++ = (val & (1 << i)) ? '1':'0'; 
+		}
+		len %= BIT_UNIT;
+		if (len == (uint32) 0)
+			len = BIT_UNIT;
+		val = *last;
+		for(i=BIT_UNIT-1; i>=(int)(BIT_UNIT-len); i--)	/* Print last bits */
+			*ptr++ = (val & (1 << i)) ? '1':'0';
+		*ptr++ = 'b';
+		*ptr = '\0';
 	}
-	len %= BIT_UNIT;
-	if (len == (uint32) 0)
-		len = BIT_UNIT;
-	val = *last;
-	for(i=BIT_UNIT-1; i>=(int)(BIT_UNIT-len); i--)	/* Print last bits */
-		*ptr++ = (val & (1 << i)) ? '1':'0';
-	*ptr++ = 'b';
-	*ptr = '\0';
 	return result;
 }
 
@@ -221,43 +224,44 @@ rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
 	/* union overhead *zone2;*/ /* %%ss removed */
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
-	if ((EIF_REFERENCE ) 0 == a)
+	if ((EIF_REFERENCE ) 0 == a) {
 		eif_panic (MTC "bit copy eif_panic (void source)");
-	if ((EIF_REFERENCE ) 0 == b)
+	} else if ((EIF_REFERENCE ) 0 == b) {
 		eif_panic (MTC "bit copy eif_panic (void target)");
-
-	len1 = LENGTH(a);
-	len2 = LENGTH(b);
+	} else {
+		len1 = LENGTH(a);
+		len2 = LENGTH(b);
 
 #ifdef MAY_PANIC
-	if (len1 > len2)
-		eif_panic("bits conformance violated");
+		if (len1 > len2)
+			eif_panic("bits conformance violated");
 #endif
 
-	if (len1 == len2) {
-		memcpy(b, a, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
-		return;
-	}
+		if (len1 == len2) {
+			memcpy(b, a, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
+			return;
+		}
 
 
-	/* Different bit sizes: copy `a' at the start of longer field of `b' */
-	arena1 = ARENA(a);
-	arena2 = ARENA(b);
-	nb_pack1 = BIT_NBPACK(len1);
-	idx = nb_pack1 - 1;				/* Index of last pack of `arena1' */
-	/* First, copy first fulled packs of `arena1' into `arena2' (if any) */
-	if (nb_pack1 > 1) {
-		memcpy (arena2, arena1, idx * BIT_PACKSIZE);
-	}
-	/* Copy last pack of `arena1' with garbage bits set to zero */
-	mask = len1 % BIT_UNIT;
-	val = arena1[idx];
-	arena2[idx] = (mask == (uint32) 0) ? val : val & ~((1<<(BIT_UNIT-mask))- 1);
-	/* Set last fields of `arena2' to zero */
-	nb_pack2 = BIT_NBPACK(len2);
-	gap = nb_pack2 - nb_pack1;
-	if (gap > 0) {
-		memset ((arena2 + nb_pack1), 0, gap * BIT_PACKSIZE);
+		/* Different bit sizes: copy `a' at the start of longer field of `b' */
+		arena1 = ARENA(a);
+		arena2 = ARENA(b);
+		nb_pack1 = BIT_NBPACK(len1);
+		idx = nb_pack1 - 1;				/* Index of last pack of `arena1' */
+		/* First, copy first fulled packs of `arena1' into `arena2' (if any) */
+		if (nb_pack1 > 1) {
+			memcpy (arena2, arena1, idx * BIT_PACKSIZE);
+		}
+		/* Copy last pack of `arena1' with garbage bits set to zero */
+		mask = len1 % BIT_UNIT;
+		val = arena1[idx];
+		arena2[idx] = (mask == (uint32) 0) ? val : val & ~((1<<(BIT_UNIT-mask))- 1);
+		/* Set last fields of `arena2' to zero */
+		nb_pack2 = BIT_NBPACK(len2);
+		gap = nb_pack2 - nb_pack1;
+		if (gap > 0) {
+			memset ((arena2 + nb_pack1), 0, gap * BIT_PACKSIZE);
+		}
 	}
 }
 
@@ -429,52 +433,54 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	len = LENGTH(bit);			/* Length of bit field */
 	RT_GC_PROTECT(bit);
 	new = bmalloc(len);			/* Returned bit object */
-	RT_GC_WEAN(bit);
-	arena = ARENA(new);			/* Where bit array starts */
-	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
+	if (new) {
+		arena = ARENA(new);			/* Where bit array starts */
+		units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
-	if (s > len)			/* Shifting more than bit field size */
-		return new;			/* Reset bit field with zeros */
+		if (s > len)			/* Shifting more than bit field size */
+			return new;			/* Reset bit field with zeros */
 
-	memcpy (arena, ARENA(bit), units * BIT_PACKSIZE);
+		memcpy (arena, ARENA(bit), units * BIT_PACKSIZE);
 
-	/* When shifting to the left, we must clear the garbage bits at the right
-	 * end of the bitfield before any shifting action.
-	 */
+		/* When shifting to the left, we must clear the garbage bits at the right
+		 * end of the bitfield before any shifting action.
+		 */
 
-	bshift = len % BIT_UNIT;	/* Amount of trailing garbage bits */
-	if (bshift > 0)
-		arena[units - 1] &= ((1 << bshift) - 1) << (BIT_UNIT - bshift);
+		bshift = len % BIT_UNIT;	/* Amount of trailing garbage bits */
+		if (bshift > 0)
+			arena[units - 1] &= ((1 << bshift) - 1) << (BIT_UNIT - bshift);
 
-	/* First phase: full byte shifting. For instance, if BIT_UNIT is 32 and
-	 * we want to shift 67 bits, then this is 2 * BIT_UNIT + 3, which means
-	 * there is a 2 full byte shifting needed and then a single 3 bits shift.
-	 */
+		/* First phase: full byte shifting. For instance, if BIT_UNIT is 32 and
+		 * we want to shift 67 bits, then this is 2 * BIT_UNIT + 3, which means
+		 * there is a 2 full byte shifting needed and then a single 3 bits shift.
+		 */
 
-	bshift = s / BIT_UNIT;		/* Amount of full byte shifting needed */
-	if (bshift > 0) {
-		for (i = bshift; i <= units - 1; i++)
-			arena[i - bshift] = arena[i];
-		for (i = units - bshift; i < units; i++)
-			arena[i] = 0;
-	}
+		bshift = s / BIT_UNIT;		/* Amount of full byte shifting needed */
+		if (bshift > 0) {
+			for (i = bshift; i <= units - 1; i++)
+				arena[i - bshift] = arena[i];
+			for (i = units - bshift; i < units; i++)
+				arena[i] = 0;
+		}
 
-	/* Second phase: single bit shifting (less than BIT_UNIT). When shifting
-	 * to the left, the garbage bits have been reset to zero, so it is safe to
-	 * blindly shift bits.
-	 */
+		/* Second phase: single bit shifting (less than BIT_UNIT). When shifting
+		 * to the left, the garbage bits have been reset to zero, so it is safe to
+		 * blindly shift bits.
+		 */
 
-	bshift = s % BIT_UNIT;				/* Amount of bit shifting needed */
-	if (bshift > 0) {
-		previous = 0;
-		mask = ((1 << bshift) - 1) << (BIT_UNIT - bshift);
-		for (i = units - 1; i >= 0; i--) {
-			buffer = arena[i];
-			arena[i] = (buffer << bshift) | previous;
-			previous = (buffer & mask) >> (BIT_UNIT - bshift);
+		bshift = s % BIT_UNIT;				/* Amount of bit shifting needed */
+		if (bshift > 0) {
+			previous = 0;
+			mask = ((1 << bshift) - 1) << (BIT_UNIT - bshift);
+			for (i = units - 1; i >= 0; i--) {
+				buffer = arena[i];
+				arena[i] = (buffer << bshift) | previous;
+				previous = (buffer & mask) >> (BIT_UNIT - bshift);
+			}
 		}
 	}
 
+	RT_GC_WEAN(bit);
 	return new;
 }
 
@@ -850,10 +856,10 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 
 	len_b %= BIT_UNIT;			/* Amount of needed bits in last unit */
 	if (len_b == 0)
-		*addr_a++ |= *addr_b;
+		*addr_a |= *addr_b;
 	else {
 		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
-		*addr_a++ |= (*addr_b & len_b);
+		*addr_a |= (*addr_b & len_b);
 	}
 
 	/* If there are some more bit units at the end of `a', they have to be
@@ -898,10 +904,10 @@ rt_public EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b)
 
 	len_b %= BIT_UNIT;			/* Amount of needed bits in last unit */
 	if (len_b == 0)
-		*addr_a++ ^= *addr_b;
+		*addr_a ^= *addr_b;
 	else {
 		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
-		*addr_a++ ^= (*addr_b & len_b);
+		*addr_a ^= (*addr_b & len_b);
 	}
 
 	/* If there are some more bit units at the end of `a', they have to be

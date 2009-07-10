@@ -261,7 +261,7 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 		} else {
 			lsquare = strchr (l_class_type_name, '[');
 
-			if ((lsquare == NULL) || (lsquare && l_class_type_name [l_count - 1] == ']')) {
+			if ((lsquare == NULL) || (l_class_type_name [l_count - 1] == ']')) {
 				l_type = (struct rt_type *) eif_malloc (sizeof(struct rt_type));
 				if (l_type == NULL) {
 						/* Could not allocate memory. Free what we have allocated so far. */
@@ -931,7 +931,7 @@ doc:	</routine>
 */
 rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type, struct rt_global_data *data)
 {
-	uint32 i = 0, l_generic_count;
+	uint32 i, l_generic_count;
 	struct cecil_info l_cecil_type;
 	struct rt_type *l_type;
 	EIF_TYPE_INDEX l_cecil_id;
@@ -949,17 +949,24 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 
 	l_generic_count = a_type->count;
 
-	if ((data->has_error == 1) || (type->nb_param != l_generic_count)) {
-		/* We already had an error, or requested number of generics is
-		 * different from found number of generics. This is a fatal error. */
+	if ((data->has_error == 1) || (l_generic_count == 0) ||(type->nb_param != l_generic_count)) {
+			/* We already had an error, or requested number of generics is
+			 * different from found number of generics. This is a fatal error. */
 		data->has_error = 1;
 	} else {
 			/* Allocate the `gtype' and `itype' array with the corresponding number of generics */
 		gtype = (int32 *) eif_malloc (l_generic_count * sizeof (int32));
-		itype = (int32 *) eif_malloc (l_generic_count * sizeof (int32));
-		if ((gtype == NULL) || (itype == NULL)) {
-			data->has_error = 1;
-		} else {
+		if (gtype) {
+			itype = (int32 *) eif_malloc (l_generic_count * sizeof (int32));
+			if (!itype) {
+				eif_free(gtype);
+				gtype = NULL;
+				data->has_error = 1;
+			}
+		}
+			/* It is safe to only check that `gtype' is not null thanks to the above code. */
+		if (gtype) {
+			CHECK("itype_not_null", itype);
 			l_original_pos = data->position;
 			data->position++;
 			for (i = 0; (i < l_generic_count) && (data->has_error == 0); i++) {

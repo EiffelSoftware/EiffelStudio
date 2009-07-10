@@ -14,8 +14,14 @@ inherit
 	ES_EDITOR_OUTPUT_PANE
 		redefine
 			make,
+			on_unlocked,
 			new_icon_animations,
 			new_icon_pixmap_animations
+		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
 		end
 
 create
@@ -29,7 +35,22 @@ feature {NONE} -- Initialization
 			make_with_icon (a_name, stock_pixmaps.compile_animation_7_icon_buffer)
 		end
 
-feature -- Factory
+feature {NONE} -- Event handlers
+
+	on_unlocked
+			-- <Precursor>
+		do
+			Precursor
+			if workbench.successful then
+				internal_icon_active := stock_pixmaps.compile_success_icon_buffer
+				internal_icon_active_pixmap := stock_pixmaps.compile_success_icon
+			else
+				internal_icon_active := stock_pixmaps.compile_error_icon_buffer
+				internal_icon_active_pixmap := stock_pixmaps.compile_error_icon
+			end
+		end
+
+feature {NONE} -- Factory
 
 	new_icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- <Precursor>

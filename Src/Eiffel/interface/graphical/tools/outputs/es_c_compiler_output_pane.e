@@ -12,7 +12,7 @@ class
 	ES_C_COMPILER_OUTPUT_PANE
 
 inherit
-	ES_EDITOR_OUTPUT_PANE
+	ES_EIFFEL_COMPILER_OUTPUT_PANE
 		redefine
 			make,
 			new_widget
@@ -40,9 +40,6 @@ feature {NONE} -- Factory
 				check False end
 			end
 		end
-
-invariant
-	not_name_is_empty: not name.is_empty
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

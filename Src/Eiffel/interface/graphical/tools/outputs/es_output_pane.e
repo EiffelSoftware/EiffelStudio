@@ -20,6 +20,8 @@ inherit
 
 	ES_OUTPUT_PANE_I
 		redefine
+			icon_active,
+			icon_active_pixmap,
 			activate
 		end
 
@@ -108,6 +110,26 @@ feature {NONE} -- Access
 			-- Ouptut window use to notify clients of changes.
 
 feature -- Access
+
+	icon_active: EV_PIXEL_BUFFER
+			-- <Precursor>
+		do
+			if attached internal_icon_active as l_result then
+				Result := l_result
+			else
+				Result := Precursor
+			end
+		end
+
+	icon_active_pixmap: EV_PIXMAP
+			-- <Precursor>
+		do
+			if attached internal_icon_active_pixmap as l_result then
+				Result := l_result
+			else
+				Result := Precursor
+			end
+		end
 
 	icon_animations: ARRAY [EV_PIXEL_BUFFER]
 			-- <Precursor>
@@ -373,6 +395,14 @@ feature {NONE} -- Implementation: Internal cache
 
 	internal_formatter: detachable like formatter
 			-- Cached version of `formatter'.
+			-- Note: Do not use directly!
+
+	internal_icon_active: detachable like icon_active
+			-- Cached version of `icon_active'
+			-- Note: Do not use directly!
+
+	internal_icon_active_pixmap: detachable like icon_active_pixmap
+			-- Cached version of `icon_active_pixmap'
 			-- Note: Do not use directly!
 
 	internal_icon_animations: detachable like icon_animations

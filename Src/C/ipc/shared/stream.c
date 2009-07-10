@@ -121,11 +121,11 @@ rt_public void close_stream(STREAM *sp)
 #endif
 	r = close(readfd(sp));
 	if (r != 0) {
-		r = close(readfd(sp));
+		(void) close(readfd(sp));
 	}
 	r = close(writefd(sp));
 	if (r != 0) {
-		r = close(writefd(sp));
+		(void) close(writefd(sp));
 	}
 
 	stream_by_fd[readfd(sp)] = (STREAM *) 0;

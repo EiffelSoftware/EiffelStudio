@@ -182,8 +182,8 @@ extern "C" {
 	RT_LNK void (**egc_edispose)(void);
 	RT_LNK void (**egc_copy)(EIF_REFERENCE, EIF_REFERENCE);
 	RT_LNK EIF_BOOLEAN (**egc_is_equal)(EIF_REFERENCE, EIF_REFERENCE);
-	RT_LNK void *(**egc_ecreate)(EIF_REFERENCE, EIF_REFERENCE);
-	RT_LNK char *(**egc_exp_create)(void);
+	RT_LNK void (**egc_ecreate)(EIF_REFERENCE, EIF_REFERENCE);
+	RT_LNK void (**egc_exp_create)(EIF_REFERENCE);
 	RT_LNK struct ctable *egc_ce_rname;
 	RT_LNK long *egc_fnbref ;
 	RT_LNK long *egc_fsize;

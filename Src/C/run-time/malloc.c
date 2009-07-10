@@ -876,8 +876,8 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 	rt_uint_ptr elem_size, i, offset;
 	union overhead *zone;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
-	void *(*cp) (EIF_REFERENCE);
-	void *(*init) (EIF_REFERENCE, EIF_REFERENCE);
+	void (*cp) (EIF_REFERENCE);
+	void (*init) (EIF_REFERENCE, EIF_REFERENCE);
 	
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE) 0);
 	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
@@ -890,7 +890,7 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 #ifdef WORKBENCH
 		cp = init_exp;
 #else
-		cp = (void *(*) (EIF_REFERENCE)) egc_exp_create [dtype];
+		cp = egc_exp_create [dtype];
 #endif
 		init = XCreate(dtype);
 
@@ -3991,7 +3991,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 {
 	RT_GET_CONTEXT
 	union overhead *zone = HEADER(object);		/* Object's header */
-	void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* The optional initialization */
+	void (*init)(EIF_REFERENCE, EIF_REFERENCE);	/* The optional initialization */
 
 	SIGBLOCK;					/* Critical section */
 	memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */

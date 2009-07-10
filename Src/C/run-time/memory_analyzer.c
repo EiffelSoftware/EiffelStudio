@@ -51,7 +51,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	EIF_REFERENCE Result;
 	union overhead *zone;
 	struct obj_array l_found;
-	struct obj_array *l_found_p;
+	EIF_REFERENCE *l_area;
 	struct stack *l_once_set;
 
 	struct stchunk* s;
@@ -86,8 +86,10 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	l_found.count = 0;
 	l_found.capacity = 64;
 	l_found.area = malloc (sizeof (EIF_REFERENCE) * l_found.capacity);
+	if (!l_found.area) {
+		enomem();
+	}
 	l_found.index = -1;
-	l_found_p = &l_found;
 
 	while (l_once_set) {
 		for (s = l_once_set->st_hd, done = 0; s && !done; s = s->sk_next) {
@@ -114,14 +116,20 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 				}
 #endif
 				if (o_ref) {
-					l_found_p->index = l_found_p->index + 1;
+					l_found.index = l_found.index + 1;
 
-					if (l_found_p->index >= l_found_p->capacity) {
-						l_found_p->capacity = l_found_p->capacity * 2;
-						l_found_p->area = realloc (l_found_p->area, sizeof (EIF_REFERENCE) * (l_found_p->capacity));
+					if (l_found.index >= l_found.capacity) {
+						l_found.capacity = l_found.capacity * 2;
+						l_area = realloc (l_found.area, sizeof (EIF_REFERENCE) * (l_found.capacity));
+						if (!l_area) {
+							free(l_found.area);
+							enomem();
+						} else {
+							l_found.area = l_area;
+						}
 					}
-					l_found_p->area [l_found_p->index] = o_ref;
-					l_found_p->count = l_found_p->count + 1;
+					l_found.area [l_found.index] = o_ref;
+					l_found.count = l_found.count + 1;
 				}
 			}
 		}

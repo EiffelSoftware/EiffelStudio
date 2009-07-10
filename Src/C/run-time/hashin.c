@@ -177,11 +177,16 @@ rt_public void ht_force(struct htable *ht, rt_uint_ptr key, EIF_POINTER val)
 	 */
 
 	if (!(ht_put(ht, key, val))) {		/* Insertion failed => H table full */
-		if (ht_xtend(ht))		/* Extend the H table */
+			/* Extend the H table */
+		if (ht_xtend(ht)) {
 			eraise("Hashtable extension failure", EN_FATAL);
+		} else {
 				/* Something (...) was wrotten, don't know what */
-		if (!(ht_put(ht, key, val))) 	/* Insertion failed again => Bailing out */
-			eraise("Hash table insertion failure", EN_FATAL);
+				/* Insertion failed again => Bailing out */
+			if (!(ht_put(ht, key, val))) {
+				eraise("Hash table insertion failure", EN_FATAL);
+			}
+		}
 	}
 }
 

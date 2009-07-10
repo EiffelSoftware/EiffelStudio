@@ -26,14 +26,14 @@ feature {NONE} -- Initialization
 			l_arg_parser: XS_ARGUMENT_PARSER
 			l_common_classes: XC_CLASSES
 		do
---			create l_common_classes.make
---			create l_arg_parser.make
---			create l_server.make
---			l_arg_parser.execute (agent l_server.setup (l_arg_parser))
+			create l_common_classes.make
+			create l_arg_parser.make
+			create l_server.make
+			l_arg_parser.execute (agent l_server.setup (l_arg_parser))
 --			
-			start_time
-			test_request.do_nothing
-			print (stop_time)
+--			start_time
+--			test_request.do_nothing
+--			print (stop_time)
 
 		end
 

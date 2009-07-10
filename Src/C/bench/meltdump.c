@@ -122,7 +122,10 @@ int main (int argc, char **argv)
 
 	fclose (ifp);
 
-	ifp = fopen (melt_path, "rb");
+	if ((ifp = fopen (melt_path, "rb")) == NULL) {
+		fprintf (stderr, "Cannot open file <%s>\n", melt_path);
+		panic ();
+	}
 
 	analyze_file ();
 
@@ -175,10 +178,16 @@ static  void    prepare_types (void)
 	}
 
 	count = rlong ();
+	if ((count < 0) || (count >= dtype_size)) {
+		panic ();
+	}
 
 	while (count--)
 	{
 		dtype = rshort ();
+		if (dtype < 0) {
+			panic ();
+		}
 		slen  = rshort ();
 		dname = malloc (slen + 2);
 
@@ -201,16 +210,11 @@ static  void    prepare_types (void)
 		if (dtype > dtype_max)
 			dtype_max = dtype;
 
-		if (dtype >= dtype_size)
-		{
+		if (dtype >= dtype_size) {
 			int old_size = dtype_size;
-
-			dtype_size = (dtype > dtype_size ? dtype + 256 : dtype_size) ;
-
-			dtype_names = (char **) realloc ((char *) dtype_names,
-											 dtype_size * sizeof (char *));
-			if (dtype_names == (char **) 0)
-			{
+			dtype_size = dtype + 256;
+			dtype_names = (char **) realloc ((char *) dtype_names, dtype_size * sizeof (char *));
+			if (dtype_names == (char **) 0) {
 				fprintf (stderr, "Out of memory\n");
 				panic ();
 			} else {
@@ -267,13 +271,9 @@ static  void    prepare_types (void)
 		if (ctype >= ctype_size)
 		{
 			int old_size = ctype_size;
-
-			ctype_size = (ctype > ctype_size ? ctype + 256 : ctype_size) ;
-
-			ctype_names = (char **) realloc ((char *) ctype_names,
-											 ctype_size * sizeof (char *));
-			if (ctype_names == (char **) 0)
-			{
+			ctype_size = ctype + 256;
+			ctype_names = (char **) realloc ((char *) ctype_names, ctype_size * sizeof (char *));
+			if (ctype_names == (char **) 0) {
 				fprintf (stderr, "Out of memory\n");
 				panic ();
 			} else {
@@ -449,7 +449,7 @@ static  void    analyze_routids (void)
 
 {
 	long    class_id, asize, hsize, i, j, dtype, orig_dtype;
-	long    *rids, rid;
+	long    *rids = NULL, rid;
 	short   slen;
 	char    has_cecil;
 
@@ -468,24 +468,19 @@ static  void    analyze_routids (void)
 /*
 		fprintf (mfp,"Routine ids: %ld\n", asize);
 */
-		if (asize > 0)
-		{
+		if (asize < 0) {
+			panic ();
+		} else if (asize > 0) {
 			rids = (long *) malloc (asize * sizeof (long));
-
-			if (rids == (long *) 0)
-			{
+			if (rids == (long *) 0) {
 				fprintf (stderr, "Out of memory\n");
 				panic ();
 			}
 		}
-		else
-			rids = (long *) 0;
 
 		i = 0;
 		j = asize;
-
-		while (j--)
-		{
+		while (j--) {
 			rid = rlong ();
 			rids [i++] = rid;
 /*
@@ -846,15 +841,15 @@ static  void    analyze_desc (void)
 
 				info_count = rshort ();
 
-				if (info_count > 0) {
+				dinfo = NULL;
+				if (info_count < 0) {
+					panic();
+				} else if (info_count > 0) {
 					dinfo = (short *) malloc (3*info_count * sizeof (short));
-
 					if (dinfo == (short *) 0) {
 						fprintf (stderr,"Out of memory\n");
 						panic ();
 					}
-				} else {
-					dinfo = (short *) 0;
 				}
 
 				i = 0;
@@ -1090,7 +1085,6 @@ static  void    print_dtype (uint32 type)
 
 			default    :    fprintf (stderr,"Illegal type\n");
 							panic ();
-							break;
 		}
 	}
 	else

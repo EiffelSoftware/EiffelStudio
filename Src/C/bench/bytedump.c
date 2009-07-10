@@ -667,8 +667,7 @@ static  void    print_instructions (void)
 				get_creation_type();
 					/* Get rid of modifiers */
 				if (get_bool(&ip)) {
-					if (get_bool(&ip))  {
-					}
+					(void) get_bool(&ip);
 				}
 					/* Static type of class */
 				print_ctype (get_int16(&ip));
@@ -1320,7 +1319,6 @@ static  void    print_instructions (void)
 			default:
 				fprintf (stderr,"Illegal byte code %d\n", (int) code);
 				panic ();
-				break;
 		}
 
 		NEWL;
@@ -1378,11 +1376,8 @@ static  void    print_dtype (int cid, uint32 type)
 
 			default    :    fprintf (stderr,"Illegal type\n");
 							panic ();
-							break;
 		}
-	}
-	else
-	{
+	} else {
 		fprintf (ofp,"VOID");
 	}
 }

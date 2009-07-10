@@ -91,26 +91,26 @@ rt_shared void dserver(void)
 #ifndef EIF_WINDOWS
 #ifdef USE_SIGNAL
 rt_private void sigtrap_handler (int sig)
-	{
+{
 	int 	pid = getpid();	/* get current PID */
 	FILE	*file = NULL;
 	char	filename[50];
 	
 	if (sig==SIGTRAP)
 		{
-		/* Read the interrupt flag value from the file /tmp/estudioXXXX */
-		/* where XXXX is the PID of the application */
+			/* Read the interrupt flag value from the file /tmp/estudioXXXX */
+			/* where XXXX is the PID of the application */
 		filename[0]='0';
 		sprintf(filename,"/tmp/estudio%d",pid);
 
 		file = fopen(filename,"rb");
-		if (file != NULL)
-			{
-			fread(&interrupt_flag, sizeof(unsigned char), 1, file);
+		if (file != NULL) {
+			interrupt_flag = 0;
+			(void) fread(&interrupt_flag, sizeof(unsigned char), 1, file);
 			fclose(file);
-			}
 		}
 	}
+}
 #endif	/* USE_SIGNAL */
 #endif	/* EIF_WINDOWS */
 #endif	/* WORKBENCH */

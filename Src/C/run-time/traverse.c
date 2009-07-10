@@ -732,6 +732,9 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	l_found.count = 0;
 	l_found.capacity = 64;
 	l_found.area = malloc (sizeof (EIF_REFERENCE) * l_found.capacity);
+	if (!l_found.area) {
+		enomem();
+	}
 	l_found.index = -1;
 	found_collection = &l_found;
 
@@ -739,6 +742,10 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	l_marked.count = 0;
 	l_marked.capacity = 64;
 	l_marked.area = malloc (sizeof (EIF_REFERENCE) * l_marked.capacity);
+	if (!l_marked.area) {
+		free(l_found.area);
+		enomem();
+	}
 	l_marked.index = -1;
 	marked_collection = &l_marked;
 

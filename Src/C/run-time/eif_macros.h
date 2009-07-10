@@ -185,7 +185,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
 #define RTLNTY(x)			(((x) < rt_type_set_count) ? (rt_type_set[x] ? rt_type_set [x] : eif_type_malloc(x)) : eif_type_malloc(x))
 #define RTLNSMART(x)		smart_emalloc(x)
-#define RTLNR2(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create2((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRW(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)

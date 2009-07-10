@@ -49,20 +49,6 @@ extern "C" {
 /* New object of type `dftype' with routine dispatcher `rout_disp',
    argument tuple `args', open map `omap' and closed map `cmap'
 */
-RT_LNK EIF_REFERENCE rout_obj_create2 (
-								EIF_TYPE_INDEX dftype, 
-								EIF_POINTER rout_disp, 
-								EIF_POINTER encaps_rout_disp, 
-								EIF_POINTER calc_rout_addr, 
-								EIF_INTEGER class_id,
-								EIF_INTEGER feature_id,
-								EIF_REFERENCE open_map,
-								EIF_BOOLEAN is_precompiled,
-								EIF_BOOLEAN is_basic, 
-								EIF_BOOLEAN is_target_closed,
-								EIF_BOOLEAN is_inline_agent,
-								EIF_REFERENCE closed_operands,
-								EIF_INTEGER open_count);
 #ifdef WORKBENCH
 RT_LNK EIF_REFERENCE rout_obj_create_wb (
 								EIF_TYPE_INDEX dftype, 

@@ -49,53 +49,10 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 #include "rt_gen_types.h"
 #include "rt_interp.h"
 #include "rt_except.h"
+#include "rt_assert.h"
 #ifdef WORKBENCH
 #include <string.h>
 #endif
-
-/*------------------------------------------------------------------*/
-/* Create a ROUTINE object of type `dftype'. Use the arguements for */
-/* the call to `set_rout_disp'.									    */
-/*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create2 ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
-										   EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id, 
-										   EIF_REFERENCE open_map,
-										   EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
-										   EIF_BOOLEAN is_inline_agent, EIF_REFERENCE closed_operands, EIF_INTEGER open_count)
-{
-	EIF_GET_CONTEXT
-	EIF_REFERENCE result = NULL;
-	RTLD;
-
-		/* Protect address in case it moves */
- 	RTLI(3);
-	RTLR (0, result);
-	RTLR (1, closed_operands);
-	RTLR (2, open_map);
-
-		/* Create ROUTINE object */
-	result = emalloc(dftype);
-	nstcall = 0;
-		/* Call 'set_rout_disp' from ROUTINE */
-	(FUNCTION_CAST (void, ( EIF_REFERENCE,
-							EIF_POINTER, 
-							EIF_POINTER, 
-							EIF_POINTER, 
-							EIF_INTEGER,
-							EIF_INTEGER,
-							EIF_REFERENCE,
-							EIF_BOOLEAN,
-							EIF_BOOLEAN, 
-							EIF_BOOLEAN,
-							EIF_BOOLEAN,
-							EIF_REFERENCE,
-							EIF_INTEGER)) egc_routdisp)( result, rout_disp, encaps_rout_disp, calc_rout_addr, 
-														 class_id, feature_id, open_map, is_precompiled, is_basic, 
-														 is_target_closed, is_inline_agent, closed_operands, open_count);
-
-	RTLE;
-	return result;
-}
 
 #ifdef WORKBENCH
 /*------------------------------------------------------------------*/
@@ -265,6 +222,9 @@ rt_public void rout_obj_call_procedure_dynamic (
 	EIF_TYPED_VALUE* first_arg = NULL;
 	EIF_INTEGER* open_positions = NULL;
 
+	REQUIRE("valid_closed_args", (closed_count == 0) || closed_args);
+	REQUIRE("valid_open_args", (open_count == 0) || open_args);
+
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 			/* Unprotect protected locals. */
@@ -337,6 +297,9 @@ rt_public void rout_obj_call_procedure_dynamic (
 
 void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te) 
 {
+	REQUIRE("it not null", it);
+	REQUIRE("te not null", te);
+
 	*it = *te;
 }
 

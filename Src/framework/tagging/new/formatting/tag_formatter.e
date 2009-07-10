@@ -16,6 +16,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	item_prefix: STRING
+			-- Prefix for item tokens
+		do
+			Result := "item:"
+		end
+
 feature -- Query
 
 	is_valid_token (a_string: READABLE_STRING_GENERAL): BOOLEAN

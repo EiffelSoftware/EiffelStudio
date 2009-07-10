@@ -54,11 +54,6 @@ inherit
 			{NONE} all
 		end
 
---	EB_SHARED_GRAPHICAL_COMMANDS
---		export
---			{NONE} all
---		end
-
 create {ES_TESTING_TOOL}
 	make
 
@@ -183,13 +178,13 @@ feature {NONE} -- Initialization: widget status
 		do
 			view_templates.force_last ("")
 			view_template_descriptions.force_last ("")
-			view_templates.force_last ("class")
+			view_templates.force_last ("^class/")
 			view_template_descriptions.force_last (locale_formatter.translation (c_class))
-			view_templates.force_last ("covers")
+			view_templates.force_last ("^covers/")
 			view_template_descriptions.force_last (locale_formatter.translation (c_covers))
-			view_templates.force_last ("result")
+			view_templates.force_last ("^result/")
 			view_template_descriptions.force_last (locale_formatter.translation (c_results))
-			view_templates.force_last ("type")
+			view_templates.force_last ("^type/")
 			view_template_descriptions.force_last (locale_formatter.translation (c_types))
 
 			update_filter_box
@@ -283,6 +278,11 @@ feature {NONE} -- Access: menus
 	debug_filtered_menu: attached EV_MENU_ITEM
 			-- Menu items for debugging tests
 
+feature {NONE} -- Status report
+
+	is_updating_filter_box: BOOLEAN
+			-- Is `filter_box' currently being updated?
+
 feature {NONE} -- Status setting: view
 
 	on_return_filter
@@ -312,7 +312,11 @@ feature {NONE} -- Status setting: view
 	on_select_filter
 			-- Called when a view new view is selected
 		do
-			if attached {STRING} filter_box.selected_item.data as l_tag then
+			if
+				not is_updating_filter_box and
+				attached filter_box.selected_item as l_item and then
+				attached {STRING} l_item.data as l_tag
+			then
 				filter_box.set_text (l_tag)
 				execute_with_busy_cursor (agent update_tag_tree)
 			end
@@ -327,11 +331,14 @@ feature {NONE} -- Status setting: view
 
 	update_filter_box
 			-- Update proposal list for `view_box'
+		require
+			not_updating: not is_updating_filter_box
 		local
 			l_cursor: DS_LINEAR_CURSOR [attached STRING]
 			i: INTEGER
 			l_item: EV_LIST_ITEM
 		do
+			is_updating_filter_box := True
 			filter_box.wipe_out
 			from
 				l_cursor := view_history.new_cursor
@@ -354,6 +361,9 @@ feature {NONE} -- Status setting: view
 				filter_box.extend (l_item)
 				i := i + 1
 			end
+			is_updating_filter_box := False
+		ensure
+			not_updating: not is_updating_filter_box
 		end
 
 	update_tag_tree
@@ -396,24 +406,26 @@ feature {NONE} -- Status setting: stones
 					end
 					create l_filter_text.make (40)
 					if l_is_test_class then
-						l_filter_text.append ("class")
+						l_filter_text.append ("^class")
 					else
-						l_filter_text.append ("covers")
+						l_filter_text.append ("^covers")
 					end
-					l_filter_text.append (" *")
+					l_filter_text.append (".*")
+					l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.class_prefix)
 					l_filter_text.append (l_class_stone.class_name)
 					if attached {FEATURE_STONE} stone as l_feature_stone then
-						l_filter_text.append (" *")
+						l_filter_text.append ("/")
+						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.feature_prefix)
 						l_filter_text.append (l_feature_stone.feature_name)
 					end
 				elseif attached {CLUSTER_STONE} stone as l_cluster then
 					create l_filter_text.make (40)
 					if l_cluster.group.is_cluster then
-						l_filter_text.append ("*")
+						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.cluster_prefix)
 					elseif l_cluster.group.is_library then
-						l_filter_text.append ("*")
+						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.library_prefix)
 					elseif l_cluster.group.is_override then
-						l_filter_text.append ("*")
+						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.override_prefix)
 					end
 					l_filter_text.append (l_cluster.group.name)
 				end
@@ -680,7 +692,6 @@ feature {NONE} -- Events: tree view
 
 	on_selection_change (a_node: TAG_TREE_NODE [TEST_I]; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
-
 		do
 			if tag_tree.selected_nodes.is_empty then
 				run_selected_menu.disable_sensitive
@@ -891,8 +902,8 @@ feature {NONE} -- Internationalization
 
 feature {NONE} -- Constants
 
-	l_outcome_view: STRING = "outcome"
-	l_filter_not_passing: STRING = "outcome -outcome/passes"
+	l_outcome_view: STRING = "^outcome/"
+	l_filter_not_passing: STRING = "^outcome/ -^outcome/passes/"
 
 invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count

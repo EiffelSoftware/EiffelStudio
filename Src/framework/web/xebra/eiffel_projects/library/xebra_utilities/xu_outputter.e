@@ -22,9 +22,11 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
---			create print_mutex.make
+			create i_name.make_empty
+			create i_debug_level.make_empty
 		ensure
---			print_mutex_attached: print_mutex /= Void
+			i_name_attached: i_name /= Void
+			i_debug_level_attached: i_debug_level /= Void
 		end
 
 
@@ -180,5 +182,8 @@ feature {NONE}  -- Impl
 
 
 invariant
---	print_mutex_attached: print_mutex /= Void
+		i_name_attached: i_name /= Void
+		i_debug_level_attached: i_debug_level /= Void
+		name_attached: name /= Void
+		debug_level_attached: debug_level /= Void
 end

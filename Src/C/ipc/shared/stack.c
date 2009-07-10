@@ -53,6 +53,7 @@
 #include "request.h"
 #include "eif_macros.h"
 #include "rt_globals.h"
+#include "rt_assert.h"
 #include <string.h>
 
 #define EIF_IGNORE	-1	/*	We do not want this item sent, but there are still
@@ -626,46 +627,53 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 
 		case DLT_RESULT:
 			top = extop (&eif_stack);
+			CHECK("top not null", top);
 			ivalue(&ip, IV_LOCAL, top->ex_locnum, start);
 			break;
 		default:
 			error_code = 3; /* bad value for loc_type */
 			goto lblError_restore_context;
 	}
+	if (new_value && !ip.address) {
+		error_code = 4; /* Something wend wrong when initializing `ip'. */
+		goto lblError_restore_context;
+	}
 
 	restore_stacks(); /* restore context (so that RTMS can run properly) */
 
-	/* modify the local item */
-	switch (new_value->type & SK_HEAD) {
-		case SK_BOOL:
-		case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
-		case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
-		case SK_UINT8: *(EIF_NATURAL_8 *)(ip.address) = new_value->it_uint8; break;
-		case SK_UINT16: *(EIF_NATURAL_16 *)(ip.address) = new_value->it_uint16; break;
-		case SK_UINT32: *(EIF_NATURAL_32 *)(ip.address) = new_value->it_uint32; break;
-		case SK_UINT64: *(EIF_NATURAL_64 *)(ip.address) = new_value->it_uint64; break;
-		case SK_INT8: *(EIF_INTEGER_8 *)(ip.address) = new_value->it_int8; break;
-		case SK_INT16: *(EIF_INTEGER_16 *)(ip.address) = new_value->it_int16; break;
-		case SK_INT32: *(EIF_INTEGER_32 *)(ip.address) = new_value->it_int32; break;
-		case SK_INT64: *(EIF_INTEGER_64 *)(ip.address) = new_value->it_int64; break;
-		case SK_REAL32: *(EIF_REAL_32 *)(ip.address) = new_value->it_real32; break;
-		case SK_REAL64: *(EIF_REAL_64 *)(ip.address) = new_value->it_real64; break;
-		case SK_POINTER: *(EIF_POINTER *)(ip.address) = new_value->it_ptr; break;
-		case SK_STRING: *(EIF_REFERENCE *)(ip.address) = RTMS(new_value->it_ref); break;
-		case SK_REF:
-			new_object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
-			*(EIF_REFERENCE *)(ip.address) = new_object;
-			break;
-		case SK_BIT:
-			error_code = 1; /* not yet implemented */
-			goto lblError;
-		case SK_EXP:
-			error_code = 2; /* modifying  an expanded reference is not allowed */
-			goto lblError;
-		default:
-			/* unexpected value, error: set the error flag */
-			error_code = 1;
-			goto lblError;
+	if (new_value) {
+		/* modify the local item */
+		switch (new_value->type & SK_HEAD) {
+			case SK_BOOL:
+			case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
+			case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
+			case SK_UINT8: *(EIF_NATURAL_8 *)(ip.address) = new_value->it_uint8; break;
+			case SK_UINT16: *(EIF_NATURAL_16 *)(ip.address) = new_value->it_uint16; break;
+			case SK_UINT32: *(EIF_NATURAL_32 *)(ip.address) = new_value->it_uint32; break;
+			case SK_UINT64: *(EIF_NATURAL_64 *)(ip.address) = new_value->it_uint64; break;
+			case SK_INT8: *(EIF_INTEGER_8 *)(ip.address) = new_value->it_int8; break;
+			case SK_INT16: *(EIF_INTEGER_16 *)(ip.address) = new_value->it_int16; break;
+			case SK_INT32: *(EIF_INTEGER_32 *)(ip.address) = new_value->it_int32; break;
+			case SK_INT64: *(EIF_INTEGER_64 *)(ip.address) = new_value->it_int64; break;
+			case SK_REAL32: *(EIF_REAL_32 *)(ip.address) = new_value->it_real32; break;
+			case SK_REAL64: *(EIF_REAL_64 *)(ip.address) = new_value->it_real64; break;
+			case SK_POINTER: *(EIF_POINTER *)(ip.address) = new_value->it_ptr; break;
+			case SK_STRING: *(EIF_REFERENCE *)(ip.address) = RTMS(new_value->it_ref); break;
+			case SK_REF:
+				new_object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+				*(EIF_REFERENCE *)(ip.address) = new_object;
+				break;
+			case SK_BIT:
+				error_code = 1; /* not yet implemented */
+				goto lblError;
+			case SK_EXP:
+				error_code = 2; /* modifying  an expanded reference is not allowed */
+				goto lblError;
+			default:
+				/* unexpected value, error: set the error flag */
+				error_code = 1;
+				goto lblError;
+		}
 	}
 
 	goto lblError;

@@ -888,11 +888,11 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 
 	if (upper >= lower) {
 #ifdef WORKBENCH
-		cp = (void *(*) (EIF_REFERENCE)) init_exp;
+		cp = init_exp;
 #else
 		cp = (void *(*) (EIF_REFERENCE)) egc_exp_create [dtype];
 #endif
-		init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
+		init = XCreate(dtype);
 
 		elem_size = RT_SPECIAL_ELEM_SIZE(obj);
 #ifndef WORKBENCH
@@ -2572,6 +2572,8 @@ rt_public void eif_rt_xfree(register void * ptr)
 	union overhead *zone;		/* The to-be-freed zone */
 	rt_uint_ptr i;					/* Index in hlist */
 
+	REQUIRE("ptr not null", ptr);
+
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
 		fprintf (stderr, "Warning: try to eif_rt_xfree a malloc'ed ptr\n");
@@ -2755,6 +2757,8 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	EIF_REFERENCE safeptr = NULL;		/* GC-safe pointer */
 	size_t size, size_gain;				/* Gain in size brought by coalesc */
 	
+	REQUIRE("ptr not null", ptr);
+
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
 		fprintf (stderr, "Warning: try to xrealloc a malloc'ed pointer\n");
@@ -2933,6 +2937,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	zone = (union overhead *) eif_rt_xmalloc(nbytes, (int) i, gc_flag);
 
 	if (gc_flag & GC_ON) {
+		CHECK("safeptr not null", safeptr);
 		ptr = safeptr;
 		RT_GC_WEAN(safeptr);			/* Remove protection */
 	}
@@ -4026,7 +4031,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 	 */
 
 
-	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
+	init = XCreate(dtype);
 	if (init) {
 		EIF_GET_CONTEXT
 		DISCARD_BREAKPOINTS

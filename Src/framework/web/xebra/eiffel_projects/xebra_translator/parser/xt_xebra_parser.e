@@ -42,20 +42,23 @@ feature -- Initialization
 			underscore := char ('_')
 			hyphen := char ('-')
 				-- A common identifier. Will put the identifier {STRING} on the stack
-			identifier_prefix := (hyphen | underscore | upper_case | lower_case)
+			identifier_prefix := (lower_case | upper_case | hyphen | underscore)
 			identifier_prefix.fixate
-			identifier := identifier_prefix + (-(identifier_prefix | digit))
+			identifier := identifier_prefix + (-(lower_case | upper_case | hyphen | underscore | digit))
 			identifier := identifier.consumer
 			identifier.fixate
+			identifier.set_name ("identifier")
 
 				-- XML comments
 			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
 			comment.set_behaviour (agent concatenate_results)
+			comment.set_name ("comment")
 
 				-- Whitespace: Eats all the whitespace until something else appears
 			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
 			ws.ommit_result
 			ws := +ws
+			ws.set_name ("whitespaces")
 
 			source_path := "No source path specified"
 		end

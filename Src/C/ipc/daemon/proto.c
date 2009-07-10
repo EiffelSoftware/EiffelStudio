@@ -216,8 +216,6 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 			case EWB_INTERRUPT:
 				write_application_interruption_flag(INTERRUPT_APPLICATION);
 				break;
-			default:
-				break;
 		}
 #else	/* EIF_WINDOWS */
 #ifdef USE_SIGNAL
@@ -234,9 +232,6 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 					break;
 				case EWB_INTERRUPT:
 					write_application_interruption_flag(INTERRUPT_APPLICATION);
-					break;
-				default:
-					interrupted = FALSE;
 					break;
 			}
 			kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
@@ -302,11 +297,12 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	sprintf(filename,"/tmp/estudio%d",pid);
 
 	file = fopen(filename,"wb");
-	if (file != NULL)
-		{
-		fwrite(&interrupt_flag, sizeof(unsigned char), 1, file);
+	if (file != NULL) {
+			/* If it fails to `write' then there is nothing we can do, User might just need to try
+			 * again */
+		(void) fwrite(&interrupt_flag, sizeof(unsigned char), 1, file);
 		fclose(file);
-		}	
+	}	
 #endif
 	}
 	
@@ -469,27 +465,29 @@ rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size)
 {
 	/* Commute 'size' bytes from source to target */
 
-	char *buf = (char *) malloc(size * sizeof(char));
+	char *buf = (char *) malloc((size > 0 ? size : 1) * sizeof(char));
 
+	if (!buf) {
+		daemon_exit (1);
+	} else {
 #ifdef USE_ADD_LOG
-	add_log(12, "commuting %d bytes from #%d to #%d", size, from, to);
+		add_log(12, "commuting %d bytes from #%d to #%d", size, from, to);
 #endif
+
+		buf[0] = (char) 0;
 
 #ifdef EIF_WINDOWS
-	if (-1 == net_recv(from, buf, size, TRUE)) {
+		if (-1 == net_recv(from, buf, size, TRUE)) {
 #else
-	if (-1 == net_recv(from, buf, size))  {
+		if (-1 == net_recv(from, buf, size))  {
 #endif
-		free (buf);
-		return;
+			free (buf);
+		} else if (-1 == net_send(to, buf, size)) {	/* Cannot send any more */
+			free (buf);
+		} else {
+			free (buf);
+		}
 	}
-
-	if (-1 == net_send(to, buf, size)) {	/* Cannot send any more */
-		free (buf);
-		return;
-	}
-
-	free(buf);
 }
 
 rt_private void run_command(EIF_PSTREAM sp)
@@ -512,6 +510,9 @@ rt_private void run_command(EIF_PSTREAM sp)
 #endif
 
 	cmd = recv_str(sp, NULL);		/* Get command */
+	if (!cmd) {
+		daemon_exit(1);
+	}
 	meltpath = (char *) (strdup (cmd));
 	if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
@@ -635,6 +636,9 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 #endif
 
 	cmd = recv_str(sp, NULL);		/* Get command */
+	if (!cmd) {
+		daemon_exit (1);
+	}
 
 	dans.rq_type = ASYNACK;				/* Initialize the answer type */
 	jobnum = rqst->rq_opaque.op_1;	/* Job number assigned by client */
@@ -699,6 +703,7 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 #endif
 		break;
 	default:
+		free(cmd);
 		return;				/* Parent returns immediately */
 	}
 #endif /* not VMS (skip fork/parent code if VMS) */
@@ -788,13 +793,13 @@ rt_private void get_application_cwd (EIF_PSTREAM sp)
 {
 	current_directory = recv_str(sp, NULL);		/* Get command */
 
-	CHECK ("valid_count", strlen (current_directory) > 0);
-
-		/* If current directory is `.' we reset the value to NULL,
-		 * meaning that we won't look at the value of `current_directory' */
-	if ((current_directory[0] == '.') && (strlen (current_directory) == 1)) {
-		free(current_directory);
-		current_directory = NULL;
+	if (current_directory) {
+			/* If current directory is `.' we reset the value to NULL,
+			 * meaning that we won't look at the value of `current_directory' */
+		if ((strlen (current_directory) == 1) && (current_directory[0] == '.')) {
+			free(current_directory);
+			current_directory = NULL;
+		}
 	}
 }
 
@@ -803,7 +808,7 @@ rt_private void get_application_env (EIF_PSTREAM sp)
 	current_app_env = recv_str(sp, NULL);		/* Get command */
 		/* If current app env is '' we reset the value to NULL,
 		 * meaning that we won't look at the value of `current_app_env' */
-	if (strlen (current_app_env) == 0) {
+	if (current_app_env && (strlen (current_app_env) == 0)) {
 		free(current_app_env);
 		current_app_env = NULL;
 	}

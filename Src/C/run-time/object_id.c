@@ -175,7 +175,7 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 	EIF_OBJECT_ID_LOCK;
 	private_object_id_free(id, &object_id_stack, max_object_id);
 
-	ENSURE ("Object of id must be free", eif_id_object(id) == NULL);
+	ENSURE ("Object of id must be free", private_id_object(id, &object_id_stack, max_object_id) == NULL);
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 	ENSURE ("Object of id is not in Object ID stack", !st_has(&object_id_stack, ref));
 #endif

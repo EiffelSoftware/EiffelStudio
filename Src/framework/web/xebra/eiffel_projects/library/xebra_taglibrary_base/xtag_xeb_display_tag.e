@@ -42,7 +42,7 @@ feature -- Implementation
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
-			if id.is_equal ("feature") then
+			if id.is_equal ("text") then
 				feature_name := a_attribute
 			end
 		end

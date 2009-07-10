@@ -75,11 +75,11 @@ rt_private void print_info(void) {
 	struct align_test2 t2;
 	struct eif_ex_type t3;
 
-	printf ("Size of overhead %d\n", OVERHEAD);
+	printf ("Size of overhead %ld\n", OVERHEAD);
 	printf ("Expected alignment %d\n", MEM_ALIGNBYTES);
-	printf ("Computed alignment EIF_REAL_64 %d\n", (char *) &t.d - (char *) &t);
-	printf ("Computed alignment EIF_REAL_32 %d\n", (char *) &t2.r - (char *) &t2);
-	printf ("Expanded offset between overhead and data %d\n", (char *) &t3.data - (char *) &t3.overhead);
+	printf ("Computed alignment EIF_REAL_64 %ld\n", (char *) &t.d - (char *) &t);
+	printf ("Computed alignment EIF_REAL_32 %ld\n", (char *) &t2.r - (char *) &t2);
+	printf ("Expanded offset between overhead and data %ld\n", (char *) &t3.data - (char *) &t3.overhead);
 }
 
 rt_private int randomizer (int i) {
@@ -91,18 +91,23 @@ rt_private void double_alignment_speed_test (void) {
 	double d;
 	int i, j;
 
-/* Comment out the line below to test if a double incorrectly aligned causes
- * either a segfault or a slow down in performance. */
-/*	pd = (double *) ((char *)pd + 4); */
-	for (j = 1; j < 100000; j++) {
-		for (i = 0; i < 10000; i++) {
-			d = pd [i];
-			pd [i] = d + randomizer (i);
+	if (pd) {
+		memset(pd, 0, sizeof(double) * 10005);
+	/* Comment out the line below to test if a double incorrectly aligned causes
+	 * either a segfault or a slow down in performance. */
+	/*	pd = (double *) ((char *)pd + 4); */
+		for (j = 1; j < 100000; j++) {
+			for (i = 0; i < 10000; i++) {
+				d = pd [i];
+				pd [i] = d + randomizer (i);
+			}
 		}
-	}
 
-	for (i = 0; i < 1000; i++) {
-		printf ("%g\n", pd [i]);
+		for (i = 0; i < 1000; i++) {
+			printf ("%g\n", pd [i]);
+		}
+	} else {
+		printf ("Failure in allocating memory in `double_alignment_speed_test'\n");
 	}
 }
 

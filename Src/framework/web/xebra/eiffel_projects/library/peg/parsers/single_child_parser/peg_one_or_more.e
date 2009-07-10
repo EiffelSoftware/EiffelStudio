@@ -15,7 +15,7 @@ create
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		local
 			temp: PEG_PARSER_RESULT
@@ -32,10 +32,6 @@ feature -- Implementation
 					if (temp.success) then
 						Result.left_to_parse := temp.left_to_parse
 						Result.append_results (temp)
---						Result.append_results (temp)
---						l_list := Result.internal_result
---						Result := temp
---						Result.set_result (l_list)
 					end
 				end
 				Result := build_result (Result)
@@ -43,6 +39,18 @@ feature -- Implementation
 				create Result.make (a_string, False)
 				Result := fix_result (Result)
 			end
+		end
+
+	default_parse_info: STRING
+			-- <Precursor>	
+		do
+			Result := "one_or_more (" + child.short_debug_info + ")"
+		end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := "one_or_more"
 		end
 
 feature {PEG_ABSTRACT_PEG} -- Serialization

@@ -22,7 +22,7 @@ feature -- Initialization
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			if a_string.is_empty then
@@ -35,6 +35,18 @@ feature -- Implementation
 				end
 				Result := build_result (Result)
 			end
+		end
+
+	default_parse_info: STRING
+			-- <Precursor>
+		do
+			Result := "."
+		end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := default_parse_info
 		end
 
 feature {PEG_ABSTRACT_PEG} -- Serialization

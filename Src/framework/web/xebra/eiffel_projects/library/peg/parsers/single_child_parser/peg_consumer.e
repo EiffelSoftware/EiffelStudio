@@ -16,7 +16,7 @@ create
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		local
 			l_index: INTEGER
@@ -29,6 +29,18 @@ feature -- Implementation
 			else
 				Result := fix_result (Result)
 			end
+		end
+
+	default_parse_info: STRING
+				-- <Precursor>	
+			do
+				Result := "consumer (" + child.short_debug_info + ")"
+			end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := "consumer"
 		end
 
 feature {PEG_ABSTRACT_PEG} -- Serialization

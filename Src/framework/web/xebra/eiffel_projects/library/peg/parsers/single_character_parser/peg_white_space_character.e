@@ -28,7 +28,7 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			if a_string.is_empty then
@@ -46,6 +46,18 @@ feature -- Implementation
 					Result := fix_result (Result)
 				end
 			end
+		end
+
+	default_parse_info: STRING
+			-- <Precursor>	
+		do
+			Result := "whitespace"
+		end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := default_parse_info
 		end
 
 feature {NONE} -- Implementation

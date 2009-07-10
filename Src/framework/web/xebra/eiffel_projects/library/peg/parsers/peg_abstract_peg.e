@@ -7,6 +7,9 @@ note
 deferred class
 	PEG_ABSTRACT_PEG
 
+inherit
+	XU_SHARED_OUTPUTTER
+
 feature {PEG_ABSTRACT_PEG} -- Behaviours
 
 	behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
@@ -20,7 +23,19 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	fixated: BOOLEAN
 			-- Is the parser fixed, that is, are sequences and choices always newly created?
 
+	parser_name: STRING
+			-- The optional name for the parser
+
 feature -- Access
+
+	set_name (a_name: STRING)
+		require
+			a_name_attached: attached a_name
+		do
+			parser_name := a_name
+		ensure
+			name_set: parser_name = a_name
+		end
 
 	is_cached: BOOLEAN assign set_is_cached
 			-- Is the result of this parser cached (True) or is it recomputed on every parse (False)
@@ -62,9 +77,54 @@ feature -- Access
 			ommit := True
 		end
 
+	is_debug: BOOLEAN
+		once
+			Result := True
+		end
+
 feature -- Basic Functionality
 
 	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+			-- `a_string' the string that should be parsed
+			-- Tries to parse a_string
+		require
+			a_string_attached: attached a_string
+		do
+			if o.debug_level >= 10 then
+				o.dprint (internal_debug_info + "###" + a_string.out, 10)
+			end
+			Result := internal_parse (a_string)
+		ensure
+			result_attached: attached Result
+		end
+
+	internal_debug_info: STRING
+			-- Returns an informal description of the parser (or the user defined name)
+		do
+			if attached parser_name then
+				Result := parser_name
+			else
+				Result := default_parse_info
+			end
+		ensure
+			Result_attached: attached Result
+		end
+
+	default_parse_info: STRING
+			-- The default informal description of the parser
+		deferred
+		ensure
+			Result_attached: attached Result
+		end
+
+	short_debug_info: STRING
+				-- The short informal description of the parser (without children)
+		deferred
+		ensure
+			Result_attached: attached Result
+		end
+
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- `a_string' the string that should be parsed
 			-- Tries to parse a_string
 		require

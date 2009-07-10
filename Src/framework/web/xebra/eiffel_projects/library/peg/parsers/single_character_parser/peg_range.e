@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
+	internal_parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- <Precursor>
 		do
 			if not a_string.is_empty and then (a_string [1] >= lower and a_string [1] <= upper) then
@@ -51,6 +51,18 @@ feature -- Implementation
 				create Result.make (a_string, False)
 				Result := fix_result (Result)
 			end
+		end
+
+	default_parse_info: STRING
+			-- <Precursor>	
+		do
+			Result := "[" + lower.out + "-" + upper.out + "]"
+		end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := default_parse_info
 		end
 
 feature {PEG_ABSTRACT_PEG} -- Serialization

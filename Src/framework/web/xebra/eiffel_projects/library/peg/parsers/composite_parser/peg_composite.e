@@ -49,6 +49,32 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 			end
 		end
 
+	default_parse_info: STRING
+			-- <Precursor>
+		local
+			l_i: INTEGER
+			l_sep: STRING
+		do
+			from
+				l_i := 1
+				Result := "("
+				l_sep := ""
+			until
+				l_i > children.count
+			loop
+				Result := Result + l_sep +  children [l_i].short_debug_info
+				l_sep := serialization_separator
+				l_i := l_i + 1
+			end
+			Result := Result + ")"
+		end
+
+	short_debug_info: STRING
+			-- <Precursor>		
+		do
+			Result := "(" + serialization_separator + ")"
+		end
+
 feature {PEG_COMPOSITE} -- Serialization
 
 	serialization_separator: STRING

@@ -69,7 +69,7 @@ feature -- Status setting
 		local
 			l_type: INTEGER
 		do
-			l_type := internal_object.dynamic_type (a_exception)
+			l_type := a_exception.type_id
 			ignored_exceptions.force (l_type, l_type)
 		end
 
@@ -78,7 +78,7 @@ feature -- Status setting
 		local
 			l_type: INTEGER
 		do
-			l_type := internal_object.dynamic_type (a_exception)
+			l_type := a_exception.type_id
 			ignored_exceptions.remove (l_type)
 		end
 
@@ -97,25 +97,25 @@ feature -- Status report
 	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is ignorable.
 		do
-			Result := not unignorable_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not unignorable_exceptions.has (a_exception.type_id)
 		end
 
 	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raisable.
 		do
-			Result := not unraisable_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not unraisable_exceptions.has (a_exception.type_id)
 		end
 
 	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is not raised.
 		do
-			Result := ignored_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := ignored_exceptions.has (a_exception.type_id)
 		end
 
 	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raised.
 		do
-			Result := not ignored_exceptions.has (internal_object.dynamic_type (a_exception))
+			Result := not ignored_exceptions.has (a_exception.type_id)
 		end
 
 feature {EXCEPTIONS} -- Compatibility support
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation, ignoring
 			l_type: INTEGER
 		once
 			create Result.make (1)
-			l_type := internal_object.dynamic_type ({VOID_TARGET})
+			l_type := ({VOID_TARGET}).type_id
 			Result.force (l_type, l_type)
 		end
 
@@ -357,9 +357,9 @@ feature {NONE} -- Implementation, ignoring
 			l_type: INTEGER
 		once
 			create Result.make (2)
-			l_type := internal_object.dynamic_type ({ROUTINE_FAILURE})
+			l_type := ({ROUTINE_FAILURE}).type_id
 			Result.force (l_type, l_type)
-			l_type := internal_object.dynamic_type ({OLD_VIOLATION})
+			l_type := ({OLD_VIOLATION}).type_id
 			Result.force (l_type, l_type)
 		end
 
@@ -485,7 +485,6 @@ feature {NONE} -- Implementation
 			arr: like ignored_exceptions
 			l_data: like exception_data_cell
 			l_ex: like last_exception_cell
-			inte: like internal_object
 			l_nomem: like no_memory_exception_object_cell
 		do
 			arr := ignored_exceptions
@@ -493,14 +492,8 @@ feature {NONE} -- Implementation
 			arr := unraisable_exceptions
 			l_data := exception_data_cell
 			l_ex := last_exception_cell
-			inte := internal_object
 				-- Reserve memory for no more memory exception object.
 			l_nomem := no_memory_exception_object_cell
-		end
-
-	internal_object: INTERNAL
-		once
-			create Result
 		end
 
 	frozen free_preallocated_trace

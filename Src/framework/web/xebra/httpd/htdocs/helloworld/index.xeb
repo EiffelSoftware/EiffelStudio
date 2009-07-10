@@ -6,6 +6,6 @@
 <title>Xebra Hello World Application</title>
 </head>
 <body>
-Hello <xeb:display feature="%=world%" />!
+Hello <xeb:display text="%=world%" />!
 </body>
 </html>

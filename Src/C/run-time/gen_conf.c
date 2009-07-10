@@ -950,6 +950,9 @@ rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 	typearr [2] = dtype;			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
+	CHECK("Valid ARRAY reference type", egc_arr_dtype <= MAX_DTYPE);
+	CHECK("Valid ARRAY generic type", dtype <= MAX_DTYPE);
+
 	result = eif_compound_id (0, typearr[1], typearr);
 	return result;
 }
@@ -1539,63 +1542,75 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(EIF_TYPE_INDEX min_low, EIF_TYPE_INDEX
 
 	result = (EIF_CONF_TAB *) cmalloc(sizeof (EIF_CONF_TAB));
 
-	if (result == NULL)
+	if (result == NULL) {
 		enomem();
-
-	result->min_low_id = min_low;
-	result->max_low_id = max_low;
-	result->min_high_id = min_high;
-	result->max_high_id = max_high;
-
-	if (min_low <= max_low) {
-		size = (max_low - min_low + 8)/8;
-		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
-		if (!tab)
-			enomem ();
-		result->low_tab = tab;
-
-		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
-		if (!tab)
-			enomem ();
-		result->low_comp = tab;
-#ifdef EIF_ASSERTIONS
-		result->low_tab_end = result->low_tab + size;
-		result->low_comp_end = result->low_comp + size;
-#endif
 	} else {
-		result->low_tab = NULL;
-		result->low_comp = NULL;
+		result->min_low_id = min_low;
+		result->max_low_id = max_low;
+		result->min_high_id = min_high;
+		result->max_high_id = max_high;
+
+		if (min_low <= max_low) {
+			size = (max_low - min_low + 8)/8;
+			tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+			if (!tab) {
+				enomem ();
+			} else {
+				result->low_tab = tab;
+
+				tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+				if (!tab) {
+					eif_rt_xfree (result->low_tab);
+					enomem ();
+				} else {
+					result->low_comp = tab;
 #ifdef EIF_ASSERTIONS
-		result->low_tab_end = NULL;
-		result->low_comp_end = NULL;
+					result->low_tab_end = result->low_tab + size;
+					result->low_comp_end = result->low_comp + size;
 #endif
+				}
+			}
+		} else {
+			result->low_tab = NULL;
+			result->low_comp = NULL;
+#ifdef EIF_ASSERTIONS
+			result->low_tab_end = NULL;
+			result->low_comp_end = NULL;
+#endif
+		}
+
+
+		if (min_high <= max_high) {
+			size = (max_high - min_high + 8)/8;
+			tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+			if (!tab) {
+				enomem ();
+			} else  {
+				result->high_tab = tab;
+
+				tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
+				if (!tab) {
+					eif_rt_xfree(result->high_tab);
+					enomem ();
+				} else {
+					result->high_comp = tab;
+#ifdef EIF_ASSERTIONS
+					result->high_tab_end = result->high_tab + size;
+					result->high_comp_end = result->high_comp + size;
+#endif
+				}
+			}
+		} else {
+			result->high_tab = NULL;
+			result->high_comp = NULL;
+#ifdef EIF_ASSERTIONS
+			result->high_tab_end = NULL;
+			result->high_comp_end = NULL;
+#endif
+		}
 	}
 
-
-	if (min_high <= max_high) {
-		size = (max_high - min_high + 8)/8;
-		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
-		if (!tab)
-			enomem ();
-		result->high_tab = tab;
-
-		tab = (unsigned char *) eif_rt_xcalloc (size, sizeof (unsigned char));
-		if (!tab)
-			enomem ();
-		result->high_comp = tab;
-#ifdef EIF_ASSERTIONS
-		result->high_tab_end = result->high_tab + size;
-		result->high_comp_end = result->high_comp + size;
-#endif
-	} else {
-		result->high_tab = NULL;
-		result->high_comp = NULL;
-#ifdef EIF_ASSERTIONS
-		result->high_tab_end = NULL;
-		result->high_comp_end = NULL;
-#endif
-	}
-	
+	ENSURE("result not null", result);
 	return result;
 }
 
@@ -1769,15 +1784,27 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 
 			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
 				result = cmalloc (10 + strlen (l_class_name));
-				result [0] = '\0';
-				strcat (result, "expanded ");
+				if (!result) {
+					enomem();
+				} else {
+					result [0] = '\0';
+					strcat (result, "expanded ");
+				}
 			} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dftype))) {
 				result = cmalloc (11 + strlen (l_class_name));
-				result [0] = '\0';
-				strcat (result, "reference ");
+				if (!result) {
+					enomem();
+				} else {
+					result [0] = '\0';
+					strcat (result, "reference ");
+				}
 			} else {
 				result = cmalloc (strlen (l_class_name) + 1);
-				result [0] = '\0';
+				if (!result) {
+					enomem();
+				} else {
+					result [0] = '\0';
+				}
 			}
 			strcat (result, l_class_name);
 			non_generic_type_names[dftype] = result;

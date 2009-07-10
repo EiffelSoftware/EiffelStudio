@@ -1,0 +1,33 @@
+<page:include template="support">
+<page:define_region id="default_main_content">
+	<div id="sidebar">
+		<div class="vert_bar_link">
+			<h3>Self Support</h3>
+			<ul class="vert_bar_link">
+				<li>&#187; <a href="http://www.eiffel.com/developers/presentations/">Technical Presentations</a></li>
+				<li>&#187; <a href="http://docs.eiffel.com/">Product Documentation</a></li>
+				<li>&#187; <a href="http://groups.yahoo.com/group/eiffel_software/">User Group</a></li>
+				<li>&#187; <a href="http://activate.eiffel.com/">Product Activation</a></li>
+			</ul>
+			<h3>Assisted Support</h3>
+			<ul class="vert_bar_link">
+				<li>&#187; <a href="http://www.eiffel.com/services/support/">Support Plans</a></li>
+				<li>&#187; <a href="http://www.eiffel.com/services/training/index.html">Training Courses</a></li>
+			</ul>
+			<h3>Account Management</h3>
+			<ul class="vert_bar_link">
+				<li>&#187; <a href="<%=login_root (True)%>/secure/protected/account_info.aspx">Account Information</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="content">
+		<div class="prop"></div>
+		<page:declare_region id="main_content" />
+		<div class="spacer"></div>
+	</div>
+</page:define_region>
+</page:include>
+
+
+
+

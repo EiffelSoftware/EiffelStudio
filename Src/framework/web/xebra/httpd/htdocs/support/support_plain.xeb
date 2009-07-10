@@ -1,0 +1,9 @@
+<page:include template="support">
+<page:define_region id="default_main_content">
+	<div id="full_content">
+		<div class="prop"></div>
+		<page:declare_region id="main_content" />
+		<div class="spacer"></div>
+	</div>
+</page:define_region>
+</page:include>

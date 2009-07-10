@@ -226,7 +226,7 @@ rt_private int get_thread_index(rt_uint_ptr th_id)
 {
 #ifdef EIF_THREADS
 	int count;
-	int i = 0;
+	int i;
 	rt_global_context_t ** lst;
 	
 	REQUIRE("eif GC synchronized", eif_is_synchronized());
@@ -445,9 +445,14 @@ rt_public void eif_thr_register(int is_external)
 				eif_thr_context->is_alive = 1;
 				eif_thr_context->is_root = 1;
 				eif_thr_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+				if (eif_thr_context->tid == NULL) {
+					eif_free(eif_thr_context);
+					eif_panic ("Couldn't allocate thread ID");
 #ifdef WORKBENCH
-				dnotify_create_thread((EIF_THR_TYPE) eif_thr_context->tid);
+				} else {
+					dnotify_create_thread((EIF_THR_TYPE) eif_thr_context->tid);
 #endif
+				}
 			}
 		}
 			/* Is current thread created by the EiffelThread library or by a third party library */
@@ -502,6 +507,7 @@ rt_private rt_global_context_t *eif_new_context (void)
 		/* Create and initialize public context */
 	eif_globals = (eif_global_context_t *) eif_malloc(sizeof(eif_global_context_t));
 	if (!eif_globals) {
+		eif_free(rt_globals);
 		eif_thr_panic("No more memory for thread context");
 	}
 	memset (eif_globals, 0, sizeof(eif_global_context_t));
@@ -667,13 +673,18 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	rt_thr_context *routine_ctxt;
-	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+	EIF_THR_TYPE *tid;
 #ifndef EIF_WINDOWS
 	EIF_THR_ATTR_TYPE attr;
 #endif
 
+	tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+	if (!tid) {
+		eif_thr_panic ("No more memory to create thread ID");
+	}
 	routine_ctxt = (rt_thr_context *) eif_malloc(sizeof(rt_thr_context));
 	if (!routine_ctxt) {
+		eif_free (tid);
 		eif_thr_panic("No more memory to launch new thread\n");
 	} else {
 		memset(routine_ctxt, 0, sizeof(rt_thr_context));
@@ -689,6 +700,9 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 			EIF_MUTEX_CREATE(eif_thr_context->children_mutex, "Couldn't create join mutex");
 #ifndef EIF_NO_CONDVAR
 			eif_thr_context->children_cond = (EIF_COND_TYPE *) eif_malloc (sizeof (EIF_COND_TYPE));
+			if (!eif_thr_context->children_cond) {
+				eif_thr_panic ("Cannot allocated children condition variable");
+			}
 			EIF_COND_INIT(eif_thr_context->children_cond, "Couldn't initialize cond. variable");
 #endif /* EIF_NO_CONDVAR */
 		}
@@ -791,13 +805,16 @@ rt_public void eif_thr_exit(void)
 		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
 #endif
 		int destroy_mutex; /* If non null, we'll destroy the 'join' mutex */
-		int l_has_parent_thread = (eif_thr_context != NULL) && (eif_thr_context->current) && (eif_thr_context->parent_context);
+		int l_has_parent_thread;
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_MUTEX_TYPE *l_children_mutex, *l_parent_children_mutex;
 
 		thread_exiting = 1;
 
+		REQUIRE("has_context", eif_thr_context);
+
+		l_has_parent_thread = (eif_thr_context->current) && (eif_thr_context->parent_context);
 #ifdef WORKBENCH
 		if (l_has_parent_thread) {
 			dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
@@ -1034,9 +1051,15 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 	int count = st_list->count + 1;
 	st_list->count = count;
 	if (st_list->capacity < st_list->count) {
-		st_list->threads.data = (void **) eif_realloc (st_list->threads.data,
-															count * sizeof(struct stack **));
-		st_list->capacity = count;
+		void **stack;
+		stack = (void **) eif_realloc (st_list->threads.data,
+			count * sizeof(struct stack **));
+		if (!stack) {
+			enomem();
+		} else {
+			st_list->threads.data = stack;
+			st_list->capacity = count;
+		}
 	}
 	st_list->threads.data[count - 1] = st;
 }
@@ -1217,11 +1240,18 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 				 * the platform implementation of malloc is not async-safe. */
 			if (rt_globals_list.count > NB_THREADS_DATA) {
 				all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
+				if (!all_thread_list.threads.data) {
+					EIF_GC_MUTEX_UNLOCK;
+					enomem();
+				}
 			} else {
 				all_thread_list.threads.data = rt_threads_data;
 			}
+
 			memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
 				rt_globals_list.count * sizeof(void *));
+
+			CHECK("data not null", all_thread_list.threads.data);
 
 			while (all_thread_list.count != 0) {
 				for (i = 0; i < all_thread_list.count; i++) {
@@ -1238,6 +1268,8 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 				}
 				memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
 				memset(&running_thread_list, 0, sizeof(struct stack_list));
+
+				CHECK("data not null", all_thread_list.threads.data);
 
 					/* For performance reasons on systems with a poor scheduling policy, 
 					 * we switch context to one of the remaining running thread. Not doing

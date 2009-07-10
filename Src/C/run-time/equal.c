@@ -204,7 +204,6 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	 */
 
 	union overhead *s_zone;				/* Source header */
-	union overhead *t_zone;				/* Target header */
 	uint32 s_flags;						/* Source flags */
 	/*uint32 t_flags;*/					/* Target flags */
 	EIF_REFERENCE s_ref;
@@ -219,7 +218,6 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		return EIF_TRUE;
 
 	s_zone = HEADER(source);
-	t_zone = HEADER(target);
 
 #ifdef DEBUG
 	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
@@ -484,7 +482,7 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 		count--,
 			source = (EIF_REFERENCE) ((EIF_REFERENCE *)source + 1),
 			target = (EIF_REFERENCE) ((EIF_REFERENCE *) target + 1)
-	)  {
+	) {
 		s_ref = *(EIF_REFERENCE *)source;
 		t_ref = *(EIF_REFERENCE *)target;
 		/* One test an a de-reference is only useful since the source and
@@ -523,12 +521,14 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref;
 	int attribute_type;	/* Attribute type in skeleton */
-	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
-											   since they are supposed to be the same type.*/
+	EIF_TYPE_INDEX dtype;
 
 	REQUIRE("target not null", target);
 	REQUIRE("source not null", source);
 	REQUIRE("Same full dynamic type", Dftype(target) == Dftype(source));
+
+	dtype = Dtype(target);	/* Doesn't matter to take target or source
+							   since they are supposed to be the same type.*/
 
 	skeleton = &System(dtype);
 	types = skeleton->cn_types;
@@ -657,12 +657,14 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref, ref1, ref2;
 	int attribute_type;
-	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
-											   since they are supposed to be the same type.*/
+	EIF_TYPE_INDEX dtype;
 
 	REQUIRE("target not null", target);
 	REQUIRE("source not null", source);
 	REQUIRE("Same full dynamic type", Dftype(target) == Dftype(source));
+
+	dtype = Dtype(target);	/* Doesn't matter to take target or source
+							   since they are supposed to be the same type.*/
 
 	skeleton = &System(dtype);
 	types = skeleton->cn_types;

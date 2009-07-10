@@ -340,20 +340,14 @@ rt_private unsigned char ex_tagc[] = {
 };
 
 /* Strings used as separator for Eiffel stack dumps */
-rt_private char *RT_RETRIED_MSG =
-"===============================================================================";
+#define RT_RETRIED_MSG "==============================================================================="
 #ifdef EIF_THREADS
-rt_private char *RT_THREAD_ENTER_MSG =
-"******************************** Thread exception *****************************";
-rt_private char *RT_THREAD_FAILED_MSG =
-"*******************************************************************************";
+#define RT_THREAD_ENTER_MSG "******************************** Thread exception *****************************"
+#define RT_THREAD_FAILED_MSG "*******************************************************************************"
 #endif	/* EIF_THREADS */
-rt_private char *RT_FAILED_MSG =
-"-------------------------------------------------------------------------------";
-rt_private char *RT_BRANCH_ENTER_MSG =
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-rt_private char *RT_BRANCH_EXIT_MSG =
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+#define RT_FAILED_MSG "-------------------------------------------------------------------------------"
+#define RT_ENTER_LEVEL_MSG "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#define RT_EXIT_LEVEL_MSG "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 /* Commonly used error messages */
 #ifdef MAY_PANIC
@@ -537,12 +531,8 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	struct ex_vect *last_item;		/* Item at the top of the calling stack */
 
 	last_item = extop(&eif_stack);		/* Make sure top is EX_RESC */
-
-#ifdef MAY_PANIC
-	if (last_item->ex_type != EX_RESC) {
-		eif_panic(RT_BOTCHED_MSG);
-	}
-#endif
+	CHECK("last_item not null", last_item);
+	CHECK("last_item is rescue", last_item->ex_type == EX_RESC);
 
 	SIGBLOCK;				/* Critical section, protected against signals */
 
@@ -564,11 +554,8 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	 */
 	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
 
-#ifdef MAY_PANIC
-	if (rout_vect->ex_type != EN_ILVL) {
-		eif_panic(RT_BOTCHED_MSG);
-	}
-#endif
+	CHECK("rout_vect not null", rout_vect);
+	CHECK("rout_vect is ILVL", rout_vect->ex_type == EN_ILVL);
 
 	expop(&eif_trace);					/* Remove EN_ILVL */
 	echlvl--;							/* And decrease exception level */
@@ -576,19 +563,9 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	unwind_trace();						
 
 	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
-	if (rout_vect){
-#ifdef MAY_PANIC
-		switch (rout_vect->ex_type) {		/* Consistency check */
-		case EN_FAIL:						/* Routine failure */
-		case EN_RES:						/* Resumption failed */
-			rout_vect->ex_retry = 1;		/* Function has been retried */
-			break;							/* Ok for these two */
-		default:
-			eif_panic(RT_BOTCHED_MSG);
-		}
-#else
+	if (rout_vect) {
+		CHECK("rout_vect fail or res", (rout_vect->ex_type == EN_FAIL) || (rout_vect->ex_type == EN_RES));
 		rout_vect->ex_retry = 1;		/* Function has been retried */
-#endif
 	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
@@ -721,14 +698,8 @@ rt_public struct ex_vect * extre(void)
 		/* Get last execution vector */
 	vector = extop(&eif_stack);
 
-#ifdef MAY_PANIC
-	if (vector == 0) {
-		eif_panic("Missing outer execution vector.");
-	}
-	if (vector->ex_type != EX_CALL) {
-		eif_panic("Wrong type of outer execution vector.");
-	}
-#endif
+	CHECK("vector not null", vector);
+	CHECK("vector is call", vector->ex_type == EX_CALL);
 
 		/* Save routine execution vector. */
 	v = *vector;
@@ -775,18 +746,9 @@ rt_public struct ex_vect * extrl(void)
 
 		/* Get last execution vector. */
 	vector = extop(&eif_stack);
-
-#ifdef MAY_PANIC
-	if (vector == 0) {
-		eif_panic("Missing execution vector.");
-	}
-	if (   vector->ex_type != EX_CALL 
-		&& vector->ex_type != EX_RESC 
-		&& vector->ex_type != EX_RETY
-		) {
-		eif_panic("Wrong type of execution vector.");
-	}
-#endif
+	CHECK("vector not null", vector);
+	CHECK("vector is call, rescue or retry", (vector->ex_type == EX_CALL) ||
+		(vector->ex_type == EX_RESC) || (vector->ex_type == EX_RETY));
 
 		/* Save routine execution vector. */
 	v = *vector;
@@ -798,15 +760,9 @@ rt_public struct ex_vect * extrl(void)
 
 		/* Get last execution vector. */
 	vector = extop(&eif_stack);
+	CHECK("vector not null", vector);
+	CHECK("vector is EX_OSTK", vector->ex_type == EX_OSTK);
 
-#ifdef MAY_PANIC
-	if (vector == 0) {
-		eif_panic("Missing 'try' execution vector.");
-	}
-	if (vector->ex_type != EX_OSTK) {
-		eif_panic("Wrong type of 'try' execution vector.");
-	}
-#endif
 
 		/* Restore routine execution vector. */
 	*vector = v;
@@ -873,10 +829,10 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct ex_vect * volatile trace;		/* Top of Eiffel trace stack */
+	struct ex_vect  *trace;		/* Top of Eiffel trace stack */
 	jmp_buf exenv;							/* Environment saving for setjmp */
 #ifdef ISE_GC
-	char volatile gc_status;							/* Saved GC status */
+	char gc_status;							/* Saved GC status */
 #endif
 	RTYD;									/* Save stack contexts */
 
@@ -910,7 +866,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 #endif
 
 	trace = exget(&eif_trace);		/* Get a new execution vector */
-	if (trace == (struct ex_vect *) 0) {	/* Can't have it */
+	if (!trace) {	/* Can't have it */
 		echmem |= MEM_FSTK;					/* Stack is full */
 #ifdef ISE_GC
 		EIF_G_DATA_MUTEX_LOCK;
@@ -918,56 +874,55 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		enomem();							/* We ran out of memory */
-	}
+	} else {
+		trace->ex_type = EN_ILVL;		/* New exception level on stack */
+		trace->ex_lvl = ++echlvl;		/* Record new level */
 
-	trace->ex_type = EN_ILVL;		/* New exception level on stack */
-	trace->ex_lvl = ++echlvl;		/* Record new level */
+		/* If we come here, we were able to get a vector for EN_ILVL. If we cannot
+		 * get one for EX_HDLR, this is a non-critical "No more memory" exception.
+		 */
 
-	/* If we come here, we were able to get a vector for EN_ILVL. If we cannot
-	 * get one for EX_HDLR, this is a non-critical "No more memory" exception.
-	 */
-
-	trace = exget(&eif_stack);		/* Vector to record entry in handler */
-	if (trace == (struct ex_vect *) 0) {	/* Can't have it */
-		echmem |= MEM_FULL;					/* Exception stack incomplete */
-		expop(&eif_trace);					/* Remove EN_ILVL vector */
-		echlvl--;							/* We did not enter a new level */
+		trace = exget(&eif_stack);		/* Vector to record entry in handler */
+		if (!trace) {	/* Can't have it */
+			echmem |= MEM_FULL;					/* Exception stack incomplete */
+			expop(&eif_trace);					/* Remove EN_ILVL vector */
+			echlvl--;							/* We did not enter a new level */
 #ifdef ISE_GC
-		EIF_G_DATA_MUTEX_LOCK;
-		rt_g_data.status = gc_status;			/* Restore previous GC status */
-		EIF_G_DATA_MUTEX_UNLOCK;
+			EIF_G_DATA_MUTEX_LOCK;
+			rt_g_data.status = gc_status;			/* Restore previous GC status */
+			EIF_G_DATA_MUTEX_UNLOCK;
 #endif
-		xraise(EN_MEM);						/* Non-critical exception */
-		return;								/* Which may be ignored */
-	}
+			xraise(EN_MEM);						/* Non-critical exception */
+		} else {
+			trace->ex_type = EX_HDLR;		/* Enter in a signal handler */
 
-	trace->ex_type = EX_HDLR;		/* Enter in a signal handler */
+			/* It is now time to call the handler after all those silly "stack"
+			 * considerations. We put a setjmp to ensure we'll regain control should
+			 * an exception occur, so that garbage collection may be enabled again.
+			 */
 
-	/* It is now time to call the handler after all those silly "stack"
-	 * considerations. We put a setjmp to ensure we'll regain control should
-	 * an exception occur, so that garbage collection may be enabled again.
-	 */
-
-	if (setjmp(exenv)) {				/* Returning from an exception */
-		RTXSC;						/* Restore stack contexts */
+			if (setjmp(exenv)) {				/* Returning from an exception */
+				RTXSC;						/* Restore stack contexts */
 #ifdef ISE_GC
-		EIF_G_DATA_MUTEX_LOCK;
-		rt_g_data.status = gc_status;	/* Restore previous GC status */
-		EIF_G_DATA_MUTEX_UNLOCK;
+				EIF_G_DATA_MUTEX_LOCK;
+				rt_g_data.status = gc_status;	/* Restore previous GC status */
+				EIF_G_DATA_MUTEX_UNLOCK;
 #endif
-			/* We reuse `echtg' from exception taht causes us to go here.*/
-		eraise(echtg, EN_HDLR);			/* Raise exception in signal handler */
-		return;						/* Exception ignored */
-	}
-	trace->ex_jbuf = &exenv;	/* Save setjmp buffer address */
-	(handler)(sig);					/* LISPish call to signal handler :-) */
+					/* We reuse `echtg' from exception taht causes us to go here.*/
+				eraise(echtg, EN_HDLR);			/* Raise exception in signal handler */
+			} else {
+				trace->ex_jbuf = &exenv;	/* Save setjmp buffer address */
+				(handler)(sig);					/* LISPish call to signal handler :-) */
 #ifdef ISE_GC
-	EIF_G_DATA_MUTEX_LOCK;
-	rt_g_data.status = gc_status;		/* Restore saved GC status */
-	EIF_G_DATA_MUTEX_UNLOCK;
+				EIF_G_DATA_MUTEX_LOCK;
+				rt_g_data.status = gc_status;		/* Restore saved GC status */
+				EIF_G_DATA_MUTEX_UNLOCK;
 #endif
-	expop(&eif_trace);				/* Remove EN_ILVL record */
-	expop(&eif_stack);				/* And EX_HDLR vector */
+				expop(&eif_trace);				/* Remove EN_ILVL record */
+				expop(&eif_stack);				/* And EX_HDLR vector */
+			}
+		}
+	}
 }
 
 rt_public void exfail(void)
@@ -1032,23 +987,10 @@ rt_public void exresc(struct ex_vect *rout_vect)
 	SIGBLOCK;			/* Critical section, protected against signals */
 
 	trace = extop(&eif_trace);		/* Should be a calling vector */
+	CHECK("trace not null", trace);
+	CHECK("trace is failure/rescue", (trace->ex_type == EN_FAIL) || (trace->ex_type == EN_RES));
 
-#ifdef MAY_PANIC
-	/* Panic if the top of the stack is not a calling vector. We may have
-	 * run out of memory, but we cannot continue with an incorrect stack,
-	 * that could break the program's consistency.
-	 */
-	switch (trace->ex_type) {
-	case EN_FAIL:
-	case EN_RES:
-		trace->ex_rescue = 1;		/* Signals entry in rescue clause */
-		break;
-	default:
-		eif_panic(RT_BOTCHED_MSG);
-	}
-#else
 	trace->ex_rescue = 1;		/* Signals entry in rescue clause */
-#endif
 
 	if (!(echmem & MEM_FSTK)) {				/* Eiffel trace not full */
 		trace = exget(&eif_trace);			/* Record entry in new level */
@@ -1066,7 +1008,6 @@ rt_public void exresc(struct ex_vect *rout_vect)
 	if (trace == (struct ex_vect *) 0) {	/* No more memory */
 		echmem |= MEM_FULL;					/* Exception stack incomplete */
 		xraise(EN_MEM);						/* Non-critical exception */
-		return;								/* If exception is ignored */
 	}
 
 	/* We use `memmove' since `rout_vect' and `trace' could be the same. */
@@ -1230,13 +1171,17 @@ rt_public void eraise(char *tag, long num)
 
 	switch (num) {
 	case EN_SIG:			/* Signal received */
-		signo = trace->ex_sig;
-		echtg = signame(trace->ex_sig);
+		if (trace) {
+			signo = trace->ex_sig;
+			echtg = signame(trace->ex_sig);
+		}
 		break;
 	case EN_SYS:			/* Operating system error */
 	case EN_IO:				/* I/O error */
-		eno = trace->ex_errno;
-		echtg = error_tag(trace->ex_errno);
+		if (trace) {
+			eno = trace->ex_errno;
+			echtg = error_tag(trace->ex_errno);
+		}
 		break;
 	case EN_ISE_IO:			/* ISE I/O error */
 		eno = errno;
@@ -1423,13 +1368,17 @@ rt_public void com_eraise(char *tag, long num)
 		 */
 		switch (num) {
 		case EN_SIG:			/* Signal received */
-			signo = trace->ex_sig;
-			echtg = signame(trace->ex_sig);
+			if (trace) {
+				signo = trace->ex_sig;
+				echtg = signame(trace->ex_sig);
+			}
 			break;
 		case EN_SYS:			/* Operating system error */
 		case EN_IO:				/* I/O error */
-			eno = trace->ex_errno;
-			echtg = error_tag(trace->ex_errno);
+			if (trace) {
+				eno = trace->ex_errno;
+				echtg = error_tag(trace->ex_errno);
+			}
 			break;
 		case EN_ISE_IO:			/* ISE I/O error */
 			eno = errno;
@@ -1490,8 +1439,10 @@ rt_public void com_eraise(char *tag, long num)
 		}
 	}
 
-	trace->ex_where = echrt;		/* Save routine in trace for exorig */
-	trace->ex_from = echclass;			/* Save class in trace for exorig */
+	if (trace) {
+		trace->ex_where = echrt;		/* Save routine in trace for exorig */
+		trace->ex_from = echclass;			/* Save class in trace for exorig */
+	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
@@ -1529,6 +1480,7 @@ rt_public void eviol(void)
 	 */
 
 	vector = extop(&eif_stack);		/* Top level vector */
+	CHECK("vector not null", vector);
 	code = xcode(vector);			/* Failure yields a specific code */
 	if (code < EN_NEX && is_ex_ignored(code)) {	/* Exception to be ignored */
 		expop(&eif_stack);					/* Remove the faulty vector */
@@ -1725,6 +1677,7 @@ rt_private jmp_buf *backtrack(void)
 				jbuf = top->ex_jbuf;			/* Save setjmp buffer */
 				expop(&eif_stack);				/* Remove catching vector */
 				top = extop(&eif_stack);		/* Update top */
+				CHECK ("top vector not null", top);
 			}
 #endif
 
@@ -1783,9 +1736,10 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 			if (trace == (struct ex_vect *) 0) {		/* No more memory */
 				echmem |= MEM_FSTK;						/* Stack full now */
 				enomem();								/* Critical exception */
+			} else {
+				memcpy (trace, top, sizeof(struct ex_vect));	/* Record exception */
+				trace->ex_type = xcode(top);				/* Exception code */
 			}
-			memcpy (trace, top, sizeof(struct ex_vect));	/* Record exception */
-			trace->ex_type = xcode(top);				/* Exception code */
 		}
 		expop_helper (from_stack, 0);			/* Vector no longer needed on stack */
 
@@ -1832,17 +1786,19 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 			 * of that rescue clause.
 			 */
 			if (!(echmem & MEM_FSTK)) {			/* Eiffel trace not full */
+				CHECK("trace set", trace);
 				top = exget(&eif_trace);		/* Record end of level */
 				if (top == (struct ex_vect *) 0) {
 					echmem |= MEM_FSTK;			/* Stack is full */
 					enomem();					/* Critical exception */
-				}
-				memcpy (top, trace, sizeof(struct ex_vect));	/* Shift record */
-				trace->ex_type = EN_OLVL;	/* Exit one exception level */
-				if (for_full){
-					trace->ex_lvl = l_level--;	/* Level we're comming from */
 				} else {
-					trace->ex_lvl = echlvl--;	/* Level we're comming from */
+					memcpy (top, trace, sizeof(struct ex_vect));	/* Shift record */
+					trace->ex_type = EN_OLVL;	/* Exit one exception level */
+					if (for_full){
+						trace->ex_lvl = l_level--;	/* Level we're comming from */
+					} else {
+						trace->ex_lvl = echlvl--;	/* Level we're comming from */
+					}
 				}
 			} else {
 				if (for_full){
@@ -1859,6 +1815,7 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 			 * routine, which will be in charge of raising the exception. This
 			 * is why we may safely replace the existing EN_HDLR record--RAM.
 			 */
+			CHECK("trace set", trace);
 			trace->ex_type = EN_OLVL;		/* Exit one exception level */
 			if (for_full){
 				trace->ex_lvl = l_level--;	/* Level we're comming from */
@@ -1900,22 +1857,20 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 			 * order to clean the operational stack (that's the purpose of this
 			 * exception trap).
 			 */
-		{
 			if (top->ex_type == EX_OSTK) {		/* Melted pre-condition */
 				expop_helper (from_stack, 0);				/* Remove catching vector */
 				top = extop(from_stack);		/* Update top */
+				CHECK ("top vector not null", top);
 			}
 #endif
 
 			CHECK ("precondition violated in call", top->ex_type == EX_CALL);
+			CHECK("trace set", trace);
 			trace->ex_where = top->ex_rout;	/* Save routine name */
 			trace->ex_from = top->ex_orig;	/* Where it comes from */
 			trace->ex_oid = top->ex_id;		/* And object ID */
 			expop(from_stack);				/* Exception raised in caller */
 
-#ifdef WORKBENCH
-		}
-#endif
 			break;
 
 			/* FIXME: Manu 02/22/2001
@@ -1931,22 +1886,21 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 		case EX_LINV:	/* Loop invariant violation */
 		case EX_VAR:	/* Loop variant violation */
 			top = extop(from_stack);
+			CHECK ("top vector not null", top);
 #ifdef WORKBENCH
-		{
 			if (top->ex_type == EX_OSTK) {		/* Melted invariant */
 				expop_helper (from_stack, 0);				/* Remove catching vector */
 				top = extop(from_stack);
+				CHECK ("top vector not null", top);
 			}
 #endif
 
 			CHECK ("top vector not null", top);
+			CHECK("trace set", trace);
 
 			trace->ex_where = top->ex_rout;	/* Save routine name */
 			trace->ex_from = top->ex_orig;	/* Where it comes from */
 			trace->ex_oid = top->ex_id;		/* And object ID */
-#ifdef WORKBENCH
-		}
-#endif
 	  		break;
 
 		default:
@@ -2022,6 +1976,7 @@ rt_public void exok(void)
 	 */
 
 	top = extop (&eif_stack);
+	CHECK("top not null", top);
 	if (echval == 0 || top->ex_type != EX_RETY) {
 		expop(&(eif_stack));		/* remove current call from `eif_stack' */
 		return;						/* No exception occurred */
@@ -2150,6 +2105,7 @@ rt_private void excur(void)
 
 	expop(&eif_trace);			/* This removes the EN_ILVL record */
 	top = exget(&eif_trace);	/* Last exception at previous level */
+	CHECK("top not null", top);
 	echval = top->ex_type;		/* Current exception code */
 	echtg = extag(top);			/* Recompute exception tag */
 
@@ -2722,12 +2678,12 @@ rt_private void recursive_dump(void (*append_trace)(char *), int level)
 			if (exend()) {
 				return;					/* Exit if at the end of the stack */
 			}
-			sprintf(buffer, RT_BRANCH_ENTER_MSG, trace->ex_lvl);
+			sprintf(buffer, RT_ENTER_LEVEL_MSG, trace->ex_lvl);
 			append_trace(buffer);
 			sprintf(buffer, "\n%s\n", RT_FAILED_MSG);
 			append_trace(buffer);
 			recursive_dump(append_trace, level + 1);	/* Dump the new level */
-			sprintf(buffer, RT_BRANCH_EXIT_MSG, level);
+			sprintf(buffer, RT_EXIT_LEVEL_MSG, level);
 			append_trace(buffer);
 			sprintf(buffer, "\n%s\n", RT_FAILED_MSG);
 			append_trace(buffer);

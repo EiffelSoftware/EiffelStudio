@@ -84,7 +84,7 @@ rt_private void ipc_access(EIF_PSTREAM s, Opaque *what);		/* Access object throu
 rt_private void wean(EIF_PSTREAM s, Opaque *what);			/* Wean adopted object */
 rt_private void once_inspect(EIF_PSTREAM s, Opaque *what);	/* Once routines inspection */
 rt_private void obj_inspect(EIF_OBJ object);
-rt_private void bit_inspect(EIF_OBJ object);
+rt_private void bit_inspect(EIF_REFERENCE object);
 rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
 rt_private void app_send_integer (EIF_PSTREAM sp, int val);
@@ -240,15 +240,14 @@ static int curr_modify = NO_CURRMODIF;
 	case LAST_EXCEPTION:
 		/* return last_exception() */
 		{
-			EIF_TYPED_VALUE *excpt = NULL;		/* Exception's object */
-			excpt = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-			memset (excpt, 0, sizeof(EIF_TYPED_VALUE));
-			excpt->it_ref = last_exception();	/* Get last exception */
-			excpt->type = SK_REF;
-			if (excpt->it_ref != NULL) {
-				excpt->type = excpt->type | Dtype(excpt->it_ref);
+			EIF_TYPED_VALUE excpt;	/* Exception's object */
+			memset (&excpt, 0, sizeof(EIF_TYPED_VALUE));
+			excpt.it_ref = last_exception();	/* Get last exception */
+			excpt.type = SK_REF;
+			if (excpt.it_ref != NULL) {
+				excpt.type = excpt.type | Dtype(excpt.it_ref);
 			}
-			app_send_typed_value (sp, excpt, DMP_EXCEPTION_ITEM);
+			app_send_typed_value (sp, &excpt, DMP_EXCEPTION_ITEM);
 		}
 		break;
 	case LAST_RTCC_INFO:
@@ -440,6 +439,7 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
       				/* The connected socket */
               		/* The daemon's answer */
 {
+	int result = 0;
 	/* Wait for an answer and fill in the Request structure, then de-serialize
 	 * it. If an error occurs, exit immediately. The signature has to be 'int',
 	 * since some shared functions do expect that signature. However, since
@@ -453,20 +453,23 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
 		, reset
 #endif
 		)) {
+		result = -1;
 		esdie(1);		/* Connection lost, probably */
 	}
 
 	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Deserialize request */
-	if (!idr_Request(&app_idrf.i_decode, rqst))
+	if (!idr_Request(&app_idrf.i_decode, rqst)) {
+		result = -1;
 		esdie(1);
+	}
 
 #ifdef DEBUG
 	trace_request("got", rqst);
 #endif
 
-	return 0;		/* All is ok, for lint */
+	return result;		/* All is ok, for lint */
 }
 
 /*
@@ -494,18 +497,16 @@ rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp
 	 *	 `a_dmp_type' is either DMP_ITEM, or DMP_EXCEPTION_ITEM
 	 */
 
-	EIF_TYPED_VALUE *ip = NULL;
-
-	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
+	EIF_TYPED_VALUE ip;
+	memset (&ip, 0, sizeof(EIF_TYPED_VALUE));
 	if (ref != NULL) {
-		ip->it_ref = (EIF_REFERENCE) ref;
-		ip->type = SK_REF | Dtype(ip->it_ref);
+		ip.it_ref = (EIF_REFERENCE) ref;
+		ip.type = SK_REF | Dtype(ip.it_ref);
 	} else {
-		ip->it_ref = (EIF_REFERENCE) 0;
-		ip->type = SK_VOID;
+		ip.it_ref = (EIF_REFERENCE) 0;
+		ip.type = SK_VOID;
 	}
-	app_send_typed_value (sp, ip, a_dmp_type);
+	app_send_typed_value (sp, &ip, a_dmp_type);
 }
 
 rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type)
@@ -651,13 +652,15 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	unsigned char result;
 	
 	if (new_value == NULL) {
-		/* access the object through its hector address */
+	   if (arg_addr) {
+				/* access the object through its hector address */
 #ifdef ISE_GC
-		object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) arg_addr))));
+			object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) arg_addr))));
 #else
-		object = (EIF_REFERENCE) (arg_addr);
+			object = (EIF_REFERENCE) (arg_addr);
 #endif
-		attr_number = arg_attr_number;	
+			attr_number = arg_attr_number;	
+		}
 	} else {
 		/* second call, get the new value and call the function */
 		result = modify_attr(object, attr_number, new_value);
@@ -691,7 +694,7 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		return;
 	case IN_BIT_ADDR:				/* Bit address inspection */
 		addr = (char *) what->op_3;		/* long -> (char *) */
-		bit_inspect((EIF_OBJ) &addr);
+		bit_inspect(addr);
 		return;
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_3;		/* long -> (char *) */
@@ -1039,11 +1042,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
 		case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
 		case SK_BIT:
-			{
-				char *buf = b_out (o_ref);
-				app_twrite (buf, strlen(buf));
-				eif_rt_xfree(buf);
-			}
+			bit_inspect(o_ref);
 			break;
 		case SK_EXP:
 			{
@@ -1102,7 +1101,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	char *reference;
 	int32 count,capacity;					/* Element count */
 	uint32 nb_attr, sk_type;
-	long sp_start = 0, sp_end;		/* Bounds for inspection */
+	long sp_start, sp_end;		/* Bounds for inspection */
 	uint32 dtype;
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
@@ -1124,16 +1123,19 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 
 	if (skip_items == EIF_FALSE) {
 		/* Compute the number of items within the bounds */
-		if (sp_upper < 0)				/* A negative `sp_upper' means `count' */
+		if (sp_upper < 0) {				/* A negative `sp_upper' means `count' */
 			sp_end = count - 1;
-		else if (count > sp_upper + 1)	/* Must be truncated */
+		} else if (count > sp_upper + 1) {	/* Must be truncated */
 			sp_end = sp_upper;
-		else							/* No need to truncate */
+		} else {						/* No need to truncate */
 			sp_end = count - 1;
-		if (sp_lower <= 0)				/* A negative `sp_lower' means 0 */
-			sp_start = 0;
-		else if (sp_lower > 0)			/* Must be truncated */
+		}
+		if (sp_lower > 0) {		/* Must be truncated */
 			sp_start = sp_lower;
+		} else {
+				/* A negative `sp_lower' means 0 */
+			sp_start = 0;
+		}
 
 			/* Compute number of items that will be inspected */
 		if (sp_start > sp_end)
@@ -1223,11 +1225,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					case SK_REAL32: app_twrite (o_ref, sizeof(EIF_REAL_32)); break;
 					case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
 					case SK_BIT:
-						{
-							char *buf = b_out (*(EIF_REFERENCE *) o_ref);
-							app_twrite (buf, strlen(buf));
-							eif_rt_xfree(buf);
-						}
+						bit_inspect (eif_access(o_ref));
 						break;
 					}
 				}
@@ -1403,10 +1401,10 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 	}
 }
 
-rt_private void bit_inspect(EIF_OBJ object)
+rt_private void bit_inspect(EIF_REFERENCE object)
                		/* Reference to a bit object (= BIT_REF) */
 {
-	char *buf = b_out(*(EIF_REFERENCE *) object);
+	char *buf = b_out(object);
 	app_twrite (buf, strlen(buf));
 	eif_rt_xfree(buf);
 }
@@ -1443,6 +1441,7 @@ rt_private void string_inspect(EIF_OBJ object)
 			string_area = *(char **) o_ref;
 		}
 	}
+	CHECK("has string area", string_area);
 	if (string_count > DEFAULT_SLICE + 1)	/* Send only the beginning of */
 		string_count = DEFAULT_SLICE + 1;	/* the string if it is too big */
 	app_twrite (string_area, string_count);
@@ -1526,12 +1525,10 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 
 	struct cnode *obj_desc;		/* Object type description */
 	long nb_attr;				/* Attribute number */
-	uint32 *types;				/* Attribute types */
 	int32 *cn_attr;				/* Attribute keys */
 	long offset;				/* Offset of the attribute within object structure */
 	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
 	char *o_ref;				/* Attribute address */
-	uint32 type;				/* Dynamic type of the attribute */
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
 	uint32 ref_flags;
 
@@ -1550,14 +1547,12 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 	} else {
 		/* get characteristic of the object */
 		nb_attr = obj_desc->cn_nbattr;
-		types = obj_desc->cn_types;
 		cn_attr = obj_desc->cn_attr;
 	
 		/* check that the given attribute number is not out-of-bounds */
 		if (attr_number > nb_attr)
 			return 1; /* error */
 		
-		type = types[attr_number];
 		CAttrOffs(offset,cn_attr[attr_number],dtype);
 		o_ref = object + offset;
 
@@ -1680,24 +1675,18 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 	}
 	if (s == NULL) {
 		send_ack(sp, AK_ERROR);		/* Protocol error */
-		return;
 	} else {
 		send_ack(sp, AK_OK);
-	}
-	
-	if (s != NULL) {
 		tid = eif_type_id(s);
 		if (tid != -1) {
 			CHECK("valid tid", rt_valid_type_index(tid));
 			loc1 = RTLNSMART((EIF_TYPE_INDEX) tid);
 		}
-	} else {
-		loc1 = RTLN(typeid);
+		if (loc1 != NULL) {
+			tmp = (EIF_REFERENCE) RTCCL(loc1); /* clone */
+		}
+		app_send_reference (sp, tmp, DMP_ITEM);
 	}
-	if (loc1 != NULL) {
-		tmp = (EIF_REFERENCE)RTCCL(loc1); /* clone */
-	}
-	app_send_reference (sp, tmp, DMP_ITEM);
 }
 
 rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)

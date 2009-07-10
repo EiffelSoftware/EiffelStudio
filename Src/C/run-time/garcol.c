@@ -4245,7 +4245,7 @@ rt_private void update_moved_set(void)
 	 */
 
 	if (rt_g_data.status & GC_PART) {			/* Partial collection */
-		for (s = moved_set.st_hd; s && !done; s = s->sk_next) {
+		for (; s && !done; s = s->sk_next) {
 			obj = s->sk_arena;					/* Start of stack */
 			if (s != moved_set.st_cur)			/* Top is before after 's' */
 				i = s->sk_end - obj;			/* Look at the whole chunk */
@@ -4266,7 +4266,7 @@ rt_private void update_moved_set(void)
 			}
 		}
 	} else if (rt_g_data.status & GC_FAST) {	/* Generation collection */
-		for (s = moved_set.st_hd; s && !done; s = s->sk_next) {
+		for (; s && !done; s = s->sk_next) {
 			obj = s->sk_arena;					/* Start of stack */
 			if (s != moved_set.st_cur)			/* Top is before after 's' */
 				i = s->sk_end - obj;			/* Look at the whole chunk */
@@ -4289,7 +4289,7 @@ rt_private void update_moved_set(void)
 			}
 		}
 	} else {								/* Mark and sweep */
-		for (s = moved_set.st_hd; s && !done; s = s->sk_next) {
+		for (; s && !done; s = s->sk_next) {
 			obj = s->sk_arena;					/* Start of stack */
 			if (s != moved_set.st_cur)			/* Top is before after 's' */
 				i = s->sk_end - obj;			/* Look at the whole chunk */
@@ -4359,7 +4359,7 @@ rt_private void update_rem_set(void)
 	flush;
 #endif
 
-	for (s = rem_set.st_hd; s && !done; s = s->sk_next) {
+	for (; s && !done; s = s->sk_next) {
 		object = s->sk_arena;				/* Start of stack */
 		if (s != rem_set.st_cur)			/* Top is before after 's' */
 			n = s->sk_end - object;			/* Look at the whole chunk */
@@ -4494,7 +4494,7 @@ rt_private void update_memory_set (void)
 #endif
 
 	/* Traverse stack.	*/
-	for (s = memory_set.st_hd; s && !done; s = s->sk_next) 
+	for (; s && !done; s = s->sk_next) 
 	{
 		object = s->sk_arena;				/* Start of stack */
 		if (s != memory_set.st_cur)			/* Top is before after 's' */
@@ -5223,21 +5223,24 @@ rt_shared int st_has (struct stack *st, void *data)
 	char **address;
 	int done = 0;
 
-		/* Loop through all the chunks */
-	for (ck = st->st_hd; ck != NULL && !done; ck = ck->sk_next){
-			/* Starting address is end of chunk for full chunks and
-			 * current insertion position for the last one */
-		if (ck == st->st_cur) {
-			address = st->st_top - 1;
-			done = 1;
-		} else {
-			address = ck->sk_end - 1;
-		}
+	if (st->st_top) {
+			/* Loop through all the chunks, of course only when the stack has been created. */
+		for (ck = st->st_hd; ck != NULL && !done; ck = ck->sk_next){
+				/* Starting address is end of chunk for full chunks and
+				 * current insertion position for the last one */
+			if (ck == st->st_cur) {
+				address = st->st_top - 1;
+				done = 1;
+			} else {
+				address = ck->sk_end - 1;
+			}
 
-		for (; address >= ck->sk_arena; address--) {
-			if (*address == data)
-					/* Object is in the stack. We exit the loop. */
-				return 1;
+			CHECK("arena not null", ck->sk_arena);
+			for (; address >= ck->sk_arena; address--) {
+				if (*address == data)
+						/* Object is in the stack. We exit the loop. */
+					return 1;
+			}
 		}
 	}
 	return 0;

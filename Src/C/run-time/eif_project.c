@@ -155,17 +155,6 @@ rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);
 #endif
 
-/*
-doc:	<attribute name="egc_routdisp" return_type="fnptr" export="public">
-doc:		<summary>Address of Eiffel routine ROUTINE.set_rout_disp used to initialize new ROUTINE objects of type PROCEDURE, FUNCTION or PREDICATE.</summary>
-doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
-doc:	</attribute>
-*/
-rt_public void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
-							   EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,	EIF_INTEGER); 
-
 #ifdef WORKBENCH
 /*
 doc:	<attribute name="egc_routdisp_wb" return_type="fnptr" export="public">
@@ -396,7 +385,7 @@ rt_public struct rout_info *egc_forg_table;
 rt_public void (**egc_edispose)(void);
 rt_public void (**egc_copy)(EIF_REFERENCE, EIF_REFERENCE);
 rt_public EIF_BOOLEAN (**egc_is_equal)(EIF_REFERENCE, EIF_REFERENCE);
-rt_public char *(**egc_ecreate)(void);
+rt_public void *(**egc_ecreate)(EIF_REFERENCE, EIF_REFERENCE);
 rt_public char *(**egc_exp_create)(void);
 rt_public struct ctable *egc_ce_rname;
 rt_public long *egc_fnbref ;

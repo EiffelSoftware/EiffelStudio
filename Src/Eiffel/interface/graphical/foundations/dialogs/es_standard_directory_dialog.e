@@ -13,6 +13,8 @@ class
 
 inherit
 	ES_STANDARD_PATH_DIALOG [EV_DIRECTORY_DIALOG]
+		export
+			{ANY} set_start_path
 		redefine
 			reset,
 			on_confirm

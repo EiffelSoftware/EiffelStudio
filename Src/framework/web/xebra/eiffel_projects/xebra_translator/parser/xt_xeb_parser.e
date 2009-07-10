@@ -72,15 +72,19 @@ feature {NONE} -- Implementation
 			plain_text := +((open + (identifier_prefix | slash)).negate + any_char)
 			plain_text := plain_text.consumer
 			plain_text.set_behaviour (agent build_content_tag)
+			plain_text.set_name ("plain-text")
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
 			value_attribute := (-(quote.negate + any_char)).consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
+			value_attribute.set_name ("value_attribute")
 			dynamic_attribute := (percent + equals + identifier + percent).consumer
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
+			dynamic_attribute.set_name ("dynamic_attribute")
 			variable_attribute := (sharp + open_curly + identifier + (+(dot + identifier)) + close_curly).consumer
 			variable_attribute.set_behaviour (agent build_variable_attribute)
+			variable_attribute.set_name ("variable_attribute")
 
 				-- All possible values which can occur in quotes after a tag attribute
 			value := variable_attribute | dynamic_attribute | value_attribute
@@ -89,13 +93,17 @@ feature {NONE} -- Implementation
 			l_attribute := (ws + identifier + ws.optional + equals + ws.optional + quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
 			l_attribute.fixate
+			l_attribute.set_name ("attribute")
 
 			namespace_identifier := identifier + colon + identifier
 			namespace_identifier.fixate
+			namespace_identifier.set_name ("namespace_identifier")
 			plain_html_header := identifier + (-l_attribute)
 			plain_html_header.fixate
+			plain_html_header.set_name ("plain_html")
 			xeb_tag_header := namespace_identifier + (-l_attribute)
 			xeb_tag_header.fixate
+			xeb_tag_header.set_name ("xeb_tag_header")
 
 			create {PEG_CHOICE} xml.make
 
@@ -105,6 +113,7 @@ feature {NONE} -- Implementation
 									(close_fixed + (-xml) + open + slash + ws.optional + identifier)
 								)
 						)
+			plain_html.set_name ("plain_html")
 			plain_html.set_behaviour (agent build_plain_html)
 			xeb_tag := namespace_identifier.enforce  + (
 							xeb_tag_header + ws.optional + (
@@ -114,7 +123,9 @@ feature {NONE} -- Implementation
 						)
 
 			xeb_tag.set_behaviour (agent build_xeb_tag)
+			xeb_tag.set_name ("xeb_tag")
 			xml := xml | (open + (xeb_tag | plain_html) + ws.optional + close_fixed) | plain_text
+			xml.set_name ("xml")
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
 			plain_text_without_behaviour := +((open + any_char).negate + any_char)
@@ -123,6 +134,7 @@ feature {NONE} -- Implementation
 			doctype := char ('<') + char ('!') + plain_text_without_behaviour
 			doctype := doctype.consumer
 			doctype.set_behaviour (agent build_content_tag)
+			doctype.set_name ("doctype")
 
 				-- Xml with pre- and post-context
 			xeb_file := ws.optional + doctype.optional + ws.optional + xml + ws.optional
@@ -138,8 +150,8 @@ feature -- Parser error strategies
 			a_result_attached: attached a_result
 		do
 			Result := a_result
-			Result.put_error_message ("Missing '>'")
-			Result.success := True
+--			Result.put_error_message ("Missing '>'")
+--			Result.success := True
 		ensure
 			Result_attached: attached Result
 		end
@@ -202,11 +214,11 @@ feature -- Parser Behaviours
 					l_i > a_result.internal_result.count
 				loop
 					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
-						if l_tag.has_attribute (l_attribute.id) then
-							Result.put_error_message ("Invalid argument detected for " + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
-						else
+--						if l_tag.has_attribute (l_attribute.id) then
+--							Result.put_error_message ("Invalid argument detected for " + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
+--						else
 							l_tag.put_attribute (l_attribute.id, l_attribute.value)
-						end
+--						end
 					elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
 						l_tag.put_subtag (l_subtag)
 					end
@@ -250,7 +262,7 @@ feature -- Parser Behaviours
 								l_i > a_result.internal_result.count
 							loop
 								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
-									if l_tag.has_attribute (l_attribute.id) then
+									if not l_taglib.argument_belongs_to_tag (l_attribute.id, l_id) then
 										Result.put_error_message ("Invalid argument detected for " + l_namespace + ":" + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 									else
 										l_tag.put_attribute (l_attribute.id, l_attribute.value)

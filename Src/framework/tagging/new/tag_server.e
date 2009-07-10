@@ -1,7 +1,7 @@
 note
 	description: "[
 		Objects that associate generic items G with tags, represented by strings. The tags are validated
-		by an instance of {TAG_FORMATTER}.
+		by an instance of {TAG_VALIDATOR}.
 		
 		A observer pattern is provided to inform clients when tags are added/removed from items.
 	]"
@@ -18,26 +18,26 @@ inherit
 	TAG_SHARED_EQUALITY_TESTER
 
 create
-	make_default, make_with_formatter
+	make_default, make
 
 feature {NONE} -- Initialization
 
 	make_default
 			-- Initialize `Current' with default formatter.
 		do
-			make_with_formatter (create {TAG_FORMATTER})
+			make (create {TAG_VALIDATOR})
 		end
 
-	make_with_formatter (a_formatter: like formatter)
+	make (a_validator: like validator)
 			-- Initialize `Current' using given formatter.
 			--
-			-- `a_formatter': Formatter for validating/modifying tags.
+			-- `a_formatter': Validator for validating/modifying tags.
 		require
-			a_formatter_attached: a_formatter /= Void
+			a_validator_attached: a_validator /= Void
 		local
 			l_tag_table: like tag_table
 		do
-			formatter := a_formatter
+			validator := a_validator
 
 			create item_to_tags_table.make_default
 			create l_tag_table.make_default
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 			create tag_added_event
 			create tag_remove_event
 		ensure
-			formatter_set: formatter = a_formatter
+			validator_set: validator = a_validator
 		end
 
 feature -- Access
 
-	formatter: TAG_FORMATTER
-			-- Formatter used to validate/modify tags
+	validator: TAG_VALIDATOR
+			-- Validator used to validate/modify tags
 
 	items: DS_ARRAYED_LIST [attached G]
 			-- All items currently tagged in `Current'
@@ -87,7 +87,7 @@ feature -- Access
 			results_attached: not Result.has_void
 			results_valid: Result.for_all (agent (a_tag: STRING): BOOLEAN
 				do
-					Result := formatter.is_valid_tag (a_tag)
+					Result := validator.is_valid_tag (a_tag)
 				end)
 		end
 
@@ -158,11 +158,11 @@ feature -- Query
 			an_item_attached: an_item /= Void
 			a_tag_attached: a_tag /= Void
 		do
-			if formatter.is_valid_tag (a_tag) then
+			if validator.is_valid_tag (a_tag) then
 				Result := not has_item_with_tag (an_item, a_tag)
 			end
 		ensure
-			result_implies_valid_tag: Result implies formatter.is_valid_tag (a_tag)
+			result_implies_valid_tag: Result implies validator.is_valid_tag (a_tag)
 			result_implies_not_used: Result implies not has_item_with_tag (an_item, a_tag)
 		end
 
@@ -172,28 +172,10 @@ feature -- Query
 			-- `a_tag': Tag to be added.
 			-- `Result': True if `a_tag' is a valid tag, False otherwise.
 		do
-			Result := formatter.is_valid_tag (a_tag)
+			Result := validator.is_valid_tag (a_tag)
 		ensure
-			result_implies_valid_tag: Result implies formatter.is_valid_tag (a_tag)
+			result_implies_valid_tag: Result implies validator.is_valid_tag (a_tag)
 		end
-
---	has_tag (a_tag: READABLE_STRING_GENERAL): BOOLEAN
---			-- Is tag currently used to tag an item?
---			--
---			-- `a_tag': Some tag.
---			-- `Result': True if there is an item tagged with `a_tag', False otherwise.
---		require
---			a_tag_attached: a_tag /= Void
---		local
---			l_table: like tag_to_item_table
---		do
---			l_table := tag_to_item_table
---			check l_table /= Void end
---			Result := l_table.has (a_tag)
---		ensure
---			result_valid: Result = (attached tag_to_item_table as l_t and then l_t.has (a_tag))
---			result_implies_valid: Result implies formatter.is_valid_tag (a_tag)
---		end
 
 	has_item (an_item: G): BOOLEAN
 			-- Is item currently tagged in `Current'?
@@ -260,7 +242,7 @@ feature -- Element change
 				l_new := l_tag_table.key (a_tag)
 				l_count := l_tag_table.item (l_new) + 1
 			else
-				l_new := formatter.immutable_string (a_tag)
+				l_new := validator.immutable_string (a_tag)
 				l_count := 1
 			end
 			l_tag_table.force (l_count, l_new)

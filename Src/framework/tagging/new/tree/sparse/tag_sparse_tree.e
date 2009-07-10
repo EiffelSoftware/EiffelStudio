@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			a_node1_valid: a_node1.tree = tree
 			a_node2_valid: a_node2.tree = tree
 		local
-			l_formatter: TAG_HIERARCHICAL_FORMATTER
+			l_formatter: TAG_FORMATTER
 			l_tag1, l_tag2, l_token1, l_token2: STRING
 			l_done: BOOLEAN
 		do

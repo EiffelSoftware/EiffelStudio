@@ -196,7 +196,7 @@ feature {NONE} -- Access
 			a_node_valid: a_node.tree = tree
 			a_node_has_row: is_node_in_grid (a_node)
 		local
-			l_formatter: TAG_HIERARCHICAL_FORMATTER
+			l_formatter: TAG_FORMATTER
 			l_root_tag, l_node_tag: STRING
 			l_token, l_suffix: STRING
 		do

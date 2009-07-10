@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_tag_item_attached: a_tag_item /= Void
 			a_uuid_attached: a_uuid /= Void
 			a_parent_active: a_parent.is_active
-			a_tag_valid: a_parent.tree.formatter.is_valid_tag (a_tag)
+			a_tag_valid: a_parent.tree.validator.is_valid_tag (a_tag)
 			an_item_name_valid: not an_item_name.is_empty
 		do
 			make_es_node (a_parent, a_tag, an_item_name, a_tag_item)

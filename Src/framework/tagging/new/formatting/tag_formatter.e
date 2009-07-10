@@ -1,51 +1,109 @@
 note
-	description: "Summary description for {TAG_VALIDATOR}."
+	description: "Summary description for {TAG_FORMATTER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TAG_FORMATTER
+
+feature -- Access
+
+	validator: TAG_VALIDATOR
+			-- Validator for checking tags
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Query
 
-	is_valid_tag (a_tag: READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_token (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is given string a valid token?
+			--
+			-- `a_string': String for which is determined if it is a valid token.
+			-- `Result': True if `a_string' represents a valid token, False otherwise.
 		require
-			a_tag_attached: a_tag /= Void
+			a_string_attached: a_string /= Void
 		do
-			Result := not a_tag.is_empty
+			Result := not a_string.is_empty
 		ensure
-			result_implies_not_empty: Result implies not a_tag.is_empty
+			result_implies_not_empty: Result implies not a_string.is_empty
+			result_implies_valid_tag: Result implies validator.is_valid_tag (a_string)
+		end
+
+	is_prefix (a_prefix, a_tag: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does some tag begin with the same tokens as some other tag?
+			--
+			-- `a_prefix': A valid tag
+			-- `a_tag': A valid tag
+			-- `Result': True if `a_tag' starts with the tokens found in `a_prefix', False otherwise.
+		require
+			a_prefix_valid: a_prefix.is_empty or else validator.is_valid_tag (a_prefix)
+			a_tag_valid: a_tag.is_empty or else validator.is_valid_tag (a_tag)
+		deferred
+		ensure
+			result_implies_valid_count: Result implies a_prefix.count <= a_tag.count
+			result_implies_starts_with: Result implies a_tag.substring (1, a_prefix.count).same_string (a_prefix)
 		end
 
 feature -- Basic operations
 
-	immutable_string (a_tag: READABLE_STRING_GENERAL): IMMUTABLE_STRING_8
+	suffix (a_prefix, a_tag: READABLE_STRING_GENERAL): STRING_8
+			-- Tag containing tokens of `a_tag' whithout leading tokens contained in `a_prefix'
 		require
-			a_tag_attached: a_tag /= Void
-		do
-			if attached {IMMUTABLE_STRING_8} a_tag as l_result then
-				Result := l_result
-			else
-				create Result.make_from_string (a_tag.as_string_8)
-			end
+			a_prefix_valid: a_prefix.is_empty or else validator.is_valid_tag (a_prefix)
+			a_tag_valid: a_tag.is_empty or else validator.is_valid_tag (a_tag)
+			is_prefix_of_tag: is_prefix (a_prefix, a_tag)
+		deferred
 		ensure
-			result_attached: Result /= Void
-			result_equal: a_tag.same_string (Result)
+			result_valid: Result.is_empty or else validator.is_valid_tag (Result)
+			result_correct: a_tag.same_string (join_tags (a_prefix, Result))
 		end
 
-	string_copy (a_tag: READABLE_STRING_GENERAL): STRING_8
+	first_token (a_tag: READABLE_STRING_GENERAL): STRING_8
+			-- First token of `a_tag'
 		require
-			a_tag_attached: a_tag /= Void
+			a_tag_valid: validator.is_valid_tag (a_tag)
+		deferred
+		ensure
+			result_valid: is_valid_token (Result)
+			result_correct: is_prefix (Result, a_tag)
+		end
+
+	join_tags (a_prefix, a_suffix: READABLE_STRING_GENERAL): STRING_8
+			-- Join `a_prefix' and `a_suffix' to a tag using `split_char'.
+		require
+			prefix_is_valid_tag: a_prefix.is_empty or else validator.is_valid_tag (a_prefix)
+			suffix_is_valid_tag: a_suffix.is_empty or else validator.is_valid_tag (a_suffix)
 		do
-			Result := a_tag.as_string_8
-			if Result = a_tag then
-				create Result.make_from_string (Result)
+			if a_prefix.is_empty or a_suffix.is_empty then
+				if a_prefix.is_empty then
+					Result := validator.string_copy (a_suffix)
+				else
+					Result := validator.string_copy (a_prefix)
+				end
+			else
+				create Result.make (a_prefix.count + a_suffix.count + 1)
+				Result.append (a_prefix.as_string_8)
+				append_tag (Result, a_suffix)
 			end
 		ensure
-			result_attached: Result /= Void
-			result_same_string: a_tag.same_string (Result)
-			result_is_copy: Result /= a_tag
+			result_valid: Result.is_empty or else validator.is_valid_tag (Result)
+			result_correct: a_suffix.same_string (suffix (a_prefix, Result))
+		end
+
+	append_tag (a_prefix: STRING_GENERAL; a_suffix: READABLE_STRING_GENERAL)
+			-- Append `a_suffix' to the end of `a_prefix' resulting in a valid tag.
+		require
+			prefix_is_valid_tag: validator.is_valid_tag (a_prefix)
+			suffix_is_valid_tag: validator.is_valid_tag (a_suffix)
+		deferred
+		ensure
+			a_prefix_valid: validator.is_valid_tag (a_prefix)
+			a_prefix_has_valid_count: a_prefix.count >= old a_prefix.count + a_suffix.count
+			a_prefix_starts_with_old_prefix: a_prefix.substring (1, old a_prefix.count).same_string (old validator.immutable_string (a_prefix))
+			a_prefix_ends_with_suffix: a_prefix.substring (a_prefix.count - a_suffix.count + 1, a_prefix.count).same_string (a_suffix)
 		end
 
 note

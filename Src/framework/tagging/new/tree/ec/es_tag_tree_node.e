@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			an_item_name_attached: an_item_name /= Void
 			a_tag_item_attached: a_tag_item /= Void
 			a_parent_active: a_parent.is_active
-			a_tag_valid: a_parent.tree.formatter.is_valid_tag (a_tag)
+			a_tag_valid: a_parent.tree.validator.is_valid_tag (a_tag)
 			an_item_name_valid: not an_item_name.is_empty
 		do
 			make_node (a_parent, a_tag, a_tag_item)
-			name := tree.formatter.immutable_string (an_item_name)
+			name := tree.validator.immutable_string (an_item_name)
 		ensure
 			active: is_active
 			valid_token: token.same_string (tree.formatter.first_token (a_tag))

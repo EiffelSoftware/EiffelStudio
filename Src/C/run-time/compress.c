@@ -149,7 +149,7 @@ rt_public void eif_compress (unsigned char* in_buf, unsigned long in_size, unsig
 	unsigned char* out_ptr = NULL;
 	register unsigned char in_octet = 0x00;
 	register unsigned char out_octet = 0x00;
-	register int i = 0;
+	register int i;
 	short bit_nb = 0;
 	unsigned long out_size = 0;
 	unsigned short pad_size = 0;
@@ -248,7 +248,7 @@ void eif_decompress (unsigned char* in_buf, unsigned long in_size, unsigned char
 	unsigned char* out_ptr = NULL;
 	register unsigned char in_octet = 0x00;
 	register unsigned char out_octet = 0x00;
-	register int i = 0;
+	register int i;
 	unsigned char discriminator = 0x00;
 	short bit_nb = 0;
 	unsigned long out_size = 0;

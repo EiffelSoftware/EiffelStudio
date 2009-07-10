@@ -88,8 +88,8 @@ rt_private jmp_buf env;		/* Environment saving for longjmp() */
 #ifdef EIF_WINDOWS
 rt_private void CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for read timeouts */
 #else
-rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
-rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
+rt_private Signal_t broken(int);	/* Signal handler for SIGPIPE */
+rt_private Signal_t timeout(int);	/* Signal handler for read timeouts */
 #endif
 
 rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
@@ -183,7 +183,7 @@ closed:
   	return -1;
 
 #else
-	oldalrm = signal(SIGALRM, (void (*)(int)) timeout);	/* Trap SIGALRM within this function */
+	oldalrm = signal(SIGALRM, timeout);	/* Trap SIGALRM within this function */
 
 	if (0 != setjmp(env)) {
 		alarm(0);					/* Stop alarm clock */
@@ -281,7 +281,7 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 
 #else  /* (not) EIF_WINDOWS */
 
-	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
+	oldpipe = signal(SIGPIPE, broken);	/* Trap SIGPIPE within this function */
 	if (0 != setjmp(env)) {
 		signal(SIGPIPE, oldpipe);
 		errno = EPIPE;
@@ -318,7 +318,7 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 }
 
 #ifndef EIF_WINDOWS
-rt_private Signal_t broken(void)
+rt_private Signal_t broken(int sig)
 {
 #ifdef USE_ADD_LOG
 	add_log(20, "SIGPIPE signal handler broken() called in network.c");
@@ -331,7 +331,7 @@ rt_private Signal_t broken(void)
 #ifdef EIF_WINDOWS
 rt_private void CALLBACK timeout(HWND hwnd, UINT msg, UINT id, DWORD time)
 #else
-rt_private Signal_t timeout(void)
+rt_private Signal_t timeout(int sig)
 #endif
 {
 	longjmp(env, 1);			/* Alarm signal received */

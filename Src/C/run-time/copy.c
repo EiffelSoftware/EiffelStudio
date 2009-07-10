@@ -88,10 +88,13 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Might move `source' */
 
-	register uint16 flags = HEADER(source)->ov_flags;
-	EIF_TYPE_INDEX dftype = Dftype(source);
+	register uint16 flags;
+	EIF_TYPE_INDEX dftype;
 
   	REQUIRE ("source not null", source);
+
+	flags = HEADER(source)->ov_flags;
+	dftype= Dftype(source);
 
 	if (flags & EO_SPEC) {
 		if (flags & EO_TUPLE) {
@@ -181,12 +184,13 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	 * because the garbage collector needs to explore those references.
 	 */
 
-	register uint16 flags = HEADER(source)->ov_flags;
+	register uint16 flags;
 
 	REQUIRE ("source_not_null", source);
 	REQUIRE ("target_not_null", target);
 	REQUIRE ("Same type", Dftype(source) == Dftype(target));
 
+	flags = HEADER(source)->ov_flags;
 	if (flags & EO_SPEC) {
 		spcopy(source, target);
 	} else if (Dftype(source) == egc_bit_dtype) {

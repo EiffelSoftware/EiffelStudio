@@ -566,13 +566,13 @@ rt_private void interpret(int flag, int where)
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
+	int  volatile is_process_once = 0;		/* Is once routine process-relative? */
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
 	long volatile once_key = 0;				/* Index in once table */
 	int  volatile is_once = 0;				/* Is it a once routine? */
-	int  volatile is_process_once = 0;		/* Is once routine process-relative? */
 	int  volatile create_result = 1;			/* Should result be created? */
 	RTSN;							/* Save nested flag */
 	STACK_PRESERVE_FOR_OLD;

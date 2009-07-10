@@ -64,6 +64,16 @@ feature -- Accessing the Main Menu
 			"return [(NSApplication*)$a_application mainMenu];"
 		end
 
+feature -- Managing Panels
+
+	frozen order_front_standard_about_panel (a_application: POINTER; a_sender: POINTER)
+			-- - (void)orderFrontStandardAboutPanel:(id)sender
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSApplication*)$a_application orderFrontStandardAboutPanel: $a_sender];"
+		end
+
 feature -- Terminating Applications
 
 	frozen update_windows (a_application: POINTER)

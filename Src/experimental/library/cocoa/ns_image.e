@@ -40,7 +40,7 @@ feature {NONE} -- Creation
 			make_from_pointer ({NS_IMAGE_API}.image_named ((create {NS_STRING}.make_with_string (a_name)).item))
 		end
 
-feature -- Access
+feature -- Setting the Image Attributes
 
 	size: NS_SIZE
 			-- Returns the size of the receiver.
@@ -54,9 +54,17 @@ feature -- Access
 		end
 
 	set_size (a_size: NS_SIZE)
+			-- Sets the width and height of the image.
+			-- The size of an NS_IAMGE object must be set before it can be used. If the size of the image hasn't already
+			-- been set when an image representation is added, the size is taken from the image representation's data.
+			-- Changing the size of an NSImage after it has been used effectively resizes the image.
 		do
 			{NS_IMAGE_API}.set_size (item, a_size.item)
 		end
+
+feature -- Referring to Images by Name
+
+feature -- Working With Image Representatons
 
 	representations: NS_ARRAY [NS_IMAGE_REP]
 			-- Returns an array containing all of the receiver's image representations.
@@ -112,6 +120,18 @@ feature -- Access
 		do
 			Result := {NS_IMAGE_API}.is_flipped (item)
 		end
+
+feature -- Producing TIFF data for the image
+
+	tiff_representation: NS_DATA
+		do
+			create Result.share_from_pointer ({NS_IMAGE_API}.tiff_representation (item))
+		end
+
+--	tiff_representation_using_compression_factor (a_comp: NSTIFF_COMPRESSION; a_float: REAL): NS_DATA
+--		do
+--			create Result.share_from_pointer ({NS_IMAGE_API}.tiff_representation_using_compression_factor (item, a_comp.item, a_float.item))
+--		end	
 
 feature -- Contract Support
 

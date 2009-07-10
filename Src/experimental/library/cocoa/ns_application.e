@@ -122,6 +122,13 @@ feature -- Accessing the Main Menu
 			{NS_APPLICATION_API}.stop (item, item)
 		end
 
+feature -- Managing Panels
+
+	order_front_standard_about_panel
+		do
+			{NS_APPLICATION_API}.order_front_standard_about_panel (item, item)
+		end
+
 feature -- Managing the Event Loop
 
 	run_modal_for_window (a_window: NS_WINDOW): INTEGER
@@ -158,6 +165,7 @@ feature -- Other
 			Result := l_menu_item
 
 			create l_menu_item.make_with_title (create {NS_STRING}.make_with_string ("About #{appname}"), void)
+			l_menu_item.set_action (agent order_front_standard_about_panel)
 			l_menu.add_item (l_menu_item)
 
 			create l_menu_item.separator_item
@@ -182,7 +190,8 @@ feature -- Other
 			l_menu.add_item (l_menu_item)
 
 			create l_menu_item.make_with_title (create {NS_STRING}.make_with_string ("Quit #{appname}"), void)
-			l_menu_item.set_key_equivalent ("Q")
+			l_menu_item.set_key_equivalent ("q")
+			l_menu_item.set_action (agent terminate)
 			l_menu.add_item (l_menu_item)
 		end
 

@@ -164,7 +164,7 @@ rt_private Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* In
 #endif
 #endif
 
-void (*rt_signal (int sig, void (*handler)(int)))(int) 
+Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int) 
 {
 #ifndef HAS_SIGACTION
 	return signal(sig, handler);
@@ -709,7 +709,7 @@ rt_shared void initsig(void)
 
 #ifdef SIGCHLD
 	sig_ign[SIGCHLD] = 1;			/* Ignore death of a child */
-	rt_signal(SIGCHLD, SIG_DFL);		/* Restore the default value */
+	(void) rt_signal(SIGCHLD, SIG_DFL);		/* Restore the default value */
 #endif
 #ifdef SIGCLD
 	sig_ign[SIGCLD] = 1;			/* Ignore death of a child */

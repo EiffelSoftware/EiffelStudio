@@ -215,9 +215,8 @@ feature {NONE} -- Registration: Output
 feature {NONE} -- Internationalization
 
 	lb_general: STRING = "General"
-	lb_compiler: STRING = "Compiler"
+	lb_compiler: STRING = "Eiffel Compilation"
 	lb_external_compilation: STRING = "External Compilation"
-	lb_testing: STRING = "Testing"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

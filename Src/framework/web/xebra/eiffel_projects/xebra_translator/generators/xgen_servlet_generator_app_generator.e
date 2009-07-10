@@ -229,6 +229,7 @@ feature -- Constants
 		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
 		<library name="xebra_taglibrary_form" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form-voidunsafe.ecf"/>
 		<library name="xebra_taglibrary_xrpc" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_xrpc\xebra_taglibrary_xrpc-voidunsafe.ecf"/>
+		<library name="xebra_taglibrary_efa" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_efa\xebra_taglibrary_efa-voidunsafe.ecf"/>
 		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>

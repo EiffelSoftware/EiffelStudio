@@ -96,8 +96,7 @@ RT_LNK long *nbref;		/* Gives # of references given DT */
 #define Disp_rout(type)		EIF_TYPE_HAS_DISPOSE(esystem[type]) /* Does type have disp routine ? */
 #define Dispose(type) ((void (*)()) wdisp(type));
 										/* Dispose routine */
-#define XCreate(type)	     \
-	(EIF_IS_COMPOSITE_TYPE(esystem[type]) ? (char *(*)()) wstdinit : (char *(*)()) 0)
+#define XCreate(type)	     (EIF_IS_COMPOSITE_TYPE(esystem[type]) ? wstdinit : NULL)
 #endif
 
 

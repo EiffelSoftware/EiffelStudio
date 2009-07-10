@@ -93,9 +93,9 @@ feature {TAG_TREE_NODE} -- Basic operations
 			token_writer.process_basic_text (process_token (a_node.token))
 		end
 
-feature {ES_TAG_TREE_NODE} -- Basic operations
+feature {EC_TAG_TREE_NODE} -- Basic operations
 
-	process_class_node (a_node: ES_TAG_TREE_CLASS_NODE [G])
+	process_class_node (a_node: EC_TAG_TREE_CLASS_NODE [G])
 			-- <Precursor>
 		do
 			if attached a_node.item (project_access) as l_class then
@@ -107,7 +107,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 			end
 		end
 
-	process_feature_node (a_node: ES_TAG_TREE_FEATURE_NODE [G])
+	process_feature_node (a_node: EC_TAG_TREE_FEATURE_NODE [G])
 			-- <Precursor>
 		do
 			if attached a_node.item (project_access) as l_feature then
@@ -119,7 +119,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 			end
 		end
 
-	process_library_node (a_node: ES_TAG_TREE_LIBRARY_NODE [G])
+	process_library_node (a_node: EC_TAG_TREE_LIBRARY_NODE [G])
 			-- <Precursor>
 		do
 			if attached a_node.item (project_access) as l_library then
@@ -131,7 +131,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 			end
 		end
 
-	process_cluster_node (a_node: ES_TAG_TREE_CLUSTER_NODE [G])
+	process_cluster_node (a_node: EC_TAG_TREE_CLUSTER_NODE [G])
 			-- <Precursor>
 		do
 			if attached a_node.item (project_access) as l_cluster then
@@ -143,7 +143,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 			end
 		end
 
-	process_override_node (a_node: ES_TAG_TREE_OVERRIDE_NODE [G])
+	process_override_node (a_node: EC_TAG_TREE_OVERRIDE_NODE [G])
 			-- <Precursor>
 		do
 			if attached a_node.item (project_access) as l_override then
@@ -155,7 +155,7 @@ feature {ES_TAG_TREE_NODE} -- Basic operations
 			end
 		end
 
-	process_directory_node (a_node: ES_TAG_TREE_DIRECTORY_NODE [G])
+	process_directory_node (a_node: EC_TAG_TREE_DIRECTORY_NODE [G])
 			-- <Precursor>
 		local
 			l_name: STRING
@@ -191,8 +191,8 @@ feature {NONE} -- Implementation
 			a_node.process (Current)
 		end
 
-	process_ec_node (a_node: ES_TAG_TREE_NODE [G, ANY])
-			-- Process {ES_TAG_TREE_NODE}.
+	process_ec_node (a_node: EC_TAG_TREE_NODE [G, ANY])
+			-- Process {EC_TAG_TREE_NODE}.
 		do
 			token_writer.process_basic_text (a_node.name.as_string_8)
 		end

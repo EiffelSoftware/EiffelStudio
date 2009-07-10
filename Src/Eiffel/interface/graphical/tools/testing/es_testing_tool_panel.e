@@ -411,21 +411,21 @@ feature {NONE} -- Status setting: stones
 						l_filter_text.append ("^covers")
 					end
 					l_filter_text.append (".*")
-					l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.class_prefix)
+					l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.class_prefix)
 					l_filter_text.append (l_class_stone.class_name)
 					if attached {FEATURE_STONE} stone as l_feature_stone then
 						l_filter_text.append ("/")
-						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.feature_prefix)
+						l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.feature_prefix)
 						l_filter_text.append (l_feature_stone.feature_name)
 					end
 				elseif attached {CLUSTER_STONE} stone as l_cluster then
 					create l_filter_text.make (40)
 					if l_cluster.group.is_cluster then
-						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.cluster_prefix)
+						l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.cluster_prefix)
 					elseif l_cluster.group.is_library then
-						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.library_prefix)
+						l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.library_prefix)
 					elseif l_cluster.group.is_override then
-						l_filter_text.append ({ES_TAG_TREE_CONSTANTS}.override_prefix)
+						l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.override_prefix)
 					end
 					l_filter_text.append (l_cluster.group.name)
 				end

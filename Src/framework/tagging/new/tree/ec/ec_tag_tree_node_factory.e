@@ -1,13 +1,13 @@
 note
 	description: "[
-		Node factory creating instances of {ES_TAG_TREE_NODE}.
+		Node factory creating instances of {EC_TAG_TREE_NODE}.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TAG_TREE_NODE_FACTORY [G -> TAG_ITEM]
+	EC_TAG_TREE_NODE_FACTORY [G -> TAG_ITEM]
 
 inherit
 	TAG_TREE_NODE_FACTORY [G]
@@ -28,38 +28,38 @@ feature -- Factory
 			l_formatter := a_parent.tree.formatter
 			l_token := l_formatter.first_token (a_tag)
 
-			if l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.class_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.class_prefix.count + 1, l_token.count)
-				create {ES_TAG_TREE_CLASS_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
+			if l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.class_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.class_prefix.count + 1, l_token.count)
+				create {EC_TAG_TREE_CLASS_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.feature_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.feature_prefix.count + 1, l_token.count)
-				create {ES_TAG_TREE_FEATURE_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.feature_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.feature_prefix.count + 1, l_token.count)
+				create {EC_TAG_TREE_FEATURE_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.target_prefix) then
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.target_prefix) then
 				-- TODO: implement
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.library_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.library_prefix.count + 1, l_token.count)
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.library_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.library_prefix.count + 1, l_token.count)
 				if l_name.count > 37 then
 					l_uuid := l_name.substring (l_name.count - 35, l_name.count)
 					l_name := l_name.substring (1, l_name.count - 37)
 					if (create {UUID}).is_valid_uuid (l_uuid) then
-						create {ES_TAG_TREE_LIBRARY_NODE [G]} l_node.make (a_parent, a_tag, l_name, create {UUID}.make_from_string (l_uuid), an_item)
+						create {EC_TAG_TREE_LIBRARY_NODE [G]} l_node.make (a_parent, a_tag, l_name, create {UUID}.make_from_string (l_uuid), an_item)
 					end
 				end
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.cluster_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.cluster_prefix.count + 1, l_token.count)
-				create {ES_TAG_TREE_CLUSTER_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.cluster_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.cluster_prefix.count + 1, l_token.count)
+				create {EC_TAG_TREE_CLUSTER_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.override_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.override_prefix.count + 1, l_token.count)
-				create {ES_TAG_TREE_OVERRIDE_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.override_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.override_prefix.count + 1, l_token.count)
+				create {EC_TAG_TREE_OVERRIDE_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
 
-			elseif l_token.starts_with ({ES_TAG_TREE_CONSTANTS}.directory_prefix) then
-				l_name := l_token.substring ({ES_TAG_TREE_CONSTANTS}.directory_prefix.count + 1, l_token.count)
-				create {ES_TAG_TREE_DIRECTORY_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
+			elseif l_token.starts_with ({EC_TAG_TREE_CONSTANTS}.directory_prefix) then
+				l_name := l_token.substring ({EC_TAG_TREE_CONSTANTS}.directory_prefix.count + 1, l_token.count)
+				create {EC_TAG_TREE_DIRECTORY_NODE [G]} l_node.make (a_parent, a_tag, l_name, an_item)
 
 			end
 

@@ -616,8 +616,8 @@ feature {NONE} -- Text Loading
 		do
 				-- First abort our previous actions.
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if search_tool /= Void then
-				search_tool.force_new_search
+			if attached internal_search_tool then
+				internal_search_tool.force_new_search
 			end
 			after_reading_text_actions.wipe_out
 		end

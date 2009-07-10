@@ -123,16 +123,12 @@ rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
 				break;					/* We reached the bottom of the stack */
 		}
 
-#ifdef MAY_PANIC
-		/* Now either 's' is NULL and we made a mistake because we asked for
-		 * more items than there actually were held in the stack. So eif_panic.
-		 * Otherwise 'top' is correctly set and 's' is the new current chunk.
-		 */
-		if (s == (struct stchunk *) 0)
-			eif_panic("run-time stack botched");
-#endif
+			/* Now either 's' is NULL and we made a mistake because we asked for
+			 * more items than there actually were held in the stack.
+			 * Otherwise 'top' is correctly set and 's' is the new current chunk. */
+		CHECK("not null", s);
 
-		/* Update stack structure */
+			/* Update stack structure */
 		stk->st_cur = s;
 		stk->st_top = top;
 		stk->st_end = s->sk_end;

@@ -125,6 +125,7 @@ rt_public void register_packet_functions (EIF_PSTREAM sp, void(*p_send_fct)(EIF_
 			};
 		}
 	}
+	CHECK("p_data not null", p_data);
 	p_data->sp = sp;
 	p_data->p_send_fct = p_send_fct;
 	p_data->p_recv_fct = p_recv_fct;
@@ -326,10 +327,12 @@ rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)
 	}
 
 	size = pack.rq_opaque.op_size;			/* Fetch string's length */
-	if (sizeptr) {*sizeptr = size; }		/* Fill in size pointer */
+	if (sizeptr) {
+			/* Fill in size pointer */
+		*sizeptr = size;
+	}
 
 	if (size == 0) {						/* Nothing to be received */
-		if (sizeptr) { *sizeptr = 0; }		/* Fill in size with 0 */
 		return (char *) 0;
 	}
 

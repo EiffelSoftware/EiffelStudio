@@ -136,29 +136,31 @@ void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT 
 	/* allocate buffer for command, add 10 bytes of overhead for COPY command verb, spaces, and terminator */
 	cmd_len = strlen(driver_name_vms) + strlen(c_code_dir_vms) + strlen(system_name_cstr) + 10;
 	cmd = malloc (cmd_len);
-	if (cmd == NULL)
+	if (cmd == NULL) {
 	    enomem();
-
-	sprintf (cmd, "COPY %s %s%s", driver_name_vms, c_code_dir_vms, system_name_cstr);
-	assert (strlen(cmd) < cmd_len);
-	printf ("$ %s\n",cmd);
-	res = eif_system (cmd);
-	free (cmd);
+	} else {
+		sprintf (cmd, "COPY %s %s%s", driver_name_vms, c_code_dir_vms, system_name_cstr);
+		assert (strlen(cmd) < cmd_len);
+		printf ("$ %s\n",cmd);
+		res = eif_system (cmd);
+		free (cmd);
+	}
 
 #else
 	char *cmd;
 
 	cmd = malloc(20 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
-	if (cmd == (char *)0)
+	if (cmd == (char *)0) {
 		enomem();
+	} else {
+		sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name),
+			 eif_access(driver_name), eif_access(c_code_dir),
+			 eif_access(system_name));
 
-	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name),
-		 eif_access(driver_name), eif_access(c_code_dir),
-		 eif_access(system_name));
-
-	(void) eif_system(cmd);
-	free(cmd);
+		(void) eif_system(cmd);
+		free(cmd);
+	}
 #endif
 }
 

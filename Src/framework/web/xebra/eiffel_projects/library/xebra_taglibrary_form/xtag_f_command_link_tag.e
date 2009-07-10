@@ -80,7 +80,7 @@ feature -- Implementation
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
-			if a_id.is_equal ("label") then
+			if a_id.is_equal ("text") then
 				label := a_attribute
 			end
 			if a_id.is_equal ("action") then

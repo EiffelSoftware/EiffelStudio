@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	project: attached E_PROJECT
+	project: E_PROJECT
 			-- Project used to find classes and features
 		require
 			available: is_project_available
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature -- Query
 
-	has_attached_items (a_row: attached EV_GRID_ROW): BOOLEAN
+	has_attached_items (a_row: EV_GRID_ROW): BOOLEAN
 			-- Are all items of `a_row' attached?
 		local
 			i: INTEGER
@@ -121,7 +121,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	class_from_name (a_name: attached STRING; a_group: detachable CONF_GROUP): detachable CLASS_I
+	class_from_name (a_name: STRING; a_group: detachable CONF_GROUP): detachable CLASS_I
 			-- Class in `project' with `a_name'. Void if no class with name exists.
 		local
 			l_group: CONF_GROUP
@@ -140,14 +140,14 @@ feature {NONE} -- Query
 
 feature -- Basic functionality
 
-	populate_header (a_header: attached EV_GRID_HEADER)
+	populate_header (a_header: EV_GRID_HEADER)
 			-- Populate header with items
 		require
 			valid_item_count: a_header.count = column_count
 		do
 		end
 
-	populate_node_row (a_row: attached EV_GRID_ROW; a_node: attached TAG_BASED_TREE_NODE [G])
+	populate_node_row (a_row: EV_GRID_ROW; a_node: TAG_BASED_TREE_NODE [G])
 			-- Populate row with tree node information
 		require
 			valid_item_count: a_row.count = column_count
@@ -158,7 +158,7 @@ feature -- Basic functionality
 			items_attached: has_attached_items (a_row)
 		end
 
-	populate_item_row (a_row: attached EV_GRID_ROW; a_item: attached G)
+	populate_item_row (a_row: EV_GRID_ROW; a_item: G)
 			-- Populate row with item information
 		require
 			valid_item_count: a_row.count = column_count
@@ -170,7 +170,7 @@ feature -- Basic functionality
 			items_attached: has_attached_items (a_row)
 		end
 
-	populate_text_row (a_row: attached EV_GRID_ROW; a_text: attached STRING)
+	populate_text_row (a_row: EV_GRID_ROW; a_text: STRING)
 			-- Populate untagged row
 		require
 			valid_item_count: a_row.count = column_count
@@ -183,13 +183,13 @@ feature -- Basic functionality
 
 feature {NONE} -- Factory
 
-	new_empty_item: attached EV_GRID_ITEM
+	new_empty_item: EV_GRID_ITEM
 			-- Create an empty grid item
 		do
 			create Result
 		end
 
-	new_label_item (a_token: attached STRING): attached EV_GRID_LABEL_ITEM
+	new_label_item (a_token: STRING): EV_GRID_LABEL_ITEM
 			-- Create a new label item
 			--
 			-- `a_token': Text used in new label item.
@@ -197,12 +197,12 @@ feature {NONE} -- Factory
 			create Result.make_with_text (a_token)
 		end
 
-	new_token_item (a_node: attached TAG_BASED_TREE_NODE [G]): attached EV_GRID_ITEM
+	new_token_item (a_node: TAG_BASED_TREE_NODE [G]): EV_GRID_ITEM
 			-- Create new item according to given node.
 			--
 			-- `a_node': Node for which token item should be created.
 		local
-			l_token: attached STRING
+			l_token: STRING
 			l_name, l_uuid: detachable STRING
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_label_item: EV_GRID_LABEL_ITEM
@@ -346,7 +346,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Implementation
 
-	fill_with_empty_items (a_row: attached EV_GRID_ROW; a_start: INTEGER)
+	fill_with_empty_items (a_row: EV_GRID_ROW; a_start: INTEGER)
 			-- Fill missing items of row with empty items.
 			--
 			-- `a_row': Row to be filled with empty items
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_token (a_token: attached STRING): attached STRING
+	process_token (a_token: STRING): STRING
 			-- Replace underscores in `a_token' with whitespace
 		local
 			i: INTEGER

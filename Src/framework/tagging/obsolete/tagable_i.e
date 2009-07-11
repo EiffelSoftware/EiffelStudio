@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	name: attached STRING
+	name: STRING
 			-- Name describing `Current'
 		require
 			usable: is_interface_usable
@@ -29,7 +29,7 @@ feature -- Access
 			not_empty: not Result.is_empty
 		end
 
-	tags: attached DS_LINEAR [attached STRING]
+	tags: DS_LINEAR [STRING]
 			-- List of tags
 		require
 			usable: is_interface_usable
@@ -37,10 +37,10 @@ feature -- Access
 		ensure
 			result_uses_string_equality: ({KL_STRING_EQUALITY_TESTER} #? Result.equality_tester) /= Void
 			results_valid: Result.for_all (agent is_valid_tag)
-			results_not_empty: not ({attached DS_LINEAR [attached STRING]} #? Result).there_exists (agent {attached STRING}.is_empty)
+			results_not_empty: not ({attached DS_LINEAR [STRING]} #? Result).there_exists (agent {attached STRING}.is_empty)
 		end
 
-	memento: attached TAGABLE_MEMENTO_I
+	memento: TAGABLE_MEMENTO_I
 			-- <Precursor>
 		deferred
 		end

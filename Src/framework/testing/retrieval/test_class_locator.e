@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	project: attached TEST_PROJECT
+	project: TEST_PROJECT
 			-- <Precursor>
 		local
 			l_project: like internal_project
@@ -80,7 +80,7 @@ feature {TEST_PROJECT_I} -- Status setting
 
 feature {TEST_PROJECT_I} -- Query
 
-	is_test_class_impl (a_class: attached EIFFEL_CLASS_I; a_project: like project): BOOLEAN
+	is_test_class_impl (a_class: EIFFEL_CLASS_I; a_project: like project): BOOLEAN
 			-- <Precursor>
 		do
 			internal_project := a_project
@@ -90,7 +90,7 @@ feature {TEST_PROJECT_I} -- Query
 
 feature {NONE} -- Query
 
-	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- Is `a_class' a valid test class?
 		require
 			locating: is_locating

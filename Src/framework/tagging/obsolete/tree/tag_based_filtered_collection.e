@@ -78,7 +78,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	items: DS_LINEAR [attached G]
+	items: DS_LINEAR [G]
 			-- <Precursor>
 		local
 			l_empty: like empty_items
@@ -96,10 +96,10 @@ feature -- Access
 				Result := l_empty
 			end
 		ensure then
-			results_match_expression: has_expression implies Result.for_all (agent (a_item: attached G): BOOLEAN do Result := matches (a_item) end)
+			results_match_expression: has_expression implies Result.for_all (agent (a_item: G): BOOLEAN do Result := matches (a_item) end)
 		end
 
-	collection: attached like internal_collection
+	collection: like internal_collection
 			-- Collection being filtered
 		require
 			connected: is_connected
@@ -127,7 +127,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_items: DS_HASH_SET [attached G]
+	internal_items: DS_HASH_SET [G]
 			-- Cache holding items currently matching expression
 
 	internal_collection: detachable ACTIVE_COLLECTION_I [G]
@@ -142,7 +142,7 @@ feature {NONE} -- Access
 	negative_matchers: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Regular expressions which item must not match to be in `items'
 
-	empty_items: detachable DS_ARRAYED_LIST [attached G]
+	empty_items: detachable DS_ARRAYED_LIST [G]
 			-- Empty list of items
 
 feature -- Status report
@@ -226,13 +226,13 @@ feature -- Status setting
 
 feature -- Events
 
-	item_added_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_added_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: G]]
 			-- <Precursor>
 
-	item_removed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_removed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: G]]
 			-- <Precursor>
 
-	item_changed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: attached G]]
+	item_changed_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]; active: G]]
 			-- <Precursor>
 
 	items_reset_event: EVENT_TYPE [TUPLE [collection: ACTIVE_COLLECTION_I [G]]]
@@ -240,7 +240,7 @@ feature -- Events
 
 feature {ACTIVE_COLLECTION_I} -- Events
 
-	on_item_added (a_collection: like collection; an_item: attached G)
+	on_item_added (a_collection: like collection; an_item: G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -253,7 +253,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 			end
 		end
 
-	on_item_removed (a_collection: like collection; an_item: attached G)
+	on_item_removed (a_collection: like collection; an_item: G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -267,7 +267,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 			end
 		end
 
-	on_item_changed (a_collection: like collection; an_item: attached G)
+	on_item_changed (a_collection: like collection; an_item: G)
 			-- <Precursor>
 		do
 			if has_expression then
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 		require
 			connected: is_connected
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached G]
+			l_cursor: DS_LINEAR_CURSOR [G]
 			l_removed, l_added: detachable like internal_items
 			l_expr, l_int: BOOLEAN
 		do
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_matchers (a_expr: attached STRING)
+	add_matchers (a_expr: STRING)
 			-- Add matchers to `positive_matchers' and `negative_matchers' according to given expression.
 			--
 			-- `a_expression': Expression from which matchers are created.

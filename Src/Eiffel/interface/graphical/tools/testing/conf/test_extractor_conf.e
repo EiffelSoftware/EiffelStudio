@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	call_stack_elements: attached DS_LINEAR [INTEGER]
+	call_stack_elements: DS_LINEAR [INTEGER]
 			-- <Precursor>
 		do
 			Result := call_stack_elements_cache
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Access: cache
 
-	call_stack_elements_cache: attached DS_HASH_SET [INTEGER]
+	call_stack_elements_cache: DS_HASH_SET [INTEGER]
 
 feature {NONE} -- Query
 

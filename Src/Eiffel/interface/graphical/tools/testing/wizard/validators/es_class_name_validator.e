@@ -19,7 +19,7 @@ inherit
 
 feature -- Validation
 
-	validate_class_name (a_class_name: attached STRING)
+	validate_class_name (a_class_name: STRING)
 			-- Is name a valid name for an Eiffel class?
 			--
 			-- `a_class_name': Name to be validated.
@@ -32,7 +32,7 @@ feature -- Validation
 			end
 		end
 
-	validate_new_class_name (a_class_name: attached STRING; a_project: attached E_PROJECT)
+	validate_new_class_name (a_class_name: STRING; a_project: E_PROJECT)
 			-- Is name a valid name for a new Eiffel class?
 			--
 			-- `a_class_name': Name for new Eiffel class.

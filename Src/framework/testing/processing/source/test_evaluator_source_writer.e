@@ -17,38 +17,38 @@ inherit
 
 feature -- Access
 
-	class_name: attached STRING = "EQA_EVALUATOR_ROOT"
+	class_name: STRING = "EQA_EVALUATOR_ROOT"
 			-- <Precursor>
 
-	ancestor_names: attached ARRAY [attached STRING]
+	ancestor_names: ARRAY [STRING]
 			-- <Precursor>
 		do
 			Result := << "EQA_EVALUATOR" >>
 		end
 
-	root_feature_name: attached STRING = "make"
+	root_feature_name: STRING = "make"
 			-- <Precursor>
 
 feature -- Basic operations
 
-	write_source (a_file: attached KI_TEXT_OUTPUT_STREAM; a_list: detachable DS_LINEAR [attached TEST_I])
+	write_source (a_file: KI_TEXT_OUTPUT_STREAM; a_list: detachable DS_LINEAR [TEST_I])
 			-- Write interpreter root class to file
 		require
 			a_file_open_write: a_file.is_open_write
 		local
-			l_type: attached STRING
+			l_type: STRING
 		do
 			create stream.make (a_file)
 			put_indexing
 			put_class_header
 			put_query ("is_valid_index", "BOOLEAN", a_list,
-				agent (a_test: attached TEST_I; a_index: NATURAL)
+				agent (a_test: TEST_I; a_index: NATURAL)
 					do
 						stream.put_line ("Result := True")
 					end, True)
 			create l_type.make_from_string ({TEST_CONSTANTS}.common_test_class_ancestor_name)
 			put_query ("test_set_instance", l_type, a_list,
-				agent (a_test: attached TEST_I; a_index: NATURAL)
+				agent (a_test: TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("l_result := create {")
 						stream.put_string (a_test.class_name)
@@ -56,7 +56,7 @@ feature -- Basic operations
 					end, False)
 			create l_type.make_from_string ("PROCEDURE [ANY, TUPLE [" + {TEST_CONSTANTS}.common_test_class_ancestor_name + "]]")
 			put_query ("test_procedure", l_type, a_list,
-				agent (a_test: attached TEST_I; a_index: NATURAL)
+				agent (a_test: TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("l_result := agent {")
 						stream.put_string (a_test.class_name)
@@ -65,7 +65,7 @@ feature -- Basic operations
 					end, False)
 			create l_type.make_from_string ("READABLE_STRING_8")
 			put_query ("test_name", l_type, a_list,
-				agent (a_test: attached TEST_I; a_index: NATURAL)
+				agent (a_test: TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("l_result := %"")
 						stream.put_string (a_test.name)
@@ -78,12 +78,12 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_query (a_name: attached STRING; a_result: attached STRING; a_list: detachable DS_LINEAR [attached TEST_I]; a_callback: attached PROCEDURE [ANY, TUPLE [t: attached TEST_I; i: NATURAL]]; a_is_basic: BOOLEAN)
+	put_query (a_name: STRING; a_result: STRING; a_list: detachable DS_LINEAR [TEST_I]; a_callback: PROCEDURE [ANY, TUPLE [t: TEST_I; i: NATURAL]]; a_is_basic: BOOLEAN)
 			-- Print `test_name' routine to `stream'.
 		require
 			stream_valid: is_writing
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [TEST_I]
 			i: NATURAL
 		do
 			stream.indent

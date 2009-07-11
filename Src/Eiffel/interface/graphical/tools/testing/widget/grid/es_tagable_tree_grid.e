@@ -71,7 +71,7 @@ feature {NONE} --Initialization
 
 				-- Create expansion cache
 			create expansion_cache.make
-			expansion_cache.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
+			expansion_cache.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
 		end
 
 	on_after_initialized
@@ -86,7 +86,7 @@ feature {NONE} --Initialization
 
 feature -- Access
 
-	tree: attached ES_TAGABLE_TREE_GRID [G]
+	tree: ES_TAGABLE_TREE_GRID [G]
 			-- <Precursor>
 		do
 			Result := Current
@@ -94,7 +94,7 @@ feature -- Access
 
 feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Access
 
-	expansion_cache: attached DS_LINKED_LIST [attached STRING]
+	expansion_cache: DS_LINKED_LIST [STRING]
 			-- Tags of nodes which are currently expanded in `grid'
 			--
 			-- Note: this list holds not more than `max_expansion_cache_count', where the first one the list
@@ -170,7 +170,7 @@ feature {NONE} -- Element change
 			initialize_layout
 		end
 
-	add_untagged_item (a_item: attached G)
+	add_untagged_item (a_item: G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -207,7 +207,7 @@ feature {NONE} -- Element change
 			create l_new.make (l_row, a_item)
 		end
 
-	remove_untagged_item (a_item: attached G)
+	remove_untagged_item (a_item: G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -232,13 +232,13 @@ feature {NONE} -- Element change
 
 feature -- Basic functionality
 
-	show_row_for_item (a_item: attached G)
+	show_row_for_item (a_item: G)
 			-- Expand all rows in `Current' displaying `a_item' and select them.
 		require
 			connected: is_connected
 			a_item_in_collection: collection.items.has (a_item)
 		local
-			l_tags: attached DS_HASH_SET [attached STRING]
+			l_tags: DS_HASH_SET [STRING]
 			i: INTEGER
 		do
 			l_tags := tag_suffixes (a_item.tags, tag_prefix)

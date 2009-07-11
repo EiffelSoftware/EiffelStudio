@@ -37,13 +37,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	execution_assigner: attached TEST_EXECUTION_ASSIGNER
+	execution_assigner: TEST_EXECUTION_ASSIGNER
 			-- Assigner for retrieving tests to be executed
 
-	status_queue: attached DS_LINKED_LIST [like fetch_progress]
+	status_queue: DS_LINKED_LIST [like fetch_progress]
 			-- Queue containing evaluator progress
 
-	queue_mutex: attached MUTEX
+	queue_mutex: MUTEX
 			-- Mutex for controlling access to `status_queue'
 
 feature -- Status report
@@ -164,7 +164,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 			queue_mutex.unlock
 		end
 
-	put_outcome (a_outcome: attached EQA_TEST_RESULT)
+	put_outcome (a_outcome: EQA_TEST_RESULT)
 			-- Add `a_outcome' to `status_queue'.
 		do
 			queue_mutex.lock
@@ -199,7 +199,7 @@ feature {NONE} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Basic operations
 
-	fetch_progress: attached TUPLE [index: like next; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
+	fetch_progress: TUPLE [index: like next; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
 			-- Retrieve current status
 			--
 			-- Note: `fetch_progress' might return information about tests which have been aborted.

@@ -33,7 +33,7 @@ feature -- Access
 			Result := stock_pixmaps.tool_external_output_icon
 		end
 
-	title: attached STRING_32
+	title: STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_tool_title)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
+	is_stone_usable_internal (a_stone: like stone): BOOLEAN
 			-- <Precursor>
 		do
 			Result := True
@@ -49,7 +49,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Factory
 
-	new_tool: attached ES_TESTING_TOOL_PANEL
+	new_tool: ES_TESTING_TOOL_PANEL
 			-- <Precursor>
 		do
 			create Result.make (window, Current)

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attributes: attached DS_HASH_TABLE [attached STRING, attached STRING]
+	attributes: DS_HASH_TABLE [STRING, STRING]
 
 feature -- Status report
 

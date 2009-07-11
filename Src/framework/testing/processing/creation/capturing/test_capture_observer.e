@@ -17,7 +17,7 @@ inherit
 
 feature {TEST_CAPTURER} -- Events
 
-	on_invocation_capture (a_stack_element: attached TEST_CAPTURED_STACK_ELEMENT)
+	on_invocation_capture (a_stack_element: TEST_CAPTURED_STACK_ELEMENT)
 			-- Called when new invocation has been captured.
 			--
 			-- `a_stack_element': Stack element containing information about routine invocation.
@@ -26,7 +26,7 @@ feature {TEST_CAPTURER} -- Events
 		do
 		end
 
-	on_object_capture (a_object: attached TEST_CAPTURED_OBJECT)
+	on_object_capture (a_object: TEST_CAPTURED_OBJECT)
 			-- Called when new object has been captured.
 			--
 			-- `a_object': Object containing information about captured class instance.

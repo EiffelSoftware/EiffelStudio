@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	inheritance_parser: attached EIFFEL_PARSER
+	inheritance_parser: EIFFEL_PARSER
 			-- Parser for retrieving inheritance information only
 		once
 			create Result.make_with_factory (inheritance_ast_factory)
 		end
 
-	inheritance_ast_factory: attached TEST_INHERITANCE_AST_FACTORY
+	inheritance_ast_factory: TEST_INHERITANCE_AST_FACTORY
 			-- Factory for retrieving inheritance information from uncompiled classes
 		once
 			create Result.make
@@ -57,15 +57,15 @@ feature {NONE} -- Access
 	cached_common_ancestor: like common_ancestor
 			-- Cache for `common_ancestor'
 
-	traversed_descendants: attached DS_HASH_SET [attached EIFFEL_CLASS_I]
+	traversed_descendants: DS_HASH_SET [EIFFEL_CLASS_I]
 			-- Cached classes which are descendants of {TEST_SET}
 
-	traversed_helpers: attached DS_HASH_SET [attached EIFFEL_CLASS_I]
+	traversed_helpers: DS_HASH_SET [EIFFEL_CLASS_I]
 			-- Cached ancestors which are not descendants of {TEST_SET}
 
 feature {NONE} -- Query
 
-	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		do
 			if cached_common_ancestor = Void then
@@ -106,7 +106,7 @@ feature {NONE} -- Basic functionality
 
 feature {NONE} -- Implementation: uncompiled test retrieval
 
-	report_potential_test_class (a_class: attached EIFFEL_CLASS_I)
+	report_potential_test_class (a_class: EIFFEL_CLASS_I)
 			-- Report class as potential test class if it inherits from {TEST_SET}
 			--
 			-- `a_class': Class to be reported.
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			end
 		end
 
-	is_descendant (a_class: attached EIFFEL_CLASS_I; a_cache: BOOLEAN): BOOLEAN
+	is_descendant (a_class: EIFFEL_CLASS_I; a_cache: BOOLEAN): BOOLEAN
 			-- Is class descendant of {TEST_SET}?
 			--
 			-- `a_class': Class for which it should be determined whether it is a descendant of {TEST_SET}.
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				(Result = (not traversed_helpers.has (a_class) or a_class = project.eiffel_project.system.any_class))
 		end
 
-	parents_of_class (a_class: attached EIFFEL_CLASS_I): attached DS_LINEAR [attached EIFFEL_CLASS_I]
+	parents_of_class (a_class: EIFFEL_CLASS_I): DS_LINEAR [EIFFEL_CLASS_I]
 			-- List of direct ancestors of `a_class'
 			--
 			-- `a_class': Class for which we want to retreive ancestors
@@ -176,8 +176,8 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 		local
 			l_universe: UNIVERSE_I
 			l_group: CONF_GROUP
-			l_cursor: DS_LINEAR_CURSOR [attached STRING]
-			l_list: attached DS_ARRAYED_LIST [attached EIFFEL_CLASS_I]
+			l_cursor: DS_LINEAR_CURSOR [STRING]
+			l_list: DS_ARRAYED_LIST [EIFFEL_CLASS_I]
 			l_text: STRING_32
 		do
 			l_universe := project.eiffel_project.universe

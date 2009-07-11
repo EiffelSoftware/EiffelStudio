@@ -87,7 +87,7 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
 
-	current_window: attached EV_WINDOW
+	current_window: EV_WINDOW
 			-- <Precursor>
 		local
 			l_window: EV_WINDOW
@@ -105,12 +105,12 @@ feature {NONE} -- Access
 			not_void: Result /= Void
 		end
 
-	t_title: attached STRING
+	t_title: STRING
 			-- Window title
 		deferred
 		end
 
-	t_subtitle: attached STRING
+	t_subtitle: STRING
 			-- Window subtitle
 		deferred
 		end

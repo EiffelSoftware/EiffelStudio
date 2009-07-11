@@ -40,12 +40,12 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Factory
 
-	create_evaluator: attached TEST_EVALUATOR_CONTROLLER
+	create_evaluator: TEST_EVALUATOR_CONTROLLER
 			-- <Precursor>
 		local
 			l_project: E_PROJECT
-			l_exec: attached STRING
-			l_workdir: attached STRING
+			l_exec: STRING
+			l_workdir: STRING
 			l_assigner: like assigner
 		do
 			l_project := test_suite.eiffel_project

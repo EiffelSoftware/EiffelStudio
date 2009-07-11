@@ -11,18 +11,18 @@ class
 
 feature -- Access
 
-	common_test_class_ancestor_name: attached STRING = "EQA_TEST_SET"
-	system_level_test_ancestor_name: attached STRING = "EQA_SYSTEM_LEVEL_TEST_SET"
+	common_test_class_ancestor_name: STRING = "EQA_TEST_SET"
+	system_level_test_ancestor_name: STRING = "EQA_SYSTEM_LEVEL_TEST_SET"
 
-	indexing_clause_tag_name: attached STRING = "testing"
-	prepare_routine_name: attached STRING = "on_prepare"
-	clean_routine_name: attached STRING = "on_clean"
+	indexing_clause_tag_name: STRING = "testing"
+	prepare_routine_name: STRING = "on_prepare"
+	clean_routine_name: STRING = "on_clean"
 
 feature -- Access: tags
 
-	outcome_fail_tag: attached STRING = "result/fails"
-	outcome_pass_tag: attached STRING = "result/passes"
-	outcome_unresolved_tag: attached STRING = "result/unresolved"
+	outcome_fail_tag: STRING = "result/fails"
+	outcome_pass_tag: STRING = "result/passes"
+	outcome_unresolved_tag: STRING = "result/unresolved"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

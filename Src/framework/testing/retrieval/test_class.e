@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_class: like eiffel_class)
 			-- Initialize `Current'.
 		local
-			l_classname, l_filename: attached STRING
+			l_classname, l_filename: STRING
 		do
 			eiffel_class := a_class
 			create l_classname.make_from_string (eiffel_class.name)
@@ -28,29 +28,29 @@ feature {NONE} -- Initialization
 			identifier.append (l_classname)
 			identifier.append (l_filename)
 			create internal_names.make_default
-			internal_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
+			internal_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
 		end
 
 feature -- Access
 
-	eiffel_class: attached EIFFEL_CLASS_I
+	eiffel_class: EIFFEL_CLASS_I
 			-- Class in system carrying tests
 
-	identifier: attached STRING
+	identifier: STRING
 			-- Unique identifier for `eiffel_class'
 
-	frozen test_routine_names: attached DS_LINEAR [attached STRING]
+	frozen test_routine_names: DS_LINEAR [STRING]
 			-- Names of test routines defined in `eiffel_class'.
 		do
 			Result := internal_names
 		ensure
 			results_not_empty: not Result.there_exists (agent {attached STRING}.is_empty)
-			correct_equality_tester: attached {KL_STRING_EQUALITY_TESTER_A [attached STRING]} Result.equality_tester as l_tester
+			correct_equality_tester: attached {KL_STRING_EQUALITY_TESTER_A [STRING]} Result.equality_tester as l_tester
 		end
 
 feature {TEST_PROJECT_I} -- Access
 
-	internal_names: attached DS_HASH_SET [attached STRING]
+	internal_names: DS_HASH_SET [STRING]
 			-- Internal storage for `test_routine_names'
 
 ;note
@@ -78,10 +78,10 @@ feature {TEST_PROJECT_I} -- Access
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

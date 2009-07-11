@@ -46,7 +46,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	test_suite: attached TEST_SUITE_S
+	test_suite: TEST_SUITE_S
 			-- <Precursor>
 
 feature {NONE} -- Access
@@ -149,7 +149,7 @@ feature {NONE} -- Status setting
 
 feature {TEST_SUITE_S} -- Events
 
-	on_test_changed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
+	on_test_changed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
 			-- <Precursor>
 		do
 			if tests.has (a_item) then

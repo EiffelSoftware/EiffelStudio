@@ -29,7 +29,7 @@ feature -- Status report
 
 feature {NONE} -- Status setting
 
-	set_error (a_message: attached STRING)
+	set_error (a_message: STRING)
 			-- Set error message for current validation
 			--
 			-- `a_message': Error message
@@ -39,7 +39,7 @@ feature {NONE} -- Status setting
 			not_valid: not is_valid
 		end
 
-	set_formatted_error (a_message: attached STRING; a_tokens: attached TUPLE)
+	set_formatted_error (a_message: STRING; a_tokens: TUPLE)
 			-- Set error message for current validation and replace tokens
 			--
 			-- `a_message': Error message with tokens

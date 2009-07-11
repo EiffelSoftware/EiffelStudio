@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			create type_field.make (l_textfield, agent on_validate_type)
 			type_field.set_entry_formatter (agent {attached STRING_32}.as_upper)
 			type_field.set_entry_validation (
-				agent (a_string: attached STRING_32): BOOLEAN
+				agent (a_string: STRING_32): BOOLEAN
 					local
 						i: INTEGER
 						nb: INTEGER
@@ -190,7 +190,7 @@ feature {NONE} -- Initialization
 			a_parent.extend (l_vbox)
 		end
 
-	append_option (a_parent: EV_BOX; a_name: attached STRING; a_widget: EV_WIDGET)
+	append_option (a_parent: EV_BOX; a_name: STRING; a_widget: EV_WIDGET)
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
@@ -210,7 +210,7 @@ feature {NONE} -- Initialization
 	on_after_initialize
 			-- Called after all widgets have been created
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached STRING]
+			l_cursor: DS_LINEAR_CURSOR [STRING]
 			l_types: STRING_32
 		do
 			timeout_field.set_text (conf.time_out_cache.out)
@@ -249,7 +249,7 @@ feature {NONE} -- Initialization
 			end
 
 			conf.types_cache.do_all (
-				agent (a_type: attached STRING)
+				agent (a_type: STRING)
 					do
 						type_list.extend (create {EV_LIST_ITEM}.make_with_text (a_type))
 					end)
@@ -266,7 +266,7 @@ feature {NONE} -- Access
 			Result := wizard_information.generator_conf
 		end
 
-	factory_type: attached TYPE [TEST_CREATOR_I]
+	factory_type: TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := generator_factory_type
@@ -320,7 +320,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	on_validate_type (a_input: attached STRING_32): attached TUPLE [valid: BOOLEAN; error: detachable STRING_32]
+	on_validate_type (a_input: STRING_32): TUPLE [valid: BOOLEAN; error: detachable STRING_32]
 			-- Called when input of `types' has to be validated.
 		local
 			l_types: STRING

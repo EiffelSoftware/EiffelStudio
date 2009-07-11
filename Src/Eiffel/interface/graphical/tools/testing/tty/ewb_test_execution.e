@@ -39,7 +39,7 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	execute_with_test_suite (a_test_suite: attached TEST_SUITE_S)
+	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- <Precursor>
 		local
 			l_conf: TEST_EXECUTOR_CONF
@@ -61,7 +61,7 @@ feature {NONE} -- Basic operations
 
 feature -- Events
 
-	on_test_changed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_test: attached TEST_I)
+	on_test_changed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
 			-- <Precursor>
 		do
 			if a_test.memento.is_outcome_added then
@@ -75,7 +75,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	print_outcome (a_outcome: attached EQA_TEST_RESULT)
+	print_outcome (a_outcome: EQA_TEST_RESULT)
 			-- Print outcome information
 			--
 			-- `a_outcome': Outcome for which information shall be printed.
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_invocation (a_invocation: attached EQA_TEST_INVOCATION_RESPONSE; a_name: attached STRING)
+	print_invocation (a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: STRING)
 			-- Print information about a given test invocation.
 			--
 			-- `a_invocation': Invocation response for which information should be printed.

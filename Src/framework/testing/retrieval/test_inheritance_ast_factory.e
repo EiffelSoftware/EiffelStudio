@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ancestors: attached DS_LINEAR [attached STRING]
+	ancestors: DS_LINEAR [STRING]
 			-- Name of ancestors which were found during last parse
 		do
 			Result := internal_ancestors
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_ancestors: attached DS_ARRAYED_LIST [attached STRING]
+	internal_ancestors: DS_ARRAYED_LIST [STRING]
 			-- Internal storage for `ancestors'
 
 feature -- Status report
@@ -101,7 +101,7 @@ feature -- Query
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- <Precursor>
 		local
-			l_type: attached STRING
+			l_type: STRING
 		do
 			if is_parsing_ancestors then
 				if not is_parsing_parent_clause  then

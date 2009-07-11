@@ -63,7 +63,7 @@ feature -- Properties
 
 feature -- Execution
 
-	execute_with_test_suite (a_test_suite: attached TEST_SUITE_S)
+	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- Action performed when invoked from the
 			-- command line.
 		local
@@ -176,7 +176,7 @@ feature -- Execution
 
 feature {NONE} -- Events
 
-	on_processor_proceeded (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
+	on_processor_proceeded (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
 			l_generator: detachable TEST_GENERATOR_I

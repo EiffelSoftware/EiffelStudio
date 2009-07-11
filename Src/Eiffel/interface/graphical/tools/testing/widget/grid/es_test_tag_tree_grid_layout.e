@@ -150,7 +150,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	new_date_time_item (a_date: DATE_TIME): attached EV_GRID_ITEM
+	new_date_time_item (a_date: DATE_TIME): EV_GRID_ITEM
 			-- Item displaying how long a given date is in the past.
 			--
 			-- `a_date': Date shown on item.
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			Result := l_label
 		end
 
-	status_text (a_test: attached TEST_I): attached STRING_32
+	status_text (a_test: TEST_I): STRING_32
 			-- Status text for `a_test'.
 		local
 			l_outcome: EQA_TEST_RESULT
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): attached STRING_32
+	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): STRING_32
 			-- Text describing for given expception
 		require
 			a_exception_attached: a_exception /= Void

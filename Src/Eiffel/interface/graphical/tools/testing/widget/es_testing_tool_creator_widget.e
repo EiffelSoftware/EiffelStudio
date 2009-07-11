@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	title: attached STRING_32
+	title: STRING_32
 		do
 			if generator_factory_type.attempt (factory) /= Void then
 				Result := locale_formatter.translation (t_generator_title)

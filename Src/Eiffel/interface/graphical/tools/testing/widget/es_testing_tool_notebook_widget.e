@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	development_window: attached EB_DEVELOPMENT_WINDOW
+	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window in which `Current' is shown
 
-	current_window: attached EV_WINDOW
+	current_window: EV_WINDOW
 			-- <Precursor>
 		local
 			l_result: EV_WINDOW
@@ -48,7 +48,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Helpers
 
-	icon_provider: attached ES_TOOL_ICONS_PROVIDER [ES_TESTING_TOOL_ICONS, ES_TESTING_TOOL]
+	icon_provider: ES_TOOL_ICONS_PROVIDER [ES_TESTING_TOOL_ICONS, ES_TESTING_TOOL]
 			-- Access to the icons provided by the testing tool.
 		once
 			create Result.make (development_window)
@@ -56,7 +56,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Factory
 
-	create_notebook_widget: attached EV_VERTICAL_BOX
+	create_notebook_widget: EV_VERTICAL_BOX
 			-- <Precursor>
 		do
 			create Result

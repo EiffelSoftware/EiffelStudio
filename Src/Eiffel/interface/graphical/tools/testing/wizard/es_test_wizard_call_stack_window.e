@@ -107,13 +107,13 @@ feature {NONE} -- Access
 			Result := wizard_information.extractor_conf
 		end
 
-	factory_type: attached TYPE [TEST_CREATOR_I]
+	factory_type: TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := extractor_factory_type
 		end
 
-	grid: attached ES_GRID
+	grid: ES_GRID
 			-- Grid showing call stack
 
 	extractor: detachable TEST_EXTRACTOR_I
@@ -138,7 +138,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	populate_row (a_row: attached EV_GRID_ROW; a_cse: attached CALL_STACK_ELEMENT)
+	populate_row (a_row: EV_GRID_ROW; a_cse: CALL_STACK_ELEMENT)
 			-- Populate row items with information from call stack element
 			--
 			--| Note: this code is a modified version of {ES_CALL_STACK_TOOL_PANEL}.compute_stack_grid_row

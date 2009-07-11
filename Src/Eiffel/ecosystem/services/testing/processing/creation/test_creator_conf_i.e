@@ -19,7 +19,7 @@ inherit
 
 feature -- Access: tags
 
-	tags: attached DS_LINEAR [attached STRING]
+	tags: DS_LINEAR [STRING]
 			-- Predefined tags for new test
 		require
 			usable: is_interface_usable
@@ -31,7 +31,7 @@ feature -- Access: tags
 
 feature -- Access: new class
 
-	new_class_name: attached STRING
+	new_class_name: STRING
 			-- Name of the new class. If `is_multiple_new_classes' is true, it will be used as a prefix for
 			-- all new classes.
 		require
@@ -40,7 +40,7 @@ feature -- Access: new class
 		deferred
 		end
 
-	cluster: attached CONF_CLUSTER
+	cluster: CONF_CLUSTER
 			-- Cluster in which new test classes will be created
 		require
 			usable: is_interface_usable
@@ -48,7 +48,7 @@ feature -- Access: new class
 		deferred
 		end
 
-	path: attached STRING
+	path: STRING
 			-- Path relativ to location of `cluster' where new test classes will be created
 		require
 			usable: is_interface_usable

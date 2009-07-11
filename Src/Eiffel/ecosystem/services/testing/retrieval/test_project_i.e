@@ -39,7 +39,7 @@ feature -- Access
 		deferred
 		end
 
-	eiffel_project_helper: attached TEST_PROJECT_HELPER_I
+	eiffel_project_helper: TEST_PROJECT_HELPER_I
 			-- Project helper for compiling, debugging and adding new classes.
 		require
 			usable: is_interface_usable
@@ -47,7 +47,7 @@ feature -- Access
 		deferred
 		end
 
-	eiffel_project: attached E_PROJECT
+	eiffel_project: E_PROJECT
 			-- Project containing actual eiffel classes
 		require
 			usable: is_interface_usable
@@ -89,7 +89,7 @@ feature -- Status report
 			result_implies_project_compiled: Result implies eiffel_project.successful
 		end
 
-	is_class_in_project (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_class_in_project (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- Does `a_class' belong to `eiffel_project'?
 			--
 			-- `a_class': Class for which it should be determined whether it exists in `eiffel_project'.
@@ -101,7 +101,7 @@ feature -- Status report
 			Result := eiffel_project.universe.safe_class_named (a_class.name, a_class.cluster) /= Void
 		end
 
-	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- Does `Current' recognize `a_class' as a valid test class?
 			--
 			-- `a_class': Class for which it should be determined whether it is a test class.
@@ -113,7 +113,7 @@ feature -- Status report
 		deferred
 		end
 
-	tests_for_class (a_class: attached EIFFEL_CLASS_I): attached DS_LINEAR [attached TEST_I]
+	tests_for_class (a_class: EIFFEL_CLASS_I): DS_LINEAR [TEST_I]
 			-- Returns a list containing the tests defined in the given class.
 			--
 			-- `a_class': Class for which a list of tests defined in the class will be returned.
@@ -126,7 +126,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_locator_registered (a_locator: attached TEST_CLASS_LOCATOR_I): BOOLEAN
+	is_locator_registered (a_locator: TEST_CLASS_LOCATOR_I): BOOLEAN
 			-- Is test class locater registered?
 			--
 			-- `a_locator': Locator.
@@ -147,7 +147,7 @@ feature -- Status setting
 		deferred
 		end
 
-	synchronize_with_class (a_class: attached EIFFEL_CLASS_I)
+	synchronize_with_class (a_class: EIFFEL_CLASS_I)
 			-- Synchronize `tests' with state of class.
 			--
 			-- Note: this routine can be called for any {EIFFEL_CLASS_I} object, even if the actual class
@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature -- Query
 
-	class_for_test (a_test: attached TEST_I): detachable EIFFEL_CLASS_I
+	class_for_test (a_test: TEST_I): detachable EIFFEL_CLASS_I
 			-- Class in which test is defined.
 			--
 			-- `a_test': Test for which class shall be returned.
@@ -176,7 +176,7 @@ feature -- Query
 		deferred
 		end
 
-	compiled_class_for_test (a_test: attached TEST_I): detachable EIFFEL_CLASS_C
+	compiled_class_for_test (a_test: TEST_I): detachable EIFFEL_CLASS_C
 			-- Compiled class in which test is defined.
 			--
 			-- `a_test': Test for which class shall be returned.
@@ -196,7 +196,7 @@ feature -- Query
 			end
 		end
 
-	feature_for_test (a_test: attached TEST_I): detachable E_FEATURE
+	feature_for_test (a_test: TEST_I): detachable E_FEATURE
 			-- Feature defining `a_test'.
 			--
 			-- `a_test': Test for which feature shall be returned.
@@ -210,7 +210,7 @@ feature -- Query
 
 feature -- Element change
 
-	register_locator (a_locator: attached TEST_CLASS_LOCATOR_I)
+	register_locator (a_locator: TEST_CLASS_LOCATOR_I)
 			-- Register locator for retrieving test classes.
 		require
 			usable: is_interface_usable
@@ -220,7 +220,7 @@ feature -- Element change
 			registered: is_locator_registered (a_locator)
 		end
 
-	unregister_locator (a_locator: attached TEST_CLASS_LOCATOR_I)
+	unregister_locator (a_locator: TEST_CLASS_LOCATOR_I)
 			-- Unregister locator.
 		require
 			usable: is_interface_usable
@@ -230,7 +230,7 @@ feature -- Element change
 			not_registered: not is_locator_registered (a_locator)
 		end
 
-	add_test_cluster (a_name, a_path: attached STRING; a_parent: detachable CONF_CLUSTER)
+	add_test_cluster (a_name, a_path: STRING; a_parent: detachable CONF_CLUSTER)
 			-- Add a new testing cluster to `eiffel_project'. Instance of new cluster will be available through
 			-- `last_created_cluster'
 			--
@@ -245,7 +245,7 @@ feature -- Element change
 		do
 		end
 
-	add_class (a_path: attached STRING; a_cluster: attached CONF_CLUSTER)
+	add_class (a_path: STRING; a_cluster: CONF_CLUSTER)
 			-- Make existing class file appear as class in system. Instance of new class will be available
 			-- through `last_created_class'.
 			--
@@ -258,7 +258,7 @@ feature -- Element change
 		do
 		end
 
-	remove_class (a_class: attached EIFFEL_CLASS_I)
+	remove_class (a_class: EIFFEL_CLASS_I)
 			-- Remove class and file from system.
 			--
 			-- `a_class': Class to be removed
@@ -272,7 +272,7 @@ feature -- Element change
 
 feature {TEST_CLASS_LOCATOR_I} -- Basic operations
 
-	report_test_class (a_class: attached EIFFEL_CLASS_I)
+	report_test_class (a_class: EIFFEL_CLASS_I)
 			-- Report class as potential test class.
 			--
 			-- `a_class': Class which was identified by a {TEST_CLASS_LOCATOR_I} as a descendant

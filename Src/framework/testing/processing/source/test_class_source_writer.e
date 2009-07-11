@@ -11,18 +11,18 @@ deferred class
 
 feature -- Access
 
-	class_name: attached STRING
+	class_name: STRING
 			-- Name of class
 		deferred
 		end
 
-	ancestor_names: attached ARRAY [attached STRING]
+	ancestor_names: ARRAY [STRING]
 			-- Name of ancestor classes
 		do
 			Result := << >>
 		end
 
-	root_feature_name: attached STRING
+	root_feature_name: STRING
 			-- Name for root feature
 		deferred
 		end
@@ -80,7 +80,7 @@ feature {NONE} -- Output
 		require
 			stream_valid: is_writing
 		local
-			l_ancs: ARRAY [attached STRING]
+			l_ancs: ARRAY [STRING]
 			l_root: detachable STRING
 			i: INTEGER
 		do

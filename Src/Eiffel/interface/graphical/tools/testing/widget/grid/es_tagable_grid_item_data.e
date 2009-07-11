@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: attached G
+	item: G
 			-- Item represented by leaf
 
 feature -- Basic functionality

@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	tag: attached STRING
+	tag: STRING
 			-- Prefix used for comparing two items
 
 feature -- Status report
@@ -45,7 +45,7 @@ feature -- Status report
 			--       or both items have no tags, `less_than' will compare its names.
 		local
 			l_uleast, l_vleast: like tag
-			l_usuff, l_vsuff: attached DS_LINEAR [like tag]
+			l_usuff, l_vsuff: DS_LINEAR [like tag]
 			l_compare_names: BOOLEAN
 		do
 			l_usuff := tag_suffixes (u.tags, tag)

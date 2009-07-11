@@ -10,7 +10,7 @@ deferred class
 	TEST_COLLECTION_I
 
 inherit
-	ACTIVE_COLLECTION_I [attached TEST_I]
+	ACTIVE_COLLECTION_I [TEST_I]
 		rename
 			items as tests,
 			are_items_available as are_tests_available,

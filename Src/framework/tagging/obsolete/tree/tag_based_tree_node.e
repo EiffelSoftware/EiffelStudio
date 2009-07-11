@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	token: attached STRING
+	token: STRING
 			-- Token `Current' represents in the tag
 
-	tag: attached STRING
+	tag: STRING
 			-- Tag defining ancestors of `Current'
 
-	parent: attached TAG_BASED_TREE_NODE_CONTAINER [G]
+	parent: TAG_BASED_TREE_NODE_CONTAINER [G]
 			-- Node listing `Current' as one of its children
 
 	data: detachable ANY
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Access
 
-	tree: attached TAG_BASED_TREE [G]
+	tree: TAG_BASED_TREE [G]
 			-- <Precursor>
 
 feature -- Status report

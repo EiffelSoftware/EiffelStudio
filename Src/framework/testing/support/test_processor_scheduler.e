@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 					processors.forth
 				else
 					test_suite.processor_stopped_event.publish_if ([test_suite.as_attached, l_proc.as_attached],
-						agent (ts: attached TEST_SUITE_S; p: attached TEST_PROCESSOR_I): BOOLEAN
+						agent (ts: TEST_SUITE_S; p: TEST_PROCESSOR_I): BOOLEAN
 							do
 								Result := not p.is_running
 							end)

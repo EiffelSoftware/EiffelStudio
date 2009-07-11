@@ -44,7 +44,7 @@ feature -- Access
 	s: STRING
 	i: INTEGER
 
-	vol_s: STRING note option: volatile attribute end
-	vol_i: INTEGER note option: volatile attribute end
+	vol_s: STRING note option: transient attribute end
+	vol_i: INTEGER note option: transient attribute end
 
 end

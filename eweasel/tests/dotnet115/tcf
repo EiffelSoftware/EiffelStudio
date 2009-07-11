@@ -8,6 +8,9 @@ copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
 compile_result 	ok
 
+c_compile_work
+c_compile_result ok
+
 execute_work 	NONE exec_output
 execute_result 	ok
 compare		exec_output output

@@ -25,9 +25,9 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create {XTAG_TAG_VALUE_ARGUMENT} list.make_default
-			create {XTAG_TAG_VALUE_ARGUMENT} variable.make_default
-			create {XTAG_TAG_VALUE_ARGUMENT} type.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} list.make ("list_not_set")
+			create {XTAG_TAG_VALUE_ARGUMENT} variable.make ("variable_not_set")
+			create {XTAG_TAG_VALUE_ARGUMENT} type.make ("type_not_set")
 		ensure
 			list_attached: attached list
 			variable_attached: attached variable

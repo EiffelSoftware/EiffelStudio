@@ -52,5 +52,9 @@ feature -- Cookie Order
 	Cookie_secure: STRING = "Secure"
 	Cookie_comment: STRING = "Comment="
 
+feature -- time
+
+	Two_seconds_in_nanoseconds: NATURAL = 2000000000
+
 
 end

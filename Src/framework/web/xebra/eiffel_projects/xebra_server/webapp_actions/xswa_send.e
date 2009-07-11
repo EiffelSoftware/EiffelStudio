@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			l_webapp_socket: NETWORK_STREAM_SOCKET
 		do
 			if attached {XC_WEBAPP_COMMAND} webapp.current_request as l_current_request then
-				o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 10)
+				o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 6)
 				create l_webapp_socket.make_client_by_port (webapp.app_config.port, webapp.app_config.host)
 				o.dprint ("Connecting to " + webapp.app_config.name.out + "@" + webapp.app_config.port.out, 2)
 				l_webapp_socket.set_accept_timeout (3000)

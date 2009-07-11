@@ -68,7 +68,7 @@ feature -- Access
 			Result.append (" -t " + config.file.taglib.out)
 			Result.append (" -d " + config.args.debug_level.out)
 			if force then
-				Result.append (" -f ")
+				Result.append (" -f FIXME_SANDRO")
 			end
 		ensure
 			Result_attached: Result /= void
@@ -221,9 +221,6 @@ feature -- Status report
 			else
 				o.dprint ("Translating is not necessary", 3)
 			end
-
-				-- Set force back to false (for next time)
-			force := False
 		end
 
 feature -- Status setting
@@ -285,7 +282,7 @@ feature {NONE} -- Implementation
 						end
 					end
 
-					o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 10)
+					o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE (5)-=-=-=-=-=-=", 6)
 					translate_process := launch_process (config.file.translator_filename,
 															translator_args,
 															app_dir,
@@ -293,6 +290,8 @@ feature {NONE} -- Implementation
 															agent output_handler_translate.handle_output,
 															agent output_handler_translate.handle_output)
 					set_running (True)
+						-- Set force back to false (for next time)
+					force := False
 				end
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
@@ -311,7 +310,7 @@ feature {NONE} -- Implementation
 						p.terminate
 					end
 				end
-				o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 10)
+				o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN (4)-=-=-=-=-=-=", 6)
 				gen_compile_process := launch_process (config.file.compiler_filename,
 														gen_compiler_args,
 														app_dir,
@@ -331,7 +330,7 @@ feature {NONE} -- Implementation
 						p.terminate
 					end
 				end
-				o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR (3) -=-=-=-=-=-=", 10)
+				o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR (3) -=-=-=-=-=-=", 6)
 				generate_process := launch_process (servlet_gen_exe,
 													generate_args,
 													app_dir,

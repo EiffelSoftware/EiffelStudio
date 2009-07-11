@@ -40,6 +40,18 @@ feature -- Access
 	method: STRING
 			-- The method of the request, POST or GET
 
+	is_post: BOOLEAN
+			-- True if the method is POST
+		do
+			Result := method.is_equal ({XU_CONSTANTS}.Request_method_post)
+		end
+
+	is_get: BOOLEAN
+			-- True if the method is GET
+		do
+			Result := method.is_equal ({XU_CONSTANTS}.Request_method_get)
+		end
+
 	uri: STRING
 			-- The target uri
 

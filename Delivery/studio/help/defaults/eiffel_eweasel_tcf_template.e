@@ -9,33 +9,6 @@ class
 
 inherit
 	EW_EQA_TEST_CONTROL_INSTRUCTIONS
-		redefine
-			on_prepare
-		end
-
-feature {NONE} -- Initialization
-
-	test_setup: EW_EQA_WINDOWS_SETUP
-			-- Helper for setup testing environment
-		local
-			l_platform: PLATFORM
-		once
-			create l_platform
-			if l_platform.is_windows then
-				create Result.make
-			elseif l_platform.is_unix then
-				create {EW_EQA_UNIX_SETUP} Result.make
-			else
-				check not_implmented_for_other_platforms: False end
-			end
-		end
-
-	on_prepare
-			-- Setup testing environment
-		do
-			make
-			test_setup.setup
-		end
 
 feature -- Command$TCF_CONTENT
 

@@ -14,6 +14,9 @@ inherit
 	EW_INSTRUCTION_TABLES
 
 	EQA_TEST_SET
+		redefine
+			on_prepare
+		end
 
 create
 	make
@@ -37,6 +40,25 @@ feature {NONE} -- Initialization
 			create l_factory
 			create l_control_file.make_eqa (instructions, l_factory.environment)
 			a_test_instruction.initialize_for_conditional (l_control_file, a_name, a_argument)
+		end
+
+	test_setup: EW_EQA_WINDOWS_SETUP
+				-- Helper for setting up testing environment
+		once
+			if {PLATFORM}.is_windows then
+				create Result.make
+			elseif {PLATFORM}.is_unix then
+				create {EW_EQA_UNIX_SETUP} Result.make
+			else
+				check platform_not_supported: False end
+			end
+		end
+
+	on_prepare
+			-- <Precursor>
+		do
+			make
+			test_setup.setup
 		end
 
 feature {NONE} -- Implementation
@@ -75,7 +97,7 @@ feature {NONE} -- Implementation
 				create err.make (a_inst.file_name, a_inst.line_number, orig_text, subst_text, a_inst.failure_explanation);
 				-- add_error (err);
 				err.display
-				assert (a_inst.command, FAlse)
+				assert (a_inst.command, False)
 			end
 		end
 

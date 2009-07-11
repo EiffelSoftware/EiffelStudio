@@ -184,7 +184,7 @@ feature -- Basic Opertaions
 			l_file: RAW_FILE
 		do
 			create l_file.make (a_path)
-			Result := l_file.exists and l_file.is_readable
+			Result := l_file.exists and l_file.is_readable and not l_file.is_directory
 		end
 
 	is_executable_file (a_path: STRING): BOOLEAN
@@ -193,7 +193,7 @@ feature -- Basic Opertaions
 			l_file: RAW_FILE
 		do
 			create l_file.make (a_path)
-			Result := l_file.exists and l_file.is_executable
+			Result := l_file.exists and l_file.is_executable and not l_file.is_directory
 		end
 
 

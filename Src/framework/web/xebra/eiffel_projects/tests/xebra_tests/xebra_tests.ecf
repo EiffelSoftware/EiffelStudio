@@ -12,6 +12,7 @@
 		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
+		<library name="string_expander" location="\home\fabioz\local\eiffel_src\64dev\framework\string_expander\string_expander.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf" />
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>

@@ -66,7 +66,7 @@ feature -- Access
 			Result.append ( " -i . ")
 			Result.append (" -o . ")
 			Result.append (" -t " + config.file.taglib.out)
-			Result.append (" -d " + config.args.debug_level.out)
+		--	Result.append (" -d " + config.args.debug_level.out)
 			if force then
 				Result.append (" -f FIXME_SANDRO")
 			end

@@ -19,13 +19,13 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="tagging" location=".\" recursive="true">
 			<option namespace="Tagging">
 			</option>
 			<file_rule>
 				<exclude>/spec$</exclude>
 				<exclude>/tests$</exclude>
+				<exclude>/ev$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

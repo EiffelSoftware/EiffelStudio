@@ -502,6 +502,21 @@ feature -- Basic operations
 			a_visitor.process_node (Current)
 		end
 
+	append_items_recursive (a_hash_set: DS_HASH_SET [G])
+			-- Recursively add items in children of `Current' to given hash set.
+			--
+			-- `a_hash_set': Hash set to which items will be added.
+		require
+			a_hash_set_attached: a_hash_set /= Void
+			active: is_active
+		do
+			if is_leaf then
+				a_hash_set.force (item)
+			else
+				child_table.do_all (agent {like child_with_token}.append_items_recursive (a_hash_set))
+			end
+		end
+
 invariant
 	only_root_can_be_empty: (is_active and then is_empty) implies is_root
 	not_root_and_leaf: is_active implies not (is_root and is_leaf)

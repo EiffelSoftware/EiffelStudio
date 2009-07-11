@@ -493,8 +493,11 @@ feature {NONE} -- Events: test execution
 	on_run_current (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
-				-- TODO: only run selected nodes if any
-			on_run_filtered (a_type)
+			if tag_tree.selected_nodes.is_empty then
+				on_run_filtered (a_type)
+			else
+				on_run_selected (a_type)
+			end
 		end
 
 	on_run_all (a_type: attached TYPE [TEST_EXECUTOR_I])
@@ -532,16 +535,22 @@ feature {NONE} -- Events: test execution
 
 	on_run_filtered (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run filteres" item of `run_button'.
+		local
+			l_set: DS_HASH_SET [TEST_I]
 		do
-				-- TODO: only run filtered
-			launch_executor (Void, a_type)
+			create l_set.make_default
+			tag_tree.append_items_recursive (l_set)
+			launch_executor (l_set, a_type)
 		end
 
 	on_run_selected (a_type: attached TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run selected" item of `run_button'.
+		local
+			l_set: DS_HASH_SET [TEST_I]
 		do
-				-- TODO: only run selected
-			on_run_all (a_type)
+			create l_set.make_default
+			tag_tree.selected_nodes.do_all (agent {TAG_TREE_NODE [TEST_I]}.append_items_recursive (l_set))
+			launch_executor (l_set, a_type)
 		end
 
 	launch_executor (a_list: detachable DS_LINEAR [attached TEST_I]; a_type: attached TYPE [TEST_EXECUTOR_I])

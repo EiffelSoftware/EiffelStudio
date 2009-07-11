@@ -26,9 +26,7 @@ feature {NONE} -- Initialization
 			l_manager := project.manager
 			l_agent := agent
 				do
-					if is_available then
-						increase_build
-					end
+					increase_build
 				end
 			l_manager.load_agents.extend (l_agent)
 			l_manager.compile_stop_agents.extend (l_agent)

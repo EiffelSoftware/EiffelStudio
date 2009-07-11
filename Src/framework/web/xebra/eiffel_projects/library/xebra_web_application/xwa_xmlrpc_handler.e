@@ -36,12 +36,10 @@ feature -- Basic operations
 		require
 			a_request_attached: a_request /= Void
 		do
-			if attached {XH_POST_REQUEST} a_request as l_request then
-				if attached l_request.headers_in ["Content-Type"] as l_content_type then
+			if a_request.is_post  then
+				if attached a_request.headers_in ["Content-Type"] as l_content_type then
 					if l_content_type.is_equal ("text/xml") then
-						if attached l_request.argument_table ["content"] as l_content then
-							a_response.append (request_handler.response_string (l_content, a_dispatcher))
-						end
+							a_response.append (request_handler.response_string (a_request.args, a_dispatcher))
 					else
 						a_response.append ("invalid content-type") --todo ((create {XER_INVALID_CONTENT_TYPE}.make ("")).render_to_response)
 					end

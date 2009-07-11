@@ -42,7 +42,7 @@ feature -- Operation
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
-			create l_translator.make (a_arg_parser.project_name)
+			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
 			create l_dir.make_from_string (a_arg_parser.input_path)
 
 			l_translator.set_output_path (a_arg_parser.output_path)

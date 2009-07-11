@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_minimal (a_servlet_name: STRING; a_path: FILE_NAME)
+	make_minimal (a_servlet_name: STRING; a_path: FILE_NAME; a_force: BOOLEAN)
 			-- `a_servlet_name': The name of the servlet
 			-- `a_path': The path where the generator should be generated to
 		require
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			not_a_servlet_name_is_empty: not a_servlet_name.is_empty
 			not_a_path_is_empty: not a_path.is_empty
 		do
-			make (a_servlet_name, False, create {XP_TAG_ELEMENT}.make_empty, a_path, False, False)
+			make (a_servlet_name, False, create {XP_TAG_ELEMENT}.make_empty, a_path, False, a_force)
 		end
 
 	make (a_servlet_name: STRING; a_stateful: BOOLEAN; a_root_tag: XP_TAG_ELEMENT; a_path: FILE_NAME; a_is_template, a_force: BOOLEAN)

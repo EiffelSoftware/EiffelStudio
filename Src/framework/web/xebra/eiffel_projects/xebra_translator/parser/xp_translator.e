@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING; a_force: BOOLEAN)
 			-- Initialization for {XP_TRANSLATOR}.
 		require
 			a_name_valid: attached a_name and then not a_name.is_empty
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create output_path.make_from_string ("./generated/")
 			output_path.extend (a_name)
 			name := a_name
-			create registry.make (output_path)
+			create registry.make (output_path, a_force)
 			create xeb_parser.make_with_registry (registry)
 			create l_page_taglib.make_with_arguments ("page")
 			registry.put_tag_lib (l_page_taglib.id, l_page_taglib)

@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make (a_path: FILE_NAME)
+	make (a_path: FILE_NAME; a_force: BOOLEAN)
 			-- a_path: The output path
 		require
 			a_path_attached: a_path /= Void
@@ -23,7 +23,9 @@ feature -- Initialization
 			create xrpc_registry.make (10)
 			create taglib_registry.make (10)
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_g_generators.make (10)
+			force := a_force
 		ensure
+			force_set: force = a_force
 			path_attached: attached path
 			path_set: path = a_path
 			template_registry_attached: attached template_registry
@@ -44,6 +46,9 @@ feature {NONE} -- Access
 
 	path: FILE_NAME
 			-- The output path
+
+	force: BOOLEAN
+			-- Should the generation of servlets be forced?
 
 feature -- Access
 
@@ -112,7 +117,7 @@ feature -- Access
 			loop
 				l_template := template_registry.item_for_iteration
 				if not template_registry.item_for_iteration.is_template then
-					create l_servlet_gen.make_minimal (l_template.template_name, path)
+					create l_servlet_gen.make_minimal (l_template.template_name, path, force)
 					l_root_tag := l_template.resolve (template_registry, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (1), create {ARRAYED_LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]}.make (1), l_servlet_gen)
 					l_servlet_gen.set_root_tag (l_root_tag)
 					servlet_g_generators.extend (l_servlet_gen)
@@ -126,7 +131,7 @@ feature -- Access
 				xrpc_registry.after
 			loop
 				l_xrpc := xrpc_registry.item_for_iteration
-				create l_servlet_gen.make_minimal (l_xrpc.template_name, path)
+				create l_servlet_gen.make_minimal (l_xrpc.template_name, path, force)
 				l_servlet_gen.set_root_tag (l_xrpc.root_tag)
 				l_servlet_gen.add_controller (l_xrpc.controller_class, "api")
 				l_servlet_gen.transform_to_xrpc

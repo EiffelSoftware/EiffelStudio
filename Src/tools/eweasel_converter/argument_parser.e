@@ -7,9 +7,9 @@ class
 	ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_MULTI_PARSER
+	ARGUMENT_OPTION_PARSER
 		rename
-			make as make_multi_parser
+			make as make_option_parser
 		redefine
 			switch_groups
 		end
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize argument parser
 		do
-			make_multi_parser (False, False)
+			make_option_parser (False)
 		end
 
 feature -- Query
@@ -45,15 +45,6 @@ feature {NONE} -- Usage
 			-- <Precursor>
 
 	version: STRING = "1.0"
-			-- <Precursor>
-
-	non_switched_argument_name: STRING = "cfg_file"
-			-- <Precursor>
-
-	non_switched_argument_description: STRING = "Configuration file, representing a pixmap matrix, to generate an Eiffel class for."
-			-- <Precursor>
-
-	non_switched_argument_type: STRING = "Configuration File"
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -103,10 +94,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -427,6 +427,19 @@ feature {NONE} -- Element change
 			common_parent_changed: has_common_parent_changed
 		end
 
+feature -- Basic operations
+
+	append_items_recursive (a_hash_set: DS_HASH_SET [G])
+			-- Recursively add items in children of `root_nodes' to given hash set.
+			--
+			-- `a_hash_set': Hash set to which items will be added.
+		require
+			a_hash_set_attached: a_hash_set /= Void
+			connected: is_connected
+		do
+			internal_root_nodes.do_all (agent {like common_parent}.append_items_recursive (a_hash_set))
+		end
+
 feature {TAG_TREE} -- Events
 
 	on_node_added (a_tree: TAG_TREE [G]; a_node: TAG_TREE_NODE [G])

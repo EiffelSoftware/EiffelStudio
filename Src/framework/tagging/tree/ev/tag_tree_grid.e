@@ -287,6 +287,7 @@ feature -- Status setting
 			end
 			l_timer.actions.extend (agent on_timer_elapse)
 			l_timer.set_interval (an_interval * 1_000)
+			timer := l_timer
 		end
 
 feature {TAG_SPARSE_TREE_FILTER} -- Status setting
@@ -474,11 +475,14 @@ feature {NONE} -- Events
 			-- Called when timer reached timeout.
 		local
 			l_timer: like timer
+			l_interval: INTEGER
 		do
 			redraw_items
 			l_timer := timer
 			check timer_attached: l_timer /= Void end
-			l_timer.set_interval (l_timer.interval)
+			l_interval := l_timer.interval
+			l_timer.set_interval (0)
+			l_timer.set_interval (l_interval)
 		end
 
 feature {NONE} -- Implementation
@@ -492,19 +496,20 @@ feature {NONE} -- Implementation
 	redraw_items
 			-- Redraw all visible items in `grid'
 		local
-			i: INTEGER
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: EV_GRID_ITEM
+			l_row: EV_GRID_ROW
 		do
 			if grid.is_displayed then
 				from
 					l_list := grid.visible_row_indexes
-					i := 1
+					l_list.start
 				until
-					i > l_list.count
+					l_list.after
 				loop
-					l_item := computed_grid_item (1, l_list.i_th (i))
-					i := i + 1
+					l_row := grid.row (l_list.item_for_iteration)
+					l_row.clear
+					l_row.redraw
+					l_list.forth
 				end
 			end
 		end

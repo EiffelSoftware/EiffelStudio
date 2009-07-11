@@ -14,14 +14,14 @@ inherit
 
 feature -- Access
 
-	added_tags: attached DS_LINEAR [attached STRING]
+	added_tags: DS_LINEAR [STRING]
 			-- Tags which have been added to item
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	removed_tags: attached DS_LINEAR [attached STRING]
+	removed_tags: DS_LINEAR [STRING]
 			-- Tags which have been removed from item
 		require
 			usable: is_interface_usable

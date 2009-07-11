@@ -32,19 +32,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	called_feature: attached E_FEATURE
+	called_feature: E_FEATURE
 			-- Feature called in stack element
 
-	type: attached STRING
+	type: STRING
 			-- Dynamic type for `called_feature'
 
-	operands: attached DS_LINEAR [attached STRING]
+	operands: DS_LINEAR [STRING]
 			-- Operands needed to invoce `called_feature'
 		do
 			Result := internal_operands
 		end
 
-	types: attached DS_LINEAR [attached STRING]
+	types: DS_LINEAR [STRING]
 			-- Types for `operands'
 		do
 			Result := internal_types
@@ -52,10 +52,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_operands: attached DS_ARRAYED_LIST [attached STRING]
+	internal_operands: DS_ARRAYED_LIST [STRING]
 			-- Internal storage for `operands'
 
-	internal_types: attached DS_ARRAYED_LIST [attached STRING]
+	internal_types: DS_ARRAYED_LIST [STRING]
 			-- Internal storage for `types'
 
 feature -- Status report
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature {TEST_CAPTURER} -- Element change
 
-	add_operand (a_operand: attached STRING; a_type: attached STRING)
+	add_operand (a_operand: STRING; a_type: STRING)
 			-- Add `a_operand' to `operands'.
 		require
 			not_complete: not are_operands_complete

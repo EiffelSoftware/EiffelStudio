@@ -209,7 +209,7 @@ feature -- Events
 		do
 			l_cache := connection_cache
 			if l_cache = Void then
-				create l_cache.make (agent (a_observer: TAG_TREE_OBSERVER [G]): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+				create l_cache.make (agent (a_observer: TAG_TREE_OBSERVER [G]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 					do
 						Result := <<
 								[node_added_event, agent a_observer.on_node_added],

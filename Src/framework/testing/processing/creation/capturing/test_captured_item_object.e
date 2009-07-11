@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 			-- `a_count': Expected number of items
 		do
 			make_object (a_id, a_type)
-			create {attached DS_ARRAYED_LIST [attached STRING]} items.make (a_count)
+			create {attached DS_ARRAYED_LIST [STRING]} items.make (a_count)
 		end
 
 feature -- Access
 
-	items: attached DS_LIST [attached STRING]
+	items: DS_LIST [STRING]
 
 feature -- Status report
 

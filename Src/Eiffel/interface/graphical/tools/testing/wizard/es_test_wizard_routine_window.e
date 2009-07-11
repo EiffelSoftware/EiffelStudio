@@ -246,7 +246,7 @@ feature {NONE} -- Access
 			Result := wizard_information.manual_conf
 		end
 
-	factory_type: attached TYPE [TEST_CREATOR_I]
+	factory_type: TYPE [TEST_CREATOR_I]
 			-- <Precursor>
 		do
 			Result := manual_factory_type
@@ -305,7 +305,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	on_validate_test_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
+	on_validate_test_name (a_name: STRING_32): TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `class_name' content needs to be validated
 		local
 			l_valid: BOOLEAN
@@ -330,7 +330,7 @@ feature {NONE} -- Events
 			Result := [l_valid, l_msg]
 		end
 
-	on_validate_tag_field (a_tag_32: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
+	on_validate_tag_field (a_tag_32: STRING_32): TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `tag_field' content needs to be validated
 		local
 			l_error: detachable STRING_32

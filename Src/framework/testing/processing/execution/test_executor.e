@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	active_tests: attached DS_LINEAR [attached TEST_I]
+	active_tests: DS_LINEAR [TEST_I]
 			-- <Precursor>
 		local
 			l_test_map: like test_map
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {TEST_EVALUATOR_CONTROLLER} -- Access
 
-	source_writer: attached TEST_EVALUATOR_SOURCE_WRITER
+	source_writer: TEST_EVALUATOR_SOURCE_WRITER
 			-- Source writer for writing evaluator root class
 		once
 			create Result
@@ -68,22 +68,22 @@ feature {TEST_EVALUATOR_CONTROLLER} -- Access
 
 feature {NONE} -- Access
 
-	test_map: detachable DS_HASH_TABLE [attached TEST_I, NATURAL]
+	test_map: detachable DS_HASH_TABLE [TEST_I, NATURAL]
 			-- Test map containing test and their indices to be executed.
 			--
 			-- values: Tests which are executed by `Current'.
 			-- keys: Corresponding indices.
 
-	empty_test_list: attached DS_LINEAR [attached TEST_I]
+	empty_test_list: DS_LINEAR [TEST_I]
 			-- Empty list of tests
 		once
-			create {DS_ARRAYED_LIST [attached TEST_I]} Result.make (0)
+			create {DS_ARRAYED_LIST [TEST_I]} Result.make (0)
 		end
 
 	assigner: detachable TEST_EXECUTION_ASSIGNER
 			-- Assigner for evaluators
 
-	evaluators: attached DS_LINKED_LIST [like create_evaluator]
+	evaluators: DS_LINKED_LIST [like create_evaluator]
 			-- Evaluators executing tests
 
 	evaluator_count: NATURAL
@@ -95,7 +95,7 @@ feature {NONE} -- Access
 	log_file: detachable KL_TEXT_OUTPUT_FILE
 			-- Log file for test results
 
-	result_cursor: detachable DS_HASH_TABLE_CURSOR [attached TEST_I, NATURAL]
+	result_cursor: detachable DS_HASH_TABLE_CURSOR [TEST_I, NATURAL]
 
 feature -- Status report
 
@@ -145,7 +145,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	skip_test (a_test: attached TEST_I)
+	skip_test (a_test: TEST_I)
 			-- <Precursor>
 		do
 			abort_test (a_test, False)
@@ -169,12 +169,12 @@ feature {NONE} -- Basic functionality
 	start_process_internal (a_conf: like conf_type)
 			-- <Precursor>
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [TEST_I]
 			l_old_map: like test_map
 			l_count: NATURAL
-			l_list: attached DS_ARRAYED_LIST [attached TEST_I]
-			l_sorter: DS_QUICK_SORTER [attached TEST_I]
-			l_comparator: TAG_COMPARATOR [attached TEST_I]
+			l_list: DS_ARRAYED_LIST [TEST_I]
+			l_sorter: DS_QUICK_SORTER [TEST_I]
+			l_comparator: TAG_COMPARATOR [TEST_I]
 		do
 			l_old_map := test_map
 
@@ -249,7 +249,7 @@ feature {NONE} -- Basic functionality
 			result_cursor := Void
 		end
 
-	write_root_class (a_list: detachable DS_LINEAR [attached TEST_I])
+	write_root_class (a_list: detachable DS_LINEAR [TEST_I])
 			-- Write new root class
 			--
 			-- `a_list': List of test routines to be referenced by root class.
@@ -284,7 +284,7 @@ feature {NONE} -- Basic functionality
 			running: is_running
 		local
 			l_project: E_PROJECT
-			l_class, l_feature: attached STRING
+			l_class, l_feature: STRING
 		do
 			last_compilation_successful := False
 			l_project := test_suite.eiffel_project
@@ -406,13 +406,13 @@ feature {NONE} -- Basic functionality
 			stop_requested_implies_evaluators_empty: is_stop_requested implies evaluators.is_empty
 		end
 
-	retrieve_results (a_evaluator: attached TEST_EVALUATOR_CONTROLLER)
+	retrieve_results (a_evaluator: TEST_EVALUATOR_CONTROLLER)
 			-- Retrieve all available results from evaluator and add them to tests in `test_map'. If
 			-- evaluator is running a test which is not in `test_map', terminate it.
 			--
 			-- `a_evaluator': Evaluator from which new results are fetched.
 		local
-			l_tuple: attached TUPLE [index: NATURAL; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
+			l_tuple: TUPLE [index: NATURAL; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
 			l_done, l_terminate: BOOLEAN
 			l_test: detachable TEST_I
 			l_outcome: EQA_TEST_RESULT
@@ -504,7 +504,7 @@ feature {NONE} -- Basic functionality
 			end
 		end
 
-	abort_test (a_test: attached TEST_I; a_remove: BOOLEAN)
+	abort_test (a_test: TEST_I; a_remove: BOOLEAN)
 			-- Flag test as aborted if queued or running. Remove it from `test_map' if `a_remove' is True.
 		require
 			test_map_attached: test_map /= Void
@@ -543,7 +543,7 @@ feature {NONE} -- Basic functionality
 
 feature {TEST_SUITE_S} -- Events
 
-	on_test_removed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_test: attached TEST_I)
+	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
 			-- <Precursor>
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution
@@ -556,7 +556,7 @@ feature {TEST_SUITE_S} -- Events
 
 feature {NONE} -- Factory
 
-	create_evaluator: attached TEST_EVALUATOR_CONTROLLER
+	create_evaluator: TEST_EVALUATOR_CONTROLLER
 			-- Create new evaluator state
 		require
 			running: is_running
@@ -569,7 +569,7 @@ feature {NONE} -- Constants
 
 	progress_compile_fraction: like progress = {REAL} 0.2
 
-	e_compile_error: attached STRING = "Tests can not be executed because last compilation failed"
+	e_compile_error: STRING = "Tests can not be executed because last compilation failed"
 
 invariant
 	running_implies_log_file_attached: is_running implies log_file /= Void

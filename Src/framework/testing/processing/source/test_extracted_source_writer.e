@@ -46,26 +46,26 @@ feature {NONE} -- Initialization
 		do
 			create class_name.make_empty
 			create used_routine_names.make_default
-			used_routine_names.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [attached STRING]})
+			used_routine_names.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
 		end
 
 feature -- Access
 
-	class_name: attached STRING
+	class_name: STRING
 			-- <Precursor>
 
-	ancestor_names: attached ARRAY [attached STRING]
+	ancestor_names: ARRAY [STRING]
 			-- <Precursor>
 		do
 			Result := << extracted_ancestor_name >>
 		end
 
-	root_feature_name: attached STRING = ""
+	root_feature_name: STRING = ""
 			-- <Precursor>
 
 feature {NONE} -- Access
 
-	used_routine_names: attached DS_HASH_TABLE [NATURAL, attached STRING]
+	used_routine_names: DS_HASH_TABLE [NATURAL, STRING]
 			-- Routine names which have been used in the current class
 			--
 			-- keys: routine names
@@ -96,7 +96,7 @@ feature {TEST_CAPTURER} -- Status report
 
 feature -- Status setting
 
-	prepare (a_file: attached KI_TEXT_OUTPUT_STREAM; a_class_name: attached STRING)
+	prepare (a_file: KI_TEXT_OUTPUT_STREAM; a_class_name: STRING)
 			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
@@ -110,7 +110,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	test_routine_name (a_feature: attached E_FEATURE): attached STRING
+	test_routine_name (a_feature: E_FEATURE): STRING
 			-- Valid test routine name for feature in `a_stack_element'.
 		local
 			i: INTEGER_32
@@ -211,13 +211,13 @@ feature {NONE} -- Query
 
 feature {TEST_CAPTURER} -- Events
 
-	on_invocation_capture (a_stack_element: attached TEST_CAPTURED_STACK_ELEMENT)
+	on_invocation_capture (a_stack_element: TEST_CAPTURED_STACK_ELEMENT)
 			-- <Precursor>
 		local
 			l_feat: E_FEATURE
 			l_name: STRING
 			l_count: NATURAL
-			l_cursor: DS_LINEAR_CURSOR [attached STRING]
+			l_cursor: DS_LINEAR_CURSOR [STRING]
 			i: INTEGER
 		do
 			l_feat := a_stack_element.called_feature
@@ -346,7 +346,7 @@ feature {TEST_CAPTURER} -- Events
 			stream.dedent
 		end
 
-	on_object_capture (a_object: attached TEST_CAPTURED_OBJECT)
+	on_object_capture (a_object: TEST_CAPTURED_OBJECT)
 			-- <Precursor>
 		local
 			l_long_string: BOOLEAN
@@ -448,7 +448,7 @@ feature {NONE} -- Output
 			stream.put_line ("")
 		end
 
-	put_manifest_string (a_string: attached STRING)
+	put_manifest_string (a_string: STRING)
 		local
 			i: INTEGER
 		do
@@ -464,7 +464,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_attributes (a_table: attached DS_HASH_TABLE [attached STRING, attached STRING])
+	put_attributes (a_table: DS_HASH_TABLE [STRING, STRING])
 		do
 			from
 				a_table.start
@@ -484,7 +484,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_items (a_list: attached DS_LINEAR [attached STRING])
+	put_items (a_list: DS_LINEAR [STRING])
 		local
 			l_count: INTEGER
 		do
@@ -509,7 +509,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_value (a_value: attached STRING)
+	put_value (a_value: STRING)
 		do
 			if a_value.is_natural then
 				stream.put_character ('"')
@@ -525,7 +525,7 @@ feature {NONE} -- Constants
 
 	max_string_length: INTEGER = 80
 
-	extracted_ancestor_name: attached STRING = "EQA_EXTRACTED_TEST_SET"
+	extracted_ancestor_name: STRING = "EQA_EXTRACTED_TEST_SET"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

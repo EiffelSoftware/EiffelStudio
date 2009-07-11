@@ -18,13 +18,13 @@ feature {NONE} -- Initialization
 			a_preference_attached: a_preference /= Void
 		do
 			create tags_cache.make_default
-			tags_cache.set_equality_tester (create {KL_EQUALITY_TESTER_A [attached STRING]})
+			tags_cache.set_equality_tester (create {KL_EQUALITY_TESTER_A [STRING]})
 			create new_class_name_cache.make_from_string (default_new_class_name)
 		end
 
 feature -- Access
 
-	new_class_name: attached STRING
+	new_class_name: STRING
 			-- <Precursor>
 		local
 			l_name: like new_class_name_cache
@@ -34,7 +34,7 @@ feature -- Access
 			Result := l_name
 		end
 
-	cluster: attached CONF_CLUSTER
+	cluster: CONF_CLUSTER
 			-- <Precursor>
 		local
 			l_cluster: like cluster_cache
@@ -44,7 +44,7 @@ feature -- Access
 			Result := l_cluster
 		end
 
-	path: attached STRING
+	path: STRING
 			-- <Precursor>
 		local
 			l_path: like path_cache
@@ -54,7 +54,7 @@ feature -- Access
 			Result := l_path
 		end
 
-	tags: attached DS_LINEAR [attached STRING]
+	tags: DS_LINEAR [STRING]
 			-- <Precursor>
 		do
 			Result := tags_cache
@@ -65,7 +65,7 @@ feature -- Access: cache
 	new_class_name_cache: detachable like new_class_name assign set_new_class_name
 			-- Cache for `new_class_name'
 
-	tags_cache: attached DS_HASH_SET [attached STRING]
+	tags_cache: DS_HASH_SET [STRING]
 			-- List of tags for new test routine
 
 	cluster_cache: detachable like cluster assign set_cluster

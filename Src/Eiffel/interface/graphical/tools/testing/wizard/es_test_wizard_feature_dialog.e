@@ -243,7 +243,7 @@ feature {NONE} -- Implementation: feature tree
 			end
 		end
 
-	build_tree_for_external (a_class: attached EXTERNAL_CLASS_C)
+	build_tree_for_external (a_class: EXTERNAL_CLASS_C)
 			-- Build tree for .Net classes
 		do
 			-- FIXIT: Don't support .Net classes for the moment

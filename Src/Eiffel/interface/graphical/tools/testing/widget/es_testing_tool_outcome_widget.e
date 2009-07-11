@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test: attached TEST_I
+	test: TEST_I
 			-- Test being displayed by `Current'
 		local
 			l_test: like internal_test
@@ -62,7 +62,7 @@ feature -- Access
 			Result := l_test
 		end
 
-	title: attached STRING_32
+	title: STRING_32
 			-- Caption for tab
 		do
 			Result := locale_formatter.translation (t_title)
@@ -82,7 +82,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	grid: attached ES_GRID
+	grid: ES_GRID
 			-- Grid for listing test results
 
 	internal_test: detachable like test
@@ -109,11 +109,11 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	show_test (a_test: attached TEST_I)
+	show_test (a_test: TEST_I)
 			-- <Precursor>
 		local
 			i: INTEGER
-			l_cursor: DS_BILINEAR_CURSOR [attached EQA_TEST_RESULT]
+			l_cursor: DS_BILINEAR_CURSOR [EQA_TEST_RESULT]
 		do
 			if is_active and a_test /= test then
 				remove_test
@@ -145,7 +145,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_outcome (a_outcome: attached EQA_TEST_RESULT; a_expanded: BOOLEAN)
+	add_outcome (a_outcome: EQA_TEST_RESULT; a_expanded: BOOLEAN)
 			-- Add outcome to grid
 			--
 			-- `a_outcome': Outcome for which information should be added.
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_invocation (a_parent: EV_GRID_ROW; a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: attached STRING; a_expanded: BOOLEAN)
+	add_invocation (a_parent: EV_GRID_ROW; a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: STRING; a_expanded: BOOLEAN)
 			-- Add invocation information to grid
 			--
 			-- `a_parent': Parent row for new rows.
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	code_item (a_code: INTEGER): attached EV_GRID_ITEM
+	code_item (a_code: INTEGER): EV_GRID_ITEM
 			-- Item containing exception code and corresonding name
 		local
 			l_label: EV_GRID_LABEL_ITEM
@@ -314,7 +314,7 @@ feature {NONE} -- Factory
 			Result := l_label
 		end
 
-	recipient_item (a_exception: attached EQA_TEST_INVOCATION_EXCEPTION): attached EV_GRID_ITEM
+	recipient_item (a_exception: EQA_TEST_INVOCATION_EXCEPTION): EV_GRID_ITEM
 			-- Item containing a clickable exception recipient if available
 			--
 			-- `a_exception': Exception containing recipient.

@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	row: attached EV_GRID_ROW
+	row: EV_GRID_ROW
 			-- Row to which `Current' is attached
 
 feature -- Basic functionality

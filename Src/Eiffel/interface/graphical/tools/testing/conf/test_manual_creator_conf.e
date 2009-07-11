@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: attached STRING
+	name: STRING
 			-- <Precursor>
 		local
 			l_name: like name_cache
@@ -42,7 +42,7 @@ feature -- Access
 			Result := l_name
 		end
 
-	test_class: attached EIFFEL_CLASS_I
+	test_class: EIFFEL_CLASS_I
 			-- <Precursor>
 		local
 			l_class: like test_class_cache
@@ -52,7 +52,7 @@ feature -- Access
 			Result := l_class
 		end
 
-	feature_clause: attached FEATURE_CLAUSE_AS
+	feature_clause: FEATURE_CLAUSE_AS
 			-- <Precursor>
 		local
 			l_fc: like feature_clause_cache
@@ -62,7 +62,7 @@ feature -- Access
 			Result := l_fc
 		end
 
-	feature_clause_name: attached STRING
+	feature_clause_name: STRING
 			-- <Precursor>
 		local
 			l_name: like feature_clause_name_cache

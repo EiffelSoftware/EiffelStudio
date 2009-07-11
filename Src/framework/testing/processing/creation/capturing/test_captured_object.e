@@ -31,10 +31,10 @@ feature -- Access
 			--
 			-- Note: Currently this is just a counter increasing for each object.
 
-	type: attached STRING
+	type: STRING
 			-- Full type name of captured object
 
-	items: attached DS_LIST [attached STRING]
+	items: DS_LIST [STRING]
 			-- Items captured from original object
 			--
 			-- Note: The items are representet as manifest values. For example:
@@ -46,7 +46,7 @@ feature -- Access
 		do
 		end
 
-	attributes: attached DS_HASH_TABLE [attached STRING, attached STRING]
+	attributes: DS_HASH_TABLE [STRING, STRING]
 			-- Attribues captured from original object
 			--
 			-- keys: Atttribute names
@@ -60,7 +60,7 @@ feature -- Access
 		do
 		end
 
-	string: attached STRING
+	string: STRING
 			-- Content of original string object
 		require
 			is_string: is_string

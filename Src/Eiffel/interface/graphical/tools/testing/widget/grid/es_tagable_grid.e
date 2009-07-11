@@ -89,10 +89,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	grid: attached ES_GRID
+	grid: ES_GRID
 			-- Actual grid visualizing tree as in items
 
-	layout: attached ES_TAGABLE_GRID_LAYOUT [G]
+	layout: ES_TAGABLE_GRID_LAYOUT [G]
 			-- Layout responsible for drawing grid items and header
 		local
 			l_layout: like internal_layout
@@ -108,7 +108,7 @@ feature {NONE} -- Access
 	internal_layout: detachable like layout
 			-- Internal storage for factory
 
-	timer: attached EV_TIMEOUT
+	timer: EV_TIMEOUT
 			-- Timer for redrawing items in `grid'
 
 	timer_interval: INTEGER = 10000
@@ -167,7 +167,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	highlight_row (a_row: attached EV_GRID_ROW)
+	highlight_row (a_row: EV_GRID_ROW)
 			-- Make `a_row' look like it is fully selected.
 		do
 			if grid.has_focus then
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unhighlight_row (a_row: attached EV_GRID_ROW)
+	unhighlight_row (a_row: EV_GRID_ROW)
 			-- Make `a_row' look like it is not selected.
 		do
 			a_row.set_background_color (grid.background_color)
@@ -225,7 +225,7 @@ feature {NONE} -- Events
 			timer.set_interval (timer_interval)
 		end
 
-	on_row_select (a_row: attached EV_GRID_ROW)
+	on_row_select (a_row: EV_GRID_ROW)
 			-- Called when a row in `grid' is selected.
 		do
 			if propagate_selection_events then
@@ -236,7 +236,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_row_deselect (a_row: attached EV_GRID_ROW)
+	on_row_deselect (a_row: EV_GRID_ROW)
 			-- Called when a row in `grid' is deselected.
 		do
 			if propagate_selection_events then

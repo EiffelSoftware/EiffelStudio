@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	call_stack_elements: attached DS_LINEAR [INTEGER]
+	call_stack_elements: DS_LINEAR [INTEGER]
 			-- Indices of call stack elements to be captured
 			--
 			-- Note: Since debugger classes can currently not be referenced in the ecosystem framework, we

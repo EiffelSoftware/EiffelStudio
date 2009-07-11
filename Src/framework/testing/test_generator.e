@@ -696,7 +696,7 @@ feature{NONE} -- Test result analyizing
 			statistics_task := l_generator
 		end
 
-	add_result (a_result: attached AUT_TEST_CASE_RESULT)
+	add_result (a_result: AUT_TEST_CASE_RESULT)
 		require
 			current_results_attached: current_results /= Void
 			a_result_fails: a_result.is_fail
@@ -727,7 +727,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
 			-- <Precursor>
 		local
 			l_system: like system

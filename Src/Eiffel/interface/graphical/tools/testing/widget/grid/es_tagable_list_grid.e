@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	collection: attached ACTIVE_COLLECTION_I [G]
+	collection: ACTIVE_COLLECTION_I [G]
 			-- <Precursor>
 		local
 			l_collection: like internal_collection
@@ -106,7 +106,7 @@ feature {NONE} -- Query
 
 feature -- Events
 
-	on_item_added (a_collection: attached ACTIVE_COLLECTION_I [G]; a_item: attached G)
+	on_item_added (a_collection: ACTIVE_COLLECTION_I [G]; a_item: G)
 			-- <Precursor>
 		local
 			l_cursor: DS_LINEAR_CURSOR [G]
@@ -126,13 +126,13 @@ feature -- Events
 			l_cursor.go_after
 		end
 
-	on_item_removed (a_collection: attached ACTIVE_COLLECTION_I [G]; a_item: attached G)
+	on_item_removed (a_collection: ACTIVE_COLLECTION_I [G]; a_item: G)
 			-- <Precursor>
 		do
 			grid.remove_row (row_index_for_item (a_item))
 		end
 
-	on_item_changed (a_collection: attached ACTIVE_COLLECTION_I [G]; a_item: attached G)
+	on_item_changed (a_collection: ACTIVE_COLLECTION_I [G]; a_item: G)
 			-- <Precursor>
 		local
 			l_item: EV_GRID_ITEM
@@ -140,7 +140,7 @@ feature -- Events
 			l_item := computed_grid_item (1, row_index_for_item (a_item))
 		end
 
-	on_items_reset (a_collection: attached ACTIVE_COLLECTION_I [G])
+	on_items_reset (a_collection: ACTIVE_COLLECTION_I [G])
 			-- <Precursor>
 		do
 			grid.remove_and_clear_all_rows
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			connected: is_connected
 			grid_empty: grid.row_count = 0
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached G]
+			l_cursor: DS_LINEAR_CURSOR [G]
 			i: INTEGER
 		do
 			l_cursor := collection.items.new_cursor
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_row_for_item (a_item: attached G; a_pos: INTEGER)
+	add_row_for_item (a_item: G; a_pos: INTEGER)
 			-- Insert row for item into grid at given position
 		require
 			connected: is_connected

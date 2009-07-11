@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	test_suite: attached TEST_SUITE_S
+	test_suite: TEST_SUITE_S
 			-- Test suite `Current' is synchronized with.
 		require
 			usable: is_interface_usable
@@ -37,7 +37,7 @@ feature -- Access
 			result_available: Result.is_project_initialized
 		end
 
-	tests: attached DS_LINEAR [attached TEST_I]
+	tests: DS_LINEAR [TEST_I]
 			-- <Precursor>
 		deferred
 		ensure then
@@ -125,7 +125,7 @@ feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
 
 feature -- Query
 
-	frozen is_valid_configuration (a_arg: attached TEST_PROCESSOR_CONF_I): BOOLEAN
+	frozen is_valid_configuration (a_arg: TEST_PROCESSOR_CONF_I): BOOLEAN
 			-- Is `an_arg' a valid configuration to start a task for `a_test_suite'?
 		require
 			usable: is_interface_usable
@@ -169,7 +169,7 @@ feature -- Status setting
 
 feature {TEST_SUITE_S, TEST_PROCESSOR_SCHEDULER_I} -- Status setting
 
-	frozen start (a_arg: attached TEST_PROCESSOR_CONF_I)
+	frozen start (a_arg: TEST_PROCESSOR_CONF_I)
 			-- Start performing a task for given configuration.
 			--
 			-- `a_arg': Arguments defining the task.
@@ -230,7 +230,7 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Typing
 
-	conf_type: attached TEST_PROCESSOR_CONF_I
+	conf_type: TEST_PROCESSOR_CONF_I
 			-- Type anchor for configuration used by `Current'.
 		do
 		ensure

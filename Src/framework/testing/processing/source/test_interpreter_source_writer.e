@@ -32,13 +32,13 @@ inherit
 
 feature -- Access
 
-	class_name: attached STRING = "ITP_INTERPRETER_ROOT"
+	class_name: STRING = "ITP_INTERPRETER_ROOT"
 			-- <Precursor>
 
-	root_feature_name: attached STRING = "execute"
+	root_feature_name: STRING = "execute"
 			-- <Precursor>
 
-	ancestor_names: attached ARRAY [attached STRING]
+	ancestor_names: ARRAY [STRING]
 			-- <Precursor>
 		do
 			Result := << "ITP_INTERPRETER" >>
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 
 feature -- Basic operations
 
-	write_class (a_file: attached KI_TEXT_OUTPUT_STREAM; a_type_list: attached DS_LINEAR [STRING]; a_system: attached SYSTEM_I)
+	write_class (a_file: KI_TEXT_OUTPUT_STREAM; a_type_list: DS_LINEAR [STRING]; a_system: SYSTEM_I)
 			-- Print root class refering to types in `a_type_list'
 		require
 			a_file_open_write: a_file.is_open_write
@@ -83,7 +83,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	put_anchor_routine (a_types: attached DS_LINEAR [STRING])
+	put_anchor_routine (a_types: DS_LINEAR [STRING])
 			--
 		require
 			stream_valid: is_writing
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_type (a_string: attached STRING; a_type: TYPE_A)
+	append_type (a_string: STRING; a_type: TYPE_A)
 			-- Append type name for `a_type' to `a_string' without formal parameters.
 		local
 			i: INTEGER

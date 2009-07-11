@@ -12,7 +12,7 @@ inherit
 
 feature {NONE} -- Access
 
-	test_suite: attached SERVICE_CONSUMER [TEST_SUITE_S]
+	test_suite: SERVICE_CONSUMER [TEST_SUITE_S]
 			-- Access to a test suite service {TEST_SUITE_S} consumer
 		local
 			l_test_suite: detachable like test_suite
@@ -34,31 +34,31 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	background_executor_type: attached TYPE [TEST_BACKGROUND_EXECUTOR_I]
+	background_executor_type: TYPE [TEST_BACKGROUND_EXECUTOR_I]
 			-- Type for executor used to execute tests in background
 		do
 			Result := {TEST_BACKGROUND_EXECUTOR_I}
 		end
 
-	debug_executor_type: attached TYPE [TEST_DEBUGGER_I]
+	debug_executor_type: TYPE [TEST_DEBUGGER_I]
 			-- Type for executor that runs tests in the debugger
 		do
 			Result := {TEST_DEBUGGER_I}
 		end
 
-	extractor_factory_type: attached TYPE [TEST_EXTRACTOR_I]
+	extractor_factory_type: TYPE [TEST_EXTRACTOR_I]
 			-- Factory type for test case extraction
 		do
 			Result := {TEST_EXTRACTOR_I}
 		end
 
-	manual_factory_type: attached TYPE [TEST_MANUAL_CREATOR_I]
+	manual_factory_type: TYPE [TEST_MANUAL_CREATOR_I]
 			-- Type for manual test creation
 		do
 			Result := {TEST_MANUAL_CREATOR_I}
 		end
 
-	generator_factory_type: attached TYPE [TEST_GENERATOR_I]
+	generator_factory_type: TYPE [TEST_GENERATOR_I]
 			-- Factory type for test case generation
 		do
 			Result := {TEST_GENERATOR_I}
@@ -66,7 +66,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	error_message (a_type: attached TYPE [TEST_PROCESSOR_I]; a_code: NATURAL): attached STRING_32
+	error_message (a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL): STRING_32
 			-- Translated error message for given error code and corresponding processor.
 			--
 			-- `a_type': Type of processor
@@ -122,7 +122,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	frozen launch_processor (a_type: attached TYPE [TEST_PROCESSOR_I]; a_conf: attached TEST_PROCESSOR_CONF_I)
+	frozen launch_processor (a_type: TYPE [TEST_PROCESSOR_I]; a_conf: TEST_PROCESSOR_CONF_I)
 			-- Launch processor with provided configuration. If unable to launch processor, report errors
 			-- through `on_error'.
 			--
@@ -163,7 +163,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Events
 
-	on_processor_launch_error (a_error: like error_message; a_type: attached TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
+	on_processor_launch_error (a_error: like error_message; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
 			-- Called when an error occurred launching processor.
 			--
 			-- `a_error': Error message

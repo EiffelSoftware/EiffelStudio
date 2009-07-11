@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	created_tests: attached DS_LINEAR [attached TEST_I]
+	created_tests: DS_LINEAR [TEST_I]
 			-- <Precursor>
 		do
 			Result := internal_created_tests
@@ -48,7 +48,7 @@ feature {NONE} -- Access
 	configuration: detachable like conf_type
 			-- Internal storage for `configuration'
 
-	internal_created_tests: attached DS_HASH_SET [attached TEST_I]
+	internal_created_tests: DS_HASH_SET [TEST_I]
 			-- Internal storage for `created_tests'
 
 	class_name_counter: NATURAL
@@ -117,7 +117,7 @@ feature {NONE} -- Basic operations
 			l_location: DIRECTORY_NAME
 			l_directory: DIRECTORY
 			l_path: detachable FILE_NAME
-			l_file: attached KL_TEXT_OUTPUT_FILE
+			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
 			l_class_name: STRING
 		do
@@ -186,7 +186,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
 			-- Print new class text to `a_file'.
 		require
 			running: is_running
@@ -195,7 +195,7 @@ feature {NONE} -- Basic operations
 		deferred
 		end
 
-	add_class (a_filename: attached STRING; a_class_name: attached STRING)
+	add_class (a_filename: STRING; a_class_name: STRING)
 			-- Add new test class to Eiffel project and update test suite.
 		require
 			running: is_running
@@ -207,7 +207,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	synchronize_class (a_class: attached EIFFEL_CLASS_I)
+	synchronize_class (a_class: EIFFEL_CLASS_I)
 			-- Synchronize `a_class' with test suite and add any new tests to `created_tests'.
 		do
 			is_adding_tests := True
@@ -217,7 +217,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Events
 
-	on_test_added (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
+	on_test_added (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
 			-- <Precursor>
 		do
 			if is_adding_tests then
@@ -227,7 +227,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_test_removed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
+	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
 			-- <Precursor>
 		do
 			internal_created_tests.search (a_item)
@@ -240,35 +240,35 @@ feature {NONE} -- Events
 
 feature {NONE} -- Typing
 
-	conf_type: attached TEST_CREATOR_CONF_I
+	conf_type: TEST_CREATOR_CONF_I
 			-- <Precursor>
 		deferred
 		end
 
 feature {NONE} -- Constants
 
-	e_can_not_create_new_class_file: attached STRING = "Can not create new class file in $1:%N%N"
-	e_cluster_read_only: attached STRING
+	e_can_not_create_new_class_file: STRING = "Can not create new class file in $1:%N%N"
+	e_cluster_read_only: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
 			Result.append ("Cluster is read only.")
 		end
-	e_directory_does_not_exist: attached STRING
+	e_directory_does_not_exist: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
 			Result.append ("Path does not exist.")
 		end
-	e_directory_not_writable: attached STRING
+	e_directory_not_writable: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
 			Result.append ("Path is not writable.")
 		end
-	e_file_already_exists: attached STRING
+	e_file_already_exists: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
 			Result.append ("File $2 already exists.")
 		end
-	e_file_not_creatable: attached STRING
+	e_file_not_creatable: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
 			Result.append ("Unable to create file $2.")

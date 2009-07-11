@@ -14,14 +14,14 @@ inherit
 
 feature -- Access
 
-	name: attached STRING
+	name: STRING
 			-- Name used for new test
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	test_class: attached EIFFEL_CLASS_I
+	test_class: EIFFEL_CLASS_I
 			-- Class to which new test will be added
 		require
 			usable: is_interface_usable
@@ -29,7 +29,7 @@ feature -- Access
 		deferred
 		end
 
-	feature_clause: attached FEATURE_CLAUSE_AS
+	feature_clause: FEATURE_CLAUSE_AS
 			-- Feature clause to which new test routine will be written to
 		require
 			usable: is_interface_usable
@@ -38,7 +38,7 @@ feature -- Access
 		deferred
 		end
 
-	feature_clause_name: attached STRING
+	feature_clause_name: STRING
 			-- Name of new feature clause
 		require
 			usable: is_interface_usable

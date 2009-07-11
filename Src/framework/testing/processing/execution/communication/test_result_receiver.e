@@ -20,7 +20,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	port_counter: attached CELL [INTEGER]
+	port_counter: CELL [INTEGER]
 			-- Counter for port number `Current' listens to
 		once
 			create Result.put (0)
@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	receive (a_status: attached TEST_EVALUATOR_STATUS)
+	receive (a_status: TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket.
 			--
 			-- Note: `receive' will open a listener socket on a arbitrary available port and simply try to
@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	listen (a_socket: attached NETWORK_STREAM_SOCKET; a_status: attached TEST_EVALUATOR_STATUS)
+	listen (a_socket: NETWORK_STREAM_SOCKET; a_status: TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket and receive results.
 			--
 			-- `a_socket': Socket to which evaluator will connect to.
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: attached TEST_EVALUATOR_STATUS)
+	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: TEST_EVALUATOR_STATUS)
 			-- Receive results from socket.
 			--
 			-- `a_socket': Socket through which evaluator sends results.

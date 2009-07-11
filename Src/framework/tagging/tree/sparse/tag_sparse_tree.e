@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			make (create {TAG_DEFAULT_FILTER [G]})
 		ensure
-			filter_empty: attached {TAG_DEFAULT_FILTER [G]} filter
+			default_filter: attached {TAG_DEFAULT_FILTER [G]} filter
 		end
 
 feature -- Access

@@ -18,13 +18,13 @@ inherit
 
 feature {NONE} -- Query
 
-	is_class_alive (a_class: attached EIFFEL_CLASS_C): BOOLEAN
+	is_class_alive (a_class: EIFFEL_CLASS_C): BOOLEAN
 			-- Is `a_class' registered in system and contains ast?
 		do
 			Result := a_class.is_valid and then a_class.has_ast
 		end
 
-	is_test_class (a_class: attached EIFFEL_CLASS_I): BOOLEAN
+	is_test_class (a_class: EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		local
 			l_ancestor: like common_ancestor
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_descendants (an_ancestor: attached EIFFEL_CLASS_C)
+	report_descendants (an_ancestor: EIFFEL_CLASS_C)
 			-- Report effective descendants to project as potential test classes.
 			--
 			-- `an_ancestor': Recursively report all errektive descendants (including `an_ancestor') as

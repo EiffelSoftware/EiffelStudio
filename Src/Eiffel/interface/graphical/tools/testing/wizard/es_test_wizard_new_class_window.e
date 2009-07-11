@@ -295,7 +295,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Events
 
-	validate_class_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
+	validate_class_name (a_name: STRING_32): TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `class_name' contents need to be validated
 		local
 			l_name: STRING

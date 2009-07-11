@@ -26,7 +26,7 @@ feature {NONE} -- Access
 	wizard_information: ES_TEST_WIZARD_INFORMATION
 			-- Information user has provided to the wizard
 
-	factory_type: attached TYPE [TEST_CREATOR_I]
+	factory_type: TYPE [TEST_CREATOR_I]
 			-- Factory type used to create tests
 		deferred
 		end
@@ -65,7 +65,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Events
 
-	on_processor_launch_error (a_error: attached STRING_32; a_type: attached TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
+	on_processor_launch_error (a_error: STRING_32; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
 			-- <Precursor>
 		do
 			has_error := True

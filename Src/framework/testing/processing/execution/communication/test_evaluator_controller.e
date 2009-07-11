@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	status: attached TEST_EVALUATOR_STATUS
+	status: TEST_EVALUATOR_STATUS
 			-- Status showing testing progress
 
-	launch_time: attached DATE_TIME
+	launch_time: DATE_TIME
 			-- Date and time evaluator was last launched
 		require
 			running: is_running
@@ -41,7 +41,7 @@ feature -- Access
 			Result := l_launch_time
 		end
 
-	assigner: attached TEST_EXECUTION_ASSIGNER
+	assigner: TEST_EXECUTION_ASSIGNER
 			-- Assigner for retrieving test to be executed
 
 feature {NONE} -- Access
@@ -58,7 +58,7 @@ feature {NONE} -- Access
 	last_port: INTEGER
 			-- Port last receiver launched by `Current' opened a socket
 
-	execution_environment: attached EXECUTION_ENVIRONMENT
+	execution_environment: EXECUTION_ENVIRONMENT
 			-- Helper class providing `sleep' routine.
 		once
 			create Result
@@ -112,10 +112,10 @@ feature {TEST_EXECUTOR_I} -- Status setting
 
 feature {NONE} -- Query
 
-	arguments: attached ARRAYED_LIST [attached STRING]
+	arguments: ARRAYED_LIST [STRING]
 			-- Arguments used to launch evaluator
 		local
-			l_port, l_root: attached STRING
+			l_port, l_root: STRING
 		do
 			create Result.make (5)
 
@@ -145,7 +145,7 @@ feature	{NONE} -- Implementation
 			l_socket.close
 		end
 
-	launch_evaluator (a_args: attached LIST [attached STRING])
+	launch_evaluator (a_args: LIST [STRING])
 			-- Launch evaluator executable
 			--
 			-- `a_args': Arguments for launching evaluator process

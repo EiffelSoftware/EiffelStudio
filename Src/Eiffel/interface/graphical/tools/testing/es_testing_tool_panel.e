@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- <Precursor>
 		local
-			l_et: KL_STRING_EQUALITY_TESTER_A [attached STRING]
+			l_et: KL_STRING_EQUALITY_TESTER_A [STRING]
 		do
 			Precursor
 			create l_et
@@ -204,10 +204,10 @@ feature {NONE} -- Access
 	tag_tree: ES_TAG_TREE_GRID [TEST_I]
 	tag_filter: TAG_REGEX_FILTER [TEST_I]
 
-	outcome_tab: attached ES_TESTING_TOOL_OUTCOME_WIDGET
+	outcome_tab: ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
 
-	current_window: attached EV_WINDOW
+	current_window: EV_WINDOW
 			-- <Precursor>
 		local
 			l_window: EV_WINDOW
@@ -219,49 +219,49 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: widgets
 
-	filter_box: attached EV_COMBO_BOX
+	filter_box: EV_COMBO_BOX
 			-- Combo box containing pattern for filtering tests
 
-	split_area: attached EV_VERTICAL_SPLIT_AREA
+	split_area: EV_VERTICAL_SPLIT_AREA
 			-- Splitting area for grid and notebook
 
-	notebook: attached EV_NOTEBOOK
+	notebook: EV_NOTEBOOK
 			-- Notebook for detailed information
 
-	runs_label: attached EV_LABEL
+	runs_label: EV_LABEL
 			-- Label showing number of tests which have been executed
 
-	errors_label: attached EV_LABEL
+	errors_label: EV_LABEL
 			-- Label showing number of tests currently failing
 
-	errors_pixmap: attached EV_PIXMAP
+	errors_pixmap: EV_PIXMAP
 
 feature {NONE} -- Access: view
 
-	view_templates: attached DS_ARRAYED_LIST [attached STRING]
+	view_templates: DS_ARRAYED_LIST [STRING]
 			-- List of predefined tags to be used in `tree_view'
 
-	view_template_descriptions: attached DS_ARRAYED_LIST [attached STRING]
+	view_template_descriptions: DS_ARRAYED_LIST [STRING]
 			-- List of readable descriptions for each tag in `view_templates'
 
-	view_history: attached DS_LINKED_LIST [attached STRING]
+	view_history: DS_LINKED_LIST [STRING]
 			-- List of tags user has entered recently
 
 feature {NONE} -- Access: buttons
 
-	wizard_button: attached SD_TOOL_BAR_BUTTON
+	wizard_button: SD_TOOL_BAR_BUTTON
 			-- Button for launching test wizard
 
-	run_button: attached SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	run_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for launching the test executor
 
-	debug_button: attached SD_TOOL_BAR_DUAL_POPUP_BUTTON
+	debug_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for debugging tests
 
-	stop_button: attached SD_TOOL_BAR_BUTTON
+	stop_button: SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
 
-	clear_filter_button: attached SD_TOOL_BAR_BUTTON
+	clear_filter_button: SD_TOOL_BAR_BUTTON
 			-- Button for clearing any filter
 
 feature {NONE} -- Access: menus
@@ -269,13 +269,13 @@ feature {NONE} -- Access: menus
 	run_all_menu,
 	run_failing_menu,
 	run_selected_menu,
-	run_filtered_menu: attached EV_MENU_ITEM
+	run_filtered_menu: EV_MENU_ITEM
 			-- Menu items for running tests in background
 
 	debug_all_menu,
 	debug_failing_menu,
 	debug_selected_menu,
-	debug_filtered_menu: attached EV_MENU_ITEM
+	debug_filtered_menu: EV_MENU_ITEM
 			-- Menu items for debugging tests
 
 feature {NONE} -- Status report
@@ -334,7 +334,7 @@ feature {NONE} -- Status setting: view
 		require
 			not_updating: not is_updating_filter_box
 		local
-			l_cursor: DS_LINEAR_CURSOR [attached STRING]
+			l_cursor: DS_LINEAR_CURSOR [STRING]
 			i: INTEGER
 			l_item: EV_LIST_ITEM
 		do
@@ -490,7 +490,7 @@ feature {NONE} -- Events: wizard
 
 feature {NONE} -- Events: test execution
 
-	on_run_current (a_type: attached TYPE [TEST_EXECUTOR_I])
+	on_run_current (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
 			if tag_tree.selected_nodes.is_empty then
@@ -500,18 +500,18 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_all (a_type: attached TYPE [TEST_EXECUTOR_I])
+	on_run_all (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run all" item of `run_button'.
 		do
 			launch_executor (Void, a_type)
 		end
 
-	on_run_failing (a_type: attached TYPE [TEST_EXECUTOR_I])
+	on_run_failing (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user selectes "run failing" item of `run_button'.
 		local
-			l_item: attached TEST_I
-			l_list: attached DS_ARRAYED_LIST [attached TEST_I]
-			l_cursor: DS_LINEAR_CURSOR [attached TEST_I]
+			l_item: TEST_I
+			l_list: DS_ARRAYED_LIST [TEST_I]
+			l_cursor: DS_LINEAR_CURSOR [TEST_I]
 		do
 			if test_suite.is_service_available then
 				create l_list.make (test_suite.service.tests.count)
@@ -533,7 +533,7 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_filtered (a_type: attached TYPE [TEST_EXECUTOR_I])
+	on_run_filtered (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run filteres" item of `run_button'.
 		local
 			l_set: DS_HASH_SET [TEST_I]
@@ -543,7 +543,7 @@ feature {NONE} -- Events: test execution
 			launch_executor (l_set, a_type)
 		end
 
-	on_run_selected (a_type: attached TYPE [TEST_EXECUTOR_I])
+	on_run_selected (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run selected" item of `run_button'.
 		local
 			l_set: DS_HASH_SET [TEST_I]
@@ -553,7 +553,7 @@ feature {NONE} -- Events: test execution
 			launch_executor (l_set, a_type)
 		end
 
-	launch_executor (a_list: detachable DS_LINEAR [attached TEST_I]; a_type: attached TYPE [TEST_EXECUTOR_I])
+	launch_executor (a_list: detachable DS_LINEAR [TEST_I]; a_type: TYPE [TEST_EXECUTOR_I])
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 		local
@@ -605,13 +605,13 @@ feature {NONE} -- Events: labels
 
 feature {TEST_SUITE_S} -- Events: test suite
 
-	on_test_added (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
+	on_test_added (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
 			-- <Precursor>
 		do
 			update_run_labels
 		end
 
-	on_test_changed (a_test_suite: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_test: attached TEST_I)
+	on_test_changed (a_test_suite: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_test then
@@ -620,7 +620,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_test_removed (a_collection: attached ACTIVE_COLLECTION_I [attached TEST_I]; a_item: attached TEST_I)
+	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_item then
@@ -629,7 +629,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_processor_launched (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
+	on_processor_launched (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
 			-- <Precursor>
 		local
 			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
@@ -678,7 +678,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
 		end
 
- 	on_processor_stopped (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I)
+ 	on_processor_stopped (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
  			-- <Precursor>
  		do
  			if background_executor_type.attempt (a_processor) /= Void then
@@ -688,7 +688,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
  		end
 
- 	on_processor_error (a_test_suite: attached TEST_SUITE_S; a_processor: attached TEST_PROCESSOR_I; a_error: attached STRING_8; a_token_values: TUPLE)
+ 	on_processor_error (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I; a_error: STRING_8; a_token_values: TUPLE)
  			-- <Precursor>
  		do
  			if window_manager.last_focused_window = develop_window then

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	types: attached DS_LINEAR [attached STRING]
+	types: DS_LINEAR [STRING]
 			-- <Precursor>
 		do
 			Result := types_cache
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Access: cache
 
-	types_cache: attached DS_HASH_SET [attached STRING]
+	types_cache: DS_HASH_SET [STRING]
 			-- Cache for `types'
 
 	time_out_cache: like time_out assign set_time_out

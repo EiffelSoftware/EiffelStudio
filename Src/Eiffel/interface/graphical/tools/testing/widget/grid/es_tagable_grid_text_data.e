@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: attached STRING
+	text: STRING
 			-- Text shown in grid
 
 feature -- Basic functionality

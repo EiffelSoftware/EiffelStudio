@@ -55,7 +55,7 @@ feature -- Access
 	validator: TAG_VALIDATOR
 			-- Validator used to validate/modify tags
 
-	items: DS_ARRAYED_LIST [attached G]
+	items: DS_ARRAYED_LIST [G]
 			-- All items currently tagged in `Current'
 		do
 			create Result.make_from_linear (item_to_tags_table.keys)
@@ -330,7 +330,7 @@ feature -- Events
 			l_cache := connection_cache
 			if l_cache = Void then
 				create l_cache.make (
-					agent (a_observer: TAG_SERVER_OBSERVER [G]): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+					agent (a_observer: TAG_SERVER_OBSERVER [G]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
 								[tag_added_event, agent a_observer.on_tag_added],

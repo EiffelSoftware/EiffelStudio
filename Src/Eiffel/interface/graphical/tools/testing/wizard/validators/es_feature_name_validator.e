@@ -23,7 +23,7 @@ inherit
 
 feature -- Validation
 
-	validate_feature_name (a_feature_name: attached STRING)
+	validate_feature_name (a_feature_name: STRING)
 			-- Is name a vlaid name for an Eiffel feature?
 			--
 			-- `a_feature_name': Name to be validated.
@@ -36,7 +36,7 @@ feature -- Validation
 			end
 		end
 
-	validate_new_feature_name (a_feature_name: attached STRING; a_class: attached CLASS_I)
+	validate_new_feature_name (a_feature_name: STRING; a_class: CLASS_I)
 			-- Is name a valid name for a new feature?
 			--
 			-- `a_feature_name': Name of new Eiffel feature.

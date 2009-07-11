@@ -259,7 +259,7 @@ feature {NONE} -- Events
 			update_next_button_status
 		end
 
-	on_validate_feature_clause_name (a_name: attached STRING_32): attached TUPLE [BOOLEAN, detachable STRING_32]
+	on_validate_feature_clause_name (a_name: STRING_32): TUPLE [BOOLEAN, detachable STRING_32]
 			-- Called when `new_feature_clause_name' contents need to be validated.
 		local
 			l_name: STRING

@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	executor (a_type: attached TYPE [TEST_EXECUTOR_I]): attached TEST_EXECUTOR_I
+	executor (a_type: TYPE [TEST_EXECUTOR_I]): TEST_EXECUTOR_I
 			-- Test executor registered under `a_type'.
 			--
 			-- `a_type': Type under which executor is registered.
@@ -48,7 +48,7 @@ feature -- Access
 			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
 		end
 
-	factory (a_type: attached TYPE [TEST_CREATOR_I]): attached TEST_CREATOR_I
+	factory (a_type: TYPE [TEST_CREATOR_I]): TEST_CREATOR_I
 			-- Test factory registered under `a_type'.
 			--
 			-- `a_type': Type under which factory is registered.
@@ -68,7 +68,7 @@ feature -- Access
 			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
 		end
 
-	processor_registrar: attached TEST_PROCESSOR_REGISTRAR_I
+	processor_registrar: TEST_PROCESSOR_REGISTRAR_I
 			-- Registrar managing available test processors
 		require
 			usable: is_interface_usable
@@ -77,7 +77,7 @@ feature -- Access
 			registrar_usable: Result.is_interface_usable
 		end
 
-	scheduler: attached TEST_PROCESSOR_SCHEDULER_I
+	scheduler: TEST_PROCESSOR_SCHEDULER_I
 			-- Scheduler for launching test processors
 		require
 			usable: is_interface_usable
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature {TEST_PROCESSOR_I} -- Status setting
 
-	propagate_error (a_error: attached STRING; a_token_values: attached TUPLE; a_processor: attached TEST_PROCESSOR_I)
+	propagate_error (a_error: STRING; a_token_values: TUPLE; a_processor: TEST_PROCESSOR_I)
 			-- Propagate error message raised by processor
 		require
 			usable: is_interface_usable
@@ -122,7 +122,7 @@ feature {TEST_PROCESSOR_I} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: attached TEST_I; a_executor: attached TEST_EXECUTOR_I)
+	set_test_queued (a_test: TEST_I; a_executor: TEST_EXECUTOR_I)
 			-- Set status of test to queued and notify observers.
 			--
 			-- `a_test': Test being queued.
@@ -137,7 +137,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_executor_queues_a_test: a_test.executor = a_executor
 		end
 
-	set_test_running (a_test: attached TEST_I)
+	set_test_running (a_test: TEST_I)
 			-- Set status of test to running and notify observers.
 			--
 			-- `a_test': Test being executed.
@@ -151,7 +151,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test_running: a_test.is_running
 		end
 
-	add_outcome_to_test (a_test: attached TEST_I; a_outcome: attached EQA_TEST_RESULT)
+	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_TEST_RESULT)
 			-- Add outcome to test being executed and notify observers.
 			--
 			-- `a_test': Test for which outcome is available.
@@ -168,7 +168,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_outcome_is_last_outcome: a_test.last_outcome = a_outcome
 		end
 
-	set_test_aborted (a_test: attached TEST_I)
+	set_test_aborted (a_test: TEST_I)
 			-- Abort execution of test and notify observers.
 			--
 			-- `a_test': Test which was not completely executed.
@@ -184,7 +184,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 
 feature -- Events
 
-	processor_launched_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
+	processor_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
 			-- Events called when `Current' launches a processor.
 			--
 			-- test_suite: `Current'
@@ -194,7 +194,7 @@ feature -- Events
 		deferred
 		end
 
-	processor_proceeded_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
+	processor_proceeded_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
 			-- Events called after some processor has proceeded with its task.
 			--
 			-- test_suite: `Current'
@@ -204,7 +204,7 @@ feature -- Events
 		deferred
 		end
 
-	processor_finished_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
+	processor_finished_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
 			-- Events called when some processor finished its task.
 			--
 			-- test_suite: `Current'
@@ -214,7 +214,7 @@ feature -- Events
 		deferred
 		end
 
-	processor_stopped_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I]]
+	processor_stopped_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
 			-- Events called when a processor has completely stopped
 			--
 			-- Note: It is not guaranteed that all observers will receive this notification. This is because
@@ -227,7 +227,7 @@ feature -- Events
 		deferred
 		end
 
-	processor_error_event: attached EVENT_TYPE [TUPLE [test_suite: attached TEST_SUITE_S; processor: attached TEST_PROCESSOR_I; error: attached STRING; token_values: TUPLE]]
+	processor_error_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I; error: STRING; token_values: TUPLE]]
 			-- Events called when a processor raises an error message
 			--
 			-- test_suite: `Current'
@@ -241,16 +241,16 @@ feature -- Events
 
 feature -- Event: Connection point
 
-	test_suite_connection: attached EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
+	test_suite_connection: EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
 			-- <Precursor>
 		local
 			l_result: like internal_test_suite_connection
 		do
 			l_result := internal_test_suite_connection
 			if l_result = Void then
-				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [attached TEST_I], ACTIVE_COLLECTION_I [attached TEST_I]]}
+				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [TEST_I], ACTIVE_COLLECTION_I [TEST_I]]}
 					Result.make (
-						agent (ia_observer: attached TEST_SUITE_OBSERVER): attached ARRAY [TUPLE [event: attached EVENT_TYPE [TUPLE]; action: attached PROCEDURE [ANY, TUPLE]]]
+						agent (ia_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 							do
 								Result := << [processor_launched_event, agent ia_observer.on_processor_launched],
 									[processor_proceeded_event, agent ia_observer.on_processor_proceeded],

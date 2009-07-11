@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	executable: attached STRING
+	executable: STRING
 			-- Name of executable for `process'
 
-	working_directory: attached STRING
+	working_directory: STRING
 
 	process: detachable PROCESS
 			-- Process
@@ -69,7 +69,7 @@ feature -- Status setting
 			end
 		end
 
-	launch_evaluator (a_args: attached LIST [attached STRING])
+	launch_evaluator (a_args: LIST [STRING])
 			-- <Precursor>
 		do
 			process := process_factory.process_launcher (executable, a_args, working_directory)

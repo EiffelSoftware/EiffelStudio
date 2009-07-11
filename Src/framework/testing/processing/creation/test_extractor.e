@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	capturer: attached TEST_CAPTURER
+	capturer: TEST_CAPTURER
 			-- Capturer retrieving objects from running application.
 
 feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
@@ -52,10 +52,10 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	print_new_class (a_file: attached KL_TEXT_OUTPUT_FILE; a_class_name: attached STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
 			-- <Precursor>
 		local
-			l_source_writer: attached TEST_EXTRACTED_SOURCE_WRITER
+			l_source_writer: TEST_EXTRACTED_SOURCE_WRITER
 			l_app_stat: detachable APPLICATION_STATUS
 			l_cs: detachable EIFFEL_CALL_STACK
 		do

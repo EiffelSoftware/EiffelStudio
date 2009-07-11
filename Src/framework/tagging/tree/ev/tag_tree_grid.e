@@ -498,6 +498,7 @@ feature {NONE} -- Implementation
 		local
 			l_list: ARRAYED_LIST [INTEGER]
 			l_row: EV_GRID_ROW
+			l_selected: BOOLEAN
 		do
 			if grid.is_displayed then
 				from
@@ -507,8 +508,12 @@ feature {NONE} -- Implementation
 					l_list.after
 				loop
 					l_row := grid.row (l_list.item_for_iteration)
+					l_selected := l_row.is_selected
 					l_row.clear
 					l_row.redraw
+					if l_selected then
+						l_row.enable_select
+					end
 					l_list.forth
 				end
 			end

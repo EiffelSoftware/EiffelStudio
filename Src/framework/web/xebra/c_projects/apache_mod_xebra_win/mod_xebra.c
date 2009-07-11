@@ -235,46 +235,29 @@ static int xebra_handler (request_rec* r)
 	/* If there are, read POST parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
-		ctype = apr_table_get (r->headers_in, "Content-Type");
+	
+		rv = read_from_POST (r, &post_buf);
 
-		if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))
+		if (rv != OK)
 		{
-			rv = read_from_POST (r, &post_buf);
-
-			if (rv != OK)
-			{
-				ap_rputs ("Error reading POST data from x-www-form-urlencoded", r);
-				return rv;
+			PRINT_ERROR ("Error reading POST data");
+			return OK;
+		} else {			
+				
+			ctype = apr_table_get (r->headers_in, "Content-Type");
+			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))                               
+                        {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf, NULL);					
 			} else {
-				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
-								TABLEEND, NULL);
-			}
-		}
-		else if (ctype && (strcasecmp (ctype, "text/xml")== 0))
-		{
-			rv = read_from_POST (r, &post_buf);
-
-			if (rv != OK)
-			{
-				ap_rputs ("Error reading POST data from text/xml", r);
-				return rv;
-			} else {
-				message = apr_pstrcat (r->pool, message, ARG, "#TEXT/XML#", post_buf,
-								TABLEEND, NULL);
-			}
-		}
-		else
-		{
-			ap_rputs ("Unsupported POST content type!", r);
-			return APR_EGENERAL;
-		}
-
+				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);	
+			}		
+		}	
 
 	} else if (r->args != NULL) {
-		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, TABLEEND,
+		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, 
 				NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, ARG, TABLEEND, NULL);
+		message = apr_pstrcat (r->pool, message, ARG,  NULL);
 	}
 
 	/* set up connection to server */

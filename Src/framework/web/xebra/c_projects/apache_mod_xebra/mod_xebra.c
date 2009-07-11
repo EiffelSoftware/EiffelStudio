@@ -217,11 +217,8 @@ static int xebra_handler (request_rec* r)
 				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf, NULL);					
 			} else {
 				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);	
-			}
-			
-
-		}
-	
+			}		
+		}	
 
 	} else if (r->args != NULL) {
 		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, 

@@ -30,8 +30,6 @@ else
 fi;
 
 
-sudo apache2ctl stop
-
 # Checkout xebra
 cd $XEBRA_DEV
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
@@ -58,7 +56,7 @@ $XEBRA_DEV/httpd/bin/apxs -i mod_xebra.la
 echo "LoadModule xebra_module modules/mod_xebra.so" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "AddHandler mod_xebra .xrpc" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "XebraServer_port \"55000\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "XebraServer_port \"55001\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "DirectoryIndex index.xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
@@ -72,18 +70,18 @@ echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 sed -e 's/Listen 80/Listen 55000/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
 
-sudo $XEBRA_DEV/httpd/bin/apachectl start
+$XEBRA_DEV/httpd/bin/apachectl start
 
 
 # Compile xebra translator
 cd $XEBRA_DEV/eiffel_projects/xebra_translator/
-ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile -clean
+ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile -clean -finalize
 
 # Compile xebra server
 cd $XEBRA_DEV/eiffel_projects/xebra_server
-ec -config xebra_server-voidunsafe.ecf -target xebra_server -c_compile -clean
+ec -config xebra_server-voidunsafe.ecf -target xebra_server -c_compile -clean -finalize
 
-echo "Installation complete. Please edit $XEBRA_DEV/eiffel_projects/xebra_server/config.ini to match your configuration and run xebra server."
+echo "Installation complete."
 
 
 

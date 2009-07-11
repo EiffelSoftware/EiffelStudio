@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		do
 			if  not is_running then
 				if can_launch_process (webapp_exe, run_workdir) then
-					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 10)
+					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 6)
 					run_process := launch_process (webapp_exe,
 												run_args,
 												run_workdir,

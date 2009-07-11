@@ -55,7 +55,7 @@ feature -- Status report
 			Result_attached: Result /= Void
 		end
 
-feature {XS_MAIN_SERVER} -- Status setting
+feature  -- Status setting
 
 	set_debug_level  (a_debug_level: like debug_level)
 			-- Sets debug_level.

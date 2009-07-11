@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		local
 			l: TEST_REQUEST_PARSER
 		--	ll: XU_REQUEST_ARG_TABLE_PARSER
+			b: TEST_WEBAPPS
 		do
 --			create ll.make
 
@@ -26,8 +27,11 @@ feature {NONE} -- Initialization
 --				print (l_res)
 --			end
 
-			create l
-			l.test_get_cookies
+--			create l
+--			l.test_get_cookies
+
+			create b
+			b.test_all_webapps
 
 		end
 

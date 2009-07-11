@@ -34,6 +34,17 @@ feature -- Access
 	is_running: BOOLEAN
 		-- True if the action has to wait e.g. for a process to terminate
 
+	is_running_recursive: BOOLEAN
+			-- True if internal_is_running is true and
+			-- if the next action (recursively) is still running
+		do
+			if attached next_action then
+				Result := is_running or next_action.is_running_recursive
+			else
+				Result := is_running
+			end
+		end
+
 	next_action: detachable XS_WEBAPP_ACTION
 		-- Is executed after the action has executed
 

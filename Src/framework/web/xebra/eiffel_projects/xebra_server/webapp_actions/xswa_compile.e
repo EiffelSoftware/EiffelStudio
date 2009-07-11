@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 							p.terminate
 						end
 					end
-					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 10)
+					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP (2) -=-=-=-=-=-=", 6)
 					compile_process := launch_process (config.file.compiler_filename,
 													compiler_args,
 													app_dir,

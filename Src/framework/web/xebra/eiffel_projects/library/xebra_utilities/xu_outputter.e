@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	configured: BOOLEAN
-			-- Checks if the outputter has been configured and all neccesary attributes set
+			-- Checks if the outputter has been configured and all neccesary attributes have been set
 		do
 			Result := (i_name /= Void and then i_name.is_set) and (i_debug_level /= Void and then i_debug_level.is_set)
 		end

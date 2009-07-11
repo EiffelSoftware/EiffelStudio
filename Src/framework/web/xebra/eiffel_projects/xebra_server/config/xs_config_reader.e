@@ -15,6 +15,7 @@ inherit
 	XS_SHARED_SERVER_OUTPUTTER
 	XI_READER [XS_FILE_CONFIG]
 
+
 create
 	make
 
@@ -98,7 +99,10 @@ feature -- Status setting
 		local
 			l_name: STRING
 			l_value: STRING
+			l_expander: STRING_AGENT_EXPANDER
 		do
+			create l_expander
+
 			l_name := a_property.name.as_lower
 			l_value := a_property.value
 
@@ -107,16 +111,27 @@ feature -- Status setting
 					a_config.finalize_webapps := l_value.to_boolean
 				end
 			elseif l_name.is_equal (compiler_name) then
-					a_config.compiler := l_value
+					a_config.compiler :=  l_expander.expand_string (l_value, replacer, True)
 			elseif l_name.is_equal (translator_name) then
-					a_config.translator := l_value
+					a_config.translator := l_expander.expand_string (l_value, replacer, True)
 			elseif l_name.is_equal (webapps_root_name) then
-					a_config.webapps_root := l_value
+					a_config.webapps_root := l_expander.expand_string (l_value, replacer, True)
 			elseif l_name.is_equal (taglib_name) then
-					a_config.taglib := l_value
+					a_config.taglib := l_expander.expand_string (l_value, replacer, True)
 			else
 				error_manager.add_error (create {XERROR_UNKNOWN_CONFIG_PROPERTY}.make (l_name), false)
 			end
+		end
+
+feature {NONE} -- Internal
+
+	replacer: FUNCTION [ANY, TUPLE [READABLE_STRING_8], detachable STRING]
+			-- Converts get from EXECUTION_ENVIRONMENT to be usable by string expander
+		once
+			Result := agent (ia_exec: EXECUTION_ENVIRONMENT; a_name: READABLE_STRING_8): STRING
+				do
+					Result := ia_exec.get (a_name.as_string_8)
+				end (create {EXECUTION_ENVIRONMENT}, ?)
 		end
 
 end

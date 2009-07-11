@@ -1,6 +1,6 @@
 note
 	description: "[
-		Disables a webapp.
+		Enables a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Prototyping phase"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCC_DISABLE_WEBAPP
+	XCC_ENABLE_WEBAPP
 
 inherit
 	XC_SERVER_COMMAND
@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Disables a webapp."
+			Result := "Enables a webapp."
 		end
 
 	parameter_description: STRING
@@ -42,7 +42,7 @@ feature -- Basic operations
 	execute (a_server: XC_SERVER_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := a_server.disable_webapp (parameter.value)
+			Result := a_server.enable_webapp (parameter.value)
 		end
 
 end

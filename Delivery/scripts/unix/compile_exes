@@ -8,6 +8,7 @@ if [ $# -eq 0 ]; then
 fi
 
 ISE_PLATFORM=$1; export ISE_PLATFORM
+should_cancel=$2
 
 # Set up the environment
 . $INIT_DIR/set_aliases
@@ -226,7 +227,7 @@ safe_md $EXPORT_DIR/ecs
 remtrace GPL edition
 cd $EXPORT_DIR/bin
 cp ec_gpl.tar.bz2 ec.tar.bz2
-untgz_ccode ec no_cancel
+untgz_ccode ec $should_cancel
 if [ -f ec ]; then
 	bzip2 ec
 	move ec.bz2 $EXPORT_DIR/ecs/ec_gpl.bz2
@@ -245,7 +246,7 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 else
 	remtrace Enterprise edition
 	cp ec_ent.tar.bz2 ec.tar.bz2
-	untgz_ccode ec no_cancel
+	untgz_ccode ec $should_cancel
 	if [ -f ec ]; then
 		bzip2 ec
 		move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2

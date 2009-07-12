@@ -9,7 +9,14 @@ class
 	TYPE [G]
 
 inherit
-	ANY
+	HASHABLE
+		rename
+			default as any_default
+		redefine
+			is_equal
+		end
+
+	DEBUG_OUTPUT
 		rename
 			default as any_default
 		redefine
@@ -17,9 +24,80 @@ inherit
 		end
 
 create {NONE}
+	-- Creation is done either by using manifest types
+	-- or by calling ANY.generating_type.
 
 convert
+		-- Conversion useful for the transition period because of the
+		-- modification in ANY:
+		--    generating_type: STRING
+		-- becomes:
+		--    generating_type: TYPE [like Current]
+	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32},
 	to_cil: {SYSTEM_TYPE, detachable SYSTEM_TYPE}
+
+feature -- Access
+
+	name: IMMUTABLE_STRING_8
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+		do
+			if attached internal_name as l_name then
+				Result := l_name
+			else
+				create Result.make_from_string (runtime_name)
+				internal_name := Result
+			end
+		ensure
+			name_not_void: Result /= Void
+		end
+
+	generic_parameter_type (i: INTEGER): TYPE [detachable ANY]
+			-- `i'-th generic parameter of Eiffel type represented by `Current'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= generic_parameter_count
+		do
+			Result := internal.type_of_type (type_id)
+		ensure
+			generic_parameter_not_void: Result /= Void
+		end
+
+	type_id: INTEGER
+			-- Id of the Eiffel type represented by `Current'
+		local
+			l_class_type: detachable RT_CLASS_TYPE
+		do
+			l_class_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
+			check l_class_type_attached: l_class_type /= Void end
+			l_class_type := internal.internal_pure_interface_type (l_class_type)
+			check l_class_type_attached: l_class_type /= Void end
+			Result := internal.dynamic_type_from_rt_class_type (l_class_type)
+		ensure
+			type_id_not_negative: Result >= 0
+		end
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := type_id
+		end
+
+feature -- Measurement
+
+	generic_parameter_count: INTEGER
+			-- Number of generic parameters in Eiffel type represented by `Current'
+		local
+			l_class_type: detachable RT_CLASS_TYPE
+		do
+			l_class_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
+			check l_class_type_attached: l_class_type /= Void end
+			l_class_type := internal.internal_pure_interface_type (l_class_type)
+			if attached {RT_GENERIC_TYPE} l_class_type as l_gen_type then
+				Result := l_gen_type.count
+			end
+		end
 
 feature -- Status report
 
@@ -84,12 +162,133 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
-		local
-			l_rt_type: detachable RT_CLASS_TYPE
 		do
-			l_rt_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
-			check l_rt_type_attached: l_rt_type /= Void end
-			Result := l_rt_type.equals ({ISE_RUNTIME}.type_of_generic (other, 1))
+			Result := type_id = other.type_id
+		end
+
+feature -- Output
+
+	debug_output: STRING
+			-- <Precursor>
+		do
+			Result := name
+		end
+
+feature -- Features from STRING needed here for the transition period (see convert clause)
+
+	plus alias "+" (other: STRING): STRING
+			-- Append a copy of 's' at the end of a copy of the name of the
+			-- Eiffel type represented by `Current', then return the Result.
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name + other' instead (or 'out + other' during the transition period)."
+		require
+			argument_not_void: other /= Void
+		do
+			Result := name + other
+		ensure
+			result_exists: Result /= Void
+			definition: Result.is_equal (name + other)
+		end
+
+	same_string (other: STRING): BOOLEAN
+			-- Do the name of the Eiffel type represented by `Current'
+			-- and `other' have same character sequence?
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period)."
+		require
+			other_not_void: other /= Void
+		do
+			Result := name.same_string (other)
+		ensure
+			definition: Result = name.same_string (other)
+		end
+
+	is_case_insensitive_equal (other: STRING): BOOLEAN
+			-- Is the name of the Eiffel type represented by `Current'
+			-- made of same character sequence as `other' regardless
+			-- of casing (possibly with a different capacity)?
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period)."
+		require
+			other_not_void: other /= Void
+		do
+			Result := name.is_case_insensitive_equal (other)
+		ensure
+			definition: Result = name.is_case_insensitive_equal (other)
+		end
+
+	as_lower: STRING
+			-- New object with all letters of the name of the Eiffel type
+			-- represented by `Current' in lower case.
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
+		do
+			Result := name.as_lower
+		ensure
+			as_lower_not_void: Result /= Void
+			definition: Result.is_equal (name.as_lower)
+		end
+
+	as_upper: STRING
+			-- New object with all letters of the name of the Eiffel type
+			-- represented by `Current' in upper case.
+			-- This feature from STRING is needed here for the
+			-- transition period (see convert clause).
+		obsolete
+			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
+		do
+			Result := name.as_upper
+		ensure
+			as_upper_not_void: Result /= Void
+			definition: Result.is_equal (name.as_upper)
+		end
+
+	to_string_8: STRING_8
+		obsolete
+			"Use `name' instead (or `out' during the transition period)."
+		do
+			Result := name
+		ensure
+			to_string_8_not_void: Result /= Void
+		end
+
+	to_string_32: STRING_32
+			-- Name of type
+		obsolete
+			"[080717] Use 'name' instead (or 'out' during the transition period)."
+		do
+			Result := name
+		ensure
+			to_string_32_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation: Access
+
+	internal_name: detachable IMMUTABLE_STRING_8
+			-- Storage for once per object `name'
+
+feature {NONE} -- Implementation
+
+	runtime_name: STRING
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+		do
+			Result := internal.type_name_of_type (type_id)
+		ensure
+			name_not_void: Result /= Void
+		end
+
+	internal: INTERNAL
+		once
+			create Result
 		end
 
 note

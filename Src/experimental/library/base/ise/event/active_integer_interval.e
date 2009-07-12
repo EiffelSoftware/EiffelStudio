@@ -90,8 +90,10 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Reset to be the same interval as `other'.
 		do
-			Precursor (other)
-			on_change
+			if other /= Current then
+				Precursor (other)
+				on_change
+			end
 		end
 
 feature -- Event handling

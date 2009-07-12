@@ -1220,7 +1220,7 @@ feature {NONE} -- Cached data
 			internal_dynamic_type_string_table_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {TYPE, INTERNAL} -- Implementation
 
 	object_type: INTEGER = 17
 			-- System.Object type ID
@@ -1412,7 +1412,7 @@ feature {NONE} -- Implementation
 			interface_type_not_void: Result /= Void
 		end
 
-	dynamic_type_from_rt_class_type (a_class_type: RT_CLASS_TYPE): INTEGER
+	dynamic_type_from_rt_class_type (a_class_type: detachable RT_CLASS_TYPE): INTEGER
 			-- Dynamic type of `a_class_type'.
 		local
 			l_obj: detachable SYSTEM_OBJECT

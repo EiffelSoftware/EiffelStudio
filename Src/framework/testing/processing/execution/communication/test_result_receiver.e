@@ -95,6 +95,7 @@ feature {NONE} -- Implementation
 						-- We have to make sure that the socket is blocking otherwise
 						-- for unknown reason, we get some memory corruption. See bug#15279.
 					l_connection.set_blocking
+					l_connection.set_nodelay
 					receive_results (l_connection, a_status)
 				end
 			end

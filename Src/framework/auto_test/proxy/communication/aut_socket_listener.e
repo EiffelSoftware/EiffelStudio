@@ -169,6 +169,7 @@ feature {NONE} -- Implementation
 				if is_listening then
 					connection := a_socket.accepted
 					connection.set_blocking
+					connection.set_nodelay
 					condition.broadcast
 				end
 				mutex.unlock

@@ -124,6 +124,7 @@ feature {NONE} -- Status setting
 					l_socket.connect
 					if l_socket.is_connected then
 						l_socket.set_blocking
+						l_socket.set_nodelay
 						if not l_socket.is_open_write then
 							raise ("bad_socket")
 						end

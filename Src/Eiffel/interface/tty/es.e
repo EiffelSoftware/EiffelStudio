@@ -81,6 +81,10 @@ feature -- Initialization
 				set_eiffel_layout (l_layout)
 			end
 
+				-- Set the default project path to the current working directory.
+				-- This may be overriden via user settings.
+			project_path :=(create {EXECUTION_ENVIRONMENT}).current_working_directory
+
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN
 				--| directory, generating the profile information, ...) the run-time is initialized
@@ -92,6 +96,7 @@ feature -- Initialization
 			create new_resources.initialize
 
 				-- Initialization of compiler resources.
+
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
 			create l_ec_preferences.make (l_preference_access)
@@ -306,6 +311,9 @@ feature -- Properties
 	is_finish_freezing_called: BOOLEAN
 			-- Should a freeze or a finalize call `finish_freezing' after generating
 			-- C code
+
+	is_project_path_requested: BOOLEAN
+			-- Has the user explicitly set -project_path via command line.
 
 	is_precompiling: BOOLEAN
 			-- Should compilation actual precompile?
@@ -1071,8 +1079,16 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						project_path := l_arg
+						if not is_user_settings_requested then
+							project_path := l_arg
+							is_project_path_requested := True
+						else
+							project_path := Void
+							option_error := True
+						end
 					else
+							-- Unset project path due to error.
+						project_path := Void
 						option_error := True
 					end
 				else
@@ -1134,8 +1150,14 @@ feature -- Update
 					-- is the behavior by default.
 			elseif option.is_equal ("-use_settings") then
 					-- Compiler will read user configuration file for that project
-				is_user_settings_requested := True
-
+				if not is_project_path_requested then
+					is_user_settings_requested := True
+						-- Unset default project path.
+					project_path := Void
+				else
+						-- It is an error to use 'project_path' and 'use_settings' together.
+					option_error := True
+				end
 			elseif option.is_equal ("-no_library") then
 					-- Compiler will read user configuration file for that project
 				has_no_library_conversion := True

@@ -16,6 +16,7 @@ inherit
 			add_core_services,
 			new_output_manager_service,
 			new_testing_service,
+			new_rota_service,
 			register_environment_variables,
 			register_outputs
 		end
@@ -111,6 +112,12 @@ feature {NONE} -- Factory
 			create {WIZARD_ENGINE} Result
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	new_rota_service: detachable ROTA_S
+			-- <Precursor>
+		do
+			create {EV_ROTA} Result.make
 		end
 
 feature {NONE} -- Registering: Code templates

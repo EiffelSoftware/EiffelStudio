@@ -58,7 +58,7 @@ feature -- Initialization
 			command_groups ["Webapps"].force (create {XCC_DEV_OFF_GLOBAL}.make, "dev_off_all")
 			command_groups ["Webapps"].force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
 			command_groups ["Webapps"].force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
-			command_groups ["Webapps"].force (create {XCC_GET_SESSIONS}.make, "get_sessions")
+		--	command_groups ["Webapps"].force (create {XCC_GET_SESSIONS}.make, "get_sessions")
 			command_groups ["Webapps"].force (create {XCC_TRANSLATE_WEBAPP}.make, "translate")
 
 			-- help command is hardcoded
@@ -86,7 +86,7 @@ feature -- Inherited Features
 		do
 			launched := True
 			running := True
-			o.iprint (print_command_list)
+			o.iprint (print_help)
 			from
 				stop := False
 			until
@@ -242,6 +242,16 @@ feature -- Status Report
 			end
 			Result.append   ("%N-----------------------------------------------------------%N")
 		end
+
+
+	print_help: STRING
+			-- Prints the help command
+		do
+			Result := "Type 'help' for a list of commands."
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 	print_command_list: STRING
 			-- Prints a list of the listed commands

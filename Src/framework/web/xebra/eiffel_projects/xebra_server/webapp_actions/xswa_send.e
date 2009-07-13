@@ -68,9 +68,13 @@ feature {NONE} -- Implementation
 		        else
 		        	Result := (create {XER_CANNOT_CONNECT}.make (webapp.app_config.name.out)).render_to_command_response
 		        end
+		        l_webapp_socket.cleanup
 		     end
 		    rescue
 		    	o.eprint ("Exception while sending command to webapp", generating_type)
+		    	if l_webapp_socket /= Void then
+			    	l_webapp_socket.cleanup
+		    	end
 		end
 
 end

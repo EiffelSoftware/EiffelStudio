@@ -93,44 +93,23 @@ feature -- Processing
 			process_with_files (search_rec_for_xeb (l_directory), a_tag_lib_directory, a_force)
 		end
 
-	search_rec_for_xeb (a_directory: DIRECTORY): LIST [XP_FILE_NAME]
+	search_rec_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
 			-- `l_directory': In which directory to search
 			-- `already_found': All the files already found
 			-- Searches recursively over the directory to find all xeb files
 		require
 			a_directory_attached: attached a_directory
 		local
-			l_files: LIST [STRING]
-			l_file: RAW_FILE
-			l_file_name: XP_FILE_NAME
-			l_directory_name: XP_FILE_NAME
+			l_directory_name: FILE_NAME
+			l_util: XU_FILE_UTILITIES
 		do
-			create {ARRAYED_LIST [XP_FILE_NAME]}Result.make (5)
+			create {ARRAYED_LIST [FILE_NAME]}Result.make (5)
 			create l_directory_name.make_from_string (a_directory.name)
-			from
-				l_files := a_directory.linear_representation
-				l_files.start
-			until
-				l_files.after
-			loop
-				l_file_name := l_directory_name.twin
-				l_file_name.set_file_name (l_files.item)
-				create l_file.make_open_read (l_file_name)
-				if not l_file.is_symlink and then not l_files.item.is_equal (".") and not l_files.item.is_equal ("..") then
-					if l_file.is_directory and then not l_files.item.is_equal ("EIFGENs") then
-						l_file_name := l_directory_name.twin
-						l_file_name.extend (l_files.item)
-						Result.append (search_rec_for_xeb (create {DIRECTORY}.make (l_file_name)))
-					elseif l_file.name.ends_with (".xeb") or l_file.name.ends_with (".xrpc") then
-						Result.extend (l_file_name)
-					end
-				end
-				l_file.close
-				l_files.forth
-			end
+			create l_util.make
+			Result := l_util.scan_for_files (l_directory_name.out, -1, "(\.xeb$)|(\.xrpc$)", "EIFGENs|\.svn")
 		end
 
-	process_with_files (a_files: LIST [XP_FILE_NAME]; a_taglib_folder: FILE_NAME; a_force: BOOLEAN)
+	process_with_files (a_files: LIST [FILE_NAME]; a_taglib_folder: FILE_NAME; a_force: BOOLEAN)
 			-- `a_files': All the files of a folder with xeb files
 			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
@@ -141,11 +120,11 @@ feature -- Processing
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
 		do
+			o.iprint ("********************$Revision$**********************")
 			o.iprint ("************************************************************")
 			o.iprint ("*                  .taglib processing start...             *")
 			o.iprint ("************************************************************")
 			parse_taglibs (a_taglib_folder, registry)
-
 			o.iprint ("************************************************************")
 			o.iprint ("*                    .xeb processing start...              *")
 			o.iprint ("************************************************************")
@@ -154,10 +133,10 @@ feature -- Processing
 			until
 				a_files.after
 			loop
-				if a_files.item.file_name.ends_with (".xeb") then
-					process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.file_name, a_force))
+				if a_files.item.out.ends_with (".xeb") then
+					process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.out, a_force))
 				else
-					process_file (a_files.item, agent process_xrpc_file (?, ?, a_files.item, a_files.item.file_name, a_force))
+					process_file (a_files.item, agent process_xrpc_file (?, ?, a_files.item, a_files.item.out, a_force))
 				end
 				a_files.forth
 			end
@@ -170,7 +149,7 @@ feature -- Processing
 			l_webapp_gen.generate
 		end
 
-	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
+	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
 		require
 			a_source_attached: attached a_source
 			a_path: attached a_path
@@ -180,7 +159,7 @@ feature -- Processing
 			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
-	process_xrpc_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: XP_FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
+	process_xrpc_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
 		require
 			a_source_attached: attached a_source
 			a_path: attached a_path
@@ -190,13 +169,18 @@ feature -- Processing
 			add_xrpc_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
-	generate_name_from_file_name (a_file_name: XP_FILE_NAME): STRING
+	generate_name_from_file_name (a_file_name: FILE_NAME): STRING
 		local
 			l_output_path, l_file_name: STRING
 			l_i: INTEGER
+			l_raw_file: RAW_FILE
+			l_util: FILE_UTILITIES
 		do
-			l_output_path := output_path.out
-			l_file_name := a_file_name.out
+			create l_util
+			l_output_path := l_util.absolute_path (output_path.out, True)
+			l_file_name := l_util.absolute_path (a_file_name.out, True)
+			check not l_output_path.starts_with ("..") and not l_output_path.starts_with (".") end
+			check not l_file_name.starts_with ("..") and not l_file_name.starts_with (".") end
 			from
 				l_i := 1
 			until
@@ -259,25 +243,22 @@ feature -- Processing
 			taglib_folder_valid: attached taglib_folder and not taglib_folder.is_empty
 			a_registry_attached: attached a_registry
 		local
-			dir: DIRECTORY
-			files: LIST [STRING]
-			file: FILE_NAME
+			l_directory: FILE_NAME
+			l_files: LIST [FILE_NAME]
+			l_util: XU_FILE_UTILITIES
 		do
-			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 10)
-			create dir.make (create {FILE_NAME}.make_from_string (taglib_folder))
-			files := dir.linear_representation
+			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 1)
+			create l_util.make
+			create l_directory.make_from_string (taglib_folder)
+			l_files := l_util.scan_for_files (l_directory.out, -1, "(\.taglib$)", "EIFGENs|\.svn")
 			from
-				files.start
+				l_files.start
 			until
-				files.after
+				l_files.after
 			loop
-				if files.item.ends_with (".taglib") then
-					o.dprint ("Processing file: " + files.item, 10)
-					create file.make_from_string (taglib_folder)
-					file.set_file_name (files.item)
-					process_file (file, agent process_taglib_with_stream (a_registry, ?, ?))
-				end
-				files.forth
+				o.dprint ("Processing file: " + l_files.item.out, 1)
+				process_file (l_files.item, agent process_taglib_with_stream (a_registry, ?, ?))
+				l_files.forth
 			end
 		end
 
@@ -297,7 +278,7 @@ feature -- Processing
 				o.iprint ("Successfully parsed taglib: " + l_taglib.id)
 				a_registry.put_tag_lib (l_taglib.id, l_taglib)
 			else
-				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + "TODO NAME"]), False)
+				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)
 			end
 		end
 

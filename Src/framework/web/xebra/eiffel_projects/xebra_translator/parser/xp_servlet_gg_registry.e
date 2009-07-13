@@ -78,7 +78,7 @@ feature -- Access
 			if attached template_registry [a_name] as template then
 				template.absorb (a_template)
 			else
-				template_registry [a_name] := a_template
+				template_registry [a_name.out] := a_template
 			end
 			has_resolved := False
 		end
@@ -87,7 +87,7 @@ feature -- Access
 		require
 			a_name_valid: not a_name.is_empty
 		do
-			xrpc_registry [a_name] := a_xrpc_template
+			xrpc_registry [a_name.out] := a_xrpc_template
 		end
 
 	put_tag_lib (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)

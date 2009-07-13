@@ -25,7 +25,7 @@ feature -- Access
 			a_action_attached: attached a_action
 		local
 			l_source: STRING
-			l_generic_file_name: XP_FILE_NAME
+			l_generic_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
 			create l_util.make

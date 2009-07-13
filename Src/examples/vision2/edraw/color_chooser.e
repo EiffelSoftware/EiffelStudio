@@ -8,17 +8,25 @@ note
 
 class
 	COLOR_CHOOSER
-	
+
 inherit
 	EV_FRAME
 		redefine
-			make_with_text
+			make_with_text,
+			create_interface_objects
 		end
-	
+
 create
 	make_with_text
-	
+
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			create color_change_actions
+			create button_array.make (1, 10)
+			create last_choosen_color
+		end
 
 	make_with_text (a_text: STRING)
 			-- create a COLOR_CHOOSER showing `a_text' on the frame.
@@ -33,13 +41,11 @@ feature {NONE} -- Initialization
 			Precursor {EV_FRAME} (a_text)
 
 			create v_box
-			
+
 				create table
-				
+
 					table.resize (3, 4)
-					
-					create button_array.make (1, 10)
-					
+
 					from
 						i := 1
 					until
@@ -50,14 +56,14 @@ feature {NONE} -- Initialization
 							button.set_background_color (get_color (i))
 							button.set_minimum_size (button_size, button_size)
 							button.select_actions.extend (agent on_button_select (i))
-							
+
 						table.add (button, ((i-1) \\ 3) + 1, ((i - 1) // 3)  + 1, 1, 1)
 						button_array.put (button, i)
-						
+
 						i := i + 1
-							
+
 					end
-					
+
 					create button
 						create pixmap.make_with_size (button_size, button_size)
 						pixmap.set_with_named_file ("nocolor.png")
@@ -66,8 +72,8 @@ feature {NONE} -- Initialization
 						button.select_actions.extend (agent on_button_select (9))
 					table.add (button, 3, 3, 1, 1)
 					button_array.put (button, 9)
-					
-					create button			
+
+					create button
 						create pixmap.make_with_size (button_size, button_size)
 						pixmap.set_with_named_file ("nocolor.png")
 						button.set_pixmap (pixmap)
@@ -75,30 +81,28 @@ feature {NONE} -- Initialization
 						button.select_actions.extend (agent on_button_select (10))
 					table.add (button, 1, 4, 1, 1)
 					button_array.put (button, 10)
-				
+
 				v_box.extend (table)
-				
+
 				create choose.make_with_text ("Select...")
 				choose.select_actions.extend (agent choose_color)
-				
+
 				v_box.extend (choose)
-			
+
 			extend (v_box)
-			
-			create color_change_actions
-			
+
 			none_color_selectable := True
 		end
-		
+
 feature -- Access
 
-	color: EV_COLOR
+	color: detachable EV_COLOR
 			-- The selected color
 			-- Default: Void (no color)
-			
+
 	color_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when a color was selected.
-		
+
 feature -- Element change
 
 	set_color (a_color: EV_COLOR)
@@ -107,20 +111,20 @@ feature -- Element change
 			color := a_color
 
 			last_choosen_color := a_color
-			
+
 			button_array.item (10).remove_pixmap
 			button_array.item (10).set_background_color (a_color)
 			button_array.item (10).enable_select
 		ensure
 			set: color = a_color
 		end
-		
+
 feature -- Status
 
 	none_color_selectable: BOOLEAN
 			-- can the user select no color (`color' = Void)
 			-- Default: True
-			
+
 feature -- Status settings
 
 	disable_none_color_selectable
@@ -131,7 +135,7 @@ feature -- Status settings
 		ensure
 			set: none_color_selectable = False
 		end
-		
+
 	enable_none_color_selectable
 			-- Set `none_color_selectable' to `True'.
 		do
@@ -140,7 +144,7 @@ feature -- Status settings
 		ensure
 			set: none_color_selectable
 		end
-	
+
 feature {NONE} -- Implementation
 
 	choose_color
@@ -150,32 +154,37 @@ feature {NONE} -- Implementation
 		do
 			create dialog
 			dialog.show_modal_to_window (top_window)
-			
+
 			set_color (dialog.color)
 		end
 
 	top_window: EV_WINDOW
 			-- The applications window `Current' is part of.
 		local
-			cur: EV_CONTAINER
+			cursor: detachable EV_CONTAINER
+			l_result: detachable EV_WINDOW
 		do
-			cur := parent
-			Result ?= cur
 			from
+				cursor := parent
+			invariant
+				cursor /= Void
 			until
-				Result /= Void
+				attached {EV_WINDOW} cursor
 			loop
-				cur := cur.parent
-				Result ?= cur
+				check cursor /= Void end
+				cursor := cursor.parent
 			end
+			l_result ?= cursor
+			check l_result /= Void end
+			Result := l_result
 		end
-			
+
 	button_array: ARRAY [EV_TOGGLE_BUTTON]
 			-- All the toggle buttons
-	
+
 	button_size: INTEGER = 20
 			-- The size of the colored pixmaps on the buttons
-			
+
 	on_button_select (button_nr: INTEGER)
 			-- Button with `button_nr' in `button_array' was selected.
 		local
@@ -198,7 +207,7 @@ feature {NONE} -- Implementation
 				color_change_actions.call (Void)
 			end
 		end
-		
+
 	get_color (nr: INTEGER): EV_COLOR
 			-- Return color for button with number `nr'.
 		require
@@ -222,6 +231,9 @@ feature {NONE} -- Implementation
 				create Result.make_with_8_bit_rgb (0, 0, 0)
 			elseif nr = 10 then
 				Result := last_choosen_color
+			else
+				check cannot_happen: False end
+				create Result
 			end
 		end
 

@@ -12,7 +12,8 @@ class
 inherit
 	EV_DIALOG
 		redefine
-			initialize
+			initialize,
+			create_interface_objects
 		end
 
 	INTERFACE_NAMES
@@ -27,6 +28,13 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			create ok_button
+			create pixmap
+			create message_label
+		end
+
 	initialize
 			-- Populate the dialog box.
 		local
@@ -39,22 +47,20 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-				--| Add the pixmap to the dialog box. 
+				--| Add the pixmap to the dialog box.
 				--|
-				--| We do not use `{EV_STOCK_PIXMAPS}.Information_pixmap' 
+				--| We do not use `{EV_STOCK_PIXMAPS}.Information_pixmap'
 				--| directly because a given pixmap can only have one
 				--| parent. `Information_pixmap' may have alredy been put
 				--| into another container.
-			create pixmap
 			pixmap.copy ((create {EV_STOCK_PIXMAPS}).Information_pixmap)
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
-	
-			create message_label
+
 			message_label.align_text_left
 
 			create horizontal_separator
 
-			create ok_button.make_with_text (Button_ok_item)
+			ok_button.set_text (Button_ok_item)
 			ok_button.set_minimum_size (75, 24)
 			ok_button.select_actions.extend (agent destroy)
 
@@ -62,7 +68,7 @@ feature {NONE} -- Initialization
 			buttons_box.extend (create {EV_CELL}) -- Fill in empty space on left
 			buttons_box.extend (ok_button)
 			buttons_box.disable_item_expand (ok_button)
-						
+
 			create left_vertical_box
 			left_vertical_box.set_border_width (7)
 			left_vertical_box.extend (pixmap)
@@ -109,7 +115,7 @@ feature -- Access
 		end
 
 feature -- Element change
-	
+
 	set_message (a_message: STRING)
 		do
 			message_label.set_text (a_message)

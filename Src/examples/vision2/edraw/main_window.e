@@ -13,7 +13,8 @@ inherit
 	EV_TITLED_WINDOW
 		redefine
 			initialize,
-			is_in_default_state
+			is_in_default_state,
+			create_interface_objects
 		end
 
 	INTERFACE_NAMES
@@ -25,11 +26,22 @@ inherit
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			create standard_menu_bar
+			create file_menu
+			create standard_toolbar
+			create help_menu
+
+			build_standard_status_bar
+			Precursor {EV_TITLED_WINDOW}
+		end
+
 	initialize
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
-			
+
 			build_main_container
 			extend (main_container)
 
@@ -44,7 +56,6 @@ feature {NONE} -- Initialization
 			upper_bar.extend (standard_toolbar)
 
 				-- Create and add the status bar.
-			build_standard_status_bar
 			lower_bar.extend (standard_status_bar)
 
 				-- Execute `request_close_window' when the user clicks
@@ -82,26 +93,23 @@ feature {NONE} -- Menu Implementation
 	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
 		require
-			menu_bar_not_yet_created: standard_menu_bar = Void 
+			menu_bar_not_yet_created: standard_menu_bar = Void
 		do
-				-- Create the menu bar.
-			create standard_menu_bar
-
 				-- Add the "File" menu
 			build_file_menu
 			standard_menu_bar.extend (file_menu)
-			
+
 			build_extended_menu_bar
 
 				-- Add the "Help" menu
 			build_help_menu
 			standard_menu_bar.extend (help_menu)
 		ensure
-			menu_bar_created: 
-				standard_menu_bar /= Void and then 
+			menu_bar_created:
+				standard_menu_bar /= Void and then
 				not standard_menu_bar.is_empty
 		end
-		
+
 	build_extended_menu_bar
 			-- Build extended menu bar.
 		deferred
@@ -114,7 +122,7 @@ feature {NONE} -- Menu Implementation
 		local
 			menu_item: EV_MENU_ITEM
 		do
-			create file_menu.make_with_text (Menu_file_item)
+			file_menu.set_text (Menu_file_item)
 
 			create menu_item.make_with_text (Menu_file_new_item)
 			menu_item.select_actions.extend (agent on_new)
@@ -129,11 +137,11 @@ feature {NONE} -- Menu Implementation
 			file_menu.extend (menu_item)
 
 			file_menu.extend (create {EV_MENU_SEPARATOR})
-			
+
 			create menu_item.make_with_text (Menu_print_item)
 			menu_item.select_actions.extend (agent on_print)
 			file_menu.extend (menu_item)
-			
+
 
 			file_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -153,7 +161,7 @@ feature {NONE} -- Menu Implementation
 		local
 			menu_item: EV_MENU_ITEM
 		do
-			create help_menu.make_with_text (Menu_help_item)
+			help_menu.set_text (Menu_help_item)
 
 			create menu_item.make_with_text (Menu_help_about_item)
 			menu_item.select_actions.extend (agent on_about)
@@ -175,9 +183,6 @@ feature {NONE} -- ToolBar Implementation
 			toolbar_item: EV_TOOL_BAR_BUTTON
 			toolbar_pixmap: EV_PIXMAP
 		do
-				-- Create the toolbar.
-			create standard_toolbar
-			
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/new.png")
@@ -191,7 +196,7 @@ feature {NONE} -- ToolBar Implementation
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.select_actions.extend (agent on_save)
 			standard_toolbar.extend (toolbar_item)
-			
+
 		ensure
 			toolbar_created: standard_toolbar /= Void and then  not standard_toolbar.is_empty
 		end
@@ -209,23 +214,15 @@ feature {NONE} -- StatusBar Implementation
 
 	build_standard_status_bar
 			-- Create and populate the standard toolbar.
-		require
-			status_bar_not_yet_created: 
-				standard_status_bar = Void and then 
-				standard_status_label = Void
 		do
 				-- Create the status bar.
 			create standard_status_bar
 			standard_status_bar.set_border_width (2)
-			
+
 				-- Populate the status bar.
 			create standard_status_label.make_with_text ("")
 			standard_status_label.align_text_left
 			standard_status_bar.extend (standard_status_label)
-		ensure
-			status_bar_created: 
-				standard_status_bar /= Void and then 
-				standard_status_label /= Void
 		end
 
 feature {NONE} -- About Dialog Implementation
@@ -245,18 +242,21 @@ feature {NONE} -- Implementation, Close event
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
+			l_app: detachable EV_APPLICATION
 		do
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if equal ((create {EV_DIALOG_CONSTANTS}).ev_ok.to_string_32, question_dialog.selected_button) then
 					-- Destroy the window
 				destroy;
-				
+
 					-- End the application
 					--| TODO: Remove this line if you don't want the application
 					--|       to end when the first window is closed..
-				(create {EV_ENVIRONMENT}).application.destroy
+				l_app ?= (create {EV_ENVIRONMENT}).application
+				check l_app /= Void end
+				l_app.destroy
 			end
 		end
 
@@ -271,9 +271,9 @@ feature {NONE} -- Implementation
 			main_container_not_yet_created: main_container = Void
 		do
 			create main_container
-	
+
 			main_container.extend (create {EV_TEXT})
-			
+
 		ensure
 			main_container_created: main_container /= Void
 		end
@@ -288,24 +288,24 @@ feature {NONE} -- Implementation / Constants
 
 	Window_height: INTEGER = 600
 			-- Initial height for this window.
-			
+
 feature {NONE} -- Events
 
 	on_save_as
 			-- Save as was selected.
 		deferred
 		end
-		
+
 	on_save
 			-- Save was selected.
 		deferred
 		end
-		
+
 	on_new
 			-- New was selected.
 		deferred
 		end
-		
+
 	on_print
 			-- Print was selected.
 		deferred

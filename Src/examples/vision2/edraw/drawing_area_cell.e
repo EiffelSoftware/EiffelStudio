@@ -15,31 +15,38 @@ inherit
 			on_pointer_button_press_on_drawing_area,
 			on_pointer_button_move_on_drawing_area,
 			on_pointer_button_release_on_drawing_area,
-			initialize
+			initialize,
+			create_interface_objects
 		end
-	
+
 	EV_SHARED_APPLICATION
 		undefine
 			default_create,
 			copy
 		end
-		
+
 	EV_FIGURE_MATH
 		undefine
 			default_create,
 			copy
 		end
-	
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			Precursor {EV_MODEL_WORLD_CELL}
+			mode_name := ""
+			create new_figure_foreground_color
+		end
 
 	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MODEL_WORLD_CELL}
-			mode_name := ""
 			drawing_area.pointer_double_press_actions.extend (agent on_point_double_press_on_area)
 			drawing_area.key_press_string_actions.extend (agent user_text_input)
 		end
@@ -55,7 +62,7 @@ feature -- Status report
 		do
 			Result := world.grid_enabled
 		end
-	
+
 	is_grid_visible: BOOLEAN
 			-- Is grid visible?
 		do
@@ -67,144 +74,142 @@ feature -- Status report
 		 do
 		 	Result := mode_name.is_equal ("line")
 		 end
-			
+
 	is_rect_draw_mode: BOOLEAN
 			-- Is current mode rectangle draw mode?
 		do
 			Result := mode_name.is_equal ("rect")
 		end
-		
+
 	is_parallelogram_draw_mode: BOOLEAN
 			-- Is current mode parallelogram draw mode?
 		do
 			Result := mode_name.is_equal ("parallelogram")
 		end
-		
+
 	is_polygone_draw_mode: BOOLEAN
 			-- Is current mode polygone draw mode?
 		do
 			Result := mode_name.is_equal ("polygon")
 		end
-		
+
 	is_polyline_draw_mode: BOOLEAN
 			-- Is current mode polyline draw mode?
 		do
 			Result := mode_name.is_equal ("polyline")
 		end
-		
+
 	is_ellipse_draw_mode: BOOLEAN
 			-- Is current ode ellipse draw mode?
 		do
 			Result := mode_name.is_equal ("ellipse")
 		end
-		
+
 	is_dot_draw_mode: BOOLEAN
 			-- Is current mode dot draw mode?
 		do
 			Result := mode_name.is_equal ("dot")
 		end
-		
+
 	is_text_draw_mode: BOOLEAN
 			-- Is current mode text draw mode?
 		do
 			Result := mode_name.is_equal ("text")
 		end
-		
+
 	is_text_input_mode: BOOLEAN
 			-- Is current in text input mode
-			
+
 	is_arc_draw_mode: BOOLEAN
 			-- Is current in arc draw mode?
 		do
 			Result := mode_name.is_equal ("arc")
 		end
-		
+
 	is_arc_set_start_angle_mode: BOOLEAN
 			-- Is current in arc set start angle mode?
-			
+
 	is_arc_set_aperture_mode: BOOLEAN
 			-- Is current in arc set aperture mode?
-			
+
 	is_pie_draw_mode: BOOLEAN
 			-- Is current in pie draw mode?
 		do
 			Result := mode_name.is_equal ("pie")
 		end
-		
+
 	is_pie_set_start_angle_mode: BOOLEAN
 			-- Is current in pie set start angle mode?
-			
+
 	is_pie_set_aperture_mode: BOOLEAN
 			-- Is current in pie set aperture mode?
-			
+
 	is_equilateral_draw_mode: BOOLEAN
 			-- Is current mode equilateral_draw_mode?
 		do
 			Result := mode_name.is_equal ("equilateral")
 		end
-		
+
 	is_equilateral_side_count_select_mode: BOOLEAN
 			-- Is equilateral side count select mode?
-			
+
 	is_picture_draw_mode: BOOLEAN
 			-- Is current mode picture draw mode?
 		do
 			Result := mode_name.is_equal ("picture")
 		end
-		
+
 	is_rounded_rectangle_mode: BOOLEAN
 			-- Is current mode rounded rectangle draw mode?
 		do
 			Result := mode_name.is_equal ("rounded_rect")
-		end		
-		
+		end
+
 	is_rounded_rectangle_select_radius_mode: BOOLEAN
 			-- Is current mode rounded rectangle selcet radius mode?
-			
+
 	is_rounded_parallelogram_mode: BOOLEAN
 			-- Is current mode rounded parallelogram draw mode?
 		do
 			Result := mode_name.is_equal ("rounded_parallelogram")
 		end
-		
+
 	is_rounded_parallelogram_select_radius_mode: BOOLEAN
 			-- Is current mode rounded parallelogram draw mode?
-			
+
 	is_star_draw_mode: BOOLEAN
 			-- Is current mode star draw mode?
 		do
 			Result := mode_name.is_equal ("star")
 		end
-		
+
 	is_star_line_select_mode: BOOLEAN
 			-- Is current mode star line count select mode?
-			
+
 feature -- Access
 
 	new_figure_foreground_color: EV_COLOR
 			-- Foreground color for new figur.
-	
+
 	new_figure_line_width: INTEGER
 			-- Line width for new figure.
-	
+
 	new_figure_is_dashed_line_style: BOOLEAN
 			-- Is new figures line style dashed?
-	
-	new_figure_background_color: EV_COLOR
+
+	new_figure_background_color: detachable EV_COLOR
 			-- Background color for new figure.
 
 feature -- Element change
 
-	set_new_figure_foreground_color (a_foreground_color: like new_figure_foreground_color)
+	set_new_figure_foreground_color (a_foreground_color: EV_COLOR)
 			-- Set `new_figure_foreground_color' to `a_foreground_color'.
-		require
-			a_foreground_color_exists: a_foreground_color /= Void
 		do
 			new_figure_foreground_color := a_foreground_color
 		ensure
 			set: new_figure_foreground_color = a_foreground_color
 		end
-		
+
 	set_new_figure_line_width (a_line_width: like new_figure_line_width)
 			-- Set `new_figure_line_width' to `a_line_width'.
 		require
@@ -214,7 +219,7 @@ feature -- Element change
 		ensure
 			set: new_figure_line_width = a_line_width
 		end
-		
+
 	new_figure_enable_dashed_line_style
 			-- Set `new_figure_is_dashed_line_style' to True.
 		do
@@ -222,7 +227,7 @@ feature -- Element change
 		ensure
 			set: new_figure_is_dashed_line_style
 		end
-		
+
 	new_figure_disable_dashed_line_style
 			-- Set `new_figure_is_dashed_line_style' to False.
 		do
@@ -230,7 +235,7 @@ feature -- Element change
 		ensure
 			set: not new_figure_is_dashed_line_style
 		end
-		
+
 	set_new_figure_background_color (a_background_color: like new_figure_background_color)
 			-- Set `new_figure_background_color' to `a_background_color'.
 		do
@@ -250,7 +255,7 @@ feature -- Status setting
 		ensure
 			set: mode_name = a_mode_name
 		end
-		
+
 feature -- Element change
 
 	stop_drawing
@@ -276,15 +281,21 @@ feature -- Element change
 			is_arc_set_aperture_mode := False
 			is_arc_set_start_angle_mode := False
 		end
-		
+
 feature {NONE} -- Implementation
 
 	state_forth (ax, ay: INTEGER)
 			-- Button was pressed at `ax' `ay' make a transition
-			-- in drawing state machine. 
+			-- in drawing state machine.
 		local
 			pixmap: EV_PIXMAP
 			file_open: EV_FILE_OPEN_DIALOG
+			l_polygone: attached like new_polygone
+			l_polyline: attached like new_polyline
+			l_text: attached like new_text
+			l_arc: attached like new_arc
+			l_pie: attached like new_pie
+			l_picture: attached like new_picture
 		do
 			new_figure := Void
 			if is_line_draw_mode then
@@ -298,7 +309,7 @@ feature {NONE} -- Implementation
 			elseif is_rect_draw_mode then
 				if new_rectangle = Void then
 					create new_rectangle.make_rectangle (ax, ay, 0, 0)
-					new_figure := new_rectangle	
+					new_figure := new_rectangle
 					is_scroll := True
 				else
 					end_draw
@@ -336,24 +347,26 @@ feature {NONE} -- Implementation
 					end_draw
 				end
 			elseif is_polygone_draw_mode then
-				if new_polygone = Void then
-					create new_polygone
-					new_polygone.extend_point (create {EV_COORDINATE}.make (ax, ay))
-					new_polygone.extend_point (create {EV_COORDINATE}.make (ax, ay))
+				if attached new_polygone as l_poly then
+					l_poly.extend_point (create {EV_COORDINATE}.make (ax, ay))
+				else
+					create l_polygone
+					l_polygone.extend_point (create {EV_COORDINATE}.make (ax, ay))
+					l_polygone.extend_point (create {EV_COORDINATE}.make (ax, ay))
+					new_polygone := l_polygone
 					new_figure := new_polygone
 					is_scroll := True
-				else
-					new_polygone.extend_point (create {EV_COORDINATE}.make (ax, ay))
 				end
 			elseif is_polyline_draw_mode then
-				if new_polyline = Void then
-					create new_polyline
-					new_polyline.extend_point (create {EV_COORDINATE}.make (ax, ay))
-					new_polyline.extend_point (create {EV_COORDINATE}.make (ax, ay))
+				if attached new_polyline as l_poly then
+					l_poly.extend_point (create {EV_COORDINATE}.make (ax, ay))
+				else
+					create l_polyline
+					l_polyline.extend_point (create {EV_COORDINATE}.make (ax, ay))
+					l_polyline.extend_point (create {EV_COORDINATE}.make (ax, ay))
+					l_polyline := l_polyline
 					new_figure := new_polyline
 					is_scroll := True
-				else
-					new_polyline.extend_point (create {EV_COORDINATE}.make (ax, ay))
 				end
 			elseif is_ellipse_draw_mode then
 				if new_ellipse = Void then
@@ -373,8 +386,9 @@ feature {NONE} -- Implementation
 				end
 			elseif is_text_draw_mode then
 				if new_text = Void then
-					create new_text.make_with_text ("I")
-					new_text.set_point_position (ax, ay)
+					create l_text.make_with_text ("I")
+					l_text.set_point_position (ax, ay)
+					new_text := l_text
 					new_figure := new_text
 					is_text_input_mode := True
 					is_scroll := True
@@ -386,16 +400,17 @@ feature {NONE} -- Implementation
 				end
 			elseif is_arc_draw_mode then
 				if new_arc = Void then
-					create new_arc.make_with_positions (ax, ay, ax, ay)
-					new_arc.set_start_angle (0)
-					new_arc.set_aperture (2 * new_arc.pi)
+					create l_arc.make_with_positions (ax, ay, ax, ay)
+					l_arc.set_start_angle (0)
+					l_arc.set_aperture (2 * l_arc.pi)
+					new_arc := l_arc
 					is_arc_set_aperture_mode := False
 					is_arc_set_start_angle_mode := False
 					new_figure := new_arc
 					is_scroll := True
-				elseif not is_arc_set_start_angle_mode then
+				elseif attached new_arc as arc and not is_arc_set_start_angle_mode then
 					is_arc_set_start_angle_mode := True
-					new_arc.set_aperture (0.1)
+					arc.set_aperture (0.1)
 					is_scroll := True
 				elseif not is_arc_set_aperture_mode then
 					is_arc_set_aperture_mode := True
@@ -405,16 +420,17 @@ feature {NONE} -- Implementation
 				end
 			elseif is_pie_draw_mode then
 				if new_pie = Void then
-					create new_pie.make_with_positions (ax, ay, ax, ay)
-					new_pie.set_start_angle (0)
-					new_pie.set_aperture (2 * new_pie.pi - 0.1)
+					create l_pie.make_with_positions (ax, ay, ax, ay)
+					l_pie.set_start_angle (0)
+					l_pie.set_aperture (2 * l_pie.pi - 0.1)
+					new_pie := l_pie
 					is_pie_set_aperture_mode := False
 					is_pie_set_start_angle_mode := False
 					new_figure := new_pie
 					is_scroll := True
-				elseif not is_pie_set_start_angle_mode then
+				elseif attached new_pie as pie and not is_pie_set_start_angle_mode then
 					is_pie_set_start_angle_mode := True
-					new_pie.set_aperture (0.1)
+					pie.set_aperture (0.1)
 					is_scroll := True
 				elseif not is_pie_set_aperture_mode then
 					is_pie_set_aperture_mode := True
@@ -440,13 +456,14 @@ feature {NONE} -- Implementation
 
 					file_open.filters.extend (["*.png", "PNG Files"])
 					file_open.show_modal_to_window (window)
-					
+
 					if not file_open.file_name.is_empty then
 						create pixmap
 						pixmap.set_with_named_file (file_open.file_name)
-						
-						create new_picture.make_with_pixmap (pixmap)
-						new_picture.set_point_position (ax, ay)
+
+						create l_picture.make_with_pixmap (pixmap)
+						l_picture.set_point_position (ax, ay)
+						new_picture := l_picture
 						new_figure := new_picture
 						is_scroll := True
 					end
@@ -467,7 +484,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	end_draw
 			-- End drawing reached.
 		do
@@ -475,7 +492,7 @@ feature {NONE} -- Implementation
 			stop_drawing
 			current_figure := Void
 		end
-		
+
 	start_drawing (a_figure: EV_MODEL)
 			-- Start drawing `a_figure'.
 		require
@@ -484,51 +501,46 @@ feature {NONE} -- Implementation
 			current_figure := a_figure
 		end
 
-	new_figure: EV_MODEL
+	new_figure: detachable EV_MODEL
 			-- Newly created figure.
-			
-	current_figure: EV_MODEL
+
+	current_figure: detachable EV_MODEL
 			-- Figure that is currently build by user.
-	
+
 	on_pointer_button_press_on_drawing_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- A button was pressed on the drawable.
 		local
-			
-			af: EV_MODEL_ATOMIC
-			cf: EV_MODEL_CLOSED
 			ax, ay: INTEGER
 		do
 			if is_grid_enabled then
 				ax := snapped_x (x + horizontal_scrollbar.value)
-				ay := snapped_y (y + vertical_scrollbar.value) 
+				ay := snapped_y (y + vertical_scrollbar.value)
 			else
 				ax := x + horizontal_scrollbar.value
 				ay := y + vertical_scrollbar.value
 			end
 			if button = 1 and not ev_application.ctrl_pressed and then world.capture_figure = Void then
-		
+
 				state_forth (ax, ay)
 
-				if new_figure /= Void then
-					af ?= new_figure
-					if af /= Void then
+				if attached new_figure as l_figure then
+					if attached {EV_MODEL_ATOMIC} new_figure as af then
 						af.set_foreground_color (new_figure_foreground_color)
 						af.set_line_width (new_figure_line_width)
 						if new_figure_is_dashed_line_style then
 							af.enable_dashed_line_style
 						end
 					end
-					cf ?= new_figure
-					if cf /= Void and new_figure_background_color /= Void then
-						cf.set_background_color (new_figure_background_color)
+					if attached {EV_MODEL_CLOSED} new_figure as cf and attached new_figure_background_color as l_color then
+						cf.set_background_color (l_color)
 					end
-					
-					world.extend (new_figure)
-					
+
+					world.extend (l_figure)
+
 					start_x := ax
 					start_y := ay
-					
-					start_drawing (new_figure)
+
+					start_drawing (l_figure)
 				end
 			elseif button = 3 then
 				if new_polygone /= Void then
@@ -538,7 +550,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not is_scroll then
-				if projector.is_figure_selected then		
+				if projector.is_figure_selected then
 					is_scroll := True
 					is_selected_scroll := True
 				else
@@ -551,14 +563,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	user_text_input (keystring: STRING_32)
 			-- User made a text input
 		local
 			i: INTEGER
 			a_new_text: STRING
 		do
-			if new_text /= Void and is_text_input_mode then
+			if attached new_text as l_text and is_text_input_mode then
 				if keystring.count > 0 then
 					if keystring.has ('%R') then
 						from
@@ -572,14 +584,14 @@ feature {NONE} -- Implementation
 							i := i + 1
 						end
 					end
-					a_new_text := new_text.text
+					a_new_text := l_text.text
 					if keystring.item (keystring.count).is_equal ('%B') then
 						if a_new_text.count > 1 then
-							a_new_text.keep_head (new_text.text.count - 2)
+							a_new_text.keep_head (l_text.text.count - 2)
 							a_new_text := a_new_text + "I"
 						end
-					else	
-						a_new_text.keep_head (new_text.text.count - 1)
+					else
+						a_new_text.keep_head (l_text.text.count - 1)
 						a_new_text := a_new_text + keystring
 						if a_new_text.count >= 2 and then (a_new_text.item (a_new_text.count) = '%N' and a_new_text.item (a_new_text.count - 1) = '%N') then
 							a_new_text.keep_head (a_new_text.count - 2)
@@ -589,12 +601,12 @@ feature {NONE} -- Implementation
 							a_new_text := a_new_text + "I"
 						end
 					end
-					new_text.set_text (a_new_text)
+					l_text.set_text (a_new_text)
 					projector.project
 				end
 			end
 		end
-		
+
 	on_point_double_press_on_area (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- User double pressed on drawing area.
 		do
@@ -614,105 +626,105 @@ feature {NONE} -- Implementation
 		do
 			if is_grid_enabled then
 				a_x := snapped_x (x + horizontal_scrollbar.value)
-				a_y := snapped_y (y + vertical_scrollbar.value) 
+				a_y := snapped_y (y + vertical_scrollbar.value)
 			else
 				a_x := x + horizontal_scrollbar.value
 				a_y := y + vertical_scrollbar.value
 			end
-			if new_line /= Void then
-				new_line.set_point_b_position (a_x, a_y)
+			if attached new_line as l_line then
+				l_line.set_point_b_position (a_x, a_y)
 				projector.project
-			elseif new_rectangle /= Void then
-				new_rectangle.set_point_b_position (a_x, a_y)
+			elseif attached new_rectangle as l_rectangle then
+				l_rectangle.set_point_b_position (a_x, a_y)
 				projector.project
-			elseif new_parallelogram /= Void then
-				new_parallelogram.set_point_a_position (a_x, a_y)
+			elseif attached new_parallelogram as l_parallelogram then
+				l_parallelogram.set_point_a_position (a_x, a_y)
 				projector.project
-			elseif new_rounded_rectangle /= Void then
+			elseif attached new_rounded_rectangle as l_rounded_rectangle then
 				if not is_rounded_rectangle_select_radius_mode then
-					new_rounded_rectangle.set_point_b_position (a_x, a_y)
+					l_rounded_rectangle.set_point_b_position (a_x, a_y)
 					projector.project
 				else
-					new_rounded_rectangle.set_radius ((((a_x - new_rounded_rectangle.x).abs) // 2))
+					l_rounded_rectangle.set_radius ((((a_x - l_rounded_rectangle.x).abs) // 2))
 					projector.project
-				end	
-			elseif new_rounded_parallelogram /= Void then
+				end
+			elseif attached new_rounded_parallelogram as l_rounded_parallelogram then
 				if not is_rounded_parallelogram_select_radius_mode then
-					new_rounded_parallelogram.set_point_b_position (a_x, a_y)
+					l_rounded_parallelogram.set_point_b_position (a_x, a_y)
 					projector.project
 				else
-					new_rounded_parallelogram.set_radius ((((a_x - new_rounded_parallelogram.x).abs) // 2))
+					l_rounded_parallelogram.set_radius ((((a_x - l_rounded_parallelogram.x).abs) // 2))
 					projector.project
-				end	
-			elseif new_polygone /= Void then
-				new_polygone.set_i_th_point_position (new_polygone.point_count, a_x, a_y)
+				end
+			elseif attached new_polygone as l_polygone then
+				l_polygone.set_i_th_point_position (l_polygone.point_count, a_x, a_y)
 				projector.project
-			elseif new_polyline /= Void then
-				new_polyline.set_i_th_point_position (new_polyline.point_count, a_x, a_y)
+			elseif attached new_polyline as l_polyline then
+				l_polyline.set_i_th_point_position (l_polyline.point_count, a_x, a_y)
 				projector.project
-			elseif new_ellipse /= Void then
-				new_ellipse.set_point_b_position (a_x, a_y)
+			elseif attached new_ellipse as l_ellipse then
+				l_ellipse.set_point_b_position (a_x, a_y)
 				projector.project
-			elseif new_dot /= Void then
-				new_dot.set_point_position (a_x, a_y)
+			elseif attached new_dot as l_dot then
+				l_dot.set_point_position (a_x, a_y)
 				projector.project
-			elseif new_text /= Void and not is_text_input_mode then
-				new_text.set_point_position (a_x, a_y)
+			elseif attached new_text as l_text and not is_text_input_mode then
+				l_text.set_point_position (a_x, a_y)
 				projector.project
-			elseif new_arc /= Void then
+			elseif attached new_arc as l_arc then
 				if is_arc_set_aperture_mode then
-					start_angle := new_arc.start_angle
-					ax := a_x - new_arc.x
-					ay := a_y - new_arc.y
+					start_angle := l_arc.start_angle
+					ax := a_x - l_arc.x
+					ay := a_y - l_arc.y
 					rax := (ax * cosine (start_angle) - ay * sine (start_angle)).truncated_to_integer
 					ray := (ax * sine (start_angle) + ay * cosine (start_angle)).truncated_to_integer
 					new_angle := 2*pi - line_angle (0,0, rax, ray)
-					new_arc.set_aperture (new_angle)
+					l_arc.set_aperture (new_angle)
 				elseif is_arc_set_start_angle_mode then
-					new_angle := 2*pi - line_angle (new_arc.x, new_arc.y, a_x, a_y) 
-					new_arc.set_start_angle (new_angle)
+					new_angle := 2*pi - line_angle (l_arc.x, l_arc.y, a_x, a_y)
+					l_arc.set_start_angle (new_angle)
 				else
-					new_arc.set_point_b_position (a_x, a_y)
+					l_arc.set_point_b_position (a_x, a_y)
 				end
 				projector.project
-			elseif new_pie /= Void then
+			elseif attached new_pie as l_pie then
 				if is_pie_set_aperture_mode then
-					start_angle := new_pie.start_angle
-					ax := a_x - new_pie.x
-					ay := a_y - new_pie.y
+					start_angle := l_pie.start_angle
+					ax := a_x - l_pie.x
+					ay := a_y - l_pie.y
 					rax := (ax * cosine (start_angle) - ay * sine (start_angle)).truncated_to_integer
 					ray := (ax * sine (start_angle) + ay * cosine (start_angle)).truncated_to_integer
 					new_angle := 2*pi - line_angle (0,0, rax, ray)
-					new_pie.set_aperture (new_angle)
+					l_pie.set_aperture (new_angle)
 				elseif is_pie_set_start_angle_mode then
-					new_angle := 2*pi - line_angle (new_pie.x, new_pie.y, a_x, a_y) 
-					new_pie.set_start_angle (new_angle)
+					new_angle := 2*pi - line_angle (l_pie.x, l_pie.y, a_x, a_y)
+					l_pie.set_start_angle (new_angle)
 				else
-					new_pie.set_point_b_position (a_x, a_y)
+					l_pie.set_point_b_position (a_x, a_y)
 				end
 				projector.project
-			elseif new_equilateral /= Void then
+			elseif attached new_equilateral as l_equilateral then
 				if not is_equilateral_side_count_select_mode then
-					new_equilateral.set_point_b_position (a_x, a_y)
+					l_equilateral.set_point_b_position (a_x, a_y)
 				else
-					new_equilateral.set_side_count ((((a_x - new_equilateral.corner_point.x).abs) // 10) + 3)
+					l_equilateral.set_side_count ((((a_x - l_equilateral.corner_point.x).abs) // 10) + 3)
 				end
 				projector.project
-			elseif new_picture /= Void then
-				new_picture.set_point_position (a_x, a_y)
+			elseif attached new_picture as l_picture then
+				l_picture.set_point_position (a_x, a_y)
 				projector.project
-			elseif new_star /= Void then
+			elseif attached new_star as l_star then
 				if not is_star_line_select_mode then
-					new_star.set_point_b_position (a_x, a_y)
+					l_star.set_point_b_position (a_x, a_y)
 					projector.project
 				else
-					new_star.set_line_count ((((a_x - new_star.x).abs) // 2) + 3)
+					l_star.set_line_count ((((a_x - l_star.x).abs) // 2) + 3)
 					projector.project
 				end
 			end
 			Precursor {EV_MODEL_WORLD_CELL} (x, y, x_tilt, y_tilt, pressure, a_screen_x, a_screen_y)
 		end
-		
+
 	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was released over `drawing_area'.
 		do
@@ -723,27 +735,27 @@ feature {NONE} -- Implementation
 			is_hand := False
 			drawing_area.set_pointer_style (default_pixmaps.standard_cursor)
 		end
-		
+
 	is_selected_scroll: BOOLEAN
 			-- Is scroll mode?
-	
-	new_line: EV_MODEL_LINE
-	new_rectangle: EV_MODEL_RECTANGLE
-	new_parallelogram: EV_MODEL_PARALLELOGRAM
-	new_polygone: EV_MODEL_POLYGON
-	new_polyline: EV_MODEL_POLYLINE
-	new_ellipse: EV_MODEL_ROTATED_ELLIPSE
-	new_dot: EV_MODEL_DOT
-	new_text: EV_MODEL_TEXT
-	new_arc: EV_MODEL_ROTATED_ARC
-	new_pie: EV_MODEL_ROTATED_PIE_SLICE
-	new_equilateral: EV_MODEL_EQUILATERAL
-	new_picture: EV_MODEL_PICTURE
-	new_rounded_rectangle: EV_MODEL_ROUNDED_RECTANGLE
-	new_rounded_parallelogram: EV_MODEL_ROUNDED_PARALLELOGRAM
-	new_star: EV_MODEL_STAR
+
+	new_line: detachable EV_MODEL_LINE
+	new_rectangle: detachable EV_MODEL_RECTANGLE
+	new_parallelogram: detachable EV_MODEL_PARALLELOGRAM
+	new_polygone: detachable EV_MODEL_POLYGON
+	new_polyline: detachable EV_MODEL_POLYLINE
+	new_ellipse: detachable EV_MODEL_ROTATED_ELLIPSE
+	new_dot: detachable EV_MODEL_DOT
+	new_text: detachable EV_MODEL_TEXT
+	new_arc: detachable EV_MODEL_ROTATED_ARC
+	new_pie: detachable EV_MODEL_ROTATED_PIE_SLICE
+	new_equilateral: detachable EV_MODEL_EQUILATERAL
+	new_picture: detachable EV_MODEL_PICTURE
+	new_rounded_rectangle: detachable EV_MODEL_ROUNDED_RECTANGLE
+	new_rounded_parallelogram: detachable EV_MODEL_ROUNDED_PARALLELOGRAM
+	new_star: detachable EV_MODEL_STAR
 			-- Figure currently creating (if any not void)	
-			
+
 	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
@@ -756,27 +768,31 @@ feature {NONE} -- Implementation
 
 	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
-		do			
+		do
 			if ay \\ world.grid_y < world.grid_y // 2 then
 				Result := ay - ay \\ world.grid_y
 			else
 				Result := ay - ay \\ world.grid_y + world.grid_y
 			end
 		end
-		
+
 	window: EV_WINDOW
 			-- Window `Current' is part of.
 		local
-			cur: EV_CONTAINER
+			cursor: detachable EV_CONTAINER
+			l_window: detachable EV_WINDOW
 		do
 			from
-				cur := Current
+				cursor := Current
 			until
-				Result /= Void
+				attached {EV_WINDOW} cursor
 			loop
-				Result ?= cur.parent
-				cur := cur.parent
+				check cursor /= Void end
+				cursor := cursor.parent
 			end
+			l_window ?= cursor
+			check l_window /= Void end
+			Result := l_window
 		end
 
 note

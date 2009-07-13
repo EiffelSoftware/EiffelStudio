@@ -11,10 +11,10 @@ class
 
 inherit
 	EV_COMBO_BOX
-		
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make
@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			dashed: BOOLEAN
 		do
 			default_create
-			
-			
+
+
 			from
 				j := 1
 				dashed := False
@@ -69,24 +69,32 @@ feature {NONE} -- Initialization
 			l_item.set_data (item_data)
 			extend (l_item)
 		end
-		
+
 feature -- Access
 
 	line_width: INTEGER
 			-- Selected line width.
 		local
-			item_data: TUPLE [INTEGER, BOOLEAN]
+			item_data: detachable TUPLE [INTEGER, BOOLEAN]
+			l_item: like selected_item
 		do
-			item_data ?= selected_item.data
+			l_item := selected_item
+			check l_item /= Void end
+			item_data ?= l_item.data
+			check item_data /= Void end
 			Result := item_data.integer_item (1)
 		end
 
 	is_dashed_line_style: BOOLEAN
 			-- Is dashed line style selected?
 		local
-			item_data: TUPLE [INTEGER, BOOLEAN]
+			item_data: detachable TUPLE [INTEGER, BOOLEAN]
+			l_item: like selected_item
 		do
-			item_data ?= selected_item.data
+			l_item := selected_item
+			check l_item /= Void end
+			item_data ?= l_item.data
+			check item_data /= Void end
 			Result := item_data.boolean_item (2)
 		end
 

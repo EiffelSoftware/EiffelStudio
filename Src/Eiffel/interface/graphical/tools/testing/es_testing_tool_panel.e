@@ -130,7 +130,7 @@ feature {NONE} -- Initialization: widgets
 			                      tag_filter,
 			                      create {ES_TEST_TAG_TREE_GRID_LAYOUT}.make (Current))
 			tag_tree.set_hide_outside_nodes (True)
-			tag_tree.set_update_timer (10)
+			tag_tree.set_update_timer (2)
 
 			split_area.set_first (tag_tree.widget)
 			register_action (tag_tree.node_selected_actions, agent on_selection_change (?, True))

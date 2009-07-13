@@ -276,6 +276,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_proxy: INTEGER
+			-- Declared as CURLOPT_PROXY.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_PROXY;
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' value valid?
 		do
@@ -303,7 +313,8 @@ feature -- Enumerations.
 						a_integer = curlopt_upload or
 						a_integer = curlopt_put or
 						a_integer = curlopt_readdata or
-						a_integer = curlopt_infilesize_large
+						a_integer = curlopt_infilesize_large or
+						a_integer = curlopt_proxy
 		end
 
 note

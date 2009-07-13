@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		do
 			create traversed_descendants.make_default
 			create traversed_helpers.make_default
+			create traversed_libraries.make_default
 		end
 
 feature {NONE} -- Access
@@ -62,6 +63,9 @@ feature {NONE} -- Access
 
 	traversed_helpers: DS_HASH_SET [EIFFEL_CLASS_I]
 			-- Cached ancestors which are not descendants of {TEST_SET}
+
+	traversed_libraries: DS_HASH_SET [UUID]
+			-- UUID of libraries which have already been traversed
 
 feature {NONE} -- Query
 
@@ -100,7 +104,8 @@ feature {NONE} -- Basic functionality
 			traversed_descendants.wipe_out
 			traversed_helpers.wipe_out
 			if cached_common_ancestor /= Void then
-				process_target (project.eiffel_project.universe.target)
+				project.eiffel_project.universe.target.process (Current)
+				traversed_libraries.wipe_out
 			end
 		end
 
@@ -239,10 +244,16 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			-- <Precursor>
 			--
 			-- Note: if library is not read only, we will look for tests.
+		local
+			l_target: CONF_TARGET
 		do
 			Precursor (a_library)
 			if not a_library.is_readonly and a_library.library_target /= Void then
-				process_target (a_library.library_target)
+				l_target := a_library.library_target
+				if not traversed_libraries.has (l_target.system.uuid) then
+					traversed_libraries.force (l_target.system.uuid)
+					l_target.process (Current)
+				end
 			end
 		end
 

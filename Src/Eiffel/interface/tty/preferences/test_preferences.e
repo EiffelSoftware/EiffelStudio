@@ -124,7 +124,7 @@ feature {NONE} -- Constants
 	autotest_slice_default: BOOLEAN = True
 
 	autotest_html_name: STRING = "autotest.html_statistics"
-	autotest_html_default: BOOLEAN = True
+	autotest_html_default: BOOLEAN = False
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

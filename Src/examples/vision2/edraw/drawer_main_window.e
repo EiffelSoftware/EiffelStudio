@@ -13,9 +13,10 @@ inherit
 	MAIN_WINDOW
 		redefine
 			build_main_container,
-			build_standard_toolbar
+			build_standard_toolbar,
+			create_interface_objects
 		end
-		
+
 	EV_FIGURE_MATH
 		export
 			{NONE} all
@@ -23,92 +24,96 @@ inherit
 			default_create,
 			copy
 		end
-		
+
 	EV_SHARED_APPLICATION
 		undefine
 			default_create,
 			copy
 		end
-		
+
 create
 	default_create
 
 feature {NONE} -- Implementation
+
+	create_interface_objects
+		do
+			create main_container
+			create settings_bar
+			create fg_color_chooser.make_with_text ("foreground")
+			create bg_color_chooser.make_with_text ("background")
+
+			create world
+			create world_cell.make_with_world (world)
+			projector := world_cell.projector
+			create line_style_chooser.make
+			create grid_visible
+			create grid_enabled
+			create radio_buttons.make (17)
+
+			Precursor {MAIN_WINDOW}
+		end
 
 	build_main_container
 			-- Create and populate `main_container'.
 		local
 			hbox: EV_HORIZONTAL_BOX
 			fixed: EV_FIXED
-			
 		do
-			create main_container
-
 			create hbox
 
-				create settings_bar
-				
 					create fixed
-						create fg_color_chooser.make_with_text ("foreground")
 						fg_color_chooser.color_change_actions.extend (agent fg_color_changed)
 						fg_color_chooser.disable_none_color_selectable
-						
+
 					fixed.extend (fg_color_chooser)
 					fixed.set_item_size (fg_color_chooser, 80, 130)
-					
+
 				settings_bar.extend (fixed)
-				
+
 					create fixed
-						create bg_color_chooser.make_with_text ("background")
 						bg_color_chooser.color_change_actions.extend (agent bg_color_changed)
-						
+
 					fixed.extend (bg_color_chooser)
 					fixed.set_item_size (bg_color_chooser, 80, 130)
-					
+
 				settings_bar.extend (fixed)
-				
+
 					create fixed
-						create line_style_chooser.make
 						line_style_chooser.select_actions.extend (agent line_style_selected)
-						
+
 					fixed.extend (line_style_chooser)
 					fixed.set_item_width (line_style_chooser, 80)
-					
+
 				settings_bar.extend (fixed)
 
 				create fixed
 				fixed.extend (settings_bar)
 				fixed.set_item_width (settings_bar, 82)
-			
+
 			hbox.extend (fixed)
 			hbox.disable_item_expand (fixed)
-			
-			create world
-			
-			create world_cell.make_with_world (world)
-			
-			projector := world_cell.projector
-			
+
 			world_cell.set_new_figure_line_width (1)
 			world_cell.set_new_figure_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
-			
+
 			hbox.extend (world_cell)
-			
+
 			main_container.extend (hbox)
 		end
-		
+
 	world_cell: DRAWING_AREA_CELL
 			-- Cell containing the drawing part.
-			
+
 	settings_bar: EV_VERTICAL_BOX
 			-- The bar on the left side with the color choosers.
-			
+
 	projector: EV_MODEL_BUFFER_PROJECTOR
 			-- The projector
-			
+
 	world: MULTI_SELECTION_WORLD
 			-- The world.
-	
+
 feature {NONE} -- ToolBar Implementation
 
 	build_standard_toolbar
@@ -118,15 +123,13 @@ feature {NONE} -- ToolBar Implementation
 			toolbar_pixmap: EV_PIXMAP
 		do
 			Precursor {MAIN_WINDOW}
-			
+
 			standard_toolbar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			
-			create radio_buttons.make (17)
-			
+
 			add_radio_button ("select")
-			
+
 			add_radio_button ("line")
-			
+
 			add_radio_button ("rect")
 			add_radio_button ("rounded_rect")
 			add_radio_button ("parallelogram")
@@ -134,60 +137,58 @@ feature {NONE} -- ToolBar Implementation
 			add_radio_button ("polygon")
 			add_radio_button ("polyline")
 			add_radio_button ("equilateral")
-			
+
 			add_radio_button ("ellipse")
 			add_radio_button ("arc")
 			add_radio_button ("pie")
-			
+
 			add_radio_button ("dot")
 			add_radio_button ("star")
-			
+
 			add_radio_button ("text")
-			
+
 			add_radio_button ("picture")
 
-			
+
 			standard_toolbar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			
+
 			create toolbar_button
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/group.png")
 			toolbar_button.set_pixmap (toolbar_pixmap)
 			standard_toolbar.extend (toolbar_button)
 			toolbar_button.select_actions.extend (agent on_group)
-			
+
 			create toolbar_button
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/ungroup.png")
 			toolbar_button.set_pixmap (toolbar_pixmap)
 			standard_toolbar.extend (toolbar_button)
 			toolbar_button.select_actions.extend (agent on_ungroup)
-			
+
 			create toolbar_button
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/tofront.png")
 			toolbar_button.set_pixmap (toolbar_pixmap)
 			standard_toolbar.extend (toolbar_button)
 			toolbar_button.select_actions.extend (agent on_tofront)
-			
+
 			create toolbar_button
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/toback.png")
 			toolbar_button.set_pixmap (toolbar_pixmap)
 			standard_toolbar.extend (toolbar_button)
 			toolbar_button.select_actions.extend (agent on_toback)
-			
+
 			standard_toolbar.extend (create {EV_TOOL_BAR_SEPARATOR})
-			
-			create grid_enabled
+
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/magnet.png")
 			grid_enabled.set_pixmap (toolbar_pixmap)
 			standard_toolbar.extend (grid_enabled)
 			grid_enabled.select_actions.extend (agent on_grid_enable_select)
 			world.disable_grid
-			
-			create grid_visible
+
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("./toolbar/grid.png")
 			grid_visible.set_pixmap (toolbar_pixmap)
@@ -196,13 +197,13 @@ feature {NONE} -- ToolBar Implementation
 			world.hide_grid
 			world.set_grid_x (10)
 			world.set_grid_y (10)
-			
+
 			fg_color_chooser.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			
+
 			is_dashed_line_style := False
 			line_width := 1
 		end
-		
+
 	radio_buttons: HASH_TABLE [EV_TOOL_BAR_RADIO_BUTTON, STRING]
 			-- All radio buttons to draw or manipulate figures.
 
@@ -225,7 +226,7 @@ feature {NONE} -- ToolBar Implementation
 			added: old radio_buttons.count + 1 = radio_buttons.count
 		end
 
-	on_radio_button_select 
+	on_radio_button_select
 			-- Called after a radio button in `radio_buttons' was selected.
 		do
 			standard_status_label.set_text ("")
@@ -246,10 +247,10 @@ feature {NONE} -- ToolBar Implementation
 			end
 			world_cell.stop_drawing
 		end
-		
+
 	grid_enabled: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Grid enable button.
-	
+
 	on_grid_enable_select
 			-- Grid enabled was pressed.
 		do
@@ -257,14 +258,14 @@ feature {NONE} -- ToolBar Implementation
 				world.enable_grid
 			else
 				world.disable_grid
-			end	
+			end
 			world.full_redraw
 			projector.project
 		end
-		
+
 	grid_visible: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Grid visible button.
-	
+
 	on_grid_visible_select
 			-- Grid visible was pressed.
 		do
@@ -284,7 +285,7 @@ feature {NONE} -- Menu Implementation
 		do
 			standard_menu_bar.extend (edit_menu)
 		end
-		
+
 	edit_menu: EV_MENU
 			-- Build edit menu.
 		local
@@ -295,17 +296,17 @@ feature {NONE} -- Menu Implementation
 			create menu_item.make_with_text (menu_edit_select_all)
 			menu_item.select_actions.extend (agent on_select_all)
 			Result.extend (menu_item)
-			
+
 			create menu_item.make_with_text (menu_edit_deselect_all)
 			menu_item.select_actions.extend (agent on_deselect_all)
 			Result.extend (menu_item)
-			
+
 			create menu_item.make_with_text (menu_edit_invert_selection)
 			menu_item.select_actions.extend (agent on_invert_selection)
 			Result.extend (menu_item)
 
 			Result.extend (create {EV_MENU_SEPARATOR})
-			
+
 			create menu_item.make_with_text (menu_edit_delete_selected)
 			menu_item.select_actions.extend (agent on_delete_selected)
 			Result.extend (menu_item)
@@ -320,21 +321,25 @@ feature {NONE} -- Application state
 		do
 			Result := grid_enabled.is_selected
 		end
-	
+
 	is_grid_visible: BOOLEAN
 			-- Is grid visible?
 		do
 			Result := grid_visible.is_selected
 		end
-		
+
 	is_select_mode: BOOLEAN
 			-- Is current mode select?
+		local
+			l_item: detachable EV_TOOL_BAR_RADIO_BUTTON
 		do
-			Result := radio_buttons.item ("select").is_selected
+			l_item := radio_buttons.item ("select")
+			check l_item /= Void end
+			Result := l_item.is_selected
 		end
 
 feature {NONE} -- Order and group change
-		
+
 	on_group
 			-- Group button was pressed.
 		do
@@ -350,7 +355,7 @@ feature {NONE} -- Order and group change
 				end
 			end
 		end
-		
+
 	on_ungroup
 			-- Ungroup button was pressed.
 		do
@@ -366,13 +371,17 @@ feature {NONE} -- Order and group change
 				end
 			end
 		end
-		
+
 	on_tofront
 			-- tofront button was pressed.
+		local
+			l_group: detachable EV_MODEL
 		do
 			standard_status_label.set_text ("")
 			if world.selected_figures.count = 1 then
-				world.bring_to_front (world.selected_figures.first.group)
+				l_group := world.selected_figures.first.group
+				check l_group /= Void end
+				world.bring_to_front (l_group)
 				projector.project
 			else
 				if world.selected_figures.is_empty then
@@ -382,13 +391,17 @@ feature {NONE} -- Order and group change
 				end
 			end
 		end
-		
+
 	on_toback
 			-- toback button was pressed.
+		local
+			l_group: detachable EV_MODEL
 		do
 			standard_status_label.set_text ("")
 			if world.selected_figures.count = 1 then
-				world.send_to_back (world.selected_figures.first.group)
+				l_group := world.selected_figures.first.group
+				check l_group /= Void end
+				world.send_to_back (l_group)
 				projector.project
 			else
 				if world.selected_figures.is_empty then
@@ -398,18 +411,19 @@ feature {NONE} -- Order and group change
 				end
 			end
 		end
-		
+
 feature {NONE} -- Color
 
 	bg_color_chooser: COLOR_CHOOSER
 			-- Color chooser for background color.
-			
+
 	bg_color_changed
 			-- Background color was changed to `color'
 		local
-			color: EV_COLOR
+			color: detachable EV_COLOR
 		do
 			color := bg_color_chooser.color
+			check color /= Void end
 			world_cell.set_new_figure_background_color (color)
 			from
 				world.selected_figures.start
@@ -417,21 +431,22 @@ feature {NONE} -- Color
 				world.selected_figures.after
 			loop
 				set_bg_color (world.selected_figures.item)
-				
+
 				world.selected_figures.forth
 			end
 			projector.project
 		end
-		
+
 	fg_color_chooser: COLOR_CHOOSER
 			-- Color chooser for forground color.
-			
+
 	fg_color_changed
 			-- Forground color was changed to `color'
 		local
-			color: EV_COLOR
+			color: detachable EV_COLOR
 		do
 			color := fg_color_chooser.color
+			check color /= Void end
 			world_cell.set_new_figure_foreground_color (color)
 			from
 				world.selected_figures.start
@@ -443,12 +458,12 @@ feature {NONE} -- Color
 			end
 			projector.project
 		end
-		
+
 feature {NONE} -- Line Style
 
 	line_style_chooser: LINE_STYLE_CHOOSER
 			-- The box to choose the line style from.
-		
+
 	line_style_selected
 			-- A line style was selected
 		do
@@ -460,7 +475,7 @@ feature {NONE} -- Line Style
 			else
 				world_cell.new_figure_disable_dashed_line_style
 			end
-			
+
 			from
 				world.selected_figures.start
 			until
@@ -471,16 +486,16 @@ feature {NONE} -- Line Style
 			end
 			projector.project
 		end
-		
+
 	is_dashed_line_style: BOOLEAN
 			-- Is current line style dashed?
 			-- Default: False
-			
+
 	line_width: INTEGER
 			-- Current line width.
 			-- Default: 1
 
-feature {NONE} -- File menu Events 
+feature {NONE} -- File menu Events
 
 	on_save_as
 			-- Save as was selected.
@@ -492,7 +507,7 @@ feature {NONE} -- File menu Events
 			dialog.filters.extend (["*.png", "PNG File"])
 			dialog.filters.extend (["*.ps", "Postscript File"])
 			dialog.show_modal_to_window (Current)
-			
+
 			file_name := dialog.file_name
 			if file_name.count > 4 then
 				ext := file_name.substring (file_name.count - 3, file_name.count)
@@ -508,7 +523,7 @@ feature {NONE} -- File menu Events
 					file_name := file_name + ".png"
 				else
 					file_name := file_name + ".ps"
-				end	
+				end
 			end
 			if file_name.count > 0 then
 				if dialog.selected_filter_index = 1 then
@@ -517,33 +532,33 @@ feature {NONE} -- File menu Events
 					last_file_type := 2
 				end
 				last_file_name := file_name
-				save (create {FILE_NAME}.make_from_string (last_file_name), last_file_type)
+				save (create {FILE_NAME}.make_from_string (file_name), last_file_type)
 			end
 		end
-		
-	last_file_name: STRING
+
+	last_file_name: detachable STRING
 			-- last used file name.
-			
+
 	last_file_type: INTEGER
 			-- 1 png, 2 ps
-			
+
 	on_save
 			-- Save using last_file_name or call save_as if last_file_name is void.
 		do
-			if last_file_name = Void then
-				on_save_as
+			if attached last_file_name as file_name then
+				save (create {FILE_NAME}.make_from_string (file_name), last_file_type)
 			else
-				save (create {FILE_NAME}.make_from_string (last_file_name), last_file_type)
+				on_save_as
 			end
 		end
-		
+
 	save (file: FILE_NAME; type: INTEGER)
 			-- Save `buffer' to `file'.
 			-- type = 1 -> png
 			-- type = 2 -> ps
 		require
 			file_exists: file /= Void
-		local	
+		local
 			postscript_projector: EV_MODEL_POSTSCRIPT_PROJECTOR
 			l_selected_figures: LIST [EV_MODEL]
 			pixmap: EV_PIXMAP
@@ -551,7 +566,7 @@ feature {NONE} -- File menu Events
 		do
 			l_selected_figures := world.selected_figures.twin
 			world.deselect_all
-			
+
 			if type = 1 then
 				pixmap := projector.world_as_pixmap (5)
 				if projector.is_world_too_large then
@@ -565,7 +580,7 @@ feature {NONE} -- File menu Events
 				world.full_redraw
 				postscript_projector.project
 			end
-			
+
 			from
 				l_selected_figures.start
 			until
@@ -575,14 +590,14 @@ feature {NONE} -- File menu Events
 				l_selected_figures.forth
 			end
 		end
-		
+
 	on_new
 			-- New was selected.
 		do
 			world.wipe_out
 			projector.project
 		end
-		
+
 feature {NONE} -- Edit menu events
 
 	on_select_all
@@ -592,7 +607,7 @@ feature {NONE} -- Edit menu events
 			world.full_redraw
 			projector.project
 		end
-		
+
 	on_deselect_all
 			-- Deselect all figures.
 		do
@@ -600,7 +615,7 @@ feature {NONE} -- Edit menu events
 			world.full_redraw
 			projector.project
 		end
-		
+
 	on_delete_selected
 			-- Delete all selected figures.
 		do
@@ -608,7 +623,7 @@ feature {NONE} -- Edit menu events
 			world.full_redraw
 			projector.project
 		end
-		
+
 	on_invert_selection
 			-- Invert the selection.
 		do
@@ -616,18 +631,14 @@ feature {NONE} -- Edit menu events
 			world.full_redraw
 			projector.project
 		end
-		
+
 feature {NONE} -- Implementation
 
 	set_bg_color (figure: EV_MODEL)
 			-- Set background color.
-		local
-			group: EV_MODEL_GROUP
-			cf: EV_MODEL_CLOSED
 		do
-			group ?= figure
-			if group /= Void then
-				from 
+			if attached {EV_MODEL_GROUP} figure as group then
+				from
 					group.start
 				until
 					group.after
@@ -635,27 +646,20 @@ feature {NONE} -- Implementation
 					set_bg_color (group.item)
 					group.forth
 				end
-			else
-				cf ?= figure
-				if cf /= Void then
-					if bg_color_chooser.color /= Void then
-						cf.set_background_color (bg_color_chooser.color)
-					else
-						cf.remove_background_color
-					end
+			elseif attached {EV_MODEL_CLOSED} figure as cf then
+				if attached bg_color_chooser.color as l_color then
+					cf.set_background_color (l_color)
+				else
+					cf.remove_background_color
 				end
 			end
 		end
-		
+
 	set_fg_color (figure: EV_MODEL)
 			-- Set foreground color.
-		local
-			group: EV_MODEL_GROUP
-			af: EV_MODEL_ATOMIC
 		do
-			group ?= figure
-			if group /= Void then
-				from 
+			if attached {EV_MODEL_GROUP} figure as group then
+				from
 					group.start
 				until
 					group.after
@@ -663,23 +667,16 @@ feature {NONE} -- Implementation
 					set_fg_color (group.item)
 					group.forth
 				end
-			else
-				af ?= figure
-				if af /= Void then
-					af.set_foreground_color (fg_color_chooser.color)
-				end
+			elseif attached {EV_MODEL_ATOMIC} figure as af and attached fg_color_chooser.color as l_color then
+				af.set_foreground_color (l_color)
 			end
 		end
-		
+
 	set_line_style (figure: EV_MODEL)
 			-- Set line width, is_dashed and color for all figures in figure.
-		local
-			group: EV_MODEL_GROUP
-			af: EV_MODEL_ATOMIC
 		do
-			group ?= figure
-			if group /= Void then
-				from 
+			if attached {EV_MODEL_GROUP} figure as group then
+				from
 					group.start
 				until
 					group.after
@@ -687,19 +684,16 @@ feature {NONE} -- Implementation
 					set_line_style (group.item)
 					group.forth
 				end
-			else
-				af ?= figure
-				if af /= Void then
-					af.set_line_width (line_width)
-					if is_dashed_line_style then
-						af.enable_dashed_line_style
-					else
-						af.disable_dashed_line_style
-					end
+			elseif attached {EV_MODEL_ATOMIC} figure as af then
+				af.set_line_width (line_width)
+				if is_dashed_line_style then
+					af.enable_dashed_line_style
+				else
+					af.disable_dashed_line_style
 				end
 			end
 		end
-		
+
 	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
@@ -712,29 +706,27 @@ feature {NONE} -- Implementation
 
 	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
-		do			
+		do
 			if ay \\ world.grid_y < world.grid_y // 2 then
 				Result := ay - ay \\ world.grid_y
 			else
 				Result := ay - ay \\ world.grid_y + world.grid_y
 			end
 		end
-		
-feature {NONE} -- Implementation print
 
-	print_dialog: EV_PRINT_DIALOG
+feature {NONE} -- Implementation print
 
 	on_print
 			-- Print was selected.
+		local
+			print_dialog: EV_PRINT_DIALOG
 		do
 			create print_dialog.make_with_title ("Print")
-			print_dialog.print_actions.extend (agent do_print)
+			print_dialog.print_actions.extend (agent do_print (print_dialog))
 			print_dialog.show_modal_to_window (Current)
-
-		
 		end
-		
-	do_print
+
+	do_print (print_dialog: EV_PRINT_DIALOG)
 			-- Print
 		local
 			pc: EV_PRINT_CONTEXT
@@ -743,12 +735,12 @@ feature {NONE} -- Implementation print
 		do
 			pc := print_dialog.print_context
 			create pp.make_with_context (world, pc)
-		
+
 			l_selected_figures := world.selected_figures.twin
 			world.deselect_all
 
 			pp.project
-			
+
 			from
 				l_selected_figures.start
 			until
@@ -758,7 +750,7 @@ feature {NONE} -- Implementation print
 				l_selected_figures.forth
 			end
 		end
-		
+
 feature {NONE} -- Text constants
 
 	select_a_figure_text: STRING = "Select a figure first."
@@ -770,7 +762,7 @@ feature {NONE} -- Text constants
 	menu_edit_deselect_all: STRING = "&Deselect all"
 	menu_edit_invert_selection: STRING = "&Invert selection"
 	menu_edit_delete_selected: STRING = "Del&ete selected";
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

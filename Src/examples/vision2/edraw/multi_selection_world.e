@@ -14,7 +14,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	EV_SHARED_APPLICATION
 		undefine
 			default_create
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			is_selection_enabled := True
 			pointer_button_press_actions.extend (agent on_pointer_pressed)
 		end
-		
+
 feature -- Status report
 
 	is_selection_enabled: BOOLEAN
@@ -41,7 +41,7 @@ feature -- Access
 
 	selected_figures: ARRAYED_LIST [EV_MODEL]
 			-- Figures currently selected.
-			
+
 feature -- Status Settings
 
 	enable_selection
@@ -51,7 +51,7 @@ feature -- Status Settings
 		ensure
 			set: is_selection_enabled
 		end
-		
+
 	disable_selection
 			-- Set `is_selection_enabled' to False.
 		do
@@ -73,40 +73,38 @@ feature -- Element change
 		do
 			select_group := new_selection_group
 			select_group.set_selected_item (figure)
-			
+
 			force (select_group)
 			selected_figures.extend (figure)
-
 		ensure
 			added: old selected_figures.count + 1 = selected_figures.count
 		end
-		
+
 	deselect_figure (figure: EV_MODEL)
 			-- Remove `figure' from `selected_figures'.
 		require
 			figure_exists: figure /= Void
 			figure_selected: selected_figures.has (figure)
 		local
-			sg: SELECTION_GROUP
+			sg: detachable SELECTION_GROUP
+			l_item: detachable EV_MODEL
 		do
 			sg ?= figure.group
-			check
-				sg /= Void
-			end
+			check sg /= Void end
 			prune_all (sg)
-			
-			extend (sg.selected_item)
+
+			l_item := sg.selected_item
+			check l_item /= Void end
+			extend (l_item)
 			selected_figures.prune_all (figure)
 		ensure
 			removed: old selected_figures.count - 1 = selected_figures.count
 		end
-		
+
 
 	select_all
 			-- Select all figures.
 		local
-			sg: SELECTION_GROUP
-			figure: EV_MODEL
 			figures_to_select: ARRAYED_LIST [EV_MODEL]
 		do
 			from
@@ -115,9 +113,7 @@ feature -- Element change
 			until
 				after
 			loop
-				figure := item
-				sg ?= figure
-				if sg = Void and then not selected_figures.has (figure) then
+				if attached {EV_MODEL} item as figure and then not selected_figures.has (figure) then
 					figures_to_select.extend (figure)
 				end
 				forth
@@ -131,52 +127,46 @@ feature -- Element change
 				figures_to_select.forth
 			end
 		end
-		
+
 	deselect_all
 			-- Deselect all figures.
-		local
-			sg: SELECTION_GROUP
 		do
 			from
 				start
 			until
 				after
 			loop
-				sg ?= item
-				if sg /= Void then
-					replace (sg.selected_item)
+				if attached {SELECTION_GROUP} item as sg and then attached sg.selected_item as l_item then
+					replace (l_item)
 				end
 				forth
 			end
 			selected_figures.wipe_out
 		end
-		
+
 	delete_selected
 			-- Delete all selected figures.
-		local
-			sg: SELECTION_GROUP
 		do
 			from
 				start
 			until
 				after
 			loop
-				sg ?= item
-				if sg /= Void then
+				if attached {SELECTION_GROUP} item then
 					remove
-				else				
+				else
 					forth
 				end
 			end
 			selected_figures.wipe_out
 		end
-		
+
 	invert_selection
 			-- Invert the selection.
 		local
 			figures_to_select: ARRAYED_LIST [EV_MODEL]
 			figure: EV_MODEL
-			sg: SELECTION_GROUP
+			sg: detachable SELECTION_GROUP
 		do
 			from
 				start
@@ -201,13 +191,14 @@ feature -- Element change
 				figures_to_select.forth
 			end
 		end
-		
+
 	group_selection
 			-- Group selected figures.
 		require
 			more_then_one: selected_figures.count > 1
 		local
 			new_group: EV_MODEL_GROUP
+			l_group: detachable EV_MODEL_GROUP
 		do
 			create new_group
 			from
@@ -216,7 +207,9 @@ feature -- Element change
 				selected_figures.after
 			loop
 				start
-				search (selected_figures.item.group)
+				l_group := selected_figures.item.group
+				check l_group /= Void end
+				search (l_group)
 				remove
 				new_group.extend (selected_figures.item)
 				selected_figures.forth
@@ -224,20 +217,18 @@ feature -- Element change
 			selected_figures.wipe_out
 			select_figure (new_group)
 		end
-		
+
 	ungroup_selection
 			-- Ungroup selected figures.
 		require
 			one_selected: selected_figures.count = 1
 		local
-			group_to_ungroup: EV_MODEL_GROUP
 			selected_figure: EV_MODEL
 		do
 			selected_figure := selected_figures.first
-			group_to_ungroup ?= selected_figure
-			if group_to_ungroup /= Void then
+			if attached {EV_MODEL_GROUP} selected_figure.group as group_to_ungroup then
 				start
-				search (selected_figure.group)
+				search (group_to_ungroup)
 				remove
 				selected_figures.wipe_out
 				from
@@ -249,7 +240,7 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	new_selection_group: SELECTION_GROUP
@@ -261,33 +252,25 @@ feature {NONE} -- Implementation
 
 	on_pointer_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- User pressed on `world'.
-		local
-			top_fig: EV_MODEL
 		do
 			if button = 1 then
-				top_fig := top_figure_at (ax, ay, Current)
-				if top_fig /= Void then
+				if attached top_figure_at (ax, ay, Current) as top_fig then
 					on_select_figure (top_fig, ax, ay)
 				end
 			elseif button = 3 then
 				deselect_all
 			end
 		end
-		
-	top_figure_at (ax, ay: INTEGER; a_group: EV_MODEL_GROUP): EV_MODEL
+
+	top_figure_at (ax, ay: INTEGER; a_group: EV_MODEL_GROUP): detachable EV_MODEL
 			-- Return top figure at (`ax', `ay') in `a_group' if any.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			l_child: EV_MODEL_GROUP
 		do
 			from
 				a_group.start
 			until
 				a_group.after or else Result /= Void
 			loop
-				l_child ?= a_group.item
-				if l_child /= Void then
+				if attached {EV_MODEL_GROUP} a_group.item as l_child then
 					Result := top_figure_at (ax, ay, l_child)
 				elseif a_group.item.position_on_figure (ax, ay) then
 					Result := a_group.item
@@ -306,41 +289,38 @@ feature {NONE} -- Implementation
 		require
 			a_figure_exist: figure /= Void
 		local
-			l_selected_figure: EV_MODEL
-			sg: SELECTION_GROUP
+			l_selected_figure: detachable EV_MODEL
 		do
-			if 
-				capture_figure = Void and then 
-				(ev_application.ctrl_pressed or else is_selection_enabled) 
+			if
+				capture_figure = Void and then
+				(ev_application.ctrl_pressed or else is_selection_enabled)
 			then
 				l_selected_figure ?= root_figure (figure)
-				sg ?= l_selected_figure
-				if sg = Void then
+				check l_selected_figure /= Void end
+				if attached {SELECTION_GROUP} l_selected_figure as sg and then attached sg.selected_item as l_item then
+					check
+						selected_figures.has (l_item)
+					end
+					deselect_figure (l_item)
+				else
 					check
 						not selected_figures.has (l_selected_figure)
 					end
 					select_figure (l_selected_figure)
-				else
-					check
-						selected_figures.has (sg.selected_item)
-					end
-					deselect_figure (sg.selected_item)
 				end
 			end
 		end
-		
+
 	root_figure (a_figure: EV_MODEL): EV_MODEL
 			-- Root group containing `a_figure' but not `Current'.
-		require
-			a_figure_not_void: a_figure /= Void
 		do
-			if a_figure.group = Void or else a_figure.group = Current then
-				Result := a_figure
+			if attached a_figure.group as l_group and then l_group /= Current then
+				Result := root_figure (l_group)
 			else
-				Result := root_figure (a_figure.group)
+				Result := a_figure
 			end
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

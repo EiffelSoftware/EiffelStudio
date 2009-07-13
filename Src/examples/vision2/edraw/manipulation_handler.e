@@ -11,10 +11,10 @@ class
 
 inherit
 	EV_MODEL_GROUP
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_figure: like figure)
@@ -45,56 +45,56 @@ feature {NONE} -- Initialization
 				scale_x_handle.pointer_button_press_actions.extend (agent on_start_scale_x)
 				scale_x_handle.pointer_motion_actions.extend (agent on_scale_x)
 				scale_x_handle.pointer_button_release_actions.extend (agent on_end_scale_x)
-				
+
 				scale_y_handle.pointer_button_press_actions.extend (agent on_start_scale_y)
 				scale_y_handle.pointer_motion_actions.extend (agent on_scale_y)
 				scale_y_handle.pointer_button_release_actions.extend (agent on_end_scale_y)
-				
+
 				scale_handle.pointer_button_press_actions.extend (agent on_start_scale)
 				scale_handle.pointer_motion_actions.extend (agent on_scale_x)
 				scale_handle.pointer_motion_actions.extend (agent on_scale_y)
 				scale_handle.pointer_button_release_actions.extend (agent on_end_scale)
 			end
-			
+
 			if figure.is_rotatable then
 				rotation_handle.pointer_button_press_actions.extend (agent on_start_rotating)
 				rotation_handle.pointer_motion_actions.extend (agent on_rotating)
 				rotation_handle.pointer_button_release_actions.extend (agent on_end_rotating)
-				
+
 				center_handle.enable_moving
 				center_handle.pointer_double_press_actions.extend (agent on_recenter_center)
 			end
-			
+
 			move_handle.pointer_button_press_actions.extend (agent on_start_move)
 			move_handle.pointer_motion_actions.extend (agent on_move)
 			move_handle.pointer_button_release_actions.extend (agent on_end_move)
 		end
-		
+
 feature -- Access
 
 	figure: EV_MODEL
 			-- Figure `Current' manipulates.
-		
+
 feature {NONE} -- Implementation
 
-	scale_y_handle: EV_MODEL_GROUP 
+	scale_y_handle: EV_MODEL_GROUP
 			-- Handle to scale to y direction.
-			
-	scale_x_handle: EV_MODEL_GROUP 
+
+	scale_x_handle: EV_MODEL_GROUP
 			-- Handle to scale to x direction.
-	
+
 	scale_handle: EV_MODEL_GROUP
 			-- Handle to scale to x and y direction.
-			
+
 	rotation_handle: EV_MODEL_GROUP
 			-- Handle for rotation.
-			
+
 	move_handle: EV_MODEL_GROUP
 			-- Handle for moving.
-			
+
 	center_handle: EV_MODEL_MOVE_HANDLE
 			-- Handle to select center for rotation.
-			
+
 	angle_indicator: EV_MODEL_PIE_SLICE
 			-- Figure showing the rotation angle.
 
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			polygone.set_point_count (polygone.point_count + 1)
 			polygone.set_i_th_point_position (polygone.point_count, 5, -5)
 			scale_handle.extend (polygone)
-		end	
+		end
 
 	new_arrow: EV_MODEL_POLYGON
 			-- Build a scale arrow
@@ -150,9 +150,9 @@ feature {NONE} -- Implementation
 			Result.set_i_th_point_position (4, 60, 0)
 			Result.set_i_th_point_position (5, 40, -14)
 			Result.set_i_th_point_position (6, 40, -8)
-			Result.set_i_th_point_position (7, 5, -5)	
+			Result.set_i_th_point_position (7, 5, -5)
 		end
-		
+
 	build_rotation_handle
 			-- Build `rotation_handle'.
 		local
@@ -171,11 +171,11 @@ feature {NONE} -- Implementation
 				pie.set_background_color (default_colors.gray)
 			end
 			rotation_handle.extend (pie)
-			
+
 			create circ.make_with_positions (-25, -25, 25, 25)
 			circ.set_background_color (default_colors.white)
 			rotation_handle.extend (circ)
-			
+
 			create angle_indicator.make_with_positions (-25, -25, 25, 25)
 			if figure.is_rotatable then
 				angle_indicator.set_background_color (default_colors.green)
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			angle_indicator.set_start_angle (modulo (2 * pi - figure.angle, 2 *pi))
 			angle_indicator.set_aperture (0.2)
 			rotation_handle.extend (angle_indicator)
-			
+
 			create arrow
 			arrow.set_point_count (3)
 			arrow.set_line_width (0)
@@ -193,12 +193,12 @@ feature {NONE} -- Implementation
 				arrow.set_background_color (default_colors.red)
 			else
 				arrow.set_background_color (default_colors.gray)
-			end	
+			end
 			arrow.set_i_th_point_position (1, 28, 37)
 			arrow.set_i_th_point_position (2, 29, 14)
 			arrow.set_i_th_point_position (3, 8, 15)
 			rotation_handle.extend (arrow)
-			
+
 			create line
 			line.set_point_count (5)
 			line.set_i_th_point_position (1, 24, 33)
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			move_arrow.set_background_color (default_colors.yellow)
 			move_handle.extend (move_arrow)
 		end
-		
+
 	new_move_arrow: EV_MODEL_POLYGON
 			-- Build a move to all directions arrow.
 		do
@@ -232,28 +232,28 @@ feature {NONE} -- Implementation
 			Result.set_i_th_point_position (5, -10, -10)
 			Result.set_i_th_point_position (6, -5, -10)
 			Result.set_i_th_point_position (7, -5, -5)
-			
+
 			Result.set_i_th_point_position (8, -10, -5)
 			Result.set_i_th_point_position (9, -10, -10)
 			Result.set_i_th_point_position (10, -20, 0)
 			Result.set_i_th_point_position (11, -10, 10)
 			Result.set_i_th_point_position (12, -10, 5)
 			Result.set_i_th_point_position (13, -5, 5)
-			
+
 			Result.set_i_th_point_position (14, -5, 10)
 			Result.set_i_th_point_position (15, -10, 10)
 			Result.set_i_th_point_position (16, 0, 20)
 			Result.set_i_th_point_position (17, 10, 10)
 			Result.set_i_th_point_position (18, 5, 10)
 			Result.set_i_th_point_position (19, 5, 5)
-			
+
 			Result.set_i_th_point_position (20, 10, 5)
 			Result.set_i_th_point_position (21, 10, 10)
 			Result.set_i_th_point_position (22, 20, 0)
 			Result.set_i_th_point_position (23, 10, -10)
-			Result.set_i_th_point_position (24, 10, -5)	
+			Result.set_i_th_point_position (24, 10, -5)
 		end
-		
+
 	build_center_handle
 			-- Build `center_handle'.
 		local
@@ -273,30 +273,31 @@ feature {NONE} -- Implementation interaction
 
 	start_x, start_y: INTEGER
 			-- Position when pointer button down.
-			
+
 	do_scale_x: BOOLEAN
 			-- Is scale_x mode?
 
 	do_scale_y: BOOLEAN
 			-- Is scale_y mode?
-			
+
 	do_rotate: BOOLEAN
 			-- Is rotation mode?
-			
+
 	do_move: BOOLEAN
 			-- Is move mode?
 
 	on_start_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scaling to x.
 		do
-			if button = 1 and then world.capture_figure = Void then
+			if button = 1 and then attached world as l_world
+							and then attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_x := True
 				scale_x_handle.enable_capture
 			end
 		end
-		
+
 	on_scale_x (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Scale to x.
 		local
@@ -310,7 +311,7 @@ feature {NONE} -- Implementation interaction
 				figure.scale_x_abs (new_scale_x)
 			end
 		end
-		
+
 	on_end_scale_x (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to x.
 		do
@@ -323,14 +324,15 @@ feature {NONE} -- Implementation interaction
 	on_start_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scaling to y.
 		do
-			if button = 1 and then world.capture_figure = Void then
+			if button = 1 and then attached world as l_world
+							and then attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_y := True
 				scale_y_handle.enable_capture
 			end
 		end
-		
+
 	on_scale_y (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Scale to y.
 		local
@@ -344,7 +346,7 @@ feature {NONE} -- Implementation interaction
 				figure.scale_y_abs (new_scale_y)
 			end
 		end
-		
+
 	on_end_scale_y (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to y.
 		do
@@ -353,11 +355,12 @@ feature {NONE} -- Implementation interaction
 				scale_y_handle.disable_capture
 			end
 		end
-	
+
 	on_start_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start scale to x and y.
 		do
-			if button = 1 and then world.capture_figure = Void then
+			if button = 1 and then attached world as l_world
+							and then attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_y := True
@@ -365,7 +368,7 @@ feature {NONE} -- Implementation interaction
 				scale_handle.enable_capture
 			end
 		end
-	
+
 	on_end_scale (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End scale to x and y.
 		do
@@ -374,19 +377,20 @@ feature {NONE} -- Implementation interaction
 				do_scale_x := False
 				scale_handle.disable_capture
 			end
-		end		
+		end
 
 	on_start_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start rotation.
 		do
-			if button = 1 and then world.capture_figure = Void then
+			if button = 1 and then attached world as l_world
+							and then attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_rotate := True
 				rotation_handle.enable_capture
 			end
 		end
-		
+
 	on_rotating (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Rotate.
 		local
@@ -394,21 +398,21 @@ feature {NONE} -- Implementation interaction
 			cx, cy: INTEGER
 		do
 			if do_rotate then
-				
+
 				cx := center_handle.x
 				cy := center_handle.y
-				
+
 				new_angle := line_angle (point_x, point_y, ax, ay) - line_angle (point_x, point_y, start_x, start_y)
-				
+
 				figure.rotate_around (new_angle, cx, cy)
-				
+
 				angle_indicator.set_start_angle (modulo (2 * pi - figure.angle, 2 *pi))
-				
+
 				start_x := ax
 				start_y := ay
 			end
 		end
-		
+
 	on_end_rotating (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End rotation.
 		do
@@ -421,30 +425,37 @@ feature {NONE} -- Implementation interaction
 	on_start_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Start moving.
 		do
-			if button = 1 and then world.capture_figure = Void then
-				start_x := ax - group.point_x
-				start_y := ay - group.point_y
+			if button = 1 and then attached world as l_world
+							and then attached l_world.capture_figure
+							and then attached group as l_group then
+				start_x := ax - l_group.point_x
+				start_y := ay - l_group.point_y
 				do_move := True
 				move_handle.enable_capture
 			end
 		end
-		
+
 	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Move.
 		local
 			nx, ny: INTEGER
+			l_world: like world
+			l_group: like group
 		do
+			l_world := world
+			l_group := group
+			check l_world /= Void and l_group /= Void end
 			if do_move then
 				nx := ax - start_x
 				ny := ay - start_y
-				if world.grid_enabled then
+				if l_world.grid_enabled then
 					nx := snapped_x (nx)
 					ny := snapped_y (ny)
 				end
-				group.set_point_position (nx, ny)
+				l_group.set_point_position (nx, ny)
 			end
 		end
-		
+
 	on_end_move (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- End moving.
 		do
@@ -453,27 +464,39 @@ feature {NONE} -- Implementation interaction
 				move_handle.disable_capture
 			end
 		end
-		
+
 	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
+		require
+			world_attached: world /= Void
+		local
+			l_world: like world
 		do
-			if ax \\ world.grid_x < world.grid_x // 2 then
-				Result := ax - ax \\ world.grid_x
+			l_world := world
+			check l_world /= Void end
+			if ax \\ l_world.grid_x < l_world.grid_x // 2 then
+				Result := ax - ax \\ l_world.grid_x
 			else
-				Result := ax - ax \\ world.grid_x + world.grid_x
+				Result := ax - ax \\ l_world.grid_x + l_world.grid_x
 			end
 		end
 
 	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
-		do			
-			if ay \\ world.grid_y < world.grid_y // 2 then
-				Result := ay - ay \\ world.grid_y
+		require
+			world_attached: world /= Void
+		local
+			l_world: like world
+		do
+			l_world := world
+			check l_world /= Void end
+			if ay \\ l_world.grid_y < l_world.grid_y // 2 then
+				Result := ay - ay \\ l_world.grid_y
 			else
-				Result := ay - ay \\ world.grid_y + world.grid_y
+				Result := ay - ay \\ l_world.grid_y + l_world.grid_y
 			end
 		end
-		
+
 	on_recenter_center (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Set `center_handle' to center of `figure'.
 		do

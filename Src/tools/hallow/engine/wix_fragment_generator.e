@@ -54,6 +54,7 @@ feature {NONE} -- Element generation
 			can_read_options_a_options: a_options.can_read_options
 			a_writer_attached: a_writer /= Void
 		local
+			l_dir_id: SYSTEM_STRING
 			l_dir: DIRECTORY_INFO
 			l_expressions: NATIVE_ARRAY [SYSTEM_STRING]
 			l_expr: SYSTEM_STRING
@@ -96,11 +97,13 @@ feature {NONE} -- Element generation
 			end
 
 			if a_options.use_root_directory_ref then
+				l_dir_id := a_options.root_directory_ref_id
 				a_writer.write_start_element ({WIX_CONSTANTS}.directory_ref_tag)
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, a_options.root_directory_ref_id)
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, l_dir_id)
 			else
+				l_dir_id := semantic_name (l_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False)
 				a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (l_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, l_dir_id)
 				if a_options.generate_include then
 					a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, ".")
 				else
@@ -109,7 +112,7 @@ feature {NONE} -- Element generation
 				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
 			end
 
-			generate_directory_content (l_dir, True, a_options, a_writer)
+			generate_directory_content (l_dir, l_dir_id, True, a_options, a_writer)
 
 			a_writer.write_end_element
 
@@ -167,22 +170,26 @@ feature {NONE} -- Element generation
 			a_writer_attached: a_writer /= Void
 			a_dir_attached: a_dir /= Void
 			a_dir_exists: a_dir.exists
+		local
+			l_dir_id: SYSTEM_STRING
 		do
+			l_dir_id := semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False)
 			a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, l_dir_id)
 
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, a_dir.name)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (a_dir.full_name, a_options))
 
-			generate_directory_content (a_dir, False, a_options, a_writer)
+			generate_directory_content (a_dir, l_dir_id, False, a_options, a_writer)
 
 			a_writer.write_end_element
 		end
 
-	generate_directory_content (a_dir: DIRECTORY_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
+	generate_directory_content (a_dir: DIRECTORY_INFO; a_dir_id: SYSTEM_STRING; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates WiX Compent, File and Directory elements based on the content of a directory.
 			--
 			-- `a_dir': A directory to scan and generated XML elements base on content.
+			-- `a_dir_id': The directory ID to generate content for.
 			-- `a_root': Indicates if content is for the root directory
 			-- `a_options': The options that determine how the element is generated.
 			-- `a_writer': The writer that the generated element will be written to.
@@ -192,6 +199,7 @@ feature {NONE} -- Element generation
 			a_writer_attached: a_writer /= Void
 			a_dir_attached: a_dir /= Void
 			a_dir_exists: a_dir.exists
+			not_a_dir_id_empty: not {SYSTEM_STRING}.is_null_or_empty (a_dir_id)
 		local
 			l_files: NATIVE_ARRAY [FILE_INFO]
 			l_dirs: NATIVE_ARRAY [DIRECTORY_INFO]
@@ -201,12 +209,17 @@ feature {NONE} -- Element generation
 				-- Generate files
 			l_add_files := a_options.use_directory_include_pattern implies a_options.directory_include_pattern.is_match (a_dir.full_name)
 			if l_add_files then
+					-- Reset l_add_files so we can determine if a CreateFolder tag needs to be generated.
+				l_add_files := False
 				l_files := a_dir.get_files
 
 				if l_files.count > 0 then
 					l_files := files_for_options (l_files, a_options)
 					l_count := l_files.count
 					if l_count > 0 then
+							-- There are files so there is no need to generate a CreateFolder tag.
+						l_add_files := True
+
 						if a_options.generate_single_file_components then
 							from i := 0 until i = l_count loop
 								generate_component (l_files.item (i).full_name, agent generate_file (l_files.item (i), a_root, ?, ?), a_options, a_writer)
@@ -218,6 +231,20 @@ feature {NONE} -- Element generation
 					end
 				end
 			end
+
+			if not a_root and then not l_add_files then
+					-- The path is a directory, and no files have been added.
+					-- We need to be sure that the directory is always created with the CreateFolder tag.
+				generate_component (a_dir.full_name, agent (ia_dir_id: SYSTEM_STRING; ia_options: I_OPTIONS; ia_writer: XML_TEXT_WRITER)
+					do
+						ia_writer.write_element_string ({WIX_CONSTANTS}.create_folder_tag, Void)
+						ia_writer.write_start_element ({WIX_CONSTANTS}.remove_folder_tag)
+						ia_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, ia_dir_id)
+						ia_writer.write_attribute_string ({WIX_CONSTANTS}.on_attribute, {WIX_CONSTANTS}.uninstall_value)
+						ia_writer.write_end_element
+					end (a_dir_id, ?, ?), a_options, a_writer)
+			end
+
 
 				-- Generate directories
 			if a_options.include_subdirectories then
@@ -269,7 +296,7 @@ feature {NONE} -- Element generation
 			can_read_options_a_options: a_options.can_read_options
 			a_writer_attached: a_writer /= Void
 			a_content_gen_attached: a_content_gen /= Void
-			a_content_gen_has_attached_target: a_content_gen.target /= Void
+			--a_content_gen_has_attached_target: a_content_gen.target /= Void
 		local
 			l_name: SYSTEM_STRING
 			i: INTEGER
@@ -795,7 +822,7 @@ feature {NONE} -- Constants
 			-- Maximum length allowed for WiX identifiers
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -808,22 +835,22 @@ feature {NONE} -- Constants
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

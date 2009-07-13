@@ -55,6 +55,10 @@ feature -- Access
 			if not l_f_utils.is_readable_file (webapp_exe) then
 				Result.append (" -clean")
 			end
+			
+			if {XU_CONSTANTS}.experiment_library then
+				Result.append (" -experiment")
+			end
 		ensure
 			Result_attached: Result /= Void
 		end

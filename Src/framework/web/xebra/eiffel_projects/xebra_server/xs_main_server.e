@@ -78,7 +78,7 @@ feature {NONE} -- Operations
 				l_thread.sleep (1000000)
 			end
 
-			o.iprint ("Shutting down...")
+			o.dprint ("Shutting down...", 1)
 			shutdown_all_modules
 			shutdown_webapps.do_nothing
 			if attached modules ["mod_input"] then
@@ -120,7 +120,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		end
 
 
-	get_sessions: XC_COMMAND_RESPONSE
+	get_sessions (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_webapp: XS_WEBAPP
@@ -132,20 +132,16 @@ feature {XS_SERVER_MODULE} -- Status setting
 			loop
 				l_webapp := config.file.webapps.item_for_iteration
 
-					-- until multihreading is implemented in webapps, this hack has to be here to prevent deadlock
-				if not l_webapp.app_config.name.value.is_equal ("servercontrol") then
-					--
-
-				if l_webapp.get_sessions then
-					create {XCCR_OK}Result.make
-				else
-					--todo: error
-					create {XCCR_OK}Result.make
-				end
+				if not l_webapp.app_config.name.value.is_equal (a_name) then
+					if l_webapp.get_sessions then
+						create {XCCR_OK}Result.make
+					else
+						--todo: error
+						create {XCCR_OK}Result.make
+					end
 				end
 				config.file.webapps.forth
 			end
-
 		end
 
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
@@ -244,9 +240,6 @@ feature {XS_SERVER_MODULE} -- Status setting
 		local
 			l_response: XCCR_GET_WEBAPPS
 		do
-			if attached {XCCR_OK} get_sessions then
-			end
-
 			create l_response.make
 			if attached {HASH_TABLE [XS_WEBAPP, STRING]}config.file.webapps as l_webapps then
 				from

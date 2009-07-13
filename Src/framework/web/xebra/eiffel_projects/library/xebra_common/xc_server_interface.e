@@ -22,8 +22,11 @@ feature -- Webapps
 		end
 
 
-	get_sessions: XC_COMMAND_RESPONSE
+	get_sessions (a_name: STRING): XC_COMMAND_RESPONSE
 			-- Retrieves the number of sessions of all running webapps.
+			-- `a_name': Use this to exclude a webapp from this request
+		require
+			a_name_attached: a_name /= Void
 		deferred
 		ensure
 			result_attached: Result /= Void

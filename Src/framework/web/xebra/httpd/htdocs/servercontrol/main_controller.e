@@ -90,19 +90,26 @@ feature -- Webapp Control
 
 	get_webapps: STRING
 			-- Retreive webapps from server
+		local
+			l_c: XCC_GET_SESSIONS
 		do
-			if attached {XCCR_GET_WEBAPPS} server_control.send (create {XCC_GET_WEBAPPS}.make) as l_response then
-				from
-					webapps.wipe_out
-					l_response.webapps.start
-				until
-					l_response.webapps.after
-				loop
-					webapps.force (l_response.webapps.item_for_iteration)
-					l_response.webapps.forth
-				end
+			create l_c.make
+			l_c.set_parameter ("servercontrol")
 
-				Result := ""
+			if attached server_control.send (l_c) then
+				if attached {XCCR_GET_WEBAPPS} server_control.send (create {XCC_GET_WEBAPPS}.make) as l_response then
+					from
+						webapps.wipe_out
+						l_response.webapps.start
+					until
+						l_response.webapps.after
+					loop
+						webapps.force (l_response.webapps.item_for_iteration)
+						l_response.webapps.forth
+					end
+
+					Result := ""
+				end
 			end
 		end
 

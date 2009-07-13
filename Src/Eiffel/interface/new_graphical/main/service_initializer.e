@@ -23,6 +23,7 @@ feature -- Services
 			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 			a_container.register_with_activator ({SESSION_MANAGER_S}, agent new_session_manager_service, False)
 			a_container.register_with_activator ({TEST_SUITE_S}, agent new_testing_service, False)
+			a_container.register_with_activator ({ROTA_S}, agent new_rota_service, False)
 		end
 
 feature {NONE} -- Factory
@@ -80,6 +81,12 @@ feature {NONE} -- Factory
 			end
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	new_rota_service: detachable ROTA_S
+			-- Create rota service
+		do
+			create {TTY_ROTA} Result.make
 		end
 
 feature {NONE} -- Registeration: Environemtn

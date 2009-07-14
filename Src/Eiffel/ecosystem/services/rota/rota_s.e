@@ -92,7 +92,11 @@ feature -- Events
 				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
 					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
 						do
-							Result := << [task_finished_event, agent an_observer.on_task_finished] >>
+							Result := <<
+									[task_run_event, agent an_observer.on_task_run],
+									[task_finished_event, agent an_observer.on_task_finished],
+									[task_removed_event, agent an_observer.on_task_remove]
+								>>
 						end)
 			end
 		end

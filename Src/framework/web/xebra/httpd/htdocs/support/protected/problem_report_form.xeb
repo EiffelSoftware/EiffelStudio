@@ -1,108 +1,72 @@
 <page:include template="support_side">
+<page:controller class="PROBLEM_REPORT_CONTROLLER" />
 <page:define_region id="main_content">
-	<efa:title_box title="<h1>Problem Report Submission</h1>" id="title_box" />
+	<div id="title_box"><h1>Problem Report Submission</h1></div>
 	<p>
 		Use this page to submit a problem report. If you haven't already we strongly suggest
-		that you read the <a href="<%=support_root (False)%>howto.aspx">instructions
+		that you read the <a href="howto.xeb">instructions
 		for submitting problem reports</a>.
 	</p>
 	<efa:collapsible_table div_id="main_id" id="main_table" />
 	<div id="main_id">
-	<!--%Here is the form, note that the id for the labels must match the "title" column of the ProblemReportFormFields table%-->
-		<xeb:display text="intro_label" />
-		<f:validation_result id="validation_summary"  css_class="error" header_text="Please fix the following errors:" />
+	<!--Here is the form, note that the id for the labels must match the "title" column of the ProblemReportFormFields table: might be obsolete?-->
+		<f:form variable="problem_report" class="PROBLEM_REPORT_BEAN">
 		<table class="problem_report">
 			<tr>
 				<td>
-					<div  class="tooltipped" id="category_tooltip_container">
-						<a  id="category_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-
-						<f:validator class="CustomValidator"
-							display="Dynamic" 
-							control_to_validate="category_list" 
-							error_message="Specify the product category." 
-							css_class="error" 
-							text="*"
-							on_server_validate="on_validate_category"
-							id="required_field_validator_1" />
-
+					<div class="tooltipped" id="category_tooltip_container">
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						Product/Category
-						<efa:i_frame_tooltip  width="475px" height="38px" anchor_id="category_link" content_url="pr_product.htm" id="category_tooltip" />
 					</div>
 				</td>
 				<td class="separator_field">
 					<f:drop_down_list
-						on_selected_index_changed="on_category_changed"
-						auto_post_back="True"
 						id="category_list" />
 				</td>
 				<td>
 					<div  class="tooltipped" id="severity_tooltip_container">
-						<a id="severity_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>					
 						Severity
-						<efa:i_frame_tooltip  width="400px" height="173px" anchor_id="severity_link" content_url="pr_severity.htm" id="severity_tooltip" />
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list  id="severity_list" />
+					<f:drop_down_list id="severity_list" />
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div  class="tooltipped" id="class_tooltip_container">
-						<a  id="class_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-						Class
-						<efa:i_frame_tooltip  width="400px" height="135px" anchor_id="class_link" content_url="pr_class.htm" id="class_tooltip" />
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>					
+						Class						
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list  id="class_list" />
+					<f:drop_down_list id="class_list" />
 				</td>
 				<td>
-					<div  class="tooltipped" id="priority_tooltip_container">
-						<a  id="priority_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
+					<div class="tooltipped" id="priority_tooltip_container">
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>			
 						Priority
-						<efa:i_frame_tooltip  width="450px" height="82px" anchor_id="priority_link" content_url="pr_priority.htm" id="priority_tooltip" />
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list  id="priority_list" />
+					<f:drop_down_list items="priority_list" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<div  class="tooltipped" id="release_tooltip_container">					
-						<a  id="release_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-
-						<f:validator class="RequiredFieldValidator"
-							display="Dynamic" 
-							control_to_validate="release_text" 
-							error_message="Specify the release version (e.g. 5.6.1006)." 
-							css_class="error" 
-							text="*"
-							id="required_field_validator_2" />
-
-						<f:validator class="CustomValidator"
-							control_to_validate="release_text" 
-							text="*"
-							error_message="Release version cannot exceed 50 characters"
-							on_server_validate="validate_input" 
-							css_class="error" 
-							display="Dynamic"
-							id="report_release_validator"/>
-
+					<div  class="tooltipped" id="release_tooltip_container">
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>					
 						Release
-						<efa:i_frame_tooltip  width="400px" height="38px" anchor_id="release_link" content_url="pr_release.htm" id="release_tooltip" />
 					</div>
 				</td>
 				<td>
-					<f:input_text  columns="14" id="release_text" />
+					<f:input_text size="14" name="release_input" text="some_text" value="release" />
 				</td>
 				<td>
 					<div  class="tooltipped" id="confidential_tooltip_container">
-						<a  id="confidential_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
+						<a  id="confidential_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						Confidential
-						<efa:i_frame_tooltip  width="400px" height="51px" anchor_id="confidential_link" content_url="pr_confidential.htm" id="confidential_tooltip" />
 					</div>
 				</td>
 				<td>
@@ -110,82 +74,40 @@
 				</td>
 			</tr>
 		</table>
+		
 		<table class="problem_report">
 			<tr>
 				<td>
 					<div  class="tooltipped" id="environment_tooltip_container">
-						<a  id="environment_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-
-						<f:validator class="RequiredFieldValidator" 
-							display="Dynamic" 
-							control_to_validate="environment_text" 
-							error_message="Specify your environment (e.g. Windows XP SP2)." 
-							css_class="error" 
-							text="*"
-							id="required_field_validator_3" />
-
-						<f:validator class="CustomValidator"
-							control_to_validate="environment_text" 
-							text="*" 
-							error_message="Environment description cannot exceed 200 characters"
-							on_server_validate="validate_input" 
-							css_class="error" 
-							display="Dynamic"
-							id="report_environment_validator"/>
-
+						<a  id="environment_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						Environment
-						<efa:i_frame_tooltip  width="450px" height="64px" anchor_id="environment_link" content_url="pr_environment.htm" id="environment_tooltip" />
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:input_text
-						text_mode="MultiLine"
-						columns="80"
-						rows="3"
-						id="environment_text" />
+					<f:text_area rows="3" cols="80" name="environment_text" value="environment_text" text=""/>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div  class="tooltipped" id="synopsis_tooltip_container">
-						<a  id="synopsis_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-
-						<f:validator class="RequiredFieldValidator"
-							display="Dynamic" 
-							control_to_validate="synopsis_text" 
-							error_message="Specify a synopsis." 
-							css_class="error" 
-							text="*"
-							id="required_field_validator_4" />
-
-						<f:validator class="CustomValidator"
-							control_to_validate="synopsis_text" 
-							text="*"
-							error_message="Synopsis cannot exceed 200 characters"
-							on_server_validate="validate_input" 
-							css_class="error" 
-							display="Dynamic"
-							id="report_synopsis_validator"/>
-
+						<a  id="synopsis_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						Synopsis
-						<efa:i_frame_tooltip  width="450px" height="55px" anchor_id="synopsis_link" content_url="pr_synopsis.htm" id="synopsis_tooltip" />
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:input_text id="synopsis_text"  columns="80"/>
+					<f:input_text name="synopsis_text" size="70" value="environment_text" text=""/>
 				</td>
 			</tr>
 			<!--% if edited_problem_report_number = 0 then %-->
 				<tr>
 					<td>
 						<div  class="tooltipped" id="attachments_tooltip_container">
-							<a  id="attachments_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-							Attachments
-							<efa:i_frame_tooltip  width="440px" height="25px" anchor_id="attachments_link" content_url="pr_attachments.htm" id="attachments_tooltip" />
+							<a  id="attachments_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
+							Attachments						
 						</div>
 					</td>
 				</tr>
@@ -198,54 +120,36 @@
 			<tr>
 				<td>
 					<div  class="tooltipped" id="description_tooltip_container">
-						<a  id="description_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-
-						<f:validator class="RequiredFieldValidator"
-							display="Dynamic" 
-							control_to_validate="description_text" 
-							error_message="Give a description of the problem." 
-							css_class="error" 
-							text="*"
-							id="required_field_validator_5" />
-
-						Description
-						<efa:i_frame_tooltip  width="220px" height="25px" anchor_id="description_link" content_url="pr_description.htm" id="description_tooltip" />
+						<a  id="description_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
+						Description			
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:input_text
-						text_mode="MultiLine"
-						columns="80"
-						rows="15"
-						id="description_text" />
+					<f:text_area rows="15" cols="80" name="description_text" text="" value="description_text" />
 				</td> 
 			</tr>
 			<tr>
 				<td>
-					<div  class="tooltipped" id="to_reproduce_tooltip_container">
-						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
+					<div class="tooltipped" id="to_reproduce_tooltip_container">
+						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						To Reproduce
-						<efa:i_frame_tooltip  width="400px" height="129px" anchor_id="to_reproduce_link" content_url="pr_to_reproduce.htm" id="to_reproduce_tooltip" />
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td class="last_row">
-					<f:input_text
-						text_mode="MultiLine"
-						columns="80" 
-						rows="10"
-						id="to_reproduce_text" />
+					<f:text_area rows="10" cols="80" name="to_reproduce_text" value="to_reproduce_text" text=""/>
 				</td> 
 			</tr>
 			<tr>
 				<td class="submit_column_big_padding">
-					<f:button  width="80" text="Preview" on_click="submit" id="submit_button" />
+					<f:button text="Preview" action="save" />
 				</td>
 			</tr>
 		</table>
+		</f:form>
 	</div>
 
 </page:define_region>

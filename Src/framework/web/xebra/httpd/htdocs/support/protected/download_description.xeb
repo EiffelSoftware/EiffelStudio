@@ -1,6 +1,6 @@
 <page:include template="support_side">
 <page:define_region id="main_content">
-	<efa:title_box text="<h1>Description Download<h1>" id="title_box" />
+	<div id="title_box"><h1>Description Download</h1></div>
 	<efa:collapsible_table div_id="main_div" id="main_table" />
 	<div  id="main_div">
 		<xeb:display css_class="error" id="error_label"/>

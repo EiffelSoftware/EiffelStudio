@@ -1,7 +1,7 @@
 <page:include template="support_side">
 <page:define_region id="main_content">
 	<div>
-		<efa:title_box title="<h1>Problem Report Interaction Submission</h1>" id="title_box" />
+		<div id="title_box"><h1>Problem Report Interaction Submission</h1></div>
 		<efa:collapsible_table collapsible="true" div_id="main_id" id="main_table" />
 		<div id="main_id">
 			<p>

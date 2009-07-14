@@ -23,6 +23,8 @@ feature -- Initialization
 			--
 		do
 			make_base
+			create {XTAG_TAG_VALUE_ARGUMENT} action.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} label.make_default
 		end
 
 feature -- Access
@@ -65,8 +67,16 @@ feature -- Implementation
 					)
 					a_servlet_class.render_html_page.append_expression ("if attached agent_table [%"" + l_unique_form_id + "%"] as l_agent_table then")
 					a_servlet_class.render_html_page.append_expression ("l_agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST; a_object: ANY) do")
-					a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")
-					a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_TAG")
+					
+					if attached variable then
+						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")			
+						a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_LINK_TAG")
+
+					else
+						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id))
+						a_servlet_class.render_html_page.append_expression ("end (?, Void) -- COMMAND_LINK_TAG")
+						
+					end
 					a_servlet_class.render_html_page.append_expression ("end")
 
 				else

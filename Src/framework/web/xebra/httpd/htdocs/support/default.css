@@ -9,9 +9,7 @@ body {
 	min-width: 960px;
 }
 
-form {
-	margin: 0;
-}
+form { display: inline; }
 
 /* ----- IDS ----- */
 

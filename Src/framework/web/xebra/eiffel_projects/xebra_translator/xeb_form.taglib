@@ -22,6 +22,7 @@
 		<attribute id="rows" />
 		<attribute id="on_text_changed" />
 		<attribute id="text_mode" />
+		<attribute id="size" />
 	</tag>
 	<tag id="input_secret" class="XTAG_F_INPUT_SECRET_TAG">
 		<attribute id="id"/>
@@ -79,6 +80,7 @@
 	</tag>
 	<tag id="drop_down_list" class="XTAG_F_DROP_DOWN_LIST_TAG">
 		<attribute id="id" />
+		<attribute id="items" />
 		<attribute id="on_click" />
 		<attribute id="auto_post_back" />
 		<attribute id="on_text_changed" />

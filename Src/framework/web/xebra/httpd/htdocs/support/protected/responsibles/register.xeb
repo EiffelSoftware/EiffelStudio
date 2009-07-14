@@ -1,6 +1,6 @@
 <page:include template="support_side">
 <page:define_region id="main_content">
-	<efa:title_box title="<h1>Problem Report Categories Selection</h1>" id="title_box" />
+	<div id="title_box"><h1>Problem Report Categories Selection</h1></div>
 		<p>
 			Select the categories you would like to subscribe to below. Once subscribed to a category,
 			you will receive a notification each time a problem report is submitted to that category or a 

@@ -454,7 +454,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 	EIF_INTEGER count, elem_size;
 
 	REQUIRE("source not null", source);
-	REQUIRE("enclsoing not null", enclosing);
+	REQUIRE("enclosing not null", enclosing);
 
 	flags = HEADER(source)->ov_flags;
 
@@ -672,7 +672,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	REQUIRE ("source not null", source);
 	REQUIRE ("target not null", target);
 	REQUIRE ("source is special", HEADER(source)->ov_flags & EO_SPEC);
-	REQUIRE ("target is special", HEADER(source)->ov_flags & EO_SPEC);
+	REQUIRE ("target is special", HEADER(target)->ov_flags & EO_SPEC);
 	REQUIRE ("target_elem_size_identical", RT_SPECIAL_ELEM_SIZE(target) == RT_SPECIAL_ELEM_SIZE(source));
 
 		/* Because we can call copy with special/tuples of different size, we have to take the min size

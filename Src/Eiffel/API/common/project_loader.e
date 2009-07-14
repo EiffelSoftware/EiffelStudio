@@ -81,7 +81,7 @@ feature -- Loading
 	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
-			l_ext: STRING
+			l_ext: STRING_8
 			l_pos: INTEGER
 			l_default_file_name: FILE_NAME
 			l_load_ace: CONF_LOAD_LACE
@@ -136,7 +136,7 @@ feature -- Loading
 					-- on its value try different loading approach.
 				l_pos := a_file_name.last_index_of ('.', a_file_name.count)
 				if l_pos > 0 and then l_pos < a_file_name.count then
-					l_ext := a_file_name.substring (l_pos + 1, a_file_name.count)
+					create l_ext.make_from_string (a_file_name.substring (l_pos + 1, a_file_name.count))
 					if l_ext.is_equal (project_extension) then
 						convert_epr (a_file_name)
 					elseif l_ext.is_equal (ace_file_extension) then

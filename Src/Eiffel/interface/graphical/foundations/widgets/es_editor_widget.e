@@ -121,10 +121,14 @@ feature -- Basic operations
 				if (attached l_editor.text_displayed as l_text_displayed) and then l_text_displayed.cursor /= Void then
 					l_text := l_editor.text_displayed
 					if a_force or else l_text.last_line = l_text.current_line then
+						l_editor.handle_after_processing
 						l_editor.scroll_to_end_when_ready
+						l_editor.handle_before_processing (True)
 					end
 				elseif a_force then
+					l_editor.handle_after_processing
 					l_editor.scroll_to_end_when_ready
+					l_editor.handle_before_processing (True)
 				end
 			end
 		end

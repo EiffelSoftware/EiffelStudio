@@ -16,6 +16,22 @@ deferred class
 inherit
 	SERVICE_I
 
+	EVENT_CONNECTION_POINT_I [ROTA_OBSERVER, ROTA_S]
+
+feature -- Query
+
+	has_task (a_task: ROTA_TIMED_TASK_I): BOOLEAN
+			-- Is `Current' running given task?
+			--
+			-- `a_task': A task.
+			-- `Result': True if `Current' is stepping through task, False otherwise.
+		require
+			a_task_attached: a_task /= Void
+			usable: is_interface_usable
+			a_task_usable: a_task.is_interface_usable
+		deferred
+		end
+
 feature -- Basic operations
 
 	run_task (a_task: ROTA_TIMED_TASK_I)
@@ -30,11 +46,65 @@ feature -- Basic operations
 			a_task_attached: a_task /= Void
 			interface_usable: is_interface_usable
 			a_task_usable: a_task.is_interface_usable
-			a_task_not_launched: a_task.has_next_step
+			not_has_a_task: not has_task (a_task)
 		deferred
 		end
 
-note
+feature -- Events
+
+	task_run_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- Events called when a task is run.
+			--
+			-- service: `Current'
+			-- task: Task being run.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	task_finished_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- Events called when a task is done.
+			--
+			-- service: `Current'
+			-- task: Finished task
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	task_removed_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- Events called after a task was removed from `Current'.
+			--
+			-- service: `Current'
+			-- task: Removed task
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	connection: EVENT_CONNECTION_I [ROTA_OBSERVER, ROTA_S]
+			-- <Precursor>
+		local
+			l_result: like connection_cache
+		do
+			l_result := connection_cache
+			if l_result = Void then
+				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
+					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [task_finished_event, agent an_observer.on_task_finished] >>
+						end)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	connection_cache: detachable like connection
+			-- Cache for `connection'
+			--
+			-- Note: do not use directly, use `connection' instead.
+
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

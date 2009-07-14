@@ -15,7 +15,8 @@ inherit
 	ROTA_TASK_COLLECTION_I [ROTA_TIMED_TASK_I]
 		redefine
 			new_task_data,
-			perform_step
+			perform_step,
+			remove_task
 		end
 
 	DISPOSABLE_SAFE
@@ -26,6 +27,9 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create tasks.make
+			create task_run_event
+			create task_finished_event
+			create task_removed_event
 		end
 
 feature {NONE} -- Access
@@ -50,33 +54,31 @@ feature {NONE} -- Access
 			Result := (l_fine_seconds * 1_000).truncated_to_integer.as_natural_32
 		end
 
+feature -- Query
+
+	has_task (a_task: ROTA_TIMED_TASK_I): BOOLEAN
+			-- <Precursor>
+		local
+			l_tasks: like tasks
+		do
+			from
+				l_tasks := tasks
+				l_tasks.start
+			until
+				l_tasks.after or Result
+			loop
+				Result := l_tasks.item_for_iteration.task = a_task
+				l_tasks.forth
+			end
+		end
+
 feature -- Basic operations
 
 	run_task (a_task: ROTA_TIMED_TASK_I)
 			-- <Precursor>
-		local
-			l_cursor: DS_LINKED_LIST_CURSOR [like new_task_data]
-			l_add: BOOLEAN
 		do
-				-- Check that `a_task' has not already been added
-			from
-				l_cursor := tasks.new_cursor
-				l_cursor.start
-				l_add := True
-			until
-				l_cursor.after
-			loop
-				if l_cursor.item.task = a_task then
-					l_add := False
-					l_cursor.go_after
-				else
-					l_cursor.forth
-				end
-			end
-
-			if l_add then
-				tasks.force_last (new_task_data (a_task))
-			end
+			tasks.force_last (new_task_data (a_task))
+			task_run_event.publish ([Current, a_task])
 		end
 
 feature {NONE} -- Basic operations
@@ -104,6 +106,32 @@ feature {NONE} -- Basic operations
 				min_sleep_time := min_sleep_time.min (l_data.sleep_time - l_duration)
 			end
 		end
+
+	remove_task
+			-- <Precursor>
+		local
+			l_task: ROTA_TIMED_TASK_I
+		do
+			l_task := tasks.item_for_iteration.task
+			task_finished_event.publish ([Current, l_task])
+			Precursor
+			task_removed_event.publish_if ([Current, l_task],
+				agent (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I): BOOLEAN
+					do
+						Result := a_task.is_interface_usable and then not a_task.has_next_step
+					end)
+		end
+
+feature -- Events
+
+	task_run_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- <Precursor>
+
+	task_finished_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- <Precursor>
+
+	task_removed_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+			-- <Precursor>
 
 feature {NONE} -- Clean up
 

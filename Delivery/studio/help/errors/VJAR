@@ -2,5 +2,5 @@ VJAR, chapter 20 (Reattaching entities), page 311
 
      Assignment rule
 
-     An Assignment is valid if  and  only  if  its  source
-     expression conforms to its target entity.
+     An Assignment is valid if and only if its source expression
+     is compatible with its target entity.

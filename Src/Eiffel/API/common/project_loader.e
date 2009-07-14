@@ -794,14 +794,17 @@ feature {NONE} -- Settings
 					l_args.extend (l_path)
 				end
 			end
+			l_args.extend ("-project_path")
 			if a_precompile.eifgens_location /= Void then
-				l_args.extend ("-project_path")
 				l_path := a_precompile.eifgens_location.evaluated_path
 				if l_path.item (l_path.count) = '\' then
 					l_path.remove_tail (1)
 				end
-				l_args.extend (l_path)
+			else
+					-- If no path is specified we default to the location of the ecf.
+				l_path := a_precompile.location.evaluated_directory
 			end
+			l_args.extend (l_path)
 			launch_precompile_process (l_args)
 		end
 

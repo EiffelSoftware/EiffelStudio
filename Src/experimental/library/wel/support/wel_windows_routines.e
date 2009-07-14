@@ -146,9 +146,10 @@ feature -- Status report
 						l_id := l_data.to_integer_32
 						check l_id_positive: l_id > 0 end
 						Result := eif_id_object (l_id)
-						if Result /= Void and then not Result.exists then
+						if Result /= Void and then Result.item /= hwnd then
 							Result := Void
-								-- Window returned has recently been destroyed so we return Void
+								-- Window returned has recently been destroyed or had its implementation
+								-- swapped so we return Void
 						end
 					end
 				end

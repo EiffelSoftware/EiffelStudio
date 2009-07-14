@@ -51,7 +51,7 @@ feature -- Access
 feature -- Implementation
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
-			-- <Precusor>
+			-- <Precursor>
 		do
 			if a_id.is_equal ("value") then
 				value := a_attribute
@@ -84,9 +84,9 @@ feature -- Implementation
 						-- RENDER HTML PAGE
 					a_servlet_class.render_html_page.append_expression (l_input_id + " := get_unique_id")
 					a_servlet_class.render_html_page.append_expression
-						(response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "cols=%%%"" +
+						(response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "%%%" cols=%%%"" +
 						cols.value (current_controller_id) +"%%%" name=%%%"" + l_input_id + "%%%">" +
-						text.value (current_controller_id) + "%%%"</textarea>%")")
+						text.value (current_controller_id) + "</textarea>%")")
 
 						-- WRAP FORM TO INTERNAL REPRESENTATION
 					create {ARRAYED_LIST [STRING]} l_validator_list.make (0)

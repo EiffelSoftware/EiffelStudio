@@ -1,39 +1,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
+<page:controller class="LOGIN_CONTROLLER" />
 <head>
 	<noscript>
 		<meta http-equiv="refresh" id="refresh" />
 	</noscript>
-	<link rel="stylesheet" type="text/css" id="stylesheet" href="default.css"/>
+	<link rel="stylesheet" type="text/css" id="stylesheet" href="/support/default.css"/>
 </head>
 <body>
 	<div id="shadow_top">
 		<div id="shadow_bottom">
 			<div id="wrap">
-				<div id="header"><img src="images/support/banner.jpg" alt="login"/></div>
+				<div id="header"><img src="/support/images/support/banner.jpg" alt="login"/></div>
 				<div id="navbars">
 					<div id="general_links">
 						<a href="http://www.eiffel.com">Eiffel</a> |
-						<a id="home_link">Home</a>
-						<xeb:display text="support_links_label" />
+						<a href="default.xeb">Home</a>
+						<xeb:container render="is_logged_in">
+							| <a href=""><xeb:display text="%=user_name%" />'s support</a> |
+							<a href="problem_report_form.xeb">Report a problem</a>
+						</xeb:container>
 					</div>
 					<div id="nav_bar">
 						<div id="nav_bar_links">
-							<xeb:display text="login_links_label"/>
+							<container render="is_not_logged_in">
+								<f:form><f:command_link action="login" text="Login" /></f:form> | <a href="">Register</a>
+							</container>
+							<container render="is_logged_in">
+								<f:form>
+									<f:command_link text="Logout" action="logout"/>
+								</f:form>
+							</container>
 						</div>
 					</div>
 					<div class="spacer"></div>
 					<div id="responsibles_link"></div>
 				</div>
-				<form id="main_form">
+				<div id="main_form">
 					<page:declare_region id="default_main_content" />
-				</form>
+				</div>
 				<div id="footer">
 					<a href="http://www.eiffel.com/general/contact_details.html">Questions? Comments? Let us know!</a><br/>
 					&copy; 1993-2006 Eiffel Software inc. All rights reserved. --
 					<a href="http://www.eiffel.com/general/privacy_policy.html">Privacy Policy</a>
 					<div id="logo">
-						<img src="images/support/xebra_for_eiffel.png" alt="Xebra for Eiffel"/>
+						<img src="/support/images/support/xebra_for_eiffel.png" alt="Xebra for Eiffel"/>
 					</div>
 				</div>
 			</div>
@@ -56,7 +67,4 @@ pageTracker._trackPageview();
 </script>
 </body>
 </html>
-
-
-
 

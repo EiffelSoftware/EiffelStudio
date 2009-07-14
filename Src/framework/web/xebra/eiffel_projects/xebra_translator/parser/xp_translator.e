@@ -173,7 +173,6 @@ feature -- Processing
 		local
 			l_output_path, l_file_name: STRING
 			l_i: INTEGER
-			l_raw_file: RAW_FILE
 			l_util: FILE_UTILITIES
 		do
 			create l_util

@@ -1,7 +1,8 @@
 <page:include template="support_side">
+<page:controller class="default_controller"/>
 <page:define_region id="main_content">
 	<div>
-	<efa:title_box title="<h1>Eiffel Software Support</h1>" id="title_box" />
+	<div id="title_box"><h1>Eiffel Software Support</h1></div>
 	<p>
 		The Eiffel Software Support web site, your one stop destination for information and 
 		support on Eiffel products and technologies.

@@ -23,13 +23,15 @@ feature -- Initialization
 	make_base
 		do
 			Precursor
-			create {XTAG_TAG_VALUE_ARGUMENT}value.make_default
-			create {XTAG_TAG_VALUE_ARGUMENT}name.make_default
-			create {XTAG_TAG_VALUE_ARGUMENT}text.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} value.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} name.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} size.make ("40")
 		ensure then
 			value_attached: attached value
 			name_attached: attached name
 			text_attached: attached text
+			size_attached: attached size
 		end
 
 feature -- Access
@@ -42,6 +44,9 @@ feature -- Access
 
 	name: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the data object mapping for validation
+			
+	size: XTAG_TAG_ARGUMENT
+			-- The size of the input field
 
 feature -- Implementation
 
@@ -56,6 +61,9 @@ feature -- Implementation
 			end
 			if a_id.is_equal ("text") then
 				text := a_attribute
+			end
+			if a_id.is_equal ("size") then
+				size := a_attribute
 			end
 		end
 
@@ -74,7 +82,8 @@ feature -- Implementation
 					a_servlet_class.render_html_page.append_expression (l_input_id + " := get_unique_id")
 					a_servlet_class.render_html_page.append_expression
 						(response_variable_append + "(%"<input type=%%%"" + input_type +"%%%" name=%%%"" +
-						 l_input_id + "%%%" value=%%%"" + text.value (current_controller_id) + "%%%" />%")")
+						 l_input_id + "%%%" value=%%%"" + text.value (current_controller_id) +  "%%%"" +
+						 "size=%%%"" + size.value (current_controller_id) + "%%%" />%")")
 
 						-- WRAP FORM TO INTERNAL REPRESENTATION
 					create {ARRAYED_LIST [STRING]} l_validator_list.make (0)

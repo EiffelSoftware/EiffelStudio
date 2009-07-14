@@ -357,9 +357,10 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 							-- Abort the last operation
 						l_db.abort
 					else
-						l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
+						l_done := l_result /= {SQLITE_RESULT_CODES}.sqlite_row
 						if not l_done then
 							l_result := sqlite3_step (l_api, l_stmt)
+							l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
 						end
 					end
 				else

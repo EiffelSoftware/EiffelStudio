@@ -884,13 +884,13 @@ feature -- Plug and Makefile file
 
 					-- Initialization routines
 				buffer.put_string ("%Tegc_ecreate = ")
-				buffer.put_string ("(char *(**)(void)) ")
+				buffer.put_string ("(void (**)(EIF_REFERENCE, EIF_REFERENCE)) ")
 				buffer.put_string (init_name)
 				buffer.put_string (";%N")
 
 					-- Initialization routines
 				buffer.put_string ("%Tegc_exp_create = ")
-				buffer.put_string ("(char *(**)(void)) ")
+				buffer.put_string ("(void (**)(EIF_REFERENCE)) ")
 				buffer.put_string (exp_init_name)
 				buffer.put_string (";%N")
 

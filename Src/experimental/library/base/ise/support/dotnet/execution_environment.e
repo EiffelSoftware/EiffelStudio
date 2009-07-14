@@ -44,10 +44,7 @@ feature -- Access
 		require
 			s_exists: s /= Void
 		do
-			user_environment_variables.search (s)
-			if user_environment_variables.found then
-				Result := user_environment_variables.found_item
-			elseif attached {SYSTEM_STRING} {ENVIRONMENT}.get_environment_variable (s.to_cil) as cs then
+			if attached {ENVIRONMENT}.get_environment_variable (s.to_cil) as cs then
 				create Result.make_from_cil (cs)
 			end
 		end
@@ -118,7 +115,7 @@ feature -- Status setting
 			key_meaningful: key.count > 0
 			value_exists: value /= Void
 		do
-			user_environment_variables.force (value, key)
+			{ENVIRONMENT}.set_environment_variable (key, value)
 			return_code := 0
 		ensure
 			variable_set: (return_code = 0) implies
@@ -199,7 +196,6 @@ feature {NONE} -- Implementation
 					create l_si.make (l_cmd.to_cil, l_args.to_cil)
 					l_si.set_create_no_window (True)
 					l_si.set_use_shell_execute (False)
-					merge_env_vars (l_si.environment_variables)
 					l_si.set_redirect_standard_error (True)
 					l_si.set_redirect_standard_output (True)
 					last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
@@ -250,7 +246,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			l_si.set_use_shell_execute (False)
-			merge_env_vars (l_si.environment_variables)
 			last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
 			check last_process_attached: last_process /= Void end
 			if should_wait then
@@ -330,31 +325,6 @@ feature {NONE} -- Implementation
 			if l_path /= Void then
 				Result.append (l_path.split (';'))
 			end
-		end
-
-	merge_env_vars (evsd: detachable SYSTEM_DLL_STRING_DICTIONARY)
-			-- Merge user environment variable set in `user_environment_variables'
-			-- to the system one.
-		local
-			l_vars: like user_environment_variables
-		do
-			if evsd /= Void then
-				from
-					l_vars := user_environment_variables
-					l_vars.start
-				until
-					l_vars.off
-				loop
-					evsd.set_item (l_vars.key_for_iteration, l_vars.item_for_iteration)
-					l_vars.forth
-				end
-			end
-		end
-
-	user_environment_variables: HASH_TABLE [STRING, STRING]
-			-- User-defined environment variables.
-		once
-			create Result.make (10)
 		end
 
 note

@@ -1919,7 +1919,6 @@ rt_public void eif_thr_panic(char *msg)
 {
 	print_err_msg (stderr, "*** Thread panic! ***\n");
 	eif_panic(msg);
-	exit(0);
 }
 
 #endif /* EIF_THREADS */

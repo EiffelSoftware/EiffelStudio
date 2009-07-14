@@ -105,7 +105,6 @@ feature {NONE} -- Basic operations
 				compiler_formatter.process_basic_text (": ")
 			end
 			compiler_formatter.process_basic_text (l_degree_str)
-			compiler_formatter.process_basic_text (once "...")
 			compiler_formatter.process_new_line
 			compiler_formatter.end_processing
 

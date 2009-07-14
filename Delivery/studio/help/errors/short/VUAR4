@@ -1,4 +1,0 @@
-Error: invalid use of the Address form for actual argument.
-What to do: if Address form (with a $ sign) is needed, make sure
-  that the dollar sign is followed by the final name of a feature,
-  which must not be a constant attribute. 

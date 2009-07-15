@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_request (a_request: XH_REQUEST)
+	make_with_request (a_request: STRING)
 
 		require
 			a_request_attached: a_request /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	request: XH_REQUEST
+	request: STRING
 
 	description: STRING
 			-- <Precursor>

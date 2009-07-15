@@ -16,14 +16,22 @@ inherit
 feature -- Access
 
 	title: STRING
-			-- The type (title) of the Response
+			-- <Precursor>
 		do
 			Result := "Error Report"
 		end
 
 	deco_color: STRING
-			-- The color of the decoration
+			-- <Precursor>
 		do
 			Result := "#F15922"
+		end
+
+	img: STRING
+			-- <Precursor>
+		do
+			Result := "[
+					   <img src="http://fusun.ch/download/temp/xebTot.jpg" alt="fail xebra image" width="520" height="256" />
+					   ]"
 		end
 end

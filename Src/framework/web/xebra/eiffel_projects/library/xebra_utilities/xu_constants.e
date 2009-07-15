@@ -26,6 +26,7 @@ feature -- Request Message
 
 	Request_method_get: STRING = "GET"
 	Request_method_post: STRING = "POST"
+	Request_http: STRING = "HTTP/"
 	Request_http11: STRING = "HTTP/1.1"
 	Request_http10: STRING = "HTTP/1.0"
 	Request_space: STRING = " "
@@ -38,6 +39,7 @@ feature -- Request Message
 	Request_arg: STRING = "#A#"
 	Request_content_type: STRING = "Content-Type"
 	Request_ct_form: STRING = "application/x-www-form-urlencoded"
+	Request_post_too_big: STRING = "#PTB#"
 
 feature -- Cookie Order
 

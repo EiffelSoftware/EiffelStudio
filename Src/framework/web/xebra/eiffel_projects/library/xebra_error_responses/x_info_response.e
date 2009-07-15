@@ -16,15 +16,21 @@ inherit
 feature -- Access
 
 	title: STRING
-			-- The type (title) of the Response
+			-- <Precursor>
 		do
 			Result := "Information"
 		end
 
 	deco_color: STRING
-			-- The color of the decoration
+			-- <Precursor>
 		do
 			Result := "#6CC5C3"
+		end
+
+	img: STRING
+			-- <Precursor>
+		do
+			Result := ""
 		end
 
 end

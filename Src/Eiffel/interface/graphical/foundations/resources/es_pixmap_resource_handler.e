@@ -36,31 +36,33 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	matrices: attached DS_HASH_TABLE [attached EV_PIXEL_BUFFER, STRING]
+	matrices: DS_HASH_TABLE [EV_PIXEL_BUFFER, STRING]
 			-- Table of loaded matrices.
 			--
 			-- Key: Matrix file name, sans extension.
 			-- Value: The matrix loaded from the given file name.
 
-	pixmap_file_extension: attached STRING
+	pixmap_file_extension: STRING
 			-- File extension of EiffelStudio pixmap files
 		once
 			Result := "png"
 		ensure
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Query
 
-	matrix_file_name (a_name: attached STRING): attached STRING
+	matrix_file_name (a_name: STRING): STRING
 			-- Retrieves the actual file name for a moniker name.
 			--
 			-- `a_name': A moniker or a file name sans extension.
 			-- `Result': A generated file name to a matrix image file.
 		require
+			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_file_name: attached FILE_NAME
+			l_file_name: FILE_NAME
 		do
 			create l_file_name.make_from_string (eiffel_layout.bitmaps_path)
 			l_file_name.extend (pixmap_file_extension)
@@ -68,10 +70,11 @@ feature -- Query
 			l_file_name.add_extension (pixmap_file_extension)
 			Result := l_file_name.string.as_attached
 		ensure
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
 		end
 
-	retrieve_matrix (a_name: attached STRING): detachable EV_PIXEL_BUFFER
+	retrieve_matrix (a_name: STRING): detachable EV_PIXEL_BUFFER
 			-- Attempts to retrieve a matrix from a given file name or other moniker.
 			--
 			-- `a_name': A file name, sans extension, or another moniker used to load a pixmap file.
@@ -79,19 +82,19 @@ feature -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_matrices: attached like matrices
-			l_file_name: attached STRING
-			l_buffer: attached EV_PIXEL_BUFFER
+			l_matrices: like matrices
+			l_file_name: STRING
+			l_buffer: EV_PIXEL_BUFFER
 		do
 			l_matrices := matrices
 			if l_matrices.has (a_name) then
 				Result := l_matrices.item (a_name)
 			end
 
-			if Result = Void then
+			if not attached Result then
 					-- Load the pixmap file from disk, if it exists
 				l_file_name := matrix_file_name (a_name)
-				if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
+				if attached eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
 				end
@@ -105,9 +108,12 @@ feature -- Query
 				end
 			end
 		ensure
-			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
-			matrices_has_a_name: Result /= Void implies matrices.has (a_name)
+			not_result_is_destroyed: attached Result implies not Result.is_destroyed
+			matrices_has_a_name: attached Result implies matrices.has (a_name)
 		end
+
+invariant
+	matrices_attached: attached matrices
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

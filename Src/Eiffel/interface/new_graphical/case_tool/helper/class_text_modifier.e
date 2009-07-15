@@ -301,14 +301,16 @@ feature -- Modification (Add/Remove feature)
 			-- If user clicks OK and entered data is correct,
 			-- generates the feature.
 			-- Sets `last_feature_as' if everything was successful.
+		local
+			l_error: ES_ERROR_PROMPT
 		do
-
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
 				execute_wizard (create {EB_FEATURE_COMPOSITION_WIZARD}.make)
 			else
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error, context_editor.develop_window.window, Void)
+				create l_error.make_standard (Warning_messages.w_Class_syntax_error)
+				l_error.show_on_active_window
 			end
 		end
 
@@ -538,6 +540,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			preset_type_not_void: preset_type /= Void
 		local
+			l_error: ES_ERROR_PROMPT
 			qcw: EB_QUERY_COMPOSITION_WIZARD
 			x, y: INTEGER
 		do
@@ -562,7 +565,8 @@ feature -- Modification (Add/Remove feature)
 				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
 				execute_wizard_from_diagram (qcw)
 			else
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
+				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
+				l_error.show_on_active_window
 				extend_from_diagram_successful := False
 				invalidate_text
 				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
@@ -574,6 +578,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			preset_type_not_void: preset_type /= Void
 		local
+			l_error: ES_ERROR_PROMPT
 			qcw: EB_QUERY_COMPOSITION_WIZARD
 			x, y: INTEGER
 		do
@@ -599,7 +604,8 @@ feature -- Modification (Add/Remove feature)
 				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
 				execute_wizard_from_diagram (qcw)
 			else
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
+				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
+				l_error.show_on_active_window
 				extend_from_diagram_successful := False
 				invalidate_text
 				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
@@ -611,6 +617,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			wizard_not_void: fcw /= Void
 		local
+			l_error: ES_ERROR_PROMPT
 			inv: STRING
 			retried: BOOLEAN
 		do
@@ -637,15 +644,18 @@ feature -- Modification (Add/Remove feature)
 						if valid_syntax then
 							commit_modification
 						else
-							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, Void, Void)
+							create l_error.make_standard (Warning_messages.w_New_feature_syntax_error)
+							l_error.show_on_active_window
 							invalidate_text
 						end
 					else
-						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, Void, Void)
+						create l_error.make_standard (Warning_messages.w_New_feature_syntax_error)
+						l_error.show_on_active_window
 						invalidate_text
 					end
 				else
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), Void, Void)
+					create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
+					l_error.show_on_active_window
 					invalidate_text
 				end
 			end
@@ -921,16 +931,18 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			l_class_c: CLASS_C
+			l_wrapper: EIFFEL_PARSER_WRAPPER
 		do
 			if not retried then
 				if class_i.is_compiled then
 					l_class_c := class_i.compiled_class
 				end
 				inst_context.set_group (class_i.group)
-				parser.parse_from_string (text, l_class_c)
-				if parser.root_node /= Void and then parser.match_list /= Void then
-					class_as := parser.root_node
-					match_list := parser.match_list
+				create l_wrapper
+				l_wrapper.parse_with_option (parser, text, class_i.options, True, l_class_c)
+				if attached {CLASS_AS} l_wrapper.ast_node as l_class_as and then attached l_wrapper.ast_match_list then
+					class_as := l_class_as
+					match_list := l_wrapper.ast_match_list
 				end
 				is_modified := False
 			else
@@ -1239,6 +1251,7 @@ feature {NONE} -- Implementation
 		require
 			wizard_not_void: fcw /= Void
 		local
+			l_error: ES_ERROR_PROMPT
 			class_file: PLAIN_TEXT_FILE
 			inv: STRING
 			editor: EB_SMART_EDITOR
@@ -1289,22 +1302,26 @@ feature {NONE} -- Implementation
 						if valid_syntax then
 							commit_modification
 						else
-							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
+							create l_error.make_standard (Warning_messages.w_New_feature_syntax_error)
+							l_error.show_on_active_window
 							extend_from_diagram_successful := False
 							invalidate_text
 						end
 					else
-						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
+						create l_error.make_standard (Warning_messages.w_New_feature_syntax_error)
+						l_error.show_on_active_window
 						extend_from_diagram_successful := False
 						invalidate_text
 					end
 				else
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
+					create l_error.make_standard (Warning_messages.w_New_feature_syntax_error)
+					l_error.show_on_active_window
 					extend_from_diagram_successful := False
 					invalidate_text
 				end
 			else
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
+				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
+				l_error.show_on_active_window
 				extend_from_diagram_successful := False
 				invalidate_text
 			end

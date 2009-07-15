@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 					if l_widget_item /= Void then
 						l_widget := l_widget_item.widget
 						if has_fixed (l_widget) then
-							set_item_width (l_widget, l_widget.minimum_width)
+							set_item_width (l_widget, l_widget.minimum_width.max (1))
 						end
 					end
 				end

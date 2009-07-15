@@ -1795,26 +1795,7 @@ feature {NONE} -- Grid Implementation
 			end
 		end
 
-	on_grid_item_pointer_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
-			-- Action when mouse click on `stack_grid'
-		local
-			l_row: EV_GRID_ROW
-		do
-			if a_button = 1 and a_item /= Void then
-				if
-					not ev_application.ctrl_pressed
-					and not ev_application.shift_pressed
-					and not ev_application.alt_pressed
-				then
-					l_row := a_item.row
-					if l_row /= Void then
-						select_element_by_row (l_row)
-					end
-				end
-			end
-		end
-
-	on_grid_item_pebble_function (a_item: EV_GRID_ITEM): CALL_STACK_STONE
+	stone_for_grid_item (a_item: EV_GRID_ITEM): detachable CALL_STACK_STONE
 			-- Returns the call_stack_stone of row related to a_item
 		local
 			l_row: EV_GRID_ROW
@@ -1836,6 +1817,48 @@ feature {NONE} -- Grid Implementation
 						end
 					end
 				end
+			end
+		end
+
+	on_grid_item_pointer_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+			-- Action when mouse click on `stack_grid'
+		local
+			l_row: EV_GRID_ROW
+			l_stone: STONE
+		do
+			if a_item /= Void then
+				if a_button = 1 then
+					if
+						not ev_application.ctrl_pressed
+						and not ev_application.shift_pressed
+						and not ev_application.alt_pressed
+					then
+						l_row := a_item.row
+						if l_row /= Void then
+							select_element_by_row (l_row)
+						end
+					end
+				elseif a_button = 3 then
+						-- Right click
+					if ev_application.ctrl_pressed then
+						l_stone := stone_for_grid_item (a_item)
+						if l_stone /= Void and then l_stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+						end
+					end
+				end
+			end
+
+		end
+
+	on_grid_item_pebble_function (a_item: EV_GRID_ITEM): CALL_STACK_STONE
+			-- Returns the call_stack_stone of row related to a_item
+		local
+			l_row: EV_GRID_ROW
+			level: INTEGER
+		do
+			if not ev_application.ctrl_pressed then
+				Result := stone_for_grid_item (a_item)
 			end
 		end
 

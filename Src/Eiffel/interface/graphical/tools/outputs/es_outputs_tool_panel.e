@@ -63,7 +63,7 @@ feature {NONE} -- User interface initialization
 	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		do
-			register_action (selection_combo.change_actions, agent on_selected_editor_changed)
+			register_action (selection_combo.select_actions, agent on_selected_editor_changed)
 			register_action (save_button.select_actions, agent on_save)
 			register_action (search_button.select_actions, agent on_search)
 			register_action (clear_button.select_actions, agent on_clear)
@@ -89,7 +89,7 @@ feature {NONE} -- User interface initialization
 			l_output_manager := output_manager
 			if l_output_manager.is_service_available then
 				l_output_manager.service.output_manager_event_connection.connect_events (Current)
-				if not attached last_output then
+				if not attached output then
 						-- No output is currently been set.
 					l_active_outputs := l_output_manager.service.active_outputs
 					from l_active_outputs.start until l_active_outputs.after loop
@@ -237,8 +237,10 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			if not is_initialized then
 					-- Force initialization.
 					-- We set the output to prevent initialization from setting a default output.
+
 				output := a_output
 				initialize
+				extend_output (a_output)
 				output := Void
 			end
 
@@ -255,9 +257,9 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
 				l_combo := selection_combo
 				if l_combo /= Void then
-					l_actions_running := l_combo.change_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
+					l_actions_running := l_combo.select_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
 					if l_actions_running then
-						l_combo.change_actions.block
+						l_combo.select_actions.block
 					end
 
 						-- Change label in the combo box.
@@ -274,7 +276,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 					l_combo.go_to (l_cursor)
 
 					if l_actions_running then
-						l_combo.change_actions.resume
+						l_combo.select_actions.resume
 					end
 				end
 
@@ -316,7 +318,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 --			a_editor_parented: a_editor.widget.widget.parent = user_widget
 --			a_editor_is_displayed: a_editor.widget.is_shown
 --			not_old_editor_is_display: old editor /= Void implies not (old editor).widget.is_shown
---			selection_combo_changed_actions_restored: selection_combo.change_actions.state = old (selection_combo.change_actions).state
+--			selection_combo_select_actions_restored: selection_combo.select_actions.state = old (selection_combo.select_actions).state
 		end
 
 feature -- Status report
@@ -367,9 +369,9 @@ feature {NONE} -- Basic operations
 			i: INTEGER
 		do
 			l_combo := selection_combo
-			l_actions_running := l_combo.change_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
+			l_actions_running := l_combo.select_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
 			if l_actions_running then
-				l_combo.change_actions.block
+				l_combo.select_actions.block
 			end
 			from l_combo.start until l_combo.after or l_already_added loop
 				l_item := l_combo.item_for_iteration
@@ -421,10 +423,10 @@ feature {NONE} -- Basic operations
 				l_combo.extend (l_item)
 			end
 			if l_actions_running then
-				l_combo.change_actions.resume
+				l_combo.select_actions.resume
 			end
 		ensure
-			selection_combo_changed_actions_restored: selection_combo.change_actions.state = old selection_combo.change_actions.state
+			selection_select_actions_restored: selection_combo.select_actions.state = old selection_combo.select_actions.state
 		end
 
 	remove_output (a_output: attached ES_OUTPUT_PANE_I)

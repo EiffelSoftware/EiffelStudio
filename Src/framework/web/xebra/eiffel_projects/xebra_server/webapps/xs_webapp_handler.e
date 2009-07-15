@@ -45,25 +45,26 @@ feature -- Status Change
 
 feature  -- Basic Operations
 
-	request_message_to_response (a_request_message: STRING): XC_COMMAND_RESPONSE
+	forward_request (a_request_message: STRING): XC_COMMAND_RESPONSE
 			-- Does the stuff. I don't bother writing much here, it's going to change tomorrow anyway....
 		local
 			l_response: XH_RESPONSE
-			l_request_factory: XH_REQUEST_PARSER
+			l_request_parser: XH_REQUEST_MINI_PARSER
 			l_uri_webapp_name: STRING
-			l_req_buf: detachable XH_REQUEST
+			l_req_buf: detachable XH_MINI_REQUEST
 		do
-			create l_request_factory.make
+			create l_request_parser.make
 		--	l_req_buf := test_request
-			l_req_buf := l_request_factory.request (a_request_message)
-	        if attached {XH_REQUEST} l_req_buf as l_request then
-				l_uri_webapp_name := l_request.uri.substring (2, l_request.uri.index_of ('/', 2))
-				l_uri_webapp_name.remove_tail (1)
-
-				if attached {XS_WEBAPP} config.file.webapps[l_uri_webapp_name] as webapp then
-					Result := webapp.send (create {XCWC_HTTP_REQUEST}.make_with_request (l_request))
+			l_req_buf := l_request_parser.request (a_request_message)
+	        if attached {XH_MINI_REQUEST} l_req_buf as l_request then
+				if not l_request.post_too_big then
+					if attached {XS_WEBAPP} config.file.webapps[l_request.webapp] as webapp then
+						Result := webapp.send (create {XCWC_HTTP_REQUEST}.make_with_request (a_request_message))
+					else
+						Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_command_response
+					end
 				else
-					Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_command_response
+					Result := (create {XER_POST_TOO_BIG}.make ("")).render_to_command_response
 				end
             else
             	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_command_response

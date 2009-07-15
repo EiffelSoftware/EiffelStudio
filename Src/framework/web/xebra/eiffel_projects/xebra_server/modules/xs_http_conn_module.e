@@ -74,7 +74,7 @@ feature -- Inherited Features
 			            	end
 
 			            	 if receive_message (thread_http_socket) then
-								l_response := l_webapp_handler.request_message_to_response (current_request_message)
+								l_response := l_webapp_handler.forward_request (current_request_message)
 			            	else
 								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_command_response
 							end

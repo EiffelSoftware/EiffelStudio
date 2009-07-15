@@ -26,20 +26,26 @@ feature -- Access
 	arg: STRING
 		-- Can be used to pass an argument to the message
 
-	message : STRING
+	message: STRING
 			-- The message
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 	producer: STRING
-			-- Who produced this error message
+			-- The producer of this error message
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 	has_refresh: BOOLEAN
 			-- Redefine to true to autoamtically refresh the page
 		do
 			Result := False
+		ensure
+			result_attached: Result /= Void
 		end
 
 
@@ -79,11 +85,22 @@ feature -- Html code generation
 	title: STRING
 			-- The type (title) of the Response
 		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 	deco_color: STRING
 			-- The color of the decoration
 		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	img: STRING
+			-- The image place holder
+		deferred
+		ensure
+			result_attached: Result /= Void
 		end
 
 	html: STRING
@@ -140,8 +157,10 @@ feature -- Html code generation
 			<hr/>
 			<p><span class="em">Message:</span>
 			]" + message + "[
+			</p>					
+			<p>
+			]" + img + "[
 			</p>
-			<p><img src="http://www.yiyinglu.com/failwhale/images/failwhale.gif" alt="fail whale image" width="800" height="432" /></p>
 			<hr/>
 			<h3>
 			]" + producer +	"[

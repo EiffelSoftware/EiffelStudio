@@ -1,6 +1,6 @@
 /*
  * description: "Apache module that sends request data to xebra server and receives page to be displayed."
- * date:		"$Date$"
+ * date:	"$Date$"
  * revision:	"$Revision$"
  * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
  * license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
@@ -86,11 +86,8 @@
 #define COOKIE_END "#CE"
 #define HTML_START "#H#"
 #define CONTENT_TYPE_START "#CT#"
+#define POST_TOO_BIG "#PTB#"
 
-/* MAX_POST_SIZE:
- *	Defines a max size for reading the POST arguments
- */
-#define MAX_POST_SIZE 10000
 
 /*======= HEADERS ENCODING =======*/
 
@@ -105,7 +102,7 @@
 
 #define ERROR_MSG_START "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Xebra Module - Error Report</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><style type=\"text/css\"><!--body,td,th {	font-family: Geneva, Arial, Helvetica, sans-serif;	font-size: 12px;}h1 {	font-size: 18px;	background-color:#000000;	color: #FFFFFF;}h3 {	font-size: 14px;	background-color:#000000;	color: #FFFFFF;}.em {font-size: 14px;background-color:#000000;color: #FFFFFF;margin-right: 10px;font-weight: bold;}--></style></head><body><h1>Xebra Module - Error Report</h1><hr/><p><span class=\"em\">Message: </span> "
 
-#define ERROR_MSG_END "</p><p><img src=\"http://www.yiyinglu.com/failwhale/images/failwhale.gif\" alt=\"fail whale image\" width=\"800\" height=\"432\" /></p><hr /><h3>Xebra Module for Apache</h3></body></html>"
+#define ERROR_MSG_END "</p><p><img src=\"http://fusun.ch/download/temp/xebTot.jpg\" alt=\"fail xebra image\" width=\"520\" height=\"256\" /></p><hr /><h3>Xebra Module for Apache</h3></body></html>"
 
 #define PRINT_ERROR(a) ap_rputs (ERROR_MSG_START, r); ap_rputs (a, r); ap_rputs (ERROR_MSG_END, r);
 
@@ -120,6 +117,7 @@ typedef struct
 {
 	char * port;
 	char * host;
+	int max_upload_size;
 } xebra_svr_cfg;
 
 /*
@@ -149,6 +147,15 @@ static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
 		const char *arg);
 
 /*
+ doc:    <routine name="set_srv_cfg_max_upload_size" export="private">
+ doc:            <summary>Sets the max_upload_size attribute to the xebra_svr_cfg instance</summary>
+ doc:			 <return>NULL</return>
+ doc:    </routine>
+ */
+static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
+		const char *arg);
+
+/*
  doc:    <function name="read_from_POST" export="private">
  doc:            <summary>Reads POST values and appends them to the buffer</summary>
  doc:            <param name="r" type="request_rec*>The request</param>
@@ -156,7 +163,7 @@ static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
  doc:			 <return>Returns an apache RESPONSE_CODE</return>
  doc:    </routine>
  */
-static int read_from_POST (request_rec* r, char **buf);
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size);
 
 /*
  doc:	<attribute name="table_buf" return_type="char*" export="private">
@@ -328,9 +335,15 @@ apr_status_t cookie_remove2 (request_rec * r, const char *name2,
 		const char *attrs2, ...);
 
 /* The array of command_rec structures is passed to the httpd core by this module to declare a new configuration directive. */
-static const command_rec xebra_cmds[] = { AP_INIT_TAKE1 ("XebraServer_port",
-		set_srv_cfg_port, NULL, RSRC_CONF,
-		"Mod_xebra: use e.g. 'Port \"1234\"'"), AP_INIT_TAKE1 (
+static const command_rec xebra_cmds[] = { 
+	AP_INIT_TAKE1 (
+		"XebraServer_port", set_srv_cfg_port, NULL, RSRC_CONF,
+		"Mod_xebra: use e.g. 'Port \"1234\"'"),
+	AP_INIT_TAKE1 (
+		"XebraServer_max_upload_size", set_srv_cfg_max_upload_size, NULL, RSRC_CONF,
+		"Mod_xebra: use e.g. 'Max_upload_size \"10000\"'"),
+	AP_INIT_TAKE1 (
 		"XebraServer_host", set_srv_cfg_host, NULL, RSRC_CONF,
-		"Mod_xebra: use e.g. 'Host \"localhost\"'"), { NULL } };
+		"Mod_xebra: use e.g. 'Host \"localhost\"'")
+		, { NULL } };
 

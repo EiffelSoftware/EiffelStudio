@@ -125,14 +125,21 @@ feature -- Status setting
 
 feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 
-	handle_http_request (a_request: XH_REQUEST): XC_COMMAND_RESPONSE
+	handle_http_request (a_request: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		local
 			l_request_handler: XWA_REQUEST_HANDLER
+			l_parser: XH_REQUEST_PARSER
 		do
 			o.dprint ("Handling http request...", 4)
+			create l_parser.make
 			create l_request_handler.make
-			create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, a_request, Current))
+			if attached {XH_REQUEST} l_parser.request (a_request) as l_request then
+				create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, l_request, Current))
+			else
+				create {XCCR_UNKNOWN_ERROR}Result.make -- FIXME
+			end
+
 		end
 
 	get_sessions: XC_COMMAND_RESPONSE

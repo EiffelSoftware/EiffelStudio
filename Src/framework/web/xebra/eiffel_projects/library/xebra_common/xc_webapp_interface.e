@@ -21,7 +21,7 @@ feature -- Basic operations
 		end
 
 
-	handle_http_request (a_request: XH_REQUEST): XC_COMMAND_RESPONSE
+	handle_http_request (a_request: STRING): XC_COMMAND_RESPONSE
 			-- Lets the webapp handle a http request.
 		require
 			a_request_attached: a_request /= Void

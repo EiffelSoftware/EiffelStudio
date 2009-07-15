@@ -9,7 +9,7 @@
  * source: 	"[
  * 			Eiffel Software
  * 			5949 Hollister Ave #B, Goleta, CA 93117
- * 			Telephone 805-685-1006, Fax 805-685-6869
+ * 			Telephone	 805-685-1006, Fax 805-685-6869
  * 			Website http://www.eiffel.com
  * 			Customer support http://support.eiffel.com
  * 			]"
@@ -24,6 +24,7 @@ static void* create_srv_cfg (apr_pool_t* pool, char* x)
 	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
 	svr_cfg->port = "9999";
 	svr_cfg->port = "0.0.0.0";
+	svr_cfg->max_upload_size = 10000;
 	return svr_cfg;
 }
 
@@ -45,7 +46,16 @@ static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
 	return NULL;
 }
 
-static int read_from_POST (request_rec* r, char **buf)
+static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
+		const char *arg)
+{
+	xebra_svr_cfg* svr_cfg = ap_get_module_config (
+			parms->server->module_config, &xebra_module);
+	svr_cfg->max_upload_size = atoi(arg);
+	return NULL;
+}
+
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size)
 {
 	int max_loops = 1000; /* hack to prevent endless loops*/
 	int bytes, eos;
@@ -59,14 +69,14 @@ static int read_from_POST (request_rec* r, char **buf)
 
 	if (clen != NULL) {
 		bytes = strtol (clen, NULL, 0);
-		if (bytes >= MAX_POST_SIZE) {
+		if (bytes >= max_upload_size) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
 					"Request too big (%d bytes; limit %d)", bytes,
-					MAX_POST_SIZE);
+					max_upload_size);
 			return HTTP_REQUEST_ENTITY_TOO_LARGE;
 		}
 	} else {
-		bytes = MAX_POST_SIZE;
+		bytes = max_upload_size;
 	}
 
 	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
@@ -105,14 +115,14 @@ static int read_from_POST (request_rec* r, char **buf)
 			if (!APR_BUCKET_IS_METADATA (b)) {
 				if (b->length != (apr_size_t) (-1)) {
 					count += b->length;
-					if (count > MAX_POST_SIZE) {
+					if (count > max_upload_size) {
 						/* More data than we accept, murder the request, but mop up first */
 						apr_bucket_delete (b);
 					}
 				}
 			}
 
-			if (count <= MAX_POST_SIZE) {
+			if (count <= max_upload_size) {
 				APR_BUCKET_REMOVE (b);
 				APR_BRIGADE_INSERT_TAIL (bb, b);
 			}
@@ -120,9 +130,9 @@ static int read_from_POST (request_rec* r, char **buf)
 	} while (!eos);
 
 	/* done with data, kill request if too much data */
-	if (count > MAX_POST_SIZE) {
+	if (count > max_upload_size) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Request too big (%d bytes; limit %d)", bytes, MAX_POST_SIZE);
+				"Request too big (%d bytes; limit %d)", bytes, max_upload_size);
 		return HTTP_REQUEST_ENTITY_TOO_LARGE;
 	}
 
@@ -155,8 +165,9 @@ static int xebra_handler (request_rec* r)
 	int numbytes; /* number of bytes recieved from server */
 	char* rmsg_buf; /* buffer for receiving message */
 	char* post_buf;
-	char* srv_hostname;
-	char* srv_port;
+	char* srv_hostname; /* the xebra server host name read from config */
+	char* srv_port; /* the xebra server port read from config */
+	int srv_max_upload_size; /* the max upload size read from config */
 	char* ctype;
 	xebra_svr_cfg *srvc = ap_get_module_config (r->server->module_config,
 			&xebra_module);
@@ -168,9 +179,15 @@ static int xebra_handler (request_rec* r)
 		return HTTP_METHOD_NOT_ALLOWED;
 	}
 
+	/* Reading config file */
+	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
+	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
+	srv_max_upload_size = srvc->max_upload_size;
+
 	/* Set a default content-type */
 	ap_set_content_type (r, "text/html;charset=ascii");
 
+	/* Prepare return message */
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG (r->the_request)
 
@@ -203,9 +220,13 @@ static int xebra_handler (request_rec* r)
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
 	
-		rv = read_from_POST (r, &post_buf);
-
-		if (rv != OK)
+		rv = read_from_POST (r, &post_buf, srv_max_upload_size);
+		
+		if (rv == HTTP_REQUEST_ENTITY_TOO_LARGE)
+		{
+			message = apr_pstrcat (r->pool, message, ARG, POST_TOO_BIG, NULL);
+		}
+		else if (rv != OK)
 		{
 			PRINT_ERROR ("Error reading POST data");
 			return OK;
@@ -229,12 +250,8 @@ static int xebra_handler (request_rec* r)
 
 
 
-	/* set up connection to server */
+	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
-
-	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
-	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
-
 	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
 
 	memset (&hints, 0, sizeof hints);

@@ -74,7 +74,6 @@ feature -- Element change
 			-- `a_name' : The name of the variable to set.
 		require
 			is_interface_usable: is_interface_usable
-			not_a_value_is_empty: a_value /= Void and then not a_value.is_empty
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		deferred

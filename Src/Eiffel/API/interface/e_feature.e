@@ -492,31 +492,48 @@ feature -- Access
 			class_ast: CLASS_AS;
 			bid: INTEGER
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
+			has_error: BOOLEAN
+			indexes: INDEXING_CLAUSE_AS
+			index_list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			bid := body_id_for_ast;
-			if bid > 0 then
-					-- Server in the temporary server first to get the latest version of the AST.
-				Result := body_server.item (bid)
-			end
-			if Result = Void then
-				class_ast := tmp_ast_server.item (written_in)
-				if class_ast /= Void then
-					Result := class_ast.feature_with_name (name_id)
+			if not has_error then
+				bid := body_id_for_ast;
+				if bid > 0 then
+						-- Server in the temporary server first to get the latest version of the AST.
+					Result := body_server.item (bid)
+				end
+				if Result = Void then
+					class_ast := tmp_ast_server.item (written_in)
+					if class_ast /= Void then
+						Result := class_ast.feature_with_name (name_id)
+					end
 				end
 			end
 
 			if Result = Void then
-					-- In this case we must certainly be handling a dotnet feature and we need
-					-- to create an empty AST otherwise we cannot pick and drop it.
+					-- In this case we must certainly be handling a dotnet feature or the AST cannot be loaded due to corruption
+					-- and we need to create an empty AST otherwise we cannot pick and drop it.
 				create l_feature_names.make (1)
 				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (
 					create {ID_AS}.initialize (name)))
 				if is_frozen then
 					l_feature_names.last.set_frozen_keyword (create {KEYWORD_AS}.make_null)
 				end
-				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void, Void, Void, Void, Void), Void, 0, 0)
+				if has_error then
+					create index_list.make (1)
+					index_list.extend (create {STRING_AS}.initialize ("Cannot load feature.", 0, 0, 0, 0))
+					create indexes.make (1)
+					indexes.extend (create {INDEX_AS}.initialize (create {ID_AS}.initialize ("error"), index_list, Void))
+				end
+				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void, Void, Void, Void, Void), indexes, 0, 0)
 			end
-		end;
+		rescue
+			if not has_error then
+					-- There is an error loading the feature. It is masked to avoid a crash (bug#13874).
+				has_error := True
+				retry
+			end
+		end
 
 	hash_code: INTEGER
 			-- Hash code

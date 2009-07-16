@@ -94,7 +94,7 @@ feature -- Access
 			if attached internal_formatter as l_result then
 				Result := l_result
 			else
-				create {ES_MULTI_TEXT_FORMATTER} Result.make
+				create Result.make
 					-- Add the notifier window to ensure clients have access to the cached
 					-- string contents and actions.
 				Result.extend (notifier_formatter)

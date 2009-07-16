@@ -858,14 +858,21 @@ feature {NONE} -- Basic operations
 	process_new_lines_cache
 			-- Processes any number of cached new line characters, cached to prevent unnecessary output of new lines.
 		local
-			l_formatters: like managed_formatters
+			l_formatters: BILINEAR [TEXT_FORMATTER]
 			l_formatter: TEXT_FORMATTER
 			i, l_new_lines: like new_line_count
 		do
 			l_new_lines := new_line_count
 			if l_new_lines > 0 then
 				l_formatters := managed_formatters
-				from l_formatters.start until l_formatters.after loop
+
+					-- Navigate backwards, not forwards! This is to ensure the notifier formatter
+					-- ({ES_NOTIFIER_OUTPUT_WINDOW} used to notify clients about changes to the output) is
+					-- called after the output has been processes.
+					--
+					-- Note: There is some reorganization to be done because a {ES_NOTIFIER_OUTPUT_WINDOW}
+					--       instance should be managed by Current.
+				from l_formatters.finish until l_formatters.before loop
 					l_formatter := l_formatters.item
 					if l_formatter /= Void then
 						from i := 1 until i > l_new_lines loop
@@ -873,7 +880,7 @@ feature {NONE} -- Basic operations
 							i := i + 1
 						end
 					end
-					l_formatters.forth
+					l_formatters.back
 				end
 				new_line_count := 0
 			end

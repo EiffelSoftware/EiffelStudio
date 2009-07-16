@@ -57,16 +57,22 @@ static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
 
 static int read_from_POST (request_rec* r, char **buf, int max_upload_size)
 {
-	int max_loops = 1000; /* hack to prevent endless loops*/
-	int bytes, eos;
-	apr_size_t count;
+	const char *bbuf;
+	apr_size_t nbytes;
+	apr_size_t logbytes;
+	unsigned int bytes;
 	apr_status_t rv;
 	apr_bucket_brigade *bb;
-	apr_bucket_brigade *bbin;
-	char *baf;
 	apr_bucket *b;
-	const char *clen = apr_table_get (r->headers_in, "Content-Length");
+	const char *clen;
+	apr_file_t* tmpfile ;
+	char* tmpname;
+	
+	(*buf) = apr_palloc (r->pool, 1);
+	(*buf)[0] = '\0';
 
+	/* Check if content-length does not exceed max_upload_size */
+	clen = apr_table_get (r->headers_in, "Content-Length");
 	if (clen != NULL) {
 		bytes = strtol (clen, NULL, 0);
 		if (bytes >= max_upload_size) {
@@ -75,75 +81,60 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size)
 					max_upload_size);
 			return HTTP_REQUEST_ENTITY_TOO_LARGE;
 		}
-	} else {
-		bytes = max_upload_size;
 	}
-
-	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
-	bbin = apr_brigade_create (r->pool, r->connection->bucket_alloc);
-	count = 0;
-
-	do {
-
-		rv = ap_get_brigade (r->input_filters, bbin, AP_MODE_READBYTES,
-				APR_BLOCK_READ, bytes);
-
-		if (rv != APR_SUCCESS) {
-			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-					"failed to read form input");
-			return HTTP_INTERNAL_SERVER_ERROR;
-		}
-
-		for (b = APR_BRIGADE_FIRST (bbin); b != APR_BRIGADE_SENTINEL (bbin); b
-				= APR_BUCKET_NEXT (b)) {
-
-			max_loops--;
-			if (max_loops < 0) {
-				return HTTP_REQUEST_ENTITY_TOO_LARGE;
-			}
-
-			/*=======hack to prevent endless loops*/
-			if ((b == NULL) || (b->length < 0) || b->length > 10000) {
-				break;
-			}
-			/*=======very strange */
-
-			if (APR_BUCKET_IS_EOS (b)) {
-				eos = 1;
-			}
-
-			if (!APR_BUCKET_IS_METADATA (b)) {
-				if (b->length != (apr_size_t) (-1)) {
-					count += b->length;
-					if (count > max_upload_size) {
-						/* More data than we accept, murder the request, but mop up first */
-						apr_bucket_delete (b);
-					}
-				}
-			}
-
-			if (count <= max_upload_size) {
-				APR_BUCKET_REMOVE (b);
-				APR_BRIGADE_INSERT_TAIL (bb, b);
-			}
-		}
-	} while (!eos);
-
-	/* done with data, kill request if too much data */
-	if (count > max_upload_size) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Request too big (%d bytes; limit %d)", bytes, max_upload_size);
-		return HTTP_REQUEST_ENTITY_TOO_LARGE;
-	}
-
-	(*buf) = apr_palloc (r->pool, count + 1);
-	rv = apr_brigade_flatten (bb, (*buf), &count);
+		
+	/* Prepare tmp file */
+	tmpname = apr_pstrdup(r->pool, "/tmp/xebra_upload.XXXXXX") ;
+	rv = apr_file_mktemp(&tmpfile, tmpname, KEEPONCLOSE, r->pool);
 	if (rv != APR_SUCCESS) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Error (flatten) reading form data");
+				"Failed to create temp file");
 		return HTTP_INTERNAL_SERVER_ERROR;
 	}
-	(*buf)[count] = '\0';
+	apr_pool_cleanup_register(r->pool, tmpfile, (void*)apr_file_close, apr_pool_cleanup_null) ;
+		
+	/* Get brigade from input filters */
+	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
+	rv = ap_get_brigade (r->input_filters, bb, AP_MODE_READBYTES,
+				APR_BLOCK_READ, bytes);
+	if (rv != APR_SUCCESS) {
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+				"Failed to get brigade from input filters");
+		return HTTP_INTERNAL_SERVER_ERROR;
+	}
+	
+	/* Iterate over brigade and read buckets*/
+	for (b = APR_BRIGADE_FIRST (bb); b != APR_BRIGADE_SENTINEL (bb); b = APR_BUCKET_NEXT (b)) {
+		/****************************************/
+		    DEBUG ("BUCKET>> data_type: %s, type: %s, length: %" APR_SIZE_T_FMT " bytes",
+				(APR_BUCKET_IS_METADATA(b)) ? "metadata" : "data",
+				b->type->name,
+				b->length) ;
+
+		    if (!(APR_BUCKET_IS_METADATA(b)))
+		    {			
+			rv = apr_bucket_read(b, &bbuf, &nbytes, APR_BLOCK_READ);
+
+			if (rv == APR_SUCCESS)
+			{			  
+				DEBUG ("Bucket content: '%s'", bbuf);
+				apr_file_write(tmpfile, bbuf, &nbytes);
+				(*buf) =  apr_pstrcat (r->pool, (*buf), bbuf, NULL);
+
+			} else {
+			    ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "(%s, %s): Failed to read bucket",
+					(APR_BUCKET_IS_METADATA(b)) ? "metadata" : "data",
+					 b->type->name ); 
+				return HTTP_INTERNAL_SERVER_ERROR;
+				
+			}
+		    }
+		/************************************/
+		
+	}
+	apr_file_flush(tmpfile) ;
+
+	//(*buf)[count] = '\0';
 	return OK;
 }
 
@@ -168,7 +159,8 @@ static int xebra_handler (request_rec* r)
 	char* srv_hostname; /* the xebra server host name read from config */
 	char* srv_port; /* the xebra server port read from config */
 	int srv_max_upload_size; /* the max upload size read from config */
-	char* ctype;
+	const char* ctype;
+
 	xebra_svr_cfg *srvc = ap_get_module_config (r->server->module_config,
 			&xebra_module);
 
@@ -189,7 +181,7 @@ static int xebra_handler (request_rec* r)
 
 	/* Prepare return message */
 	DEBUG ("===============NEW REQUEST===============");
-	DEBUG (r->the_request)
+	DEBUG ("%s", r->the_request)
 
 	DEBUG ("Reading input...");
 
@@ -216,7 +208,7 @@ static int xebra_handler (request_rec* r)
 
 
 
-	/* If there are, read POST parameters into message buffer */
+	/* If there are, read POST or GET parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
 	

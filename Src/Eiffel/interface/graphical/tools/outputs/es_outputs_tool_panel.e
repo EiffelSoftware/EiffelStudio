@@ -410,7 +410,7 @@ feature {NONE} -- Basic operations
 				inject_output_widget (a_editor)
 
 					-- Set up action to ensure users are notified when a hidden output changes.
-				register_action (a_editor.text_changed_actions, agent (ia_sender: ES_NOTIFIER_OUTPUT_WINDOW; ia_output: ES_OUTPUT_PANE_I)
+				register_action (a_editor.text_changed_actions, agent (ia_sender: ES_NOTIFIER_FORMATTER; ia_output: ES_OUTPUT_PANE_I)
 					require
 						ia_sender_attached: ia_sender /= Void
 						ia_output_attached: ia_output /= Void

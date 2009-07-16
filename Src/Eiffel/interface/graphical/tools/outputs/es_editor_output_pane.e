@@ -12,8 +12,6 @@ class
 
 inherit
 	ES_OUTPUT_PANE [ES_EDITOR_WIDGET]
-		rename
-			make as make_output_pane
 		redefine
 			clear,
 			on_locked,
@@ -49,7 +47,6 @@ feature {NONE} -- Initialization
 			not_a_name_is_empty: not a_name.is_empty
 			a_icon_attached: a_icon /= Void
 		do
-			make_output_pane
 			create name.make_from_string (a_name.as_string_32)
 			icon := a_icon
 			is_auto_scrolled := True
@@ -77,7 +74,7 @@ feature {NONE} -- Initialization
 
 				-- Recieve notifications when a new line has been added to the output. This ensures the output
 				-- is always scrolled to the end.
-			register_action (new_line_actions, agent (ia_sender: ES_NOTIFIER_OUTPUT_WINDOW; ia_lines: NATURAL)
+			register_action (new_line_actions, agent (ia_sender: ES_NOTIFIER_FORMATTER; ia_lines: NATURAL)
 					-- Need to scroll the output
 				local
 					l_cursor: DS_HASH_TABLE_CURSOR [ES_EDITOR_WIDGET, NATURAL_32]

@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_NOTIFIER_OUTPUT_WINDOW
+	ES_NOTIFIER_FORMATTER
 
 inherit
 	OUTPUT_WINDOW
@@ -107,7 +107,7 @@ feature -- Output
 
 feature -- Actions
 
-	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW; lines: NATURAL]]
+	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_FORMATTER; lines: NATURAL]]
 			-- Actions called when a new line has been added to the output
 			--
 			-- 'sender': The sender (Current) of the action.
@@ -124,7 +124,7 @@ feature -- Actions
 			result_consistent: Result = new_line_actions
 		end
 
-	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW]]
+	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_FORMATTER]]
 			-- Actions called when the text has changed.
 			--
 			-- 'sender': The sender (Current) of the action.

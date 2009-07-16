@@ -42,12 +42,6 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initializes the output pane
-		do
-			create notifier_formatter.make
-		end
-
 	build_interface (a_widget: attached G)
 			-- Builds the interface for the widget.
 			--
@@ -95,9 +89,6 @@ feature -- Access
 				Result := l_result
 			else
 				create Result.make
-					-- Add the notifier window to ensure clients have access to the cached
-					-- string contents and actions.
-				Result.extend (notifier_formatter)
 				internal_formatter := Result
 			end
 		ensure then
@@ -106,8 +97,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	notifier_formatter: ES_NOTIFIER_OUTPUT_WINDOW
+	notifier_formatter: ES_NOTIFIER_FORMATTER
 			-- Ouptut window use to notify clients of changes.
+		do
+			Result := formatter.notifier
+		ensure
+			result_attached: attached Result
+		end
 
 feature -- Access
 
@@ -279,13 +275,13 @@ feature -- Basic operations
 
 feature -- Actions
 
-	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW; lines: NATURAL]]
+	new_line_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_FORMATTER; lines: NATURAL]]
 			-- <Precursor>
 		do
 			Result := notifier_formatter.new_line_actions
 		end
 
-	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_OUTPUT_WINDOW]]
+	text_changed_actions: ACTION_SEQUENCE [TUPLE [sender: ES_NOTIFIER_FORMATTER]]
 			-- <Precursor>
 		do
 			Result := notifier_formatter.text_changed_actions

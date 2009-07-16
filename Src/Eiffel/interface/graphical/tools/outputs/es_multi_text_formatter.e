@@ -65,7 +65,16 @@ feature {NONE} -- Initialization
 		do
 			create managed_formatters.make (1)
 			create new_managed_formatters.make (1)
+
+				-- Ensure the notifier is part of the managed formatters
+			create notifier.make
+			managed_formatters.extend (notifier)
 		end
+
+feature -- Access
+
+	notifier: ES_NOTIFIER_FORMATTER
+			-- Notifier formatter used to notifier clients of text changes.
 
 feature {NONE} -- Access
 
@@ -138,14 +147,12 @@ feature -- Element change
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			Precursor (a_group)
 			l_formatters := managed_formatters
 			if not l_formatters.is_empty then
 				from l_formatters.start until l_formatters.after loop
-					l_formatter := l_formatters.item
-					if l_formatter /= Void then
+					if attached l_formatters.item as l_formatter then
 						l_formatter.set_context_group (a_group)
 					end
 					l_formatters.forth
@@ -166,7 +173,6 @@ feature -- Basic operations
 	start_processing (a_append: BOOLEAN)
 			 -- <Precursor>
 		local
-			l_formatter: TEXT_FORMATTER
 			l_formatters: like managed_formatters
 			l_new_windows: like new_managed_formatters
 		do
@@ -187,8 +193,7 @@ feature -- Basic operations
 			end
 
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.start_processing (a_append)
 				end
 				l_formatters.forth
@@ -199,12 +204,10 @@ feature -- Basic operations
 			 -- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.end_processing
 				end
 				l_formatters.forth
@@ -217,13 +220,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_basic_text (a_text)
 				end
 				l_formatters.forth
@@ -234,13 +235,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_character_text (a_text)
 				end
 				l_formatters.forth
@@ -251,13 +250,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_generic_text (a_text)
 				end
 				l_formatters.forth
@@ -268,13 +265,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_indexing_tag_text (a_text)
 				end
 				l_formatters.forth
@@ -285,13 +280,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_local_text (a_text)
 				end
 				l_formatters.forth
@@ -302,13 +295,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_number_text (a_text)
 				end
 				l_formatters.forth
@@ -319,13 +310,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_quoted_text (a_text)
 				end
 				l_formatters.forth
@@ -336,13 +325,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_assertion_tag_text (a_text)
 				end
 				l_formatters.forth
@@ -353,13 +340,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_string_text (a_text, a_link)
 				end
 				l_formatters.forth
@@ -370,13 +355,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_reserved_word_text (a_text)
 				end
 				l_formatters.forth
@@ -387,13 +370,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_comment_text (a_text, a_url)
 				end
 				l_formatters.forth
@@ -404,13 +385,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_difference_text_item (a_text)
 				end
 				l_formatters.forth
@@ -421,13 +400,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_class_name_text (a_text, a_class, a_quote)
 				end
 				l_formatters.forth
@@ -438,13 +415,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_cluster_name_text (a_text, a_cluster, a_quote)
 				end
 				l_formatters.forth
@@ -455,13 +430,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_target_name_text (a_text, a_target)
 				end
 				l_formatters.forth
@@ -472,13 +445,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_feature_name_text (a_text, a_class)
 				end
 				l_formatters.forth
@@ -489,13 +460,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_feature_error (a_text, a_feature, a_line)
 				end
 				l_formatters.forth
@@ -506,13 +475,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_feature_text (a_text, a_feature, a_quote)
 				end
 				l_formatters.forth
@@ -523,13 +490,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_breakpoint (a_feature, a_index)
 				end
 				l_formatters.forth
@@ -540,13 +505,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_breakpoint_index (a_feature, a_index, a_cond)
 				end
 				l_formatters.forth
@@ -557,13 +520,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_padded
 				end
 				l_formatters.forth
@@ -585,13 +546,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_indentation (a_indent_depth)
 				end
 				l_formatters.forth
@@ -602,13 +561,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_after_class (a_class)
 				end
 				l_formatters.forth
@@ -619,13 +576,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_before_class (a_class)
 				end
 				l_formatters.forth
@@ -636,13 +591,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_filter_item (a_text, a_is_before)
 				end
 				l_formatters.forth
@@ -653,13 +606,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_tooltip_item (a_tooltip, a_is_before)
 				end
 				l_formatters.forth
@@ -670,13 +621,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_feature_dec_item (a_feature_name, a_is_before)
 				end
 				l_formatters.forth
@@ -687,13 +636,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_symbol_text (a_text)
 				end
 				l_formatters.forth
@@ -704,13 +651,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_keyword_text (a_text, a_feature)
 				end
 				l_formatters.forth
@@ -721,13 +666,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_operator_text (a_text, a_feature)
 				end
 				l_formatters.forth
@@ -738,13 +681,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_address_text (a_address, a_name, a_class)
 				end
 				l_formatters.forth
@@ -755,13 +696,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_error_text (a_text, a_error)
 				end
 				l_formatters.forth
@@ -772,13 +711,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_cl_syntax (a_text, a_syntax_message, a_class)
 				end
 				l_formatters.forth
@@ -789,13 +726,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_column_text (a_column_number)
 				end
 				l_formatters.forth
@@ -806,13 +741,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_call_stack_item (a_level_number, a_display)
 				end
 				l_formatters.forth
@@ -823,13 +756,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_menu_text (a_text, a_link)
 				end
 				l_formatters.forth
@@ -840,13 +771,11 @@ feature -- Process
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
-			l_formatter: TEXT_FORMATTER
 		do
 			process_new_lines_cache
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
+				if attached l_formatters.item as l_formatter then
 					l_formatter.process_class_menu_text (a_text, a_link)
 				end
 				l_formatters.forth
@@ -858,8 +787,7 @@ feature {NONE} -- Basic operations
 	process_new_lines_cache
 			-- Processes any number of cached new line characters, cached to prevent unnecessary output of new lines.
 		local
-			l_formatters: BILINEAR [TEXT_FORMATTER]
-			l_formatter: TEXT_FORMATTER
+			l_formatters: ARRAYED_LIST [TEXT_FORMATTER]
 			i, l_new_lines: like new_line_count
 		do
 			l_new_lines := new_line_count
@@ -867,14 +795,14 @@ feature {NONE} -- Basic operations
 				l_formatters := managed_formatters
 
 					-- Navigate backwards, not forwards! This is to ensure the notifier formatter
-					-- ({ES_NOTIFIER_OUTPUT_WINDOW} used to notify clients about changes to the output) is
+					-- ({ES_NOTIFIER_FORMATTER} used to notify clients about changes to the output) is
 					-- called after the output has been processes.
-					--
-					-- Note: There is some reorganization to be done because a {ES_NOTIFIER_OUTPUT_WINDOW}
-					--       instance should be managed by Current.
+				check
+					not_l_formatter_is_empty: not l_formatters.is_empty
+					l_formatters_first_is_notifier: l_formatters.first = notifier
+				end
 				from l_formatters.finish until l_formatters.before loop
-					l_formatter := l_formatters.item
-					if l_formatter /= Void then
+					if attached l_formatters.item as l_formatter then
 						from i := 1 until i > l_new_lines loop
 							l_formatter.process_new_line
 							i := i + 1
@@ -889,8 +817,10 @@ feature {NONE} -- Basic operations
 		end
 
 invariant
-	managed_formatters_attached: managed_formatters /= Void
-	new_managed_formatters_attached: new_managed_formatters /= Void
+	managed_formatters_attached: attached managed_formatters
+	new_managed_formatters_attached: attached new_managed_formatters
+	notifier_attached: attached notifier
+	managed_formatters_has_notifier: managed_formatters.has (notifier)
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -1026,7 +1026,7 @@ feature -- Warning messages
 			end
 		end
 
-	w_Text_not_editable: STRING_32 do Result := locale.translation ("Current text is not editable.") end
+	w_Text_not_editable: STRING_32 do Result := locale.translation ("Current view is not editable.") end
 
 	w_Class_syntax_error_before_generation (class_name: STRING_GENERAL): STRING_32
 		require

@@ -33,6 +33,8 @@
 
 #include "eif_eiffel.h"
 
+#include <apr_strings.h>
+#include <apr_tables.h>
 #include <httpd.h>
 #include <http_log.h>
 #include <http_protocol.h>
@@ -57,6 +59,12 @@
 #define DEBUG(...)
 #define DEBUG2(...)
 #endif
+
+/*======= POST processing =======*/
+
+#define KEEPONCLOSE APR_CREATE | APR_READ | APR_WRITE | APR_EXCL
+#define xebra_MAX_STRING_LEN MAX_STRING_LEN / 4 - 80
+
 
 /*======= SOCKET CONSTANTS =======*/
 

@@ -90,7 +90,6 @@ feature -- Building commands
 
 			l_content.close_request_actions.extend (agent l_show_general_toolbar_command.execute)
 			l_content.show_request_actions.extend (agent l_show_general_toolbar_command.execute)
-			develop_window.commands.editor_commands.extend (develop_window.commands.shell_cmd)
 		end
 
 	build_address_toolbar
@@ -212,7 +211,7 @@ feature -- Building commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

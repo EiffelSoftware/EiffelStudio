@@ -63,10 +63,11 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			area.fill_with_default (a_count, upper - 1)
 
 			index := j - 1
+
 			if index < a_count then
-				move_items (index + 1, index + a_duplicate.count + 1, a_count)
+				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
-			area.copy_data (a_duplicate.area, 0, index, a_duplicate.count)
+			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
 
 				-- Restore index
 			index := l_original_index
@@ -104,9 +105,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			end
 
 			if index < a_count then
-				move_items (index + 1, index + a_duplicate.count + 1, a_count)
+				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
-			area.copy_data (a_duplicate.area, 0, index, a_duplicate.count)
+			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
 
 				-- Restore index.
 			index := l_original_index
@@ -131,6 +132,22 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			index := index.min (new_capacity + 1)
 		ensure
 			count_set: count = new_capacity
+		end
+
+feature {NONE} -- Implementation
+
+	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER_32)
+			-- Copy items of `other' within bounds `start_pos' and `end_pos'
+			-- to current array starting at index `index_pos'.
+		require
+			other_not_void: other /= Void
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+			enough_space: (upper - index_pos) >= (end_pos - start_pos)
+		do
+			area.copy_data (other.area, start_pos - other.lower, index_pos - lower, end_pos - start_pos + 1)
 		end
 
 note

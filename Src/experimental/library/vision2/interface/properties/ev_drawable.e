@@ -5,7 +5,7 @@ note
 		Note: When line style is dashed and line width is bigger than one,
 		lines are not guaranteed to be dashed on all platforms.
 		All drawing operations are performed in the current
-		oreground color unless otherwise stated. i.e. `clear_rectangle'
+		foreground color unless otherwise stated. i.e. `clear_rectangle'
 		uses the current background color.
 		]"
 	legal: "See notice at end of class."

@@ -1769,11 +1769,6 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 			else
 				save_all_cmd.disable_sensitive
 			end
-			if editors_manager.editors.count > 0 then
-				commands.shell_cmd.enable_sensitive
-			else
-				commands.shell_cmd.disable_sensitive
-			end
 		end
 
 	is_stone_external: BOOLEAN

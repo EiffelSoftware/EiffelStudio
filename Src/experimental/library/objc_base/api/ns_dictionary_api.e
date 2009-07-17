@@ -61,7 +61,14 @@ feature -- Objective-C implementation
 			"return [NSDictionary dictionaryWithObject: $a_object forKey: $a_key];"
 		end
 
---+ (id)dictionaryWithObjects:(id *)objects forKeys:(id *)keys count:(NSUInteger)cnt;
+	frozen dictionary_with_objects_for_keys (a_objects, a_keys: POINTER): POINTER
+			--+ (id)dictionaryWithObjects:(id *)objects forKeys:(id *)keys count:(NSUInteger)cnt;
+		external
+			"C inline use <Foundation/NSDictionary.h>"
+		alias
+			"return [NSDictionary dictionaryWithObjects: $a_objects forKeys: $a_keys];"
+		end
+
 --+ (id)dictionaryWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
 --+ (id)dictionaryWithDictionary:(NSDictionary *)dict;
 --+ (id)dictionaryWithObjects:(NSArray *)objects forKeys:(NSArray *)keys;

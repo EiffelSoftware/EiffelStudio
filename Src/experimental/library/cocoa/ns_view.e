@@ -35,7 +35,7 @@ feature {NONE} -- Creation and Initialization
 --			make_from_pointer ({NS_VIEW_API}.new)
 			make_from_pointer (view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
-			--insert_in_table
+			insert_in_table
 		end
 
 	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
@@ -52,7 +52,7 @@ feature {NONE} -- Creation and Initialization
 		do
 			make_from_pointer (flipped_view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
-			--insert_in_table
+			insert_in_table
 		end
 
 	flipped_view_class: OBJC_CLASS

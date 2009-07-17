@@ -31,4 +31,14 @@ feature -- Getting NSScreen Objects
 			create Result.share_from_pointer (l_root_screen.item)
 		end
 
+
+feature -- Getting the Notification Center
+
+	default_center: NS_NOTIFICATION_CENTER
+			-- The task's default notification center.
+		once
+			create Result.make_from_pointer ({NS_NOTIFICATION_CENTER}.default_center)
+		end
+
+
 end

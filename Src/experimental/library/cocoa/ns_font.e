@@ -16,7 +16,8 @@ create
 	label_font_of_size,
 	font_with_descriptor
 create {NS_OBJECT}
-	make_from_pointer
+	make_from_pointer,
+	share_from_pointer
 
 feature -- Creation
 

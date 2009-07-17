@@ -20,7 +20,7 @@ import re
 ### Config
 
 dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSSegmentedControl"
+classname = "NSSavePanel"
 #classname = "NSImage"
 #dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
 #classname = "NSData"
@@ -59,7 +59,6 @@ class EiffelType(Type):
 	def isExpanded(self):
 		 return self.name in expandedTypes
 
-
 # Represents a C or Eiffel argument to a method
 class Argument:
 	name = ""
@@ -97,7 +96,7 @@ class Signature:
 		return string
 		
 	def isFunction(self):
-		return (self.return_type != "void")
+		return (self.EiffelReturnType().name != "")
 			
 	def isStatic(self):
 		return self.is_static
@@ -220,7 +219,7 @@ class Signature:
 				return ret
 
 		def InternalEiffelReturn():
-			if self.EiffelReturnType() == "":
+			if self.isFunction():
 				return ""
 			else:
 				return ": " + InternalEiffelTypeName(self.return_type)

@@ -31,6 +31,7 @@
 	<ul>
         <li><a href="index.xeb">Home</a></li>
         <li><a href="reservations.xeb">Reservations</a></li>
+	<li><a href="upload.xeb">Upload</a></li>
         <li><a href="contact.xeb">Contact</a></li>
      </ul>
 </div>

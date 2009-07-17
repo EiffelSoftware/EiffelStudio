@@ -1,0 +1,6 @@
+<page:include template="master_template">
+	<page:controller class="upload_controller" />
+	<page:define_region id="content">
+		<xeb:display text="%=process_upload%" />
+	</page:define_region>
+</page:include>

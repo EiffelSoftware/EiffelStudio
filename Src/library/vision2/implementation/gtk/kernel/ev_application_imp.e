@@ -23,7 +23,7 @@ inherit
 		undefine
 			dispose
 		redefine
-			launch, focused_widget
+			launch, focused_widget, make
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -40,15 +40,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
 			l_image: POINTER
 			l_supports_composite_symbol: POINTER
 		do
-			base_make (an_interface)
-
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
 --			end
@@ -56,12 +54,26 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
+			Precursor
+
 			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
 
 			gtk_is_launchable := gtk_init_check
-			if
-				gtk_is_launchable
-			then
+
+			create stored_display_data
+				-- Initialize display retrieval storage for use by motion actions.
+
+				-- Initialize the marshal object.
+			create gtk_marshal
+
+				-- Initialize the dependent routines object
+			create gtk_dependent_routines
+
+			create window_oids.make
+
+			default_font_name_internal := ""
+
+			if gtk_is_launchable then
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_state := debug_state
@@ -72,21 +84,14 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
 
 				gtk_dependent_initialize
-				create window_oids.make
+
 
 				tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
 				{EV_GTK_EXTERNALS}.object_ref (tooltips)
 				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
-				create stored_display_data
-					-- Initialize display retrieval storage for use by motion actions.
 
-					-- Initialize the marshal object.
-				create gtk_marshal
-
-					-- Initialize the dependent routines object
-				create gtk_dependent_routines
 					-- Uncomment for Gtk 2.x only
 				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)
 
@@ -150,23 +155,23 @@ feature {EV_ANY_I} -- Implementation
 			-- Is application display remote?
 			-- This function is primarily to determine if drawing to the display is optimal.
 
-	set_currently_shown_control (a_control: EV_PICK_AND_DROPABLE)
+	set_currently_shown_control (a_control: detachable EV_PICK_AND_DROPABLE)
 			-- Set `currently_shown_control' to `a_control'.
 		do
 			currently_shown_control := a_control
 		end
 
-	currently_shown_control: EV_PICK_AND_DROPABLE
+	currently_shown_control: detachable EV_PICK_AND_DROPABLE
 		-- Graphical objects that is presently shown
 		-- Used for holding a reference do not get garbage collected.
 
-	focused_widget: EV_WIDGET
+	focused_widget: detachable EV_WIDGET
 			-- Widget with keyboard focus
 		local
 			current_windows: like windows
 			current_window: EV_WINDOW
-			l_window_imp: EV_WINDOW_IMP
-			l_widget_imp: EV_WIDGET_IMP
+			l_window_imp: detachable EV_WINDOW_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 			l_widget_ptr: POINTER
 		do
 			current_windows := windows
@@ -179,6 +184,7 @@ feature {EV_ANY_I} -- Implementation
 				if current_window.has_focus then
 					if current_window.full then
 						l_window_imp ?= current_window.implementation
+						check l_window_imp /= Void end
 						l_widget_ptr := {EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (l_window_imp.c_object)
 						if l_widget_ptr /= default_pointer then
 							l_widget_imp ?= eif_object_from_gtk_object (l_widget_ptr)
@@ -207,18 +213,18 @@ feature {EV_ANY_I} -- Implementation
 			gdk_event: POINTER
 			event_widget, l_grab_widget: POINTER
 			l_call_event, l_propagate_event, l_event_handled: BOOLEAN
-			l_pnd_imp: EV_PICK_AND_DROPABLE_IMP
-			l_widget_imp: EV_WIDGET_IMP
-			l_top_level_window_imp: EV_WINDOW_IMP
-			l_gtk_widget_imp: EV_GTK_WIDGET_IMP
-			l_gtk_window_imp: EV_GTK_WINDOW_IMP
+			l_pnd_imp: detachable EV_PICK_AND_DROPABLE_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
+			l_top_level_window_imp: detachable EV_WINDOW_IMP
+			l_gtk_widget_imp: detachable EV_GTK_WIDGET_IMP
+			l_gtk_window_imp: detachable EV_GTK_WINDOW_IMP
 			l_gdk_window, l_gtk_widget_ptr: POINTER
 			l_motion_tuple: like motion_tuple
 			l_app_motion_tuple: like app_motion_tuple
 			l_no_more_events: BOOLEAN
 			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y, l_button_number: INTEGER
 			l_has_grab_widget: BOOLEAN
-			l_event_string: STRING
+			l_event_string: detachable STRING
 			l_call_theme_events: BOOLEAN
 		do
 			from
@@ -243,10 +249,10 @@ feature {EV_ANY_I} -- Implementation
 					else
 						l_has_grab_widget := True
 							-- Cancel any invalid event capture.
-						if pick_and_drop_source /= Void and then not pick_and_drop_source.is_displayed then
-							pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
-						elseif captured_widget /= Void and then not captured_widget.is_displayed then
-							captured_widget.disable_capture
+						if attached pick_and_drop_source as l_pnd_src and then not l_pnd_src.is_displayed then
+							l_pnd_src.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+						elseif attached captured_widget as l_captured_widget and then not l_captured_widget.is_displayed then
+							l_captured_widget.disable_capture
 						end
 					end
 					inspect
@@ -271,9 +277,9 @@ feature {EV_ANY_I} -- Implementation
 
 						l_call_event := False
 						if
-							captured_widget /= Void
+							attached captured_widget as l_captured_widget
 						then
-							l_pnd_imp ?= captured_widget.implementation
+							l_pnd_imp ?= l_captured_widget.implementation
 						elseif
 							pick_and_drop_source /= Void
 						then
@@ -290,12 +296,12 @@ feature {EV_ANY_I} -- Implementation
 									if pointer_motion_actions_internal /= Void then
 										l_widget_imp ?= l_pnd_imp
 										if l_widget_imp /= Void then
-												l_app_motion_tuple.widget := l_widget_imp.interface
+												l_app_motion_tuple.widget := l_widget_imp.attached_interface
 												l_app_motion_tuple.x := l_screen_x
 												l_app_motion_tuple.y := l_screen_y
 												pointer_motion_actions_internal.call (l_app_motion_tuple)
-													-- Void out reference so that it gets GC'd
-												l_app_motion_tuple.widget := Void
+													-- Remove widget reference so that it gets GC'd
+												l_app_motion_tuple.widget := default_window
 										end
 									end
 									if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
@@ -338,8 +344,8 @@ feature {EV_ANY_I} -- Implementation
 							print ("GDK_SCROLL%N")
 						end
 						if not is_in_transport then
-							if focused_popup_window /= Void then
-								focused_popup_window.handle_mouse_button_event (
+							if attached focused_popup_window as l_focused_popup_window then
+								l_focused_popup_window.handle_mouse_button_event (
 									{EV_GTK_EXTERNALS}.gdk_button_press_enum,
 									2,
 									{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_x_root (gdk_event).truncated_to_integer,
@@ -511,8 +517,8 @@ feature {EV_ANY_I} -- Implementation
 						end
 						user_events_processed_from_underlying_toolkit := True
 						l_propagate_event := True
-						if focused_popup_window /= Void then
-							l_gtk_widget_imp := focused_popup_window
+						if attached focused_popup_window as l_focused_popup_window then
+							l_gtk_widget_imp := l_focused_popup_window
 								-- Change window of `gdk_event' to be that of focused widget.
 							l_gdk_window := {EV_GTK_EXTERNALS}.gdk_event_any_struct_window (gdk_event)
 							{EV_GTK_EXTERNALS}.set_gdk_event_any_struct_window (gdk_event, {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_gtk_widget_imp.c_object))
@@ -694,7 +700,7 @@ feature -- Access
 			-- Global list of windows.
 		local
 			cur: CURSOR
-			w: EV_WINDOW_IMP
+			w: detachable EV_WINDOW_IMP
 			id: IDENTIFIED
 			l: LINKED_LIST [EV_WINDOW]
 		do
@@ -709,17 +715,17 @@ feature -- Access
 			loop
 				w ?= id.id_object (window_oids.item)
 				if w = Void or else w.is_destroyed then
-					window_oids.prune_all (window_oids.item)
+					window_oids.remove
 				else
-					l.extend (w.interface)
+					l.extend (w.attached_interface)
 					window_oids.forth
 				end
 			end
 			window_oids.go_to (cur)
 		end
 
-	focused_popup_window: EV_POPUP_WINDOW_IMP
-		-- Window that is currently focused.
+	focused_popup_window: detachable EV_POPUP_WINDOW_IMP
+		-- Popup Window that is currently focused.
 
 	set_focused_popup_window (a_window: like focused_popup_window)
 			-- Set `focused_popup_window' to `a_window'.
@@ -746,7 +752,7 @@ feature -- Basic operation
 	app_motion_tuple: TUPLE [widget: EV_WIDGET; x: INTEGER; y: INTEGER]
 			-- Tuple optimization
 		once
-			create Result
+			Result := [default_window, 0, 0]
 		end
 
 	process_button_event (a_gdk_event: POINTER)
@@ -754,13 +760,13 @@ feature -- Basic operation
 		require
 			a_gdkevent_not_null: a_gdk_event /= default_pointer
 		local
-			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
+			l_pnd_item: detachable EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
 			l_stored_display_data: like stored_display_data
-			l_top_level_window_imp: EV_WINDOW_IMP
-			l_popup_parent: EV_POPUP_WINDOW_IMP
+			l_top_level_window_imp: detachable EV_WINDOW_IMP
+			l_popup_parent: detachable EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
-			l_text_component_imp: EV_TEXT_COMPONENT_IMP
+			l_text_component_imp: detachable EV_TEXT_COMPONENT_IMP
 		do
 			use_stored_display_data := True
 			l_stored_display_data := stored_display_data
@@ -769,8 +775,8 @@ feature -- Basic operation
 			l_stored_display_data.y := {EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
 			l_stored_display_data.mask := {EV_GTK_EXTERNALS}.gdk_event_button_struct_state (a_gdk_event)
 
-			if captured_widget /= Void then
-				l_pnd_item ?= captured_widget.implementation
+			if attached captured_widget as l_captured_widget then
+				l_pnd_item ?= l_captured_widget.implementation
 			elseif
 				pick_and_drop_source /= Void
 			then
@@ -845,9 +851,9 @@ feature -- Basic operation
 			prop_data: POINTER
 			prop_type, prop_format, prop_length: INTEGER
 			a_string: STRING_32
-			l_file_list: LIST [STRING_32]
+			l_file_list: detachable LIST [STRING_32]
 			l_success: BOOLEAN
-			l_widget_imp: EV_WIDGET_IMP
+			l_widget_imp: detachable EV_WIDGET_IMP
 			l_string, l_file: STRING_32
 		do
 			from
@@ -889,7 +895,7 @@ feature -- Basic operation
 				end
 				a_target_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_target_list)
 			end
-			if l_success then
+			if l_success and then attached l_file_list then
 				dest_window := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_dest_window (a_context)
 				if dest_window /= default_pointer then
 					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (dest_window, $gtkwid)
@@ -903,7 +909,7 @@ feature -- Basic operation
 								l_widget_imp.file_drop_actions.call ([l_file_list])
 							end
 							if file_drop_actions_internal /= Void then
-								file_drop_actions_internal.call ([l_widget_imp.interface, l_file_list])
+								file_drop_actions_internal.call ([l_widget_imp.attached_interface, l_file_list])
 							end
 						end
 					end
@@ -986,7 +992,7 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-	set_docking_source (a_source: EV_DOCKABLE_SOURCE_IMP)
+	set_docking_source (a_source: detachable EV_DOCKABLE_SOURCE_IMP)
 			-- Set `docking_source' to `a_source'.
 		do
 			internal_docking_source := a_source
@@ -996,10 +1002,10 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		do
 			internal_pick_and_drop_source := a_source
-			interface.pick_actions.call ([a_pebble])
+			attached_interface.pick_actions.call ([a_pebble])
 		end
 
-	on_drop (a_pebble: ANY)
+	on_drop (a_pebble: detachable ANY)
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
 			internal_pick_and_drop_source := Void
@@ -1018,13 +1024,13 @@ feature -- Implementation
 			Result := pick_and_drop_source /= Void or else docking_source /= Void
 		end
 
-	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
+	pick_and_drop_source: detachable EV_PICK_AND_DROPABLE_IMP
 			-- Source of pick and drop if any.
 		do
 			Result := internal_pick_and_drop_source
 		end
 
-	docking_source: EV_DOCKABLE_SOURCE_IMP
+	docking_source: detachable EV_DOCKABLE_SOURCE_IMP
 			-- Source of docking if any.
 		assign
 			set_docking_source
@@ -1111,7 +1117,7 @@ feature -- Implementation
 
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP
+	eif_object_from_gtk_object (a_gtk_object: POINTER): detachable EV_ANY_IMP
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
 		local
 			gtkwid, l_null: POINTER
@@ -1124,12 +1130,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
 				gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 			end
-			if Result /= Void and then Result.interface.is_destroyed then
+			if Result /= Void and then Result.is_destroyed then
 				Result := Void
 			end
 		end
 
-	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP
+	gtk_widget_imp_at_pointer_position: detachable EV_GTK_WIDGET_IMP
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
@@ -1141,7 +1147,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			end
 		end
 
-	gtk_widget_from_gdk_window (a_gdk_window: POINTER): EV_GTK_WIDGET_IMP
+	gtk_widget_from_gdk_window (a_gdk_window: POINTER): detachable EV_GTK_WIDGET_IMP
 			-- Gtk Widget implementation from GdkWindow.
 		local
 			gtkwid, l_null: POINTER
@@ -1177,8 +1183,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	default_window_imp: EV_WINDOW_IMP
 			-- Default window implementation.
+		local
+			l_result: detachable EV_WINDOW_IMP
 		once
-			Result ?= default_window.implementation
+			l_result ?= default_window.implementation
+			check l_result /= Void end
+			Result := l_result
 		end
 
 	default_font_height: INTEGER
@@ -1340,4 +1350,7 @@ note
 
 
 end -- class EV_APPLICATION_IMP
+
+
+
 

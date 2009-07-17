@@ -32,10 +32,15 @@ inherit
 -- TODO: Would probably be nice if an NS_ARRAY could inherit from CHAIN [T] or even ARRAY [T]
 
 create
-	make_with_objects
+	make_with_objects,
+	make_from_array
 
 create {NS_OBJECT, NS_ENVIRONEMENT}
 	share_from_pointer
+
+convert
+	make_with_objects ({LIST[T]}),
+	make_from_array ({ARRAY[T]})
 
 feature {NONE} -- Creation
 
@@ -58,6 +63,28 @@ feature {NONE} -- Creation
 				a_objects.forth
 			end
 			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_objects.count)))
+		end
+
+	make_from_array (a_array: ARRAY [T])
+			-- Creates an NS_ARRAY with given elements
+		local
+			l_objects: MANAGED_POINTER
+			i, j: INTEGER
+		do
+			create l_objects.make (a_array.count)
+			from
+				i := 0
+				j := a_array.lower
+			until
+				j > a_array.upper
+			loop
+				if attached a_array.item (j) as l_object then
+					l_objects.put_pointer (l_object.item, i * {PLATFORM}.pointer_bytes )
+				end
+				i := i + 1
+				j := j + 1
+			end
+			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_array.count)))
 		end
 
 feature -- Access

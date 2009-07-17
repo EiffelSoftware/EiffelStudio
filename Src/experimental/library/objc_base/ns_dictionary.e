@@ -12,7 +12,8 @@ inherit
 
 create
 	make,
-	make_with_object_for_key
+	make_with_object_for_key,
+	make_with_objects_for_keys
 create {NS_OBJECT}
 	make_from_pointer
 
@@ -26,6 +27,14 @@ feature -- Creation
 	make_with_object_for_key (a_object, a_key: NS_OBJECT)
 		do
 			make_from_pointer ({NS_DICTIONARY_API}.dictionary_with_object_for_key (a_object.item, a_key.item))
+		end
+
+	make_with_objects_for_keys (a_objects, a_keys: NS_ARRAY[NS_OBJECT])
+			-- Creates a dictionary containing entries constructed from the contents of an array of keys and an array of values.
+		require
+			same_count: a_objects.count = a_keys.count
+		do
+			make_from_pointer ({NS_DICTIONARY_API}.dictionary_with_objects_for_keys (a_objects.object_item, a_keys.object_item))
 		end
 
 feature -- Accessing Keys and Values

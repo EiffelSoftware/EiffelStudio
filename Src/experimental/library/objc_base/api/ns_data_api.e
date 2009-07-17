@@ -89,22 +89,6 @@ feature -- Creating Data Objects
 			"return [NSData dataWithData: $a_data];"
 		end
 
-	frozen data_with_capacity (a_num_items: INTEGER): POINTER
-			-- + (id)dataWithCapacity: (NSUInteger) aNumItems
-		external
-			"C inline use <Foundation/Foundation.h>"
-		alias
-			"return [NSData dataWithCapacity: $a_num_items];"
-		end
-
-	frozen data_with_length (a_length: INTEGER): POINTER
-			-- + (id)dataWithLength: (NSUInteger) length
-		external
-			"C inline use <Foundation/Foundation.h>"
-		alias
-			"return [NSData dataWithLength: $a_length];"
-		end
-
 feature --
 
 --	frozen init_with_bytes_length (a_ns_data: POINTER; a_bytes: POINTER; a_length: INTEGER): POINTER

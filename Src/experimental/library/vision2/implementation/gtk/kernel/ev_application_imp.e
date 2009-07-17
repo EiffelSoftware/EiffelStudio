@@ -715,7 +715,7 @@ feature -- Access
 			loop
 				w ?= id.id_object (window_oids.item)
 				if w = Void or else w.is_destroyed then
-					window_oids.prune_all (window_oids.item)
+					window_oids.remove
 				else
 					l.extend (w.attached_interface)
 					window_oids.forth

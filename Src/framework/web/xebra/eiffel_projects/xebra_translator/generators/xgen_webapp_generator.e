@@ -93,7 +93,7 @@ feature -- Basic Functionality
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_" + Server_con_handler_class.as_lower + ".e")
 
-			create l_util.make
+			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create l_buf.make (l_file)
 				l_buf.set_ind_character ('%T')

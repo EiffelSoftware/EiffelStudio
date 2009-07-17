@@ -68,7 +68,7 @@ feature -- Access
 			Result.append (" -t " + config.file.taglib.out)
 		--	Result.append (" -d " + config.args.debug_level.out)
 			if force then
-				Result.append (" -f")
+				Result.append (" -f FIXME_SANDRO")
 			end
 		ensure
 			Result_attached: Result /= void
@@ -87,7 +87,7 @@ feature -- Access
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_f_utils.make
+			create l_f_utils
 			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
 			if webapp.needs_cleaning then
 				Result.append (" -clean")
@@ -172,7 +172,7 @@ feature -- Status report
 			l_servet_gen_ecf_not_exist: BOOLEAN
 			l_servlet_gen_not_executed: BOOLEAN
 		do
-			create l_f_utils.make
+			create l_f_utils
 			l_application_file := app_dir.twin
 			l_application_file.extend ({XU_CONSTANTS}.Generated_folder_name)
 			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_f_utils.make
+			create l_f_utils
 			if can_launch_process (config.file.compiler_filename, app_dir) and then l_f_utils.is_readable_file (servlet_gen_ecf) then
 				if attached gen_compile_process as p  then
 					if p.is_running then

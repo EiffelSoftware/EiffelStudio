@@ -176,7 +176,7 @@ feature {NONE}  -- Impl
  		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_f_utils.make
+			create l_f_utils
 
 			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name + ".log") as l_file then
 				l_file.put_string ("%N" + a_msg)

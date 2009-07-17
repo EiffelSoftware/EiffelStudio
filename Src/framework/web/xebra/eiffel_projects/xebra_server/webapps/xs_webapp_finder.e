@@ -43,7 +43,7 @@ feature -- Operations
 			l_webapp_config_reader: XC_WEBAPP_CONFIG_READER
 		do
 			create Result.make (1)
-			create l_f_utils.make
+			create l_f_utils
 			create l_webapp_config_reader.make
 			l_files := l_f_utils.scan_for_files (a_path, -1, Webapp_config_filename, Search_exclude)
 

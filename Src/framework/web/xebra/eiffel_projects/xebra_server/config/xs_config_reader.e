@@ -37,7 +37,7 @@ feature -- Status report
 			l_ok: BOOLEAN
 			l_validator: XU_FILE_UTILITIES
 		do
-			create l_validator.make
+			create l_validator
 			l_ok := True
 			if not a_config.webapps_root.is_set then
 				error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (webapps_root_name), false)

@@ -105,7 +105,7 @@ feature -- Processing
 		do
 			create {ARRAYED_LIST [FILE_NAME]}Result.make (5)
 			create l_directory_name.make_from_string (a_directory.name)
-			create l_util.make
+			create l_util
 			Result := l_util.scan_for_files (l_directory_name.out, -1, "(\.xeb$)|(\.xrpc$)", "EIFGENs|\.svn")
 		end
 
@@ -247,7 +247,7 @@ feature -- Processing
 			l_util: XU_FILE_UTILITIES
 		do
 			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 1)
-			create l_util.make
+			create l_util
 			create l_directory.make_from_string (taglib_folder)
 			l_files := l_util.scan_for_files (l_directory.out, -1, "(\.taglib$)", "EIFGENs|\.svn")
 			from

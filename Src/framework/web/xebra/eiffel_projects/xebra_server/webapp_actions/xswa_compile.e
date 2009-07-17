@@ -44,7 +44,7 @@ feature -- Access
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_f_utils.make
+			create l_f_utils
 			Result  := " -config " + webapp.app_config.name.out + ".ecf -target " + webapp.app_config.name.out + " -c_compile -stop"
 			if config.file.finalize_webapps.value then
 				Result := Result + " -finalize"
@@ -76,7 +76,7 @@ feature -- Status report
 			l_melted_file_is_old: BOOLEAN
 			l_executable_does_not_exist: BOOLEAN
 		do
-			create l_f_util.make
+			create l_f_util
 			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file_path,
 												app_dir,
 												"\w+\.(e|ecf)")

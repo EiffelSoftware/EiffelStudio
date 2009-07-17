@@ -23,6 +23,8 @@ feature -- Status Change
 		local
 			l_s_file: RAW_FILE
 			l_t_file: RAW_FILE
+			l_modulo, l_read, l_nb: INTEGER
+			l_pos: INTEGER
 		do
 			if attached {STRING} current_request.upload_filename as l_filename then
 				create l_s_file.make (l_filename)
@@ -45,7 +47,19 @@ feature -- Status Change
 								l_s_file.next_line
 								l_s_file.next_line
 								l_s_file.next_line
-								l_s_file.copy_to (l_t_file)
+
+								from
+									l_read := 0
+									l_nb := l_s_file.count
+									l_modulo := 51200
+								until
+									l_read >= l_nb
+								loop
+									l_s_file.read_stream (l_modulo)
+									l_t_file.put_string (l_s_file.last_string)
+									l_read := l_read + l_modulo
+								end
+
 
 								Result := "Success, file is now at: " + l_t_file.name
 							else

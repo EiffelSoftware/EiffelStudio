@@ -10,16 +10,8 @@ class
 inherit
 	NS_OBJECT
 
-create
-	default_center
-
-feature {NONE} -- Getting the Notification Center
-
-	default_center
-			-- fixme: should be a singleton
-		do
-			make_from_pointer (notification_center_default_center)
-		end
+create {NS_ENVIRONEMENT}
+	make_from_pointer
 
 feature -- Managing Notification Observers
 
@@ -66,9 +58,9 @@ feature {NONE} -- Implementation
 			counter.put (counter.item (0) + 1, 0)
 		end
 
-feature {NONE} -- Objective-C interface
+feature {NS_ENVIRONEMENT} -- Objective-C interface
 
-	frozen notification_center_default_center: POINTER
+	frozen default_center: POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

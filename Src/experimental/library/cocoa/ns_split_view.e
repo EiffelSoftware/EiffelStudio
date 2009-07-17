@@ -21,6 +21,7 @@ feature {NONE} -- Creation
 	make
 		do
 			make_from_pointer (split_view_new)
+			insert_in_table
 		end
 
 feature -- Access

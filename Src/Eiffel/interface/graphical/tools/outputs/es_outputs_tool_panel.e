@@ -230,7 +230,6 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			l_name: STRING_32
 			l_cursor: CURSOR
 			l_actions_running: BOOLEAN
-			l_locked: BOOLEAN
 			l_old_output: like output
 			l_widget: ES_WIDGET [EV_WIDGET]
 			l_window: EB_DEVELOPMENT_WINDOW
@@ -250,10 +249,13 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 				l_old_output := output
 				if attached l_old_output then
 						-- Clean up the old output
-					l_locked := l_old_output.is_locked
 					if l_old_output.lockable_connection.is_connected (Current) then
 							-- Disconnect the lock events
 						l_old_output.lockable_connection.disconnect_events (Current)
+					end
+					if l_old_output.is_locked then
+							-- The output was still locked after the disconnect, call unlock handler now.
+						on_output_unlocked (l_old_output)
 					end
 				end
 
@@ -303,15 +305,9 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 
 					-- Connect to lock events
 				a_output.lockable_connection.connect_events (Current)
-				if a_output.is_locked /= l_locked then
-						-- Output pane locked status has changed, perform manual event publishing
-					if l_locked then
-							-- Was locked so unlock now.
-						on_output_unlocked (a_output)
-					else
-							-- Was unlocked so lock now.
-						on_output_locked (a_output)
-					end
+				if a_output.is_locked then
+						-- The output is locked so raise the correct events.
+					on_output_locked (a_output)
 				end
 
 				on_output_shown (a_output)
@@ -591,8 +587,8 @@ feature {NONE} -- Basic operations
 		do
 				-- Remove timer.
 			l_timer := icon_animation_timer
-			l_timer.set_interval (0)
 			check l_timer_attached: l_timer /= Void end
+			l_timer.set_interval (0)
 			unregister_action (l_timer.actions, agent on_icon_animation_timeout)
 			l_timer.destroy
 			icon_animation_timer := Void

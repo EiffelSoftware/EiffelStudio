@@ -450,6 +450,17 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_SELECTION_NOTIFY%N")
 						end
+						if
+							attached {EV_TEXT_FIELD} focused_widget as l_text_field and then
+							not l_text_field.is_destroyed and then
+							attached {EV_TEXT_FIELD_IMP} l_text_field.implementation as l_text_field_imp
+						then
+								-- We need to explicitly check for selection actions on text fields
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							l_text_field_imp.on_change_actions
+						end
+						
 					when GDK_CLIENT_EVENT then
 						debug ("GDK_EVENT")
 							print ("GDK_CLIENT_EVENT%N")

@@ -50,21 +50,16 @@ feature {NONE}
 				l_tag := l_tag + " " + attributes.key_for_iteration + "=%%%"" + attributes.item_for_iteration.value (current_controller_id) + "%%%""
 				attributes.forth
 			end
-
+			l_tag := l_tag + ">"
 			if l_cashable then
-				write_string_to_result (l_tag + ">", a_servlet_class.render_html_page)
+				write_string_to_result (l_tag, a_servlet_class.render_html_page)
 			else
-				write_string_to_result_uncashed (l_tag + ">", a_servlet_class.render_html_page)
+				write_string_to_result_uncashed (l_tag, a_servlet_class.render_html_page)
 			end
 
 			generate_children (a_servlet_class, a_variable_table)
 
-			if l_cashable then
-				write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_html_page)
-			else
-				write_string_to_result_uncashed ("</" + tag_id + ">", a_servlet_class.render_html_page)
-			end
-
+			write_string_to_result ("</" + tag_id + ">", a_servlet_class.render_html_page)
 		end
 
 	internal_put_attribute (a_id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

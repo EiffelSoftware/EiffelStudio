@@ -14,13 +14,6 @@ inherit
 create
 	make
 
-feature -- Initialization
-
-	make
-		do
-			make_base
-		end
-
 feature -- Implementation
 
 	input_type: STRING

@@ -16,6 +16,18 @@ create
 
 feature -- Implementation
 
+	is_dynamic: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
+
+	is_variable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
+
 	value (a_controller_id: STRING): STRING
 			-- <Precursor>
 		do
@@ -32,12 +44,6 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			Result := "%"+" + a_controller_id + "." + internal_value + "+%""
-		end
-
-	is_plain_text: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
 		end
 
 end

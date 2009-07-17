@@ -58,6 +58,7 @@ feature -- Operation
 				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
 				o.iprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N")
+				{EXCEPTIONS}.die (-1)
 			else
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("System translated.")

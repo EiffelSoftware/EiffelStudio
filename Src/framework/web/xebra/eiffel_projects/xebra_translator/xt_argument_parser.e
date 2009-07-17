@@ -131,7 +131,7 @@ feature {NONE} -- Access: Usage
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (project_name_switch, "Specifies the name of the project", False, False, "project_name", "Project name", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (force_switch, "Specifies if the files should be generated regardless", True, False, "force", "Force", True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Specifies if the files should be generated regardless", True, False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (input_path_switch, "Specifies the path to the directory with the input files", False, False, "input_path", "The input directory path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (output_path_switch, "Specifies the path to the directory where the generated files will be written.", False, False, "ouput_path", "The output path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (tag_lib_path_switch, "Specifies the path to the directory where the tag libraries are located.", False, False, "tag_lib", "The tag libraries directory", False))

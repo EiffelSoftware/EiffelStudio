@@ -79,10 +79,10 @@ feature {NONE} -- Implementation
 			value_attribute := (-(quote.negate + any_char)).consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
 			value_attribute.set_name ("value_attribute")
-			dynamic_attribute := (percent + equals + identifier + percent).consumer
+			dynamic_attribute := (percent + equals + (identifier + (-(dot + identifier))).consumer + percent)
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
 			dynamic_attribute.set_name ("dynamic_attribute")
-			variable_attribute := (sharp + open_curly + identifier + (+(dot + identifier)) + close_curly).consumer
+			variable_attribute := (sharp + open_curly + (identifier + (+(dot + identifier))).consumer + close_curly)
 			variable_attribute.set_behaviour (agent build_variable_attribute)
 			variable_attribute.set_name ("variable_attribute")
 
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			value := variable_attribute | dynamic_attribute | value_attribute
 
 				-- Tag attributes
-			l_attribute := (ws + identifier + ws.optional + equals + ws.optional + quote + value + quote)
+			l_attribute := (ws.optional + identifier + ws.optional + equals + ws.optional + quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
 			l_attribute.fixate
 			l_attribute.set_name ("attribute")
@@ -98,10 +98,10 @@ feature {NONE} -- Implementation
 			namespace_identifier := identifier + colon + identifier
 			namespace_identifier.fixate
 			namespace_identifier.set_name ("namespace_identifier")
-			plain_html_header := identifier + (-l_attribute)
+			plain_html_header := identifier + (ws + (-l_attribute)).optional
 			plain_html_header.fixate
 			plain_html_header.set_name ("plain_html")
-			xeb_tag_header := namespace_identifier + (-l_attribute)
+			xeb_tag_header := namespace_identifier + (ws + (-l_attribute)).optional
 			xeb_tag_header.fixate
 			xeb_tag_header.set_name ("xeb_tag_header")
 

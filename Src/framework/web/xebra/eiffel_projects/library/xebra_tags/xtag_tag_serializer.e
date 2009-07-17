@@ -178,7 +178,7 @@ feature -- Basic implementation
 				-- If the render option is set, overwrite definition of tag
 			if not render.value (current_controller_id).is_empty then
 				l_render_condition_id := a_servlet_class.get_unique_identifier
-				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + current_controller_id + "." + render.plain_value (current_controller_id))
+				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + render.plain_value (current_controller_id))
 
 				if generates_clean_up then
 					a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")

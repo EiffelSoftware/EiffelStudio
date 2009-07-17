@@ -127,7 +127,7 @@ feature -- Basic Functionality
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet.e")
 			create l_current_file.make (current_file_path)
-			create l_util.make
+			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				o.iprint ("The servlet '" + l_filename + "' is being generated...")
 

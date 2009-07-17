@@ -28,7 +28,7 @@ feature -- Access
 			l_generic_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
-			create l_util.make
+			create l_util
 			create l_generic_file_name.make_from_string (a_file_name)
 			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_read( a_file_name ) as l_file then
 				l_source := ""

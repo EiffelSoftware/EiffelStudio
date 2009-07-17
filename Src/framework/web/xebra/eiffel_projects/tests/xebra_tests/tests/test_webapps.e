@@ -23,16 +23,18 @@ feature -- Test routines
 			l_webapp_finder: XS_WEBAPP_FINDER
 			l_config_reader: XS_CONFIG_READER
 			l_ee: EXECUTION_ENVIRONMENT
+			l_f_utils: XU_FILE_UTILITIES
 			l_exp: STRING_AGENT_EXPANDER
 		do
 			create l_exp
+			create l_f_utils
 			print ("%N%N%N%N=========================================STARTING NEW TEST========")
 
 			create l_ee
 			config.args.set_assume_webapps_are_running (False)
 			config.args.set_clean (False)
 			config.args.set_debug_level (6)
-			config.args.set_config_filename ( l_exp.expand_string ("$XEBRA_DEV/eiffel_projects/xebra_server/config.ini", replacer, True))
+			config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV/eiffel_projects/xebra_server/config.ini", True))
 
 
 			create l_config_reader.make
@@ -86,15 +88,6 @@ feature -- Test routines
 			end
 
 		end
-feature {NONE} -- Internal
 
-	replacer: FUNCTION [ANY, TUPLE [READABLE_STRING_8], detachable STRING]
-			-- Converts get from EXECUTION_ENVIRONMENT to be usable by string expander
-		once
-			Result := agent (ia_exec: EXECUTION_ENVIRONMENT; a_name: READABLE_STRING_8): STRING
-				do
-					Result := ia_exec.get (a_name.as_string_8)
-				end (create {EXECUTION_ENVIRONMENT}, ?)
-		end
 
 end

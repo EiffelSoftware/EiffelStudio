@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Provides utility features that help to work with files.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -14,17 +14,6 @@ inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-
-		end
-
 feature {NONE} -- Access
 
 	plain_text_file: detachable PLAIN_TEXT_FILE
@@ -33,6 +22,23 @@ feature {NONE} -- Internal
 
 
 feature -- Basic Opertaions
+
+	resolve_env_vars (a_path: STRING; a_keep: BOOLEAN): STRING
+			-- Resolves a path containing environment variables
+			--
+			-- `a_path'    : The string to expand.
+			-- `a_keep'    : True to retain any unmatched variables in the result; False otherwise.
+			-- `Result'    : An expanded string with the match variable expanded.
+		require
+			a_path_attached: a_path /= Void
+		local
+			l_exp: STRING_AGENT_EXPANDER
+		do
+			create l_exp
+			Result := l_exp.expand_string (a_path, replacer, a_keep)
+		ensure
+			result_attached: Result /= Void
+		end
 
 	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE
 			-- Opens a plain text file for reading
@@ -263,13 +269,17 @@ feature -- Basic Opertaions
 		end
 
 
-feature -- Status setting
+feature {NONE} -- Internal
 
-feature -- Basic operations
+	replacer: FUNCTION [ANY, TUPLE [READABLE_STRING_8], detachable STRING]
+			-- Converts get from EXECUTION_ENVIRONMENT to be usable by string expander
+		once
+			Result := agent (ia_exec: EXECUTION_ENVIRONMENT; a_name: READABLE_STRING_8): STRING
+				do
+					Result := ia_exec.get (a_name.as_string_8)
+				end (create {EXECUTION_ENVIRONMENT}, ?)
+		end
 
-feature {NONE} -- Implementation
-
-invariant
 
 end
 

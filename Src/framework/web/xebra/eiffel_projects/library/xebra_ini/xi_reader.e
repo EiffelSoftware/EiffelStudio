@@ -94,7 +94,7 @@ feature {NONE} -- Internal Status setting
 			l_f_utils: XU_FILE_UTILITIES
 		do
 
-			create l_f_utils.make
+			create l_f_utils
 			create l_reader.make
 			if attached l_f_utils.plain_text_file_read (a_file_name) as l_file then
 				l_reader.read_from_file (l_file, True)

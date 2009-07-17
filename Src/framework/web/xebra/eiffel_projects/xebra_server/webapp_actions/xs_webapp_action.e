@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			l_f_utils: XU_FILE_UTILITIES
 		do
 			Result := True
-			create l_f_utils.make
+			create l_f_utils
 
 			if not l_f_utils.is_dir (a_dir) then
 				o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)

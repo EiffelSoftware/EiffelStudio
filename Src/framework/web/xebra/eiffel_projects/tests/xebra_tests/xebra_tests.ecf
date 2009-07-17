@@ -3,36 +3,26 @@
 	<target name="xebra_tests">
 		<root class="XTE_APPLICATION" feature="make"/>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf" />
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
-		<cluster name="tests" location="tests\" recursive="true"/>
-		<cluster name="xebra_server" location="$XEBRA_DEV\eiffel_projects\xebra_server\" recursive="true"/>
 		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
-		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
-		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf" />
+		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf" />
+		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf"/>
+		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf">
-			
-		</library>
-		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf" >
-			
-		</library>
-		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf" >
-			
-		</library>
-		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf" >
-			
-		</library>
-			<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf">
-			
-		</library>
+		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf"/>
+		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf"/>
+		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf"/>
+		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+		<cluster name="tests" location="tests\" recursive="true"/>
+		<cluster name="xebra_server" location="$XEBRA_DEV\eiffel_projects\xebra_server\" recursive="true"/>
 		<cluster name="xebra_tests" location=".\">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

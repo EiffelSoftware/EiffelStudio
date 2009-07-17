@@ -172,7 +172,7 @@ feature -- Basic functionality
 			end
 
 			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
-			create l_util.make
+			create l_util
 			if l_util.file_is_older_than (l_filename, root_tag.date) or force then
 				if attached l_util.plain_text_file_write (l_filename) as l_file then
 					create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")

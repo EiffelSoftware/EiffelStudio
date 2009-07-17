@@ -92,7 +92,7 @@ feature -- Basic functionality
 				l_directory.create_dir
 			end
 			l_filename.set_file_name (Application_name.as_lower + ".e")
-			create l_util.make
+			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create buf.make (l_file)
 				create application_class.make (Application_name.as_upper)

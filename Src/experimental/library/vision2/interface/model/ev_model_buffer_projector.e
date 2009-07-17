@@ -84,7 +84,7 @@ feature -- Access
 			Result := -drawable_position.y
 		end
 
-	world_as_pixmap (a_border: INTEGER): detachable EV_PIXMAP
+	world_as_pixmap (a_border: INTEGER): EV_PIXMAP
 			-- Image of the `world' with `a_border'.
 		require
 			a_border_positive: a_border >= 0
@@ -101,7 +101,8 @@ feature -- Access
 			rectangle := world.bounding_box
 			create drawable_position.make (rectangle.left - a_border, rectangle.top - a_border)
 
-			drawable := create {EV_PIXMAP}.make_with_size (rectangle.width + 2 * a_border, rectangle.height + 2 * a_border)
+			create Result.make_with_size (rectangle.width + 2 * a_border, rectangle.height + 2 * a_border)
+			drawable := Result
 
 			u_x := rectangle.x
 			u_y := rectangle.y
@@ -112,9 +113,6 @@ feature -- Access
 			end
 			world.validate
 
-			l_result ?= drawable
-			check l_result /= Void end
-			Result := l_result
 			set_drawable_position (old_drawable_position)
 			drawable := old_drawable
 			full_project

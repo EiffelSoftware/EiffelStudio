@@ -89,18 +89,20 @@ feature {NONE} -- User interface initialization
 			l_output_manager := output_manager
 			if l_output_manager.is_service_available then
 				l_output_manager.service.output_manager_event_connection.connect_events (Current)
+					-- Add all already activated outputs
+				l_active_outputs := l_output_manager.service.active_outputs
+				from l_active_outputs.start until l_active_outputs.after loop
+					if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
+						if l_first_output = Void then
+							l_first_output := l_output_pane
+						end
+						extend_output (l_output_pane)
+					end
+					l_active_outputs.forth
+				end
+
 				if not attached output then
 						-- No output is currently been set.
-					l_active_outputs := l_output_manager.service.active_outputs
-					from l_active_outputs.start until l_active_outputs.after loop
-						if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
-							if l_first_output = Void then
-								l_first_output := l_output_pane
-							end
-							extend_output (l_output_pane)
-						end
-						l_active_outputs.forth
-					end
 
 						-- Set best output
 					if attached {ES_OUTPUT_PANE_I} l_output_manager.service.general_output as l_active_output then
@@ -272,7 +274,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 						end
 						l_combo.forth
 					end
-					check done: l_done end
+					--check done: l_done end
 					l_combo.go_to (l_cursor)
 
 					if l_actions_running then

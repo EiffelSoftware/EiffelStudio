@@ -4,7 +4,7 @@ note
 		compiling the servlet_gen and running the servlet_Gen
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,7 +68,7 @@ feature -- Access
 			Result.append (" -t " + config.file.taglib.out)
 		--	Result.append (" -d " + config.args.debug_level.out)
 			if force then
-				Result.append (" -f FIXME_SANDRO")
+				Result.append (" -f")
 			end
 		ensure
 			Result_attached: Result /= void

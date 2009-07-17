@@ -3,7 +3,7 @@ note
 		Cleans, re-translates, compiles and launches a webapp.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

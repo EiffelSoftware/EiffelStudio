@@ -3,9 +3,9 @@ note
 		no comment yet
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "Pre-release"
+	date: "$Date: 2009-06-22 17:17:46 -0700 (Mon, 22 Jun 2009) $"
+	revision: "$Revision: 79413 $"
 
 class
 	XC_WEBAPP_CONFIG

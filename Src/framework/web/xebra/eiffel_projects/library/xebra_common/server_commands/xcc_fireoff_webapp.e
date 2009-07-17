@@ -3,7 +3,7 @@ note
 		Sends shutdown signal even if the webapp process is not owned by the server.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

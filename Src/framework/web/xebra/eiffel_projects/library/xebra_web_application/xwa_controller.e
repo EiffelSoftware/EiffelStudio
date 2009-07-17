@@ -4,7 +4,7 @@ note
 		It's constructor has to be the make feature.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

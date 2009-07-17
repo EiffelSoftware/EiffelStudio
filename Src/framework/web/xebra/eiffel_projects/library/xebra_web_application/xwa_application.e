@@ -3,7 +3,7 @@ note
 		The run class that starts the application.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -87,7 +87,7 @@ feature {NONE} -- Operations Internal
 					o.eprint ("Socket could not be bound!", generating_type)
 				else
 					server.launch
-					o.iprint ("Xebra Wep Application ready to rock...")
+					o.iprint ("Xebra Web Application ready to rock...")
 					if config.is_interactive.value then
 						o.iprint ("(enter 'x' to shut down)")
 						from

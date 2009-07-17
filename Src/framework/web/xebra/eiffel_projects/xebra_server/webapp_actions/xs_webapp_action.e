@@ -3,7 +3,7 @@ note
 		A deferred class for actions that the server can perform on webapps
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -222,20 +222,15 @@ static int xebra_handler (request_rec* r)
 	/* Prepare return message */
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("%s", r->the_request)
-
 	DEBUG ("Reading input...");
-
 	message = apr_palloc (r->pool, 1);
 	message[0] = '\0';
-
 	message = apr_pstrcat (r->pool, message, r->the_request, NULL);
 
 	/* Read headers into message buffer */
 	DEBUG2 ("Reading in headers...");
-
 	table_buf = apr_palloc (r->pool, 1);
 	table_buf[0] = '\0';
-
 	table_buf = apr_pstrcat (r->pool, HEADERS_IN, NULL);
 	apr_table_do (print_item, r, r->headers_in, NULL);
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, HEADERS_OUT, NULL);
@@ -248,11 +243,12 @@ static int xebra_handler (request_rec* r)
 
 	/* If there are, read POST or GET parameters into message buffer */
 	if (r->method_number == M_POST) {
-		DEBUG2 ("Reading POST parameters...");
+		DEBUG ("Reading POST parameters...");
 		ctype = apr_table_get (r->headers_in, "Content-Type");
 		DEBUG ("Content-Type: %s", ctype);
 		tmp_ctype = apr_palloc (r->pool, 1);
 		apr_cpystrn(tmp_ctype, ctype, strlen(CT_MULTIPART_FORM_DATA) +1);
+		/* If the Content-Type is CT_MULTIPART_FORM_DATA save the post data to a file and don't append it to the message */
 		if (tmp_ctype && (strcasecmp (tmp_ctype, CT_MULTIPART_FORM_DATA) == 0))
 			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 1);
 		else
@@ -264,7 +260,7 @@ static int xebra_handler (request_rec* r)
 			PRINT_ERROR ("Error reading POST data");
 			return OK;
 		} else {
-
+			/* If the Content-Type is CT_APP_FORM_URLENCODED put a & betweeen ARG and the post data */
 			if (ctype && (strcasecmp (ctype, CT_APP_FORM_URLENCODED) == 0)) {
 				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
 						NULL);
@@ -274,6 +270,7 @@ static int xebra_handler (request_rec* r)
 		}
 
 	} else if (r->args != NULL) {
+	    /* If its not a POST request, simply append the (GET) args to the message */
 		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, NULL);
 	} else {
 		message = apr_pstrcat (r->pool, message, ARG, NULL);

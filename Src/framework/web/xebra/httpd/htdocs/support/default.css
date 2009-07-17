@@ -452,6 +452,18 @@ div.tooltip {
 	position: absolute;
 }
 
+div.status_closed {
+	background-image: support/images/support/status_closed.gif
+}
+
+div.status_open {
+	background-image: support/images/support/status_open.gif
+}
+
+div.status_suspended {
+	background-image: /support/images/support/status_suspended.gif
+}
+
 .tooltip_container {
 	position: relative;
 	z-index: 100;

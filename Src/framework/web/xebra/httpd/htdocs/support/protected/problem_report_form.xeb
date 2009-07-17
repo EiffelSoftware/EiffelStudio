@@ -16,41 +16,48 @@
 				<td>
 					<div class="tooltipped" id="category_tooltip_container">
 						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Product/Category
+						Product/Category <span style="color: red"><f:validation_result name="category" variable="category_error"/></span>
 					</div>
 				</td>
 				<td class="separator_field">
-					<f:drop_down_list
-						id="category_list" />
+					<f:drop_down_list items="category_list" name="category" value="category" selected_index="#{problem_report.category}">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:drop_down_list>
 				</td>
 				<td>
 					<div  class="tooltipped" id="severity_tooltip_container">
 						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>					
-						Severity
+						Severity <span style="color: red"><f:validation_result name="severity" variable="severity_error"/></span>
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list id="severity_list" />
+					<f:drop_down_list items="severity_list" name="severity" value="severity" >
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:drop_down_list>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div  class="tooltipped" id="class_tooltip_container">
 						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>					
-						Class						
+						Class <span style="color: red"><f:validation_result name="class" variable="class_error"/></span>					
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list id="class_list" />
+					<f:drop_down_list items="e_class_list" name="class" value="e_class">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:drop_down_list>
 				</td>
 				<td>
 					<div class="tooltipped" id="priority_tooltip_container">
 						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>			
-						Priority
+						Priority <span style="color: red"><f:validation_result name="priority" variable="priority_error"/></span>
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list items="priority_list" />
+					<f:drop_down_list items="priority_list" name="priority" value="priority">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:drop_down_list>
 				</td>
 			</tr>
 			<tr>
@@ -60,17 +67,32 @@
 						Release
 					</div>
 				</td>
-				<td>
-					<f:input_text size="14" name="release_input" text="some_text" value="release" />
+				<td>			
+					<f:input_text size="14" name="release_input" text="#{problem_report.release}" value="release">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:input_text>
+					
+					<span style="color: red">
+						<f:validation_result name="release_input" variable="release_error">
+							<br/>
+							<xeb:display text="#{release_error.out}" />
+						</f:validation_result>						
+					</span>
 				</td>
 				<td>
 					<div  class="tooltipped" id="confidential_tooltip_container">
 						<a  id="confidential_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Confidential
+						Confidential <span style="color: red">
+						<f:validation_result name="confidential" variable="confidential_errors">
+							<xeb:display text="#{confidential_errors.out}" />	
+						</f:validation_result>
+						</span>
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list id="confidential_list" />
+					<f:drop_down_list items="confidential_list" name="confidential" value="confidential">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:drop_down_list>
 				</td>
 			</tr>
 		</table>
@@ -80,26 +102,34 @@
 				<td>
 					<div  class="tooltipped" id="environment_tooltip_container">
 						<a  id="environment_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Environment
+						Environment <span style="color: red"><f:validation_result name="environment_text" variable="environment_errors">
+							<xeb:display text="#{environment_errors.out}" />	
+						</f:validation_result></span>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:text_area rows="3" cols="80" name="environment_text" value="environment_text" text=""/>
+					<f:text_area rows="3" cols="80" name="environment_text" value="environment_text" text="%=environment_info%">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:text_area>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div  class="tooltipped" id="synopsis_tooltip_container">
 						<a  id="synopsis_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Synopsis
+						Synopsis <span style="color: red"><f:validation_result name="synopsis_text" variable="synopsis_errors">
+							<xeb:display text="#{synopsis_errors.out}" />	
+						</f:validation_result></span>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:input_text name="synopsis_text" size="70" value="environment_text" text=""/>
+					<f:input_text name="synopsis_text" size="70" value="synopsis" text="">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:input_text>
 				</td>
 			</tr>
 			<!--% if edited_problem_report_number = 0 then %-->
@@ -107,13 +137,13 @@
 					<td>
 						<div  class="tooltipped" id="attachments_tooltip_container">
 							<a  id="attachments_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-							Attachments						
+							Attachments 					
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<efa:attachments_table  is_report_attachments="true" id="attachments_table" />
+						--Attachmentstable--
 					</td> 
 				</tr>
 			<!--% end %-->
@@ -121,13 +151,18 @@
 				<td>
 					<div  class="tooltipped" id="description_tooltip_container">
 						<a  id="description_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Description			
+						Description <span style="color: red"><f:validation_result name="description_text" variable="description_errors">
+							<xeb:display text="#{description_errors.out}" />	
+						</f:validation_result></span>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<f:text_area rows="15" cols="80" name="description_text" text="" value="description_text" />
+					<f:text_area rows="15" cols="80" name="description_text" text="" value="description_text" >
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:text_area>
+					
 				</td> 
 			</tr>
 			<tr>
@@ -135,12 +170,19 @@
 					<div class="tooltipped" id="to_reproduce_tooltip_container">
 						<a  id="to_reproduce_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
 						To Reproduce
+						<span style="color: red">
+							<f:validation_result name="to_reproduce_text" variable="to_reproduce_text_errors">
+								<xeb:display text="#{to_reproduce_text_errors.out}" />	
+							</f:validation_result>
+						</span>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td class="last_row">
-					<f:text_area rows="10" cols="80" name="to_reproduce_text" value="to_reproduce_text" text=""/>
+					<f:text_area rows="10" cols="80" name="to_reproduce_text" value="to_reproduce_text" text="">
+						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
+					</f:text_area>
 				</td> 
 			</tr>
 			<tr>

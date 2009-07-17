@@ -70,7 +70,7 @@
 		</xeb:grid_view>
 		<table class="top_padding">
 			<tr>
-				<xeb:iterate list="legend_repeater" variable="variable_todo" type="STRING">
+				<xeb:iterate list="%=legend_repeater%" variable="variable_todo" type="STRING">
 					<ItemTemplate>
 						<td valign="bottom">
 							<img src="<%#status_image_url ({INTEGER} #? eval('Statusid')) %>" alt="" />

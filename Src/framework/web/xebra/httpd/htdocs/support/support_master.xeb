@@ -16,17 +16,17 @@
 					<div id="general_links">
 						<a href="http://www.eiffel.com">Eiffel</a> |
 						<a href="default.xeb">Home</a>
-						<xeb:container render="is_logged_in">
+						<xeb:container render="%=is_logged_in%">
 							| <a href=""><xeb:display text="%=user_name%" />'s support</a> |
 							<a href="problem_report_form.xeb">Report a problem</a>
 						</xeb:container>
 					</div>
 					<div id="nav_bar">
 						<div id="nav_bar_links">
-							<container render="is_not_logged_in">
+							<container render="%=is_not_logged_in%">
 								<f:form><f:command_link action="login" text="Login" /></f:form> | <a href="">Register</a>
 							</container>
-							<container render="is_logged_in">
+							<container render="%=is_logged_in%">
 								<f:form>
 									<f:command_link text="Logout" action="logout"/>
 								</f:form>
@@ -37,11 +37,16 @@
 					<div id="responsibles_link"></div>
 				</div>
 				<div id="main_form">
-					<page:declare_region id="default_main_content" />
+					<container render="%=is_logged_in%">
+						<page:declare_region id="default_authorized_main_content" />
+					</container>
+					<container render="%=is_not_logged_in%">
+						<page:declare_region id="default_not_authorized_main_content"/>
+					</container>
 				</div>
 				<div id="footer">
 					<a href="http://www.eiffel.com/general/contact_details.html">Questions? Comments? Let us know!</a><br/>
-					&copy; 1993-2006 Eiffel Software inc. All rights reserved. --
+					&copy; 1993-2009 Eiffel Software inc. All rights reserved. --
 					<a href="http://www.eiffel.com/general/privacy_policy.html">Privacy Policy</a>
 					<div id="logo">
 						<img src="/support/images/support/xebra_for_eiffel.png" alt="Xebra for Eiffel"/>

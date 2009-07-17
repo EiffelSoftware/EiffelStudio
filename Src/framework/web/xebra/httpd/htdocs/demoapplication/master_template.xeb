@@ -10,16 +10,14 @@
 <div id="main">
 <div id="header_title">
 <div class="login_text">
-	
-	<xeb:container render="authenticated"> Welcome
+	<xeb:container render="%=authenticated%"> Welcome
 	          <xeb:display text="%=username%" />
 	          ,<f:form variable="b" class="login_bean">
 			<f:command_link text="Logout" action="logout" variable="b" />
 		</f:form>
-		
 	</xeb:container> 
 	 
-	<xeb:container render="not_authenticated">
+	<xeb:container render="%=not_authenticated%">
 		 <a href="login.xeb">Login</a>
 	</xeb:container>
 	

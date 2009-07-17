@@ -2,38 +2,35 @@
 	<page:controller class="reservation_controller" />
 	<page:define_region id="content">
 		<h2 class="style1">Reservations</h2>
-		<xeb:container render="not_authenticated">
+		<xeb:container render="%=not_authenticated%">
 			<p>Please log in to see reservations.</p>
 		</xeb:container>
-		<xeb:container render="authenticated">
+		<xeb:container render="%=authenticated%">
 			<table width="100%" border="0" cellpadding="0">
 				<tr class="tableheader">
 					<td>Name</td>
 					<td>Date</td>
 					<td>Persons</td>
-					<xeb:container render="authenticated_admin">
+					<xeb:container render="%=authenticated_admin%">
 						<td>Delete</td>
 					</xeb:container>
-					<xeb:container render="not_authenticated_admin">
+					<xeb:container render="%=not_authenticated_admin%">
 						<td>Details</td>
 					</xeb:container>
 				</tr>
 				<f:form>
-				<xeb:iterate list="global_state.db.reservations"
+				<xeb:iterate list="%=global_state.db.reservations%"
 					variable="reservation" type="RESERVATION">
 					<tr>
 						<td><xeb:display text="#{reservation.name}"/></td>
 						<td><xeb:display text="#{reservation.date}"/></td>
-						
-						
-						
 						<td><xeb:display text="#{reservation.s_persons}"/></td>
-						<xeb:container render="authenticated_admin">
+						<xeb:container render="%=authenticated_admin%">
 							<td class="style2">
 							<f:command_link text="Delete" action="delete" variable="reservation" />
 							</td>					
 						</xeb:container>
-						<xeb:container render="not_authenticated_admin">
+						<xeb:container render="%=not_authenticated_admin%">
 							<td class="style2"><a href="">Details</a></td>
 						</xeb:container>
 					</tr>
@@ -41,7 +38,7 @@
 				</f:form>
 			</table>
 		</xeb:container>
-		<xeb:container render="authenticated_admin">
+		<xeb:container render="%=authenticated_admin%">
 			<h2 class="style1">New Reservation</h2>
 			<f:form variable="new_reservation" class="RESERVATION">
 			<table width="400" border="0" cellpadding="2" cellspacing="2">

@@ -33,7 +33,6 @@ feature {LOCKABLE_I} -- Event handlers
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_sender_is_interface_usable: attached {USABLE_I} a_sender as l_usable_lock implies l_usable_lock.is_interface_usable
-			not_a_sender_is_locked: not a_sender.is_locked
 		do
 		end
 

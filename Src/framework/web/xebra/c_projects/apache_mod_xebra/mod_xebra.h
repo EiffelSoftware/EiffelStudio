@@ -33,6 +33,7 @@
 
 #include "eif_eiffel.h"
 
+#include <util_filter.h>
 #include <apr_strings.h>
 #include <apr_tables.h>
 #include <httpd.h>
@@ -65,6 +66,8 @@
 #define KEEPONCLOSE APR_CREATE | APR_READ | APR_WRITE | APR_EXCL
 #define xebra_MAX_STRING_LEN MAX_STRING_LEN / 4 - 80
 
+#define CT_MULTIPART_FORM_DATA "multipart/form-data"
+#define CT_APP_FORM_URLENCODED "application/x-www-form-urlencoded"
 
 /*======= SOCKET CONSTANTS =======*/
 
@@ -168,10 +171,12 @@ static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
  doc:            <summary>Reads POST values and appends them to the buffer</summary>
  doc:            <param name="r" type="request_rec*>The request</param>
  doc:            <param name="buf" type="char**>A buffer to write the keys and values</param>
+ doc:            <param name="max_upload_size" type="int>The maximum size of post data as specified in Content-Length</param>
+ doc:            <param name="save_file" type="int>Specifies whether the data should be stored in a temp file or attached to buf. If a file is written the filename is stored in buf</param>
  doc:			 <return>Returns an apache RESPONSE_CODE</return>
  doc:    </routine>
  */
-static int read_from_POST (request_rec* r, char **buf, int max_upload_size);
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size, int save_file);
 
 /*
  doc:	<attribute name="table_buf" return_type="char*" export="private">
@@ -343,7 +348,7 @@ apr_status_t cookie_remove2 (request_rec * r, const char *name2,
 		const char *attrs2, ...);
 
 /* The array of command_rec structures is passed to the httpd core by this module to declare a new configuration directive. */
-static const command_rec xebra_cmds[] = { 
+static const command_rec xebra_cmds[] = {
 	AP_INIT_TAKE1 (
 		"XebraServer_port", set_srv_cfg_port, NULL, RSRC_CONF,
 		"Mod_xebra: use e.g. 'Port \"1234\"'"),

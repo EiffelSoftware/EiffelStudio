@@ -40,6 +40,7 @@ feature -- Request Message
 	Request_content_type: STRING = "Content-Type"
 	Request_ct_form: STRING = "application/x-www-form-urlencoded"
 	Request_post_too_big: STRING = "#PTB#"
+	Request_file_upload: STRING = "#FUP#"
 
 feature -- Cookie Order
 

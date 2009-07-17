@@ -1,0 +1,11 @@
+<page:include template="master_template">
+	<page:controller class="upload_controller" />
+	<page:define_region id="content">
+		<h2 class="style1">Upload a File!</h2>
+		<FORM ACTION="upload_rcv.xeb"  ENCTYPE="multipart/form-data" METHOD="POST">
+			What file are you sending? 
+			<INPUT TYPE="FILE" NAME="file" />
+			<INPUT TYPE="SUBMIT" />
+		</FORM>
+	</page:define_region>
+</page:include>

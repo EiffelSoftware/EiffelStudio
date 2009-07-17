@@ -46,30 +46,30 @@ static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
 	return NULL;
 }
 
-static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
-		const char *arg)
+static const char *set_srv_cfg_max_upload_size (cmd_parms *parms,
+		void *mconfig, const char *arg)
 {
 	xebra_svr_cfg* svr_cfg = ap_get_module_config (
 			parms->server->module_config, &xebra_module);
-	svr_cfg->max_upload_size = atoi(arg);
+	svr_cfg->max_upload_size = atoi (arg);
 	return NULL;
 }
 
-static int read_from_POST (request_rec* r, char **buf, int max_upload_size)
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
+		int save_file)
 {
 	const char *bbuf;
+	apr_off_t blen;
+	apr_size_t bsize;
 	apr_size_t nbytes;
-	apr_size_t logbytes;
-	unsigned int bytes;
+	int bytes;
 	apr_status_t rv;
 	apr_bucket_brigade *bb;
 	apr_bucket *b;
 	const char *clen;
-	apr_file_t* tmpfile ;
+	apr_file_t * tmpfile;
 	char* tmpname;
-	
-	(*buf) = apr_palloc (r->pool, 1);
-	(*buf)[0] = '\0';
+	int eos;
 
 	/* Check if content-length does not exceed max_upload_size */
 	clen = apr_table_get (r->headers_in, "Content-Length");
@@ -82,60 +82,99 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size)
 			return HTTP_REQUEST_ENTITY_TOO_LARGE;
 		}
 	}
-		
-	/* Prepare tmp file */
-	tmpname = apr_pstrdup(r->pool, "/tmp/xebra_upload.XXXXXX") ;
-	rv = apr_file_mktemp(&tmpfile, tmpname, KEEPONCLOSE, r->pool);
-	if (rv != APR_SUCCESS) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Failed to create temp file");
-		return HTTP_INTERNAL_SERVER_ERROR;
+	DEBUG ("Content-Length: %d bytes", bytes);
+
+	/* Prepare buffer */
+	(*buf) = apr_palloc (r->pool, 1);
+	(*buf)[0] = 0;
+
+	if (save_file) {
+		/* Prepare tmp file */
+		tmpname = apr_pstrdup (r->pool, "/tmp/xebra_upload.XXXXXX");
+		rv = apr_file_mktemp (&tmpfile, tmpname, KEEPONCLOSE, r->pool);
+		DEBUG ("Creating file... '%s'", tmpname);
+
+		rv = apr_file_perms_set(tmpname,  APR_FPROT_UREAD | APR_FPROT_UWRITE  |
+										APR_FPROT_GREAD | APR_FPROT_GWRITE  |
+										APR_FPROT_WREAD | APR_FPROT_WWRITE);
+
+		if (rv != APR_SUCCESS)
+		{
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+								"Failed to change permissions on temp file");
+						return HTTP_INTERNAL_SERVER_ERROR;
+		}
+
+
+		(*buf) = apr_pstrcat (r->pool, "#FUP#", tmpname, NULL);
+		if (rv != APR_SUCCESS) {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+					"Failed to create temp file");
+			return HTTP_INTERNAL_SERVER_ERROR;
+		}
+		apr_pool_cleanup_register (r->pool, tmpfile, (void*) apr_file_close,
+				apr_pool_cleanup_null);
 	}
-	apr_pool_cleanup_register(r->pool, tmpfile, (void*)apr_file_close, apr_pool_cleanup_null) ;
-		
-	/* Get brigade from input filters */
-	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
-	rv = ap_get_brigade (r->input_filters, bb, AP_MODE_READBYTES,
+
+	/* Iterate over brigades */
+	eos = 0;
+	do {
+		/* Get brigade from input filters */
+		bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
+		rv = ap_get_brigade (r->input_filters, bb, AP_MODE_READBYTES,
 				APR_BLOCK_READ, bytes);
-	if (rv != APR_SUCCESS) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"Failed to get brigade from input filters");
-		return HTTP_INTERNAL_SERVER_ERROR;
-	}
-	
-	/* Iterate over brigade and read buckets*/
-	for (b = APR_BRIGADE_FIRST (bb); b != APR_BRIGADE_SENTINEL (bb); b = APR_BUCKET_NEXT (b)) {
-		/****************************************/
-		    DEBUG ("BUCKET>> data_type: %s, type: %s, length: %" APR_SIZE_T_FMT " bytes",
-				(APR_BUCKET_IS_METADATA(b)) ? "metadata" : "data",
-				b->type->name,
-				b->length) ;
+		if (rv != APR_SUCCESS) {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+					"Failed to get brigade from input filters");
+			return HTTP_INTERNAL_SERVER_ERROR;
+		}
 
-		    if (!(APR_BUCKET_IS_METADATA(b)))
-		    {			
-			rv = apr_bucket_read(b, &bbuf, &nbytes, APR_BLOCK_READ);
-
-			if (rv == APR_SUCCESS)
-			{			  
-				DEBUG ("Bucket content: '%s'", bbuf);
-				apr_file_write(tmpfile, bbuf, &nbytes);
-				(*buf) =  apr_pstrcat (r->pool, (*buf), bbuf, NULL);
-
-			} else {
-			    ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "(%s, %s): Failed to read bucket",
+		/* Iterate over brigade and read buckets*/
+		for (b = APR_BRIGADE_FIRST (bb); b != APR_BRIGADE_SENTINEL (bb); b
+				= APR_BUCKET_NEXT (b)) {
+			DEBUG ("BUCKET>> data_type: %s, type: %s, length: %" APR_SIZE_T_FMT " bytes",
 					(APR_BUCKET_IS_METADATA(b)) ? "metadata" : "data",
-					 b->type->name ); 
-				return HTTP_INTERNAL_SERVER_ERROR;
-				
-			}
-		    }
-		/************************************/
-		
-	}
-	apr_file_flush(tmpfile) ;
+					b->type->name,
+					b->length);
 
-	//(*buf)[count] = '\0';
+			if (APR_BUCKET_IS_EOS (b)) {
+				eos = 1;
+				break;
+			}
+			if (!(APR_BUCKET_IS_METADATA (b))) {
+				rv = apr_bucket_read (b, &bbuf, &nbytes, APR_BLOCK_READ);
+				if (rv == APR_SUCCESS) {
+					DEBUG2 ("Bucket content: '%s'", bbuf);
+					if (save_file) {
+						apr_file_write (tmpfile, bbuf, &nbytes);
+					} else {
+						(*buf) = apr_pstrcat (r->pool, (*buf), bbuf, NULL);
+					}
+				} else {
+					ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+							"(%s, %s): Failed to read bucket",
+							(APR_BUCKET_IS_METADATA (b)) ? "metadata" : "data",
+							b->type->name);
+					return HTTP_INTERNAL_SERVER_ERROR;
+				}
+			}
+		}
+	} while (!eos);
+
+	if (save_file)
+		apr_file_flush (tmpfile);
+
 	return OK;
+
+	/*		apr_brigade_length(bb, 1, &blen);
+	 DEBUG ("Brigade length: %d", (int) blen);
+	 bsize = (apr_size_t) blen;
+	 (*buf) = apr_palloc(r->pool, bsize + 1);
+	 apr_brigade_flatten(bb, (*buf), &bsize);
+	 (*buf)[blen] = 0;
+
+	 apr_file_write(tmpfile, (*buf), &bsize);
+	 */
 }
 
 static int print_item (void* rec, const char *key, const char *value)
@@ -156,6 +195,7 @@ static int xebra_handler (request_rec* r)
 	int numbytes; /* number of bytes recieved from server */
 	char* rmsg_buf; /* buffer for receiving message */
 	char* post_buf;
+	char* tmp_ctype;
 	char* srv_hostname; /* the xebra server host name read from config */
 	char* srv_port; /* the xebra server port read from config */
 	int srv_max_upload_size; /* the max upload size read from config */
@@ -206,41 +246,38 @@ static int xebra_handler (request_rec* r)
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, NULL);
 	message = apr_pstrcat (r->pool, message, table_buf, NULL);
 
-
-
 	/* If there are, read POST or GET parameters into message buffer */
 	if (r->method_number == M_POST) {
 		DEBUG2 ("Reading POST parameters...");
-	
-		rv = read_from_POST (r, &post_buf, srv_max_upload_size);
-		
-		if (rv == HTTP_REQUEST_ENTITY_TOO_LARGE)
-		{
+		ctype = apr_table_get (r->headers_in, "Content-Type");
+		DEBUG ("Content-Type: %s", ctype);
+		tmp_ctype = apr_palloc (r->pool, 1);
+		apr_cpystrn(tmp_ctype, ctype, strlen(CT_MULTIPART_FORM_DATA) +1);
+		if (tmp_ctype && (strcasecmp (tmp_ctype, CT_MULTIPART_FORM_DATA) == 0))
+			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 1);
+		else
+			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 0);
+
+		if (rv == HTTP_REQUEST_ENTITY_TOO_LARGE) {
 			message = apr_pstrcat (r->pool, message, ARG, POST_TOO_BIG, NULL);
-		}
-		else if (rv != OK)
-		{
+		} else if (rv != OK) {
 			PRINT_ERROR ("Error reading POST data");
 			return OK;
-		} else {			
-				
-			ctype = apr_table_get (r->headers_in, "Content-Type");
-			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))                               
-                        {
-				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf, NULL);					
+		} else {
+
+			if (ctype && (strcasecmp (ctype, CT_APP_FORM_URLENCODED) == 0)) {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
+						NULL);
 			} else {
-				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);	
-			}		
-		}	
+				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);
+			}
+		}
 
 	} else if (r->args != NULL) {
-		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, 
-				NULL);
+		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, ARG,  NULL);
+		message = apr_pstrcat (r->pool, message, ARG, NULL);
 	}
-
-
 
 	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
@@ -306,11 +343,9 @@ static int xebra_handler (request_rec* r)
 	DEBUG ("All receiving ok.");
 
 	rv = handle_response_message (r, rmsg_buf);
-	if (rv != APR_SUCCESS)
-	{
+	if (rv != APR_SUCCESS) {
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
-
 
 	/* Close sockets and quit */
 	shutdown (sockfd, 2);
@@ -351,11 +386,10 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	}
 
 	DEBUG2 ("Extracting content-type");
-	content_type = apr_pstrcat (r->pool, message,  NULL);
+	content_type = apr_pstrcat (r->pool, message, NULL);
 	content_type = ap_strstr_c (content_type, CONTENT_TYPE_START);
-	if (content_type != NULL)
-	{
-		content_type += strlen(CONTENT_TYPE_START);
+	if (content_type != NULL) {
+		content_type += strlen (CONTENT_TYPE_START);
 		html = ap_strstr_c (content_type, HTML_START);
 		content_type[html - content_type] = '\0';
 		ap_set_content_type (r, content_type);
@@ -378,7 +412,7 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	html += strlen (HTML_START);
 
 	/* Tell browsers not to cache the page */
-	apr_table_addn(r->headers_out, "Cache-Control", "no-cache");
+	apr_table_addn (r->headers_out, "Cache-Control", "no-cache");
 
 	/* Print html */
 	ap_rputs (html, r);
@@ -405,7 +439,7 @@ char * intToByteArray (request_rec* r, EIF_INTEGER_32 i)
 
 EIF_NATURAL_32 encode_natural (EIF_NATURAL_32 i, EIF_BOOLEAN flag)
 {
-	if (i > 0x7FFFFFFF)	{
+	if (i > 0x7FFFFFFF) {
 		return 0;
 	} else {
 		return (i << 1) + flag;
@@ -480,15 +514,14 @@ EIF_INTEGER_32 send_message_fraged (char * message, EIF_INTEGER_32 sockfd,
 			frag_msg[sizeof(char) * FRAG_SIZE] = '\0';
 
 			DEBUG ("-About to send fragment. Length is %i bytes", (int) strlen (
-					frag_msg));
+							frag_msg));
 
 			/* encode frag_msg */
 			encoded_msg_length_byte = intToByteArray (r, encode_natural (
 					strlen (frag_msg), 1));
 		}
 
-		DEBUG (" -Sending... ");
-		DEBUG2 ("'%s'", frag_msg);
+		DEBUG (" -Sending... ");DEBUG2 ("'%s'", frag_msg);
 
 		/* send encoded messagte length */
 		numbytes = send (sockfd, encoded_msg_length_byte, sizeof(int), 0);
@@ -573,8 +606,7 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 			numbytes = recv (sockfd, buf, frag_length - bytes_recv, 0);
 			buf[numbytes] = '\0';
 
-			DEBUG2 ("  --filling buffer...%i bytes", numbytes);
-			DEBUG2 ("  --'%s'", buf);
+			DEBUG2 ("  --filling buffer...%i bytes", numbytes);DEBUG2 ("  --'%s'", buf);
 
 			if (numbytes < 1) {
 				ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
@@ -596,8 +628,7 @@ EIF_INTEGER_32 receive_message_fraged (char **msg_buf, EIF_INTEGER_32 sockfd,
 
 		frag_buf[numbytes] = '\0';
 
-		DEBUG ("Recieved %i bytes...:", numbytes);
-		DEBUG2 ("'%s'", frag_buf);
+		DEBUG ("Recieved %i bytes...:", numbytes);DEBUG2 ("'%s'", frag_buf);
 
 		/* extend *msg_buf and copy frag to end of it */
 		(*msg_buf) = apr_pstrcat (r->pool, (*msg_buf), frag_buf, NULL);
@@ -640,7 +671,7 @@ apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
 	rfc2109 = apr_pstrcat (r->pool, name, "=", val, ";", buffer, attrs
 			&& strlen (attrs) > 0 ? attrs : DEFAULT_ATTRS, NULL);
 	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-			"user '%s' set cookie: '%s'", r->user, rfc2109);
+	"user '%s' set cookie: '%s'", r->user, rfc2109);
 
 	/* write the cookie to the header table(s) provided */
 	va_start (vp, maxage);
@@ -668,7 +699,7 @@ apr_status_t cookie_remove (request_rec * r, const char *name,
 	char *rfc2109 = apr_pstrcat (r->pool, name, "=;Max-Age=0;", attrs ? attrs
 			: CLEAR_ATTRS, NULL);
 	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-			"user '%s' removed cookie: '%s'", r->user, rfc2109);
+	"user '%s' removed cookie: '%s'", r->user, rfc2109);
 
 	/* write the cookie to the header table(s) provided */
 	va_start (vp, attrs);

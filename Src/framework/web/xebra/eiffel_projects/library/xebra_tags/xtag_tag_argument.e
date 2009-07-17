@@ -23,15 +23,7 @@ feature -- Initialization
 		require
 			a_value_attached: attached a_value
 		do
-			is_dynamic := dynamic_attribute_regexp.matches (a_value)
-			is_variable := variable_attribute_regexp.matches (a_value)
-			if is_dynamic then
-				internal_value := dynamic_attribute_regexp.captured_substring (1)
-			elseif is_variable then
-				internal_value := variable_attribute_regexp.captured_substring (1)
-			else
-				internal_value := a_value
-			end
+			internal_value := a_value			
 		ensure
 			internal_value_attached: attached internal_value
 		end
@@ -43,13 +35,17 @@ feature -- Initialization
 			internal_value_attached: attached internal_value
 		end
 
-feature {NONE} -- Access
+feature {XTAG_TAG_SERIALIZER} -- Access
 
 	is_dynamic: BOOLEAN
 			-- Is the argument dynamic?
+		deferred
+		end
 
 	is_variable: BOOLEAN
 			-- Is the argument a variable call?
+		deferred
+		end
 
 	internal_value: STRING
 			-- The actual value
@@ -110,8 +106,9 @@ feature -- Access
 		end
 
 	is_plain_text: BOOLEAN
-			-- Is the argument plain (not dynamic)?
-		deferred
+			-- Is the argument plain (not dynamic nor variable)?
+		do
+			Result := not (is_dynamic or is_variable)
 		end
 
 invariant

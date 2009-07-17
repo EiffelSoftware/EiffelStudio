@@ -26,10 +26,10 @@ feature -- Initialization
 
 feature -- Basic implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			generate_children (a_servlet_class, variable_table)
+			generate_children (a_servlet_class, a_variable_table)
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

@@ -77,6 +77,7 @@
 		<attribute id="name" />
 		<attribute id="id" />
 		<attribute id="header_text" />
+		<attribute id="variable" />
 	</tag>
 	<tag id="drop_down_list" class="XTAG_F_DROP_DOWN_LIST_TAG">
 		<attribute id="id" />
@@ -85,6 +86,9 @@
 		<attribute id="auto_post_back" />
 		<attribute id="on_text_changed" />
 		<attribute id="on_selected_index_changed" />
+		<attribute id="name"/>
+		<attribute id="value"/>
+		<attribute id="selected_index" />
 	</tag>
 	<tag id="bound_field" class="XTAG_F_BOUND_FIELD_TAG">
 		<attribute id="data_field" />
@@ -95,10 +99,13 @@
 		<attribute id="sort_expression" />
 	</tag>
 	<tag id="check_box" class="XTAG_F_CHECK_BOX_TAG">
+		<attribute id="name"/>
+		<attribute id="value"/>
 		<attribute id="text"/>
 		<attribute id="id"/>
 		<attribute id="on_selected_index_changed" />
 		<attribute id="on_checked_changed" />
 		<attribute id="auto_post_back"/>
+		<attribute id="checked" />
 	</tag>
 </taglib>

@@ -1,5 +1,5 @@
 <page:include template="support">
-<page:define_region id="default_main_content">
+<page:define_region id="default_authorized_main_content">
 	<div id="sidebar">
 		<div class="vert_bar_link">
 			<h3>Self Support</h3>
@@ -25,6 +25,9 @@
 		<page:declare_region id="main_content" />
 		<div class="spacer"></div>
 	</div>
+</page:define_region>
+<page:define_region id="default_not_authorized_main_content">
+You are not logged in!
 </page:define_region>
 </page:include>
 

@@ -7,6 +7,12 @@ note
 class
 	PROBLEM_REPORT_BEAN
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	make
 
@@ -14,10 +20,32 @@ feature -- Initialization
 
 	make
 		do
-			release := ""
+			release := "default_release"
+			to_reproduce_text := "default_to_reproduce"
+			description_text := "default_description_text"
+			environment_text:= "default_environment_text"
+			synopsis := "default_synopsis"
+			severity := "default_severity"
+			e_class := "default_class"
+			priority := "default_priority"
+			confidential := "default_confidential"
+			category := "default_category"
+			number := "default_number"
+			submitter := "default_submitter"
+			date := "default_date"
+			status := "status_suspended"
 		end
-
 		
+feature -- Access	
+	
+	status: STRING
+	
+	date: STRING
+	
+	number: STRING
+	
+	submitter: STRING
+	
 	release: STRING assign set_release
 	
 	set_release (a_release: STRING)
@@ -45,5 +73,52 @@ feature -- Initialization
 		do
 			environment_text := a_environment_text
 		end
+		
+	synopsis: STRING assign set_synopsis
 
+	set_synopsis (a_synopsis: STRING)
+		do
+			synopsis := a_synopsis
+		end
+
+	severity: STRING assign set_severity
+
+	set_severity (a_severity: STRING)
+		do
+			severity := a_severity
+		end
+		
+	e_class: STRING assign set_e_class
+
+	set_e_class (a_class: STRING)	
+		do
+			e_class := a_class	
+		end
+
+	priority: STRING assign set_priority
+
+	set_priority (a_priority: STRING)	
+	do
+		priority := a_priority	
+	end
+
+	category: STRING assign set_category
+
+	set_category (a_category: STRING)	
+	do
+		category := a_category	
+	end
+	
+	confidential: STRING assign set_confidential
+
+	set_confidential (a_confidential: STRING)	
+		do
+			confidential := a_confidential	
+		end
+
+	out: STRING
+		do
+			Result := "PROBLEM_REPORT (" + release + ", " + to_reproduce_text + ", " + description_text + ", " + environment_text + ", " + synopsis + ", " + severity + ", " + e_class + ", " + priority + ", " + confidential  + ", " + category + ")"
+		end
+	
 end

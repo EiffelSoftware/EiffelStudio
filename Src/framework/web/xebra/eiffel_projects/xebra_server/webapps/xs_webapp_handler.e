@@ -3,7 +3,7 @@ note
 			Knows how to handle webapps
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

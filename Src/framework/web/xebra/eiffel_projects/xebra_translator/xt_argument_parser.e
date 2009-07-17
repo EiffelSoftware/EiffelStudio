@@ -3,7 +3,7 @@ note
 		Parses command line arguments that configure the translator.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {ERROR_UNDEFINED_TAG}."
-	author: "sandro"
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

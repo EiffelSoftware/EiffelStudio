@@ -3,7 +3,7 @@ note
 		A server module that reads commands on a socket.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

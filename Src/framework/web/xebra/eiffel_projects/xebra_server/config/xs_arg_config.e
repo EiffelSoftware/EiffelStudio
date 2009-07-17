@@ -3,7 +3,7 @@ note
 		Contains settings that are read from execution arguments.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

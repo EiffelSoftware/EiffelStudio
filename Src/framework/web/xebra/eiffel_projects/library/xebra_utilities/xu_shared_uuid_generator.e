@@ -3,7 +3,7 @@ note
 		Provides shared access to an uuid_generator.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,7 @@ note
 		Retrieves the number of sessions of all running webapps except the one specified in the argument.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

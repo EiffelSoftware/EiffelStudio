@@ -3,7 +3,7 @@ note
 		Sets dev_mod to on on all webapps.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

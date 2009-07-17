@@ -3,7 +3,7 @@ note
 		Data container for sending XC_SERVER_MODULES over sockets.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

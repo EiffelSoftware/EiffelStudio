@@ -3,7 +3,7 @@ note
 		no comment yet
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,19 +33,19 @@ feature -- Status Change
 
 					if attached l_s_file.last_string.split ('"').i_th (4) as l_up_filename then
 						create l_t_file.make(l_up_filename)
+						if l_t_file.exists and l_t_file.is_writable and l_t_file.is_access_writable then
+							l_t_file.delete
+						end
 						if l_t_file.is_creatable then
 							l_t_file.create_read_write
 							if l_t_file.is_access_readable and l_t_file.is_readable and
 							 l_t_file.is_access_writable and l_t_file.is_writable then
 									-- Maybe there is a faster way than line by line?
-								from
-									l_s_file.read_line
-								until
-									l_s_file.after
-								loop
-									l_s_file.read_line
-									l_t_file.put_string (l_s_file.last_string)
-								end
+								l_s_file.next_line
+								l_s_file.next_line
+								l_s_file.next_line
+								l_s_file.next_line
+								l_s_file.copy_to (l_t_file)
 
 								Result := "Success, file is now at: " + l_t_file.name
 							else

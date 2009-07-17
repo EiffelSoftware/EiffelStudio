@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {XERROR_SOCKET_NOT_BOUND}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,7 @@ note
 		Represents a special version of request with only few attributes.
 	]"
 	legal: "See notice at end of class."
-	status: "Prototyping phase"
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

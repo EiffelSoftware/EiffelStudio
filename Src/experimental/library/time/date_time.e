@@ -312,9 +312,11 @@ feature -- Element Change
 	copy (other: like Current)
 			-- set `date' and `time' with the `other' attributes.
 		do
-			Precursor {ABSOLUTE} (other)
-			date := other.date.twin
-			time := other.time.twin
+			if other /= Current then
+				Precursor {ABSOLUTE} (other)
+				date := other.date.twin
+				time := other.time.twin
+			end
 		end
 
 feature -- Basic operations

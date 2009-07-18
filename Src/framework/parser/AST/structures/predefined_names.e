@@ -210,6 +210,10 @@ feature -- Constants
 	make_filled_name_id: INTEGER = 197
 	make_empty_name_id: INTEGER = 198
 	has_default_name_id: INTEGER = 199
+	type_id_name_id: INTEGER = 200
+	runtime_name_name_id: INTEGER = 201
+	generic_parameter_count_name_id: INTEGER = 202
+	generic_parameter_type_name_id: INTEGER = 203
 
 feature -- Classification
 

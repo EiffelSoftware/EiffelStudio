@@ -366,6 +366,10 @@ feature {NONE} -- Implementation: access
 			put ("make_filled") check found_item = make_filled_name_id end
 			put ("make_empty") check found_item = make_empty_name_id end
 			put ("has_default") check found_item = has_default_name_id end
+			put ("type_id") check found_item = type_id_name_id end
+			put ("runtime_name") check found_item = runtime_name_name_id end
+			put ("generic_parameter_count") check found_item = generic_parameter_count_name_id end
+			put ("generic_parameter_type") check found_item = generic_parameter_type_name_id end
 		end
 
 invariant

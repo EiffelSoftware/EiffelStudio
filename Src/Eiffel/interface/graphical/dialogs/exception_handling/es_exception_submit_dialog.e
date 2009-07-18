@@ -490,7 +490,7 @@ feature {NONE} -- Action handlers
 			if can_submit then
 				if not l_retried then
 					if not is_description_available then
-						create l_warning.make_standard_with_cancel ("No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?")
+						create l_warning.make_standard_with_cancel (locale_formatter.translation (w_no_description))
 						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.cancel_button, agent veto_close)
 						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.ok_button, agent do execute_with_busy_cursor (agent submit_bug_report) end)
 						l_warning.show (dialog)
@@ -499,7 +499,7 @@ feature {NONE} -- Action handlers
 						is_submit_successed := True
 					end
 				else
-					create l_error.make_standard ("There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com.")
+					create l_error.make_standard (locale_formatter.translation (e_submit_error))
 					l_error.show (dialog)
 				end
 			end
@@ -889,35 +889,59 @@ feature {NONE} -- Reporting
 		local
 			l_report: COMM_SUPPORT_BUG_REPORT
 			l_thanks: ES_INFORMATION_PROMPT
+			l_error: ES_ERROR_PROMPT
 			l_transistion: ES_POPUP_TRANSITION_WINDOW
 			l_window: EV_WINDOW
+			retried: BOOLEAN
 		do
-			create l_transistion.make_with_icon ("Submitting bug report, please wait...", stock_pixmaps.tool_output_failed_icon_buffer)
-			l_window := dialog
-			check l_window_attached: l_window /= Void end
-			l_transistion.show_relative_to_window (l_window)
+			if not retried then
+				create l_transistion.make_with_icon (locale_formatter.translation (lb_submitting), stock_pixmaps.tool_output_failed_icon_buffer)
+				l_window := dialog
+				check l_window_attached: l_window /= Void end
+				l_transistion.show_relative_to_window (l_window)
 
-			create l_report.make (synopsis, description, compiler_version_number.version)
-			l_report.environment := workbench_name + " " + version_number
-			l_report.to_reproduce := "Please see description"
-			l_report.confidential := not make_public_check.is_selected
-			if severity_critical_radio.is_selected then
-				l_report.severity := l_report.severity_critical
-			elseif severity_non_critical_radio.is_selected then
-				l_report.severity := l_report.severity_non_critical
+				create l_report.make (synopsis, description, compiler_version_number.version)
+				l_report.environment := workbench_name + " " + version_number
+				l_report.to_reproduce := "Please see description"
+				l_report.confidential := not make_public_check.is_selected
+				if severity_critical_radio.is_selected then
+					l_report.severity := l_report.severity_critical
+				elseif severity_non_critical_radio.is_selected then
+					l_report.severity := l_report.severity_non_critical
+				else
+					check severity_serious_radio.is_selected end
+					l_report.severity := l_report.severtiy_serious
+				end
+
+				support_login.report_bug (l_report)
+
+				l_transistion.hide
+
+				create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
+				l_thanks.set_sub_title (locale_formatter.translation (tt_thank_you))
+				l_thanks.show (dialog)
 			else
-				check severity_serious_radio.is_selected end
-				l_report.severity := l_report.severtiy_serious
+				if attached l_transistion and then l_transistion.is_shown then
+						-- Need to hide the transition window if there was a failure.
+					l_transistion.hide
+				end
+				create l_error.make_standard (locale_formatter.translation (e_submit_error))
+				l_error.show (dialog)
 			end
-
-			support_login.report_bug (l_report)
-
-			l_transistion.hide
-
-			create l_thanks.make_standard ("The submitted report is now available at http://support.eiffel.com.")
-			l_thanks.set_sub_title ("Thank you for the bug report")
-			l_thanks.show (dialog)
+		rescue
+			retried := True
+			retry
 		end
+
+feature {NONE} -- Internationalization
+
+	tt_thank_you: STRING = "Thank you for the bug report"
+
+	lb_submitting: STRING = "Submitting bug report, please wait..."
+	lb_submitted: STRING = "The submitted report is now available at http://support.eiffel.com."
+
+	w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?"
+	e_submit_error: STRING = "There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com."
 
 feature {NONE} -- Constants
 

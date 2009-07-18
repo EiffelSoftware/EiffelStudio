@@ -1,0 +1,33 @@
+STRING_8
+True
+True
+True
+Void
+0
+INTEGER_16
+True
+True
+True
+0
+0
+TEST2 [INTEGER_32]
+True
+True
+True
+Void
+1
+INTEGER_32
+TEST2 [TEST3]
+True
+True
+True
+Void
+1
+TEST3
+TEST3
+True
+True
+True
+Coucou
+0
+Execution completed

@@ -73,9 +73,10 @@ feature -- Duplication
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			standard_copy (other)
-			create socket_address.make (other.count)
-			socket_address.copy (other.socket_address)
+			if other /= Current then
+				standard_copy (other)
+				socket_address := other.socket_address.twin
+			end
 		ensure then
 			new_result_count: count = other.count or else count = address_size
 		end

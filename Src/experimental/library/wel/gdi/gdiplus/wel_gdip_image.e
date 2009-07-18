@@ -1,10 +1,10 @@
 note
 	description: "[
-					Image functions in GDI+."
-					For more information, please see:
-					MSDN Image Functions:
-					http://msdn.microsoft.com/en-us/library/ms534041(VS.85).aspx
-																					]"
+			Image functions in GDI+.
+			For more information, please see:
+			MSDN Image Functions:
+			http://msdn.microsoft.com/en-us/library/ms534041(VS.85).aspx
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

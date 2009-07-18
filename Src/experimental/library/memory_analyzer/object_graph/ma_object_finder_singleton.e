@@ -7,11 +7,11 @@ note
 
 class
 	MA_OBJECT_FINDER_SINGLETON
-	
+
 inherit
 	MA_SINGLETON_FACTORY
-	
-feature 
+
+feature
 
 	find_objects_by_object_name (a_object_name:STRING): ANY
 			-- Only the field name can be found (not include local instance names).
@@ -26,14 +26,14 @@ feature
 		do
 			create l_inter
 				l_ht:=	memory.memory_map
-			from 
+			from
 				l_ht.start
 			until
 				l_ht.after
 			loop
 				l_list := l_ht.item_for_iteration
-				
-				from 
+
+				from
 					l_list.start
 				until
 					l_list.after
@@ -42,8 +42,8 @@ feature
 					if  l_item /= Void then
 						--show item's field name
 						l_field_count:=l_inter.field_count (l_item)
-						
-						from 
+
+						from
 							i := 1
 						until
 							i > l_field_count
@@ -62,7 +62,7 @@ feature
 				l_ht.forth
 			end
 		end
-	
+
 	find_key_for_type (a_type_name: STRING): INTEGER
 			-- Calculate the key of a class base on the type name.
 		local
@@ -71,7 +71,7 @@ feature
 			l_end_loop : BOOLEAN
 		do
 			l_hash := 	memory.memory_count_map
-			from 
+			from
 				create l_inter
 				l_end_loop := False
 				l_hash.start
@@ -79,29 +79,29 @@ feature
 				l_hash.after or l_end_loop
 			loop
 				if l_inter.type_name_of_type (l_hash.key_for_iteration).is_equal(a_type_name) then
-					Result := l_hash.key_for_iteration	
+					Result := l_hash.key_for_iteration
 					l_end_loop := True
 				end
 				l_hash.forth
 			end
 		end
-	
-	find_objects_by_type_name(a_type_name: STRING):ANY
+
+	find_objects_by_type_name (a_type_name: STRING):ANY
 			--Find the SPECIAL[ANY] which represent a group of object have the same type.
 		local
 			l_ht: HASH_TABLE [ARRAYED_LIST[ANY], INTEGER]
 			l_list: ARRAYED_LIST[ANY]
 		do
 				l_ht:=	memory.memory_map
-				from 
+				from
 					l_ht.start
 				until
 					l_ht.after
 				loop
-				
+
 					l_list := l_ht.item_for_iteration
-					
-					from 
+
+					from
 						l_list.start
 					until
 						l_list.after or Result /= Void
@@ -109,13 +109,13 @@ feature
 						if l_list.item /= Void and then a_type_name.is_equal (l_list.item.generating_type) then
 							Result := l_list.item
 						end
-	
+
 						l_list.forth
 					end
 					l_ht.forth
 				end
-		end	
-	
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

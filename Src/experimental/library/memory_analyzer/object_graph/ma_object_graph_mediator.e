@@ -120,7 +120,7 @@ feature -- Command
 		do
 
 			if not object_already_draw (a_object) then
-				add_node_random_pos(a_object.generating_type)
+				add_node_random_pos (a_object.generating_type)
 				refers  := memory.referers (a_object)
  				if refers /= Void then
  					from
@@ -144,7 +144,7 @@ feature -- Command
 			add_node (random.next_item_in_range (0, object_drawing.width),random.next_item_in_range (0,object_drawing.height), a_object)
 		end
 
-	add_node (ax, ay: INTEGER;a_object:ANY)
+	add_node (ax, ay: INTEGER; a_object: ANY)
 			-- Add a new node to `graph' position it at (`ax', `ay') in `world'.
 		require
 			a_object_not_void: a_object /= Void

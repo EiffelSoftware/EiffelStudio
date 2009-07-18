@@ -123,7 +123,7 @@ feature -- Access
 
 	size: INTEGER = 16
 			-- Size of structure.
-			
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
@@ -138,7 +138,9 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
-			internal_item := other.internal_item.twin
+			if other /= Current then
+				internal_item := other.internal_item.twin
+			end
 		end
 
 feature {WEL_GUID} -- Access

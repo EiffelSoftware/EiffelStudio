@@ -1,5 +1,7 @@
 note
 	description: "{POOLED_THREAD} is used in combination with {THREAD_POOL} to allow for pooled threads."
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

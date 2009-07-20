@@ -3,6 +3,8 @@ note
 		Displays the errors from a validation of an input field. Only works within the context
 		of a form and a matching input-name to its own.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

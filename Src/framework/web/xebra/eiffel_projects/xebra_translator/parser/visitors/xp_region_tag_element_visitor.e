@@ -2,6 +2,8 @@ note
 	description: "[
 		Replaces {XP_REGION_TAG_ELEMENT} of a template by the implementation stored in `regions'.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,6 +2,8 @@ note
 	description: "[
 		Creates a servlet generator file in the servlet_gen path.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

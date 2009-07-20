@@ -2,6 +2,8 @@ note
 	description: "[
 		Used to render a name and its type.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

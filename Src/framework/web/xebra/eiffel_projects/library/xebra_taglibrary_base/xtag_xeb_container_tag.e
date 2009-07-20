@@ -2,6 +2,8 @@ note
 	description: "[
 		A simple tag which does nothing apart from rendering its children
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

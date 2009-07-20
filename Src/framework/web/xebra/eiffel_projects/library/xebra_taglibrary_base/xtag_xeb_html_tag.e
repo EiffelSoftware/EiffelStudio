@@ -2,6 +2,8 @@ note
 	description: "[
 		This tag outputs plain html and plain text. Whitespaces are wrapped to newlines.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,6 +2,8 @@ note
 	description: "[
 		Repeats its children `times' times.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

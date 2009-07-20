@@ -2,6 +2,8 @@ note
 	description: "[
 		{XTAG_XEB_CONTENT_TAG}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

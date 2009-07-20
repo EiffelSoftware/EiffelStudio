@@ -1,6 +1,7 @@
 note
 	description: "Summary description for {PARSER_RESULT}."
-	author: "sandro"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

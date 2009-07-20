@@ -5,6 +5,8 @@ note
 		list. The tag will then iterate over every element in the list and render its
 		children.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

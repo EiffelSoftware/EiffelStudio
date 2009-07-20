@@ -2,6 +2,8 @@ note
 	description: "[
 		Generates and links all the needed classes for a web application.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

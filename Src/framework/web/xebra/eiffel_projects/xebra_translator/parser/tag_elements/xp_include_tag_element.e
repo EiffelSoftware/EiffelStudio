@@ -3,6 +3,8 @@ note
 		Special implementation of a XP_TAG_ELEMENT. Makes sure include calls are resolved with the proper
 		template.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +36,7 @@ feature -- Access
 		end
 
 	resolve_all_dependencies (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING])
-			-- Precursor
+			-- <Precursor>
 		local
 			l_child: XP_TAG_ELEMENT
 			l_region: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]

@@ -2,6 +2,8 @@ note
 	description: "[
 		Manages the processing and ensuing error handling of a file.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

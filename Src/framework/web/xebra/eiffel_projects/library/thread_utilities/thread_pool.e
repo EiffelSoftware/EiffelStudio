@@ -3,6 +3,8 @@ note
 		A thread pool manager. Manages threads up to `capacity' and queue after that,
 		till threads get available again.
 		]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

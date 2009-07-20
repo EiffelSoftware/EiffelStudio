@@ -4,6 +4,8 @@ note
 		warapped object depending on the validation (if any).
 		Can only be used in the context of a {XTAG_F_FORM_TAG}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,6 +2,8 @@ note
 	description: "[
 		{XTAG_F_TEXTAREA_TAG}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

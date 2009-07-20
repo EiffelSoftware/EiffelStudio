@@ -4,6 +4,8 @@ note
 		eiffel class and has to be compiled and executed together with the other servlet generator
 		classes to generate the very servlets.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

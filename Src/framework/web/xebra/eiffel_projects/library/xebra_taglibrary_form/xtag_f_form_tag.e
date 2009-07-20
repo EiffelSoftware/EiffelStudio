@@ -5,6 +5,8 @@ note
 		which is used by buttons, inputs and validators. The latter cannot be used out
 		of a form context. Forms cannot be nested.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

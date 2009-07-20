@@ -2,6 +2,8 @@ note
 	description: "[
 		{XEL_RENDER_FEATURE_ELEMENT}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

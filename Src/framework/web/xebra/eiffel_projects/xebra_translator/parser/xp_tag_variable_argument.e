@@ -2,6 +2,8 @@ note
 	description: "[
 		{XP_TAG_VARIABLE_ARGUMENT}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

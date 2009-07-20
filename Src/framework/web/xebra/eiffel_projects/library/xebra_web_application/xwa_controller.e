@@ -13,6 +13,7 @@ deferred class
 
 inherit
 	XU_SHARED_OUTPUTTER
+	XU_STOPWATCH
 
 
 feature -- Initialization
@@ -64,14 +65,12 @@ feature -- Operations
 	process_upload_single_file (a_source_file: STRING; a_target_file_dir: FILE_NAME): BOOLEAN
 			-- Copies the uploaded and encoded (single) file to a new place and removes header and footer from it
 			-- The uploaded temp file is expected to be in the following format. Other formats will likely result in endless loops!
-			-- -----------------------------172158860518773611771834400137
-			-- Content-Disposition: form-data; name="file"; filename="hallo.text"
-			-- Content-Type: text/plain
-			--
-			-- This is a text.
-			-- And this is a new line.
-			--
-			-- -----------------------------172158860518773611771834400137
+			-- -----------------------------13689473967984000952010704750%R%N
+			-- Content-Disposition: form-data; name=%"file%"; filename=%"{FILENAME}%"%R%N
+			-- Content-Type: text/plain%R%N
+			-- %R%N
+			-- {CONTENT}%R%N
+			-- -----------------------------13689473967984000952010704750--%R%N
 		require
 			a_source_file_attached_and_not_empty: a_source_file /= Void and then not a_source_file.is_empty
 			a_target_file_dir_attached: a_target_file_dir /= Void
@@ -84,6 +83,7 @@ feature -- Operations
 			l_end: INTEGER
 			l_start: INTEGER
 			l_block_size: INTEGER
+			l_buf: STRING
 		do
 			Result := False
 				create l_s_file.make (a_source_file)
@@ -91,8 +91,7 @@ feature -- Operations
 					l_s_file.open_read
 					l_s_file.read_line
 					l_s_file.read_line
-					if l_s_file.has ('"') then
-
+					if l_s_file.last_string.has ('"') then
 						if attached l_s_file.last_string.split ('"').i_th (4) as l_up_filename then
 							a_target_file_dir.set_file_name (l_up_filename)
 							create l_t_file.make (a_target_file_dir)
@@ -103,28 +102,44 @@ feature -- Operations
 								l_t_file.create_read_write
 								if l_t_file.is_access_readable and l_t_file.is_readable and l_t_file.is_access_writable and l_t_file.is_writable then
 
+
+
+------									--debug read whole file
+--									l_buf := ""
+--									from
+--										l_s_file.start
+--									until
+--										l_s_file.after
+--									loop
+--										l_s_file.read_character
+--										l_buf.append_character (l_s_file.last_character)
+--									end
+
 										-- Find end of target file
+
 									from
-										i := 0
 										l_s_file.finish
+										i := 1
 									until
-											-- (Remove two lines from the bottom)
-										i >= 3
+										i = 3
 									loop
 										from
 											l_s_file.back
 											l_s_file.read_character
 											l_s_file.back
 										until
-											l_s_file.last_character = '%N'
+											l_s_file.last_character = '%R'
 										loop
 											l_s_file.back
 											l_s_file.read_character
 											l_s_file.back
 										end
-										i := i +1
+										i := i + 1
 									end
-									l_end := l_s_file.position + 1
+
+									l_end := l_s_file.position
+
+
 
 
 										-- Find start of target file
@@ -147,7 +162,7 @@ feature -- Operations
 									l_start := l_s_file.position
 
 
-								from
+									from
 										l_block_size := 51200
 										l_modulo := l_block_size
 										l_read := l_start
@@ -161,11 +176,13 @@ feature -- Operations
 										else
 											l_modulo := l_end - l_read
 										end
-
-										l_s_file.read_stream (l_modulo)
-										l_t_file.put_string (l_s_file.last_string)
-										l_read := l_read + l_modulo
+										if l_modulo > 0 then
+											l_s_file.read_stream (l_modulo)
+											l_t_file.put_string (l_s_file.last_string)
+											l_read := l_read + l_modulo
+										end
 									end
+
 									Result := True
 								else
 									o.eprint ("File upload: Created file is not readable or writable??", generating_type)

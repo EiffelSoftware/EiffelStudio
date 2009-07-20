@@ -1,0 +1,10 @@
+<taglib id="xrpc">
+	<tag id="api" class="XTAG_XRPC_API_TAG">
+		<attribute id="class" />
+		<attribute id="namespace" />				
+	</tag>
+	<tag id="method" class="XTAG_XRPC_METHOD_TAG">
+		<attribute id="name" />
+	</tag>
+</taglib>
+ 

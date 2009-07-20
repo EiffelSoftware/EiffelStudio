@@ -53,14 +53,22 @@ feature -- Implementation
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
 			-- <Precursor>
 		local
-			l_items_name: STRING
+			l_items_name, l_list_value: STRING
 		do
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" " + a_name + ">%")")
+			
 			if attached drop_down_items then
+			
+				if drop_down_items.is_dynamic or drop_down_items.is_variable then
+					l_list_value := drop_down_items.plain_value (current_controller_id)
+				else
+					l_list_value := "%"" + drop_down_items.value (current_controller_id) + "%""
+				end
+			
 				l_items_name := a_servlet_class.render_html_page.new_local ("LIST [STRING]")
 				a_servlet_class.render_html_page.append_expression ("from")
 				a_servlet_class.render_html_page.append_expression (l_items_name 
-					+ " := " + current_controller_id + "." + drop_down_items.plain_value (current_controller_id))
+					+ " := " + l_list_value)
 				a_servlet_class.render_html_page.append_expression (l_items_name + ".start")
 				a_servlet_class.render_html_page.append_expression ("until")
 				a_servlet_class.render_html_page.append_expression (l_items_name + ".after")

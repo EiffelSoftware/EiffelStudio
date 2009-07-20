@@ -1,0 +1,69 @@
+<taglib id="xeb">
+	<tag id="call" class="XTAG_XEB_CALL_TAG">
+		<attribute id="feature" />
+	</tag>
+	<tag id="loop" class="XTAG_XEB_LOOP_TAG">
+		<attribute id="times" />
+	</tag>
+	<tag id="display" class="XTAG_XEB_DISPLAY_TAG">
+		<attribute id="text" />
+		<attribute id="id" />
+	</tag>
+	<tag id ="redirect" class="XTAG_XEB_REDIRECT_TAG">
+		<attribute id="url" />
+	</tag>
+	<tag id="iterate" class="XTAG_XEB_ITERATE_TAG">
+		<attribute id="list" />
+		<attribute id="variable" />
+		<attribute id="type" />
+		<attribute id="id"/>
+	</tag>
+	<tag id="container" class="XTAG_XEB_CONTAINER_TAG">
+	</tag>
+	<tag id="data_grid" class="XTAG_XEB_DATA_GRID_TAG">
+		<attribute id="id" />
+		<attribute id="alternating_item_style_css_class" />
+	</tag>
+	<tag id="grid_view" class="XTAG_XEB_GRID_VIEW_TAG">
+		<attribute id="width" />
+		<attribute id="pager_settings_visible" />
+		<attribute id="css_class" />
+		<attribute id="border_color" />
+		<attribute id="border_width" />
+		<attribute id="grid_lines" />
+		<attribute id="auto_generate_columns" />
+		<attribute id="header_style_css_class" />
+		<attribute id="allow_paging" />
+		<attribute id="allow_sorting" />
+		<attribute id="row_style_css_class" />
+		<attribute id="cell_padding" />
+		<attribute id="alternating_row_style_css_class" />
+		<attribute id="page_size" />
+		<attribute id="id" />
+		<attribute id="alternating_row_style_back_color" />
+	</tag>
+	<tag id="image" class="XTAG_XEB_IMAGE_TAG">
+		<attribute id="id"/>
+		<attribute id="image_url"/>
+	</tag>
+	<tag id="template_field" class="XTAG_XEB_TEMPLATE_FIELD_TAG">
+		<attribute id="header_text"/>
+		<attribute id="header_style_width"/>
+		<attribute id="header_style_css_class"/>
+		<attribute id="sort_expression"/>
+	</tag>
+	<tag id="hyper_link" class="XTAG_XEB_HYPER_LINK_TAG">
+		<attribute id="id"/>
+	</tag>
+	<tag id="bound_field" class="XTAG_XEB_BOUND_FIELD_TAG">
+		<attribute id="header_text"/>
+		<attribute id="data_field"/>
+		<attribute id="header_style_width"/>
+		<attribute id="sort_expression"/>
+		<attribute id="html_encode"/>
+	</tag>
+	<tag id="hidden_field" class="XTAG_XEB_HIDDEN_FIELD_TAG">
+		<attribute id="on_data_binding"/>
+		<attribute id="id"/>
+	</tag>
+</taglib>

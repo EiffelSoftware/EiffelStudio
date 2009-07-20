@@ -2,6 +2,8 @@ note
 	description: "[
 		Defines tag denoting a page:region
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

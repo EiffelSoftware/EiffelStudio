@@ -2,6 +2,8 @@ note
 	description: "[
 		Used to render a class with its features, inherit and create clause
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

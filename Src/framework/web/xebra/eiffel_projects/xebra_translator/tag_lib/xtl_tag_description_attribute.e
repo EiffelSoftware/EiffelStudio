@@ -2,6 +2,8 @@ note
 	description: "[
 		Contains all the data to meta describe an attribute of a tag
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,6 +3,8 @@ note
 		Displays the out-string of the return value the specified feature. 
 		Expects a function with no arguments.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

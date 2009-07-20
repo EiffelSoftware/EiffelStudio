@@ -1,6 +1,7 @@
 note
 	description: "Summary description for {ZERO_OR_MORE}."
-	author: "sandro"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

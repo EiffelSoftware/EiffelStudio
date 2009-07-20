@@ -1,6 +1,7 @@
 note
 	description: "Summary description for {XU_CONSTANTS}."
-	author: ""
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

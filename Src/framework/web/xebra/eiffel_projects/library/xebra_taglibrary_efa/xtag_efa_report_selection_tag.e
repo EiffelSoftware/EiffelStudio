@@ -3,6 +3,8 @@ note
 	description: "[
 		Defines validator classes for an input field.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

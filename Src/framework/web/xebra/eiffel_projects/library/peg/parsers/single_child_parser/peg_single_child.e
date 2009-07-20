@@ -2,6 +2,8 @@ note
 	description: "[
 		{PEG_SINGLE_CHILD}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

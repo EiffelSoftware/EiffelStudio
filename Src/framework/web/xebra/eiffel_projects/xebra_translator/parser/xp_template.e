@@ -2,6 +2,8 @@ note
 	description: "[
 		Represents a xeb file.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -164,7 +166,6 @@ feature -- Basic functionality
 			l_root_tag.accept (l_region_visitor)
 
 				-- l_region_visitor might have unused regions. Pass them over to the next resolve_all_dependencies so it can be used transitively!
-
 			l_root_tag.resolve_all_dependencies (a_templates, a_pending_uids, a_servlet_gen, l_region_visitor.regions)
 			if l_root_tag.date < date then
 				l_root_tag.date := date

@@ -2,6 +2,8 @@ note
 	description: "[
 		{XEL_XRPC_CLASS_ELEMENT}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

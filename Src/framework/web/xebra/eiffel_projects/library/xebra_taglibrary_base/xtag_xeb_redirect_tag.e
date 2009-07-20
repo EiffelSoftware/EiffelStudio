@@ -3,6 +3,8 @@ note
 		Induces a redirect at the specific point. The redirect is internal
 		to the server and not a html redirect. Expects an internal `url' to redirect to.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

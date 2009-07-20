@@ -2,6 +2,8 @@ note
 	description: "[
 		Used to write plain text to a file. Indendation is automatically handled.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

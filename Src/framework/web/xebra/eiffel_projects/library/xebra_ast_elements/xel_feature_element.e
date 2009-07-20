@@ -2,6 +2,8 @@ note
 	description: "[
 		Used to render a feature with its local variables
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

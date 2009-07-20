@@ -2,6 +2,8 @@ note
 	description: "[
 		{XGEN_XRPC_SERVLET_GENERATOR}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,6 +2,8 @@ note
 	description: "[
 		{XU_STRING_MANIPULATION}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

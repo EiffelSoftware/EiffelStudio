@@ -2,6 +2,8 @@ note
 	description: "[
 		{PEG_WHITE_SPACE_CHARACTER}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

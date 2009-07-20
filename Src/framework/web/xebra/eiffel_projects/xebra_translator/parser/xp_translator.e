@@ -2,6 +2,8 @@ note
 	description: "[
 			Reads a xebra scriptlet file and generates an eiffel class.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

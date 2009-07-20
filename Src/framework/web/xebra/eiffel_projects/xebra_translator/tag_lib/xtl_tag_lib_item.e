@@ -2,7 +2,8 @@ note
 	description: "[
 		Abstraction for all TAG_LIB related classes
 	]"
-	author: "sandro"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

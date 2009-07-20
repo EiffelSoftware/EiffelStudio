@@ -3,6 +3,8 @@ note
 		Generates a call to the current controller in the render feature.
 		Expects a procedure without arguments.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

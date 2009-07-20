@@ -2,6 +2,8 @@ note
 	description: "[
 		Mimics a {XTL_TAG_LIBRARY} and provides a hardcoded library for <page:X> tags.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

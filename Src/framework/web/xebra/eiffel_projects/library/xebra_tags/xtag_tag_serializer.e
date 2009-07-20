@@ -8,6 +8,8 @@ note
 		True the children are rendered, otherwise it will skip that
 		part.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,6 +2,8 @@ note
 	description: "[
 		{XEL_OUTPUT_TEXT_EXPRESSION}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

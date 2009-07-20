@@ -84,6 +84,14 @@ feature -- Access
 
 feature -- Basic Functionality
 
+	parse_string (a_string: STRING): PEG_PARSER_RESULT
+			-- Automatically wraps the string and persues to parse with `parse'
+		require
+			a_string_attached: attached a_string
+		do
+			Result := parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
+		end
+
 	parse (a_string: PEG_PARSER_STRING): PEG_PARSER_RESULT
 			-- `a_string' the string that should be parsed
 			-- Tries to parse a_string

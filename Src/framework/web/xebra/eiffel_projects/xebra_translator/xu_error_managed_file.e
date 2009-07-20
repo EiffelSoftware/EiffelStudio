@@ -25,12 +25,14 @@ feature -- Access
 			a_action_attached: attached a_action
 		local
 			l_source: STRING
+			l_file_name: STRING
 			l_generic_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
 			create l_util
-			create l_generic_file_name.make_from_string (a_file_name)
-			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_read( a_file_name ) as l_file then
+			l_file_name := l_util.resolve_env_vars (a_file_name, True)
+			create l_generic_file_name.make_from_string (l_file_name)
+			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_read( l_generic_file_name ) as l_file then
 				l_source := ""
 				l_file.read_stream (l_file.count)
 				l_source := l_file.last_string

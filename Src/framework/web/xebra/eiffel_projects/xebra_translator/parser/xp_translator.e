@@ -119,34 +119,58 @@ feature -- Processing
 		local
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
+			l_translation_config_path: FILE_NAME
 		do
+			l_translation_config_path := output_path.twin
 			o.iprint ("********************$Revision$**********************")
 			o.iprint ("************************************************************")
 			o.iprint ("*                  .taglib processing start...             *")
 			o.iprint ("************************************************************")
-			parse_taglibs (a_taglib_folder, registry)
-			o.iprint ("************************************************************")
-			o.iprint ("*                    .xeb processing start...              *")
-			o.iprint ("************************************************************")
-			from
-				a_files.start
-			until
-				a_files.after
-			loop
-				if a_files.item.out.ends_with (".xeb") then
-					process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.out, a_force))
-				else
-					process_file (a_files.item, agent process_xrpc_file (?, ?, a_files.item, a_files.item.out, a_force))
+			l_translation_config_path.set_file_name (Translation_config_name)
+			process_file (l_translation_config_path, agent parse_translation_conf (?, ?, registry))
+			if not attached registry.taglib_configuration then
+				o.dprint ("Taglib configuration either not existing or corrupted! Aborting translation.", 1)
+			else
+				parse_taglibs (a_taglib_folder, registry)
+				o.iprint ("************************************************************")
+				o.iprint ("*                    .xeb processing start...              *")
+				o.iprint ("************************************************************")
+				from
+					a_files.start
+				until
+					a_files.after
+				loop
+					if a_files.item.out.ends_with (".xeb") then -- ugly.
+						process_file (a_files.item, agent process_xeb_file (?, ?, a_files.item, a_files.item.out, a_force))
+					else
+						process_file (a_files.item, agent process_xrpc_file (?, ?, a_files.item, a_files.item.out, a_force))
+					end
+					a_files.forth
 				end
-				a_files.forth
+				o.iprint ("Processing done.")
+				registry.resolve_all_templates
+
+				create l_generator_app_generator.make (registry)
+				l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
+				l_generator_app_generator.generate (output_path.twin)
+				create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
+				l_webapp_gen.generate
 			end
-			o.iprint ("Processing done.")
-			registry.resolve_all_templates
-			create l_generator_app_generator.make
-			l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
-			l_generator_app_generator.generate (output_path.twin)
-			create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
-			l_webapp_gen.generate
+
+		end
+
+	parse_translation_conf (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_registry: XP_SERVLET_GG_REGISTRY)
+			--Parses the translation_conf.xml file to get all the date for the tag libs
+		require
+			a_source_attached: attached a_source
+			a_registry_attached: attached a_registry
+		local
+			l_config_parser: XT_CONFIG_PARSER
+			l_configuration: LIST [TUPLE [STRING, STRING, STRING]]
+		do
+			create l_config_parser.make
+			l_configuration := l_config_parser.parse (a_source)
+			a_registry.set_taglibrary_config (l_configuration)
 		end
 
 	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
@@ -242,22 +266,24 @@ feature -- Processing
 			taglib_folder_valid: attached taglib_folder and not taglib_folder.is_empty
 			a_registry_attached: attached a_registry
 		local
-			l_directory: FILE_NAME
+			l_taglibrary_file_name: FILE_NAME
 			l_files: LIST [FILE_NAME]
 			l_util: XU_FILE_UTILITIES
+			l_config: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
 		do
 			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 1)
-			create l_util
-			create l_directory.make_from_string (taglib_folder)
-			l_files := l_util.scan_for_files (l_directory.out, -1, "(\.taglib$)", "EIFGENs|\.svn")
+--			create l_util
+			l_config := a_registry.taglib_configuration
 			from
-				l_files.start
+				l_config.start
 			until
-				l_files.after
+				l_config.after
 			loop
-				o.dprint ("Processing file: " + l_files.item.out, 1)
-				process_file (l_files.item, agent process_taglib_with_stream (a_registry, ?, ?))
-				l_files.forth
+				create l_taglibrary_file_name.make_from_string (l_config.item.path)
+				l_taglibrary_file_name.set_file_name (Taglib_file_name)
+				o.dprint ("Processing file: " + l_taglibrary_file_name, 1)
+				process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
+				l_config.forth
 			end
 		end
 
@@ -280,6 +306,11 @@ feature -- Processing
 				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)
 			end
 		end
+
+feature -- Constants
+
+	Translation_config_name: STRING = "translation_conf.xml"
+	Taglib_file_name: STRING = "config.taglib"
 
 invariant
 	output_path_attached: attached output_path

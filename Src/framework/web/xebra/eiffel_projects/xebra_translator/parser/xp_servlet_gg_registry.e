@@ -58,6 +58,19 @@ feature -- Access
 	taglib_registry: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Registry for the taglibs
 
+	taglib_configuration: LIST [TUPLE [STRING, STRING, STRING]] assign set_taglibrary_config
+			-- The configuration of the taglibs
+
+	set_taglibrary_config (a_config: LIST [TUPLE [STRING, STRING, STRING]])
+			--
+		require
+			a_config_attached: attached a_config
+		do
+			taglib_configuration := a_config
+		ensure
+			taglib_configuration_set: taglib_configuration = a_config
+		end
+
 	retrieve_template (a_name: STRING): XP_TEMPLATE
 			-- Returns the template with the specified name or creates a new one.
 		do

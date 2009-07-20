@@ -18,15 +18,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_registry: XP_SERVLET_GG_REGISTRY)
 			--
+		require
+			a_registry_attached: attached a_registry
 		do
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
+			taglibs := a_registry.taglib_configuration
 		ensure
 			servlet_generator_generators_attached: attached servlet_generator_generators
 		end
 
 feature -- Access
+
+	taglibs: LIST [TUPLE [name, ecf, path: STRING]]
+			-- The taglibs which should be used
 
 	put_servlet_generator_generator (a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Adds a servlet_generator_generator to the generator_app_generator
@@ -67,6 +73,7 @@ feature -- Basic functionality
 			l_filename: FILE_NAME
 			l_directory: DIRECTORY
 			l_util: XU_FILE_UTILITIES
+			l_ecf_file_name: FILE_NAME
 		do
 				-- Generate the servlet generator files
 			from
@@ -110,7 +117,18 @@ feature -- Basic functionality
 			l_filename.set_file_name ("servlet_gen.ecf")
 			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
-				l_file.put_string (servlet_gen_ecf)
+				l_file.put_string (servlet_gen_ecf_prefix)
+				from
+					taglibs.start
+				until
+					taglibs.after
+				loop
+					create l_ecf_file_name.make_from_string (taglibs.item.path)
+					l_ecf_file_name.set_file_name (taglibs.item.ecf)
+					l_file.put_string ("<library name=%"" + taglibs.item.name + "%" location=%"" +  l_ecf_file_name + "%"/>")
+					taglibs.forth
+				end
+				l_file.put_string (servlet_gen_ecf_postfix)
 				l_util.close
 			end
 		end
@@ -215,7 +233,7 @@ feature -- Constants
 
 	Application_name: STRING = "G_APPLICATION"
 
-	servlet_gen_ecf: STRING = "[
+	servlet_gen_ecf_prefix: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
@@ -226,10 +244,8 @@ feature -- Constants
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="xebra_taglibrary_base" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base-voidunsafe.ecf"/>
-		<library name="xebra_taglibrary_form" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form-voidunsafe.ecf"/>
-		<library name="xebra_taglibrary_xrpc" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_xrpc\xebra_taglibrary_xrpc-voidunsafe.ecf"/>
-		<library name="xebra_taglibrary_efa" location="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_efa\xebra_taglibrary_efa-voidunsafe.ecf"/>
+]"
+	servlet_gen_ecf_postfix: STRING = "[
 		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
@@ -243,7 +259,7 @@ feature -- Constants
 		</cluster>
 	</target>
 </system>
-	]"
+]"
 		-- The .ecf file
 
 invariant

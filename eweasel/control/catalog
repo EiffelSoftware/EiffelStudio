@@ -516,6 +516,7 @@ test	catcall-generic				catcall004 tcf pass catcall
 test	catcall-generic-numeric		catcall005 tcf pass catcall
 test	catcall-at-runtime-detection	catcall006 tcf pass catcall
 test	wrong-catcall-reported-on-generic-expanded	catcall007 tcf pass catcall
+test	wrong-catcall-on-function-tuple	catcall008 tcf fail catcall
 
 -- Incrementality tests
 

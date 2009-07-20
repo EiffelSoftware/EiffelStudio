@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
+			a: TEST_UPLOADER
 			l: TEST_REQUEST_PARSER
 		--	ll: XU_REQUEST_ARG_TABLE_PARSER
 			b: TEST_WEBAPPS
@@ -30,8 +31,8 @@ feature {NONE} -- Initialization
 --			create l
 --			l.test_get_cookies
 
-			create b
-			b.test_all_webapps
+--			create b
+--			b.test_all_webapps
 
 		end
 

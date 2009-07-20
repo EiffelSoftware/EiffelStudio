@@ -1,0 +1,4 @@
+<config>
+	<taglib name="xebra_taglibrary_base" ecf="xebra_taglibrary_base-voidunsafe.ecf" path="$XEBRA_DEV/eiffel_projects/library/xebra_taglibrary_base" />
+</config>
+

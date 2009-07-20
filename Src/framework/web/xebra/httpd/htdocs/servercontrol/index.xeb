@@ -37,7 +37,7 @@
 		<th>Launched</th>
 		<th>Running</th>
 	</tr>
-	<xeb:iterate list="modules" variable="module" type="XC_SERVER_MODULE_BEAN">
+	<xeb:iterate list="%=modules%" variable="module" type="XC_SERVER_MODULE_BEAN">
 		<tr>		
 			<td><xeb:display text="#{module.name}" /></td>
 
@@ -66,7 +66,7 @@
 		<th>Development Mode</th>
 		
 	</tr>
-	<xeb:iterate list="webapps" variable="webapp" type="XC_WEBAPP_BEAN">
+	<xeb:iterate list="%=webapps%" variable="webapp" type="XC_WEBAPP_BEAN">
 		<tr>
 			<td><xeb:display text="#{webapp.app_config.name.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.host.value.out}" /></td>

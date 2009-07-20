@@ -58,7 +58,9 @@
 						</td><td><xeb:display text="#{problem_report.synopsis}" /></td><td>
 							<a disabled="disabled" class="disabled"><xeb:display text="#{problem_report.submitter}"/></a>
 						</td><td>
-							<f:drop_down_list items="%=all_responsibles%"/>
+							<f:form>
+								<f:drop_down_list items="%=all_responsibles%" name="responsibles" value="responsibles"/>
+							</f:form>
 						</td><td><xeb:display text="#{problem_report.category}" /></td><td><xeb:display text="#{problem_report.release}" /></td><td><xeb:display text="#{problem_report.date}" />
 						</td>
 					</tr>

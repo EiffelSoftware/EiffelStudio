@@ -20,7 +20,7 @@
 					</div>
 				</td>
 				<td class="separator_field">
-					<f:drop_down_list items="category_list" name="category" value="category" selected_index="#{problem_report.category}">
+					<f:drop_down_list items="%=category_list%" name="category" value="category" selected_index="#{problem_report.category}">
 						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
 					</f:drop_down_list>
 				</td>
@@ -31,7 +31,7 @@
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list items="severity_list" name="severity" value="severity" >
+					<f:drop_down_list items="%=severity_list%" name="severity" value="severity" >
 						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
 					</f:drop_down_list>
 				</td>
@@ -44,7 +44,7 @@
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list items="e_class_list" name="class" value="e_class">
+					<f:drop_down_list items="%=e_class_list%" name="class" value="e_class">
 						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
 					</f:drop_down_list>
 				</td>
@@ -55,7 +55,7 @@
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list items="priority_list" name="priority" value="priority">
+					<f:drop_down_list items="%=priority_list%" name="priority" value="priority">
 						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
 					</f:drop_down_list>
 				</td>
@@ -90,7 +90,7 @@
 					</div>
 				</td>
 				<td>
-					<f:drop_down_list items="confidential_list" name="confidential" value="confidential">
+					<f:drop_down_list items="%=confidential_list%" name="confidential" value="confidential">
 						<f:validator class="XWA_NOT_EMPTY_VALIDATOR" />
 					</f:drop_down_list>
 				</td>
